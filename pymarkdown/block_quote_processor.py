@@ -362,22 +362,38 @@ class BlockQuoteProcessor:
     def __check_if_really_start_list(
         parser_state, position_marker, eligible_stack, eligible_stack_index
     ):
-        current_indent, requeue_line_info = (
-            eligible_stack[eligible_stack_index].indent_level,
-            None,
-        )
-        if current_indent > position_marker.index_number:
-            POGGER.debug("BOOYAH")
-            (container_level_tokens, _,) = parser_state.close_open_blocks_fn(
-                parser_state,
-                include_block_quotes=True,
-                include_lists=eligible_stack_index + 1,
-                until_this_index=-1,
-                was_forced=True,
+        current_indent = eligible_stack[eligible_stack_index].indent_level
+        if current_indent <= position_marker.index_number:
+            return current_indent, None
+        POGGER.debug("BOOYAH")
+        POGGER.debug("current_indent=$", current_indent)
+        POGGER.debug("index_number=$", position_marker.index_number)
+        POGGER.debug("eligible_stack=$", eligible_stack)
+        POGGER.debug("eligible_stack_index=$", eligible_stack_index)
+
+        while (
+            eligible_stack_index >= 0
+            and eligible_stack[eligible_stack_index].indent_level
+            > position_marker.index_number
+        ):
+            eligible_stack_index -= 1
+        POGGER.debug("eligible_stack_index=$", eligible_stack_index)
+        if eligible_stack_index >= 0:
+            root_index = (
+                parser_state.token_stack.index(eligible_stack[eligible_stack_index]) + 1
             )
-            parser_state.token_document.extend(container_level_tokens)
-            requeue_line_info = RequeueLineInfo([position_marker.text_to_parse], False)
-        return current_indent, requeue_line_info
+        else:
+            root_index = 0
+        POGGER.debug("root_index=$", root_index)
+        (container_level_tokens, _,) = parser_state.close_open_blocks_fn(
+            parser_state,
+            include_block_quotes=True,
+            include_lists=True,
+            until_this_index=root_index,
+            was_forced=True,
+        )
+        parser_state.token_document.extend(container_level_tokens)
+        return None, RequeueLineInfo([position_marker.text_to_parse], False)
 
     @staticmethod
     def __count_block_quote_starts(

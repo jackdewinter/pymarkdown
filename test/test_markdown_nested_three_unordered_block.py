@@ -85,7 +85,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_nl_block_nl_unordered_wo_bq():
     """
     Verify that a nesting of unordered list, new line, block quote, new line, unordered list works
@@ -98,7 +97,7 @@ def test_nested_three_unordered_nl_block_nl_unordered_wo_bq():
     + list
   >   item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::]",
+        "[ulist(1,1):+::2::\n]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >]",
         "[BLANK(2,4):]",
@@ -108,12 +107,12 @@ def test_nested_three_unordered_nl_block_nl_unordered_wo_bq():
         "[text(3,7):list:]",
         "[end-para:::True]",
         "[end-ulist:::True]",
-        "[end-ulist:::True]",
         "[block-quote(4,3):  :  > ]",
         "[para(4,7):  ]",
         "[text(4,7):item:]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>
@@ -129,7 +128,7 @@ def test_nested_three_unordered_nl_block_nl_unordered_wo_bq():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
@@ -178,7 +177,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_text_nl_block_text_nl_unordered_wo_bq():
     """
     Verify that a nesting of unordered list, text, new line, block quote, text, new line, unordered list works
@@ -191,7 +189,7 @@ def test_nested_three_unordered_text_nl_block_text_nl_unordered_wo_bq():
     + list
   >   item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::]",
+        "[ulist(1,1):+::2::\n]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
@@ -205,12 +203,12 @@ def test_nested_three_unordered_text_nl_block_text_nl_unordered_wo_bq():
         "[text(3,7):list:]",
         "[end-para:::True]",
         "[end-ulist:::True]",
-        "[end-ulist:::True]",
         "[block-quote(4,3):  :  > ]",
         "[para(4,7):  ]",
         "[text(4,7):item:]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>abc
@@ -513,7 +511,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_nl_block_nl_ordered_wo_bq():
     """
     Verify that a nesting of unordered list, new line, block quote, new line, ordered list works
@@ -526,7 +523,7 @@ def test_nested_three_unordered_nl_block_nl_ordered_wo_bq():
     1. list
   >    item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::]",
+        "[ulist(1,1):+::2::\n]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >]",
         "[BLANK(2,4):]",
@@ -536,12 +533,12 @@ def test_nested_three_unordered_nl_block_nl_ordered_wo_bq():
         "[text(3,8):list:]",
         "[end-para:::True]",
         "[end-olist:::True]",
-        "[end-ulist:::True]",
         "[block-quote(4,3):  :  > ]",
         "[para(4,8):   ]",
         "[text(4,8):item:]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>
@@ -606,7 +603,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_text_nl_block_text_nl_ordered_wo_bq():
     """
     Verify that a nesting of unordered list, text, new line, block quote, text, new line, ordered list works
@@ -619,7 +615,7 @@ def test_nested_three_unordered_text_nl_block_text_nl_ordered_wo_bq():
     1. list
   >    item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::]",
+        "[ulist(1,1):+::2::\n]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
@@ -633,12 +629,12 @@ def test_nested_three_unordered_text_nl_block_text_nl_ordered_wo_bq():
         "[text(3,8):list:]",
         "[end-para:::True]",
         "[end-olist:::True]",
-        "[end-ulist:::True]",
         "[block-quote(4,3):  :  > ]",
         "[para(4,8):   ]",
         "[text(4,8):item:]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>abc
