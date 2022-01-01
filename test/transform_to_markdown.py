@@ -1177,11 +1177,33 @@ class TransformToMarkdown:
         )
         block_quote_leading_space_length = 0
         if deeper_containing_block_quote_token:
-            block_quote_leading_space = (
-                deeper_containing_block_quote_token.calculate_next_leading_space_part(
-                    increment_index=False, delta=-1
+            print(
+                "adj->deeper_containing_block_quote_token.line_number>>:"
+                + f"{deeper_containing_block_quote_token.line_number}:<<"
+            )
+            print(
+                "adj->current_token.line_number>>:" + f"{current_token.line_number}:<<"
+            )
+            line_number_delta = (
+                current_token.line_number
+                - deeper_containing_block_quote_token.line_number
+            )
+            print("index:" + str(line_number_delta))
+            split_leading_spaces = (
+                deeper_containing_block_quote_token.leading_spaces.split(
+                    ParserHelper.newline_character
                 )
             )
+            print(
+                "split_leading_spaces:"
+                + ParserHelper.make_value_visible(split_leading_spaces)
+            )
+            block_quote_leading_space = split_leading_spaces[line_number_delta]
+            print(
+                "block_quote_leading_space:"
+                + ParserHelper.make_value_visible(block_quote_leading_space)
+            )
+
             block_quote_leading_space_length = len(block_quote_leading_space)
         print(
             f"adj->block_quote_leading_space_length>>:{block_quote_leading_space_length}:<<"
