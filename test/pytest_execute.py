@@ -239,11 +239,7 @@ class InProcessExecution(ABC):
 
     # pylint: disable=broad-except
     def invoke_main(
-        self,
-        arguments=None,
-        cwd=None,
-        suppress_first_line_heading_rule=True,
-        disable_version_checking=True,
+        self, arguments=None, cwd=None, suppress_first_line_heading_rule=True
     ):
         """
         Invoke the mainline so that we can capture results.
@@ -260,10 +256,6 @@ class InProcessExecution(ABC):
                     disable_value += ","
                 disable_value += "md041"
                 new_arguments[disable_index + 1] = disable_value
-            arguments = new_arguments
-        if disable_version_checking:
-            new_arguments = arguments.copy() if arguments else []
-            new_arguments.insert(0, "--disable-version")
             arguments = new_arguments
 
         saved_state = SystemState()

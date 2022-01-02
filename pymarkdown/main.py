@@ -15,7 +15,6 @@ from application_properties import (
 )
 
 from pymarkdown.bad_tokenization_error import BadTokenizationError
-from pymarkdown.dial_home_helper import DialHomeHelper
 from pymarkdown.extension_manager import ExtensionManager
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
@@ -32,9 +31,6 @@ class PyMarkdownLint:
     """
     Class to provide for a simple implementation of a title case algorithm.
     """
-
-    __package_name = "pymarkdownlnt"
-    __dial_home_expiry_in_days = 7
 
     available_log_maps = {
         "CRITICAL": logging.CRITICAL,
@@ -67,13 +63,6 @@ class PyMarkdownLint:
         file_path = file_path[: last_index + 1] + "version.py"
         version_meta = runpy.run_path(file_path)
         return version_meta["__version__"]
-
-    @property
-    def package_name(self):
-        """
-        Get the name of the package where this application is published.
-        """
-        return PyMarkdownLint.__package_name
 
     @staticmethod
     def log_level_type(argument):
@@ -123,27 +112,6 @@ class PyMarkdownLint:
             action="append",
             default=None,
             help="path to a plugin containing a new rule to apply",
-        )
-        parser.add_argument(
-            "--disable-version",
-            dest="disable_version_check",
-            action="store_true",
-            default=False,
-            help="disable the check of the application version against the released version",
-        )
-        parser.add_argument(
-            "--force-version",
-            dest="force_version_check",
-            action="store_true",
-            default=False,
-            help="force a check of the application version against the released version",
-        )
-        parser.add_argument(
-            "-x-version",
-            dest="x_test_version_fault",
-            action="store_true",
-            default="",
-            help=argparse.SUPPRESS,
         )
         parser.add_argument(
             "--config",
@@ -538,31 +506,6 @@ class PyMarkdownLint:
 
     # pylint: enable=broad-except
 
-    def __check_for_current_version(self, args):
-
-        if args.disable_version_check:
-            return
-
-        package_name = self.__package_name
-        if args.x_test_version_fault:
-            package_name += "xxxxxx"
-        helper = DialHomeHelper(package_name, PyMarkdownLint.__dial_home_expiry_in_days)
-
-        (
-            current_version,
-            version_error,
-        ) = helper.get_semantic_version_from_version_module()
-        assert (
-            current_version
-        ), f"Version information was not in the expected location: {version_error}"
-
-        update_message = helper.verify_version_is_currrent(
-            current_version, args.force_version_check
-        )
-        if update_message:
-            LOGGER.warning(update_message)
-            print(update_message)
-
     def __handle_plugins_and_extensions(self, args):
         self.__initialize_plugins(args)
         self.__initialize_extensions(args)
@@ -588,8 +531,6 @@ class PyMarkdownLint:
         try:
             self.__initialize_strict_mode(args)
             new_handler = self.__initialize_logging(args)
-
-            self.__check_for_current_version(args)
 
             self.__handle_plugins_and_extensions(args)
 

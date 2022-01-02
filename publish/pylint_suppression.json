@@ -26,9 +26,6 @@
         "pymarkdown/container_markdown_token.py": {
             "too-many-arguments": 2
         },
-        "pymarkdown/dial_home_helper.py": {
-            "broad-except": 4
-        },
         "pymarkdown/emphasis_helper.py": {
             "too-few-public-methods": 1,
             "too-many-arguments": 1
@@ -137,8 +134,8 @@
         "too-few-public-methods": 2,
         "no-self-argument": 1,
         "chained-comparison": 1,
-        "broad-except": 6,
         "too-many-instance-attributes": 12,
+        "broad-except": 2,
         "too-many-public-methods": 2
     }
 }
