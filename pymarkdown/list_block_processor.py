@@ -1158,6 +1158,12 @@ class ListBlockProcessor:
 
             assert not container_level_tokens
             last_block_index = parser_state.find_last_block_quote_on_stack()
+            previous_last_block_token = parser_state.token_stack[
+                last_block_index
+            ].matching_markdown_token
+            POGGER.debug(
+                "last_block_index>>$-->$", last_block_index, previous_last_block_token
+            )
             container_level_tokens, _ = parser_state.close_open_blocks_fn(
                 parser_state,
                 until_this_index=last_block_index,
@@ -1165,6 +1171,40 @@ class ListBlockProcessor:
                 include_lists=True,
             )
             POGGER.debug("container_level_tokens>>$", container_level_tokens)
+            last_block_index = parser_state.find_last_block_quote_on_stack()
+            if last_block_index:
+                current_last_block_token = parser_state.token_stack[
+                    last_block_index
+                ].matching_markdown_token
+                POGGER.debug(
+                    "last_block_index>>$-->$",
+                    last_block_index,
+                    current_last_block_token,
+                )
+
+                POGGER.debug(
+                    "prev>>$<<, current>>$<<",
+                    previous_last_block_token,
+                    current_last_block_token,
+                )
+                removed_leading_spaces = (
+                    previous_last_block_token.remove_last_leading_space()
+                )
+                POGGER.debug("removed_leading_spaces>>$<<", removed_leading_spaces)
+                POGGER.debug(
+                    "prev>>$<<, current>>$<<",
+                    previous_last_block_token,
+                    current_last_block_token,
+                )
+                current_last_block_token.add_leading_spaces(
+                    removed_leading_spaces, skip_adding_newline=True
+                )
+                POGGER.debug(
+                    "prev>>$<<, current>>$<<",
+                    previous_last_block_token,
+                    current_last_block_token,
+                )
+
             adjusted_stack_count -= 1
 
         if adjusted_stack_count != block_quote_data.stack_count:
@@ -1592,7 +1632,6 @@ class ListBlockProcessor:
         )
         return list_count, parent_indent_level
 
-    # pylint: disable=too-many-arguments
     @staticmethod
     def __close_required_lists(
         parser_state, allow_list_removal, balancing_tokens, last_list_index, new_stack
@@ -1645,8 +1684,6 @@ class ListBlockProcessor:
                 allow_list_removal,
                 list_count,
             )
-
-    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __adjust_line_for_list_in_process(
