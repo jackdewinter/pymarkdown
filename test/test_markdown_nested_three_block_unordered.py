@@ -85,7 +85,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_nl_unordered_nl_unordered_no_bq1():
     """
     Verify that a nesting of block quote, unordered list, unordered list works
