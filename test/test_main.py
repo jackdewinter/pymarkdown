@@ -29,9 +29,8 @@ def test_markdown_with_no_parameters():
 
     expected_return_code = 2
     expected_output = """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
-               [--add-plugin ADD_PLUGIN] [--disable-version] [--force-version]
-               [--config CONFIGURATION_FILE] [--set SET_CONFIGURATION]
-               [--strict-config] [--stack-trace]
+               [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
+               [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE]
                {plugins,extensions,scan,version} ...
@@ -53,10 +52,6 @@ optional arguments:
                         comma separated list of rules to disable
   --add-plugin ADD_PLUGIN
                         path to a plugin containing a new rule to apply
-  --disable-version     disable the check of the application version against
-                        the released version
-  --force-version       force a check of the application version against the
-                        released version
   --config CONFIGURATION_FILE, -c CONFIGURATION_FILE
                         path to the configuration file to use
   --set SET_CONFIGURATION, -s SET_CONFIGURATION
@@ -92,8 +87,7 @@ def test_markdown_with_no_parameters_through_module():
 
     expected_return_code = 2
     expected_output = """usage: __main.py__ [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
-                   [--add-plugin ADD_PLUGIN] [--disable-version]
-                   [--force-version] [--config CONFIGURATION_FILE]
+                   [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                    [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
                    [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                    [--log-file LOG_FILE]
@@ -116,10 +110,6 @@ optional arguments:
                         comma separated list of rules to disable
   --add-plugin ADD_PLUGIN
                         path to a plugin containing a new rule to apply
-  --disable-version     disable the check of the application version against
-                        the released version
-  --force-version       force a check of the application version against the
-                        released version
   --config CONFIGURATION_FILE, -c CONFIGURATION_FILE
                         path to the configuration file to use
   --set SET_CONFIGURATION, -s SET_CONFIGURATION
@@ -155,9 +145,8 @@ def test_markdown_with_no_parameters_through_main():
 
     expected_return_code = 2
     expected_output = """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
-               [--add-plugin ADD_PLUGIN] [--disable-version] [--force-version]
-               [--config CONFIGURATION_FILE] [--set SET_CONFIGURATION]
-               [--strict-config] [--stack-trace]
+               [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
+               [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE]
                {plugins,extensions,scan,version} ...
@@ -179,10 +168,6 @@ optional arguments:
                         comma separated list of rules to disable
   --add-plugin ADD_PLUGIN
                         path to a plugin containing a new rule to apply
-  --disable-version     disable the check of the application version against
-                        the released version
-  --force-version       force a check of the application version against the
-                        released version
   --config CONFIGURATION_FILE, -c CONFIGURATION_FILE
                         path to the configuration file to use
   --set SET_CONFIGURATION, -s SET_CONFIGURATION
@@ -217,9 +202,8 @@ def test_markdown_with_dash_h():
 
     expected_return_code = 0
     expected_output = """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
-               [--add-plugin ADD_PLUGIN] [--disable-version] [--force-version]
-               [--config CONFIGURATION_FILE] [--set SET_CONFIGURATION]
-               [--strict-config] [--stack-trace]
+               [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
+               [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE]
                {plugins,extensions,scan,version} ...
@@ -241,10 +225,6 @@ optional arguments:
                         comma separated list of rules to disable
   --add-plugin ADD_PLUGIN
                         path to a plugin containing a new rule to apply
-  --disable-version     disable the check of the application version against
-                        the released version
-  --force-version       force a check of the application version against the
-                        released version
   --config CONFIGURATION_FILE, -c CONFIGURATION_FILE
                         path to the configuration file to use
   --set SET_CONFIGURATION, -s SET_CONFIGURATION
@@ -726,9 +706,8 @@ def test_markdown_with_dash_dash_log_level_invalid(caplog):
     expected_return_code = 2
     expected_output = ""
     expected_error = """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
-               [--add-plugin ADD_PLUGIN] [--disable-version] [--force-version]
-               [--config CONFIGURATION_FILE] [--set SET_CONFIGURATION]
-               [--strict-config] [--stack-trace]
+               [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
+               [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE]
                {plugins,extensions,scan,version} ...

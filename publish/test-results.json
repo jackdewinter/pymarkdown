@@ -75,14 +75,6 @@
             "elapsedTimeInMilliseconds": 0
         },
         {
-            "name": "test.test_dial_home_helper",
-            "totalTests": 13,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
             "name": "test.test_extension_manager",
             "totalTests": 15,
             "failedTests": 0,
