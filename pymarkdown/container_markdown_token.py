@@ -346,6 +346,17 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
         )
         self.__compose_extra_data_field()
 
+    def remove_last_leading_space(self):
+        """
+        Remove the last leading space and return it.
+        """
+        last_separator_index = self.__leading_spaces.rindex("\n")
+        extracted_text = self.__leading_spaces[last_separator_index:]
+        self.__leading_spaces = self.__leading_spaces[:last_separator_index]
+        self.leading_text_index -= 1
+        self.__compose_extra_data_field()
+        return extracted_text
+
     def __compose_extra_data_field(self):
         """
         Compose the object's self.extra_data field from the local object's variables.

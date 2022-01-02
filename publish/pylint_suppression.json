@@ -79,7 +79,7 @@
             "too-many-arguments": 6
         },
         "pymarkdown/list_block_processor.py": {
-            "too-many-arguments": 16,
+            "too-many-arguments": 15,
             "too-many-locals": 4
         },
         "pymarkdown/main.py": {
@@ -132,7 +132,7 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 122,
+        "too-many-arguments": 121,
         "too-many-locals": 34,
         "too-few-public-methods": 2,
         "no-self-argument": 1,
