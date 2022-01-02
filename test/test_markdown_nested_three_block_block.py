@@ -81,7 +81,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_nl_block_nl_unordered_no_bq1():
     """
     Verify that a nesting of block quote, new line, block quote, new line, unordered list works
@@ -94,9 +93,9 @@ def test_nested_three_block_nl_block_nl_unordered_no_bq1():
   > + list
 > >   item"""
     expected_tokens = [
-        "[block-quote(1,1)::>]",
+        "[block-quote(1,1)::>\n  > ]",
         "[BLANK(1,2):]",
-        "[block-quote(2,1)::> >\n  > ]",
+        "[block-quote(2,1)::> >]",
         "[BLANK(2,4):]",
         "[end-block-quote:::True]",
         "[ulist(3,5):+::6:]",
@@ -259,7 +258,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_text_nl_block_text_nl_unordered_no_bq1():
     """
     Verify that a nesting of block quote, new line, block quote, new line, unordered list works
@@ -272,11 +270,11 @@ def test_nested_three_block_text_nl_block_text_nl_unordered_no_bq1():
   > + list
 > >   item"""
     expected_tokens = [
-        "[block-quote(1,1)::> ]",
+        "[block-quote(1,1)::> \n  > ]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
-        "[block-quote(2,1)::> > \n  > ]",
+        "[block-quote(2,1)::> > ]",
         "[para(2,5):]",
         "[text(2,5):def:]",
         "[end-para:::True]",
@@ -832,7 +830,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_nl_block_skip_nl_unordered_no_bq1():
     """
     Verify that a nesting of block quote, block quote, unordered list works
@@ -845,9 +842,9 @@ def test_nested_three_block_nl_block_skip_nl_unordered_no_bq1():
   > + list
 >     item"""
     expected_tokens = [
-        "[block-quote(1,1)::>\n> ]",
+        "[block-quote(1,1)::>\n  > \n> ]",
         "[BLANK(1,2):]",
-        "[block-quote(2,1)::> >\n  > ]",
+        "[block-quote(2,1)::> >]",
         "[BLANK(2,4):]",
         "[end-block-quote:::True]",
         "[ulist(3,5):+::6::    ]",
@@ -995,7 +992,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_text_nl_block_skip_text_nl_unordered_no_bq1():
     """
     Verify that a nesting of block quote, block quote, unordered list works
@@ -1008,11 +1004,11 @@ def test_nested_three_block_text_nl_block_skip_text_nl_unordered_no_bq1():
   > + list
 >     item"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n> ]",
+        "[block-quote(1,1)::> \n  > \n> ]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
-        "[block-quote(2,1)::> > \n  > ]",
+        "[block-quote(2,1)::> > ]",
         "[para(2,5):]",
         "[text(2,5):def:]",
         "[end-para:::True]",
@@ -1193,7 +1189,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_skip_nl_block_skip_nl_unordered_no_bq1():
     """
     Verify that a nesting of block quote, block quote, unordered list works
@@ -1206,9 +1201,9 @@ def test_nested_three_block_skip_nl_block_skip_nl_unordered_no_bq1():
   > + list
       item"""
     expected_tokens = [
-        "[block-quote(1,1)::>\n]",
+        "[block-quote(1,1)::>\n  > \n]",
         "[BLANK(1,2):]",
-        "[block-quote(2,1)::> >\n  > ]",
+        "[block-quote(2,1)::> >]",
         "[BLANK(2,4):]",
         "[end-block-quote:::True]",
         "[ulist(3,5):+::6::      \n]",
@@ -1353,7 +1348,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_skip_text_nl_block_skip_text_nl_unordered_no_bq1():
     """
     Verify that a nesting of block quote, block quote, unordered list works
@@ -1366,11 +1360,11 @@ def test_nested_three_block_skip_text_nl_block_skip_text_nl_unordered_no_bq1():
   > + list
       item"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n]",
+        "[block-quote(1,1)::> \n  > \n]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
-        "[block-quote(2,1)::> > \n  > ]",
+        "[block-quote(2,1)::> > ]",
         "[para(2,5):]",
         "[text(2,5):def:]",
         "[end-para:::True]",
@@ -1551,7 +1545,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_nl_block_nl_ordered_no_bq1():
     """
     Verify that a nesting of block quote, block quote, ordered list works
@@ -1564,9 +1557,9 @@ def test_nested_three_block_nl_block_nl_ordered_no_bq1():
   > 1. list
 > >    item"""
     expected_tokens = [
-        "[block-quote(1,1)::>]",
+        "[block-quote(1,1)::>\n  > ]",
         "[BLANK(1,2):]",
-        "[block-quote(2,1)::> >\n  > ]",
+        "[block-quote(2,1)::> >]",
         "[BLANK(2,4):]",
         "[end-block-quote:::True]",
         "[olist(3,5):.:1:7:]",
@@ -1729,7 +1722,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq1():
     """
     Verify that a nesting of block quote, block quote, ordered list works
@@ -1742,11 +1734,11 @@ def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq1():
   > 1. list
 > >    item"""
     expected_tokens = [
-        "[block-quote(1,1)::> ]",
+        "[block-quote(1,1)::> \n  > ]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
-        "[block-quote(2,1)::> > \n  > ]",
+        "[block-quote(2,1)::> > ]",
         "[para(2,5):]",
         "[text(2,5):def:]",
         "[end-para:::True]",
@@ -2662,7 +2654,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_skip_nl_block_skip_nl_ordered_no_bq1():
     """
     Verify that a nesting of block quote, block quote, ordered list works
@@ -2675,9 +2666,9 @@ def test_nested_three_block_skip_nl_block_skip_nl_ordered_no_bq1():
   > 1. list
        item"""
     expected_tokens = [
-        "[block-quote(1,1)::>\n]",
+        "[block-quote(1,1)::>\n  > \n]",
         "[BLANK(1,2):]",
-        "[block-quote(2,1)::> >\n  > ]",
+        "[block-quote(2,1)::> >]",
         "[BLANK(2,4):]",
         "[end-block-quote:::True]",
         "[olist(3,5):.:1:7::       \n]",
@@ -2822,7 +2813,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_no_bq1():
     """
     Verify that a nesting of block quote, block quote, ordered list works
@@ -2835,11 +2825,11 @@ def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_no_bq1():
   > 1. list
        item"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n]",
+        "[block-quote(1,1)::> \n  > \n]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
-        "[block-quote(2,1)::> > \n  > ]",
+        "[block-quote(2,1)::> > ]",
         "[para(2,5):]",
         "[text(2,5):def:]",
         "[end-para:::True]",
