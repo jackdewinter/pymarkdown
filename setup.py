@@ -9,7 +9,7 @@ from setuptools import setup
 
 def parse_requirements():
     with open("install-requirements.txt", "r", encoding="utf-8") as requirement_file:
-        lineiter = (line.strip() for line in requirement_file)
+        lineiter = [line.strip() for line in requirement_file]
     return [line for line in lineiter if line and not line.startswith("#")]
 
 
