@@ -194,9 +194,7 @@ class ListBlockProcessor:
         return is_start, index, number_of_digits, is_not_one
 
     @staticmethod
-    def __adjust_whitespace_for_nested_lists(
-        parser_state, adj_ws, line_to_parse, start_index
-    ):
+    def __determine_child_and_parent_tokens(parser_state):
         child_list_token, parent_list_token = None, None
         if parser_state.token_stack[-1].is_list:
             child_list_token = parser_state.token_stack[-1]
@@ -212,9 +210,19 @@ class ListBlockProcessor:
                 and parser_state.token_stack[-3].is_list
             ):
                 parent_list_token = parser_state.token_stack[-3]
-        POGGER.debug("len(adj_ws)>>$", len(adj_ws))
         POGGER.debug("child_list_token>>$", child_list_token)
         POGGER.debug("parent_list_token>>$", parent_list_token)
+        return child_list_token, parent_list_token
+
+    @staticmethod
+    def __adjust_whitespace_for_nested_lists(
+        parser_state, adj_ws, line_to_parse, start_index
+    ):
+        (
+            child_list_token,
+            parent_list_token,
+        ) = ListBlockProcessor.__determine_child_and_parent_tokens(parser_state)
+        POGGER.debug("len(adj_ws)>>$", len(adj_ws))
 
         if child_list_token and parent_list_token:
             parent_indent, child_indent = (
