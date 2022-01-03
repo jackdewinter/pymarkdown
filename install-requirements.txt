@@ -1,3 +1,2 @@
 application-properties==0.5.0
 Columnar==1.4.1
-requests==2.26.0
