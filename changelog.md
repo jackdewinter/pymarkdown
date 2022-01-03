@@ -10,6 +10,10 @@
 
 - [Changed - Issue 184](https://github.com/jackdewinter/pymarkdown/issues/184)
   - scenario tests: instead of mixup in different areas, added initial combinations to test in one place
+- [Changed - Issue 207](https://github.com/jackdewinter/pymarkdown/issues/207)
+  - adding more upfront analysis, upgrading Columnar to new version
+- [Changed - Issue 214](https://github.com/jackdewinter/pymarkdown/issues/214)
+  - removing call home support
 
 ### Fixed
 
@@ -25,6 +29,25 @@
   - parser: not dealing with a block occurring after 2 nested lists
 - [Fixed - Issue 192](https://github.com/jackdewinter/pymarkdown/issues/192)
   - parser: needed to adjust `__calculate_current_indent_level` function to accomodate nesting
+- [Fixed - Issue 196](https://github.com/jackdewinter/pymarkdown/issues/196)
+  - markdown: transformer was not calculating indent properly
+- [Fixed - Issue 197](https://github.com/jackdewinter/pymarkdown/issues/197)
+  - parser: block quote processor was not closing blocks properly, resulting in bad HTML
+- [Fixed - Issue 198](https://github.com/jackdewinter/pymarkdown/issues/198)
+  - markdown: algorithm was not taking into effect newer change to calculate container indices later
+- [Fixed - Issue 199](https://github.com/jackdewinter/pymarkdown/issues/199)
+  - parser: fixed by work done on [Issue 202](https://github.com/jackdewinter/pymarkdown/issues/202)
+- [Fixed - Issue 200](https://github.com/jackdewinter/pymarkdown/issues/200)
+  - markdown: calculation for previous indent and whitespace to add after was off
+- [Fixed - Issue 201](https://github.com/jackdewinter/pymarkdown/issues/201)
+  - parser: fixed by work done on [Issue 202](https://github.com/jackdewinter/pymarkdown/issues/202)
+- [Fixed - Issue 202](https://github.com/jackdewinter/pymarkdown/issues/202)
+  - parser: block quote processor needed a lot of work to handle whitespace properly
+  - parser: container block processor not handling 4 spaces at start of line properly
+- [Fixed - Issue 203](https://github.com/jackdewinter/pymarkdown/issues/203)
+  - markdown: adjustments to properly calculate indent
+  - parser: list block processor not transferring extracted text to a nested block
+  - various cleanup
 
 ## Version 0.9.3 - Date: 2021-12-14
 
