@@ -460,7 +460,7 @@
         },
         {
             "name": "test.test_markdown_lists",
-            "totalTests": 67,
+            "totalTests": 68,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -479,7 +479,7 @@
             "totalTests": 22,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 1,
+            "skippedTests": 0,
             "elapsedTimeInMilliseconds": 0
         },
         {

@@ -171,7 +171,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_skip_nl_ordered_nl_unordered_no_bq2():
     """
     Verify that a nesting of block quote, ordered list, unordered list works
@@ -189,10 +188,12 @@ def test_nested_three_block_skip_nl_ordered_nl_unordered_no_bq2():
         "[end-block-quote:::True]",
         "[olist(2,3):.:1:5:  ]",
         "[BLANK(2,5):]",
+        "[olist(3,6):.:1:8:     :        ]",
+        "[para(3,9):\n]",
+        "[text(3,9):list\nitem::\n]",
+        "[end-para:::True]",
         "[end-olist:::True]",
-        "[icode-block(3,5):    :\n    ]",
-        "[text(3,5):1. list\n    item: ]",
-        "[end-icode-block:::True]",
+        "[end-olist:::True]",
     ]
     expected_gfm = """<blockquote>
 </blockquote>

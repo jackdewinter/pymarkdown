@@ -1289,7 +1289,7 @@ def test_list_items_293():
 
 
 @pytest.mark.gfm
-def test_list_items_293a():
+def test_list_items_293ax():
     """
     Test case 293a:  variation on 293 with no blank lines
     """
@@ -1302,6 +1302,37 @@ def test_list_items_293a():
         "[olist(1,1):.:1:3::]",
         "[para(1,4):]",
         "[text(1,4):a:]",
+        "[end-para:::True]",
+        "[li(2,3):5:  :1]",
+        "[para(2,6):\n    ]",
+        "[text(2,6):b\n1. c::\n]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>a</li>
+<li>b
+1. c</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_list_items_293aa():
+    """
+    Test case 293a:  variation on 293 with no blank lines
+    """
+
+    # Arrange
+    source_markdown = """ 1. a
+  1. b
+    1. c"""
+    expected_tokens = [
+        "[olist(1,2):.:1:4: :]",
+        "[para(1,5):]",
+        "[text(1,5):a:]",
         "[end-para:::True]",
         "[li(2,3):5:  :1]",
         "[para(2,6):\n    ]",

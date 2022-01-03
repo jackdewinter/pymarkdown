@@ -47,7 +47,10 @@ class ListBlockProcessor:
         POGGER.debug("is_ulist_start>>adj_ws>>$<<", adj_ws)
         POGGER.debug("is_ulist_start>>extracted_whitespace>>$<<", extracted_whitespace)
         adj_ws, parent_indent = ListBlockProcessor.__adjust_whitespace_for_nested_lists(
-            parser_state, extracted_whitespace if adj_ws is None else adj_ws
+            parser_state,
+            extracted_whitespace if adj_ws is None else adj_ws,
+            line_to_parse,
+            start_index,
         )
         POGGER.debug("skip_whitespace_check>>$", skip_whitespace_check)
         POGGER.debug("len(adj_ws)>>$", len(adj_ws))
@@ -99,10 +102,15 @@ class ListBlockProcessor:
         Determine if we have the start of a numbered or ordered list.
         """
 
-        whitespace_to_measure = extracted_whitespace if adj_ws is None else adj_ws
-        POGGER.debug("before_adjust>>ws=$=", whitespace_to_measure)
+        POGGER.debug("is_olist_start>>pre>>")
+        POGGER.debug("is_olist_start>>start_index>>$<<", start_index)
+        POGGER.debug("is_olist_start>>adj_ws>>$<<", adj_ws)
+        POGGER.debug("is_olist_start>>extracted_whitespace>>$<<", extracted_whitespace)
         adj_ws, parent_indent = ListBlockProcessor.__adjust_whitespace_for_nested_lists(
-            parser_state, whitespace_to_measure
+            parser_state,
+            extracted_whitespace if adj_ws is None else adj_ws,
+            line_to_parse,
+            start_index,
         )
         POGGER.debug("after_adjust>>ws=$=", adj_ws)
         POGGER.debug("after_adjust>>parent_indent=$=", parent_indent)
@@ -186,7 +194,9 @@ class ListBlockProcessor:
         return is_start, index, number_of_digits, is_not_one
 
     @staticmethod
-    def __adjust_whitespace_for_nested_lists(parser_state, adj_ws):
+    def __adjust_whitespace_for_nested_lists(
+        parser_state, adj_ws, line_to_parse, start_index
+    ):
         child_list_token, parent_list_token = None, None
         if parser_state.token_stack[-1].is_list:
             child_list_token = parser_state.token_stack[-1]
@@ -215,6 +225,23 @@ class ListBlockProcessor:
             POGGER.debug("child_indent>>$", child_indent)
             if len(adj_ws) > parent_indent and len(adj_ws) < child_indent:
                 adj_ws = adj_ws[parent_indent:]
+        elif child_list_token:
+            POGGER.debug("current_start>>$", child_list_token.matching_markdown_token)
+            POGGER.debug(
+                "current_start.last_new_list_token>>$",
+                child_list_token.last_new_list_token,
+            )
+            POGGER.debug("line_to_parse>>:$:", line_to_parse)
+            POGGER.debug("start_index>>$", start_index)
+
+            indent_level = (
+                child_list_token.last_new_list_token.indent_level
+                if child_list_token.last_new_list_token
+                else child_list_token.indent_level
+            )
+            parent_indent = (
+                child_list_token.indent_level if start_index >= indent_level else 0
+            )
         else:
             parent_indent = 0
         return adj_ws, parent_indent
