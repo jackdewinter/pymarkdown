@@ -48,6 +48,8 @@
   - markdown: adjustments to properly calculate indent
   - parser: list block processor not transferring extracted text to a nested block
   - various cleanup
+- [Fixed - Issue 219](https://github.com/jackdewinter/pymarkdown/issues/219)
+  - parser: indents of 4 within a single and double level list were not cleanly differentiating
 
 ## Version 0.9.3 - Date: 2021-12-14
 
