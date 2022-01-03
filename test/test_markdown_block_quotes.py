@@ -698,7 +698,7 @@ def test_block_quotes_213c():
 > - bar"""
     expected_tokens = [
         "[block-quote(1,1)::> \n\n> ]",
-        "[ulist(1,3):-::4::    \n]",
+        "[ulist(1,3):-::4::    ]",
         "[para(1,5):\n]",
         "[text(1,5):foo\nbrr::\n]",
         "[end-para:::True]",
@@ -780,8 +780,8 @@ def test_block_quotes_214():
         "[block-quote(1,1)::> ]",
         "[icode-block(1,7):    :]",
         "[text(1,7):foo:]",
-        "[end-icode-block:::True]",
-        "[end-block-quote:::True]",
+        "[end-icode-block:::False]",
+        "[end-block-quote:::False]",
         "[icode-block(2,5):    :]",
         "[text(2,5):bar:]",
         "[end-icode-block:::True]",

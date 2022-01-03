@@ -110,7 +110,7 @@ def test_nested_three_block_text_nl_ordered_text_nl_unordered_no_bq3():
         "[para(2,6):]",
         "[text(2,6):def:]",
         "[end-para:::True]",
-        "[olist(3,6):.:1:8:   :        \n]",
+        "[olist(3,6):.:1:8:   :        ]",
         "[para(3,9):\n]",
         "[text(3,9):list\nitem::\n]",
         "[end-para:::True]",
@@ -147,7 +147,7 @@ def test_nested_three_block_skip_ordered_unordered():
     expected_tokens = [
         "[block-quote(1,1)::> \n]",
         "[olist(1,3):.:1:5:]",
-        "[ulist(1,6):+::7:   :       \n]",
+        "[ulist(1,6):+::7:   :       ]",
         "[para(1,8):\n]",
         "[text(1,8):list\nitem::\n]",
         "[end-para:::True]",
@@ -170,8 +170,8 @@ item</li>
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_nested_three_block_skip_nl_ordered_nl_unordered_no_bq2():
     """
     Verify that a nesting of block quote, ordered list, unordered list works
@@ -230,7 +230,7 @@ def test_nested_three_block_skip_text_nl_ordered_text_nl_unordered():
         "[para(2,6):]",
         "[text(2,6):def:]",
         "[end-para:::True]",
-        "[olist(3,6):.:1:8:   :        \n]",
+        "[olist(3,6):.:1:8:   :        ]",
         "[para(3,9):\n]",
         "[text(3,9):list\nitem::\n]",
         "[end-para:::True]",
@@ -356,7 +356,7 @@ def test_nested_three_block_text_nl_ordered_text_nl_ordered_no_bq3():
         "[para(2,6):]",
         "[text(2,6):def:]",
         "[end-para:::True]",
-        "[olist(3,6):.:1:8:   :        \n]",
+        "[olist(3,6):.:1:8:   :        ]",
         "[para(3,9):\n]",
         "[text(3,9):list\nitem::\n]",
         "[end-para:::True]",
@@ -520,7 +520,7 @@ def test_nested_three_block_skip_ordered_ordered():
     expected_tokens = [
         "[block-quote(1,1)::> \n]",
         "[olist(1,3):.:1:5:]",
-        "[olist(1,6):.:1:8:   :        \n]",
+        "[olist(1,6):.:1:8:   :        ]",
         "[para(1,9):\n]",
         "[text(1,9):list\nitem::\n]",
         "[end-para:::True]",
@@ -556,9 +556,9 @@ def test_nested_three_block_skip_ordered_block():
     expected_tokens = [
         "[block-quote(1,1)::> ]",
         "[olist(1,3):.:1:5::]",
-        "[block-quote(1,6)::> \n     > ]",
-        "[para(1,8):\n]",
-        "[text(1,8):list\nitem::\n]",
+        "[block-quote(1,6)::> \n]",
+        "[para(1,8):\n     ]",
+        "[text(1,8):list\n\a>\a&gt;\a item::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
         "[end-olist:::True]",
@@ -569,7 +569,7 @@ def test_nested_three_block_skip_ordered_block():
 <li>
 <blockquote>
 <p>list
-item</p>
+&gt; item</p>
 </blockquote>
 </li>
 </ol>
@@ -809,9 +809,9 @@ def test_nested_three_block_skip_ordered_block_skip():
         item"""
     expected_tokens = [
         "[block-quote(1,1)::> ]",
-        "[olist(1,3):.:1:5::     \n]",
-        "[block-quote(1,6)::> \n\n]",
-        "[para(1,8):\n   ]",
+        "[olist(1,3):.:1:5::]",
+        "[block-quote(1,6)::> \n]",
+        "[para(1,8):\n        ]",
         "[text(1,8):list\nitem::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",

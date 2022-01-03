@@ -597,7 +597,6 @@ def test_md005_bad_ordered_list_double_level_weirdx():
 
 
 @pytest.mark.rules
-@pytest.mark.skip
 def test_md005_bad_ordered_list_double_level_weirder():
     """
     Test to make sure this rule does trigger with a document that
