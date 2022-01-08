@@ -1654,3 +1654,394 @@ item</p>
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_unordered_max_block_max_unordered_max_x():
+    """
+    Verify that a nesting of unordered list, block quote, unordered list, with
+    the maximum number of spaces allowed, works properly.
+    """
+
+    # Arrange
+    source_markdown = """   +    >    + list
+               item"""
+    expected_tokens = [
+        "[ulist(1,4):+::8:   ]",
+        "[block-quote(1,9):        :        > \n]",
+        "[ulist(1,14):+::15:   :               \n]",
+        "[para(1,16):\n]",
+        "[text(1,16):list\nitem::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<blockquote>
+<ul>
+<li>list
+item</li>
+</ul>
+</blockquote>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_unordered_max_plus_one_block_max_unordered_max():
+    """
+    Verify that a nesting of unordered list, block quote, unordered list, with
+    the maximum number of spaces (plus one for the first) allowed, works properly.
+    """
+
+    # Arrange
+    source_markdown = """    +    >    + list
+                item"""
+    expected_tokens = [
+        "[icode-block(1,5):    :\n    ]",
+        "[text(1,5):+    \a>\a&gt;\a    + list\n            item:]",
+        "[end-icode-block:::True]",
+    ]
+    expected_gfm = """<pre><code>+    &gt;    + list
+            item
+</code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_nested_three_unordered_max_block_max_plus_one_unordered_max():
+    """
+    Verify that a nesting of unordered list, unordered list, unordered list, with
+    the maximum number of spaces (plus one for the second) allowed, works properly.
+    """
+
+    # Arrange
+    source_markdown = """   +     >    + list
+                item"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> ]",
+        "[olist(1,3):.:1:5:]",
+        "[ulist(1,6):+::7:   :     ]",
+        "[para(1,8):\n]",
+        "[text(1,8):list\nitem::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<pre><code>&gt;    + list
+       item
+</code></pre>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_nested_three_unordered_max_block_max_unordered_max_plus_one():
+    """
+    Verify that a nesting of unordered list, block quote, unordered list, with
+    the maximum number of spaces (plus one for the third) allowed, works properly.
+    """
+
+    # Arrange
+    source_markdown = """   +    >     + list
+                item"""
+    expected_tokens = [
+        "[ulist(1,4):+::8:   ]",
+        "[block-quote(1,9):        :        > \n]",
+        "[ulist(1,15):+::16:    :                \n]",
+        "[para(1,17):\n]",
+        "[text(1,17):list\nitem::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<blockquote>
+<pre><code>+ list
+</code></pre>
+</blockquote>
+<pre><code>    item
+</code></pre>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_unordered_max_block_max_ordered_max():
+    """
+    Verify that a nesting of unordered list, block quote, ordered list, with
+    the maximum number of spaces allowed, works properly.
+    """
+
+    # Arrange
+    source_markdown = """   +    >    1. list
+                item"""
+    expected_tokens = [
+        "[ulist(1,4):+::8:   ]",
+        "[block-quote(1,9):        :        > \n]",
+        "[olist(1,14):.:1:16:   :                \n]",
+        "[para(1,17):\n]",
+        "[text(1,17):list\nitem::\n]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<blockquote>
+<ol>
+<li>list
+item</li>
+</ol>
+</blockquote>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_unordered_max_plus_one_block_max_ordered_max():
+    """
+    Verify that a nesting of unordered list, block quote, ordered list, with
+    the maximum number of spaces (plus one for the first) allowed, works properly.
+    """
+
+    # Arrange
+    source_markdown = """    +    >    1.  list
+                  item"""
+    expected_tokens = [
+        "[icode-block(1,5):    :\n    ]",
+        "[text(1,5):+    \a>\a&gt;\a    1.  list\n              item:]",
+        "[end-icode-block:::True]",
+    ]
+    expected_gfm = """<pre><code>+    &gt;    1.  list
+              item
+</code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_nested_three_unordered_max_block_max_plus_one_ordered_max():
+    """
+    Verify that a nesting of unordered list, block quote, ordered list, with
+    the maximum number of spaces (plus one for the second) allowed, works properly.
+    """
+
+    # Arrange
+    source_markdown = """   +     >    1. list
+                 item"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> ]",
+        "[olist(1,3):.:1:5:]",
+        "[ulist(1,6):+::7:   :     ]",
+        "[para(1,8):\n]",
+        "[text(1,8):list\nitem::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<pre><code>&gt;    1. list
+        item
+</code></pre>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_nested_three_unordered_max_block_max_ordered_max_plus_one():
+    """
+    Verify that a nesting of unordered list, block quote, ordered list, with
+    the maximum number of spaces (plus one for the third) allowed, works properly.
+    """
+
+    # Arrange
+    source_markdown = """   +    >     1. list
+                 item"""
+    expected_tokens = [
+        "[ulist(1,4):+::8:   ]",
+        "[block-quote(1,9):        :        > \n]",
+        "[olist(1,15):.:1:17:    :                 \n]",
+        "[para(1,18):\n]",
+        "[text(1,18):list\nitem::\n]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<blockquote>
+<pre><code>1. list
+</code></pre>
+</blockquote>
+<pre><code>     item
+</code></pre>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_nested_three_unordered_max_block_max_block_max():
+    """
+    Verify that a nesting of unordered list, block quote, block quote, with
+    the maximum number of spaces allowed, works properly.
+    """
+
+    # Arrange
+    source_markdown = """   +    >    > list
+             > item"""
+    expected_tokens = [
+        "[ulist(1,4):+::8:   :]",
+        "[block-quote(1,9):        :        > ]",
+        "[block-quote(1,14)::        >    > \n             > ]",
+        "[para(1,16):\n]",
+        "[text(1,16):list\nitem::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<blockquote>
+<blockquote>
+<p>list
+&gt; item</p>
+</blockquote>
+</blockquote>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_unordered_max_plus_one_block_max_block_max():
+    """
+    Verify that a nesting of unordered list, block quote, block quote, with
+    the maximum number of spaces (plus one for the first) allowed, works properly.
+    """
+
+    # Arrange
+    source_markdown = """    +    >    > list
+              > item"""
+    expected_tokens = [
+        "[icode-block(1,5):    :\n    ]",
+        "[text(1,5):+    \a>\a&gt;\a    \a>\a&gt;\a list\n          \a>\a&gt;\a item:]",
+        "[end-icode-block:::True]",
+    ]
+    expected_gfm = """<pre><code>+    &gt;    &gt; list
+          &gt; item
+</code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_nested_three_unordered_max_block_max_plus_one_block_max():
+    """
+    Verify that a nesting of unordered list, block quote, block quote, with
+    the maximum number of spaces (plus one for the second) allowed, works properly.
+    """
+
+    # Arrange
+    source_markdown = """   +     >    > list
+              > item"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> ]",
+        "[olist(1,3):.:1:5:]",
+        "[ulist(1,6):+::7:   :     ]",
+        "[para(1,8):\n]",
+        "[text(1,8):list\nitem::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<pre><code>&gt;    &gt; list
+     &gt; item
+</code></pre>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_nested_three_unordered_max_block_max_block_max_plus_one():
+    """
+    Verify that a nesting of unordered list, block quote, block quote, with
+    the maximum number of spaces (plus one for the third) allowed, works properly.
+    """
+
+    # Arrange
+    source_markdown = """   +    >     > list
+              > item"""
+    expected_tokens = [
+        "[ulist(1,4):+::8:   :]",
+        "[block-quote(1,9):        :        > ]",
+        "[block-quote(1,15)::        >     > \n              > ]",
+        "[para(1,17):\n]",
+        "[text(1,17):list\nitem::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<blockquote>
+<pre><code>&gt; list
+</code></pre>
+</blockquote>
+<pre><code>  &gt; item
+</code></pre>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
