@@ -148,6 +148,7 @@ class ContainerBlockProcessor:
             ) = ContainerBlockProcessor.__handle_indented_block_start(
                 parser_state, position_marker
             )
+            # POGGER.debug("was_paragraph_continuation>>$", was_paragraph_continuation)
         else:
             # POGGER.debug("normal")
             (
@@ -176,6 +177,7 @@ class ContainerBlockProcessor:
                 container_depth,
                 parser_properties,
             )
+            # POGGER.debug("was_paragraph_continuation>>$", was_paragraph_continuation)
         if can_continue:
             # POGGER.debug(">>text_removed_by_container>>:$:", text_removed_by_container)
             # POGGER.debug(
@@ -239,9 +241,17 @@ class ContainerBlockProcessor:
             -1,
             -1,
         )
+        POGGER.debug("was_paragraph_continuation>>$", was_paragraph_continuation)
         is_paragraph_continuation = (
             parser_state.token_stack and parser_state.token_stack[-1].is_paragraph
         )
+        list_index = parser_state.find_last_list_block_on_stack()
+        block_index = parser_state.find_last_block_quote_on_stack()
+        POGGER.debug("list_index>>$", list_index)
+        POGGER.debug("block_index>>$", block_index)
+        if is_paragraph_continuation and block_index > list_index:
+            was_paragraph_continuation = True
+        POGGER.debug("was_paragraph_continuation>>$", was_paragraph_continuation)
         if (
             not is_paragraph_continuation
             and parser_state.token_stack
@@ -369,6 +379,7 @@ class ContainerBlockProcessor:
                 was_paragraph_continuation,
             ) = ContainerBlockProcessor.__handle_block_continuations(
                 parser_state,
+                position_marker,
                 did_process,
                 line_to_parse,
                 start_index,
@@ -378,8 +389,10 @@ class ContainerBlockProcessor:
                 block_quote_data,
                 container_start_bq_count,
             )
+            # POGGER.debug("was_paragraph_continuation>>$", was_paragraph_continuation)
         else:
             used_indent, was_paragraph_continuation = None, False
+            # POGGER.debug("was_paragraph_continuation>>$", was_paragraph_continuation)
         return (
             block_quote_data,
             line_to_parse,
@@ -474,10 +487,11 @@ class ContainerBlockProcessor:
             extracted_whitespace,
         )
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __handle_block_continuations(
         parser_state,
+        position_marker,
         did_process,
         line_to_parse,
         start_index,
@@ -506,6 +520,7 @@ class ContainerBlockProcessor:
                 container_level_tokens,
                 extracted_whitespace,
             )
+            # POGGER.debug("was_paragraph_continuation>>$", was_paragraph_continuation)
             if not requeue_line_info:
                 # POGGER.debug_with_visible_whitespace(
                 #     ">>__process_list_in_progress>>$>>", line_to_parse
@@ -518,6 +533,7 @@ class ContainerBlockProcessor:
                     was_paragraph_continuation,
                 ) = ContainerBlockProcessor.__process_lazy_lines(
                     parser_state,
+                    position_marker,
                     leaf_tokens,
                     block_quote_data,
                     line_to_parse,
@@ -525,12 +541,23 @@ class ContainerBlockProcessor:
                     container_start_bq_count,
                     was_paragraph_continuation,
                 )
+                # POGGER.debug(
+                #     "was_paragraph_continuation>>$", was_paragraph_continuation
+                # )
         else:
             requeue_line_info, used_indent, was_paragraph_continuation = (
                 None,
                 None,
                 False,
             )
+            # POGGER.debug("was_paragraph_continuation>>$", was_paragraph_continuation)
+            is_paragraph_continuation = (
+                parser_state.token_stack and parser_state.token_stack[-1].is_paragraph
+            )
+            list_index = parser_state.find_last_list_block_on_stack()
+            block_index = parser_state.find_last_block_quote_on_stack()
+            if is_paragraph_continuation and block_index > list_index:
+                was_paragraph_continuation = True
 
         return (
             not requeue_line_info,
@@ -543,7 +570,7 @@ class ContainerBlockProcessor:
             was_paragraph_continuation,
         )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
 
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
@@ -785,6 +812,7 @@ class ContainerBlockProcessor:
     ):
         # POGGER.debug_with_visible_whitespace("text>>$>>", line_to_parse)
         # POGGER.debug("container_level_tokens>>$>>", container_level_tokens)
+        # POGGER.debug("was_paragraph_continuation>>$", was_paragraph_continuation)
 
         calculated_indent = len(parser_state.original_line_to_parse) - len(
             line_to_parse
@@ -1877,6 +1905,7 @@ class ContainerBlockProcessor:
     @staticmethod
     def __process_lazy_lines(
         parser_state,
+        position_marker,
         leaf_tokens,
         block_quote_data,
         line_to_parse,
@@ -1912,11 +1941,13 @@ class ContainerBlockProcessor:
             was_paragraph_continuation,
         ) = BlockQuoteProcessor.check_for_lazy_handling(
             parser_state,
+            position_marker,
             block_quote_data,
             remaining_line,
             ex_whitespace,
             was_paragraph_continuation,
         )
+        # POGGER.debug("was_paragraph_continuation>>$", was_paragraph_continuation)
 
         container_level_tokens.extend(lazy_tokens)
         return block_quote_data, was_paragraph_continuation
@@ -2226,6 +2257,60 @@ class ContainerBlockProcessor:
 
     # pylint: enable=too-many-arguments
 
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __handle_special_block_quote_reduction(
+        parser_state,
+        block_quote_data,
+        last_block_index,
+        last_list_index,
+        was_paragraph_continuation,
+        text_removed_by_container,
+    ):
+        real_stack_count = parser_state.count_of_block_quotes_on_stack()
+        POGGER.debug("current_count>>:$:<", block_quote_data.current_count)
+        POGGER.debug(
+            "stack_count>>:$:($)<", block_quote_data.stack_count, real_stack_count
+        )
+        if (
+            block_quote_data.current_count < real_stack_count
+            and not was_paragraph_continuation
+            and last_block_index > last_list_index
+            and not last_list_index
+        ):
+
+            stack_delta = block_quote_data.stack_count - block_quote_data.current_count
+            close_tokens, requeue_line_info = parser_state.close_open_blocks_fn(
+                parser_state,
+                include_block_quotes=True,
+                was_forced=True,
+                requeue_reset=True,
+                caller_can_handle_requeue=True,
+                until_this_index=len(parser_state.token_stack) - stack_delta,
+            )
+            if requeue_line_info:
+                return [], requeue_line_info
+            POGGER.debug("parser_state.token_stack>>$", parser_state.token_stack)
+            POGGER.debug("parser_state.token_document>>$", parser_state.token_document)
+            POGGER.debug("close_tokens>>:$:<", close_tokens)
+            block_quote_data = BlockQuoteData(
+                block_quote_data.current_count,
+                block_quote_data.stack_count - stack_delta,
+            )
+
+            new_last_block_index = parser_state.find_last_block_quote_on_stack()
+            if new_last_block_index:
+                parser_state.token_stack[
+                    new_last_block_index
+                ].matching_markdown_token.add_leading_spaces(
+                    text_removed_by_container, skip_adding_newline=False
+                )
+        else:
+            close_tokens = []
+        return close_tokens, None
+
+    # pylint: enable=too-many-arguments
+
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __process_leaf_tokens(
@@ -2243,8 +2328,6 @@ class ContainerBlockProcessor:
         assert not leaf_tokens
         POGGER.debug("parsing leaf>>")
         POGGER.debug("was_paragraph_continuation>>$", was_paragraph_continuation)
-        POGGER.debug("parser_state.token_stack>>$", parser_state.token_stack)
-        POGGER.debug("parser_state.token_document>>$", parser_state.token_document)
         position_marker = PositionMarker(
             xposition_marker.line_number,
             0,
@@ -2265,9 +2348,6 @@ class ContainerBlockProcessor:
         POGGER.debug("text_removed_by_container>>:$:<", text_removed_by_container)
         total_ws = new_index_number + xposition_marker.index_indent
 
-        POGGER.debug("current_count>>:$:<", block_quote_data.current_count)
-        POGGER.debug("stack_count>>:$:<", block_quote_data.stack_count)
-
         last_block_index = parser_state.find_last_block_quote_on_stack()
         last_list_index = parser_state.find_last_list_block_on_stack()
         POGGER.debug("last_block_index>>:$:<", last_block_index)
@@ -2280,6 +2360,20 @@ class ContainerBlockProcessor:
             "last_list.token>>:$:<",
             parser_state.token_stack[last_list_index].matching_markdown_token,
         )
+
+        (
+            close_tokens,
+            requeue_line_info,
+        ) = ContainerBlockProcessor.__handle_special_block_quote_reduction(
+            parser_state,
+            block_quote_data,
+            last_block_index,
+            last_list_index,
+            was_paragraph_continuation,
+            text_removed_by_container,
+        )
+        if requeue_line_info:
+            return close_tokens, requeue_line_info
 
         orig_text_removed_by_container = text_removed_by_container
 
@@ -2299,17 +2393,18 @@ class ContainerBlockProcessor:
             xposition_marker,
         )
 
-        (
-            position_marker,
-            text_removed_by_container,
-        ) = ContainerBlockProcessor.__adjust_containers_before_leaf_blocks(
-            parser_state,
-            xposition_marker,
-            was_paragraph_continuation,
-            last_block_index,
-            text_removed_by_container,
-            total_ws,
-        )
+        if not close_tokens:
+            (
+                position_marker,
+                text_removed_by_container,
+            ) = ContainerBlockProcessor.__adjust_containers_before_leaf_blocks(
+                parser_state,
+                xposition_marker,
+                was_paragraph_continuation,
+                last_block_index,
+                text_removed_by_container,
+                total_ws,
+            )
 
         POGGER.debug(
             "parsing leaf($:$)>>$",
@@ -2352,8 +2447,8 @@ class ContainerBlockProcessor:
             xposition_marker.line_number,
         )
 
-        POGGER.debug("parsed leaf>>$", leaf_tokens)
-        return leaf_tokens, requeue_line_info
+        close_tokens.extend(leaf_tokens)
+        return close_tokens, requeue_line_info
 
     # pylint: enable=too-many-arguments, too-many-locals
 

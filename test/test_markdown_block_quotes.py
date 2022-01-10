@@ -1294,7 +1294,7 @@ baz"""
         "[text(1,3):bar:]",
         "[end-para:::True]",
         "[BLANK(2,2):]",
-        "[end-block-quote:::False]",
+        "[end-block-quote:::True]",
         "[para(3,1):]",
         "[text(3,1):baz:]",
         "[end-para:::True]",
@@ -1621,7 +1621,7 @@ def test_block_quotes_229dx():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
@@ -2172,7 +2172,7 @@ def test_block_quotes_extra_01a():
         "[para(3,5):]",
         "[text(3,5):middle:]",
         "[end-para:::True]",
-        "[block-quote(4,5):    :    > \n\n]",
+        "[block-quote(4,5):    :    > \n]",
         "[para(4,7):\n  ]",
         "[text(4,7):middle\nquote::\n]",
         "[end-para:::True]",

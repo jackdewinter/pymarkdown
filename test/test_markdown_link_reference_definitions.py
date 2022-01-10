@@ -1882,11 +1882,18 @@ def test_link_reference_definitions_extra_02x():
     source_markdown = """> [foo]:
 /url"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n\n]",
-        "[link-ref-def(1,3):True::foo::\n:/url:::::]",
+        "[block-quote(1,1)::> \n]",
+        "[para(1,3):\n]",
+        "[text(1,3):[:]",
+        "[text(1,4):foo:]",
+        "[text(1,7):]:]",
+        "[text(1,8)::\n/url::\n]",
+        "[end-para:::True]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
+<p>[foo]:
+/url</p>
 </blockquote>"""
 
     # Act & Assert
@@ -2000,17 +2007,24 @@ def test_link_reference_definitions_extra_02cx():
     expected_tokens = [
         "[block-quote(1,1)::]",
         "[block-quote(1,2)::>> \n> ]",
-        "[link-ref-def(1,4):True::foo::\n:/url:::::]",
+        "[para(1,4):\n]",
+        "[text(1,4):[:]",
+        "[text(1,5):foo:]",
+        "[text(1,8):]:]",
+        "[text(1,9)::\n/url::\n]",
+        "[end-para:::True]",
         "[end-block-quote:::True]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <blockquote>
+<p>[foo]:
+/url</p>
 </blockquote>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
@@ -2026,7 +2040,12 @@ def test_link_reference_definitions_extra_02ca():
         "[block-quote(1,1)::]",
         "[block-quote(1,2)::]",
         "[block-quote(1,3)::>>> \n> ]",
-        "[link-ref-def(1,5):True::foo::\n:/url:::::]",
+        "[para(1,5):\n]",
+        "[text(1,5):[:]",
+        "[text(1,6):foo:]",
+        "[text(1,9):]:]",
+        "[text(1,10)::\n/url::\n]",
+        "[end-para:::True]",
         "[end-block-quote:::True]",
         "[end-block-quote:::True]",
         "[end-block-quote:::True]",
@@ -2034,6 +2053,8 @@ def test_link_reference_definitions_extra_02ca():
     expected_gfm = """<blockquote>
 <blockquote>
 <blockquote>
+<p>[foo]:
+/url</p>
 </blockquote>
 </blockquote>
 </blockquote>"""
