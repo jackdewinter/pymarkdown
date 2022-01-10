@@ -851,8 +851,6 @@ class LeafBlockProcessor:
                 LeafBlockProcessor.__adjust_paragraph_for_containers(
                     parser_state,
                     container_index,
-                    position_marker,
-                    text_removed_by_container,
                     extracted_whitespace,
                     adjusted_whitespace_length,
                 )
@@ -920,59 +918,14 @@ class LeafBlockProcessor:
             extracted_whitespace = ""
         return new_tokens, extracted_whitespace
 
-    # pylint: disable=too-many-arguments
     @staticmethod
     def __adjust_paragraph_for_containers(
         parser_state,
         container_index,
-        position_marker,
-        text_removed_by_container,
         extracted_whitespace,
         adjusted_whitespace_length,
     ):
-        POGGER.debug(">>text_removed_by_container>>:$:<<", text_removed_by_container)
-        POGGER.debug(">>extracted_whitespace>>:$:<<", extracted_whitespace)
-        POGGER.debug(">>adjusted_whitespace_length>>$", adjusted_whitespace_length)
-        if parser_state.token_stack[container_index].is_block_quote:
-            top_block_token = parser_state.token_stack[container_index]
-            POGGER.debug(">>container_index>>$", container_index)
-            POGGER.debug(">>block-owners>>$", top_block_token)
-            POGGER.debug(
-                ">>token_stack>>$",
-                ParserHelper.make_value_visible(parser_state.token_stack),
-            )
-            POGGER.debug(">>line_number>>$", position_marker.line_number)
-
-            apply_paragraph_adjustment = not (
-                container_index + 1 == len(parser_state.token_stack)
-                and position_marker.line_number
-                == top_block_token.matching_markdown_token.line_number
-                and container_index > 0
-                and parser_state.token_stack[container_index - 1].is_list
-            )
-            if not apply_paragraph_adjustment:
-                POGGER.debug(
-                    ">>list-owners>>$",
-                    ParserHelper.make_value_visible(
-                        parser_state.token_stack[
-                            container_index - 1
-                        ].matching_markdown_token
-                    ),
-                )
-                apply_paragraph_adjustment = not (
-                    position_marker.line_number
-                    == parser_state.token_stack[
-                        container_index - 1
-                    ].matching_markdown_token.line_number
-                )
-
-            if apply_paragraph_adjustment:
-                LeafBlockProcessor.__adjust_paragraph_for_block_quotes(
-                    top_block_token,
-                    text_removed_by_container,
-                    parser_state.token_document,
-                )
-        else:
+        if not parser_state.token_stack[container_index].is_block_quote:
             top_list_token = parser_state.token_stack[container_index]
             POGGER.debug(">>list-owners>>$", top_list_token)
             adjusted_whitespace_length = LeafBlockProcessor.__adjust_paragraph_for_list(
@@ -980,8 +933,6 @@ class LeafBlockProcessor:
             )
         POGGER.debug(">>adjusted_whitespace_length>>$", adjusted_whitespace_length)
         return adjusted_whitespace_length
-
-    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __adjust_paragraph_for_list(top_list_token, extracted_whitespace):
@@ -1019,37 +970,6 @@ class LeafBlockProcessor:
             if dominant_indent > original_text_indent >= 4
             else 0
         )
-
-    @staticmethod
-    def __adjust_paragraph_for_block_quotes(
-        top_block_token, text_removed_by_container, token_document
-    ):
-        POGGER.debug(">>list-owners>>$", token_document)
-        POGGER.debug(">>text_removed_by_container>>$<<", text_removed_by_container)
-        number_of_block_quote_ends, end_index = 0, len(token_document) - 1
-        while token_document[end_index].is_block_quote_end:
-            number_of_block_quote_ends += 1
-            end_index -= 1
-        if not (
-            number_of_block_quote_ends > 0
-            and token_document[end_index].is_fenced_code_block_end
-        ):
-            POGGER.debug(
-                "apfbq>>last_block_token>>$", top_block_token.matching_markdown_token
-            )
-            POGGER.debug(
-                "apfbq>>leading_text_index>>$",
-                top_block_token.matching_markdown_token.leading_text_index,
-            )
-            if text_removed_by_container is None:
-                top_block_token.matching_markdown_token.add_leading_spaces("")
-            POGGER.debug(
-                "apfbq>>last_block_token>>$", top_block_token.matching_markdown_token
-            )
-            POGGER.debug(
-                "apfbq>>leading_text_index>>$",
-                top_block_token.matching_markdown_token.leading_text_index,
-            )
 
     @staticmethod
     def check_for_list_in_process(parser_state):

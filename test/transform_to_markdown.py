@@ -1491,12 +1491,6 @@ class TransformToMarkdown:
             f"{extracted_whitespace}{current_token.list_start_content}"
             + f"{self.container_token_stack[-1].list_start_sequence}"
         )
-        # start_sequence = (
-        #     f"{extracted_whitespace2}{self.container_token_stack[-1].list_start_sequence}"
-        #     if current_token.is_unordered_list_start
-        #     else f"{extracted_whitespace2}{current_token.list_start_content}" + \
-        #           f"{self.container_token_stack[-1].list_start_sequence}"
-        # )
 
         print(f"rnli->start_sequence>:{start_sequence}:")
         if not next_token.is_blank_line:
@@ -1504,10 +1498,6 @@ class TransformToMarkdown:
                 self.container_token_stack[-1].indent_level - adjustment_since_newline,
                 " ",
             )
-            # start_sequence = start_sequence.ljust(
-            #     current_token.indent_level - previous_indent - adjustment_since_newline,
-            #     " ",
-            # )
         else:
             print(f">>next_token.column_number>>:{next_token.column_number}:<<")
             print(f">>current_token.column_number>>:{current_token.column_number}:<<")

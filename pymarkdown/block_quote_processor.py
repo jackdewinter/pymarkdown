@@ -45,9 +45,11 @@ class BlockQuoteProcessor:
             line_to_parse, start_index, BlockQuoteProcessor.__block_quote_character
         )
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def check_for_lazy_handling(
         parser_state,
+        position_marker,
         block_quote_data,
         line_to_parse,
         extracted_whitespace,
@@ -67,18 +69,39 @@ class BlockQuoteProcessor:
         if block_quote_data.current_count == 0 and block_quote_data.stack_count > 0:
             POGGER.debug("haven't processed")
 
-            is_leaf_block_start = (
-                LeafBlockProcessor.is_paragraph_ending_leaf_block_start(
-                    parser_state,
-                    line_to_parse,
-                    0,
-                    extracted_whitespace,
-                    exclude_thematic_break=False,
-                )
-            )
+            POGGER.debug("xx:$", parser_state.token_stack)
+            POGGER.debug("xx:$", parser_state.token_document)
+            POGGER.debug("xx:$", parser_state.original_stack_depth)
+            POGGER.debug("xx:$", position_marker.line_number)
 
-            if is_leaf_block_start:
-                was_paragraph_continuation = False
+            # assert not was_paragraph_continuation
+            if (
+                parser_state.token_stack[-1].is_paragraph
+                and not parser_state.token_document[-1].is_blank_line
+            ):
+                was_paragraph_continuation = True
+                POGGER.debug(
+                    "was_paragraph_continuation>>$", was_paragraph_continuation
+                )
+
+                is_leaf_block_start = (
+                    LeafBlockProcessor.is_paragraph_ending_leaf_block_start(
+                        parser_state,
+                        line_to_parse,
+                        0,
+                        extracted_whitespace,
+                        exclude_thematic_break=False,
+                    )
+                )
+
+                POGGER.debug("is_leaf_block_start:$", is_leaf_block_start)
+                if is_leaf_block_start:
+                    was_paragraph_continuation = False
+                    POGGER.debug(
+                        "was_paragraph_continuation>>$", was_paragraph_continuation
+                    )
+            else:
+                is_leaf_block_start = False
 
             if (
                 parser_state.token_stack[-1].is_code_block
@@ -101,6 +124,8 @@ class BlockQuoteProcessor:
                     block_quote_data.current_count, stack_count
                 )
         return container_level_tokens, block_quote_data, was_paragraph_continuation
+
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
@@ -261,6 +286,7 @@ class BlockQuoteProcessor:
         POGGER.debug(
             ">>block_quote_data.current_count>>$", block_quote_data.current_count
         )
+        POGGER.debug(">>block_quote_data.stack_count>>$", block_quote_data.stack_count)
         if block_quote_data.current_count:
             POGGER.debug("token_stack>$", parser_state.token_stack)
             POGGER.debug("token_document>$", parser_state.token_document)

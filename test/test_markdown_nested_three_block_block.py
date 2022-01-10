@@ -1149,7 +1149,7 @@ item</li>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
@@ -3178,7 +3178,6 @@ def test_nested_three_block_nl_block_nl_block_no_bq4():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_nl_block_nl_block_no_bq5():
     """
     Verify that a nesting of block quote, block quote, block quote works
@@ -3191,14 +3190,16 @@ def test_nested_three_block_nl_block_nl_block_no_bq5():
   >   list
 > > > item"""
     expected_tokens = [
-        "[block-quote(1,1)::>]",
+        "[block-quote(1,1)::>\n  > ]",
         "[BLANK(1,2):]",
         "[block-quote(2,1)::> >\n  > ]",
         "[BLANK(2,4):]",
+        "[end-block-quote:::True]",
         "[para(3,7):  ]",
         "[text(3,7):list:]",
         "[end-para:::True]",
-        "[block-quote(4,1)::> > > ]",
+        "[block-quote(4,1)::]",
+        "[block-quote(4,3)::> > > ]",
         "[para(4,7):]",
         "[text(4,7):item:]",
         "[end-para:::True]",
@@ -3218,11 +3219,10 @@ def test_nested_three_block_nl_block_nl_block_no_bq5():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_nl_block_nl_block_no_bq6():
     """
     Verify that a nesting of block quote, block quote, block quote works
@@ -3235,14 +3235,16 @@ def test_nested_three_block_nl_block_nl_block_no_bq6():
 >     list
 > > > item"""
     expected_tokens = [
-        "[block-quote(1,1)::>]",
+        "[block-quote(1,1)::>\n> ]",
         "[BLANK(1,2):]",
         "[block-quote(2,1)::> >\n> ]",
         "[BLANK(2,4):]",
+        "[end-block-quote:::True]",
         "[icode-block(3,7):    :]",
         "[text(3,7):list:]",
         "[end-icode-block:::True]",
-        "[block-quote(4,1)::> > > ]",
+        "[block-quote(4,1)::]",
+        "[block-quote(4,3)::> > > ]",
         "[para(4,7):]",
         "[text(4,7):item:]",
         "[end-para:::True]",
@@ -3263,7 +3265,7 @@ def test_nested_three_block_nl_block_nl_block_no_bq6():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
