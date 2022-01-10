@@ -2279,8 +2279,6 @@ class ContainerBlockProcessor:
             and not last_list_index
         ):
 
-            # parser_state.token_stack[last_block_index].matching_markdown_token.add_leading_spaces(text_removed_by_container, skip_adding_newline=True)
-
             stack_delta = block_quote_data.stack_count - block_quote_data.current_count
             close_tokens, requeue_line_info = parser_state.close_open_blocks_fn(
                 parser_state,
@@ -2307,7 +2305,6 @@ class ContainerBlockProcessor:
                 ].matching_markdown_token.add_leading_spaces(
                     text_removed_by_container, skip_adding_newline=False
                 )
-            # assert False, ">>" + str() + "<<"
         else:
             close_tokens = []
         return close_tokens, None
