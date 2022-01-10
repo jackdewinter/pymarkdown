@@ -2257,60 +2257,16 @@ class ContainerBlockProcessor:
 
     # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments, too-many-locals, too-many-statements
     @staticmethod
-    def __process_leaf_tokens(
+    def __handle_special_block_quote_reduction(
         parser_state,
-        leaf_tokens,
-        xposition_marker,
         block_quote_data,
-        removed_chars_at_start,
-        ignore_link_definition_start,
-        last_block_quote_index,
-        last_list_start_index,
-        text_removed_by_container,
+        last_block_index,
+        last_list_index,
         was_paragraph_continuation,
+        text_removed_by_container,
     ):
-        assert not leaf_tokens
-        POGGER.debug("parsing leaf>>")
-        POGGER.debug("was_paragraph_continuation>>$", was_paragraph_continuation)
-        POGGER.debug("parser_state.token_stack>>$", parser_state.token_stack)
-        POGGER.debug("parser_state.token_document>>$", parser_state.token_document)
-        position_marker = PositionMarker(
-            xposition_marker.line_number,
-            0,
-            xposition_marker.text_to_parse,
-            index_indent=xposition_marker.index_indent,
-        )
-
-        POGGER.debug("ttp>>:$:<", xposition_marker.text_to_parse)
-        POGGER.debug("index_number>>:$:<", xposition_marker.index_number)
-        POGGER.debug("index_indent>>:$:<", xposition_marker.index_indent)
-
-        (
-            new_index_number,
-            extracted_whitespace,
-        ) = ParserHelper.extract_whitespace(xposition_marker.text_to_parse, 0)
-        POGGER.debug("new_index_number>>:$:<", new_index_number)
-        POGGER.debug("extracted_whitespace>>:$:<", extracted_whitespace)
-        POGGER.debug("text_removed_by_container>>:$:<", text_removed_by_container)
-        total_ws = new_index_number + xposition_marker.index_indent
-
-        last_block_index = parser_state.find_last_block_quote_on_stack()
-        last_list_index = parser_state.find_last_list_block_on_stack()
-        POGGER.debug("last_block_index>>:$:<", last_block_index)
-        POGGER.debug(
-            "last_block.token>>:$:<",
-            parser_state.token_stack[last_block_index].matching_markdown_token,
-        )
-        POGGER.debug("last_list_index>>:$:<", last_list_index)
-        POGGER.debug(
-            "last_list.token>>:$:<",
-            parser_state.token_stack[last_list_index].matching_markdown_token,
-        )
-
         real_stack_count = parser_state.count_of_block_quotes_on_stack()
-
         POGGER.debug("current_count>>:$:<", block_quote_data.current_count)
         POGGER.debug(
             "stack_count>>:$:($)<", block_quote_data.stack_count, real_stack_count
@@ -2353,6 +2309,71 @@ class ContainerBlockProcessor:
             # assert False, ">>" + str() + "<<"
         else:
             close_tokens = []
+        return close_tokens, None
+
+    # pylint: disable=too-many-arguments, too-many-locals, too-many-statements
+    @staticmethod
+    def __process_leaf_tokens(
+        parser_state,
+        leaf_tokens,
+        xposition_marker,
+        block_quote_data,
+        removed_chars_at_start,
+        ignore_link_definition_start,
+        last_block_quote_index,
+        last_list_start_index,
+        text_removed_by_container,
+        was_paragraph_continuation,
+    ):
+        assert not leaf_tokens
+        POGGER.debug("parsing leaf>>")
+        POGGER.debug("was_paragraph_continuation>>$", was_paragraph_continuation)
+        position_marker = PositionMarker(
+            xposition_marker.line_number,
+            0,
+            xposition_marker.text_to_parse,
+            index_indent=xposition_marker.index_indent,
+        )
+
+        POGGER.debug("ttp>>:$:<", xposition_marker.text_to_parse)
+        POGGER.debug("index_number>>:$:<", xposition_marker.index_number)
+        POGGER.debug("index_indent>>:$:<", xposition_marker.index_indent)
+
+        (
+            new_index_number,
+            extracted_whitespace,
+        ) = ParserHelper.extract_whitespace(xposition_marker.text_to_parse, 0)
+        POGGER.debug("new_index_number>>:$:<", new_index_number)
+        POGGER.debug("extracted_whitespace>>:$:<", extracted_whitespace)
+        POGGER.debug("text_removed_by_container>>:$:<", text_removed_by_container)
+        total_ws = new_index_number + xposition_marker.index_indent
+
+        last_block_index = parser_state.find_last_block_quote_on_stack()
+        last_list_index = parser_state.find_last_list_block_on_stack()
+        POGGER.debug("last_block_index>>:$:<", last_block_index)
+        POGGER.debug(
+            "last_block.token>>:$:<",
+            parser_state.token_stack[last_block_index].matching_markdown_token,
+        )
+        POGGER.debug("last_list_index>>:$:<", last_list_index)
+        POGGER.debug(
+            "last_list.token>>:$:<",
+            parser_state.token_stack[last_list_index].matching_markdown_token,
+        )
+
+        (
+            close_tokens,
+            requeue_line_info,
+        ) = ContainerBlockProcessor.__handle_special_block_quote_reduction(
+            parser_state,
+            block_quote_data,
+            last_block_index,
+            last_list_index,
+            was_paragraph_continuation,
+            text_removed_by_container,
+        )
+        if requeue_line_info:
+            return close_tokens, requeue_line_info
 
         orig_text_removed_by_container = text_removed_by_container
 
@@ -2426,10 +2447,7 @@ class ContainerBlockProcessor:
             xposition_marker.line_number,
         )
 
-        POGGER.debug("close_tokens>>$", close_tokens)
-        POGGER.debug("parsed leaf>>$", leaf_tokens)
         close_tokens.extend(leaf_tokens)
-        POGGER.debug("parsed leaf>>$", leaf_tokens)
         return close_tokens, requeue_line_info
 
     # pylint: enable=too-many-arguments, too-many-locals, too-many-statements

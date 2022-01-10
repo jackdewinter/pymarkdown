@@ -545,6 +545,62 @@ class TransformToMarkdown:
         return nested_list_start_index
 
     @classmethod
+    def __adjust_for_block_quote_same_line(
+        cls,
+        container_line,
+        nested_list_start_index,
+        token_stack,
+        container_token_indices,
+    ):
+        adj_line = ""
+        print("adj_line->:" + adj_line + ":")
+        adj_line = cls.__adjust(
+            nested_list_start_index - 1,
+            token_stack,
+            container_token_indices,
+            adj_line,
+            True,
+        )
+        print("adj_line->:" + adj_line + ":")
+        adj_line = cls.__adjust(
+            nested_list_start_index,
+            token_stack,
+            container_token_indices,
+            adj_line,
+            True,
+        )
+        print("adj_line->:" + adj_line + ":")
+        container_line = adj_line + container_line
+        return container_line
+
+    @classmethod
+    def __adjust_for_block_quote_previous_line(
+        cls,
+        container_line,
+        nested_list_start_index,
+        token_stack,
+        container_token_indices,
+        line_number,
+    ):
+        previous_token = token_stack[nested_list_start_index]
+        print(" yes->" + ParserHelper.make_value_visible(previous_token))
+        print("token_stack[-1].line_number->" + str(token_stack[-1].line_number))
+        print("previous_token.line_number->" + str(previous_token.line_number))
+        print("line_number->" + str(line_number))
+        if (
+            token_stack[-1].line_number != previous_token.line_number
+            or line_number != previous_token.line_number
+        ):
+            container_line = cls.__adjust(
+                nested_list_start_index,
+                token_stack,
+                container_token_indices,
+                container_line,
+                False,
+            )
+        return container_line
+
+    @classmethod
     def __adjust_for_block_quote(
         cls, token_stack, container_line, container_token_indices, line_number
     ):
@@ -565,43 +621,20 @@ class TransformToMarkdown:
             and token_stack[nested_list_start_index - 1].is_block_quote_start
             and token_stack[-1].line_number != token_stack[-2].line_number
         ):
-
-            adj_line = ""
-            print("adj_line->:" + adj_line + ":")
-            adj_line = cls.__adjust(
-                nested_list_start_index - 1,
-                token_stack,
-                container_token_indices,
-                adj_line,
-                True,
-            )
-            print("adj_line->:" + adj_line + ":")
-            adj_line = cls.__adjust(
+            container_line = cls.__adjust_for_block_quote_same_line(
+                container_line,
                 nested_list_start_index,
                 token_stack,
                 container_token_indices,
-                adj_line,
-                True,
             )
-            print("adj_line->:" + adj_line + ":")
-            container_line = adj_line + container_line
         else:
-            previous_token = token_stack[nested_list_start_index]
-            print(" yes->" + ParserHelper.make_value_visible(previous_token))
-            print("token_stack[-1].line_number->" + str(token_stack[-1].line_number))
-            print("previous_token.line_number->" + str(previous_token.line_number))
-            print("line_number->" + str(line_number))
-            if (
-                token_stack[-1].line_number != previous_token.line_number
-                or line_number != previous_token.line_number
-            ):
-                container_line = cls.__adjust(
-                    nested_list_start_index,
-                    token_stack,
-                    container_token_indices,
-                    container_line,
-                    False,
-                )
+            container_line = cls.__adjust_for_block_quote_previous_line(
+                container_line,
+                nested_list_start_index,
+                token_stack,
+                container_token_indices,
+                line_number,
+            )
         return container_line
 
     # pylint: disable=too-many-arguments, unused-private-member
