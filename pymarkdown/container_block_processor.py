@@ -2257,6 +2257,7 @@ class ContainerBlockProcessor:
 
     # pylint: enable=too-many-arguments
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __handle_special_block_quote_reduction(
         parser_state,
@@ -2311,7 +2312,9 @@ class ContainerBlockProcessor:
             close_tokens = []
         return close_tokens, None
 
-    # pylint: disable=too-many-arguments, too-many-locals, too-many-statements
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __process_leaf_tokens(
         parser_state,
@@ -2450,7 +2453,7 @@ class ContainerBlockProcessor:
         close_tokens.extend(leaf_tokens)
         return close_tokens, requeue_line_info
 
-    # pylint: enable=too-many-arguments, too-many-locals, too-many-statements
+    # pylint: enable=too-many-arguments, too-many-locals
 
     @staticmethod
     def __close_indented_block_if_indent_not_there(parser_state, extracted_whitespace):

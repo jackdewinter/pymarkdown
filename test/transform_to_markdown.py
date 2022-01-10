@@ -544,6 +544,7 @@ class TransformToMarkdown:
             stack_index -= 1
         return nested_list_start_index
 
+    # pylint: disable=unused-private-member
     @classmethod
     def __adjust_for_block_quote_same_line(
         cls,
@@ -573,6 +574,9 @@ class TransformToMarkdown:
         container_line = adj_line + container_line
         return container_line
 
+    # pylint: enable=unused-private-member
+
+    # pylint: disable=unused-private-member, too-many-arguments
     @classmethod
     def __adjust_for_block_quote_previous_line(
         cls,
@@ -599,6 +603,8 @@ class TransformToMarkdown:
                 False,
             )
         return container_line
+
+    # pylint: enable=unused-private-member, too-many-arguments
 
     @classmethod
     def __adjust_for_block_quote(

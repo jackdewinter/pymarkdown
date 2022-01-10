@@ -9,7 +9,7 @@
         "pymarkdown/block_quote_data.py": {},
         "pymarkdown/block_quote_processor.py": {
             "too-many-arguments": 11,
-            "too-many-locals": 3
+            "too-many-locals": 2
         },
         "pymarkdown/coalesce_processor.py": {
             "too-few-public-methods": 1
@@ -18,10 +18,9 @@
             "no-self-argument": 1
         },
         "pymarkdown/container_block_processor.py": {
-            "too-many-arguments": 24,
+            "too-many-arguments": 25,
             "too-many-locals": 13,
-            "chained-comparison": 1,
-            "too-many-statements": 1
+            "chained-comparison": 1
         },
         "pymarkdown/container_indices.py": {},
         "pymarkdown/container_markdown_token.py": {
@@ -130,12 +129,11 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 122,
-        "too-many-locals": 37,
+        "too-many-arguments": 123,
+        "too-many-locals": 36,
         "too-few-public-methods": 2,
         "no-self-argument": 1,
         "chained-comparison": 1,
-        "too-many-statements": 1,
         "too-many-instance-attributes": 12,
         "broad-except": 2,
         "too-many-public-methods": 2

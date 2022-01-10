@@ -1335,7 +1335,6 @@ class BlockQuoteProcessor:
             )
         return stack_hard_limit, extra_consumed_whitespace
 
-    # pylint: disable=too-many-locals
     @staticmethod
     def __calculate_stack_hard_limit(
         parser_state, position_marker, adjust_current_block_quote, stack_increase_needed
@@ -1413,8 +1412,6 @@ class BlockQuoteProcessor:
             extra_consumed_whitespace,
         )
         return stack_hard_limit, extra_consumed_whitespace
-
-    # pylint: enable=too-many-locals
 
     # pylint: disable=too-many-arguments
     @staticmethod
