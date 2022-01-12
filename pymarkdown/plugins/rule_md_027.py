@@ -167,6 +167,14 @@ class RuleMd027(RulePlugin):
         # if self.__debug_on:
         #     print(f"newlines_in_container>{newlines_in_container}")
         #     print(f"__bq_line_index>{self.__bq_line_index[num_container_tokens]}")
+        #     print(f"__is_paragraph_end_delayed>{self.__is_paragraph_end_delayed}")
+        #     print(f"__delayed_blank_line>{self.__delayed_blank_line}")
+        if (
+            self.__delayed_blank_line
+            and newlines_in_container != self.__bq_line_index[num_container_tokens]
+        ):
+            self.__bq_line_index[num_container_tokens] += 1
+
         assert newlines_in_container == self.__bq_line_index[num_container_tokens], (
             str(newlines_in_container)
             + " == "
@@ -343,7 +351,7 @@ class RuleMd027(RulePlugin):
             # if self.__debug_on:
             #     print(f"end-container>>{ParserHelper.make_value_visible(self.__container_tokens[-1])}")
             #     print(f"split_leading_spaces>>{ParserHelper.make_value_visible(split_leading_spaces)}")
-            #     print(f"specific_block_quote_prefix>>:" + \
+            #     print("specific_block_quote_prefix>>:" + \
             #       f"{ParserHelper.make_value_visible(specific_block_quote_prefix)}:")
             #     print("fenced-end-error")
             self.report_next_token_error(
@@ -392,7 +400,7 @@ class RuleMd027(RulePlugin):
             #     print(f"split_array_index>>{split_array_index}")
             #     print(f"end-container>>{ParserHelper.make_value_visible(self.__container_tokens[-1])}")
             #     print(f"split_leading_spaces>>{ParserHelper.make_value_visible(split_leading_spaces)}")
-            #     print(f"specific_block_quote_prefix>>:" + \
+            #     print("specific_block_quote_prefix>>:" + \
             #       f"{ParserHelper.make_value_visible(specific_block_quote_prefix)}:")
             #     print("lrd-2-error")
             self.report_next_token_error(
@@ -426,7 +434,7 @@ class RuleMd027(RulePlugin):
             #     print("split_array_index>>" + str(split_array_index))
             #     print(f"end-container>>{ParserHelper.make_value_visible(self.__container_tokens[-1])}")
             #     print(f"split_leading_spaces>>{ParserHelper.make_value_visible(split_leading_spaces)}")
-            #     print(f"specific_block_quote_prefix>>:" + \
+            #     print("specific_block_quote_prefix>>:" + \
             #       f"{ParserHelper.make_value_visible(specific_block_quote_prefix)}:")
             #     print("lrd-3-error")
             self.report_next_token_error(
@@ -479,7 +487,7 @@ class RuleMd027(RulePlugin):
                         # if self.__debug_on:
                         #     print(f"split_leading_spaces>>{ParserHelper.make_value_visible(split_leading_spaces)}")
                         #     print(f"split_array_index>>{ParserHelper.make_value_visible(split_array_index)}")
-                        #     print(f"specific_block_quote_prefix>>:" + \
+                        #     print("specific_block_quote_prefix>>:" + \
                         #       f"{ParserHelper.make_value_visible(specific_block_quote_prefix)}:")
                         #     print("setext-text-error")
                         self.report_next_token_error(

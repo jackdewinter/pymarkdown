@@ -926,6 +926,7 @@ def test_md027_bad_block_quote_misindented_unordered_list_first():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--stack-trace",
         "--disable-rules",
         "md005,md007",
         "scan",
@@ -1891,6 +1892,34 @@ def test_md027_bad_block_quote_unordered_list_text_last():
         "md005,md030",
         "scan",
         "test/resources/rules/md027/bad_block_quote_unordered_list_text_last.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md027_good_block_quote_with_trailing_empty_line():
+    """
+    TBD
+    reported as https://github.com/jackdewinter/pymarkdown/issues/189
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--stack-trace",
+        "scan",
+        "test/resources/rules/md027/good_block_quote_with_trailing_empty_line.md",
     ]
 
     expected_return_code = 0
