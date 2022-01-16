@@ -506,7 +506,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_skip_nl_unordered_nl_unordered_no_bq2():
     """
     Verify that a nesting of block quote, unordered list, unordered list works
@@ -534,8 +533,8 @@ def test_nested_three_block_skip_nl_unordered_nl_unordered_no_bq2():
 <li></li>
 </ul>
 </blockquote>
-<pre><code> + list
-   item
+<pre><code>+ list
+  item
 </code></pre>"""
 
     # Act & Assert
