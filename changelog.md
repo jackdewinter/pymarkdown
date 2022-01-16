@@ -12,7 +12,11 @@
 
 ### Fixed
 
-- None
+- [Fixed - Issue 189](https://github.com/jackdewinter/pymarkdown/issues/189)
+  - rule md027: weird case where total for series of block quotes that ended with a blank line was off by 1
+- [Fixed - Issue 218](https://github.com/jackdewinter/pymarkdown/issues/218)
+  - parser: lot of small things needed fixing to set the variables properly for this issue's resolution
+  - parser: after that, was not properly handling shutting down a block quote that downgraded
 
 ## Version 0.9.4 - Date: 2022-01-04
 

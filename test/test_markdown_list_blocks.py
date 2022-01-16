@@ -2747,7 +2747,6 @@ continued here.</p>
 
 
 @pytest.mark.gfm
-# @pytest.mark.skip
 def test_list_blocks_270d():
     """
     Test case 270:  variation where bq starts before
