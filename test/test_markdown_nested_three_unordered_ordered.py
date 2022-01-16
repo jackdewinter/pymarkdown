@@ -608,7 +608,6 @@ def test_nested_three_unordered_max_ordered_max_plus_one_unordered_max():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_max_ordered_max_unordered_max_plus_one():
     """
     Verify that a nesting of unordered list, ordered list, unordered list, with
@@ -619,17 +618,15 @@ def test_nested_three_unordered_max_ordered_max_unordered_max_plus_one():
     source_markdown = """   +    1.     + list
                  item"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n> ]",
-        "[olist(1,3):.:1:5:]",
-        "[ulist(1,6):+::7:   :     ]",
-        "[para(1,8):\n]",
-        "[text(1,8):list\nitem::\n]",
-        "[end-para:::True]",
-        "[end-ulist:::True]",
+        "[ulist(1,4):+::8:   ]",
+        "[olist(1,9):.:1:11:        :           ]",
+        "[icode-block(1,16):    :\n    ]",
+        "[text(1,16):+ list\n  item:]",
+        "[end-icode-block:::True]",
         "[end-olist:::True]",
-        "[end-block-quote:::True]",
+        "[end-ulist:::True]",
     ]
-    expected_gfm = """<ol>
+    expected_gfm = """<ul>
 <li>
 <ol>
 <li>
@@ -639,7 +636,7 @@ def test_nested_three_unordered_max_ordered_max_unordered_max_plus_one():
 </li>
 </ol>
 </li>
-</ol>"""
+</ul>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -741,7 +738,6 @@ def test_nested_three_unordered_max_ordered_max_plus_one_ordered_max():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_max_ordered_max_ordered_max_plus_one():
     """
     Verify that a nesting of unordered list, ordered list, ordered list, with
@@ -752,17 +748,15 @@ def test_nested_three_unordered_max_ordered_max_ordered_max_plus_one():
     source_markdown = """   +    1.     1. list
                   item"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n> ]",
-        "[olist(1,3):.:1:5:]",
-        "[ulist(1,6):+::7:   :     ]",
-        "[para(1,8):\n]",
-        "[text(1,8):list\nitem::\n]",
-        "[end-para:::True]",
-        "[end-ulist:::True]",
+        "[ulist(1,4):+::8:   ]",
+        "[olist(1,9):.:1:11:        :           ]",
+        "[icode-block(1,16):    :\n    ]",
+        "[text(1,16):1. list\n   item:]",
+        "[end-icode-block:::True]",
         "[end-olist:::True]",
-        "[end-block-quote:::True]",
+        "[end-ulist:::True]",
     ]
-    expected_gfm = """<ol>
+    expected_gfm = """<ul>
 <li>
 <ol>
 <li>
@@ -772,10 +766,10 @@ def test_nested_three_unordered_max_ordered_max_ordered_max_plus_one():
 </li>
 </ol>
 </li>
-</ol>"""
+</ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
@@ -874,7 +868,6 @@ def test_nested_three_unordered_max_ordered_max_plus_one_block_max():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_max_ordered_max_block_max_plus_one():
     """
     Verify that a nesting of unordered list, ordered list, block quote, with
@@ -885,17 +878,15 @@ def test_nested_three_unordered_max_ordered_max_block_max_plus_one():
     source_markdown = """   +    1.     > list
                > item"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n> ]",
-        "[olist(1,3):.:1:5:]",
-        "[ulist(1,6):+::7:   :     ]",
-        "[para(1,8):\n]",
-        "[text(1,8):list\nitem::\n]",
-        "[end-para:::True]",
-        "[end-ulist:::True]",
+        "[ulist(1,4):+::8:   ]",
+        "[olist(1,9):.:1:11:        :           ]",
+        "[icode-block(1,16):    :\n    ]",
+        "[text(1,16):\a>\a&gt;\a list\n\a>\a&gt;\a item:]",
+        "[end-icode-block:::True]",
         "[end-olist:::True]",
-        "[end-block-quote:::True]",
+        "[end-ulist:::True]",
     ]
-    expected_gfm = """<ol>
+    expected_gfm = """<ul>
 <li>
 <ol>
 <li>
@@ -905,7 +896,7 @@ def test_nested_three_unordered_max_ordered_max_block_max_plus_one():
 </li>
 </ol>
 </li>
-</ol>"""
+</ul>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
