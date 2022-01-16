@@ -743,11 +743,12 @@ class ContainerBlockProcessor:
         parser_state.copy_of_token_stack = []
         parser_state.copy_of_token_stack.extend(parser_state.token_stack)
 
-        parser_state.block_copy = []
-        for i in parser_state.token_stack:
-            if i.is_document:
-                continue
-            parser_state.block_copy.append(copy.deepcopy(i.matching_markdown_token))
+        parser_state.block_copy = [
+            copy.deepcopy(i.matching_markdown_token)
+            for i in parser_state.token_stack
+            if not i.is_document
+        ]
+
         return position_marker
 
     @staticmethod
