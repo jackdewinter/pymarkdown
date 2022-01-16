@@ -1750,7 +1750,6 @@ def test_nested_three_unordered_max_block_max_plus_one_unordered_max():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_max_block_max_unordered_max_plus_one():
     """
     Verify that a nesting of unordered list, block quote, unordered list, with
@@ -1761,14 +1760,15 @@ def test_nested_three_unordered_max_block_max_unordered_max_plus_one():
     source_markdown = """   +    >     + list
                 item"""
     expected_tokens = [
-        "[ulist(1,4):+::8:   ]",
-        "[block-quote(1,9):        :        > \n]",
-        "[ulist(1,15):+::16:    :                \n]",
-        "[para(1,17):\n]",
-        "[text(1,17):list\nitem::\n]",
-        "[end-para:::True]",
-        "[end-ulist:::True]",
+        "[ulist(1,4):+::8:   :        ]",
+        "[block-quote(1,9):        :        > ]",
+        "[icode-block(1,15):    :]",
+        "[text(1,15):+ list:]",
+        "[end-icode-block:::True]",
         "[end-block-quote:::True]",
+        "[icode-block(2,13):    :]",
+        "[text(2,13):item:    ]",
+        "[end-icode-block:::True]",
         "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
@@ -1783,7 +1783,7 @@ def test_nested_three_unordered_max_block_max_unordered_max_plus_one():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
@@ -1880,7 +1880,6 @@ def test_nested_three_unordered_max_block_max_plus_one_ordered_max():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_max_block_max_ordered_max_plus_one():
     """
     Verify that a nesting of unordered list, block quote, ordered list, with
@@ -1891,14 +1890,15 @@ def test_nested_three_unordered_max_block_max_ordered_max_plus_one():
     source_markdown = """   +    >     1. list
                  item"""
     expected_tokens = [
-        "[ulist(1,4):+::8:   ]",
-        "[block-quote(1,9):        :        > \n]",
-        "[olist(1,15):.:1:17:    :                 \n]",
-        "[para(1,18):\n]",
-        "[text(1,18):list\nitem::\n]",
-        "[end-para:::True]",
-        "[end-olist:::True]",
+        "[ulist(1,4):+::8:   :        ]",
+        "[block-quote(1,9):        :        > ]",
+        "[icode-block(1,15):    :]",
+        "[text(1,15):1. list:]",
+        "[end-icode-block:::True]",
         "[end-block-quote:::True]",
+        "[icode-block(2,13):    :]",
+        "[text(2,13):item:     ]",
+        "[end-icode-block:::True]",
         "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
@@ -2011,7 +2011,6 @@ def test_nested_three_unordered_max_block_max_plus_one_block_max():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_max_block_max_block_max_plus_one():
     """
     Verify that a nesting of unordered list, block quote, block quote, with
@@ -2022,14 +2021,15 @@ def test_nested_three_unordered_max_block_max_block_max_plus_one():
     source_markdown = """   +    >     > list
               > item"""
     expected_tokens = [
-        "[ulist(1,4):+::8:   :]",
+        "[ulist(1,4):+::8:   :        ]",
         "[block-quote(1,9):        :        > ]",
-        "[block-quote(1,15)::        >     > \n              > ]",
-        "[para(1,17):\n]",
-        "[text(1,17):list\nitem::\n]",
-        "[end-para:::True]",
+        "[icode-block(1,15):    :]",
+        "[text(1,15):\a>\a&gt;\a list:]",
+        "[end-icode-block:::True]",
         "[end-block-quote:::True]",
-        "[end-block-quote:::True]",
+        "[icode-block(2,13):    :]",
+        "[text(2,13):\a>\a&gt;\a item:  ]",
+        "[end-icode-block:::True]",
         "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
@@ -2044,4 +2044,4 @@ def test_nested_three_unordered_max_block_max_block_max_plus_one():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
