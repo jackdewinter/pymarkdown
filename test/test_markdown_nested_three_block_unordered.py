@@ -2790,16 +2790,16 @@ def test_nested_three_block_max_unordered_max_block_max():
 
     # Arrange
     source_markdown = """   >    +    > list
-   >          > item"""
+   >         > item"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n> ]",
-        "[olist(1,3):.:1:5:]",
-        "[ulist(1,6):+::7:   :     ]",
-        "[para(1,8):\n]",
-        "[text(1,8):list\nitem::\n]",
+        "[block-quote(1,4):   :   > ]",
+        "[ulist(1,9):+::13:   :]",
+        "[block-quote(1,14)::> \n   >            > ]",
+        "[para(1,16):\n]",
+        "[text(1,16):list\nitem::\n]",
         "[end-para:::True]",
+        "[end-block-quote:::True]",
         "[end-ulist:::True]",
-        "[end-olist:::True]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
