@@ -1255,7 +1255,27 @@ class BlockQuoteProcessor:
             length_of_available_whitespace,
         )
         assert length_of_available_whitespace >= delta
+        adjust_for_extra_indent = (
+            parser_state.token_stack[
+                current_stack_index
+            ].matching_markdown_token.indent_level
+            - parser_state.token_stack[
+                current_stack_index
+            ].matching_markdown_token.column_number
+            - 1
+        )
+        if parser_state.token_stack[current_stack_index].is_ordered_list:
+            adjust_for_extra_indent -= (
+                len(
+                    parser_state.token_stack[
+                        current_stack_index
+                    ].matching_markdown_token.list_start_sequence
+                )
+                - 1
+            )
+        POGGER.debug("adjust_for_extra_indent:$:", adjust_for_extra_indent)
         current_stack_index += 1
+        delta -= adjust_for_extra_indent
         indent_text_count += delta
         length_of_available_whitespace -= delta
         extra_consumed_whitespace += delta

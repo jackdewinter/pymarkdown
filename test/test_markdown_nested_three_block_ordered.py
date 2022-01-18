@@ -1245,7 +1245,6 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_nl_ordered_nl_block_x():
     """
     Verify that a nesting of block quote, ordered list, block quote works
@@ -2785,7 +2784,6 @@ def test_nested_three_block_max_ordered_max_ordered_max_plus_one():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_max_ordered_max_block_max():
     """
     Verify that a nesting of block quote, ordered list, block quote, with
@@ -2798,7 +2796,7 @@ def test_nested_three_block_max_ordered_max_block_max():
     expected_tokens = [
         "[block-quote(1,4):   :   > ]",
         "[olist(1,9):.:1:14:   :]",
-        "[block-quote(1,15)::> \n   >              > ]",
+        "[block-quote(1,15)::> \n   >          > ]",
         "[para(1,17):\n]",
         "[text(1,17):list\nitem::\n]",
         "[end-para:::True]",
