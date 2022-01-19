@@ -8,7 +8,7 @@
         "pymarkdown/bad_tokenization_error.py": {},
         "pymarkdown/block_quote_data.py": {},
         "pymarkdown/block_quote_processor.py": {
-            "too-many-arguments": 11,
+            "too-many-arguments": 12,
             "too-many-locals": 2
         },
         "pymarkdown/coalesce_processor.py": {
@@ -129,7 +129,7 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 124,
+        "too-many-arguments": 125,
         "too-many-locals": 37,
         "too-few-public-methods": 2,
         "no-self-argument": 1,

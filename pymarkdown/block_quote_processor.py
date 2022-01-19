@@ -432,8 +432,10 @@ class BlockQuoteProcessor:
         parser_state.token_document.extend(container_level_tokens)
         return None, RequeueLineInfo([position_marker.text_to_parse], False)
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __count_block_quote_starts(
+        parser_state,
         line_to_parse,
         start_index,
         block_quote_data,
@@ -476,6 +478,7 @@ class BlockQuoteProcessor:
                     last_block_quote_index,
                     current_count,
                 ) = BlockQuoteProcessor.__should_continue_processing(
+                    parser_state,
                     current_count,
                     block_quote_data.stack_count,
                     is_top_of_stack_is_html_block,
@@ -509,6 +512,8 @@ class BlockQuoteProcessor:
             avoid_block_starts,
         )
 
+    # pylint: enable=too-many-arguments
+
     @staticmethod
     def __handle_bq_whitespace(adjusted_line, start_index):
         if ParserHelper.is_character_at_index_whitespace(adjusted_line, start_index):
@@ -518,6 +523,7 @@ class BlockQuoteProcessor:
     # pylint: disable=too-many-arguments
     @staticmethod
     def __should_continue_processing(
+        parser_state,
         current_count,
         stack_count,
         is_top_of_stack_is_html_block,
@@ -577,7 +583,12 @@ class BlockQuoteProcessor:
                 start_index,
                 BlockQuoteProcessor.__block_quote_character,
             ):
-                POGGER.debug("not block>$ of :$:", start_index, adjusted_line)
+                (
+                    continue_processing,
+                    start_index,
+                ) = BlockQuoteProcessor.__is_special_double_block_case(
+                    parser_state, adjusted_line, start_index, current_count, stack_count
+                )
             else:
                 continue_processing = True
         return (
@@ -590,6 +601,44 @@ class BlockQuoteProcessor:
         )
 
     # pylint: enable=too-many-arguments
+    @staticmethod
+    def __is_special_double_block_case(
+        parser_state, adjusted_line, start_index, current_count, stack_count
+    ):
+        continue_processing = False
+        POGGER.debug("not block>$ of :$:", start_index, adjusted_line)
+        POGGER.debug("not block>:$:", adjusted_line[start_index:])
+        if current_count < stack_count:
+            count_to_consume = current_count
+            final_stack_index = 0
+            for stack_index, stack_token in enumerate(parser_state.token_stack):
+                POGGER.debug("stack>:$:$:", stack_index, stack_token)
+                if stack_token.is_block_quote:
+                    count_to_consume -= 1
+                    if not count_to_consume:
+                        final_stack_index = stack_index
+                        break
+            assert not count_to_consume
+            assert final_stack_index
+            POGGER.debug(
+                ">>stack>:$:$:",
+                final_stack_index,
+                parser_state.token_stack[final_stack_index],
+            )
+            POGGER.debug(
+                "+1>>stack>:$:$:",
+                final_stack_index + 1,
+                parser_state.token_stack[final_stack_index + 1],
+            )
+            if parser_state.token_stack[final_stack_index + 1].is_block_quote:
+                next_bq_index = adjusted_line.find(
+                    BlockQuoteProcessor.__block_quote_character, start_index
+                )
+                POGGER.debug("+1>>next_bq_index:$:", next_bq_index)
+                if next_bq_index != -1 and (next_bq_index - start_index) <= 3:
+                    continue_processing = True
+                    start_index = next_bq_index
+        return continue_processing, start_index
 
     @staticmethod
     def __handle_block_quote_section(
@@ -633,6 +682,7 @@ class BlockQuoteProcessor:
             last_block_quote_index,
             avoid_block_starts,
         ) = BlockQuoteProcessor.__count_block_quote_starts(
+            parser_state,
             position_marker.text_to_parse,
             position_marker.index_number,
             block_quote_data,
