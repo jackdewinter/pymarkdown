@@ -2836,8 +2836,9 @@ class ContainerBlockProcessor:
                 block_quote_data.stack_count - stack_delta,
             )
 
-            new_last_block_index = parser_state.find_last_block_quote_on_stack()
-            if new_last_block_index:
+            if (
+                new_last_block_index := parser_state.find_last_block_quote_on_stack()
+            ):
                 parser_state.token_stack[
                     new_last_block_index
                 ].matching_markdown_token.add_leading_spaces(
