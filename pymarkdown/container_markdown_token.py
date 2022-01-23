@@ -190,11 +190,14 @@ class OrderedListStartMarkdownToken(ContainerMarkdownToken):
         """
         Add any leading spaces to the token, separating them with line feeds.
         """
+        POGGER.debug("__leading_spaces>>:$:<<", self.__leading_spaces)
+        POGGER.debug("add_leading_spaces>>:$:<<", ws_add)
         self.__leading_spaces = (
             ws_add
             if self.__leading_spaces is None
             else f"{self.__leading_spaces}{ParserHelper.newline_character}{ws_add}"
         )
+        POGGER.debug("__leading_spaces>>:$:<<", self.__leading_spaces)
         self.__compose_extra_data_field()
 
 
@@ -281,11 +284,14 @@ class UnorderedListStartMarkdownToken(ContainerMarkdownToken):
         """
         Add any leading spaces to the token, separating them with line feeds.
         """
+        POGGER.debug("__leading_spaces>>:$:<<", self.__leading_spaces)
+        POGGER.debug("add_leading_spaces>>:$:<<", ws_add)
         self.__leading_spaces = (
             ws_add
             if self.__leading_spaces is None
             else f"{self.__leading_spaces}{ParserHelper.newline_character}{ws_add}"
         )
+        POGGER.debug("__leading_spaces>>:$:<<", self.__leading_spaces)
         self.__compose_extra_data_field()
 
 

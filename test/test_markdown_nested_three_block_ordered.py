@@ -2870,7 +2870,6 @@ def test_nested_three_block_max_ordered_max_plus_one_block_max():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_max_ordered_max_block_max_plus_one():
     """
     Verify that a nesting of block quote, ordered list, block quote, with
@@ -2881,13 +2880,11 @@ def test_nested_three_block_max_ordered_max_block_max_plus_one():
     source_markdown = """   >    1.     > list
    >           > item"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n> ]",
-        "[olist(1,3):.:1:5:]",
-        "[ulist(1,6):+::7:   :     ]",
-        "[para(1,8):\n]",
-        "[text(1,8):list\nitem::\n]",
-        "[end-para:::True]",
-        "[end-ulist:::True]",
+        "[block-quote(1,4):   :   > \n   > \n]",
+        "[olist(1,9):.:1:11:   :      ]",
+        "[icode-block(1,16):    :\n    ]",
+        "[text(1,16):\a>\a&gt;\a list\n\a>\a&gt;\a item:]",
+        "[end-icode-block:::True]",
         "[end-olist:::True]",
         "[end-block-quote:::True]",
     ]
@@ -2902,4 +2899,4 @@ def test_nested_three_block_max_ordered_max_block_max_plus_one():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
