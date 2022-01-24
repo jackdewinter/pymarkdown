@@ -2788,7 +2788,6 @@ continued here.</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_list_blocks_271x():
     """
     Test case 271:  (part 2) These examples show how laziness can work in nested structures:
