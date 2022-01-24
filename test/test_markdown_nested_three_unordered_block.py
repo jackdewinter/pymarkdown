@@ -1778,7 +1778,7 @@ def test_nested_three_unordered_max_block_max_unordered_max_plus_one():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1907,7 +1907,6 @@ def test_nested_three_unordered_max_block_max_ordered_max_plus_one():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_max_block_max_block_max():
     """
     Verify that a nesting of unordered list, block quote, block quote, with
@@ -1918,11 +1917,11 @@ def test_nested_three_unordered_max_block_max_block_max():
     source_markdown = """   +    >    > list
              > item"""
     expected_tokens = [
-        "[ulist(1,4):+::8:   :]",
+        "[ulist(1,4):+::8:   :        \n]",
         "[block-quote(1,9):        :        > ]",
-        "[block-quote(1,14)::        >    > \n             > ]",
-        "[para(1,16):\n]",
-        "[text(1,16):list\nitem::\n]",
+        "[block-quote(1,14)::        >    > \n]",
+        "[para(1,16):\n     ]",
+        "[text(1,16):list\n\a>\a&gt;\a item::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
         "[end-block-quote:::True]",
@@ -1940,7 +1939,7 @@ def test_nested_three_unordered_max_block_max_block_max():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
@@ -2029,4 +2028,4 @@ def test_nested_three_unordered_max_block_max_block_max_plus_one():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

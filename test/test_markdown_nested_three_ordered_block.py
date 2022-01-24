@@ -128,7 +128,7 @@ def test_nested_three_ordered_nl_block_nl_unordered_wo_bq():
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -225,7 +225,7 @@ def test_nested_three_ordered_text_nl_block_text_nl_unordered_wo_bq():
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
@@ -1070,7 +1070,7 @@ list</p>
 
 
 @pytest.mark.gfm
-def test_nested_three_ordered_block_skip_block():
+def test_nested_three_ordered_block_skip_block_x():
     """
     Verify that a nesting of ordered list, block quote, block quote works
     properly.
@@ -1102,7 +1102,7 @@ item</p>
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
@@ -1907,7 +1907,6 @@ def test_nested_three_ordered_max_block_max_ordered_max_plus_one():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_block_max():
     """
     Verify that a nesting of ordered list, block quote, block quote, with
@@ -1918,11 +1917,11 @@ def test_nested_three_ordered_max_block_max_block_max():
     source_markdown = """   1.    >    > list
               > item"""
     expected_tokens = [
-        "[olist(1,4):.:1:9:   :]",
+        "[olist(1,4):.:1:9:   :         \n]",
         "[block-quote(1,10):         :         > ]",
-        "[block-quote(1,15)::         >    > \n              > ]",
-        "[para(1,17):\n]",
-        "[text(1,17):list\nitem::\n]",
+        "[block-quote(1,15)::         >    > \n]",
+        "[para(1,17):\n     ]",
+        "[text(1,17):list\n\a>\a&gt;\a item::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
         "[end-block-quote:::True]",

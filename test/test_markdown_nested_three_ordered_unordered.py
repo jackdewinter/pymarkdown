@@ -884,4 +884,4 @@ def test_nested_three_ordered_max_unordered_max_block_max_plus_one():
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
