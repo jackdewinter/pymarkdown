@@ -276,10 +276,10 @@ class ContainerBlockProcessor:
             extracted_whitespace,
             is_para_continue,
         )
-        POGGER.debug(
-            "skip_containers_before_leaf_blocks:$:", skip_containers_before_leaf_blocks
-        )
-        POGGER.debug("have_pre_processed_indent:$:", have_pre_processed_indent)
+        # POGGER.debug(
+        #     "skip_containers_before_leaf_blocks:$:", skip_containers_before_leaf_blocks
+        # )
+        # POGGER.debug("have_pre_processed_indent:$:", have_pre_processed_indent)
         # POGGER.debug("indent_already_processed=$", indent_already_processed)
         if have_pre_processed_indent:
             (
@@ -308,13 +308,13 @@ class ContainerBlockProcessor:
                 None,
             )
             # POGGER.debug("was_paragraph_continuation>>$", was_paragraph_continuation)
-            POGGER.debug("line_to_parse>>$", line_to_parse)
-            POGGER.debug("start_index>>$", start_index)
-        POGGER.debug(
-            "not can_continue=$ and not skip_containers_before_leaf_blocks=$",
-            can_continue,
-            skip_containers_before_leaf_blocks,
-        )
+            # POGGER.debug("line_to_parse>>$", line_to_parse)
+            # POGGER.debug("start_index>>$", start_index)
+        # POGGER.debug(
+        #     "not can_continue=$ and not skip_containers_before_leaf_blocks=$",
+        #     can_continue,
+        #     skip_containers_before_leaf_blocks,
+        # )
         if not can_continue and not skip_containers_before_leaf_blocks:
             (
                 block_quote_data,
@@ -343,8 +343,8 @@ class ContainerBlockProcessor:
                 parser_properties,
             )
             # POGGER.debug("was_paragraph_continuation>>$", was_paragraph_continuation)
-        POGGER.debug("line_to_parse>>$", line_to_parse)
-        POGGER.debug("start_index>>$", start_index)
+        # POGGER.debug("line_to_parse>>$", line_to_parse)
+        # POGGER.debug("start_index>>$", start_index)
         # POGGER.debug("indent_already_processed=$", indent_already_processed)
         return (
             can_continue,
@@ -403,7 +403,7 @@ class ContainerBlockProcessor:
         return container_used_indent, extracted_whitespace
 
     @staticmethod
-    def __xx(parser_state, position_marker, extracted_whitespace):
+    def __special_list_block_block(parser_state, position_marker, extracted_whitespace):
         skip_containers_before_leaf_blocks = False
         did_indent_processing = False
         have_pre_processed_indent = False
@@ -485,7 +485,7 @@ class ContainerBlockProcessor:
                 have_pre_processed_indent,
                 force_leaf_token_parse,
                 used_indent,
-            ) = ContainerBlockProcessor.__xx(
+            ) = ContainerBlockProcessor.__special_list_block_block(
                 parser_state, position_marker, extracted_whitespace
             )
         elif not is_para_continue:
@@ -609,10 +609,10 @@ class ContainerBlockProcessor:
                 extracted_whitespace,
                 is_para_continue,
             )
-            POGGER.debug(
-                "skip_containers_before_leaf_blocks:$:",
-                skip_containers_before_leaf_blocks,
-            )
+            # POGGER.debug(
+            #     "skip_containers_before_leaf_blocks:$:",
+            #     skip_containers_before_leaf_blocks,
+            # )
         if not did_indent_processing:
             (
                 have_pre_processed_indent,
