@@ -46,7 +46,7 @@ class ContainerBlockProcessor:
             container_depth,
             parser_properties,
         ):
-            return None, None, None, None, None, None, True
+            return None, None, None, None, None, None, True, None
 
         position_marker = ContainerBlockProcessor.__prepare_container_start_variables(
             parser_state,
@@ -66,6 +66,13 @@ class ContainerBlockProcessor:
             foobar,
             init_bq,
         )
+
+        is_not_in_root_list = not (
+            parser_state.token_stack
+            and len(parser_state.token_stack) >= 2
+            and parser_state.token_stack[1].is_list
+        )
+
         return (
             position_marker,
             current_container_blocks,
@@ -74,6 +81,7 @@ class ContainerBlockProcessor:
             start_index,
             extracted_whitespace,
             False,
+            is_not_in_root_list,
         )
 
     # pylint: enable=too-many-arguments
@@ -108,6 +116,7 @@ class ContainerBlockProcessor:
             start_index,
             extracted_whitespace,
             did_find_pragma,
+            is_not_in_root_list,
         ) = ContainerBlockProcessor.__setup(
             parser_state,
             position_marker,
@@ -121,12 +130,6 @@ class ContainerBlockProcessor:
 
         # POGGER.debug(">>extracted_whitespace>>:$:", extracted_whitespace)
         # POGGER.debug(">>parser_state.token_stack:$", parser_state.token_stack)
-        is_not_in_root_list = not (
-            parser_state.token_stack
-            and len(parser_state.token_stack) >= 2
-            and parser_state.token_stack[1].is_list
-        )
-
         # POGGER.debug(">>container_depth=$", container_depth)
         # POGGER.debug(">>extracted_whitespace=:$:", extracted_whitespace)
         # POGGER.debug(">>is_not_in_root_list=:$:", is_not_in_root_list)
