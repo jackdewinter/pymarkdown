@@ -468,15 +468,15 @@
         },
         {
             "name": "test.test_markdown_nested_three_block_block",
-            "totalTests": 122,
+            "totalTests": 174,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 3,
             "elapsedTimeInMilliseconds": 0
         },
         {
             "name": "test.test_markdown_nested_three_block_ordered",
-            "totalTests": 73,
+            "totalTests": 93,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -484,7 +484,7 @@
         },
         {
             "name": "test.test_markdown_nested_three_block_unordered",
-            "totalTests": 73,
+            "totalTests": 93,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -492,15 +492,15 @@
         },
         {
             "name": "test.test_markdown_nested_three_ordered_block",
-            "totalTests": 52,
+            "totalTests": 72,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 1,
             "elapsedTimeInMilliseconds": 0
         },
         {
             "name": "test.test_markdown_nested_three_ordered_ordered",
-            "totalTests": 24,
+            "totalTests": 28,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -508,7 +508,7 @@
         },
         {
             "name": "test.test_markdown_nested_three_ordered_unordered",
-            "totalTests": 24,
+            "totalTests": 28,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -516,15 +516,15 @@
         },
         {
             "name": "test.test_markdown_nested_three_unordered_block",
-            "totalTests": 52,
+            "totalTests": 72,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 2,
             "elapsedTimeInMilliseconds": 0
         },
         {
             "name": "test.test_markdown_nested_three_unordered_ordered",
-            "totalTests": 24,
+            "totalTests": 28,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -532,7 +532,7 @@
         },
         {
             "name": "test.test_markdown_nested_three_unordered_unordered",
-            "totalTests": 25,
+            "totalTests": 29,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
