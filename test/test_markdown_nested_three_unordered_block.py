@@ -1914,8 +1914,7 @@ def test_nested_three_unordered_max_block_max_unordered_max_plus_one_no_bq1():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_nested_three_unordered_max_block_max_ordered_max():
+def test_nested_three_unordered_max_block_max_ordered_max_x():
     """
     Verify that a nesting of unordered list, block quote, ordered list, with
     the maximum number of spaces allowed, works properly.
@@ -1923,33 +1922,26 @@ def test_nested_three_unordered_max_block_max_ordered_max():
 
     # Arrange
     source_markdown = """   +    >    1. list
-   +         1. item"""
+        >       item"""
     expected_tokens = [
         "[ulist(1,4):+::8:   ]",
-        "[block-quote(1,9):        :        > ]",
-        "[olist(1,14):.:1:16:   ]",
-        "[para(1,17):]",
-        "[text(1,17):list:]",
+        "[block-quote(1,9):        :        > \n        > ]",
+        "[olist(1,14):.:1:16:   :      ]",
+        "[para(1,17):\n]",
+        "[text(1,17):list\nitem::\n]",
         "[end-para:::True]",
         "[end-olist:::True]",
         "[end-block-quote:::True]",
-        "[li(2,4):5::]",
-        "[icode-block(2,10):    :]",
-        "[text(2,10):1. item:    ]",
-        "[end-icode-block:::True]",
         "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>
 <blockquote>
 <ol>
-<li>list</li>
+<li>list
+item</li>
 </ol>
 </blockquote>
-</li>
-<li>
-<pre><code>    1. item
-</code></pre>
 </li>
 </ul>"""
 
