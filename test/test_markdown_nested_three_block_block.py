@@ -5606,7 +5606,6 @@ def test_nested_three_block_max_block_max_block_max_no_bq3():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_max_block_max_block_max_no_bq4():
     """
     Verify that a nesting of block quote, block quote, block quote, with
@@ -5632,7 +5631,7 @@ def test_nested_three_block_max_block_max_block_max_no_bq4():
 <blockquote>
 <blockquote>
 <p>list
-&gt;      list</p>
+list</p>
 </blockquote>
 </blockquote>
 </blockquote>"""
