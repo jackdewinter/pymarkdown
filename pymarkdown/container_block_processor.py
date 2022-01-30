@@ -524,6 +524,9 @@ class ContainerBlockProcessor:
                     indent_already_processed,
                 ) = (True, False, bool(container_depth))
             # POGGER.debug("indent_already_processed=$", indent_already_processed)
+            # POGGER.debug("have_pre_processed_indent=$", have_pre_processed_indent)
+            # POGGER.debug("used_indent=$", used_indent)
+            # POGGER.debug("container_level_tokens=$", container_level_tokens)
         return (
             did_indent_processing,
             indent_already_processed,
@@ -594,6 +597,7 @@ class ContainerBlockProcessor:
             ) = ContainerBlockProcessor.__handle_trailing_indent_with_block_quote(
                 parser_state, extracted_whitespace
             )
+            # POGGER.debug("have_pre_processed_indent:$:", have_pre_processed_indent)
         elif need_leading_whitespace_processing:
             POGGER.debug(">>leading_whitespace_preprocessing")
 
@@ -612,10 +616,12 @@ class ContainerBlockProcessor:
                 extracted_whitespace,
                 is_para_continue,
             )
+            # POGGER.debug("have_pre_processed_indent:$:", have_pre_processed_indent)
             # POGGER.debug(
             #     "skip_containers_before_leaf_blocks:$:",
             #     skip_containers_before_leaf_blocks,
             # )
+        # POGGER.debug("did_indent_processing:$:",did_indent_processing)
         if not did_indent_processing:
             (
                 have_pre_processed_indent,
@@ -623,8 +629,10 @@ class ContainerBlockProcessor:
                 container_level_tokens,
                 used_indent,
             ) = (False, False, [], -1)
+            # POGGER.debug("have_pre_processed_indent:$:", have_pre_processed_indent)
 
         # Case 3: list item start or block quote character, needs to be calculated from non-zero level
+        # POGGER.debug("have_pre_processed_indent:$:", have_pre_processed_indent)
         return (
             can_continue,
             have_pre_processed_indent,
@@ -745,6 +753,10 @@ class ContainerBlockProcessor:
                 used_indent,
                 container_used_indent,
             )
+            # POGGER.debug(">do_break:$:", do_break)
+            # POGGER.debug(">stack_index:$:", stack_index)
+            # POGGER.debug(">remaining_whitespace:$:", remaining_whitespace)
+            # POGGER.debug(">used_indent:$:", used_indent)
             if do_break:
                 POGGER.debug(">break!")
                 break
@@ -2849,9 +2861,13 @@ class ContainerBlockProcessor:
                     + ":"
                 )
             else:
-                assert parser_state.original_line_to_parse.endswith(
+                is_valid = parser_state.original_line_to_parse.endswith(
                     new_text_to_parse
-                ), (
+                )
+                # if not is_valid and new_text_to_parse[0] == " ":
+                #     new_parse = ">" + new_text_to_parse[1:]
+                #     is_valid = parser_state.original_line_to_parse.endswith(new_parse)
+                assert is_valid, (
                     "cheat=:"
                     + ParserHelper.make_value_visible(
                         parser_state.original_line_to_parse
