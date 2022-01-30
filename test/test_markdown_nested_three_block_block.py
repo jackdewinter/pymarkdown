@@ -4517,7 +4517,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_max_block_max_unordered_max_no_bq1():
     """
     Verify that a nesting of block quote, block quote, unordered list, with
@@ -4532,7 +4531,7 @@ def test_nested_three_block_max_block_max_unordered_max_no_bq1():
         "[block-quote(1,4):   :   > ]",
         "[block-quote(1,9)::   >    > \n]",
         "[ulist(1,14):+::15:   :        ]",
-        "[para(1,16):\n        ]",
+        "[para(1,16):\n]",
         "[text(1,16):list\n\a>\a&gt;\a      item::\n]",
         "[end-para:::True]",
         "[end-ulist:::True]",
@@ -5010,7 +5009,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_max_block_max_ordered_max_no_bq1():
     """
     Verify that a nesting of block quote, block quote, ordered list, with
@@ -5025,7 +5023,7 @@ def test_nested_three_block_max_block_max_ordered_max_no_bq1():
         "[block-quote(1,4):   :   > ]",
         "[block-quote(1,9)::   >    > \n]",
         "[olist(1,14):.:1:16:   :        ]",
-        "[para(1,17):\n        ]",
+        "[para(1,17):\n]",
         "[text(1,17):list\n\a>\a&gt;\a       item::\n]",
         "[end-para:::True]",
         "[end-olist:::True]",
@@ -5042,7 +5040,7 @@ def test_nested_three_block_max_block_max_ordered_max_no_bq1():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm

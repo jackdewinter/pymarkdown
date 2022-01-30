@@ -8,7 +8,8 @@
 
 ### Changed
 
-- None
+- [Changed - Issue 248](https://github.com/jackdewinter/pymarkdown/issues/248)
+  - github actions: only run against `main` branch
 
 ### Fixed
 
@@ -17,6 +18,26 @@
 - [Fixed - Issue 218](https://github.com/jackdewinter/pymarkdown/issues/218)
   - parser: lot of small things needed fixing to set the variables properly for this issue's resolution
   - parser: after that, was not properly handling shutting down a block quote that downgraded
+- [Fixed - Issue 227](https://github.com/jackdewinter/pymarkdown/issues/227)
+  - scenario tests: adding 3-level nesting tests with max space, and max space plus one variations
+- [Fixed - Issue 228](https://github.com/jackdewinter/pymarkdown/issues/228)
+  - parser: previous adjustment no longer needed
+- [Fixed - Issue 229](https://github.com/jackdewinter/pymarkdown/issues/229)
+  - parser: generated HTML did not include indented code block
+- [Fixed - Issue 230](https://github.com/jackdewinter/pymarkdown/issues/230)
+  - parser: dropping leading `>`
+- [Fixed - Issue 231](https://github.com/jackdewinter/pymarkdown/issues/231)
+  - parser: fixed by issue-229
+- [Fixed - Issue 232](https://github.com/jackdewinter/pymarkdown/issues/232)
+  - parser: fixed by issue-233
+  - parser: fixed by issue-228
+- [Fixed - Issue 233](https://github.com/jackdewinter/pymarkdown/issues/233)
+  - parser: limiting container checking to limited set, expanded
+  - parser: extra indent was not accounted for in space calculations
+  - parser: double block quotes not being handled properly
+  - parser: indent being processed twice
+- [Fixed - Issue 252](https://github.com/jackdewinter/pymarkdown/issues/252)
+  - parser: in rare cases, was adding leading spaces to both list and paragraph within
 
 ## Version 0.9.4 - Date: 2022-01-04
 
