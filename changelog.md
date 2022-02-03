@@ -4,7 +4,12 @@
 
 ### Added
 
-- None
+- [Added - Issue 227](https://github.com/jackdewinter/pymarkdown/issues/227)
+  - scenario tests: adding 3-level nesting tests with max space, and max space plus one variations
+- [Added - Issue 250](https://github.com/jackdewinter/pymarkdown/issues/250)
+  - scenario tests: adding variations of removed block quotes on second line
+- [Added - Issue 261](https://github.com/jackdewinter/pymarkdown/tree/issue-261)
+  - scenario tests: variations of 3-level max space tests with no text after container starts on first line
 
 ### Changed
 
@@ -18,8 +23,6 @@
 - [Fixed - Issue 218](https://github.com/jackdewinter/pymarkdown/issues/218)
   - parser: lot of small things needed fixing to set the variables properly for this issue's resolution
   - parser: after that, was not properly handling shutting down a block quote that downgraded
-- [Fixed - Issue 227](https://github.com/jackdewinter/pymarkdown/issues/227)
-  - scenario tests: adding 3-level nesting tests with max space, and max space plus one variations
 - [Fixed - Issue 228](https://github.com/jackdewinter/pymarkdown/issues/228)
   - parser: previous adjustment no longer needed
 - [Fixed - Issue 229](https://github.com/jackdewinter/pymarkdown/issues/229)
