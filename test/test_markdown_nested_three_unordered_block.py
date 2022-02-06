@@ -57,7 +57,7 @@ def test_nested_three_unordered_nl_block_nl_unordered():
   > + list
   >   item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::]",
+        "[ulist(1,1):+::2:]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >\n  > \n  > ]",
         "[BLANK(2,4):]",
@@ -97,7 +97,7 @@ def test_nested_three_unordered_nl_block_nl_unordered_wo_bq():
     + list
   >   item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::\n]",
+        "[ulist(1,1):+::2::]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >]",
         "[BLANK(2,4):]",
@@ -277,7 +277,7 @@ def test_nested_three_unordered_nl_block_skip_nl_unordered():
     + list
       item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::]",
+        "[ulist(1,1):+::2:]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >]",
         "[BLANK(2,4):]",
@@ -317,7 +317,7 @@ def test_nested_three_unordered_nl_block_skip_nl_unordered_wo_bq():
     + list
       item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::]",
+        "[ulist(1,1):+::2:]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >]",
         "[BLANK(2,4):]",
@@ -483,7 +483,7 @@ def test_nested_three_unordered_nl_block_nl_ordered():
   > 1. list
   >    item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::]",
+        "[ulist(1,1):+::2:]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >\n  > \n  > ]",
         "[BLANK(2,4):]",
@@ -523,7 +523,7 @@ def test_nested_three_unordered_nl_block_nl_ordered_wo_bq():
     1. list
   >    item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::\n]",
+        "[ulist(1,1):+::2::]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >]",
         "[BLANK(2,4):]",
@@ -703,7 +703,7 @@ def test_nested_three_unordered_nl_block_skip_nl_ordered():
     1. list
        item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::]",
+        "[ulist(1,1):+::2:]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >]",
         "[BLANK(2,4):]",
@@ -743,7 +743,7 @@ def test_nested_three_unordered_nl_block_skip_nl_ordered_wo_bq():
     1. list
        item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::]",
+        "[ulist(1,1):+::2:]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >]",
         "[BLANK(2,4):]",
@@ -909,7 +909,7 @@ def test_nested_three_unordered_nl_block_nl_block_x():
   > > list
   > > item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::\n\n]",
+        "[ulist(1,1):+::2::\n]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >]",
         "[BLANK(2,4):]",
@@ -949,7 +949,7 @@ def test_nested_three_unordered_nl_block_nl_block_wo_bq():
     > list
   > > item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::\n\n]",
+        "[ulist(1,1):+::2::\n]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >\n    > ]",
         "[BLANK(2,4):]",
@@ -1118,7 +1118,7 @@ def test_nested_three_unordered_nl_block_skip_nl_block_x():
   > > list
     > item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::\n\n]",
+        "[ulist(1,1):+::2::\n]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >]",
         "[BLANK(2,4):]",
@@ -1158,7 +1158,7 @@ def test_nested_three_unordered_nl_block_skip_nl_block_wo_bq():
     > list
     > item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::\n\n]",
+        "[ulist(1,1):+::2::\n]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >\n    > \n    > ]",
         "[BLANK(2,4):]",
@@ -1313,7 +1313,7 @@ def test_nested_three_unordered_nl_block_nl_block_skip():
   > > list
   >   item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::\n\n]",
+        "[ulist(1,1):+::2::\n]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >]",
         "[BLANK(2,4):]",
@@ -1353,7 +1353,7 @@ def test_nested_three_unordered_nl_block_nl_block_skip_wo_bq():
     > list
   >   item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::\n\n]",
+        "[ulist(1,1):+::2::\n]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >\n    > \n  > ]",
         "[BLANK(2,4):]",
@@ -1496,6 +1496,7 @@ item</p>
 
 
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_nested_three_unordered_nl_block_skip_nl_block_skip():
     """
     Verify that a nesting of unordered list, new line, block quote, new line, block quote works
@@ -1508,7 +1509,7 @@ def test_nested_three_unordered_nl_block_skip_nl_block_skip():
   > > list
       item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::\n\n  \n]",
+        "[ulist(1,1):+::2::\n  \n]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >]",
         "[BLANK(2,4):]",
@@ -2364,7 +2365,6 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_max_block_max_block_max_empty():
     """
     Verify that a nesting of unordered list, block quote, block quote, with
@@ -2375,10 +2375,9 @@ def test_nested_three_unordered_max_block_max_block_max_empty():
     source_markdown = """   +    >    >
         >    > item"""
     expected_tokens = [
-        "[ulist(1,4):+::8:   :\n]",
+        "[ulist(1,4):+::8:   :]",
         "[block-quote(1,9):        :        > ]",
         "[block-quote(1,14)::        >    >\n        >    > ]",
-        "[BLANK(1,15):]",
         "[BLANK(1,15):]",
         "[para(2,16):]",
         "[text(2,16):item:]",
@@ -2439,7 +2438,6 @@ def test_nested_three_unordered_max_block_max_block_max_no_bq1():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_max_block_max_block_max_empty_no_bq1():
     """
     Verify that a nesting of unordered list, block quote, block quote, with
@@ -2451,10 +2449,9 @@ def test_nested_three_unordered_max_block_max_block_max_empty_no_bq1():
     source_markdown = """   +    >    >
              > item"""
     expected_tokens = [
-        "[ulist(1,4):+::8:   :\n        ]",
+        "[ulist(1,4):+::8:   :        ]",
         "[block-quote(1,9):        :        > ]",
         "[block-quote(1,14)::        >    >]",
-        "[BLANK(1,15):]",
         "[BLANK(1,15):]",
         "[end-block-quote:::True]",
         "[end-block-quote:::True]",
@@ -2593,7 +2590,6 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_max_block_max_block_max_empty_no_bq3():
     """
     Verify that a nesting of unordered list, block quote, block quote, with
@@ -2605,10 +2601,9 @@ def test_nested_three_unordered_max_block_max_block_max_empty_no_bq3():
     source_markdown = """   +    >    >
                item"""
     expected_tokens = [
-        "[ulist(1,4):+::8:   :\n        ]",
+        "[ulist(1,4):+::8:   :        ]",
         "[block-quote(1,9):        :        > ]",
         "[block-quote(1,14)::        >    >]",
-        "[BLANK(1,15):]",
         "[BLANK(1,15):]",
         "[end-block-quote:::True]",
         "[end-block-quote:::True]",

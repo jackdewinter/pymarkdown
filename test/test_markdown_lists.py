@@ -2177,7 +2177,7 @@ def test_list_items_300x():
   >
 * c"""
     expected_tokens = [
-        "[ulist(1,1):*::2::\n]",
+        "[ulist(1,1):*::2::]",
         "[para(1,3):]",
         "[text(1,3):a:]",
         "[end-para:::True]",
@@ -2218,7 +2218,7 @@ def test_list_items_300a():
   >
 1) c"""
     expected_tokens = [
-        "[ulist(1,1):*::2::\n]",
+        "[ulist(1,1):*::2::]",
         "[para(1,3):]",
         "[text(1,3):a:]",
         "[end-para:::True]",
@@ -2262,7 +2262,7 @@ def test_list_items_300b():
   >
   * c"""
     expected_tokens = [
-        "[ulist(1,1):*::2::\n]",
+        "[ulist(1,1):*::2::]",
         "[para(1,3):]",
         "[text(1,3):a:]",
         "[end-para:::True]",
@@ -2568,7 +2568,7 @@ def test_list_items_301d():
   >     c
 - d"""
     expected_tokens = [
-        "[ulist(1,1):-::2::\n\n]",
+        "[ulist(1,1):-::2::\n]",
         "[para(1,3):]",
         "[text(1,3):a:]",
         "[end-para:::True]",

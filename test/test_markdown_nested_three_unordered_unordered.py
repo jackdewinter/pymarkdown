@@ -878,7 +878,6 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_max_unordered_max_block_max_empty():
     """
     Verify that a nesting of unordered list, unordered list, block quote, with
@@ -890,9 +889,8 @@ def test_nested_three_unordered_max_unordered_max_block_max_empty():
              > item"""
     expected_tokens = [
         "[ulist(1,4):+::8:   ]",
-        "[ulist(1,9):+::13:        :\n]",
+        "[ulist(1,9):+::13:        :]",
         "[block-quote(1,14):             :             >\n             > ]",
-        "[BLANK(1,15):]",
         "[BLANK(1,15):]",
         "[para(2,16):]",
         "[text(2,16):item:]",
@@ -957,7 +955,6 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_max_unordered_max_block_max_empty_no_bq1():
     """
     Verify that a nesting of unordered list, unordered list, block quote, with
@@ -970,9 +967,8 @@ def test_nested_three_unordered_max_unordered_max_block_max_empty_no_bq1():
                item"""
     expected_tokens = [
         "[ulist(1,4):+::8:   ]",
-        "[ulist(1,9):+::13:        :\n             \n]",
+        "[ulist(1,9):+::13:        :             \n]",
         "[block-quote(1,14):             :             >]",
-        "[BLANK(1,15):]",
         "[BLANK(1,15):]",
         "[end-block-quote:::False]",
         "[para(2,16):  ]",

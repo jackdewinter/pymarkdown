@@ -41,6 +41,8 @@
   - parser: indent being processed twice
 - [Fixed - Issue 252](https://github.com/jackdewinter/pymarkdown/issues/252)
   - parser: in rare cases, was adding leading spaces to both list and paragraph within
+- [Fixed - Issue 263](https://github.com/jackdewinter/pymarkdown/issues/263)
+  - parser: with empty list items, was creating 2 blank line tokens, plus extra list indent
 
 ## Version 0.9.4 - Date: 2022-01-04
 

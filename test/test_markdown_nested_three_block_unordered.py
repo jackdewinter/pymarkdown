@@ -3301,7 +3301,6 @@ def test_nested_three_block_max_unordered_max_block_max_no_bq1():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_max_unordered_max_block_max_empty_no_bq1():
     """
     Verify that a nesting of block quote, unordered list, block quote, with
@@ -3314,9 +3313,8 @@ def test_nested_three_block_max_unordered_max_block_max_empty_no_bq1():
              > item"""
     expected_tokens = [
         "[block-quote(1,4):   :   > ]",
-        "[ulist(1,9):+::13:   :]",
+        "[ulist(1,9):+::13:   ]",
         "[block-quote(1,14)::>]",
-        "[BLANK(1,15):]",
         "[BLANK(1,15):]",
         "[end-block-quote:::False]",
         "[end-ulist:::False]",
@@ -3453,7 +3451,6 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_max_unordered_max_block_max_empty_no_bq3():
     """
     Verify that a nesting of block quote, unordered list, block quote, with
@@ -3466,9 +3463,8 @@ def test_nested_three_block_max_unordered_max_block_max_empty_no_bq3():
                item"""
     expected_tokens = [
         "[block-quote(1,4):   :   > ]",
-        "[ulist(1,9):+::13:   :]",
+        "[ulist(1,9):+::13:   ]",
         "[block-quote(1,14)::>]",
-        "[BLANK(1,15):]",
         "[BLANK(1,15):]",
         "[end-block-quote:::False]",
         "[end-ulist:::False]",

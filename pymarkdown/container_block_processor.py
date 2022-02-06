@@ -139,6 +139,7 @@ class ContainerBlockProcessor:
             and is_not_in_root_list
         ):
             POGGER.debug("indent")
+            did_blank, force_leaf_token_parse = False, False
             (
                 can_continue,
                 line_to_parse,
@@ -176,6 +177,7 @@ class ContainerBlockProcessor:
                 block_quote_data,
                 indent_already_processed,
                 force_leaf_token_parse,
+                did_blank,
             ) = ContainerBlockProcessor.__handle_non_leaf_block(
                 parser_state,
                 position_marker,
@@ -197,8 +199,10 @@ class ContainerBlockProcessor:
         # POGGER.debug("start_index>>$", start_index)
 
         # POGGER.debug("indent_already_processed=$", indent_already_processed)
+        # POGGER.debug("force_leaf_token_parse=$", force_leaf_token_parse)
+        # POGGER.debug("did_blank=$", did_blank)
         if (
-            can_continue and not skip_containers_before_leaf_blocks
+            can_continue and not skip_containers_before_leaf_blocks and not did_blank
         ) or force_leaf_token_parse:
             # POGGER.debug(">>text_removed_by_container>>:$:", text_removed_by_container)
             # POGGER.debug(
@@ -233,7 +237,7 @@ class ContainerBlockProcessor:
             line_to_parse,
             block_quote_data.current_count,
             requeue_line_info,
-            False,
+            did_blank,
         )
         # pylint: enable=too-many-locals
         # pylint: enable=too-many-arguments
@@ -262,8 +266,9 @@ class ContainerBlockProcessor:
             removed_chars_at_start,
             last_block_quote_index,
             last_list_start_index,
+            did_blank,
             requeue_line_info,
-        ) = (False, None, None, None, None, None, None, None, None)
+        ) = (False, None, None, None, None, None, None, None, False, None)
 
         if (
             parser_state.token_stack
@@ -287,11 +292,11 @@ class ContainerBlockProcessor:
             extracted_whitespace,
             is_para_continue,
         )
-        POGGER.debug(
-            "skip_containers_before_leaf_blocks:$:", skip_containers_before_leaf_blocks
-        )
-        POGGER.debug("have_pre_processed_indent:$:", have_pre_processed_indent)
-        POGGER.debug("indent_already_processed=$", indent_already_processed)
+        # POGGER.debug(
+        #     "skip_containers_before_leaf_blocks:$:", skip_containers_before_leaf_blocks
+        # )
+        # POGGER.debug("have_pre_processed_indent:$:", have_pre_processed_indent)
+        # POGGER.debug("indent_already_processed=$", indent_already_processed)
         if have_pre_processed_indent:
             (
                 can_continue,
@@ -340,6 +345,7 @@ class ContainerBlockProcessor:
                 last_list_start_index,
                 used_indent,
                 was_paragraph_continuation,
+                did_blank,
                 requeue_line_info,
             ) = ContainerBlockProcessor.__handle_normal_containers(
                 parser_state,
@@ -374,6 +380,7 @@ class ContainerBlockProcessor:
             block_quote_data,
             indent_already_processed,
             force_leaf_token_parse,
+            did_blank,
         )
 
     # pylint: enable=too-many-arguments, too-many-locals
@@ -943,6 +950,7 @@ class ContainerBlockProcessor:
                 -1,
                 None,
                 False,
+                did_blank,
                 requeue_line_info,
             )
 
@@ -955,6 +963,7 @@ class ContainerBlockProcessor:
             block_quote_data,
             last_list_start_index,
             text_removed_by_container,
+            did_blank,
         ) = ContainerBlockProcessor.__handle_nested_blocks(
             parser_state,
             container_depth,
@@ -1016,6 +1025,7 @@ class ContainerBlockProcessor:
             last_list_start_index,
             used_indent,
             was_paragraph_continuation,
+            did_blank,
             requeue_line_info,
         )
 
@@ -1417,6 +1427,7 @@ class ContainerBlockProcessor:
             block_quote_data,
             last_list_start_index,
             text_removed_by_container,
+            did_process_blank_line,
         )
 
     # pylint: enable=too-many-arguments, too-many-locals
@@ -2416,7 +2427,8 @@ class ContainerBlockProcessor:
         #     POGGER.debug("position_marker[$,$]->:$:", position_marker.index_indent,
         # position_marker.index_number, position_marker.text_to_parse)
 
-        POGGER.debug("parser_state.token_document>$", parser_state.token_document)
+        POGGER.debug("\n\nRECURSING\n")
+        # POGGER.debug("parser_state.token_document>$", parser_state.token_document)
         previous_document_length = len(parser_state.token_document)
         (
             produced_inner_tokens,
@@ -2436,9 +2448,9 @@ class ContainerBlockProcessor:
         )
         assert not requeue_line_info or not requeue_line_info.lines_to_requeue
 
-        POGGER.debug("\ncheck next container_start>recursed")
+        POGGER.debug("\nRECURSED\n\n")
 
-        POGGER.debug("previous_document_length=$", previous_document_length)
+        # POGGER.debug("previous_document_length=$", previous_document_length)
         nested_removed_text = ContainerBlockProcessor.__calculate_nested_removed_text(
             parser_state, previous_document_length
         )
@@ -2449,16 +2461,16 @@ class ContainerBlockProcessor:
         )
         POGGER.debug("check next container_start>line_parse>>$", line_to_parse)
         if current_bq_count_increment:
-            POGGER.debug(
-                "block_quote_data.current_count>$", block_quote_data.current_count
-            )
+            # POGGER.debug(
+            #     "block_quote_data.current_count>$", block_quote_data.current_count
+            # )
             block_quote_data = BlockQuoteData(
                 block_quote_data.current_count + current_bq_count_increment,
                 parser_state.count_of_block_quotes_on_stack(),
             )
-            POGGER.debug(
-                "block_quote_data.current_count>$", block_quote_data.current_count
-            )
+            # POGGER.debug(
+            #     "block_quote_data.current_count>$", block_quote_data.current_count
+            # )
 
         POGGER.debug("produced_inner_tokens=$", produced_inner_tokens)
         was_indent_text_added = (
@@ -2469,10 +2481,10 @@ class ContainerBlockProcessor:
         )
         POGGER.debug("was_indent_text_added=$", was_indent_text_added)
 
-        POGGER.debug("parser_state.token_document>$", parser_state.token_document)
+        # POGGER.debug("parser_state.token_document>$", parser_state.token_document)
         parser_state.token_document.extend(produced_inner_tokens)
         POGGER.debug("parser_state.token_document>$", parser_state.token_document)
-        POGGER.debug("did_process_blank_line>$", did_process_blank_line)
+        # POGGER.debug("did_process_blank_line>$", did_process_blank_line)
 
         return (
             line_to_parse,
