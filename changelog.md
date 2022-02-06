@@ -45,6 +45,8 @@
   - parser: when checking for block quote decrease, did not have empty scenarios checked for
 - [Fixed - Issue 263](https://github.com/jackdewinter/pymarkdown/issues/263)
   - parser: with empty list items, was creating 2 blank line tokens, plus extra list indent
+- [Fixed - Issue 265](https://github.com/jackdewinter/pymarkdown/issues/265)
+  - parser: fixed with work on [Issue 262](https://github.com/jackdewinter/pymarkdown/issues/262)
 
 ## Version 0.9.4 - Date: 2022-01-04
 
