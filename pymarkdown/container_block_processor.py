@@ -2960,7 +2960,6 @@ class ContainerBlockProcessor:
         last_block_index,
         last_list_index,
         was_paragraph_continuation,
-        text_removed_by_container,
     ):
         real_stack_count = parser_state.count_of_block_quotes_on_stack()
         POGGER.debug("current_count>>:$:<", block_quote_data.current_count)
@@ -2993,13 +2992,6 @@ class ContainerBlockProcessor:
                 block_quote_data.current_count,
                 block_quote_data.stack_count - stack_delta,
             )
-
-            if new_last_block_index := parser_state.find_last_block_quote_on_stack():
-                parser_state.token_stack[
-                    new_last_block_index
-                ].matching_markdown_token.add_leading_spaces(
-                    text_removed_by_container, skip_adding_newline=False
-                )
         else:
             POGGER.debug("not special_block_quote_reduction")
             close_tokens = []
@@ -3070,7 +3062,6 @@ class ContainerBlockProcessor:
             last_block_index,
             last_list_index,
             was_paragraph_continuation,
-            text_removed_by_container,
         )
         if requeue_line_info:
             POGGER.debug("requeuing after __handle_special_block_quote_reduction")

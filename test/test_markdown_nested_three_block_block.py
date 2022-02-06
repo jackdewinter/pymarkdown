@@ -3192,7 +3192,7 @@ def test_nested_three_block_nl_block_nl_block_no_bq5():
     expected_tokens = [
         "[block-quote(1,1)::>\n  > ]",
         "[BLANK(1,2):]",
-        "[block-quote(2,1)::> >\n  > ]",
+        "[block-quote(2,1)::> >]",
         "[BLANK(2,4):]",
         "[end-block-quote:::True]",
         "[para(3,7):  ]",
@@ -3237,7 +3237,7 @@ def test_nested_three_block_nl_block_nl_block_no_bq6():
     expected_tokens = [
         "[block-quote(1,1)::>\n> ]",
         "[BLANK(1,2):]",
-        "[block-quote(2,1)::> >\n> ]",
+        "[block-quote(2,1)::> >]",
         "[BLANK(2,4):]",
         "[end-block-quote:::True]",
         "[icode-block(3,7):    :]",
@@ -4658,7 +4658,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_max_block_max_unordered_max_empty_no_bq2():
     """
     Verify that a nesting of block quote, block quote, unordered list, and
@@ -4671,15 +4670,15 @@ def test_nested_three_block_max_block_max_unordered_max_empty_no_bq2():
     source_markdown = """   >    >    +
    >           item"""
     expected_tokens = [
-        "[block-quote(1,4):   :   > ]",
-        "[block-quote(1,9)::   >    > \n   > ]",
-        "[ulist(1,14):+::15:   :          ]",
+        "[block-quote(1,4):   :   > \n   > ]",
+        "[block-quote(1,9)::   >    > ]",
+        "[ulist(1,14):+::15:   ]",
         "[BLANK(1,15):]",
-        "[para(2,16):]",
-        "[text(2,16):item:]",
-        "[end-para:::True]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[icode-block(2,10):    :]",
+        "[text(2,10):item:      ]",
+        "[end-icode-block:::True]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -4693,7 +4692,7 @@ def test_nested_three_block_max_block_max_unordered_max_empty_no_bq2():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
@@ -5298,7 +5297,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2():
     """
     Verify that a nesting of block quote, block quote, ordered list, with
@@ -5310,15 +5308,15 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2():
     source_markdown = """   >    >    1.
    >            item"""
     expected_tokens = [
-        "[block-quote(1,4):   :   > ]",
-        "[block-quote(1,9)::   >    > \n   > ]",
-        "[olist(1,14):.:1:16:   :           ]",
+        "[block-quote(1,4):   :   > \n   > ]",
+        "[block-quote(1,9)::   >    > ]",
+        "[olist(1,14):.:1:16:   ]",
         "[BLANK(1,16):]",
-        "[para(2,17):]",
-        "[text(2,17):item:]",
-        "[end-para:::True]",
         "[end-olist:::True]",
         "[end-block-quote:::True]",
+        "[icode-block(2,10):    :]",
+        "[text(2,10):item:       ]",
+        "[end-icode-block:::True]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -5946,7 +5944,7 @@ def test_nested_three_block_max_block_max_block_max_empty_no_bq2():
     expected_tokens = [
         "[block-quote(1,4):   :   > \n   > ]",
         "[block-quote(1,9)::   >    > ]",
-        "[block-quote(1,14)::   >    >    >\n   > ]",
+        "[block-quote(1,14)::   >    >    >]",
         "[BLANK(1,15):]",
         "[end-block-quote:::True]",
         "[end-block-quote:::True]",
@@ -6088,7 +6086,7 @@ def test_nested_three_block_max_block_max_block_max_empty_no_bq4():
     expected_tokens = [
         "[block-quote(1,4):   :   > ]",
         "[block-quote(1,9)::   >    > \n   >    > ]",
-        "[block-quote(1,14)::   >    >    >\n   >    > ]",
+        "[block-quote(1,14)::   >    >    >]",
         "[BLANK(1,15):]",
         "[end-block-quote:::True]",
         "[icode-block(2,15):    :]",
@@ -6230,7 +6228,7 @@ def test_nested_three_block_max_block_max_block_max_empty_no_bq6():
     expected_tokens = [
         "[block-quote(1,4):   :   > \n   > ]",
         "[block-quote(1,9)::   >    > ]",
-        "[block-quote(1,14)::   >    >    >\n   > ]",
+        "[block-quote(1,14)::   >    >    >]",
         "[BLANK(1,15):]",
         "[end-block-quote:::True]",
         "[end-block-quote:::True]",
