@@ -1004,10 +1004,9 @@ class BlockQuoteProcessor:
         special_case = False
         if parser_state.block_copy and found_bq_stack_token:
             POGGER.debug("parser_state.block_copy>>search")
-            original_token = BlockQuoteProcessor.__find_original_token(
+            if original_token := BlockQuoteProcessor.__find_original_token(
                 parser_state, found_bq_stack_token
-            )
-            if original_token:
+            ):
                 POGGER.debug("original_token>>$", original_token)
                 POGGER.debug(
                     "original_token.leading_spaces>>:$:<<",
@@ -1299,11 +1298,10 @@ class BlockQuoteProcessor:
         last_bq_index,
     ):
         POGGER.debug("eligible")
-        remaining_text = parser_state.original_line_to_parse[
-            : -len(position_marker.text_to_parse)
-        ]
         stack_hard_limit, extra_consumed_whitespace = None, None
-        if remaining_text:
+        if remaining_text := parser_state.original_line_to_parse[
+            : -len(position_marker.text_to_parse)
+        ]:
             POGGER.debug("eligible - remaining_text:$:", remaining_text)
 
             # use up already extracted text/ws
@@ -1534,6 +1532,8 @@ class BlockQuoteProcessor:
             stack_decrease_needed = (
                 top_token_on_stack.is_indented_code_block
                 or top_token_on_stack.is_html_block
+                or top_token_on_stack.is_list
+                or top_token_on_stack.is_block_quote
             )
             POGGER.debug(
                 "__ensure_stack_at_level>>decrease to new level=$",
