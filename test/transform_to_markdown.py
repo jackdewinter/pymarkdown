@@ -563,7 +563,7 @@ class TransformToMarkdown:
         container_token_indices,
     ):
         adj_line = ""
-        print("adj_line->:" + adj_line + ":")
+        print(f"adj_line->:{adj_line}:")
         adj_line = cls.__adjust(
             nested_list_start_index - 1,
             token_stack,
@@ -571,7 +571,7 @@ class TransformToMarkdown:
             adj_line,
             True,
         )
-        print("adj_line->:" + adj_line + ":")
+        print(f"adj_line->:{adj_line}:")
         adj_line = cls.__adjust(
             nested_list_start_index,
             token_stack,
@@ -579,7 +579,7 @@ class TransformToMarkdown:
             adj_line,
             True,
         )
-        print("adj_line->:" + adj_line + ":")
+        print(f"adj_line->:{adj_line}:")
         container_line = adj_line + container_line
         return container_line
 
@@ -796,11 +796,14 @@ class TransformToMarkdown:
     # pylint: enable=too-many-locals
 
     def __look_for_last_block_token(self):
-        found_block_token = None
-        for i in range(len(self.container_token_stack) - 1, -1, -1):
-            if self.container_token_stack[i].is_block_quote_start:
-                found_block_token = self.container_token_stack[i]
-                break
+        found_block_token = next(
+            (
+                self.container_token_stack[i]
+                for i in range(len(self.container_token_stack) - 1, -1, -1)
+                if self.container_token_stack[i].is_block_quote_start
+            ),
+            None,
+        )
         print(
             f">>found_block_token>>{ParserHelper.make_value_visible(found_block_token)}<"
         )
@@ -1570,11 +1573,14 @@ class TransformToMarkdown:
         Deal with re-inserting any removed whitespace at the starts of lines.
         """
         if ParserHelper.newline_character in text_to_modify:
-            owning_paragraph_token = None
-            for search_index in range(len(self.block_stack) - 1, -1, -1):
-                if self.block_stack[search_index].is_paragraph:
-                    owning_paragraph_token = self.block_stack[search_index]
-                    break
+            owning_paragraph_token = next(
+                (
+                    self.block_stack[search_index]
+                    for search_index in range(len(self.block_stack) - 1, -1, -1)
+                    if self.block_stack[search_index].is_paragraph
+                ),
+                None,
+            )
 
             print(f"text>before>{ParserHelper.make_value_visible(text_to_modify)}")
             text_to_modify = ParserHelper.remove_all_from_text(text_to_modify)

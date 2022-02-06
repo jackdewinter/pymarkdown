@@ -603,7 +603,6 @@ class TokenizedMarkdown:
         make sure to do it uniformly.
         """
 
-        new_tokens = []
         POGGER.debug("cob->top_element->$", parser_state.token_stack[-1])
         POGGER.debug("cob->was_forced->$", was_forced)
         extra_elements = []
@@ -614,12 +613,13 @@ class TokenizedMarkdown:
                 )
             )
 
-        new_tokens.append(
+        new_tokens = [
             parser_state.token_stack[-1].generate_close_markdown_token_from_stack_token(
                 was_forced=was_forced
-            )
-        )
-        new_tokens.extend(extra_elements)
+            ),
+            *extra_elements,
+        ]
+
         del parser_state.token_stack[-1]
         return new_tokens
 
