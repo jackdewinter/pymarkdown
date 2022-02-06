@@ -47,6 +47,8 @@
   - parser: with empty list items, was creating 2 blank line tokens, plus extra list indent
 - [Fixed - Issue 265](https://github.com/jackdewinter/pymarkdown/issues/265)
   - parser: fixed with work on [Issue 262](https://github.com/jackdewinter/pymarkdown/issues/262)
+- [Fixed - Issue 268](https://github.com/jackdewinter/pymarkdown/issues/268)
+  - parser: previous work took too many newlnes out, this put the right ones back in
 
 ## Version 0.9.4 - Date: 2022-01-04
 
