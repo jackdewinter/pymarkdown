@@ -28,7 +28,7 @@ jobs:
       - name: Install PipEnv
         uses: dschep/install-pipenv-action@v1
         with:
-          version: 2021.5.29
+          version: 2022.1.8
       - name: Sync With Repository
         run: pipenv sync
       - name: Execute Tests
@@ -62,6 +62,8 @@ jobs:
           python-version: 3.8
       - name: Install PipEnv
         uses: dschep/install-pipenv-action@v1
+        with:
+          version: 2022.1.8
       - name: Sync With Repository
         run: pipenv sync
       - name: Execute Flake8
