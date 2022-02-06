@@ -1114,14 +1114,14 @@ class TransformToMarkdown:
         )
         containing_block_quote_token = self.__look_for_last_block_token()
         print(
-            "rls>>containing_block_quote_token>>"
-            + f"{ParserHelper.make_value_visible(containing_block_quote_token)}<<"
+            f'rls>>containing_block_quote_token>>{ParserHelper.make_value_visible(containing_block_quote_token)}<<'
         )
+
         if containing_block_quote_token:
             print(
-                "rls>>containing_block_quote_token>>"
-                + f"{ParserHelper.make_value_visible(containing_block_quote_token.leading_text_index)}<<"
+                f'rls>>containing_block_quote_token>>{ParserHelper.make_value_visible(containing_block_quote_token.leading_text_index)}<<'
             )
+
 
         token_stack_index = len(self.container_token_stack) - 1
         print(f"rls>>token_stack_index>>{token_stack_index}<<")
@@ -1260,21 +1260,19 @@ class TransformToMarkdown:
             f"adj->containing_list_token>>:{ParserHelper.make_value_visible(containing_list_token)}:<<"
         )
         print(
-            "adj->deeper_containing_block_quote_token>>:"
-            + f"{ParserHelper.make_value_visible(deeper_containing_block_quote_token)}:<<"
+            f'adj->deeper_containing_block_quote_token>>:{ParserHelper.make_value_visible(deeper_containing_block_quote_token)}:<<'
         )
+
         print(
             f"adj->extracted_whitespace>>:{ParserHelper.make_value_visible(extracted_whitespace)}:<<"
         )
         block_quote_leading_space_length = 0
         if deeper_containing_block_quote_token:
             print(
-                "adj->deeper_containing_block_quote_token.line_number>>:"
-                + f"{deeper_containing_block_quote_token.line_number}:<<"
+                f'adj->deeper_containing_block_quote_token.line_number>>:{deeper_containing_block_quote_token.line_number}:<<'
             )
-            print(
-                "adj->current_token.line_number>>:" + f"{current_token.line_number}:<<"
-            )
+
+            print(f'adj->current_token.line_number>>:{current_token.line_number}:<<')
             line_number_delta = (
                 current_token.line_number
                 - deeper_containing_block_quote_token.line_number
