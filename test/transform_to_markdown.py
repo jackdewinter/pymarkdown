@@ -265,6 +265,9 @@ class TransformToMarkdown:
                 else None
             )
 
+            print(
+                f"pre-h>current_token>:{ParserHelper.make_value_visible(current_token)}:"
+            )
             (new_data, pragma_token,) = self.__process_next_token(
                 current_token,
                 previous_token,
@@ -274,9 +277,15 @@ class TransformToMarkdown:
                 token_index,
             )
 
-            print(f"post-h>new_data>{ParserHelper.make_value_visible(new_data)}")
+            print(f"post-h>new_data>:{ParserHelper.make_value_visible(new_data)}:")
             transformed_data_length_before_add = len(transformed_data)
+            print(
+                f"post-h>transformed_data>:{ParserHelper.make_value_visible(transformed_data)}:"
+            )
             transformed_data += new_data
+            print(
+                f"post-h>transformed_data>:{ParserHelper.make_value_visible(transformed_data)}:"
+            )
 
             if (
                 current_token.is_block_quote_start
@@ -658,9 +667,12 @@ class TransformToMarkdown:
             delta = previous_token.indent_level - len(container_line)
             print("delta->" + str(delta))
             container_line += ParserHelper.repeat_string(" ", delta)
-        split_leading_spaces = previous_token.leading_spaces.split(
-            ParserHelper.newline_character
+        leading_spaces = (
+            ""
+            if previous_token.leading_spaces is None
+            else previous_token.leading_spaces
         )
+        split_leading_spaces = leading_spaces.split(ParserHelper.newline_character)
         inner_token_index = container_token_indices[nested_list_start_index]
         if inner_token_index < len(split_leading_spaces):
             print(

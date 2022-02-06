@@ -685,24 +685,25 @@ class TokenizedMarkdown:
             else:
                 new_tokens = n_tokens
 
-        stack_index = parser_state.find_last_list_block_on_stack()
-        POGGER.debug("stack_index>>$", stack_index)
-        if stack_index > 0:
+        list_stack_index = parser_state.find_last_list_block_on_stack()
+        block_stack_index = parser_state.find_last_block_quote_on_stack()
+        POGGER.debug("list_stack_index>>$", list_stack_index)
+        POGGER.debug("block_stack_index>>$", block_stack_index)
+        if list_stack_index > 0 and list_stack_index > block_stack_index:
             POGGER.debug(
                 "blank>>bq_start>>$",
-                parser_state.token_stack[stack_index],
+                parser_state.token_stack[list_stack_index],
             )
-            assert parser_state.token_stack[stack_index].is_list
             POGGER.debug(
                 "hbl>>last_block_token>>$",
-                parser_state.token_stack[stack_index].matching_markdown_token,
+                parser_state.token_stack[list_stack_index].matching_markdown_token,
             )
             parser_state.token_stack[
-                stack_index
+                list_stack_index
             ].matching_markdown_token.add_leading_spaces("")
             POGGER.debug(
                 "hbl>>last_block_token>>$",
-                parser_state.token_stack[stack_index].matching_markdown_token,
+                parser_state.token_stack[list_stack_index].matching_markdown_token,
             )
 
         POGGER.debug("hbl>>new_tokens>>$", new_tokens)

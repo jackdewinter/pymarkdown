@@ -877,7 +877,6 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_max_ordered_max_block_max_empty():
     """
     Verify that a nesting of unordered list, ordered list, block quote, with
@@ -889,9 +888,8 @@ def test_nested_three_unordered_max_ordered_max_block_max_empty():
               > item"""
     expected_tokens = [
         "[ulist(1,4):+::8:   ]",
-        "[olist(1,9):.:1:14:        :\n]",
+        "[olist(1,9):.:1:14:        :]",
         "[block-quote(1,15):              :              >\n              > ]",
-        "[BLANK(1,16):]",
         "[BLANK(1,16):]",
         "[para(2,17):]",
         "[text(2,17):item:]",
@@ -956,7 +954,6 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_max_ordered_max_block_max_empty_no_bq1():
     """
     Verify that a nesting of unordered list, ordered list, block quote, with
@@ -969,9 +966,8 @@ def test_nested_three_unordered_max_ordered_max_block_max_empty_no_bq1():
                 item"""
     expected_tokens = [
         "[ulist(1,4):+::8:   ]",
-        "[olist(1,9):.:1:14:        :\n              \n]",
+        "[olist(1,9):.:1:14:        :              \n]",
         "[block-quote(1,15):              :              >]",
-        "[BLANK(1,16):]",
         "[BLANK(1,16):]",
         "[end-block-quote:::False]",
         "[para(2,17):  ]",
@@ -992,7 +988,7 @@ item</li>
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
