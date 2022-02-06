@@ -1142,6 +1142,14 @@ class BlockQuoteProcessor:
         POGGER.debug("handle_block_quote_section>>leaf_tokens>>$", leaf_tokens)
         assert not (requeue_line_info and requeue_line_info.lines_to_requeue)
 
+        # KLUDGE!
+        if (
+            len(parser_state.token_stack) == 3
+            and parser_state.token_stack[1].is_list
+            and parser_state.token_stack[2].is_block_quote
+        ):
+            parser_state.token_stack[1].matching_markdown_token.add_leading_spaces("")
+
         return True, leaf_tokens
 
     @staticmethod

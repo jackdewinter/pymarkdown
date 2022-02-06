@@ -57,7 +57,7 @@ def test_nested_three_unordered_nl_block_nl_unordered():
   > + list
   >   item"""
     expected_tokens = [
-        "[ulist(1,1):+::2:]",
+        "[ulist(1,1):+::2::]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >\n  > \n  > ]",
         "[BLANK(2,4):]",
@@ -97,7 +97,7 @@ def test_nested_three_unordered_nl_block_nl_unordered_wo_bq():
     + list
   >   item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::]",
+        "[ulist(1,1):+::2::\n]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >]",
         "[BLANK(2,4):]",
@@ -277,7 +277,7 @@ def test_nested_three_unordered_nl_block_skip_nl_unordered():
     + list
       item"""
     expected_tokens = [
-        "[ulist(1,1):+::2:]",
+        "[ulist(1,1):+::2::]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >]",
         "[BLANK(2,4):]",
@@ -317,7 +317,7 @@ def test_nested_three_unordered_nl_block_skip_nl_unordered_wo_bq():
     + list
       item"""
     expected_tokens = [
-        "[ulist(1,1):+::2:]",
+        "[ulist(1,1):+::2::]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >]",
         "[BLANK(2,4):]",
@@ -483,7 +483,7 @@ def test_nested_three_unordered_nl_block_nl_ordered():
   > 1. list
   >    item"""
     expected_tokens = [
-        "[ulist(1,1):+::2:]",
+        "[ulist(1,1):+::2::]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >\n  > \n  > ]",
         "[BLANK(2,4):]",
@@ -523,7 +523,7 @@ def test_nested_three_unordered_nl_block_nl_ordered_wo_bq():
     1. list
   >    item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::]",
+        "[ulist(1,1):+::2::\n]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >]",
         "[BLANK(2,4):]",
@@ -703,7 +703,7 @@ def test_nested_three_unordered_nl_block_skip_nl_ordered():
     1. list
        item"""
     expected_tokens = [
-        "[ulist(1,1):+::2:]",
+        "[ulist(1,1):+::2::]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >]",
         "[BLANK(2,4):]",
@@ -743,7 +743,7 @@ def test_nested_three_unordered_nl_block_skip_nl_ordered_wo_bq():
     1. list
        item"""
     expected_tokens = [
-        "[ulist(1,1):+::2:]",
+        "[ulist(1,1):+::2::]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >]",
         "[BLANK(2,4):]",
@@ -909,7 +909,7 @@ def test_nested_three_unordered_nl_block_nl_block_x():
   > > list
   > > item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::\n]",
+        "[ulist(1,1):+::2::\n\n]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >]",
         "[BLANK(2,4):]",
@@ -949,7 +949,7 @@ def test_nested_three_unordered_nl_block_nl_block_wo_bq():
     > list
   > > item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::\n]",
+        "[ulist(1,1):+::2::\n\n]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >\n    > ]",
         "[BLANK(2,4):]",
@@ -1118,7 +1118,7 @@ def test_nested_three_unordered_nl_block_skip_nl_block_x():
   > > list
     > item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::\n]",
+        "[ulist(1,1):+::2::\n\n]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >]",
         "[BLANK(2,4):]",
@@ -1158,7 +1158,7 @@ def test_nested_three_unordered_nl_block_skip_nl_block_wo_bq():
     > list
     > item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::\n]",
+        "[ulist(1,1):+::2::\n\n]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >\n    > \n    > ]",
         "[BLANK(2,4):]",
@@ -1313,7 +1313,7 @@ def test_nested_three_unordered_nl_block_nl_block_skip():
   > > list
   >   item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::\n]",
+        "[ulist(1,1):+::2::\n\n]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >]",
         "[BLANK(2,4):]",
@@ -1353,7 +1353,7 @@ def test_nested_three_unordered_nl_block_nl_block_skip_wo_bq():
     > list
   >   item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::\n]",
+        "[ulist(1,1):+::2::\n\n]",
         "[BLANK(1,2):]",
         "[block-quote(2,3):  :  >\n    > \n  > ]",
         "[BLANK(2,4):]",

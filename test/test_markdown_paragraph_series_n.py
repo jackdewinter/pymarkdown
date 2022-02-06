@@ -1130,7 +1130,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_bq_nl_i2_bq_ib():
   >     def
 * def"""
     expected_tokens = [
-        "[ulist(1,1):*::2::\n]",
+        "[ulist(1,1):*::2::\n\n]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
