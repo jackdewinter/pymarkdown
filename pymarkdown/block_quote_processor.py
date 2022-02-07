@@ -1617,11 +1617,17 @@ class BlockQuoteProcessor:
             text_after_current_block_quote = position_marker.text_to_parse[
                 position_marker.index_number + 1 :
             ]
-            found_index = -1
-            for char_index, current_char in enumerate(text_after_current_block_quote):
-                if current_char not in " >":
-                    found_index = char_index
-                    break
+            found_index = next(
+                (
+                    char_index
+                    for char_index, current_char in enumerate(
+                        text_after_current_block_quote
+                    )
+                    if current_char not in " >"
+                ),
+                -1,
+            )
+
             POGGER.debug("found_index:$", found_index)
             assert found_index < len(text_after_current_block_quote)
             whitespace_after_block_quote = text_after_current_block_quote[:found_index]
