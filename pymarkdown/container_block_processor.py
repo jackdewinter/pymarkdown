@@ -139,7 +139,6 @@ class ContainerBlockProcessor:
             and is_not_in_root_list
         ):
             POGGER.debug("indent")
-            did_blank, force_leaf_token_parse = False, False
             (
                 can_continue,
                 line_to_parse,
@@ -155,11 +154,12 @@ class ContainerBlockProcessor:
                 skip_containers_before_leaf_blocks,
                 indent_already_processed,
                 was_other_paragraph_continuation,
+                did_blank,
+                force_leaf_token_parse,
             ) = ContainerBlockProcessor.__handle_indented_block_start(
                 parser_state, position_marker
             )
         else:
-            was_other_paragraph_continuation = False
             (
                 can_continue,
                 container_level_tokens,
@@ -178,6 +178,7 @@ class ContainerBlockProcessor:
                 indent_already_processed,
                 force_leaf_token_parse,
                 did_blank,
+                was_other_paragraph_continuation,
             ) = ContainerBlockProcessor.__handle_non_leaf_block(
                 parser_state,
                 position_marker,
@@ -268,7 +269,8 @@ class ContainerBlockProcessor:
             last_list_start_index,
             did_blank,
             requeue_line_info,
-        ) = (False, None, None, None, None, None, None, None, False, None)
+        ) = (False, None, False, None, None, None, None, None, False, None)
+        was_other_paragraph_continuation = False
 
         if (
             parser_state.token_stack
@@ -381,6 +383,7 @@ class ContainerBlockProcessor:
             indent_already_processed,
             force_leaf_token_parse,
             did_blank,
+            was_other_paragraph_continuation,
         )
 
     # pylint: enable=too-many-arguments, too-many-locals
@@ -702,29 +705,29 @@ class ContainerBlockProcessor:
         parser_state, i, remaining_whitespace, used_indent, container_used_indent
     ):
         stack_index = 0
-        POGGER.debug(
-            "$>remaining_whitespace:$:($)",
-            i,
-            remaining_whitespace,
-            len(remaining_whitespace),
-        )
-        POGGER.debug("$>used_indent:$:", i, used_indent)
-        POGGER.debug("$>container_used_indent:$:", i, container_used_indent)
-        POGGER.debug("$>stack:$:", i, parser_state.token_stack[i])
-        POGGER.debug(
-            "$>token:$:", i, parser_state.token_stack[i].matching_markdown_token
-        )
+        # POGGER.debug(
+        #     "$>remaining_whitespace:$:($)",
+        #     i,
+        #     remaining_whitespace,
+        #     len(remaining_whitespace),
+        # )
+        # POGGER.debug("$>used_indent:$:", i, used_indent)
+        # POGGER.debug("$>container_used_indent:$:", i, container_used_indent)
+        # POGGER.debug("$>stack:$:", i, parser_state.token_stack[i])
+        # POGGER.debug(
+        #     "$>token:$:", i, parser_state.token_stack[i].matching_markdown_token
+        # )
         if parser_state.token_stack[i].matching_markdown_token.is_block_quote_start:
             start_bq_index = remaining_whitespace.find(">")
             if start_bq_index < 0 or start_bq_index >= 4:
-                POGGER.debug("1-->$>start_bq_index:$:", i, start_bq_index)
-                POGGER.debug("$>remaining_whitespace:$:", i, remaining_whitespace)
+                # POGGER.debug("1-->$>start_bq_index:$:", i, start_bq_index)
+                # POGGER.debug("$>remaining_whitespace:$:", i, remaining_whitespace)
                 if len(remaining_whitespace) >= 4:
                     stack_index = i
                 return True, stack_index, remaining_whitespace, used_indent
             raise AssertionError()
         if not parser_state.token_stack[i].matching_markdown_token.is_list_start:
-            POGGER.debug("2-->")
+            # POGGER.debug("2-->")
             if len(remaining_whitespace) >= 4:
                 stack_index = (
                     i + 1 if parser_state.token_stack[i].is_indented_code_block else i
@@ -733,13 +736,13 @@ class ContainerBlockProcessor:
         remaining_indent = parser_state.token_stack[
             i
         ].matching_markdown_token.indent_level - (used_indent + container_used_indent)
-        POGGER.debug("$>remaining_indent:$:", i, remaining_indent)
+        # POGGER.debug("$>remaining_indent:$:", i, remaining_indent)
         left_whitespace = remaining_whitespace[:remaining_indent]
-        POGGER.debug("$>left_whitespace:$:", i, left_whitespace)
+        # POGGER.debug("$>left_whitespace:$:", i, left_whitespace)
         if len(left_whitespace) < remaining_indent:
             if len(remaining_whitespace) >= 4:
                 stack_index = i
-            POGGER.debug("3-->")
+            # POGGER.debug("3-->")
             return True, stack_index, remaining_whitespace, used_indent
         remaining_whitespace = remaining_whitespace[remaining_indent:]
         assert parser_state.token_stack[i].matching_markdown_token.is_list_start
@@ -832,6 +835,8 @@ class ContainerBlockProcessor:
             last_list_start_index,
             indent_already_processed,
             was_other_paragraph_continuation,
+            did_blank,
+            force_leaf_token_parse,
         ) = (
             True,
             position_marker.text_to_parse,
@@ -844,6 +849,8 @@ class ContainerBlockProcessor:
             0,
             -1,
             -1,
+            False,
+            False,
             False,
             False,
         )
@@ -889,6 +896,8 @@ class ContainerBlockProcessor:
             False,
             indent_already_processed,
             was_other_paragraph_continuation,
+            did_blank,
+            force_leaf_token_parse,
         )
 
     # pylint: enable=too-many-locals
@@ -2953,7 +2962,6 @@ class ContainerBlockProcessor:
 
     # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments
     @staticmethod
     def __handle_special_block_quote_reduction(
         parser_state,
@@ -2997,8 +3005,6 @@ class ContainerBlockProcessor:
             POGGER.debug("not special_block_quote_reduction")
             close_tokens = []
         return close_tokens, None
-
-    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
