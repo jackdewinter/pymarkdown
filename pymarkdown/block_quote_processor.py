@@ -1582,6 +1582,82 @@ class BlockQuoteProcessor:
             else:
                 break  # pragma: no cover
 
+    @staticmethod
+    def __block_list_block_kludge(
+        parser_state,
+        position_marker,
+        stack_count,
+        block_quote_data,
+    ):
+        POGGER.debug("original_line_to_parse>>$", parser_state.original_line_to_parse)
+        POGGER.debug("text_to_parse>>$", position_marker.text_to_parse)
+        POGGER.debug("index_number>>$", position_marker.index_number)
+        POGGER.debug("index_indent>>$", position_marker.index_indent)
+
+        POGGER.debug("stack_count>>$", stack_count)
+        POGGER.debug("block_quote_data.stack_count>>$", block_quote_data.stack_count)
+        POGGER.debug(
+            "block_quote_data.current_count>>$", block_quote_data.current_count
+        )
+
+        # KLUDGE!
+        skip = False
+        if (
+            parser_state.original_line_to_parse == position_marker.text_to_parse
+            and not position_marker.index_indent
+        ):
+            last_active_block_quote_stack_index = position_marker.text_to_parse[
+                : position_marker.index_number + 1
+            ].count(">")
+            POGGER.debug(
+                "last_active_block_quote_stack_index>>$",
+                last_active_block_quote_stack_index,
+            )
+
+            text_after_current_block_quote = position_marker.text_to_parse[
+                position_marker.index_number + 1 :
+            ]
+            found_index = -1
+            for char_index, current_char in enumerate(text_after_current_block_quote):
+                if current_char not in " >":
+                    found_index = char_index
+                    break
+            POGGER.debug("found_index:$", found_index)
+            assert found_index < len(text_after_current_block_quote)
+            whitespace_after_block_quote = text_after_current_block_quote[:found_index]
+            text_after_block_quote = text_after_current_block_quote[found_index:]
+            POGGER.debug(
+                "whitespace_after_block_quote:$: + text_after_block_quote:$:",
+                whitespace_after_block_quote,
+                text_after_block_quote,
+            )
+
+            POGGER.debug("token_stack>>$", parser_state.token_stack)
+            POGGER.debug(
+                "token_stack[last_active_block_quote_stack_index]>>$",
+                parser_state.token_stack[last_active_block_quote_stack_index],
+            )
+            stack_index_valid = last_active_block_quote_stack_index + 1 < len(
+                parser_state.token_stack
+            )
+            stack_index_in_scope = last_active_block_quote_stack_index < stack_count
+            more_block_quotes_present = ">" in whitespace_after_block_quote
+            POGGER.debug(
+                "stack_index_valid:$ and stack_index_in_scope:$ and more_block_quotes_present:$",
+                stack_index_valid,
+                stack_index_in_scope,
+                more_block_quotes_present,
+            )
+            if stack_index_valid and stack_index_in_scope and more_block_quotes_present:
+                POGGER.debug(
+                    "xy>>$",
+                    parser_state.token_stack[last_active_block_quote_stack_index + 1],
+                )
+                skip = parser_state.token_stack[
+                    last_active_block_quote_stack_index + 1
+                ].is_list
+        return skip
+
     # pylint: disable=too-many-arguments
     @staticmethod
     def __increase_stack(
@@ -1632,12 +1708,19 @@ class BlockQuoteProcessor:
             parser_state.token_stack.append(BlockQuoteStackToken(new_markdown_token))
 
         POGGER.debug("container_level_tokens>>$", container_level_tokens)
-        BlockQuoteProcessor.__decrease_stack_to_level(
+        skip = BlockQuoteProcessor.__block_list_block_kludge(
             parser_state,
-            block_quote_data.current_count,
+            position_marker,
             stack_count,
-            container_level_tokens,
+            block_quote_data,
         )
+        if not skip:
+            BlockQuoteProcessor.__decrease_stack_to_level(
+                parser_state,
+                block_quote_data.current_count,
+                stack_count,
+                container_level_tokens,
+            )
         POGGER.debug(
             "container_level_tokens>>$",
             container_level_tokens,

@@ -3228,7 +3228,6 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_max_unordered_max_block_max_empty():
     """
     Verify that a nesting of block quote, unordered list, block quote, with
@@ -3241,9 +3240,10 @@ def test_nested_three_block_max_unordered_max_block_max_empty():
     expected_tokens = [
         "[block-quote(1,4):   :   > ]",
         "[ulist(1,9):+::13:   :]",
-        "[block-quote(1,14)::> \n   >         > ]",
-        "[para(1,16):\n]",
-        "[text(1,16):list\nitem::\n]",
+        "[block-quote(1,14)::>\n   >         > ]",
+        "[BLANK(1,15):]",
+        "[para(2,16):]",
+        "[text(2,16):item:]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
         "[end-ulist:::True]",
@@ -3408,7 +3408,7 @@ item</li>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm

@@ -416,7 +416,7 @@ class ContainerBlockProcessor:
             stack_index += 1
         assert stack_index > container_depth
         _, extracted_whitespace = ParserHelper.extract_whitespace(
-            position_marker.text_to_parse, container_used_indent
+            parser_state.original_line_to_parse, container_used_indent
         )
         return container_used_indent, extracted_whitespace
 
@@ -511,6 +511,7 @@ class ContainerBlockProcessor:
                 "position_marker.index_number:$:", position_marker.index_number
             )
             POGGER.debug("container_depth:$:", container_depth)
+            POGGER.debug("extracted_whitespace:$:", extracted_whitespace)
             if position_marker.index_number == -1 and container_depth:
                 (
                     container_used_indent,
@@ -701,29 +702,29 @@ class ContainerBlockProcessor:
         parser_state, i, remaining_whitespace, used_indent, container_used_indent
     ):
         stack_index = 0
-        # POGGER.debug(
-        #     "$>remaining_whitespace:$:($)",
-        #     i,
-        #     remaining_whitespace,
-        #     len(remaining_whitespace),
-        # )
-        # POGGER.debug("$>used_indent:$:", i, used_indent)
-        # POGGER.debug("$>container_used_indent:$:", i, container_used_indent)
-        # POGGER.debug("$>stack:$:", i, parser_state.token_stack[i])
-        # POGGER.debug(
-        #     "$>token:$:", i, parser_state.token_stack[i].matching_markdown_token
-        # )
+        POGGER.debug(
+            "$>remaining_whitespace:$:($)",
+            i,
+            remaining_whitespace,
+            len(remaining_whitespace),
+        )
+        POGGER.debug("$>used_indent:$:", i, used_indent)
+        POGGER.debug("$>container_used_indent:$:", i, container_used_indent)
+        POGGER.debug("$>stack:$:", i, parser_state.token_stack[i])
+        POGGER.debug(
+            "$>token:$:", i, parser_state.token_stack[i].matching_markdown_token
+        )
         if parser_state.token_stack[i].matching_markdown_token.is_block_quote_start:
             start_bq_index = remaining_whitespace.find(">")
             if start_bq_index < 0 or start_bq_index >= 4:
-                # POGGER.debug("1-->$>start_bq_index:$:", i, start_bq_index)
-                # POGGER.debug("$>remaining_whitespace:$:", i, remaining_whitespace)
+                POGGER.debug("1-->$>start_bq_index:$:", i, start_bq_index)
+                POGGER.debug("$>remaining_whitespace:$:", i, remaining_whitespace)
                 if len(remaining_whitespace) >= 4:
                     stack_index = i
                 return True, stack_index, remaining_whitespace, used_indent
             raise AssertionError()
         if not parser_state.token_stack[i].matching_markdown_token.is_list_start:
-            # POGGER.debug("2-->")
+            POGGER.debug("2-->")
             if len(remaining_whitespace) >= 4:
                 stack_index = (
                     i + 1 if parser_state.token_stack[i].is_indented_code_block else i
@@ -732,13 +733,13 @@ class ContainerBlockProcessor:
         remaining_indent = parser_state.token_stack[
             i
         ].matching_markdown_token.indent_level - (used_indent + container_used_indent)
-        # POGGER.debug("$>remaining_indent:$:", i, remaining_indent)
+        POGGER.debug("$>remaining_indent:$:", i, remaining_indent)
         left_whitespace = remaining_whitespace[:remaining_indent]
-        # POGGER.debug("$>left_whitespace:$:", i, left_whitespace)
+        POGGER.debug("$>left_whitespace:$:", i, left_whitespace)
         if len(left_whitespace) < remaining_indent:
             if len(remaining_whitespace) >= 4:
                 stack_index = i
-            # POGGER.debug("3-->")
+            POGGER.debug("3-->")
             return True, stack_index, remaining_whitespace, used_indent
         remaining_whitespace = remaining_whitespace[remaining_indent:]
         assert parser_state.token_stack[i].matching_markdown_token.is_list_start
@@ -768,10 +769,10 @@ class ContainerBlockProcessor:
                 used_indent,
                 container_used_indent,
             )
-            # POGGER.debug(">do_break:$:", do_break)
-            # POGGER.debug(">stack_index:$:", stack_index)
-            # POGGER.debug(">remaining_whitespace:$:", remaining_whitespace)
-            # POGGER.debug(">used_indent:$:", used_indent)
+            POGGER.debug(">do_break:$:", do_break)
+            POGGER.debug(">stack_index:$:", stack_index)
+            POGGER.debug(">remaining_whitespace:$:", remaining_whitespace)
+            POGGER.debug(">used_indent:$:", used_indent)
             if do_break:
                 POGGER.debug(">break!")
                 break

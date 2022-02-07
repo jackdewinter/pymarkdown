@@ -3228,8 +3228,7 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_nested_three_block_max_ordered_max_block_max_empty():
+def test_nested_three_block_max_ordered_max_block_max_empty_x():
     """
     Verify that a nesting of block quote, ordered list, block quote, with
     the maximum number of spaces allowed, and no text on the first line, works properly.
@@ -3241,9 +3240,10 @@ def test_nested_three_block_max_ordered_max_block_max_empty():
     expected_tokens = [
         "[block-quote(1,4):   :   > ]",
         "[olist(1,9):.:1:14:   :]",
-        "[block-quote(1,15)::> \n   >          > ]",
-        "[para(1,17):\n]",
-        "[text(1,17):list\nitem::\n]",
+        "[block-quote(1,15)::>\n   >          > ]",
+        "[BLANK(1,16):]",
+        "[para(2,17):]",
+        "[text(2,17):item:]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
         "[end-olist:::True]",
@@ -3260,7 +3260,7 @@ def test_nested_three_block_max_ordered_max_block_max_empty():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
