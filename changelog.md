@@ -45,6 +45,9 @@
   - parser: when checking for block quote decrease, did not have empty scenarios checked for
 - [Fixed - Issue 263](https://github.com/jackdewinter/pymarkdown/issues/263)
   - parser: with empty list items, was creating 2 blank line tokens, plus extra list indent
+- [Fixed - Issue 264](https://github.com/jackdewinter/pymarkdown/issues/264)
+  - parser: fixed issue with blending current text and original text to parse
+  - parser: cleaned up remaining issues about closing off containers too early
 - [Fixed - Issue 265](https://github.com/jackdewinter/pymarkdown/issues/265)
   - parser: fixed with work on [Issue 262](https://github.com/jackdewinter/pymarkdown/issues/262)
 - [Fixed - Issue 268](https://github.com/jackdewinter/pymarkdown/issues/268)

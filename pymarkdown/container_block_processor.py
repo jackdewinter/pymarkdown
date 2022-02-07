@@ -139,7 +139,6 @@ class ContainerBlockProcessor:
             and is_not_in_root_list
         ):
             POGGER.debug("indent")
-            did_blank, force_leaf_token_parse = False, False
             (
                 can_continue,
                 line_to_parse,
@@ -155,11 +154,12 @@ class ContainerBlockProcessor:
                 skip_containers_before_leaf_blocks,
                 indent_already_processed,
                 was_other_paragraph_continuation,
+                did_blank,
+                force_leaf_token_parse,
             ) = ContainerBlockProcessor.__handle_indented_block_start(
                 parser_state, position_marker
             )
         else:
-            was_other_paragraph_continuation = False
             (
                 can_continue,
                 container_level_tokens,
@@ -178,6 +178,7 @@ class ContainerBlockProcessor:
                 indent_already_processed,
                 force_leaf_token_parse,
                 did_blank,
+                was_other_paragraph_continuation,
             ) = ContainerBlockProcessor.__handle_non_leaf_block(
                 parser_state,
                 position_marker,
@@ -268,7 +269,8 @@ class ContainerBlockProcessor:
             last_list_start_index,
             did_blank,
             requeue_line_info,
-        ) = (False, None, None, None, None, None, None, None, False, None)
+        ) = (False, None, False, None, None, None, None, None, False, None)
+        was_other_paragraph_continuation = False
 
         if (
             parser_state.token_stack
@@ -381,6 +383,7 @@ class ContainerBlockProcessor:
             indent_already_processed,
             force_leaf_token_parse,
             did_blank,
+            was_other_paragraph_continuation,
         )
 
     # pylint: enable=too-many-arguments, too-many-locals
@@ -416,7 +419,7 @@ class ContainerBlockProcessor:
             stack_index += 1
         assert stack_index > container_depth
         _, extracted_whitespace = ParserHelper.extract_whitespace(
-            position_marker.text_to_parse, container_used_indent
+            parser_state.original_line_to_parse, container_used_indent
         )
         return container_used_indent, extracted_whitespace
 
@@ -511,6 +514,7 @@ class ContainerBlockProcessor:
                 "position_marker.index_number:$:", position_marker.index_number
             )
             POGGER.debug("container_depth:$:", container_depth)
+            POGGER.debug("extracted_whitespace:$:", extracted_whitespace)
             if position_marker.index_number == -1 and container_depth:
                 (
                     container_used_indent,
@@ -768,10 +772,10 @@ class ContainerBlockProcessor:
                 used_indent,
                 container_used_indent,
             )
-            # POGGER.debug(">do_break:$:", do_break)
-            # POGGER.debug(">stack_index:$:", stack_index)
-            # POGGER.debug(">remaining_whitespace:$:", remaining_whitespace)
-            # POGGER.debug(">used_indent:$:", used_indent)
+            POGGER.debug(">do_break:$:", do_break)
+            POGGER.debug(">stack_index:$:", stack_index)
+            POGGER.debug(">remaining_whitespace:$:", remaining_whitespace)
+            POGGER.debug(">used_indent:$:", used_indent)
             if do_break:
                 POGGER.debug(">break!")
                 break
@@ -831,6 +835,8 @@ class ContainerBlockProcessor:
             last_list_start_index,
             indent_already_processed,
             was_other_paragraph_continuation,
+            did_blank,
+            force_leaf_token_parse,
         ) = (
             True,
             position_marker.text_to_parse,
@@ -843,6 +849,8 @@ class ContainerBlockProcessor:
             0,
             -1,
             -1,
+            False,
+            False,
             False,
             False,
         )
@@ -888,6 +896,8 @@ class ContainerBlockProcessor:
             False,
             indent_already_processed,
             was_other_paragraph_continuation,
+            did_blank,
+            force_leaf_token_parse,
         )
 
     # pylint: enable=too-many-locals
@@ -2952,7 +2962,6 @@ class ContainerBlockProcessor:
 
     # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments
     @staticmethod
     def __handle_special_block_quote_reduction(
         parser_state,
@@ -2996,8 +3005,6 @@ class ContainerBlockProcessor:
             POGGER.debug("not special_block_quote_reduction")
             close_tokens = []
         return close_tokens, None
-
-    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
