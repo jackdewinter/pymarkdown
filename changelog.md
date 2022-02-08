@@ -4,6 +4,26 @@
 
 ### Added
 
+- None
+
+### Changed
+
+- None
+
+### Fixed
+
+- None
+
+## Version 0.9.5 - Date: 2022-02-07
+
+This was a point release that highlighted improvements to the accuracy of reported tokens
+in situations with nested containers.
+
+PLEASE! If you encounter any issues with this product, please [file an issue report](https://github.com/jackdewinter/pymarkdown/issues) and tell us about it!
+There are a lot of combinations of Markdown elements to cover, and we need your help to prioritize them all!
+
+### Added
+
 - [Added - Issue 227](https://github.com/jackdewinter/pymarkdown/issues/227)
   - scenario tests: adding 3-level nesting tests with max space, and max space plus one variations
 - [Added - Issue 250](https://github.com/jackdewinter/pymarkdown/issues/250)
@@ -61,9 +81,6 @@ in situations with nested containers.
 - Removed "call home support" similar to VSCode and other products.
   - One of our contributors pointed out a number of falacies, and we agreed.
 - Enhanced testing of the whitespace calculations recently completed.
-
-PLEASE! If you encounter any issues with this product, please [file an issue report](https://github.com/jackdewinter/pymarkdown/issues) and tell us about it!
-There are a lot of combinations of Markdown elements to cover, and we need your help to prioritize them all!
 
 ### Changed
 
