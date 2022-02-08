@@ -52,8 +52,7 @@ The PyMarkdown project has the following advantages:
     and made more efficient by leveraging this token format. Where that is not possible,
     simple regular expressions and simple algorithms are used on a line-by-line basis.
 - Thoroughly tested
-  - The project currently has over 3200 scenario tests and coverage percentages
-    over 99%.
+  - The project currently has over 4100 scenario tests and a coverage percentage of 100%.
 - Extensible
   - The parser for the project adheres to the GFM specification and most of
     the rules for the parser leverage the tokens produced by that parser. The
