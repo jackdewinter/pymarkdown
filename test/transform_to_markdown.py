@@ -1536,7 +1536,42 @@ class TransformToMarkdown:
                 adjustment_since_newline = len(leading_space)
         return adjustment_since_newline
 
-    # pylint: disable=too-many-locals
+    @classmethod
+    def __rehydrate_next_list_item_blank_line(
+        cls, start_sequence, current_token, next_token
+    ):
+        print(f">>next_token.column_number>>:{next_token.column_number}:<<")
+        print(f">>current_token.column_number>>:{current_token.column_number}:<<")
+        start_content_length = 1
+        if current_token.list_start_content:
+            start_content_length += len(current_token.list_start_content)
+        new_column_number = (
+            next_token.column_number
+            - current_token.column_number
+            - start_content_length
+        )
+        start_sequence += ParserHelper.repeat_string(" ", new_column_number)
+        return start_sequence
+
+    def __rehydrate_next_list_item_not_blank_line(
+        self, start_sequence, did_container_start_midline, adjustment_since_newline
+    ):
+        if did_container_start_midline:
+            start_sequence = start_sequence.ljust(
+                self.container_token_stack[-1].indent_level, " "
+            )
+        else:
+            calculated_indent = (
+                self.container_token_stack[-1].indent_level - adjustment_since_newline
+            )
+            print(
+                f"rnli->calculated_indent>{calculated_indent} = "
+                + f"indent_level={self.container_token_stack[-1].indent_level} - "
+                + f"adjustment_since_newline{adjustment_since_newline}"
+            )
+            start_sequence = start_sequence.ljust(calculated_indent, " ")
+        return start_sequence
+
     def __rehydrate_next_list_item(
         self, current_token, previous_token, next_token, transformed_data
     ):
@@ -1596,39 +1631,17 @@ class TransformToMarkdown:
         )
 
         print(f"rnli->start_sequence>:{start_sequence}:")
-        if not next_token.is_blank_line:
-            if did_container_start_midline:
-                start_sequence = start_sequence.ljust(
-                    self.container_token_stack[-1].indent_level, " "
-                )
-            else:
-                calculated_indent = (
-                    self.container_token_stack[-1].indent_level
-                    - adjustment_since_newline
-                )
-                print(
-                    f"rnli->calculated_indent>{calculated_indent} = "
-                    + f"indent_level={self.container_token_stack[-1].indent_level} - "
-                    + f"adjustment_since_newline{adjustment_since_newline}"
-                )
-                start_sequence = start_sequence.ljust(calculated_indent, " ")
-        else:
-            print(f">>next_token.column_number>>:{next_token.column_number}:<<")
-            print(f">>current_token.column_number>>:{current_token.column_number}:<<")
-            start_content_length = 1
-            if current_token.list_start_content:
-                start_content_length += len(current_token.list_start_content)
-            new_column_number = (
-                next_token.column_number
-                - current_token.column_number
-                - start_content_length
+        if next_token.is_blank_line:
+            start_sequence = self.__rehydrate_next_list_item_blank_line(
+                start_sequence, current_token, next_token
             )
-            start_sequence += ParserHelper.repeat_string(" ", new_column_number)
+        else:
+            start_sequence = self.__rehydrate_next_list_item_not_blank_line(
+                start_sequence, did_container_start_midline, adjustment_since_newline
+            )
         print(f"rnli->start_sequence>:{start_sequence}:")
 
         return start_sequence
-
-    # pylint: enable=too-many-locals
 
     def __insert_leading_whitespace_at_newlines(self, text_to_modify):
         """

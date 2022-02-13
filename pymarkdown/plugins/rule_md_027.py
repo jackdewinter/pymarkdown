@@ -189,12 +189,14 @@ class RuleMd027(RulePlugin):
         del self.__container_tokens[-1]
 
     def __get_last_block_quote(self):
-        found_block_quote_token = None
-        for i in range(len(self.__container_tokens) - 1, -1, -1):
-            if self.__container_tokens[i].is_block_quote_start:
-                found_block_quote_token = self.__container_tokens[i]
-                break
-        return found_block_quote_token
+        return next(
+            (
+                self.__container_tokens[i]
+                for i in range(len(self.__container_tokens) - 1, -1, -1)
+                if self.__container_tokens[i].is_block_quote_start
+            ),
+            None,
+        )
 
     def __check_list_starts(
         self, context, token, num_container_tokens, is_new_list_item
