@@ -33,6 +33,7 @@ class RuleMd003(RulePlugin):
         super().__init__()
         self.__style_type = None
         self.__actual_style_type = None
+        self.__allow_consistent_setext_update = None
 
     def get_details(self):
         """
@@ -63,6 +64,14 @@ class RuleMd003(RulePlugin):
             default_value=RuleMd003.__consistent_style,
             valid_value_fn=self.__validate_configuration_style,
         )
+        if self.__style_type == RuleMd003.__consistent_style:
+            self.__allow_consistent_setext_update = (
+                self.plugin_configuration.get_boolean_property(
+                    "allow-setext-update", default_value=False
+                )
+            )
+        else:
+            self.__allow_consistent_setext_update = False
 
     def starting_new_file(self):
         """
@@ -87,9 +96,20 @@ class RuleMd003(RulePlugin):
                 self.__actual_style_type = heading_style_type
             elif self.__actual_style_type in RuleMd003.__simple_styles:
                 is_heading_bad = bool(heading_style_type != self.__actual_style_type)
+
+                if (
+                    is_heading_bad
+                    and self.__allow_consistent_setext_update
+                    and self.__actual_style_type == RuleMd003.__setext_style
+                    and heading_style_type == RuleMd003.__atx_style
+                    and not is_heading_level_1_or_2
+                ):
+
+                    is_heading_bad = False
+                    self.__actual_style_type = RuleMd003.__setext_with_atx_style
+
                 expected_style_type = self.__actual_style_type
             else:
-
                 if self.__actual_style_type == RuleMd003.__setext_with_atx_style:
                     base_atx_style = RuleMd003.__atx_style
                 else:
@@ -114,6 +134,13 @@ class RuleMd003(RulePlugin):
                         if is_heading_level_1_or_2
                         else base_atx_style
                     )
+                    if (
+                        expected_style_type == RuleMd003.__setext_style
+                        and is_heading_level_1_or_2
+                        and self.__actual_style_type
+                        == RuleMd003.__setext_with_atx_style
+                    ):
+                        expected_style_type = RuleMd003.__setext_with_atx_style
 
             if is_heading_bad:
                 extra_data = (
