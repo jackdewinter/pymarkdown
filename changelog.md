@@ -8,11 +8,13 @@
 
 ### Changed
 
-- None
+- [Changed - Issue 154](https://github.com/jackdewinter/pymarkdown/issues/154)
+  - rule md003 - added configuration `allow-setext-update`
 
 ### Fixed
 
-- None
+- [Fixed - Issue 95](https://github.com/jackdewinter/pymarkdown/issues/95)
+  - parser: with certain cases involving a new list item, can start a container in the middle of line
 
 ## Version 0.9.5 - Date: 2022-02-07
 
