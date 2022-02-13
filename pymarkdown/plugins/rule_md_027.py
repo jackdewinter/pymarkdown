@@ -294,7 +294,9 @@ class RuleMd027(RulePlugin):
             # if self.__debug_on:
             #     print("blank-error")
             self.report_next_token_error(context, token)
-        self.__bq_line_index[num_container_tokens] += 1
+
+        if self.__bq_line_index:
+            self.__bq_line_index[num_container_tokens] += 1
 
     def __handle_common_element(
         self, context, token, num_container_tokens, is_directly_within_block_quote
