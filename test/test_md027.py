@@ -1243,7 +1243,6 @@ def test_md027_good_block_quote_unordered_list_block_quote_text():
 
 
 @pytest.mark.rules
-@pytest.mark.skip
 def test_md027_bad_block_quote_unordered_list_block_quote_text_first():
     """
     Block quote with an aligned multiline list and an aligned block
@@ -1260,8 +1259,11 @@ def test_md027_bad_block_quote_unordered_list_block_quote_text_first():
         "test/resources/rules/md027/bad_block_quote_unordered_list_block_quote_text_first.md",
     ]
 
-    expected_return_code = 0
-    expected_output = ""
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md027/bad_block_quote_unordered_list_block_quote_text_first.md:3:3: "
+        + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
+    )
     expected_error = ""
 
     # Act
@@ -1274,7 +1276,6 @@ def test_md027_bad_block_quote_unordered_list_block_quote_text_first():
 
 
 @pytest.mark.rules
-@pytest.mark.skip
 def test_md027_bad_block_quote_unordered_list_block_quote_text_last():
     """
     Block quote with an aligned multiline list and an aligned block
@@ -1290,8 +1291,11 @@ def test_md027_bad_block_quote_unordered_list_block_quote_text_last():
         "test/resources/rules/md027/bad_block_quote_unordered_list_block_quote_text_last.md",
     ]
 
-    expected_return_code = 0
-    expected_output = ""
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md027/bad_block_quote_unordered_list_block_quote_text_last.md:4:7: "
+        + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
+    )
     expected_error = ""
 
     # Act

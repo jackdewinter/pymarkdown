@@ -6,6 +6,7 @@ from pymarkdown.plugin_details import PluginDetails
 from pymarkdown.rule_plugin import RulePlugin
 
 
+# pylint: disable=too-many-instance-attributes
 class RuleMd027(RulePlugin):
     """
     Class to implement a plugin that looks for excessive spaces after the block quote character.
@@ -20,6 +21,7 @@ class RuleMd027(RulePlugin):
         self.__is_paragraph_end_delayed = None
         self.__delayed_blank_line = None
         self.__have_incremented_for_this_line = None
+        self.__last_token = None
         # self.__debug_on = False
 
     def get_details(self):
@@ -47,6 +49,7 @@ class RuleMd027(RulePlugin):
         self.__is_paragraph_end_delayed = False
         self.__delayed_blank_line = None
         self.__have_incremented_for_this_line = False
+        self.__last_token = None
 
     def __process_delayed_paragraph_end(self, token, num_container_tokens):
         if self.__is_paragraph_end_delayed:
@@ -127,6 +130,8 @@ class RuleMd027(RulePlugin):
         elif num_container_tokens:
             self.__handle_within_block_quotes(context, token)
 
+        self.__last_token = token
+
     def __handle_block_quote_start(self, token):
         self.__container_tokens.append(token)
 
@@ -175,30 +180,32 @@ class RuleMd027(RulePlugin):
         ):
             self.__bq_line_index[num_container_tokens] += 1
 
-        assert newlines_in_container == self.__bq_line_index[num_container_tokens], (
-            str(newlines_in_container)
-            + " == "
-            + str(self.__bq_line_index[num_container_tokens])
-        )
+        # assert newlines_in_container == self.__bq_line_index[num_container_tokens], (
+        #     str(newlines_in_container)
+        #     + " == "
+        #     + str(self.__bq_line_index[num_container_tokens])
+        # )
         del self.__bq_line_index[num_container_tokens]
         del self.__container_tokens[-1]
 
     def __get_last_block_quote(self):
-        found_block_quote_token = None
-        for i in range(len(self.__container_tokens) - 1, -1, -1):
-            if self.__container_tokens[i].is_block_quote_start:
-                found_block_quote_token = self.__container_tokens[i]
-                break
-        return found_block_quote_token
+        return next(
+            (
+                self.__container_tokens[i]
+                for i in range(len(self.__container_tokens) - 1, -1, -1)
+                if self.__container_tokens[i].is_block_quote_start
+            ),
+            None,
+        )
 
     def __check_list_starts(
         self, context, token, num_container_tokens, is_new_list_item
     ):
         # if self.__debug_on:
         #     print(f"num_container_tokens={num_container_tokens};")
+        #     print(f"container_tokens={ParserHelper.make_value_visible(self.__container_tokens)};")
         _ = num_container_tokens
-        found_block_quote_token = self.__get_last_block_quote()
-        if found_block_quote_token:
+        if found_block_quote_token := self.__get_last_block_quote():
             is_start_properly_scoped = False
             if is_new_list_item:
                 is_start_properly_scoped = (
@@ -213,12 +220,39 @@ class RuleMd027(RulePlugin):
             #         f"is_start_properly_scoped={is_start_properly_scoped};"
             #         + f"found_block_quote_token={ParserHelper.make_value_visible(found_block_quote_token)}"
             #     )
-            if is_start_properly_scoped and token.extracted_whitespace:
+            #     print(f"token.extracted_whitespace>:{token.extracted_whitespace}:")
+            #     print(f"self.__last_token>:{ParserHelper.make_value_visible(self.__last_token)}:")
+
+            # In rare cases, a block quote is ended in the middle of a line.
+            # This is one of those cases.
+            whitespace_to_use = token.extracted_whitespace
+            if (
+                self.__last_token
+                and self.__last_token.is_end_token
+                and self.__last_token.start_markdown_token.is_block_quote_start
+            ):
+                # if self.__debug_on:
+                #     print(f"self.__last_token.start_markdown_token>:{ParserHelper.make_value_visible(\
+                #       self.__last_token.start_markdown_token)}:")
+                #     print("BOOM")
+                split_line_length = (
+                    self.__last_token.start_markdown_token.leading_spaces.split("\n")[
+                        -1
+                    ]
+                )
+                # if self.__debug_on:
+                #     print(f"BOOM:{split_line_length}:")
+                whitespace_to_use = whitespace_to_use[len(split_line_length) :]
+
+            if is_start_properly_scoped and whitespace_to_use:
+                column_number_delta = -(token.column_number - len(whitespace_to_use))
                 # if self.__debug_on:
                 #     print("list-error")
-                column_number_delta = -(
-                    token.column_number - len(token.extracted_whitespace)
-                )
+                #     line_index = (
+                #         self.__bq_line_index[num_container_tokens] + 0
+                #     )
+                #     print(f"5>{line_index}")
+                #     print(f"column-delta>{column_number_delta}")
                 self.report_next_token_error(
                     context, token, column_number_delta=column_number_delta
                 )
@@ -624,3 +658,6 @@ class RuleMd027(RulePlugin):
             self.__last_leaf_token = token
         elif token.is_html_block_end or token.is_indented_code_block_end:
             self.__last_leaf_token = None
+
+
+# pylint: enable=too-many-instance-attributes

@@ -455,7 +455,8 @@ class ListBlockProcessor:
                 extracted_whitespace,
                 number_of_digits,
                 block_quote_data,
-                adj_ws=adj_ws,
+                adj_ws,
+                position_marker,
             )
 
             POGGER.debug(
@@ -1053,6 +1054,7 @@ class ListBlockProcessor:
         marker_width_minus_one,
         block_quote_data,
         adj_ws,
+        position_marker,
     ):
         """
         Handle the processing of the first part of the list.
@@ -1093,7 +1095,9 @@ class ListBlockProcessor:
         (
             container_level_tokens,
             block_quote_data,
-        ) = ListBlockProcessor.__handle_list_nesting(parser_state, block_quote_data)
+        ) = ListBlockProcessor.__handle_list_nesting(
+            parser_state, block_quote_data, position_marker
+        )
 
         return (
             indent_level,
@@ -1178,7 +1182,7 @@ class ListBlockProcessor:
     # pylint: enable=too-many-arguments
 
     @staticmethod
-    def __handle_list_nesting(parser_state, block_quote_data):
+    def __handle_list_nesting(parser_state, block_quote_data, position_marker):
         """
         Resolve any nesting issues with block quotes.
         """
@@ -1206,8 +1210,47 @@ class ListBlockProcessor:
                 include_lists=True,
             )
             POGGER.debug("container_level_tokens>>$", container_level_tokens)
+            POGGER.debug("stack>>$", parser_state.token_stack)
+            POGGER.debug(
+                "last token>>$", parser_state.token_stack[-1].matching_markdown_token
+            )
+            POGGER.debug("position_marker.line_number>>$", position_marker.line_number)
             last_block_index = parser_state.find_last_block_quote_on_stack()
-            if last_block_index:
+            POGGER.debug("last_block_index>>$", last_block_index)
+            POGGER.debug(
+                "parser_state.token_stack[-1]>>$", parser_state.token_stack[-1]
+            )
+            POGGER.debug(
+                "parser_state.token_stack[-1].matching_markdown_token>>$",
+                parser_state.token_stack[-1].matching_markdown_token,
+            )
+
+            first_conditional = not parser_state.token_stack[-1].matching_markdown_token
+            second_conditional = (not first_conditional) and (
+                position_marker.line_number
+                == parser_state.token_stack[-1].matching_markdown_token.line_number
+            )
+            third_conditional = parser_state.token_stack[-1].is_block_quote
+
+            secondary_conditionals = (
+                first_conditional or second_conditional or third_conditional
+            )
+            POGGER.debug(
+                "secondary_conditionals>>$ = first_conditional:$ or second_conditional:$ or "
+                + "third_conditional:$",
+                secondary_conditionals,
+                first_conditional,
+                second_conditional,
+                third_conditional,
+            )
+            all_conditionals = last_block_index and secondary_conditionals
+            POGGER.debug(
+                "all_conditionals>>$ = last_block_index:$ or a2:$",
+                all_conditionals,
+                last_block_index,
+                secondary_conditionals,
+            )
+            if all_conditionals:
                 current_last_block_token = parser_state.token_stack[
                     last_block_index
                 ].matching_markdown_token

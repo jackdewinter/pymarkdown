@@ -1728,7 +1728,7 @@ class ContainerBlockProcessor:
         )
         if found_block_quote_token:
             leading_spaces = found_block_quote_token.calculate_next_leading_space_part(
-                increment_index=False, delta=-1
+                increment_index=False, delta=-1, allow_overflow=True
             )
             POGGER.debug("PLFCB>>leading_spaces>>:$:", leading_spaces)
             old_start_index = len(leading_spaces)
