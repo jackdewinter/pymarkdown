@@ -1937,3 +1937,61 @@ def test_md027_good_block_quote_with_trailing_empty_line():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md027_issue_189():
+    """
+    TBD
+    reported as https://github.com/jackdewinter/pymarkdown/issues/189
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--stack-trace",
+        "--disable-rules",
+        "md003,md013,md022",
+        "scan",
+        "test/resources/rules/md027/issue-189.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md027_issue_189_mini():
+    """
+    TBD
+    reported as https://github.com/jackdewinter/pymarkdown/issues/189
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--stack-trace",
+        "scan",
+        "test/resources/rules/md027/issue-189-mini.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
