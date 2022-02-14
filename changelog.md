@@ -15,6 +15,8 @@
 
 - [Fixed - Issue 95](https://github.com/jackdewinter/pymarkdown/issues/95)
   - parser: with certain cases involving a new list item, can start a container in the middle of line
+- [Fixed - Issue 161](https://github.com/jackdewinter/pymarkdown/issues/161)
+  - rule md005: was not returning proper values for actual and expected
 - [Fixed - Issue 189](https://github.com/jackdewinter/pymarkdown/issues/189)
   - rule md027: addressed index out of bounds error keeping track of blank lines after a block quote was started in a previous section
 
