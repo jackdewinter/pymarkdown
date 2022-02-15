@@ -20,7 +20,7 @@
         },
         {
             "name": "test.rules.test_md003",
-            "totalTests": 38,
+            "totalTests": 41,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -180,10 +180,10 @@
         },
         {
             "name": "test.rules.test_md027",
-            "totalTests": 66,
+            "totalTests": 68,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 2,
+            "skippedTests": 0,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -748,10 +748,10 @@
         },
         {
             "name": "test.test_markdown_extra",
-            "totalTests": 66,
+            "totalTests": 70,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 4,
+            "skippedTests": 0,
             "elapsedTimeInMilliseconds": 0
         },
         {

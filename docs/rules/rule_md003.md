@@ -38,8 +38,8 @@ SetExt Heading
 ### Correct Scenarios
 
 This rule does not trigger when a consistent heading style is used within
-the document.  By default, the heading style is decided upon encountering
-the first heading element in the document:
+the document.  The default style `consistent` decides the heading style upon
+encountering the first heading element in the document.  In this example:
 
 ```Markdown
 # ATX style H1
@@ -47,7 +47,9 @@ the first heading element in the document:
 ## ATX style H2
 ```
 
-Configuration may be used to specify an exact heading style to be used within
+the heading style that would be decided on is `atx`.
+
+Configuration may be used to specify a specific heading style to be used within
 the document.  This is extremely useful for the `setext` style, which is limited
 by Markdown to only 2 levels.  The `setext_with_atx` and `setext_with_atx_closed`
 styles can be used to specify that for levels 3 and higher, the `atx` and
@@ -66,6 +68,16 @@ Setext style H2
 ### ATX style H3
 ```
 
+#### Allowing Auto-Detection of `setext_with_atx`
+
+Using the default style of `consistent` to auto-detect the `setext_with_atx` style
+is problematic, as it appears first as the `setext` style.  The `allow-setext-update`
+configuration value was added to address this issue.  If this configuration setting
+is enabled with the previous example, the rule will still detect the `setext` style
+based on the first SetExt Heading element.  However, when a level 3 (or higher)
+Atx Heading element is encounted and this configuration setting is enabled, it will
+switch to the `setext_with_atx` style.
+
 ## Configuration
 
 | Prefixes |
@@ -78,6 +90,7 @@ Setext style H2
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `style` | string (see below) | `consistent` | Style of headings expected in the document. |
+| `allow-setext-update` | boolean | `False` | If `style` is `consistent` and the document started off as `setext`, allow an upgrade to `setext_with_atx` if a level 3 Atx Header or higher is observed. |
 
 Valid heading styles:
 
@@ -94,3 +107,4 @@ Valid heading styles:
 
 This rule is largely inspired by the MarkdownLint rule
 [MD003](https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md003---heading-style).
+The `allow-setext-update` configuration value was added due to a [user request](https://github.com/jackdewinter/pymarkdown/issues/154).
