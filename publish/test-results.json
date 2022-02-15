@@ -3,6 +3,174 @@
     "reportSource": "pytest",
     "measurements": [
         {
+            "name": "test.basic.test_calculate_length",
+            "totalTests": 22,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.basic.test_collect_backwards_while_character",
+            "totalTests": 10,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.basic.test_collect_backwards_while_one_of_characters",
+            "totalTests": 10,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.basic.test_collect_until_character",
+            "totalTests": 7,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.basic.test_collect_until_one_of_characters",
+            "totalTests": 7,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.basic.test_collect_while_character",
+            "totalTests": 9,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.basic.test_collect_while_one_of_characters",
+            "totalTests": 7,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.basic.test_complete_html_tags",
+            "totalTests": 17,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.basic.test_constant_wrapper",
+            "totalTests": 2,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.basic.test_extract_any_whitespace",
+            "totalTests": 9,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.basic.test_extract_until_whitespace",
+            "totalTests": 7,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.basic.test_extract_whitespace",
+            "totalTests": 9,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.basic.test_extract_whitespace_from_end",
+            "totalTests": 3,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.basic.test_find_nth_occurrence",
+            "totalTests": 5,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.basic.test_html_tags",
+            "totalTests": 29,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.basic.test_is_character_at_index",
+            "totalTests": 43,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.basic.test_markdown_token",
+            "totalTests": 4,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.basic.test_source_providers",
+            "totalTests": 8,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.extensions.test_extension_manager",
+            "totalTests": 15,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.extensions.test_markdown_front_matter",
+            "totalTests": 20,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.extensions.test_markdown_pragmas",
+            "totalTests": 13,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
             "name": "test.gfm.test_markdown_atx_headings",
             "totalTests": 18,
             "failedTests": 0,
@@ -411,6 +579,190 @@
             "elapsedTimeInMilliseconds": 0
         },
         {
+            "name": "test.nested_three.test_markdown_nested_three_block_block",
+            "totalTests": 190,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.nested_three.test_markdown_nested_three_block_ordered",
+            "totalTests": 101,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.nested_three.test_markdown_nested_three_block_unordered",
+            "totalTests": 101,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.nested_three.test_markdown_nested_three_ordered_block",
+            "totalTests": 80,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 1,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.nested_three.test_markdown_nested_three_ordered_ordered",
+            "totalTests": 32,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.nested_three.test_markdown_nested_three_ordered_unordered",
+            "totalTests": 32,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.nested_three.test_markdown_nested_three_unordered_block",
+            "totalTests": 80,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 2,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.nested_three.test_markdown_nested_three_unordered_ordered",
+            "totalTests": 32,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.nested_three.test_markdown_nested_three_unordered_unordered",
+            "totalTests": 32,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.paragraph_series.test_markdown_paragraph_series_a",
+            "totalTests": 11,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.paragraph_series.test_markdown_paragraph_series_b",
+            "totalTests": 9,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.paragraph_series.test_markdown_paragraph_series_c",
+            "totalTests": 11,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.paragraph_series.test_markdown_paragraph_series_d",
+            "totalTests": 13,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.paragraph_series.test_markdown_paragraph_series_e",
+            "totalTests": 5,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.paragraph_series.test_markdown_paragraph_series_h",
+            "totalTests": 24,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.paragraph_series.test_markdown_paragraph_series_j",
+            "totalTests": 52,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.paragraph_series.test_markdown_paragraph_series_m_fb",
+            "totalTests": 30,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.paragraph_series.test_markdown_paragraph_series_m_ha",
+            "totalTests": 26,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.paragraph_series.test_markdown_paragraph_series_m_hb",
+            "totalTests": 30,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.paragraph_series.test_markdown_paragraph_series_m_hs",
+            "totalTests": 32,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.paragraph_series.test_markdown_paragraph_series_m_ib",
+            "totalTests": 32,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.paragraph_series.test_markdown_paragraph_series_m_tb",
+            "totalTests": 29,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.paragraph_series.test_markdown_paragraph_series_n",
+            "totalTests": 35,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
             "name": "test.rules.test_md001",
             "totalTests": 10,
             "failedTests": 0,
@@ -795,136 +1147,8 @@
             "elapsedTimeInMilliseconds": 0
         },
         {
-            "name": "test.test_calculate_length",
-            "totalTests": 22,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_collect_backwards_while_character",
-            "totalTests": 10,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_collect_backwards_while_one_of_characters",
-            "totalTests": 10,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_collect_until_character",
-            "totalTests": 7,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_collect_until_one_of_characters",
-            "totalTests": 7,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_collect_while_character",
-            "totalTests": 9,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_collect_while_one_of_characters",
-            "totalTests": 7,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_complete_html_tags",
-            "totalTests": 17,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_constant_wrapper",
-            "totalTests": 2,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_extension_manager",
-            "totalTests": 15,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_extract_any_whitespace",
-            "totalTests": 9,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_extract_until_whitespace",
-            "totalTests": 7,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_extract_whitespace",
-            "totalTests": 9,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_extract_whitespace_from_end",
-            "totalTests": 3,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_find_nth_occurrence",
-            "totalTests": 5,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_html_tags",
-            "totalTests": 29,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_is_character_at_index",
-            "totalTests": 43,
+            "name": "test.rules.test_plugin_manager",
+            "totalTests": 41,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -955,232 +1179,8 @@
             "elapsedTimeInMilliseconds": 0
         },
         {
-            "name": "test.test_markdown_front_matter",
-            "totalTests": 20,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_markdown_nested_three_block_block",
-            "totalTests": 190,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_markdown_nested_three_block_ordered",
-            "totalTests": 101,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_markdown_nested_three_block_unordered",
-            "totalTests": 101,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_markdown_nested_three_ordered_block",
-            "totalTests": 80,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 1,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_markdown_nested_three_ordered_ordered",
-            "totalTests": 32,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_markdown_nested_three_ordered_unordered",
-            "totalTests": 32,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_markdown_nested_three_unordered_block",
-            "totalTests": 80,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 2,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_markdown_nested_three_unordered_ordered",
-            "totalTests": 32,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_markdown_nested_three_unordered_unordered",
-            "totalTests": 32,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_markdown_paragraph_series_a",
-            "totalTests": 11,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_markdown_paragraph_series_b",
-            "totalTests": 9,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_markdown_paragraph_series_c",
-            "totalTests": 11,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_markdown_paragraph_series_d",
-            "totalTests": 13,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_markdown_paragraph_series_e",
-            "totalTests": 5,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_markdown_paragraph_series_h",
-            "totalTests": 24,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_markdown_paragraph_series_j",
-            "totalTests": 52,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_markdown_paragraph_series_m_fb",
-            "totalTests": 30,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_markdown_paragraph_series_m_ha",
-            "totalTests": 26,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_markdown_paragraph_series_m_hb",
-            "totalTests": 30,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_markdown_paragraph_series_m_hs",
-            "totalTests": 32,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_markdown_paragraph_series_m_ib",
-            "totalTests": 32,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_markdown_paragraph_series_m_tb",
-            "totalTests": 29,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_markdown_paragraph_series_n",
-            "totalTests": 35,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_markdown_pragmas",
-            "totalTests": 13,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_markdown_token",
-            "totalTests": 4,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
             "name": "test.test_markdown_transform_to_gfm",
             "totalTests": 2,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_plugin_manager",
-            "totalTests": 41,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.test_source_providers",
-            "totalTests": 8,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
