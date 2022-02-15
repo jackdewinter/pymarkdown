@@ -1,9 +1,9 @@
 """
 Extra tests for three level nesting with un/or.
 """
-import pytest
+from test.utils import act_and_assert
 
-from .utils import act_and_assert
+import pytest
 
 # pylint: disable=too-many-lines
 

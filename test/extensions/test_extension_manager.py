@@ -3,8 +3,7 @@ Module to provide tests related to the extension manager for the scanner.
 """
 import os
 from test.markdown_scanner import MarkdownScanner
-
-from .utils import write_temporary_configuration
+from test.utils import write_temporary_configuration
 
 # pylint: disable=too-many-lines
 
