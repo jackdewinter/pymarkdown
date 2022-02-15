@@ -3,10 +3,9 @@ Module to provide tests related to the MD003 rule.
 """
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.utils import write_temporary_configuration
 
 import pytest
-
-from .utils import write_temporary_configuration
 
 # pylint: disable=too-many-lines
 
