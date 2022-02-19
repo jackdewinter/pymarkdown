@@ -82,7 +82,7 @@ class RuleMd033(RulePlugin):
         ):
             is_first_image_element = full_tag_text.endswith("</h1>")
             if is_first_image_element:
-                full_tag_text = full_tag_text[:-len("</h1>")]
+                full_tag_text = full_tag_text[: -len("</h1>")]
                 end_of_start_heading_index = full_tag_text.find(">")
                 assert end_of_start_heading_index != -1
                 full_tag_text = full_tag_text[end_of_start_heading_index + 1 :]
