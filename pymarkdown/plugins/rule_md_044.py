@@ -49,11 +49,10 @@ class RuleMd044(RulePlugin):
             "code_blocks", default_value=True
         )
         self.__proper_name_list = []
-        names = self.plugin_configuration.get_string_property(
+        if names := self.plugin_configuration.get_string_property(
             "names",
             default_value="",
-        ).strip()
-        if names:
+        ).strip():
             lower_list = []
             for next_name in names.split(","):
                 next_name = next_name.strip()

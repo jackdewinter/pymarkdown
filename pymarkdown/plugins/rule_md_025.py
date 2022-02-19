@@ -70,12 +70,18 @@ class RuleMd025(RulePlugin):
         Event that a new token is being processed.
         """
         # print(">>>" + str(token).replace(ParserHelper.newline_character, "\\n"))
-        if token.is_atx_heading or token.is_setext_heading:
-            if token.hash_count == self.__level:
-                if self.__have_top_level:
-                    self.report_next_token_error(context, token)
-                else:
-                    self.__have_top_level = True
-        elif token.is_front_matter:
-            if self.__front_matter_title in token.matter_map:
-                self.__have_top_level = True
+        if (
+            (token.is_atx_heading or token.is_setext_heading)
+            and token.hash_count == self.__level
+            and self.__have_top_level
+        ):
+            self.report_next_token_error(context, token)
+        elif (
+            (token.is_atx_heading or token.is_setext_heading)
+            and token.hash_count == self.__level
+            or not token.is_atx_heading
+            and not token.is_setext_heading
+            and token.is_front_matter
+            and self.__front_matter_title in token.matter_map
+        ):
+            self.__have_top_level = True

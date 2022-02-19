@@ -61,8 +61,7 @@ class RuleMd011(RulePlugin):
             and "(" in line
             and "[" in line
         ):
-            regex_search = self.__reverse_link_syntax.search(line)
-            if regex_search:
+            if regex_search := self.__reverse_link_syntax.search(line):
                 regex_span = regex_search.span()
                 extra_error_information = line[regex_span[0] : regex_span[1]]
                 self.report_next_line_error(
