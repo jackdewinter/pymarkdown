@@ -77,8 +77,7 @@ class PluginManager:
 
         all_additional_paths = []
         all_additional_paths.extend([] if not additional_paths else additional_paths)
-        more_paths = properties.get_string_property("plugins.additional_paths")
-        if more_paths:
+        if more_paths := properties.get_string_property("plugins.additional_paths"):
             all_additional_paths.extend(more_paths.split(","))
 
         if all_additional_paths:
@@ -172,6 +171,18 @@ class PluginManager:
             help="an id",
         )
 
+    def __add_row_for_next_plugin(self, next_plugin_id, args, show_rows, list_re):
+        # if next_plugin_id.startswith("md9"):
+        #     continue
+        next_plugin_list = []
+        for next_plugin in self.__registered_plugins:
+            if next_plugin.plugin_id == next_plugin_id:
+                next_plugin_list.append(next_plugin)
+        assert len(next_plugin_list) == 1
+        next_plugin = next_plugin_list[0]
+        if next_plugin.plugin_version != "0.0.0" or args.show_all:
+            self.__show_row_if_matches(list_re, next_plugin_id, next_plugin, show_rows)
+
     def __handle_argparse_subparser_list(self, args):
         list_re = None
         if args.list_filter:
@@ -179,20 +190,11 @@ class PluginManager:
                 "^" + args.list_filter.replace("*", ".*").replace("?", ".") + "$"
             )
 
-        ids, show_rows = self.all_plugin_ids, []
+        show_rows = []
+        ids = self.all_plugin_ids
         ids.sort()
         for next_plugin_id in ids:
-            # if next_plugin_id.startswith("md9"):
-            #     continue
-            next_plugin_list = []
-            for next_plugin in self.__registered_plugins:
-                if next_plugin.plugin_id == next_plugin_id:
-                    next_plugin_list.append(next_plugin)
-            assert len(next_plugin_list) == 1
-            next_plugin = next_plugin_list[0]
-            if next_plugin.plugin_version == "0.0.0" and not args.show_all:
-                continue
-            self.__show_row_if_matches(list_re, next_plugin_id, next_plugin, show_rows)
+            self.__add_row_for_next_plugin(next_plugin_id, args, show_rows, list_re)
         if show_rows:
             headers = [
                 "id",
@@ -415,10 +417,9 @@ class PluginManager:
             plugin_object, command_line_disabled_rules, command_line_enabled_rules
         )
         if new_value is None:
-            plugin_specific_facade = self.__find_configuration_for_plugin(
+            if plugin_specific_facade := self.__find_configuration_for_plugin(
                 plugin_object, properties
-            )
-            if plugin_specific_facade:
+            ):
                 LOGGER.debug(
                     "Plugins specific configuration found, searching for key 'enabled'."
                 )
@@ -573,6 +574,36 @@ class PluginManager:
 
         return plugin_object
 
+    def __register_plugin_id(self, plugin_object, instance_file_name, next_key):
+        if not PluginManager.__id_regex.match(next_key):
+            raise ValueError(
+                f"Unable to register plugin '{instance_file_name}' with id '{next_key}' as "
+                + "id is not a valid id in the form 'aannn' or 'aaannn'."
+            )
+
+        if next_key in self.__all_ids:
+            found_plugin = self.__all_ids[next_key]
+            raise ValueError(
+                f"Unable to register plugin '{instance_file_name}' with id '{next_key}' as "
+                + f"plugin '{found_plugin.plugin_file_name}' is already registered with that id."
+            )
+        self.__all_ids[next_key] = plugin_object
+
+    def __register_plugin_names(self, plugin_object, instance_file_name):
+        for next_key in plugin_object.plugin_names:
+            if not PluginManager.__name_regex.match(next_key):
+                raise ValueError(
+                    f"Unable to register plugin '{instance_file_name}' with name '{next_key}' as "
+                    + "name is not a valid name in the form 'an-an'."
+                )
+            if next_key in self.__all_ids:
+                found_plugin = self.__all_ids[next_key]
+                raise ValueError(
+                    f"Unable to register plugin '{instance_file_name}' with name '{next_key}' as "
+                    + f"plugin '{found_plugin.plugin_file_name}' is already registered with that name."
+                )
+            self.__all_ids[next_key] = plugin_object
+
     # pylint: disable=too-many-arguments
     def __register_individual_plugin(
         self,
@@ -589,33 +620,8 @@ class PluginManager:
         plugin_object = self.__get_plugin_details(plugin_instance, instance_file_name)
 
         next_key = plugin_object.plugin_id
-        if not PluginManager.__id_regex.match(next_key):
-            raise ValueError(
-                f"Unable to register plugin '{instance_file_name}' with id '{next_key}' as "
-                + "id is not a valid id in the form 'aannn' or 'aaannn'."
-            )
-
-        if next_key in self.__all_ids:
-            found_plugin = self.__all_ids[next_key]
-            raise ValueError(
-                f"Unable to register plugin '{instance_file_name}' with id '{next_key}' as "
-                + f"plugin '{found_plugin.plugin_file_name}' is already registered with that id."
-            )
-        self.__all_ids[next_key] = plugin_object
-
-        for next_key in plugin_object.plugin_names:
-            if not PluginManager.__name_regex.match(next_key):
-                raise ValueError(
-                    f"Unable to register plugin '{instance_file_name}' with name '{next_key}' as "
-                    + "name is not a valid name in the form 'an-an'."
-                )
-            if next_key in self.__all_ids:
-                found_plugin = self.__all_ids[next_key]
-                raise ValueError(
-                    f"Unable to register plugin '{instance_file_name}' with name '{next_key}' as "
-                    + f"plugin '{found_plugin.plugin_file_name}' is already registered with that name."
-                )
-            self.__all_ids[next_key] = plugin_object
+        self.__register_plugin_id(plugin_object, instance_file_name, next_key)
+        self.__register_plugin_names(plugin_object, instance_file_name)
         if not plugin_object.plugin_description.strip():
             raise ValueError(
                 f"Unable to register plugin '{instance_file_name}' with a description string that is blank."
