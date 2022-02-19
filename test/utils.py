@@ -9,7 +9,7 @@ from test.transform_to_markdown import TransformToMarkdown
 
 from application_properties import ApplicationProperties
 
-from pymarkdown.extension_manager import ExtensionManager
+from pymarkdown.extension_manager.extension_manager import ExtensionManager
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.tokenized_markdown import TokenizedMarkdown

@@ -59,7 +59,7 @@ PACKAGE_MODULES = [
 setup(
     name=PACKAGE_NAME,
     version=SEMANTIC_VERSION,
-    python_requires=">=" + MINIMUM_PYTHON_VERSION,
+    python_requires=f">={MINIMUM_PYTHON_VERSION}",
     install_requires=parse_requirements(),
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,

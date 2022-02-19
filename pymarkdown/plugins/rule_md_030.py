@@ -1,8 +1,8 @@
 """
 Module to implement a plugin that ensures consistent spacing after the list markers.
 """
-from pymarkdown.plugin_details import PluginDetails
-from pymarkdown.rule_plugin import RulePlugin
+from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
 # pylint: disable=too-many-instance-attributes

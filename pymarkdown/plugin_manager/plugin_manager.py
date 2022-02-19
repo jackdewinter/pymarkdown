@@ -11,11 +11,11 @@ import sys
 from application_properties import ApplicationPropertiesFacade
 from columnar import columnar
 
-from pymarkdown.bad_plugin_error import BadPluginError
 from pymarkdown.extensions.pragma_token import PragmaExtension
-from pymarkdown.found_plugin import FoundPlugin
 from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.plugin_scan_context import PluginScanContext
+from pymarkdown.plugin_manager.bad_plugin_error import BadPluginError
+from pymarkdown.plugin_manager.found_plugin import FoundPlugin
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 
 LOGGER = logging.getLogger(__name__)
 

@@ -2,8 +2,8 @@
 Module to implement a plugin that ensures that a mandates set of headers are present.
 """
 from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.plugin_details import PluginDetails
-from pymarkdown.rule_plugin import RulePlugin
+from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
 class RuleMd043(RulePlugin):

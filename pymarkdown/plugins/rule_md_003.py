@@ -2,8 +2,8 @@
 Module to implement a plugin that looks for heading styles that are inconsistent
 throughout the document.
 """
-from pymarkdown.plugin_details import PluginDetails
-from pymarkdown.rule_plugin import RulePlugin
+from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
 class RuleMd003(RulePlugin):

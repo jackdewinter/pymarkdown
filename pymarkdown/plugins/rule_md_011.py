@@ -4,8 +4,8 @@ it appear like the author got the inline link syntax reversed.
 """
 import re
 
-from pymarkdown.plugin_details import PluginDetails
-from pymarkdown.rule_plugin import RulePlugin
+from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
 class RuleMd011(RulePlugin):
