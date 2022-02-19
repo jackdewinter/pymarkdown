@@ -330,9 +330,7 @@ class PyMarkdownLint:
                 did_error_scanning_files = True
                 break
 
-        files_to_parse = list(files_to_parse)
-        files_to_parse.sort()
-
+        files_to_parse = sorted(files_to_parse)
         POGGER.info("Number of files found: $", len(files_to_parse))
         return files_to_parse, did_error_scanning_files
 
