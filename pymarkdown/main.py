@@ -15,10 +15,11 @@ from application_properties import (
 )
 
 from pymarkdown.bad_tokenization_error import BadTokenizationError
-from pymarkdown.extension_manager import ExtensionManager
+from pymarkdown.extension_manager.extension_manager import ExtensionManager
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
-from pymarkdown.plugin_manager import BadPluginError, PluginManager
+from pymarkdown.plugin_manager.bad_plugin_error import BadPluginError
+from pymarkdown.plugin_manager.plugin_manager import PluginManager
 from pymarkdown.source_providers import FileSourceProvider
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
 
@@ -60,7 +61,7 @@ class PyMarkdownLint:
         assert os.path.isabs(file_path)
         file_path = file_path.replace(os.sep, "/")
         last_index = file_path.rindex("/")
-        file_path = file_path[: last_index + 1] + "version.py"
+        file_path = f"{file_path[: last_index + 1]}version.py"
         version_meta = runpy.run_path(file_path)
         return version_meta["__version__"]
 
@@ -329,9 +330,7 @@ class PyMarkdownLint:
                 did_error_scanning_files = True
                 break
 
-        files_to_parse = list(files_to_parse)
-        files_to_parse.sort()
-
+        files_to_parse = sorted(files_to_parse)
         POGGER.info("Number of files found: $", len(files_to_parse))
         return files_to_parse, did_error_scanning_files
 

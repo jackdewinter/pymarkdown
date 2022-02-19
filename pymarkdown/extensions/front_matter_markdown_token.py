@@ -4,7 +4,7 @@ Module to provide for a leaf element that can be added to markdown parsing strea
 import logging
 import string
 
-from pymarkdown.extension_impl import ExtensionDetails
+from pymarkdown.extension_manager.extension_impl import ExtensionDetails
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.markdown_token import MarkdownToken

@@ -2,8 +2,8 @@
 Module to implement a plugin that looks for inline HTML in the files.
 """
 from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.plugin_details import PluginDetails
-from pymarkdown.rule_plugin import RulePlugin
+from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
 class RuleMd033(RulePlugin):
@@ -49,8 +49,7 @@ class RuleMd033(RulePlugin):
         )
         self.__allowed_elements = []
         for next_element in allowed_elements.split(","):
-            next_element = next_element.strip()
-            if next_element:
+            if next_element := next_element.strip():
                 self.__allowed_elements.append(next_element)
 
     def starting_new_file(self):
@@ -83,7 +82,7 @@ class RuleMd033(RulePlugin):
         ):
             is_first_image_element = full_tag_text.endswith("</h1>")
             if is_first_image_element:
-                full_tag_text = full_tag_text[0 : -len("</h1>")]
+                full_tag_text = full_tag_text[: -len("</h1>")]
                 end_of_start_heading_index = full_tag_text.find(">")
                 assert end_of_start_heading_index != -1
                 full_tag_text = full_tag_text[end_of_start_heading_index + 1 :]

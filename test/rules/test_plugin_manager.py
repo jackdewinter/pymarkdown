@@ -449,7 +449,7 @@ Traceback (most recent call last):
 """,
             """, in next_line
     raise BadPluginError(
-pymarkdown.bad_plugin_error.BadPluginError: (Line 1): Plugin id 'MDE003' had a critical failure during the 'next_line' action.
+pymarkdown.plugin_manager.bad_plugin_error.BadPluginError: (Line 1): Plugin id 'MDE003' had a critical failure during the 'next_line' action.
 """,
         ],
     )
@@ -499,7 +499,7 @@ Traceback (most recent call last):
 """,
             """, in next_line
     raise BadPluginError(
-pymarkdown.bad_plugin_error.BadPluginError: (Line 1): Plugin id 'MDE003' had a critical failure during the 'next_line' action.
+pymarkdown.plugin_manager.bad_plugin_error.BadPluginError: (Line 1): Plugin id 'MDE003' had a critical failure during the 'next_line' action.
 """,
         ],
     )
@@ -577,7 +577,7 @@ Traceback (most recent call last):
 """,
             """, in next_token
     raise BadPluginError(
-pymarkdown.bad_plugin_error.BadPluginError: (1,1): Plugin id 'MDE003' had a critical failure during the 'next_token' action.
+pymarkdown.plugin_manager.bad_plugin_error.BadPluginError: (1,1): Plugin id 'MDE003' had a critical failure during the 'next_token' action.
 """,
         ],
     )
@@ -684,7 +684,7 @@ The above exception was the direct cause of the following exception:
 Traceback (most recent call last):
 """,
             """    raise BadPluginError(
-pymarkdown.bad_plugin_error.BadPluginError: Plugin class 'BadDetails' had a critical failure loading the plugin details.""",
+pymarkdown.plugin_manager.bad_plugin_error.BadPluginError: Plugin class 'BadDetails' had a critical failure loading the plugin details.""",
         ],
     )
 

@@ -2,7 +2,7 @@
 Module to provide for a debug extension.
 """
 
-from pymarkdown.extension_impl import ExtensionDetails
+from pymarkdown.extension_manager.extension_impl import ExtensionDetails
 
 
 class DebugExtension:
