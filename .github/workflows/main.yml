@@ -67,7 +67,7 @@ jobs:
       - name: Execute Flake8
         run: pipenv run flake8 --exclude dist,build
       - name: Execute PyLint on Source
-        run: pipenv run pylint --rcfile=setup.cfg ./pymarkdown ./pymarkdown/extensions ./pymarkdown/plugins
+        run: pipenv run pylint --rcfile=setup.cfg ./pymarkdown ./pymarkdown/extensions ./pymarkdown/extension_manager ./pymarkdown/plugins ./pymarkdown/plugin_manager
       - name: Execute PyLint on Tests
         run: pipenv run pylint --rcfile=setup.cfg ./test
       - name: Execute PyMarkdown on Current Docs
