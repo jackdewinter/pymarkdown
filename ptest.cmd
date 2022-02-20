@@ -2,16 +2,17 @@
 setlocal EnableDelayedExpansion
 pushd %~dp0
 
+rem Required to make sure coverage is written to the right areas.
 set COVERAGE_FILE=build/.coverage
+set "PROJECT_DIRECTORY=%cd%"
+set PYTHONPATH=%PROJECT_DIRECTORY%
 
 rem Set needed environment variables.
 set PTEST_TEMPFILE=temp_ptest.txt
 set PTEST_SCRIPT_DIRECTORY=%~dp0
-set PTEST_PYSCAN_SCRIPT_PATH=%PTEST_SCRIPT_DIRECTORY%..\pyscan\pyscan\main.py
+set PTEST_PYSCAN_SCRIPT_PATH=project_summarizer
 set PTEST_TEST_RESULTS_PATH=report\tests.xml
 set PTEST_TEST_COVERAGE_PATH=report\coverage.xml
-set "PROJECT_DIRECTORY=%cd%"
-set PYTHONPATH=%PROJECT_DIRECTORY%
 
 rem Look for options on the command line.
 set PTEST_PUBLISH_SUMMARIES=
@@ -94,7 +95,7 @@ if defined PTEST_KEYWORD (
 ) else (
 	if defined PTEST_COVERAGE_MODE (
 		echo {Executing full test suite with coverage...}
-		set PYTEST_ARGS=--cov-fail-under=90 --cov --cov-branch --cov-report xml:report/coverage.xml --cov-report html:report/coverage 
+		set PYTEST_ARGS=--cov --cov-branch --cov-report xml:report/coverage.xml --cov-report html:report/coverage 
 	) else (
 		echo {Executing full test suite...}
 	)
@@ -125,12 +126,12 @@ if defined PTEST_KEYWORD (
 set PTEST_REPORT_OPTIONS=--junit %PTEST_TEST_RESULTS_PATH%
 if defined PTEST_COVERAGE_MODE (
 	if not defined TEST_EXECUTION_FAILED (
-		set PTEST_REPORT_OPTIONS=%PTEST_REPORT_OPTIONS% --cobertura=%PTEST_TEST_COVERAGE_PATH%
+		set PTEST_REPORT_OPTIONS=%PTEST_REPORT_OPTIONS% --cobertura %PTEST_TEST_COVERAGE_PATH%
 	)
 )
 
 echo {Summarizing changes in execution of full test suite.}
-pipenv run python %PTEST_PYSCAN_SCRIPT_PATH% %PTEST_PYSCAN_OPTIONS% %PTEST_REPORT_OPTIONS%
+pipenv run %PTEST_PYSCAN_SCRIPT_PATH% %PTEST_PYSCAN_OPTIONS% %PTEST_REPORT_OPTIONS%
 if ERRORLEVEL 1 (
 	echo.
 	echo {Summarizing changes in execution of full test suite failed.}
@@ -146,7 +147,7 @@ goto success_end
 
 :publish_start
 echo {Publishing summaries from last test runs.}
-pipenv run python %PTEST_PYSCAN_SCRIPT_PATH% --publish
+pipenv run %PTEST_PYSCAN_SCRIPT_PATH% --publish
 if ERRORLEVEL 1 (
 	echo.
 	echo {Publishing summaries from last test runs failed.}

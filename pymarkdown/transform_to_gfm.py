@@ -426,11 +426,13 @@ class TransformToGfm:
                 end_handler_fn = self.end_token_handlers[next_token.type_name]
                 output_html = end_handler_fn(output_html, next_token, transform_state)
             else:
-                assert (
-                    False
-                ), f"Markdown token end type {next_token.type_name} not supported."
+                raise AssertionError(
+                    f"Markdown token end type {next_token.type_name} not supported."
+                )
         else:
-            assert False, f"Markdown token type {type(next_token)} not supported."
+            raise AssertionError(
+                f"Markdown token type {type(next_token)} not supported."
+            )
         return output_html
 
     # pylint: enable=too-many-arguments
@@ -650,16 +652,18 @@ class TransformToGfm:
         """
         Handle the end fenced code block token.
         """
-        fenced_token = transform_state.actual_token_index - 1
-        while not transform_state.actual_tokens[fenced_token].is_fenced_code_block:
-            fenced_token -= 1
+        fenced_token_index = transform_state.actual_token_index - 1
+        while not transform_state.actual_tokens[
+            fenced_token_index
+        ].is_fenced_code_block:
+            fenced_token_index -= 1
 
         inner_tag_parts = ["<code"]
-        if transform_state.actual_tokens[fenced_token].extracted_text:
+        if transform_state.actual_tokens[fenced_token_index].extracted_text:
             inner_tag_parts.extend(
                 [
                     ' class="language-',
-                    transform_state.actual_tokens[fenced_token].extracted_text,
+                    transform_state.actual_tokens[fenced_token_index].extracted_text,
                     '"',
                 ]
             )
@@ -742,15 +746,15 @@ class TransformToGfm:
         """
         _ = next_token
 
-        fenced_token = transform_state.actual_token_index - 1
-        while not transform_state.actual_tokens[fenced_token].is_atx_heading:
-            fenced_token -= 1
+        fenced_token_index = transform_state.actual_token_index - 1
+        while not transform_state.actual_tokens[fenced_token_index].is_atx_heading:
+            fenced_token_index -= 1
 
         return "".join(
             [
                 output_html,
                 "</h",
-                str(transform_state.actual_tokens[fenced_token].hash_count),
+                str(transform_state.actual_tokens[fenced_token_index].hash_count),
                 ">",
                 ParserHelper.newline_character,
             ]

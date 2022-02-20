@@ -4,6 +4,147 @@
 
 ### Added
 
+- None
+
+### Changed
+
+- [Changed - Issue 154](https://github.com/jackdewinter/pymarkdown/issues/154)
+  - rule md003 - added configuration `allow-setext-update`
+
+### Fixed
+
+- [Fixed - Issue 95](https://github.com/jackdewinter/pymarkdown/issues/95)
+  - parser: with certain cases involving a new list item, can start a container in the middle of line
+- [Fixed - Issue 161](https://github.com/jackdewinter/pymarkdown/issues/161)
+  - rule md005: was not returning proper values for actual and expected
+- [Fixed - Issue 189](https://github.com/jackdewinter/pymarkdown/issues/189)
+  - rule md027: addressed index out of bounds error keeping track of blank lines after a block quote was started in a previous section
+
+## Version 0.9.5 - Date: 2022-02-07
+
+This was a point release that highlighted improvements to the accuracy of reported tokens
+in situations with nested containers.
+
+PLEASE! If you encounter any issues with this product, please [file an issue report](https://github.com/jackdewinter/pymarkdown/issues) and tell us about it!
+There are a lot of combinations of Markdown elements to cover, and we need your help to prioritize them all!
+
+### Added
+
+- [Added - Issue 227](https://github.com/jackdewinter/pymarkdown/issues/227)
+  - scenario tests: adding 3-level nesting tests with max space, and max space plus one variations
+- [Added - Issue 250](https://github.com/jackdewinter/pymarkdown/issues/250)
+  - scenario tests: adding variations of removed block quotes on second line
+- [Added - Issue 261](https://github.com/jackdewinter/pymarkdown/tree/issue-261)
+  - scenario tests: variations of 3-level max space tests with no text after container starts on first line
+
+### Changed
+
+- [Changed - Issue 248](https://github.com/jackdewinter/pymarkdown/issues/248)
+  - github actions: only run against `main` branch
+
+### Fixed
+
+- [Fixed - Issue 189](https://github.com/jackdewinter/pymarkdown/issues/189)
+  - rule md027: weird case where total for series of block quotes that ended with a blank line was off by 1
+- [Fixed - Issue 218](https://github.com/jackdewinter/pymarkdown/issues/218)
+  - parser: lot of small things needed fixing to set the variables properly for this issue's resolution
+  - parser: after that, was not properly handling shutting down a block quote that downgraded
+- [Fixed - Issue 228](https://github.com/jackdewinter/pymarkdown/issues/228)
+  - parser: previous adjustment no longer needed
+- [Fixed - Issue 229](https://github.com/jackdewinter/pymarkdown/issues/229)
+  - parser: generated HTML did not include indented code block
+- [Fixed - Issue 230](https://github.com/jackdewinter/pymarkdown/issues/230)
+  - parser: dropping leading `>`
+- [Fixed - Issue 231](https://github.com/jackdewinter/pymarkdown/issues/231)
+  - parser: fixed by issue-229
+- [Fixed - Issue 232](https://github.com/jackdewinter/pymarkdown/issues/232)
+  - parser: fixed by issue-233
+  - parser: fixed by issue-228
+- [Fixed - Issue 233](https://github.com/jackdewinter/pymarkdown/issues/233)
+  - parser: limiting container checking to limited set, expanded
+  - parser: extra indent was not accounted for in space calculations
+  - parser: double block quotes not being handled properly
+  - parser: indent being processed twice
+- [Fixed - Issue 252](https://github.com/jackdewinter/pymarkdown/issues/252)
+  - parser: in rare cases, was adding leading spaces to both list and paragraph within
+- [Fixed - Issue 262](https://github.com/jackdewinter/pymarkdown/issues/262)
+  - parser: when checking for block quote decrease, did not have empty scenarios checked for
+- [Fixed - Issue 263](https://github.com/jackdewinter/pymarkdown/issues/263)
+  - parser: with empty list items, was creating 2 blank line tokens, plus extra list indent
+- [Fixed - Issue 264](https://github.com/jackdewinter/pymarkdown/issues/264)
+  - parser: fixed issue with blending current text and original text to parse
+  - parser: cleaned up remaining issues about closing off containers too early
+- [Fixed - Issue 265](https://github.com/jackdewinter/pymarkdown/issues/265)
+  - parser: fixed with work on [Issue 262](https://github.com/jackdewinter/pymarkdown/issues/262)
+- [Fixed - Issue 268](https://github.com/jackdewinter/pymarkdown/issues/268)
+  - parser: previous work took too many newlnes out, this put the right ones back in
+
+## Version 0.9.4 - Date: 2022-01-04
+
+This was a point release that highlighted improvements to the accuracy of reported tokens
+in situations with nested containers.
+
+- Removed "call home support" similar to VSCode and other products.
+  - One of our contributors pointed out a number of falacies, and we agreed.
+- Enhanced testing of the whitespace calculations recently completed.
+
+### Changed
+
+- [Changed - Issue 184](https://github.com/jackdewinter/pymarkdown/issues/184)
+  - scenario tests: instead of mixup in different areas, added initial combinations to test in one place
+- [Changed - Issue 207](https://github.com/jackdewinter/pymarkdown/issues/207)
+  - adding more upfront analysis, upgrading Columnar to new version
+- [Changed - Issue 214](https://github.com/jackdewinter/pymarkdown/issues/214)
+  - removing call home support
+
+### Fixed
+
+- [Fixed - Issue 159](https://github.com/jackdewinter/pymarkdown/issues/159)
+  - parser: was using wrong values to determine nesting level
+- [Fixed - Issue 185](https://github.com/jackdewinter/pymarkdown/issues/185)
+  - parser: nesting of block quote, list, block quote raised an assert
+- [Fixed - Issue 186](https://github.com/jackdewinter/pymarkdown/issues/186)
+  - parser: due to work on Issue 187, these now passed after assert examine and disabled
+- [Fixed - Issue 187](https://github.com/jackdewinter/pymarkdown/issues/187)
+  - parser: three separate adjustments needed to be made to ensure the whitespace is consistent
+- [Fixed - Issue 188](https://github.com/jackdewinter/pymarkdown/issues/188)
+  - parser: not dealing with a block occurring after 2 nested lists
+- [Fixed - Issue 192](https://github.com/jackdewinter/pymarkdown/issues/192)
+  - parser: needed to adjust `__calculate_current_indent_level` function to accomodate nesting
+- [Fixed - Issue 196](https://github.com/jackdewinter/pymarkdown/issues/196)
+  - markdown: transformer was not calculating indent properly
+- [Fixed - Issue 197](https://github.com/jackdewinter/pymarkdown/issues/197)
+  - parser: block quote processor was not closing blocks properly, resulting in bad HTML
+- [Fixed - Issue 198](https://github.com/jackdewinter/pymarkdown/issues/198)
+  - markdown: algorithm was not taking into effect newer change to calculate container indices later
+- [Fixed - Issue 199](https://github.com/jackdewinter/pymarkdown/issues/199)
+  - parser: fixed by work done on [Issue 202](https://github.com/jackdewinter/pymarkdown/issues/202)
+- [Fixed - Issue 200](https://github.com/jackdewinter/pymarkdown/issues/200)
+  - markdown: calculation for previous indent and whitespace to add after was off
+- [Fixed - Issue 201](https://github.com/jackdewinter/pymarkdown/issues/201)
+  - parser: fixed by work done on [Issue 202](https://github.com/jackdewinter/pymarkdown/issues/202)
+- [Fixed - Issue 202](https://github.com/jackdewinter/pymarkdown/issues/202)
+  - parser: block quote processor needed a lot of work to handle whitespace properly
+  - parser: container block processor not handling 4 spaces at start of line properly
+- [Fixed - Issue 203](https://github.com/jackdewinter/pymarkdown/issues/203)
+  - markdown: adjustments to properly calculate indent
+  - parser: list block processor not transferring extracted text to a nested block
+  - various cleanup
+- [Fixed - Issue 219](https://github.com/jackdewinter/pymarkdown/issues/219)
+  - parser: indents of 4 within a single and double level list were not cleanly differentiating
+
+## Version 0.9.3 - Date: 2021-12-14
+
+This was a point release to allow fixed issues to be released.  While
+the full descriptions are below, here are some highlights:
+
+- Added "call home support" similar to VSCode and other products, to allow notification of new versions
+  - This is currently experimental.  Feedback welcome.
+- Lots of refactoring to reduce complexity and adhere to guidelines
+- Rewrite of the whitespace calculations to drastically reduce their complexity
+
+### Added
+
 - [Added - Issue 104](https://github.com/jackdewinter/pymarkdown/issues/104)
   - core: added support for calling home every week to see if there is a new version at PyPi.org
 
@@ -11,6 +152,8 @@
 
 - [Changed - Issue 85](https://github.com/jackdewinter/pymarkdown/issues/85)
   - scenario tests: verified and documented inlines with newline tests
+- [Changed - Issue 96](https://github.com/jackdewinter/pymarkdown/issues/96)
+  - parser: was misunderstanding.  extra blank line was verified as per spec
 - [Changed - Issue 103](https://github.com/jackdewinter/pymarkdown/issues/103)
   - refactoring: look for better way to use .items()
 - [Changed - Issue 107](https://github.com/jackdewinter/pymarkdown/issues/107)
@@ -37,7 +180,7 @@
   - refactoring: tightening up code after refactoring
 - [Changed - Issue 155](https://github.com/jackdewinter/pymarkdown/issues/155)
   - refactoring: moving this_bq_count and stack_bq_quote into new BlockQuoteData class
-- [Changed - Issue 166]](https://github.com/jackdewinter/pymarkdown/issues/166)
+- [Changed - Issue 166](https://github.com/jackdewinter/pymarkdown/issues/166)
   - refactoring: large refactoring to standardize the whitespace in tokens
 
 ### Fixed
@@ -59,9 +202,15 @@
 - [Fixed - Issue 93](https://github.com/jackdewinter/pymarkdown/issues/93)
   - parser: was not handling extracted spaces properly, causing issues with calculating values for thematic breaks
   - parser: spent time rewriting whitespace calculation and storage to address the issue
+- [Fixed - Issue 94](https://github.com/jackdewinter/pymarkdown/issues/94)
+  - parser: after work on 153, this was resolved
+- [Fixed - Issue 97](https://github.com/jackdewinter/pymarkdown/issues/97)
+  - parser: after work on 153, this was resolved
 - [Fixed - Issue 98](https://github.com/jackdewinter/pymarkdown/issues/98)
   - parser: after work on 153, this was resolved
 - [Fixed - Issue 99](https://github.com/jackdewinter/pymarkdown/issues/99)
+  - parser: after work on 153, this was resolved
+- [Fixed - Issue 100](https://github.com/jackdewinter/pymarkdown/issues/100)
   - parser: after work on 153, this was resolved
 - [Fixed - Issue 153](https://github.com/jackdewinter/pymarkdown/issues/153)
   - parser: hit missed scenario test with list indents

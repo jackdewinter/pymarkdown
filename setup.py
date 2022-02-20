@@ -8,7 +8,8 @@ from setuptools import setup
 
 
 def parse_requirements():
-    lineiter = (line.strip() for line in open("install-requirements.txt", "r"))
+    with open("install-requirements.txt", "r", encoding="utf-8") as requirement_file:
+        lineiter = [line.strip() for line in requirement_file]
     return [line for line in lineiter if line and not line.startswith("#")]
 
 
@@ -18,7 +19,7 @@ def get_semantic_version():
 
 
 def load_readme_file():
-    with open("README.md", "r") as readme_file:
+    with open("README.md", "r", encoding="utf-8") as readme_file:
         return readme_file.read()
 
 
@@ -58,7 +59,7 @@ PACKAGE_MODULES = [
 setup(
     name=PACKAGE_NAME,
     version=SEMANTIC_VERSION,
-    python_requires=">=" + MINIMUM_PYTHON_VERSION,
+    python_requires=f">={MINIMUM_PYTHON_VERSION}",
     install_requires=parse_requirements(),
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,

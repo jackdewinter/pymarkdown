@@ -54,9 +54,9 @@ class InProcessResult:
                 diff_values = ParserHelper.newline_character.join(list(diff))
                 print(diff_values, file=sys.stderr)
                 if not was_found:
-                    assert (
-                        False
-                    ), f"Block\n---\n{next_text_block}\n---\nwas not found in\n---\n{actual_stream.getvalue()}"
+                    raise AssertionError(
+                        f"Block\n---\n{next_text_block}\n---\nwas not found in\n---\n{actual_stream.getvalue()}"
+                    )
         elif actual_stream.getvalue().strip() != expected_text.strip():
             diff = difflib.ndiff(
                 expected_text.splitlines(), actual_stream.getvalue().splitlines()
@@ -75,7 +75,7 @@ class InProcessResult:
             print(f"WARN>expect>>{ParserHelper.make_value_visible(expected_text)}")
             if log_extra:
                 print(f"log_extra:{log_extra}")
-            assert False, f"{stream_name} not as expected:\n{diff_values}"
+            raise AssertionError(f"{stream_name} not as expected:\n{diff_values}")
 
     # pylint: enable=too-many-arguments
 
@@ -93,8 +93,14 @@ class InProcessResult:
         """
         return self.__std_out
 
+    # pylint: disable=too-many-arguments
     def assert_results(
-        self, stdout=None, stderr=None, error_code=0, additional_error=None
+        self,
+        stdout=None,
+        stderr=None,
+        error_code=0,
+        additional_error=None,
+        alternate_stdout=None,
     ):
         """
         Assert the results are as expected in the "assert" phase.
@@ -102,12 +108,28 @@ class InProcessResult:
 
         try:
             if stdout:
-                self.compare_versus_expected(
-                    "Stdout",
-                    self.__std_out,
-                    stdout,
-                    log_extra=self.__std_err.getvalue(),
-                )
+                if alternate_stdout:
+                    try:
+                        self.compare_versus_expected(
+                            "Stdout",
+                            self.__std_out,
+                            stdout,
+                            log_extra=self.__std_err.getvalue(),
+                        )
+                    except AssertionError:
+                        self.compare_versus_expected(
+                            "Stdout",
+                            self.__std_out,
+                            alternate_stdout,
+                            log_extra=self.__std_err.getvalue(),
+                        )
+                else:
+                    self.compare_versus_expected(
+                        "Stdout",
+                        self.__std_out,
+                        stdout,
+                        log_extra=self.__std_err.getvalue(),
+                    )
             else:
                 assert_text = (
                     f"Expected stdout to be empty, not: {self.__std_out.getvalue()}"
@@ -132,6 +154,8 @@ class InProcessResult:
         finally:
             self.__std_out.close()
             self.__std_err.close()
+
+    # pylint: enable=too-many-arguments
 
 
 # pylint: disable=too-few-public-methods
@@ -158,7 +182,7 @@ class SystemState:
         """
 
         os.chdir(self.saved_cwd)
-        os.environ = self.saved_env
+        os.environ = self.saved_env  # noqa B003
         sys.argv = self.saved_argv
         sys.stdout = self.saved_stdout
         sys.stderr = self.saved_stderr
@@ -215,11 +239,7 @@ class InProcessExecution(ABC):
 
     # pylint: disable=broad-except
     def invoke_main(
-        self,
-        arguments=None,
-        cwd=None,
-        suppress_first_line_heading_rule=True,
-        disable_version_checking=True,
+        self, arguments=None, cwd=None, suppress_first_line_heading_rule=True
     ):
         """
         Invoke the mainline so that we can capture results.
@@ -236,10 +256,6 @@ class InProcessExecution(ABC):
                     disable_value += ","
                 disable_value += "md041"
                 new_arguments[disable_index + 1] = disable_value
-            arguments = new_arguments
-        if disable_version_checking:
-            new_arguments = arguments.copy() if arguments else []
-            new_arguments.insert(0, "--disable-version")
             arguments = new_arguments
 
         saved_state = SystemState()

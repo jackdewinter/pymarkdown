@@ -3,8 +3,8 @@ Module to implement a plugin that ensures that all Unordered List Items
 start at the beginning of the line.
 """
 from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.plugin_details import PluginDetails
-from pymarkdown.rule_plugin import RulePlugin
+from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
 class RuleMd006(RulePlugin):

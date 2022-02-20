@@ -1,6 +1,7 @@
 """
 Module to provide for verification of the line numbers and column numbers in tokens.
 """
+from pymarkdown.constants import Constants
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.position_marker import PositionMarker
 
@@ -342,7 +343,7 @@ def __verify_line_and_column_numbers_next_token(
             last_token, last_token_index, last_token_stack = (
                 current_token,
                 ind,
-                token_stack[0:],
+                token_stack[:],
             )
         else:
             print("skipping last")
@@ -731,7 +732,7 @@ def __validate_new_line_blank_line_needs_recalc(
     return not was_end_list_end
 
 
-# pylint: disable=too-many-arguments, too-many-branches
+# pylint: disable=too-many-arguments
 def __validate_new_line_blank_line(
     current_token, container_block_stack, top_block_token, actual_tokens, init_ws, did_x
 ):
@@ -767,7 +768,7 @@ def __validate_new_line_blank_line(
     return init_ws, did_x
 
 
-# pylint: enable=too-many-arguments, too-many-branches
+# pylint: enable=too-many-arguments
 
 
 def __validate_new_line_list_adjacent_indents(
@@ -927,7 +928,7 @@ def __validate_new_line_new_list_item(container_block_stack, current_token):
     return init_ws, delta
 
 
-# pylint: disable=too-many-arguments, too-many-branches
+# pylint: disable=too-many-arguments
 def __validate_new_line(  # noqa: C901
     container_block_stack,
     current_token,
@@ -993,7 +994,7 @@ def __validate_new_line(  # noqa: C901
     return did_x
 
 
-# pylint: enable=too-many-arguments, too-many-branches
+# pylint: enable=too-many-arguments
 
 
 def __validate_first_token(current_token, current_position):
@@ -1010,7 +1011,7 @@ def __calc_initial_whitespace_paragraph(calc_token):
         end_of_line_index = calc_token.extracted_whitespace.index(
             ParserHelper.newline_character
         )
-        first_para_ws = calc_token.extracted_whitespace[0:end_of_line_index]
+        first_para_ws = calc_token.extracted_whitespace[:end_of_line_index]
     else:
         first_para_ws = calc_token.extracted_whitespace
     print(f">>first_para_ws>>{ParserHelper.make_value_visible(first_para_ws)}>>")
@@ -1311,9 +1312,9 @@ def __verify_first_inline_setext(last_non_inline_token, first_inline_token):
         or first_inline_token.is_inline_link_end
         or first_inline_token.is_blank_line
     ):
-        assert False
+        raise AssertionError("TBD")
     else:
-        assert False, first_inline_token.token_name
+        raise AssertionError(first_inline_token.token_name)
 
 
 # pylint: enable=too-many-boolean-expressions
@@ -1507,7 +1508,7 @@ def __verify_next_inline_handle_previous_end_adjust_position(
 def __verify_next_inline_handle_previous_end_links(
     parent_cur_token, last_token, new_lines
 ):
-    if parent_cur_token.label_type == "inline":
+    if parent_cur_token.label_type == Constants.link_type__inline:
         print(">>inline")
         (
             new_lines,
@@ -1516,7 +1517,7 @@ def __verify_next_inline_handle_previous_end_links(
             parent_cur_token, last_token, new_lines
         )
 
-    elif parent_cur_token.label_type == "full":
+    elif parent_cur_token.label_type == Constants.link_type__full:
         print(f">>full:{parent_cur_token.ex_label}:")
         newline_count = ParserHelper.count_newlines_in_text(parent_cur_token.ex_label)
         if newline_count:
@@ -1533,11 +1534,13 @@ def __verify_next_inline_handle_previous_end_links(
     # label are already accounted for, and as such, do not require any further
     # modifications.
 
-    elif parent_cur_token.label_type == "shortcut":
+    elif parent_cur_token.label_type == Constants.link_type__shortcut:
         print(f">>shortcut:{parent_cur_token.ex_label}:")
         adjust_column_by = 1
     else:
-        assert parent_cur_token.label_type == "collapsed", parent_cur_token.label_type
+        assert (
+            parent_cur_token.label_type == Constants.link_type__collapsed
+        ), parent_cur_token.label_type
         adjust_column_by = 3
     return new_lines, adjust_column_by
 
@@ -1973,7 +1976,7 @@ def __process_previous_token(
             estimated_column_number,
         )
         if not did_process:
-            assert False, previous_inline_token.token_name
+            raise AssertionError(previous_inline_token.token_name)
 
     estimated_line_number, estimated_column_number = __process_previous_token_check(
         current_inline_token,
@@ -2569,7 +2572,7 @@ def __verify_next_inline_inline_image(  # noqa: C901
             ParserHelper.newline_character
         )
     print(f">>before>>{estimated_column_number}")
-    if previous_inline_token.label_type == "inline":
+    if previous_inline_token.label_type == Constants.link_type__inline:
         print(">>>>>>>>>inline")
         (
             estimated_line_number,
@@ -2586,7 +2589,7 @@ def __verify_next_inline_inline_image(  # noqa: C901
             estimated_line_number,
             estimated_column_number,
         )
-    elif previous_inline_token.label_type == "shortcut":
+    elif previous_inline_token.label_type == Constants.link_type__shortcut:
         (
             estimated_line_number,
             estimated_column_number,
@@ -2597,7 +2600,7 @@ def __verify_next_inline_inline_image(  # noqa: C901
             para_owner,
         )
 
-    elif previous_inline_token.label_type == "collapsed":
+    elif previous_inline_token.label_type == Constants.link_type__collapsed:
         (
             estimated_line_number,
             estimated_column_number,
@@ -2608,7 +2611,7 @@ def __verify_next_inline_inline_image(  # noqa: C901
             estimated_column_number,
         )
     else:
-        assert previous_inline_token.label_type == "full"
+        assert previous_inline_token.label_type == Constants.link_type__full
         (
             estimated_line_number,
             estimated_column_number,
@@ -2701,7 +2704,7 @@ def __verify_next_inline_hard_break(
             else:
                 ws_for_new_line = split_whitespace[0]
             if ws_for_new_line.endswith(ParserHelper.whitespace_split_character):
-                ws_for_new_line = ws_for_new_line[0:-1]
+                ws_for_new_line = ws_for_new_line[:-1]
             print(
                 f"ws_for_new_line>{ParserHelper.make_value_visible(ws_for_new_line)}<"
             )
@@ -2836,7 +2839,7 @@ def __verify_next_inline_text_whitespace(last_token, previous_inline_token):
 
             if split_end_whitespace:
                 assert split_end_whitespace[-1] == "\x02"
-                split_end_whitespace = split_end_whitespace[0:-1]
+                split_end_whitespace = split_end_whitespace[:-1]
                 print(
                     f"split_end_whitespace>{ParserHelper.make_value_visible(split_end_whitespace)}<"
                 )
@@ -2999,7 +3002,10 @@ def __handle_last_token_end_link(
         last_inline_token.start_markdown_token.before_title_whitespace,
         last_inline_token.start_markdown_token.after_title_whitespace,
     )
-    if last_inline_token.start_markdown_token.label_type != "shortcut":
+    if (
+        last_inline_token.start_markdown_token.label_type
+        != Constants.link_type__shortcut
+    ):
         link_title = last_inline_token.start_markdown_token.active_link_title
         inline_height += ParserHelper.count_newlines_in_text(link_title)
 
@@ -3026,7 +3032,7 @@ def __handle_last_token_image(
         last_inline_token.after_title_whitespace,
     )
 
-    if last_inline_token.label_type == "full":
+    if last_inline_token.label_type == Constants.link_type__full:
         inline_height += ParserHelper.count_newlines_in_text(
             last_inline_token.text_from_blocks
         )

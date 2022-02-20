@@ -5,8 +5,6 @@ pushd %~dp0
 rem Set needed environment variables.
 set CLEAN_TEMPFILE=temp_clean.txt
 set PYTHON_MODULE_NAME=pymarkdown
-set "PROJECT_DIRECTORY=%cd%"
-set PYTHONPATH=%PROJECT_DIRECTORY%
 
 rem Look for options on the command line.
 
@@ -68,7 +66,7 @@ if ERRORLEVEL 1 (
 )
 
 echo {Executing pylint static analyzer on Python source code.}
-pipenv run pylint -j 4 --rcfile=setup.cfg %MY_VERBOSE% %PYTHON_MODULE_NAME% %PYTHON_MODULE_NAME%/extensions %PYTHON_MODULE_NAME%/plugins
+pipenv run pylint -j 4 --rcfile=setup.cfg %MY_VERBOSE% %PYTHON_MODULE_NAME% %PYTHON_MODULE_NAME%/extensions %PYTHON_MODULE_NAME%/extension_manager %PYTHON_MODULE_NAME%/plugins %PYTHON_MODULE_NAME%/plugin_manager
 if ERRORLEVEL 1 (
 	echo.
 	echo {Executing pylint static analyzer on Python source code failed.}
@@ -76,12 +74,20 @@ if ERRORLEVEL 1 (
 )
 
 echo {Executing pylint utils analyzer on Python source code to verify suppressions and document them.}
-pipenv run python ..\pylint_utils\main.py --config setup.cfg -r publish\pylint_suppression.json  pymarkdown
+pipenv run python ..\pylint_utils\main.py --config setup.cfg --recurse -r publish\pylint_suppression.json  pymarkdown
 if ERRORLEVEL 1 (
 	echo.
 	echo {Executing reporting of pylint suppressions in Python source code failed.}
 	goto error_end
 )
+
+echo {Executing pylint static analyzer on test Python code.}
+pipenv run pylint -j 4 --rcfile=setup.cfg test --ignore test\resources %MY_VERBOSE%
+if ERRORLEVEL 1 (
+	echo.
+	echo {Executing pylint static analyzer on test Python code failed.}
+	goto error_end
+)	
 
 git diff --name-only --staged > %CLEAN_TEMPFILE%
 set ALL_FILES=
@@ -99,14 +105,6 @@ if "%ALL_FILES%" == "" (
 		echo {Executing reporting of unused pylint suppressions in modified Python source code failed.}
 		goto error_end
 	)
-)
-
-echo {Executing pylint static analyzer on test Python code.}
-pipenv run pylint -j 4 --rcfile=setup.cfg test %MY_VERBOSE%
-if ERRORLEVEL 1 (
-	echo.
-	echo {Executing pylint static analyzer on test Python code failed.}
-	goto error_end
 )
 
 echo {Executing PyMarkdown scan on Markdown documents.}

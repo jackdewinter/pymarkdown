@@ -157,13 +157,10 @@ class HtmlHelper:
             )
         ):
             return -1
-        string_index += 1
-        while string_index < string_to_parse_length:
-            if not (
-                string_to_parse[string_index] in HtmlHelper.__attribute_other_characters
-            ):
-                break
-            string_index += 1
+
+        string_index, __ = ParserHelper.collect_while_one_of_characters(
+            string_to_parse, string_index + 1, HtmlHelper.__attribute_other_characters
+        )
 
         if string_index < string_to_parse_length and string_to_parse[string_index] in [
             HtmlHelper.__html_attribute_name_value_separator,
@@ -287,27 +284,30 @@ class HtmlHelper:
             non_whitespace_index = HtmlHelper.extract_html_attribute_name(
                 line_to_parse, non_whitespace_index
             )
-            if non_whitespace_index == -1:
-                are_attributes_valid = False
+            are_attributes_valid = non_whitespace_index != -1
+            if not are_attributes_valid:
                 break
             non_whitespace_index = HtmlHelper.extract_optional_attribute_value(
                 line_to_parse, non_whitespace_index
             )
-            if non_whitespace_index == -1:
-                are_attributes_valid = False
+            are_attributes_valid = non_whitespace_index != -1
+            if not are_attributes_valid:
                 break
             (
                 non_whitespace_index,
                 extracted_whitespace,
             ) = ParserHelper.extract_whitespace(line_to_parse, non_whitespace_index)
 
-        is_end_of_tag_present = False
         if non_whitespace_index < line_to_parse_size:
             if line_to_parse[non_whitespace_index] == HtmlHelper.__html_tag_start:
                 non_whitespace_index += 1
-            if line_to_parse[non_whitespace_index] == HtmlHelper.__html_tag_end:
+            is_end_of_tag_present = (
+                line_to_parse[non_whitespace_index] == HtmlHelper.__html_tag_end
+            )
+            if is_end_of_tag_present:
                 non_whitespace_index += 1
-                is_end_of_tag_present = True
+        else:
+            is_end_of_tag_present = False
 
         non_whitespace_index, _ = ParserHelper.extract_whitespace(
             line_to_parse, non_whitespace_index
@@ -330,12 +330,10 @@ class HtmlHelper:
         if ParserHelper.is_character_at_index_one_of(
             text_to_parse, start_index, HtmlHelper.__valid_tag_name_start
         ):
-            index = start_index + 1
-            while ParserHelper.is_character_at_index_one_of(
-                text_to_parse, index, HtmlHelper.__valid_tag_name_characters
-            ):
-                index += 1
-            return text_to_parse[0:index]
+            index, __ = ParserHelper.collect_while_one_of_characters(
+                text_to_parse, start_index + 1, HtmlHelper.__valid_tag_name_characters
+            )
+            return text_to_parse[:index]
         return ""
 
     @staticmethod
@@ -419,21 +417,17 @@ class HtmlHelper:
             parse_index, extracted_whitespace = ParserHelper.extract_any_whitespace(
                 text_to_parse, len(tag_name)
             )
-            if extracted_whitespace:
-                while (
-                    extracted_whitespace
-                    and ParserHelper.is_character_at_index_one_of(
-                        text_to_parse,
-                        parse_index,
-                        HtmlHelper.__tag_attribute_name_start,
-                    )
-                ):
-                    (
-                        parse_index,
-                        extracted_whitespace,
-                    ) = HtmlHelper.__parse_tag_attributes(text_to_parse, parse_index)
-                    if parse_index is None:
-                        return parse_index, extracted_whitespace
+            while extracted_whitespace and ParserHelper.is_character_at_index_one_of(
+                text_to_parse,
+                parse_index,
+                HtmlHelper.__tag_attribute_name_start,
+            ):
+                (
+                    parse_index,
+                    extracted_whitespace,
+                ) = HtmlHelper.__parse_tag_attributes(text_to_parse, parse_index)
+                if parse_index is None:
+                    return parse_index, extracted_whitespace
 
             if ParserHelper.is_character_at_index(
                 text_to_parse, parse_index, HtmlHelper.__html_tag_start
@@ -443,7 +437,7 @@ class HtmlHelper:
             if ParserHelper.is_character_at_index(
                 text_to_parse, parse_index, HtmlHelper.__html_tag_end
             ):
-                valid_raw_html = text_to_parse[0:parse_index]
+                valid_raw_html = text_to_parse[:parse_index]
                 end_parse_index = parse_index + 1
 
         return valid_raw_html, end_parse_index
@@ -507,7 +501,7 @@ class HtmlHelper:
             remaining_line = remaining_line[special_start_size:]
             parse_index = remaining_line.find(special_end)
             if parse_index != -1:
-                remaining_line = remaining_line[0:parse_index]
+                remaining_line = remaining_line[:parse_index]
                 parse_index = parse_index + special_start_size + len(special_end)
                 if (not do_extra_check) or (
                     not (
@@ -518,7 +512,7 @@ class HtmlHelper:
                     )
                 ):
                     valid_raw_html = (
-                        f"{special_start}{remaining_line}{special_end[0:-1]}"
+                        f"{special_start}{remaining_line}{special_end[:-1]}"
                     )
         return valid_raw_html, parse_index
 
@@ -590,35 +584,36 @@ class HtmlHelper:
         Check for the easy to spot special blocks: 2-5.
         """
 
+        if character_index >= len(line_to_parse):
+            return None
         html_block_type = None
-        if character_index < len(line_to_parse):
-            if ParserHelper.is_character_at_index(
-                line_to_parse, character_index, HtmlHelper.__html_block_2_to_5_start
-            ):
-                if ParserHelper.are_characters_at_index(
-                    line_to_parse,
-                    character_index + 1,
-                    HtmlHelper.__html_block_2_continued_start,
-                ):
-                    html_block_type = HtmlHelper.html_block_2
-                elif ParserHelper.is_character_at_index_one_of(
-                    line_to_parse,
-                    character_index + 1,
-                    HtmlHelper.__html_block_4_continued_start,
-                ):
-                    html_block_type = HtmlHelper.html_block_4
-                elif ParserHelper.are_characters_at_index(
-                    line_to_parse,
-                    character_index + 1,
-                    HtmlHelper.__html_block_5_continued_start,
-                ):
-                    html_block_type = HtmlHelper.html_block_5
-            elif ParserHelper.is_character_at_index(
+        if ParserHelper.is_character_at_index(
+            line_to_parse, character_index, HtmlHelper.__html_block_2_to_5_start
+        ):
+            if ParserHelper.are_characters_at_index(
                 line_to_parse,
-                character_index,
-                HtmlHelper.__html_block_3_continued_start,
+                character_index + 1,
+                HtmlHelper.__html_block_2_continued_start,
             ):
-                html_block_type = HtmlHelper.html_block_3
+                html_block_type = HtmlHelper.html_block_2
+            elif ParserHelper.is_character_at_index_one_of(
+                line_to_parse,
+                character_index + 1,
+                HtmlHelper.__html_block_4_continued_start,
+            ):
+                html_block_type = HtmlHelper.html_block_4
+            elif ParserHelper.are_characters_at_index(
+                line_to_parse,
+                character_index + 1,
+                HtmlHelper.__html_block_5_continued_start,
+            ):
+                html_block_type = HtmlHelper.html_block_5
+        elif ParserHelper.is_character_at_index(
+            line_to_parse,
+            character_index,
+            HtmlHelper.__html_block_3_continued_start,
+        ):
+            html_block_type = HtmlHelper.html_block_3
 
         return html_block_type
 
@@ -643,7 +638,7 @@ class HtmlHelper:
             and adjusted_remaining_html_tag
             and adjusted_remaining_html_tag[-1] == HtmlHelper.__html_tag_start
         ):
-            adjusted_remaining_html_tag = adjusted_remaining_html_tag[0:-1]
+            adjusted_remaining_html_tag = adjusted_remaining_html_tag[:-1]
 
         return adjusted_remaining_html_tag, line_to_parse_size, is_end_tag
 
@@ -705,11 +700,13 @@ class HtmlHelper:
         Determine the type of the html block that we are starting.
         """
 
-        character_index, remaining_html_tag = start_index + 1, ""
+        character_index = start_index + 1
         html_block_type = HtmlHelper.__check_for_special_html_blocks(
             line_to_parse, character_index
         )
-        if not html_block_type:
+        if html_block_type:
+            remaining_html_tag = ""
+        else:
             (
                 character_index,
                 remaining_html_tag,
@@ -736,7 +733,6 @@ class HtmlHelper:
         Determine if the current sequence of characters would start a html block element.
         """
 
-        html_block_type, remaining_html_tag = None, None
         if (
             ParserHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
         ) and ParserHelper.is_character_at_index(
@@ -752,6 +748,8 @@ class HtmlHelper:
                 line_to_parse,
                 start_index,
             )
+        else:
+            html_block_type, remaining_html_tag = None, None
         return html_block_type, remaining_html_tag
 
     @staticmethod
@@ -760,7 +758,6 @@ class HtmlHelper:
         Determine if we have the criteria that we need to start an HTML block.
         """
 
-        new_tokens = []
         html_block_type, _ = HtmlHelper.is_html_block(
             position_marker.text_to_parse,
             position_marker.index_number,
@@ -777,6 +774,8 @@ class HtmlHelper:
             parser_state.token_stack.append(
                 HtmlBlockStackToken(html_block_type, new_token)
             )
+        else:
+            new_tokens = []
         return new_tokens
 
     @staticmethod
@@ -786,7 +785,6 @@ class HtmlHelper:
         via an empty line or BLANK.
         """
 
-        new_tokens = []
         if parser_state.token_stack[-1].html_block_type in [
             HtmlHelper.html_block_6,
             HtmlHelper.html_block_7,
@@ -795,6 +793,8 @@ class HtmlHelper:
                 parser_state,
                 only_these_blocks=[type(parser_state.token_stack[-1])],
             )
+        else:
+            new_tokens = []
 
         return new_tokens
 

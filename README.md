@@ -52,8 +52,7 @@ The PyMarkdown project has the following advantages:
     and made more efficient by leveraging this token format. Where that is not possible,
     simple regular expressions and simple algorithms are used on a line-by-line basis.
 - Thoroughly tested
-  - The project currently has over 3200 scenario tests and coverage percentages
-    over 99%.
+  - The project currently has over 4100 scenario tests and a coverage percentage of 100%.
 - Extensible
   - The parser for the project adheres to the GFM specification and most of
     the rules for the parser leverage the tokens produced by that parser. The
@@ -297,25 +296,6 @@ document includes information on:
 For more information of how to query information on the rule plugins
 that are currently loaded, please consult the document on
 [Advanced Rule Plugins](/docs/advanced_plugins.md).
-
-### Dialing "Home"
-
-To try and ensure that you are running the latest version of the application,
-this application contains a dial home check that occurs every seven days.
-If the version of the application that is published on
-[PyPi](https://pypi.org/project/pymarkdownlnt/) is different that the current
-version, a simple message is displayed that is similar to:
-
-```text
-WARN: Current application version '0.9.2' differs from the published version '0.9.1'.
-  Please update the pymarkdownlnt application version.
-```
-
-This dial home feature can be forced to run by using the `--force-version` command
-line flag and it can also be disabled by using the `--disable-version` command
-line flag.  To keep track of the last time that the dial home check was successfully
-performed, a `.pymarkdownlnt` file is created in the user's home directory containing
-the timestamp of the last successful check.
 
 ## Open Issues and Future Plans
 

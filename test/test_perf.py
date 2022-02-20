@@ -30,7 +30,7 @@ def xtest_block_quotes_extra_perf1():
     x = timeit.timeit(ex, number=n)
     print(">>" + str(x))
     print(">>" + str(float(x) / float(n)))
-    assert False
+    raise AssertionError("TBD")
 
 
 def bob1():
@@ -81,7 +81,7 @@ def xtest_block_quotes_extra_perf3():
     for y in range(5):
         xx = timeit.timeit("fred()", globals=globals(), number=10000000)
         print(str(xx) + ">>" + str(y))
-    assert False
+    raise AssertionError("TBD")
 
 
 # pylint: enable=missing-module-docstring

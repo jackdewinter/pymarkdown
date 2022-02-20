@@ -190,11 +190,14 @@ class OrderedListStartMarkdownToken(ContainerMarkdownToken):
         """
         Add any leading spaces to the token, separating them with line feeds.
         """
+        POGGER.debug("__leading_spaces>>:$:<<", self.__leading_spaces)
+        POGGER.debug("add_leading_spaces>>:$:<<", ws_add)
         self.__leading_spaces = (
             ws_add
             if self.__leading_spaces is None
             else f"{self.__leading_spaces}{ParserHelper.newline_character}{ws_add}"
         )
+        POGGER.debug("__leading_spaces>>:$:<<", self.__leading_spaces)
         self.__compose_extra_data_field()
 
 
@@ -281,11 +284,14 @@ class UnorderedListStartMarkdownToken(ContainerMarkdownToken):
         """
         Add any leading spaces to the token, separating them with line feeds.
         """
+        POGGER.debug("__leading_spaces>>:$:<<", self.__leading_spaces)
+        POGGER.debug("add_leading_spaces>>:$:<<", ws_add)
         self.__leading_spaces = (
             ws_add
             if self.__leading_spaces is None
             else f"{self.__leading_spaces}{ParserHelper.newline_character}{ws_add}"
         )
+        POGGER.debug("__leading_spaces>>:$:<<", self.__leading_spaces)
         self.__compose_extra_data_field()
 
 
@@ -331,19 +337,31 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
             self.__leading_spaces,
         )
         POGGER.debug("add_leading_spaces>>:$:<<", leading_spaces_to_add)
-        if skip_adding_newline:
-            self.__leading_spaces = f"{self.__leading_spaces}{leading_spaces_to_add}"
-        else:
-            self.__leading_spaces = (
+        self.__leading_spaces = (
+            f"{self.__leading_spaces}{leading_spaces_to_add}"
+            if skip_adding_newline
+            else (
                 f"{self.__leading_spaces}{ParserHelper.newline_character}{leading_spaces_to_add}"
                 if self.__leading_spaces
                 else leading_spaces_to_add
             )
+        )
         POGGER.debug(
             "__leading_spaces>>:$:<<",
             self.__leading_spaces,
         )
         self.__compose_extra_data_field()
+
+    def remove_last_leading_space(self):
+        """
+        Remove the last leading space and return it.
+        """
+        last_separator_index = self.__leading_spaces.rindex("\n")
+        extracted_text = self.__leading_spaces[last_separator_index:]
+        self.__leading_spaces = self.__leading_spaces[:last_separator_index]
+        self.leading_text_index -= 1
+        self.__compose_extra_data_field()
+        return extracted_text
 
     def __compose_extra_data_field(self):
         """
@@ -352,13 +370,19 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
         item_list = [self.__extracted_whitespace, self.__leading_spaces]
         self._set_extra_data(MarkdownToken.extra_data_separator.join(item_list))
 
-    def calculate_next_leading_space_part(self, increment_index=True, delta=0):
+    def calculate_next_leading_space_part(
+        self, increment_index=True, delta=0, allow_overflow=False
+    ):
         """
         Calculate the next leading space based on the leading_text_index,
         optonally incrementing it as well.
         """
         split_leading_spaces = self.leading_spaces.split(ParserHelper.newline_character)
-        leading_text = split_leading_spaces[self.leading_text_index + delta]
-        if increment_index:
-            self.leading_text_index += 1
+        absolute_index = self.leading_text_index + delta
+        if allow_overflow and absolute_index >= len(split_leading_spaces):
+            leading_text = ""
+        else:
+            leading_text = split_leading_spaces[self.leading_text_index + delta]
+            if increment_index:
+                self.leading_text_index += 1
         return leading_text

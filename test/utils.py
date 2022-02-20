@@ -9,7 +9,7 @@ from test.transform_to_markdown import TransformToMarkdown
 
 from application_properties import ApplicationProperties
 
-from pymarkdown.extension_manager import ExtensionManager
+from pymarkdown.extension_manager.extension_manager import ExtensionManager
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
@@ -70,9 +70,10 @@ def write_temporary_configuration(supplied_configuration):
             else:
                 json.dump(supplied_configuration, outfile)
             return outfile.name
-    except IOError as ex:
-        assert False, f"Test configuration file was not written ({ex})."
-        return None
+    except IOError as this_exception:
+        raise AssertionError(
+            f"Test configuration file was not written ({this_exception})."
+        ) from this_exception
 
 
 def assert_if_lists_different(expected_tokens, actual_tokens):
@@ -152,35 +153,32 @@ def verify_markdown_roundtrip(source_markdown, actual_tokens):
         source_markdown = ParserHelper.newline_character.join(new_source)
 
     transformer = TransformToMarkdown()
-    original_markdown, avoid_processing = transformer.transform(actual_tokens)
+    original_markdown = transformer.transform(actual_tokens)
 
-    if avoid_processing:
-        print("Comparison of generated Markdown against original Markdown shipped.")
-    else:
-        print(
-            "".join(
-                [
-                    "\n-=-=-\nExpected\n-=-=-\n-->",
-                    ParserHelper.make_value_visible(source_markdown),
-                    "<--\n-=-=-\nActual\n-=-=-\n-->",
-                    ParserHelper.make_value_visible(original_markdown),
-                    "<--\n-=-=-\n",
-                ]
-            )
-        )
-        diff = difflib.ndiff(source_markdown, original_markdown)
-        diff_values = "".join(
+    print(
+        "".join(
             [
-                "\n-=-=-n",
-                ParserHelper.newline_character.join(list(diff)),
-                "\n-=-=-expected\n-->",
+                "\n-=-=-\nExpected\n-=-=-\n-->",
                 ParserHelper.make_value_visible(source_markdown),
-                "<--\n-=-=-actual\n-->",
+                "<--\n-=-=-\nActual\n-=-=-\n-->",
                 ParserHelper.make_value_visible(original_markdown),
                 "<--\n-=-=-\n",
             ]
         )
+    )
+    diff = difflib.ndiff(source_markdown, original_markdown)
+    diff_values = "".join(
+        [
+            "\n-=-=-n",
+            ParserHelper.newline_character.join(list(diff)),
+            "\n-=-=-expected\n-->",
+            ParserHelper.make_value_visible(source_markdown),
+            "<--\n-=-=-actual\n-->",
+            ParserHelper.make_value_visible(original_markdown),
+            "<--\n-=-=-\n",
+        ]
+    )
 
-        assert (
-            source_markdown == original_markdown
-        ), f"Markdown strings are not equal.{diff_values}"
+    assert (
+        source_markdown == original_markdown
+    ), f"Markdown strings are not equal.{diff_values}"

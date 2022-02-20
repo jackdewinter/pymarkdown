@@ -5,9 +5,9 @@ and the text of the heading, either at the start, end, or both.
 """
 import re
 
-from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.plugins.rule_md_018 import StartOfLineTokenParser
-from pymarkdown.rule_plugin import RulePlugin
 
 
 class MyStartOfLineTokenParser(StartOfLineTokenParser):

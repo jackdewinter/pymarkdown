@@ -2,7 +2,7 @@
 Module to provide for the recognition of Markdown tables.
 """
 
-from pymarkdown.extension_impl import ExtensionDetails
+from pymarkdown.extension_manager.extension_impl import ExtensionDetails
 
 
 # pylint: disable=too-few-public-methods

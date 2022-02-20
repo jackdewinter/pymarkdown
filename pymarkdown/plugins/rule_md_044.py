@@ -2,9 +2,10 @@
 Module to implement a plugin that ensures that specific proper names have
 the correct capitalization.
 """
+from pymarkdown.constants import Constants
 from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.plugin_details import PluginDetails
-from pymarkdown.rule_plugin import RulePlugin
+from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
 class RuleMd044(RulePlugin):
@@ -48,11 +49,10 @@ class RuleMd044(RulePlugin):
             "code_blocks", default_value=True
         )
         self.__proper_name_list = []
-        names = self.plugin_configuration.get_string_property(
+        if names := self.plugin_configuration.get_string_property(
             "names",
             default_value="",
-        ).strip()
-        if names:
+        ).strip():
             lower_list = []
             for next_name in names.split(","):
                 next_name = next_name.strip()
@@ -213,7 +213,7 @@ class RuleMd044(RulePlugin):
     # pylint: enable=too-many-arguments
 
     def __handle_inline_link_end(self, context, token):
-        if token.start_markdown_token.label_type == "inline":
+        if token.start_markdown_token.label_type == Constants.link_type__inline:
             link_body = "".join(
                 [
                     token.start_markdown_token.before_link_whitespace,
@@ -246,7 +246,7 @@ class RuleMd044(RulePlugin):
             token.text_from_blocks, context, token, same_line_offset
         )
 
-        if token.label_type == "inline":
+        if token.label_type == Constants.link_type__inline:
             link_body = "".join(
                 [
                     token.before_link_whitespace,

@@ -81,27 +81,26 @@ class EmphasisHelper:
     def __process_this_delimiter_item(
         is_debug_enabled, delimiter_stack, current_position
     ):
-        continue_processing = True
         if is_debug_enabled:
             POGGER.debug(
                 "Block($)-->$",
                 current_position,
                 delimiter_stack[current_position].show_process_emphasis(),
             )
+        continue_processing = False
         if not delimiter_stack[current_position].is_active:
             POGGER.debug("not active")
-            continue_processing = False
         elif (
             delimiter_stack[current_position].token_text[0]
             not in EmphasisHelper.inline_emphasis
         ):
             POGGER.debug("not emphasis")
-            continue_processing = False
         elif not EmphasisHelper.__is_potential_closer(
             delimiter_stack[current_position]
         ):
             POGGER.debug("not closer")
-            continue_processing = False
+        else:
+            continue_processing = True
         return continue_processing
 
     @staticmethod
@@ -114,12 +113,13 @@ class EmphasisHelper:
             inline_blocks, is_debug_enabled, wall_token
         )
 
-        current_position, openers_bottom, stack_size = (
+        current_position, stack_size = (
             stack_bottom + 1,
-            stack_bottom,
             len(delimiter_stack),
         )
         if current_position < stack_size:
+
+            openers_bottom = stack_bottom
             if is_debug_enabled:
                 POGGER.debug("BLOCK($) of ($)", current_position, stack_size)
                 POGGER.debug(
@@ -259,7 +259,6 @@ class EmphasisHelper:
             new_token.generate_close_markdown_token_from_markdown_token(
                 "",
                 "",
-                False,
                 line_number=close_token.line_number,
                 column_number=close_token.column_number,
             ),
@@ -421,10 +420,10 @@ class EmphasisHelper:
         Determine if these two tokens together make a valid open/close emphasis pair.
         """
 
-        matching_delimiter, is_valid_opener = close_token.token_text[0], False
-
+        is_valid_opener = False
         if not (
-            open_token.token_text and open_token.token_text[0] == matching_delimiter
+            open_token.token_text
+            and open_token.token_text[0] == close_token.token_text[0]
         ):
             POGGER.debug("  delimiter mismatch")
         elif not open_token.is_active:

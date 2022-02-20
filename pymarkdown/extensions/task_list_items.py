@@ -1,7 +1,7 @@
 """
 Module to provide for a list item that can be check off.
 """
-from pymarkdown.extension_impl import ExtensionDetails
+from pymarkdown.extension_manager.extension_impl import ExtensionDetails
 
 
 # pylint: disable=too-few-public-methods

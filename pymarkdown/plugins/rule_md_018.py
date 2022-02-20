@@ -5,9 +5,10 @@ the text of the heading.
 """
 import re
 
+from pymarkdown.constants import Constants
 from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.plugin_details import PluginDetails
-from pymarkdown.rule_plugin import RulePlugin
+from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
 class StartOfLineTokenParser:
@@ -90,7 +91,7 @@ class StartOfLineTokenParser:
             self.__paragraph_index += token.text_from_blocks.count(
                 ParserHelper.newline_character
             )
-            if token.label_type == "inline":
+            if token.label_type == Constants.link_type__inline:
                 self.__paragraph_index += token.before_link_whitespace.count(
                     ParserHelper.newline_character
                 )
@@ -103,7 +104,7 @@ class StartOfLineTokenParser:
                 self.__paragraph_index += token.active_link_title.count(
                     ParserHelper.newline_character
                 )
-            if token.label_type == "full":
+            if token.label_type == Constants.link_type__full:
                 self.__paragraph_index += token.ex_label.count(
                     ParserHelper.newline_character
                 )
