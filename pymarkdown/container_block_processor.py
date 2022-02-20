@@ -402,11 +402,11 @@ class ContainerBlockProcessor:
             if parser_state.token_stack[stack_index].is_block_quote:
                 container_used_indent = parser_state.original_line_to_parse.find(">")
                 assert container_used_indent != -1
-                if (
+                assert (
                     parser_state.original_line_to_parse[container_used_indent + 1]
                     == " "
-                ):
-                    container_used_indent += 1
+                )
+                container_used_indent += 1
             else:
                 assert parser_state.token_stack[stack_index].is_list
                 delta = (
@@ -585,15 +585,21 @@ class ContainerBlockProcessor:
             container_depth >= len(parser_state.token_stack) - 1
             and position_marker.index_number == -1
         )
-        need_leading_whitespace_processing = container_depth < (
-            len(parser_state.token_stack) - 1
-        )
         POGGER.debug(
             "need_trailing_indent_processing($) = container_depth($) >= len(token)-1($) and index_number($) == -1",
             need_trailing_indent_processing,
             container_depth,
             len(parser_state.token_stack) - 1,
             position_marker.index_number,
+        )
+        POGGER.debug("token-stack:$", parser_state.token_stack)
+        need_leading_whitespace_processing = (
+            container_depth < (len(parser_state.token_stack) - 1)
+            and len(extracted_whitespace) >= 4
+            and not (
+                parser_state.token_stack[-1].is_html_block
+                or parser_state.token_stack[-1].is_fenced_code_block
+            )
         )
         POGGER.debug(
             "need_leading_whitespace_processing($) = "

@@ -379,7 +379,15 @@
             "elapsedTimeInMilliseconds": 0
         },
         {
-            "name": "test.gfm.test_markdown_fenced_code_blocks",
+            "name": "test.test_markdown_extra",
+            "totalTests": 78,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.test_markdown_fenced_code_blocks",
             "totalTests": 68,
             "failedTests": 0,
             "errorTests": 0,
