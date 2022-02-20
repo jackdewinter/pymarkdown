@@ -5,8 +5,8 @@ are equivalent with each other.
 from enum import Enum
 
 # from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.plugin_details import PluginDetails
-from pymarkdown.rule_plugin import RulePlugin
+from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
 class OrderedListAlignment(Enum):

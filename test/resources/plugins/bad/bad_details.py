@@ -1,7 +1,7 @@
 """
 Module to implement a sample plugin that has a bad constructor function.
 """
-from pymarkdown.rule_plugin import RulePlugin
+from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
 class BadDetails(RulePlugin):

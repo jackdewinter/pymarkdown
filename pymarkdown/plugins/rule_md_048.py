@@ -1,8 +1,8 @@
 """
 Module to implement a plugin that ensures that the style of fenced code blocks is consistent.
 """
-from pymarkdown.plugin_details import PluginDetails
-from pymarkdown.rule_plugin import RulePlugin
+from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
 class RuleMd048(RulePlugin):

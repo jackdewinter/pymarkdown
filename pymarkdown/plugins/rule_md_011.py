@@ -4,8 +4,8 @@ it appear like the author got the inline link syntax reversed.
 """
 import re
 
-from pymarkdown.plugin_details import PluginDetails
-from pymarkdown.rule_plugin import RulePlugin
+from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
 class RuleMd011(RulePlugin):
@@ -61,8 +61,7 @@ class RuleMd011(RulePlugin):
             and "(" in line
             and "[" in line
         ):
-            regex_search = self.__reverse_link_syntax.search(line)
-            if regex_search:
+            if regex_search := self.__reverse_link_syntax.search(line):
                 regex_span = regex_search.span()
                 extra_error_information = line[regex_span[0] : regex_span[1]]
                 self.report_next_line_error(

@@ -1,8 +1,8 @@
 """
 Module to implement a plugin that looks for multiple top level headings.
 """
-from pymarkdown.plugin_details import PluginDetails
-from pymarkdown.rule_plugin import RulePlugin
+from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
 class RuleMd025(RulePlugin):
@@ -70,12 +70,16 @@ class RuleMd025(RulePlugin):
         Event that a new token is being processed.
         """
         # print(">>>" + str(token).replace(ParserHelper.newline_character, "\\n"))
-        if token.is_atx_heading or token.is_setext_heading:
-            if token.hash_count == self.__level:
-                if self.__have_top_level:
-                    self.report_next_token_error(context, token)
-                else:
-                    self.__have_top_level = True
-        elif token.is_front_matter:
-            if self.__front_matter_title in token.matter_map:
-                self.__have_top_level = True
+        is_token_heading = token.is_atx_heading or token.is_setext_heading
+        if (
+            is_token_heading
+            and token.hash_count == self.__level
+            and self.__have_top_level
+        ):
+            self.report_next_token_error(context, token)
+        elif (is_token_heading and token.hash_count == self.__level) or (
+            not is_token_heading
+            and token.is_front_matter
+            and self.__front_matter_title in token.matter_map
+        ):
+            self.__have_top_level = True
