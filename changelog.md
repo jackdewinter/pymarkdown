@@ -9,7 +9,9 @@
 ### Changed
 
 - [Changed - Issue 154](https://github.com/jackdewinter/pymarkdown/issues/154)
-  - rule md003 - added configuration `allow-setext-update`
+  - rule md003: added configuration `allow-setext-update`
+- [Changed - Issue 283](https://github.com/jackdewinter/pymarkdown/issues/283)
+  - general: moved more modules into specific directories
 
 ### Fixed
 
@@ -19,6 +21,8 @@
   - rule md005: was not returning proper values for actual and expected
 - [Fixed - Issue 189](https://github.com/jackdewinter/pymarkdown/issues/189)
   - rule md027: addressed index out of bounds error keeping track of blank lines after a block quote was started in a previous section
+- [Fixed - Issue 287](https://github.com/jackdewinter/pymarkdown/issues/287)
+  - parser: code to handle indent was greedy with respect to HTML blocks and fenced code blocks
 
 ## Version 0.9.5 - Date: 2022-02-07
 
