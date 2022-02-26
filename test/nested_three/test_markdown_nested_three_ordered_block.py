@@ -225,7 +225,7 @@ def test_nested_three_ordered_text_nl_block_text_nl_unordered_wo_bq():
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1102,7 +1102,7 @@ item</p>
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1692,6 +1692,7 @@ item</li>
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_unordered_max_with_li1():
     """
     Verify that a nesting of ordered list, block quote, unordered list, with
@@ -1701,24 +1702,19 @@ def test_nested_three_ordered_max_block_max_unordered_max_with_li1():
     # Arrange
     source_markdown = """   1.    >    + list
    1.    >      item"""
-    expected_tokens = [
-        "[olist(1,4):.:1:9:   ]",
-        "[block-quote(1,10):         :         > \n         > ]",
-        "[ulist(1,15):+::16:   :     ]",
-        "[para(1,17):\n]",
-        "[text(1,17):list\nitem::\n]",
-        "[end-para:::True]",
-        "[end-ulist:::True]",
-        "[end-block-quote:::True]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens = ['[olist(1,4):.:1:9:   :]', '[block-quote(1,10):         :         > ]', '[ulist(1,15):+::16:   ]', '[para(1,17):]', '[text(1,17):list:]', '[end-para:::True]', '[end-ulist:::True]', '[end-block-quote:::True]', '[li(2,4):9::1]', '[block-quote(2,10):         :         > ]', '[icode-block(2,16):    :]', '[text(2,16):item: ]', '[end-icode-block:::True]', '[end-block-quote:::True]', '[end-olist:::True]']
     expected_gfm = """<ol>
 <li>
 <blockquote>
 <ul>
-<li>list
-item</li>
+<li>list</li>
 </ul>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<pre><code> item
+</code></pre>
 </blockquote>
 </li>
 </ol>"""
@@ -1735,23 +1731,13 @@ def test_nested_three_ordered_max_block_max_unordered_max_with_li2():
     # Arrange
     source_markdown = """   1.    >    + list
          >    + item"""
-    expected_tokens = [
-        "[olist(1,4):.:1:9:   ]",
-        "[block-quote(1,10):         :         > \n         > ]",
-        "[ulist(1,15):+::16:   :     ]",
-        "[para(1,17):\n]",
-        "[text(1,17):list\nitem::\n]",
-        "[end-para:::True]",
-        "[end-ulist:::True]",
-        "[end-block-quote:::True]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[block-quote(1,10):         :         > \n         > ]', '[ulist(1,15):+::16:   ]', '[para(1,17):]', '[text(1,17):list:]', '[end-para:::True]', '[li(2,15):16:   :]', '[para(2,17):]', '[text(2,17):item:]', '[end-para:::True]', '[end-ulist:::True]', '[end-block-quote:::True]', '[end-olist:::True]']
     expected_gfm = """<ol>
 <li>
 <blockquote>
 <ul>
-<li>list
-item</li>
+<li>list</li>
+<li>item</li>
 </ul>
 </blockquote>
 </li>
@@ -1760,6 +1746,7 @@ item</li>
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_unordered_max_with_li3():
     """
     Verify that a nesting of ordered list, block quote, unordered list, with
@@ -1769,23 +1756,19 @@ def test_nested_three_ordered_max_block_max_unordered_max_with_li3():
     # Arrange
     source_markdown = """   1.    >    + list
    1.    >    + item"""
-    expected_tokens = [
-        "[olist(1,4):.:1:9:   ]",
-        "[block-quote(1,10):         :         > \n         > ]",
-        "[ulist(1,15):+::16:   :     ]",
-        "[para(1,17):\n]",
-        "[text(1,17):list\nitem::\n]",
-        "[end-para:::True]",
-        "[end-ulist:::True]",
-        "[end-block-quote:::True]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[block-quote(1,10):         :         > ]', '[ulist(1,15):+::16:   ]', '[para(1,17):]', '[text(1,17):list:]', '[end-para:::True]', '[end-ulist:::True]', '[end-block-quote:::True]', '[li(2,4):9::1]', '[block-quote(2,10):         :         > ]', '[ulist(2,15):+::16:   ]', '[para(2,17):]', '[text(2,17):item:]', '[end-para:::True]', '[end-ulist:::True]', '[end-block-quote:::True]', '[end-olist:::True]']
     expected_gfm = """<ol>
 <li>
 <blockquote>
 <ul>
-<li>list
-item</li>
+<li>list</li>
+</ul>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<ul>
+<li>item</li>
 </ul>
 </blockquote>
 </li>
@@ -1830,6 +1813,7 @@ def test_nested_three_ordered_max_block_max_unordered_max_empty():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_unordered_max_empty_li1():
     """
     Verify that a nesting of ordered list, block quote, unordered list, with
@@ -1839,24 +1823,19 @@ def test_nested_three_ordered_max_block_max_unordered_max_empty_li1():
     # Arrange
     source_markdown = """   1.    >    +
    1.    >      item"""
-    expected_tokens = [
-        "[olist(1,4):.:1:9:   ]",
-        "[block-quote(1,10):         :         > \n         > ]",
-        "[ulist(1,15):+::16:   :     ]",
-        "[BLANK(1,16):]",
-        "[para(2,17):]",
-        "[text(2,17):item:]",
-        "[end-para:::True]",
-        "[end-ulist:::True]",
-        "[end-block-quote:::True]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens = ['[olist(1,4):.:1:9:   :]', '[block-quote(1,10):         :         > ]', '[ulist(1,15):+::16:   ]', '[BLANK(1,16):]', '[end-ulist:::True]', '[end-block-quote:::True]', '[li(2,4):9::1]', '[block-quote(2,10):         :         > ]', '[icode-block(2,16):    :]', '[text(2,16):item: ]', '[end-icode-block:::True]', '[end-block-quote:::True]', '[end-olist:::True]']
     expected_gfm = """<ol>
 <li>
 <blockquote>
 <ul>
-<li>item</li>
+<li></li>
 </ul>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<pre><code> item
+</code></pre>
 </blockquote>
 </li>
 </ol>"""
@@ -1874,22 +1853,12 @@ def test_nested_three_ordered_max_block_max_unordered_max_empty_li2():
     # Arrange
     source_markdown = """   1.    >    +
          >    + item"""
-    expected_tokens = [
-        "[olist(1,4):.:1:9:   ]",
-        "[block-quote(1,10):         :         > \n         > ]",
-        "[ulist(1,15):+::16:   :     ]",
-        "[BLANK(1,16):]",
-        "[para(2,17):]",
-        "[text(2,17):item:]",
-        "[end-para:::True]",
-        "[end-ulist:::True]",
-        "[end-block-quote:::True]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[block-quote(1,10):         :         > \n         > ]', '[ulist(1,15):+::16:   ]', '[BLANK(1,16):]', '[li(2,15):16:   :]', '[para(2,17):]', '[text(2,17):item:]', '[end-para:::True]', '[end-ulist:::True]', '[end-block-quote:::True]', '[end-olist:::True]']
     expected_gfm = """<ol>
 <li>
 <blockquote>
 <ul>
+<li></li>
 <li>item</li>
 </ul>
 </blockquote>
@@ -1899,6 +1868,7 @@ def test_nested_three_ordered_max_block_max_unordered_max_empty_li2():
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_unordered_max_empty_li3():
     """
     Verify that a nesting of ordered list, block quote, unordered list, with
@@ -1908,19 +1878,15 @@ def test_nested_three_ordered_max_block_max_unordered_max_empty_li3():
     # Arrange
     source_markdown = """   1.    >    +
    1.    >    + item"""
-    expected_tokens = [
-        "[olist(1,4):.:1:9:   ]",
-        "[block-quote(1,10):         :         > \n         > ]",
-        "[ulist(1,15):+::16:   :     ]",
-        "[BLANK(1,16):]",
-        "[para(2,17):]",
-        "[text(2,17):item:]",
-        "[end-para:::True]",
-        "[end-ulist:::True]",
-        "[end-block-quote:::True]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[block-quote(1,10):         :         > ]', '[ulist(1,15):+::16:   ]', '[BLANK(1,16):]', '[end-ulist:::True]', '[end-block-quote:::True]', '[li(2,4):9::1]', '[block-quote(2,10):         :         > ]', '[ulist(2,15):+::16:   ]', '[para(2,17):]', '[text(2,17):item:]', '[end-para:::True]', '[end-ulist:::True]', '[end-block-quote:::True]', '[end-olist:::True]']
     expected_gfm = """<ol>
+<li>
+<blockquote>
+<ul>
+<li></li>
+</ul>
+</blockquote>
+</li>
 <li>
 <blockquote>
 <ul>
@@ -1970,6 +1936,7 @@ item</li>
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_unordered_max_no_bq1_with_li1():
     """
     Verify that a nesting of ordered list, block quote, unordered list, with
@@ -1980,25 +1947,18 @@ def test_nested_three_ordered_max_block_max_unordered_max_no_bq1_with_li1():
     # Arrange
     source_markdown = """   1.    >    + list
    1.           item"""
-    expected_tokens = [
-        "[olist(1,4):.:1:9:   ]",
-        "[block-quote(1,10):         :         > \n]",
-        "[ulist(1,15):+::16:   :                \n]",
-        "[para(1,17):\n]",
-        "[text(1,17):list\nitem::\n]",
-        "[end-para:::True]",
-        "[end-ulist:::True]",
-        "[end-block-quote:::True]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[block-quote(1,10):         :         > ]', '[ulist(1,15):+::16:   ]', '[para(1,17):]', '[text(1,17):list:]', '[end-para:::True]', '[end-ulist:::True]', '[end-block-quote:::True]', '[li(2,4):6::1]', '[icode-block(2,11):    :]', '[text(2,11):item:      ]', '[end-icode-block:::True]', '[end-olist:::True]']
     expected_gfm = """<ol>
 <li>
 <blockquote>
 <ul>
-<li>list
-item</li>
+<li>list</li>
 </ul>
 </blockquote>
+</li>
+<li>
+<pre><code>      item
+</code></pre>
 </li>
 </ol>"""
 
@@ -2006,6 +1966,7 @@ item</li>
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_unordered_max_no_bq1_with_li2():
     """
     Verify that a nesting of ordered list, block quote, unordered list, with
@@ -2016,23 +1977,13 @@ def test_nested_three_ordered_max_block_max_unordered_max_no_bq1_with_li2():
     # Arrange
     source_markdown = """   1.    >    + list
               + item"""
-    expected_tokens = [
-        "[olist(1,4):.:1:9:   ]",
-        "[block-quote(1,10):         :         > \n]",
-        "[ulist(1,15):+::16:   :                \n]",
-        "[para(1,17):\n]",
-        "[text(1,17):list\nitem::\n]",
-        "[end-para:::True]",
-        "[end-ulist:::True]",
-        "[end-block-quote:::True]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens =  ['[olist(1,4):.:1:9:   ]', '[block-quote(1,10):         :         > ]', '[ulist(1,15):+::16:   ]', '[para(1,17):]', '[text(1,17):list:]', '[end-para:::True]', '[end-ulist:::True]', '[end-block-quote:::True]', '[end-olist:::True]', '[ulist(2,15):+::16:              ]', '[para(2,17):]', '[text(2,17):item:]', '[end-para:::True]', '[end-ulist:::True]']
     expected_gfm = """<ol>
 <li>
 <blockquote>
 <ul>
 <li>list
-item</li>
++ item</li>
 </ul>
 </blockquote>
 </li>
@@ -2041,6 +1992,7 @@ item</li>
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_unordered_max_no_bq1_with_li3():
     """
     Verify that a nesting of ordered list, block quote, unordered list, with
@@ -2051,25 +2003,18 @@ def test_nested_three_ordered_max_block_max_unordered_max_no_bq1_with_li3():
     # Arrange
     source_markdown = """   1.    >    + list
    1.         + item"""
-    expected_tokens = [
-        "[olist(1,4):.:1:9:   ]",
-        "[block-quote(1,10):         :         > \n]",
-        "[ulist(1,15):+::16:   :                \n]",
-        "[para(1,17):\n]",
-        "[text(1,17):list\nitem::\n]",
-        "[end-para:::True]",
-        "[end-ulist:::True]",
-        "[end-block-quote:::True]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[block-quote(1,10):         :         > ]', '[ulist(1,15):+::16:   ]', '[para(1,17):]', '[text(1,17):list:]', '[end-para:::True]', '[end-ulist:::True]', '[end-block-quote:::True]', '[li(2,4):6::1]', '[icode-block(2,11):    :]', '[text(2,11):+ item:    ]', '[end-icode-block:::True]', '[end-olist:::True]']
     expected_gfm = """<ol>
 <li>
 <blockquote>
 <ul>
-<li>list
-item</li>
+<li>list</li>
 </ul>
 </blockquote>
+</li>
+<li>
+<pre><code>    + item
+</code></pre>
 </li>
 </ol>"""
 
@@ -2115,6 +2060,7 @@ def test_nested_three_ordered_max_block_max_unordered_max_empty_no_bq1():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_unordered_max_empty_no_bq1_with_li1():
     """
     Verify that a nesting of ordered list, block quote, unordered list, with
@@ -2125,18 +2071,7 @@ def test_nested_three_ordered_max_block_max_unordered_max_empty_no_bq1_with_li1(
     # Arrange
     source_markdown = """   1.    >    +
    1.           item"""
-    expected_tokens = [
-        "[olist(1,4):.:1:9:   :         ]",
-        "[block-quote(1,10):         :         > ]",
-        "[ulist(1,15):+::16:   ]",
-        "[BLANK(1,16):]",
-        "[end-ulist:::True]",
-        "[end-block-quote:::True]",
-        "[icode-block(2,14):    :]",
-        "[text(2,14):item:   ]",
-        "[end-icode-block:::True]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[block-quote(1,10):         :         > ]', '[ulist(1,15):+::16:   ]', '[BLANK(1,16):]', '[end-ulist:::True]', '[end-block-quote:::True]', '[li(2,4):6::1]', '[icode-block(2,11):    :]', '[text(2,11):item:      ]', '[end-icode-block:::True]', '[end-olist:::True]']
     expected_gfm = """<ol>
 <li>
 <blockquote>
@@ -2144,7 +2079,9 @@ def test_nested_three_ordered_max_block_max_unordered_max_empty_no_bq1_with_li1(
 <li></li>
 </ul>
 </blockquote>
-<pre><code>   item
+</li>
+<li>
+<pre><code>      item
 </code></pre>
 </li>
 </ol>"""
@@ -2163,18 +2100,7 @@ def test_nested_three_ordered_max_block_max_unordered_max_empty_no_bq1_with_li2(
     # Arrange
     source_markdown = """   1.    >    +
               + item"""
-    expected_tokens = [
-        "[olist(1,4):.:1:9:   :         ]",
-        "[block-quote(1,10):         :         > ]",
-        "[ulist(1,15):+::16:   ]",
-        "[BLANK(1,16):]",
-        "[end-ulist:::True]",
-        "[end-block-quote:::True]",
-        "[icode-block(2,14):    :]",
-        "[text(2,14):item:   ]",
-        "[end-icode-block:::True]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens = ['[olist(1,4):.:1:9:   :         ]', '[block-quote(1,10):         :         > ]', '[ulist(1,15):+::16:   ]', '[BLANK(1,16):]', '[end-ulist:::True]', '[end-block-quote:::True]', '[icode-block(2,14):    :]', '[text(2,14):+ item: ]', '[end-icode-block:::True]', '[end-olist:::True]']
     expected_gfm = """<ol>
 <li>
 <blockquote>
@@ -2182,7 +2108,7 @@ def test_nested_three_ordered_max_block_max_unordered_max_empty_no_bq1_with_li2(
 <li></li>
 </ul>
 </blockquote>
-<pre><code>   item
+<pre><code> + item
 </code></pre>
 </li>
 </ol>"""
@@ -2191,6 +2117,7 @@ def test_nested_three_ordered_max_block_max_unordered_max_empty_no_bq1_with_li2(
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_unordered_max_empty_no_bq1_with_li3():
     """
     Verify that a nesting of ordered list, block quote, unordered list, with
@@ -2201,18 +2128,7 @@ def test_nested_three_ordered_max_block_max_unordered_max_empty_no_bq1_with_li3(
     # Arrange
     source_markdown = """   1.    >    +
    1.         + item"""
-    expected_tokens = [
-        "[olist(1,4):.:1:9:   :         ]",
-        "[block-quote(1,10):         :         > ]",
-        "[ulist(1,15):+::16:   ]",
-        "[BLANK(1,16):]",
-        "[end-ulist:::True]",
-        "[end-block-quote:::True]",
-        "[icode-block(2,14):    :]",
-        "[text(2,14):item:   ]",
-        "[end-icode-block:::True]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens =  ['[olist(1,4):.:1:9:   ]', '[block-quote(1,10):         :         > ]', '[ulist(1,15):+::16:   ]', '[BLANK(1,16):]', '[end-ulist:::True]', '[end-block-quote:::True]', '[li(2,4):6::1]', '[icode-block(2,11):    :]', '[text(2,11):+ item:    ]', '[end-icode-block:::True]', '[end-olist:::True]']
     expected_gfm = """<ol>
 <li>
 <blockquote>
@@ -2220,7 +2136,9 @@ def test_nested_three_ordered_max_block_max_unordered_max_empty_no_bq1_with_li3(
 <li></li>
 </ul>
 </blockquote>
-<pre><code>   item
+</li>
+<li>
+<pre><code>    + item
 </code></pre>
 </li>
 </ol>"""
@@ -2441,6 +2359,7 @@ item</li>
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_ordered_max_with_li1():
     """
     Verify that a nesting of ordered list, block quote, ordered list, with
@@ -2450,24 +2369,19 @@ def test_nested_three_ordered_max_block_max_ordered_max_with_li1():
     # Arrange
     source_markdown = """   1.    >    1. list
    1.    >       item"""
-    expected_tokens = [
-        "[olist(1,4):.:1:9:   ]",
-        "[block-quote(1,10):         :         > \n         > ]",
-        "[olist(1,15):.:1:17:   :      ]",
-        "[para(1,18):\n]",
-        "[text(1,18):list\nitem::\n]",
-        "[end-para:::True]",
-        "[end-olist:::True]",
-        "[end-block-quote:::True]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens = ['[olist(1,4):.:1:9:   :]', '[block-quote(1,10):         :         > ]', '[olist(1,15):.:1:17:   ]', '[para(1,18):]', '[text(1,18):list:]', '[end-para:::True]', '[end-olist:::True]', '[end-block-quote:::True]', '[li(2,4):9::1]', '[block-quote(2,10):         :         > ]', '[icode-block(2,16):    :]', '[text(2,16):item:  ]', '[end-icode-block:::True]', '[end-block-quote:::True]', '[end-olist:::True]']
     expected_gfm = """<ol>
 <li>
 <blockquote>
 <ol>
-<li>list
-item</li>
+<li>list</li>
 </ol>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<pre><code>  item
+</code></pre>
 </blockquote>
 </li>
 </ol>"""
@@ -2484,23 +2398,13 @@ def test_nested_three_ordered_max_block_max_ordered_max_with_li2():
     # Arrange
     source_markdown = """   1.    >    1. list
          >    1. item"""
-    expected_tokens = [
-        "[olist(1,4):.:1:9:   ]",
-        "[block-quote(1,10):         :         > \n         > ]",
-        "[olist(1,15):.:1:17:   :      ]",
-        "[para(1,18):\n]",
-        "[text(1,18):list\nitem::\n]",
-        "[end-para:::True]",
-        "[end-olist:::True]",
-        "[end-block-quote:::True]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[block-quote(1,10):         :         > \n         > ]', '[olist(1,15):.:1:17:   ]', '[para(1,18):]', '[text(1,18):list:]', '[end-para:::True]', '[li(2,15):17:   :1]', '[para(2,18):]', '[text(2,18):item:]', '[end-para:::True]', '[end-olist:::True]', '[end-block-quote:::True]', '[end-olist:::True]']
     expected_gfm = """<ol>
 <li>
 <blockquote>
 <ol>
-<li>list
-item</li>
+<li>list</li>
+<li>item</li>
 </ol>
 </blockquote>
 </li>
@@ -2509,6 +2413,7 @@ item</li>
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_ordered_max_with_li3():
     """
     Verify that a nesting of ordered list, block quote, ordered list, with
@@ -2518,23 +2423,19 @@ def test_nested_three_ordered_max_block_max_ordered_max_with_li3():
     # Arrange
     source_markdown = """   1.    >    1. list
    1.    >    1. item"""
-    expected_tokens = [
-        "[olist(1,4):.:1:9:   ]",
-        "[block-quote(1,10):         :         > \n         > ]",
-        "[olist(1,15):.:1:17:   :      ]",
-        "[para(1,18):\n]",
-        "[text(1,18):list\nitem::\n]",
-        "[end-para:::True]",
-        "[end-olist:::True]",
-        "[end-block-quote:::True]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[block-quote(1,10):         :         > ]', '[olist(1,15):.:1:17:   ]', '[para(1,18):]', '[text(1,18):list:]', '[end-para:::True]', '[end-olist:::True]', '[end-block-quote:::True]', '[li(2,4):9::1]', '[block-quote(2,10):         :         > ]', '[olist(2,15):.:1:17:   ]', '[para(2,18):]', '[text(2,18):item:]', '[end-para:::True]', '[end-olist:::True]', '[end-block-quote:::True]', '[end-olist:::True]']
     expected_gfm = """<ol>
 <li>
 <blockquote>
 <ol>
-<li>list
-item</li>
+<li>list</li>
+</ol>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<ol>
+<li>item</li>
 </ol>
 </blockquote>
 </li>
@@ -2578,6 +2479,7 @@ def test_nested_three_ordered_max_block_max_ordered_max_empty():
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_ordered_max_empty_with_li1():
     """
     Verify that a nesting of ordered list, block quote, ordered list, with
@@ -2587,24 +2489,19 @@ def test_nested_three_ordered_max_block_max_ordered_max_empty_with_li1():
     # Arrange
     source_markdown = """   1.    >    1.
    1.    >       item"""
-    expected_tokens = [
-        "[olist(1,4):.:1:9:   ]",
-        "[block-quote(1,10):         :         > \n         > ]",
-        "[olist(1,15):.:1:17:   :      ]",
-        "[BLANK(1,17):]",
-        "[para(2,18):]",
-        "[text(2,18):item:]",
-        "[end-para:::True]",
-        "[end-olist:::True]",
-        "[end-block-quote:::True]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens = ['[olist(1,4):.:1:9:   :]', '[block-quote(1,10):         :         > ]', '[olist(1,15):.:1:17:   ]', '[BLANK(1,17):]', '[end-olist:::True]', '[end-block-quote:::True]', '[li(2,4):9::1]', '[block-quote(2,10):         :         > ]', '[icode-block(2,16):    :]', '[text(2,16):item:  ]', '[end-icode-block:::True]', '[end-block-quote:::True]', '[end-olist:::True]']
     expected_gfm = """<ol>
 <li>
 <blockquote>
 <ol>
-<li>item</li>
+<li></li>
 </ol>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<pre><code>  item
+</code></pre>
 </blockquote>
 </li>
 </ol>"""
@@ -2622,22 +2519,12 @@ def test_nested_three_ordered_max_block_max_ordered_max_empty_with_li2():
     # Arrange
     source_markdown = """   1.    >    1.
          >    1. item"""
-    expected_tokens = [
-        "[olist(1,4):.:1:9:   ]",
-        "[block-quote(1,10):         :         > \n         > ]",
-        "[olist(1,15):.:1:17:   :      ]",
-        "[BLANK(1,17):]",
-        "[para(2,18):]",
-        "[text(2,18):item:]",
-        "[end-para:::True]",
-        "[end-olist:::True]",
-        "[end-block-quote:::True]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[block-quote(1,10):         :         > \n         > ]', '[olist(1,15):.:1:17:   ]', '[BLANK(1,17):]', '[li(2,15):17:   :1]', '[para(2,18):]', '[text(2,18):item:]', '[end-para:::True]', '[end-olist:::True]', '[end-block-quote:::True]', '[end-olist:::True]']
     expected_gfm = """<ol>
 <li>
 <blockquote>
 <ol>
+<li></li>
 <li>item</li>
 </ol>
 </blockquote>
@@ -2647,6 +2534,7 @@ def test_nested_three_ordered_max_block_max_ordered_max_empty_with_li2():
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_ordered_max_empty_with_li3():
     """
     Verify that a nesting of ordered list, block quote, ordered list, with
@@ -2656,19 +2544,15 @@ def test_nested_three_ordered_max_block_max_ordered_max_empty_with_li3():
     # Arrange
     source_markdown = """   1.    >    1.
    1.    >    1. item"""
-    expected_tokens = [
-        "[olist(1,4):.:1:9:   ]",
-        "[block-quote(1,10):         :         > \n         > ]",
-        "[olist(1,15):.:1:17:   :      ]",
-        "[BLANK(1,17):]",
-        "[para(2,18):]",
-        "[text(2,18):item:]",
-        "[end-para:::True]",
-        "[end-olist:::True]",
-        "[end-block-quote:::True]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[block-quote(1,10):         :         > ]', '[olist(1,15):.:1:17:   ]', '[BLANK(1,17):]', '[end-olist:::True]', '[end-block-quote:::True]', '[li(2,4):9::1]', '[block-quote(2,10):         :         > ]', '[olist(2,15):.:1:17:   ]', '[para(2,18):]', '[text(2,18):item:]', '[end-para:::True]', '[end-olist:::True]', '[end-block-quote:::True]', '[end-olist:::True]']
     expected_gfm = """<ol>
+<li>
+<blockquote>
+<ol>
+<li></li>
+</ol>
+</blockquote>
+</li>
 <li>
 <blockquote>
 <ol>
@@ -2717,6 +2601,7 @@ item</li>
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_ordered_max_no_bq1_with_li1():
     """
     Verify that a nesting of ordered list, block quote, ordered list, with
@@ -2727,31 +2612,25 @@ def test_nested_three_ordered_max_block_max_ordered_max_no_bq1_with_li1():
     # Arrange
     source_markdown = """   1.    >    1. list
    1.            item"""
-    expected_tokens = [
-        "[olist(1,4):.:1:9:   ]",
-        "[block-quote(1,10):         :         > \n]",
-        "[olist(1,15):.:1:17:   :                 \n]",
-        "[para(1,18):\n]",
-        "[text(1,18):list\nitem::\n]",
-        "[end-para:::True]",
-        "[end-olist:::True]",
-        "[end-block-quote:::True]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[block-quote(1,10):         :         > ]', '[olist(1,15):.:1:17:   ]', '[para(1,18):]', '[text(1,18):list:]', '[end-para:::True]', '[end-olist:::True]', '[end-block-quote:::True]', '[li(2,4):6::1]', '[icode-block(2,11):    :]', '[text(2,11):item:       ]', '[end-icode-block:::True]', '[end-olist:::True]']
     expected_gfm = """<ol>
 <li>
 <blockquote>
 <ol>
-<li>list
-item</li>
+<li>list</li>
 </ol>
 </blockquote>
+</li>
+<li>
+<pre><code>       item
+</code></pre>
 </li>
 </ol>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_ordered_max_no_bq1_with_li2():
     """
     Verify that a nesting of ordered list, block quote, ordered list, with
@@ -2762,23 +2641,13 @@ def test_nested_three_ordered_max_block_max_ordered_max_no_bq1_with_li2():
     # Arrange
     source_markdown = """   1.    >    1. list
               1. item"""
-    expected_tokens = [
-        "[olist(1,4):.:1:9:   ]",
-        "[block-quote(1,10):         :         > \n]",
-        "[olist(1,15):.:1:17:   :                 \n]",
-        "[para(1,18):\n]",
-        "[text(1,18):list\nitem::\n]",
-        "[end-para:::True]",
-        "[end-olist:::True]",
-        "[end-block-quote:::True]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[block-quote(1,10):         :         > ]', '[olist(1,15):.:1:17:   ]', '[para(1,18):]', '[text(1,18):list:]', '[end-para:::True]', '[end-olist:::True]', '[end-block-quote:::True]', '[li(2,15):17:   :1]', '[para(2,18):]', '[text(2,18):item:]', '[end-para:::True]', '[end-olist:::True]']
     expected_gfm = """<ol>
 <li>
 <blockquote>
 <ol>
 <li>list
-item</li>
+1. item</li>
 </ol>
 </blockquote>
 </li>
@@ -2787,6 +2656,7 @@ item</li>
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_ordered_max_no_bq1_with_li3():
     """
     Verify that a nesting of ordered list, block quote, ordered list, with
@@ -2797,25 +2667,18 @@ def test_nested_three_ordered_max_block_max_ordered_max_no_bq1_with_li3():
     # Arrange
     source_markdown = """   1.    >    1. list
    1.         1. item"""
-    expected_tokens = [
-        "[olist(1,4):.:1:9:   ]",
-        "[block-quote(1,10):         :         > \n]",
-        "[olist(1,15):.:1:17:   :                 \n]",
-        "[para(1,18):\n]",
-        "[text(1,18):list\nitem::\n]",
-        "[end-para:::True]",
-        "[end-olist:::True]",
-        "[end-block-quote:::True]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[block-quote(1,10):         :         > ]', '[olist(1,15):.:1:17:   ]', '[para(1,18):]', '[text(1,18):list:]', '[end-para:::True]', '[end-olist:::True]', '[end-block-quote:::True]', '[li(2,4):6::1]', '[icode-block(2,11):    :]', '[text(2,11):1. item:    ]', '[end-icode-block:::True]', '[end-olist:::True]']
     expected_gfm = """<ol>
 <li>
 <blockquote>
 <ol>
-<li>list
-item</li>
+<li>list</li>
 </ol>
 </blockquote>
+</li>
+<li>
+<pre><code>    1. item
+</code></pre>
 </li>
 </ol>"""
 
@@ -2861,6 +2724,7 @@ def test_nested_three_ordered_max_block_max_ordered_max_empty_no_bq1():
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_ordered_max_empty_no_bq1_with_li1():
     """
     Verify that a nesting of ordered list, block quote, ordered list, with
@@ -2871,18 +2735,7 @@ def test_nested_three_ordered_max_block_max_ordered_max_empty_no_bq1_with_li1():
     # Arrange
     source_markdown = """   1.    >    1.
    1.            item"""
-    expected_tokens = [
-        "[olist(1,4):.:1:9:   :         ]",
-        "[block-quote(1,10):         :         > ]",
-        "[olist(1,15):.:1:17:   ]",
-        "[BLANK(1,17):]",
-        "[end-olist:::True]",
-        "[end-block-quote:::True]",
-        "[icode-block(2,14):    :]",
-        "[text(2,14):item:    ]",
-        "[end-icode-block:::True]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[block-quote(1,10):         :         > ]', '[olist(1,15):.:1:17:   ]', '[BLANK(1,17):]', '[end-olist:::True]', '[end-block-quote:::True]', '[li(2,4):6::1]', '[icode-block(2,11):    :]', '[text(2,11):item:       ]', '[end-icode-block:::True]', '[end-olist:::True]']
     expected_gfm = """<ol>
 <li>
 <blockquote>
@@ -2890,7 +2743,9 @@ def test_nested_three_ordered_max_block_max_ordered_max_empty_no_bq1_with_li1():
 <li></li>
 </ol>
 </blockquote>
-<pre><code>    item
+</li>
+<li>
+<pre><code>       item
 </code></pre>
 </li>
 </ol>"""
@@ -2908,18 +2763,7 @@ def test_nested_three_ordered_max_block_max_ordered_max_empty_no_bq1_with_li2():
     # Arrange
     source_markdown = """   1.    >    1.
               1. item"""
-    expected_tokens = [
-        "[olist(1,4):.:1:9:   :         ]",
-        "[block-quote(1,10):         :         > ]",
-        "[olist(1,15):.:1:17:   ]",
-        "[BLANK(1,17):]",
-        "[end-olist:::True]",
-        "[end-block-quote:::True]",
-        "[icode-block(2,14):    :]",
-        "[text(2,14):item:    ]",
-        "[end-icode-block:::True]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens = ['[olist(1,4):.:1:9:   :         ]', '[block-quote(1,10):         :         > ]', '[olist(1,15):.:1:17:   ]', '[BLANK(1,17):]', '[end-olist:::True]', '[end-block-quote:::True]', '[icode-block(2,14):    :]', '[text(2,14):1. item: ]', '[end-icode-block:::True]', '[end-olist:::True]']
     expected_gfm = """<ol>
 <li>
 <blockquote>
@@ -2927,7 +2771,7 @@ def test_nested_three_ordered_max_block_max_ordered_max_empty_no_bq1_with_li2():
 <li></li>
 </ol>
 </blockquote>
-<pre><code>    item
+<pre><code> 1. item
 </code></pre>
 </li>
 </ol>"""
@@ -2935,6 +2779,7 @@ def test_nested_three_ordered_max_block_max_ordered_max_empty_no_bq1_with_li2():
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_ordered_max_empty_no_bq1_with_li3():
     """
     Verify that a nesting of ordered list, block quote, ordered list, with
@@ -2945,18 +2790,7 @@ def test_nested_three_ordered_max_block_max_ordered_max_empty_no_bq1_with_li3():
     # Arrange
     source_markdown = """   1.    >    1.
    1.         1. item"""
-    expected_tokens = [
-        "[olist(1,4):.:1:9:   :         ]",
-        "[block-quote(1,10):         :         > ]",
-        "[olist(1,15):.:1:17:   ]",
-        "[BLANK(1,17):]",
-        "[end-olist:::True]",
-        "[end-block-quote:::True]",
-        "[icode-block(2,14):    :]",
-        "[text(2,14):item:    ]",
-        "[end-icode-block:::True]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[block-quote(1,10):         :         > ]', '[olist(1,15):.:1:17:   ]', '[BLANK(1,17):]', '[end-olist:::True]', '[end-block-quote:::True]', '[li(2,4):6::1]', '[icode-block(2,11):    :]', '[text(2,11):1. item:    ]', '[end-icode-block:::True]', '[end-olist:::True]']
     expected_gfm = """<ol>
 <li>
 <blockquote>
@@ -2964,7 +2798,9 @@ def test_nested_three_ordered_max_block_max_ordered_max_empty_no_bq1_with_li3():
 <li></li>
 </ol>
 </blockquote>
-<pre><code>    item
+</li>
+<li>
+<pre><code>    1. item
 </code></pre>
 </li>
 </ol>"""
@@ -3185,6 +3021,7 @@ item</p>
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_block_max_with_li():
     """
     Verify that a nesting of ordered list, block quote, block quote, with
@@ -3255,6 +3092,7 @@ def test_nested_three_ordered_max_block_max_block_max_empty():
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_block_max_empty_with_li():
     """
     Verify that a nesting of ordered list, block quote, block quote, with
@@ -3326,6 +3164,7 @@ def test_nested_three_ordered_max_block_max_block_max_no_bq1():
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_block_max_no_bq1_with_li():
     """
     Verify that a nesting of ordered list, block quote, block quote, with
@@ -3399,6 +3238,7 @@ def test_nested_three_ordered_max_block_max_block_max_empty_no_bq1():
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_block_max_empty_no_bq1_with_li():
     """
     Verify that a nesting of ordered list, block quote, block quote, with
@@ -3437,6 +3277,7 @@ def test_nested_three_ordered_max_block_max_block_max_empty_no_bq1_with_li():
 
 
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_block_max_no_bq2():
     """
     Verify that a nesting of ordered list, block quote, block quote, with
@@ -3472,6 +3313,7 @@ item</p>
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_block_max_no_bq2():
     """
     Verify that a nesting of ordered list, block quote, block quote, with
@@ -3619,6 +3461,7 @@ item</p>
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_block_max_no_bq3_with_li():
     """
     Verify that a nesting of ordered list, block quote, block quote, with
@@ -3691,6 +3534,7 @@ def test_nested_three_ordered_max_block_max_block_max_empty_no_bq3():
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_block_max_empty_no_bq3_with_li():
     """
     Verify that a nesting of ordered list, block quote, block quote, with

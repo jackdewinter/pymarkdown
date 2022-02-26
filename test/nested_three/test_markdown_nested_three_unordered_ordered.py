@@ -2323,7 +2323,7 @@ item</li>
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 @pytest.mark.gfm
 def test_nested_three_unordered_max_ordered_max_block_max_empty_no_bq1_with_li1():
     """
@@ -2359,7 +2359,7 @@ item</li>
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 @pytest.mark.gfm
 def test_nested_three_unordered_max_ordered_max_block_max_empty_no_bq1_with_li2():
     """
@@ -2395,7 +2395,7 @@ item</li>
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 @pytest.mark.gfm
 def test_nested_three_unordered_max_ordered_max_block_max_empty_no_bq1_with_li3():
     """
@@ -2431,7 +2431,7 @@ item</li>
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
