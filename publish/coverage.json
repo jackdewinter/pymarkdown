@@ -6,8 +6,8 @@
         "totalCovered": 3026
     },
     "lineLevel": {
-        "totalMeasured": 10601,
-        "totalCovered": 10601
+        "totalMeasured": 10606,
+        "totalCovered": 10606
     }
 }
 

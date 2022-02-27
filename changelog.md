@@ -4,7 +4,8 @@
 
 ### Added
 
-- None
+- [Added - Issue 293](https://github.com/jackdewinter/pymarkdown/issues/293)
+  - next round of nested level tests, with new list items
 
 ### Changed
 
@@ -23,6 +24,8 @@
   - rule md027: addressed index out of bounds error keeping track of blank lines after a block quote was started in a previous section
 - [Fixed - Issue 287](https://github.com/jackdewinter/pymarkdown/issues/287)
   - parser: code to handle indent was greedy with respect to HTML blocks and fenced code blocks
+- [Fixed - Issue 294](https://github.com/jackdewinter/pymarkdown/issues/294)
+  - markdown generator: needed to take list items into accountg
 
 ## Version 0.9.5 - Date: 2022-02-07
 

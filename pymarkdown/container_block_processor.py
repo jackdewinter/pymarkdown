@@ -1731,7 +1731,10 @@ class ContainerBlockProcessor:
         )
         return other_block_quote_token
 
-    def __calculate_adjusted_whitespace_kludge_without_found(parser_state, token_index, container_depth):
+    @staticmethod
+    def __calculate_adjusted_whitespace_kludge_without_found(
+        parser_state, token_index, container_depth
+    ):
         other_block_quote_token = (
             ContainerBlockProcessor.__look_back_in_document_for_block_quote(
                 parser_state, token_index
@@ -1753,22 +1756,16 @@ class ContainerBlockProcessor:
                 other_block_quote_token = None
 
         if other_block_quote_token:
-            POGGER.debug(
-                "PLFCB>>other_block_quote_token>>:$:", other_block_quote_token
-            )
+            POGGER.debug("PLFCB>>other_block_quote_token>>:$:", other_block_quote_token)
             POGGER.debug(
                 "PLFCB>>other_block_quote_token.leading_text_index>>:$:",
                 other_block_quote_token.leading_text_index,
             )
-            leading_spaces = (
-                other_block_quote_token.calculate_next_leading_space_part(
-                    increment_index=False, delta=-1
-                )
+            leading_spaces = other_block_quote_token.calculate_next_leading_space_part(
+                increment_index=False, delta=-1
             )
             POGGER.debug("PLFCB>>leading_spaces>>:$:", leading_spaces)
-            POGGER.debug(
-                "PLFCB>>other_block_quote_token>>:$:", other_block_quote_token
-            )
+            POGGER.debug("PLFCB>>other_block_quote_token>>:$:", other_block_quote_token)
             POGGER.debug(
                 "PLFCB>>other_block_quote_token.leading_text_index>>:$:",
                 other_block_quote_token.leading_text_index,
@@ -1803,7 +1800,12 @@ class ContainerBlockProcessor:
             POGGER.debug("PLFCB>>leading_spaces>>:$:", leading_spaces)
             old_start_index = len(leading_spaces)
         else:
-            force_reline, old_start_index = ContainerBlockProcessor.__calculate_adjusted_whitespace_kludge_without_found(parser_state, token_index, container_depth)
+            (
+                force_reline,
+                old_start_index,
+            ) = ContainerBlockProcessor.__calculate_adjusted_whitespace_kludge_without_found(
+                parser_state, token_index, container_depth
+            )
         POGGER.debug(
             "old_start_index>>$>>ws_len>>$>>force_reline>>$",
             old_start_index,
