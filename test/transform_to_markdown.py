@@ -1310,6 +1310,68 @@ class TransformToMarkdown:
 
     # pylint: enable=unused-private-member
 
+    # pylint: disable=unused-private-member
+    @classmethod
+    def __rehydrate_list_start_contained_in_list_deeper_block_quote(
+        cls, previous_token, deeper_containing_block_quote_token, current_token
+    ):
+        starting_whitespace = ""
+        did_container_start_midline = False
+        check_list_for_indent = True
+        if (
+            previous_token
+            and previous_token.is_end_token
+            and previous_token.start_markdown_token.is_block_quote_start
+        ):
+            check_list_for_indent = False
+            print(
+                ">>"
+                + ParserHelper.make_value_visible(previous_token.start_markdown_token)
+            )
+            split_leading_spaces = (
+                previous_token.start_markdown_token.leading_spaces.split(
+                    ParserHelper.newline_character
+                )
+            )
+            block_quote_leading_space = split_leading_spaces[-1]
+            starting_whitespace = block_quote_leading_space
+            did_container_start_midline = True
+        else:
+            print(
+                "adj->deeper_containing_block_quote_token.line_number>>:"
+                + f"{deeper_containing_block_quote_token.line_number}:<<"
+            )
+            print(f'adj->current_token.line_number>>:{current_token.line_number}:<<')
+            line_number_delta = (
+                current_token.line_number
+                - deeper_containing_block_quote_token.line_number
+            )
+            print(f"index:{line_number_delta}")
+            split_leading_spaces = (
+                deeper_containing_block_quote_token.leading_spaces.split(
+                    ParserHelper.newline_character
+                )
+            )
+            print(
+                "split_leading_spaces:"
+                + ParserHelper.make_value_visible(split_leading_spaces)
+            )
+            block_quote_leading_space = split_leading_spaces[line_number_delta]
+        print(
+            "block_quote_leading_space:"
+            + ParserHelper.make_value_visible(block_quote_leading_space)
+            + ":"
+        )
+        block_quote_leading_space_length = len(block_quote_leading_space)
+        return (
+            check_list_for_indent,
+            starting_whitespace,
+            did_container_start_midline,
+            block_quote_leading_space_length,
+        )
+
+    # pylint: enable=unused-private-member
+
     # pylint: disable=too-many-arguments, too-many-locals
     @classmethod
     def __rehydrate_list_start_contained_in_list(
@@ -1337,57 +1399,15 @@ class TransformToMarkdown:
         did_container_start_midline = False
         check_list_for_indent = True
         if deeper_containing_block_quote_token:
-            if (
-                previous_token
-                and previous_token.is_end_token
-                and previous_token.start_markdown_token.is_block_quote_start
-            ):
-                check_list_for_indent = False
-                print(
-                    ">>"
-                    + ParserHelper.make_value_visible(
-                        previous_token.start_markdown_token
-                    )
-                )
-                split_leading_spaces = (
-                    previous_token.start_markdown_token.leading_spaces.split(
-                        ParserHelper.newline_character
-                    )
-                )
-                block_quote_leading_space = split_leading_spaces[-1]
-                starting_whitespace = block_quote_leading_space
-                did_container_start_midline = True
-            else:
-                print(
-                    "adj->deeper_containing_block_quote_token.line_number>>:"
-                    + f"{deeper_containing_block_quote_token.line_number}:<<"
-                )
-                print(
-                    "adj->current_token.line_number>>:"
-                    + f"{current_token.line_number}:<<"
-                )
-                line_number_delta = (
-                    current_token.line_number
-                    - deeper_containing_block_quote_token.line_number
-                )
-                print(f"index:{line_number_delta}")
-                split_leading_spaces = (
-                    deeper_containing_block_quote_token.leading_spaces.split(
-                        ParserHelper.newline_character
-                    )
-                )
-                print(
-                    "split_leading_spaces:"
-                    + ParserHelper.make_value_visible(split_leading_spaces)
-                )
-                block_quote_leading_space = split_leading_spaces[line_number_delta]
-            print(
-                "block_quote_leading_space:"
-                + ParserHelper.make_value_visible(block_quote_leading_space)
-                + ":"
+            (
+                check_list_for_indent,
+                starting_whitespace,
+                did_container_start_midline,
+                block_quote_leading_space_length,
+            ) = cls.__rehydrate_list_start_contained_in_list_deeper_block_quote(
+                previous_token, deeper_containing_block_quote_token, current_token
             )
 
-            block_quote_leading_space_length = len(block_quote_leading_space)
         if (
             check_list_for_indent
             and previous_token
