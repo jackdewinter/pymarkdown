@@ -1717,6 +1717,20 @@ class ContainerBlockProcessor:
 
     # pylint: enable=too-many-arguments
 
+    @staticmethod
+    def __look_back_in_document_for_block_quote(parser_state, token_index):
+        other_block_quote_token, other_token_index = None, token_index
+        while other_token_index >= 0:
+            if parser_state.token_document[other_token_index].is_block_quote_start:
+                other_block_quote_token = parser_state.token_document[other_token_index]
+                break
+            other_token_index -= 1
+        POGGER.debug_with_visible_whitespace(
+            "PLFCB>>other_block_quote_token>>$",
+            other_block_quote_token,
+        )
+        return other_block_quote_token
+
     # pylint: disable=too-many-arguments
     @staticmethod
     def __calculate_adjusted_whitespace_kludge(
@@ -1740,17 +1754,10 @@ class ContainerBlockProcessor:
             POGGER.debug("PLFCB>>leading_spaces>>:$:", leading_spaces)
             old_start_index = len(leading_spaces)
         else:
-            other_block_quote_token, other_token_index = None, token_index
-            while other_token_index >= 0:
-                if parser_state.token_document[other_token_index].is_block_quote_start:
-                    other_block_quote_token = parser_state.token_document[
-                        other_token_index
-                    ]
-                    break
-                other_token_index -= 1
-            POGGER.debug_with_visible_whitespace(
-                "PLFCB>>other_block_quote_token>>$",
-                other_block_quote_token,
+            other_block_quote_token = (
+                ContainerBlockProcessor.__look_back_in_document_for_block_quote(
+                    parser_state, token_index
+                )
             )
 
             # Check to see if out first block token is the same as our first.

@@ -39,10 +39,12 @@ class PluginTwo(RulePlugin):
         """
         Event that a new line is being processed.
         """
+        _ = context
         print(f"{self.get_id()}>>next_line:{line}")
 
     def completed_file(self, context):
         """
         Event that the file being currently scanned is now completed.
         """
+        _ = context
         print(f"{self.get_id()}>>completed_file")

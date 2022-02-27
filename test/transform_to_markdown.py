@@ -1050,6 +1050,19 @@ class TransformToMarkdown:
             else ""
         )
 
+    def __search_backward_for_block_quote_start(self):
+        token_stack_index = len(self.container_token_stack) - 2
+        while (
+            token_stack_index >= 0
+            and self.container_token_stack[token_stack_index].is_block_quote_start
+        ):
+            token_stack_index -= 1
+        print(f">token_stack_index>{token_stack_index}")
+        print(
+            f">token_stack_token-->{ParserHelper.make_value_visible(self.container_token_stack[token_stack_index])}"
+        )
+        return token_stack_index
+
     def __rehydrate_block_quote(
         self, current_token, previous_token, next_token, transformed_data
     ):
@@ -1063,16 +1076,7 @@ class TransformToMarkdown:
             f">self.container_token_stack>{ParserHelper.make_value_visible(self.container_token_stack)}"
         )
 
-        token_stack_index = len(self.container_token_stack) - 2
-        while (
-            token_stack_index >= 0
-            and self.container_token_stack[token_stack_index].is_block_quote_start
-        ):
-            token_stack_index -= 1
-        print(f">token_stack_index>{token_stack_index}")
-        print(
-            f">token_stack_token-->{ParserHelper.make_value_visible(self.container_token_stack[token_stack_index])}"
-        )
+        token_stack_index = self.__search_backward_for_block_quote_start()
         are_tokens_viable = (
             len(self.container_token_stack) > 1 and token_stack_index >= 0
         )
@@ -1127,6 +1131,18 @@ class TransformToMarkdown:
             print(f">bquote>new selected_leading_sequence>{selected_leading_sequence}<")
         return selected_leading_sequence
 
+    def __look_backward_for_list_or_block_quote_start(self):
+        token_stack_index = len(self.container_token_stack) - 1
+        print(f"rls>>token_stack_index>>{token_stack_index}<<")
+        while token_stack_index >= 0:
+            if (
+                self.container_token_stack[token_stack_index].is_list_start
+                or self.container_token_stack[token_stack_index].is_block_quote_start
+            ):
+                break
+            token_stack_index -= 1
+        return token_stack_index
+
     def __rehydrate_list_start_previous_token(
         self, current_token, previous_token, extracted_whitespace
     ):
@@ -1150,15 +1166,7 @@ class TransformToMarkdown:
                 + f"{ParserHelper.make_value_visible(containing_block_quote_token.leading_text_index)}<<"
             )
 
-        token_stack_index = len(self.container_token_stack) - 1
-        print(f"rls>>token_stack_index>>{token_stack_index}<<")
-        while token_stack_index >= 0:
-            if (
-                self.container_token_stack[token_stack_index].is_list_start
-                or self.container_token_stack[token_stack_index].is_block_quote_start
-            ):
-                break
-            token_stack_index -= 1
+        token_stack_index = self.__look_backward_for_list_or_block_quote_start()
 
         containing_list_token, deeper_containing_block_quote_token = None, None
         if (
