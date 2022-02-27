@@ -1303,12 +1303,14 @@ class TransformToMarkdown:
         list_leading_space_length = 0
         starting_whitespace = ""
         did_container_start_midline = False
+        check_list_for_indent = True
         if deeper_containing_block_quote_token:
             if (
                 previous_token
                 and previous_token.is_end_token
                 and previous_token.start_markdown_token.is_block_quote_start
             ):
+                check_list_for_indent = False
                 print(
                     ">>"
                     + ParserHelper.make_value_visible(
@@ -1354,8 +1356,9 @@ class TransformToMarkdown:
             )
 
             block_quote_leading_space_length = len(block_quote_leading_space)
-        elif (
-            previous_token
+        if (
+            check_list_for_indent
+            and previous_token
             and previous_token.line_number == current_token.line_number
             and previous_token.is_new_list_item
         ):

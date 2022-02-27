@@ -125,7 +125,6 @@ def test_nested_three_block_unordered_unordered_with_li2():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_unordered_unordered_with_li3():
     """
     Verify that a nesting of block quote, unordered list, unordered list works
@@ -2788,7 +2787,6 @@ def test_nested_three_block_max_unordered_max_unordered_max_with_li2():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_max_unordered_max_unordered_max_with_li3():
     """
     Verify that a nesting of block quote, unordered list, unordered list, with
@@ -3586,7 +3584,6 @@ def test_nested_three_block_max_unordered_max_ordered_max_with_li2():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_max_unordered_max_ordered_max_with_li3():
     """
     Verify that a nesting of block quote, unordered list, ordered list, with
