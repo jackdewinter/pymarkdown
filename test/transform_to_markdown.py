@@ -1278,7 +1278,7 @@ class TransformToMarkdown:
 
         return True, previous_indent
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @classmethod
     def __rehydrate_list_start_contained_in_list(
         cls,
@@ -1300,6 +1300,7 @@ class TransformToMarkdown:
             f"adj->extracted_whitespace>>:{ParserHelper.make_value_visible(extracted_whitespace)}:<<"
         )
         block_quote_leading_space_length = 0
+        list_leading_space_length = 0
         starting_whitespace = ""
         did_container_start_midline = False
         if deeper_containing_block_quote_token:
@@ -1353,11 +1354,22 @@ class TransformToMarkdown:
             )
 
             block_quote_leading_space_length = len(block_quote_leading_space)
+        elif (
+            previous_token
+            and previous_token.line_number == current_token.line_number
+            and previous_token.is_new_list_item
+        ):
+            list_leading_space_length = previous_token.indent_level
+
         print(
             f"adj->block_quote_leading_space_length>>:{block_quote_leading_space_length}:<<"
         )
+        print(f"adj->list_leading_space_length>>:{list_leading_space_length}:<<")
         post_adjust_whitespace = starting_whitespace.rjust(
-            containing_list_token.indent_level - block_quote_leading_space_length, " "
+            containing_list_token.indent_level
+            - block_quote_leading_space_length
+            - list_leading_space_length,
+            " ",
         )
 
         previous_indent = containing_list_token.indent_level
@@ -1382,7 +1394,7 @@ class TransformToMarkdown:
             did_container_start_midline,
         )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
 
     def __rehydrate_list_start(
         self, current_token, previous_token, next_token, transformed_data
@@ -1404,6 +1416,7 @@ class TransformToMarkdown:
                 current_token, previous_token, extracted_whitespace
             )
             print(f">>extracted_whitespace>>{extracted_whitespace}<<")
+            print(f">>post_adjust_whitespace>>{post_adjust_whitespace}<<")
         else:
             previous_indent, post_adjust_whitespace, was_within_block_token = (
                 0,

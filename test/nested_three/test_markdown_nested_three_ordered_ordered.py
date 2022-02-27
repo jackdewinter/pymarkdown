@@ -728,7 +728,6 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_with_li4():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_unordered_max_with_li5():
     """
     Verify that a nesting of ordered list, ordered list, unordered list, with
@@ -777,7 +776,6 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_with_li5():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_unordered_max_with_li6():
     """
     Verify that a nesting of ordered list, ordered list, unordered list, with
@@ -829,7 +827,6 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_with_li6():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_unordered_max_with_li7():
     """
     Verify that a nesting of ordered list, ordered list, unordered list, with
@@ -1048,7 +1045,6 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_empty_with_li3():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_unordered_max_empty_with_li4():
     """
     Verify that a nesting of ordered list, ordered list, unordered list, with
@@ -1138,7 +1134,6 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_empty_with_li5():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_unordered_max_empty_with_li6():
     """
     Verify that a nesting of ordered list, ordered list, unordered list, with
@@ -1188,7 +1183,6 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_empty_with_li6():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_unordered_max_empty_with_li7():
     """
     Verify that a nesting of ordered list, ordered list, unordered list, with
@@ -1498,7 +1492,6 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_with_li3():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_ordered_max_with_li4():
     """
     Verify that a nesting of ordered list, ordered list, ordered list, with
@@ -1592,7 +1585,6 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_with_li5():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_ordered_max_with_li6():
     """
     Verify that a nesting of ordered list, ordered list, ordered list, with
@@ -1644,7 +1636,6 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_with_li6():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_ordered_max_with_li7():
     """
     Verify that a nesting of ordered list, ordered list, ordered list, with
@@ -1863,7 +1854,6 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_empty_with_li3():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_ordered_max_empty_with_li4():
     """
     Verify that a nesting of ordered list, ordered list, ordered list, with
@@ -1953,7 +1943,6 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_empty_with_li5():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_ordered_max_empty_with_li6():
     """
     Verify that a nesting of ordered list, ordered list, ordered list, with
@@ -2003,7 +1992,6 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_empty_with_li6():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_ordered_max_empty_with_li7():
     """
     Verify that a nesting of ordered list, ordered list, ordered list, with
@@ -2269,7 +2257,6 @@ def test_nested_three_ordered_max_ordered_max_block_max_with_li2():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_block_max_with_li3():
     """
     Verify that a nesting of ordered list, ordered list, block quote, with
@@ -2404,7 +2391,6 @@ def test_nested_three_ordered_max_ordered_max_block_max_empty_with_li1():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_block_max_empty_with_li2():
     """
     Verify that a nesting of ordered list, ordered list, block quote, with
@@ -2450,7 +2436,6 @@ def test_nested_three_ordered_max_ordered_max_block_max_empty_with_li2():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_block_max_empty_with_li3():
     """
     Verify that a nesting of ordered list, ordered list, block quote, with
@@ -2631,7 +2616,6 @@ def test_nested_three_ordered_max_ordered_max_block_max_no_bq1_with_li2():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_block_max_no_bq1_with_li3():
     """
     Verify that a nesting of ordered list, ordered list, block quote, with
@@ -2768,7 +2752,6 @@ def test_nested_three_ordered_max_ordered_max_block_max_empty_no_bq1_with_li1():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_block_max_empty_no_bq1_with_li2():
     """
     Verify that a nesting of ordered list, ordered list, block quote, with
@@ -2815,7 +2798,6 @@ def test_nested_three_ordered_max_ordered_max_block_max_empty_no_bq1_with_li2():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_block_max_empty_no_bq1_with_li3():
     """
     Verify that a nesting of ordered list, ordered list, block quote, with
