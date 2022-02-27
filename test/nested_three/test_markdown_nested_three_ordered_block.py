@@ -2034,7 +2034,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_unordered_max_no_bq1_with_li1():
     """
     Verify that a nesting of ordered list, block quote, unordered list, with
@@ -2054,7 +2053,7 @@ def test_nested_three_ordered_max_block_max_unordered_max_no_bq1_with_li1():
         "[end-para:::True]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
-        "[li(2,4):6::1]",
+        "[li(2,4):6:   :1]",
         "[icode-block(2,11):    :]",
         "[text(2,11):item:      ]",
         "[end-icode-block:::True]",
@@ -2122,7 +2121,6 @@ def test_nested_three_ordered_max_block_max_unordered_max_no_bq1_with_li2():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_unordered_max_no_bq1_with_li3():
     """
     Verify that a nesting of ordered list, block quote, unordered list, with
@@ -2142,7 +2140,7 @@ def test_nested_three_ordered_max_block_max_unordered_max_no_bq1_with_li3():
         "[end-para:::True]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
-        "[li(2,4):6::1]",
+        "[li(2,4):6:   :1]",
         "[icode-block(2,11):    :]",
         "[text(2,11):+ item:    ]",
         "[end-icode-block:::True]",
@@ -2206,7 +2204,6 @@ def test_nested_three_ordered_max_block_max_unordered_max_empty_no_bq1():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_unordered_max_empty_no_bq1_with_li1():
     """
     Verify that a nesting of ordered list, block quote, unordered list, with
@@ -2224,7 +2221,7 @@ def test_nested_three_ordered_max_block_max_unordered_max_empty_no_bq1_with_li1(
         "[BLANK(1,16):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
-        "[li(2,4):6::1]",
+        "[li(2,4):6:   :1]",
         "[icode-block(2,11):    :]",
         "[text(2,11):item:      ]",
         "[end-icode-block:::True]",
@@ -2288,7 +2285,6 @@ def test_nested_three_ordered_max_block_max_unordered_max_empty_no_bq1_with_li2(
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_unordered_max_empty_no_bq1_with_li3():
     """
     Verify that a nesting of ordered list, block quote, unordered list, with
@@ -2306,7 +2302,7 @@ def test_nested_three_ordered_max_block_max_unordered_max_empty_no_bq1_with_li3(
         "[BLANK(1,16):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
-        "[li(2,4):6::1]",
+        "[li(2,4):6:   :1]",
         "[icode-block(2,11):    :]",
         "[text(2,11):+ item:    ]",
         "[end-icode-block:::True]",
@@ -2885,7 +2881,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_ordered_max_no_bq1_with_li1():
     """
     Verify that a nesting of ordered list, block quote, ordered list, with
@@ -2905,7 +2900,7 @@ def test_nested_three_ordered_max_block_max_ordered_max_no_bq1_with_li1():
         "[end-para:::True]",
         "[end-olist:::True]",
         "[end-block-quote:::True]",
-        "[li(2,4):6::1]",
+        "[li(2,4):6:   :1]",
         "[icode-block(2,11):    :]",
         "[text(2,11):item:       ]",
         "[end-icode-block:::True]",
@@ -2972,7 +2967,6 @@ def test_nested_three_ordered_max_block_max_ordered_max_no_bq1_with_li2():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_ordered_max_no_bq1_with_li3():
     """
     Verify that a nesting of ordered list, block quote, ordered list, with
@@ -2992,7 +2986,7 @@ def test_nested_three_ordered_max_block_max_ordered_max_no_bq1_with_li3():
         "[end-para:::True]",
         "[end-olist:::True]",
         "[end-block-quote:::True]",
-        "[li(2,4):6::1]",
+        "[li(2,4):6:   :1]",
         "[icode-block(2,11):    :]",
         "[text(2,11):1. item:    ]",
         "[end-icode-block:::True]",
@@ -3056,7 +3050,6 @@ def test_nested_three_ordered_max_block_max_ordered_max_empty_no_bq1():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_ordered_max_empty_no_bq1_with_li1():
     """
     Verify that a nesting of ordered list, block quote, ordered list, with
@@ -3074,7 +3067,7 @@ def test_nested_three_ordered_max_block_max_ordered_max_empty_no_bq1_with_li1():
         "[BLANK(1,17):]",
         "[end-olist:::True]",
         "[end-block-quote:::True]",
-        "[li(2,4):6::1]",
+        "[li(2,4):6:   :1]",
         "[icode-block(2,11):    :]",
         "[text(2,11):item:       ]",
         "[end-icode-block:::True]",
@@ -3138,7 +3131,6 @@ def test_nested_three_ordered_max_block_max_ordered_max_empty_no_bq1_with_li2():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_ordered_max_empty_no_bq1_with_li3():
     """
     Verify that a nesting of ordered list, block quote, ordered list, with
@@ -3156,7 +3148,7 @@ def test_nested_three_ordered_max_block_max_ordered_max_empty_no_bq1_with_li3():
         "[BLANK(1,17):]",
         "[end-olist:::True]",
         "[end-block-quote:::True]",
-        "[li(2,4):6::1]",
+        "[li(2,4):6:   :1]",
         "[icode-block(2,11):    :]",
         "[text(2,11):1. item:    ]",
         "[end-icode-block:::True]",
