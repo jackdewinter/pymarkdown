@@ -237,10 +237,10 @@ class TransformToMarkdown:
             adjusted_text = self.__apply_container_transformation(
                 container_text, container_records
             )
-            print("pre>:" + str(pre_container_text) + ":<")
-            print("adj>:" + str(adjusted_text) + ":<")
+            print(f"pre>:{str(pre_container_text)}:<")
+            print(f"adj>:{str(adjusted_text)}:<")
             transformed_data = pre_container_text + adjusted_text
-            print("trn>:" + str(transformed_data) + ":<")
+            print(f"trn>:{str(transformed_data)}:<")
         return transformed_data
 
     def transform(self, actual_tokens):  # noqa: C901
@@ -335,7 +335,7 @@ class TransformToMarkdown:
             False,
         )
 
-        print("(" + str(container_text_index) + ")")
+        print(f"({str(container_text_index)})")
         print(
             "("
             + str(record_index + 1)
@@ -367,7 +367,7 @@ class TransformToMarkdown:
                 token_stack.append(current_changed_record[2])
                 container_token_indices.append(0)
             else:
-                print("   -->" + ParserHelper.make_value_visible(token_stack))
+                print(f"   -->{ParserHelper.make_value_visible(token_stack)}")
                 print(
                     "   -->" + ParserHelper.make_value_visible(container_token_indices)
                 )
@@ -389,7 +389,7 @@ class TransformToMarkdown:
                 "   -->current_changed_record>"
                 + ParserHelper.make_value_visible(current_changed_record)
             )
-            print("   -->" + ParserHelper.make_value_visible(token_stack))
+            print(f"   -->{ParserHelper.make_value_visible(token_stack)}")
             print("   -->" + ParserHelper.make_value_visible(container_token_indices))
             old_record_index += 1
         return record_index, did_move_ahead, current_changed_record
@@ -406,8 +406,8 @@ class TransformToMarkdown:
         current_changed_record,
         last_container_token_index,
     ):
-        print(" -->" + ParserHelper.make_value_visible(token_stack))
-        print(" -->" + ParserHelper.make_value_visible(container_token_indices))
+        print(f" -->{ParserHelper.make_value_visible(token_stack)}")
+        print(f" -->{ParserHelper.make_value_visible(container_token_indices)}")
         did_change_to_list_token = (
             did_move_ahead
             and current_changed_record[0]
@@ -420,8 +420,8 @@ class TransformToMarkdown:
         elif token_stack[-1].is_new_list_item:
             del token_stack[-1]
             del container_token_indices[-1]
-        print(" -->" + ParserHelper.make_value_visible(token_stack))
-        print(" -->" + ParserHelper.make_value_visible(container_token_indices))
+        print(f" -->{ParserHelper.make_value_visible(token_stack)}")
+        print(f" -->{ParserHelper.make_value_visible(container_token_indices)}")
 
     # pylint: enable=too-many-arguments
 
@@ -436,8 +436,8 @@ class TransformToMarkdown:
         container_line,
     ):
         print(" -->did_move_ahead>" + ParserHelper.make_value_visible(did_move_ahead))
-        print(" -->" + ParserHelper.make_value_visible(token_stack))
-        print(" -->" + ParserHelper.make_value_visible(container_token_indices))
+        print(f" -->{ParserHelper.make_value_visible(token_stack)}")
+        print(f" -->{ParserHelper.make_value_visible(container_token_indices)}")
         print(" -->did_move_ahead>" + ParserHelper.make_value_visible(did_move_ahead))
         print(
             " -->current_changed_record>"
@@ -601,10 +601,10 @@ class TransformToMarkdown:
         line_number,
     ):
         previous_token = token_stack[nested_list_start_index]
-        print(" yes->" + ParserHelper.make_value_visible(previous_token))
-        print("token_stack[-1].line_number->" + str(token_stack[-1].line_number))
-        print("previous_token.line_number->" + str(previous_token.line_number))
-        print("line_number->" + str(line_number))
+        print(f" yes->{ParserHelper.make_value_visible(previous_token)}")
+        print(f"token_stack[-1].line_number->{str(token_stack[-1].line_number)}")
+        print(f"previous_token.line_number->{str(previous_token.line_number)}")
+        print(f"line_number->{str(line_number)}")
         if (
             token_stack[-1].line_number != previous_token.line_number
             or line_number != previous_token.line_number
@@ -630,8 +630,8 @@ class TransformToMarkdown:
 
         print(" looking for nested list start")
         nested_list_start_index = TransformToMarkdown.__get_last_list_index(token_stack)
-        print(" afbq=" + str(len(token_stack) - 1))
-        print(" nested_list_start_index=" + str(nested_list_start_index))
+        print(f" afbq={str(len(token_stack) - 1)}")
+        print(f" nested_list_start_index={str(nested_list_start_index)}")
         if nested_list_start_index == -1:
             print(" nope")
         elif (
@@ -670,7 +670,7 @@ class TransformToMarkdown:
         previous_token = token_stack[nested_list_start_index]
         if apply_list_fix and previous_token.is_list_start:
             delta = previous_token.indent_level - len(container_line)
-            print("delta->" + str(delta))
+            print(f"delta->{str(delta)}")
             container_line += ParserHelper.repeat_string(" ", delta)
         leading_spaces = (
             ""
@@ -694,7 +694,11 @@ class TransformToMarkdown:
 
     # pylint: disable=too-many-locals
     def __apply_container_transformation(self, container_text, container_records):
-        print(">>incoming>>:" + ParserHelper.make_value_visible(container_text) + ":<<")
+        print(
+            f">>incoming>>:{ParserHelper.make_value_visible(container_text)}"
+            + ":<<"
+        )
+
         print(
             ">>container_records>>" + ParserHelper.make_value_visible(container_records)
         )
@@ -1338,7 +1342,7 @@ class TransformToMarkdown:
                     current_token.line_number
                     - deeper_containing_block_quote_token.line_number
                 )
-                print("index:" + str(line_number_delta))
+                print(f"index:{str(line_number_delta)}")
                 split_leading_spaces = (
                     deeper_containing_block_quote_token.leading_spaces.split(
                         ParserHelper.newline_character
