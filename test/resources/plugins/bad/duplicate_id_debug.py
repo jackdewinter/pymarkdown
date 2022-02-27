@@ -39,10 +39,12 @@ class DuplicateIdDebug(RulePlugin):
         """
         Event that a new line is being processed.
         """
+        _ = context
         print(f"{self.get_details().plugin_id}>>next_line:{line}")
 
     def completed_file(self, context):
         """
         Event that the file being currently scanned is now completed.
         """
+        _ = context
         print(f"{self.get_details().plugin_id}>>completed_file")

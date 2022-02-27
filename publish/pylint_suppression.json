@@ -15,13 +15,14 @@
             "no-self-argument": 1
         },
         "pymarkdown/container_block_processor.py": {
-            "too-many-arguments": 25,
+            "too-many-arguments": 26,
             "too-many-locals": 15,
             "chained-comparison": 1
         },
         "pymarkdown/container_indices.py": {},
         "pymarkdown/container_markdown_token.py": {
-            "too-many-arguments": 2
+            "too-many-arguments": 2,
+            "too-many-instance-attributes": 1
         },
         "pymarkdown/emphasis_helper.py": {
             "too-few-public-methods": 1,
@@ -217,12 +218,12 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 134,
+        "too-many-arguments": 135,
         "too-many-locals": 40,
         "too-few-public-methods": 7,
         "no-self-argument": 1,
         "chained-comparison": 1,
-        "too-many-instance-attributes": 16,
+        "too-many-instance-attributes": 17,
         "broad-except": 2,
         "too-many-public-methods": 2,
         "invalid-unary-operand-type": 1
