@@ -371,6 +371,11 @@ class TransformToMarkdown:
                 print(
                     "   -->" + ParserHelper.make_value_visible(container_token_indices)
                 )
+
+                if token_stack[-1].is_new_list_item:
+                    del token_stack[-1]
+                    del container_token_indices[-1]
+
                 assert str(current_changed_record[2]) == str(token_stack[-1]), (
                     "end:"
                     + ParserHelper.make_value_visible(current_changed_record[2])
@@ -1068,10 +1073,28 @@ class TransformToMarkdown:
         print(
             f">token_stack_token-->{ParserHelper.make_value_visible(self.container_token_stack[token_stack_index])}"
         )
-        if len(self.container_token_stack) > 1 and (
-            token_stack_index >= 0
-            and current_token.line_number
-            == self.container_token_stack[token_stack_index].line_number
+        are_tokens_viable = (
+            len(self.container_token_stack) > 1 and token_stack_index >= 0
+        )
+        print(f">are_tokens_viable>{are_tokens_viable}")
+        if are_tokens_viable:
+            matching_list_token = (
+                self.container_token_stack[token_stack_index].last_new_list_token
+                or self.container_token_stack[token_stack_index]
+            )
+            print(
+                f">matching_list_token>{ParserHelper.make_value_visible(matching_list_token)}"
+            )
+
+            print(f">current_token.line_number>{current_token.line_number}")
+            print(
+                ">container_token_stack[token_stack_index].line_number>"
+                + f"{self.container_token_stack[token_stack_index].line_number}"
+            )
+
+        if (
+            are_tokens_viable
+            and current_token.line_number == matching_list_token.line_number
         ):
             already_existing_whitespace = ParserHelper.repeat_string(
                 " ", self.container_token_stack[token_stack_index].indent_level
@@ -1093,12 +1116,15 @@ class TransformToMarkdown:
             selected_leading_sequence = new_instance.calculate_next_leading_space_part()
             print(f">bquote>selected_leading_sequence>{selected_leading_sequence}<")
 
+        print(f">bquote>already_existing_whitespace>:{already_existing_whitespace}:<")
+        print(f">bquote>selected_leading_sequence>:{selected_leading_sequence}:<")
         if already_existing_whitespace and selected_leading_sequence.startswith(
             already_existing_whitespace
         ):
             selected_leading_sequence = selected_leading_sequence[
                 len(already_existing_whitespace) :
             ]
+            print(f">bquote>new selected_leading_sequence>{selected_leading_sequence}<")
         return selected_leading_sequence
 
     def __rehydrate_list_start_previous_token(

@@ -548,6 +548,8 @@ item</li>
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 def test_nested_three_ordered_max_ordered_max_unordered_max_with_li1():
     """
@@ -558,7 +560,21 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_with_li1():
     # Arrange
     source_markdown = """   1.    1.    + list
    1.            item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[ulist(1,16):+::17:               ]', '[para(1,18):]', '[text(1,18):list:]', '[end-para:::True]', '[end-ulist:::True]', '[end-olist:::True]', '[li(2,4):6:   :1]', '[icode-block(2,11):    :]', '[text(2,11):item:       ]', '[end-icode-block:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[ulist(1,16):+::17:               ]",
+        "[para(1,18):]",
+        "[text(1,18):list:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-olist:::True]",
+        "[li(2,4):6:   :1]",
+        "[icode-block(2,11):    :]",
+        "[text(2,11):item:       ]",
+        "[end-icode-block:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -577,6 +593,8 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_with_li1():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 def test_nested_three_ordered_max_ordered_max_unordered_max_with_li2():
     """
@@ -587,7 +605,21 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_with_li2():
     # Arrange
     source_markdown = """   1.    1.    + list
          1.      item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[ulist(1,16):+::17:               ]', '[para(1,18):]', '[text(1,18):list:]', '[end-para:::True]', '[end-ulist:::True]', '[li(2,10):12:         :1]', '[icode-block(2,17):    :]', '[text(2,17):item: ]', '[end-icode-block:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[ulist(1,16):+::17:               ]",
+        "[para(1,18):]",
+        "[text(1,18):list:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[li(2,10):12:         :1]",
+        "[icode-block(2,17):    :]",
+        "[text(2,17):item: ]",
+        "[end-icode-block:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -607,6 +639,7 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_with_li2():
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
 def test_nested_three_ordered_max_ordered_max_unordered_max_with_li3():
     """
@@ -617,7 +650,21 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_with_li3():
     # Arrange
     source_markdown = """   1.    1.    + list
                + item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[ulist(1,16):+::17:               ]', '[para(1,18):]', '[text(1,18):list:]', '[end-para:::True]', '[li(2,16):17:               :]', '[para(2,18):]', '[text(2,18):item:]', '[end-para:::True]', '[end-ulist:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[ulist(1,16):+::17:               ]",
+        "[para(1,18):]",
+        "[text(1,18):list:]",
+        "[end-para:::True]",
+        "[li(2,16):17:               :]",
+        "[para(2,18):]",
+        "[text(2,18):item:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -633,6 +680,8 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_with_li3():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 def test_nested_three_ordered_max_ordered_max_unordered_max_with_li4():
     """
@@ -643,7 +692,21 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_with_li4():
     # Arrange
     source_markdown = """   1.    1.    + list
    1.          + item"""
-    expected_tokens =  ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[ulist(1,16):+::17:               ]', '[para(1,18):]', '[text(1,18):list:]', '[end-para:::True]', '[end-ulist:::True]', '[end-olist:::True]', '[li(2,4):6:   :1]', '[icode-block(2,11):    :]', '[text(2,11):+ item:     ]', '[end-icode-block:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[ulist(1,16):+::17:               ]",
+        "[para(1,18):]",
+        "[text(1,18):list:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-olist:::True]",
+        "[li(2,4):6:   :1]",
+        "[icode-block(2,11):    :]",
+        "[text(2,11):+ item:     ]",
+        "[end-icode-block:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -662,6 +725,8 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_with_li4():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 @pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_unordered_max_with_li5():
@@ -673,7 +738,23 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_with_li5():
     # Arrange
     source_markdown = """   1.    1.    + list
          1.    + item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[ulist(1,16):+::17:               ]', '[para(1,18):]', '[text(1,18):list:]', '[end-para:::True]', '[end-ulist:::True]', '[li(2,10):15:         :1]', '[ulist(2,16):+::17:               ]', '[para(2,18):]', '[text(2,18):item:]', '[end-para:::True]', '[end-ulist:::True]', '[end-olist:::True]', '[end-olist:::True]'] 
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[ulist(1,16):+::17:               ]",
+        "[para(1,18):]",
+        "[text(1,18):list:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[li(2,10):15:         :1]",
+        "[ulist(2,16):+::17:               ]",
+        "[para(2,18):]",
+        "[text(2,18):item:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -693,6 +774,8 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_with_li5():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 @pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_unordered_max_with_li6():
@@ -704,7 +787,23 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_with_li6():
     # Arrange
     source_markdown = """   1.    1.    + list
    1.    1.      item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[ulist(1,16):+::17:               ]', '[para(1,18):]', '[text(1,18):list:]', '[end-para:::True]', '[end-ulist:::True]', '[end-olist:::True]', '[li(2,4):9:   :1]', '[olist(2,10):.:1:12:         ]', '[icode-block(2,17):    :]', '[text(2,17):item: ]', '[end-icode-block:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[ulist(1,16):+::17:               ]",
+        "[para(1,18):]",
+        "[text(1,18):list:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-olist:::True]",
+        "[li(2,4):9:   :1]",
+        "[olist(2,10):.:1:12:         ]",
+        "[icode-block(2,17):    :]",
+        "[text(2,17):item: ]",
+        "[end-icode-block:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -727,6 +826,8 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_with_li6():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 @pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_unordered_max_with_li7():
@@ -738,7 +839,25 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_with_li7():
     # Arrange
     source_markdown = """   1.    1.    + list
    1.    1.    + item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[ulist(1,16):+::17:               ]', '[para(1,18):]', '[text(1,18):list:]', '[end-para:::True]', '[end-ulist:::True]', '[end-olist:::True]', '[li(2,4):9:   :1]', '[olist(2,10):.:1:15:         ]', '[ulist(2,16):+::17:               ]', '[para(2,18):]', '[text(2,18):item:]', '[end-para:::True]', '[end-ulist:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[ulist(1,16):+::17:               ]",
+        "[para(1,18):]",
+        "[text(1,18):list:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-olist:::True]",
+        "[li(2,4):9:   :1]",
+        "[olist(2,10):.:1:15:         ]",
+        "[ulist(2,16):+::17:               ]",
+        "[para(2,18):]",
+        "[text(2,18):item:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -762,6 +881,7 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_with_li7():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
 
 @pytest.mark.gfm
 def test_nested_three_ordered_max_ordered_max_unordered_max_empty():
@@ -799,6 +919,8 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_empty():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 def test_nested_three_ordered_max_ordered_max_unordered_max_empty_with_li1():
     """
@@ -809,7 +931,19 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_empty_with_li1():
     # Arrange
     source_markdown = """   1.    1.    +
    1.            item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[ulist(1,16):+::17:               ]', '[BLANK(1,17):]', '[end-ulist:::True]', '[end-olist:::True]', '[li(2,4):6:   :1]', '[icode-block(2,11):    :]', '[text(2,11):item:       ]', '[end-icode-block:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[ulist(1,16):+::17:               ]",
+        "[BLANK(1,17):]",
+        "[end-ulist:::True]",
+        "[end-olist:::True]",
+        "[li(2,4):6:   :1]",
+        "[icode-block(2,11):    :]",
+        "[text(2,11):item:       ]",
+        "[end-icode-block:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -828,6 +962,8 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_empty_with_li1():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 def test_nested_three_ordered_max_ordered_max_unordered_max_empty_with_li2():
     """
@@ -838,7 +974,19 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_empty_with_li2():
     # Arrange
     source_markdown = """   1.    1.    +
          1.      item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[ulist(1,16):+::17:               ]', '[BLANK(1,17):]', '[end-ulist:::True]', '[li(2,10):12:         :1]', '[icode-block(2,17):    :]', '[text(2,17):item: ]', '[end-icode-block:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[ulist(1,16):+::17:               ]",
+        "[BLANK(1,17):]",
+        "[end-ulist:::True]",
+        "[li(2,10):12:         :1]",
+        "[icode-block(2,17):    :]",
+        "[text(2,17):item: ]",
+        "[end-icode-block:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -857,6 +1005,8 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_empty_with_li2():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 def test_nested_three_ordered_max_ordered_max_unordered_max_empty_with_li3():
     """
@@ -867,7 +1017,19 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_empty_with_li3():
     # Arrange
     source_markdown = """   1.    1.    +
                + item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[ulist(1,16):+::17:               ]', '[BLANK(1,17):]', '[li(2,16):17:               :]', '[para(2,18):]', '[text(2,18):item:]', '[end-para:::True]', '[end-ulist:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[ulist(1,16):+::17:               ]",
+        "[BLANK(1,17):]",
+        "[li(2,16):17:               :]",
+        "[para(2,18):]",
+        "[text(2,18):item:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -883,6 +1045,8 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_empty_with_li3():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 @pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_unordered_max_empty_with_li4():
@@ -894,7 +1058,21 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_empty_with_li4():
     # Arrange
     source_markdown = """   1.    1.    +
          1.    + item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[ulist(1,16):+::17:               ]', '[BLANK(1,17):]', '[end-ulist:::True]', '[li(2,10):15:         :1]', '[ulist(2,16):+::17:               ]', '[para(2,18):]', '[text(2,18):item:]', '[end-para:::True]', '[end-ulist:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[ulist(1,16):+::17:               ]",
+        "[BLANK(1,17):]",
+        "[end-ulist:::True]",
+        "[li(2,10):15:         :1]",
+        "[ulist(2,16):+::17:               ]",
+        "[para(2,18):]",
+        "[text(2,18):item:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -914,6 +1092,8 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_empty_with_li4():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 def test_nested_three_ordered_max_ordered_max_unordered_max_empty_with_li5():
     """
@@ -924,7 +1104,19 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_empty_with_li5():
     # Arrange
     source_markdown = """   1.    1.    +
    1.          + item"""
-    expected_tokens =  ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[ulist(1,16):+::17:               ]', '[BLANK(1,17):]', '[end-ulist:::True]', '[end-olist:::True]', '[li(2,4):6:   :1]', '[icode-block(2,11):    :]', '[text(2,11):+ item:     ]', '[end-icode-block:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[ulist(1,16):+::17:               ]",
+        "[BLANK(1,17):]",
+        "[end-ulist:::True]",
+        "[end-olist:::True]",
+        "[li(2,4):6:   :1]",
+        "[icode-block(2,11):    :]",
+        "[text(2,11):+ item:     ]",
+        "[end-icode-block:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -943,6 +1135,8 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_empty_with_li5():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 @pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_unordered_max_empty_with_li6():
@@ -954,7 +1148,21 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_empty_with_li6():
     # Arrange
     source_markdown = """   1.    1.    +
    1.    1.      item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[ulist(1,16):+::17:               ]', '[BLANK(1,17):]', '[end-ulist:::True]', '[end-olist:::True]', '[li(2,4):9:   :1]', '[olist(2,10):.:1:12:         ]', '[icode-block(2,17):    :]', '[text(2,17):item: ]', '[end-icode-block:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[ulist(1,16):+::17:               ]",
+        "[BLANK(1,17):]",
+        "[end-ulist:::True]",
+        "[end-olist:::True]",
+        "[li(2,4):9:   :1]",
+        "[olist(2,10):.:1:12:         ]",
+        "[icode-block(2,17):    :]",
+        "[text(2,17):item: ]",
+        "[end-icode-block:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -977,6 +1185,8 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_empty_with_li6():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 @pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_unordered_max_empty_with_li7():
@@ -988,7 +1198,23 @@ def test_nested_three_ordered_max_ordered_max_unordered_max_empty_with_li7():
     # Arrange
     source_markdown = """   1.    1.    +
    1.    1.    + item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[ulist(1,16):+::17:               ]', '[BLANK(1,17):]', '[end-ulist:::True]', '[end-olist:::True]', '[li(2,4):9:   :1]', '[olist(2,10):.:1:15:         ]', '[ulist(2,16):+::17:               ]', '[para(2,18):]', '[text(2,18):item:]', '[end-para:::True]', '[end-ulist:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[ulist(1,16):+::17:               ]",
+        "[BLANK(1,17):]",
+        "[end-ulist:::True]",
+        "[end-olist:::True]",
+        "[li(2,4):9:   :1]",
+        "[olist(2,10):.:1:15:         ]",
+        "[ulist(2,16):+::17:               ]",
+        "[para(2,18):]",
+        "[text(2,18):item:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -1137,6 +1363,8 @@ item</li>
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 def test_nested_three_ordered_max_ordered_max_ordered_max_with_li1():
     """
@@ -1147,7 +1375,21 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_with_li1():
     # Arrange
     source_markdown = """   1.    1.    1. list
    1.             item"""
-    expected_tokens =  ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[olist(1,16):.:1:18:               ]', '[para(1,19):]', '[text(1,19):list:]', '[end-para:::True]', '[end-olist:::True]', '[end-olist:::True]', '[li(2,4):6:   :1]', '[icode-block(2,11):    :]', '[text(2,11):item:        ]', '[end-icode-block:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[olist(1,16):.:1:18:               ]",
+        "[para(1,19):]",
+        "[text(1,19):list:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+        "[li(2,4):6:   :1]",
+        "[icode-block(2,11):    :]",
+        "[text(2,11):item:        ]",
+        "[end-icode-block:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -1167,6 +1409,7 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_with_li1():
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
 def test_nested_three_ordered_max_ordered_max_ordered_max_with_li2():
     """
@@ -1177,7 +1420,21 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_with_li2():
     # Arrange
     source_markdown = """   1.    1.    1. list
          1.       item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[olist(1,16):.:1:18:               ]', '[para(1,19):]', '[text(1,19):list:]', '[end-para:::True]', '[end-olist:::True]', '[li(2,10):12:         :1]', '[icode-block(2,17):    :]', '[text(2,17):item:  ]', '[end-icode-block:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[olist(1,16):.:1:18:               ]",
+        "[para(1,19):]",
+        "[text(1,19):list:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[li(2,10):12:         :1]",
+        "[icode-block(2,17):    :]",
+        "[text(2,17):item:  ]",
+        "[end-icode-block:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -1196,6 +1453,8 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_with_li2():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 def test_nested_three_ordered_max_ordered_max_ordered_max_with_li3():
     """
@@ -1206,7 +1465,21 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_with_li3():
     # Arrange
     source_markdown = """   1.    1.    1. list
                1. item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[olist(1,16):.:1:18:               ]', '[para(1,19):]', '[text(1,19):list:]', '[end-para:::True]', '[li(2,16):18:               :1]', '[para(2,19):]', '[text(2,19):item:]', '[end-para:::True]', '[end-olist:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[olist(1,16):.:1:18:               ]",
+        "[para(1,19):]",
+        "[text(1,19):list:]",
+        "[end-para:::True]",
+        "[li(2,16):18:               :1]",
+        "[para(2,19):]",
+        "[text(2,19):item:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -1222,6 +1495,8 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_with_li3():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 @pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_ordered_max_with_li4():
@@ -1233,7 +1508,23 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_with_li4():
     # Arrange
     source_markdown = """   1.    1.    1. list
          1.    1. item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[olist(1,16):.:1:18:               ]', '[para(1,19):]', '[text(1,19):list:]', '[end-para:::True]', '[end-olist:::True]', '[li(2,10):15:         :1]', '[olist(2,16):.:1:18:               ]', '[para(2,19):]', '[text(2,19):item:]', '[end-para:::True]', '[end-olist:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[olist(1,16):.:1:18:               ]",
+        "[para(1,19):]",
+        "[text(1,19):list:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[li(2,10):15:         :1]",
+        "[olist(2,16):.:1:18:               ]",
+        "[para(2,19):]",
+        "[text(2,19):item:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -1253,6 +1544,8 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_with_li4():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 def test_nested_three_ordered_max_ordered_max_ordered_max_with_li5():
     """
@@ -1263,7 +1556,21 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_with_li5():
     # Arrange
     source_markdown = """   1.    1.    1. list
    1.          1. item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[olist(1,16):.:1:18:               ]', '[para(1,19):]', '[text(1,19):list:]', '[end-para:::True]', '[end-olist:::True]', '[end-olist:::True]', '[li(2,4):6:   :1]', '[icode-block(2,11):    :]', '[text(2,11):1. item:     ]', '[end-icode-block:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[olist(1,16):.:1:18:               ]",
+        "[para(1,19):]",
+        "[text(1,19):list:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+        "[li(2,4):6:   :1]",
+        "[icode-block(2,11):    :]",
+        "[text(2,11):1. item:     ]",
+        "[end-icode-block:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -1282,6 +1589,8 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_with_li5():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 @pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_ordered_max_with_li6():
@@ -1293,7 +1602,23 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_with_li6():
     # Arrange
     source_markdown = """   1.    1.    1. list
    1.    1.       item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[olist(1,16):.:1:18:               ]', '[para(1,19):]', '[text(1,19):list:]', '[end-para:::True]', '[end-olist:::True]', '[end-olist:::True]', '[li(2,4):9:   :1]', '[olist(2,10):.:1:12:         ]', '[icode-block(2,17):    :]', '[text(2,17):item:  ]', '[end-icode-block:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[olist(1,16):.:1:18:               ]",
+        "[para(1,19):]",
+        "[text(1,19):list:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+        "[li(2,4):9:   :1]",
+        "[olist(2,10):.:1:12:         ]",
+        "[icode-block(2,17):    :]",
+        "[text(2,17):item:  ]",
+        "[end-icode-block:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -1316,6 +1641,8 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_with_li6():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 @pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_ordered_max_with_li7():
@@ -1327,7 +1654,25 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_with_li7():
     # Arrange
     source_markdown = """   1.    1.    1. list
    1.    1.    1. item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[olist(1,16):.:1:18:               ]', '[para(1,19):]', '[text(1,19):list:]', '[end-para:::True]', '[end-olist:::True]', '[end-olist:::True]', '[li(2,4):9:   :1]', '[olist(2,10):.:1:15:         ]', '[olist(2,16):.:1:18:               ]', '[para(2,19):]', '[text(2,19):item:]', '[end-para:::True]', '[end-olist:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[olist(1,16):.:1:18:               ]",
+        "[para(1,19):]",
+        "[text(1,19):list:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+        "[li(2,4):9:   :1]",
+        "[olist(2,10):.:1:15:         ]",
+        "[olist(2,16):.:1:18:               ]",
+        "[para(2,19):]",
+        "[text(2,19):item:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -1351,6 +1696,7 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_with_li7():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
 
 @pytest.mark.gfm
 def test_nested_three_ordered_max_ordered_max_ordered_max_empty():
@@ -1388,6 +1734,8 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_empty():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 def test_nested_three_ordered_max_ordered_max_ordered_max_empty_with_li1():
     """
@@ -1398,7 +1746,19 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_empty_with_li1():
     # Arrange
     source_markdown = """   1.    1.    1.
    1.             item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[olist(1,16):.:1:18:               ]', '[BLANK(1,18):]', '[end-olist:::True]', '[end-olist:::True]', '[li(2,4):6:   :1]', '[icode-block(2,11):    :]', '[text(2,11):item:        ]', '[end-icode-block:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[olist(1,16):.:1:18:               ]",
+        "[BLANK(1,18):]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+        "[li(2,4):6:   :1]",
+        "[icode-block(2,11):    :]",
+        "[text(2,11):item:        ]",
+        "[end-icode-block:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -1417,6 +1777,8 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_empty_with_li1():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 def test_nested_three_ordered_max_ordered_max_ordered_max_empty_with_li2():
     """
@@ -1427,7 +1789,19 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_empty_with_li2():
     # Arrange
     source_markdown = """   1.    1.    1.
          1.       item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[olist(1,16):.:1:18:               ]', '[BLANK(1,18):]', '[end-olist:::True]', '[li(2,10):12:         :1]', '[icode-block(2,17):    :]', '[text(2,17):item:  ]', '[end-icode-block:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[olist(1,16):.:1:18:               ]",
+        "[BLANK(1,18):]",
+        "[end-olist:::True]",
+        "[li(2,10):12:         :1]",
+        "[icode-block(2,17):    :]",
+        "[text(2,17):item:  ]",
+        "[end-icode-block:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -1446,6 +1820,8 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_empty_with_li2():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 def test_nested_three_ordered_max_ordered_max_ordered_max_empty_with_li3():
     """
@@ -1456,7 +1832,19 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_empty_with_li3():
     # Arrange
     source_markdown = """   1.    1.    1.
                1. item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[olist(1,16):.:1:18:               ]', '[BLANK(1,18):]', '[li(2,16):18:               :1]', '[para(2,19):]', '[text(2,19):item:]', '[end-para:::True]', '[end-olist:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[olist(1,16):.:1:18:               ]",
+        "[BLANK(1,18):]",
+        "[li(2,16):18:               :1]",
+        "[para(2,19):]",
+        "[text(2,19):item:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -1472,6 +1860,8 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_empty_with_li3():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 @pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_ordered_max_empty_with_li4():
@@ -1483,7 +1873,21 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_empty_with_li4():
     # Arrange
     source_markdown = """   1.    1.    1.
          1.    1. item"""
-    expected_tokens =  ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[olist(1,16):.:1:18:               ]', '[BLANK(1,18):]', '[end-olist:::True]', '[li(2,10):15:         :1]', '[olist(2,16):.:1:18:               ]', '[para(2,19):]', '[text(2,19):item:]', '[end-para:::True]', '[end-olist:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[olist(1,16):.:1:18:               ]",
+        "[BLANK(1,18):]",
+        "[end-olist:::True]",
+        "[li(2,10):15:         :1]",
+        "[olist(2,16):.:1:18:               ]",
+        "[para(2,19):]",
+        "[text(2,19):item:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -1503,6 +1907,8 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_empty_with_li4():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 def test_nested_three_ordered_max_ordered_max_ordered_max_empty_with_li5():
     """
@@ -1513,7 +1919,19 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_empty_with_li5():
     # Arrange
     source_markdown = """   1.    1.    1.
    1.          1. item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[olist(1,16):.:1:18:               ]', '[BLANK(1,18):]', '[end-olist:::True]', '[end-olist:::True]', '[li(2,4):6:   :1]', '[icode-block(2,11):    :]', '[text(2,11):1. item:     ]', '[end-icode-block:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[olist(1,16):.:1:18:               ]",
+        "[BLANK(1,18):]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+        "[li(2,4):6:   :1]",
+        "[icode-block(2,11):    :]",
+        "[text(2,11):1. item:     ]",
+        "[end-icode-block:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -1532,6 +1950,8 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_empty_with_li5():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 @pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_ordered_max_empty_with_li6():
@@ -1543,7 +1963,21 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_empty_with_li6():
     # Arrange
     source_markdown = """   1.    1.    1.
    1.    1.       item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[olist(1,16):.:1:18:               ]', '[BLANK(1,18):]', '[end-olist:::True]', '[end-olist:::True]', '[li(2,4):9:   :1]', '[olist(2,10):.:1:12:         ]', '[icode-block(2,17):    :]', '[text(2,17):item:  ]', '[end-icode-block:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[olist(1,16):.:1:18:               ]",
+        "[BLANK(1,18):]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+        "[li(2,4):9:   :1]",
+        "[olist(2,10):.:1:12:         ]",
+        "[icode-block(2,17):    :]",
+        "[text(2,17):item:  ]",
+        "[end-icode-block:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -1566,6 +2000,8 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_empty_with_li6():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 @pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_ordered_max_empty_with_li7():
@@ -1577,7 +2013,23 @@ def test_nested_three_ordered_max_ordered_max_ordered_max_empty_with_li7():
     # Arrange
     source_markdown = """   1.    1.    1.
    1.    1.    1. item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[olist(1,16):.:1:18:               ]', '[BLANK(1,18):]', '[end-olist:::True]', '[end-olist:::True]', '[li(2,4):9:   :1]', '[olist(2,10):.:1:15:         ]', '[olist(2,16):.:1:18:               ]', '[para(2,19):]', '[text(2,19):item:]', '[end-para:::True]', '[end-olist:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[olist(1,16):.:1:18:               ]",
+        "[BLANK(1,18):]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+        "[li(2,4):9:   :1]",
+        "[olist(2,10):.:1:15:         ]",
+        "[olist(2,16):.:1:18:               ]",
+        "[para(2,19):]",
+        "[text(2,19):item:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -1726,6 +2178,8 @@ item</p>
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 def test_nested_three_ordered_max_ordered_max_block_max_with_li1():
     """
@@ -1736,7 +2190,21 @@ def test_nested_three_ordered_max_ordered_max_block_max_with_li1():
     # Arrange
     source_markdown = """   1.    1.    > list
    1.          > item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[block-quote(1,16):               :               > ]', '[para(1,18):]', '[text(1,18):list:]', '[end-para:::True]', '[end-block-quote:::True]', '[end-olist:::True]', '[li(2,4):6:   :1]', '[icode-block(2,11):    :]', '[text(2,11):\a>\a&gt;\a item:     ]', '[end-icode-block:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[block-quote(1,16):               :               > ]",
+        "[para(1,18):]",
+        "[text(1,18):list:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[li(2,4):6:   :1]",
+        "[icode-block(2,11):    :]",
+        "[text(2,11):\a>\a&gt;\a item:     ]",
+        "[end-icode-block:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -1755,6 +2223,8 @@ def test_nested_three_ordered_max_ordered_max_block_max_with_li1():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 @pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_block_max_with_li2():
@@ -1766,7 +2236,17 @@ def test_nested_three_ordered_max_ordered_max_block_max_with_li2():
     # Arrange
     source_markdown = """   1.    1.    > list
          1.    > item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         :\n]', '[block-quote(1,16):               :               > \n]', '[para(1,18):\n         ]', '[text(1,18):list\n1.    \a>\a&gt;\a item::\n]', '[end-para:::True]', '[end-block-quote:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         :\n]",
+        "[block-quote(1,16):               :               > \n]",
+        "[para(1,18):\n         ]",
+        "[text(1,18):list\n1.    \a>\a&gt;\a item::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -1786,6 +2266,8 @@ def test_nested_three_ordered_max_ordered_max_block_max_with_li2():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 @pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_block_max_with_li3():
@@ -1797,7 +2279,25 @@ def test_nested_three_ordered_max_ordered_max_block_max_with_li3():
     # Arrange
     source_markdown = """   1.    1.    > list
    1.    1.    > item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[block-quote(1,16):               :               > ]', '[para(1,18):]', '[text(1,18):list:]', '[end-para:::True]', '[end-block-quote:::True]', '[end-olist:::True]', '[li(2,4):9:   :1]', '[olist(2,10):.:1:15:         ]', '[block-quote(2,16):               :               > ]', '[para(2,18):]', '[text(2,18):item:]', '[end-para:::True]', '[end-block-quote:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[block-quote(1,16):               :               > ]",
+        "[para(1,18):]",
+        "[text(1,18):list:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[li(2,4):9:   :1]",
+        "[olist(2,10):.:1:15:         ]",
+        "[block-quote(2,16):               :               > ]",
+        "[para(2,18):]",
+        "[text(2,18):item:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -1859,6 +2359,8 @@ def test_nested_three_ordered_max_ordered_max_block_max_empty():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 def test_nested_three_ordered_max_ordered_max_block_max_empty_with_li1():
     """
@@ -1869,7 +2371,19 @@ def test_nested_three_ordered_max_ordered_max_block_max_empty_with_li1():
     # Arrange
     source_markdown = """   1.    1.    >
    1.          > item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[block-quote(1,16):               :               >]', '[BLANK(1,17):]', '[end-block-quote:::True]', '[end-olist:::True]', '[li(2,4):6:   :1]', '[icode-block(2,11):    :]', '[text(2,11):\a>\a&gt;\a item:     ]', '[end-icode-block:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[block-quote(1,16):               :               >]",
+        "[BLANK(1,17):]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[li(2,4):6:   :1]",
+        "[icode-block(2,11):    :]",
+        "[text(2,11):\a>\a&gt;\a item:     ]",
+        "[end-icode-block:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -1887,6 +2401,8 @@ def test_nested_three_ordered_max_ordered_max_block_max_empty_with_li1():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 @pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_block_max_empty_with_li2():
@@ -1898,7 +2414,21 @@ def test_nested_three_ordered_max_ordered_max_block_max_empty_with_li2():
     # Arrange
     source_markdown = """   1.    1.    >
          1.    > item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         :]', '[block-quote(1,16):               :               >]', '[BLANK(1,17):]', '[end-block-quote:::True]', '[li(2,10):15:         :1]', '[block-quote(2,16):               :               > ]', '[para(2,18):]', '[text(2,18):item:]', '[end-para:::True]', '[end-block-quote:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         :]",
+        "[block-quote(1,16):               :               >]",
+        "[BLANK(1,17):]",
+        "[end-block-quote:::True]",
+        "[li(2,10):15:         :1]",
+        "[block-quote(2,16):               :               > ]",
+        "[para(2,18):]",
+        "[text(2,18):item:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -1917,6 +2447,8 @@ def test_nested_three_ordered_max_ordered_max_block_max_empty_with_li2():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 @pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_block_max_empty_with_li3():
@@ -1928,7 +2460,23 @@ def test_nested_three_ordered_max_ordered_max_block_max_empty_with_li3():
     # Arrange
     source_markdown = """   1.    1.    >
    1.    1.    > item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[block-quote(1,16):               :               >]', '[BLANK(1,17):]', '[end-block-quote:::True]', '[end-olist:::True]', '[li(2,4):9:   :1]', '[olist(2,10):.:1:15:         ]', '[block-quote(2,16):               :               > ]', '[para(2,18):]', '[text(2,18):item:]', '[end-para:::True]', '[end-block-quote:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[block-quote(1,16):               :               >]",
+        "[BLANK(1,17):]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[li(2,4):9:   :1]",
+        "[olist(2,10):.:1:15:         ]",
+        "[block-quote(2,16):               :               > ]",
+        "[para(2,18):]",
+        "[text(2,18):item:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -1990,6 +2538,8 @@ item</p>
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 def test_nested_three_ordered_max_ordered_max_block_max_no_bq1_with_li1():
     """
@@ -2001,7 +2551,21 @@ def test_nested_three_ordered_max_ordered_max_block_max_no_bq1_with_li1():
     # Arrange
     source_markdown = """   1.    1.    > list
    1.          > item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[block-quote(1,16):               :               > ]', '[para(1,18):]', '[text(1,18):list:]', '[end-para:::True]', '[end-block-quote:::True]', '[end-olist:::True]', '[li(2,4):6:   :1]', '[icode-block(2,11):    :]', '[text(2,11):\a>\a&gt;\a item:     ]', '[end-icode-block:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[block-quote(1,16):               :               > ]",
+        "[para(1,18):]",
+        "[text(1,18):list:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[li(2,4):6:   :1]",
+        "[icode-block(2,11):    :]",
+        "[text(2,11):\a>\a&gt;\a item:     ]",
+        "[end-icode-block:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -2020,6 +2584,8 @@ def test_nested_three_ordered_max_ordered_max_block_max_no_bq1_with_li1():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 @pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_block_max_no_bq1_with_li2():
@@ -2032,7 +2598,17 @@ def test_nested_three_ordered_max_ordered_max_block_max_no_bq1_with_li2():
     # Arrange
     source_markdown = """   1.    1.    > list
          1.    > item"""
-    expected_tokens =  ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         :\n]', '[block-quote(1,16):               :               > \n]', '[para(1,18):\n         ]', '[text(1,18):list\n1.    \a>\a&gt;\a item::\n]', '[end-para:::True]', '[end-block-quote:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         :\n]",
+        "[block-quote(1,16):               :               > \n]",
+        "[para(1,18):\n         ]",
+        "[text(1,18):list\n1.    \a>\a&gt;\a item::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -2052,6 +2628,8 @@ def test_nested_three_ordered_max_ordered_max_block_max_no_bq1_with_li2():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 @pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_block_max_no_bq1_with_li3():
@@ -2064,7 +2642,25 @@ def test_nested_three_ordered_max_ordered_max_block_max_no_bq1_with_li3():
     # Arrange
     source_markdown = """   1.    1.    > list
    1.    1.    > item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[block-quote(1,16):               :               > ]', '[para(1,18):]', '[text(1,18):list:]', '[end-para:::True]', '[end-block-quote:::True]', '[end-olist:::True]', '[li(2,4):9:   :1]', '[olist(2,10):.:1:15:         ]', '[block-quote(2,16):               :               > ]', '[para(2,18):]', '[text(2,18):item:]', '[end-para:::True]', '[end-block-quote:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[block-quote(1,16):               :               > ]",
+        "[para(1,18):]",
+        "[text(1,18):list:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[li(2,4):9:   :1]",
+        "[olist(2,10):.:1:15:         ]",
+        "[block-quote(2,16):               :               > ]",
+        "[para(2,18):]",
+        "[text(2,18):item:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -2126,6 +2722,8 @@ item</li>
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 def test_nested_three_ordered_max_ordered_max_block_max_empty_no_bq1_with_li1():
     """
@@ -2137,7 +2735,19 @@ def test_nested_three_ordered_max_ordered_max_block_max_empty_no_bq1_with_li1():
     # Arrange
     source_markdown = """   1.    1.    >
    1.          > item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[block-quote(1,16):               :               >]', '[BLANK(1,17):]', '[end-block-quote:::True]', '[end-olist:::True]', '[li(2,4):6:   :1]', '[icode-block(2,11):    :]', '[text(2,11):\a>\a&gt;\a item:     ]', '[end-icode-block:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[block-quote(1,16):               :               >]",
+        "[BLANK(1,17):]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[li(2,4):6:   :1]",
+        "[icode-block(2,11):    :]",
+        "[text(2,11):\a>\a&gt;\a item:     ]",
+        "[end-icode-block:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -2155,6 +2765,8 @@ def test_nested_three_ordered_max_ordered_max_block_max_empty_no_bq1_with_li1():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 @pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_block_max_empty_no_bq1_with_li2():
@@ -2167,7 +2779,21 @@ def test_nested_three_ordered_max_ordered_max_block_max_empty_no_bq1_with_li2():
     # Arrange
     source_markdown = """   1.    1.    >
          1.    > item"""
-    expected_tokens = ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         :]', '[block-quote(1,16):               :               >]', '[BLANK(1,17):]', '[end-block-quote:::True]', '[li(2,10):15:         :1]', '[block-quote(2,16):               :               > ]', '[para(2,18):]', '[text(2,18):item:]', '[end-para:::True]', '[end-block-quote:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         :]",
+        "[block-quote(1,16):               :               >]",
+        "[BLANK(1,17):]",
+        "[end-block-quote:::True]",
+        "[li(2,10):15:         :1]",
+        "[block-quote(2,16):               :               > ]",
+        "[para(2,18):]",
+        "[text(2,18):item:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -2186,6 +2812,8 @@ def test_nested_three_ordered_max_ordered_max_block_max_empty_no_bq1_with_li2():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 @pytest.mark.skip
 def test_nested_three_ordered_max_ordered_max_block_max_empty_no_bq1_with_li3():
@@ -2198,7 +2826,23 @@ def test_nested_three_ordered_max_ordered_max_block_max_empty_no_bq1_with_li3():
     # Arrange
     source_markdown = """   1.    1.    >
    1.    1.    > item"""
-    expected_tokens =  ['[olist(1,4):.:1:9:   ]', '[olist(1,10):.:1:15:         ]', '[block-quote(1,16):               :               >]', '[BLANK(1,17):]', '[end-block-quote:::True]', '[end-olist:::True]', '[li(2,4):9:   :1]', '[olist(2,10):.:1:15:         ]', '[block-quote(2,16):               :               > ]', '[para(2,18):]', '[text(2,18):item:]', '[end-para:::True]', '[end-block-quote:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[olist(1,10):.:1:15:         ]",
+        "[block-quote(1,16):               :               >]",
+        "[BLANK(1,17):]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[li(2,4):9:   :1]",
+        "[olist(2,10):.:1:15:         ]",
+        "[block-quote(2,16):               :               > ]",
+        "[para(2,18):]",
+        "[text(2,18):item:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>

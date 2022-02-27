@@ -61,10 +61,7 @@ class ContainerBlockProcessor:
             start_index,
             extracted_whitespace,
         ) = ContainerBlockProcessor.__prepare_container_start_variables2(
-            parser_state,
-            position_marker,
-            foobar,
-            init_bq,
+            parser_state, position_marker, foobar, init_bq, container_depth
         )
 
         is_not_in_root_list = not (
@@ -1084,10 +1081,7 @@ class ContainerBlockProcessor:
 
     @staticmethod
     def __prepare_container_start_variables2(
-        parser_state,
-        position_marker,
-        foobar,
-        init_bq,
+        parser_state, position_marker, foobar, init_bq, container_depth
     ):
         # Debug to be used for block quotes if needed.
         # POGGER.debug(
@@ -1115,6 +1109,7 @@ class ContainerBlockProcessor:
             extracted_whitespace,
             foobar,
             init_bq,
+            container_depth,
         )
         return (
             current_container_blocks,
@@ -1685,6 +1680,7 @@ class ContainerBlockProcessor:
 
     # pylint: enable=too-many-locals, too-many-arguments
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __calculate_for_container_blocks(
         parser_state,
@@ -1692,6 +1688,7 @@ class ContainerBlockProcessor:
         extracted_whitespace,
         foobar,
         init_bq,
+        container_depth,
     ):
         """
         Perform some calculations that will be needed for parsing the container blocks.
@@ -1705,6 +1702,7 @@ class ContainerBlockProcessor:
             current_container_blocks,
             line_to_parse,
             extracted_whitespace,
+            container_depth,
             foobar=foobar,
         )
 
@@ -1717,6 +1715,8 @@ class ContainerBlockProcessor:
             ),
         )
 
+    # pylint: enable=too-many-arguments
+
     # pylint: disable=too-many-arguments
     @staticmethod
     def __calculate_adjusted_whitespace_kludge(
@@ -1727,6 +1727,7 @@ class ContainerBlockProcessor:
         found_block_quote_token,
         line_to_parse,
         adj_ws,
+        container_depth,
     ):
         force_reline, ws_len = (
             False,
@@ -1751,6 +1752,21 @@ class ContainerBlockProcessor:
                 "PLFCB>>other_block_quote_token>>$",
                 other_block_quote_token,
             )
+
+            # Check to see if out first block token is the same as our first.
+            # if not, do not use it as a base.
+            #
+            # Note; may need to be tweaked for extra levels.
+            if not container_depth and other_block_quote_token:
+                POGGER.debug(
+                    "parser_state.token_stack[1]>>:$:", parser_state.token_stack[1]
+                )
+                if (
+                    parser_state.token_stack[1].matching_markdown_token
+                    != other_block_quote_token
+                ):
+                    other_block_quote_token = None
+
             if other_block_quote_token:
                 POGGER.debug(
                     "PLFCB>>other_block_quote_token>>:$:", other_block_quote_token
@@ -1785,6 +1801,8 @@ class ContainerBlockProcessor:
         if force_reline or ws_len >= old_start_index:
             POGGER.debug("RELINE:$:", line_to_parse)
             adj_ws = extracted_whitespace[old_start_index:]
+            POGGER.debug("extracted_whitespace:$:", extracted_whitespace)
+            POGGER.debug("adj_ws:$: old_start_index:$:", adj_ws, old_start_index)
         return adj_ws
 
     # pylint: enable=too-many-arguments
@@ -1796,6 +1814,7 @@ class ContainerBlockProcessor:
         current_container_blocks,
         line_to_parse,
         extracted_whitespace,
+        container_depth,
         foobar=None,
         previous_ws_len=0,
     ):
@@ -1861,6 +1880,7 @@ class ContainerBlockProcessor:
                 found_block_quote_token,
                 line_to_parse,
                 adj_ws,
+                container_depth,
             )
             POGGER.debug(f"caw>adj_ws>:{adj_ws}:")
 

@@ -1,14 +1,14 @@
 """
 Extra tests.
 """
+from test.utils import act_and_assert
+
 import pytest
 
 from pymarkdown.container_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.extensions.front_matter_markdown_token import FrontMatterMarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.position_marker import PositionMarker
-
-from .utils import act_and_assert
 
 # pylint: disable=too-many-lines
 
@@ -3252,6 +3252,93 @@ def test_extra_026cd():
         "[end-fcode-block::3:False]",
         "[BLANK(5,1):]",
         "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>Item with code.
+<pre><code class="language-text">    this is some text
+</code></pre>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_027x():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """   1.    >    +
+   1.    >    + item"""
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[block-quote(1,10):         :         > ]",
+        "[ulist(1,15):+::16:   ]",
+        "[BLANK(1,16):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[li(2,4):9:   :1]",
+        "[block-quote(2,10):         :         > ]",
+        "[ulist(2,15):+::16:   ]",
+        "[para(2,17):]",
+        "[text(2,17):item:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<blockquote>
+<ul>
+<li></li>
+</ul>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<ul>
+<li>item</li>
+</ul>
+</blockquote>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_extra_027a():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """   1.    >    +
+   1.    >    +
+       abc"""
+    expected_tokens = [
+        "[olist(1,4):.:1:9:   ]",
+        "[block-quote(1,10):         :         > ]",
+        "[ulist(1,15):+::16:   ]",
+        "[BLANK(1,16):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[li(2,4):9::1]",
+        "[block-quote(2,10):         :         > ]",
+        "[ulist(2,15):+::16:   ]",
+        "[BLANK(2,16):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[icode-block(3,5):    :]",
+        "[text(3,5):abc:   ]",
+        "[end-icode-block:::True]",
     ]
     expected_gfm = """<ol>
 <li>Item with code.

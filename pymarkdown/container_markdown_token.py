@@ -83,6 +83,7 @@ class NewListItemMarkdownToken(ContainerMarkdownToken):
         return self.__list_start_content
 
 
+# pylint: disable=too-many-instance-attributes
 class OrderedListStartMarkdownToken(ContainerMarkdownToken):
     """
     Class to provide for an encapsulation of the ordered list start element.
@@ -105,6 +106,7 @@ class OrderedListStartMarkdownToken(ContainerMarkdownToken):
             self.__leading_spaces,
             self.is_loose,
             self.leading_spaces_index,
+            self.__last_new_list_token,
         ) = (
             list_start_sequence,
             list_start_content,
@@ -113,6 +115,7 @@ class OrderedListStartMarkdownToken(ContainerMarkdownToken):
             None,
             True,
             0,
+            None,
         )
         ContainerMarkdownToken.__init__(
             self,
@@ -165,6 +168,8 @@ class OrderedListStartMarkdownToken(ContainerMarkdownToken):
         """
         assert new_list_item_token and new_list_item_token.is_new_list_item
 
+        self.__last_new_list_token = new_list_item_token
+
         self.__indent_level, self.__extracted_whitespace = (
             new_list_item_token.indent_level,
             new_list_item_token.extracted_whitespace,
@@ -200,6 +205,16 @@ class OrderedListStartMarkdownToken(ContainerMarkdownToken):
         POGGER.debug("__leading_spaces>>:$:<<", self.__leading_spaces)
         self.__compose_extra_data_field()
 
+    @property
+    def last_new_list_token(self):
+        """
+        Returns the last new-list token associated with this stack token.
+        """
+        return self.__last_new_list_token
+
+
+# pylint: enable=too-many-instance-attributes
+
 
 class UnorderedListStartMarkdownToken(ContainerMarkdownToken):
     """
@@ -216,7 +231,16 @@ class UnorderedListStartMarkdownToken(ContainerMarkdownToken):
             self.__leading_spaces,
             self.is_loose,
             self.leading_spaces_index,
-        ) = (list_start_sequence, indent_level, extracted_whitespace, None, True, 0)
+            self.__last_new_list_token,
+        ) = (
+            list_start_sequence,
+            indent_level,
+            extracted_whitespace,
+            None,
+            True,
+            0,
+            None,
+        )
         ContainerMarkdownToken.__init__(
             self,
             MarkdownToken._token_unordered_list_start,
@@ -259,6 +283,8 @@ class UnorderedListStartMarkdownToken(ContainerMarkdownToken):
         """
         assert new_list_item_token and new_list_item_token.is_new_list_item
 
+        self.__last_new_list_token = new_list_item_token
+
         self.__indent_level, self.__extracted_whitespace = (
             new_list_item_token.indent_level,
             new_list_item_token.extracted_whitespace,
@@ -293,6 +319,13 @@ class UnorderedListStartMarkdownToken(ContainerMarkdownToken):
         )
         POGGER.debug("__leading_spaces>>:$:<<", self.__leading_spaces)
         self.__compose_extra_data_field()
+
+    @property
+    def last_new_list_token(self):
+        """
+        Returns the last new-list token associated with this stack token.
+        """
+        return self.__last_new_list_token
 
 
 class BlockQuoteMarkdownToken(ContainerMarkdownToken):
