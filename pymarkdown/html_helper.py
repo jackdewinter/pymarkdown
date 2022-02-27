@@ -451,8 +451,7 @@ class HtmlHelper:
         if ParserHelper.is_character_at_index(
             text_to_parse, 0, HtmlHelper.__html_tag_start
         ):
-            tag_name = HtmlHelper.__parse_raw_tag_name(text_to_parse, 1)
-            if tag_name:
+            if tag_name := HtmlHelper.__parse_raw_tag_name(text_to_parse, 1):
                 parse_index, text_to_parse_size = len(tag_name), len(text_to_parse)
                 if parse_index != text_to_parse_size:
                     parse_index, _ = ParserHelper.extract_whitespace(

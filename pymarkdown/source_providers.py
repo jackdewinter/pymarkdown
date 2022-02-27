@@ -49,7 +49,7 @@ class FileSourceProvider:
         for next_line in file_as_lines:
             did_line_end_in_newline = next_line.endswith(ParserHelper.newline_character)
             if did_line_end_in_newline:
-                next_line = next_line[0:-1]
+                next_line = next_line[:-1]
             self.read_lines.append(next_line)
 
         if did_line_end_in_newline:

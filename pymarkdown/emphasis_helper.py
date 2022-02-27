@@ -62,10 +62,7 @@ class EmphasisHelper:
         ):
             POGGER.debug("potential opener:$", scan_index)
             open_token = delimiter_stack[scan_index]
-            is_valid_opener = EmphasisHelper.__is_open_close_emphasis_valid(
-                open_token, close_token
-            )
-            if is_valid_opener:
+            if EmphasisHelper.__is_open_close_emphasis_valid(open_token, close_token):
                 found_opener = open_token
                 break
             scan_index -= 1

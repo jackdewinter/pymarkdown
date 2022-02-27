@@ -1341,7 +1341,7 @@ class TransformToMarkdown:
                 "adj->deeper_containing_block_quote_token.line_number>>:"
                 + f"{deeper_containing_block_quote_token.line_number}:<<"
             )
-            print(f'adj->current_token.line_number>>:{current_token.line_number}:<<')
+            print(f"adj->current_token.line_number>>:{current_token.line_number}:<<")
             line_number_delta = (
                 current_token.line_number
                 - deeper_containing_block_quote_token.line_number
