@@ -318,6 +318,59 @@ class TransformToMarkdown:
         assert not self.container_token_stack
         return transformed_data
 
+    # pylint: disable=unused-private-member, too-many-arguments
+    @classmethod
+    def __manage_records(
+        cls,
+        container_records,
+        old_record_index,
+        token_stack,
+        container_token_indices,
+        removed_tokens,
+    ):
+        did_move_ahead, current_changed_record = (
+            True,
+            container_records[old_record_index + 1],
+        )
+        print(
+            "   current_changed_record("
+            + str(old_record_index + 1)
+            + ")-->"
+            + ParserHelper.make_value_visible(current_changed_record)
+        )
+        if current_changed_record[0]:
+            token_stack.append(current_changed_record[2])
+            container_token_indices.append(0)
+        else:
+            print(f"   -->{ParserHelper.make_value_visible(token_stack)}")
+            print("   -->" + ParserHelper.make_value_visible(container_token_indices))
+
+            if token_stack[-1].is_new_list_item:
+                removed_tokens.append(token_stack[-1])
+                del token_stack[-1]
+                del container_token_indices[-1]
+
+            assert str(current_changed_record[2]) == str(token_stack[-1]), (
+                "end:"
+                + ParserHelper.make_value_visible(current_changed_record[2])
+                + "!="
+                + ParserHelper.make_value_visible(token_stack[-1])
+            )
+            removed_tokens.append(token_stack[-1])
+            del token_stack[-1]
+            del container_token_indices[-1]
+
+        print(
+            "   -->current_changed_recordx>"
+            + ParserHelper.make_value_visible(current_changed_record)
+        )
+        print(f"   -->{ParserHelper.make_value_visible(token_stack)}")
+        print("   -->" + ParserHelper.make_value_visible(container_token_indices))
+        old_record_index += 1
+        return old_record_index, did_move_ahead, current_changed_record
+
+    # pylint: enable=unused-private-member, too-many-arguments
+
     # pylint: disable=too-many-arguments
     @classmethod
     def __move_to_current_record(
@@ -354,47 +407,17 @@ class TransformToMarkdown:
         )
         removed_tokens = []
         while old_record_index != record_index:
-            did_move_ahead, current_changed_record = (
-                True,
-                container_records[old_record_index + 1],
+            (
+                old_record_index,
+                did_move_ahead,
+                current_changed_record,
+            ) = cls.__manage_records(
+                container_records,
+                old_record_index,
+                token_stack,
+                container_token_indices,
+                removed_tokens,
             )
-            print(
-                "   current_changed_record("
-                + str(old_record_index + 1)
-                + ")-->"
-                + ParserHelper.make_value_visible(current_changed_record)
-            )
-            if current_changed_record[0]:
-                token_stack.append(current_changed_record[2])
-                container_token_indices.append(0)
-            else:
-                print(f"   -->{ParserHelper.make_value_visible(token_stack)}")
-                print(
-                    "   -->" + ParserHelper.make_value_visible(container_token_indices)
-                )
-
-                if token_stack[-1].is_new_list_item:
-                    removed_tokens.append(token_stack[-1])
-                    del token_stack[-1]
-                    del container_token_indices[-1]
-
-                assert str(current_changed_record[2]) == str(token_stack[-1]), (
-                    "end:"
-                    + ParserHelper.make_value_visible(current_changed_record[2])
-                    + "!="
-                    + ParserHelper.make_value_visible(token_stack[-1])
-                )
-                removed_tokens.append(token_stack[-1])
-                del token_stack[-1]
-                del container_token_indices[-1]
-
-            print(
-                "   -->current_changed_recordx>"
-                + ParserHelper.make_value_visible(current_changed_record)
-            )
-            print(f"   -->{ParserHelper.make_value_visible(token_stack)}")
-            print("   -->" + ParserHelper.make_value_visible(container_token_indices))
-            old_record_index += 1
 
         print(f"   removed_tokens={ParserHelper.make_value_visible(removed_tokens)}")
         return record_index, did_move_ahead, current_changed_record, removed_tokens
@@ -491,6 +514,46 @@ class TransformToMarkdown:
             stack_index -= 1
         return nested_block_start_index
 
+    # pylint: disable=unused-private-member
+    @classmethod
+    def __xx(
+        cls,
+        token_stack,
+        removed_tokens,
+        applied_leading_spaces_to_start_of_container_line,
+        previous_token,
+    ):
+        if token_stack[-1].is_new_list_item:
+
+            new_list_item_adjust = True
+            if len(removed_tokens) == 1 and removed_tokens[-1].is_block_quote_start:
+                leading_spaces_newline_count = removed_tokens[-1].leading_spaces.count(
+                    "\n"
+                )
+                block_quote_end_line = (
+                    leading_spaces_newline_count + removed_tokens[-1].line_number
+                )
+                print(
+                    f"block_quote_end_line={block_quote_end_line} = "
+                    + f"fg={leading_spaces_newline_count} + "
+                    + f"line={removed_tokens[-1].line_number}"
+                )
+                new_list_item_adjust = leading_spaces_newline_count > 1
+                print(f"new_list_item_adjust:{new_list_item_adjust}")
+
+            add_leading_spaces_from_previous_token = (
+                token_stack[-1].line_number != previous_token.line_number
+                and new_list_item_adjust
+            )
+        else:
+            add_leading_spaces_from_previous_token = (
+                applied_leading_spaces_to_start_of_container_line
+                or token_stack[-1].line_number != previous_token.line_number
+            )
+        return add_leading_spaces_from_previous_token
+
+    # pylint: enable=unused-private-member
+
     # pylint: disable=too-many-arguments
     @classmethod
     def __adjust_for_list(
@@ -513,16 +576,6 @@ class TransformToMarkdown:
             if nested_block_start_index != -1:
                 previous_token = token_stack[nested_block_start_index]
                 print(
-                    " nested_block_start_index->"
-                    + str(nested_block_start_index)
-                    + ":previous_token="
-                    + ParserHelper.make_value_visible(previous_token)
-                )
-                print(
-                    " token_stack[-1]="
-                    + ParserHelper.make_value_visible(token_stack[-1])
-                )
-                print(
                     " applied_leading_spaces_to_start_of_container_line->"
                     + str(applied_leading_spaces_to_start_of_container_line)
                 )
@@ -532,35 +585,12 @@ class TransformToMarkdown:
                     + f"end.line:{token_stack[-1].line_number} != prev.line:{previous_token.line_number}"
                 )
 
-                if token_stack[-1].is_new_list_item:
-
-                    new_list_item_adjust = True
-                    if (
-                        len(removed_tokens) == 1
-                        and removed_tokens[-1].is_block_quote_start
-                    ):
-                        leading_spaces_newline_count = removed_tokens[
-                            -1
-                        ].leading_spaces.count("\n")
-                        block_quote_end_line = (
-                            leading_spaces_newline_count
-                            + removed_tokens[-1].line_number
-                        )
-                        print(
-                            f"block_quote_end_line={block_quote_end_line} = fg={leading_spaces_newline_count} + line={removed_tokens[-1].line_number}"
-                        )
-                        new_list_item_adjust = leading_spaces_newline_count > 1
-                        print(f"new_list_item_adjust:{new_list_item_adjust}")
-
-                    add_leading_spaces_from_previous_token = (
-                        token_stack[-1].line_number != previous_token.line_number
-                        and new_list_item_adjust
-                    )
-                else:
-                    add_leading_spaces_from_previous_token = (
-                        applied_leading_spaces_to_start_of_container_line
-                        or token_stack[-1].line_number != previous_token.line_number
-                    )
+                add_leading_spaces_from_previous_token = cls.__xx(
+                    token_stack,
+                    removed_tokens,
+                    applied_leading_spaces_to_start_of_container_line,
+                    previous_token,
+                )
                 if add_leading_spaces_from_previous_token:
                     split_leading_spaces = previous_token.leading_spaces.split(
                         ParserHelper.newline_character
@@ -1438,7 +1468,45 @@ class TransformToMarkdown:
 
     # pylint: enable=unused-private-member
 
-    # pylint: disable=too-many-arguments, too-many-locals
+    # pylint: disable=unused-private-member, too-many-arguments
+    @classmethod
+    def __calculate_post_adjust_whitespace(
+        cls,
+        starting_whitespace,
+        containing_list_token,
+        block_quote_leading_space_length,
+        list_leading_space_length,
+        list_start_content_length,
+        add_extracted_whitespace_at_end,
+        current_token,
+    ):
+        print(f"adj->starting_whitespace>>:{starting_whitespace}:<<")
+        print(
+            f"adj->containing_list_token.indent_level>>:{containing_list_token.indent_level}:<<"
+        )
+        print(
+            f"adj->block_quote_leading_space_length>>:{block_quote_leading_space_length}:<<"
+        )
+        print(f"adj->list_leading_space_length>>:{list_leading_space_length}:<<")
+        print(f"list_start_content_length:{list_start_content_length}:<<")
+
+        pad_to_length = (
+            containing_list_token.indent_level
+            - block_quote_leading_space_length
+            - list_leading_space_length
+            - list_start_content_length
+        )
+        print(f"pad_to_length:{pad_to_length}:<<")
+        post_adjust_whitespace = starting_whitespace.rjust(pad_to_length, " ")
+        print(f"adj->post_adjust_whitespace>>:{post_adjust_whitespace}:<<")
+        if add_extracted_whitespace_at_end:
+            post_adjust_whitespace += current_token.extracted_whitespace
+        print(f"adj->post_adjust_whitespace>>:{post_adjust_whitespace}:<<")
+        return post_adjust_whitespace
+
+    # pylint: enable=unused-private-member, too-many-arguments
+
+    # pylint: disable=too-many-arguments
     @classmethod
     def __rehydrate_list_start_contained_in_list(
         cls,
@@ -1501,29 +1569,16 @@ class TransformToMarkdown:
                 else 0
             )
             add_extracted_whitespace_at_end = True
-        print(f"adj->starting_whitespace>>:{starting_whitespace}:<<")
-        print(
-            f"adj->containing_list_token.indent_level>>:{containing_list_token.indent_level}:<<"
-        )
-        print(
-            f"adj->block_quote_leading_space_length>>:{block_quote_leading_space_length}:<<"
-        )
-        print(f"adj->list_leading_space_length>>:{list_leading_space_length}:<<")
-        print(f"adj->list_leading_space_length>>:{list_leading_space_length}:<<")
-        print(f"list_start_content_length:{list_start_content_length}:<<")
 
-        pad_to_length = (
-            containing_list_token.indent_level
-            - block_quote_leading_space_length
-            - list_leading_space_length
-            - list_start_content_length
+        post_adjust_whitespace = cls.__calculate_post_adjust_whitespace(
+            starting_whitespace,
+            containing_list_token,
+            block_quote_leading_space_length,
+            list_leading_space_length,
+            list_start_content_length,
+            add_extracted_whitespace_at_end,
+            current_token,
         )
-        print(f"pad_to_length:{pad_to_length}:<<")
-        post_adjust_whitespace = starting_whitespace.rjust(pad_to_length, " ")
-        print(f"adj->post_adjust_whitespace>>:{post_adjust_whitespace}:<<")
-        if add_extracted_whitespace_at_end:
-            post_adjust_whitespace += current_token.extracted_whitespace
-        print(f"adj->post_adjust_whitespace>>:{post_adjust_whitespace}:<<")
 
         (
             previous_indent,
@@ -1539,7 +1594,7 @@ class TransformToMarkdown:
             did_container_start_midline,
         )
 
-    # pylint: enable=too-many-arguments, too-many-locals
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     @classmethod
