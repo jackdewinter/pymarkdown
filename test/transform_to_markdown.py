@@ -531,9 +531,7 @@ class TransformToMarkdown:
             )
         new_list_item_adjust = True
         if len(removed_tokens) == 1 and removed_tokens[-1].is_block_quote_start:
-            leading_spaces_newline_count = removed_tokens[-1].leading_spaces.count(
-                "\n"
-            )
+            leading_spaces_newline_count = removed_tokens[-1].leading_spaces.count("\n")
             block_quote_end_line = (
                 leading_spaces_newline_count + removed_tokens[-1].line_number
             )
@@ -546,9 +544,9 @@ class TransformToMarkdown:
             print(f"new_list_item_adjust:{new_list_item_adjust}")
 
         return (
-                token_stack[-1].line_number != previous_token.line_number
-                and new_list_item_adjust
-            )
+            token_stack[-1].line_number != previous_token.line_number
+            and new_list_item_adjust
+        )
 
     # pylint: enable=unused-private-member
 
