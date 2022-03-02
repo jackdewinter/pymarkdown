@@ -352,6 +352,7 @@ class TransformToMarkdown:
             + "):"
             + ParserHelper.make_value_visible(container_records[1])
         )
+        removed_tokens = []
         while old_record_index != record_index:
             did_move_ahead, current_changed_record = (
                 True,
@@ -373,6 +374,7 @@ class TransformToMarkdown:
                 )
 
                 if token_stack[-1].is_new_list_item:
+                    removed_tokens.append(token_stack[-1])
                     del token_stack[-1]
                     del container_token_indices[-1]
 
@@ -382,17 +384,20 @@ class TransformToMarkdown:
                     + "!="
                     + ParserHelper.make_value_visible(token_stack[-1])
                 )
+                removed_tokens.append(token_stack[-1])
                 del token_stack[-1]
                 del container_token_indices[-1]
 
             print(
-                "   -->current_changed_record>"
+                "   -->current_changed_recordx>"
                 + ParserHelper.make_value_visible(current_changed_record)
             )
             print(f"   -->{ParserHelper.make_value_visible(token_stack)}")
             print("   -->" + ParserHelper.make_value_visible(container_token_indices))
             old_record_index += 1
-        return record_index, did_move_ahead, current_changed_record
+
+        print(f"   removed_tokens={ParserHelper.make_value_visible(removed_tokens)}")
+        return record_index, did_move_ahead, current_changed_record, removed_tokens
 
     # pylint: enable=too-many-arguments
 
@@ -486,6 +491,7 @@ class TransformToMarkdown:
             stack_index -= 1
         return nested_block_start_index
 
+    # pylint: disable=too-many-arguments
     @classmethod
     def __adjust_for_list(
         cls,
@@ -493,6 +499,7 @@ class TransformToMarkdown:
         applied_leading_spaces_to_start_of_container_line,
         container_token_indices,
         container_line,
+        removed_tokens,
     ):
 
         if (
@@ -520,10 +527,41 @@ class TransformToMarkdown:
                     + str(applied_leading_spaces_to_start_of_container_line)
                 )
                 inner_token_index = container_token_indices[nested_block_start_index]
-                if (
-                    applied_leading_spaces_to_start_of_container_line
-                    or token_stack[-1].line_number != previous_token.line_number
-                ):
+                print(
+                    f"applied:{applied_leading_spaces_to_start_of_container_line} or "
+                    + f"end.line:{token_stack[-1].line_number} != prev.line:{previous_token.line_number}"
+                )
+
+                if token_stack[-1].is_new_list_item:
+
+                    new_list_item_adjust = True
+                    if (
+                        len(removed_tokens) == 1
+                        and removed_tokens[-1].is_block_quote_start
+                    ):
+                        leading_spaces_newline_count = removed_tokens[
+                            -1
+                        ].leading_spaces.count("\n")
+                        block_quote_end_line = (
+                            leading_spaces_newline_count
+                            + removed_tokens[-1].line_number
+                        )
+                        print(
+                            f"block_quote_end_line={block_quote_end_line} = fg={leading_spaces_newline_count} + line={removed_tokens[-1].line_number}"
+                        )
+                        new_list_item_adjust = leading_spaces_newline_count > 1
+                        print(f"new_list_item_adjust:{new_list_item_adjust}")
+
+                    add_leading_spaces_from_previous_token = (
+                        token_stack[-1].line_number != previous_token.line_number
+                        and new_list_item_adjust
+                    )
+                else:
+                    add_leading_spaces_from_previous_token = (
+                        applied_leading_spaces_to_start_of_container_line
+                        or token_stack[-1].line_number != previous_token.line_number
+                    )
+                if add_leading_spaces_from_previous_token:
                     split_leading_spaces = previous_token.leading_spaces.split(
                         ParserHelper.newline_character
                     )
@@ -543,6 +581,8 @@ class TransformToMarkdown:
                     inner_token_index + 1
                 )
         return container_line
+
+    # pylint: enable=too-many-arguments
 
     @classmethod
     def __get_last_list_index(cls, token_stack):
@@ -746,6 +786,7 @@ class TransformToMarkdown:
                 record_index,
                 did_move_ahead,
                 current_changed_record,
+                removed_tokens,
             ) = self.__move_to_current_record(
                 old_record_index,
                 container_records,
@@ -776,6 +817,7 @@ class TransformToMarkdown:
                 applied_leading_spaces_to_start_of_container_line,
                 container_token_indices,
                 container_line,
+                removed_tokens,
             )
             container_line = self.__adjust_for_block_quote(
                 token_stack,
@@ -1150,7 +1192,13 @@ class TransformToMarkdown:
         previous_indent, post_adjust_whitespace, was_within_block_token = 0, None, False
 
         print(
-            f"rls>>previous_token>>{ParserHelper.make_value_visible(previous_token)}<<"
+            f"rlspt>>current_token>>{ParserHelper.make_value_visible(current_token)}<<"
+        )
+        print(
+            f"rlspt>>previous_token>>{ParserHelper.make_value_visible(previous_token)}<<"
+        )
+        print(
+            f"rlspt>>extracted_whitespace>>{ParserHelper.make_value_visible(extracted_whitespace)}<<"
         )
 
         print(
@@ -1168,6 +1216,7 @@ class TransformToMarkdown:
             )
 
         token_stack_index = self.__look_backward_for_list_or_block_quote_start()
+        print(f"rls>>token_stack_index2>>{token_stack_index}<<")
 
         containing_list_token, deeper_containing_block_quote_token = None, None
         if (
@@ -1220,6 +1269,12 @@ class TransformToMarkdown:
                 extracted_whitespace,
                 previous_token,
             )
+
+        print(f"xx>>previous_indent:{previous_indent}:")
+        print(f"xx>>extracted_whitespace:{extracted_whitespace}:")
+        print(f"xx>>was_within_block_token:{was_within_block_token}:")
+        print(f"xx>>post_adjust_whitespace:{post_adjust_whitespace}:")
+        print(f"xx>>did_container_start_midline:{did_container_start_midline}:")
         return (
             previous_indent,
             extracted_whitespace,
@@ -1323,19 +1378,30 @@ class TransformToMarkdown:
             and previous_token.is_end_token
             and previous_token.start_markdown_token.is_block_quote_start
         ):
-            check_list_for_indent = False
-            print(
-                ">>"
-                + ParserHelper.make_value_visible(previous_token.start_markdown_token)
-            )
             split_leading_spaces = (
                 previous_token.start_markdown_token.leading_spaces.split(
                     ParserHelper.newline_character
                 )
             )
+            print(f"split_leading_spaces>>{split_leading_spaces}")
+            print("current_token>>" + ParserHelper.make_value_visible(current_token))
+            # if (
+            #     current_token.is_new_list_item
+            #     and len(split_leading_spaces) <= 2
+            #     and False
+            # ):
+            #     block_quote_leading_space = ""
+            #     starting_whitespace = ""
+            # else:
+            print(
+                ">>"
+                + ParserHelper.make_value_visible(previous_token.start_markdown_token)
+            )
             block_quote_leading_space = split_leading_spaces[-1]
             starting_whitespace = block_quote_leading_space
             did_container_start_midline = True
+            # up to here?
+            check_list_for_indent = False
         else:
             print(
                 "adj->deeper_containing_block_quote_token.line_number>>:"
@@ -1416,16 +1482,48 @@ class TransformToMarkdown:
         ):
             list_leading_space_length = previous_token.indent_level
 
+        list_start_content_length = 0
+        add_extracted_whitespace_at_end = False
+        print(f"current_token-->{ParserHelper.make_value_visible(current_token)}")
+        print(f"previous_token-->{ParserHelper.make_value_visible(previous_token)}")
+        if (
+            current_token.is_new_list_item
+            and previous_token.is_end_token
+            and previous_token.start_markdown_token.is_block_quote_start
+        ):
+            print(
+                "previous_token.start_markdown_token-->"
+                + f"{ParserHelper.make_value_visible(previous_token.start_markdown_token)}"
+            )
+            list_start_content_length = (
+                len(containing_list_token.list_start_content)
+                if containing_list_token.is_ordered_list_start
+                else 0
+            )
+            add_extracted_whitespace_at_end = True
+        print(f"adj->starting_whitespace>>:{starting_whitespace}:<<")
+        print(
+            f"adj->containing_list_token.indent_level>>:{containing_list_token.indent_level}:<<"
+        )
         print(
             f"adj->block_quote_leading_space_length>>:{block_quote_leading_space_length}:<<"
         )
         print(f"adj->list_leading_space_length>>:{list_leading_space_length}:<<")
-        post_adjust_whitespace = starting_whitespace.rjust(
+        print(f"adj->list_leading_space_length>>:{list_leading_space_length}:<<")
+        print(f"list_start_content_length:{list_start_content_length}:<<")
+
+        pad_to_length = (
             containing_list_token.indent_level
             - block_quote_leading_space_length
-            - list_leading_space_length,
-            " ",
+            - list_leading_space_length
+            - list_start_content_length
         )
+        print(f"pad_to_length:{pad_to_length}:<<")
+        post_adjust_whitespace = starting_whitespace.rjust(pad_to_length, " ")
+        print(f"adj->post_adjust_whitespace>>:{post_adjust_whitespace}:<<")
+        if add_extracted_whitespace_at_end:
+            post_adjust_whitespace += current_token.extracted_whitespace
+        print(f"adj->post_adjust_whitespace>>:{post_adjust_whitespace}:<<")
 
         (
             previous_indent,
@@ -1666,10 +1764,12 @@ class TransformToMarkdown:
         self, start_sequence, did_container_start_midline, adjustment_since_newline
     ):
         if did_container_start_midline:
+            print("did start midline")
             start_sequence = start_sequence.ljust(
                 self.container_token_stack[-1].indent_level, " "
             )
         else:
+            print("did not start midline")
             calculated_indent = (
                 self.container_token_stack[-1].indent_level - adjustment_since_newline
             )
@@ -1678,7 +1778,9 @@ class TransformToMarkdown:
                 + f"indent_level={self.container_token_stack[-1].indent_level} - "
                 + f"adjustment_since_newline{adjustment_since_newline}"
             )
+            print(f"start_sequence:{start_sequence}")
             start_sequence = start_sequence.ljust(calculated_indent, " ")
+            print(f"start_sequence:{start_sequence}")
         return start_sequence
 
     def __rehydrate_next_list_item(
@@ -1730,8 +1832,8 @@ class TransformToMarkdown:
             if did_container_start_midline
             else extracted_whitespace
         )
-        print(f"rnli->whitespace_to_use>:{whitespace_to_use}:")
 
+        print(f"rnli->whitespace_to_use>:{whitespace_to_use}:")
         print(f"rnli->adjustment_since_newline>:{adjustment_since_newline}:")
         print(f"rnli->extracted_whitespace>:{extracted_whitespace}:")
         start_sequence = (

@@ -2568,6 +2568,7 @@ def test_extra_024a():
 
 
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_extra_025xx():
     """
     TBD
@@ -2662,6 +2663,7 @@ that</p>
 
 
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_extra_025ax():
     """
     TBD
@@ -2846,7 +2848,8 @@ that</p>
 
 
 @pytest.mark.gfm
-def test_extra_025cx():
+@pytest.mark.skip
+def test_extra_025cxx():
     """
     TBD
     """
@@ -2890,6 +2893,305 @@ item</p>
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_extra_025cxb():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """> 1. list
+>    > good
+>    > item
+> 1. that
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> ]",
+        "[olist(1,3):.:1:5::\n\n]",
+        "[para(1,6):]",
+        "[text(1,6):list:]",
+        "[end-para:::True]",
+        "[block-quote(2,6)::> \n>    > \n> ]",
+        "[para(2,8):\n]",
+        "[text(2,8):good\nitem::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[li(4,3):5:  :1]",
+        "[para(4,6):]",
+        "[text(4,6):that:]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>list
+<blockquote>
+<p>good
+item</p>
+</blockquote>
+</li>
+<li>that</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_extra_025cxc():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """> 1. list
+>    > good
+> 1. that
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> ]",
+        "[olist(1,3):.:1:5::\n]",
+        "[para(1,6):]",
+        "[text(1,6):list:]",
+        "[end-para:::True]",
+        "[block-quote(2,6)::> \n> ]",
+        "[para(2,8):]",
+        "[text(2,8):good:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[li(3,3):5::1]",
+        "[para(3,6):]",
+        "[text(3,6):that:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>list
+<blockquote>
+<p>good</p>
+</blockquote>
+</li>
+<li>that</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_extra_025cxd():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """> 1. list
+> 1. that
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> ]",
+        "[olist(1,3):.:1:5::]",
+        "[para(1,6):]",
+        "[text(1,6):list:]",
+        "[end-para:::True]",
+        "[li(2,3):5::1]",
+        "[para(2,6):]",
+        "[text(2,6):that:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>list</li>
+<li>that</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_extra_025cxe():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """> 1. > list
+> 1. that
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[olist(1,3):.:1:5::]",
+        "[block-quote(1,6)::> \n> ]",
+        "[para(1,8):]",
+        "[text(1,8):list:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[li(2,3):5::1]",
+        "[para(2,6):]",
+        "[text(2,6):that:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>
+<blockquote>
+<p>list</p>
+</blockquote>
+</li>
+<li>that</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_extra_025cxf():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """> 1. > list
+>    > is
+> 1. that
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[olist(1,3):.:1:5::\n]",
+        "[block-quote(1,6)::> \n>    > \n> ]",
+        "[para(1,8):\n]",
+        "[text(1,8):list\nis::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[li(3,3):5:  :1]",
+        "[para(3,6):]",
+        "[text(3,6):that:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>
+<blockquote>
+<p>list
+is</p>
+</blockquote>
+</li>
+<li>that</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_extra_025cxg():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """> + > list
+>   > is
+> + that
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[ulist(1,3):+::4::\n]",
+        "[block-quote(1,5)::> \n>   > \n> ]",
+        "[para(1,7):\n]",
+        "[text(1,7):list\nis::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[li(3,3):4:  :]",
+        "[para(3,5):]",
+        "[text(3,5):that:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<blockquote>
+<p>list
+is</p>
+</blockquote>
+</li>
+<li>that</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_extra_025cxz():
+    """
+    Verify that a nesting of block quote, ordered list, block quote, with
+    the maximum number of spaces allowed, works properly,
+    with no block quote characters on the second line, with a list item.
+    """
+
+    # Arrange
+    source_markdown = """> 1. > list
+> 1.   item"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[olist(1,3):.:1:5:]",
+        "[block-quote(1,6)::> \n> ]",
+        "[para(1,8):]",
+        "[text(1,8):list:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[li(2,3):7::1]",
+        "[para(2,8):]",
+        "[text(2,8):item:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>
+<blockquote>
+<p>list</p>
+</blockquote>
+</li>
+<li>item</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
