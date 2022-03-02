@@ -523,34 +523,32 @@ class TransformToMarkdown:
         applied_leading_spaces_to_start_of_container_line,
         previous_token,
     ):
-        if token_stack[-1].is_new_list_item:
+        if not token_stack[-1].is_new_list_item:
 
-            new_list_item_adjust = True
-            if len(removed_tokens) == 1 and removed_tokens[-1].is_block_quote_start:
-                leading_spaces_newline_count = removed_tokens[-1].leading_spaces.count(
-                    "\n"
-                )
-                block_quote_end_line = (
-                    leading_spaces_newline_count + removed_tokens[-1].line_number
-                )
-                print(
-                    f"block_quote_end_line={block_quote_end_line} = "
-                    + f"fg={leading_spaces_newline_count} + "
-                    + f"line={removed_tokens[-1].line_number}"
-                )
-                new_list_item_adjust = leading_spaces_newline_count > 1
-                print(f"new_list_item_adjust:{new_list_item_adjust}")
-
-            add_leading_spaces_from_previous_token = (
-                token_stack[-1].line_number != previous_token.line_number
-                and new_list_item_adjust
-            )
-        else:
-            add_leading_spaces_from_previous_token = (
+            return (
                 applied_leading_spaces_to_start_of_container_line
                 or token_stack[-1].line_number != previous_token.line_number
             )
-        return add_leading_spaces_from_previous_token
+        new_list_item_adjust = True
+        if len(removed_tokens) == 1 and removed_tokens[-1].is_block_quote_start:
+            leading_spaces_newline_count = removed_tokens[-1].leading_spaces.count(
+                "\n"
+            )
+            block_quote_end_line = (
+                leading_spaces_newline_count + removed_tokens[-1].line_number
+            )
+            print(
+                f"block_quote_end_line={block_quote_end_line} = "
+                + f"fg={leading_spaces_newline_count} + "
+                + f"line={removed_tokens[-1].line_number}"
+            )
+            new_list_item_adjust = leading_spaces_newline_count > 1
+            print(f"new_list_item_adjust:{new_list_item_adjust}")
+
+        return (
+                token_stack[-1].line_number != previous_token.line_number
+                and new_list_item_adjust
+            )
 
     # pylint: enable=unused-private-member
 
