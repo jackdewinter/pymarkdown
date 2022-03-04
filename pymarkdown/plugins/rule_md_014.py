@@ -47,9 +47,5 @@ class RuleMd014(RulePlugin):
             self.__in_code_block = False
         elif self.__in_code_block and token.is_text:
             split_token_text = token.token_text.split(ParserHelper.newline_character)
-            are_all_preceded_with_dollar_sign = all(
-                next_line.strip().startswith("$") for next_line in split_token_text
-            )
-
-            if are_all_preceded_with_dollar_sign:
+            if all(next_line.strip().startswith("$") for next_line in split_token_text):
                 self.report_next_token_error(context, token)

@@ -48,7 +48,8 @@ class RuleMd035(RulePlugin):
                     break
         if not is_valid:
             raise ValueError(
-                f"Allowable values are: {RuleMd035.__consistent_style}, '---', '***', or any other horizontal rule text."
+                f"Allowable values are: {RuleMd035.__consistent_style}, "
+                + "'---', '***', or any other horizontal rule text."
             )
 
     def initialize_from_config(self):

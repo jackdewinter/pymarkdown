@@ -4489,7 +4489,6 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_max_ordered_max_block_max_no_bq2_with_li():
     """
     Verify that a nesting of block quote, ordered list, block quote, with
