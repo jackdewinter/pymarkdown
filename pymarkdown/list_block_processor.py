@@ -1659,6 +1659,8 @@ class ListBlockProcessor:
         )
         if len(parser_state.token_stack) <= 2:
             return False
+        if not parser_state.token_stack[-2].is_list:
+            return False
 
         POGGER.debug("parser_state.token_stack[-2]>$", parser_state.token_stack[-2])
         previous_list_start_index = parser_state.token_stack[-2].indent_level
