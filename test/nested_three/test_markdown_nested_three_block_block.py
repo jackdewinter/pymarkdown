@@ -4590,7 +4590,6 @@ def test_nested_three_block_max_block_max_unordered_max_empty():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_max_block_max_unordered_max_empty_with_li():
     """
     Verify that a nesting of block quote, block quote, unordered list,
@@ -4602,15 +4601,16 @@ def test_nested_three_block_max_block_max_unordered_max_empty_with_li():
     source_markdown = """   >    >    +
    >    >    + item"""
     expected_tokens = [
-        "[block-quote(1,4):   :   > \n\n]",
+        "[block-quote(1,4):   :   > ]",
         "[block-quote(1,9)::   >    > \n   >    > ]",
         "[ulist(1,14):+::15:   ]",
         "[BLANK(1,15):]",
+        "[li(2,14):15:   :]",
+        "[para(2,16):]",
+        "[text(2,16):item:]",
+        "[end-para:::True]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
-        "[icode-block(2,5):    :\n    ]",
-        "[text(2,5):+ item\n         + item:         ]",
-        "[end-icode-block:::True]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -5554,7 +5554,6 @@ def test_nested_three_block_max_block_max_ordered_max_empty():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_max_block_max_ordered_max_empty_with_li():
     """
     Verify that a nesting of block quote, block quote, ordered list, and
@@ -5566,15 +5565,16 @@ def test_nested_three_block_max_block_max_ordered_max_empty_with_li():
     source_markdown = """   >    >    1.
    >    >    1. item"""
     expected_tokens = [
-        "[block-quote(1,4):   :   > \n\n]",
+        "[block-quote(1,4):   :   > ]",
         "[block-quote(1,9)::   >    > \n   >    > ]",
         "[olist(1,14):.:1:16:   ]",
         "[BLANK(1,16):]",
+        "[li(2,14):16:   :1]",
+        "[para(2,17):]",
+        "[text(2,17):item:]",
+        "[end-para:::True]",
         "[end-olist:::True]",
         "[end-block-quote:::True]",
-        "[icode-block(2,5):    :\n    ]",
-        "[text(2,5):1. item\n         1. item:         ]",
-        "[end-icode-block:::True]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>

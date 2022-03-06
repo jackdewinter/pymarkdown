@@ -2737,7 +2737,6 @@ def test_nested_three_block_max_ordered_max_unordered_max_empty():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_max_ordered_max_unordered_max_empty_with_li1():
     """
     Verify that a nesting of block quote, ordered list, unordered list, with
@@ -2748,15 +2747,16 @@ def test_nested_three_block_max_ordered_max_unordered_max_empty_with_li1():
     source_markdown = """   >    1.    +
    >    1.      item"""
     expected_tokens = [
-        "[block-quote(1,4):   :   > \n   > \n\n]",
+        "[block-quote(1,4):   :   > \n   > ]",
         "[olist(1,9):.:1:14:   ]",
         "[ulist(1,15):+::16:         ]",
         "[BLANK(1,16):]",
         "[end-ulist:::True]",
-        "[end-olist:::True]",
-        "[icode-block(2,5):    :\n    ]",
-        "[text(2,5):1.      item\n    1.      item:    ]",
+        "[li(2,9):11:   :1]",
+        "[icode-block(2,16):    :]",
+        "[text(2,16):item: ]",
         "[end-icode-block:::True]",
+        "[end-olist:::True]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -2774,7 +2774,7 @@ def test_nested_three_block_max_ordered_max_unordered_max_empty_with_li1():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
@@ -2816,7 +2816,6 @@ def test_nested_three_block_max_ordered_max_unordered_max_empty_with_li2():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_max_ordered_max_unordered_max_empty_with_li3():
     """
     Verify that a nesting of block quote, ordered list, unordered list, with
@@ -2827,15 +2826,18 @@ def test_nested_three_block_max_ordered_max_unordered_max_empty_with_li3():
     source_markdown = """   >    1.    +
    >    1.    + item"""
     expected_tokens = [
-        "[block-quote(1,4):   :   > \n   > \n\n]",
+        "[block-quote(1,4):   :   > \n   > ]",
         "[olist(1,9):.:1:14:   ]",
         "[ulist(1,15):+::16:         ]",
         "[BLANK(1,16):]",
         "[end-ulist:::True]",
+        "[li(2,9):14:   :1]",
+        "[ulist(2,15):+::16:         ]",
+        "[para(2,17):]",
+        "[text(2,17):item:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
         "[end-olist:::True]",
-        "[icode-block(2,5):    :\n    ]",
-        "[text(2,5):1.    + item\n    1.    + item:    ]",
-        "[end-icode-block:::True]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -3540,7 +3542,6 @@ def test_nested_three_block_max_ordered_max_ordered_max_empty():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_max_ordered_max_ordered_max_empty_with_li1():
     """
     Verify that a nesting of block quote, ordered list, ordered list, with
@@ -3551,15 +3552,16 @@ def test_nested_three_block_max_ordered_max_ordered_max_empty_with_li1():
     source_markdown = """   >    1.    1.
    >    1.       item"""
     expected_tokens = [
-        "[block-quote(1,4):   :   > \n   > \n\n]",
+        "[block-quote(1,4):   :   > \n   > ]",
         "[olist(1,9):.:1:14:   ]",
         "[olist(1,15):.:1:17:         ]",
         "[BLANK(1,17):]",
         "[end-olist:::True]",
-        "[end-olist:::True]",
-        "[icode-block(2,5):    :\n    ]",
-        "[text(2,5):1.       item\n    1.       item:    ]",
+        "[li(2,9):11:   :1]",
+        "[icode-block(2,16):    :]",
+        "[text(2,16):item:  ]",
         "[end-icode-block:::True]",
+        "[end-olist:::True]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -3619,7 +3621,6 @@ def test_nested_three_block_max_ordered_max_ordered_max_empty_with_li2():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_max_ordered_max_ordered_max_empty_with_li3():
     """
     Verify that a nesting of block quote, ordered list, ordered list, with
@@ -3630,15 +3631,18 @@ def test_nested_three_block_max_ordered_max_ordered_max_empty_with_li3():
     source_markdown = """   >    1.    1.
    >    1.    1. item"""
     expected_tokens = [
-        "[block-quote(1,4):   :   > \n   > \n\n]",
+        "[block-quote(1,4):   :   > \n   > ]",
         "[olist(1,9):.:1:14:   ]",
         "[olist(1,15):.:1:17:         ]",
         "[BLANK(1,17):]",
         "[end-olist:::True]",
+        "[li(2,9):14:   :1]",
+        "[olist(2,15):.:1:17:         ]",
+        "[para(2,18):]",
+        "[text(2,18):item:]",
+        "[end-para:::True]",
         "[end-olist:::True]",
-        "[icode-block(2,5):    :\n    ]",
-        "[text(2,5):1.    1. item\n    1.    1. item:    ]",
-        "[end-icode-block:::True]",
+        "[end-olist:::True]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -4272,15 +4276,15 @@ def test_nested_three_block_max_ordered_max_block_max_empty_with_li():
     source_markdown = """   >    1.    >
    >    1.    > item"""
     expected_tokens = [
-        "[block-quote(1,4):   :   > \n   > \n\n]",
-        "[olist(1,9):.:1:14:   ]",
+        "[block-quote(1,4):   :   > \n   > ]",
+        "[olist(1,9):.:1:14:   :        ]",
         "[block-quote(1,15)::>]",
         "[BLANK(1,16):]",
         "[end-block-quote:::True]",
+        "[para(2,9):]",
+        "[text(2,9):1.    \a>\a&gt;\a item:]",
+        "[end-para:::True]",
         "[end-olist:::True]",
-        "[icode-block(2,5):    :\n    ]",
-        "[text(2,5):1.    \a>\a&gt;\a item\n    1.    \a>\a&gt;\a item:    ]",
-        "[end-icode-block:::True]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -4581,15 +4585,15 @@ def test_nested_three_block_max_ordered_max_block_max_empty_no_bq2_with_li():
     source_markdown = """   >    1.    >
    >    1.      item"""
     expected_tokens = [
-        "[block-quote(1,4):   :   > \n   > \n\n]",
-        "[olist(1,9):.:1:14:   ]",
+        "[block-quote(1,4):   :   > \n   > ]",
+        "[olist(1,9):.:1:14:   :        ]",
         "[block-quote(1,15)::>]",
         "[BLANK(1,16):]",
         "[end-block-quote:::True]",
+        "[para(2,9):]",
+        "[text(2,9):1.      item:]",
+        "[end-para:::True]",
         "[end-olist:::True]",
-        "[icode-block(2,5):    :\n    ]",
-        "[text(2,5):1.      item\n    1.      item:    ]",
-        "[end-icode-block:::True]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>

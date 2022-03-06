@@ -377,7 +377,7 @@ class ListBlockProcessor:
     @staticmethod
     def __calculate_create_adj_ws(adj_ws, position_marker, parser_state):
         create_adj_ws = adj_ws
-        POGGER.debug("adj_ws=>:$:<", adj_ws)
+        POGGER.debug("adj_ws=>:$:<", create_adj_ws)
         if position_marker.index_number:
             POGGER.debug("adjusting for nested")
             POGGER.debug("afn>>$", parser_state.token_stack)
@@ -1658,6 +1658,8 @@ class ListBlockProcessor:
             "current_start_index>$", current_start_index
         )
         if len(parser_state.token_stack) <= 2:
+            return False
+        if not parser_state.token_stack[-2].is_list:
             return False
 
         POGGER.debug("parser_state.token_stack[-2]>$", parser_state.token_stack[-2])

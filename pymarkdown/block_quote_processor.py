@@ -180,6 +180,7 @@ class BlockQuoteProcessor:
             position_marker.text_to_parse,
             position_marker.index_number,
         )
+        POGGER.debug("adjusted_index_number>>:$:", adjusted_index_number)
 
         POGGER.debug(
             "handle_block_quote_block>>was_link_definition_started>:$:<",
@@ -215,6 +216,7 @@ class BlockQuoteProcessor:
                 extracted_whitespace,
                 container_start_bq_count,
             )
+            POGGER.debug("adjusted_index_number>>:$:", adjusted_index_number)
             POGGER.debug(">>avoid_block_starts>>$", avoid_block_starts)
             POGGER.debug(">>text_removed_by_container>>:$:", text_removed_by_container)
 
@@ -691,6 +693,7 @@ class BlockQuoteProcessor:
             parser_state.token_stack[-1].is_fenced_code_block,
             parser_state.token_stack[-1].is_html_block,
         )
+        POGGER.debug("start_index>>:$:", start_index)
 
         POGGER.debug("token_stack--$", parser_state.token_stack)
         POGGER.debug(">>container_start_bq_count>>$", container_start_bq_count)
@@ -703,6 +706,7 @@ class BlockQuoteProcessor:
         POGGER.debug(">>avoid_block_starts>>$", avoid_block_starts)
 
         if last_block_quote_index != -1:
+            POGGER.debug("start_index>>:$:", start_index)
             (
                 line_to_parse,
                 start_index,
@@ -725,6 +729,7 @@ class BlockQuoteProcessor:
                 leaf_tokens,
                 container_level_tokens,
             )
+            POGGER.debug("start_index>>:$:", start_index)
         else:
             (
                 text_removed_by_container,
