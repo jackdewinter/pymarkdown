@@ -3492,39 +3492,30 @@ class ContainerBlockProcessor:
             assert not new_tokens
             new_tokens = LeafBlockProcessor.parse_atx_headings(
                 parser_state, leaf_block_position_marker, extracted_whitespace
-            )
-            if not new_tokens:
-                new_tokens = LeafBlockProcessor.parse_indented_code_block(
+            ) or LeafBlockProcessor.parse_indented_code_block(
                     parser_state,
                     leaf_block_position_marker,
                     extracted_whitespace,
                     removed_chars_at_start,
                     last_block_quote_index,
                     last_list_start_index,
-                )
-            if not new_tokens:
-                new_tokens = LeafBlockProcessor.parse_setext_headings(
+                ) or LeafBlockProcessor.parse_setext_headings(
                     parser_state,
                     leaf_block_position_marker,
                     extracted_whitespace,
                     block_quote_data,
-                )
-            if not new_tokens:
-                new_tokens = LeafBlockProcessor.parse_thematic_break(
+                ) or LeafBlockProcessor.parse_thematic_break(
                     parser_state,
                     leaf_block_position_marker,
                     extracted_whitespace,
                     block_quote_data,
-                )
-            if not new_tokens:
-                new_tokens = LeafBlockProcessor.parse_paragraph(
+                ) or LeafBlockProcessor.parse_paragraph(
                     parser_state,
                     leaf_block_position_marker,
                     extracted_whitespace,
                     block_quote_data,
                     text_removed_by_container,
                 )
-
         # POGGER.debug(">>leaf--adding>>$", new_tokens)
         pre_tokens.extend(new_tokens)
         # POGGER.debug(">>leaf--added>>$", pre_tokens)
