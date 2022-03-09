@@ -2578,7 +2578,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_max_ordered_max_unordered_max_with_li1():
     """
     Verify that a nesting of block quote, ordered list, unordered list, with
@@ -2591,11 +2590,15 @@ def test_nested_three_block_max_ordered_max_unordered_max_with_li1():
     expected_tokens = [
         "[block-quote(1,4):   :   > \n   > ]",
         "[olist(1,9):.:1:14:   ]",
-        "[ulist(1,15):+::16:         :           ]",
-        "[para(1,17):\n]",
-        "[text(1,17):list\nitem::\n]",
+        "[ulist(1,15):+::16:         ]",
+        "[para(1,17):]",
+        "[text(1,17):list:]",
         "[end-para:::True]",
         "[end-ulist:::True]",
+        "[li(2,9):11:   :1]",
+        "[icode-block(2,16):    :]",
+        "[text(2,16):item: ]",
+        "[end-icode-block:::True]",
         "[end-olist:::True]",
         "[end-block-quote:::True]",
     ]
@@ -2603,9 +2606,12 @@ def test_nested_three_block_max_ordered_max_unordered_max_with_li1():
 <ol>
 <li>
 <ul>
-<li>list
-item</li>
+<li>list</li>
 </ul>
+</li>
+<li>
+<pre><code> item
+</code></pre>
 </li>
 </ol>
 </blockquote>"""

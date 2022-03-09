@@ -212,6 +212,13 @@ class OrderedListStartMarkdownToken(ContainerMarkdownToken):
         """
         return self.__last_new_list_token
 
+    def set_extracted_whitespace(self, new_whitespace):
+        """
+        Set the extracted whitespace for the token.  To be used sparingly.
+        """
+        self.__extracted_whitespace = new_whitespace
+        self.__compose_extra_data_field()
+
 
 # pylint: enable=too-many-instance-attributes
 
@@ -327,6 +334,13 @@ class UnorderedListStartMarkdownToken(ContainerMarkdownToken):
         """
         return self.__last_new_list_token
 
+    def set_extracted_whitespace(self, new_whitespace):
+        """
+        Set the extracted whitespace for the token.  To be used sparingly.
+        """
+        self.__extracted_whitespace = new_whitespace
+        self.__compose_extra_data_field()
+
 
 class BlockQuoteMarkdownToken(ContainerMarkdownToken):
     """
@@ -385,15 +399,18 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
         )
         self.__compose_extra_data_field()
 
-    def remove_last_leading_space(self):
+    def remove_last_leading_space_if_present(self):
         """
         Remove the last leading space and return it.
         """
-        last_separator_index = self.__leading_spaces.rindex("\n")
-        extracted_text = self.__leading_spaces[last_separator_index:]
-        self.__leading_spaces = self.__leading_spaces[:last_separator_index]
-        self.leading_text_index -= 1
-        self.__compose_extra_data_field()
+        if "\n" in self.__leading_spaces:
+            last_separator_index = self.__leading_spaces.rindex("\n")
+            extracted_text = self.__leading_spaces[last_separator_index:]
+            self.__leading_spaces = self.__leading_spaces[:last_separator_index]
+            self.leading_text_index -= 1
+            self.__compose_extra_data_field()
+        else:
+            extracted_text = None
         return extracted_text
 
     def __compose_extra_data_field(self):
