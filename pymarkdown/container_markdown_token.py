@@ -212,6 +212,13 @@ class OrderedListStartMarkdownToken(ContainerMarkdownToken):
         """
         return self.__last_new_list_token
 
+    def set_extracted_whitespace(self, new_whitespace):
+        """
+        Set the extracted whitespace for the token.  To be used sparingly.
+        """
+        self.__extracted_whitespace = new_whitespace
+        self.__compose_extra_data_field()
+
 
 # pylint: enable=too-many-instance-attributes
 
@@ -326,6 +333,13 @@ class UnorderedListStartMarkdownToken(ContainerMarkdownToken):
         Returns the last new-list token associated with this stack token.
         """
         return self.__last_new_list_token
+
+    def set_extracted_whitespace(self, new_whitespace):
+        """
+        Set the extracted whitespace for the token.  To be used sparingly.
+        """
+        self.__extracted_whitespace = new_whitespace
+        self.__compose_extra_data_field()
 
 
 class BlockQuoteMarkdownToken(ContainerMarkdownToken):

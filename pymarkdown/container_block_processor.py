@@ -991,6 +991,7 @@ class ContainerBlockProcessor:
             container_start_bq_count,
             current_container_blocks,
             container_used_indent,
+            container_depth,
         )
         # POGGER.debug("line_to_parse>>$", line_to_parse)
         # POGGER.debug("start_index>>$", start_index)
@@ -1266,6 +1267,7 @@ class ContainerBlockProcessor:
         container_start_bq_count,
         current_container_blocks,
         container_used_indent,
+        container_depth,
     ):
         # POGGER.debug(f"cfcs>extracted_whitespace>:{extracted_whitespace}:")
         # POGGER.debug(f"cfcs>adj_ws>:{adj_ws}:")
@@ -1328,6 +1330,7 @@ class ContainerBlockProcessor:
                 removed_chars_at_start,
                 current_container_blocks,
                 container_level_tokens,
+                container_depth,
             )
             can_continue = bool(not requeue_line_info)
             if not can_continue:
@@ -1359,6 +1362,7 @@ class ContainerBlockProcessor:
                 removed_chars_at_start,
                 current_container_blocks,
                 container_level_tokens,
+                container_depth,
             )
             if requeue_line_info:
                 POGGER.debug(
@@ -1657,6 +1661,7 @@ class ContainerBlockProcessor:
         removed_chars_at_start,
         current_container_blocks,
         container_level_tokens,
+        container_depth,
     ):
         """
         Note: This is one of the more heavily traffic functions in the
@@ -1696,6 +1701,7 @@ class ContainerBlockProcessor:
                 block_quote_data,
                 removed_chars_at_start,
                 current_container_blocks,
+                container_depth,
             )
             # POGGER.debug_with_visible_whitespace("handle_list_block>$", resultant_tokens)
             if requeue_line_info:
@@ -3484,11 +3490,11 @@ class ContainerBlockProcessor:
 
         if not outer_processed:
             assert not new_tokens
-            new_tokens = LeafBlockProcessor.parse_atx_headings(
-                parser_state, leaf_block_position_marker, extracted_whitespace
-            )
-            if not new_tokens:
-                new_tokens = LeafBlockProcessor.parse_indented_code_block(
+            new_tokens = (
+                LeafBlockProcessor.parse_atx_headings(
+                    parser_state, leaf_block_position_marker, extracted_whitespace
+                )
+                or LeafBlockProcessor.parse_indented_code_block(
                     parser_state,
                     leaf_block_position_marker,
                     extracted_whitespace,
@@ -3496,29 +3502,26 @@ class ContainerBlockProcessor:
                     last_block_quote_index,
                     last_list_start_index,
                 )
-            if not new_tokens:
-                new_tokens = LeafBlockProcessor.parse_setext_headings(
+                or LeafBlockProcessor.parse_setext_headings(
                     parser_state,
                     leaf_block_position_marker,
                     extracted_whitespace,
                     block_quote_data,
                 )
-            if not new_tokens:
-                new_tokens = LeafBlockProcessor.parse_thematic_break(
+                or LeafBlockProcessor.parse_thematic_break(
                     parser_state,
                     leaf_block_position_marker,
                     extracted_whitespace,
                     block_quote_data,
                 )
-            if not new_tokens:
-                new_tokens = LeafBlockProcessor.parse_paragraph(
+                or LeafBlockProcessor.parse_paragraph(
                     parser_state,
                     leaf_block_position_marker,
                     extracted_whitespace,
                     block_quote_data,
                     text_removed_by_container,
                 )
-
+            )
         # POGGER.debug(">>leaf--adding>>$", new_tokens)
         pre_tokens.extend(new_tokens)
         # POGGER.debug(">>leaf--added>>$", pre_tokens)
