@@ -2535,7 +2535,7 @@ def test_nested_three_ordered_max_ordered_max_block_max_no_bq1_with_li1():
 
     # Arrange
     source_markdown = """   1.    1.    > list
-   1.          > item"""
+   1.            item"""
     expected_tokens = [
         "[olist(1,4):.:1:9:   ]",
         "[olist(1,10):.:1:15:         ]",
@@ -2547,7 +2547,7 @@ def test_nested_three_ordered_max_ordered_max_block_max_no_bq1_with_li1():
         "[end-olist:::True]",
         "[li(2,4):6:   :1]",
         "[icode-block(2,11):    :]",
-        "[text(2,11):\a>\a&gt;\a item:     ]",
+        "[text(2,11):item:       ]",
         "[end-icode-block:::True]",
         "[end-olist:::True]",
     ]
@@ -2562,7 +2562,7 @@ def test_nested_three_ordered_max_ordered_max_block_max_no_bq1_with_li1():
 </ol>
 </li>
 <li>
-<pre><code>     &gt; item
+<pre><code>       item
 </code></pre>
 </li>
 </ol>"""
@@ -2582,13 +2582,13 @@ def test_nested_three_ordered_max_ordered_max_block_max_no_bq1_with_li2():
 
     # Arrange
     source_markdown = """   1.    1.    > list
-         1.    > item"""
+         1.      item"""
     expected_tokens = [
         "[olist(1,4):.:1:9:   ]",
         "[olist(1,10):.:1:15:         :\n]",
         "[block-quote(1,16):               :               > \n]",
         "[para(1,18):\n         ]",
-        "[text(1,18):list\n1.    \a>\a&gt;\a item::\n]",
+        "[text(1,18):list\n1.      item::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
         "[end-olist:::True]",
@@ -2603,9 +2603,8 @@ def test_nested_three_ordered_max_ordered_max_block_max_no_bq1_with_li2():
 </blockquote>
 </li>
 <li>
-<blockquote>
-<p>item</p>
-</blockquote>
+<pre><code> item
+</code></pre>
 </li>
 </ol>
 </li>
@@ -2625,7 +2624,7 @@ def test_nested_three_ordered_max_ordered_max_block_max_no_bq1_with_li3():
 
     # Arrange
     source_markdown = """   1.    1.    > list
-   1.    1.    > item"""
+   1.    1.      item"""
     expected_tokens = [
         "[olist(1,4):.:1:9:   ]",
         "[olist(1,10):.:1:15:         ]",
@@ -2636,12 +2635,10 @@ def test_nested_three_ordered_max_ordered_max_block_max_no_bq1_with_li3():
         "[end-block-quote:::True]",
         "[end-olist:::True]",
         "[li(2,4):9:   :1]",
-        "[olist(2,10):.:1:15:         ]",
-        "[block-quote(2,16):               :               > ]",
-        "[para(2,18):]",
-        "[text(2,18):item:]",
-        "[end-para:::True]",
-        "[end-block-quote:::True]",
+        "[olist(2,10):.:1:12:         ]",
+        "[icode-block(2,17):    :]",
+        "[text(2,17):item: ]",
+        "[end-icode-block:::True]",
         "[end-olist:::True]",
         "[end-olist:::True]",
     ]
@@ -2658,9 +2655,8 @@ def test_nested_three_ordered_max_ordered_max_block_max_no_bq1_with_li3():
 <li>
 <ol>
 <li>
-<blockquote>
-<p>item</p>
-</blockquote>
+<pre><code> item
+</code></pre>
 </li>
 </ol>
 </li>
