@@ -2078,7 +2078,6 @@ def test_nested_three_ordered_max_block_max_unordered_max_no_bq1_with_li1():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_unordered_max_no_bq1_with_li2():
     """
     Verify that a nesting of ordered list, block quote, unordered list, with
@@ -2091,19 +2090,14 @@ def test_nested_three_ordered_max_block_max_unordered_max_no_bq1_with_li2():
               + item"""
     expected_tokens = [
         "[olist(1,4):.:1:9:   ]",
-        "[block-quote(1,10):         :         > ]",
-        "[ulist(1,15):+::16:   ]",
-        "[para(1,17):]",
-        "[text(1,17):list:]",
+        "[block-quote(1,10):         :         > \n]",
+        "[ulist(1,15):+::16:   :              ]",
+        "[para(1,17):\n]",
+        "[text(1,17):list\n+ item::\n]",
         "[end-para:::True]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
         "[end-olist:::True]",
-        "[ulist(2,15):+::16:              ]",
-        "[para(2,17):]",
-        "[text(2,17):item:]",
-        "[end-para:::True]",
-        "[end-ulist:::True]",
     ]
     expected_gfm = """<ol>
 <li>
@@ -2117,7 +2111,7 @@ def test_nested_three_ordered_max_block_max_unordered_max_no_bq1_with_li2():
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
@@ -2925,7 +2919,6 @@ def test_nested_three_ordered_max_block_max_ordered_max_no_bq1_with_li1():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_ordered_max_no_bq1_with_li2():
     """
     Verify that a nesting of ordered list, block quote, ordered list, with
@@ -2938,17 +2931,13 @@ def test_nested_three_ordered_max_block_max_ordered_max_no_bq1_with_li2():
               1. item"""
     expected_tokens = [
         "[olist(1,4):.:1:9:   ]",
-        "[block-quote(1,10):         :         > ]",
-        "[olist(1,15):.:1:17:   ]",
-        "[para(1,18):]",
-        "[text(1,18):list:]",
+        "[block-quote(1,10):         :         > \n]",
+        "[olist(1,15):.:1:17:   :              ]",
+        "[para(1,18):\n]",
+        "[text(1,18):list\n1. item::\n]",
         "[end-para:::True]",
         "[end-olist:::True]",
         "[end-block-quote:::True]",
-        "[li(2,15):17:   :1]",
-        "[para(2,18):]",
-        "[text(2,18):item:]",
-        "[end-para:::True]",
         "[end-olist:::True]",
     ]
     expected_gfm = """<ol>

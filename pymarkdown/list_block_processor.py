@@ -654,7 +654,7 @@ class ListBlockProcessor:
 
     @staticmethod
     def __list_in_process_update_containers(
-        parser_state, ind, used_indent, was_paragraph_continuation
+        parser_state, ind, used_indent, was_paragraph_continuation, start_index
     ):
         POGGER.debug(">>used_indent>>$<<", used_indent)
         POGGER.debug(">>was_paragraph_continuation>>$<<", was_paragraph_continuation)
@@ -680,28 +680,58 @@ class ListBlockProcessor:
                 parser_state.token_stack[ind].matching_markdown_token,
             )
         else:
-            ind = parser_state.find_last_list_block_on_stack()
-            if ind > 0:
+            need_to_add_leading_spaces = False
+            stack_index = parser_state.find_last_list_block_on_stack()
+            if stack_index > 0:
+                last_container_index = parser_state.find_last_container_on_stack()
+                POGGER.debug("ind=:$:", ind)
+                POGGER.debug("parser_state.token_stack=:$:", parser_state.token_stack)
+                POGGER.debug(
+                    "parser_state.token_stack[ind]=:$:", parser_state.token_stack[ind]
+                )
+                POGGER.debug(
+                    "parser_state.original_line_to_parse=:$:",
+                    parser_state.original_line_to_parse,
+                )
+                POGGER.debug("start_index=:$:", start_index)
+                POGGER.debug("stack_index=:$:", stack_index)
+                consumed_text = parser_state.original_line_to_parse[:start_index]
+                POGGER.debug("consumed_text=:$:", consumed_text)
+                back_index = stack_index
+                while back_index and parser_state.token_stack[back_index].is_list:
+                    back_index -= 1
+                POGGER.debug("back_index=:$:", back_index)
+                need_to_add_leading_spaces = not (
+                    back_index > 0
+                    and consumed_text
+                    and ">" not in consumed_text
+                    and stack_index == last_container_index
+                )
+                POGGER.debug(
+                    "need_to_add_leading_spaces=:$:", need_to_add_leading_spaces
+                )
+
+            if need_to_add_leading_spaces:
                 POGGER.debug(
                     ">>adj_before>>$<<",
-                    parser_state.token_stack[ind].matching_markdown_token,
+                    parser_state.token_stack[stack_index].matching_markdown_token,
                 )
 
                 POGGER.debug(
                     "lip>>last_block_token>>$",
-                    parser_state.token_stack[ind].matching_markdown_token,
+                    parser_state.token_stack[stack_index].matching_markdown_token,
                 )
                 parser_state.token_stack[
-                    ind
+                    stack_index
                 ].matching_markdown_token.add_leading_spaces("")
                 POGGER.debug(
                     "lip>>last_block_token>>$",
-                    parser_state.token_stack[ind].matching_markdown_token,
+                    parser_state.token_stack[stack_index].matching_markdown_token,
                 )
 
                 POGGER.debug(
                     ">>adj_after>>$<<",
-                    parser_state.token_stack[ind].matching_markdown_token,
+                    parser_state.token_stack[stack_index].matching_markdown_token,
                 )
 
     @staticmethod
@@ -798,7 +828,7 @@ class ListBlockProcessor:
                 return [], None, None, requeue_line_info, None
 
         ListBlockProcessor.__list_in_process_update_containers(
-            parser_state, ind, used_indent, was_paragraph_continuation
+            parser_state, ind, used_indent, was_paragraph_continuation, start_index
         )
         return (
             container_level_tokens,
