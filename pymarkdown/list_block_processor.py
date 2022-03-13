@@ -387,28 +387,106 @@ class ListBlockProcessor:
         POGGER.debug("create_adj_ws=$=", create_adj_ws)
         return create_adj_ws
 
+    @staticmethod
+    def __handle_list_with_leading_indent_loop(
+        acceptable_indent_stack_index, parser_state, stack_index, extracted_whitespace
+    ):
+        box_start = 1 if stack_index == 1 else ((stack_index + 1) * 4) + stack_index
+        box_end = (stack_index * 4) + (stack_index - 1)
+
+        is_in_this_box = box_start <= len(extracted_whitespace) + 1 <= box_end
+        can_promote_to_next_box = (stack_index + 1) < len(
+            parser_state.token_stack
+        ) and parser_state.token_stack[stack_index + 1].is_list
+
+        # POGGER.debug("ra>$<", box_start)
+        # POGGER.debug("rb>$<", box_end)
+        # POGGER.debug("is_in_this_box>$<", is_in_this_box)
+        # POGGER.debug("can_promote_to_next_box>$<", can_promote_to_next_box)
+
+        if is_in_this_box or can_promote_to_next_box:
+            acceptable_indent_stack_index = stack_index
+        return acceptable_indent_stack_index
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __handle_list_with_leading_indent(
+        parser_state,
+        container_depth,
+        removed_chars_at_start,
+        extracted_whitespace,
+        indent_already_processed,
+        adj_ws,
+    ):
+
+        indent_already_used, forced_container_whitespace = 0, None
+        is_in_root_list = (
+            not container_depth
+            and parser_state.token_stack
+            and len(parser_state.token_stack) >= 2
+            and parser_state.token_stack[1].is_list
+        )
+
+        # POGGER.debug("container_depth>$<", container_depth)
+        # POGGER.debug("removed_chars_at_start>$<", removed_chars_at_start)
+        # POGGER.debug("is_in_root_list>$<", is_in_root_list)
+        if (
+            not removed_chars_at_start
+            and is_in_root_list
+            and adj_ws == extracted_whitespace
+            and len(extracted_whitespace) >= 4
+            and not indent_already_processed
+        ):
+
+            # POGGER.debug("extracted_whitespace>$<", extracted_whitespace)
+            # POGGER.debug("parser_state.token_stack>$<", parser_state.token_stack)
+            stack_index = 1
+            acceptable_indent_stack_index = 0
+            while (
+                stack_index < len(parser_state.token_stack)
+                and parser_state.token_stack[stack_index].is_list
+            ):
+                acceptable_indent_stack_index = (
+                    ListBlockProcessor.__handle_list_with_leading_indent_loop(
+                        acceptable_indent_stack_index,
+                        parser_state,
+                        stack_index,
+                        extracted_whitespace,
+                    )
+                )
+                stack_index += 1
+
+            # POGGER.debug("acceptable_indent_stack_index>$<", acceptable_indent_stack_index)
+            if acceptable_indent_stack_index:
+                indent_already_used = parser_state.token_stack[
+                    acceptable_indent_stack_index
+                ].matching_markdown_token.indent_level
+                forced_container_whitespace = extracted_whitespace[:indent_already_used]
+                extracted_whitespace = extracted_whitespace[indent_already_used:]
+                adj_ws = adj_ws[indent_already_used:]
+                indent_already_processed = True
+        return (
+            indent_already_used,
+            forced_container_whitespace,
+            extracted_whitespace,
+            adj_ws,
+            indent_already_processed,
+        )
+
+    # pylint: enable=too-many-arguments
+
     # pylint: disable=too-many-locals, too-many-arguments
     @staticmethod
-    def handle_list_block(
-        is_ulist,
+    def __handle_list_block_init(
         parser_state,
         position_marker,
         extracted_whitespace,
         adj_ws,
-        block_quote_data,
-        removed_chars_at_start,
-        current_container_blocks,
+        is_ulist,
         container_depth,
+        removed_chars_at_start,
+        indent_already_processed,
     ):
-        """
-        Handle the processing of a ulist block.
-        """
-        (
-            did_process,
-            requeue_line_info,
-            container_level_tokens,
-            adjusted_text_to_parse,
-        ) = (False, None, [], position_marker.text_to_parse)
 
         POGGER.debug(
             "hlb>>parser_state.nested_list_start>$", parser_state.nested_list_start
@@ -422,8 +500,22 @@ class ListBlockProcessor:
             position_marker.text_to_parse[position_marker.index_number :],
         )
 
-        is_start_fn, create_token_fn = ListBlockProcessor.__get_list_functions(is_ulist)
+        (
+            indent_already_used,
+            forced_container_whitespace,
+            extracted_whitespace,
+            adj_ws,
+            indent_already_processed,
+        ) = ListBlockProcessor.__handle_list_with_leading_indent(
+            parser_state,
+            container_depth,
+            removed_chars_at_start,
+            extracted_whitespace,
+            indent_already_processed,
+            adj_ws,
+        )
 
+        is_start_fn, create_token_fn = ListBlockProcessor.__get_list_functions(is_ulist)
         (
             started_ulist,
             end_of_ulist_start_index,
@@ -437,10 +529,83 @@ class ListBlockProcessor:
             False,
             adj_ws=adj_ws,
         )
+        return (
+            create_token_fn,
+            started_ulist,
+            end_of_ulist_start_index,
+            index,
+            number_of_digits,
+            indent_already_used,
+            forced_container_whitespace,
+            extracted_whitespace,
+            adj_ws,
+            indent_already_processed,
+        )
+
+    # pylint: enable=too-many-locals, too-many-arguments
+
+    # pylint: disable=too-many-locals, too-many-arguments
+    @staticmethod
+    def handle_list_block(
+        is_ulist,
+        parser_state,
+        position_marker,
+        extracted_whitespace,
+        adj_ws,
+        block_quote_data,
+        removed_chars_at_start,
+        current_container_blocks,
+        container_depth,
+        indent_already_processed,
+    ):
+        """
+        Handle the processing of a ulist block.
+        """
+        (
+            did_process,
+            requeue_line_info,
+            container_level_tokens,
+            adjusted_text_to_parse,
+            old_extracted_whitespace,
+            old_indent_already_processed,
+        ) = (
+            False,
+            None,
+            [],
+            position_marker.text_to_parse,
+            extracted_whitespace,
+            indent_already_processed,
+        )
+
+        (
+            create_token_fn,
+            started_ulist,
+            end_of_ulist_start_index,
+            index,
+            number_of_digits,
+            indent_already_used,
+            forced_container_whitespace,
+            extracted_whitespace,
+            adj_ws,
+            indent_already_processed,
+        ) = ListBlockProcessor.__handle_list_block_init(
+            parser_state,
+            position_marker,
+            extracted_whitespace,
+            adj_ws,
+            is_ulist,
+            container_depth,
+            removed_chars_at_start,
+            indent_already_processed,
+        )
         POGGER.debug("clt>>list-start=$", started_ulist)
         if started_ulist:
+
+            # if not j:
+            #     parser_state.token_stack[j].matching_markdown_token.add_leading_spaces(dfg)
+
             POGGER.debug("clt>>ulist-start")
-            removed_chars_at_start = 0
+            removed_chars_at_start = indent_already_used
             (
                 indent_level,
                 remaining_whitespace,
@@ -469,6 +634,11 @@ class ListBlockProcessor:
             )
             POGGER.debug("extracted_whitespace=$=", extracted_whitespace)
             if indent_level >= 0:
+                POGGER.debug("indent_level=$=", indent_level)
+                POGGER.debug("ws_before_marker=$=", ws_before_marker)
+                POGGER.debug(
+                    "forced_container_whitespace=$=", forced_container_whitespace
+                )
                 create_adj_ws = ListBlockProcessor.__calculate_create_adj_ws(
                     adj_ws, position_marker, parser_state
                 )
@@ -491,8 +661,12 @@ class ListBlockProcessor:
                     container_depth,
                     adj_ws=create_adj_ws,
                     alt_adj_ws=adj_ws,
+                    forced_container_whitespace=forced_container_whitespace,
                 )
                 did_process = True
+        else:
+            extracted_whitespace = old_extracted_whitespace
+            indent_already_processed = old_indent_already_processed
         return (
             did_process,
             end_of_ulist_start_index,
@@ -501,6 +675,8 @@ class ListBlockProcessor:
             removed_chars_at_start,
             block_quote_data,
             requeue_line_info,
+            indent_already_processed,
+            extracted_whitespace,
         )
         # pylint: enable=too-many-locals, too-many-arguments
 
@@ -543,6 +719,7 @@ class ListBlockProcessor:
         container_depth,
         adj_ws=None,
         alt_adj_ws=None,
+        forced_container_whitespace=None,
     ):
         found_block_quote_before_list = (
             ListBlockProcessor.__find_block_quote_before_list(parser_state)
@@ -550,7 +727,18 @@ class ListBlockProcessor:
         if found_block_quote_before_list and adj_ws is None and alt_adj_ws is not None:
             adj_ws = alt_adj_ws
 
-        whitespace_to_add = extracted_whitespace if adj_ws is None else adj_ws
+        POGGER.debug("ws_before_marker=$=", ws_before_marker)
+        POGGER.debug("forced_container_whitespace=$=", forced_container_whitespace)
+        if forced_container_whitespace:
+            whitespace_to_add = forced_container_whitespace
+            if alt_adj_ws:
+                whitespace_to_add += alt_adj_ws
+            ws_before_marker += len(forced_container_whitespace)
+            indent_level += len(forced_container_whitespace)
+            alt_adj_ws += forced_container_whitespace
+        else:
+            whitespace_to_add = extracted_whitespace if adj_ws is None else adj_ws
+        POGGER.debug("ws_before_marker=$=", ws_before_marker)
         POGGER.debug_with_visible_whitespace("whitespace_to_add>$:", whitespace_to_add)
         POGGER.debug_with_visible_whitespace("adj_ws>$<", adj_ws)
         POGGER.debug_with_visible_whitespace("alt_adj_ws>$<", alt_adj_ws)

@@ -2222,7 +2222,6 @@ def test_nested_three_unordered_max_unordered_max_block_max_with_li1():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_max_unordered_max_block_max_with_li2():
     """
     Verify that a nesting of unordered list, unordered list, block quote, with
@@ -2234,10 +2233,16 @@ def test_nested_three_unordered_max_unordered_max_block_max_with_li2():
         +    > item"""
     expected_tokens = [
         "[ulist(1,4):+::8:   ]",
-        "[ulist(1,9):+::13:        :\n]",
-        "[block-quote(1,14):             :             > \n]",
-        "[para(1,16):\n        ]",
-        "[text(1,16):list\n+    \a>\a&gt;\a item::\n]",
+        "[ulist(1,9):+::13:        :]",
+        "[block-quote(1,14):             :             > ]",
+        "[para(1,16):]",
+        "[text(1,16):list:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[li(2,9):13:        :]",
+        "[block-quote(2,14):             :             > ]",
+        "[para(2,16):]",
+        "[text(2,16):item:]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
         "[end-ulist:::True]",
@@ -2580,7 +2585,6 @@ def test_nested_three_unordered_max_unordered_max_block_max_no_bq1_with_li1():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_max_unordered_max_block_max_no_bq1_with_li2():
     """
     Verify that a nesting of unordered list, unordered list, block quote, with
@@ -2593,12 +2597,16 @@ def test_nested_three_unordered_max_unordered_max_block_max_no_bq1_with_li2():
         +      item"""
     expected_tokens = [
         "[ulist(1,4):+::8:   ]",
-        "[ulist(1,9):+::13:        :\n]",
-        "[block-quote(1,14):             :             > \n]",
-        "[para(1,16):\n        ]",
-        "[text(1,16):list\n+      item::\n]",
+        "[ulist(1,9):+::13:        ]",
+        "[block-quote(1,14):             :             > ]",
+        "[para(1,16):]",
+        "[text(1,16):list:]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
+        "[li(2,9):10:        :]",
+        "[icode-block(2,15):    :]",
+        "[text(2,15):item: ]",
+        "[end-icode-block:::True]",
         "[end-ulist:::True]",
         "[end-ulist:::True]",
     ]
@@ -2619,7 +2627,7 @@ def test_nested_three_unordered_max_unordered_max_block_max_no_bq1_with_li2():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
