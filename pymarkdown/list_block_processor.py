@@ -404,7 +404,7 @@ class ListBlockProcessor:
         # POGGER.debug("is_in_this_box>$<", is_in_this_box)
         # POGGER.debug("can_promote_to_next_box>$<", can_promote_to_next_box)
 
-        if is_in_this_box or (not is_in_this_box and can_promote_to_next_box):
+        if is_in_this_box or can_promote_to_next_box:
             acceptable_indent_stack_index = stack_index
         return acceptable_indent_stack_index
 
@@ -461,9 +461,7 @@ class ListBlockProcessor:
                 indent_already_used = parser_state.token_stack[
                     acceptable_indent_stack_index
                 ].matching_markdown_token.indent_level
-                forced_container_whitespace = extracted_whitespace[
-                    0:indent_already_used
-                ]
+                forced_container_whitespace = extracted_whitespace[:indent_already_used]
                 extracted_whitespace = extracted_whitespace[indent_already_used:]
                 adj_ws = adj_ws[indent_already_used:]
                 indent_already_processed = True
