@@ -2062,7 +2062,7 @@ class TransformToMarkdown:
 
         prefix_text = ""
         print(
-            f">>rehydrate_text>>{ParserHelper.make_value_visible(current_token.token_text)}"
+            f">>rehydrate_text>>:{ParserHelper.make_value_visible(current_token.token_text)}:<<"
         )
         # main_text = ParserHelper.resolve_noops_from_text(current_token.token_text)
         main_text = ParserHelper.remove_all_from_text(
@@ -2072,13 +2072,13 @@ class TransformToMarkdown:
         print(f"<<rehydrate_text>>{ParserHelper.make_value_visible(main_text)}")
 
         print(
-            f">>leading_whitespace>>{ParserHelper.make_value_visible(current_token.extracted_whitespace)}"
+            f">>leading_whitespace>>:{ParserHelper.make_value_visible(current_token.extracted_whitespace)}:<<"
         )
         leading_whitespace = ParserHelper.remove_all_from_text(
             current_token.extracted_whitespace
         )
         print(
-            f"<<leading_whitespace>>{ParserHelper.make_value_visible(leading_whitespace)}"
+            f"<<leading_whitespace>>:{ParserHelper.make_value_visible(leading_whitespace)}:<<"
         )
 
         extra_line = ""

@@ -178,6 +178,7 @@ class ContainerBlockProcessor:
                 force_leaf_token_parse,
                 did_blank,
                 was_other_paragraph_continuation,
+                extracted_whitespace,
             ) = ContainerBlockProcessor.__handle_non_leaf_block(
                 parser_state,
                 position_marker,
@@ -367,6 +368,8 @@ class ContainerBlockProcessor:
                 was_paragraph_continuation,
                 did_blank,
                 requeue_line_info,
+                indent_already_processed,
+                extracted_whitespace,
             ) = ContainerBlockProcessor.__handle_normal_containers(
                 parser_state,
                 position_marker,
@@ -379,6 +382,7 @@ class ContainerBlockProcessor:
                 container_depth,
                 parser_properties,
                 container_used_indent,
+                indent_already_processed,
             )
             # POGGER.debug("was_paragraph_continuation>>$", was_paragraph_continuation)
         # POGGER.debug("line_to_parse>>$", line_to_parse)
@@ -403,6 +407,7 @@ class ContainerBlockProcessor:
             force_leaf_token_parse,
             did_blank,
             was_other_paragraph_continuation,
+            extracted_whitespace,
         )
 
     # pylint: enable=too-many-arguments, too-many-locals
@@ -965,8 +970,8 @@ class ContainerBlockProcessor:
         container_depth,
         parser_properties,
         container_used_indent,
+        indent_already_processed,
     ):
-
         (
             end_container_indices,
             did_process,
@@ -981,6 +986,8 @@ class ContainerBlockProcessor:
             text_removed_by_container,
             avoid_block_starts,
             requeue_line_info,
+            indent_already_processed,
+            extracted_whitespace,
         ) = ContainerBlockProcessor.__check_for_container_starts(
             parser_state,
             position_marker,
@@ -992,6 +999,7 @@ class ContainerBlockProcessor:
             current_container_blocks,
             container_used_indent,
             container_depth,
+            indent_already_processed,
         )
         # POGGER.debug("line_to_parse>>$", line_to_parse)
         # POGGER.debug("start_index>>$", start_index)
@@ -1014,6 +1022,8 @@ class ContainerBlockProcessor:
                 False,
                 did_blank,
                 requeue_line_info,
+                indent_already_processed,
+                extracted_whitespace,
             )
 
         # POGGER.debug(">>text_removed_by_container>>:$:", text_removed_by_container)
@@ -1089,6 +1099,8 @@ class ContainerBlockProcessor:
             was_paragraph_continuation,
             did_blank,
             requeue_line_info,
+            indent_already_processed,
+            extracted_whitespace,
         )
 
     # pylint: enable=too-many-arguments, too-many-locals
@@ -1268,6 +1280,7 @@ class ContainerBlockProcessor:
         current_container_blocks,
         container_used_indent,
         container_depth,
+        indent_already_processed,
     ):
         # POGGER.debug(f"cfcs>extracted_whitespace>:{extracted_whitespace}:")
         # POGGER.debug(f"cfcs>adj_ws>:{adj_ws}:")
@@ -1317,6 +1330,8 @@ class ContainerBlockProcessor:
                 removed_chars_at_start,
                 block_quote_data,
                 requeue_line_info,
+                indent_already_processed,
+                extracted_whitespace,
             ) = ContainerBlockProcessor.__get_list_start_index(
                 position_marker,
                 line_to_parse,
@@ -1331,6 +1346,7 @@ class ContainerBlockProcessor:
                 current_container_blocks,
                 container_level_tokens,
                 container_depth,
+                indent_already_processed,
             )
             can_continue = bool(not requeue_line_info)
             if not can_continue:
@@ -1349,6 +1365,8 @@ class ContainerBlockProcessor:
                 removed_chars_at_start,
                 block_quote_data,
                 requeue_line_info,
+                indent_already_processed,
+                extracted_whitespace,
             ) = ContainerBlockProcessor.__get_list_start_index(
                 position_marker,
                 line_to_parse,
@@ -1363,6 +1381,7 @@ class ContainerBlockProcessor:
                 current_container_blocks,
                 container_level_tokens,
                 container_depth,
+                indent_already_processed,
             )
             if requeue_line_info:
                 POGGER.debug(
@@ -1383,6 +1402,8 @@ class ContainerBlockProcessor:
             text_removed_by_container,
             avoid_block_starts,
             requeue_line_info,
+            indent_already_processed,
+            extracted_whitespace,
         )
 
     # pylint: enable=too-many-arguments, too-many-locals
@@ -1662,6 +1683,7 @@ class ContainerBlockProcessor:
         current_container_blocks,
         container_level_tokens,
         container_depth,
+        indent_already_processed,
     ):
         """
         Note: This is one of the more heavily traffic functions in the
@@ -1692,6 +1714,8 @@ class ContainerBlockProcessor:
                 removed_chars_at_start,
                 block_quote_data,
                 requeue_line_info,
+                indent_already_processed,
+                extracted_whitespace,
             ) = ListBlockProcessor.handle_list_block(
                 is_ulist,
                 parser_state,
@@ -1702,6 +1726,7 @@ class ContainerBlockProcessor:
                 removed_chars_at_start,
                 current_container_blocks,
                 container_depth,
+                indent_already_processed,
             )
             # POGGER.debug_with_visible_whitespace("handle_list_block>$", resultant_tokens)
             if requeue_line_info:
@@ -1712,6 +1737,8 @@ class ContainerBlockProcessor:
                     None,
                     block_quote_data,
                     requeue_line_info,
+                    indent_already_processed,
+                    extracted_whitespace,
                 )
             container_level_tokens.extend(resultant_tokens)
         else:
@@ -1737,6 +1764,8 @@ class ContainerBlockProcessor:
             removed_chars_at_start,
             block_quote_data,
             None,
+            indent_already_processed,
+            extracted_whitespace,
         )
 
     # pylint: enable=too-many-locals, too-many-arguments
