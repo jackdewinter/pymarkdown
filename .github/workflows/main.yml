@@ -30,6 +30,7 @@ jobs:
           pip install pipenv==2022.1.8
       - name: Sync With Repository
         run: |
+          pipenv lock
           pipenv sync
           pipenv graph
       - name: Execute Tests
