@@ -29,7 +29,10 @@ jobs:
         run: |
           pip install pipenv==2022.1.8
       - name: Sync With Repository
-        run: pipenv sync
+        run: |
+          pipenv lock
+          pipenv sync
+          pipenv graph
       - name: Execute Tests
         run: pipenv run pytest --cov-fail-under=90 --cov --cov-branch --cov-report xml:report/coverage.xml --cov-report html:report/coverage
       - name: Archive coverage artifacts
@@ -50,7 +53,7 @@ jobs:
     strategy:
       matrix:
         python: [3.8]
-        platform: [windows-latest]
+        platform: [ubuntu-latest]
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout Repository
@@ -63,12 +66,20 @@ jobs:
         run: |
           pip install pipenv==2022.1.8
       - name: Sync With Repository
-        run: pipenv sync
+        run: |
+          pipenv lock
+          pipenv sync
+          pipenv graph
       - name: Execute Flake8
         run: pipenv run flake8 --exclude dist,build
       - name: Execute PyLint on Source
-        run: pipenv run pylint --rcfile=setup.cfg ./pymarkdown ./pymarkdown/extensions ./pymarkdown/extension_manager ./pymarkdown/plugins ./pymarkdown/plugin_manager
+        run: |
+          pipenv run pylint --rcfile=${{github.workspace}}/setup.cfg ${{github.workspace}}/pymarkdown
+          pipenv run pylint --rcfile=${{github.workspace}}/setup.cfg ${{github.workspace}}/pymarkdown/extensions
+          pipenv run pylint --rcfile=${{github.workspace}}/setup.cfg ${{github.workspace}}/pymarkdown/extension_manager
+          pipenv run pylint --rcfile=${{github.workspace}}/setup.cfg ${{github.workspace}}/pymarkdown/plugins
+          pipenv run pylint --rcfile=${{github.workspace}}/setup.cfg ${{github.workspace}}/pymarkdown/plugin_manager
       - name: Execute PyLint on Tests
-        run: pipenv run pylint --rcfile=setup.cfg ./test
+        run: pipenv run pylint --rcfile=${{github.workspace}}/setup.cfg ${{github.workspace}}/test
       - name: Execute PyMarkdown on Current Docs
-        run: pipenv run python main.py --config ./clean.json scan . ./docs
+        run: pipenv run python ${{github.workspace}}/main.py --config ${{github.workspace}}/clean.json scan ${{github.workspace}} ${{github.workspace}}/docs
