@@ -220,7 +220,7 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 140,
+        "too-many-arguments": 139,
         "too-many-locals": 43,
         "too-few-public-methods": 7,
         "no-self-argument": 1,

@@ -713,9 +713,7 @@ class InlineProcessor:
 
     @staticmethod
     def __calculate_full_deltas(current_token, para_owner, delta_line, repeat_count):
-        if newline_count := ParserHelper.count_newlines_in_text(
-            current_token.ex_label
-        ):
+        if newline_count := ParserHelper.count_newlines_in_text(current_token.ex_label):
             POGGER.debug(">>ex_label")
             delta_line += newline_count
             if para_owner:

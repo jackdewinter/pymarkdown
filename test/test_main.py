@@ -775,7 +775,7 @@ def test_markdown_with_dash_dash_log_level_info_with_file():
             expected_output, expected_error, expected_return_code
         )
 
-        with open(log_file_name) as file:
+        with open(log_file_name, encoding="utf-8") as file:
             file_data = file.read().replace("\n", "")
 
         # Info messages

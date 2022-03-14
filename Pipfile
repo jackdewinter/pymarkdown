@@ -9,7 +9,7 @@ verify_ssl = true
 black = "*"
 isort = "*"
 flake8 = "*"
-pylint = "*"
+pylint = "==2.12.2"
 pytest-cov = "==2.10.1"
 pytest-console-scripts = "*"
 pytest-timeout = "*"
