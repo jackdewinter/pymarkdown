@@ -53,7 +53,7 @@ jobs:
     strategy:
       matrix:
         python: [3.8]
-        platform: [windows-latest]
+        platform: [ubuntu-latest]
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout Repository
@@ -66,7 +66,10 @@ jobs:
         run: |
           pip install pipenv==2022.1.8
       - name: Sync With Repository
-        run: pipenv sync
+        run: |
+          pipenv lock
+          pipenv sync
+          pipenv graph
       - name: Execute Flake8
         run: pipenv run flake8 --exclude dist,build
       - name: Execute PyLint on Source
