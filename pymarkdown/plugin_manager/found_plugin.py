@@ -52,8 +52,7 @@ class FoundPlugin:
             plugin_configuration,
         )
         for next_name in plugin_name.lower().split(","):
-            next_name = next_name.strip()
-            if next_name:
+            if next_name := next_name.strip():
                 self.__plugin_names.append(next_name)
 
     # pylint: enable=too-many-arguments

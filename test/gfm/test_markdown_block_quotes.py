@@ -490,7 +490,7 @@ def test_block_quotes_212c():
 
 
 @pytest.mark.gfm
-def test_block_quotes_213():
+def test_block_quotes_213x():
     """
     Test case 213:  then the block quote ends after the first line:
     """
@@ -522,7 +522,7 @@ def test_block_quotes_213():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm

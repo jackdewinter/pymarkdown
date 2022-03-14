@@ -2,7 +2,7 @@
 Test the top level transform functions.
 """
 
-from .utils import act_and_assert
+from test.utils import act_and_assert
 
 
 def test_transform_with_debug_on():
