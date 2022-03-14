@@ -6,6 +6,7 @@ import logging
 import os
 import re
 import string
+from typing import Dict
 
 from pymarkdown.bad_tokenization_error import BadTokenizationError
 from pymarkdown.html_helper import HtmlHelper
@@ -50,7 +51,7 @@ class InlineHelper:
     __angle_bracket_end = ">"
     code_span_bounds = "`"
     backslash_character = "\\"
-    __entity_map = {}
+    __entity_map: Dict[str, str] = {}
     character_reference_start_character = "&"
     __numeric_character_reference_start_character = "#"
     __hex_character_reference_start_character = "xX"

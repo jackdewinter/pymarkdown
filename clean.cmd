@@ -73,6 +73,17 @@ if ERRORLEVEL 1 (
 	goto error_end
 )
 
+echo {Executing mypy static analyzer on Python source code.}
+pipenv run mypy %PYTHON_MODULE_NAME% stubs
+if ERRORLEVEL 1 (
+	echo.
+	echo {Executing mypy static analyzer on Python source code failed.}
+	goto error_end
+)
+rem pipenv run stubgen --output stubs -p application_properties
+rem pipenv run stubgen --output stubs -p columnar
+rem pipenv run stubgen --output stubs -p wcwidth
+
 echo {Executing pylint utils analyzer on Python source code to verify suppressions and document them.}
 pipenv run python ..\pylint_utils\main.py --config setup.cfg --recurse -r publish\pylint_suppression.json  pymarkdown
 if ERRORLEVEL 1 (

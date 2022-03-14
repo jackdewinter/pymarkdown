@@ -2,6 +2,7 @@
 Inline processing
 """
 import logging
+from typing import Any, Dict, Optional
 
 from pymarkdown.constants import Constants
 from pymarkdown.emphasis_helper import EmphasisHelper
@@ -27,8 +28,8 @@ class InlineProcessor:
         f"{EmphasisHelper.inline_emphasis}{LinkHelper.link_label_start}"
         + f"{LinkHelper.link_label_end}"
     )
-    __inline_character_handlers = {}
-    __inline_simple_character_handlers = {}
+    __inline_character_handlers: Dict[str, Optional[Any]] = {}
+    __inline_simple_character_handlers: Dict[str, Optional[Any]] = {}
 
     """
     Class to provide helper functions for parsing html.

@@ -4,6 +4,7 @@ Link helper
 import logging
 import urllib
 import urllib.parse
+from typing import Any, Dict, Optional
 
 from pymarkdown.constants import Constants
 from pymarkdown.emphasis_helper import EmphasisHelper
@@ -24,7 +25,7 @@ class LinkHelper:
     Class to helper with the parsing of links.
     """
 
-    __link_definitions = {}
+    __link_definitions: Dict[str, Optional[Any]] = {}
     __link_safe_characters = "/#:?=()*!$'+,;@"
 
     __special_link_destination_characters = "%&"

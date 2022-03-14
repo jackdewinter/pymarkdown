@@ -29,6 +29,7 @@ project-summarizer = "==0.5.0"
 pyroma = "*"
 flake8-bugbear = "*"
 flake8-bandit = "*"
+mypy = "*"
 
 [requires]
 python_version = "3.8"

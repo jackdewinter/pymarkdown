@@ -27,11 +27,13 @@
             "too-few-public-methods": 1,
             "too-many-arguments": 1
         },
+        "pymarkdown/extension_manager/__init__.py": {},
         "pymarkdown/extension_manager/extension_impl.py": {
             "too-many-instance-attributes": 1,
             "too-many-arguments": 1
         },
         "pymarkdown/extension_manager/extension_manager.py": {},
+        "pymarkdown/extensions/__init__.py": {},
         "pymarkdown/extensions/disallowed_raw_html.py": {
             "too-few-public-methods": 1
         },
@@ -70,8 +72,7 @@
             "too-many-locals": 6
         },
         "pymarkdown/inline_request.py": {
-            "too-many-instance-attributes": 1,
-            "too-many-arguments": 1
+            "too-many-instance-attributes": 1
         },
         "pymarkdown/inline_response.py": {
             "too-many-instance-attributes": 1
@@ -133,6 +134,7 @@
         "pymarkdown/plugin_manager/rule_plugin.py": {
             "too-many-arguments": 1
         },
+        "pymarkdown/plugins/__init__.py": {},
         "pymarkdown/plugins/plugin_one.py": {},
         "pymarkdown/plugins/rule_md_001.py": {},
         "pymarkdown/plugins/rule_md_002.py": {},
@@ -217,7 +219,7 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 134,
+        "too-many-arguments": 133,
         "too-many-locals": 40,
         "too-few-public-methods": 7,
         "no-self-argument": 1,
