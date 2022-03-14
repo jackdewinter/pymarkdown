@@ -29,7 +29,9 @@ jobs:
         run: |
           pip install pipenv==2022.1.8
       - name: Sync With Repository
-        run: pipenv sync
+        run: |
+          pipenv sync
+          pipenv graph
       - name: Execute Tests
         run: pipenv run pytest --cov-fail-under=90 --cov --cov-branch --cov-report xml:report/coverage.xml --cov-report html:report/coverage
       - name: Archive coverage artifacts
