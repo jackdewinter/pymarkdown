@@ -1,8 +1,11 @@
 """
 Module to provide for an element that can be added to the stack.
 """
+from typing import Any, List, Optional
+
 from pymarkdown.markdown_token import EndMarkdownToken
 from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.position_marker import PositionMarker
 
 
 class StackToken:
@@ -20,21 +23,26 @@ class StackToken:
     _stack_paragraph = "para"
     _stack_link_definition = "linkdef"
 
-    def __init__(self, type_name, matching_markdown_token=None, extra_data=None):
+    def __init__(
+        self,
+        type_name: str,
+        matching_markdown_token: Optional[Any] = None,
+        extra_data: Optional[Any] = None,
+    ) -> None:
         self.__type_name, self.__extra_data, self.__matching_markdown_token = (
             type_name,
             extra_data,
             matching_markdown_token,
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
         add_extra = f":{self.extra_data}" if self.extra_data else ""
         return f"StackToken({self.type_name}{add_extra})"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.__str__()
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any) -> bool:
         """
         Overrides the default implementation
         """
@@ -45,35 +53,40 @@ class StackToken:
         )
 
     @property
-    def type_name(self):
+    def type_name(self) -> str:
         """
         Returns the type name associated with this stack token.
         """
         return self.__type_name
 
     @property
-    def extra_data(self):
+    def extra_data(self) -> Optional[Any]:
         """
         Returns the extra data associated with this stack token.
         """
         return self.__extra_data
 
     @property
-    def matching_markdown_token(self):
+    def matching_markdown_token(self) -> Optional[Any]:
         """
         Returns the matching markdown associated with this stack token.
         """
         return self.__matching_markdown_token
 
-    def reset_matching_markdown_token(self, new_matching_markdown_token):
+    def reset_matching_markdown_token(
+        self, new_matching_markdown_token: Optional[Any]
+    ) -> None:
         """
         Reset the matching markdown token.  To be used only when rewinding.
         """
         self.__matching_markdown_token = new_matching_markdown_token
 
     def generate_close_markdown_token_from_stack_token(
-        self, extracted_whitespace=None, extra_end_data=None, was_forced=False
-    ):
+        self,
+        extracted_whitespace: Optional[str] = None,
+        extra_end_data: Optional[Any] = None,
+        was_forced: bool = False,
+    ) -> EndMarkdownToken:
         """
         Generate the token emitted to close off the current stack token
         """
@@ -90,77 +103,77 @@ class StackToken:
         )
 
     @property
-    def is_document(self):
+    def is_document(self) -> bool:
         """
         Is this stack token a document token?
         """
         return self.type_name == self._stack_base_document
 
     @property
-    def is_unordered_list(self):
+    def is_unordered_list(self) -> bool:
         """
         Is this stack token the unordered list token?
         """
         return self.type_name == self._stack_unordered_list
 
     @property
-    def is_ordered_list(self):
+    def is_ordered_list(self) -> bool:
         """
         Is this stack token the ordered list token?
         """
         return self.type_name == self._stack_ordered_list
 
     @property
-    def is_list(self):
+    def is_list(self) -> bool:
         """
         Is this stack token one of the list tokens?
         """
         return self.is_ordered_list or self.is_unordered_list
 
     @property
-    def is_html_block(self):
+    def is_html_block(self) -> bool:
         """
         Is this stack token a html block token?
         """
         return self.type_name == self._stack_html_block
 
     @property
-    def is_code_block(self):
+    def is_code_block(self) -> bool:
         """
         Is this stack token a fenced code block or indented code block token?
         """
         return self.is_fenced_code_block or self.is_indented_code_block
 
     @property
-    def is_fenced_code_block(self):
+    def is_fenced_code_block(self) -> bool:
         """
         Is this stack token a fenced code block token?
         """
         return self.type_name == self._stack_fenced_code
 
     @property
-    def is_indented_code_block(self):
+    def is_indented_code_block(self) -> bool:
         """
         Is this stack token an indented code block token?
         """
         return self.type_name == self._stack_indented_code
 
     @property
-    def is_block_quote(self):
+    def is_block_quote(self) -> bool:
         """
         Is this stack token a block quote token?
         """
         return self.type_name == self._stack_block_quote
 
     @property
-    def is_paragraph(self):
+    def is_paragraph(self) -> bool:
         """
         Is this stack token a paragraph token?
         """
         return self.type_name == self._stack_paragraph
 
     @property
-    def was_link_definition_started(self):
+    def was_link_definition_started(self) -> bool:
         """
         Is this stack token a link definition started token?
         """
@@ -172,7 +185,7 @@ class DocumentStackToken(StackToken):
     Class to provide for a stack token at the root.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         StackToken.__init__(self, StackToken._stack_base_document)
 
 
@@ -181,7 +194,7 @@ class ParagraphStackToken(StackToken):
     Class to provide for a stack token for a paragraph.
     """
 
-    def __init__(self, matching_markdown_token):
+    def __init__(self, matching_markdown_token: Optional[Any]) -> None:
         StackToken.__init__(
             self,
             StackToken._stack_paragraph,
@@ -194,7 +207,7 @@ class BlockQuoteStackToken(StackToken):
     Class to provide for a stack token for a block quote.
     """
 
-    def __init__(self, matching_markdown_token):
+    def __init__(self, matching_markdown_token: Optional[Any]) -> None:
         StackToken.__init__(
             self,
             StackToken._stack_block_quote,
@@ -207,7 +220,7 @@ class IndentedCodeBlockStackToken(StackToken):
     Class to provide for a stack token for an indented code block.
     """
 
-    def __init__(self, matching_markdown_token):
+    def __init__(self, matching_markdown_token: Optional[Any]) -> None:
         StackToken.__init__(
             self,
             StackToken._stack_indented_code,
@@ -222,11 +235,11 @@ class FencedCodeBlockStackToken(StackToken):
 
     def __init__(
         self,
-        code_fence_character,
-        fence_character_count,
-        whitespace_start_count,
-        matching_markdown_token,
-    ):
+        code_fence_character: str,
+        fence_character_count: int,
+        whitespace_start_count: int,
+        matching_markdown_token: Optional[Any],
+    ) -> None:
         (
             self.__code_fence_character,
             self.__fence_character_count,
@@ -246,21 +259,21 @@ class FencedCodeBlockStackToken(StackToken):
         )
 
     @property
-    def code_fence_character(self):
+    def code_fence_character(self) -> str:
         """
         Returns the fence character associated with this stack token.
         """
         return self.__code_fence_character
 
     @property
-    def fence_character_count(self):
+    def fence_character_count(self) -> int:
         """
         Returns the fence character count associated with this stack token.
         """
         return self.__fence_character_count
 
     @property
-    def whitespace_start_count(self):
+    def whitespace_start_count(self) -> int:
         """
         Returns the count of whitespaces preceding this stack token.
         """
@@ -275,14 +288,14 @@ class ListStackToken(StackToken):
     # pylint: disable=too-many-arguments
     def __init__(
         self,
-        type_name,
-        indent_level,
-        list_character,
-        ws_before_marker,
-        ws_after_marker,
-        start_index,
-        matching_markdown_token,
-    ):
+        type_name: str,
+        indent_level: int,
+        list_character: str,
+        ws_before_marker: int,
+        ws_after_marker: int,
+        start_index: int,
+        matching_markdown_token: Optional[Any],
+    ) -> None:
         (
             self.__indent_level,
             self.__list_character,
@@ -316,48 +329,48 @@ class ListStackToken(StackToken):
 
     # pylint: enable=too-many-arguments
     @property
-    def indent_level(self):
+    def indent_level(self) -> int:
         """
         Returns the indent level associated with this stack token.
         """
         return self.__indent_level
 
     @property
-    def list_character(self):
+    def list_character(self) -> str:
         """
         Returns the list character associated with this stack token.
         """
         return self.__list_character
 
     @property
-    def ws_before_marker(self):
+    def ws_before_marker(self) -> int:
         """
         Returns the whitespace occurring before this stack token.
         """
         return self.__ws_before_marker
 
     @property
-    def ws_after_marker(self):
+    def ws_after_marker(self) -> int:
         """
         Returns the whitespace occurring after this stack token.
         """
         return self.__ws_after_marker
 
     @property
-    def start_index(self):
+    def start_index(self) -> int:
         """
         Returns the start index for this stack token.
         """
         return self.__start_index
 
     @property
-    def last_new_list_token(self):
+    def last_new_list_token(self) -> Optional[Any]:
         """
         Returns the last new-list token associated with this stack token.
         """
         return self.__last_new_list_token
 
-    def set_last_new_list_token(self, new_list_token):
+    def set_last_new_list_token(self, new_list_token: Optional[Any]) -> None:
         """
         Set the last new-list token associated with this stack token.
         """
@@ -372,13 +385,13 @@ class OrderedListStackToken(ListStackToken):
     # pylint: disable=too-many-arguments
     def __init__(
         self,
-        indent_level,
-        list_character,
-        ws_before_marker,
-        ws_after_marker,
-        start_index,
-        matching_markdown_token,
-    ):
+        indent_level: int,
+        list_character: str,
+        ws_before_marker: int,
+        ws_after_marker: int,
+        start_index: int,
+        matching_markdown_token: Optional[Any],
+    ) -> None:
         ListStackToken.__init__(
             self,
             StackToken._stack_ordered_list,
@@ -401,13 +414,13 @@ class UnorderedListStackToken(ListStackToken):
     # pylint: disable=too-many-arguments
     def __init__(
         self,
-        indent_level,
-        list_character,
-        ws_before_marker,
-        ws_after_marker,
-        start_index,
-        matching_markdown_token,
-    ):
+        indent_level: int,
+        list_character: str,
+        ws_before_marker: int,
+        ws_after_marker: int,
+        start_index: int,
+        matching_markdown_token: Optional[Any],
+    ) -> None:
         ListStackToken.__init__(
             self,
             StackToken._stack_unordered_list,
@@ -427,9 +440,11 @@ class HtmlBlockStackToken(StackToken):
     Class to provide for a stack token for a html block.
     """
 
-    def __init__(self, html_block_type, matching_markdown_token):
+    def __init__(
+        self, html_block_type: str, matching_markdown_token: Optional[Any]
+    ) -> None:
         self.__html_block_type = html_block_type
-        extra_data = str(html_block_type)
+        extra_data = html_block_type
         StackToken.__init__(
             self,
             StackToken._stack_html_block,
@@ -438,7 +453,7 @@ class HtmlBlockStackToken(StackToken):
         )
 
     @property
-    def html_block_type(self):
+    def html_block_type(self) -> str:
         """
         Returns the html block type associated with this stack token.
         """
@@ -451,11 +466,11 @@ class LinkDefinitionStackToken(StackToken):
     Class to provide for a stack token for a possible link definition.
     """
 
-    def __init__(self, extracted_whitespace, position_marker):
+    def __init__(
+        self, extracted_whitespace: Optional[str], position_marker: PositionMarker
+    ) -> None:
         (
             self.__extracted_whitespace,
-            self.__continuation_lines,
-            self.__unmodified_lines,
             self.__start_position_marker,
             self.original_stack_depth,
             self.original_document_depth,
@@ -465,8 +480,6 @@ class LinkDefinitionStackToken(StackToken):
             self.copy_of_token_stack,
         ) = (
             extracted_whitespace,
-            [],
-            [],
             position_marker,
             None,
             None,
@@ -475,43 +488,45 @@ class LinkDefinitionStackToken(StackToken):
             None,
             None,
         )
+        self.__continuation_lines: List[str] = []
+        self.__unmodified_lines: List[str] = []
         StackToken.__init__(self, StackToken._stack_link_definition)
 
     @property
-    def extracted_whitespace(self):
+    def extracted_whitespace(self) -> Optional[str]:
         """
         Returns the extracted whitespace associated with this stack token.
         """
         return self.__extracted_whitespace
 
     @property
-    def continuation_lines(self):
+    def continuation_lines(self) -> List[str]:
         """
         Returns the continuation lines associated with this stack token.
         """
         return self.__continuation_lines
 
     @property
-    def unmodified_lines(self):
+    def unmodified_lines(self) -> List[str]:
         """
         Returns the unmodified continuation lines associated with this stack token.
         """
         return self.__unmodified_lines
 
     @property
-    def start_position_marker(self):
+    def start_position_marker(self) -> PositionMarker:
         """
         Returns the start position associated with this stack token.
         """
         return self.__start_position_marker
 
-    def add_continuation_line(self, new_line):
+    def add_continuation_line(self, new_line: str) -> None:
         """
         Add the line to the collection of lines to keep as "continuations".
         """
         self.__continuation_lines.append(new_line)
 
-    def add_unmodified_line(self, new_line):
+    def add_unmodified_line(self, new_line: str) -> None:
         """
         Add the line to the collection of lines to keep as "umodified line".
         These are the same as the continuation_lines values, just with the exact
@@ -519,7 +534,7 @@ class LinkDefinitionStackToken(StackToken):
         """
         self.__unmodified_lines.append(new_line)
 
-    def get_joined_lines(self, join_suffix):
+    def get_joined_lines(self, join_suffix: str) -> str:
         """
         Grab the continuation lines as a single line.
         """

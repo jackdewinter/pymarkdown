@@ -5,7 +5,7 @@ as if it was run from the console.
 import pymarkdown
 
 
-def main():
+def main() -> None:
     """
     Main entry point.  Exposed in this manner so that the setup
     entry_points configuration has something to execute.

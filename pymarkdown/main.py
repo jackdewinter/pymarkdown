@@ -8,6 +8,7 @@ import os
 import runpy
 import sys
 import traceback
+from typing import List, Optional, Set, Tuple
 
 from application_properties import (
     ApplicationProperties,
@@ -41,13 +42,13 @@ class PyMarkdownLint:
         "DEBUG": logging.DEBUG,
     }
 
-    def __init__(self):
+    def __init__(self) -> None:
         (
             self.__version_number,
             self.__show_stack_trace,
-            self.__tokenizer,
             self.default_log_level,
-        ) = (PyMarkdownLint.__get_semantic_version(), False, None, "CRITICAL")
+        ) = (PyMarkdownLint.__get_semantic_version(), False, "CRITICAL")
+        self.__tokenizer: Optional[TokenizedMarkdown] = None
 
         self.__properties, self.__plugins, self.__extensions = (
             ApplicationProperties(),
@@ -56,17 +57,17 @@ class PyMarkdownLint:
         )
 
     @staticmethod
-    def __get_semantic_version():
+    def __get_semantic_version() -> str:
         file_path = __file__
         assert os.path.isabs(file_path)
         file_path = file_path.replace(os.sep, "/")
         last_index = file_path.rindex("/")
         file_path = f"{file_path[: last_index + 1]}version.py"
         version_meta = runpy.run_path(file_path)
-        return version_meta["__version__"]
+        return str(version_meta["__version__"])
 
     @staticmethod
-    def log_level_type(argument):
+    def log_level_type(argument: str) -> str:
         """
         Function to help argparse limit the valid log levels.
         """
@@ -74,7 +75,7 @@ class PyMarkdownLint:
             return argument
         raise ValueError(f"Value '{argument}' is not a valid log level.")
 
-    def __parse_arguments(self):
+    def __parse_arguments(self) -> argparse.Namespace:
         parser = argparse.ArgumentParser(description="Lint any found Markdown files.")
 
         parser.add_argument(
@@ -205,13 +206,13 @@ class PyMarkdownLint:
         return parse_arguments
 
     @classmethod
-    def __is_file_eligible_to_scan(cls, path_to_test):
+    def __is_file_eligible_to_scan(cls, path_to_test: str) -> bool:
         """
         Determine if the presented path is one that we want to scan.
         """
         return path_to_test.endswith(".md")
 
-    def __scan_file(self, args, next_file):
+    def __scan_file(self, args: argparse.Namespace, next_file: str) -> None:
         """
         Scan a given file and call the plugin manager for any significant events.
         """
@@ -224,6 +225,7 @@ class PyMarkdownLint:
             source_provider = (
                 None if args.x_test_scan_fault else FileSourceProvider(next_file)
             )
+            assert self.__tokenizer
             actual_tokens = self.__tokenizer.transform_from_provider(source_provider)
 
             if actual_tokens and actual_tokens[-1].is_pragma:
@@ -254,7 +256,9 @@ class PyMarkdownLint:
             context.report_on_triggered_rules()
             raise
 
-    def __process_next_path(self, next_path, files_to_parse, recurse_directories):
+    def __process_next_path(
+        self, next_path: str, files_to_parse: Set[str], recurse_directories: bool
+    ) -> bool:
 
         did_find_any = False
         POGGER.info("Determining files to scan for path '$'.", next_path)
@@ -288,8 +292,8 @@ class PyMarkdownLint:
         return did_find_any
 
     def __process_next_path_directory(
-        self, next_path, files_to_parse, recurse_directories
-    ):
+        self, next_path: str, files_to_parse: Set[str], recurse_directories: bool
+    ) -> None:
         POGGER.debug("Provided path '$' is a directory. Walking directory.", next_path)
         normalized_next_path = next_path.replace("\\", "/")
         for root, _, files in os.walk(next_path):
@@ -306,9 +310,12 @@ class PyMarkdownLint:
                 if self.__is_file_eligible_to_scan(rooted_file_path):
                     files_to_parse.add(rooted_file_path)
 
-    def __determine_files_to_scan(self, eligible_paths, recurse_directories):
+    def __determine_files_to_scan(
+        self, eligible_paths: List[str], recurse_directories: bool
+    ) -> Tuple[List[str], bool]:
 
-        did_error_scanning_files, files_to_parse = False, set()
+        did_error_scanning_files = False
+        files_to_parse: Set[str] = set()
         for next_path in eligible_paths:
             if "*" in next_path or "?" in next_path:
                 globbed_paths = glob.glob(next_path)
@@ -330,12 +337,12 @@ class PyMarkdownLint:
                 did_error_scanning_files = True
                 break
 
-        files_to_parse = sorted(files_to_parse)
-        POGGER.info("Number of files found: $", len(files_to_parse))
-        return files_to_parse, did_error_scanning_files
+        sorted_files_to_parse = sorted(files_to_parse)
+        POGGER.info("Number of files found: $", len(sorted_files_to_parse))
+        return sorted_files_to_parse, did_error_scanning_files
 
     @classmethod
-    def __handle_list_files(cls, files_to_scan):
+    def __handle_list_files(cls, files_to_scan: List[str]) -> int:
 
         if files_to_scan:
             print(ParserHelper.newline_character.join(files_to_scan))
@@ -344,7 +351,7 @@ class PyMarkdownLint:
         return 1
 
     # pylint: disable=broad-except
-    def __apply_configuration_to_plugins(self):
+    def __apply_configuration_to_plugins(self) -> None:
 
         try:
             self.__plugins.apply_configuration(self.__properties)
@@ -357,7 +364,7 @@ class PyMarkdownLint:
 
     # pylint: enable=broad-except
 
-    def __initialize_parser(self, args):
+    def __initialize_parser(self, args: argparse.Namespace) -> None:
 
         resource_path = "fredo" if args.x_test_init_fault else None
         try:
@@ -370,7 +377,9 @@ class PyMarkdownLint:
             )
             self.__handle_error(formatted_error, this_exception)
 
-    def __initialize_plugin_manager(self, args, plugin_dir):
+    def __initialize_plugin_manager(
+        self, args: argparse.Namespace, plugin_dir: str
+    ) -> None:
         """
         Make sure all plugins are ready before being initialized.
         """
@@ -390,7 +399,7 @@ class PyMarkdownLint:
             )
             self.__handle_error(formatted_error, this_exception)
 
-    def __handle_error(self, formatted_error, thrown_error):
+    def __handle_error(self, formatted_error: str, thrown_error: Exception) -> None:
 
         show_error = self.__show_stack_trace or not isinstance(thrown_error, ValueError)
         LOGGER.warning(formatted_error, exc_info=show_error)
@@ -400,12 +409,12 @@ class PyMarkdownLint:
             traceback.print_exc(file=sys.stderr)
         sys.exit(1)
 
-    def __handle_scan_error(self, next_file, this_exception):
+    def __handle_scan_error(self, next_file: str, this_exception: Exception) -> None:
 
         formatted_error = f"{type(this_exception).__name__} encountered while scanning '{next_file}':\n{this_exception}"
         self.__handle_error(formatted_error, this_exception)
 
-    def __set_initial_state(self, args):
+    def __set_initial_state(self, args: argparse.Namespace) -> None:
 
         self.__show_stack_trace = args.show_stack_trace
         base_logger = logging.getLogger()
@@ -421,7 +430,7 @@ class PyMarkdownLint:
         if args.set_configuration:
             self.__properties.set_manual_property(args.set_configuration)
 
-    def __initialize_strict_mode(self, args):
+    def __initialize_strict_mode(self, args: argparse.Namespace) -> None:
         effective_strict_configuration = args.strict_configuration
         if not effective_strict_configuration:
             effective_strict_configuration = self.__properties.get_boolean_property(
@@ -431,7 +440,9 @@ class PyMarkdownLint:
         if effective_strict_configuration:
             self.__properties.enable_strict_mode()
 
-    def __initialize_logging(self, args):
+    def __initialize_logging(
+        self, args: argparse.Namespace
+    ) -> Optional[logging.FileHandler]:
 
         self.__show_stack_trace = args.show_stack_trace
         if not self.__show_stack_trace:
@@ -468,7 +479,7 @@ class PyMarkdownLint:
         ParserLogger.sync_on_next_call()
         return new_handler
 
-    def __initialize_plugins(self, args):
+    def __initialize_plugins(self, args: argparse.Namespace) -> None:
         try:
             plugin_dir = os.path.dirname(os.path.realpath(__file__))
             plugin_dir = os.path.join(plugin_dir, "plugins")
@@ -482,7 +493,7 @@ class PyMarkdownLint:
             self.__handle_error(formatted_error, this_exception)
 
     # pylint: disable=broad-except
-    def __initialize_extensions(self, args):
+    def __initialize_extensions(self, args: argparse.Namespace) -> None:
         try:
             self.__extensions.initialize(
                 args,
@@ -505,7 +516,7 @@ class PyMarkdownLint:
 
     # pylint: enable=broad-except
 
-    def __handle_plugins_and_extensions(self, args):
+    def __handle_plugins_and_extensions(self, args: argparse.Namespace) -> None:
         self.__initialize_plugins(args)
         self.__initialize_extensions(args)
 
@@ -514,12 +525,14 @@ class PyMarkdownLint:
         if args.primary_subparser == ExtensionManager.argparse_subparser_name():
             sys.exit(self.__extensions.handle_argparse_subparser(args))
 
-    def __handle_main_list_files(self, args, files_to_scan):
+    def __handle_main_list_files(
+        self, args: argparse.Namespace, files_to_scan: List[str]
+    ) -> None:
         if args.list_files:
             POGGER.info("Sending list of files that would have been scanned to stdout.")
             sys.exit(self.__handle_list_files(files_to_scan))
 
-    def main(self):
+    def main(self) -> None:
         """
         Main entrance point.
         """
