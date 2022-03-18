@@ -83,7 +83,7 @@ class PluginManager:
         plugin_files = self.__find_eligible_plugins_in_directory(directory_to_search)
         self.__load_plugins(directory_to_search, plugin_files)
 
-        all_additional_paths = list([] if not additional_paths else additional_paths)
+        all_additional_paths = list(additional_paths or [])
         if more_paths := properties.get_string_property("plugins.additional_paths"):
             all_additional_paths.extend(more_paths.split(","))
 
