@@ -7,15 +7,21 @@ import logging
 import os
 import re
 import sys
+from typing import Any, Dict, List, Optional, Pattern, Set, Tuple
 
-from application_properties import ApplicationPropertiesFacade
+from application_properties import ApplicationProperties, ApplicationPropertiesFacade
 from columnar import columnar
 
 from pymarkdown.extensions.pragma_token import PragmaExtension
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.bad_plugin_error import BadPluginError
 from pymarkdown.plugin_manager.found_plugin import FoundPlugin
-from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
+from pymarkdown.plugin_manager.plugin_scan_context import (
+    PluginScanContext,
+    PluginScanFailure,
+)
+from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 LOGGER = logging.getLogger(__name__)
 
@@ -30,38 +36,40 @@ class PluginManager:
 
     __plugin_prefix = "plugins"
     __root_subparser_name = "pm_subcommand"
-    __argparse_subparser = None
+    __argparse_subparser: Optional[argparse.ArgumentParser] = None
     __id_regex = re.compile("^[a-z]{2,3}[0-9]{3,3}$")
     __name_regex = re.compile("^[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$")
     __filter_regex = re.compile("^[a-zA-Z0-9-]+$")
     __version_regex = re.compile("^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$")
 
-    def __init__(self):
+    def __init__(self) -> None:
         (
-            self.__registered_plugins,
-            self.__enabled_plugins,
-            self.__enabled_plugins_for_starting_new_file,
-            self.__enabled_plugins_for_next_token,
-            self.__enabled_plugins_for_next_line,
-            self.__enabled_plugins_for_completed_file,
-            self.__loaded_classes,
             self.number_of_scan_failures,
             self.number_of_pragma_failures,
             self.__show_stack_trace,
-            self.__document_pragmas,
-            self.__all_ids,
-        ) = (None, None, None, None, None, None, None, None, None, False, None, None)
+        ) = (0, 0, False)
+        self.__loaded_classes: List[Tuple[RulePlugin, str]] = []
+
+        self.__document_pragmas: Dict[int, Set[str]] = {}
+
+        self.__registered_plugins: List[FoundPlugin] = []
+        self.__enabled_plugins: List[FoundPlugin] = []
+        self.__enabled_plugins_for_starting_new_file: List[FoundPlugin] = []
+        self.__enabled_plugins_for_next_token: List[FoundPlugin] = []
+        self.__enabled_plugins_for_next_line: List[FoundPlugin] = []
+        self.__enabled_plugins_for_completed_file: List[FoundPlugin] = []
+        self.__all_ids: Dict[str, FoundPlugin] = {}
 
     # pylint: disable=too-many-arguments
     def initialize(
         self,
-        directory_to_search,
-        additional_paths,
-        enable_rules_from_command_line,
-        disable_rules_from_command_line,
-        properties,
-        show_stack_trace,
-    ):
+        directory_to_search: str,
+        additional_paths: List[str],
+        enable_rules_from_command_line: str,
+        disable_rules_from_command_line: str,
+        properties: ApplicationProperties,
+        show_stack_trace: bool,
+    ) -> None:
         """
         Initializes the manager by scanning for plugins, loading them, and registering them.
         """
@@ -75,8 +83,7 @@ class PluginManager:
         plugin_files = self.__find_eligible_plugins_in_directory(directory_to_search)
         self.__load_plugins(directory_to_search, plugin_files)
 
-        all_additional_paths = []
-        all_additional_paths.extend([] if not additional_paths else additional_paths)
+        all_additional_paths = list([] if not additional_paths else additional_paths)
         if more_paths := properties.get_string_property("plugins.additional_paths"):
             all_additional_paths.extend(more_paths.split(","))
 
@@ -105,14 +112,14 @@ class PluginManager:
     # pylint: enable=too-many-arguments
 
     @staticmethod
-    def argparse_subparser_name():
+    def argparse_subparser_name() -> str:
         """
         Gets the name of the subparser used to handle these plugins.
         """
         return "plugins"
 
     @staticmethod
-    def __list_filter_type(argument):
+    def __list_filter_type(argument: str) -> str:
         test_argument = argument.replace("*", "").replace("?", "")
         if PluginManager.__filter_regex.match(test_argument):
             return argument
@@ -121,7 +128,7 @@ class PluginManager:
         )
 
     @staticmethod
-    def __info_filter_type(argument):
+    def __info_filter_type(argument: str) -> str:
         if PluginManager.__id_regex.match(argument) or PluginManager.__name_regex.match(
             argument
         ):
@@ -131,7 +138,7 @@ class PluginManager:
         )
 
     @staticmethod
-    def add_argparse_subparser(subparsers):
+    def add_argparse_subparser(subparsers: argparse._SubParsersAction) -> None:
         """
         Populate the argparse tree to allow for plugin support.
         """
@@ -171,10 +178,16 @@ class PluginManager:
             help="an id",
         )
 
-    def __add_row_for_next_plugin(self, next_plugin_id, args, show_rows, list_re):
+    def __add_row_for_next_plugin(
+        self,
+        next_plugin_id: str,
+        args: argparse.Namespace,
+        show_rows: List[List[str]],
+        list_re: Optional[Pattern[str]],
+    ) -> None:
         # if next_plugin_id.startswith("md9"):
         #     continue
-        next_plugin_list = []
+        next_plugin_list: List[FoundPlugin] = []
         for next_plugin in self.__registered_plugins:
             if next_plugin.plugin_id == next_plugin_id:
                 next_plugin_list.append(next_plugin)
@@ -183,14 +196,14 @@ class PluginManager:
         if next_plugin.plugin_version != "0.0.0" or args.show_all:
             self.__show_row_if_matches(list_re, next_plugin_id, next_plugin, show_rows)
 
-    def __handle_argparse_subparser_list(self, args):
+    def __handle_argparse_subparser_list(self, args: argparse.Namespace) -> None:
         list_re = None
         if args.list_filter:
             list_re = re.compile(
                 "^" + args.list_filter.replace("*", ".*").replace("?", ".") + "$"
             )
 
-        show_rows = []
+        show_rows: List[List[str]] = []
         ids = self.all_plugin_ids
         ids.sort()
         for next_plugin_id in ids:
@@ -209,13 +222,19 @@ class PluginManager:
                 f"No plugin rule identifiers matches the pattern '{args.list_filter}'."
             )
 
-    def __show_row_if_matches(self, list_re, next_plugin_id, next_plugin, show_rows):
+    def __show_row_if_matches(
+        self,
+        list_re: Optional[Pattern[str]],
+        next_plugin_id: str,
+        next_plugin: FoundPlugin,
+        show_rows: List[List[str]],
+    ) -> None:
         does_match = True
         if list_re:
-            does_match = list_re.match(next_plugin_id)
+            does_match = list_re.match(next_plugin_id) is not None
             if not does_match:
                 for next_name in next_plugin.plugin_names:
-                    does_match = list_re.match(next_name)
+                    does_match = list_re.match(next_name) is not None
                     if does_match:
                         break
         if does_match:
@@ -230,26 +249,28 @@ class PluginManager:
             show_rows.append(display_row)
 
     @classmethod
-    def __print_columnar_data(cls, headers, show_rows):
+    def __print_columnar_data(
+        cls, headers: List[str], show_rows: List[List[str]]
+    ) -> None:
         table = columnar(show_rows, headers, no_borders=True)
         split_rows = table.split(ParserHelper.newline_character)
         new_rows = [next_row.rstrip() for next_row in split_rows]
         print(ParserHelper.newline_character.join(new_rows))
 
-    def __handle_argparse_subparser_info(self, args):
-        found_plugin = list(
+    def __handle_argparse_subparser_info(self, args: argparse.Namespace) -> int:
+        matching_plugins: List[FoundPlugin] = list(
             filter(
                 lambda x: args.info_filter in x.plugin_identifiers,
                 self.__registered_plugins,
             )
         )
-        if not found_plugin:
+        if not matching_plugins:
             print(
                 f"Unable to find a plugin with an id or name of '{args.info_filter}'."
             )
             return 1
 
-        found_plugin = found_plugin[0]
+        found_plugin = matching_plugins[0]
         show_rows = [
             ["Id", found_plugin.plugin_id],
             ["Name(s)", ",".join(found_plugin.plugin_names)],
@@ -266,7 +287,7 @@ class PluginManager:
         self.__print_columnar_data(headers, show_rows)
         return 0
 
-    def handle_argparse_subparser(self, args):
+    def handle_argparse_subparser(self, args: argparse.Namespace) -> int:
         """
         Handle the parsing for this subparser.
         """
@@ -278,42 +299,41 @@ class PluginManager:
         elif subparser_value == "info":
             return_code = self.__handle_argparse_subparser_info(args)
         else:
+            assert PluginManager.__argparse_subparser
             PluginManager.__argparse_subparser.print_help()
             sys.exit(2)
         return return_code
 
-    # pylint: disable=too-many-arguments
-    def log_scan_failure(
-        self,
-        scan_file,
-        line_number,
-        column_number,
-        rule_id,
-        rule_name,
-        rule_description,
-        extra_error_information=None,
-    ):
+    def log_scan_failure(self, scan_failure: PluginScanFailure) -> None:
         """
         Log the scan failure in the appropriate format.
         """
 
-        if self.__document_pragmas and line_number in self.__document_pragmas:
-            id_set = self.__document_pragmas[line_number]
-            rule_id = rule_id.lower()
+        if (
+            self.__document_pragmas
+            and scan_failure.line_number in self.__document_pragmas
+        ):
+            id_set = self.__document_pragmas[scan_failure.line_number]
+            rule_id = scan_failure.rule_id.lower()
             if rule_id in id_set:
                 return
 
-        extra_info = f" [{extra_error_information}]" if extra_error_information else ""
+        extra_info = (
+            f" [{scan_failure.extra_error_information}]"
+            if scan_failure.extra_error_information
+            else ""
+        )
 
-        rule_id = rule_id.upper()
+        rule_id = scan_failure.rule_id.upper()
         print(
-            f"{scan_file}:{line_number}:{column_number}: {rule_id}: {rule_description}{extra_info} ({rule_name})"
+            f"{scan_failure.scan_file}:{scan_failure.line_number}:{scan_failure.column_number}: "
+            + f"{rule_id}: {scan_failure.rule_description}{extra_info} ({scan_failure.rule_name})"
         )
         self.number_of_scan_failures += 1
 
-    # pylint: enable=too-many-arguments
-
-    def log_pragma_failure(self, scan_file, line_number, pragma_error):
+    def log_pragma_failure(
+        self, scan_file: str, line_number: int, pragma_error: str
+    ) -> None:
         """
         Log the pragma failure in the appropriate format.
         """
@@ -321,12 +341,12 @@ class PluginManager:
         print(f"{scan_file}:{line_number}:1: INLINE: {pragma_error}")
         self.number_of_pragma_failures += 1
 
-    def compile_pragmas(self, scan_file, pragma_lines):
+    def compile_pragmas(self, scan_file: str, pragma_lines: Dict[int, str]) -> None:
         """
         Go through the list of extracted pragmas and compile them.
         """
 
-        for next_line_number in pragma_lines.keys():
+        for next_line_number in pragma_lines:
             PragmaExtension.compile_single_pragma(
                 scan_file,
                 next_line_number,
@@ -337,7 +357,9 @@ class PluginManager:
             )
 
     @classmethod
-    def __find_eligible_plugins_in_directory(cls, directory_to_search):
+    def __find_eligible_plugins_in_directory(
+        cls, directory_to_search: str
+    ) -> List[str]:
         """
         Given a directory to search, scan for eligible modules to load later.
         """
@@ -349,13 +371,13 @@ class PluginManager:
         ]
 
     @classmethod
-    def __snake_to_camel(cls, word):
+    def __snake_to_camel(cls, word: str) -> str:
 
         return "".join(x.capitalize() or "_" for x in word.split("_"))
 
     def __attempt_to_load_plugin(
-        self, next_plugin_module, plugin_class_name, next_plugin_file
-    ):
+        self, next_plugin_module: str, plugin_class_name: str, next_plugin_file: str
+    ) -> None:
         """
         Attempt to cleanly load the specified plugin.
         """
@@ -380,7 +402,7 @@ class PluginManager:
             ) from this_exception
         self.__loaded_classes.append((plugin_class_instance, next_plugin_file))
 
-    def __load_plugins(self, directory_to_search, plugin_files):
+    def __load_plugins(self, directory_to_search: str, plugin_files: List[str]) -> None:
         """
         Given an array of discovered modules, load them into the global namespace.
         """
@@ -397,11 +419,11 @@ class PluginManager:
 
     def __determine_if_plugin_enabled(
         self,
-        plugin_object,
-        command_line_enabled_rules,
-        command_line_disabled_rules,
-        properties,
-    ):
+        plugin_object: FoundPlugin,
+        command_line_enabled_rules: Set[str],
+        command_line_disabled_rules: Set[str],
+        properties: ApplicationProperties,
+    ) -> bool:
         """
         Given the enable and disable rule values, evaluate the enabled or disabled
         state of the plugin in proper order.
@@ -443,8 +465,11 @@ class PluginManager:
 
     @classmethod
     def __handle_command_line_settings(
-        cls, plugin_object, command_line_disabled_rules, command_line_enabled_rules
-    ):
+        cls,
+        plugin_object: FoundPlugin,
+        command_line_disabled_rules: Set[str],
+        command_line_enabled_rules: Set[str],
+    ) -> Optional[bool]:
         new_value = None
         if command_line_disabled_rules:
             LOGGER.debug(
@@ -465,7 +490,9 @@ class PluginManager:
         return new_value
 
     @classmethod
-    def __verify_string_field(cls, plugin_instance, field_name, field_value):
+    def __verify_string_field(
+        cls, plugin_instance: RulePlugin, field_name: str, field_value: Any
+    ):
         """
         Verify that the detail field is a valid string.
         """
@@ -482,7 +509,9 @@ class PluginManager:
             )
 
     @classmethod
-    def __verify_boolean_field(cls, plugin_instance, field_name, field_value):
+    def __verify_boolean_field(
+        cls, plugin_instance: RulePlugin, field_name: str, field_value: Any
+    ):
         """
         Verify that the detail field is a valid boolean.
         """
@@ -493,7 +522,9 @@ class PluginManager:
             )
 
     @classmethod
-    def __verify_integer_field(cls, plugin_instance, field_name, field_value):
+    def __verify_integer_field(
+        cls, plugin_instance: RulePlugin, field_name: str, field_value: Any
+    ):
         """
         Verify that the detail field is a valid integer.
         """
@@ -503,7 +534,10 @@ class PluginManager:
                 class_name=type(plugin_instance).__name__, field_name=field_name
             )
 
-    def __get_plugin_details(self, plugin_instance, instance_file_name):
+    # pylint: disable=too-many-locals
+    def __get_plugin_details(
+        self, plugin_instance: RulePlugin, instance_file_name: str
+    ) -> FoundPlugin:
         """
         Query the plugin for details and verify that they are reasonable.
         """
@@ -553,9 +587,19 @@ class PluginManager:
                 plugin_instance, "plugin_configuration", plugin_configuration
             )
 
+        plugin_id = plugin_id.strip().lower()
+
+        plugin_names = []
+        for next_name in plugin_name.lower().split(","):
+            if next_name := next_name.strip():
+                plugin_names.append(next_name)
+
+        plugin_identifiers = [plugin_id]
+        plugin_identifiers.extend(plugin_names)
+
         plugin_object = FoundPlugin(
             plugin_id,
-            plugin_name,
+            plugin_names,
             plugin_description,
             plugin_instance,
             plugin_enabled_by_default,
@@ -564,6 +608,7 @@ class PluginManager:
             instance_file_name,
             plugin_url,
             plugin_configuration,
+            plugin_identifiers,
         )
 
         if plugin_object.plugin_interface_version != 1:
@@ -574,7 +619,11 @@ class PluginManager:
 
         return plugin_object
 
-    def __register_plugin_id(self, plugin_object, instance_file_name, next_key):
+    # pylint: enable=too-many-locals
+
+    def __register_plugin_id(
+        self, plugin_object: FoundPlugin, instance_file_name: str, next_key: str
+    ) -> None:
         if not PluginManager.__id_regex.match(next_key):
             raise ValueError(
                 f"Unable to register plugin '{instance_file_name}' with id '{next_key}' as "
@@ -589,7 +638,9 @@ class PluginManager:
             )
         self.__all_ids[next_key] = plugin_object
 
-    def __register_plugin_names(self, plugin_object, instance_file_name):
+    def __register_plugin_names(
+        self, plugin_object: FoundPlugin, instance_file_name: str
+    ) -> None:
         for next_key in plugin_object.plugin_names:
             if not PluginManager.__name_regex.match(next_key):
                 raise ValueError(
@@ -607,12 +658,12 @@ class PluginManager:
     # pylint: disable=too-many-arguments
     def __register_individual_plugin(
         self,
-        plugin_instance,
-        instance_file_name,
-        command_line_enabled_rules,
-        command_line_disabled_rules,
-        properties,
-    ):
+        plugin_instance: RulePlugin,
+        instance_file_name: str,
+        command_line_enabled_rules: Set[str],
+        command_line_disabled_rules: Set[str],
+        properties: ApplicationProperties,
+    ) -> None:
         """
         Register an individual plugin for use.
         """
@@ -645,22 +696,20 @@ class PluginManager:
 
     def __register_plugins(
         self,
-        enable_rules_from_command_line,
-        disable_rules_from_command_line,
-        properties,
-    ):
+        enable_rules_from_command_line: str,
+        disable_rules_from_command_line: str,
+        properties: ApplicationProperties,
+    ) -> None:
         """
         Scan the global namespace for all subclasses of the 'Plugin' class to use as
         plugins.
         """
 
-        (
-            command_line_enabled_rules,
-            command_line_disabled_rules,
-            self.__registered_plugins,
-            self.__enabled_plugins,
-            self.__all_ids,
-        ) = (set(), set(), [], [], {})
+        command_line_enabled_rules: Set[str] = set()
+        command_line_disabled_rules: Set[str] = set()
+        self.__registered_plugins = []
+        self.__enabled_plugins = []
+        self.__all_ids = {}
         if enable_rules_from_command_line:
             for next_rule_identifier in enable_rules_from_command_line.lower().split(
                 ","
@@ -682,7 +731,7 @@ class PluginManager:
             )
 
     @property
-    def all_plugin_ids(self):
+    def all_plugin_ids(self) -> List[str]:
         """
         Get a list of all plugins by their id.
         """
@@ -691,8 +740,11 @@ class PluginManager:
 
     @classmethod
     def __find_configuration_for_plugin(
-        cls, next_plugin, properties, always_return_facade=False
-    ):
+        cls,
+        next_plugin: FoundPlugin,
+        properties: ApplicationProperties,
+        always_return_facade: bool = False,
+    ) -> Optional[ApplicationPropertiesFacade]:
         plugin_specific_facade, first_facade = None, None
         for next_key_name in next_plugin.plugin_identifiers:
             plugin_section_title = (
@@ -712,7 +764,7 @@ class PluginManager:
             plugin_specific_facade = first_facade
         return plugin_specific_facade
 
-    def apply_configuration(self, properties):
+    def apply_configuration(self, properties: ApplicationProperties) -> None:
         """
         Apply any supplied configuration to each of the enabled plugins.
         """
@@ -730,6 +782,7 @@ class PluginManager:
                     next_plugin, properties, always_return_facade=True
                 )
 
+                assert plugin_specific_facade
                 next_plugin.plugin_instance.set_configuration_map(
                     plugin_specific_facade
                 )
@@ -750,7 +803,7 @@ class PluginManager:
             if next_plugin.plugin_instance.is_starting_new_file_implemented_in_plugin:
                 self.__enabled_plugins_for_starting_new_file.append(next_plugin)
 
-    def starting_new_file(self, file_being_started):
+    def starting_new_file(self, file_being_started: str) -> PluginScanContext:
         """
         Inform any listeners that a new current file has been started.
         """
@@ -767,7 +820,7 @@ class PluginManager:
 
         return PluginScanContext(self, file_being_started)
 
-    def completed_file(self, context, line_number):
+    def completed_file(self, context: PluginScanContext, line_number: int) -> None:
         """
         Inform any listeners that the current file has been completed.
         """
@@ -782,7 +835,9 @@ class PluginManager:
                     cause=this_exception,
                 ) from this_exception
 
-    def next_line(self, context, line_number, line):
+    def next_line(
+        self, context: PluginScanContext, line_number: int, line: str
+    ) -> None:
         """
         Inform any listeners that a new line has been loaded.
         """
@@ -801,7 +856,7 @@ class PluginManager:
                     cause=this_exception,
                 ) from this_exception
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Inform any listeners of a new token that has been processed.
         """

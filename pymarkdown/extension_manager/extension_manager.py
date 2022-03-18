@@ -5,10 +5,16 @@ import argparse
 import logging
 import re
 import sys
+from typing import Dict, List, Optional, Tuple
 
-from application_properties import ApplicationPropertiesFacade
+from application_properties import ApplicationProperties, ApplicationPropertiesFacade
 from columnar import columnar
 
+from pymarkdown.extension_manager.extension_impl import ExtensionDetails
+from pymarkdown.extension_manager.extension_manager_constants import (
+    ExtensionManagerConstants,
+)
+from pymarkdown.extension_manager.parser_extension import ParserExtension
 from pymarkdown.extensions.disallowed_raw_html import MarkdownDisallowRawHtmlExtension
 from pymarkdown.extensions.extended_autolinks import MarkdownExtendedAutolinksExtension
 from pymarkdown.extensions.extension_one import DebugExtension
@@ -28,23 +34,25 @@ class ExtensionManager:
     """
 
     __extensions_prefix = "extensions"
-    __argparse_subparser = None
+    __argparse_subparser: Optional[argparse.ArgumentParser] = None
     __root_subparser_name = "em_subcommand"
     __id_regex = re.compile("^[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$")
 
+    __DEBUG_EXTENSION = DebugExtension()
+
     def __init__(self):
-        self.__extension_objects = {}
-        self.__extension_details = {}
-        self.__enabled_extensions = []
-        self.__properties = None
-        self.__is_front_matter_enabled = None
-        self.__is_linter_pragmas_enabled = None
+        self.__extension_objects: Dict[str, ParserExtension] = {}
+        self.__extension_details: Dict[str, ExtensionDetails] = {}
+        self.__enabled_extensions: List[str] = []
+        self.__properties: Optional[ApplicationProperties] = None
+        self.__is_front_matter_enabled: bool = False
+        self.__is_linter_pragmas_enabled: bool = False
 
     def initialize(
         self,
-        args,
-        properties,
-    ):
+        args: argparse.Namespace,
+        properties: ApplicationProperties,
+    ) -> None:
         """
         Initializes the manager by adding extensions and registering them.
         """
@@ -52,7 +60,7 @@ class ExtensionManager:
         self.__properties = properties
         _ = args
 
-        all_extensions = [
+        all_extensions: List[ParserExtension] = [
             FrontMatterExtension(),
             PragmaExtension(),
             MarkdownTablesExtension(),
@@ -60,11 +68,16 @@ class ExtensionManager:
             MarkdownStrikeThroughExtension(),
             MarkdownExtendedAutolinksExtension(),
             MarkdownDisallowRawHtmlExtension(),
-            DebugExtension(),
+            ExtensionManager.__DEBUG_EXTENSION,
         ]
 
         for next_extension_object in all_extensions:
             next_extension = next_extension_object.get_details()
+
+            assert (
+                next_extension.extension_interface_version
+                == ExtensionManagerConstants.EXTENSION_INTERFACE_VERSION_BASIC
+            )
             self.__extension_details[next_extension.extension_id] = next_extension
             self.__extension_objects[
                 next_extension.extension_id
@@ -72,7 +85,7 @@ class ExtensionManager:
             _ = next_extension.extension_interface_version
             _ = next_extension.extension_configuration
 
-    def apply_configuration(self):
+    def apply_configuration(self) -> None:
         """
         Apply any supplied configuration to each of the enabled extensions.
         """
@@ -83,7 +96,7 @@ class ExtensionManager:
             (
                 is_enabled,
                 extension_specific_facade,
-            ) = self.__determine_if_extension_enabled(next_extension_detail, None, None)
+            ) = self.__determine_if_extension_enabled(next_extension_detail)
             LOGGER.info("extension %s: enabled=%s", next_extension_id, is_enabled)
             if is_enabled:
                 self.__enabled_extensions.append(next_extension_id)
@@ -99,27 +112,27 @@ class ExtensionManager:
         )
 
     @property
-    def is_front_matter_enabled(self):
+    def is_front_matter_enabled(self) -> bool:
         """
         Check to see if front-matter support is enabled.
         """
         return self.__is_front_matter_enabled
 
     @property
-    def is_linter_pragmas_enabled(self):
+    def is_linter_pragmas_enabled(self) -> bool:
         """
         Check to see if linter-pragmas support is enabled.
         """
         return self.__is_linter_pragmas_enabled
 
     @staticmethod
-    def argparse_subparser_name():
+    def argparse_subparser_name() -> str:
         """
         Gets the name of the subparser used to handle these extensions.
         """
         return "extensions"
 
-    def handle_argparse_subparser(self, args):
+    def handle_argparse_subparser(self, args: argparse.Namespace) -> int:
         """
         Handle the parsing for this subparser.
         """
@@ -131,11 +144,12 @@ class ExtensionManager:
         elif subparser_value == "info":
             return_code = self.__handle_argparse_subparser_info(args)
         else:
+            assert ExtensionManager.__argparse_subparser
             ExtensionManager.__argparse_subparser.print_help()
             sys.exit(2)
         return return_code
 
-    def __handle_argparse_subparser_list(self, args):
+    def __handle_argparse_subparser_list(self, args: argparse.Namespace) -> None:
         list_re = None
         if args.list_filter:
             list_re = re.compile(
@@ -147,8 +161,14 @@ class ExtensionManager:
         for next_extension_name in names:
             next_extension = self.__extension_details[next_extension_name]
 
-            if next_extension.extension_id == "debug-extension" or (
-                next_extension.extension_version == "0.0.0" and not args.show_all
+            if (
+                next_extension.extension_id
+                == ExtensionManager.__DEBUG_EXTENSION.get_identifier()
+                or (
+                    next_extension.extension_version
+                    == ExtensionManagerConstants.EXTENSION_VERSION_NOT_IMPLEMENTED
+                    and not args.show_all
+                )
             ):
                 continue
 
@@ -175,17 +195,17 @@ class ExtensionManager:
         else:
             print(f"No extension identifier matches the pattern '{args.list_filter}'.")
 
-    def __handle_argparse_subparser_info(self, args):
+    def __handle_argparse_subparser_info(self, args: argparse.Namespace) -> int:
         if args.info_filter not in self.__extension_details:
             print(f"Unable to find an extension with an id of '{args.info_filter}'.")
             return 1
 
         found_extension = self.__extension_details[args.info_filter]
-        show_rows = [
+        show_rows: List[List[str]] = [
             ["Id", found_extension.extension_id],
             ["Name", found_extension.extension_name],
             ["Short Description", found_extension.extension_description],
-            ["Description Url", found_extension.extension_url],
+            ["Description Url", str(found_extension.extension_url)],
         ]
 
         headers = ["Item", "Description"]
@@ -193,14 +213,14 @@ class ExtensionManager:
         return 0
 
     @staticmethod
-    def __print_column_output(headers, show_rows):
+    def __print_column_output(headers: List[str], show_rows: List[List[str]]):
         table = columnar(show_rows, headers, no_borders=True)
         split_rows = table.split(ParserHelper.newline_character)
         new_rows = [next_row.rstrip() for next_row in split_rows]
         print(ParserHelper.newline_character.join(new_rows))
 
     @staticmethod
-    def __list_filter_type(argument):
+    def __list_filter_type(argument: str) -> str:
         test_argument = argument.replace("*", "").replace("?", "")
         if ExtensionManager.__id_regex.match(test_argument):
             return argument
@@ -209,17 +229,16 @@ class ExtensionManager:
         )
 
     @staticmethod
-    def __info_filter_type(argument):
+    def __info_filter_type(argument: str) -> str:
         if ExtensionManager.__id_regex.match(argument):
             return argument
         raise argparse.ArgumentTypeError(f"Value '{argument}' is not a valid id.")
 
     @staticmethod
-    def add_argparse_subparser(subparsers):
+    def add_argparse_subparser(subparsers: argparse._SubParsersAction) -> None:
         """
         Populate the argparse tree to allow for plugin support.
         """
-
         new_sub_parser = subparsers.add_parser(
             ExtensionManager.argparse_subparser_name(), help="extension commands"
         )
@@ -256,17 +275,12 @@ class ExtensionManager:
         )
 
     def __determine_if_extension_enabled(
-        self,
-        extension_object,
-        command_line_enabled_rules,
-        command_line_disabled_rules,
-    ):
+        self, extension_object: ExtensionDetails
+    ) -> Tuple[bool, ApplicationPropertiesFacade]:
         """
         Given the enable and disable rule values, evaluate the enabled or disabled
         state of the extension in proper order.
         """
-
-        _ = (command_line_enabled_rules, command_line_disabled_rules)
 
         new_value = None
         LOGGER.debug(
@@ -274,23 +288,7 @@ class ExtensionManager:
             extension_object.extension_id,
         )
 
-        # if command_line_disabled_rules:
-        #     LOGGER.debug(
-        #         "Disabled on command line: %s", str(command_line_disabled_rules)
-        #     )
-        #     for next_identifier in plugin_oextension_objectbject.plugin_identifiers:
-        #         if next_identifier in command_line_disabled_rules:
-        #             new_value = False
-        #             LOGGER.debug("Plugin is disabled from command line.")
-        #             break
-        # if new_value is None and command_line_enabled_rules:
-        #     LOGGER.debug("Enabled on command line: %s", str(command_line_enabled_rules))
-        #     for next_identifier in plugin_object.plugin_identifiers:
-        #         if next_identifier in command_line_enabled_rules:
-        #             new_value = True
-        #             LOGGER.debug("Plugin is enabled from command line.")
-        #             break
-        # if new_value is None:
+        assert self.__properties
         plugin_section_title = (
             f"{ExtensionManager.__extensions_prefix}{self.__properties.separator}"
             + f"{extension_object.extension_id}{self.__properties.separator}"

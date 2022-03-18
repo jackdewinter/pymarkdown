@@ -3,7 +3,20 @@ Module to provide for an element that can be added to the stack.
 """
 from typing import Any, List, Optional
 
-from pymarkdown.markdown_token import EndMarkdownToken
+from pymarkdown.container_markdown_token import (
+    BlockQuoteMarkdownToken,
+    ContainerMarkdownToken,
+    NewListItemMarkdownToken,
+    OrderedListStartMarkdownToken,
+    UnorderedListStartMarkdownToken,
+)
+from pymarkdown.inline_markdown_token import RawHtmlMarkdownToken
+from pymarkdown.leaf_markdown_token import (
+    FencedCodeBlockMarkdownToken,
+    IndentedCodeBlockMarkdownToken,
+    ParagraphMarkdownToken,
+)
+from pymarkdown.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.position_marker import PositionMarker
 
@@ -26,8 +39,8 @@ class StackToken:
     def __init__(
         self,
         type_name: str,
-        matching_markdown_token: Optional[Any] = None,
-        extra_data: Optional[Any] = None,
+        matching_markdown_token: Optional[MarkdownToken] = None,
+        extra_data: Optional[str] = None,
     ) -> None:
         self.__type_name, self.__extra_data, self.__matching_markdown_token = (
             type_name,
@@ -46,11 +59,8 @@ class StackToken:
         """
         Overrides the default implementation
         """
-        return (
-            (self.type_name == other.type_name and self.extra_data == other.extra_data)
-            if isinstance(other, StackToken)
-            else NotImplemented
-        )
+        assert isinstance(other, StackToken)
+        return self.type_name == other.type_name and self.extra_data == other.extra_data
 
     @property
     def type_name(self) -> str:
@@ -60,21 +70,21 @@ class StackToken:
         return self.__type_name
 
     @property
-    def extra_data(self) -> Optional[Any]:
+    def extra_data(self) -> Optional[str]:
         """
         Returns the extra data associated with this stack token.
         """
         return self.__extra_data
 
     @property
-    def matching_markdown_token(self) -> Optional[Any]:
+    def matching_markdown_token(self) -> Optional[MarkdownToken]:
         """
         Returns the matching markdown associated with this stack token.
         """
         return self.__matching_markdown_token
 
     def reset_matching_markdown_token(
-        self, new_matching_markdown_token: Optional[Any]
+        self, new_matching_markdown_token: MarkdownToken
     ) -> None:
         """
         Reset the matching markdown token.  To be used only when rewinding.
@@ -84,7 +94,7 @@ class StackToken:
     def generate_close_markdown_token_from_stack_token(
         self,
         extracted_whitespace: Optional[str] = None,
-        extra_end_data: Optional[Any] = None,
+        extra_end_data: Optional[str] = None,
         was_forced: bool = False,
     ) -> EndMarkdownToken:
         """
@@ -194,7 +204,7 @@ class ParagraphStackToken(StackToken):
     Class to provide for a stack token for a paragraph.
     """
 
-    def __init__(self, matching_markdown_token: Optional[Any]) -> None:
+    def __init__(self, matching_markdown_token: ParagraphMarkdownToken) -> None:
         StackToken.__init__(
             self,
             StackToken._stack_paragraph,
@@ -207,7 +217,7 @@ class BlockQuoteStackToken(StackToken):
     Class to provide for a stack token for a block quote.
     """
 
-    def __init__(self, matching_markdown_token: Optional[Any]) -> None:
+    def __init__(self, matching_markdown_token: BlockQuoteMarkdownToken) -> None:
         StackToken.__init__(
             self,
             StackToken._stack_block_quote,
@@ -220,7 +230,7 @@ class IndentedCodeBlockStackToken(StackToken):
     Class to provide for a stack token for an indented code block.
     """
 
-    def __init__(self, matching_markdown_token: Optional[Any]) -> None:
+    def __init__(self, matching_markdown_token: IndentedCodeBlockMarkdownToken) -> None:
         StackToken.__init__(
             self,
             StackToken._stack_indented_code,
@@ -238,7 +248,7 @@ class FencedCodeBlockStackToken(StackToken):
         code_fence_character: str,
         fence_character_count: int,
         whitespace_start_count: int,
-        matching_markdown_token: Optional[Any],
+        matching_markdown_token: FencedCodeBlockMarkdownToken,
     ) -> None:
         (
             self.__code_fence_character,
@@ -294,7 +304,7 @@ class ListStackToken(StackToken):
         ws_before_marker: int,
         ws_after_marker: int,
         start_index: int,
-        matching_markdown_token: Optional[Any],
+        matching_markdown_token: ContainerMarkdownToken,
     ) -> None:
         (
             self.__indent_level,
@@ -302,15 +312,14 @@ class ListStackToken(StackToken):
             self.__ws_before_marker,
             self.__ws_after_marker,
             self.__start_index,
-            self.__last_new_list_token,
         ) = (
             indent_level,
             list_character,
             ws_before_marker,
             ws_after_marker,
             start_index,
-            None,
         )
+        self.__last_new_list_token: Optional[NewListItemMarkdownToken] = None
 
         StackToken.__init__(
             self,
@@ -364,13 +373,13 @@ class ListStackToken(StackToken):
         return self.__start_index
 
     @property
-    def last_new_list_token(self) -> Optional[Any]:
+    def last_new_list_token(self) -> Optional[NewListItemMarkdownToken]:
         """
         Returns the last new-list token associated with this stack token.
         """
         return self.__last_new_list_token
 
-    def set_last_new_list_token(self, new_list_token: Optional[Any]) -> None:
+    def set_last_new_list_token(self, new_list_token: NewListItemMarkdownToken) -> None:
         """
         Set the last new-list token associated with this stack token.
         """
@@ -390,7 +399,7 @@ class OrderedListStackToken(ListStackToken):
         ws_before_marker: int,
         ws_after_marker: int,
         start_index: int,
-        matching_markdown_token: Optional[Any],
+        matching_markdown_token: OrderedListStartMarkdownToken,
     ) -> None:
         ListStackToken.__init__(
             self,
@@ -419,7 +428,7 @@ class UnorderedListStackToken(ListStackToken):
         ws_before_marker: int,
         ws_after_marker: int,
         start_index: int,
-        matching_markdown_token: Optional[Any],
+        matching_markdown_token: UnorderedListStartMarkdownToken,
     ) -> None:
         ListStackToken.__init__(
             self,
@@ -441,7 +450,7 @@ class HtmlBlockStackToken(StackToken):
     """
 
     def __init__(
-        self, html_block_type: str, matching_markdown_token: Optional[Any]
+        self, html_block_type: str, matching_markdown_token: RawHtmlMarkdownToken
     ) -> None:
         self.__html_block_type = html_block_type
         extra_data = html_block_type

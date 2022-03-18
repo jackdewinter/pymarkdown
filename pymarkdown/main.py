@@ -50,11 +50,11 @@ class PyMarkdownLint:
         ) = (PyMarkdownLint.__get_semantic_version(), False, "CRITICAL")
         self.__tokenizer: Optional[TokenizedMarkdown] = None
 
-        self.__properties, self.__plugins, self.__extensions = (
+        self.__properties, self.__plugins = (
             ApplicationProperties(),
             PluginManager(),
-            ExtensionManager(),
         )
+        self.__extensions: ExtensionManager = ExtensionManager()
 
     @staticmethod
     def __get_semantic_version() -> str:

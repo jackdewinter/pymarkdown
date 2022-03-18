@@ -3,13 +3,21 @@ Module to provide for recognizing a strikethrough sequence.
 """
 
 from pymarkdown.extension_manager.extension_impl import ExtensionDetails
+from pymarkdown.extension_manager.extension_manager import ExtensionManagerConstants
+from pymarkdown.extension_manager.parser_extension import ParserExtension
 
 
-# pylint: disable=too-few-public-methods
-class MarkdownStrikeThroughExtension:
+class MarkdownStrikeThroughExtension(ParserExtension):
     """
     Extension to implement the strikethrough extension.
     """
+
+    @classmethod
+    def get_identifier(cls):
+        """
+        Get the identifier associated with this extension.
+        """
+        return "markdown-strikethrough"
 
     @classmethod
     def get_details(cls):
@@ -17,15 +25,19 @@ class MarkdownStrikeThroughExtension:
         Get the details for the extension.
         """
         return ExtensionDetails(
-            extension_id="markdown-strikethrough",
+            extension_id=cls.get_identifier(),
             extension_name="Markdown Strikethrough",
             extension_description="Allows parsing of Markdown strikethrough.",
             extension_enabled_by_default=False,
-            extension_version="0.0.0",
-            extension_interface_version=1,
+            extension_version=ExtensionManagerConstants.EXTENSION_VERSION_NOT_IMPLEMENTED,
+            extension_interface_version=ExtensionManagerConstants.EXTENSION_INTERFACE_VERSION_BASIC,
             extension_url="https://github.github.com/gfm/#strikethrough-extension-",
             extension_configuration=None,
         )
 
-
-# pylint: enable=too-few-public-methods
+    @classmethod
+    def apply_configuration(cls, extension_specific_facade):
+        """
+        Apply any configuration required by the extension.
+        """
+        _ = extension_specific_facade  # pragma: no cover

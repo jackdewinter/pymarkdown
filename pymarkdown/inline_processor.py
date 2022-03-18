@@ -2,12 +2,16 @@
 Inline processing
 """
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 from pymarkdown.constants import Constants
 from pymarkdown.emphasis_helper import EmphasisHelper
 from pymarkdown.inline_helper import InlineHelper, InlineRequest, InlineResponse
-from pymarkdown.inline_markdown_token import SpecialTextMarkdownToken, TextMarkdownToken
+from pymarkdown.inline_markdown_token import (
+    InlineMarkdownToken,
+    SpecialTextMarkdownToken,
+    TextMarkdownToken,
+)
 from pymarkdown.link_helper import LinkHelper
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
@@ -962,9 +966,9 @@ class InlineProcessor:
             current_string_unresolved,
             end_string,
             fold_space,
-            inline_blocks,
             start_index,
-        ) = (line_number, column_number, "", "", "", None, [], 0)
+        ) = (line_number, column_number, "", "", "", None, 0)
+        inline_blocks: List[InlineMarkdownToken] = []
 
         # POGGER.debug(
         #    "__process_inline_text_block>>source_text>>$>",
