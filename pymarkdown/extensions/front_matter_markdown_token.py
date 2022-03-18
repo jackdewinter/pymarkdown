@@ -5,7 +5,9 @@ import logging
 import string
 
 from pymarkdown.extension_manager.extension_impl import ExtensionDetails
-from pymarkdown.extension_manager.extension_manager import ExtensionManagerConstants
+from pymarkdown.extension_manager.extension_manager_constants import (
+    ExtensionManagerConstants,
+)
 from pymarkdown.extension_manager.parser_extension import ParserExtension
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.leaf_markdown_token import LeafMarkdownToken

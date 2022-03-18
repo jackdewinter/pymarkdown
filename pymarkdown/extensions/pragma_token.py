@@ -4,7 +4,9 @@ Module to provide for linter instructions that can be embedded within the docume
 import logging
 
 from pymarkdown.extension_manager.extension_impl import ExtensionDetails
-from pymarkdown.extension_manager.extension_manager import ExtensionManagerConstants
+from pymarkdown.extension_manager.extension_manager_constants import (
+    ExtensionManagerConstants,
+)
 from pymarkdown.extension_manager.parser_extension import ParserExtension
 from pymarkdown.markdown_token import MarkdownToken, MarkdownTokenClass
 from pymarkdown.parser_helper import ParserHelper
