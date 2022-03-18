@@ -3,10 +3,14 @@ Module to provide a tokenization of a markdown-encoded string.
 """
 import logging
 import os
+from typing import Optional
+
+from application_properties import ApplicationProperties
 
 from pymarkdown.bad_tokenization_error import BadTokenizationError
 from pymarkdown.coalesce_processor import CoalesceProcessor
 from pymarkdown.container_block_processor import ContainerBlockProcessor
+from pymarkdown.extension_manager.extension_manager import ExtensionManager
 from pymarkdown.extensions.front_matter_markdown_token import FrontMatterExtension
 from pymarkdown.extensions.pragma_token import PragmaToken
 from pymarkdown.html_helper import HtmlHelper
@@ -35,7 +39,7 @@ class TokenizedMarkdown:
     Class to provide a tokenization of a markdown-encoded string.
     """
 
-    def __init__(self, resource_path=None):
+    def __init__(self, resource_path: Optional[str] = None):
         """
         Initializes a new instance of the TokenizedMarkdown class.
         """
@@ -44,14 +48,18 @@ class TokenizedMarkdown:
             self.tokenized_document,
             self.stack,
             self.source_provider,
-            self.__parse_properties,
-        ) = (None, None, None, None)
+        ) = (None, None, None)
+        self.__parse_properties: Optional[ParseBlockPassProperties] = None
 
         if not resource_path:
             resource_path = os.path.join(os.path.split(__file__)[0], "resources")
         InlineHelper.initialize(resource_path)
 
-    def apply_configuration(self, application_properties, extension_manager):
+    def apply_configuration(
+        self,
+        application_properties: ApplicationProperties,
+        extension_manager: ExtensionManager,
+    ):
         """
         Apply any configuration map.
         """

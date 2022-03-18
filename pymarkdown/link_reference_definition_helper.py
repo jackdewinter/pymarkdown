@@ -2,6 +2,7 @@
 Link reference definition helper
 """
 import logging
+from typing import List
 
 from pymarkdown.inline_helper import InlineHelper
 from pymarkdown.leaf_markdown_token import LinkReferenceDefinitionMarkdownToken
@@ -36,12 +37,12 @@ class LinkReferenceDefinitionHelper:
         Process a link deference definition.  Note, this requires a lot of work to
         handle properly because of partial definitions across lines.
         """
-        (line_to_parse, start_index, lines_to_requeue, lrd_stack_token,) = (
+        (line_to_parse, start_index, lrd_stack_token,) = (
             position_marker.text_to_parse,
             position_marker.index_number,
-            [],
             None,
         )
+        lines_to_requeue: List[str] = []
 
         is_blank_line = not line_to_parse and not start_index
         was_started = parser_state.token_stack[-1].was_link_definition_started

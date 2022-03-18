@@ -5,6 +5,10 @@ import logging
 import string
 
 from pymarkdown.extension_manager.extension_impl import ExtensionDetails
+from pymarkdown.extension_manager.extension_manager_constants import (
+    ExtensionManagerConstants,
+)
+from pymarkdown.extension_manager.parser_extension import ParserExtension
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.markdown_token import MarkdownToken
@@ -15,7 +19,7 @@ from pymarkdown.position_marker import PositionMarker
 POGGER = ParserLogger(logging.getLogger(__name__))
 
 
-class FrontMatterExtension:
+class FrontMatterExtension(ParserExtension):
     """
     Extension to implement the front matter extensions.
     """
@@ -38,7 +42,7 @@ class FrontMatterExtension:
             extension_description="Allows metadata to be parsed from document front matter.",
             extension_enabled_by_default=False,
             extension_version="0.5.0",
-            extension_interface_version=1,
+            extension_interface_version=ExtensionManagerConstants.EXTENSION_INTERFACE_VERSION_BASIC,
             extension_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/extensions/front-matter.md",
             extension_configuration=None,
         )

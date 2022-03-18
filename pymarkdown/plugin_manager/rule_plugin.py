@@ -3,6 +3,14 @@ Module to provide structure to scan through a file.
 """
 
 from abc import ABC, abstractmethod
+from typing import Optional, cast
+
+from application_properties import ApplicationPropertiesFacade
+
+from pymarkdown.leaf_markdown_token import SetextHeadingMarkdownToken
+from pymarkdown.markdown_token import MarkdownToken
+from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 
 
 class RulePlugin(ABC):
@@ -12,29 +20,32 @@ class RulePlugin(ABC):
     https://github.com/hiddenillusion/example-code/commit/3e2daada652fe9b487574c784e0924bd5fcfe667
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         (
-            self.__plugin_specific_facade,
             self.__is_next_token_implemented_in_plugin,
             self.__is_next_line_implemented_in_plugin,
             self.__is_starting_new_file_implemented_in_plugin,
             self.__is_completed_file_implemented_in_plugin,
-        ) = (None, True, True, True, True)
+        ) = (True, True, True, True)
+        self.__plugin_specific_facade: Optional[ApplicationPropertiesFacade] = None
 
     @abstractmethod
-    def get_details(self):
+    def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
 
     @property
-    def plugin_configuration(self):
+    def plugin_configuration(self) -> ApplicationPropertiesFacade:
         """
         Get the configuration facade associated with this plugin.
         """
+        assert self.__plugin_specific_facade
         return self.__plugin_specific_facade
 
-    def set_configuration_map(self, plugin_specific_facade):
+    def set_configuration_map(
+        self, plugin_specific_facade: ApplicationPropertiesFacade
+    ):
         """
         Set the configuration map with values for the plugin.
         """
@@ -54,36 +65,40 @@ class RulePlugin(ABC):
         )
 
     @property
-    def is_starting_new_file_implemented_in_plugin(self):
+    def is_starting_new_file_implemented_in_plugin(self) -> bool:
         """
         Return whether the starting_new_file function is implemented in the plugin.
         """
         return self.__is_starting_new_file_implemented_in_plugin
 
     @property
-    def is_next_line_implemented_in_plugin(self):
+    def is_next_line_implemented_in_plugin(self) -> bool:
         """
         Return whether the next_line function is implemented in the plugin.
         """
         return self.__is_next_line_implemented_in_plugin
 
     @property
-    def is_next_token_implemented_in_plugin(self):
+    def is_next_token_implemented_in_plugin(self) -> bool:
         """
         Return whether the next_token function is implemented in the plugin.
         """
         return self.__is_next_token_implemented_in_plugin
 
     @property
-    def is_completed_file_implemented_in_plugin(self):
+    def is_completed_file_implemented_in_plugin(self) -> bool:
         """
         Return whether the completed_file function is implemented in the plugin.
         """
         return self.__is_completed_file_implemented_in_plugin
 
     def report_next_line_error(
-        self, context, column_number, line_number_delta=0, extra_error_information=None
-    ):
+        self,
+        context: PluginScanContext,
+        column_number: int,
+        line_number_delta=0,
+        extra_error_information: Optional[str] = None,
+    ) -> None:
         """
         Report an error with the current line being processed.
         """
@@ -100,26 +115,28 @@ class RulePlugin(ABC):
     # pylint: disable=too-many-arguments
     def report_next_token_error(
         self,
-        context,
-        token,
-        extra_error_information=None,
-        line_number_delta=0,
-        column_number_delta=0,
-        use_original_position=False,
+        context: PluginScanContext,
+        token: MarkdownToken,
+        extra_error_information: Optional[str] = None,
+        line_number_delta: int = 0,
+        column_number_delta: int = 0,
+        use_original_position: bool = False,
     ):
         """
         Report an error with the current token being processed.
         """
+        if use_original_position:
+            leaf_token = cast(SetextHeadingMarkdownToken, token)
+            line_number = leaf_token.original_line_number
+            column_number = leaf_token.original_column_number
+        else:
+            line_number = token.line_number
+            column_number = token.column_number
+
         context.add_triggered_rule(
             context.scan_file,
-            (token.original_line_number if use_original_position else token.line_number)
-            + line_number_delta,
-            (
-                token.original_column_number
-                if use_original_position
-                else token.column_number
-            )
-            + column_number_delta
+            line_number + line_number_delta,
+            column_number + column_number_delta
             if column_number_delta >= 0
             else -column_number_delta,
             self.get_details().plugin_id,
@@ -130,27 +147,27 @@ class RulePlugin(ABC):
 
     # pylint: enable=too-many-arguments
 
-    def initialize_from_config(self):
+    def initialize_from_config(self) -> None:
         """
         Event to allow the plugin to load configuration information.
         """
 
-    def starting_new_file(self):
+    def starting_new_file(self) -> None:
         """
         Event that the a new file to be scanned is starting.
         """
 
-    def completed_file(self, context):
+    def completed_file(self, context: PluginScanContext) -> None:
         """
         Event that the file being currently scanned is now completed.
         """
 
-    def next_line(self, context, line):
+    def next_line(self, context: PluginScanContext, line: str) -> None:
         """
         Event that a new line is being processed.
         """
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """

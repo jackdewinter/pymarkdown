@@ -2,4 +2,4 @@
 Library version information.
 """
 
-__version__ = "0.9.5"
+__version__: str = "0.9.5"

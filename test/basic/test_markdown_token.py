@@ -59,9 +59,13 @@ def test_stack_token_not_equal_not_same_type():
 
     # Arrange
     token1 = StackToken("type1", extra_data="extra1")
+    caught_exception = None
 
     # Act
-    are_equal = token1 == 1
+    try:
+        _ = token1 == 1
+    except AssertionError as this_exception:
+        caught_exception = this_exception
 
     # Assert
-    assert not are_equal
+    assert caught_exception
