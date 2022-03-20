@@ -3,12 +3,15 @@ Module to provide helper functions for parsing html.
 """
 import logging
 import string
+from typing import List
 
 from pymarkdown.constants import Constants
 from pymarkdown.inline_markdown_token import RawHtmlMarkdownToken, TextMarkdownToken
 from pymarkdown.leaf_markdown_token import HtmlBlockMarkdownToken
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.parser_state import ParserState
 from pymarkdown.stack_token import HtmlBlockStackToken, ParagraphStackToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
@@ -136,12 +139,10 @@ class HtmlHelper:
         Determine if the html tag name is valid according to the html rules.
         """
 
-        if not tag_name:
-            return False
         return all(
             next_character in HtmlHelper.__valid_tag_name_characters
             for next_character in tag_name.lower()
-        )
+        ) if tag_name else False
 
     @staticmethod
     def extract_html_attribute_name(string_to_parse, string_index):
@@ -778,7 +779,7 @@ class HtmlHelper:
         return new_tokens
 
     @staticmethod
-    def check_blank_html_block_end(parser_state):
+    def check_blank_html_block_end(parser_state: ParserState) -> List[MarkdownToken]:
         """
         Check to see if we have encountered the end of the current HTML block
         via an empty line or BLANK.

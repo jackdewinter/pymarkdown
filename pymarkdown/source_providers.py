@@ -2,46 +2,70 @@
 Module to provide a tokenization of a markdown-encoded string.
 """
 
+from abc import ABC, abstractmethod
+from typing import List, Optional
+
 from pymarkdown.parser_helper import ParserHelper
 
 
-class InMemorySourceProvider:
+class SourceProvider(ABC):
+    """
+    Class to provide for an abstract definition of an instance that provides
+    information about the input source.
+    """
+
+    @abstractmethod
+    def is_at_end_of_file(self) -> bool:
+        """
+        Whether the provider has reached the end of the input.
+        """
+
+    @abstractmethod
+    def get_next_line(self) -> Optional[str]:
+        """
+        Get the next line from the source provider.
+        """
+
+
+class InMemorySourceProvider(SourceProvider):
     """
     Class to provide for a source provider that is totally within memory.
     """
 
-    def __init__(self, source_text):
-        self.__next_token = source_text.split(ParserHelper.newline_character, 1)
+    def __init__(self, source_text: str) -> None:
+        self.__next_line_tuple: List[str] = source_text.split(
+            ParserHelper.newline_character, 1
+        )
 
-    def is_at_end_of_file(self):
+    def is_at_end_of_file(self) -> bool:
         """
         Whether the provider has reached the end of the input.
         """
-        return not self.__next_token
+        return not self.__next_line_tuple
 
-    def get_next_line(self):
+    def get_next_line(self) -> Optional[str]:
         """
         Get the next line from the source provider.
         """
         token_to_use = None
         if not self.is_at_end_of_file():
-            token_to_use = self.__next_token[0]
-            if len(self.__next_token) == 2:
-                self.__next_token = self.__next_token[1].split(
+            token_to_use = self.__next_line_tuple[0]
+            if len(self.__next_line_tuple) == 2:
+                self.__next_line_tuple = self.__next_line_tuple[1].split(
                     ParserHelper.newline_character, 1
                 )
             else:
-                assert self.__next_token
-                self.__next_token = None
+                assert self.__next_line_tuple
+                self.__next_line_tuple = []
         return token_to_use
 
 
-class FileSourceProvider:
+class FileSourceProvider(SourceProvider):
     """
     Class to provide for a source provider that is on media as a file.
     """
 
-    def __init__(self, file_to_open):
+    def __init__(self, file_to_open: str) -> None:
         with open(file_to_open, encoding="utf-8") as file_to_parse:
             file_as_lines = file_to_parse.readlines()
 
@@ -55,13 +79,13 @@ class FileSourceProvider:
         if did_line_end_in_newline:
             self.read_lines.append("")
 
-    def is_at_end_of_file(self):
+    def is_at_end_of_file(self) -> bool:
         """
         Whether the provider has reached the end of the input.
         """
         return self.read_index >= len(self.read_lines)
 
-    def get_next_line(self):
+    def get_next_line(self) -> Optional[str]:
         """
         Get the next line from the source provider.
         """

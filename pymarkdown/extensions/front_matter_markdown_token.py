@@ -3,6 +3,9 @@ Module to provide for a leaf element that can be added to markdown parsing strea
 """
 import logging
 import string
+from typing import List, Tuple
+
+from application_properties import ApplicationPropertiesFacade
 
 from pymarkdown.extension_manager.extension_impl import ExtensionDetails
 from pymarkdown.extension_manager.extension_manager_constants import (
@@ -15,6 +18,7 @@ from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.position_marker import PositionMarker
+from pymarkdown.source_providers import SourceProvider
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -25,14 +29,14 @@ class FrontMatterExtension(ParserExtension):
     """
 
     @classmethod
-    def get_identifier(cls):
+    def get_identifier(cls) -> str:
         """
         Get the identifier associated with this extension.
         """
         return "front-matter"
 
     @classmethod
-    def get_details(cls):
+    def get_details(cls) -> ExtensionDetails:
         """
         Get the details for the extension.
         """
@@ -48,7 +52,9 @@ class FrontMatterExtension(ParserExtension):
         )
 
     @classmethod
-    def apply_configuration(cls, extension_specific_facade):
+    def apply_configuration(
+        cls, extension_specific_facade: ApplicationPropertiesFacade
+    ) -> None:
         """
         Apply any configuration required by the extension.
         """
@@ -78,14 +84,18 @@ class FrontMatterExtension(ParserExtension):
 
     @staticmethod
     def process_header_if_present(
-        token_to_use, line_number, requeue, source_provider, tokenized_document
-    ):
+        first_line_in_document: str,
+        line_number: int,
+        requeue: List[str],
+        source_provider: SourceProvider,
+        tokenized_document: List[MarkdownToken],
+    ) -> Tuple[str, int, List[str]]:
         """
         Take care of processing eligibility and processing for front matter support.
         """
 
         start_char, extracted_index = LeafBlockProcessor.is_thematic_break(
-            token_to_use.rstrip(),
+            first_line_in_document.rstrip(),
             0,
             "",
             whitespace_allowed_between_characters=False,
@@ -93,22 +103,22 @@ class FrontMatterExtension(ParserExtension):
         )
         if start_char == "-" and extracted_index == 3:
             (
-                token_to_use,
+                first_line_in_document,
                 new_token,
                 line_number,
                 requeue_lines,
             ) = FrontMatterExtension.__handle_document_front_matter(
-                token_to_use, source_provider
+                first_line_in_document, source_provider
             )
             if new_token:
                 tokenized_document.append(new_token)
             else:
                 requeue.extend(requeue_lines)
-                token_to_use = requeue[0]
+                first_line_in_document = requeue[0]
                 del requeue[0]
             POGGER.debug("self.tokenized_document>>$", tokenized_document)
             POGGER.debug("requeue>>$", requeue)
-        return token_to_use, line_number, requeue
+        return first_line_in_document, line_number, requeue
 
     @staticmethod
     def __handle_document_front_matter(token_to_use, source_provider):

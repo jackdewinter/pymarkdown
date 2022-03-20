@@ -2,6 +2,7 @@
 Module to provide processing for the leaf blocks.
 """
 import logging
+from typing import Tuple
 
 from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.inline_helper import InlineHelper
@@ -17,6 +18,7 @@ from pymarkdown.leaf_markdown_token import (
 )
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.parser_state import ParserState
 from pymarkdown.stack_token import (
     BlockQuoteStackToken,
     FencedCodeBlockStackToken,
@@ -504,7 +506,6 @@ class LeafBlockProcessor:
                 )
                 new_tokens, _ = parser_state.close_open_blocks_fn(
                     parser_state,
-                    destination_array=new_tokens,
                     only_these_blocks=[ParagraphStackToken],
                     was_forced=force_paragraph_close_if_present,
                 )
@@ -514,7 +515,6 @@ class LeafBlockProcessor:
             )
             # new_tokens, _ = parser_state.close_open_blocks_fn(
             #     parser_state,
-            #     destination_array=new_tokens,
             #     only_these_blocks=[BlockQuoteStackToken],
             #     include_block_quotes=True,
             #     was_forced=True,
@@ -648,7 +648,7 @@ class LeafBlockProcessor:
             "",
         )
 
-        new_tokens, _ = parser_state.close_open_blocks_fn(parser_state, new_tokens)
+        new_tokens, _ = parser_state.close_open_blocks_fn(parser_state)
         (
             end_index,
             extracted_whitespace_at_end,
@@ -972,7 +972,7 @@ class LeafBlockProcessor:
         )
 
     @staticmethod
-    def check_for_list_in_process(parser_state):
+    def check_for_list_in_process(parser_state: ParserState) -> Tuple[bool, int]:
         """
         From the end of the stack, check to see if there is already a list in progress.
         """

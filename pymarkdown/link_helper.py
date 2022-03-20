@@ -62,7 +62,7 @@ class LinkHelper:
     __valid_link_starts = [__link_start_sequence, image_start_sequence]
 
     @staticmethod
-    def initialize():
+    def initialize() -> None:
         """
         Initialize the inline subsystem.
         """

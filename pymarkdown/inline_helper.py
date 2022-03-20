@@ -69,7 +69,7 @@ class InlineHelper:
     __entities_file_name = "entities.json"
 
     @staticmethod
-    def initialize(resource_path):
+    def initialize(resource_path: str) -> None:
         """
         Initialize the inline subsystem.
         """

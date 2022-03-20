@@ -2,13 +2,16 @@
 Link reference definition helper
 """
 import logging
-from typing import List
+from typing import List, Optional, Tuple
 
 from pymarkdown.inline_helper import InlineHelper
 from pymarkdown.leaf_markdown_token import LinkReferenceDefinitionMarkdownToken
 from pymarkdown.link_helper import LinkHelper
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.parser_state import ParserState
+from pymarkdown.position_marker import PositionMarker
 from pymarkdown.requeue_line_info import RequeueLineInfo
 from pymarkdown.stack_token import LinkDefinitionStackToken
 
@@ -25,23 +28,23 @@ class LinkReferenceDefinitionHelper:
     # pylint: disable=too-many-locals, too-many-arguments
     @staticmethod
     def process_link_reference_definition(
-        parser_state,
-        position_marker,
-        remaining_line_to_parse,
-        extracted_whitespace,
-        unmodified_line_to_parse,
-        original_stack_depth,
-        original_document_depth,
-    ):
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        remaining_line_to_parse: str,
+        extracted_whitespace: Optional[str],
+        unmodified_line_to_parse: str,
+        original_stack_depth: int,
+        original_document_depth: int,
+    ) -> Tuple[bool, bool, bool, Optional[RequeueLineInfo], List[MarkdownToken]]:
         """
         Process a link deference definition.  Note, this requires a lot of work to
         handle properly because of partial definitions across lines.
         """
-        (line_to_parse, start_index, lrd_stack_token,) = (
+        (line_to_parse, lrd_stack_token,) = (
             position_marker.text_to_parse,
-            position_marker.index_number,
             None,
         )
+        start_index: Optional[int] = position_marker.index_number
         lines_to_requeue: List[str] = []
 
         is_blank_line = not line_to_parse and not start_index
