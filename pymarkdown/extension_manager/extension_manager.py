@@ -40,7 +40,7 @@ class ExtensionManager:
 
     __DEBUG_EXTENSION = DebugExtension()
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.__extension_objects: Dict[str, ParserExtension] = {}
         self.__extension_details: Dict[str, ExtensionDetails] = {}
         self.__enabled_extensions: List[str] = []
@@ -213,7 +213,7 @@ class ExtensionManager:
         return 0
 
     @staticmethod
-    def __print_column_output(headers: List[str], show_rows: List[List[str]]):
+    def __print_column_output(headers: List[str], show_rows: List[List[str]]) -> None:
         table = columnar(show_rows, headers, no_borders=True)
         split_rows = table.split(ParserHelper.newline_character)
         new_rows = [next_row.rstrip() for next_row in split_rows]

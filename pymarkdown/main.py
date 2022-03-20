@@ -8,7 +8,7 @@ import os
 import runpy
 import sys
 import traceback
-from typing import List, Optional, Set, Tuple
+from typing import List, Optional, Set, Tuple, cast
 
 from application_properties import (
     ApplicationProperties,
@@ -17,6 +17,7 @@ from application_properties import (
 
 from pymarkdown.bad_tokenization_error import BadTokenizationError
 from pymarkdown.extension_manager.extension_manager import ExtensionManager
+from pymarkdown.extensions.pragma_token import PragmaToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.plugin_manager.bad_plugin_error import BadPluginError
@@ -50,10 +51,8 @@ class PyMarkdownLint:
         ) = (PyMarkdownLint.__get_semantic_version(), False, "CRITICAL")
         self.__tokenizer: Optional[TokenizedMarkdown] = None
 
-        self.__properties, self.__plugins = (
-            ApplicationProperties(),
-            PluginManager(),
-        )
+        self.__properties: ApplicationProperties = ApplicationProperties()
+        self.__plugins: PluginManager = PluginManager()
         self.__extensions: ExtensionManager = ExtensionManager()
 
     @staticmethod
@@ -229,9 +228,8 @@ class PyMarkdownLint:
             actual_tokens = self.__tokenizer.transform_from_provider(source_provider)
 
             if actual_tokens and actual_tokens[-1].is_pragma:
-                self.__plugins.compile_pragmas(
-                    next_file, actual_tokens[-1].pragma_lines
-                )
+                pragma_token = cast(PragmaToken, actual_tokens[-1])
+                self.__plugins.compile_pragmas(next_file, pragma_token.pragma_lines)
                 actual_tokens = actual_tokens[:-1]
 
             POGGER.info("Scanning file '$' tokens.", next_file)

@@ -2,6 +2,9 @@
 Module to provide for linter instructions that can be embedded within the document.
 """
 import logging
+from typing import Dict
+
+from application_properties import ApplicationPropertiesFacade
 
 from pymarkdown.extension_manager.extension_impl import ExtensionDetails
 from pymarkdown.extension_manager.extension_manager_constants import (
@@ -21,14 +24,14 @@ class PragmaExtension(ParserExtension):
     """
 
     @classmethod
-    def get_identifier(cls):
+    def get_identifier(cls) -> str:
         """
         Get the identifier associated with this extension.
         """
         return "linter-pragmas"
 
     @classmethod
-    def get_details(cls):
+    def get_details(cls) -> ExtensionDetails:
         """
         Get the details for the extension.
         """
@@ -44,7 +47,9 @@ class PragmaExtension(ParserExtension):
         )
 
     @classmethod
-    def apply_configuration(cls, extension_specific_facade):
+    def apply_configuration(
+        cls, extension_specific_facade: ApplicationPropertiesFacade
+    ) -> None:
         """
         Apply any configuration required by the extension.
         """
@@ -176,7 +181,7 @@ class PragmaToken(MarkdownToken):
     pragma_title = "pyml "
     pragma_suffix = "-->"
 
-    def __init__(self, pragma_lines):
+    def __init__(self, pragma_lines: Dict[int, str]) -> None:
         self.__pragma_lines = pragma_lines
 
         serialized_pragmas = "".join(

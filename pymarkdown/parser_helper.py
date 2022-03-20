@@ -2,6 +2,8 @@
 Module to provide helper functions for parsing.
 """
 
+from typing import Optional, Tuple
+
 from pymarkdown.constants import Constants
 
 
@@ -119,7 +121,9 @@ class ParserHelper:
         )
 
     @staticmethod
-    def extract_whitespace(source_string, start_index):
+    def extract_whitespace(
+        source_string: str, start_index: int
+    ) -> Tuple[Optional[int], Optional[str]]:
         """
         From the start_index, continue extracting whitespace while we have it.
 

@@ -1,8 +1,11 @@
 """
 Module to provide for a leaf element that can be added to markdown parsing stream.
 """
+from typing import Optional
+
 from pymarkdown.markdown_token import MarkdownToken, MarkdownTokenClass
 from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.position_marker import PositionMarker
 
 
 class LeafMarkdownToken(MarkdownToken):
@@ -52,7 +55,12 @@ class BlankLineMarkdownToken(LeafMarkdownToken):
     Class to provide for an encapsulation of the blank line element.
     """
 
-    def __init__(self, extracted_whitespace, position_marker, column_delta=0):
+    def __init__(
+        self,
+        extracted_whitespace: Optional[str],
+        position_marker: Optional[PositionMarker],
+        column_delta: int = 0,
+    ) -> None:
 
         if position_marker:
             line_number, column_number = position_marker.line_number, (

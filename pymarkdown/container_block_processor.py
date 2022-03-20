@@ -3,6 +3,7 @@ Module to provide processing for the container blocks.
 """
 import copy
 import logging
+from typing import Any, List, Optional, Tuple
 
 from pymarkdown.block_quote_data import BlockQuoteData
 from pymarkdown.block_quote_processor import BlockQuoteProcessor
@@ -13,9 +14,12 @@ from pymarkdown.inline_markdown_token import TextMarkdownToken
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.link_reference_definition_helper import LinkReferenceDefinitionHelper
 from pymarkdown.list_block_processor import ListBlockProcessor
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.parser_state import ParserState
 from pymarkdown.position_marker import PositionMarker
+from pymarkdown.requeue_line_info import RequeueLineInfo
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -87,15 +91,21 @@ class ContainerBlockProcessor:
     # pylint: disable=too-many-arguments
     @staticmethod
     def parse_line_for_container_blocks(
-        parser_state,
-        position_marker,
-        ignore_link_definition_start,
-        parser_properties,
-        container_start_bq_count,
-        container_depth=0,
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        ignore_link_definition_start: bool,
+        parser_properties: Optional[Any],
+        container_start_bq_count: int,
+        container_depth: int = 0,
         foobar=None,
         init_bq=None,
-    ):
+    ) -> Tuple[
+        List[MarkdownToken],
+        Optional[str],
+        Optional[int],
+        Optional[RequeueLineInfo],
+        bool,
+    ]:
         """
         Parse the line, taking care to handle any container blocks before deciding
         whether or not to pass the (remaining parts of the) line to the leaf block
@@ -3559,12 +3569,14 @@ class ContainerBlockProcessor:
     # pylint: enable=too-many-arguments
 
     @staticmethod
-    def extract_markdown_tokens_back_to_blank_line(parser_state, was_forced):
+    def extract_markdown_tokens_back_to_blank_line(
+        parser_state: ParserState, was_forced: bool
+    ) -> List[MarkdownToken]:
         """
         Extract tokens going back to the last blank line token.
         """
 
-        pre_tokens = []
+        pre_tokens: List[MarkdownToken] = []
         while parser_state.token_document[-1].is_blank_line:
             last_element = parser_state.token_document[-1]
             if was_forced:

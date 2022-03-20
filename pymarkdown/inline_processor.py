@@ -2,9 +2,10 @@
 Inline processing
 """
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, cast
 
 from pymarkdown.constants import Constants
+from pymarkdown.container_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.emphasis_helper import EmphasisHelper
 from pymarkdown.inline_helper import InlineHelper, InlineRequest, InlineResponse
 from pymarkdown.inline_markdown_token import (
@@ -13,6 +14,7 @@ from pymarkdown.inline_markdown_token import (
     TextMarkdownToken,
 )
 from pymarkdown.link_helper import LinkHelper
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 
@@ -40,7 +42,7 @@ class InlineProcessor:
     """
 
     @staticmethod
-    def initialize():
+    def initialize() -> None:
         """
         Initialize the inline processor subsystem.
         """
@@ -116,7 +118,7 @@ class InlineProcessor:
             )
 
     @staticmethod
-    def parse_inline(coalesced_results):
+    def parse_inline(coalesced_results: List[MarkdownToken]) -> List[MarkdownToken]:
         """
         Parse and resolve any inline elements.
         """
@@ -126,7 +128,9 @@ class InlineProcessor:
             POGGER.info(">>$<<", next_token)
         POGGER.info("-----")
 
-        coalesced_stack, coalesced_list, current_token = [], [], coalesced_results[0]
+        coalesced_stack: List[MarkdownToken] = []
+        current_token = coalesced_results[0]
+        coalesced_list: List[MarkdownToken] = []
         coalesced_list.extend(coalesced_results[:1])
 
         POGGER.debug("STACK?:$", current_token)
@@ -136,8 +140,9 @@ class InlineProcessor:
             POGGER.debug("STACK-ADD:$", current_token)
             POGGER.debug("STACK:$", coalesced_stack)
             if current_token.is_block_quote_start:
-                current_token.leading_text_index = 0
-                POGGER.info("-->last->block->$", current_token.leading_text_index)
+                block_quote_token = cast(BlockQuoteMarkdownToken, current_token)
+                block_quote_token.leading_text_index = 0
+                POGGER.info("-->last->block->$", block_quote_token.leading_text_index)
             else:
                 POGGER.info("-->not bq-")
 

@@ -2,8 +2,10 @@
 Processing to coalesce a text tokens with a list of tokens.
 """
 import logging
+from typing import List
 
 from pymarkdown.inline_markdown_token import TextMarkdownToken
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_logger import ParserLogger
 
 POGGER = ParserLogger(logging.getLogger(__name__))
@@ -16,7 +18,9 @@ class CoalesceProcessor:
     """
 
     @staticmethod
-    def coalesce_text_blocks(first_pass_results):
+    def coalesce_text_blocks(
+        first_pass_results: List[MarkdownToken],
+    ) -> List[MarkdownToken]:
         """
         Take a pass and combine any two adjacent text blocks into one.
         """
