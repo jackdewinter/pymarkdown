@@ -139,12 +139,10 @@ class HtmlHelper:
         Determine if the html tag name is valid according to the html rules.
         """
 
-        if not tag_name:
-            return False
         return all(
             next_character in HtmlHelper.__valid_tag_name_characters
             for next_character in tag_name.lower()
-        )
+        ) if tag_name else False
 
     @staticmethod
     def extract_html_attribute_name(string_to_parse, string_index):
