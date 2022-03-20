@@ -8,6 +8,7 @@ from pymarkdown.container_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.parser_state import ParserState
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.requeue_line_info import RequeueLineInfo
 from pymarkdown.stack_token import (
@@ -1120,11 +1121,11 @@ class BlockQuoteProcessor:
 
     @staticmethod
     def __handle_normal_blank_line(
-        parser_state,
-        block_quote_data,
-        position_marker,
-        text_removed_by_container,
-        line_to_parse,
+        parser_state: ParserState,
+        block_quote_data: BlockQuoteData,
+        position_marker: PositionMarker,
+        text_removed_by_container: str,
+        line_to_parse: str,
     ):
         POGGER.debug("call __handle_block_quote_section>>handle_blank_line")
 

@@ -1,12 +1,63 @@
 """
 Module to provide for an encapsulation of the high level state of the parser.
 """
+from __future__ import annotations
 
 import copy
-from typing import List
+from typing import List, Optional, Tuple
+
+from typing_extensions import Protocol
 
 from pymarkdown.markdown_token import MarkdownToken
+from pymarkdown.position_marker import PositionMarker
+from pymarkdown.requeue_line_info import RequeueLineInfo
 from pymarkdown.stack_token import StackToken
+
+
+# pylint: disable=too-few-public-methods
+class CloseOpenBlocksProtocol(Protocol):
+    """
+    Protocol to provide typing for the close open blocks function.
+    """
+
+    # pylint: disable=too-many-arguments
+    def __call__(
+        self,
+        parser_state: ParserState,
+        destination_array: Optional[List[MarkdownToken]] = None,
+        only_these_blocks: Optional[List[type]] = None,
+        include_block_quotes: bool = False,
+        include_lists: bool = False,
+        until_this_index: int = -1,
+        caller_can_handle_requeue: bool = False,
+        requeue_reset: bool = False,
+        was_forced: bool = False,
+    ) -> Tuple[List[MarkdownToken], Optional[RequeueLineInfo]]:
+        ...  # pragma: no cover
+
+    # pylint: enable=too-many-arguments
+
+
+# pylint: enable=too-few-public-methods
+
+
+# pylint: disable=too-few-public-methods
+class HandleBlankLineProtocol(Protocol):
+    """
+    Protocol to provide typing for the blank line function.
+    """
+
+    def __call__(
+        self,
+        parser_state: ParserState,
+        input_line: str,
+        from_main_transform: bool,
+        position_marker: Optional[PositionMarker] = None,
+    ) -> Tuple[List[MarkdownToken], Optional[RequeueLineInfo]]:
+        ...  # pragma: no cover
+
+
+# pylint: enable=too-few-public-methods
 
 
 # pylint: disable=too-many-instance-attributes
@@ -19,8 +70,8 @@ class ParserState:
         self,
         token_stack: List[StackToken],
         token_document: List[MarkdownToken],
-        close_open_blocks_fn,
-        handle_blank_line_fn,
+        close_open_blocks_fn: CloseOpenBlocksProtocol,
+        handle_blank_line_fn: HandleBlankLineProtocol,
     ) -> None:
         (
             self.__token_stack,
@@ -57,14 +108,14 @@ class ParserState:
         return self.__token_document
 
     @property
-    def close_open_blocks_fn(self):
+    def close_open_blocks_fn(self) -> CloseOpenBlocksProtocol:
         """
         Function to handle the closing of blocks.
         """
         return self.__close_open_blocks_fn
 
     @property
-    def handle_blank_line_fn(self):
+    def handle_blank_line_fn(self) -> HandleBlankLineProtocol:
         """
         Function to handle blank lines.
         """

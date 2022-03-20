@@ -104,6 +104,8 @@
         },
         "pymarkdown/parser_logger.py": {},
         "pymarkdown/parser_state.py": {
+            "too-few-public-methods": 2,
+            "too-many-arguments": 1,
             "too-many-instance-attributes": 1
         },
         "pymarkdown/plugin_manager/__init__.py": {},
@@ -213,9 +215,9 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 135,
+        "too-many-arguments": 136,
         "too-many-locals": 44,
-        "too-few-public-methods": 3,
+        "too-few-public-methods": 5,
         "no-self-argument": 1,
         "chained-comparison": 1,
         "too-many-instance-attributes": 17,
