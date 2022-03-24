@@ -2,7 +2,7 @@
 Module to provide helper functions for parsing.
 """
 
-from typing import Optional, Tuple
+from typing import Any, Optional, Tuple
 
 from pymarkdown.constants import Constants
 
@@ -324,7 +324,7 @@ class ParserHelper:
         return index, source_string[start_index:index]
 
     @staticmethod
-    def calculate_length(source_string, start_index=0):
+    def calculate_length(source_string: str, start_index: int = 0) -> int:
         """
         Calculate an adjusted length for the string.
         """
@@ -339,7 +339,7 @@ class ParserHelper:
         return string_length - start_index
 
     @staticmethod
-    def detabify_string(source_string):
+    def detabify_string(source_string: str) -> str:
         """
         Given a string that may have one or more tabstops in it, resolve the
         tabstops into more easily handled space characters.
@@ -379,7 +379,7 @@ class ParserHelper:
         return rebuilt_string
 
     @staticmethod
-    def is_length_less_than_or_equal_to(source_string, length_limit):
+    def is_length_less_than_or_equal_to(source_string: str, length_limit: int) -> bool:
         """
         Determine if the adjusted length of the string is less than or equal to the
         specified limit.
@@ -530,7 +530,7 @@ class ParserHelper:
         return text_string.split(ParserHelper.newline_character)[-1]
 
     @staticmethod
-    def make_value_visible(value_to_modify):
+    def make_value_visible(value_to_modify: Any) -> str:
         """
         For the given value, turn it into a string if necessary, and then replace
         any known "invisible" characters with more visible strings.
@@ -849,7 +849,7 @@ class ParserHelper:
         return ParserHelper.__remove_escapes_from_text(removed_text)
 
     @staticmethod
-    def repeat_string(string_to_repeat, repeat_count):
+    def repeat_string(string_to_repeat: str, repeat_count: int) -> str:
         """
         Repeat the given character the specified number of times.
         """

@@ -3,7 +3,7 @@ Module to provide helper functions for parsing html.
 """
 import logging
 import string
-from typing import List
+from typing import List, Optional
 
 from pymarkdown.constants import Constants
 from pymarkdown.inline_markdown_token import RawHtmlMarkdownToken, TextMarkdownToken
@@ -12,6 +12,7 @@ from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.parser_state import ParserState
+from pymarkdown.position_marker import PositionMarker
 from pymarkdown.stack_token import HtmlBlockStackToken, ParagraphStackToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
@@ -755,7 +756,11 @@ class HtmlHelper:
         return html_block_type, remaining_html_tag
 
     @staticmethod
-    def parse_html_block(parser_state, position_marker, extracted_whitespace):
+    def parse_html_block(
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        extracted_whitespace: Optional[str],
+    ) -> List[MarkdownToken]:
         """
         Determine if we have the criteria that we need to start an HTML block.
         """
@@ -802,14 +807,18 @@ class HtmlHelper:
 
     @staticmethod
     def check_normal_html_block_end(
-        parser_state, line_to_parse, start_index, extracted_whitespace, position_marker
-    ):
+        parser_state: ParserState,
+        line_to_parse: str,
+        start_index: int,
+        extracted_whitespace: Optional[str],
+        position_marker: PositionMarker,
+    ) -> List[MarkdownToken]:
         """
         Check to see if we have encountered the end of the current HTML block
         via text on a normal line.
         """
 
-        new_tokens = [
+        new_tokens: List[MarkdownToken] = [
             TextMarkdownToken(
                 line_to_parse[start_index:],
                 extracted_whitespace,

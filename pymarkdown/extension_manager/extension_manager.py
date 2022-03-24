@@ -235,7 +235,7 @@ class ExtensionManager:
         raise argparse.ArgumentTypeError(f"Value '{argument}' is not a valid id.")
 
     @staticmethod
-    def add_argparse_subparser(subparsers: argparse._SubParsersAction) -> None:
+    def add_argparse_subparser(subparsers: argparse._SubParsersAction) -> None:  # type: ignore
         """
         Populate the argparse tree to allow for plugin support.
         """

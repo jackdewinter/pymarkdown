@@ -2,8 +2,9 @@
 Module to provide processing for the leaf blocks.
 """
 import logging
-from typing import Tuple
+from typing import List, Optional, Tuple
 
+from pymarkdown.block_quote_data import BlockQuoteData
 from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.inline_helper import InlineHelper
 from pymarkdown.inline_markdown_token import TextMarkdownToken
@@ -16,9 +17,11 @@ from pymarkdown.leaf_markdown_token import (
     SetextHeadingMarkdownToken,
     ThematicBreakMarkdownToken,
 )
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.parser_state import ParserState
+from pymarkdown.position_marker import PositionMarker
 from pymarkdown.stack_token import (
     BlockQuoteStackToken,
     FencedCodeBlockStackToken,
@@ -83,10 +86,10 @@ class LeafBlockProcessor:
 
     @staticmethod
     def parse_fenced_code_block(
-        parser_state,
-        position_marker,
-        extracted_whitespace,
-    ):
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        extracted_whitespace: Optional[str],
+    ) -> Tuple[List[MarkdownToken], Optional[str]]:
         """
         Handle the parsing of a fenced code block
         """
@@ -96,7 +99,7 @@ class LeafBlockProcessor:
             position_marker.text_to_parse,
             position_marker.index_number,
         )
-        new_tokens = []
+        new_tokens: List[MarkdownToken] = []
         (
             is_fence_start,
             non_whitespace_index,
@@ -307,18 +310,19 @@ class LeafBlockProcessor:
     # pylint: disable=too-many-arguments
     @staticmethod
     def parse_indented_code_block(
-        parser_state,
-        position_marker,
-        extracted_whitespace,
-        removed_chars_at_start,
-        last_block_quote_index,
-        last_list_start_index,
-    ):
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        extracted_whitespace: Optional[str],
+        removed_chars_at_start: Optional[int],
+        last_block_quote_index: int,
+        last_list_start_index: int,
+    ) -> List[MarkdownToken]:
+
         """
         Handle the parsing of an indented code block
         """
 
-        new_tokens = []
+        new_tokens: List[MarkdownToken] = []
 
         if (
             ParserHelper.is_length_greater_than_or_equal_to(
@@ -482,16 +486,16 @@ class LeafBlockProcessor:
 
     @staticmethod
     def parse_thematic_break(
-        parser_state,
-        position_marker,
-        extracted_whitespace,
-        block_quote_data,
-    ):
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        extracted_whitespace: Optional[str],
+        block_quote_data: BlockQuoteData,
+    ) -> List[MarkdownToken]:
         """
         Handle the parsing of a thematic break.
         """
 
-        new_tokens = []
+        new_tokens: List[MarkdownToken] = []
 
         start_char, index = LeafBlockProcessor.is_thematic_break(
             position_marker.text_to_parse,
@@ -571,7 +575,11 @@ class LeafBlockProcessor:
         return False, None, None, None
 
     @staticmethod
-    def parse_atx_headings(parser_state, position_marker, extracted_whitespace):
+    def parse_atx_headings(
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        extracted_whitespace: Optional[str],
+    ) -> List[MarkdownToken]:
         """
         Handle the parsing of an atx heading.
         """
@@ -692,16 +700,18 @@ class LeafBlockProcessor:
 
     @staticmethod
     def parse_setext_headings(
-        parser_state,
-        position_marker,
-        extracted_whitespace,
-        block_quote_data,
-    ):
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        extracted_whitespace: Optional[str],
+        block_quote_data: BlockQuoteData,
+    ) -> List[MarkdownToken]:
+
         """
         Handle the parsing of an setext heading.
         """
 
-        new_tokens = []
+        new_tokens: List[MarkdownToken] = []
+        assert extracted_whitespace is not None
         if (
             ParserHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
             and ParserHelper.is_character_at_index_one_of(
@@ -807,16 +817,17 @@ class LeafBlockProcessor:
 
     @staticmethod
     def parse_paragraph(
-        parser_state,
-        position_marker,
-        extracted_whitespace,
-        block_quote_data,
-        text_removed_by_container,
-    ):
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        extracted_whitespace: Optional[str],
+        block_quote_data: BlockQuoteData,
+        text_removed_by_container: str,
+    ) -> List[MarkdownToken]:
         """
         Handle the parsing of a paragraph.
         """
         POGGER.debug(">>text_removed_by_container>>:$:<<", text_removed_by_container)
+        assert extracted_whitespace is not None
         if parser_state.no_para_start_if_empty and position_marker.index_number >= len(
             position_marker.text_to_parse
         ):
@@ -986,12 +997,12 @@ class LeafBlockProcessor:
 
     @staticmethod
     def correct_for_leaf_block_start_in_list(
-        parser_state,
-        removed_chars_at_start,
-        old_top_of_stack,
-        html_tokens,
-        was_token_already_added_to_stack=True,
-    ):
+        parser_state: ParserState,
+        removed_chars_at_start: int,
+        old_top_of_stack_token: MarkdownToken,
+        html_tokens: List[MarkdownToken],
+        was_token_already_added_to_stack: bool = True,
+    ) -> None:
         """
         Check to see that if a paragraph has been closed within a list and
         there is a leaf block token immediately following, that the right
@@ -1002,7 +1013,7 @@ class LeafBlockProcessor:
             ">>correct_for_leaf_block_start_in_list>>removed_chars_at_start>$>>",
             removed_chars_at_start,
         )
-        if not old_top_of_stack.is_paragraph:
+        if not old_top_of_stack_token.is_paragraph:
             POGGER.debug("1")
             return
 

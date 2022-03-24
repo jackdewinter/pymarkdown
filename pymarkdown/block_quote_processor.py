@@ -2,10 +2,12 @@
 Module to provide processing for the block quotes.
 """
 import logging
+from typing import List, Optional, Tuple
 
 from pymarkdown.block_quote_data import BlockQuoteData
 from pymarkdown.container_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.parser_state import ParserState
@@ -34,12 +36,16 @@ class BlockQuoteProcessor:
 
     @staticmethod
     def is_block_quote_start(
-        line_to_parse, start_index, extracted_whitespace, adj_ws=None
-    ):
+        line_to_parse: str,
+        start_index: int,
+        extracted_whitespace: Optional[str],
+        adj_ws: Optional[str] = None,
+    ) -> bool:
         """
         Determine if we have the start of a block quote section.
         """
 
+        assert extracted_whitespace is not None
         return ParserHelper.is_length_less_than_or_equal_to(
             extracted_whitespace if adj_ws is None else adj_ws, 3
         ) and ParserHelper.is_character_at_index(
@@ -80,19 +86,19 @@ class BlockQuoteProcessor:
     # pylint: disable=too-many-arguments
     @staticmethod
     def check_for_lazy_handling(
-        parser_state,
-        position_marker,
-        block_quote_data,
-        line_to_parse,
-        extracted_whitespace,
-        was_paragraph_continuation,
-    ):
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        block_quote_data: BlockQuoteData,
+        line_to_parse: str,
+        extracted_whitespace: Optional[str],
+        was_paragraph_continuation: bool,
+    ) -> Tuple[List[MarkdownToken], BlockQuoteData, bool]:
         """
         Check if there is any processing to be handled during the handling of
         lazy continuation lines in block quotes.
         """
         POGGER.debug("__check_for_lazy_handling")
-        container_level_tokens = []
+        container_level_tokens: List[MarkdownToken] = []
         POGGER.debug(
             "block_quote_data.current_count>$>>block_quote_data.stack_count>>$<<",
             block_quote_data.current_count,
@@ -142,13 +148,27 @@ class BlockQuoteProcessor:
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def handle_block_quote_block(
-        parser_state,
-        position_marker,
-        extracted_whitespace,
-        adj_ws,
-        block_quote_data,
-        container_start_bq_count,
-    ):
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        extracted_whitespace: Optional[str],
+        adj_ws: Optional[str],
+        block_quote_data: BlockQuoteData,
+        container_start_bq_count: int,
+    ) -> Tuple[
+        bool,
+        int,
+        BlockQuoteData,
+        str,
+        int,
+        List[MarkdownToken],
+        List[MarkdownToken],
+        int,
+        bool,
+        int,
+        Optional[str],
+        bool,
+        Optional[RequeueLineInfo],
+    ]:
         """
         Handle the processing of a block quote block.
         """

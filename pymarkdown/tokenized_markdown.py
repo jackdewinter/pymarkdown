@@ -271,6 +271,7 @@ class TokenizedMarkdown:
             )
         else:
             POGGER.debug("\n\nnormal lines")
+            assert self.__parse_properties is not None
             (
                 tokens_from_line,
                 _,
@@ -483,6 +484,7 @@ class TokenizedMarkdown:
             requeue_line_info.lines_to_requeue,
         )
         if requeue_reset:
+            assert parser_state.original_line_to_parse is not None
             POGGER.debug(
                 "cob>>original_line_to_parse>$>", parser_state.original_line_to_parse
             )
