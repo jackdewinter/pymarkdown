@@ -1490,7 +1490,7 @@ class ContainerBlockProcessor:
                 container_depth,
                 indent_already_processed,
             )
-            can_continue = bool(not requeue_line_info)
+            can_continue = not requeue_line_info
             if not can_continue:
                 POGGER.debug(
                     ">>requeuing lines after looking for ordered list start. returning."
@@ -2441,7 +2441,7 @@ class ContainerBlockProcessor:
             adjusted_indent_level,
             indent_level,
         )
-        indent_was_adjusted = bool(indent_level != adjusted_indent_level)
+        indent_was_adjusted = indent_level != adjusted_indent_level
         if indent_level > adjusted_indent_level:
             indent_level_delta = indent_level - adjusted_indent_level
         indent_level = column_number_delta + end_container_indices.block_index

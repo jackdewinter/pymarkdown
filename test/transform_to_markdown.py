@@ -576,13 +576,12 @@ class TransformToMarkdown:
                     + f"end.line:{token_stack[-1].line_number} != prev.line:{previous_token.line_number}"
                 )
 
-                add_leading_spaces_from_previous_token = cls.__xx(
+                if add_leading_spaces_from_previous_token := cls.__xx(
                     token_stack,
                     removed_tokens,
                     applied_leading_spaces_to_start_of_container_line,
                     previous_token,
-                )
-                if add_leading_spaces_from_previous_token:
+                ):
                     split_leading_spaces = previous_token.leading_spaces.split(
                         ParserHelper.newline_character
                     )

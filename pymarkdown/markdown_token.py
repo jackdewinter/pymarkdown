@@ -692,11 +692,9 @@ class EndMarkdownToken(MarkdownToken):
         """
         field_parts = []
         if self.extra_end_data is not None:
-            field_parts.append(self.extracted_whitespace)
-            field_parts.append(self.extra_end_data)
+            field_parts.extend((self.extracted_whitespace, self.extra_end_data))
         else:
-            field_parts.append("")
-            field_parts.append("")
+            field_parts.extend(("", ""))
         if (
             isinstance(self.__start_markdown_token, MarkdownToken)
             and self.__start_markdown_token.can_force_close
