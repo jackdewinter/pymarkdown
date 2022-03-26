@@ -148,7 +148,7 @@ class TransformToGfmListLooseness:
         current_token_index,
     ):
         POGGER.debug(">>list--end>>$", stack_count)
-        stop_me = bool(not stack_count)
+        stop_me = not stack_count
         if not stop_me:
             stack_count -= 1
             if not stack_count:
