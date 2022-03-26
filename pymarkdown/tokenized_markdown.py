@@ -11,7 +11,7 @@ from pymarkdown.bad_tokenization_error import BadTokenizationError
 from pymarkdown.coalesce_processor import CoalesceProcessor
 from pymarkdown.container_block_processor import ContainerBlockProcessor
 from pymarkdown.extension_manager.extension_manager import ExtensionManager
-from pymarkdown.extensions.front_matter_markdown_token import FrontMatterExtension
+from pymarkdown.extensions.front_matter_extension import FrontMatterExtension
 from pymarkdown.extensions.pragma_token import PragmaToken
 from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.inline_helper import InlineHelper

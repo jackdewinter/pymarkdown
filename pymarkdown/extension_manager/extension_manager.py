@@ -18,7 +18,7 @@ from pymarkdown.extension_manager.parser_extension import ParserExtension
 from pymarkdown.extensions.disallowed_raw_html import MarkdownDisallowRawHtmlExtension
 from pymarkdown.extensions.extended_autolinks import MarkdownExtendedAutolinksExtension
 from pymarkdown.extensions.extension_one import DebugExtension
-from pymarkdown.extensions.front_matter_markdown_token import FrontMatterExtension
+from pymarkdown.extensions.front_matter_extension import FrontMatterExtension
 from pymarkdown.extensions.markdown_strikethrough import MarkdownStrikeThroughExtension
 from pymarkdown.extensions.markdown_tables import MarkdownTablesExtension
 from pymarkdown.extensions.pragma_token import PragmaExtension

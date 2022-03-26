@@ -701,13 +701,13 @@ class SpecialTextMarkdownToken(TextMarkdownToken):
     # pylint: disable=too-many-arguments
     def __init__(
         self,
-        token_text,
-        repeat_count,
-        preceding_two,
-        following_two,
-        is_active=True,
-        line_number=0,
-        column_number=0,
+        token_text: str,
+        repeat_count: int,
+        preceding_two: Optional[str],
+        following_two: Optional[str],
+        is_active: bool = True,
+        line_number: int = 0,
+        column_number: int = 0,
     ):
         (
             self.__repeat_count,

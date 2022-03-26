@@ -92,7 +92,7 @@ class ParserState:
         self.__same_line_container_tokens: Optional[List[MarkdownToken]] = None
         self.nested_list_start: Optional[ListStackToken] = None
         self.copy_of_token_stack: List[StackToken] = []
-        self.block_copy: List[StackToken] = []
+        self.block_copy: List[MarkdownToken] = []
 
     @property
     def token_stack(self):

@@ -6,9 +6,10 @@ import logging
 import os
 import re
 import string
-from typing import Dict
+from typing import Dict, List, Optional, Tuple, cast
 
 from pymarkdown.bad_tokenization_error import BadTokenizationError
+from pymarkdown.container_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.inline_markdown_token import (
     EmailAutolinkMarkdownToken,
@@ -18,6 +19,7 @@ from pymarkdown.inline_markdown_token import (
 )
 from pymarkdown.inline_request import InlineRequest
 from pymarkdown.inline_response import InlineResponse
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 
@@ -250,22 +252,20 @@ class InlineHelper:
 
     @staticmethod
     def append_text(
-        string_to_append_to,
-        text_to_append,
-        alternate_escape_map=None,
-        add_text_signature=True,
-    ):
+        string_to_append_to: str,
+        text_to_append: str,
+        alternate_escape_map: Optional[Dict[str, str]] = None,
+        add_text_signature: bool = True,
+    ) -> str:
         """
         Append the text to the given string, doing any needed encoding as we go.
         """
 
         if not alternate_escape_map:
             alternate_escape_map = InlineHelper.__html_character_escape_map
-
+        key_map = "".join(alternate_escape_map.keys())
         start_index, text_parts = 0, [string_to_append_to]
-        next_index = ParserHelper.index_any_of(
-            text_to_append, alternate_escape_map.keys(), start_index
-        )
+        next_index = ParserHelper.index_any_of(text_to_append, key_map, start_index)
         while next_index != -1:
             escaped_part = alternate_escape_map[text_to_append[next_index]]
             text_parts.extend(
@@ -280,9 +280,7 @@ class InlineHelper:
             )
 
             start_index = next_index + 1
-            next_index = ParserHelper.index_any_of(
-                text_to_append, alternate_escape_map.keys(), start_index
-            )
+            next_index = ParserHelper.index_any_of(text_to_append, key_map, start_index)
 
         if start_index < len(text_to_append):
             text_parts.append(text_to_append[start_index:])
@@ -489,19 +487,19 @@ class InlineHelper:
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def handle_line_end(
-        remaining_line,
-        end_string,
-        current_string,
-        inline_blocks,
-        is_setext,
-        line_number,
-        column_number,
-        coalesced_stack,
-    ):
+        remaining_line: str,
+        end_string: Optional[str],
+        current_string: str,
+        inline_blocks: List[MarkdownToken],
+        is_setext: bool,
+        line_number: int,
+        column_number: int,
+        coalesced_stack: List[MarkdownToken],
+    ) -> Tuple[str, Optional[str], List[MarkdownToken], str, Optional[str], str]:
         """
         Handle the inline case of having the end of line character encountered.
         """
-        new_tokens = []
+        new_tokens: List[MarkdownToken] = []
 
         POGGER.debug(">>current_string>>$>>", current_string)
         POGGER.debug(">>end_string>>$>>", end_string)
@@ -516,17 +514,12 @@ class InlineHelper:
         POGGER.debug(">>remaining_line>>$>>", remaining_line)
 
         POGGER.debug(">>current_string>>$>>", current_string)
-        (
-            append_to_current_string,
-            whitespace_to_add,
-            removed_end_whitespace_size,
-            adj_hard_column,
-        ) = (
+        (append_to_current_string, removed_end_whitespace_size, adj_hard_column,) = (
             ParserHelper.newline_character,
-            None,
             len(removed_end_whitespace),
             column_number + len(remaining_line),
         )
+        whitespace_to_add: Optional[str] = None
         POGGER.debug(
             ">>len(r_e_w)>>$>>rem>>$>>",
             removed_end_whitespace_size,
@@ -560,7 +553,8 @@ class InlineHelper:
         )
 
         if coalesced_stack and coalesced_stack[-1].is_block_quote_start:
-            coalesced_stack[-1].leading_text_index += 1
+            block_quote_token = cast(BlockQuoteMarkdownToken, coalesced_stack[-1])
+            block_quote_token.leading_text_index += 1
 
         return (
             append_to_current_string,

@@ -2,6 +2,9 @@
 Module to provide for an element that can be added to markdown parsing stream.
 """
 from enum import Enum
+from typing import Optional
+
+from pymarkdown.position_marker import PositionMarker
 
 
 class MarkdownTokenClass(Enum):
@@ -55,16 +58,16 @@ class MarkdownToken:
     # pylint: disable=too-many-arguments
     def __init__(
         self,
-        token_name,
-        token_class,
-        extra_data=None,
-        line_number=0,
-        column_number=0,
-        position_marker=None,
-        is_extension=False,
-        can_force_close=True,
-        requires_end_token=False,
-        is_special=False,
+        token_name: str,
+        token_class: MarkdownTokenClass,
+        extra_data: Optional[str] = None,
+        line_number: int = 0,
+        column_number: int = 0,
+        position_marker: PositionMarker = None,
+        is_extension: bool = False,
+        can_force_close: bool = True,
+        requires_end_token: bool = False,
+        is_special: bool = False,
     ):
         if position_marker:
             line_number, column_number = (
@@ -148,7 +151,7 @@ class MarkdownToken:
         """
         return self.__extra_data
 
-    def _set_extra_data(self, extra_data):
+    def _set_extra_data(self, extra_data: Optional[str]) -> None:
         self.__extra_data = extra_data
 
     @property

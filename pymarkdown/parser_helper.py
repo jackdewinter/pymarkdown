@@ -35,7 +35,9 @@ class ParserHelper:
     __normal_whitespace = f" {tab_character}"
 
     @staticmethod
-    def is_character_at_index(source_string, index_in_string, valid_character):
+    def is_character_at_index(
+        source_string: str, index_in_string: int, valid_character: str
+    ) -> bool:
         """
         Determine if the specified character is at a valid location and is the
         specified valid character.
@@ -47,7 +49,9 @@ class ParserHelper:
         )
 
     @staticmethod
-    def are_characters_at_index(source_string, index_in_string, string_to_match):
+    def are_characters_at_index(
+        source_string: str, index_in_string: int, string_to_match: str
+    ) -> bool:
         """
         Determine if the specified character is at a valid location and is the
         specified valid character.
@@ -61,7 +65,9 @@ class ParserHelper:
         )
 
     @staticmethod
-    def is_character_at_index_not(source_string, index_in_string, valid_character):
+    def is_character_at_index_not(
+        source_string: str, index_in_string: int, valid_character: str
+    ) -> bool:
         """
         Determine if the specified character is at a valid location and is
         not the specified valid character.
@@ -73,7 +79,9 @@ class ParserHelper:
         )
 
     @staticmethod
-    def is_character_at_index_whitespace(source_string, index_in_string):
+    def is_character_at_index_whitespace(
+        source_string: str, index_in_string: int
+    ) -> bool:
         """
         Determine if the specified character is valid and a whitespace character.
         """
@@ -200,7 +208,9 @@ class ParserHelper:
         return index, source_string[start_index:index]
 
     @staticmethod
-    def collect_while_character(source_string, start_index, match_character):
+    def collect_while_character(
+        source_string: str, start_index: int, match_character: str
+    ) -> Tuple[Optional[int], Optional[int]]:
         """
         Collect a sequence of the same character from a given starting point in a string.
 
@@ -282,7 +292,9 @@ class ParserHelper:
         return index, source_string[start_index:index]
 
     @staticmethod
-    def collect_while_one_of_characters(source_string, start_index, match_characters):
+    def collect_while_one_of_characters(
+        source_string: str, start_index: int, match_characters: str
+    ) -> Tuple[Optional[int], Optional[str]]:
         """
         Collect a sequence of characters from a given starting point in a string as long
         as the character is one of the match characters.
@@ -398,7 +410,7 @@ class ParserHelper:
         )
 
     @staticmethod
-    def index_any_of(source_text, find_any, start_index=0):
+    def index_any_of(source_text: str, find_any: str, start_index: int = 0) -> int:
         """
         Determine if any of the specified characters are in the source string.
         """
@@ -436,7 +448,7 @@ class ParserHelper:
         return "".join(replaced_parts)
 
     @staticmethod
-    def count_characters_in_text(text_to_examine, text_to_look_for):
+    def count_characters_in_text(text_to_examine: str, text_to_look_for: str) -> int:
         """
         Count the number of a given character in a given string.
         """
@@ -445,7 +457,7 @@ class ParserHelper:
         return original_length - removed_length
 
     @staticmethod
-    def count_newlines_in_text(text_to_examine):
+    def count_newlines_in_text(text_to_examine: str) -> int:
         """
         Count the number of new line characters in a given string.
         """
@@ -466,7 +478,7 @@ class ParserHelper:
         )
 
     @staticmethod
-    def calculate_deltas(text_to_analyze):
+    def calculate_deltas(text_to_analyze: str) -> Tuple[int, int]:
         """
         Calculate the deltas associated with a given string.
         """
@@ -497,7 +509,7 @@ class ParserHelper:
         post_increment_index=False,
         start_text_index=1,
         add_whitespace_after=False,
-    ):
+    ) -> Tuple[str, int]:
         """
         Properly recombine a text-string with a matching whitespace-string.
         """
@@ -523,7 +535,7 @@ class ParserHelper:
     # pylint: enable=too-many-arguments
 
     @staticmethod
-    def calculate_last_line(text_string):
+    def calculate_last_line(text_string: str) -> str:
         """
         Determine the last line of a multi-line string.
         """
@@ -560,7 +572,7 @@ class ParserHelper:
         )
 
     @staticmethod
-    def valid_characters_to_escape():
+    def valid_characters_to_escape() -> str:
         """
         List of valid characters that can be escaped.
         """
@@ -623,7 +635,9 @@ class ParserHelper:
         return adjusted_text_token
 
     @staticmethod
-    def create_replacement_markers(replace_this_string, with_this_string):
+    def create_replacement_markers(
+        replace_this_string: str, with_this_string: str
+    ) -> str:
         """
         Create a replacement marker indicating that the first string is being replaced
         by the second string.
@@ -634,7 +648,7 @@ class ParserHelper:
         )
 
     @staticmethod
-    def create_replace_with_nothing_marker(replace_this_string):
+    def create_replace_with_nothing_marker(replace_this_string: str) -> str:
         """
         Create a replacement marker of the given string with the noop character.
         """
@@ -826,7 +840,7 @@ class ParserHelper:
         return adjusted_text_token
 
     @staticmethod
-    def resolve_all_from_text(text_to_resolve):
+    def resolve_all_from_text(text_to_resolve: str) -> str:
         """
         Combination to resolve all of these special characters from the text.
         """
@@ -836,7 +850,7 @@ class ParserHelper:
         return ParserHelper.__resolve_escapes_from_text(resolved_text)
 
     @staticmethod
-    def remove_all_from_text(text_to_remove, include_noops=False):
+    def remove_all_from_text(text_to_remove: str, include_noops: bool = False) -> str:
         """
         Combination to remove all of these special characters from the text.
         """

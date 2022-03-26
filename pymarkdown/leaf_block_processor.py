@@ -435,16 +435,17 @@ class LeafBlockProcessor:
 
     @staticmethod
     def is_thematic_break(
-        line_to_parse,
-        start_index,
-        extracted_whitespace,
-        skip_whitespace_check=False,
-        whitespace_allowed_between_characters=True,
-    ):
+        line_to_parse: str,
+        start_index: int,
+        extracted_whitespace: Optional[str],
+        skip_whitespace_check: bool = False,
+        whitespace_allowed_between_characters: bool = True,
+    ) -> Tuple[Optional[str], Optional[int]]:
         """
         Determine whether or not we have a thematic break.
         """
 
+        assert extracted_whitespace is not None
         thematic_break_character, end_of_break_index = None, None
         is_thematic_character = ParserHelper.is_character_at_index_one_of(
             line_to_parse, start_index, LeafBlockProcessor.__thematic_break_characters
@@ -733,6 +734,7 @@ class LeafBlockProcessor:
                 position_marker.index_number,
                 position_marker.text_to_parse[position_marker.index_number],
             )
+            assert collected_to_index is not None
             (
                 after_whitespace_index,
                 extra_whitespace_after_setext,
@@ -1104,28 +1106,30 @@ class LeafBlockProcessor:
 
     @staticmethod
     def is_paragraph_ending_leaf_block_start(
-        parser_state,
-        line_to_parse,
-        start_index,
-        extracted_whitespace,
-        exclude_thematic_break=False,
-    ):
+        parser_state: ParserState,
+        line_to_parse: str,
+        start_index: int,
+        extracted_whitespace: Optional[str],
+        exclude_thematic_break: bool = False,
+    ) -> bool:
         """
         Determine whether we have a valid leaf block start.
         """
 
+        # TODO Can be Removed?
         POGGER.debug(
             "is_paragraph_ending_leaf_block_start, ex=$", exclude_thematic_break
         )
         is_leaf_block_start = not exclude_thematic_break
         assert not exclude_thematic_break
-        is_leaf_block_start, _ = LeafBlockProcessor.is_thematic_break(
+
+        is_thematic_break_start, _ = LeafBlockProcessor.is_thematic_break(
             line_to_parse,
             start_index,
             extracted_whitespace,
             skip_whitespace_check=True,
         )
-        is_leaf_block_start = bool(is_leaf_block_start)
+        is_leaf_block_start = bool(is_thematic_break_start)
         POGGER.debug(
             "is_paragraph_ending_leaf_block_start>>is_theme_break>>$",
             is_leaf_block_start,

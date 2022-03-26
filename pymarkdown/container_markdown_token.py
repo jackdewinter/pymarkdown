@@ -284,7 +284,9 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
     Class to provide for an encapsulation of the block quote element.
     """
 
-    def __init__(self, extracted_whitespace, position_marker):
+    def __init__(
+        self, extracted_whitespace: Optional[str], position_marker: PositionMarker
+    ) -> None:
         self.__extracted_whitespace, self.__leading_spaces, self.leading_text_index = (
             extracted_whitespace,
             "",
@@ -312,7 +314,9 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
         """
         return self.__leading_spaces
 
-    def add_leading_spaces(self, leading_spaces_to_add, skip_adding_newline=False):
+    def add_leading_spaces(
+        self, leading_spaces_to_add: str, skip_adding_newline: bool = False
+    ) -> None:
         """
         Add any leading spaces to the token, separating them with line feeds.
         """

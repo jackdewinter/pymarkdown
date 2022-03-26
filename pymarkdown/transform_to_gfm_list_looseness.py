@@ -2,7 +2,10 @@
 Module to handle the calculationof list looseness for the GRM transformer.
 """
 import logging
+from typing import List
 
+from pymarkdown.container_markdown_token import ListStartMarkdownToken
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_logger import ParserLogger
 
 POGGER = ParserLogger(logging.getLogger(__name__))
@@ -14,7 +17,11 @@ class TransformToGfmListLooseness:
     """
 
     @staticmethod
-    def calculate_list_looseness(actual_tokens, actual_token_index, next_token):
+    def calculate_list_looseness(
+        actual_tokens: List[MarkdownToken],
+        actual_token_index: int,
+        next_token: ListStartMarkdownToken,
+    ) -> bool:
         """
         Based on the first token in a list, compute the "looseness" of the list.
         """
@@ -257,7 +264,9 @@ class TransformToGfmListLooseness:
         return current_index
 
     @staticmethod
-    def reset_list_looseness(actual_tokens, actual_token_index):
+    def reset_list_looseness(
+        actual_tokens: List[MarkdownToken], actual_token_index: int
+    ) -> bool:
         """
         Based on where we are within the actual tokens being emitted, figure
         out the correct list looseness to use.
