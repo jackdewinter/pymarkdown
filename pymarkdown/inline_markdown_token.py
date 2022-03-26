@@ -2,11 +2,13 @@
 Module to provide for an inline element that can be added to markdown parsing stream.
 """
 import logging
+from typing import Optional
 
 from pymarkdown.constants import Constants
 from pymarkdown.markdown_token import MarkdownToken, MarkdownTokenClass
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.position_marker import PositionMarker
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -540,13 +542,13 @@ class TextMarkdownToken(InlineMarkdownToken):
     # pylint: disable=too-many-arguments
     def __init__(
         self,
-        token_text,
-        extracted_whitespace,
-        end_whitespace=None,
-        position_marker=None,
-        line_number=0,
-        column_number=0,
-        is_special=False,
+        token_text: str,
+        extracted_whitespace: Optional[str],
+        end_whitespace: Optional[str] = None,
+        position_marker: Optional[PositionMarker] = None,
+        line_number: int = 0,
+        column_number: int = 0,
+        is_special: bool = False,
     ):
         (
             self.__token_text,
@@ -699,13 +701,13 @@ class SpecialTextMarkdownToken(TextMarkdownToken):
     # pylint: disable=too-many-arguments
     def __init__(
         self,
-        token_text,
-        repeat_count,
-        preceding_two,
-        following_two,
-        is_active=True,
-        line_number=0,
-        column_number=0,
+        token_text: str,
+        repeat_count: int,
+        preceding_two: Optional[str],
+        following_two: Optional[str],
+        is_active: bool = True,
+        line_number: int = 0,
+        column_number: int = 0,
     ):
         (
             self.__repeat_count,

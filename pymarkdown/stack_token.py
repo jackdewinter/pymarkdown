@@ -10,9 +10,9 @@ from pymarkdown.container_markdown_token import (
     OrderedListStartMarkdownToken,
     UnorderedListStartMarkdownToken,
 )
-from pymarkdown.inline_markdown_token import RawHtmlMarkdownToken
 from pymarkdown.leaf_markdown_token import (
     FencedCodeBlockMarkdownToken,
+    HtmlBlockMarkdownToken,
     IndentedCodeBlockMarkdownToken,
     ParagraphMarkdownToken,
 )
@@ -450,7 +450,7 @@ class HtmlBlockStackToken(StackToken):
     """
 
     def __init__(
-        self, html_block_type: str, matching_markdown_token: RawHtmlMarkdownToken
+        self, html_block_type: str, matching_markdown_token: HtmlBlockMarkdownToken
     ) -> None:
         self.__html_block_type = html_block_type
         extra_data = html_block_type

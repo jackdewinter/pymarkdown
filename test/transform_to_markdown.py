@@ -11,10 +11,8 @@ from pymarkdown.container_markdown_token import (
     OrderedListStartMarkdownToken,
     UnorderedListStartMarkdownToken,
 )
-from pymarkdown.extensions.front_matter_markdown_token import (
-    FrontMatterExtension,
-    FrontMatterMarkdownToken,
-)
+from pymarkdown.extensions.front_matter_extension import FrontMatterExtension
+from pymarkdown.extensions.front_matter_markdown_token import FrontMatterMarkdownToken
 from pymarkdown.inline_markdown_token import (
     EmailAutolinkMarkdownToken,
     EmphasisMarkdownToken,
@@ -318,7 +316,7 @@ class TransformToMarkdown:
         assert not self.container_token_stack
         return transformed_data
 
-    # pylint: disable=unused-private-member, too-many-arguments
+    # pylint: disable=too-many-arguments
     @classmethod
     def __manage_records(
         cls,
@@ -369,7 +367,7 @@ class TransformToMarkdown:
         old_record_index += 1
         return old_record_index, did_move_ahead, current_changed_record
 
-    # pylint: enable=unused-private-member, too-many-arguments
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     @classmethod
@@ -514,7 +512,6 @@ class TransformToMarkdown:
             stack_index -= 1
         return nested_block_start_index
 
-    # pylint: disable=unused-private-member
     @classmethod
     def __xx(
         cls,
@@ -548,8 +545,6 @@ class TransformToMarkdown:
             and new_list_item_adjust
         )
 
-    # pylint: enable=unused-private-member
-
     # pylint: disable=too-many-arguments
     @classmethod
     def __adjust_for_list(
@@ -581,13 +576,12 @@ class TransformToMarkdown:
                     + f"end.line:{token_stack[-1].line_number} != prev.line:{previous_token.line_number}"
                 )
 
-                add_leading_spaces_from_previous_token = cls.__xx(
+                if cls.__xx(
                     token_stack,
                     removed_tokens,
                     applied_leading_spaces_to_start_of_container_line,
                     previous_token,
-                )
-                if add_leading_spaces_from_previous_token:
+                ):
                     split_leading_spaces = previous_token.leading_spaces.split(
                         ParserHelper.newline_character
                     )
@@ -624,7 +618,6 @@ class TransformToMarkdown:
             stack_index -= 1
         return nested_list_start_index
 
-    # pylint: disable=unused-private-member
     @classmethod
     def __adjust_for_block_quote_same_line(
         cls,
@@ -654,9 +647,7 @@ class TransformToMarkdown:
         container_line = adj_line + container_line
         return container_line
 
-    # pylint: enable=unused-private-member
-
-    # pylint: disable=unused-private-member, too-many-arguments
+    # pylint: disable=too-many-arguments
     @classmethod
     def __adjust_for_block_quote_previous_line(
         cls,
@@ -684,7 +675,7 @@ class TransformToMarkdown:
             )
         return container_line
 
-    # pylint: enable=unused-private-member, too-many-arguments
+    # pylint: enable=too-many-arguments
 
     @classmethod
     def __adjust_for_block_quote(
@@ -723,7 +714,7 @@ class TransformToMarkdown:
             )
         return container_line
 
-    # pylint: disable=too-many-arguments, unused-private-member
+    # pylint: disable=too-many-arguments
     @classmethod
     def __adjust(
         cls,
@@ -756,7 +747,7 @@ class TransformToMarkdown:
             )
         return container_line
 
-    # pylint: enable=too-many-arguments, unused-private-member
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-locals
     def __apply_container_transformation(self, container_text, container_records):
@@ -1368,7 +1359,6 @@ class TransformToMarkdown:
 
         return True, previous_indent
 
-    # pylint: disable=unused-private-member
     @classmethod
     def __rehydrate_list_start_contained_in_list_spacingx(
         cls, containing_list_token, current_token, block_quote_leading_space_length
@@ -1389,9 +1379,6 @@ class TransformToMarkdown:
         )
         return previous_indent, extracted_whitespace
 
-    # pylint: enable=unused-private-member
-
-    # pylint: disable=unused-private-member
     @classmethod
     def __rehydrate_list_start_contained_in_list_deeper_block_quote(
         cls, previous_token, deeper_containing_block_quote_token, current_token
@@ -1462,9 +1449,7 @@ class TransformToMarkdown:
             block_quote_leading_space_length,
         )
 
-    # pylint: enable=unused-private-member
-
-    # pylint: disable=unused-private-member, too-many-arguments
+    # pylint: disable=too-many-arguments
     @classmethod
     def __calculate_post_adjust_whitespace(
         cls,
@@ -1500,7 +1485,7 @@ class TransformToMarkdown:
         print(f"adj->post_adjust_whitespace>>:{post_adjust_whitespace}:<<")
         return post_adjust_whitespace
 
-    # pylint: enable=unused-private-member, too-many-arguments
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     @classmethod
@@ -2307,7 +2292,6 @@ class TransformToMarkdown:
         )
         return f"{recombined_text}{ParserHelper.newline_character}", "", ""
 
-    # pylint: disable=unused-private-member
     @classmethod
     def __reconstitute_setext_text_item(
         cls,
@@ -2336,8 +2320,6 @@ class TransformToMarkdown:
         rejoined_token_text.append(
             "".join([ws_prefix_text, text_part_value, ws_suffix_text])
         )
-
-    # pylint: enable=unused-private-member
 
     @classmethod
     def __reconstitute_setext_text(cls, main_text, current_token):

@@ -11,7 +11,7 @@ from typing_extensions import Protocol
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.requeue_line_info import RequeueLineInfo
-from pymarkdown.stack_token import StackToken
+from pymarkdown.stack_token import ListStackToken, StackToken
 
 
 # pylint: disable=too-few-public-methods
@@ -81,17 +81,18 @@ class ParserState:
         ) = (token_stack, token_document, close_open_blocks_fn, handle_blank_line_fn)
 
         (
-            self.__same_line_container_tokens,
             self.__last_block_quote_stack_token,
             self.__last_block_quote_markdown_token_index,
             self.__copy_of_last_block_quote_markdown_token,
-            self.__original_line_to_parse,
             self.__original_stack_depth,
             self.__original_document_depth,
             self.__no_para_start_if_empty,
-        ) = (None, None, None, None, None, None, None, False)
-        self.nested_list_start = None
-        self.copy_of_token_stack = None
+        ) = (None, None, None, 0, 0, False)
+        self.__original_line_to_parse: Optional[str] = None
+        self.__same_line_container_tokens: Optional[List[MarkdownToken]] = None
+        self.nested_list_start: Optional[ListStackToken] = None
+        self.copy_of_token_stack: List[StackToken] = []
+        self.block_copy: List[MarkdownToken] = []
 
     @property
     def token_stack(self):
@@ -122,7 +123,7 @@ class ParserState:
         return self.__handle_blank_line_fn
 
     @property
-    def same_line_container_tokens(self):
+    def same_line_container_tokens(self) -> Optional[List[MarkdownToken]]:
         """
         State of the container tokens at the start of the leaf processing.
         """
@@ -150,7 +151,7 @@ class ParserState:
         return self.__copy_of_last_block_quote_markdown_token
 
     @property
-    def original_line_to_parse(self):
+    def original_line_to_parse(self) -> Optional[str]:
         """
         Line to parse, before any processing occurs.
         """
@@ -226,7 +227,7 @@ class ParserState:
             for next_item_on_stack in self.token_stack
         )
 
-    def mark_start_information(self, position_marker):
+    def mark_start_information(self, position_marker: PositionMarker) -> None:
         """
         Mark the start of processing this line of information.  A lot of
         this information is to allow a requeue to occur, if needed.
@@ -259,19 +260,21 @@ class ParserState:
                 self.token_document[self.__last_block_quote_markdown_token_index]
             )
 
-    def mark_for_leaf_processing(self, container_level_tokens):
+    def mark_for_leaf_processing(
+        self, container_level_tokens: List[MarkdownToken]
+    ) -> None:
         """
         Set things up for leaf processing.
         """
         self.__same_line_container_tokens = container_level_tokens
 
-    def clear_after_leaf_processing(self):
+    def clear_after_leaf_processing(self) -> None:
         """
         Reset things after leaf processing.
         """
         self.__same_line_container_tokens = None
 
-    def set_no_para_start_if_empty(self):
+    def set_no_para_start_if_empty(self) -> None:
         """
         Set the member variable to true.
         """

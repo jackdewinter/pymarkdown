@@ -4,6 +4,7 @@ Module to provide processing for the list blocks.
 
 import logging
 import string
+from typing import List, Optional, Tuple
 
 from pymarkdown.block_quote_data import BlockQuoteData
 from pymarkdown.container_markdown_token import (
@@ -13,9 +14,17 @@ from pymarkdown.container_markdown_token import (
 )
 from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
-from pymarkdown.stack_token import OrderedListStackToken, UnorderedListStackToken
+from pymarkdown.parser_state import ParserState
+from pymarkdown.position_marker import PositionMarker
+from pymarkdown.requeue_line_info import RequeueLineInfo
+from pymarkdown.stack_token import (
+    OrderedListStackToken,
+    StackToken,
+    UnorderedListStackToken,
+)
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -32,13 +41,13 @@ class ListBlockProcessor:
     @staticmethod
     # pylint: disable=too-many-arguments
     def is_ulist_start(
-        parser_state,
-        line_to_parse,
-        start_index,
-        extracted_whitespace,
-        skip_whitespace_check,
-        adj_ws=None,
-    ):
+        parser_state: ParserState,
+        line_to_parse: str,
+        start_index: int,
+        extracted_whitespace: Optional[str],
+        skip_whitespace_check: bool,
+        adj_ws: Optional[str] = None,
+    ) -> Tuple[bool, int, int, int]:
         """
         Determine if we have the start of an un-numbered list.
         """
@@ -52,6 +61,8 @@ class ListBlockProcessor:
             line_to_parse,
             start_index,
         )
+
+        assert adj_ws is not None
         POGGER.debug("skip_whitespace_check>>$", skip_whitespace_check)
         POGGER.debug("len(adj_ws)>>$", len(adj_ws))
         POGGER.debug("parent_indent>>$", parent_indent)
@@ -91,13 +102,13 @@ class ListBlockProcessor:
     # pylint: disable=too-many-arguments
     @staticmethod
     def is_olist_start(
-        parser_state,
-        line_to_parse,
-        start_index,
-        extracted_whitespace,
-        skip_whitespace_check,
-        adj_ws=None,
-    ):
+        parser_state: ParserState,
+        line_to_parse: str,
+        start_index: int,
+        extracted_whitespace: Optional[str],
+        skip_whitespace_check: bool,
+        adj_ws: Optional[str] = None,
+    ) -> Tuple[bool, int, int, int]:
         """
         Determine if we have the start of a numbered or ordered list.
         """
@@ -114,6 +125,8 @@ class ListBlockProcessor:
         )
         POGGER.debug("after_adjust>>ws=$=", adj_ws)
         POGGER.debug("after_adjust>>parent_indent=$=", parent_indent)
+
+        assert adj_ws is not None
 
         POGGER.debug("skip_whitespace_check>>$", skip_whitespace_check)
         POGGER.debug("len(adj_ws)>>$", len(adj_ws))
@@ -547,17 +560,27 @@ class ListBlockProcessor:
     # pylint: disable=too-many-locals, too-many-arguments
     @staticmethod
     def handle_list_block(
-        is_ulist,
-        parser_state,
-        position_marker,
-        extracted_whitespace,
-        adj_ws,
-        block_quote_data,
-        removed_chars_at_start,
-        current_container_blocks,
-        container_depth,
-        indent_already_processed,
-    ):
+        is_ulist: bool,
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        extracted_whitespace: Optional[str],
+        adj_ws: Optional[str],
+        block_quote_data: BlockQuoteData,
+        removed_chars_at_start: int,
+        current_container_blocks: List[StackToken],
+        container_depth: int,
+        indent_already_processed: bool,
+    ) -> Tuple[
+        bool,
+        int,
+        str,
+        List[MarkdownToken],
+        int,
+        BlockQuoteData,
+        Optional[RequeueLineInfo],
+        bool,
+        Optional[str],
+    ]:
         """
         Handle the processing of a ulist block.
         """
@@ -842,8 +865,12 @@ class ListBlockProcessor:
 
     @staticmethod
     def __list_in_process_update_containers(
-        parser_state, ind, used_indent, was_paragraph_continuation, start_index
-    ):
+        parser_state: ParserState,
+        ind: Optional[int],
+        used_indent: Optional[str],
+        was_paragraph_continuation: bool,
+        start_index: int,
+    ) -> None:
         POGGER.debug(">>used_indent>>$<<", used_indent)
         POGGER.debug(">>was_paragraph_continuation>>$<<", was_paragraph_continuation)
         if used_indent is not None:
@@ -871,6 +898,9 @@ class ListBlockProcessor:
             need_to_add_leading_spaces = False
             stack_index = parser_state.find_last_list_block_on_stack()
             if stack_index > 0:
+
+                assert parser_state.original_line_to_parse is not None
+
                 last_container_index = parser_state.find_last_container_on_stack()
                 POGGER.debug("ind=:$:", ind)
                 POGGER.debug("parser_state.token_stack=:$:", parser_state.token_stack)
@@ -924,15 +954,18 @@ class ListBlockProcessor:
 
     @staticmethod
     def list_in_process(
-        parser_state,
-        line_to_parse,
-        start_index,
-        extracted_whitespace,
-        ind,
-    ):
+        parser_state: ParserState,
+        line_to_parse: str,
+        start_index: int,
+        extracted_whitespace: Optional[str],
+        ind: Optional[int],
+    ) -> Tuple[
+        List[MarkdownToken], str, Optional[str], Optional[RequeueLineInfo], bool
+    ]:
         """
         Handle the processing of a line where there is a list in process.
         """
+        assert extracted_whitespace is not None
         (before_ws_length, leading_space_length,) = (
             parser_state.token_stack[ind].ws_before_marker,
             ParserHelper.calculate_length(extracted_whitespace),
@@ -976,7 +1009,7 @@ class ListBlockProcessor:
         )
         if was_paragraph_continuation:
 
-            container_level_tokens = []
+            container_level_tokens: List[MarkdownToken] = []
             POGGER.debug("before>>$>>", line_to_parse)
             (
                 line_to_parse,
@@ -1013,7 +1046,7 @@ class ListBlockProcessor:
                 ind,
             )
             if requeue_line_info:
-                return [], None, None, requeue_line_info, None
+                return [], line_to_parse, None, requeue_line_info, False
 
         ListBlockProcessor.__list_in_process_update_containers(
             parser_state, ind, used_indent, was_paragraph_continuation, start_index
@@ -1085,23 +1118,30 @@ class ListBlockProcessor:
     # pylint: disable=too-many-arguments
     @staticmethod
     def __process_list_non_continue(
-        parser_state,
-        requested_list_indent,
-        leading_space_length,
-        before_ws_length,
-        line_to_parse,
-        start_index,
-        extracted_whitespace,
-        allow_list_continue,
-        ind,
-    ):
+        parser_state: ParserState,
+        requested_list_indent: int,
+        leading_space_length: int,
+        before_ws_length: int,
+        line_to_parse: str,
+        start_index: int,
+        extracted_whitespace: Optional[str],
+        allow_list_continue: bool,
+        ind: Optional[int],
+    ) -> Tuple[
+        List[MarkdownToken],
+        str,
+        Optional[str],
+        Optional[int],
+        Optional[RequeueLineInfo],
+        bool,
+    ]:
 
         POGGER.debug(
             "requested_list_indent>>$<<",
             requested_list_indent,
         )
         original_requested_list_indent = requested_list_indent
-        requested_list_indent = requested_list_indent - before_ws_length
+        requested_list_indent -= before_ws_length
 
         POGGER.debug(
             "leading_space_length>>$>>adj requested_list_indent>>$>>$<<",
@@ -1163,7 +1203,9 @@ class ListBlockProcessor:
                 requeue_line_info,
             )
             if requeue_line_info:
-                return [], None, None, None, requeue_line_info, None
+                used_indent = None
+                ind = None
+                return [], line_to_parse, used_indent, ind, requeue_line_info, False
 
             (
                 line_to_parse,
@@ -1194,15 +1236,15 @@ class ListBlockProcessor:
     # pylint: disable=too-many-arguments
     @staticmethod
     def __adjust_for_nested_list(
-        parser_state,
-        container_level_tokens,
-        ind,
-        line_to_parse,
-        extracted_whitespace,
-        start_index,
-        before_ws_length,
-        leading_space_length,
-    ):
+        parser_state: ParserState,
+        container_level_tokens: List[MarkdownToken],
+        ind: Optional[int],
+        line_to_parse: str,
+        extracted_whitespace: Optional[str],
+        start_index: int,
+        before_ws_length: int,
+        leading_space_length: int,
+    ) -> Tuple[str, Optional[str], Optional[int]]:
 
         POGGER.debug(
             "2>>__check_for_list_closures>>$>>",
@@ -2217,7 +2259,7 @@ class ListBlockProcessor:
         leading_space,
         leading_space_length,
         requested_list_indent,
-    ):
+    ) -> Tuple[str, Optional[str]]:
         """
         Alter the current line to better represent the current level of lists.
         """

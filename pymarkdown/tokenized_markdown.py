@@ -11,7 +11,7 @@ from pymarkdown.bad_tokenization_error import BadTokenizationError
 from pymarkdown.coalesce_processor import CoalesceProcessor
 from pymarkdown.container_block_processor import ContainerBlockProcessor
 from pymarkdown.extension_manager.extension_manager import ExtensionManager
-from pymarkdown.extensions.front_matter_markdown_token import FrontMatterExtension
+from pymarkdown.extensions.front_matter_extension import FrontMatterExtension
 from pymarkdown.extensions.pragma_token import PragmaToken
 from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.inline_helper import InlineHelper
@@ -271,6 +271,7 @@ class TokenizedMarkdown:
             )
         else:
             POGGER.debug("\n\nnormal lines")
+            assert self.__parse_properties is not None
             (
                 tokens_from_line,
                 _,
@@ -483,6 +484,7 @@ class TokenizedMarkdown:
             requeue_line_info.lines_to_requeue,
         )
         if requeue_reset:
+            assert parser_state.original_line_to_parse is not None
             POGGER.debug(
                 "cob>>original_line_to_parse>$>", parser_state.original_line_to_parse
             )

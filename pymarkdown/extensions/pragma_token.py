@@ -2,7 +2,7 @@
 Module to provide for linter instructions that can be embedded within the document.
 """
 import logging
-from typing import Dict
+from typing import Dict, Optional
 
 from application_properties import ApplicationPropertiesFacade
 
@@ -14,6 +14,7 @@ from pymarkdown.extension_manager.parser_extension import ParserExtension
 from pymarkdown.markdown_token import MarkdownToken, MarkdownTokenClass
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.position_marker import PositionMarker
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -57,12 +58,12 @@ class PragmaExtension(ParserExtension):
 
     @staticmethod
     def look_for_pragmas(
-        position_marker,
-        line_to_parse,
-        container_depth,
-        extracted_whitespace,
+        position_marker: PositionMarker,
+        line_to_parse: str,
+        container_depth: int,
+        extracted_whitespace: Optional[str],
         parser_properties,
-    ):
+    ) -> bool:
         """
         Look for a pragma in the current line.
         """

@@ -2,9 +2,11 @@
 Emphasis helper
 """
 import logging
+from typing import List, Optional
 
 from pymarkdown.constants import Constants
 from pymarkdown.inline_markdown_token import EmphasisMarkdownToken
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 
@@ -101,7 +103,9 @@ class EmphasisHelper:
         return continue_processing
 
     @staticmethod
-    def resolve_inline_emphasis(inline_blocks, wall_token):
+    def resolve_inline_emphasis(
+        inline_blocks: List[MarkdownToken], wall_token: Optional[MarkdownToken]
+    ) -> None:
         """
         Resolve the inline emphasis by interpreting the special text tokens.
         """

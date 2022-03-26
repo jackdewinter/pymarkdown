@@ -16,16 +16,16 @@ class LeafMarkdownToken(MarkdownToken):
     # pylint: disable=too-many-arguments
     def __init__(
         self,
-        token_name,
-        extra_data,
-        line_number=0,
-        column_number=0,
-        position_marker=None,
-        extracted_whitespace=None,
-        is_extension=False,
-        requires_end_token=False,
-        can_force_close=True,
-    ):
+        token_name: str,
+        extra_data: Optional[str],
+        line_number: int = 0,
+        column_number: int = 0,
+        position_marker: PositionMarker = None,
+        extracted_whitespace: Optional[str] = None,
+        is_extension: bool = False,
+        requires_end_token: bool = False,
+        can_force_close: bool = True,
+    ) -> None:
         self.__extracted_whitespace = extracted_whitespace
         MarkdownToken.__init__(
             self,
@@ -127,7 +127,7 @@ class ParagraphMarkdownToken(LeafMarkdownToken):
             else self.__extracted_whitespace
         )
 
-    def add_whitespace(self, whitespace_to_add):
+    def add_whitespace(self, whitespace_to_add: str) -> None:
         """
         Add extra whitespace to the end of the current paragraph.  Should only be
         used when combining text blocks in a paragraph.

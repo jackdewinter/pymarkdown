@@ -4,7 +4,7 @@ Link helper
 import logging
 import urllib
 import urllib.parse
-from typing import Dict, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
 from pymarkdown.constants import Constants
 from pymarkdown.emphasis_helper import EmphasisHelper
@@ -13,6 +13,7 @@ from pymarkdown.inline_markdown_token import (
     ImageStartMarkdownToken,
     LinkStartMarkdownToken,
 )
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 
@@ -228,13 +229,13 @@ class LinkHelper:
     # pylint: disable=too-many-arguments
     @staticmethod
     def look_for_link_or_image(
-        inline_blocks,
-        source_text,
-        next_index,
-        remaining_line,
-        current_string_unresolved,
+        inline_blocks: List[MarkdownToken],
+        source_text: str,
+        next_index: int,
+        remaining_line: str,
+        current_string_unresolved: str,
         xx_fn,
-    ):
+    ) -> Tuple[int, bool, Optional[MarkdownToken], bool]:
         """
         Given that a link close character has been found, process it to see if
         there is actually enough other text to properly construct the link.
@@ -251,13 +252,13 @@ class LinkHelper:
             ">>current_string_unresolved>>$<<",
             current_string_unresolved,
         )
-        is_valid, consume_rest_of_line, new_index, updated_index, token_to_append = (
+        is_valid, consume_rest_of_line, new_index, updated_index = (
             False,
             False,
             next_index + 1,
             -1,
-            None,
         )
+        token_to_append: Optional[MarkdownToken] = None
 
         POGGER.debug("LOOKING FOR START")
         LinkHelper.__display_specials_in_tokens(inline_blocks)
@@ -347,8 +348,8 @@ class LinkHelper:
         remaining_line,
         current_string_unresolved,
         xx_fn,
-        updated_index,
-    ):
+        updated_index: int,
+    ) -> Tuple[bool, bool, int, Optional[MarkdownToken], bool, Optional[str]]:
         if POGGER.is_debug_enabled:
             POGGER.debug(
                 "search_index>>$>>$",
@@ -359,11 +360,13 @@ class LinkHelper:
         (
             is_done,
             consume_rest_of_line,
-            token_to_append,
             is_valid,
-        ) = (False, False, None, False)
+        ) = (False, False, False)
+        token_to_append: Optional[MarkdownToken] = None
         if inline_blocks[search_index].token_text in LinkHelper.__valid_link_starts:
-            valid_special_start_text = inline_blocks[search_index].token_text
+            valid_special_start_text: Optional[str] = inline_blocks[
+                search_index
+            ].token_text
             if inline_blocks[search_index].is_active:
                 POGGER.debug(">>>>>>$", inline_blocks)
                 (

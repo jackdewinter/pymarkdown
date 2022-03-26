@@ -689,14 +689,14 @@ class LinkReferenceDefinitionHelper:
     # pylint: disable=too-many-arguments
     @staticmethod
     def handle_link_reference_definition_leaf_block(
-        parser_state,
-        outer_processed,
-        position_marker,
-        extracted_whitespace,
-        remaining_line_to_parse,
-        ignore_link_definition_start,
-        pre_tokens,
-    ):
+        parser_state: ParserState,
+        outer_processed: bool,
+        position_marker: PositionMarker,
+        extracted_whitespace: Optional[str],
+        remaining_line_to_parse: str,
+        ignore_link_definition_start: bool,
+        pre_tokens: List[MarkdownToken],
+    ) -> Tuple[bool, Optional[RequeueLineInfo]]:
         """
         Take care of the processing for link reference definitions.
         """
@@ -710,6 +710,7 @@ class LinkReferenceDefinitionHelper:
                 "plflb-process_link_reference_definition>>outer_processed>>$",
                 position_marker.text_to_parse[position_marker.index_number :],
             )
+            assert parser_state.original_line_to_parse is not None
             (
                 outer_processed,
                 _,  # did_complete_lrd,
