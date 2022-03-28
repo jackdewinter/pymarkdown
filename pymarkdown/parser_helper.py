@@ -2,7 +2,7 @@
 Module to provide helper functions for parsing.
 """
 
-from typing import Any, Optional, Tuple
+from typing import Any, List, Optional, Tuple
 
 from pymarkdown.constants import Constants
 
@@ -92,7 +92,9 @@ class ParserHelper:
         )
 
     @staticmethod
-    def is_character_at_index_one_of(source_string, index_in_string, valid_characters):
+    def is_character_at_index_one_of(
+        source_string: str, index_in_string: int, valid_characters: str
+    ) -> bool:
         """
         Determine if the specified character is at a valid location and is one
         of the specified valid characters.
@@ -149,7 +151,9 @@ class ParserHelper:
         return index, source_string[start_index:index]
 
     @staticmethod
-    def extract_any_whitespace(source_string, start_index):
+    def extract_any_whitespace(
+        source_string: str, start_index: int
+    ) -> Tuple[Optional[int], Optional[str]]:
         """
         From the start_index, continue extracting whitespace while we have it.
 
@@ -169,7 +173,9 @@ class ParserHelper:
         return index, source_string[start_index:index]
 
     @staticmethod
-    def extract_whitespace_from_end(source_string, start_index=None):
+    def extract_whitespace_from_end(
+        source_string: str, start_index: int = None
+    ) -> Tuple[int, str]:
         """
         From the end of the string, continue extracting whitespace while we have it.
 
@@ -190,7 +196,9 @@ class ParserHelper:
         return index + 1, source_string[index + 1 :]
 
     @staticmethod
-    def extract_until_whitespace(source_string, start_index):
+    def extract_until_whitespace(
+        source_string: str, start_index: int
+    ) -> Tuple[Optional[int], Optional[str]]:
         """
         From the start_index, continue extracting until we hit whitespace.
 
@@ -229,7 +237,9 @@ class ParserHelper:
         return index - start_index, index
 
     @staticmethod
-    def collect_backwards_while_character(source_string, end_index, match_character):
+    def collect_backwards_while_character(
+        source_string: str, end_index: int, match_character: str
+    ) -> Tuple[Optional[int], Optional[int]]:
         """
         Collect a sequence of the same character from a given starting point in a
         string going backwards towards the start of the string.
@@ -314,7 +324,9 @@ class ParserHelper:
         return index, source_string[start_index:index]
 
     @staticmethod
-    def collect_until_one_of_characters(source_string, start_index, match_characters):
+    def collect_until_one_of_characters(
+        source_string: str, start_index: int, match_characters: str
+    ) -> Tuple[Optional[int], Optional[str]]:
         """
         Collect a sequence of characters from a given starting point in a string until
         we hit one of a given set of characters.
@@ -399,7 +411,9 @@ class ParserHelper:
         return ParserHelper.calculate_length(source_string) <= length_limit
 
     @staticmethod
-    def is_length_greater_than_or_equal_to(source_string, length_limit, start_index=0):
+    def is_length_greater_than_or_equal_to(
+        source_string: str, length_limit: int, start_index: int = 0
+    ) -> bool:
         """
         Determine if the adjusted length of the string is greater than or equal to the
         specified limit.
@@ -427,7 +441,9 @@ class ParserHelper:
         return first_index
 
     @staticmethod
-    def replace_any_of(string_to_search_in, characters_to_search_for, replace_with):
+    def replace_any_of(
+        string_to_search_in: str, characters_to_search_for: str, replace_with: str
+    ) -> str:
         """
         Replace any of a given set of characters with a given sequence.
         """
@@ -436,14 +452,18 @@ class ParserHelper:
         index, ex_str = ParserHelper.collect_until_one_of_characters(
             string_to_search_in, start_index, characters_to_search_for
         )
+        assert index is not None
+        assert ex_str is not None
         string_to_search_in_size = len(string_to_search_in)
-        replaced_parts = []
+        replaced_parts: List[str] = []
         while index < string_to_search_in_size:
             replaced_parts.extend([ex_str, replace_with])
             start_index = index + 1
             index, ex_str = ParserHelper.collect_until_one_of_characters(
                 string_to_search_in, start_index, characters_to_search_for
             )
+            assert index is not None
+            assert ex_str is not None
         replaced_parts.append(ex_str)
         return "".join(replaced_parts)
 
@@ -579,7 +599,7 @@ class ParserHelper:
         return ParserHelper.all_escape_characters
 
     @staticmethod
-    def escape_special_characters(string_to_escape):
+    def escape_special_characters(string_to_escape: str) -> str:
         """
         Build another string that has any special characters in the argument escaped.
         """
@@ -593,7 +613,7 @@ class ParserHelper:
         return "".join(string_parts)
 
     @staticmethod
-    def __remove_backspaces_from_text(token_text):
+    def __remove_backspaces_from_text(token_text: str) -> str:
         """
         Remove any backspaces from the text.
         """
@@ -614,7 +634,7 @@ class ParserHelper:
         return adjusted_text_token
 
     @staticmethod
-    def resolve_backspaces_from_text(token_text):
+    def resolve_backspaces_from_text(token_text: str) -> str:
         """
         Deal with any backslash encoding in text with backspaces.
         """

@@ -4,10 +4,12 @@ Module to provide processing for the list blocks.
 
 import logging
 import string
-from typing import List, Optional, Tuple
+from typing import Callable, List, Optional, Tuple
 
 from pymarkdown.block_quote_data import BlockQuoteData
 from pymarkdown.container_markdown_token import (
+    BlockQuoteMarkdownToken,
+    ListStartMarkdownToken,
     NewListItemMarkdownToken,
     OrderedListStartMarkdownToken,
     UnorderedListStartMarkdownToken,
@@ -21,6 +23,7 @@ from pymarkdown.parser_state import ParserState
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.requeue_line_info import RequeueLineInfo
 from pymarkdown.stack_token import (
+    ListStackToken,
     OrderedListStackToken,
     StackToken,
     UnorderedListStackToken,
@@ -47,7 +50,7 @@ class ListBlockProcessor:
         extracted_whitespace: Optional[str],
         skip_whitespace_check: bool,
         adj_ws: Optional[str] = None,
-    ) -> Tuple[bool, int, int, int]:
+    ) -> Tuple[bool, int, Optional[int], Optional[int]]:
         """
         Determine if we have the start of an un-numbered list.
         """
@@ -108,7 +111,7 @@ class ListBlockProcessor:
         extracted_whitespace: Optional[str],
         skip_whitespace_check: bool,
         adj_ws: Optional[str] = None,
-    ) -> Tuple[bool, int, int, int]:
+    ) -> Tuple[bool, int, Optional[int], Optional[int]]:
         """
         Determine if we have the start of a numbered or ordered list.
         """
@@ -144,6 +147,8 @@ class ListBlockProcessor:
         else:
             is_start, index, number_of_digits, is_not_one = False, None, None, False
         if is_start:
+            assert index is not None
+            assert is_not_one is not None
             (
                 is_start,
                 after_all_whitespace_index,
@@ -153,6 +158,8 @@ class ListBlockProcessor:
         else:
             after_all_whitespace_index = -1
         if is_start:
+            assert index is not None
+            assert is_not_one is not None
             is_start = ListBlockProcessor.__is_start_phase_two(
                 parser_state,
                 line_to_parse[index],
@@ -168,7 +175,9 @@ class ListBlockProcessor:
     # pylint: enable=too-many-arguments
 
     @staticmethod
-    def __is_start_ulist(line_to_parse, start_index, extracted_whitespace):
+    def __is_start_ulist(
+        line_to_parse: str, start_index: int, extracted_whitespace: Optional[str]
+    ) -> bool:
         is_start = ParserHelper.is_character_at_index_one_of(
             line_to_parse, start_index, ListBlockProcessor.__ulist_start_characters
         )
@@ -182,7 +191,9 @@ class ListBlockProcessor:
         return is_start
 
     @staticmethod
-    def __is_start_olist(line_to_parse, start_index):
+    def __is_start_olist(
+        line_to_parse: str, start_index: int
+    ) -> Tuple[bool, Optional[int], Optional[int], Optional[bool]]:
         is_start = ParserHelper.is_character_at_index_one_of(
             line_to_parse, start_index, string.digits
         )
@@ -190,6 +201,8 @@ class ListBlockProcessor:
             index, olist_index_number = ParserHelper.collect_while_one_of_characters(
                 line_to_parse, start_index, string.digits
             )
+            assert olist_index_number is not None
+            assert index is not None
             number_of_digits = len(olist_index_number)
 
             POGGER.debug("olist?$<<count>>$<<", olist_index_number, number_of_digits)
@@ -207,7 +220,9 @@ class ListBlockProcessor:
         return is_start, index, number_of_digits, is_not_one
 
     @staticmethod
-    def __determine_child_and_parent_tokens(parser_state):
+    def __determine_child_and_parent_tokens(
+        parser_state: ParserState,
+    ) -> Tuple[Optional[ListStackToken], Optional[ListStackToken]]:
         child_list_token, parent_list_token = None, None
         if parser_state.token_stack[-1].is_list:
             child_list_token = parser_state.token_stack[-1]
@@ -229,8 +244,13 @@ class ListBlockProcessor:
 
     @staticmethod
     def __adjust_whitespace_for_nested_lists(
-        parser_state, adj_ws, line_to_parse, start_index
-    ):
+        parser_state: ParserState,
+        adj_ws: Optional[str],
+        line_to_parse: str,
+        start_index: int,
+    ) -> Tuple[Optional[str], int]:
+
+        assert adj_ws is not None
         (
             child_list_token,
             parent_list_token,
@@ -268,13 +288,19 @@ class ListBlockProcessor:
         return adj_ws, parent_indent
 
     @staticmethod
-    def __is_start_phase_one(parser_state, line_to_parse, start_index, is_not_one):
+    def __is_start_phase_one(
+        parser_state: ParserState,
+        line_to_parse: str,
+        start_index: int,
+        is_not_one: bool,
+    ) -> Tuple[bool, int]:
 
         start_index += 1
         line_to_parse_size = len(line_to_parse)
         after_all_whitespace_index, _ = ParserHelper.extract_whitespace(
             line_to_parse, start_index
         )
+        assert after_all_whitespace_index is not None
         POGGER.debug(
             "after_all_whitespace_index>>$>>len>>$",
             after_all_whitespace_index,
@@ -301,14 +327,14 @@ class ListBlockProcessor:
     # pylint: disable=too-many-arguments
     @staticmethod
     def __is_start_phase_two(
-        parser_state,
-        xx_seq,
-        is_unordered_list,
-        is_not_one,
-        after_all_whitespace_index,
-        line_to_parse,
-        start_index,
-    ):
+        parser_state: ParserState,
+        xx_seq: str,
+        is_unordered_list: bool,
+        is_not_one: bool,
+        after_all_whitespace_index: int,
+        line_to_parse: str,
+        start_index: int,
+    ) -> bool:
         (is_in_paragraph, at_end_of_line) = (
             parser_state.token_stack[-1].is_paragraph,
             (after_all_whitespace_index == len(line_to_parse)),
@@ -343,8 +369,12 @@ class ListBlockProcessor:
 
     @staticmethod
     def __calculate_starts_within_paragraph(
-        parser_state, line_to_parse, start_index, is_unordered_list, xx_seq
-    ):
+        parser_state: ParserState,
+        line_to_parse: str,
+        start_index: int,
+        is_unordered_list: bool,
+        xx_seq: str,
+    ) -> Tuple[bool, bool]:
         is_first_item_in_list = True
         if not parser_state.token_stack[-2].is_list:
             POGGER.debug("top of stack is not list>>$", parser_state.token_stack[-2])
@@ -376,7 +406,18 @@ class ListBlockProcessor:
         return is_first_item_in_list, is_sub_list
 
     @staticmethod
-    def __get_list_functions(is_ulist):
+    def __get_list_functions(
+        is_ulist: bool,
+    ) -> Tuple[
+        Callable[
+            [ParserState, str, int, Optional[str], bool, Optional[str]],
+            Tuple[bool, int, Optional[int], Optional[int]],
+        ],
+        Callable[
+            [PositionMarker, int, Optional[str], int, int, int],
+            Tuple[ListStartMarkdownToken, ListStackToken],
+        ],
+    ]:
         if is_ulist:
             POGGER.debug("hlb>>searching for ulist")
             is_start_fn = ListBlockProcessor.is_ulist_start
@@ -388,7 +429,11 @@ class ListBlockProcessor:
         return is_start_fn, create_token_fn
 
     @staticmethod
-    def __calculate_create_adj_ws(adj_ws, position_marker, parser_state):
+    def __calculate_create_adj_ws(
+        adj_ws: Optional[str],
+        position_marker: PositionMarker,
+        parser_state: ParserState,
+    ) -> Optional[str]:
         create_adj_ws = adj_ws
         POGGER.debug("adj_ws=>:$:<", create_adj_ws)
         if position_marker.index_number:
@@ -402,11 +447,15 @@ class ListBlockProcessor:
 
     @staticmethod
     def __handle_list_with_leading_indent_loop(
-        acceptable_indent_stack_index, parser_state, stack_index, extracted_whitespace
-    ):
+        acceptable_indent_stack_index: int,
+        parser_state: ParserState,
+        stack_index: int,
+        extracted_whitespace: Optional[str],
+    ) -> int:
         box_start = 1 if stack_index == 1 else ((stack_index + 1) * 4) + stack_index
         box_end = (stack_index * 4) + (stack_index - 1)
 
+        assert extracted_whitespace is not None
         is_in_this_box = box_start <= len(extracted_whitespace) + 1 <= box_end
         can_promote_to_next_box = (stack_index + 1) < len(
             parser_state.token_stack
@@ -424,13 +473,13 @@ class ListBlockProcessor:
     # pylint: disable=too-many-arguments
     @staticmethod
     def __handle_list_with_leading_indent(
-        parser_state,
-        container_depth,
-        removed_chars_at_start,
-        extracted_whitespace,
-        indent_already_processed,
-        adj_ws,
-    ):
+        parser_state: ParserState,
+        container_depth: int,
+        removed_chars_at_start: int,
+        extracted_whitespace: Optional[str],
+        indent_already_processed: bool,
+        adj_ws: Optional[str],
+    ) -> Tuple[int, Optional[str], Optional[str], Optional[str], bool]:
 
         indent_already_used, forced_container_whitespace = 0, None
         is_in_root_list = (
@@ -443,6 +492,7 @@ class ListBlockProcessor:
         # POGGER.debug("container_depth>$<", container_depth)
         # POGGER.debug("removed_chars_at_start>$<", removed_chars_at_start)
         # POGGER.debug("is_in_root_list>$<", is_in_root_list)
+        assert extracted_whitespace is not None
         if (
             not removed_chars_at_start
             and is_in_root_list
@@ -491,16 +541,29 @@ class ListBlockProcessor:
     # pylint: disable=too-many-locals, too-many-arguments
     @staticmethod
     def __handle_list_block_init(
-        parser_state,
-        position_marker,
-        extracted_whitespace,
-        adj_ws,
-        is_ulist,
-        container_depth,
-        removed_chars_at_start,
-        indent_already_processed,
-    ):
-
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        extracted_whitespace: Optional[str],
+        adj_ws: Optional[str],
+        is_ulist: bool,
+        container_depth: int,
+        removed_chars_at_start: int,
+        indent_already_processed: bool,
+    ) -> Tuple[
+        Callable[
+            [PositionMarker, int, Optional[str], int, int, int],
+            Tuple[ListStartMarkdownToken, ListStackToken],
+        ],
+        bool,
+        int,
+        Optional[int],
+        Optional[int],
+        int,
+        Optional[str],
+        Optional[str],
+        Optional[str],
+        bool,
+    ]:
         POGGER.debug(
             "hlb>>parser_state.nested_list_start>$", parser_state.nested_list_start
         )
@@ -540,7 +603,7 @@ class ListBlockProcessor:
             position_marker.index_number,
             extracted_whitespace,
             False,
-            adj_ws=adj_ws,
+            adj_ws,
         )
         return (
             create_token_fn,
@@ -573,7 +636,7 @@ class ListBlockProcessor:
     ) -> Tuple[
         bool,
         int,
-        str,
+        Optional[str],
         List[MarkdownToken],
         int,
         BlockQuoteData,
@@ -587,18 +650,16 @@ class ListBlockProcessor:
         (
             did_process,
             requeue_line_info,
-            container_level_tokens,
-            adjusted_text_to_parse,
             old_extracted_whitespace,
             old_indent_already_processed,
         ) = (
             False,
             None,
-            [],
-            position_marker.text_to_parse,
             extracted_whitespace,
             indent_already_processed,
         )
+        adjusted_text_to_parse: Optional[str] = position_marker.text_to_parse
+        container_level_tokens: List[MarkdownToken] = []
 
         (
             create_token_fn,
@@ -629,6 +690,8 @@ class ListBlockProcessor:
 
             POGGER.debug("clt>>ulist-start")
             removed_chars_at_start = indent_already_used
+            assert index is not None
+            assert number_of_digits is not None
             (
                 indent_level,
                 remaining_whitespace,
@@ -704,7 +767,9 @@ class ListBlockProcessor:
         # pylint: enable=too-many-locals, too-many-arguments
 
     @staticmethod
-    def __find_block_quote_before_list(parser_state):
+    def __find_block_quote_before_list(
+        parser_state: ParserState,
+    ) -> Optional[BlockQuoteMarkdownToken]:
         POGGER.debug_with_visible_whitespace(
             "parser_state.token_stack>$", parser_state.token_stack
         )
@@ -727,23 +792,26 @@ class ListBlockProcessor:
     # pylint: disable=too-many-locals, too-many-arguments
     @staticmethod
     def __create_new_list(
-        parser_state,
-        position_marker,
-        indent_level,
-        extracted_whitespace,
-        ws_before_marker,
-        ws_after_marker,
-        index,
-        container_level_tokens,
-        remaining_whitespace,
-        after_marker_ws_index,
-        current_container_blocks,
-        create_token_fn,
-        container_depth,
-        adj_ws=None,
-        alt_adj_ws=None,
-        forced_container_whitespace=None,
-    ):
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        indent_level: int,
+        extracted_whitespace: Optional[str],
+        ws_before_marker: int,
+        ws_after_marker: int,
+        index: int,
+        container_level_tokens: List[MarkdownToken],
+        remaining_whitespace: int,
+        after_marker_ws_index: int,
+        current_container_blocks: List[StackToken],
+        create_token_fn: Callable[
+            [PositionMarker, int, Optional[str], int, int, int],
+            Tuple[ListStartMarkdownToken, ListStackToken],
+        ],
+        container_depth: int,
+        adj_ws: Optional[str] = None,
+        alt_adj_ws: Optional[str] = None,
+        forced_container_whitespace: Optional[str] = None,
+    ) -> Tuple[Optional[str], Optional[RequeueLineInfo]]:
         found_block_quote_before_list = (
             ListBlockProcessor.__find_block_quote_before_list(parser_state)
         )
@@ -753,11 +821,13 @@ class ListBlockProcessor:
         POGGER.debug("ws_before_marker=$=", ws_before_marker)
         POGGER.debug("forced_container_whitespace=$=", forced_container_whitespace)
         if forced_container_whitespace:
-            whitespace_to_add = forced_container_whitespace
+            whitespace_to_add: Optional[str] = forced_container_whitespace
+            assert whitespace_to_add is not None
             if alt_adj_ws:
                 whitespace_to_add += alt_adj_ws
             ws_before_marker += len(forced_container_whitespace)
             indent_level += len(forced_container_whitespace)
+            assert alt_adj_ws is not None
             alt_adj_ws += forced_container_whitespace
         else:
             whitespace_to_add = extracted_whitespace if adj_ws is None else adj_ws
@@ -793,6 +863,7 @@ class ListBlockProcessor:
             alt_adj_ws,
             container_depth,
         )
+        assert new_container_level_tokens is not None
         container_level_tokens.extend(new_container_level_tokens)
         return adjusted_text_to_parse, requeue_line_info
 
@@ -801,13 +872,13 @@ class ListBlockProcessor:
     @staticmethod
     # pylint: disable=too-many-arguments
     def __handle_list_block_unordered(
-        position_marker,
-        indent_level,
-        extracted_whitespace,
-        ws_before_marker,
-        ws_after_marker,
-        index,
-    ):
+        position_marker: PositionMarker,
+        indent_level: int,
+        extracted_whitespace: Optional[str],
+        ws_before_marker: int,
+        ws_after_marker: int,
+        index: int,
+    ) -> Tuple[ListStartMarkdownToken, ListStackToken]:
         # This is done to allow for this function and __handle_list_block_ordered
         # to be called using the same pattern.
         _ = index
@@ -835,13 +906,13 @@ class ListBlockProcessor:
     @staticmethod
     # pylint: disable=too-many-arguments
     def __handle_list_block_ordered(
-        position_marker,
-        indent_level,
-        extracted_whitespace,
-        ws_before_marker,
-        ws_after_marker,
-        index,
-    ):
+        position_marker: PositionMarker,
+        indent_level: int,
+        extracted_whitespace: Optional[str],
+        ws_before_marker: int,
+        ws_after_marker: int,
+        index: int,
+    ) -> Tuple[ListStartMarkdownToken, ListStackToken]:
         new_token = OrderedListStartMarkdownToken(
             position_marker.text_to_parse[index],
             position_marker.text_to_parse[position_marker.index_number : index],
@@ -1061,12 +1132,12 @@ class ListBlockProcessor:
 
     @staticmethod
     def __can_list_continue(
-        parser_state,
-        line_to_parse,
-        start_index,
-        extracted_whitespace,
-        leading_space_length,
-    ):
+        parser_state: ParserState,
+        line_to_parse: str,
+        start_index: int,
+        extracted_whitespace: Optional[str],
+        leading_space_length: int,
+    ) -> bool:
         started_ulist, _, _, _ = ListBlockProcessor.is_ulist_start(
             parser_state,
             line_to_parse,
@@ -1089,8 +1160,11 @@ class ListBlockProcessor:
 
     @staticmethod
     def __check_for_paragraph_break(
-        parser_state, line_to_parse, start_index, extracted_whitespace
-    ):
+        parser_state: ParserState,
+        line_to_parse: str,
+        start_index: int,
+        extracted_whitespace: Optional[str],
+    ) -> bool:
         is_theme_break, _ = LeafBlockProcessor.is_thematic_break(
             line_to_parse,
             start_index,
@@ -1113,7 +1187,12 @@ class ListBlockProcessor:
             parser_state.token_stack,
         )
         POGGER.debug("is_html_start>>$", is_html_start)
-        return is_theme_break or is_atx_heading or is_fenced_start or is_html_start
+        return (
+            bool(is_theme_break)
+            or is_atx_heading
+            or is_fenced_start
+            or bool(is_html_start)
+        )
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -1161,7 +1240,7 @@ class ListBlockProcessor:
             and not was_breakable_leaf_detected
         )
         if was_paragraph_continuation:
-            container_level_tokens = []
+            container_level_tokens: List[MarkdownToken] = []
             POGGER.debug(
                 "1>>line_to_parse>>$>>",
                 line_to_parse,
@@ -1311,15 +1390,15 @@ class ListBlockProcessor:
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __pre_list(
-        parser_state,
-        line_to_parse,
-        start_index,
-        extracted_whitespace,
-        marker_width_minus_one,
-        block_quote_data,
-        adj_ws,
-        position_marker,
-    ):
+        parser_state: ParserState,
+        line_to_parse: str,
+        start_index: int,
+        extracted_whitespace: Optional[str],
+        marker_width_minus_one: int,
+        block_quote_data: BlockQuoteData,
+        adj_ws: Optional[str],
+        position_marker: PositionMarker,
+    ) -> Tuple[int, int, int, int, int, List[MarkdownToken], BlockQuoteData]:
         """
         Handle the processing of the first part of the list.
         """
@@ -1333,6 +1412,7 @@ class ListBlockProcessor:
         )
 
         POGGER.debug("--$--$", start_index, start_index + 1)
+        assert adj_ws is not None
         (
             indent_level,
             remaining_whitespace,
@@ -1395,11 +1475,16 @@ class ListBlockProcessor:
         # pylint: enable=too-many-arguments, too-many-locals
 
     @staticmethod
-    def __calculate_whitespace_values(line_to_parse, start_index, extracted_whitespace):
+    def __calculate_whitespace_values(
+        line_to_parse: str, start_index: int, extracted_whitespace: Optional[str]
+    ) -> Tuple[int, int, int, int]:
         (
             after_marker_ws_index,
             after_marker_whitespace,
         ) = ParserHelper.extract_whitespace(line_to_parse, start_index + 1)
+        assert after_marker_ws_index is not None
+        assert after_marker_whitespace is not None
+        assert extracted_whitespace is not None
         ws_after_marker, ws_before_marker, line_to_parse_size = (
             ParserHelper.calculate_length(
                 after_marker_whitespace, start_index=start_index + 1
@@ -1420,13 +1505,13 @@ class ListBlockProcessor:
     # pylint: disable=too-many-arguments
     @staticmethod
     def __calculate_indents(
-        after_marker_ws_index,
-        line_to_parse_size,
-        marker_width_minus_one,
-        ws_after_marker,
-        ws_before_marker,
-        adj_ws,
-    ):
+        after_marker_ws_index: int,
+        line_to_parse_size: int,
+        marker_width_minus_one: int,
+        ws_after_marker: int,
+        ws_before_marker: int,
+        adj_ws: str,
+    ) -> Tuple[int, int, int]:
         POGGER.debug(
             "--ws_before_marker>>$>>marker_width_minus_one>>$",
             ws_before_marker,
@@ -1466,7 +1551,11 @@ class ListBlockProcessor:
     # pylint: enable=too-many-arguments
 
     @staticmethod
-    def __handle_list_nesting(parser_state, block_quote_data, position_marker):
+    def __handle_list_nesting(
+        parser_state: ParserState,
+        block_quote_data: BlockQuoteData,
+        position_marker: PositionMarker,
+    ) -> Tuple[List[MarkdownToken], BlockQuoteData]:
         """
         Resolve any nesting issues with block quotes.
         """
@@ -1475,7 +1564,7 @@ class ListBlockProcessor:
             block_quote_data.stack_count,
             block_quote_data.current_count,
         )
-        container_level_tokens = []
+        container_level_tokens: List[MarkdownToken] = []
         adjusted_stack_count = block_quote_data.stack_count
         while block_quote_data.current_count < adjusted_stack_count:
 
@@ -1549,8 +1638,10 @@ class ListBlockProcessor:
 
     @staticmethod
     def __handle_list_nesting_all_conditionals(
-        parser_state, last_block_index, previous_last_block_token
-    ):
+        parser_state: ParserState,
+        last_block_index: int,
+        previous_last_block_token: BlockQuoteMarkdownToken,
+    ) -> None:
         current_last_block_token = parser_state.token_stack[
             last_block_index
         ].matching_markdown_token
@@ -1585,19 +1676,19 @@ class ListBlockProcessor:
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __post_list(
-        parser_state,
-        new_stack,
-        new_token,
-        line_to_parse,
-        remaining_whitespace,
-        after_marker_ws_index,
-        indent_level,
-        current_container_blocks,
-        position_marker,
-        adj_ws,
-        alt_adj_ws,
-        container_depth,
-    ):
+        parser_state: ParserState,
+        new_stack: ListStackToken,
+        new_token: ListStartMarkdownToken,
+        line_to_parse: str,
+        remaining_whitespace: int,
+        after_marker_ws_index: int,
+        indent_level: int,
+        current_container_blocks: List[StackToken],
+        position_marker: PositionMarker,
+        adj_ws: Optional[str],
+        alt_adj_ws: Optional[str],
+        container_depth: int,
+    ) -> Tuple[Optional[List[MarkdownToken]], Optional[str], Optional[RequeueLineInfo]]:
         """
         Handle the processing of the last part of the list.
         """
@@ -1637,6 +1728,7 @@ class ListBlockProcessor:
             )
         POGGER.debug("container_level_tokens>>$", container_level_tokens)
 
+        assert container_level_tokens is not None
         POGGER.debug("__post_list>>before>>$", container_level_tokens)
         if not did_find or not emit_li:
             POGGER.debug("__post_list>>adding>>$", new_token)
@@ -1675,14 +1767,14 @@ class ListBlockProcessor:
     # pylint: disable=too-many-arguments
     @staticmethod
     def __post_list_use_new_list_item(
-        parser_state,
-        new_token,
-        container_level_tokens,
-        indent_level,
-        position_marker,
-        adj_ws,
-        alt_adj_ws,
-    ):
+        parser_state: ParserState,
+        new_token: ListStartMarkdownToken,
+        container_level_tokens: List[MarkdownToken],
+        indent_level: int,
+        position_marker: PositionMarker,
+        adj_ws: Optional[str],
+        alt_adj_ws: Optional[str],
+    ) -> None:
         POGGER.debug("instead of-->$", new_token)
 
         stack_index = len(parser_state.token_stack) - 1
@@ -1725,27 +1817,29 @@ class ListBlockProcessor:
 
         # Replace the "other" list start token with a new list item token.
         # The overwritting of the value of new_token is specifically called for.
-        new_token = NewListItemMarkdownToken(
+        replacement_token = NewListItemMarkdownToken(
             indent_level,
             position_marker,
             exws,
             list_start_content,
         )
-        top_stack_item.set_last_new_list_token(new_token)
-        container_level_tokens.append(new_token)
+        top_stack_item.set_last_new_list_token(replacement_token)
+        container_level_tokens.append(replacement_token)
 
     # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     @staticmethod
     def __close_required_lists_after_start(
-        parser_state,
-        last_list_index,
-        new_stack,
-        new_token,
-        current_container_blocks,
-        container_depth,
-    ):
+        parser_state: ParserState,
+        last_list_index: int,
+        new_stack: ListStackToken,
+        new_token: ListStartMarkdownToken,
+        current_container_blocks: List[StackToken],
+        container_depth: int,
+    ) -> Tuple[
+        Optional[List[MarkdownToken]], Optional[bool], Optional[RequeueLineInfo]
+    ]:
         """
         After a list start, check to see if any others need closing.
         """
@@ -1808,14 +1902,14 @@ class ListBlockProcessor:
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __close_next_level_of_lists(
-        parser_state,
-        new_stack,
-        new_token,
-        current_container_blocks,
-        container_level_tokens,
-        last_list_index,
-        container_depth,
-    ):
+        parser_state: ParserState,
+        new_stack: ListStackToken,
+        new_token: ListStartMarkdownToken,
+        current_container_blocks: List[StackToken],
+        container_level_tokens: List[MarkdownToken],
+        last_list_index: int,
+        container_depth: int,
+    ) -> Tuple[bool, bool, int]:
         POGGER.debug("start")
 
         (
@@ -1886,14 +1980,14 @@ class ListBlockProcessor:
 
     @staticmethod
     def __close_next_level_of_lists_do_not_emit(
-        parser_state,
-        new_stack,
-        new_token,
-        current_container_blocks,
-        emit_li_token_instead_of_list_start_token,
-        container_level_tokens,
-        container_depth,
-    ):
+        parser_state: ParserState,
+        new_stack: ListStackToken,
+        new_token: ListStartMarkdownToken,
+        current_container_blocks: List[StackToken],
+        emit_li_token_instead_of_list_start_token: bool,
+        container_level_tokens: List[MarkdownToken],
+        container_depth: int,
+    ) -> Tuple[bool, int, bool]:
         POGGER.debug("post_list>>don't emit")
         (
             did_find,
@@ -1929,6 +2023,7 @@ class ListBlockProcessor:
             POGGER.debug("parent_list_indent>>$", parent_list_indent)
             new_token_column_number = new_token.column_number
             POGGER.debug("new_token_column_number>>$", new_token_column_number)
+            assert parser_state.original_line_to_parse is not None
             intermediate_line_content = parser_state.original_line_to_parse[
                 parent_list_indent : new_token_column_number - 1
             ]
@@ -1956,13 +2051,13 @@ class ListBlockProcessor:
     # pylint: disable=too-many-arguments
     @staticmethod
     def __are_list_starts_equal(
-        parser_state,
-        last_list_index,
-        new_stack,
-        new_token,
-        current_container_blocks,
-        container_depth,
-    ):
+        parser_state: ParserState,
+        last_list_index: int,
+        new_stack: ListStackToken,
+        new_token: ListStartMarkdownToken,
+        current_container_blocks: List[StackToken],
+        container_depth: int,
+    ) -> Tuple[bool, bool, List[MarkdownToken]]:
         """
         Check to see if the list starts are equal, and hence a continuation of
         the current list.
@@ -2052,9 +2147,13 @@ class ListBlockProcessor:
 
     @staticmethod
     def __are_list_starts_equal_cleanup(
-        parser_state, current_start_index, old_start_index, new_token, container_depth
-    ):
-        balancing_tokens = []
+        parser_state: ParserState,
+        current_start_index: int,
+        old_start_index: int,
+        new_token: ListStartMarkdownToken,
+        container_depth: int,
+    ) -> Tuple[bool, List[MarkdownToken]]:
+        balancing_tokens: List[MarkdownToken] = []
         are_equal = current_start_index >= old_start_index
         POGGER.debug("are_list_starts_equal>>$", are_equal)
 
@@ -2082,13 +2181,13 @@ class ListBlockProcessor:
     # pylint: disable=too-many-arguments
     @staticmethod
     def __process_eligible_list_start(
-        parser_state,
-        balancing_tokens,
-        current_start_index,
-        old_start_index,
-        current_container_blocks,
-        new_stack,
-    ):
+        parser_state: ParserState,
+        balancing_tokens: List[MarkdownToken],
+        current_start_index: int,
+        old_start_index: int,
+        current_container_blocks: List[StackToken],
+        new_stack: StackToken,
+    ) -> bool:
         POGGER.debug("are_list_starts_equal>>ELIGIBLE!!!")
         POGGER.debug(
             "are_list_starts_equal>>current_start_index>>$>>old_start_index>>$",
@@ -2117,7 +2216,9 @@ class ListBlockProcessor:
     # pylint: enable=too-many-arguments
 
     @staticmethod
-    def __calculate_can_remove_list(parser_state, current_start_index):
+    def __calculate_can_remove_list(
+        parser_state: ParserState, current_start_index: int
+    ) -> bool:
         POGGER.debug_with_visible_whitespace(
             "parser_state.token_stack>$", parser_state.token_stack
         )
@@ -2177,7 +2278,7 @@ class ListBlockProcessor:
         )
 
     @staticmethod
-    def __close_required_lists_calc(parser_state):
+    def __close_required_lists_calc(parser_state: ParserState) -> Tuple[int, int]:
 
         token_stack_index = len(parser_state.token_stack) - 1
         found_list_tokens = []
@@ -2195,8 +2296,12 @@ class ListBlockProcessor:
 
     @staticmethod
     def __close_required_lists(
-        parser_state, allow_list_removal, balancing_tokens, new_stack
-    ):
+        parser_state: ParserState,
+        allow_list_removal: bool,
+        balancing_tokens: List[MarkdownToken],
+        new_stack: StackToken,
+    ) -> None:
+        assert new_stack.matching_markdown_token is not None
         matching_column_number = new_stack.matching_markdown_token.column_number
 
         (
@@ -2254,11 +2359,11 @@ class ListBlockProcessor:
 
     @staticmethod
     def __adjust_line_for_list_in_process(
-        line_to_parse,
-        start_index,
-        leading_space,
-        leading_space_length,
-        requested_list_indent,
+        line_to_parse: str,
+        start_index: int,
+        leading_space: Optional[str],
+        leading_space_length: int,
+        requested_list_indent: int,
     ) -> Tuple[str, Optional[str]]:
         """
         Alter the current line to better represent the current level of lists.
@@ -2281,6 +2386,7 @@ class ListBlockProcessor:
             start_index = 0
             removed_whitespace = None
         else:
+            assert leading_space is not None
             removed_whitespace = leading_space[:requested_list_indent]
             padded_spaces = ParserHelper.repeat_string(
                 ParserHelper.space_character, remaining_indent
@@ -2293,13 +2399,13 @@ class ListBlockProcessor:
     # pylint: disable=too-many-arguments
     @staticmethod
     def __check_for_list_closures(
-        parser_state,
-        line_to_parse,
-        start_index,
-        extracted_whitespace,
-        ind,
-        leading_space_length,
-    ):
+        parser_state: ParserState,
+        line_to_parse: str,
+        start_index: int,
+        extracted_whitespace: Optional[str],
+        ind: Optional[int],
+        leading_space_length: int,
+    ) -> Tuple[List[MarkdownToken], Optional[RequeueLineInfo]]:
         """
         Check to see if the list in progress and the level of lists shown require
         the closing of some of the sublists.
@@ -2307,6 +2413,7 @@ class ListBlockProcessor:
         POGGER.debug("ws(naa)>>line_to_parse>>$<<", line_to_parse)
         POGGER.debug("ws(naa)>>stack>>$", parser_state.token_stack)
         POGGER.debug("ws(naa)>>tokens>>$", parser_state.token_document)
+        assert ind is not None
 
         is_leaf_block_start = LeafBlockProcessor.is_paragraph_ending_leaf_block_start(
             parser_state, line_to_parse, start_index, extracted_whitespace

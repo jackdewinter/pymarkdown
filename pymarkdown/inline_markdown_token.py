@@ -114,7 +114,9 @@ class EmailAutolinkMarkdownToken(InlineMarkdownToken):
     Class to provide for an encapsulation of the inline email autolink element.
     """
 
-    def __init__(self, autolink_text, line_number, column_number):
+    def __init__(
+        self, autolink_text: str, line_number: int, column_number: int
+    ) -> None:
         self.__autolink_text = autolink_text
         InlineMarkdownToken.__init__(
             self,
@@ -137,7 +139,9 @@ class UriAutolinkMarkdownToken(InlineMarkdownToken):
     Class to provide for an encapsulation of the inline uri autolink element.
     """
 
-    def __init__(self, autolink_text, line_number, column_number):
+    def __init__(
+        self, autolink_text: str, line_number: int, column_number: int
+    ) -> None:
         self.__autolink_text = autolink_text
         InlineMarkdownToken.__init__(
             self,
@@ -163,13 +167,13 @@ class InlineCodeSpanMarkdownToken(InlineMarkdownToken):
     # pylint: disable=too-many-arguments
     def __init__(
         self,
-        span_text,
-        extracted_start_backticks,
-        leading_whitespace,
-        trailing_whitespace,
-        line_number,
-        column_number,
-    ):
+        span_text: str,
+        extracted_start_backticks: str,
+        leading_whitespace: str,
+        trailing_whitespace: str,
+        line_number: int,
+        column_number: int,
+    ) -> None:
         (
             self.__span_text,
             self.__extracted_start_backticks,
@@ -231,7 +235,7 @@ class HardBreakMarkdownToken(InlineMarkdownToken):
     Class to provide for an encapsulation of the inline hard line break element.
     """
 
-    def __init__(self, line_end, line_number, column_number):
+    def __init__(self, line_end: str, line_number: int, column_number: int) -> None:
         self.__line_end = line_end
         InlineMarkdownToken.__init__(
             self,
@@ -439,21 +443,21 @@ class LinkStartMarkdownToken(ReferenceMarkdownToken):
     # pylint: disable=too-many-arguments
     def __init__(
         self,
-        link_uri,
-        pre_link_uri,
-        link_title,
-        pre_link_title,
-        ex_label,
-        label_type,
-        text_from_blocks,
-        did_use_angle_start,
-        inline_title_bounding_character,
-        before_link_whitespace,
-        before_title_whitespace,
-        after_title_whitespace,
-        line_number,
-        column_number,
-    ):
+        link_uri: str,
+        pre_link_uri: str,
+        link_title: str,
+        pre_link_title: str,
+        ex_label: str,
+        label_type: str,
+        text_from_blocks: str,
+        did_use_angle_start: bool,
+        inline_title_bounding_character: str,
+        before_link_whitespace: str,
+        before_title_whitespace: str,
+        after_title_whitespace: str,
+        line_number: int,
+        column_number: int,
+    ) -> None:
         ReferenceMarkdownToken.__init__(
             self,
             MarkdownToken._token_inline_link,
@@ -487,22 +491,22 @@ class ImageStartMarkdownToken(ReferenceMarkdownToken):
     # pylint: disable=too-many-arguments, too-many-locals
     def __init__(
         self,
-        image_uri,
-        pre_image_uri,
-        image_title,
-        pre_image_title,
-        image_alt_text,
-        ex_label,
-        label_type,
-        text_from_blocks,
-        did_use_angle_start,
-        inline_title_bounding_character,
-        before_link_whitespace,
-        before_title_whitespace,
-        after_title_whitespace,
-        line_number,
-        column_number,
-    ):
+        image_uri: str,
+        pre_image_uri: str,
+        image_title: str,
+        pre_image_title: str,
+        image_alt_text: str,
+        ex_label: str,
+        label_type: str,
+        text_from_blocks: str,
+        did_use_angle_start: bool,
+        inline_title_bounding_character: str,
+        before_link_whitespace: str,
+        before_title_whitespace: str,
+        after_title_whitespace: str,
+        line_number: int,
+        column_number: int,
+    ) -> None:
         self.__image_alt_text = image_alt_text
         ReferenceMarkdownToken.__init__(
             self,
@@ -593,7 +597,7 @@ class TextMarkdownToken(InlineMarkdownToken):
         """
         return self.__end_whitespace
 
-    def create_copy(self):
+    def create_copy(self) -> "TextMarkdownToken":
         """
         Create a copy of this token.
         """
@@ -755,7 +759,7 @@ class SpecialTextMarkdownToken(TextMarkdownToken):
         """
         return self.__following_two
 
-    def deactivate(self):
+    def deactivate(self) -> None:
         """
         Mark this special token as deactivated.
         """
@@ -775,7 +779,7 @@ class SpecialTextMarkdownToken(TextMarkdownToken):
         if adjust_column_number:
             self._set_column_number(self.column_number + emphasis_length)
 
-    def show_process_emphasis(self):
+    def show_process_emphasis(self) -> str:
         """
         Independent of the __str__ function, provide extra information.
         """

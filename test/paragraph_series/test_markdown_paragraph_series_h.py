@@ -21,7 +21,7 @@ nk][bar]a
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
-        "[link(1,2):full:/url:title:::bar:li\nnk:::::]",
+        "[link(1,2):full:/url:title:::bar:li\nnk:False::::]",
         "[text(1,3):li\nnk::\n]",
         "[end-link::]",
         "[text(2,9):a:]",
@@ -50,7 +50,7 @@ nk][bar]a
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
-        "[image(1,2):full:/url:title:li\nnk:::bar:li\nnk:::::]",
+        "[image(1,2):full:/url:title:li\nnk:::bar:li\nnk:False::::]",
         "[text(2,9):a:]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
@@ -77,7 +77,7 @@ fg`nk][bar]a
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
-        "[link(1,2):full:/url:title:::bar:li`de\nfg`nk:::::]",
+        "[link(1,2):full:/url:title:::bar:li`de\nfg`nk:False::::]",
         "[text(1,3):li:]",
         "[icode-span(1,5):de\a\n\a \afg:`::]",
         "[text(2,4):nk:]",
@@ -110,7 +110,7 @@ fg`nk][bar]a
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
-        "[image(1,2):full:/url:title:lide fgnk:::bar:li`de\nfg`nk:::::]",
+        "[image(1,2):full:/url:title:lide fgnk:::bar:li`de\nfg`nk:False::::]",
         "[text(2,12):a:]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
@@ -137,7 +137,7 @@ fg>nk][bar]a
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
-        "[link(1,2):full:/url:title:::bar:li<de\nfg>nk:::::]",
+        "[link(1,2):full:/url:title:::bar:li<de\nfg>nk:False::::]",
         "[text(1,3):li:]",
         "[raw-html(1,5):de\nfg]",
         "[text(2,4):nk:]",
@@ -168,7 +168,7 @@ fg>nk][bar]a
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
-        "[image(1,2):full:/url:title:li<de\nfg>nk:::bar:li<de\nfg>nk:::::]",
+        "[image(1,2):full:/url:title:li<de\nfg>nk:::bar:li<de\nfg>nk:False::::]",
         "[text(2,12):a:]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
@@ -195,7 +195,7 @@ nk][]a
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
-        "[link(1,2):collapsed:/url:title::::li\nnk:::::]",
+        "[link(1,2):collapsed:/url:title::::li\nnk:False::::]",
         "[text(1,3):li\nnk::\n]",
         "[end-link::]",
         "[text(2,6):a:]",
@@ -224,7 +224,7 @@ nk][]a
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
-        "[image(1,2):collapsed:/url:title:li\nnk::::li\nnk:::::]",
+        "[image(1,2):collapsed:/url:title:li\nnk::::li\nnk:False::::]",
         "[text(2,6):a:]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
@@ -251,7 +251,7 @@ fg`nk][]a
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
-        "[link(1,2):collapsed:/url:title::::li`de\nfg`nk:::::]",
+        "[link(1,2):collapsed:/url:title::::li`de\nfg`nk:False::::]",
         "[text(1,3):li:]",
         "[icode-span(1,5):de\a\n\a \afg:`::]",
         "[text(2,4):nk:]",
@@ -284,7 +284,7 @@ fg`nk][]a
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
-        "[image(1,2):collapsed:/url:title:lide fgnk::::li`de\nfg`nk:::::]",
+        "[image(1,2):collapsed:/url:title:lide fgnk::::li`de\nfg`nk:False::::]",
         "[text(2,9):a:]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
@@ -311,7 +311,7 @@ fg>nk][]a
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
-        "[link(1,2):collapsed:/url:title::::li<de\nfg>nk:::::]",
+        "[link(1,2):collapsed:/url:title::::li<de\nfg>nk:False::::]",
         "[text(1,3):li:]",
         "[raw-html(1,5):de\nfg]",
         "[text(2,4):nk:]",
@@ -342,7 +342,7 @@ fg>nk][]a
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
-        "[image(1,2):collapsed:/url:title:li<de\nfg>nk::::li<de\nfg>nk:::::]",
+        "[image(1,2):collapsed:/url:title:li<de\nfg>nk::::li<de\nfg>nk:False::::]",
         "[text(2,9):a:]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
@@ -369,7 +369,7 @@ nk]a
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
-        "[link(1,2):shortcut:/url:title::::li\nnk:::::]",
+        "[link(1,2):shortcut:/url:title::::li\nnk:False::::]",
         "[text(1,3):li\nnk::\n]",
         "[end-link::]",
         "[text(2,4):a:]",
@@ -398,7 +398,7 @@ nk]a
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
-        "[image(1,2):shortcut:/url:title:li\nnk::::li\nnk:::::]",
+        "[image(1,2):shortcut:/url:title:li\nnk::::li\nnk:False::::]",
         "[text(2,4):a:]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
@@ -425,7 +425,7 @@ fg`nk]a
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
-        "[link(1,2):shortcut:/url:title::::li`de\nfg`nk:::::]",
+        "[link(1,2):shortcut:/url:title::::li`de\nfg`nk:False::::]",
         "[text(1,3):li:]",
         "[icode-span(1,5):de\a\n\a \afg:`::]",
         "[text(2,4):nk:]",
@@ -458,7 +458,7 @@ fg`nk]a
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
-        "[image(1,2):shortcut:/url:title:lide fgnk::::li`de\nfg`nk:::::]",
+        "[image(1,2):shortcut:/url:title:lide fgnk::::li`de\nfg`nk:False::::]",
         "[text(2,7):a:]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
@@ -485,7 +485,7 @@ fg>nk]a
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
-        "[link(1,2):shortcut:/url:title::::li<de\nfg>nk:::::]",
+        "[link(1,2):shortcut:/url:title::::li<de\nfg>nk:False::::]",
         "[text(1,3):li:]",
         "[raw-html(1,5):de\nfg]",
         "[text(2,4):nk:]",
@@ -516,7 +516,7 @@ fg>nk]a
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
-        "[image(1,2):shortcut:/url:title:li<de\nfg>nk::::li<de\nfg>nk:::::]",
+        "[image(1,2):shortcut:/url:title:li<de\nfg>nk::::li<de\nfg>nk:False::::]",
         "[text(2,7):a:]",
         "[end-para:::True]",
         "[BLANK(3,1):]",

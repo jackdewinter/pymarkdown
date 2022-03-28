@@ -1885,7 +1885,7 @@ class ContainerBlockProcessor:
             (
                 did_process,
                 new_list_index,
-                line_to_parse,
+                new_line_to_parse,
                 resultant_tokens,
                 removed_chars_at_start,
                 block_quote_data,
@@ -1916,6 +1916,8 @@ class ContainerBlockProcessor:
                     indent_already_processed,
                     extracted_whitespace,
                 )
+            assert new_line_to_parse is not None
+            line_to_parse = new_line_to_parse
             container_level_tokens.extend(resultant_tokens)
         else:
             new_list_index = -1

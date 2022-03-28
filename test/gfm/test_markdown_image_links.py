@@ -137,7 +137,7 @@ def test_image_link_581():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[image(1,1):shortcut:train.jpg:train &amp; tracks:foo bar::::foo *bar*:::::]",
+        "[image(1,1):shortcut:train.jpg:train &amp; tracks:foo bar::::foo *bar*:False::::]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::foo *bar*:: :train.jpg:: :train &amp; tracks:"train & tracks":]',
@@ -202,7 +202,7 @@ def test_image_link_584():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[image(1,1):collapsed:train.jpg:train &amp; tracks:foo bar::::foo *bar*:::::]",
+        "[image(1,1):collapsed:train.jpg:train &amp; tracks:foo bar::::foo *bar*:False::::]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::foo *bar*:: :train.jpg:: :train &amp; tracks:"train & tracks":]',
@@ -229,7 +229,7 @@ def test_image_link_585():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[image(1,1):full:train.jpg:train &amp; tracks:foo bar:::foobar:foo *bar*:::::]",
+        "[image(1,1):full:train.jpg:train &amp; tracks:foo bar:::foobar:foo *bar*:False::::]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::foobar:FOOBAR: :train.jpg:: :train &amp; tracks:"train & tracks":]',
@@ -334,7 +334,7 @@ def test_image_link_590():
 [bar]: /url"""
     expected_tokens = [
         "[para(1,1):]",
-        "[image(1,1):full:/url::foo:::bar:foo:::::]",
+        "[image(1,1):full:/url::foo:::bar:foo:False::::]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[link-ref-def(3,1):True::bar:: :/url:::::]",
@@ -357,7 +357,7 @@ def test_image_link_591():
 [BAR]: /url"""
     expected_tokens = [
         "[para(1,1):]",
-        "[image(1,1):full:/url::foo:::bar:foo:::::]",
+        "[image(1,1):full:/url::foo:::bar:foo:False::::]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[link-ref-def(3,1):True::bar:BAR: :/url:::::]",
@@ -381,7 +381,7 @@ def test_image_link_592():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[image(1,1):collapsed:/url:title:foo::::foo:::::]",
+        "[image(1,1):collapsed:/url:title:foo::::foo:False::::]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',
@@ -408,7 +408,7 @@ def test_image_link_592a():
     )
     expected_tokens = [
         "[para(1,1):: ]",
-        "[image(1,1):collapsed:/url:title:foo::::foo:::::]",
+        "[image(1,1):collapsed:/url:title:foo::::foo:False::::]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',
@@ -435,7 +435,7 @@ def test_image_link_592b():
     )
     expected_tokens = [
         "[para(1,1):]",
-        "[image(1,1):collapsed:/url:title:foo::::foo:::::]",
+        "[image(1,1):collapsed:/url:title:foo::::foo:False::::]",
         "[text(1,9): text:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
@@ -461,7 +461,7 @@ def test_image_link_593():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[image(1,1):collapsed:/url:title:foo bar::::*foo* bar:::::]",
+        "[image(1,1):collapsed:/url:title:foo bar::::*foo* bar:False::::]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::*foo* bar:: :/url:: :title:"title":]',
@@ -486,7 +486,7 @@ def test_image_link_594():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[image(1,1):collapsed:/url:title:Foo::::Foo:::::]",
+        "[image(1,1):collapsed:/url:title:Foo::::Foo:False::::]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',
@@ -514,7 +514,7 @@ def test_image_link_595():
     )
     expected_tokens = [
         "[para(1,1):\n]",
-        "[image(1,1):shortcut:/url:title:foo::::foo:::::]",
+        "[image(1,1):shortcut:/url:title:foo::::foo:False::::]",
         "[text(1,7):\n:: \n]",
         "[text(2,1):[:]",
         "[text(2,2):]:]",
@@ -543,7 +543,7 @@ def test_image_link_596():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[image(1,1):shortcut:/url:title:foo::::foo:::::]",
+        "[image(1,1):shortcut:/url:title:foo::::foo:False::::]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',
@@ -568,7 +568,7 @@ def test_image_link_597():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[image(1,1):shortcut:/url:title:foo bar::::*foo* bar:::::]",
+        "[image(1,1):shortcut:/url:title:foo bar::::*foo* bar:False::::]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::*foo* bar:: :/url:: :title:"title":]',
@@ -630,7 +630,7 @@ def test_image_link_599():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[image(1,1):shortcut:/url:title:Foo::::Foo:::::]",
+        "[image(1,1):shortcut:/url:title:Foo::::Foo:False::::]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',
@@ -682,7 +682,7 @@ def test_image_link_601():
     expected_tokens = [
         "[para(1,1):]",
         "[text(1,1):\\\b!:]",
-        "[link(1,3):shortcut:/url:title::::foo:::::]",
+        "[link(1,3):shortcut:/url:title::::foo:False::::]",
         "[text(1,4):foo:]",
         "[end-link::]",
         "[end-para:::True]",
@@ -711,7 +711,7 @@ o]: /url "title"
 """
     expected_tokens = [
         "[para(1,1):\n]",
-        "[image(1,1):shortcut:/url:title:fo\no::::fo\no:::::]",
+        "[image(1,1):shortcut:/url:title:fo\no::::fo\no:False::::]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
         '[link-ref-def(4,1):True::fo o:fo\no: :/url:: :title:"title":]',

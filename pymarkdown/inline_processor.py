@@ -1496,7 +1496,7 @@ class InlineProcessor:
                 reset_current_string,
                 remaining_line,
                 end_string,
-            ) = ("", None, True, "", None)
+            ) = ("", [], True, "", None)
             # POGGER.debug(
             #     "9<<end_string<<$<<",
             #     end_string,

@@ -269,7 +269,7 @@ def test_backslash_escapes_319():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[link(1,1):shortcut:/bar*:ti*tle::::foo:::::]",
+        "[link(1,1):shortcut:/bar*:ti*tle::::foo:False::::]",
         "[text(1,2):foo:]",
         "[end-link::]",
         "[end-para:::True]",

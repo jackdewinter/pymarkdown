@@ -358,7 +358,7 @@ def test_textual_content_extra_18():
     expected_tokens = [
         "[para(1,1):]",
         "[text(1,1):before:]",
-        "[link(1,7):shortcut:/bar:ti*\btle::::fo\x05\bo:::::]",
+        "[link(1,7):shortcut:/bar:ti*\btle::::fo\x05\bo:False::::]",
         "[text(1,8):fo\x05\bo:]",
         "[end-link::]",
         "[text(1,13):after:]",
