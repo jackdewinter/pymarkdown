@@ -1,5 +1,5 @@
 """
-Inline helper
+Module to help with the parsing of inline elements.
 """
 import json
 import logging
@@ -15,6 +15,7 @@ from pymarkdown.inline_markdown_token import (
     EmailAutolinkMarkdownToken,
     HardBreakMarkdownToken,
     InlineCodeSpanMarkdownToken,
+    RawHtmlMarkdownToken,
     UriAutolinkMarkdownToken,
 )
 from pymarkdown.inline_request import InlineRequest
@@ -30,7 +31,7 @@ POGGER = ParserLogger(logging.getLogger(__name__))
 
 class InlineHelper:
     """
-    Class to helper with the parsing of inline elements.
+    Class to help with the parsing of inline elements.
     """
 
     __valid_email_regex = (
@@ -78,7 +79,9 @@ class InlineHelper:
         InlineHelper.__entity_map = InlineHelper.__load_entity_map(resource_path)
 
     @staticmethod
-    def handle_inline_backslash(inline_request, add_text_signature=True):
+    def handle_inline_backslash(
+        inline_request: InlineRequest, add_text_signature: bool = True
+    ) -> InlineResponse:
         """
         Handle the inline case of having a backslash.
         """
@@ -124,7 +127,7 @@ class InlineHelper:
         return inline_response
 
     @staticmethod
-    def handle_character_reference(inline_request):
+    def handle_character_reference(inline_request: InlineRequest) -> InlineResponse:
         """
         Handle a generic character reference.
         """
@@ -134,6 +137,7 @@ class InlineHelper:
             "",
             len(inline_request.source_text),
         )
+        assert inline_response.new_index is not None
         if (
             inline_response.new_index < source_text_size
             and inline_request.source_text[inline_response.new_index]
@@ -153,9 +157,12 @@ class InlineHelper:
         return inline_response
 
     @staticmethod
-    def __handle_numeric_character_reference(inline_request, inline_response):
+    def __handle_numeric_character_reference(
+        inline_request: InlineRequest, inline_response: InlineResponse
+    ) -> None:
         original_new_index = inline_response.new_index
         POGGER.debug("here")
+        assert inline_response.new_index is not None
         (
             inline_response.new_string,
             inline_response.new_index,
@@ -172,15 +179,19 @@ class InlineHelper:
 
     @staticmethod
     def __handle_non_numeric_character_reference(
-        inline_request, inline_response, source_text_size
-    ):
+        inline_request: InlineRequest,
+        inline_response: InlineResponse,
+        source_text_size: int,
+    ) -> None:
         POGGER.debug("there")
+        assert inline_response.new_index is not None
         end_index, collected_string = ParserHelper.collect_while_one_of_characters(
             inline_request.source_text,
             inline_response.new_index,
             InlineHelper.__ascii_letters_and_digits,
         )
         if collected_string:
+            assert end_index is not None
             collected_string = (
                 f"{InlineHelper.character_reference_start_character}{collected_string}"
             )
@@ -207,7 +218,7 @@ class InlineHelper:
             )
 
     @staticmethod
-    def handle_backslashes(source_text):
+    def handle_backslashes(source_text: str) -> str:
         """
         Handle the processing of backslashes for anything other than the text
         blocks, which have additional needs for parsing.
@@ -239,6 +250,8 @@ class InlineHelper:
                 inline_response.new_string,
                 inline_response.new_index,
             )
+            assert new_string is not None
+            assert new_index is not None
             POGGER.debug("handle_backslashes<<$<<$", new_string, new_index)
             string_parts.append(new_string)
             start_index = new_index
@@ -288,7 +301,7 @@ class InlineHelper:
         return "".join(text_parts)
 
     @staticmethod
-    def handle_inline_backtick(inline_request):
+    def handle_inline_backtick(inline_request: InlineRequest) -> InlineResponse:
         """
         Handle the inline case of backticks for code spans.
         """
@@ -303,6 +316,8 @@ class InlineHelper:
         )
         POGGER.debug("after_collect>$>$", new_index, extracted_start_backticks)
 
+        assert new_index is not None
+        assert extracted_start_backticks is not None
         extracted_start_backticks_size, end_backtick_start_index = (
             len(extracted_start_backticks),
             inline_request.source_text.find(extracted_start_backticks, new_index),
@@ -316,6 +331,7 @@ class InlineHelper:
                 end_backtick_start_index,
                 InlineHelper.code_span_bounds,
             )
+            assert end_backticks_attempt is not None
             if len(end_backticks_attempt) == extracted_start_backticks_size:
                 break
             end_backtick_start_index = inline_request.source_text.find(
@@ -330,6 +346,7 @@ class InlineHelper:
             extracted_start_backticks_size,
         )
 
+        assert inline_response.new_index is not None
         POGGER.debug(
             ">>delta_line_number>>$<<",
             inline_response.delta_line_number,
@@ -347,12 +364,12 @@ class InlineHelper:
 
     @staticmethod
     def __build_backtick_response(
-        inline_request,
-        end_backtick_start_index,
-        extracted_start_backticks,
-        new_index,
-        extracted_start_backticks_size,
-    ):
+        inline_request: InlineRequest,
+        end_backtick_start_index: int,
+        extracted_start_backticks: str,
+        new_index: int,
+        extracted_start_backticks_size: int,
+    ) -> InlineResponse:
         inline_response = InlineResponse()
         inline_response.delta_line_number = -1
 
@@ -387,6 +404,9 @@ class InlineHelper:
                 "",
                 end_backtick_start_index,
             )
+            assert inline_request.line_number is not None
+            assert inline_request.column_number is not None
+            assert inline_request.remaining_line is not None
             new_column_number = inline_request.column_number + len(
                 inline_request.remaining_line
             )
@@ -413,7 +433,9 @@ class InlineHelper:
         return inline_response
 
     @staticmethod
-    def modify_end_string(end_string, removed_end_whitespace):
+    def modify_end_string(
+        end_string: Optional[str], removed_end_whitespace: str
+    ) -> str:
         """
         Modify the string at the end of the paragraph.
         """
@@ -425,8 +447,8 @@ class InlineHelper:
 
     @staticmethod
     def __calculate_backtick_between_text(
-        inline_request, new_index, end_backtick_start_index
-    ):
+        inline_request: InlineRequest, new_index: int, end_backtick_start_index: int
+    ) -> Tuple[str, str, str, str]:
         between_text = inline_request.source_text[new_index:end_backtick_start_index]
         original_between_text, leading_whitespace, trailing_whitespace = (
             between_text,
@@ -568,7 +590,9 @@ class InlineHelper:
     # pylint: enable=too-many-arguments, too-many-locals
 
     @staticmethod
-    def __is_proper_hard_break(current_string, removed_end_whitespace_size):
+    def __is_proper_hard_break(
+        current_string: str, removed_end_whitespace_size: int
+    ) -> bool:
         POGGER.debug(">>current_string>>$>>", current_string)
 
         current_string_size = len(current_string)
@@ -589,20 +613,20 @@ class InlineHelper:
     # pylint: disable=too-many-arguments
     @staticmethod
     def __select_line_ending(
-        new_tokens,
-        is_proper_hard_break,
-        line_number,
-        adj_hard_column,
-        current_string,
-        removed_end_whitespace,
-        removed_end_whitespace_size,
-        whitespace_to_add,
-        append_to_current_string,
-        end_string,
-        remaining_line,
-        inline_blocks,
-        is_setext,
-    ):
+        new_tokens: List[MarkdownToken],
+        is_proper_hard_break: bool,
+        line_number: int,
+        adj_hard_column: int,
+        current_string: str,
+        removed_end_whitespace: str,
+        removed_end_whitespace_size: int,
+        whitespace_to_add: Optional[str],
+        append_to_current_string: str,
+        end_string: Optional[str],
+        remaining_line: str,
+        inline_blocks: List[MarkdownToken],
+        is_setext: bool,
+    ) -> Tuple[str, Optional[str], str, Optional[str], str]:
         if is_proper_hard_break:
             POGGER.debug(">>proper hard break")
             new_tokens.append(
@@ -670,19 +694,20 @@ class InlineHelper:
 
     @staticmethod
     def extract_bounded_string(
-        source_text, new_index, close_character, start_character
-    ):
+        source_text: str,
+        new_index: int,
+        close_character: str,
+        start_character: Optional[str],
+    ) -> Tuple[Optional[int], Optional[str]]:
         """
         Extract a string that is bounded by some manner of characters.
         """
-        break_characters, nesting_level = (
-            (
-                f"{InlineHelper.backslash_character}{close_character}{start_character}"
-                if start_character
-                else f"{InlineHelper.backslash_character}{close_character}"
-            ),
-            0,
+        break_characters = (
+            f"{InlineHelper.backslash_character}{close_character}{start_character}"
+            if start_character
+            else f"{InlineHelper.backslash_character}{close_character}"
         )
+        nesting_level: int = 0
         POGGER.debug(
             "extract_bounded_string>>new_index>>$>>data>>$>>",
             new_index,
@@ -691,12 +716,14 @@ class InlineHelper:
         next_index, data = ParserHelper.collect_until_one_of_characters(
             source_text, new_index, break_characters
         )
-        extracted_parts = [data]
+        assert data is not None
+        extracted_parts: List[str] = [data]
         POGGER.debug(
             ">>next_index1>>$>>data>>$>>",
             next_index,
             data,
         )
+        assert next_index is not None
         while next_index < len(source_text) and not (
             source_text[next_index] == close_character and nesting_level == 0
         ):
@@ -712,6 +739,7 @@ class InlineHelper:
                 close_character,
                 break_characters,
             )
+            assert next_index is not None
             POGGER.debug(
                 "back>>next_index>>$>>data>>$>>",
                 next_index,
@@ -722,6 +750,7 @@ class InlineHelper:
             next_index,
             data,
         )
+        assert next_index is not None
         if (
             ParserHelper.is_character_at_index(source_text, next_index, close_character)
             and nesting_level == 0
@@ -736,14 +765,14 @@ class InlineHelper:
     # pylint: disable=too-many-arguments
     @staticmethod
     def __handle_next_extract_bounded_string_item(
-        source_text,
-        next_index,
-        extracted_parts,
-        start_character,
-        nesting_level,
-        close_character,
-        break_characters,
-    ):
+        source_text: str,
+        next_index: int,
+        extracted_parts: List[str],
+        start_character: Optional[str],
+        nesting_level: int,
+        close_character: str,
+        break_characters: str,
+    ) -> Tuple[int, int]:
 
         if ParserHelper.is_character_at_index(
             source_text, next_index, InlineHelper.backslash_character
@@ -753,6 +782,7 @@ class InlineHelper:
 
             inline_request = InlineRequest(source_text, next_index)
             inline_response = InlineHelper.handle_inline_backslash(inline_request)
+            assert inline_response.new_index is not None
             next_index = inline_response.new_index
             extracted_parts.append(source_text[old_index:next_index])
         elif start_character is not None and ParserHelper.is_character_at_index(
@@ -770,16 +800,20 @@ class InlineHelper:
             extracted_parts.append(close_character)
             next_index += 1
             nesting_level -= 1
-        next_index, new_data = ParserHelper.collect_until_one_of_characters(
+        nexter_index, new_data = ParserHelper.collect_until_one_of_characters(
             source_text, next_index, break_characters
         )
+        assert new_data is not None
+        assert nexter_index is not None
         extracted_parts.append(new_data)
-        return next_index, nesting_level
+        return nexter_index, nesting_level
 
     # pylint: enable=too-many-arguments
 
     @staticmethod
-    def __handle_numeric_character_reference_inner(source_text, new_index):
+    def __handle_numeric_character_reference_inner(
+        source_text: str, new_index: int
+    ) -> Tuple[str, int, Optional[str]]:
         """
         Handle a character reference that is numeric in nature.
         """
@@ -799,6 +833,8 @@ class InlineHelper:
             end_index, collected_string = ParserHelper.collect_while_one_of_characters(
                 source_text, new_index, string.hexdigits
             )
+            assert end_index is not None
+            assert collected_string is not None
             POGGER.debug(
                 "&#x>>a>>$>>b>>$>>$",
                 end_index,
@@ -818,6 +854,8 @@ class InlineHelper:
             end_index, collected_string = ParserHelper.collect_while_one_of_characters(
                 source_text, new_index, string.digits
             )
+            assert end_index is not None
+            assert collected_string is not None
             POGGER.debug(
                 "&#>>a>>$>>b>>$>>$",
                 end_index,
@@ -849,7 +887,7 @@ class InlineHelper:
         return new_string, new_index, original_reference
 
     @staticmethod
-    def __load_entity_map(resource_path):
+    def __load_entity_map(resource_path: str) -> Dict[str, str]:
         """
         Load the entity map, refreshed from https://html.spec.whatwg.org/entities.json
         into a dict that was can use.
@@ -898,7 +936,9 @@ class InlineHelper:
         return approved_entity_map
 
     @staticmethod
-    def __parse_valid_email_autolink(text_to_parse, line_number, column_number):
+    def __parse_valid_email_autolink(
+        text_to_parse: str, line_number: int, column_number: int
+    ) -> Optional[EmailAutolinkMarkdownToken]:
         """
         Parse a possible email autolink and determine if it is valid.
         """
@@ -909,7 +949,9 @@ class InlineHelper:
         )
 
     @staticmethod
-    def __parse_valid_uri_autolink(text_to_parse, line_number, column_number):
+    def __parse_valid_uri_autolink(
+        text_to_parse: str, line_number: int, column_number: int
+    ) -> Optional[UriAutolinkMarkdownToken]:
         """
         Parse a possible uri autolink and determine if it is valid.
         """
@@ -921,6 +963,7 @@ class InlineHelper:
             path_index, uri_scheme = ParserHelper.collect_while_one_of_characters(
                 text_to_parse, 1, InlineHelper.__valid_scheme_characters
             )
+            assert path_index is not None
             uri_scheme, text_to_parse_size = f"{text_to_parse[0]}{uri_scheme}", len(
                 text_to_parse
             )
@@ -943,7 +986,7 @@ class InlineHelper:
         return None
 
     @staticmethod
-    def handle_angle_brackets(inline_request):
+    def handle_angle_brackets(inline_request: InlineRequest) -> InlineResponse:
         """
         Given an open angle bracket, determine which of the three possibilities it is.
         """
@@ -960,11 +1003,16 @@ class InlineHelper:
             )
             closing_angle_index += 1
 
+            assert inline_request.line_number is not None
+            assert inline_request.column_number is not None
+            assert inline_request.remaining_line is not None
             new_column_number = inline_request.column_number + len(
                 inline_request.remaining_line
             )
 
-            new_token = InlineHelper.__parse_valid_uri_autolink(
+            new_token: Optional[
+                MarkdownToken
+            ] = InlineHelper.__parse_valid_uri_autolink(
                 between_brackets, inline_request.line_number, new_column_number
             )
             if not new_token:
@@ -981,7 +1029,8 @@ class InlineHelper:
                 )
                 if after_index != -1:
                     closing_angle_index = after_index + inline_request.next_index + 1
-                    between_brackets = new_token.raw_tag
+                    html_token = cast(RawHtmlMarkdownToken, new_token)
+                    between_brackets = html_token.raw_tag
         else:
             new_token, between_brackets = None, None
 

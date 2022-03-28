@@ -3,17 +3,18 @@ Module to provide helper functions for parsing html.
 """
 import logging
 import string
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from pymarkdown.constants import Constants
 from pymarkdown.inline_markdown_token import RawHtmlMarkdownToken, TextMarkdownToken
+from pymarkdown.inline_request import InlineRequest
 from pymarkdown.leaf_markdown_token import HtmlBlockMarkdownToken
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.parser_state import ParserState
 from pymarkdown.position_marker import PositionMarker
-from pymarkdown.stack_token import HtmlBlockStackToken, ParagraphStackToken
+from pymarkdown.stack_token import HtmlBlockStackToken, ParagraphStackToken, StackToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -523,8 +524,12 @@ class HtmlHelper:
 
     @staticmethod
     def parse_raw_html(
-        only_between_angles, remaining_line, line_number, column_number, inline_request
-    ):
+        only_between_angles: str,
+        remaining_line: str,
+        line_number: int,
+        column_number: int,
+        inline_request: InlineRequest,
+    ) -> Tuple[Optional[RawHtmlMarkdownToken], int]:
         """
         Given an open HTML tag character (<), try the various possibilities for
         types of tag, and determine if any of them parse validly.
@@ -700,7 +705,9 @@ class HtmlHelper:
         return html_block_type
 
     @staticmethod
-    def __determine_html_block_type(token_stack, line_to_parse, start_index):
+    def __determine_html_block_type(
+        token_stack: List[StackToken], line_to_parse: str, start_index: int
+    ) -> Tuple[Optional[str], Optional[str]]:
         """
         Determine the type of the html block that we are starting.
         """
@@ -713,11 +720,15 @@ class HtmlHelper:
             remaining_html_tag = ""
         else:
             (
-                character_index,
-                remaining_html_tag,
+                new_character_index,
+                new_remaining_html_tag,
             ) = ParserHelper.collect_until_one_of_characters(
                 line_to_parse, character_index, HtmlHelper.__html_tag_name_end
             )
+            assert new_character_index is not None
+            assert new_remaining_html_tag is not None
+            remaining_html_tag = new_remaining_html_tag
+            character_index = new_character_index
             remaining_html_tag = remaining_html_tag.lower()
 
             html_block_type = HtmlHelper.__check_for_normal_html_blocks(
@@ -733,11 +744,17 @@ class HtmlHelper:
         return html_block_type, remaining_html_tag
 
     @staticmethod
-    def is_html_block(line_to_parse, start_index, extracted_whitespace, token_stack):
+    def is_html_block(
+        line_to_parse: str,
+        start_index: int,
+        extracted_whitespace: Optional[str],
+        token_stack: List[StackToken],
+    ) -> Tuple[Optional[str], Optional[str]]:
         """
         Determine if the current sequence of characters would start a html block element.
         """
 
+        assert extracted_whitespace is not None
         if (
             ParserHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
         ) and ParserHelper.is_character_at_index(

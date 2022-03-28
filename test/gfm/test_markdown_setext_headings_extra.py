@@ -1512,7 +1512,7 @@ bar][bar]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):full:/url:title:::bar:foo\nbar:::::]",
+        "[link(1,2):full:/url:title:::bar:foo\nbar:False::::]",
         "[text(1,3):foo\nbar::\n]",
         "[end-link::]",
         "[text(2,10):a:]",
@@ -1541,7 +1541,7 @@ r]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):full:/url:title:::ba\nr:foo:::::]",
+        "[link(1,2):full:/url:title:::ba\nr:foo:False::::]",
         "[text(1,3):foo:]",
         "[end-link::]",
         "[text(2,3):a:]",
@@ -1570,7 +1570,7 @@ r]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):shortcut:/url:title::::ba\nr:::::]",
+        "[link(1,2):shortcut:/url:title::::ba\nr:False::::]",
         "[text(1,3):ba\nr::\n]",
         "[end-link::]",
         "[text(2,3):a:]",
@@ -1599,7 +1599,7 @@ r][]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):collapsed:/url:title::::ba\nr:::::]",
+        "[link(1,2):collapsed:/url:title::::ba\nr:False::::]",
         "[text(1,3):ba\nr::\n]",
         "[end-link::]",
         "[text(2,5):a:]",
@@ -1628,7 +1628,7 @@ bar][]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):collapsed:/url:title::::\nbar:::::]",
+        "[link(1,2):collapsed:/url:title::::\nbar:False::::]",
         "[text(1,3):\nbar::\n]",
         "[end-link::]",
         "[text(2,7):a:]",
@@ -1657,7 +1657,7 @@ bar]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):full:/url:title:::\nbar:foo:::::]",
+        "[link(1,2):full:/url:title:::\nbar:foo:False::::]",
         "[text(1,3):foo:]",
         "[end-link::]",
         "[text(2,5):a:]",
@@ -2636,7 +2636,7 @@ def test_setext_headings_extra_78():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):full:/url:title:::bar:foo\\#bar:::::]",
+        "[link(1,2):full:/url:title:::bar:foo\\#bar:False::::]",
         "[text(1,3):foo\\\b#bar:]",
         "[end-link::]",
         "[text(1,17):a:]",
@@ -2665,7 +2665,7 @@ def test_setext_headings_extra_78a():
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):full:/url:title:::bar:foo\n\\#bar:::::]",
+        "[link(1,2):full:/url:title:::bar:foo\n\\#bar:False::::]",
         "[text(1,3):foo\n\\\b#bar::\n]",
         "[end-link::]",
         "[text(2,12):a:]",
@@ -2693,7 +2693,7 @@ def test_setext_headings_extra_79():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):full:/url:title:::bar:foo&beta;bar:::::]",
+        "[link(1,2):full:/url:title:::bar:foo&beta;bar:False::::]",
         "[text(1,3):foo\a&beta;\aβ\abar:]",
         "[end-link::]",
         "[text(1,21):a:]",
@@ -2722,7 +2722,7 @@ def test_setext_headings_extra_79a():
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):full:/url:title:::bar:foo\n&beta;bar:::::]",
+        "[link(1,2):full:/url:title:::bar:foo\n&beta;bar:False::::]",
         "[text(1,3):foo\n\a&beta;\aβ\abar::\n]",
         "[end-link::]",
         "[text(2,16):a:]",
@@ -2750,7 +2750,7 @@ def test_setext_headings_extra_80():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):full:/url:title:::ba&beta;r:foo:::::]",
+        "[link(1,2):full:/url:title:::ba&beta;r:foo:False::::]",
         "[text(1,3):foo:]",
         "[end-link::]",
         "[text(1,18):a:]",
@@ -2780,7 +2780,7 @@ def test_setext_headings_extra_80a():
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):full:/url:title:::ba\n&beta;r:foo:::::]",
+        "[link(1,2):full:/url:title:::ba\n&beta;r:foo:False::::]",
         "[text(1,3):foo:]",
         "[end-link::]",
         "[text(2,9):a:]",
@@ -2808,7 +2808,7 @@ def test_setext_headings_extra_81():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):full:/url:title:::ba\\]r:foo:::::]",
+        "[link(1,2):full:/url:title:::ba\\]r:foo:False::::]",
         "[text(1,3):foo:]",
         "[end-link::]",
         "[text(1,14):a:]",
@@ -2838,7 +2838,7 @@ def test_setext_headings_extra_81a():
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):full:/url:title:::ba\n\\]r:foo:::::]",
+        "[link(1,2):full:/url:title:::ba\n\\]r:foo:False::::]",
         "[text(1,3):foo:]",
         "[end-link::]",
         "[text(2,5):a:]",
@@ -2866,7 +2866,7 @@ def test_setext_headings_extra_82():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):shortcut:/url:title::::ba&beta;r:::::]",
+        "[link(1,2):shortcut:/url:title::::ba&beta;r:False::::]",
         "[text(1,3):ba\a&beta;\aβ\ar:]",
         "[end-link::]",
         "[text(1,13):a:]",
@@ -2896,7 +2896,7 @@ def test_setext_headings_extra_82a():
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):shortcut:/url:title::::ba\n&beta;r:::::]",
+        "[link(1,2):shortcut:/url:title::::ba\n&beta;r:False::::]",
         "[text(1,3):ba\n\a&beta;\aβ\ar::\n]",
         "[end-link::]",
         "[text(2,9):a:]",
@@ -2924,7 +2924,7 @@ def test_setext_headings_extra_83():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):shortcut:/url:title::::ba\\]r:::::]",
+        "[link(1,2):shortcut:/url:title::::ba\\]r:False::::]",
         "[text(1,3):ba\\\b]r:]",
         "[end-link::]",
         "[text(1,9):a:]",
@@ -2954,7 +2954,7 @@ def test_setext_headings_extra_83a():
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):shortcut:/url:title::::ba\n\\]r:::::]",
+        "[link(1,2):shortcut:/url:title::::ba\n\\]r:False::::]",
         "[text(1,3):ba\n\\\b]r::\n]",
         "[end-link::]",
         "[text(2,5):a:]",
@@ -2982,7 +2982,7 @@ def test_setext_headings_extra_84x():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):collapsed:/url:title::::ba&beta;r:::::]",
+        "[link(1,2):collapsed:/url:title::::ba&beta;r:False::::]",
         "[text(1,3):ba\a&beta;\aβ\ar:]",
         "[end-link::]",
         "[text(1,15):a:]",
@@ -3012,7 +3012,7 @@ def test_setext_headings_extra_84a():
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):collapsed:/url:title::::ba\n&beta;r:::::]",
+        "[link(1,2):collapsed:/url:title::::ba\n&beta;r:False::::]",
         "[text(1,3):ba\n\a&beta;\aβ\ar::\n]",
         "[end-link::]",
         "[text(2,11):a:]",
@@ -3040,7 +3040,7 @@ def test_setext_headings_extra_85():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):collapsed:/url:title::::ba\\]r:::::]",
+        "[link(1,2):collapsed:/url:title::::ba\\]r:False::::]",
         "[text(1,3):ba\\\b]r:]",
         "[end-link::]",
         "[text(1,11):a:]",
@@ -3070,7 +3070,7 @@ def test_setext_headings_extra_85a():
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):collapsed:/url:title::::ba\n\\]r:::::]",
+        "[link(1,2):collapsed:/url:title::::ba\n\\]r:False::::]",
         "[text(1,3):ba\n\\\b]r::\n]",
         "[end-link::]",
         "[text(2,7):a:]",
@@ -3098,7 +3098,7 @@ def test_setext_headings_extra_86x():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):full:/url:title:::bar:fo&beta;o:::::]",
+        "[link(1,2):full:/url:title:::bar:fo&beta;o:False::::]",
         "[text(1,3):fo\a&beta;\aβ\ao:]",
         "[end-link::]",
         "[text(1,18):a:]",
@@ -3127,7 +3127,7 @@ def test_setext_headings_extra_86a():
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):full:/url:title:::bar:fo\n&beta;o:::::]",
+        "[link(1,2):full:/url:title:::bar:fo\n&beta;o:False::::]",
         "[text(1,3):fo\n\a&beta;\aβ\ao::\n]",
         "[end-link::]",
         "[text(2,14):a:]",
@@ -3155,7 +3155,7 @@ def test_setext_headings_extra_87():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):full:/url:title:::bar:fo\\]o:::::]",
+        "[link(1,2):full:/url:title:::bar:fo\\]o:False::::]",
         "[text(1,3):fo\\\b]o:]",
         "[end-link::]",
         "[text(1,14):a:]",
@@ -3184,7 +3184,7 @@ def test_setext_headings_extra_87a():
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):full:/url:title:::bar:fo\n\\]o:::::]",
+        "[link(1,2):full:/url:title:::bar:fo\n\\]o:False::::]",
         "[text(1,3):fo\n\\\b]o::\n]",
         "[end-link::]",
         "[text(2,10):a:]",
@@ -3212,7 +3212,7 @@ def test_setext_headings_extra_88x():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):full:/url:title:::ba\\]r:foo:::::]",
+        "[link(1,2):full:/url:title:::ba\\]r:foo:False::::]",
         "[text(1,3):foo:]",
         "[end-link::]",
         "[text(1,14):a:]",
@@ -3242,7 +3242,7 @@ def test_setext_headings_extra_88a():
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):full:/url:title:::ba\n\\]r:foo:::::]",
+        "[link(1,2):full:/url:title:::ba\n\\]r:foo:False::::]",
         "[text(1,3):foo:]",
         "[end-link::]",
         "[text(2,5):a:]",
@@ -3270,7 +3270,7 @@ def test_setext_headings_extra_89x():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):full:/url:title:::ba&beta;r:foo:::::]",
+        "[link(1,2):full:/url:title:::ba&beta;r:foo:False::::]",
         "[text(1,3):foo:]",
         "[end-link::]",
         "[text(1,18):a:]",
@@ -3300,7 +3300,7 @@ def test_setext_headings_extra_89a():
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):full:/url:title:::ba\n&beta;r:foo:::::]",
+        "[link(1,2):full:/url:title:::ba\n&beta;r:foo:False::::]",
         "[text(1,3):foo:]",
         "[end-link::]",
         "[text(2,9):a:]",
@@ -3328,7 +3328,7 @@ def test_setext_headings_extra_90x():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):full:/url:title:foo#bar:::bar:foo\\#bar:::::]",
+        "[image(1,2):full:/url:title:foo#bar:::bar:foo\\#bar:False::::]",
         "[text(1,18):a:]",
         "[end-setext::]",
         "[BLANK(3,1):]",
@@ -3355,7 +3355,7 @@ def test_setext_headings_extra_90a():
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):full:/url:title:foo\n#bar:::bar:foo\n\\#bar:::::]",
+        "[image(1,2):full:/url:title:foo\n#bar:::bar:foo\n\\#bar:False::::]",
         "[text(2,12):a:]",
         "[end-setext::]",
         "[BLANK(4,1):]",
@@ -3381,7 +3381,7 @@ def test_setext_headings_extra_91x():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):full:/url:title:fooβbar:::bar:foo&beta;bar:::::]",
+        "[image(1,2):full:/url:title:fooβbar:::bar:foo&beta;bar:False::::]",
         "[text(1,22):a:]",
         "[end-setext::]",
         "[BLANK(3,1):]",
@@ -3408,7 +3408,7 @@ def test_setext_headings_extra_91a():
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):full:/url:title:foo\nβbar:::bar:foo\n&beta;bar:::::]",
+        "[image(1,2):full:/url:title:foo\nβbar:::bar:foo\n&beta;bar:False::::]",
         "[text(2,16):a:]",
         "[end-setext::]",
         "[BLANK(4,1):]",
@@ -3434,7 +3434,7 @@ def test_setext_headings_extra_92x():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):full:/url:title:foo:::ba&beta;r:foo:::::]",
+        "[image(1,2):full:/url:title:foo:::ba&beta;r:foo:False::::]",
         "[text(1,19):a:]",
         "[end-setext::]",
         "[BLANK(3,1):]",
@@ -3462,7 +3462,7 @@ def test_setext_headings_extra_92a():
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):full:/url:title:foo:::ba\n&beta;r:foo:::::]",
+        "[image(1,2):full:/url:title:foo:::ba\n&beta;r:foo:False::::]",
         "[text(2,9):a:]",
         "[end-setext::]",
         "[BLANK(4,1):]",
@@ -3488,7 +3488,7 @@ def test_setext_headings_extra_93x():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):full:/url:title:foo:::ba\\]r:foo:::::]",
+        "[image(1,2):full:/url:title:foo:::ba\\]r:foo:False::::]",
         "[text(1,15):a:]",
         "[end-setext::]",
         "[BLANK(3,1):]",
@@ -3516,7 +3516,7 @@ def test_setext_headings_extra_93a():
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):full:/url:title:foo:::ba\n\\]r:foo:::::]",
+        "[image(1,2):full:/url:title:foo:::ba\n\\]r:foo:False::::]",
         "[text(2,5):a:]",
         "[end-setext::]",
         "[BLANK(4,1):]",
@@ -3542,7 +3542,7 @@ def test_setext_headings_extra_94x():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):shortcut:/url:title:baβr::::ba&beta;r:::::]",
+        "[image(1,2):shortcut:/url:title:baβr::::ba&beta;r:False::::]",
         "[text(1,14):a:]",
         "[end-setext::]",
         "[BLANK(3,1):]",
@@ -3570,7 +3570,7 @@ def test_setext_headings_extra_94a():
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):shortcut:/url:title:ba\nβr::::ba\n&beta;r:::::]",
+        "[image(1,2):shortcut:/url:title:ba\nβr::::ba\n&beta;r:False::::]",
         "[text(2,9):a:]",
         "[end-setext::]",
         "[BLANK(4,1):]",
@@ -3596,7 +3596,7 @@ def test_setext_headings_extra_95x():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):shortcut:/url:title:ba]r::::ba\\]r:::::]",
+        "[image(1,2):shortcut:/url:title:ba]r::::ba\\]r:False::::]",
         "[text(1,10):a:]",
         "[end-setext::]",
         "[BLANK(3,1):]",
@@ -3624,7 +3624,7 @@ def test_setext_headings_extra_95a():
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):shortcut:/url:title:ba\n]r::::ba\n\\]r:::::]",
+        "[image(1,2):shortcut:/url:title:ba\n]r::::ba\n\\]r:False::::]",
         "[text(2,5):a:]",
         "[end-setext::]",
         "[BLANK(4,1):]",
@@ -3650,7 +3650,7 @@ def test_setext_headings_extra_96x():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):collapsed:/url:title:baβr::::ba&beta;r:::::]",
+        "[image(1,2):collapsed:/url:title:baβr::::ba&beta;r:False::::]",
         "[text(1,16):a:]",
         "[end-setext::]",
         "[BLANK(3,1):]",
@@ -3678,7 +3678,7 @@ def test_setext_headings_extra_96a():
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):collapsed:/url:title:ba\nβr::::ba\n&beta;r:::::]",
+        "[image(1,2):collapsed:/url:title:ba\nβr::::ba\n&beta;r:False::::]",
         "[text(2,11):a:]",
         "[end-setext::]",
         "[BLANK(4,1):]",
@@ -3704,7 +3704,7 @@ def test_setext_headings_extra_97x():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):collapsed:/url:title:ba]r::::ba\\]r:::::]",
+        "[image(1,2):collapsed:/url:title:ba]r::::ba\\]r:False::::]",
         "[text(1,12):a:]",
         "[end-setext::]",
         "[BLANK(3,1):]",
@@ -3732,7 +3732,7 @@ def test_setext_headings_extra_97a():
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):collapsed:/url:title:ba\n]r::::ba\n\\]r:::::]",
+        "[image(1,2):collapsed:/url:title:ba\n]r::::ba\n\\]r:False::::]",
         "[text(2,7):a:]",
         "[end-setext::]",
         "[BLANK(4,1):]",
@@ -3758,7 +3758,7 @@ def test_setext_headings_extra_98x():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):full:/url:title:foβo:::bar:fo&beta;o:::::]",
+        "[image(1,2):full:/url:title:foβo:::bar:fo&beta;o:False::::]",
         "[text(1,19):a:]",
         "[end-setext::]",
         "[BLANK(3,1):]",
@@ -3785,7 +3785,7 @@ def test_setext_headings_extra_98a():
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):full:/url:title:fo\nβo:::bar:fo\n&beta;o:::::]",
+        "[image(1,2):full:/url:title:fo\nβo:::bar:fo\n&beta;o:False::::]",
         "[text(2,14):a:]",
         "[end-setext::]",
         "[BLANK(4,1):]",
@@ -3811,7 +3811,7 @@ def test_setext_headings_extra_99x():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):full:/url:title:fo]o:::bar:fo\\]o:::::]",
+        "[image(1,2):full:/url:title:fo]o:::bar:fo\\]o:False::::]",
         "[text(1,15):a:]",
         "[end-setext::]",
         "[BLANK(3,1):]",
@@ -3838,7 +3838,7 @@ def test_setext_headings_extra_99a():
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):full:/url:title:fo\n]o:::bar:fo\n\\]o:::::]",
+        "[image(1,2):full:/url:title:fo\n]o:::bar:fo\n\\]o:False::::]",
         "[text(2,10):a:]",
         "[end-setext::]",
         "[BLANK(4,1):]",
@@ -3864,7 +3864,7 @@ def test_setext_headings_extra_a0x():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):full:/url:title:foo:::ba\\]r:foo:::::]",
+        "[image(1,2):full:/url:title:foo:::ba\\]r:foo:False::::]",
         "[text(1,15):a:]",
         "[end-setext::]",
         "[BLANK(3,1):]",
@@ -3892,7 +3892,7 @@ def test_setext_headings_extra_a0a():
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):full:/url:title:foo:::ba\n\\]r:foo:::::]",
+        "[image(1,2):full:/url:title:foo:::ba\n\\]r:foo:False::::]",
         "[text(2,5):a:]",
         "[end-setext::]",
         "[BLANK(4,1):]",
@@ -3918,7 +3918,7 @@ def test_setext_headings_extra_a1x():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):full:/url:title:foo:::ba&beta;r:foo:::::]",
+        "[image(1,2):full:/url:title:foo:::ba&beta;r:foo:False::::]",
         "[text(1,19):a:]",
         "[end-setext::]",
         "[BLANK(3,1):]",
@@ -3946,7 +3946,7 @@ def test_setext_headings_extra_a1a():
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):full:/url:title:foo:::ba\n&beta;r:foo:::::]",
+        "[image(1,2):full:/url:title:foo:::ba\n&beta;r:foo:False::::]",
         "[text(2,9):a:]",
         "[end-setext::]",
         "[BLANK(4,1):]",
@@ -4085,7 +4085,7 @@ nk][bar]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):full:/url:title:::bar:li\nnk:::::]",
+        "[link(1,2):full:/url:title:::bar:li\nnk:False::::]",
         "[text(1,3):li\nnk::\n]",
         "[end-link::]",
         "[text(2,9):a:]",
@@ -4114,7 +4114,7 @@ fg`nk][bar]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):full:/url:title:::bar:li`de\nfg`nk:::::]",
+        "[link(1,2):full:/url:title:::bar:li`de\nfg`nk:False::::]",
         "[text(1,3):li:]",
         "[icode-span(1,5):de\a\n\a \afg:`::]",
         "[text(2,4):nk:]",
@@ -4147,7 +4147,7 @@ fg>nk][bar]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):full:/url:title:::bar:li<de\nfg>nk:::::]",
+        "[link(1,2):full:/url:title:::bar:li<de\nfg>nk:False::::]",
         "[text(1,3):li:]",
         "[raw-html(1,5):de\nfg]",
         "[text(2,4):nk:]",
@@ -4178,7 +4178,7 @@ nk][]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):collapsed:/url:title::::li\nnk:::::]",
+        "[link(1,2):collapsed:/url:title::::li\nnk:False::::]",
         "[text(1,3):li\nnk::\n]",
         "[end-link::]",
         "[text(2,6):a:]",
@@ -4207,7 +4207,7 @@ fg`nk][]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):collapsed:/url:title::::li`de\nfg`nk:::::]",
+        "[link(1,2):collapsed:/url:title::::li`de\nfg`nk:False::::]",
         "[text(1,3):li:]",
         "[icode-span(1,5):de\a\n\a \afg:`::]",
         "[text(2,4):nk:]",
@@ -4240,7 +4240,7 @@ fg>nk][]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):collapsed:/url:title::::li<de\nfg>nk:::::]",
+        "[link(1,2):collapsed:/url:title::::li<de\nfg>nk:False::::]",
         "[text(1,3):li:]",
         "[raw-html(1,5):de\nfg]",
         "[text(2,4):nk:]",
@@ -4271,7 +4271,7 @@ nk]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):shortcut:/url:title::::li\nnk:::::]",
+        "[link(1,2):shortcut:/url:title::::li\nnk:False::::]",
         "[text(1,3):li\nnk::\n]",
         "[end-link::]",
         "[text(2,4):a:]",
@@ -4300,7 +4300,7 @@ fg`nk]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):shortcut:/url:title::::li`de\nfg`nk:::::]",
+        "[link(1,2):shortcut:/url:title::::li`de\nfg`nk:False::::]",
         "[text(1,3):li:]",
         "[icode-span(1,5):de\a\n\a \afg:`::]",
         "[text(2,4):nk:]",
@@ -4333,7 +4333,7 @@ fg>nk]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):shortcut:/url:title::::li<de\nfg>nk:::::]",
+        "[link(1,2):shortcut:/url:title::::li<de\nfg>nk:False::::]",
         "[text(1,3):li:]",
         "[raw-html(1,5):de\nfg]",
         "[text(2,4):nk:]",
@@ -4445,7 +4445,7 @@ nk][bar]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):full:/url:title:li\nnk:::bar:li\nnk:::::]",
+        "[image(1,2):full:/url:title:li\nnk:::bar:li\nnk:False::::]",
         "[text(2,9):a:]",
         "[end-setext::]",
         "[BLANK(4,1):]",
@@ -4472,7 +4472,7 @@ fg`nk][bar]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):full:/url:title:lide fgnk:::bar:li`de\nfg`nk:::::]",
+        "[image(1,2):full:/url:title:lide fgnk:::bar:li`de\nfg`nk:False::::]",
         "[text(2,12):a:]",
         "[end-setext::]",
         "[BLANK(4,1):]",
@@ -4499,7 +4499,7 @@ fg>nk][bar]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):full:/url:title:li<de\nfg>nk:::bar:li<de\nfg>nk:::::]",
+        "[image(1,2):full:/url:title:li<de\nfg>nk:::bar:li<de\nfg>nk:False::::]",
         "[text(2,12):a:]",
         "[end-setext::]",
         "[BLANK(4,1):]",
@@ -4526,7 +4526,7 @@ nk][]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):collapsed:/url:title:li\nnk::::li\nnk:::::]",
+        "[image(1,2):collapsed:/url:title:li\nnk::::li\nnk:False::::]",
         "[text(2,6):a:]",
         "[end-setext::]",
         "[BLANK(4,1):]",
@@ -4553,7 +4553,7 @@ fg`nk][]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):collapsed:/url:title:lide fgnk::::li`de\nfg`nk:::::]",
+        "[image(1,2):collapsed:/url:title:lide fgnk::::li`de\nfg`nk:False::::]",
         "[text(2,9):a:]",
         "[end-setext::]",
         "[BLANK(4,1):]",
@@ -4580,7 +4580,7 @@ fg>nk][]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):collapsed:/url:title:li<de\nfg>nk::::li<de\nfg>nk:::::]",
+        "[image(1,2):collapsed:/url:title:li<de\nfg>nk::::li<de\nfg>nk:False::::]",
         "[text(2,9):a:]",
         "[end-setext::]",
         "[BLANK(4,1):]",
@@ -4607,7 +4607,7 @@ nk]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):shortcut:/url:title:li\nnk::::li\nnk:::::]",
+        "[image(1,2):shortcut:/url:title:li\nnk::::li\nnk:False::::]",
         "[text(2,4):a:]",
         "[end-setext::]",
         "[BLANK(4,1):]",
@@ -4634,7 +4634,7 @@ fg`nk]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):shortcut:/url:title:lide fgnk::::li`de\nfg`nk:::::]",
+        "[image(1,2):shortcut:/url:title:lide fgnk::::li`de\nfg`nk:False::::]",
         "[text(2,7):a:]",
         "[end-setext::]",
         "[BLANK(4,1):]",
@@ -4661,7 +4661,7 @@ fg>nk]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):shortcut:/url:title:li<de\nfg>nk::::li<de\nfg>nk:::::]",
+        "[image(1,2):shortcut:/url:title:li<de\nfg>nk::::li<de\nfg>nk:False::::]",
         "[text(2,7):a:]",
         "[end-setext::]",
         "[BLANK(4,1):]",

@@ -264,7 +264,7 @@ def test_character_references_329():
 [foo]: /f&ouml;&ouml; "f&ouml;&ouml;\""""
     expected_tokens = [
         "[para(1,1):]",
-        "[link(1,1):shortcut:/f%C3%B6%C3%B6:föö::::foo:::::]",
+        "[link(1,1):shortcut:/f%C3%B6%C3%B6:föö::::foo:False::::]",
         "[text(1,2):foo:]",
         "[end-link::]",
         "[end-para:::True]",
@@ -673,8 +673,8 @@ def test_bad_entities_json_file():
         alternate_resource_path, "entities.json"
     )
 
-    print(">>" + alternate_resource_path)
-    print(">>" + full_alternate_resource_path)
+    print(f">>{alternate_resource_path}")
+    print(f">>{full_alternate_resource_path}")
 
     try:
         TokenizedMarkdown(resource_path=alternate_resource_path)

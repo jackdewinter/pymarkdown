@@ -26,7 +26,9 @@ from pymarkdown.stack_token import (
     BlockQuoteStackToken,
     FencedCodeBlockStackToken,
     IndentedCodeBlockStackToken,
+    ListStackToken,
     ParagraphStackToken,
+    StackToken,
 )
 
 POGGER = ParserLogger(logging.getLogger(__name__))
@@ -50,12 +52,16 @@ class LeafBlockProcessor:
 
     @staticmethod
     def is_fenced_code_block(
-        line_to_parse, start_index, extracted_whitespace, skip_whitespace_check=False
-    ):
+        line_to_parse: str,
+        start_index: int,
+        extracted_whitespace: Optional[str],
+        skip_whitespace_check: bool = False,
+    ) -> Tuple[bool, Optional[int], Optional[str], Optional[int]]:
         """
         Determine if we have the start of a fenced code block.
         """
 
+        assert extracted_whitespace is not None
         if (
             skip_whitespace_check
             or ParserHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
@@ -69,6 +75,8 @@ class LeafBlockProcessor:
                 line_to_parse, start_index, line_to_parse[start_index]
             )
             POGGER.debug("ifcb:collected_count:$", collected_count)
+            assert collected_count is not None
+            assert new_index is not None
             (
                 non_whitespace_index,
                 extracted_whitespace_before_info_string,
@@ -111,6 +119,8 @@ class LeafBlockProcessor:
             extracted_whitespace,
         )
         if is_fence_start and not parser_state.token_stack[-1].is_html_block:
+            assert collected_count is not None
+            assert non_whitespace_index is not None
             if parser_state.token_stack[-1].is_fenced_code_block:
                 LeafBlockProcessor.__check_for_fenced_end(
                     parser_state,
@@ -160,16 +170,16 @@ class LeafBlockProcessor:
     # pylint: disable=too-many-arguments
     @staticmethod
     def __process_fenced_start(
-        parser_state,
-        position_marker,
-        non_whitespace_index,
-        collected_count,
-        extracted_whitespace,
-        extracted_whitespace_before_info_string,
-    ):
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        non_whitespace_index: int,
+        collected_count: int,
+        extracted_whitespace: Optional[str],
+        extracted_whitespace_before_info_string: Optional[str],
+    ) -> List[MarkdownToken]:
 
         POGGER.debug("pfcb->check")
-        new_tokens = []
+        new_tokens: List[MarkdownToken] = []
         if (
             position_marker.text_to_parse[position_marker.index_number]
             == LeafBlockProcessor.__fenced_start_tilde
@@ -183,6 +193,7 @@ class LeafBlockProcessor:
             ) = ParserHelper.extract_until_whitespace(
                 position_marker.text_to_parse, non_whitespace_index
             )
+            assert extracted_text is not None
             text_after_extracted_text = position_marker.text_to_parse[
                 after_extracted_text_index:
             ]
@@ -198,6 +209,7 @@ class LeafBlockProcessor:
                 text_after_extracted_text,
             )
 
+            assert extracted_text is not None
             extracted_text = InlineHelper.handle_backslashes(extracted_text)
             text_after_extracted_text = InlineHelper.handle_backslashes(
                 text_after_extracted_text
@@ -208,6 +220,7 @@ class LeafBlockProcessor:
             if pre_text_after_extracted_text == text_after_extracted_text:
                 pre_text_after_extracted_text = ""
 
+            assert extracted_whitespace_before_info_string is not None
             new_token = FencedCodeBlockMarkdownToken(
                 position_marker.text_to_parse[position_marker.index_number],
                 collected_count,
@@ -220,6 +233,7 @@ class LeafBlockProcessor:
                 position_marker,
             )
             new_tokens.append(new_token)
+            assert extracted_whitespace is not None
             parser_state.token_stack.append(
                 FencedCodeBlockStackToken(
                     code_fence_character=position_marker.text_to_parse[
@@ -251,13 +265,13 @@ class LeafBlockProcessor:
     # pylint: disable=too-many-arguments
     @staticmethod
     def __check_for_fenced_end(
-        parser_state,
-        position_marker,
-        collected_count,
-        non_whitespace_index,
-        extracted_whitespace,
-        new_tokens,
-    ):
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        collected_count: int,
+        non_whitespace_index: int,
+        extracted_whitespace: Optional[str],
+        new_tokens: List[MarkdownToken],
+    ) -> None:
         POGGER.debug("pfcb->end")
 
         if (
@@ -278,10 +292,11 @@ class LeafBlockProcessor:
 
     @staticmethod
     def __adjust_for_list_start(
-        parser_state,
-        last_list_start_index,
-        last_block_quote_index,
-    ):
+        parser_state: ParserState,
+        last_list_start_index: int,
+        last_block_quote_index: int,
+    ) -> int:
+        # TODO remove?
         POGGER.debug("last_list_start_index>>$>>", last_list_start_index)
         POGGER.debug(
             "parser_state.original_line_to_parse>>$>>",
@@ -290,10 +305,13 @@ class LeafBlockProcessor:
         return last_block_quote_index
 
     @staticmethod
-    def __recalculate_whitespace(whitespace_to_parse, offset_index):
+    def __recalculate_whitespace(
+        whitespace_to_parse: Optional[str], offset_index: int
+    ) -> Tuple[int, str, str]:
         """
         Recalculate the whitespace characteristics.
         """
+        assert whitespace_to_parse is not None
         POGGER.debug(
             "whitespace_to_parse>>$>>",
             whitespace_to_parse,
@@ -324,6 +342,8 @@ class LeafBlockProcessor:
 
         new_tokens: List[MarkdownToken] = []
 
+        assert extracted_whitespace is not None
+        assert removed_chars_at_start is not None
         if (
             ParserHelper.is_length_greater_than_or_equal_to(
                 extracted_whitespace, 4, start_index=removed_chars_at_start
@@ -357,13 +377,15 @@ class LeafBlockProcessor:
     # pylint: disable=too-many-arguments
     @staticmethod
     def __create_indented_block(
-        parser_state,
-        last_list_start_index,
-        last_block_quote_index,
-        position_marker,
-        extracted_whitespace,
-        new_tokens,
-    ):
+        parser_state: ParserState,
+        last_list_start_index: int,
+        last_block_quote_index: int,
+        position_marker: PositionMarker,
+        extracted_whitespace: Optional[str],
+        new_tokens: List[MarkdownToken],
+    ) -> Tuple[int, Optional[str]]:
+
+        assert extracted_whitespace is not None
         line_number, column_number = position_marker.line_number, (
             position_marker.index_number
             + position_marker.index_indent
@@ -396,11 +418,11 @@ class LeafBlockProcessor:
 
     @staticmethod
     def __prepare_for_indented_block(
-        parser_state,
-        last_list_start_index,
-        last_block_quote_index,
-        extracted_whitespace,
-    ):
+        parser_state: ParserState,
+        last_list_start_index: int,
+        last_block_quote_index: int,
+        extracted_whitespace: Optional[str],
+    ) -> Tuple[int, int, str, str]:
         POGGER.debug(">>__adjust_for_list_start")
         (last_block_quote_index) = LeafBlockProcessor.__adjust_for_list_start(
             parser_state,
@@ -536,12 +558,16 @@ class LeafBlockProcessor:
 
     @staticmethod
     def is_atx_heading(
-        line_to_parse, start_index, extracted_whitespace, skip_whitespace_check=False
-    ):
+        line_to_parse: str,
+        start_index: int,
+        extracted_whitespace: Optional[str],
+        skip_whitespace_check: bool = False,
+    ) -> Tuple[bool, Optional[int], Optional[int], Optional[str]]:
         """
         Determine whether or not an ATX Heading is about to start.
         """
 
+        assert extracted_whitespace is not None
         if (
             ParserHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
             or skip_whitespace_check
@@ -556,20 +582,22 @@ class LeafBlockProcessor:
                 LeafBlockProcessor.__atx_character,
             )
 
-            non_whitespace_index = ParserHelper.collect_while_character(
+            assert new_index is not None
+            _, non_whitespace_index = ParserHelper.collect_while_character(
                 line_to_parse, new_index, " "
             )
             extracted_whitespace_at_start = line_to_parse[
-                new_index : non_whitespace_index[1]
+                new_index:non_whitespace_index
             ]
 
+            assert hash_count is not None
             if hash_count <= 6 and (
                 extracted_whitespace_at_start
-                or non_whitespace_index[1] == len(line_to_parse)
+                or non_whitespace_index == len(line_to_parse)
             ):
                 return (
                     True,
-                    non_whitespace_index[1],
+                    non_whitespace_index,
                     hash_count,
                     extracted_whitespace_at_start,
                 )
@@ -600,6 +628,7 @@ class LeafBlockProcessor:
                 "parse_atx_headings>>start",
             )
 
+            assert non_whitespace_index is not None
             (
                 old_top_of_stack,
                 remaining_line,
@@ -610,6 +639,7 @@ class LeafBlockProcessor:
             ) = LeafBlockProcessor.__prepare_for_create_atx_heading(
                 parser_state, position_marker, [], non_whitespace_index
             )
+            assert hash_count is not None
             start_token = AtxHeadingMarkdownToken(
                 hash_count,
                 remove_trailing_count,
@@ -643,8 +673,11 @@ class LeafBlockProcessor:
 
     @staticmethod
     def __prepare_for_create_atx_heading(
-        parser_state, position_marker, new_tokens, non_whitespace_index
-    ):
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        new_tokens: List[MarkdownToken],
+        non_whitespace_index: int,
+    ) -> Tuple[StackToken, str, int, str, str, List[MarkdownToken]]:
         (
             old_top_of_stack,
             remaining_line,
@@ -674,12 +707,14 @@ class LeafBlockProcessor:
                     remaining_line, end_index - 1, " "
                 ):
                     remaining_line = remaining_line[:end_index]
-                    non_whitespace_index = (
-                        ParserHelper.collect_backwards_while_character(
-                            remaining_line, len(remaining_line) - 1, " "
-                        )
+                    (
+                        _,
+                        new_non_whitespace_index,
+                    ) = ParserHelper.collect_backwards_while_character(
+                        remaining_line, len(remaining_line) - 1, " "
                     )
-                    end_index = non_whitespace_index[1]
+                    assert new_non_whitespace_index is not None
+                    end_index = new_non_whitespace_index
                     extracted_whitespace_before_end = remaining_line[end_index:]
                     remaining_line = remaining_line[:end_index]
                 else:
@@ -756,8 +791,10 @@ class LeafBlockProcessor:
         return new_tokens
 
     @staticmethod
-    def __adjust_continuation_for_active_list(parser_state, position_marker):
-        is_paragraph_continuation = (
+    def __adjust_continuation_for_active_list(
+        parser_state: ParserState, position_marker: PositionMarker
+    ) -> bool:
+        is_paragraph_continuation: bool = (
             len(parser_state.token_stack) > 1 and parser_state.token_stack[-2].is_list
         )
         if is_paragraph_continuation:
@@ -766,6 +803,7 @@ class LeafBlockProcessor:
                 parser_state.original_line_to_parse,
             )
             adj_text = position_marker.text_to_parse[position_marker.index_number :]
+            assert parser_state.original_line_to_parse is not None
             assert parser_state.original_line_to_parse.endswith(adj_text)
             removed_text_length = len(parser_state.original_line_to_parse) - len(
                 adj_text
@@ -774,7 +812,7 @@ class LeafBlockProcessor:
             POGGER.debug("adj_text>:$:<", adj_text)
             POGGER.debug("indent_level>:$:<", parser_state.token_stack[-2].indent_level)
             is_paragraph_continuation = (
-                adj_text
+                bool(adj_text)
                 and removed_text_length < parser_state.token_stack[-2].indent_level
             )
         return is_paragraph_continuation
@@ -782,13 +820,13 @@ class LeafBlockProcessor:
     # pylint: disable=too-many-arguments
     @staticmethod
     def __create_setext_token(
-        parser_state,
-        position_marker,
-        collected_to_index,
-        new_tokens,
-        extracted_whitespace,
-        extra_whitespace_after_setext,
-    ):
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        collected_to_index: int,
+        new_tokens: List[MarkdownToken],
+        extracted_whitespace: Optional[str],
+        extra_whitespace_after_setext: Optional[str],
+    ) -> None:
         token_index = len(parser_state.token_document) - 1
         while not parser_state.token_document[token_index].is_paragraph:
             token_index -= 1
@@ -806,6 +844,7 @@ class LeafBlockProcessor:
         # the last paragraph of text (see case 61) and translates it
         # into a heading, this has to be done separately, as there is no
         # stack token to close.
+        assert extra_whitespace_after_setext is not None
         new_tokens.append(
             replacement_token.generate_close_markdown_token_from_markdown_token(
                 extracted_whitespace, extra_whitespace_after_setext
@@ -887,11 +926,11 @@ class LeafBlockProcessor:
 
     @staticmethod
     def __handle_paragraph_prep(
-        parser_state,
-        block_quote_data,
-        position_marker,
-        extracted_whitespace,
-    ):
+        parser_state: ParserState,
+        block_quote_data: BlockQuoteData,
+        position_marker: PositionMarker,
+        extracted_whitespace: Optional[str],
+    ) -> Tuple[List[MarkdownToken], Optional[str]]:
 
         # In cases where the list ended on the same line as we are processing, the
         # container tokens will not yet be added to the token_document.  As such,
@@ -933,11 +972,11 @@ class LeafBlockProcessor:
 
     @staticmethod
     def __adjust_paragraph_for_containers(
-        parser_state,
-        container_index,
-        extracted_whitespace,
-        adjusted_whitespace_length,
-    ):
+        parser_state: ParserState,
+        container_index: int,
+        extracted_whitespace: Optional[str],
+        adjusted_whitespace_length: int,
+    ) -> int:
         if not parser_state.token_stack[container_index].is_block_quote:
             top_list_token = parser_state.token_stack[container_index]
             POGGER.debug(">>list-owners>>$", top_list_token)
@@ -948,7 +987,10 @@ class LeafBlockProcessor:
         return adjusted_whitespace_length
 
     @staticmethod
-    def __adjust_paragraph_for_list(top_list_token, extracted_whitespace):
+    def __adjust_paragraph_for_list(
+        top_list_token: ListStackToken, extracted_whitespace: Optional[str]
+    ) -> int:
+        assert extracted_whitespace is not None
         ex_ws_length = len(extracted_whitespace)
         POGGER.debug(">>owners-indent>>$", top_list_token.indent_level)
         POGGER.debug(">>ws_before_marker>>$", top_list_token.ws_before_marker)
@@ -1001,7 +1043,7 @@ class LeafBlockProcessor:
     def correct_for_leaf_block_start_in_list(
         parser_state: ParserState,
         removed_chars_at_start: int,
-        old_top_of_stack_token: MarkdownToken,
+        old_top_of_stack_token: StackToken,
         html_tokens: List[MarkdownToken],
         was_token_already_added_to_stack: bool = True,
     ) -> None:
@@ -1061,7 +1103,11 @@ class LeafBlockProcessor:
         )
 
     @staticmethod
-    def __handle_leaf_start(parser_state, removed_chars_at_start, html_tokens):
+    def __handle_leaf_start(
+        parser_state: ParserState,
+        removed_chars_at_start: int,
+        html_tokens: List[MarkdownToken],
+    ) -> None:
         POGGER.debug(
             ">>correct_for_leaf_block_start_in_list>>stack>>$>>",
             parser_state.token_stack,
@@ -1135,13 +1181,13 @@ class LeafBlockProcessor:
             is_leaf_block_start,
         )
         if not is_leaf_block_start:
-            is_leaf_block_start, _ = HtmlHelper.is_html_block(
+            is_html_block_start, _ = HtmlHelper.is_html_block(
                 line_to_parse,
                 start_index,
                 extracted_whitespace,
                 parser_state.token_stack,
             )
-            is_leaf_block_start = bool(is_leaf_block_start)
+            is_leaf_block_start = bool(is_html_block_start)
             POGGER.debug(
                 "is_paragraph_ending_leaf_block_start>>is_html_block>>$",
                 is_leaf_block_start,

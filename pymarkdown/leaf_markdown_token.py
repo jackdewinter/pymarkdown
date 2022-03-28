@@ -3,6 +3,8 @@ Module to provide for a leaf element that can be added to markdown parsing strea
 """
 from typing import Optional
 
+from pymarkdown.link_reference_info import LinkReferenceInfo
+from pymarkdown.link_reference_titles import LinkReferenceTitles
 from pymarkdown.markdown_token import MarkdownToken, MarkdownTokenClass
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.position_marker import PositionMarker
@@ -87,7 +89,9 @@ class ParagraphMarkdownToken(LeafMarkdownToken):
     Class to provide for an encapsulation of the paragraph element.
     """
 
-    def __init__(self, extracted_whitespace, position_marker):
+    def __init__(
+        self, extracted_whitespace: Optional[str], position_marker: PositionMarker
+    ) -> None:
         self.__extracted_whitespace, self.__final_whitespace, self.rehydrate_index = (
             extracted_whitespace,
             "",
@@ -154,8 +158,13 @@ class ThematicBreakMarkdownToken(LeafMarkdownToken):
     """
 
     def __init__(
-        self, start_character, extracted_whitespace, rest_of_line, position_marker
-    ):
+        self,
+        start_character: str,
+        extracted_whitespace: Optional[str],
+        rest_of_line: str,
+        position_marker: PositionMarker,
+    ) -> None:
+        assert extracted_whitespace is not None
         self.__rest_of_line = rest_of_line
         LeafMarkdownToken.__init__(
             self,
@@ -214,15 +223,18 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
         did_add_definition,
         extracted_whitespace,
         link_name,
-        link_value,
-        link_debug,
+        link_value: LinkReferenceTitles,
+        link_debug: Optional[LinkReferenceInfo],
         position_marker,
     ):
         self.__did_add_definition = did_add_definition
         self.__link_name = link_name
 
         if link_value:
-            self.__link_destination, self.__link_title = link_value[0], link_value[1]
+            self.__link_destination, self.__link_title = (
+                link_value.inline_link,
+                link_value.inline_title,
+            )
         else:
             self.__link_destination, self.__link_title = "", ""
 
@@ -235,12 +247,18 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
                 self.__link_title_raw,
                 self.__end_whitespace,
             ) = (
-                "" if link_debug[0] == self.__link_name else link_debug[0],
-                link_debug[1],
-                "" if link_debug[2] == self.__link_destination else link_debug[2],
-                link_debug[3],
-                "" if link_debug[4] == self.__link_title else link_debug[4],
-                link_debug[5],
+                ""
+                if link_debug.collected_destination == self.__link_name
+                else link_debug.collected_destination,
+                link_debug.line_destination_whitespace,
+                ""
+                if link_debug.inline_raw_link == self.__link_destination
+                else link_debug.inline_raw_link,
+                link_debug.line_title_whitespace,
+                ""
+                if link_debug.inline_raw_title == self.__link_title
+                else link_debug.inline_raw_title,
+                link_debug.end_whitespace,
             )
         else:
             (
@@ -252,6 +270,14 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
                 self.__end_whitespace,
             ) = ("", "", "", "", "", "")
 
+        assert self.__end_whitespace is not None
+        assert self.__link_title_raw is not None
+        assert self.__link_title is not None
+        assert self.__link_title_whitespace is not None
+        assert self.__link_destination_raw is not None
+        assert self.__link_destination is not None
+        assert self.__link_destination_whitespace is not None
+        assert self.__link_name_debug is not None
         LeafMarkdownToken.__init__(
             self,
             MarkdownToken._token_link_reference_definition,
@@ -356,11 +382,11 @@ class AtxHeadingMarkdownToken(LeafMarkdownToken):
 
     def __init__(
         self,
-        hash_count,
-        remove_trailing_count,
-        extracted_whitespace,
-        position_marker,
-    ):
+        hash_count: int,
+        remove_trailing_count: int,
+        extracted_whitespace: Optional[str],
+        position_marker: PositionMarker,
+    ) -> None:
         self.__hash_count, self.__remove_trailing_count = (
             hash_count,
             remove_trailing_count,
@@ -414,12 +440,12 @@ class SetextHeadingMarkdownToken(LeafMarkdownToken):
     # pylint: disable=too-many-arguments
     def __init__(
         self,
-        heading_character,
-        heading_character_count,
-        extracted_whitespace,
-        position_marker,
-        para_token,
-    ):
+        heading_character: str,
+        heading_character_count: int,
+        extracted_whitespace: Optional[str],
+        position_marker: PositionMarker,
+        para_token: ParagraphMarkdownToken,
+    ) -> None:
         (
             self.__heading_character,
             self.__heading_character_count,
@@ -529,7 +555,9 @@ class IndentedCodeBlockMarkdownToken(LeafMarkdownToken):
     Class to provide for an encapsulation of the indented code block element.
     """
 
-    def __init__(self, extracted_whitespace, line_number, column_number):
+    def __init__(
+        self, extracted_whitespace: Optional[str], line_number: int, column_number: int
+    ) -> None:
         self.__indented_whitespace = ""
         LeafMarkdownToken.__init__(
             self,
@@ -578,15 +606,15 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
     # pylint: disable=too-many-arguments
     def __init__(
         self,
-        fence_character,
-        fence_count,
-        extracted_text,
-        pre_extracted_text,
-        text_after_extracted_text,
-        pre_text_after_extracted_text,
-        extracted_whitespace,
-        extracted_whitespace_before_info_string,
-        position_marker,
+        fence_character: str,
+        fence_count: int,
+        extracted_text: str,
+        pre_extracted_text: str,
+        text_after_extracted_text: str,
+        pre_text_after_extracted_text: str,
+        extracted_whitespace: Optional[str],
+        extracted_whitespace_before_info_string: str,
+        position_marker: PositionMarker,
     ):
         (
             self.__extracted_text,

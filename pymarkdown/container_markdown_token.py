@@ -340,7 +340,7 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
         )
         self.__compose_extra_data_field()
 
-    def remove_last_leading_space(self):
+    def remove_last_leading_space(self) -> str:
         """
         Remove the last leading space and return it.
         """

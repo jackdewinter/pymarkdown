@@ -104,7 +104,7 @@ def test_inline_links_495():
     source_markdown = """[link]()"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link(1,1):inline::::::link:::::]",
+        "[link(1,1):inline::::::link:False::::]",
         "[text(1,2):link:]",
         "[end-link::]",
         "[end-para:::True]",
@@ -171,7 +171,7 @@ def test_inline_links_497a():
 [link]: /url 'title'"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link(1,1):shortcut:/url:title::::link:None::::]",
+        "[link(1,1):shortcut:/url:title::::link:False::::]",
         "[text(1,2):link:]",
         "[end-link::]",
         "[text(1,7):(:]",

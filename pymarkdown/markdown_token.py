@@ -578,11 +578,11 @@ class MarkdownToken:
 
     def generate_close_markdown_token_from_markdown_token(
         self,
-        extracted_whitespace,
-        extra_end_data,
-        line_number=0,
-        column_number=0,
-    ):
+        extracted_whitespace: Optional[str],
+        extra_end_data: str,
+        line_number: int = 0,
+        column_number: int = 0,
+    ) -> "MarkdownToken":
         """
         Generate the token emitted to close off the current stack token
         """

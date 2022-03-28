@@ -478,25 +478,18 @@ class LinkDefinitionStackToken(StackToken):
     def __init__(
         self, extracted_whitespace: Optional[str], position_marker: PositionMarker
     ) -> None:
-        (
-            self.__extracted_whitespace,
-            self.__start_position_marker,
-            self.original_stack_depth,
-            self.original_document_depth,
-            self.last_block_quote_stack_token,
-            self.last_block_quote_markdown_token_index,
-            self.copy_of_last_block_quote_markdown_token,
-            self.copy_of_token_stack,
-        ) = (
+        (self.__extracted_whitespace, self.__start_position_marker,) = (
             extracted_whitespace,
             position_marker,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
         )
+        self.original_stack_depth: Optional[int] = None
+        self.original_document_depth: Optional[int] = None
+        self.last_block_quote_stack_token: Optional[StackToken] = None
+        self.last_block_quote_markdown_token_index: Optional[int] = None
+        self.copy_of_last_block_quote_markdown_token: Optional[
+            BlockQuoteMarkdownToken
+        ] = None
+        self.copy_of_token_stack: Optional[List[StackToken]] = None
         self.__continuation_lines: List[str] = []
         self.__unmodified_lines: List[str] = []
         StackToken.__init__(self, StackToken._stack_link_definition)
