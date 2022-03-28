@@ -1,5 +1,5 @@
 """
-Inline helper
+Module to help with the parsing of inline elements.
 """
 import json
 import logging
@@ -31,7 +31,7 @@ POGGER = ParserLogger(logging.getLogger(__name__))
 
 class InlineHelper:
     """
-    Class to helper with the parsing of inline elements.
+    Class to help with the parsing of inline elements.
     """
 
     __valid_email_regex = (
