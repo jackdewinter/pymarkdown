@@ -2,7 +2,13 @@
 Module to implement a plugin that looks for heading that increment more than one
 level at a time (going up).
 """
+from typing import cast
+
+from pymarkdown.extensions.front_matter_markdown_token import FrontMatterMarkdownToken
+from pymarkdown.leaf_markdown_token import SetextHeadingMarkdownToken
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
@@ -12,12 +18,12 @@ class RuleMd001(RulePlugin):
     level at a time (going up).
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.__last_heading_count = None
         self.__front_matter_title = None
 
-    def get_details(self):
+    def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
@@ -32,26 +38,28 @@ class RuleMd001(RulePlugin):
             plugin_configuration="front_matter_title",
         )
 
-    def initialize_from_config(self):
+    def initialize_from_config(self) -> None:
         self.__front_matter_title = self.plugin_configuration.get_string_property(
             "front_matter_title", default_value="title"
         ).lower()
 
-    def starting_new_file(self):
+    def starting_new_file(self) -> None:
         """
         Event that the a new file to be scanned is starting.
         """
         self.__last_heading_count = None
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """
         hash_count = None
         if token.is_atx_heading or token.is_setext_heading:
-            hash_count = token.hash_count
+            setext_token = cast(SetextHeadingMarkdownToken, token)
+            hash_count = setext_token.hash_count
         elif token.is_front_matter:
-            if self.__front_matter_title in token.matter_map:
+            front_matter_token = cast(FrontMatterMarkdownToken, token)
+            if self.__front_matter_title in front_matter_token.matter_map:
                 hash_count = 1
 
         if hash_count:

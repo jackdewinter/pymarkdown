@@ -153,7 +153,6 @@
         },
         "pymarkdown/plugins/rule_md_014.py": {},
         "pymarkdown/plugins/rule_md_018.py": {
-            "invalid-unary-operand-type": 1,
             "too-many-arguments": 2
         },
         "pymarkdown/plugins/rule_md_019.py": {},
@@ -227,7 +226,6 @@
         "chained-comparison": 1,
         "too-many-instance-attributes": 17,
         "broad-except": 2,
-        "too-many-public-methods": 2,
-        "invalid-unary-operand-type": 1
+        "too-many-public-methods": 2
     }
 }

@@ -2,7 +2,12 @@
 Module to implement a plugin that looks for multiple heading lines with the same
 content.
 """
+from typing import Dict, List, Optional, cast
+
+from pymarkdown.leaf_markdown_token import AtxHeadingMarkdownToken
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
@@ -12,16 +17,16 @@ class RuleMd024(RulePlugin):
     content.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        self.__heading_text = None
-        self.__start_token = None
-        self.__hash_count = None
-        self.__last_hash_count = None
+        self.__heading_text: Optional[str] = None
+        self.__start_token: Optional[MarkdownToken] = None
+        self.__hash_count: int = -1
+        self.__last_hash_count: int = 0
         self.__siblings_only = None
-        self.__heading_content_map = None
+        self.__heading_content_map: List[Dict[str, str]] = []
 
-    def get_details(self):
+    def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
@@ -36,7 +41,7 @@ class RuleMd024(RulePlugin):
             plugin_configuration="siblings_only, allow_different_nesting",
         )
 
-    def initialize_from_config(self):
+    def initialize_from_config(self) -> None:
         """
         Event to allow the plugin to load configuration information.
         """
@@ -46,26 +51,27 @@ class RuleMd024(RulePlugin):
             "allow_different_nesting", default_value=False
         )
 
-    def starting_new_file(self):
+    def starting_new_file(self) -> None:
         """
         Event that the a new file to be scanned is starting.
         """
         self.__heading_text = None
         self.__start_token = None
-        self.__hash_count = None
-        self.__last_hash_count = None
+        self.__hash_count = -1
+        self.__last_hash_count = 0
         if self.__siblings_only:
             self.__heading_content_map = [{}, {}, {}, {}, {}, {}]
         else:
             self.__heading_content_map = [{}]
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """
         skip_this_token = False
         if token.is_setext_heading or token.is_atx_heading:
-            self.handle_heading_start(token)
+            atx_heading_token = cast(AtxHeadingMarkdownToken, token)
+            self.handle_heading_start(atx_heading_token)
             skip_this_token = True
         elif token.is_setext_heading_end or token.is_atx_heading_end:
             self.handler_heading_end(context, token)
@@ -73,7 +79,7 @@ class RuleMd024(RulePlugin):
         if not skip_this_token and self.__heading_text is not None:
             self.__heading_text += token.debug_string(include_column_row_info=False)
 
-    def handle_heading_start(self, token):
+    def handle_heading_start(self, token: AtxHeadingMarkdownToken) -> None:
         """
         Process the start heading token, atx or setext
         """
@@ -81,7 +87,9 @@ class RuleMd024(RulePlugin):
         self.__start_token = token
         self.__hash_count = token.hash_count if self.__siblings_only else 1
 
-    def handler_heading_end(self, context, token):
+    def handler_heading_end(
+        self, context: PluginScanContext, token: MarkdownToken
+    ) -> None:
         """
         Process the end heading token, atx or setext
         """
@@ -96,7 +104,9 @@ class RuleMd024(RulePlugin):
 
         past_headings_map = self.__heading_content_map[self.__hash_count - 1]
 
+        assert self.__heading_text is not None
         if self.__heading_text in past_headings_map:
+            assert self.__start_token is not None
             self.report_next_token_error(
                 context,
                 self.__start_token,

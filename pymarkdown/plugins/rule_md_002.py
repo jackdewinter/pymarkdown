@@ -2,7 +2,12 @@
 Module to implement a plugin that looks to see if the first heading in a file is
 a top level heading.
 """
+from typing import cast
+
+from pymarkdown.leaf_markdown_token import AtxHeadingMarkdownToken
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
@@ -12,12 +17,12 @@ class RuleMd002(RulePlugin):
     a top level heading.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        self.__start_level = None
-        self.__have_seen_first_heading = None
+        self.__start_level = 0
+        self.__have_seen_first_heading = False
 
-    def get_details(self):
+    def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
@@ -32,27 +37,35 @@ class RuleMd002(RulePlugin):
             plugin_configuration="level",
         )
 
-    def initialize_from_config(self):
+    @classmethod
+    def __validate_configuration_other_test_value(cls, found_value: int) -> None:
+        if not 1 <= found_value <= 6:
+            raise ValueError("Allowable values are between 1 and 6 (inclusive).")
+
+    def initialize_from_config(self) -> None:
         """
         Event to allow the plugin to load configuration information.
         """
         self.__start_level = self.plugin_configuration.get_integer_property(
-            "level", default_value=1
+            "level",
+            default_value=1,
+            valid_value_fn=self.__validate_configuration_other_test_value,
         )
 
-    def starting_new_file(self):
+    def starting_new_file(self) -> None:
         """
         Event that the a new file to be scanned is starting.
         """
         self.__have_seen_first_heading = False
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """
         hash_count = None
         if token.is_atx_heading or token.is_setext_heading:
-            hash_count = token.hash_count
+            heading_token = cast(AtxHeadingMarkdownToken, token)
+            hash_count = heading_token.hash_count
 
         if not self.__have_seen_first_heading and hash_count:
             self.__have_seen_first_heading = True

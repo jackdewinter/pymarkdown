@@ -2,9 +2,19 @@
 Module to implement a plugin that ensures that specific proper names have
 the correct capitalization.
 """
+from typing import List, cast
+
 from pymarkdown.constants import Constants
+from pymarkdown.inline_markdown_token import (
+    InlineCodeSpanMarkdownToken,
+    LinkStartMarkdownToken,
+    TextMarkdownToken,
+)
+from pymarkdown.leaf_markdown_token import LinkReferenceDefinitionMarkdownToken
+from pymarkdown.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
@@ -14,13 +24,13 @@ class RuleMd044(RulePlugin):
     the correct capitalization.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        self.__proper_name_list = None
-        self.__check_in_code_blocks = None
-        self.__is_in_code_block = None
+        self.__proper_name_list: List[str] = []
+        self.__check_in_code_blocks: bool = False
+        self.__is_in_code_block: bool = False
 
-    def get_details(self):
+    def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
@@ -35,13 +45,13 @@ class RuleMd044(RulePlugin):
             plugin_configuration="names,code_blocks",
         )
 
-    def starting_new_file(self):
+    def starting_new_file(self) -> None:
         """
         Event that the a new file to be scanned is starting.
         """
         self.__is_in_code_block = False
 
-    def initialize_from_config(self):
+    def initialize_from_config(self) -> None:
         """
         Event to allow the plugin to load configuration information.
         """
@@ -53,7 +63,7 @@ class RuleMd044(RulePlugin):
             "names",
             default_value="",
         ).strip():
-            lower_list = []
+            lower_list: List[str] = []
             for next_name in names.split(","):
                 next_name = next_name.strip()
                 if not next_name:
@@ -71,14 +81,14 @@ class RuleMd044(RulePlugin):
     # pylint: disable=too-many-arguments
     def __check_for_proper_match(
         self,
-        original_source,
-        found_index,
-        required_capitalization,
-        context,
-        token,
-        line_adjust,
-        col_adjust,
-    ):
+        original_source: str,
+        found_index: int,
+        required_capitalization: str,
+        context: PluginScanContext,
+        token: MarkdownToken,
+        line_adjust: int,
+        col_adjust: int,
+    ) -> None:
 
         original_found_text = original_source[
             found_index : found_index + len(required_capitalization)
@@ -110,17 +120,17 @@ class RuleMd044(RulePlugin):
     # pylint: disable=too-many-arguments
     def __search_for_possible_matches(
         self,
-        string_to_check,
-        string_to_check_lower,
-        search_start,
-        found_index,
-        start_x_offset,
-        start_y_offset,
-        same_line_offset,
-        next_name,
-        context,
-        token,
-    ):
+        string_to_check: str,
+        string_to_check_lower: str,
+        search_start: int,
+        found_index: int,
+        start_x_offset: int,
+        start_y_offset: int,
+        same_line_offset: int,
+        next_name: str,
+        context: PluginScanContext,
+        token: MarkdownToken,
+    ) -> None:
         col_adjust, line_adjust = ParserHelper.adjust_for_newlines(
             string_to_check_lower, search_start, found_index
         )
@@ -150,13 +160,13 @@ class RuleMd044(RulePlugin):
     # pylint: disable=too-many-arguments
     def __search_for_matches(
         self,
-        string_to_check,
-        context,
-        token,
-        same_line_offset=0,
-        start_x_offset=0,
-        start_y_offset=0,
-    ):
+        string_to_check: str,
+        context: PluginScanContext,
+        token: MarkdownToken,
+        same_line_offset: int = 0,
+        start_x_offset: int = 0,
+        start_y_offset: int = 0,
+    ) -> None:
 
         string_to_check = ParserHelper.remove_all_from_text(string_to_check)
         string_to_check_lower = string_to_check.lower()
@@ -187,13 +197,13 @@ class RuleMd044(RulePlugin):
     # pylint: disable=too-many-arguments
     def __adjust_for_newlines_and_search(
         self,
-        context,
-        token,
-        link_body_text,
-        full_link_text,
-        string_to_check,
-        same_line_offset,
-    ):
+        context: PluginScanContext,
+        token: MarkdownToken,
+        link_body_text: str,
+        full_link_text: str,
+        string_to_check: str,
+        same_line_offset: int,
+    ) -> None:
 
         start_x_offset = 0
         start_y_offset = 0
@@ -212,20 +222,24 @@ class RuleMd044(RulePlugin):
 
     # pylint: enable=too-many-arguments
 
-    def __handle_inline_link_end(self, context, token):
-        if token.start_markdown_token.label_type == Constants.link_type__inline:
+    def __handle_inline_link_end(
+        self, context: PluginScanContext, token: MarkdownToken
+    ) -> None:
+        end_token = cast(EndMarkdownToken, token)
+        link_token = cast(LinkStartMarkdownToken, end_token.start_markdown_token)
+        if link_token.label_type == Constants.link_type__inline:
             link_body = "".join(
                 [
-                    token.start_markdown_token.before_link_whitespace,
-                    token.start_markdown_token.active_link_uri,
-                    token.start_markdown_token.before_title_whitespace,
-                    token.start_markdown_token.inline_title_bounding_character,
+                    link_token.before_link_whitespace,
+                    link_token.active_link_uri,
+                    link_token.before_title_whitespace,
+                    link_token.inline_title_bounding_character,
                 ]
             )
             full_link_text = "".join(
                 [
                     "[",
-                    token.start_markdown_token.text_from_blocks,
+                    link_token.text_from_blocks,
                     "](",
                     link_body,
                 ]
@@ -233,41 +247,47 @@ class RuleMd044(RulePlugin):
             same_line_offset = len(full_link_text) + 1
             self.__adjust_for_newlines_and_search(
                 context,
-                token.start_markdown_token,
+                link_token,
                 link_body,
                 full_link_text,
-                token.start_markdown_token.active_link_title,
+                link_token.active_link_title,
                 same_line_offset,
             )
 
-    def __handle_inline_image(self, context, token):
+    def __handle_inline_image(
+        self, context: PluginScanContext, token: MarkdownToken
+    ) -> None:
+        link_token = cast(LinkStartMarkdownToken, token)
         same_line_offset = -2
         self.__search_for_matches(
-            token.text_from_blocks, context, token, same_line_offset
+            link_token.text_from_blocks, context, token, same_line_offset
         )
 
-        if token.label_type == Constants.link_type__inline:
+        if link_token.label_type == Constants.link_type__inline:
             link_body = "".join(
                 [
-                    token.before_link_whitespace,
-                    token.active_link_uri,
-                    token.before_title_whitespace,
-                    token.inline_title_bounding_character,
+                    link_token.before_link_whitespace,
+                    link_token.active_link_uri,
+                    link_token.before_title_whitespace,
+                    link_token.inline_title_bounding_character,
                 ]
             )
-            full_link_text = f"![{token.text_from_blocks}]({link_body}"
+            full_link_text = f"![{link_token.text_from_blocks}]({link_body}"
             same_line_offset = len(full_link_text) + 1
             self.__adjust_for_newlines_and_search(
                 context,
                 token,
                 link_body,
                 full_link_text,
-                token.active_link_title,
+                link_token.active_link_title,
                 same_line_offset,
             )
 
-    def __handle_link_reference_definition(self, context, token):
-        link_name = token.link_name_debug or token.link_name
+    def __handle_link_reference_definition(
+        self, context: PluginScanContext, token: MarkdownToken
+    ) -> None:
+        lrd_token = cast(LinkReferenceDefinitionMarkdownToken, token)
+        link_name = lrd_token.link_name_debug or lrd_token.link_name
         same_line_offset = -1
         self.__search_for_matches(link_name, context, token, same_line_offset)
 
@@ -276,9 +296,9 @@ class RuleMd044(RulePlugin):
                 "[",
                 link_name,
                 "]:",
-                token.link_destination_whitespace,
-                token.link_destination,
-                token.link_title_whitespace,
+                lrd_token.link_destination_whitespace,
+                lrd_token.link_destination,
+                lrd_token.link_title_whitespace,
                 "'",
             ]
         )
@@ -288,24 +308,28 @@ class RuleMd044(RulePlugin):
             token,
             full_link_text,
             full_link_text,
-            token.link_title_raw,
+            lrd_token.link_title_raw,
             same_line_offset,
         )
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """
         if not self.__proper_name_list:
             return
         if token.is_text:
+            text_token = cast(TextMarkdownToken, token)
             if not self.__is_in_code_block or self.__check_in_code_blocks:
-                self.__search_for_matches(token.token_text, context, token)
+                self.__search_for_matches(text_token.token_text, context, token)
         elif token.is_inline_code_span:
-            same_line_offset = len(token.extracted_start_backticks) + len(
-                token.leading_whitespace
+            code_span_token = cast(InlineCodeSpanMarkdownToken, token)
+            same_line_offset = len(code_span_token.extracted_start_backticks) + len(
+                code_span_token.leading_whitespace
             )
-            self.__search_for_matches(token.span_text, context, token, same_line_offset)
+            self.__search_for_matches(
+                code_span_token.span_text, context, token, same_line_offset
+            )
         elif token.is_inline_link_end:
             self.__handle_inline_link_end(context, token)
         elif token.is_inline_image:

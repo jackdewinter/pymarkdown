@@ -4,10 +4,20 @@ with what could be an atx heading, except there is no spaces between the hashes 
 the text of the heading.
 """
 import re
+from typing import Any, Optional, Tuple, cast
 
 from pymarkdown.constants import Constants
+from pymarkdown.inline_markdown_token import (
+    InlineCodeSpanMarkdownToken,
+    LinkStartMarkdownToken,
+    RawHtmlMarkdownToken,
+    TextMarkdownToken,
+)
+from pymarkdown.leaf_markdown_token import ParagraphMarkdownToken
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
@@ -17,30 +27,33 @@ class StartOfLineTokenParser:
     a paragraph.
     """
 
-    def __init__(self):
-        self.__last_paragraph_token = None
-        self.__paragraph_index = None
-        self.__first_line_after_other_token = None
-        self.__paragraph_column_number = None
-        self.__inside_of_link = None
-        self.__first_line_after_hard_break = None
-        self.__delayed_line = None
+    def __init__(self) -> None:
+        self.__last_paragraph_token: Optional[ParagraphMarkdownToken] = None
+        self.__paragraph_index = -1
+        self.__first_line_after_other_token = False
+        self.__paragraph_column_number = 0
+        self.__inside_of_link = False
+        self.__first_line_after_hard_break = False
+        self.__delayed_line: Optional[
+            Tuple[str, PluginScanContext, MarkdownToken, int, int]
+        ] = None
 
-    def starting_new_file(self):
+    def starting_new_file(self) -> None:
         """
         Event that the a new file to be scanned is starting.
         """
         self.__last_paragraph_token = None
-        self.__paragraph_index = None
-        self.__first_line_after_other_token = None
-        self.__paragraph_column_number = None
+        self.__paragraph_index = -1
+        self.__first_line_after_other_token = False
+        self.__paragraph_column_number = 0
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """
         if token.is_paragraph:
-            self.__next_token_paragraph_start(token)
+            paragraph_token = cast(ParagraphMarkdownToken, token)
+            self.__next_token_paragraph_start(paragraph_token)
         elif token.is_paragraph_end:
             self.__next_token_paragraph_end()
         elif self.__last_paragraph_token:
@@ -48,11 +61,12 @@ class StartOfLineTokenParser:
                 if token.is_inline_link_end:
                     self.__inside_of_link = False
             elif token.is_text:
-                self.__next_token_paragraph_text_inline(token, context)
+                text_token = cast(TextMarkdownToken, token)
+                self.__next_token_paragraph_text_inline(text_token, context)
             else:
                 self.__next_token_paragraph_non_text_inline(token)
 
-    def __next_token_paragraph_start(self, token):
+    def __next_token_paragraph_start(self, token: ParagraphMarkdownToken) -> None:
         self.__last_paragraph_token = token
         self.__paragraph_index = 0
         self.__first_line_after_other_token = True
@@ -61,7 +75,7 @@ class StartOfLineTokenParser:
         self.__paragraph_column_number = token.column_number
         self.__delayed_line = None
 
-    def __next_token_paragraph_end(self):
+    def __next_token_paragraph_end(self) -> None:
         if self.__delayed_line:
             self.check_start_of_line(
                 self.__delayed_line[0],
@@ -73,39 +87,44 @@ class StartOfLineTokenParser:
             self.__delayed_line = None
         self.__last_paragraph_token = None
 
-    def __next_token_paragraph_non_text_inline(self, token):
+    def __next_token_paragraph_non_text_inline(self, token: MarkdownToken) -> None:
         if token.is_inline_code_span:
+            code_span_token = cast(InlineCodeSpanMarkdownToken, token)
             self.__delayed_line = None
             self.__paragraph_index += (
-                token.leading_whitespace.count(ParserHelper.newline_character)
-                + token.span_text.count(ParserHelper.newline_character)
-                + token.trailing_whitespace.count(ParserHelper.newline_character)
+                code_span_token.leading_whitespace.count(ParserHelper.newline_character)
+                + code_span_token.span_text.count(ParserHelper.newline_character)
+                + code_span_token.trailing_whitespace.count(
+                    ParserHelper.newline_character
+                )
             )
         elif token.is_inline_raw_html:
+            raw_html_token = cast(RawHtmlMarkdownToken, token)
             self.__delayed_line = None
-            self.__paragraph_index += token.raw_tag.count(
+            self.__paragraph_index += raw_html_token.raw_tag.count(
                 ParserHelper.newline_character
             )
         elif token.is_inline_image or token.is_inline_link:
+            link_token = cast(LinkStartMarkdownToken, token)
             self.__delayed_line = None
-            self.__paragraph_index += token.text_from_blocks.count(
+            self.__paragraph_index += link_token.text_from_blocks.count(
                 ParserHelper.newline_character
             )
-            if token.label_type == Constants.link_type__inline:
-                self.__paragraph_index += token.before_link_whitespace.count(
+            if link_token.label_type == Constants.link_type__inline:
+                self.__paragraph_index += link_token.before_link_whitespace.count(
                     ParserHelper.newline_character
                 )
-                self.__paragraph_index += token.before_title_whitespace.count(
+                self.__paragraph_index += link_token.before_title_whitespace.count(
                     ParserHelper.newline_character
                 )
-                self.__paragraph_index += token.after_title_whitespace.count(
+                self.__paragraph_index += link_token.after_title_whitespace.count(
                     ParserHelper.newline_character
                 )
-                self.__paragraph_index += token.active_link_title.count(
+                self.__paragraph_index += link_token.active_link_title.count(
                     ParserHelper.newline_character
                 )
-            if token.label_type == Constants.link_type__full:
-                self.__paragraph_index += token.ex_label.count(
+            if link_token.label_type == Constants.link_type__full:
+                self.__paragraph_index += link_token.ex_label.count(
                     ParserHelper.newline_character
                 )
             self.__inside_of_link = token.is_inline_link
@@ -121,7 +140,10 @@ class StartOfLineTokenParser:
             )
             self.__delayed_line = None
 
-    def __next_token_paragraph_text_inline(self, token, context):
+    def __next_token_paragraph_text_inline(
+        self, token: TextMarkdownToken, context: PluginScanContext
+    ) -> None:
+        assert self.__last_paragraph_token is not None
         split_whitespace = self.__last_paragraph_token.extracted_whitespace.split(
             ParserHelper.newline_character
         )
@@ -141,8 +163,6 @@ class StartOfLineTokenParser:
                     adjusted_column_number = self.__paragraph_column_number + len(
                         split_whitespace[split_index + self.__paragraph_index]
                     )
-                # pylint: disable=invalid-unary-operand-type
-                # See https://github.com/PyCQA/pylint/issues/1472
                 if split_index == len(split_text) - 1:
                     self.__delayed_line = (
                         combined_text,
@@ -159,16 +179,19 @@ class StartOfLineTokenParser:
                         split_index,
                         -adjusted_column_number,
                     )
-                # pylint: enable=invalid-unary-operand-type
             self.__first_line_after_other_token = False
             self.__first_line_after_hard_break = False
         self.__paragraph_index += token.token_text.count(ParserHelper.newline_character)
 
     # pylint: disable=too-many-arguments
-    @classmethod
     def check_start_of_line(
-        cls, combined_text, context, token, line_number_delta, column_number_delta
-    ):
+        self,
+        combined_text: str,
+        context: Any,
+        token: MarkdownToken,
+        line_number_delta: int,
+        column_number_delta: int,
+    ) -> None:
         """
         Check for a pattern at the start of the line.
         """
@@ -181,14 +204,19 @@ class MyStartOfLineTokenParser(StartOfLineTokenParser):
     Local implementation of the token parser.
     """
 
-    def __init__(self, owner):
+    def __init__(self, owner: "RuleMd018") -> None:
         super().__init__()
         self.__owner = owner
 
     # pylint: disable=too-many-arguments
     def check_start_of_line(
-        self, combined_text, context, token, line_number_delta, column_number_delta
-    ):
+        self,
+        combined_text: str,
+        context: PluginScanContext,
+        token: MarkdownToken,
+        line_number_delta: int,
+        column_number_delta: int,
+    ) -> None:
         """
         Check for a pattern at the start of the line.
 
@@ -219,11 +247,11 @@ class RuleMd018(RulePlugin):
     the text of the heading.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.__token_parser = MyStartOfLineTokenParser(self)
 
-    def get_details(self):
+    def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
@@ -237,13 +265,13 @@ class RuleMd018(RulePlugin):
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md018.md",
         )
 
-    def starting_new_file(self):
+    def starting_new_file(self) -> None:
         """
         Event that the a new file to be scanned is starting.
         """
         self.__token_parser.starting_new_file()
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """

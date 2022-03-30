@@ -1,8 +1,13 @@
 """
 Module to implement a plugin that looks for trailing spaces in the files.
 """
+from typing import List, Optional, cast
+
+from pymarkdown.container_markdown_token import ContainerMarkdownToken
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
@@ -12,19 +17,19 @@ class RuleMd009(RulePlugin):
     Class to implement a plugin that looks for trailing spaces in the files.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        self.__leaf_tokens = None
-        self.__leaf_owner_tokens = None
-        self.__line_index = None
-        self.__leaf_token_index = None
-        self.__inline_token_index = None
-        self.__container_token_stack = None
-        self.__break_spaces = None
-        self.__strict_mode = None
-        self.__list_item_empty_lines_mode = None
+        self.__leaf_tokens: List[MarkdownToken] = []
+        self.__leaf_owner_tokens: List[Optional[MarkdownToken]] = []
+        self.__line_index = 0
+        self.__leaf_token_index = 0
+        self.__inline_token_index = 0
+        self.__container_token_stack: List[ContainerMarkdownToken] = []
+        self.__break_spaces = 0
+        self.__strict_mode = False
+        self.__list_item_empty_lines_mode = False
 
-    def get_details(self):
+    def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
@@ -40,11 +45,11 @@ class RuleMd009(RulePlugin):
         )
 
     @classmethod
-    def __validate_break_spaces(cls, found_value):
+    def __validate_break_spaces(cls, found_value: int) -> None:
         if found_value < 0:
             raise ValueError("Allowable values are greater than or equal to 0.")
 
-    def initialize_from_config(self):
+    def initialize_from_config(self) -> None:
         """
         Event to allow the plugin to load configuration information.
         """
@@ -55,10 +60,12 @@ class RuleMd009(RulePlugin):
         )
         if self.__break_spaces < 2:
             self.__break_spaces = 0
+
         self.__strict_mode = self.plugin_configuration.get_boolean_property(
             "strict",
             default_value=False,
         )
+
         self.__list_item_empty_lines_mode = (
             self.plugin_configuration.get_boolean_property(
                 "list_item_empty_lines",
@@ -66,7 +73,7 @@ class RuleMd009(RulePlugin):
             )
         )
 
-    def starting_new_file(self):
+    def starting_new_file(self) -> None:
         """
         Event that the a new file to be scanned is starting.
         """
@@ -78,8 +85,11 @@ class RuleMd009(RulePlugin):
         self.__container_token_stack = []
 
     def __report_error(
-        self, context, extracted_whitespace_length, first_non_whitespace_index
-    ):
+        self,
+        context: PluginScanContext,
+        extracted_whitespace_length: int,
+        first_non_whitespace_index: int,
+    ) -> None:
         if self.__strict_mode or self.__break_spaces < 2:
             extra_error_information = "0"
         else:
@@ -91,7 +101,7 @@ class RuleMd009(RulePlugin):
             extra_error_information=extra_error_information,
         )
 
-    def next_line(self, context, line):
+    def next_line(self, context: PluginScanContext, line: str) -> None:
         """
         Event that a new line is being processed.
         """
@@ -122,12 +132,14 @@ class RuleMd009(RulePlugin):
             ) = ParserHelper.extract_whitespace_from_end(line)
             extracted_whitespace_length = len(extracted_whitespace)
 
-            is_list_empty_line = (
-                self.__list_item_empty_lines_mode
-                and self.__leaf_owner_tokens[self.__leaf_token_index]
-                and self.__leaf_owner_tokens[self.__leaf_token_index].is_list_start
-                and first_non_whitespace_index == 0
-            )
+            is_list_empty_line = False
+            leaf_token = self.__leaf_owner_tokens[self.__leaf_token_index]
+            if leaf_token is not None:
+                is_list_empty_line = (
+                    self.__list_item_empty_lines_mode
+                    and leaf_token.is_list_start
+                    and first_non_whitespace_index == 0
+                )
 
             if extracted_whitespace_length != self.__break_spaces or (
                 self.__strict_mode and not is_list_empty_line
@@ -138,14 +150,15 @@ class RuleMd009(RulePlugin):
 
         self.__line_index += 1
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """
         _ = context
 
         if token.is_block_quote_start or token.is_list_start:
-            self.__container_token_stack.append(token)
+            container_token = cast(ContainerMarkdownToken, token)
+            self.__container_token_stack.append(container_token)
         elif token.is_block_quote_end or token.is_list_end:
             del self.__container_token_stack[-1]
         elif token.is_blank_line or token.is_leaf or token.is_inline_hard_break:

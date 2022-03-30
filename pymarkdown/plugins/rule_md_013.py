@@ -1,8 +1,12 @@
 """
 Module to implement a plugin that looks for excessively long lines in the file.
 """
+from typing import List, Tuple
+
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
@@ -14,21 +18,21 @@ class RuleMd013(RulePlugin):
 
     __maximum_line_length = 99999
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        self.__leaf_tokens = None
-        self.__line_index = None
-        self.__leaf_token_index = None
-        self.__line_length = None
-        self.__code_block_line_length = None
-        self.__heading_line_length = None
-        self.__minimum_line_length = None
-        self.__code_blocks_active = None
-        self.__headings_active = None
-        self.__strict_mode = None
-        self.__stern_mode = None
+        self.__leaf_tokens: List[MarkdownToken] = []
+        self.__line_index = 0
+        self.__leaf_token_index = 0
+        self.__line_length = 0
+        self.__code_block_line_length = 0
+        self.__heading_line_length = 0
+        self.__minimum_line_length = 0
+        self.__code_blocks_active = False
+        self.__headings_active = False
+        self.__strict_mode = False
+        self.__stern_mode = False
 
-    def get_details(self):
+    def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
@@ -45,11 +49,11 @@ class RuleMd013(RulePlugin):
         )
 
     @classmethod
-    def __validate_minimum(cls, found_value):
+    def __validate_minimum(cls, found_value: int) -> None:
         if found_value < 1:
             raise ValueError("Allowable values are any integer greater than 0.")
 
-    def initialize_from_config(self):
+    def initialize_from_config(self) -> None:
         """
         Event to allow the plugin to load configuration information.
         """
@@ -91,7 +95,7 @@ class RuleMd013(RulePlugin):
             default_value=False,
         )
 
-    def starting_new_file(self):
+    def starting_new_file(self) -> None:
         """
         Event that the a new file to be scanned is starting.
         """
@@ -99,7 +103,9 @@ class RuleMd013(RulePlugin):
         self.__line_index = 1
         self.__leaf_token_index = 0
 
-    def __is_really_longer(self, line_length, compare_length):
+    def __is_really_longer(
+        self, line_length: int, compare_length: int
+    ) -> Tuple[bool, int]:
         # print("line(" + str(self.__line_index) + ")->len=(" + str(line_length) + "):" + str(line))
         # print("-->" + str(self.__leaf_tokens[self.__leaf_token_index]))
         if (
@@ -122,7 +128,7 @@ class RuleMd013(RulePlugin):
             )
         return line_length > compare_length, compare_length
 
-    def next_line(self, context, line):
+    def next_line(self, context: PluginScanContext, line: str) -> None:
         """
         Event that a new line is being processed.
         """
@@ -166,7 +172,7 @@ class RuleMd013(RulePlugin):
                 )
         self.__line_index += 1
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """

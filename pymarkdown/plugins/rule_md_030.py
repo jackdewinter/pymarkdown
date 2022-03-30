@@ -1,7 +1,12 @@
 """
 Module to implement a plugin that ensures consistent spacing after the list markers.
 """
+from typing import Dict, List, Optional, cast
+
+from pymarkdown.container_markdown_token import ListStartMarkdownToken
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
@@ -11,19 +16,19 @@ class RuleMd030(RulePlugin):
     Class to implement a plugin that ensures consistent spacing after the list markers.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         # self.__debug = False
         self.__ul_single = None
         self.__ul_multi = None
         self.__ol_single = None
         self.__ol_multi = None
-        self.__list_stack = None
-        self.__list_tokens = None
-        self.__current_list_parent = None
-        self.__paragraph_count_map = None
+        self.__list_stack: List[MarkdownToken] = []
+        self.__list_tokens: List[List[MarkdownToken]] = []
+        self.__current_list_parent: Optional[MarkdownToken] = None
+        self.__paragraph_count_map: Dict[str, int] = {}
 
-    def get_details(self):
+    def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
@@ -39,11 +44,11 @@ class RuleMd030(RulePlugin):
         )
 
     @classmethod
-    def __validate_minimum(cls, found_value):
+    def __validate_minimum(cls, found_value: int) -> None:
         if found_value < 1:
             raise ValueError("Allowable values are any integer greater than 0.")
 
-    def initialize_from_config(self):
+    def initialize_from_config(self) -> None:
         """
         Event to allow the plugin to load configuration information.
         """
@@ -68,7 +73,7 @@ class RuleMd030(RulePlugin):
             valid_value_fn=self.__validate_minimum,
         )
 
-    def starting_new_file(self):
+    def starting_new_file(self) -> None:
         """
         Event that the a new file to be scanned is starting.
         """
@@ -77,7 +82,7 @@ class RuleMd030(RulePlugin):
         self.__current_list_parent = None
         self.__paragraph_count_map = {}
 
-    def __handle_list_end(self, context):
+    def __handle_list_end(self, context: PluginScanContext) -> None:
 
         for list_token in self.__list_tokens[-1]:
             this_list_token_paragraph_count = 0
@@ -111,9 +116,10 @@ class RuleMd030(RulePlugin):
             # if self.__debug:
             #     print(">>" + str(self.__paragraph_count_map))
 
-            delta = list_token.indent_level - list_token.column_number
+            list_start_token = cast(ListStartMarkdownToken, list_token)
+            delta = list_start_token.indent_level - list_token.column_number
             if self.__list_stack[-1].is_ordered_list_start:
-                delta -= len(list_token.list_start_content)
+                delta -= len(list_start_token.list_start_content)
             # if self.__debug:
             #     print("y=" + str(list_token).replace(ParserHelper.newline_character, "\\n"))
             #     print(
@@ -135,7 +141,7 @@ class RuleMd030(RulePlugin):
                     context, list_token, extra_error_information=extra_error_information
                 )
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """

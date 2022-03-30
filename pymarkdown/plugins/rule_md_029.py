@@ -2,7 +2,12 @@
 Module to implement a plugin that ensures that Ordered List Items have
 consistent numeric prefaces.
 """
+from typing import List, Optional, Tuple, cast
+
+from pymarkdown.container_markdown_token import ListStartMarkdownToken
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
@@ -24,13 +29,13 @@ class RuleMd029(RulePlugin):
         __one_or_ordered_style,
     ]
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        self.__style = None
-        self.__list_stack = None
-        self.__ordered_list_stack = None
+        self.__style = ""
+        self.__list_stack: List[MarkdownToken] = []
+        self.__ordered_list_stack: List[Tuple[Optional[str], Optional[int]]] = []
 
-    def get_details(self):
+    def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
@@ -46,11 +51,11 @@ class RuleMd029(RulePlugin):
         )
 
     @classmethod
-    def __validate_configuration_style(cls, found_value):
+    def __validate_configuration_style(cls, found_value: str) -> None:
         if found_value not in RuleMd029.__valid_styles:
             raise ValueError(f"Allowable values: {RuleMd029.__valid_styles}")
 
-    def initialize_from_config(self):
+    def initialize_from_config(self) -> None:
         """
         Event to allow the plugin to load configuration information.
         """
@@ -60,16 +65,19 @@ class RuleMd029(RulePlugin):
             valid_value_fn=self.__validate_configuration_style,
         )
 
-    def starting_new_file(self):
+    def starting_new_file(self) -> None:
         """
         Event that the a new file to be scanned is starting.
         """
         self.__list_stack = []
         self.__ordered_list_stack = []
 
-    def __match_first_item(self, context, token):
-        list_style = self.__style
-        last_known_number = int(token.list_start_content)
+    def __match_first_item(
+        self, context: PluginScanContext, token: MarkdownToken
+    ) -> Tuple[Optional[str], Optional[int]]:
+        list_token = cast(ListStartMarkdownToken, token)
+        list_style: Optional[str] = self.__style
+        last_known_number: Optional[int] = int(list_token.list_start_content)
 
         if list_style == RuleMd029.__one_or_ordered_style and last_known_number != 1:
             list_style = RuleMd029.__ordered_style
@@ -98,9 +106,16 @@ class RuleMd029(RulePlugin):
             list_style, last_known_number = (None, None)
         return list_style, last_known_number
 
-    def __match_non_first_items(self, context, token, list_style, last_known_number):
+    def __match_non_first_items(
+        self,
+        context: PluginScanContext,
+        token: MarkdownToken,
+        list_style: Optional[str],
+        last_known_number: Optional[int],
+    ) -> Tuple[Optional[str], Optional[int]]:
         if list_style:
-            new_number = int(token.list_start_content)
+            list_token = cast(ListStartMarkdownToken, token)
+            new_number: Optional[int] = int(list_token.list_start_content)
             # print(f"list_style={list_style},last_known_number={last_known_number},new_number={new_number}")
             if list_style == RuleMd029.__one_or_ordered_style:
                 list_style = (
@@ -116,10 +131,12 @@ class RuleMd029(RulePlugin):
                 is_valid = new_number == 0
             else:
                 assert list_style == RuleMd029.__ordered_style
+                assert last_known_number is not None
                 is_valid = new_number == last_known_number + 1
             if not is_valid:
                 if list_style == RuleMd029.__ordered_style:
                     style = "1/2/3"
+                    assert last_known_number is not None
                     expected_number = last_known_number + 1
                 elif list_style == RuleMd029.__one_style:
                     style = "1/1/1"
@@ -138,7 +155,7 @@ class RuleMd029(RulePlugin):
             last_known_number = new_number
         return list_style, last_known_number
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """

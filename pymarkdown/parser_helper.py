@@ -283,7 +283,9 @@ class ParserHelper:
         return end_index - index, index
 
     @staticmethod
-    def collect_until_character(source_string, start_index, match_character):
+    def collect_until_character(
+        source_string: str, start_index: int, match_character: str
+    ) -> Tuple[Optional[int], Optional[str]]:
         """
         Collect a sequence of characters from a given starting point in a string until we hit a given character.
 
@@ -906,7 +908,9 @@ class ParserHelper:
         return found_index if did_find_last else -1
 
     @staticmethod
-    def adjust_for_newlines(source_string, start_index, end_index):
+    def adjust_for_newlines(
+        source_string: str, start_index: int, end_index: int
+    ) -> Tuple[int, int]:
         """
         Given the various parameters, determine the column and
         line offsets implied by newline characters in the

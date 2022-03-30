@@ -118,6 +118,39 @@ def test_md001_bad_configuration_front_matter_title():
 
 
 @pytest.mark.rules
+def test_md001_empty_configuration_front_matter_title():
+    """
+    Test to verify that enabling front matter title with "" is okay.
+    Note that since nothing in the front matter is considered a title,
+    then there is nothing to compare the first heading element to.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--strict-config",
+        "--set",
+        "extensions.front-matter.enabled=$!True",
+        "--set",
+        "plugins.md001.front_matter_title=",
+        "scan",
+        "test/resources/rules/md001/front_matter_with_title.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
 def test_md001_good_proper_atx_heading_incrementing():
     """
     Test to make sure the rule doesn't trigger with a document with

@@ -1,8 +1,13 @@
 """
 Module to implement a plugin that looks for inline HTML in the files.
 """
+from typing import List, cast
+
+from pymarkdown.inline_markdown_token import RawHtmlMarkdownToken, TextMarkdownToken
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
@@ -11,15 +16,15 @@ class RuleMd033(RulePlugin):
     Class to implement a plugin that looks for inline HTML in the files.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        self.__allowed_elements = None
+        self.__allowed_elements: List[str] = []
         self.__allow_first_image_element = None
-        self.__is_next_html_block_start = None
-        self.__is_first_element = None
-        self.__is_first_html_block = None
+        self.__is_next_html_block_start: bool = False
+        self.__is_first_element: bool = False
+        self.__is_first_html_block: bool = False
 
-    def get_details(self):
+    def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
@@ -34,7 +39,7 @@ class RuleMd033(RulePlugin):
             plugin_configuration="allowed_elements, allow_first_image_element",
         )
 
-    def initialize_from_config(self):
+    def initialize_from_config(self) -> None:
         """
         Event to allow the plugin to load configuration information.
         """
@@ -52,7 +57,7 @@ class RuleMd033(RulePlugin):
             if next_element := next_element.strip():
                 self.__allowed_elements.append(next_element)
 
-    def starting_new_file(self):
+    def starting_new_file(self) -> None:
         """
         Event that the a new file to be scanned is starting.
         """
@@ -60,7 +65,9 @@ class RuleMd033(RulePlugin):
         self.__is_first_html_block = False
         self.__is_first_element = True
 
-    def __look_for_html_start(self, context, token, tag_text):
+    def __look_for_html_start(
+        self, context: PluginScanContext, token: MarkdownToken, tag_text: str
+    ) -> None:
         full_tag_text = tag_text.lower()
         if tag_text.startswith("/"):
             return
@@ -69,9 +76,11 @@ class RuleMd033(RulePlugin):
         elif tag_text.startswith("!--"):
             tag_text = "!--"
         else:
-            _, tag_text = ParserHelper.collect_until_one_of_characters(
+            _, new_tag_text = ParserHelper.collect_until_one_of_characters(
                 tag_text, 0, " \n\t/>"
             )
+            assert new_tag_text is not None
+            tag_text = new_tag_text
         extra_data = f"Element: {tag_text}"
 
         is_first_image_element = False
@@ -97,18 +106,20 @@ class RuleMd033(RulePlugin):
                 context, token, extra_error_information=extra_data
             )
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """
         if token.is_inline_raw_html:
             self.__is_first_html_block = False
-            self.__look_for_html_start(context, token, token.raw_tag)
+            raw_html_token = cast(RawHtmlMarkdownToken, token)
+            self.__look_for_html_start(context, raw_html_token, raw_html_token.raw_tag)
         elif token.is_html_block:
             self.__is_next_html_block_start = True
             self.__is_first_html_block = self.__is_first_element
         elif token.is_text and self.__is_next_html_block_start:
-            self.__look_for_html_start(context, token, token.token_text[1:])
+            text_token = cast(TextMarkdownToken, token)
+            self.__look_for_html_start(context, text_token, text_token.token_text[1:])
         else:
             self.__is_next_html_block_start = False
 

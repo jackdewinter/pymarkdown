@@ -4,8 +4,12 @@ with what could be a closed atx heading, except there is no spaces between the h
 and the text of the heading, either at the start, end, or both.
 """
 import re
+from typing import Any, Optional, cast
 
+from pymarkdown.inline_markdown_token import TextMarkdownToken
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.plugins.rule_md_018 import StartOfLineTokenParser
 
@@ -15,14 +19,19 @@ class MyStartOfLineTokenParser(StartOfLineTokenParser):
     Local implementation of the token parser.
     """
 
-    def __init__(self, owner):
+    def __init__(self, owner: "RuleMd020") -> None:
         super().__init__()
         self.__owner = owner
 
     # pylint: disable=too-many-arguments
     def check_start_of_line(
-        self, combined_text, context, token, line_number_delta, column_number_delta
-    ):
+        self,
+        combined_text: str,
+        context: Any,
+        token: MarkdownToken,
+        line_number_delta: int,
+        column_number_delta: int,
+    ) -> None:
         """
         Check for a pattern at the start of the line.
         """
@@ -44,13 +53,13 @@ class RuleMd020(RulePlugin):
     and the text of the heading, either at the start, end, or both.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.__token_parser = MyStartOfLineTokenParser(self)
-        self.__is_in_normal_atx = None
-        self.__last_atx_token = None
+        self.__is_in_normal_atx = False
+        self.__last_atx_token: Optional[MarkdownToken] = None
 
-    def get_details(self):
+    def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
@@ -64,7 +73,7 @@ class RuleMd020(RulePlugin):
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md020.md",
         )
 
-    def starting_new_file(self):
+    def starting_new_file(self) -> None:
         """
         Event that the a new file to be scanned is starting.
         """
@@ -72,7 +81,7 @@ class RuleMd020(RulePlugin):
         self.__is_in_normal_atx = False
         self.__last_atx_token = None
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """
@@ -83,15 +92,15 @@ class RuleMd020(RulePlugin):
         if token.is_atx_heading:
             self.__is_in_normal_atx = True
         elif token.is_atx_heading_end:
-            if (
-                self.__is_in_normal_atx
-                and self.__last_atx_token.is_text
-                and self.__last_atx_token.token_text.endswith("#")
-            ):
-                regex_match = re.search(r"\#+$", self.__last_atx_token.token_text)
-                self.report_next_token_error(
-                    context,
-                    self.__last_atx_token,
-                    column_number_delta=regex_match.start(),
-                )
+            assert self.__last_atx_token is not None
+            if self.__is_in_normal_atx and self.__last_atx_token.is_text:
+                text_token = cast(TextMarkdownToken, self.__last_atx_token)
+                if text_token.token_text.endswith("#"):
+                    regex_match = re.search(r"\#+$", text_token.token_text)
+                    assert regex_match is not None
+                    self.report_next_token_error(
+                        context,
+                        self.__last_atx_token,
+                        column_number_delta=regex_match.start(),
+                    )
             self.__is_in_normal_atx = False

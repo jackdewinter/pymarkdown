@@ -2,7 +2,11 @@
 Module to implement a plugin that looks for headings that are not surrounded by
 blank lines.
 """
+from typing import Optional
+
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
@@ -12,17 +16,17 @@ class RuleMd022(RulePlugin):
     blank lines.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        self.__blank_line_count = None
-        self.__did_above_line_count_match = None
-        self.__start_heading_token = None
-        self.__did_heading_end = None
-        self.__lines_above = None
-        self.__lines_below = None
-        self.__start_heading_blank_line_count = None
+        self.__blank_line_count = -1
+        self.__did_above_line_count_match = False
+        self.__start_heading_token: Optional[MarkdownToken] = None
+        self.__did_heading_end = False
+        self.__lines_above = 0
+        self.__lines_below = 0
+        self.__start_heading_blank_line_count = -1
 
-    def get_details(self):
+    def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
@@ -38,11 +42,11 @@ class RuleMd022(RulePlugin):
         )
 
     @classmethod
-    def __validate_configuration_value(cls, found_value):
+    def __validate_configuration_value(cls, found_value: int) -> None:
         if found_value < 0:
             raise ValueError("Value must not be zero or a positive integer.")
 
-    def initialize_from_config(self):
+    def initialize_from_config(self) -> None:
         """
         Event to allow the plugin to load configuration information.
         """
@@ -57,7 +61,7 @@ class RuleMd022(RulePlugin):
             valid_value_fn=RuleMd022.__validate_configuration_value,
         )
 
-    def starting_new_file(self):
+    def starting_new_file(self) -> None:
         """
         Event that the a new file to be scanned is starting.
         """
@@ -66,25 +70,25 @@ class RuleMd022(RulePlugin):
         self.__start_heading_token = None
         self.__did_heading_end = False
 
-    def completed_file(self, context):
+    def completed_file(self, context: PluginScanContext) -> None:
         """
         Event that the file being currently scanned is now completed.
         """
-        if (self.__blank_line_count is not None) and self.__blank_line_count >= 0:
+        if (self.__blank_line_count != -1) and self.__blank_line_count >= 0:
             self.perform_close_check(context, None)
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """
         # print("START>>" + str(token).replace(ParserHelper.newline_character, "\\n").replace("\t", "\\t"))
         # print(">>self.__blank_line_count>>" + str(self.__blank_line_count))
-        if (self.__blank_line_count is not None) and self.__blank_line_count >= 0:
+        if (self.__blank_line_count != -1) and self.__blank_line_count >= 0:
             self.perform_close_check(context, token)
 
         if (
             token.is_blank_line
-            and (self.__blank_line_count is not None)
+            and (self.__blank_line_count != -1)
             and self.__blank_line_count >= 0
         ):
             self.__blank_line_count += 1
@@ -104,15 +108,15 @@ class RuleMd022(RulePlugin):
             # print(">>token.is_end_token>>")
             if not token.is_list_end and not token.is_block_quote_end:
                 self.__blank_line_count = (
-                    0
-                    if token.is_leaf_end_token or token.is_container_end_token
-                    else None
+                    0 if token.is_leaf_end_token or token.is_container_end_token else -1
                 )
             if token.is_atx_heading_end or token.is_setext_heading_end:
                 self.__did_heading_end = True
         # print(">>self.__blank_line_count>>" + str(self.__blank_line_count))
 
-    def perform_close_check(self, context, token):
+    def perform_close_check(
+        self, context: PluginScanContext, token: Optional[MarkdownToken]
+    ) -> None:
         """
         Perform any state checks necessary upon closing the heading context.  Also
         called at the end of a document to make sure the implicit close of the
@@ -126,11 +130,14 @@ class RuleMd022(RulePlugin):
             self.report_any_match_failures(context, did_end_match)
             self.__start_heading_token = None
 
-    def report_any_match_failures(self, context, did_end_match):
+    def report_any_match_failures(
+        self, context: PluginScanContext, did_end_match: bool
+    ) -> None:
         """
         Take care of reporting any match failures.
         """
 
+        assert self.__start_heading_token is not None
         if not self.__did_above_line_count_match:
             extra_info = f"Expected: {self.__lines_above}; Actual: {self.__start_heading_blank_line_count}; Above"
             self.report_next_token_error(

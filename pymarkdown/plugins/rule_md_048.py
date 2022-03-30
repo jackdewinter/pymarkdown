@@ -1,7 +1,12 @@
 """
 Module to implement a plugin that ensures that the style of fenced code blocks is consistent.
 """
+from typing import cast
+
+from pymarkdown.leaf_markdown_token import FencedCodeBlockMarkdownToken
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
@@ -19,12 +24,12 @@ class RuleMd048(RulePlugin):
         __backtick_style,
     ]
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        self.__style_type = None
-        self.__actual_style_type = None
+        self.__style_type: str = ""
+        self.__actual_style_type: str = ""
 
-    def get_details(self):
+    def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
@@ -40,11 +45,11 @@ class RuleMd048(RulePlugin):
         )
 
     @classmethod
-    def __validate_configuration_style(cls, found_value):
+    def __validate_configuration_style(cls, found_value: str) -> None:
         if found_value not in RuleMd048.__valid_styles:
             raise ValueError(f"Allowable values: {RuleMd048.__valid_styles}")
 
-    def initialize_from_config(self):
+    def initialize_from_config(self) -> None:
         """
         Event to allow the plugin to load configuration information.
         """
@@ -54,22 +59,23 @@ class RuleMd048(RulePlugin):
             valid_value_fn=self.__validate_configuration_style,
         )
 
-    def starting_new_file(self):
+    def starting_new_file(self) -> None:
         """
         Event that the a new file to be scanned is starting.
         """
-        self.__actual_style_type = None
+        self.__actual_style_type = ""
         if self.__style_type != RuleMd048.__consistent_style:
             self.__actual_style_type = self.__style_type
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """
         if token.is_fenced_code_block:
+            fence_token = cast(FencedCodeBlockMarkdownToken, token)
             current_style = (
                 RuleMd048.__backtick_style
-                if token.fence_character == "`"
+                if fence_token.fence_character == "`"
                 else RuleMd048.__tilde_style
             )
             if not self.__actual_style_type:
