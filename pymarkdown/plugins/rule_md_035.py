@@ -1,7 +1,12 @@
 """
 Module to implement a plugin that looks for inconsistent styles for thematic breaks.
 """
+from typing import cast
+
+from pymarkdown.leaf_markdown_token import ThematicBreakMarkdownToken
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
@@ -12,12 +17,12 @@ class RuleMd035(RulePlugin):
 
     __consistent_style = "consistent"
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        self.__rule_style = None
-        self.__actual_style = None
+        self.__rule_style: str = ""
+        self.__actual_style: str = ""
 
-    def get_details(self):
+    def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
@@ -33,7 +38,7 @@ class RuleMd035(RulePlugin):
         )
 
     @classmethod
-    def __validate_configuration_style(cls, found_value):
+    def __validate_configuration_style(cls, found_value: str) -> None:
         if found_value == RuleMd035.__consistent_style:
             return
         if found_value != found_value.strip():
@@ -52,7 +57,7 @@ class RuleMd035(RulePlugin):
                 + "'---', '***', or any other horizontal rule text."
             )
 
-    def initialize_from_config(self):
+    def initialize_from_config(self) -> None:
         """
         Event to allow the plugin to load configuration information.
         """
@@ -64,25 +69,24 @@ class RuleMd035(RulePlugin):
         if self.__rule_style != RuleMd035.__consistent_style:
             self.__actual_style = self.__rule_style
 
-    def starting_new_file(self):
+    def starting_new_file(self) -> None:
         """
         Event that the a new file to be scanned is starting.
         """
         if self.__rule_style == RuleMd035.__consistent_style:
-            self.__actual_style = None
+            self.__actual_style = ""
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """
         if token.is_thematic_break:
+            break_token = cast(ThematicBreakMarkdownToken, token)
             if self.__actual_style:
-                if self.__actual_style != token.rest_of_line:
-                    extra_data = (
-                        f"Expected: {self.__actual_style}, Actual: {token.rest_of_line}"
-                    )
+                if self.__actual_style != break_token.rest_of_line:
+                    extra_data = f"Expected: {self.__actual_style}, Actual: {break_token.rest_of_line}"
                     self.report_next_token_error(
                         context, token, extra_error_information=extra_data
                     )
             else:
-                self.__actual_style = token.rest_of_line
+                self.__actual_style = break_token.rest_of_line

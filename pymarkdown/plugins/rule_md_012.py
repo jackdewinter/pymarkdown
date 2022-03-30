@@ -1,7 +1,11 @@
 """
 Module to implement a plugin that looks for multiple blank lines in the files.
 """
+from typing import Optional
+
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
@@ -10,13 +14,13 @@ class RuleMd012(RulePlugin):
     Class to implement a plugin that looks for multiple blank lines in the files.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        self.__blank_lines_maximum = None
-        self.__blank_line_count = None
-        self.__last_blank_line = None
+        self.__blank_lines_maximum = 0
+        self.__blank_line_count = 0
+        self.__last_blank_line: Optional[MarkdownToken] = None
 
-    def get_details(self):
+    def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
@@ -32,11 +36,11 @@ class RuleMd012(RulePlugin):
         )
 
     @classmethod
-    def __validate_maximum(cls, found_value):
+    def __validate_maximum(cls, found_value: int) -> None:
         if found_value < 0:
             raise ValueError("Allowable values are any non-negative integers.")
 
-    def initialize_from_config(self):
+    def initialize_from_config(self) -> None:
         """
         Event to allow the plugin to load configuration information.
         """
@@ -46,28 +50,29 @@ class RuleMd012(RulePlugin):
             valid_value_fn=self.__validate_maximum,
         )
 
-    def starting_new_file(self):
+    def starting_new_file(self) -> None:
         """
         Event that the a new file to be scanned is starting.
         """
         self.__blank_line_count = 0
         self.__last_blank_line = None
 
-    def __check_for_excess_blank_lines(self, context):
+    def __check_for_excess_blank_lines(self, context: PluginScanContext) -> None:
         if self.__blank_line_count > self.__blank_lines_maximum:
             extra_data = f"Expected: {self.__blank_lines_maximum}, Actual: {self.__blank_line_count}"
 
+            assert self.__last_blank_line is not None
             self.report_next_token_error(
                 context, self.__last_blank_line, extra_error_information=extra_data
             )
 
-    def completed_file(self, context):
+    def completed_file(self, context: PluginScanContext) -> None:
         """
         Event that the file being currently scanned is now completed.
         """
         self.__check_for_excess_blank_lines(context)
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """

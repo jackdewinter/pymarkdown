@@ -1,7 +1,12 @@
 """
 Module to implement a plugin that ensures that Block Quote elements are surrounded by Blank Lines.
 """
+from typing import List, cast
+
+from pymarkdown.leaf_markdown_token import BlankLineMarkdownToken
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
@@ -14,12 +19,12 @@ class RuleMd028(RulePlugin):
     __look_for_blank_lines = 1
     __look_for_start_of_block_quote = 2
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        self.__current_state = None
-        self.__found_blank_lines = None
+        self.__current_state = 0
+        self.__found_blank_lines: List[BlankLineMarkdownToken] = []
 
-    def get_details(self):
+    def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
@@ -33,14 +38,14 @@ class RuleMd028(RulePlugin):
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md028.md",
         )
 
-    def starting_new_file(self):
+    def starting_new_file(self) -> None:
         """
         Event that the a new file to be scanned is starting.
         """
         self.__current_state = RuleMd028.__look_for_end_of_block_quote
-        self.__found_blank_lines = None
+        self.__found_blank_lines = []
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """
@@ -51,8 +56,9 @@ class RuleMd028(RulePlugin):
                 self.__found_blank_lines = []
         elif self.__current_state == RuleMd028.__look_for_blank_lines:
             if token.is_blank_line:
+                blank_line_token = cast(BlankLineMarkdownToken, token)
                 self.__current_state = RuleMd028.__look_for_start_of_block_quote
-                self.__found_blank_lines.append(token)
+                self.__found_blank_lines.append(blank_line_token)
             elif not token.is_block_quote_end:
                 self.__current_state = RuleMd028.__look_for_end_of_block_quote
         else:
@@ -62,6 +68,7 @@ class RuleMd028(RulePlugin):
                     self.report_next_token_error(context, next_blank_lines)
                 self.__current_state = RuleMd028.__look_for_end_of_block_quote
             elif token.is_blank_line:
-                self.__found_blank_lines.append(token)
+                blank_line_token = cast(BlankLineMarkdownToken, token)
+                self.__found_blank_lines.append(blank_line_token)
             else:
                 self.__current_state = RuleMd028.__look_for_end_of_block_quote

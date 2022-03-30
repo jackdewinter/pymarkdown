@@ -2,7 +2,12 @@
 Module to implement a plugin that looks for inconsistencies in the
 style used for Unordered List elements.
 """
+from typing import Dict, cast
+
+from pymarkdown.container_markdown_token import UnorderedListStartMarkdownToken
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
@@ -26,13 +31,13 @@ class RuleMd004(RulePlugin):
         __sublist_style,
     ]
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        self.__style_type = None
-        self.__actual_style_type = None
-        self.__current_list_level = None
+        self.__style_type = ""
+        self.__actual_style_type: Dict[int, str] = {}
+        self.__current_list_level = 0
 
-    def get_details(self):
+    def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
@@ -49,11 +54,11 @@ class RuleMd004(RulePlugin):
         )
 
     @classmethod
-    def __validate_configuration_style(cls, found_value):
+    def __validate_configuration_style(cls, found_value: str) -> None:
         if found_value not in RuleMd004.__valid_styles:
             raise ValueError(f"Allowable values: {RuleMd004.__valid_styles}")
 
-    def initialize_from_config(self):
+    def initialize_from_config(self) -> None:
         """
         Event to allow the plugin to load configuration information.
         """
@@ -63,7 +68,7 @@ class RuleMd004(RulePlugin):
             valid_value_fn=self.__validate_configuration_style,
         )
 
-    def starting_new_file(self):
+    def starting_new_file(self) -> None:
         """
         Event that the a new file to be scanned is starting.
         """
@@ -76,7 +81,7 @@ class RuleMd004(RulePlugin):
             self.__actual_style_type[0] = self.__style_type
 
     @classmethod
-    def __get_sequence_type(cls, token):
+    def __get_sequence_type(cls, token: UnorderedListStartMarkdownToken) -> str:
         if token.list_start_sequence == "*":
             return RuleMd004.__asterisk_style
         if token.list_start_sequence == "+":
@@ -84,11 +89,12 @@ class RuleMd004(RulePlugin):
         assert token.list_start_sequence == "-"
         return RuleMd004.__dash_style
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """
         if token.is_unordered_list_start:
+            list_token = cast(UnorderedListStartMarkdownToken, token)
             if self.__current_list_level not in self.__actual_style_type:
                 if self.__style_type in (RuleMd004.__sublist_style,) or (
                     self.__style_type in (RuleMd004.__consistent_style)
@@ -96,13 +102,13 @@ class RuleMd004(RulePlugin):
                 ):
                     self.__actual_style_type[
                         self.__current_list_level
-                    ] = self.__get_sequence_type(token)
+                    ] = self.__get_sequence_type(list_token)
                 else:
                     self.__actual_style_type[
                         self.__current_list_level
                     ] = self.__actual_style_type[0]
 
-            this_start_style = self.__get_sequence_type(token)
+            this_start_style = self.__get_sequence_type(list_token)
             if self.__actual_style_type[self.__current_list_level] != this_start_style:
                 extra_data = (
                     f"Expected: {self.__actual_style_type[self.__current_list_level]}; "

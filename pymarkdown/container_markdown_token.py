@@ -50,7 +50,7 @@ class NewListItemMarkdownToken(ContainerMarkdownToken):
         self,
         indent_level: int,
         position_marker: PositionMarker,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         list_start_content: str,
     ) -> None:
         self.__indent_level, self.__extracted_whitespace, self.__list_start_content = (
@@ -69,7 +69,7 @@ class NewListItemMarkdownToken(ContainerMarkdownToken):
         )
 
     @property
-    def extracted_whitespace(self) -> Optional[str]:
+    def extracted_whitespace(self) -> str:
         """
         Returns any whitespace that was extracted before the processing of this element occurred.
         """
@@ -104,7 +104,7 @@ class ListStartMarkdownToken(ContainerMarkdownToken):
         list_start_sequence: str,
         list_start_content: str,
         indent_level: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
     ) -> None:
         ContainerMarkdownToken.__init__(
             self,
@@ -153,7 +153,7 @@ class ListStartMarkdownToken(ContainerMarkdownToken):
         return self.__indent_level
 
     @property
-    def extracted_whitespace(self) -> Optional[str]:
+    def extracted_whitespace(self) -> str:
         """
         Returns any whitespace that was extracted before the processing of this element occurred.
         """
@@ -240,7 +240,7 @@ class OrderedListStartMarkdownToken(ListStartMarkdownToken):
         list_start_sequence: str,
         list_start_content: str,
         indent_level: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         position_marker: PositionMarker,
     ) -> None:
         ListStartMarkdownToken.__init__(
@@ -265,7 +265,7 @@ class UnorderedListStartMarkdownToken(ListStartMarkdownToken):
         self,
         list_start_sequence: str,
         indent_level: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         position_marker: PositionMarker,
     ) -> None:
         ListStartMarkdownToken.__init__(

@@ -189,7 +189,9 @@ class HtmlBlockMarkdownToken(LeafMarkdownToken):
     Class to provide for an encapsulation of the html block element.
     """
 
-    def __init__(self, position_marker, extracted_whitespace):
+    def __init__(
+        self, position_marker: PositionMarker, extracted_whitespace: str
+    ) -> None:
         if position_marker:
             line_number, column_number = position_marker.line_number, (
                 position_marker.index_number

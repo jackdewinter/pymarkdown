@@ -3,9 +3,13 @@ Module to implement a plugin that looks for single line emphasis text that looks
 like it is being used instead of a heading.
 """
 from enum import Enum
+from typing import Optional, cast
 
+from pymarkdown.inline_markdown_token import TextMarkdownToken
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
@@ -27,13 +31,13 @@ class RuleMd036(RulePlugin):
     like it is being used instead of a heading.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        self.__punctuation = None
-        self.__current_state = None
-        self.__start_token = None
+        self.__punctuation: str = ""
+        self.__current_state: RuleMd036States = RuleMd036States.LOOK_FOR_PARAGRAPH
+        self.__start_token: Optional[MarkdownToken] = None
 
-    def get_details(self):
+    def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
@@ -48,7 +52,7 @@ class RuleMd036(RulePlugin):
             plugin_configuration="punctuation",
         )
 
-    def initialize_from_config(self):
+    def initialize_from_config(self) -> None:
         """
         Event to allow the plugin to load configuration information.
         """
@@ -56,14 +60,14 @@ class RuleMd036(RulePlugin):
             "punctuation", default_value=".,;:!?。，；：？"
         )
 
-    def starting_new_file(self):
+    def starting_new_file(self) -> None:
         """
         Event that the a new file to be scanned is starting.
         """
         self.__current_state = RuleMd036States.LOOK_FOR_PARAGRAPH
         self.__start_token = None
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """
@@ -77,17 +81,20 @@ class RuleMd036(RulePlugin):
             if token.is_inline_emphasis:
                 new_state = RuleMd036States.LOOK_FOR_ELIGIBLE_TEXT
         elif self.__current_state == RuleMd036States.LOOK_FOR_ELIGIBLE_TEXT:
-            if token.is_text and (
-                ParserHelper.newline_character not in token.token_text
-                and token.token_text[-1] not in self.__punctuation
-            ):
-                new_state = RuleMd036States.LOOK_FOR_EMPHASIS_END
+            if token.is_text:
+                text_token = cast(TextMarkdownToken, token)
+                if (
+                    ParserHelper.newline_character not in text_token.token_text
+                    and text_token.token_text[-1] not in self.__punctuation
+                ):
+                    new_state = RuleMd036States.LOOK_FOR_EMPHASIS_END
         elif self.__current_state == RuleMd036States.LOOK_FOR_EMPHASIS_END:
             if token.is_inline_emphasis_end:
                 new_state = RuleMd036States.LOOK_FOR_PARAGRAPH_END
         else:
             assert self.__current_state == RuleMd036States.LOOK_FOR_PARAGRAPH_END
             if token.is_paragraph_end:
+                assert self.__start_token is not None
                 self.report_next_token_error(context, self.__start_token)
 
         self.__current_state = new_state

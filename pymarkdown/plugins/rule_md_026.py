@@ -1,8 +1,13 @@
 """
 Module to implement a plugin that looks for trailing punctuation in headings.
 """
+from typing import Optional, cast
+
+from pymarkdown.inline_markdown_token import TextMarkdownToken
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
@@ -11,13 +16,13 @@ class RuleMd026(RulePlugin):
     Class to implement a plugin that looks for trailing punctuation in headings.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        self.__start_token = None
-        self.__heading_text = None
-        self.__punctuation = None
+        self.__start_token: Optional[MarkdownToken] = None
+        self.__heading_text = ""
+        self.__punctuation = ""
 
-    def get_details(self):
+    def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
@@ -32,7 +37,7 @@ class RuleMd026(RulePlugin):
             plugin_configuration="punctuation",
         )
 
-    def initialize_from_config(self):
+    def initialize_from_config(self) -> None:
         """
         Event to allow the plugin to load configuration information.
         """
@@ -40,14 +45,14 @@ class RuleMd026(RulePlugin):
             "punctuation", default_value=".,;:!。，；：！"
         )
 
-    def starting_new_file(self):
+    def starting_new_file(self) -> None:
         """
         Event that the a new file to be scanned is starting.
         """
         self.__start_token = None
-        self.__heading_text = None
+        self.__heading_text = ""
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """
@@ -58,11 +63,14 @@ class RuleMd026(RulePlugin):
             self.__next_token_end(token, context)
         elif self.__start_token:
             if token.is_text:
-                self.__heading_text += token.token_text
+                text_token = cast(TextMarkdownToken, token)
+                self.__heading_text += text_token.token_text
             else:
                 self.__heading_text = ""
 
-    def __next_token_end(self, token, context):
+    def __next_token_end(
+        self, token: MarkdownToken, context: PluginScanContext
+    ) -> None:
         if token.is_setext_heading_end or token.is_atx_heading_end:
             if self.__heading_text:
                 if token.is_atx_heading_end:
@@ -82,6 +90,7 @@ class RuleMd026(RulePlugin):
                     else:
                         column_delta = len(self.__heading_text) - 1
                 if self.__heading_text[-1] in self.__punctuation:
+                    assert self.__start_token is not None
                     self.report_next_token_error(
                         context,
                         self.__start_token,

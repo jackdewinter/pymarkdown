@@ -1,8 +1,13 @@
 """
 Module to implement a plugin that looks for bare URLs in the files.
 """
+from typing import cast
+
+from pymarkdown.inline_markdown_token import TextMarkdownToken
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
@@ -13,13 +18,13 @@ class RuleMd034(RulePlugin):
 
     __valid_uri_types = ["http:", "https:", "ftp:", "ftps:"]
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        self.__in_code_block = None
-        self.__in_html_block = None
-        self.__in_link = None
+        self.__in_code_block: bool = False
+        self.__in_html_block: bool = False
+        self.__in_link: bool = False
 
-    def get_details(self):
+    def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
@@ -33,7 +38,7 @@ class RuleMd034(RulePlugin):
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md034.md",
         )
 
-    def starting_new_file(self):
+    def starting_new_file(self) -> None:
         """
         Event that the a new file to be scanned is starting.
         """
@@ -43,8 +48,13 @@ class RuleMd034(RulePlugin):
 
     # pylint: disable=too-many-arguments
     def __evaluate_possible_url(
-        self, source_text, url_prefix, found_index, context, token
-    ):
+        self,
+        source_text: str,
+        url_prefix: str,
+        found_index: int,
+        context: PluginScanContext,
+        token: MarkdownToken,
+    ) -> None:
         if found_index == 0 or source_text[found_index - 1] in (
             " ",
             ParserHelper.newline_character,
@@ -68,7 +78,7 @@ class RuleMd034(RulePlugin):
 
     # pylint: enable=too-many-arguments
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """
@@ -78,15 +88,16 @@ class RuleMd034(RulePlugin):
             and not self.__in_html_block
             and not self.__in_link
         ):
+            text_token = cast(TextMarkdownToken, token)
             for url_prefix in RuleMd034.__valid_uri_types:
                 start_index = 0
-                found_index = token.token_text.find(url_prefix, start_index)
+                found_index = text_token.token_text.find(url_prefix, start_index)
                 while found_index != -1:
                     self.__evaluate_possible_url(
-                        token.token_text, url_prefix, found_index, context, token
+                        text_token.token_text, url_prefix, found_index, context, token
                     )
                     start_index = found_index + len(url_prefix)
-                    found_index = token.token_text.find(url_prefix, start_index)
+                    found_index = text_token.token_text.find(url_prefix, start_index)
 
         elif token.is_code_block:
             self.__in_code_block = True

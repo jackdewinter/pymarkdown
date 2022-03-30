@@ -3,8 +3,11 @@ Module to implement a plugin that looks for text sequences that make
 it appear like the author got the inline link syntax reversed.
 """
 import re
+from typing import List
 
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
@@ -14,14 +17,14 @@ class RuleMd011(RulePlugin):
     it appear like the author got the inline link syntax reversed.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.__reverse_link_syntax = re.compile(r"\(.*\)\[\s*[^\^].*\s*]")
-        self.__leaf_tokens = None
-        self.__line_index = None
-        self.__leaf_token_index = None
+        self.__leaf_tokens: List[MarkdownToken] = []
+        self.__line_index = 0
+        self.__leaf_token_index = 0
 
-    def get_details(self):
+    def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
@@ -35,7 +38,7 @@ class RuleMd011(RulePlugin):
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md011.md",
         )
 
-    def starting_new_file(self):
+    def starting_new_file(self) -> None:
         """
         Event that the a new file to be scanned is starting.
         """
@@ -43,7 +46,7 @@ class RuleMd011(RulePlugin):
         self.__line_index = 1
         self.__leaf_token_index = 0
 
-    def next_line(self, context, line):
+    def next_line(self, context: PluginScanContext, line: str) -> None:
         """
         Event that a new line is being processed.
         """
@@ -72,7 +75,7 @@ class RuleMd011(RulePlugin):
 
         self.__line_index += 1
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """

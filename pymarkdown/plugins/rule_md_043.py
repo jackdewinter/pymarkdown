@@ -1,8 +1,14 @@
 """
 Module to implement a plugin that ensures that a mandates set of headers are present.
 """
+from typing import List, Optional, Tuple, Union, cast
+
+from pymarkdown.inline_markdown_token import TextMarkdownToken
+from pymarkdown.leaf_markdown_token import AtxHeadingMarkdownToken
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
@@ -11,17 +17,17 @@ class RuleMd043(RulePlugin):
     Class to implement a plugin that ensures that a mandates set of headers are present.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         # self.__show_debug = False
-        self.__collected_tokens = None
-        self.__all_tokens = None
-        self.__headings_have_wildcards = None
-        self.__compiled_headings = None
-        self.__prefix_index = None
-        self.__suffix_index = None
+        self.__collected_tokens: List[MarkdownToken] = []
+        self.__all_tokens: List[List[MarkdownToken]] = []
+        self.__headings_have_wildcards: bool = False
+        self.__compiled_headings: List[Union[str, Tuple[int, str]]] = []
+        self.__prefix_index: int = -1
+        self.__suffix_index: int = -1
 
-    def get_details(self):
+    def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
@@ -37,23 +43,25 @@ class RuleMd043(RulePlugin):
         )
 
     @classmethod
-    def __validate_heading_pattern(cls, found_value):
+    def __validate_heading_pattern(cls, found_value: str) -> None:
         if found_value.strip():
             _, _, compile_error = cls.__compile(found_value)
             if compile_error:
                 raise ValueError(f"Heading format not valid: {compile_error}")
 
     @classmethod
-    def __compile(cls, found_value):
+    def __compile(
+        cls, found_value: str
+    ) -> Tuple[List[Union[str, Tuple[int, str]]], bool, Optional[str]]:
         found_parts = found_value.split(",")
-        compiled_lines = []
+        compiled_lines: List[Union[str, Tuple[int, str]]] = []
         are_any_wildcards = False
         for next_part in found_parts:
             if next_part == "*":
                 if compiled_lines and compiled_lines[-1] == "*":
                     return (
-                        None,
-                        None,
+                        [],
+                        False,
                         "Two wildcard elements cannot be next to each other.",
                     )
                 compiled_lines.append(next_part)
@@ -63,32 +71,34 @@ class RuleMd043(RulePlugin):
                     next_part, 0, "#"
                 )
                 if not count:
-                    return None, None, "Element must start with hash characters (#)."
+                    return [], False, "Element must start with hash characters (#)."
                 if count > 6:
                     return (
-                        None,
-                        None,
+                        [],
+                        False,
                         "Element must start with between 1 and 6 hash characters (#).",
                     )
+                assert next_part is not None
+                assert new_index is not None
                 new_index, extracted_whitespace = ParserHelper.extract_any_whitespace(
                     next_part, new_index
                 )
                 if not extracted_whitespace:
                     return (
-                        None,
-                        None,
+                        [],
+                        False,
                         "Element must have at least one space character after any hash characters (#).",
                     )
                 if len(next_part) == new_index:
                     return (
-                        None,
-                        None,
+                        [],
+                        False,
                         "Element must have at least one non-space character after any space characters.",
                     )
                 compiled_lines.append((count, next_part[new_index:]))
         return compiled_lines, are_any_wildcards, None
 
-    def initialize_from_config(self):
+    def initialize_from_config(self) -> None:
         """
         Event to allow the plugin to load configuration information.
         """
@@ -97,7 +107,7 @@ class RuleMd043(RulePlugin):
             default_value="",
             valid_value_fn=self.__validate_heading_pattern,
         )
-        self.__compiled_headings = None
+        self.__compiled_headings = []
         self.__headings_have_wildcards = False
         if raw_headings:
             (
@@ -128,35 +138,42 @@ class RuleMd043(RulePlugin):
                     heading_index -= 1
 
     def __verify_single_heading_match(
-        self, this_compiled_heading, matching_all_token_index
-    ):
+        self,
+        this_compiled_heading: Union[str, Tuple[int, str]],
+        matching_all_token_index: int,
+    ) -> Tuple[Optional[MarkdownToken], Optional[str]]:
 
         failure_token, failure_reason = (None, None)
 
-        hash_count = this_compiled_heading[0]
-        expected_text = this_compiled_heading[1]
+        assert len(this_compiled_heading) == 2
+        this_heading = cast(Tuple[int, str], this_compiled_heading)
+        hash_count: int = this_heading[0]
+        expected_text: str = this_heading[1]
         if matching_all_token_index >= len(self.__all_tokens):
             failure_token = self.__all_tokens[-1][0]
             failure_reason = f"Missing heading: {ParserHelper.repeat_string('#', hash_count)} {expected_text}"
         else:
             these_tokens = self.__all_tokens[matching_all_token_index]
-            if these_tokens[0].hash_count != hash_count:
-                failure_reason = f"Bad heading level: Expected: {hash_count}, Actual: {these_tokens[0].hash_count}"
+            atx_token = cast(AtxHeadingMarkdownToken, these_tokens[0])
+            if atx_token.hash_count != hash_count:
+                failure_reason = f"Bad heading level: Expected: {hash_count}, Actual: {atx_token.hash_count}"
             elif len(these_tokens) != 2 or not these_tokens[1].is_text:
                 failure_reason = (
                     "Bad heading: Required headings must only be normal text."
                 )
-            elif these_tokens[1].token_text != expected_text:
-                failure_reason = f"Bad heading text: Expected: {expected_text}, Actual: {these_tokens[1].token_text}"
+            else:
+                text_token = cast(TextMarkdownToken, these_tokens[1])
+                if text_token.token_text != expected_text:
+                    failure_reason = f"Bad heading text: Expected: {expected_text}, Actual: {text_token.token_text}"
             if failure_reason:
                 failure_token = these_tokens[0]
         return failure_token, failure_reason
 
     def __verify_group_heading_match(
-        self, heading_index, all_token_index, scan_limit=None
-    ):
+        self, heading_index: int, all_token_index: int, scan_limit: int = -1
+    ) -> Tuple[int, int, Optional[MarkdownToken], Optional[str]]:
 
-        if not scan_limit:
+        if scan_limit < 0:
             scan_limit = len(self.__compiled_headings)
 
         failure_token, failure_reason = (None, None)
@@ -174,7 +191,9 @@ class RuleMd043(RulePlugin):
             and heading_index < len(self.__compiled_headings)
             and heading_index < scan_limit
         ):
-            this_compiled_heading = self.__compiled_headings[heading_index]
+            this_compiled_heading: Union[
+                str, Tuple[int, str]
+            ] = self.__compiled_headings[heading_index]
             # if self.__show_debug:
             #     print(
             #         "vghm:this_compiled_heading="
@@ -197,7 +216,7 @@ class RuleMd043(RulePlugin):
                 all_token_index += 1
         return heading_index, all_token_index, failure_token, failure_reason
 
-    def __handle_no_wildcards_match(self, context):
+    def __handle_no_wildcards_match(self, context: PluginScanContext) -> None:
 
         end_index, _, failure_token, failure_reason = self.__verify_group_heading_match(
             0, 0
@@ -212,7 +231,9 @@ class RuleMd043(RulePlugin):
                 context, anchor_token, extra_error_information="Extra heading"
             )
 
-    def __handle_wildcard_prefix(self):
+    def __handle_wildcard_prefix(
+        self,
+    ) -> Tuple[int, int, Optional[MarkdownToken], Optional[str]]:
 
         (
             top_heading_index,
@@ -231,7 +252,9 @@ class RuleMd043(RulePlugin):
         #     )
         return top_heading_index, top_token_index, failure_token, failure_reason
 
-    def __handle_wildcard_suffix(self, top_token_index):
+    def __handle_wildcard_suffix(
+        self, top_token_index: int
+    ) -> Tuple[int, int, Optional[MarkdownToken], Optional[str]]:
         bottom_heading_index = len(self.__compiled_headings)
         bottom_token_index = len(self.__all_tokens)
 
@@ -246,8 +269,8 @@ class RuleMd043(RulePlugin):
         #         + str(top_token_index)
         #     )
         if start_all_token_index < top_token_index:
-            failure_token = self.__all_tokens[-1][0]
-            failure_reason = "Overlapped."
+            failure_token: Optional[MarkdownToken] = self.__all_tokens[-1][0]
+            failure_reason: Optional[str] = "Overlapped."
         else:
             (_, _, failure_token, failure_reason,) = self.__verify_group_heading_match(
                 self.__suffix_index, start_all_token_index
@@ -265,17 +288,21 @@ class RuleMd043(RulePlugin):
             bottom_token_index = start_all_token_index
         return bottom_heading_index, bottom_token_index, failure_token, failure_reason
 
-    def starting_new_file(self):
+    def starting_new_file(self) -> None:
         """
         Event that the a new file to be scanned is starting.
         """
-        self.__collected_tokens = None
+        self.__collected_tokens = []
         self.__all_tokens = []
 
     # pylint: disable=too-many-locals
     def __do_recursive(
-        self, remaining_headings, top_heading_index, remaining_tokens, top_token_index
-    ):
+        self,
+        remaining_headings: List[Union[str, Tuple[int, str]]],
+        top_heading_index: int,
+        remaining_tokens: List[List[MarkdownToken]],
+        top_token_index: int,
+    ) -> bool:
 
         bottom_heading_index = top_heading_index + len(remaining_headings)
 
@@ -365,7 +392,7 @@ class RuleMd043(RulePlugin):
 
     # pylint: enable=too-many-locals
 
-    def completed_file(self, context):
+    def completed_file(self, context: PluginScanContext) -> None:
         """
         Event that the file being currently scanned is now completed.
         """
@@ -450,7 +477,7 @@ class RuleMd043(RulePlugin):
                 extra_error_information="Wildcard heading match failed.",
             )
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """
@@ -459,7 +486,7 @@ class RuleMd043(RulePlugin):
         if self.__collected_tokens:
             if token.is_atx_heading_end or token.is_setext_heading_end:
                 self.__all_tokens.append(self.__collected_tokens)
-                self.__collected_tokens = None
+                self.__collected_tokens = []
             else:
                 self.__collected_tokens.append(token)
         elif self.__compiled_headings:

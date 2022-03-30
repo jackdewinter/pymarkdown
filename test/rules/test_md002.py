@@ -82,6 +82,41 @@ def test_md002_bad_configuration_level():
 
 
 @pytest.mark.rules
+def test_md002_bad_configuration_level_value():
+    """
+    Test to verify that a configuration error is thrown when supplying the
+    level value with an integer outside of the range.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--strict-config",
+        "--set",
+        "plugins.md002.level=$#10",
+        "--enable-rules",
+        "MD002",
+        "scan",
+        "test/resources/rules/md002/proper_atx_heading_start.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = (
+        "BadPluginError encountered while configuring plugins:\n"
+        + "The value for property 'plugins.md002.level' is not valid: Allowable values are between 1 and 6 (inclusive)."
+    )
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
 def test_md002_good_proper_atx_heading_start():
     """
     Test to make sure the rule does not trigger with a level 1

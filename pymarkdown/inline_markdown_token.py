@@ -91,7 +91,7 @@ class RawHtmlMarkdownToken(InlineMarkdownToken):
     Class to provide for an encapsulation of the inline raw html element.
     """
 
-    def __init__(self, raw_tag, line_number, column_number):
+    def __init__(self, raw_tag: str, line_number: int, column_number: int) -> None:
         self.__raw_tag = raw_tag
         InlineMarkdownToken.__init__(
             self,

@@ -1,7 +1,9 @@
 """
 Module to implement a sample plugin that just reports that it has been called.
 """
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
@@ -12,12 +14,12 @@ class PluginOne(RulePlugin):
 
     __valid_values = [0, 1, 2]
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.test_value = None
         self.other_test_value = None
 
-    def get_details(self):
+    def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
@@ -31,11 +33,11 @@ class PluginOne(RulePlugin):
         )
 
     @classmethod
-    def __validate_configuration_other_test_value(cls, found_value):
+    def __validate_configuration_other_test_value(cls, found_value: int) -> None:
         if found_value not in PluginOne.__valid_values:
             raise ValueError(f"Allowable values: {found_value}")
 
-    def initialize_from_config(self):
+    def initialize_from_config(self) -> None:
         """
         Event to allow the plugin to load configuration.
         """
@@ -55,20 +57,20 @@ class PluginOne(RulePlugin):
         if self.test_value == 10:
             raise Exception("because")
 
-    def starting_new_file(self):
+    def starting_new_file(self) -> None:
         """
         Event that the a new file to be scanned is starting.
         """
         print(f"{self.get_details().plugin_id}>>starting_new_file>>")
 
-    def next_line(self, context, line):
+    def next_line(self, context: PluginScanContext, line: str) -> None:
         """
         Event that a new line is being processed.
         """
         _ = context
         print(f"{self.get_details().plugin_id}>>next_line:{line}")
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """
@@ -77,7 +79,7 @@ class PluginOne(RulePlugin):
         if self.test_value == 20:
             raise Exception("because")
 
-    def completed_file(self, context):
+    def completed_file(self, context: PluginScanContext) -> None:
         """
         Event that the file being currently scanned is now completed.
         """

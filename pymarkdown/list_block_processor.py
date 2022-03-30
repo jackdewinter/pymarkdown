@@ -883,6 +883,7 @@ class ListBlockProcessor:
         # to be called using the same pattern.
         _ = index
 
+        assert extracted_whitespace is not None
         new_token = UnorderedListStartMarkdownToken(
             position_marker.text_to_parse[position_marker.index_number],
             indent_level,
@@ -913,6 +914,7 @@ class ListBlockProcessor:
         ws_after_marker: int,
         index: int,
     ) -> Tuple[ListStartMarkdownToken, ListStackToken]:
+        assert extracted_whitespace is not None
         new_token = OrderedListStartMarkdownToken(
             position_marker.text_to_parse[index],
             position_marker.text_to_parse[position_marker.index_number : index],

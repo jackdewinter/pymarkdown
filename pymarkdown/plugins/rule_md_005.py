@@ -3,9 +3,18 @@ Module to implement a plugin that ensures that the indentation for List Items
 are equivalent with each other.
 """
 from enum import Enum
+from typing import Dict, List, Optional, cast
 
+from pymarkdown.container_markdown_token import (
+    ListStartMarkdownToken,
+    NewListItemMarkdownToken,
+    OrderedListStartMarkdownToken,
+    UnorderedListStartMarkdownToken,
+)
+from pymarkdown.markdown_token import EndMarkdownToken, MarkdownToken
 # from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
@@ -25,16 +34,16 @@ class RuleMd005(RulePlugin):
     are equivalent with each other.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        self.__list_stack = None
-        self.__unordered_list_indents = {}
-        self.__ordered_list_starts = {}
-        self.__ordered_tokens = {}
-        self.__ordered_list_alignment = {}
+        self.__list_stack: List[ListStartMarkdownToken] = []
+        self.__unordered_list_indents: Dict[int, int] = {}
+        self.__ordered_list_starts: Dict[int, OrderedListStartMarkdownToken] = {}
+        self.__ordered_tokens: Dict[int, List[MarkdownToken]] = {}
+        self.__ordered_list_alignment: Dict[int, OrderedListAlignment] = {}
         # self.__debug = False
 
-    def get_details(self):
+    def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
@@ -48,7 +57,7 @@ class RuleMd005(RulePlugin):
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md005.md",
         )
 
-    def starting_new_file(self):
+    def starting_new_file(self) -> None:
         """
         Event that the a new file to be scanned is starting.
         """
@@ -58,13 +67,16 @@ class RuleMd005(RulePlugin):
         self.__ordered_tokens = {}
         self.__ordered_list_alignment = {}
 
-    def __report_issue(self, context, token, expected_indent):
+    def __report_issue(
+        self, context: PluginScanContext, token: MarkdownToken, expected_indent: int
+    ) -> None:
         if expected_indent < 0:
+            list_token = cast(NewListItemMarkdownToken, token)
             list_level = len(self.__list_stack)
             expected_indent = (
                 self.__ordered_list_starts[list_level].indent_level
                 - 2
-                - len(token.list_start_content)
+                - len(list_token.list_start_content)
             )
 
         extra_data = f"Expected: {expected_indent}; Actual: {token.column_number - 1}"
@@ -72,7 +84,9 @@ class RuleMd005(RulePlugin):
         #     print(f"ERROR>>{extra_data}")
         self.report_next_token_error(context, token, extra_data)
 
-    def __handle_ordered_list_item(self, context, token):
+    def __handle_ordered_list_item(
+        self, context: PluginScanContext, token: OrderedListStartMarkdownToken
+    ) -> None:
         list_level = len(self.__list_stack)
         list_alignment = self.__ordered_list_alignment[list_level]
 
@@ -104,20 +118,22 @@ class RuleMd005(RulePlugin):
                 context, token, self.__ordered_list_starts[list_level].column_number - 1
             )
 
-    def __compute_ordered_list_alignment(self):
+    def __compute_ordered_list_alignment(self) -> None:
 
         list_level = len(self.__list_stack)
 
         last_length = 0
-        last_token = None
+        last_token: Optional[NewListItemMarkdownToken] = None
 
         for next_token in self.__ordered_tokens[list_level]:
-            content_length = len(next_token.list_start_content)
+            list_token = cast(NewListItemMarkdownToken, next_token)
+            content_length = len(list_token.list_start_content)
             if not last_length:
                 last_length = content_length
-                last_token = next_token
+                last_token = list_token
             elif content_length != last_length:
-                if last_token.column_number == next_token.column_number:
+                assert last_token is not None
+                if last_token.column_number == list_token.column_number:
                     self.__ordered_list_alignment[
                         list_level
                     ] = OrderedListAlignment.LEFT
@@ -125,8 +141,8 @@ class RuleMd005(RulePlugin):
                 last_total_length = len(last_token.extracted_whitespace) + len(
                     last_token.list_start_content
                 )
-                next_total_length = len(next_token.extracted_whitespace) + len(
-                    next_token.list_start_content
+                next_total_length = len(list_token.extracted_whitespace) + len(
+                    list_token.list_start_content
                 )
                 if last_total_length == next_total_length:
                     self.__ordered_list_alignment[
@@ -134,7 +150,9 @@ class RuleMd005(RulePlugin):
                     ] = OrderedListAlignment.RIGHT
                     break
 
-    def __handle_unordered_list_start(self, context, token):
+    def __handle_unordered_list_start(
+        self, context: PluginScanContext, token: UnorderedListStartMarkdownToken
+    ) -> None:
         self.__list_stack.append(token)
         list_level = len(self.__list_stack)
         if list_level not in self.__unordered_list_indents:
@@ -146,7 +164,7 @@ class RuleMd005(RulePlugin):
                 context, token, self.__unordered_list_indents[list_level] - 2
             )
 
-    def __handle_ordered_list_start(self, token):
+    def __handle_ordered_list_start(self, token: OrderedListStartMarkdownToken) -> None:
         self.__list_stack.append(token)
         list_level = len(self.__list_stack)
         self.__ordered_tokens[list_level] = []
@@ -155,7 +173,9 @@ class RuleMd005(RulePlugin):
             self.__ordered_list_starts[list_level] = token
             self.__ordered_list_alignment[list_level] = OrderedListAlignment.UNKNOWN
 
-    def __handle_list_item(self, context, token):
+    def __handle_list_item(
+        self, context: PluginScanContext, token: NewListItemMarkdownToken
+    ) -> None:
         if self.__list_stack[-1].is_unordered_list_start:
             if (
                 self.__unordered_list_indents[len(self.__list_stack)]
@@ -173,7 +193,9 @@ class RuleMd005(RulePlugin):
         else:
             self.__ordered_tokens[len(self.__list_stack)].append(token)
 
-    def __handle_list_end(self, context, token):
+    def __handle_list_end(
+        self, context: PluginScanContext, token: EndMarkdownToken
+    ) -> None:
         if token.is_ordered_list_end:
             list_level = len(self.__list_stack)
             if (
@@ -182,22 +204,27 @@ class RuleMd005(RulePlugin):
             ):
                 self.__compute_ordered_list_alignment()
             for next_token in self.__ordered_tokens[list_level]:
-                self.__handle_ordered_list_item(context, next_token)
+                next_list_token = cast(OrderedListStartMarkdownToken, next_token)
+                self.__handle_ordered_list_item(context, next_list_token)
         del self.__list_stack[-1]
         if not self.__list_stack:
             self.__unordered_list_indents = {}
             self.__ordered_list_starts = {}
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """
         # print(f"token>>{ParserHelper.make_value_visible(token)}")
         if token.is_unordered_list_start:
-            self.__handle_unordered_list_start(context, token)
+            unordered_list_start_token = cast(UnorderedListStartMarkdownToken, token)
+            self.__handle_unordered_list_start(context, unordered_list_start_token)
         elif token.is_ordered_list_start:
-            self.__handle_ordered_list_start(token)
+            ordered_list_start_token = cast(OrderedListStartMarkdownToken, token)
+            self.__handle_ordered_list_start(ordered_list_start_token)
         elif token.is_unordered_list_end or token.is_ordered_list_end:
-            self.__handle_list_end(context, token)
+            end_token = cast(EndMarkdownToken, token)
+            self.__handle_list_end(context, end_token)
         elif token.is_new_list_item:
-            self.__handle_list_item(context, token)
+            new_list_item_token = cast(NewListItemMarkdownToken, token)
+            self.__handle_list_item(context, new_list_item_token)

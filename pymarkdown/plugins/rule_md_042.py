@@ -1,7 +1,12 @@
 """
 Module to implement a plugin that looks for inline links with empty link URIs.
 """
+from typing import cast
+
+from pymarkdown.inline_markdown_token import LinkStartMarkdownToken
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
@@ -10,7 +15,7 @@ class RuleMd042(RulePlugin):
     Class to implement a plugin that looks for inline links with empty link URIs.
     """
 
-    def get_details(self):
+    def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
@@ -24,11 +29,12 @@ class RuleMd042(RulePlugin):
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md042.md",
         )
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """
         if token.is_inline_link or token.is_inline_image:
-            stripped_link_uri = token.active_link_uri.strip()
+            link_token = cast(LinkStartMarkdownToken, token)
+            stripped_link_uri = link_token.active_link_uri.strip()
             if not stripped_link_uri or stripped_link_uri == "#":
                 self.report_next_token_error(context, token)

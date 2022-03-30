@@ -1,7 +1,11 @@
 """
 Module to implement a plugin that ensures that top-level lists are surrounded by Blank Lines.
 """
+from typing import List, Optional
+
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
@@ -10,13 +14,13 @@ class RuleMd032(RulePlugin):
     Class to implement a plugin that ensures that top-level lists are surrounded by Blank Lines.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        self.__last_non_end_token = None
-        self.__container_token_stack = None
-        self.__end_list_end_token = None
+        self.__last_non_end_token: Optional[MarkdownToken] = None
+        self.__container_token_stack: List[MarkdownToken] = []
+        self.__end_list_end_token: Optional[MarkdownToken] = None
 
-    def get_details(self):
+    def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
@@ -30,7 +34,7 @@ class RuleMd032(RulePlugin):
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md032.md",
         )
 
-    def starting_new_file(self):
+    def starting_new_file(self) -> None:
         """
         Event that the a new file to be scanned is starting.
         """
@@ -38,7 +42,7 @@ class RuleMd032(RulePlugin):
         self.__container_token_stack = []
         self.__end_list_end_token = None
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """
@@ -69,6 +73,7 @@ class RuleMd032(RulePlugin):
 
             self.__container_token_stack.append(token)
         elif token.is_list_end:
+            assert self.__last_non_end_token is not None
             if not self.__last_non_end_token.is_blank_line:
                 self.__end_list_end_token = token
                 del self.__container_token_stack[-1]

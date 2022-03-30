@@ -136,7 +136,7 @@ class HtmlHelper:
     ]
 
     @staticmethod
-    def is_valid_tag_name(tag_name):
+    def is_valid_tag_name(tag_name: str) -> bool:
         """
         Determine if the html tag name is valid according to the html rules.
         """
@@ -151,7 +151,7 @@ class HtmlHelper:
         )
 
     @staticmethod
-    def extract_html_attribute_name(string_to_parse, string_index):
+    def extract_html_attribute_name(string_to_parse: str, string_index: int) -> int:
         """
         Attempt to extract the attribute name from the provided string.
         """
@@ -165,21 +165,24 @@ class HtmlHelper:
         ):
             return -1
 
-        string_index, __ = ParserHelper.collect_while_one_of_characters(
+        new_string_index, __ = ParserHelper.collect_while_one_of_characters(
             string_to_parse, string_index + 1, HtmlHelper.__attribute_other_characters
         )
+        assert new_string_index is not None
 
-        if string_index < string_to_parse_length and string_to_parse[string_index] in [
+        if new_string_index < string_to_parse_length and string_to_parse[
+            new_string_index
+        ] in [
             HtmlHelper.__html_attribute_name_value_separator,
             HtmlHelper.__html_attribute_separator,
             HtmlHelper.__html_tag_start,
             HtmlHelper.__html_tag_end,
         ]:
-            return string_index
+            return new_string_index
         return -1
 
     @staticmethod
-    def extract_optional_attribute_value(line_to_parse, value_index):
+    def extract_optional_attribute_value(line_to_parse: str, value_index: int) -> int:
         """
         Determine and extract an optional attribute value.
         """
@@ -187,6 +190,7 @@ class HtmlHelper:
         non_whitespace_index, _ = ParserHelper.extract_whitespace(
             line_to_parse, value_index
         )
+        assert non_whitespace_index is not None
         line_to_parse_size = len(line_to_parse)
         if (
             non_whitespace_index < line_to_parse_size
@@ -198,8 +202,10 @@ class HtmlHelper:
         non_whitespace_index, _ = ParserHelper.extract_whitespace(
             line_to_parse, non_whitespace_index + 1
         )
+        assert non_whitespace_index is not None
         if non_whitespace_index < line_to_parse_size:
             first_character_of_value = line_to_parse[non_whitespace_index]
+            extracted_text: Optional[str] = None
             if first_character_of_value == HtmlHelper.__html_attribute_value_double:
                 (
                     non_whitespace_index,
@@ -209,6 +215,7 @@ class HtmlHelper:
                     non_whitespace_index + 1,
                     HtmlHelper.__html_attribute_value_double,
                 )
+                assert non_whitespace_index is not None
                 if non_whitespace_index == line_to_parse_size:
                     return -1
                 non_whitespace_index += 1
@@ -221,6 +228,7 @@ class HtmlHelper:
                     non_whitespace_index + 1,
                     HtmlHelper.__html_attribute_value_single,
                 )
+                assert non_whitespace_index is not None
                 if non_whitespace_index == line_to_parse_size:
                     return -1
                 non_whitespace_index += 1
@@ -233,6 +241,7 @@ class HtmlHelper:
                     non_whitespace_index,
                     HtmlHelper.__html_tag_attribute_value_terminators,
                 )
+                assert non_whitespace_index is not None
 
                 if not extracted_text:
                     non_whitespace_index = -1
@@ -241,7 +250,9 @@ class HtmlHelper:
         return non_whitespace_index
 
     @staticmethod
-    def is_complete_html_end_tag(tag_name, line_to_parse, next_char_index):
+    def is_complete_html_end_tag(
+        tag_name: str, line_to_parse: str, next_char_index: int
+    ) -> Tuple[bool, int]:
         """
         Determine if the supplied information is a completed end of tag specification.
         """
@@ -250,6 +261,7 @@ class HtmlHelper:
         non_whitespace_index, _ = ParserHelper.extract_whitespace(
             line_to_parse, next_char_index
         )
+        assert non_whitespace_index is not None
         is_valid = is_valid and (
             non_whitespace_index < len(line_to_parse)
             and line_to_parse[non_whitespace_index] == HtmlHelper.__html_tag_end
@@ -257,7 +269,7 @@ class HtmlHelper:
         return is_valid, non_whitespace_index + 1
 
     @staticmethod
-    def __is_valid_block_1_tag_name(tag_name):
+    def __is_valid_block_1_tag_name(tag_name: str) -> bool:
         """
         Determine if the tag name is a valid block-1 html tag name.
         """
@@ -265,7 +277,9 @@ class HtmlHelper:
         return tag_name in HtmlHelper.__html_block_1_start_tag_prefix
 
     @staticmethod
-    def is_complete_html_start_tag(tag_name, line_to_parse, next_char_index):
+    def is_complete_html_start_tag(
+        tag_name: str, line_to_parse: str, next_char_index: int
+    ) -> Tuple[bool, Optional[int]]:
         """
         Determine if the supplied information is a completed start of tag specification.
         """
@@ -277,8 +291,9 @@ class HtmlHelper:
         non_whitespace_index, extracted_whitespace = ParserHelper.extract_whitespace(
             line_to_parse, next_char_index
         )
-
-        are_attributes_valid, line_to_parse_size = True, len(line_to_parse)
+        assert non_whitespace_index is not None
+        are_attributes_valid: bool = True
+        line_to_parse_size: int = len(line_to_parse)
         while (
             is_tag_valid
             and extracted_whitespace
@@ -291,12 +306,14 @@ class HtmlHelper:
             non_whitespace_index = HtmlHelper.extract_html_attribute_name(
                 line_to_parse, non_whitespace_index
             )
+            assert non_whitespace_index is not None
             are_attributes_valid = non_whitespace_index != -1
             if not are_attributes_valid:
                 break
             non_whitespace_index = HtmlHelper.extract_optional_attribute_value(
                 line_to_parse, non_whitespace_index
             )
+            assert non_whitespace_index is not None
             are_attributes_valid = non_whitespace_index != -1
             if not are_attributes_valid:
                 break
@@ -304,6 +321,7 @@ class HtmlHelper:
                 non_whitespace_index,
                 extracted_whitespace,
             ) = ParserHelper.extract_whitespace(line_to_parse, non_whitespace_index)
+            assert non_whitespace_index is not None
 
         if non_whitespace_index < line_to_parse_size:
             if line_to_parse[non_whitespace_index] == HtmlHelper.__html_tag_start:
@@ -330,7 +348,7 @@ class HtmlHelper:
         )
 
     @staticmethod
-    def __parse_raw_tag_name(text_to_parse, start_index):
+    def __parse_raw_tag_name(text_to_parse: str, start_index: int) -> str:
         """
         Parse a HTML tag name from the string.
         """
@@ -344,16 +362,20 @@ class HtmlHelper:
         return ""
 
     @staticmethod
-    def __parse_tag_attributes(text_to_parse, start_index):
+    def __parse_tag_attributes(
+        text_to_parse: str, start_index: int
+    ) -> Tuple[Optional[int], Optional[str]]:
         """
         Handle the parsing of the attributes for an open tag.
         """
         parse_index, _ = ParserHelper.collect_while_one_of_characters(
             text_to_parse, start_index, HtmlHelper.__tag_attribute_name_characters
         )
+        assert parse_index is not None
         end_name_index, extracted_whitespace = ParserHelper.extract_any_whitespace(
             text_to_parse, parse_index
         )
+        assert end_name_index is not None
         if ParserHelper.is_character_at_index(
             text_to_parse,
             end_name_index,
@@ -363,6 +385,8 @@ class HtmlHelper:
                 value_start_index,
                 extracted_whitespace,
             ) = ParserHelper.extract_any_whitespace(text_to_parse, end_name_index + 1)
+            assert value_start_index is not None
+            value_end_index: Optional[int] = None
             if ParserHelper.is_character_at_index_one_of(
                 text_to_parse,
                 value_start_index,
@@ -373,12 +397,13 @@ class HtmlHelper:
                     value_start_index + 1,
                     HtmlHelper.__html_attribute_value_single,
                 )
+                assert value_end_index is not None
                 if not ParserHelper.is_character_at_index(
                     text_to_parse,
                     value_end_index,
                     HtmlHelper.__html_attribute_value_single,
                 ):
-                    return None, -1
+                    return None, None
                 value_end_index += 1
             elif ParserHelper.is_character_at_index_one_of(
                 text_to_parse,
@@ -390,12 +415,13 @@ class HtmlHelper:
                     value_start_index + 1,
                     HtmlHelper.__html_attribute_value_double,
                 )
+                assert value_end_index is not None
                 if not ParserHelper.is_character_at_index(
                     text_to_parse,
                     value_end_index,
                     HtmlHelper.__html_attribute_value_double,
                 ):
-                    return None, -1
+                    return None, None
                 value_end_index += 1
             else:
                 value_end_index, _ = ParserHelper.collect_until_one_of_characters(
@@ -403,6 +429,7 @@ class HtmlHelper:
                     value_start_index,
                     HtmlHelper.__unquoted_attribute_value_stop,
                 )
+            assert value_end_index is not None
             end_name_index, extracted_whitespace = ParserHelper.extract_any_whitespace(
                 text_to_parse, value_end_index
             )
@@ -410,7 +437,7 @@ class HtmlHelper:
         return end_name_index, extracted_whitespace
 
     @staticmethod
-    def __parse_raw_open_tag(text_to_parse):
+    def __parse_raw_open_tag(text_to_parse: str) -> Tuple[Optional[str], int]:
         """
         Parse the current line as if it is an open tag, and determine if it is valid.
         """
@@ -424,6 +451,7 @@ class HtmlHelper:
             parse_index, extracted_whitespace = ParserHelper.extract_any_whitespace(
                 text_to_parse, len(tag_name)
             )
+            assert parse_index is not None
             while extracted_whitespace and ParserHelper.is_character_at_index_one_of(
                 text_to_parse,
                 parse_index,
@@ -434,7 +462,7 @@ class HtmlHelper:
                     extracted_whitespace,
                 ) = HtmlHelper.__parse_tag_attributes(text_to_parse, parse_index)
                 if parse_index is None:
-                    return parse_index, extracted_whitespace
+                    return None, -1
 
             if ParserHelper.is_character_at_index(
                 text_to_parse, parse_index, HtmlHelper.__html_tag_start
@@ -450,7 +478,7 @@ class HtmlHelper:
         return valid_raw_html, end_parse_index
 
     @staticmethod
-    def __parse_raw_close_tag(text_to_parse):
+    def __parse_raw_close_tag(text_to_parse: str) -> Optional[str]:
         """
         Parse the current line as if it is a close tag, and determine if it is valid.
         """
@@ -459,7 +487,9 @@ class HtmlHelper:
             text_to_parse, 0, HtmlHelper.__html_tag_start
         ):
             if tag_name := HtmlHelper.__parse_raw_tag_name(text_to_parse, 1):
-                parse_index, text_to_parse_size = len(tag_name), len(text_to_parse)
+                parse_index: Optional[int] = len(tag_name)
+                assert parse_index is not None
+                text_to_parse_size = len(text_to_parse)
                 if parse_index != text_to_parse_size:
                     parse_index, _ = ParserHelper.extract_whitespace(
                         text_to_parse, parse_index
@@ -469,7 +499,7 @@ class HtmlHelper:
         return valid_raw_html
 
     @staticmethod
-    def __parse_raw_declaration(text_to_parse):
+    def __parse_raw_declaration(text_to_parse: str) -> Optional[str]:
         """
         Parse a possible raw html declaration sequence, and return if it is valid.
         """
@@ -484,6 +514,7 @@ class HtmlHelper:
             ) = ParserHelper.collect_while_one_of_characters(
                 text_to_parse, 1, HtmlHelper.__html_block_4_continued_start
             )
+            assert parse_index is not None
             if declaration_name:
                 whitespace_count, _ = ParserHelper.collect_while_character(
                     text_to_parse, parse_index, HtmlHelper.__raw_declaration_whitespace
@@ -494,16 +525,18 @@ class HtmlHelper:
 
     @staticmethod
     def __process_raw_special(
-        remaining_line,
-        special_start,
-        special_end,
-        do_extra_check=False,
-    ):
+        remaining_line: str,
+        special_start: str,
+        special_end: str,
+        do_extra_check: bool = False,
+    ) -> Tuple[Optional[str], int]:
         """
         Parse a possible raw html special sequence, and return if it is valid.
         """
-        valid_raw_html, parse_index, special_start_size = None, -1, len(special_start)
+        valid_raw_html: Optional[str] = None
+        parse_index = -1
         if remaining_line.startswith(special_start):
+            special_start_size = len(special_start)
             remaining_line = remaining_line[special_start_size:]
             parse_index = remaining_line.find(special_end)
             if parse_index != -1:
@@ -589,7 +622,9 @@ class HtmlHelper:
         )
 
     @staticmethod
-    def __check_for_special_html_blocks(line_to_parse, character_index):
+    def __check_for_special_html_blocks(
+        line_to_parse: str, character_index: int
+    ) -> Optional[str]:
         """
         Check for the easy to spot special blocks: 2-5.
         """
@@ -629,14 +664,14 @@ class HtmlHelper:
 
     @staticmethod
     def __check_for_normal_html_blocks_adjust_tag(
-        remaining_html_tag, line_to_parse, character_index
-    ):
+        remaining_html_tag: str, line_to_parse: str, character_index: int
+    ) -> Tuple[str, int, bool]:
 
         adjusted_remaining_html_tag, line_to_parse_size = remaining_html_tag, len(
             line_to_parse
         )
         is_end_tag = (
-            adjusted_remaining_html_tag
+            bool(adjusted_remaining_html_tag)
             and adjusted_remaining_html_tag[0] == HtmlHelper.__html_tag_start
         )
         if is_end_tag:
@@ -654,8 +689,8 @@ class HtmlHelper:
 
     @staticmethod
     def __check_for_normal_html_blocks(
-        remaining_html_tag, line_to_parse, character_index
-    ):
+        remaining_html_tag: str, line_to_parse: str, character_index: int
+    ) -> Optional[str]:
         """
         Check for the the html blocks that are harder to identify: 1, 6-7.
         """
@@ -673,6 +708,7 @@ class HtmlHelper:
                 remaining_html_tag, line_to_parse, character_index
             )
 
+            complete_parse_index: Optional[int] = 0
             if adjusted_remaining_html_tag in HtmlHelper.__html_block_6_start:
                 html_block_type = HtmlHelper.html_block_6
             elif is_end_tag:
@@ -692,6 +728,7 @@ class HtmlHelper:
                     adjusted_remaining_html_tag, line_to_parse, character_index
                 )
                 if is_complete:
+                    assert complete_parse_index is not None
                     html_block_type, character_index = (
                         HtmlHelper.html_block_7,
                         complete_parse_index,
@@ -795,6 +832,7 @@ class HtmlHelper:
                 parser_state,
                 only_these_blocks=[ParagraphStackToken],
             )
+            assert extracted_whitespace is not None
             new_token = HtmlBlockMarkdownToken(position_marker, extracted_whitespace)
             new_tokens.append(new_token)
             parser_state.token_stack.append(

@@ -2,6 +2,7 @@
 Module to implement a plugin that looks for hard tabs in the files.
 """
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
@@ -10,11 +11,11 @@ class RuleMd010(RulePlugin):
     Class to implement a plugin that looks for hard tabs in the files.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.__allow_in_code_blocks = None
 
-    def get_details(self):
+    def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
@@ -29,7 +30,7 @@ class RuleMd010(RulePlugin):
             plugin_configuration="code_blocks",
         )
 
-    def initialize_from_config(self):
+    def initialize_from_config(self) -> None:
         """
         Event to allow the plugin to load configuration information.
         """
@@ -38,7 +39,7 @@ class RuleMd010(RulePlugin):
             default_value=True,
         )
 
-    def next_line(self, context, line):
+    def next_line(self, context: PluginScanContext, line: str) -> None:
         """
         Event that a new line is being processed.
         """

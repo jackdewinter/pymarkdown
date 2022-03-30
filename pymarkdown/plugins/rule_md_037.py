@@ -1,7 +1,12 @@
 """
 Module to implement a plugin that looks for spaces within emphasis sections.
 """
+from typing import List, Optional, cast
+
+from pymarkdown.inline_markdown_token import TextMarkdownToken
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
@@ -10,13 +15,13 @@ class RuleMd037(RulePlugin):
     Class to implement a plugin that looks for spaces within emphasis sections.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        self.__block_stack = None
-        self.__start_emphasis_token = None
-        self.__emphasis_token_list = []
+        self.__block_stack: List[MarkdownToken] = []
+        self.__start_emphasis_token: Optional[TextMarkdownToken] = None
+        self.__emphasis_token_list: List[MarkdownToken] = []
 
-    def get_details(self):
+    def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
@@ -30,7 +35,7 @@ class RuleMd037(RulePlugin):
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md037.md",
         )
 
-    def starting_new_file(self):
+    def starting_new_file(self) -> None:
         """
         Event that the a new file to be scanned is starting.
         """
@@ -38,7 +43,9 @@ class RuleMd037(RulePlugin):
         self.__start_emphasis_token = None
         self.__emphasis_token_list = []
 
-    def __handle_start_emphasis(self, context, token):
+    def __handle_start_emphasis(
+        self, context: PluginScanContext, token: MarkdownToken
+    ) -> None:
         if (
             token.is_paragraph_end
             or token.is_setext_heading_end
@@ -47,27 +54,34 @@ class RuleMd037(RulePlugin):
             del self.__block_stack[-1]
             self.__start_emphasis_token = None
             self.__emphasis_token_list = []
-        elif (
-            token.is_text and token.token_text == self.__start_emphasis_token.token_text
-        ):
-            assert self.__emphasis_token_list
-            first_capture_token = self.__emphasis_token_list[0]
-            did_first_start_with_space = (
-                first_capture_token.is_text and first_capture_token.token_text[0] == " "
-            )
-            last_capture_token = self.__emphasis_token_list[-1]
-            did_last_end_with_space = (
-                last_capture_token.is_text and last_capture_token.token_text[-1] == " "
-            )
-            if did_first_start_with_space or did_last_end_with_space:
-                self.report_next_token_error(context, self.__start_emphasis_token)
+        elif token.is_text and self.__start_emphasis_token is not None:
+            text_token = cast(TextMarkdownToken, token)
+            if text_token.token_text == self.__start_emphasis_token.token_text:
+                assert self.__emphasis_token_list
+                first_capture_token = self.__emphasis_token_list[0]
+                if first_capture_token.is_text:
+                    other_text_token = cast(TextMarkdownToken, first_capture_token)
+                    did_first_start_with_space = other_text_token.token_text[0] == " "
+                else:
+                    did_first_start_with_space = False
+                last_capture_token = self.__emphasis_token_list[-1]
+                if last_capture_token.is_text:
+                    another_text_token = cast(TextMarkdownToken, last_capture_token)
+                    did_last_end_with_space = another_text_token.token_text[-1] == " "
+                else:
+                    did_last_end_with_space = False
+                if did_first_start_with_space or did_last_end_with_space:
+                    assert self.__start_emphasis_token is not None
+                    self.report_next_token_error(context, self.__start_emphasis_token)
 
-            self.__start_emphasis_token = None
-            self.__emphasis_token_list = []
+                self.__start_emphasis_token = None
+                self.__emphasis_token_list = []
+            else:
+                self.__emphasis_token_list.append(token)
         else:
             self.__emphasis_token_list.append(token)
 
-    def next_token(self, context, token):
+    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """
@@ -86,5 +100,6 @@ class RuleMd037(RulePlugin):
                 or self.__block_stack[-1].is_atx_heading
             )
         ):
-            if token.token_text in ("*", "**", "_", "__"):
-                self.__start_emphasis_token = token
+            text_token = cast(TextMarkdownToken, token)
+            if text_token.token_text in ("*", "**", "_", "__"):
+                self.__start_emphasis_token = text_token
