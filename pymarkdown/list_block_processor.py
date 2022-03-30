@@ -869,8 +869,8 @@ class ListBlockProcessor:
 
     # pylint: enable=too-many-locals, too-many-arguments
 
-    @staticmethod
     # pylint: disable=too-many-arguments
+    @staticmethod
     def __handle_list_block_unordered(
         position_marker: PositionMarker,
         indent_level: int,
@@ -904,8 +904,8 @@ class ListBlockProcessor:
 
     # pylint: enable=too-many-arguments
 
-    @staticmethod
     # pylint: disable=too-many-arguments
+    @staticmethod
     def __handle_list_block_ordered(
         position_marker: PositionMarker,
         indent_level: int,
