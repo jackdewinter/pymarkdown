@@ -81,38 +81,38 @@ class Constants:
     # This is requires as PyLint does not recognize the ClassProperty annotation
     # as forcing the class property.
     @ClassProperty
-    def punctuation_characters(cls) -> ConstantWrapper:
+    def punctuation_characters(self) -> ConstantWrapper:
         """
         Standard punctuation characters.
         """
-        return cls.__punctuation_characters
+        return self.__punctuation_characters
 
     @ClassProperty
-    def unicode_whitespace(cls) -> ConstantWrapper:
+    def unicode_whitespace(self) -> ConstantWrapper:
         """
         Unicode whitespace characters.
         """
-        return cls.__unicode_whitespace
+        return self.__unicode_whitespace
 
     @ClassProperty
-    def ascii_control_characters(cls) -> str:
+    def ascii_control_characters(self) -> str:
         """
         Standard ASCII control characters, below 0x00-0x1f and 0x7f.
         """
-        return cls.__ascii_control_characters
+        return self.__ascii_control_characters
 
     @ClassProperty
-    def non_space_whitespace(cls) -> str:
+    def non_space_whitespace(self) -> str:
         """
         Standard ASCII whitespace characters minus the space character.
         """
-        return cls.__non_space_whitespace
+        return self.__non_space_whitespace
 
     @ClassProperty
-    def whitespace(cls) -> str:
+    def whitespace(self) -> str:
         """
         Standard ASCII whitespace characters.
         """
-        return cls.__whitespace
+        return self.__whitespace
 
     # pylint: enable=no-self-argument

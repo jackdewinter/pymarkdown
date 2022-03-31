@@ -228,28 +228,28 @@ class MarkdownToken:
         """
         Returns whether the current token is the pragma element.
         """
-        return bool(self.token_name == MarkdownToken._token_pragma)
+        return self.token_name == MarkdownToken._token_pragma
 
     @property
     def is_blank_line(self) -> bool:
         """
         Returns whether the current token is the blank line element.
         """
-        return bool(self.token_name == MarkdownToken._token_blank_line)
+        return self.token_name == MarkdownToken._token_blank_line
 
     @property
     def is_block_quote_start(self) -> bool:
         """
         Returns whether the current token is a block quote.
         """
-        return bool(self.token_name == MarkdownToken._token_block_quote)
+        return self.token_name == MarkdownToken._token_block_quote
 
     @property
     def is_block_quote_end(self) -> bool:
         """
         Returns whether the current token is a block quote.
         """
-        return bool(
+        return (
             self.token_name
             == MarkdownToken._end_token_prefix + MarkdownToken._token_block_quote
         )
@@ -273,14 +273,14 @@ class MarkdownToken:
         """
         Returns whether the current token is an unordered list element.
         """
-        return bool(self.token_name == MarkdownToken._token_unordered_list_start)
+        return self.token_name == MarkdownToken._token_unordered_list_start
 
     @property
     def is_ordered_list_start(self) -> bool:
         """
         Returns whether the current token is an ordered list element.
         """
-        return bool(self.token_name == MarkdownToken._token_ordered_list_start)
+        return self.token_name == MarkdownToken._token_ordered_list_start
 
     @property
     def is_unordered_list_end(self) -> bool:
@@ -298,9 +298,10 @@ class MarkdownToken:
         """
         Returns whether the current token is an ordered list end element.
         """
-        return bool(
+        return (
             self.token_name
-            == MarkdownToken._end_token_prefix + MarkdownToken._token_ordered_list_start
+            == MarkdownToken._end_token_prefix
+            + MarkdownToken._token_ordered_list_start
         )
 
     @property
@@ -332,7 +333,7 @@ class MarkdownToken:
         """
         Returns whether the current token is a list item element.
         """
-        return bool(self.token_name == MarkdownToken._token_new_list_item)
+        return self.token_name == MarkdownToken._token_new_list_item
 
     @property
     def is_any_list_token(self) -> bool:
@@ -346,14 +347,14 @@ class MarkdownToken:
         """
         Returns whether the current token is a paragraph element.
         """
-        return bool(self.token_name == MarkdownToken._token_paragraph)
+        return self.token_name == MarkdownToken._token_paragraph
 
     @property
     def is_paragraph_end(self) -> bool:
         """
         Returns whether the current token is a paragraph end element.
         """
-        return bool(
+        return (
             self.token_name
             == MarkdownToken._end_token_prefix + MarkdownToken._token_paragraph
         )
@@ -363,21 +364,21 @@ class MarkdownToken:
         """
         Returns whether the current token is a thematic break element.
         """
-        return bool(self.token_name == MarkdownToken._token_thematic_break)
+        return self.token_name == MarkdownToken._token_thematic_break
 
     @property
     def is_front_matter(self) -> bool:
         """
         Returns whether the current token is the front matter element.
         """
-        return bool(self.token_name == MarkdownToken._token_front_matter)
+        return self.token_name == MarkdownToken._token_front_matter
 
     @property
     def is_text(self) -> bool:
         """
         Returns whether the current token is a text element.
         """
-        return bool(self.token_name == MarkdownToken._token_text)
+        return self.token_name == MarkdownToken._token_text
 
     @property
     def is_special_text(self) -> bool:
@@ -391,16 +392,17 @@ class MarkdownToken:
         """
         Returns whether the current token is a setext heading element.
         """
-        return bool(self.token_name == MarkdownToken._token_setext_heading)
+        return self.token_name == MarkdownToken._token_setext_heading
 
     @property
     def is_setext_heading_end(self) -> bool:
         """
         Returns whether the current token is a setext heading end element.
         """
-        return bool(
+        return (
             self.token_name
-            == MarkdownToken._end_token_prefix + MarkdownToken._token_setext_heading
+            == MarkdownToken._end_token_prefix
+            + MarkdownToken._token_setext_heading
         )
 
     @property
@@ -408,14 +410,14 @@ class MarkdownToken:
         """
         Returns whether the current token is an atx element.
         """
-        return bool(self.token_name == MarkdownToken._token_atx_heading)
+        return self.token_name == MarkdownToken._token_atx_heading
 
     @property
     def is_atx_heading_end(self) -> bool:
         """
         Returns whether the current token is an atx heading end element.
         """
-        return bool(
+        return (
             self.token_name
             == MarkdownToken._end_token_prefix + MarkdownToken._token_atx_heading
         )
@@ -439,7 +441,7 @@ class MarkdownToken:
         """
         Returns whether the current token is an indented code block element.
         """
-        return bool(self.token_name == MarkdownToken._token_indented_code_block)
+        return self.token_name == MarkdownToken._token_indented_code_block
 
     @property
     def is_indented_code_block_end(self) -> bool:
@@ -457,16 +459,17 @@ class MarkdownToken:
         """
         Returns whether the current token is a fenced code block element.
         """
-        return bool(self.token_name == MarkdownToken._token_fenced_code_block)
+        return self.token_name == MarkdownToken._token_fenced_code_block
 
     @property
     def is_fenced_code_block_end(self) -> bool:
         """
         Returns whether the current token is a fenced code block element.
         """
-        return bool(
+        return (
             self.token_name
-            == MarkdownToken._end_token_prefix + MarkdownToken._token_fenced_code_block
+            == MarkdownToken._end_token_prefix
+            + MarkdownToken._token_fenced_code_block
         )
 
     @property
@@ -474,21 +477,21 @@ class MarkdownToken:
         """
         Returns whether the current token is a link reference definition element.
         """
-        return bool(self.token_name == MarkdownToken._token_link_reference_definition)
+        return self.token_name == MarkdownToken._token_link_reference_definition
 
     @property
     def is_html_block(self) -> bool:
         """
         Returns whether the current token is a html block element.
         """
-        return bool(self.token_name == MarkdownToken._token_html_block)
+        return self.token_name == MarkdownToken._token_html_block
 
     @property
     def is_html_block_end(self) -> bool:
         """
         Returns whether the current token is a html block element.
         """
-        return bool(
+        return (
             self.token_name
             == MarkdownToken._end_token_prefix + MarkdownToken._token_html_block
         )
@@ -498,14 +501,14 @@ class MarkdownToken:
         """
         Returns whether the current token is a code span element.
         """
-        return bool(self.token_name == MarkdownToken._token_inline_code_span)
+        return self.token_name == MarkdownToken._token_inline_code_span
 
     @property
     def is_inline_hard_break(self) -> bool:
         """
         Returns whether the current token is a hard break element.
         """
-        return bool(self.token_name == MarkdownToken._token_inline_hard_break)
+        return self.token_name == MarkdownToken._token_inline_hard_break
 
     @property
     def is_inline_autolink(self) -> bool:
@@ -519,37 +522,38 @@ class MarkdownToken:
         """
         Returns whether the current token is an uri autolink element.
         """
-        return bool(self.token_name == MarkdownToken._token_inline_uri_autolink)
+        return self.token_name == MarkdownToken._token_inline_uri_autolink
 
     @property
     def is_inline_email_autolink(self) -> bool:
         """
         Returns whether the current token is an email autolink element.
         """
-        return bool(self.token_name == MarkdownToken._token_inline_email_autolink)
+        return self.token_name == MarkdownToken._token_inline_email_autolink
 
     @property
     def is_inline_raw_html(self) -> bool:
         """
         Returns whether the current token is an email autolink element.
         """
-        return bool(self.token_name == MarkdownToken._token_inline_raw_html)
+        return self.token_name == MarkdownToken._token_inline_raw_html
 
     @property
     def is_inline_emphasis(self) -> bool:
         """
         Returns whether the current token is an emphasis element.
         """
-        return bool(self.token_name == MarkdownToken._token_inline_emphasis)
+        return self.token_name == MarkdownToken._token_inline_emphasis
 
     @property
     def is_inline_emphasis_end(self) -> bool:
         """
         Returns whether the current token is an emphasis end element.
         """
-        return bool(
+        return (
             self.token_name
-            == MarkdownToken._end_token_prefix + MarkdownToken._token_inline_emphasis
+            == MarkdownToken._end_token_prefix
+            + MarkdownToken._token_inline_emphasis
         )
 
     @property
@@ -557,14 +561,14 @@ class MarkdownToken:
         """
         Returns whether the current token is a link element.
         """
-        return bool(self.token_name == MarkdownToken._token_inline_link)
+        return self.token_name == MarkdownToken._token_inline_link
 
     @property
     def is_inline_link_end(self) -> bool:
         """
         Returns whether the current token is a link end element.
         """
-        return bool(
+        return (
             self.token_name
             == MarkdownToken._end_token_prefix + MarkdownToken._token_inline_link
         )
@@ -574,7 +578,7 @@ class MarkdownToken:
         """
         Returns whether the current token is an image element.
         """
-        return bool(self.token_name == MarkdownToken._token_inline_image)
+        return self.token_name == MarkdownToken._token_inline_image
 
     def generate_close_markdown_token_from_markdown_token(
         self,

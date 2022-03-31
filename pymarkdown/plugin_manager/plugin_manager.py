@@ -592,9 +592,7 @@ class PluginManager:
             if next_name := next_name.strip():
                 plugin_names.append(next_name)
 
-        plugin_identifiers = [plugin_id]
-        plugin_identifiers.extend(plugin_names)
-
+        plugin_identifiers = [plugin_id, *plugin_names]
         plugin_object = FoundPlugin(
             plugin_id,
             plugin_names,

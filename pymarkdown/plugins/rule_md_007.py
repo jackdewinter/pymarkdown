@@ -192,11 +192,12 @@ class RuleMd007(RulePlugin):
         list_depth = 0
         if self.__container_token_stack:
             stack_index = len(self.__container_token_stack) - 1
-            while stack_index >= 0:
-                if not self.__container_token_stack[
+            while (
+                stack_index >= 0
+                and self.__container_token_stack[
                     stack_index
-                ].is_unordered_list_start:
-                    break
+                ].is_unordered_list_start
+            ):
                 list_depth += 1
                 stack_index -= 1
             # print(f"stack_index={stack_index}")
