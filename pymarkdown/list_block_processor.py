@@ -2049,7 +2049,7 @@ class ListBlockProcessor:
 
     # pylint: enable=too-many-arguments, too-many-locals
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __are_list_starts_equal(
         parser_state: ParserState,
@@ -2147,7 +2147,7 @@ class ListBlockProcessor:
 
         return are_equal, False, balancing_tokens
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
 
     @staticmethod
     def __are_list_starts_equal_cleanup(

@@ -41,7 +41,7 @@ class MarkdownTablesExtension(ParserExtension):
 
     @classmethod
     def apply_configuration(
-        self, extension_specific_facade: ApplicationPropertiesFacade
+        cls, extension_specific_facade: ApplicationPropertiesFacade
     ) -> None:
         """
         Apply any configuration required by the extension.

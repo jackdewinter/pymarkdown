@@ -3,7 +3,7 @@ Module to provide a tokenization of a markdown-encoded string.
 """
 import logging
 import os
-from typing import Any, Dict, List, Optional, Tuple, cast
+from typing import Any, List, Optional, Tuple, cast
 
 from application_properties import ApplicationProperties
 
@@ -694,6 +694,7 @@ class TokenizedMarkdown:
             extracted_whitespace,
         )
 
+    # pylint: disable=too-many-locals
     @staticmethod
     def __handle_blank_line(
         parser_state: ParserState,
@@ -759,6 +760,8 @@ class TokenizedMarkdown:
         POGGER.debug("hbl>>new_tokens>>$", new_tokens)
 
         return new_tokens, requeue_line_info
+
+    # pylint: enable=too-many-locals
 
     @staticmethod
     def __handle_blank_line_token_stack(

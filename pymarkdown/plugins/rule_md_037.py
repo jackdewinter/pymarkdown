@@ -59,17 +59,13 @@ class RuleMd037(RulePlugin):
             if text_token.token_text == self.__start_emphasis_token.token_text:
                 assert self.__emphasis_token_list
                 first_capture_token = self.__emphasis_token_list[0]
-                if first_capture_token.is_text:
-                    other_text_token = cast(TextMarkdownToken, first_capture_token)
-                    did_first_start_with_space = other_text_token.token_text[0] == " "
-                else:
-                    did_first_start_with_space = False
+                assert first_capture_token.is_text
+                other_text_token = cast(TextMarkdownToken, first_capture_token)
+                did_first_start_with_space = other_text_token.token_text[0] == " "
                 last_capture_token = self.__emphasis_token_list[-1]
-                if last_capture_token.is_text:
-                    another_text_token = cast(TextMarkdownToken, last_capture_token)
-                    did_last_end_with_space = another_text_token.token_text[-1] == " "
-                else:
-                    did_last_end_with_space = False
+                assert last_capture_token.is_text
+                another_text_token = cast(TextMarkdownToken, last_capture_token)
+                did_last_end_with_space = another_text_token.token_text[-1] == " "
                 if did_first_start_with_space or did_last_end_with_space:
                     assert self.__start_emphasis_token is not None
                     self.report_next_token_error(context, self.__start_emphasis_token)

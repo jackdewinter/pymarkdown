@@ -16,7 +16,7 @@ class MarkdownTaskListItemsExtension(ParserExtension):
     """
 
     @classmethod
-    def get_identifier(self) -> str:
+    def get_identifier(cls) -> str:
         """
         Get the identifier associated with this extension.
         """
@@ -40,7 +40,7 @@ class MarkdownTaskListItemsExtension(ParserExtension):
 
     @classmethod
     def apply_configuration(
-        self, extension_specific_facade: ApplicationPropertiesFacade
+        cls, extension_specific_facade: ApplicationPropertiesFacade
     ) -> None:
         """
         Apply any configuration required by the extension.

@@ -3,7 +3,7 @@ Constants
 """
 
 
-from typing import Any, Callable, Optional, Union, cast
+from typing import Any, Callable, Union, cast
 
 
 class ClassProperty(property):

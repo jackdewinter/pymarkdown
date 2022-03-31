@@ -517,6 +517,7 @@ class ContainerBlockProcessor:
         POGGER.debug("extracted_whitespace=:$:", extracted_whitespace)
         return container_used_indent, extracted_whitespace
 
+    # pylint: disable=too-many-boolean-expressions
     @staticmethod
     def __special_list_block_block(
         parser_state: ParserState,
@@ -582,6 +583,8 @@ class ContainerBlockProcessor:
             force_leaf_token_parse,
             used_indent,
         )
+
+    # pylint: enable=too-many-boolean-expressions
 
     @staticmethod
     def __determine_leading_whitespace_preprocessing(
