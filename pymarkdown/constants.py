@@ -3,14 +3,18 @@ Constants
 """
 
 
+from typing import Any, Callable, Optional, Union, cast
+
+
 class ClassProperty(property):
     """
     Decorator class to allow for a classmethod to expose a "class property".
     """
 
-    def __get__(self, cls, owner):
-        _ = cls
-        return classmethod(self.fget).__get__(None, owner)()
+    def __get__(self, __obj: Any, owner: Union[type, None] = ...) -> Any:  # type: ignore
+        _ = __obj
+        fget_x = cast(Callable[..., Any], self.fget)
+        return classmethod(fget_x).__get__(None, owner)()
 
 
 class ConstantWrapper:
@@ -19,16 +23,16 @@ class ConstantWrapper:
     read-only access to the value.
     """
 
-    def __init__(self, value_to_wrap):
+    def __init__(self, value_to_wrap: Any) -> None:
         self.__wrapped_value = value_to_wrap
 
-    def value(self):
+    def value(self) -> Any:
         """
         Raw value that is wrapped.
         """
         return self.__wrapped_value
 
-    def contains(self, value):
+    def contains(self, value: Any) -> bool:
         """
         Whether the specified value is contained within the wrapped value.
         """
@@ -77,35 +81,35 @@ class Constants:
     # This is requires as PyLint does not recognize the ClassProperty annotation
     # as forcing the class property.
     @ClassProperty
-    def punctuation_characters(cls):
+    def punctuation_characters(cls) -> ConstantWrapper:
         """
         Standard punctuation characters.
         """
         return cls.__punctuation_characters
 
     @ClassProperty
-    def unicode_whitespace(cls):
+    def unicode_whitespace(cls) -> ConstantWrapper:
         """
         Unicode whitespace characters.
         """
         return cls.__unicode_whitespace
 
     @ClassProperty
-    def ascii_control_characters(cls):
+    def ascii_control_characters(cls) -> str:
         """
         Standard ASCII control characters, below 0x00-0x1f and 0x7f.
         """
         return cls.__ascii_control_characters
 
     @ClassProperty
-    def non_space_whitespace(cls):
+    def non_space_whitespace(cls) -> str:
         """
         Standard ASCII whitespace characters minus the space character.
         """
         return cls.__non_space_whitespace
 
     @ClassProperty
-    def whitespace(cls):
+    def whitespace(cls) -> str:
         """
         Standard ASCII whitespace characters.
         """

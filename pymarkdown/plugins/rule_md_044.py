@@ -228,6 +228,9 @@ class RuleMd044(RulePlugin):
         end_token = cast(EndMarkdownToken, token)
         link_token = cast(LinkStartMarkdownToken, end_token.start_markdown_token)
         if link_token.label_type == Constants.link_type__inline:
+            assert link_token.before_title_whitespace is not None
+            assert link_token.inline_title_bounding_character is not None
+            assert link_token.before_link_whitespace is not None
             link_body = "".join(
                 [
                     link_token.before_link_whitespace,
@@ -245,6 +248,7 @@ class RuleMd044(RulePlugin):
                 ]
             )
             same_line_offset = len(full_link_text) + 1
+            assert link_token.active_link_title is not None
             self.__adjust_for_newlines_and_search(
                 context,
                 link_token,
@@ -264,6 +268,9 @@ class RuleMd044(RulePlugin):
         )
 
         if link_token.label_type == Constants.link_type__inline:
+            assert link_token.before_link_whitespace is not None
+            assert link_token.before_title_whitespace is not None
+            assert link_token.inline_title_bounding_character is not None
             link_body = "".join(
                 [
                     link_token.before_link_whitespace,
@@ -274,6 +281,7 @@ class RuleMd044(RulePlugin):
             )
             full_link_text = f"![{link_token.text_from_blocks}]({link_body}"
             same_line_offset = len(full_link_text) + 1
+            assert link_token.active_link_title is not None
             self.__adjust_for_newlines_and_search(
                 context,
                 token,
@@ -291,6 +299,9 @@ class RuleMd044(RulePlugin):
         same_line_offset = -1
         self.__search_for_matches(link_name, context, token, same_line_offset)
 
+        assert lrd_token.link_destination_whitespace is not None
+        assert lrd_token.link_destination is not None
+        assert lrd_token.link_title_whitespace is not None
         full_link_text = "".join(
             [
                 "[",
@@ -303,6 +314,7 @@ class RuleMd044(RulePlugin):
             ]
         )
         same_line_offset = -(len(full_link_text) - 1)
+        assert lrd_token.link_title_raw is not None
         self.__adjust_for_newlines_and_search(
             context,
             token,

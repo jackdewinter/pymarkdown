@@ -27,7 +27,7 @@ class PluginScanFailure:
     #         and self.rule_id == other.rule_id
     #     )
 
-    def __lt__(self, other):
+    def __lt__(self, other: "PluginScanFailure") -> bool:
         # if self.scan_file != other.scan_file:
         #     return self.scan_file < other.scan_file
         if self.line_number != other.line_number:

@@ -3,7 +3,7 @@ Link reference definition helper
 """
 import logging
 from dataclasses import dataclass
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, cast
 
 from pymarkdown.inline_helper import InlineHelper
 from pymarkdown.leaf_markdown_token import LinkReferenceDefinitionMarkdownToken
@@ -62,7 +62,9 @@ class LinkReferenceDefinitionHelper:
         is_blank_line: Optional[bool] = not line_to_parse and not start_index
         was_started = parser_state.token_stack[-1].was_link_definition_started
         if was_started:
-            lrd_stack_token = parser_state.token_stack[-1]
+            lrd_stack_token = cast(
+                LinkDefinitionStackToken, parser_state.token_stack[-1]
+            )
             assert lrd_stack_token is not None
             assert lrd_stack_token.original_stack_depth is not None
             assert lrd_stack_token.original_document_depth is not None
@@ -320,6 +322,7 @@ class LinkReferenceDefinitionHelper:
             lrd_stack_token.copy_of_last_block_quote_markdown_token,
         )
         if lrd_stack_token.copy_of_last_block_quote_markdown_token:
+            assert lrd_stack_token.last_block_quote_markdown_token_index is not None
             POGGER.debug(
                 ">>XXXXXX>>last_block_quote_markdown_token_index:$:",
                 lrd_stack_token.last_block_quote_markdown_token_index,
@@ -362,6 +365,7 @@ class LinkReferenceDefinitionHelper:
             else:
                 while len(parser_state.token_stack):
                     del parser_state.token_stack[-1]
+                assert lrd_stack_token.copy_of_token_stack is not None
                 parser_state.token_stack.extend(lrd_stack_token.copy_of_token_stack)
             POGGER.debug(">>XXXXXX>>token_stack(after):$:", parser_state.token_stack)
 
@@ -572,32 +576,25 @@ class LinkReferenceDefinitionHelper:
         line_to_store = remaining_line_to_parse
         if not was_started:
             POGGER.debug(">>parse_link_reference_definition>>marking start")
-            parser_state.token_stack.append(
-                LinkDefinitionStackToken(extracted_whitespace, position_marker)
+            new_token = LinkDefinitionStackToken(extracted_whitespace, position_marker)
+            parser_state.token_stack.append(new_token)
+            new_token.original_stack_depth = original_stack_depth
+            new_token.original_document_depth = original_document_depth
+            new_token.last_block_quote_stack_token = (
+                parser_state.last_block_quote_stack_token
             )
-            parser_state.token_stack[-1].original_stack_depth = original_stack_depth
-            parser_state.token_stack[
-                -1
-            ].original_document_depth = original_document_depth
-            parser_state.token_stack[
-                -1
-            ].last_block_quote_stack_token = parser_state.last_block_quote_stack_token
-            parser_state.token_stack[
-                -1
-            ].last_block_quote_markdown_token_index = (
+            new_token.last_block_quote_markdown_token_index = (
                 parser_state.last_block_quote_markdown_token_index
             )
-            parser_state.token_stack[
-                -1
-            ].copy_of_last_block_quote_markdown_token = (
+            new_token.copy_of_last_block_quote_markdown_token = (
                 parser_state.copy_of_last_block_quote_markdown_token
             )
-            parser_state.token_stack[
-                -1
-            ].copy_of_token_stack = parser_state.copy_of_token_stack
+            new_token.copy_of_token_stack = parser_state.copy_of_token_stack
+        else:
+            new_token = cast(LinkDefinitionStackToken, parser_state.token_stack[-1])
         POGGER.debug(">>parse_link_reference_definition>>add>:$<<", line_to_store)
-        parser_state.token_stack[-1].add_continuation_line(line_to_store)
-        parser_state.token_stack[-1].add_unmodified_line(unmodified_line_to_parse)
+        new_token.add_continuation_line(line_to_store)
+        new_token.add_unmodified_line(unmodified_line_to_parse)
 
     # pylint: enable=too-many-arguments
 
@@ -624,14 +621,18 @@ class LinkReferenceDefinitionHelper:
                 parsed_lrd_tuple.normalized_destination, parsed_lrd_tuple.link_titles
             )
             assert not (end_lrd_index < -1 and remaining_line_to_parse)
+            link_def_token = cast(
+                LinkDefinitionStackToken, parser_state.token_stack[-1]
+            )
+            assert link_def_token.extracted_whitespace is not None
             new_tokens: List[MarkdownToken] = [
                 LinkReferenceDefinitionMarkdownToken(
                     did_add_definition,
-                    parser_state.token_stack[-1].extracted_whitespace,
+                    link_def_token.extracted_whitespace,
                     parsed_lrd_tuple.normalized_destination,
                     parsed_lrd_tuple.link_titles,
                     parsed_lrd_tuple.link_info,
-                    position_marker=parser_state.token_stack[-1].start_position_marker,
+                    position_marker=link_def_token.start_position_marker,
                 )
             ]
             force_ignore_first_as_lrd = len(lines_to_requeue) > 1
@@ -669,36 +670,39 @@ class LinkReferenceDefinitionHelper:
             end_lrd_index,
             parsed_lrd_tuple,
         ) = (None, None, None, None, None)
-        parser_state.token_stack[-1].add_continuation_line(remaining_line_to_parse)
-        parser_state.token_stack[-1].add_unmodified_line(unmodified_line_to_parse)
-        while parser_state.token_stack[-1].continuation_lines:
+        link_ref_stack_token = cast(
+            LinkDefinitionStackToken, parser_state.token_stack[-1]
+        )
+        link_ref_stack_token.add_continuation_line(remaining_line_to_parse)
+        link_ref_stack_token.add_unmodified_line(unmodified_line_to_parse)
+        while link_ref_stack_token.continuation_lines:
             POGGER.debug(
                 "continuation_lines>>$<<",
-                parser_state.token_stack[-1].continuation_lines,
+                link_ref_stack_token.continuation_lines,
             )
 
-            lines_to_requeue.append(parser_state.token_stack[-1].unmodified_lines[-1])
+            lines_to_requeue.append(link_ref_stack_token.unmodified_lines[-1])
             POGGER.debug(
                 ">>continuation_line>>$",
-                parser_state.token_stack[-1].continuation_lines[-1],
+                link_ref_stack_token.continuation_lines[-1],
             )
             POGGER.debug(
                 ">>unmodified_line>>$",
-                parser_state.token_stack[-1].unmodified_lines[-1],
+                link_ref_stack_token.unmodified_lines[-1],
             )
-            del parser_state.token_stack[-1].continuation_lines[-1]
-            del parser_state.token_stack[-1].unmodified_lines[-1]
+            del link_ref_stack_token.continuation_lines[-1]
+            del link_ref_stack_token.unmodified_lines[-1]
             POGGER.debug(
                 ">>lines_to_requeue>>$>>",
                 lines_to_requeue,
             )
             POGGER.debug(
                 ">>continuation_lines>>$<<",
-                parser_state.token_stack[-1].continuation_lines,
+                link_ref_stack_token.continuation_lines,
             )
-            is_blank_line, line_to_parse = True, parser_state.token_stack[
-                -1
-            ].get_joined_lines("")
+            is_blank_line, line_to_parse = True, link_ref_stack_token.get_joined_lines(
+                ""
+            )
             line_to_parse = line_to_parse[:-1]
             start_index, extracted_whitespace = ParserHelper.extract_whitespace(
                 line_to_parse, 0

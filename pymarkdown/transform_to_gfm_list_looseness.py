@@ -2,10 +2,10 @@
 Module to handle the calculationof list looseness for the GRM transformer.
 """
 import logging
-from typing import List
+from typing import List, Tuple, cast
 
 from pymarkdown.container_markdown_token import ListStartMarkdownToken
-from pymarkdown.markdown_token import MarkdownToken
+from pymarkdown.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.parser_logger import ParserLogger
 
 POGGER = ParserLogger(logging.getLogger(__name__))
@@ -68,13 +68,13 @@ class TransformToGfmListLooseness:
     # pylint: disable=too-many-arguments
     @staticmethod
     def __calculate_list_looseness_for_containers(
-        current_token,
-        stack_count,
-        is_loose,
-        stop_me,
-        actual_tokens,
-        current_token_index,
-    ):
+        current_token: MarkdownToken,
+        stack_count: int,
+        is_loose: bool,
+        stop_me: bool,
+        actual_tokens: List[MarkdownToken],
+        current_token_index: int,
+    ) -> Tuple[bool, int, bool, bool]:
         check_me = False
         if current_token.is_list_start:
             POGGER.debug("cll>>start list>>$", current_token)
@@ -129,24 +129,24 @@ class TransformToGfmListLooseness:
     # pylint: enable=too-many-arguments
 
     @staticmethod
-    def __handle_list_start(stack_count):
+    def __handle_list_start(stack_count: int) -> Tuple[bool, int]:
         POGGER.debug(">>list--new>>$", stack_count)
         return stack_count == 0, stack_count + 1
 
     @staticmethod
-    def __handle_new_list_item(current_token, stack_count):
+    def __handle_new_list_item(current_token: MarkdownToken, stack_count: int) -> bool:
         assert not current_token.is_block
         POGGER.debug(">>list--item>>$", stack_count)
         return stack_count == 0
 
     @staticmethod
     def __handle_list_end(
-        stack_count,
-        is_loose,
-        stop_me,
-        actual_tokens,
-        current_token_index,
-    ):
+        stack_count: int,
+        is_loose: bool,
+        stop_me: bool,
+        actual_tokens: List[MarkdownToken],
+        current_token_index: int,
+    ) -> Tuple[bool, bool, int]:
         POGGER.debug(">>list--end>>$", stack_count)
         stop_me = not stack_count
         if not stop_me:
@@ -177,27 +177,31 @@ class TransformToGfmListLooseness:
         return stop_me, is_loose, stack_count
 
     @staticmethod
-    def __handle_block_quote_start(stack_count):
+    def __handle_block_quote_start(stack_count: int) -> int:
         POGGER.debug(">>block--new>>$", stack_count)
         return stack_count + 1
 
     @staticmethod
-    def __handle_block_quote_end(stack_count):
+    def __handle_block_quote_end(stack_count: int) -> int:
         POGGER.debug(">>block--end>>$", stack_count)
         return stack_count - 1
 
     @staticmethod
     def __handle_blank_line(
-        current_token, stack_count, actual_tokens, current_token_index
-    ):
+        current_token: MarkdownToken,
+        stack_count: int,
+        actual_tokens: List[MarkdownToken],
+        current_token_index: int,
+    ) -> bool:
         search_back_index = current_token_index - 2
         while actual_tokens[search_back_index].is_blank_line:
             search_back_index -= 1
 
         pre_prev_token = actual_tokens[search_back_index]
         if pre_prev_token.is_end_token:
-            assert pre_prev_token.start_markdown_token, str(pre_prev_token)
-            pre_prev_token = pre_prev_token.start_markdown_token
+            end_token = cast(EndMarkdownToken, pre_prev_token)
+            assert end_token.start_markdown_token
+            pre_prev_token = end_token.start_markdown_token
             POGGER.debug(">>end_>using_start>>$", pre_prev_token)
 
         current_check = (
@@ -221,7 +225,9 @@ class TransformToGfmListLooseness:
         return stack_count == 0 and current_check and pre_prev_check
 
     @staticmethod
-    def __is_token_loose(actual_tokens, current_token_index):
+    def __is_token_loose(
+        actual_tokens: List[MarkdownToken], current_token_index: int
+    ) -> bool:
         """
         Check to see if this token inspires looseness.
         """
@@ -245,7 +251,9 @@ class TransformToGfmListLooseness:
         return False
 
     @staticmethod
-    def __find_owning_list_start(actual_tokens, actual_token_index):
+    def __find_owning_list_start(
+        actual_tokens: List[MarkdownToken], actual_token_index: int
+    ) -> int:
         """
         Figure out what the list start for the current token is.
         """
@@ -302,6 +310,7 @@ class TransformToGfmListLooseness:
                 actual_tokens, search_index
             )
             POGGER.debug(">>reset_list_looseness>>$", new_index)
-            is_in_loose_list = actual_tokens[new_index].is_loose
+            list_token = cast(ListStartMarkdownToken, actual_tokens[new_index])
+            is_in_loose_list = list_token.is_loose
         POGGER.debug("           is_in_loose_list=$", is_in_loose_list)
         return is_in_loose_list

@@ -2,7 +2,7 @@
 Module to provide for an inline element that can be added to markdown parsing stream.
 """
 import logging
-from typing import Optional
+from typing import Optional, cast
 
 from pymarkdown.constants import Constants
 from pymarkdown.markdown_token import MarkdownToken, MarkdownTokenClass
@@ -21,14 +21,14 @@ class InlineMarkdownToken(MarkdownToken):
 
     def __init__(
         self,
-        token_name,
-        extra_data,
-        line_number=0,
-        column_number=0,
-        position_marker=None,
-        requires_end_token=False,
-        can_force_close=True,
-        is_special=False,
+        token_name: str,
+        extra_data: Optional[str],
+        line_number: int = 0,
+        column_number: int = 0,
+        position_marker: Optional[PositionMarker] = None,
+        requires_end_token: bool = False,
+        can_force_close: bool = True,
+        is_special: bool = False,
     ):
         MarkdownToken.__init__(
             self,
@@ -53,8 +53,12 @@ class EmphasisMarkdownToken(InlineMarkdownToken):
     """
 
     def __init__(
-        self, emphasis_length, emphasis_character, line_number=0, column_number=0
-    ):
+        self,
+        emphasis_length: int,
+        emphasis_character: str,
+        line_number: int = 0,
+        column_number: int = 0,
+    ) -> None:
         self.__emphasis_length, self.__emphasis_character = (
             emphasis_length,
             emphasis_character,
@@ -72,14 +76,14 @@ class EmphasisMarkdownToken(InlineMarkdownToken):
         )
 
     @property
-    def emphasis_length(self):
+    def emphasis_length(self) -> int:
         """
         Returns the length of the current emphasis text.
         """
         return self.__emphasis_length
 
     @property
-    def emphasis_character(self):
+    def emphasis_character(self) -> str:
         """
         Returns the character used for the current emphasis text.
         """
@@ -102,7 +106,7 @@ class RawHtmlMarkdownToken(InlineMarkdownToken):
         )
 
     @property
-    def raw_tag(self):
+    def raw_tag(self) -> str:
         """
         Returns the text that is the raw html tag.
         """
@@ -127,7 +131,7 @@ class EmailAutolinkMarkdownToken(InlineMarkdownToken):
         )
 
     @property
-    def autolink_text(self):
+    def autolink_text(self) -> str:
         """
         Returns the text that is the autolink.
         """
@@ -152,7 +156,7 @@ class UriAutolinkMarkdownToken(InlineMarkdownToken):
         )
 
     @property
-    def autolink_text(self):
+    def autolink_text(self) -> str:
         """
         Returns the text that is the autolink.
         """
@@ -202,28 +206,28 @@ class InlineCodeSpanMarkdownToken(InlineMarkdownToken):
 
     # pylint: enable=too-many-arguments
     @property
-    def span_text(self):
+    def span_text(self) -> str:
         """
         Returns the text that is within the span.
         """
         return self.__span_text
 
     @property
-    def extracted_start_backticks(self):
+    def extracted_start_backticks(self) -> str:
         """
         Returns the backticks that started the code span.
         """
         return self.__extracted_start_backticks
 
     @property
-    def leading_whitespace(self):
+    def leading_whitespace(self) -> str:
         """
         Returns the whitespace at the start of the code span.
         """
         return self.__leading_whitespace
 
     @property
-    def trailing_whitespace(self):
+    def trailing_whitespace(self) -> str:
         """
         Returns the whitespace at the end of the code span.
         """
@@ -251,7 +255,7 @@ class HardBreakMarkdownToken(InlineMarkdownToken):
         )
 
     @property
-    def line_end(self):
+    def line_end(self) -> str:
         """
         Returns the text at the end of the line.
         """
@@ -267,24 +271,24 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
     # pylint: disable=too-many-arguments, too-many-locals
     def __init__(
         self,
-        token_name,
-        label_type,
-        link_uri,
-        link_title,
-        extra_data,
-        pre_link_uri,
-        pre_link_title,
-        ex_label,
-        text_from_blocks,
-        did_use_angle_start,
-        inline_title_bounding_character,
-        before_link_whitespace,
-        before_title_whitespace,
-        after_title_whitespace,
-        line_number=0,
-        column_number=0,
-        requires_end_token=False,
-        can_force_close=True,
+        token_name: str,
+        label_type: str,
+        link_uri: str,
+        link_title: Optional[str],
+        extra_data: Optional[str],
+        pre_link_uri: str,
+        pre_link_title: Optional[str],
+        ex_label: Optional[str],
+        text_from_blocks: str,
+        did_use_angle_start: bool,
+        inline_title_bounding_character: Optional[str],
+        before_link_whitespace: Optional[str],
+        before_title_whitespace: Optional[str],
+        after_title_whitespace: Optional[str],
+        line_number: int = 0,
+        column_number: int = 0,
+        requires_end_token: bool = False,
+        can_force_close: bool = True,
     ):
         (
             self.__label_type,
@@ -318,9 +322,17 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
             extra_data = f"{extra_data}{MarkdownToken.extra_data_separator}"
 
         # Purposefully split this way to accommodate the extra data
+        assert self.__link_title is not None
+        assert extra_data is not None
         part_1 = MarkdownToken.extra_data_separator.join(
             [label_type, self.__link_uri, self.__link_title, extra_data]
         )
+        assert self.__inline_title_bounding_character is not None
+        assert self.__before_link_whitespace is not None
+        assert self.__before_title_whitespace is not None
+        assert self.__after_title_whitespace is not None
+        assert self.__pre_link_title is not None
+        assert self.__ex_label is not None
         part_2 = MarkdownToken.extra_data_separator.join(
             [
                 self.__pre_link_uri,
@@ -348,84 +360,84 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
     # pylint: enable=too-many-arguments, too-many-locals
 
     @property
-    def label_type(self):
+    def label_type(self) -> str:
         """
         Returns the type of label that was used.
         """
         return self.__label_type
 
     @property
-    def link_uri(self):
+    def link_uri(self) -> str:
         """
         Returns the URI for the link itself.
         """
         return self.__link_uri
 
     @property
-    def active_link_uri(self):
+    def active_link_uri(self) -> str:
         """
         Returns the active URI for the link, preferring the __pre_link_uri over the __link_uri.
         """
         return self.__pre_link_uri or self.__link_uri
 
     @property
-    def link_title(self):
+    def link_title(self) -> Optional[str]:
         """
         Returns the text associated with the link's title.
         """
         return self.__link_title
 
     @property
-    def active_link_title(self):
+    def active_link_title(self) -> Optional[str]:
         """
         Returns the active text associated with the link's title, preferring the __pre_link_title over the __link_title.
         """
         return self.__pre_link_title or self.__link_title
 
     @property
-    def ex_label(self):
+    def ex_label(self) -> Optional[str]:
         """
         Returns the text extracted from the blocks of the link, after processing.
         """
         return self.__ex_label
 
     @property
-    def text_from_blocks(self):
+    def text_from_blocks(self) -> str:
         """
         Returns the text extracted from the blocks of the link, before processing.
         """
         return self.__text_from_blocks
 
     @property
-    def did_use_angle_start(self):
+    def did_use_angle_start(self) -> bool:
         """
         Returns a value indicating whether an angle start was used around the URI.
         """
         return self.__did_use_angle_start
 
     @property
-    def inline_title_bounding_character(self):
+    def inline_title_bounding_character(self) -> Optional[str]:
         """
         Returns the bounding character used for the title.
         """
         return self.__inline_title_bounding_character
 
     @property
-    def before_link_whitespace(self):
+    def before_link_whitespace(self) -> Optional[str]:
         """
         Returns the whitespace extracted before the link.
         """
         return self.__before_link_whitespace
 
     @property
-    def before_title_whitespace(self):
+    def before_title_whitespace(self) -> Optional[str]:
         """
         Returns the whitespace extracted before the title.
         """
         return self.__before_title_whitespace
 
     @property
-    def after_title_whitespace(self):
+    def after_title_whitespace(self) -> Optional[str]:
         """
         Returns the whitespace extracted after the title.
         """
@@ -531,7 +543,7 @@ class ImageStartMarkdownToken(ReferenceMarkdownToken):
     # pylint: enable=too-many-arguments, too-many-locals
 
     @property
-    def image_alt_text(self):
+    def image_alt_text(self) -> str:
         """
         Returns the text extracted from the blocks of the link, after processing.
         """
@@ -547,7 +559,7 @@ class TextMarkdownToken(InlineMarkdownToken):
     def __init__(
         self,
         token_text: str,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         end_whitespace: Optional[str] = None,
         position_marker: Optional[PositionMarker] = None,
         line_number: int = 0,
@@ -572,26 +584,26 @@ class TextMarkdownToken(InlineMarkdownToken):
 
     # pylint: enable=too-many-arguments
 
-    def _set_token_text(self, new_text):
+    def _set_token_text(self, new_text: str) -> None:
         self.__token_text = new_text
         self.__compose_extra_data_field()
 
     @property
-    def token_text(self):
+    def token_text(self) -> str:
         """
         Returns the text associated with the token.
         """
         return self.__token_text
 
     @property
-    def extracted_whitespace(self):
+    def extracted_whitespace(self) -> str:
         """
         Returns any whitespace that was extracted before the processing of this element occurred.
         """
         return self.__extracted_whitespace
 
     @property
-    def end_whitespace(self):
+    def end_whitespace(self) -> Optional[str]:
         """
         Returns any whitespace that was extracted after the processing of this element occurred.
         """
@@ -609,17 +621,17 @@ class TextMarkdownToken(InlineMarkdownToken):
             column_number=self.column_number,
         )
 
-    def __compose_extra_data_field(self):
+    def __compose_extra_data_field(self) -> None:
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
 
         data_field_parts = [self.__token_text, self.__extracted_whitespace]
-        if self.end_whitespace:
+        if self.__end_whitespace:
             data_field_parts.append(self.__end_whitespace)
         self._set_extra_data(MarkdownToken.extra_data_separator.join(data_field_parts))
 
-    def remove_final_whitespace(self):
+    def remove_final_whitespace(self) -> str:
         """
         Remove any final whitespace.  Used by paragraph blocks so that they do not
         end with a hard break.
@@ -632,6 +644,7 @@ class TextMarkdownToken(InlineMarkdownToken):
         ) = ParserHelper.collect_backwards_while_one_of_characters(
             self.__token_text, -1, Constants.whitespace
         )
+        assert first_non_whitespace_index is not None
         if collected_whitespace_length:
             removed_whitespace = self.__token_text[
                 first_non_whitespace_index : first_non_whitespace_index
@@ -640,7 +653,9 @@ class TextMarkdownToken(InlineMarkdownToken):
             self.__token_text = self.__token_text[:first_non_whitespace_index]
         return removed_whitespace
 
-    def combine(self, other_text_token, remove_leading_spaces):
+    def combine(
+        self, other_text_token: MarkdownToken, remove_leading_spaces: int
+    ) -> str:
         """
         Combine the two text tokens together with a line feed between.
         If remove_leading_spaces > 0, then that many leading spaces will be
@@ -657,9 +672,10 @@ class TextMarkdownToken(InlineMarkdownToken):
             )
         else:
             assert other_text_token.is_text
+            text_other_token = cast(TextMarkdownToken, other_text_token)
             text_to_combine, whitespace_present, blank_line_sequence = (
-                other_text_token.token_text,
-                other_text_token.extracted_whitespace,
+                text_other_token.token_text,
+                text_other_token.extracted_whitespace,
                 "",
             )
 
@@ -669,6 +685,7 @@ class TextMarkdownToken(InlineMarkdownToken):
         elif remove_leading_spaces == -1:
             whitespace_to_append, prefix_whitespace = whitespace_present, ""
         else:
+            assert whitespace_present is not None
             whitespace_present_size = len(whitespace_present)
             POGGER.debug(
                 "whitespace_present>>$>>$<<",
@@ -732,28 +749,28 @@ class SpecialTextMarkdownToken(TextMarkdownToken):
     # pylint: enable=too-many-arguments
 
     @property
-    def is_active(self):
+    def is_active(self) -> bool:
         """
         Returns a value indicating whether this special text is still active.
         """
         return self.__is_active
 
     @property
-    def repeat_count(self):
+    def repeat_count(self) -> int:
         """
         Returns the repeat count for the special text element.
         """
         return self.__repeat_count
 
     @property
-    def preceding_two(self):
+    def preceding_two(self) -> Optional[str]:
         """
         Returns the preceding two characters before this token.
         """
         return self.__preceding_two
 
     @property
-    def following_two(self):
+    def following_two(self) -> Optional[str]:
         """
         Returns the following two characters before this token.
         """
@@ -765,13 +782,15 @@ class SpecialTextMarkdownToken(TextMarkdownToken):
         """
         self.__is_active = False
 
-    def adjust_token_text_by_repeat_count(self):
+    def adjust_token_text_by_repeat_count(self) -> None:
         """
         Adjust the token's text by the repeat count.
         """
         self._set_token_text(self.token_text[: self.repeat_count])
 
-    def reduce_repeat_count(self, emphasis_length, adjust_column_number=False):
+    def reduce_repeat_count(
+        self, emphasis_length: int, adjust_column_number: bool = False
+    ) -> None:
         """
         Reduce the repeat count by the specified amount.
         """

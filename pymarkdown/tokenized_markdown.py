@@ -3,13 +3,17 @@ Module to provide a tokenization of a markdown-encoded string.
 """
 import logging
 import os
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, cast
 
 from application_properties import ApplicationProperties
 
 from pymarkdown.bad_tokenization_error import BadTokenizationError
 from pymarkdown.coalesce_processor import CoalesceProcessor
 from pymarkdown.container_block_processor import ContainerBlockProcessor
+from pymarkdown.container_markdown_token import (
+    BlockQuoteMarkdownToken,
+    ListStartMarkdownToken,
+)
 from pymarkdown.extension_manager.extension_manager import ExtensionManager
 from pymarkdown.extensions.front_matter_extension import FrontMatterExtension
 from pymarkdown.extensions.pragma_token import PragmaToken
@@ -21,6 +25,7 @@ from pymarkdown.leaf_markdown_token import BlankLineMarkdownToken
 from pymarkdown.link_helper import LinkHelper
 from pymarkdown.link_reference_definition_helper import LinkReferenceDefinitionHelper
 from pymarkdown.markdown_token import MarkdownToken
+from pymarkdown.parse_block_pass_properties import ParseBlockPassProperties
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.parser_state import ParserState
@@ -737,21 +742,13 @@ class TokenizedMarkdown:
         POGGER.debug("list_stack_index>>$", list_stack_index)
         POGGER.debug("block_stack_index>>$", block_stack_index)
         if list_stack_index > 0 and list_stack_index > block_stack_index:
-            POGGER.debug(
-                "blank>>bq_start>>$",
-                parser_state.token_stack[list_stack_index],
-            )
-            POGGER.debug(
-                "hbl>>last_block_token>>$",
+            list_token = cast(
+                ListStartMarkdownToken,
                 parser_state.token_stack[list_stack_index].matching_markdown_token,
             )
-            parser_state.token_stack[
-                list_stack_index
-            ].matching_markdown_token.add_leading_spaces("")
-            POGGER.debug(
-                "hbl>>last_block_token>>$",
-                parser_state.token_stack[list_stack_index].matching_markdown_token,
-            )
+            POGGER.debug("hbl>>last_block_token>>$", list_token)
+            list_token.add_leading_spaces("")
+            POGGER.debug("hbl>>last_block_token>>$", list_token)
 
         POGGER.debug("hbl>>new_tokens>>$", new_tokens)
         assert non_whitespace_index == len(input_line)
@@ -849,28 +846,18 @@ class TokenizedMarkdown:
             parser_state.token_stack[stack_index],
         )
         if stack_index > 0 and parser_state.token_stack[stack_index].is_block_quote:
-            POGGER.debug(
-                "hblibq>>last_block_token>>$",
+            block_quote_token = cast(
+                BlockQuoteMarkdownToken,
                 parser_state.token_stack[stack_index].matching_markdown_token,
             )
+            POGGER.debug("hblibq>>last_block_token>>$", block_quote_token)
             POGGER.debug(
-                "hblibq>>leading_text_index>>$",
-                parser_state.token_stack[
-                    stack_index
-                ].matching_markdown_token.leading_text_index,
+                "hblibq>>leading_text_index>>$", block_quote_token.leading_text_index
             )
-            parser_state.token_stack[
-                stack_index
-            ].matching_markdown_token.add_leading_spaces("")
+            block_quote_token.add_leading_spaces("")
+            POGGER.debug("hblibq>>last_block_token>>$", block_quote_token)
             POGGER.debug(
-                "hblibq>>last_block_token>>$",
-                parser_state.token_stack[stack_index].matching_markdown_token,
-            )
-            POGGER.debug(
-                "hblibq>>leading_text_index>>$",
-                parser_state.token_stack[
-                    stack_index
-                ].matching_markdown_token.leading_text_index,
+                "hblibq>>leading_text_index>>$", block_quote_token.leading_text_index
             )
 
     def __process_front_matter_header_if_present(
@@ -901,30 +888,3 @@ class TokenizedMarkdown:
                 self.__tokenized_document,
             )
         return first_line_in_document, line_number, requeue
-
-
-class ParseBlockPassProperties:
-    """
-    Class to provide a high level abstraction of the extensions.
-    """
-
-    def __init__(self, extension_manager: ExtensionManager) -> None:
-        self.__front_matter_enabled, self.__pragmas_enabled = (
-            extension_manager.is_front_matter_enabled,
-            extension_manager.is_linter_pragmas_enabled,
-        )
-        self.pragma_lines: Dict[int, str] = {}
-
-    @property
-    def is_front_matter_enabled(self) -> bool:
-        """
-        Returns whether front matter parsing is enabled.
-        """
-        return self.__front_matter_enabled
-
-    @property
-    def is_pragmas_enabled(self) -> bool:
-        """
-        Returns whether pragma parsing is enabled.
-        """
-        return self.__pragmas_enabled

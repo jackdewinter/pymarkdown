@@ -20,7 +20,7 @@ class RuleMd001(RulePlugin):
 
     def __init__(self) -> None:
         super().__init__()
-        self.__last_heading_count = None
+        self.__last_heading_count: int = 0
         self.__front_matter_title = None
 
     def get_details(self) -> PluginDetails:
@@ -47,7 +47,7 @@ class RuleMd001(RulePlugin):
         """
         Event that the a new file to be scanned is starting.
         """
-        self.__last_heading_count = None
+        self.__last_heading_count = 0
 
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """

@@ -123,6 +123,10 @@ class RuleMd007(RulePlugin):
             )
         elif token.is_link_reference_definition:
             lrd_token = cast(LinkReferenceDefinitionMarkdownToken, token)
+            assert lrd_token.link_title_raw is not None
+            assert lrd_token.link_title_whitespace is not None
+            assert lrd_token.link_destination_whitespace is not None
+            assert lrd_token.link_name_debug is not None
             bq_delta = (
                 1
                 + lrd_token.link_name_debug.count(ParserHelper.newline_character)
@@ -135,6 +139,7 @@ class RuleMd007(RulePlugin):
         elif token.is_text and self.__last_leaf_token:
             text_token = cast(TextMarkdownToken, token)
             if self.__last_leaf_token.is_setext_heading:
+                assert text_token.end_whitespace is not None
                 bq_delta = (
                     text_token.end_whitespace.count(ParserHelper.newline_character) + 1
                 )
@@ -213,6 +218,7 @@ class RuleMd007(RulePlugin):
                         self.__container_token_stack[stack_index],
                     )
                     bq_index = self.__bq_line_index[stack_index + 1]
+                    assert block_quote_token.leading_spaces is not None
                     split_leading_spaces = block_quote_token.leading_spaces.split(
                         ParserHelper.newline_character
                     )

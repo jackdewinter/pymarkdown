@@ -5,7 +5,10 @@ import logging
 from typing import List, Optional, Tuple, cast
 
 from pymarkdown.block_quote_data import BlockQuoteData
-from pymarkdown.container_markdown_token import BlockQuoteMarkdownToken
+from pymarkdown.container_markdown_token import (
+    BlockQuoteMarkdownToken,
+    ListStartMarkdownToken,
+)
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
@@ -292,9 +295,10 @@ class BlockQuoteProcessor:
     def __handle_block_quote_block_lrd_kludges(parser_state: ParserState) -> None:
         stack_index = parser_state.find_last_block_quote_on_stack()
         if stack_index > 0:
-            last_block_token = parser_state.token_stack[
-                stack_index
-            ].matching_markdown_token
+            last_block_token = cast(
+                BlockQuoteMarkdownToken,
+                parser_state.token_stack[stack_index].matching_markdown_token,
+            )
             POGGER.debug(
                 "handle_block w/ no open>>found>>$",
                 last_block_token,
@@ -340,9 +344,9 @@ class BlockQuoteProcessor:
                     and adjusted_text_to_parse.strip()
                 ):
                     POGGER.debug("\n\nBOOM\n\n")
-                    parser_state.nested_list_start = parser_state.token_stack[
-                        adjusted_current_count
-                    ]
+                    parser_state.nested_list_start = cast(
+                        ListStackToken, parser_state.token_stack[adjusted_current_count]
+                    )
 
         did_process = last_block_quote_index != -1
         return did_process, adjusted_index_number if did_process else -1
@@ -974,7 +978,9 @@ class BlockQuoteProcessor:
             POGGER.debug("==REM[$],LTP[$]", removed_text, line_to_parse)
 
             assert stack_index != -1
-            found_bq_stack_token = parser_state.token_stack[stack_index]
+            found_bq_stack_token = cast(
+                BlockQuoteStackToken, parser_state.token_stack[stack_index]
+            )
             assert found_bq_stack_token
 
             BlockQuoteProcessor.__do_block_quote_leading_spaces_adjustments(
@@ -1024,13 +1030,18 @@ class BlockQuoteProcessor:
             container_start_bq_count
             and parser_state.token_stack[stack_index - 1].is_block_quote
         ):
+            block_stack_token = cast(
+                BlockQuoteStackToken, parser_state.token_stack[stack_index - 1]
+            )
             count_of_actual_starts = ParserHelper.count_characters_in_text(
                 adjusted_removed_text, ">"
             )
             assert count_of_actual_starts != block_quote_data.current_count
-            adj_leading_spaces = parser_state.token_stack[
-                stack_index - 1
-            ].matching_markdown_token.leading_spaces
+            block_quote_token = cast(
+                BlockQuoteMarkdownToken, block_stack_token.matching_markdown_token
+            )
+            adj_leading_spaces = block_quote_token.leading_spaces
+            assert adj_leading_spaces is not None
             POGGER.debug("__hbqs>>count_of_actual_starts>>$", count_of_actual_starts)
             POGGER.debug("__hbqs>>adj_leading_spaces>>:$:<", adj_leading_spaces)
             POGGER.debug(
@@ -1094,6 +1105,7 @@ class BlockQuoteProcessor:
                 )
                 assert found_bq_stack_token.matching_markdown_token is not None
                 POGGER.debug("original_token>>$", original_block_quote_token)
+                assert original_block_quote_token.leading_spaces is not None
                 POGGER.debug(
                     "original_token.leading_spaces>>:$:<<",
                     original_block_quote_token.leading_spaces,
@@ -1103,6 +1115,7 @@ class BlockQuoteProcessor:
                     found_bq_stack_token.matching_markdown_token,
                 )
                 current_leading_spaces = block_quote_markdown_token.leading_spaces
+                assert current_leading_spaces is not None
                 POGGER.debug("found_bq_stack_token.ls>>:$:<<", current_leading_spaces)
                 assert current_leading_spaces.startswith(
                     original_block_quote_token.leading_spaces
@@ -1237,7 +1250,11 @@ class BlockQuoteProcessor:
             and parser_state.token_stack[1].is_list
             and parser_state.token_stack[2].is_block_quote
         ):
-            parser_state.token_stack[1].matching_markdown_token.add_leading_spaces("")
+            list_token = cast(
+                ListStartMarkdownToken,
+                parser_state.token_stack[1].matching_markdown_token,
+            )
+            list_token.add_leading_spaces("")
 
         return True, leaf_tokens
 
@@ -1287,22 +1304,15 @@ class BlockQuoteProcessor:
             "found_bq_stack_token---$<<<",
             found_bq_stack_token,
         )
-        POGGER.debug(
-            "hfcs>>last_block_token>>$", found_bq_stack_token.matching_markdown_token
+        found_bq_token = cast(
+            BlockQuoteMarkdownToken, found_bq_stack_token.matching_markdown_token
         )
-        POGGER.debug(
-            "hfcs>>leading_text_index>>$",
-            found_bq_stack_token.matching_markdown_token.leading_text_index,
-        )
-        found_bq_stack_token.matching_markdown_token.add_leading_spaces(removed_text)
-        found_bq_stack_token.matching_markdown_token.leading_text_index += 1
-        POGGER.debug(
-            "hfcs>>last_block_token>>$", found_bq_stack_token.matching_markdown_token
-        )
-        POGGER.debug(
-            "hfcs>>leading_text_index>>$",
-            found_bq_stack_token.matching_markdown_token.leading_text_index,
-        )
+        POGGER.debug("hfcs>>last_block_token>>$", found_bq_token)
+        POGGER.debug("hfcs>>leading_text_index>>$", found_bq_token.leading_text_index)
+        found_bq_token.add_leading_spaces(removed_text)
+        found_bq_token.leading_text_index += 1
+        POGGER.debug("hfcs>>last_block_token>>$", found_bq_token)
+        POGGER.debug("hfcs>>leading_text_index>>$", found_bq_token.leading_text_index)
         text_removed_by_container = removed_text
 
         return (
@@ -1325,39 +1335,27 @@ class BlockQuoteProcessor:
     ) -> Tuple[int, int, int, int]:
 
         assert parser_state.token_stack[current_stack_index].is_list
+        list_stack_token = cast(
+            ListStackToken, parser_state.token_stack[current_stack_index]
+        )
         POGGER.debug(
             "indent_level:$:indent_text_count:$:",
-            parser_state.token_stack[current_stack_index].indent_level,
+            list_stack_token.indent_level,
             indent_text_count,
         )
-        delta = (
-            parser_state.token_stack[current_stack_index].indent_level
-            - indent_text_count
-        )
+        delta = list_stack_token.indent_level - indent_text_count
         POGGER.debug(
             "delta:$:length_of_available_whitespace:$:",
             delta,
             length_of_available_whitespace,
         )
         assert length_of_available_whitespace >= delta
-        adjust_for_extra_indent = (
-            parser_state.token_stack[
-                current_stack_index
-            ].matching_markdown_token.indent_level
-            - parser_state.token_stack[
-                current_stack_index
-            ].matching_markdown_token.column_number
-            - 1
+        list_token = cast(
+            ListStartMarkdownToken, list_stack_token.matching_markdown_token
         )
-        if parser_state.token_stack[current_stack_index].is_ordered_list:
-            adjust_for_extra_indent -= (
-                len(
-                    parser_state.token_stack[
-                        current_stack_index
-                    ].matching_markdown_token.list_start_sequence
-                )
-                - 1
-            )
+        adjust_for_extra_indent = list_token.indent_level - list_token.column_number - 1
+        if list_stack_token.is_ordered_list:
+            adjust_for_extra_indent -= len(list_token.list_start_sequence) - 1
         POGGER.debug("adjust_for_extra_indent:$:", adjust_for_extra_indent)
         current_stack_index += 1
         delta -= adjust_for_extra_indent
@@ -1369,14 +1367,13 @@ class BlockQuoteProcessor:
                 "__calculate_stack_hard_limit>>last_block_token>>$",
                 parser_state.token_stack[last_bq_index].matching_markdown_token,
             )
-            parser_state.token_stack[
-                last_bq_index
-            ].matching_markdown_token.add_leading_spaces(
-                ParserHelper.repeat_string(" ", delta), True
-            )
-            POGGER.debug(
-                "__calculate_stack_hard_limit>>last_block_token>>$",
+            block_token = cast(
+                BlockQuoteMarkdownToken,
                 parser_state.token_stack[last_bq_index].matching_markdown_token,
+            )
+            block_token.add_leading_spaces(ParserHelper.repeat_string(" ", delta), True)
+            POGGER.debug(
+                "__calculate_stack_hard_limit>>last_block_token>>$", block_token
             )
 
         return (
@@ -1669,10 +1666,10 @@ class BlockQuoteProcessor:
         )
         POGGER.debug("stack_conditional>>$", stack_conditional)
         while stack_conditional and parser_state.token_stack[-1].is_list:
-            POGGER.debug("stack>>$", parser_state.token_stack[-1].indent_level)
+            list_stack_token = cast(ListStackToken, parser_state.token_stack[-1])
+            POGGER.debug("stack>>$", list_stack_token.indent_level)
             POGGER.debug("original_start_index>>$", original_start_index)
-
-            if original_start_index < parser_state.token_stack[-1].indent_level:
+            if original_start_index < list_stack_token.indent_level:
                 close_tokens, _ = parser_state.close_open_blocks_fn(
                     parser_state,
                     include_lists=True,

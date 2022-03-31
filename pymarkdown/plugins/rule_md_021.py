@@ -57,6 +57,7 @@ class RuleMd021(RulePlugin):
             self.__atx_heading_token = None
         elif token.is_atx_heading_end:
             end_token = cast(EndMarkdownToken, token)
+            assert end_token.extra_end_data is not None
             if self.__is_left_in_error or len(end_token.extra_end_data) > 1:
                 assert self.__atx_heading_token is not None
                 self.report_next_token_error(context, self.__atx_heading_token)

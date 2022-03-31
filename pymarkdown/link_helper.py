@@ -1741,6 +1741,7 @@ class LinkHelper:
                 ]
             )
         elif link_token.label_type == Constants.link_type__full:
+            assert link_token.ex_label is not None
             link_parts.extend(
                 ["[", link_token.text_from_blocks, "][", link_token.ex_label, "]"]
             )
@@ -1749,6 +1750,8 @@ class LinkHelper:
         else:
             assert link_token.label_type == Constants.link_type__inline
 
+            assert link_token.before_title_whitespace is not None
+            assert link_token.before_link_whitespace is not None
             link_parts.extend(
                 [
                     "[",
@@ -1772,6 +1775,7 @@ class LinkHelper:
                     title_prefix = '"'
                     title_suffix = '"'
 
+                assert link_token.after_title_whitespace is not None
                 link_parts.extend(
                     [
                         title_prefix,

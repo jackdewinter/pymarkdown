@@ -86,10 +86,9 @@ class RuleMd031(RulePlugin):
             )
             end_token = cast(EndMarkdownToken, self.__end_fenced_code_block_token)
             column_number_delta = end_token.start_markdown_token.column_number
-            if end_token.start_markdown_token.extracted_whitespace:
-                column_number_delta -= len(
-                    end_token.start_markdown_token.extracted_whitespace
-                )
+            start_token = cast(EndMarkdownToken, end_token.start_markdown_token)
+            if start_token.extracted_whitespace:
+                column_number_delta -= len(start_token.extracted_whitespace)
             if end_token.extracted_whitespace:
                 column_number_delta += len(end_token.extracted_whitespace)
             column_number_delta = -(column_number_delta)

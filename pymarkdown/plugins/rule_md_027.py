@@ -180,6 +180,7 @@ class RuleMd027(RulePlugin):
         # if self.__debug_on:
         #     print(f"leading_spaces>{ParserHelper.make_value_visible(self.__container_tokens[-1].leading_spaces)}")
         block_quote_token = cast(BlockQuoteMarkdownToken, self.__container_tokens[-1])
+        assert block_quote_token.leading_spaces is not None
         newlines_in_container = block_quote_token.leading_spaces.count(
             ParserHelper.newline_character
         )
@@ -269,6 +270,7 @@ class RuleMd027(RulePlugin):
                     #     print(f"self.__last_token.start_markdown_token>:{ParserHelper.make_value_visible(\
                     #       self.__last_token.start_markdown_token)}:")
                     #     print("BOOM")
+                    assert block_quote_token.leading_spaces is not None
                     split_line_length = block_quote_token.leading_spaces.split("\n")[-1]
                     # if self.__debug_on:
                     #     print(f"BOOM:{split_line_length}:")
@@ -456,6 +458,7 @@ class RuleMd027(RulePlugin):
             scoped_block_quote_token = cast(
                 BlockQuoteMarkdownToken, self.__container_tokens[-1]
             )
+            assert scoped_block_quote_token.leading_spaces is not None
             split_leading_spaces = scoped_block_quote_token.leading_spaces.split(
                 ParserHelper.newline_character
             )
@@ -495,6 +498,7 @@ class RuleMd027(RulePlugin):
         scoped_block_quote_token = cast(
             BlockQuoteMarkdownToken, self.__container_tokens[-1]
         )
+        assert scoped_block_quote_token.leading_spaces is not None
         lrd_token = cast(LinkReferenceDefinitionMarkdownToken, token)
         if lrd_token.extracted_whitespace:
             column_number_delta = -(
@@ -506,12 +510,14 @@ class RuleMd027(RulePlugin):
                 context, token, column_number_delta=column_number_delta
             )
 
+        assert lrd_token.link_destination_whitespace is not None
         found_index = lrd_token.link_destination_whitespace.find(
             ParserHelper.newline_character
         )
         if found_index != -1 and ParserHelper.is_character_at_index_whitespace(
             lrd_token.link_destination_whitespace, found_index + 1
         ):
+            assert lrd_token.link_name_debug is not None
             line_number_delta = (
                 lrd_token.link_name_debug.count(ParserHelper.newline_character) + 1
             )
@@ -541,12 +547,14 @@ class RuleMd027(RulePlugin):
                 column_number_delta=column_number_delta,
             )
 
+        assert lrd_token.link_title_whitespace is not None
         found_index = lrd_token.link_title_whitespace.find(
             ParserHelper.newline_character
         )
         if found_index != -1 and ParserHelper.is_character_at_index_whitespace(
             lrd_token.link_title_whitespace, found_index + 1
         ):
+            assert lrd_token.link_name_debug is not None
             line_number_delta = (
                 lrd_token.link_name_debug.count(ParserHelper.newline_character)
                 + lrd_token.link_title_whitespace.count(ParserHelper.newline_character)
@@ -577,6 +585,8 @@ class RuleMd027(RulePlugin):
                 column_number_delta=column_number_delta,
             )
 
+        assert lrd_token.link_name_debug is not None
+        assert lrd_token.link_title_raw is not None
         self.__bq_line_index[num_container_tokens] += (
             1
             + lrd_token.link_name_debug.count(ParserHelper.newline_character)
@@ -601,6 +611,9 @@ class RuleMd027(RulePlugin):
                 scoped_block_quote_token = cast(
                     BlockQuoteMarkdownToken, self.__container_tokens[-1]
                 )
+                assert scoped_block_quote_token.leading_spaces is not None
+                assert text_token.end_whitespace is not None
+
                 for line_number_delta, next_line in enumerate(
                     text_token.end_whitespace.split(ParserHelper.newline_character)
                 ):
@@ -639,6 +652,7 @@ class RuleMd027(RulePlugin):
                             line_number_delta=line_number_delta,
                             column_number_delta=calculated_column_number,
                         )
+            assert text_token.end_whitespace is not None
             self.__bq_line_index[num_container_tokens] += (
                 text_token.end_whitespace.count(ParserHelper.newline_character) + 1
             )

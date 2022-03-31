@@ -17,10 +17,8 @@ from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.bad_plugin_error import BadPluginError
 from pymarkdown.plugin_manager.found_plugin import FoundPlugin
-from pymarkdown.plugin_manager.plugin_scan_context import (
-    PluginScanContext,
-    PluginScanFailure,
-)
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
+from pymarkdown.plugin_manager.plugin_scan_failure import PluginScanFailure
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 LOGGER = logging.getLogger(__name__)
@@ -138,7 +136,7 @@ class PluginManager:
         )
 
     @staticmethod
-    def add_argparse_subparser(subparsers: argparse._SubParsersAction) -> None:
+    def add_argparse_subparser(subparsers: argparse._SubParsersAction) -> None:  # type: ignore
         """
         Populate the argparse tree to allow for plugin support.
         """
@@ -492,7 +490,7 @@ class PluginManager:
     @classmethod
     def __verify_string_field(
         cls, plugin_instance: RulePlugin, field_name: str, field_value: Any
-    ):
+    ) -> None:
         """
         Verify that the detail field is a valid string.
         """
@@ -511,7 +509,7 @@ class PluginManager:
     @classmethod
     def __verify_boolean_field(
         cls, plugin_instance: RulePlugin, field_name: str, field_value: Any
-    ):
+    ) -> None:
         """
         Verify that the detail field is a valid boolean.
         """
@@ -524,7 +522,7 @@ class PluginManager:
     @classmethod
     def __verify_integer_field(
         cls, plugin_instance: RulePlugin, field_name: str, field_value: Any
-    ):
+    ) -> None:
         """
         Verify that the detail field is a valid integer.
         """

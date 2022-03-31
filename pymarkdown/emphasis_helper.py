@@ -2,10 +2,14 @@
 Emphasis helper
 """
 import logging
-from typing import List, Optional
+from typing import List, Optional, Tuple, cast
 
 from pymarkdown.constants import Constants
-from pymarkdown.inline_markdown_token import EmphasisMarkdownToken
+from pymarkdown.inline_markdown_token import (
+    EmphasisMarkdownToken,
+    SpecialTextMarkdownToken,
+    TextMarkdownToken,
+)
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
@@ -24,7 +28,11 @@ class EmphasisHelper:
     inline_emphasis = f"{__simple_emphasis}{__complex_emphasis}"
 
     @staticmethod
-    def __create_delimiter_stack(inline_blocks, is_debug_enabled, wall_token):
+    def __create_delimiter_stack(
+        inline_blocks: List[MarkdownToken],
+        is_debug_enabled: bool,
+        wall_token: Optional[MarkdownToken],
+    ) -> Tuple[List[SpecialTextMarkdownToken], int]:
         delimiter_stack, special_count = [], 0
         for next_block in inline_blocks:
             POGGER.debug(
@@ -35,12 +43,13 @@ class EmphasisHelper:
             special_count += 1
             if not next_block.is_special_text:
                 continue
+            special_token = cast(SpecialTextMarkdownToken, next_block)
             if is_debug_enabled:
                 POGGER.debug(
                     "i>>>$",
-                    next_block.show_process_emphasis(),
+                    special_token.show_process_emphasis(),
                 )
-            delimiter_stack.append(next_block)
+            delimiter_stack.append(special_token)
 
         stack_bottom = EmphasisHelper.__find_token_in_delimiter_stack(
             inline_blocks, delimiter_stack, wall_token
@@ -49,13 +58,14 @@ class EmphasisHelper:
 
     @staticmethod
     def __find_potential_opener(
-        delimiter_stack, current_position, stack_bottom, openers_bottom
-    ):
-        close_token, scan_index, found_opener = (
-            delimiter_stack[current_position],
-            current_position - 1,
-            None,
-        )
+        delimiter_stack: List[SpecialTextMarkdownToken],
+        current_position: int,
+        stack_bottom: int,
+        openers_bottom: int,
+    ) -> Tuple[SpecialTextMarkdownToken, Optional[SpecialTextMarkdownToken]]:
+        scan_index = current_position - 1
+        found_opener: Optional[SpecialTextMarkdownToken] = None
+        close_token = delimiter_stack[current_position]
         POGGER.debug("potential closer-->$", current_position)
         while (
             scan_index >= 0
@@ -78,25 +88,25 @@ class EmphasisHelper:
 
     @staticmethod
     def __process_this_delimiter_item(
-        is_debug_enabled, delimiter_stack, current_position
-    ):
+        is_debug_enabled: bool,
+        delimiter_stack: List[SpecialTextMarkdownToken],
+        current_position: int,
+    ) -> bool:
+
+        special_token = delimiter_stack[current_position]
+
         if is_debug_enabled:
             POGGER.debug(
                 "Block($)-->$",
                 current_position,
-                delimiter_stack[current_position].show_process_emphasis(),
+                special_token.show_process_emphasis(),
             )
         continue_processing = False
-        if not delimiter_stack[current_position].is_active:
+        if not special_token.is_active:
             POGGER.debug("not active")
-        elif (
-            delimiter_stack[current_position].token_text[0]
-            not in EmphasisHelper.inline_emphasis
-        ):
+        elif special_token.token_text[0] not in EmphasisHelper.inline_emphasis:
             POGGER.debug("not emphasis")
-        elif not EmphasisHelper.__is_potential_closer(
-            delimiter_stack[current_position]
-        ):
+        elif not EmphasisHelper.__is_potential_closer(special_token):
             POGGER.debug("not closer")
         else:
             continue_processing = True
@@ -160,14 +170,14 @@ class EmphasisHelper:
     # pylint: disable=too-many-arguments
     @staticmethod
     def __mark_used_tokens(
-        open_token,
-        close_token,
-        start_index_in_blocks,
-        end_index_in_blocks,
-        emphasis_length,
-        inline_blocks,
-        current_position,
-    ):
+        open_token: SpecialTextMarkdownToken,
+        close_token: SpecialTextMarkdownToken,
+        start_index_in_blocks: int,
+        end_index_in_blocks: int,
+        emphasis_length: int,
+        inline_blocks: List[MarkdownToken],
+        current_position: int,
+    ) -> int:
         # remove emphasis_length from open and close nodes
         is_debug_enabled = POGGER.is_debug_enabled
         if is_debug_enabled:
@@ -210,7 +220,10 @@ class EmphasisHelper:
                 len(inline_blocks),
             )
             if inline_blocks[inline_index].is_special_text:
-                inline_blocks[inline_index].deactivate()
+                special_token = cast(
+                    SpecialTextMarkdownToken, inline_blocks[inline_index]
+                )
+                special_token.deactivate()
             inline_index += 1
         return current_position
 
@@ -218,8 +231,11 @@ class EmphasisHelper:
 
     @staticmethod
     def __process_emphasis_pair(
-        inline_blocks, open_token, close_token, current_position
-    ):
+        inline_blocks: List[MarkdownToken],
+        open_token: SpecialTextMarkdownToken,
+        close_token: SpecialTextMarkdownToken,
+        current_position: int,
+    ) -> int:
         """
         Given that we have found a valid open and close block, process them.
         """
@@ -277,7 +293,11 @@ class EmphasisHelper:
         )
 
     @staticmethod
-    def __find_token_in_delimiter_stack(inline_blocks, delimiter_stack, wall_token):
+    def __find_token_in_delimiter_stack(
+        inline_blocks: List[MarkdownToken],
+        delimiter_stack: List[SpecialTextMarkdownToken],
+        wall_token: Optional[MarkdownToken],
+    ) -> int:
         """
         Find the specified token in the delimiter stack, based solely on
         position in the inline_blocks.
@@ -289,16 +309,17 @@ class EmphasisHelper:
         POGGER.debug(">>wall_index_in_inlines>>$", wall_index_in_inlines)
         while wall_index_in_inlines >= 0:
             if inline_blocks[wall_index_in_inlines].is_special_text:
-                wall_index_in_inlines = delimiter_stack.index(
-                    inline_blocks[wall_index_in_inlines]
+                special_token = cast(
+                    SpecialTextMarkdownToken, inline_blocks[wall_index_in_inlines]
                 )
+                wall_index_in_inlines = delimiter_stack.index(special_token)
                 break
             wall_index_in_inlines -= 1
         POGGER.debug(">>wall_index_in_inlines(mod)>>$", wall_index_in_inlines)
         return wall_index_in_inlines
 
     @staticmethod
-    def __reset_token_text(inline_blocks):
+    def __reset_token_text(inline_blocks: List[MarkdownToken]) -> None:
         """
         Once we are completed with any emphasis processing, ensure that any
         special emphasis tokens are limited to the specified lengths.
@@ -306,10 +327,13 @@ class EmphasisHelper:
 
         for next_block in inline_blocks:
             if next_block.is_special_text:
-                next_block.adjust_token_text_by_repeat_count()
+                special_token = cast(SpecialTextMarkdownToken, next_block)
+                special_token.adjust_token_text_by_repeat_count()
 
     @staticmethod
-    def __clear_remaining_emphasis(delimiter_stack, stack_bottom):
+    def __clear_remaining_emphasis(
+        delimiter_stack: List[SpecialTextMarkdownToken], stack_bottom: int
+    ) -> None:
         """
         After processing is finished, clear any active states to ensure we don't
         process them in the future.
@@ -321,11 +345,15 @@ class EmphasisHelper:
             clear_index += 1
 
     @staticmethod
-    def __is_right_flanking_delimiter_run(current_token):
+    def __is_right_flanking_delimiter_run(
+        current_token: SpecialTextMarkdownToken,
+    ) -> bool:
         """
         Is the current token a right flanking delimiter run?
         """
 
+        assert current_token.preceding_two is not None
+        assert current_token.following_two is not None
         preceding_two, following_two = (
             current_token.preceding_two.rjust(2, ParserHelper.space_character),
             current_token.following_two.ljust(2, ParserHelper.space_character),
@@ -343,11 +371,14 @@ class EmphasisHelper:
         )
 
     @staticmethod
-    def __is_left_flanking_delimiter_run(current_token):
+    def __is_left_flanking_delimiter_run(
+        current_token: SpecialTextMarkdownToken,
+    ) -> bool:
         """
         Is the current token a left flanking delimiter run?
         """
-
+        assert current_token.preceding_two is not None
+        assert current_token.following_two is not None
         preceding_two, following_two = (
             current_token.preceding_two.rjust(2, ParserHelper.space_character),
             current_token.following_two.ljust(2, ParserHelper.space_character),
@@ -365,7 +396,7 @@ class EmphasisHelper:
         )
 
     @staticmethod
-    def __is_potential_closer(current_token):
+    def __is_potential_closer(current_token: SpecialTextMarkdownToken) -> bool:
         """
         Determine if the current token is a potential closer.
         """
@@ -380,6 +411,7 @@ class EmphasisHelper:
             assert current_token.token_text[0] == EmphasisHelper.__complex_emphasis
             is_closer = EmphasisHelper.__is_right_flanking_delimiter_run(current_token)
             if is_closer:
+                assert current_token.following_two is not None
                 is_left_flanking, following_two = (
                     EmphasisHelper.__is_left_flanking_delimiter_run(current_token),
                     current_token.following_two.ljust(2, ParserHelper.space_character),
@@ -391,7 +423,7 @@ class EmphasisHelper:
         return is_closer
 
     @staticmethod
-    def __is_potential_opener(current_token):
+    def __is_potential_opener(current_token: SpecialTextMarkdownToken) -> bool:
         """
         Determine if the current token is a potential opener.
         """
@@ -405,6 +437,7 @@ class EmphasisHelper:
             assert current_token.token_text[0] == EmphasisHelper.__complex_emphasis
             is_opener = EmphasisHelper.__is_left_flanking_delimiter_run(current_token)
             if is_opener:
+                assert current_token.preceding_two is not None
                 is_right_flanking, preceding_two = (
                     EmphasisHelper.__is_right_flanking_delimiter_run(current_token),
                     current_token.preceding_two.ljust(2, ParserHelper.space_character),
@@ -416,7 +449,9 @@ class EmphasisHelper:
         return is_opener
 
     @staticmethod
-    def __is_open_close_emphasis_valid(open_token, close_token):
+    def __is_open_close_emphasis_valid(
+        open_token: SpecialTextMarkdownToken, close_token: SpecialTextMarkdownToken
+    ) -> bool:
         """
         Determine if these two tokens together make a valid open/close emphasis pair.
         """

@@ -107,8 +107,8 @@ class ParserHelper:
 
     @staticmethod
     def is_character_at_index_not_one_of(
-        source_string, index_in_string, valid_characters
-    ):
+        source_string: str, index_in_string: int, valid_characters: str
+    ) -> bool:
         """
         Determine if the specified character is at a valid location and is not one
         of the specified valid characters.
@@ -120,7 +120,9 @@ class ParserHelper:
         )
 
     @staticmethod
-    def is_character_at_index_not_whitespace(source_string, index_in_string):
+    def is_character_at_index_not_whitespace(
+        source_string: str, index_in_string: int
+    ) -> bool:
         """
         Determine if the specified character is valid and not a whitespace character.
         """
@@ -174,7 +176,7 @@ class ParserHelper:
 
     @staticmethod
     def extract_whitespace_from_end(
-        source_string: str, start_index: int = None
+        source_string: str, start_index: Optional[int] = None
     ) -> Tuple[int, str]:
         """
         From the end of the string, continue extracting whitespace while we have it.
@@ -261,8 +263,8 @@ class ParserHelper:
 
     @staticmethod
     def collect_backwards_while_one_of_characters(
-        source_string, end_index, match_characters
-    ):
+        source_string: str, end_index: int, match_characters: str
+    ) -> Tuple[Optional[int], Optional[int]]:
         """
         Collect a sequence of the same character from a given starting point in
         a string going backwards towards the start of the string.
@@ -380,6 +382,7 @@ class ParserHelper:
             _, start_index = ParserHelper.collect_backwards_while_one_of_characters(
                 source_string, next_tab_index, " \t"
             )
+            assert start_index is not None
             end_index, _ = ParserHelper.collect_while_one_of_characters(
                 source_string, next_tab_index, " \t"
             )
@@ -488,7 +491,7 @@ class ParserHelper:
         )
 
     @staticmethod
-    def count_newlines_in_texts(*args):
+    def count_newlines_in_texts(*args: Any) -> int:
         """
         Count the number of new line characters in a given string.
         """
@@ -524,13 +527,13 @@ class ParserHelper:
     # pylint: disable=too-many-arguments
     @staticmethod
     def recombine_string_with_whitespace(
-        text_string,
-        whitespace_string,
-        start_index=0,
-        add_replace_marker_if_empty=False,
-        post_increment_index=False,
-        start_text_index=1,
-        add_whitespace_after=False,
+        text_string: str,
+        whitespace_string: str,
+        start_index: int = 0,
+        add_replace_marker_if_empty: bool = False,
+        post_increment_index: bool = False,
+        start_text_index: int = 1,
+        add_whitespace_after: bool = False,
     ) -> Tuple[str, int]:
         """
         Properly recombine a text-string with a matching whitespace-string.
@@ -582,11 +585,12 @@ class ParserHelper:
         )
 
     @staticmethod
-    def make_whitespace_visible(value_to_modify):
+    def make_whitespace_visible(value_to_modify: str) -> str:
         """
         For the given value, turn it into a string if necessary, and then replace
         any known whitespace characters with more visible strings.
         """
+        # sourcery skip: remove-unnecessary-cast
         return (
             str(value_to_modify)
             .replace(ParserHelper.newline_character, "\\n")
@@ -680,7 +684,7 @@ class ParserHelper:
         )
 
     @staticmethod
-    def __remove_sequence_from_text(token_text, sequence_to_remove):
+    def __remove_sequence_from_text(token_text: str, sequence_to_remove: str) -> str:
         """
         Resolve the specific character out of the text string.
         """
@@ -699,7 +703,7 @@ class ParserHelper:
         return adjusted_text_token
 
     @staticmethod
-    def resolve_noops_from_text(token_text):
+    def resolve_noops_from_text(token_text: str) -> str:
         """
         Resolve the replacement noop character out of the text string.
         """
@@ -708,7 +712,7 @@ class ParserHelper:
         )
 
     @staticmethod
-    def __resolve_escapes_from_text(token_text):
+    def __resolve_escapes_from_text(token_text: str) -> str:
         """
         Resolve any escapes from the text, leaving only what they escaped.
         """
@@ -729,14 +733,14 @@ class ParserHelper:
         return adjusted_text_token
 
     @staticmethod
-    def __remove_escapes_from_text(token_text):
+    def __remove_escapes_from_text(token_text: str) -> str:
         """
         Remove any escape characters from the text.
         """
         return ParserHelper.__resolve_escapes_from_text(token_text)
 
     @staticmethod
-    def __resolve_replacement_markers_from_text(main_text):
+    def __resolve_replacement_markers_from_text(main_text: str) -> str:
         """
         Resolve the alert characters (i.e. replacement markers) out of the text string.
         """
@@ -789,7 +793,9 @@ class ParserHelper:
         return main_text
 
     @staticmethod
-    def __find_with_escape(adjusted_text_token, find_char, start_index):
+    def __find_with_escape(
+        adjusted_text_token: str, find_char: str, start_index: int
+    ) -> int:
         found_index = -1
         while start_index < len(adjusted_text_token):
             start_replacement_index = adjusted_text_token.find(find_char, start_index)
@@ -806,7 +812,7 @@ class ParserHelper:
         return found_index
 
     @staticmethod
-    def __resolve_references_from_text(adjusted_text_token):
+    def __resolve_references_from_text(adjusted_text_token: str) -> str:
         """
         The alert characters signal that a replacement has occurred, so make sure
         we take the right text from the replacement.
@@ -892,7 +898,7 @@ class ParserHelper:
         return "".rjust(repeat_count, string_to_repeat)
 
     @staticmethod
-    def find_nth_occurrence(search_in, search_for, nth):
+    def find_nth_occurrence(search_in: str, search_for: str, nth: int) -> int:
         """
         Search for the nth (1-based) occurrence of the search_for
         string within the search_in string.

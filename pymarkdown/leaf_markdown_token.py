@@ -22,8 +22,8 @@ class LeafMarkdownToken(MarkdownToken):
         extra_data: Optional[str],
         line_number: int = 0,
         column_number: int = 0,
-        position_marker: PositionMarker = None,
-        extracted_whitespace: Optional[str] = None,
+        position_marker: Optional[PositionMarker] = None,
+        extracted_whitespace: str = "",
         is_extension: bool = False,
         requires_end_token: bool = False,
         can_force_close: bool = True,
@@ -45,7 +45,7 @@ class LeafMarkdownToken(MarkdownToken):
     # pylint: enable=too-many-arguments
 
     @property
-    def extracted_whitespace(self):
+    def extracted_whitespace(self) -> str:
         """
         Returns any whitespace that was extracted before the processing of this element occurred.
         """
@@ -59,7 +59,7 @@ class BlankLineMarkdownToken(LeafMarkdownToken):
 
     def __init__(
         self,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         position_marker: Optional[PositionMarker],
         column_delta: int = 0,
     ) -> None:
@@ -90,10 +90,10 @@ class ParagraphMarkdownToken(LeafMarkdownToken):
     """
 
     def __init__(
-        self, extracted_whitespace: Optional[str], position_marker: PositionMarker
+        self, extracted_whitespace: str, position_marker: PositionMarker
     ) -> None:
-        self.__extracted_whitespace, self.__final_whitespace, self.rehydrate_index = (
-            extracted_whitespace,
+        self.__extracted_whitespace: str = extracted_whitespace
+        self.__final_whitespace, self.rehydrate_index = (
             "",
             0,
         )
@@ -107,20 +107,20 @@ class ParagraphMarkdownToken(LeafMarkdownToken):
         self.__compose_extra_data_field()
 
     @property
-    def extracted_whitespace(self):
+    def extracted_whitespace(self) -> str:
         """
         Returns any whitespace that was extracted before the processing of this element occurred.
         """
         return self.__extracted_whitespace
 
     @property
-    def final_whitespace(self):
+    def final_whitespace(self) -> str:
         """
         Returns any final whitespace at the end of the paragraph that was removed.
         """
         return self.__final_whitespace
 
-    def __compose_extra_data_field(self):
+    def __compose_extra_data_field(self) -> None:
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
@@ -142,7 +142,7 @@ class ParagraphMarkdownToken(LeafMarkdownToken):
         )
         self.__compose_extra_data_field()
 
-    def set_final_whitespace(self, whitespace_to_set):
+    def set_final_whitespace(self, whitespace_to_set: str) -> None:
         """
         Set the final whitespace for the paragraph. That is any whitespace at the very
         end of the paragraph, removed to prevent hard lines at the end.
@@ -177,7 +177,7 @@ class ThematicBreakMarkdownToken(LeafMarkdownToken):
         )
 
     @property
-    def rest_of_line(self):
+    def rest_of_line(self) -> str:
         """
         Returns any whitespace that was extracted before the processing of this element occurred.
         """
@@ -222,13 +222,13 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
     # pylint: disable=too-many-arguments
     def __init__(
         self,
-        did_add_definition,
-        extracted_whitespace,
-        link_name,
+        did_add_definition: bool,
+        extracted_whitespace: str,
+        link_name: str,
         link_value: LinkReferenceTitles,
         link_debug: Optional[LinkReferenceInfo],
-        position_marker,
-    ):
+        position_marker: PositionMarker,
+    ) -> None:
         self.__did_add_definition = did_add_definition
         self.__link_name = link_name
 
@@ -304,70 +304,70 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
 
     # pylint: enable=too-many-arguments
     @property
-    def did_add_definition(self):
+    def did_add_definition(self) -> bool:
         """
         Returns an indication of whether the definition was actually added.
         """
         return self.__did_add_definition
 
     @property
-    def end_whitespace(self):
+    def end_whitespace(self) -> Optional[str]:
         """
         Returns any whitespace that was extracted after the processing of this element occurred.
         """
         return self.__end_whitespace
 
     @property
-    def link_name(self):
+    def link_name(self) -> str:
         """
         Returns the name of the link that was defined.
         """
         return self.__link_name
 
     @property
-    def link_name_debug(self):
+    def link_name_debug(self) -> Optional[str]:
         """
         Returns the name of the link that was defined, in debug form.
         """
         return self.__link_name_debug
 
     @property
-    def link_destination_whitespace(self):
+    def link_destination_whitespace(self) -> Optional[str]:
         """
         Returns the whitespace that occurs before the link destination.
         """
         return self.__link_destination_whitespace
 
     @property
-    def link_destination(self):
+    def link_destination(self) -> Optional[str]:
         """
         Returns the destination (URI) of the link that was defined.
         """
         return self.__link_destination
 
     @property
-    def link_destination_raw(self):
+    def link_destination_raw(self) -> Optional[str]:
         """
         Returns the destination (URI) of the link that was defined, in raw form.
         """
         return self.__link_destination_raw
 
     @property
-    def link_title(self):
+    def link_title(self) -> Optional[str]:
         """
         Returns the title of the link that was defined.
         """
         return self.__link_title
 
     @property
-    def link_title_raw(self):
+    def link_title_raw(self) -> Optional[str]:
         """
         Returns the title of the link that was defined, in raw form.
         """
         return self.__link_title_raw
 
     @property
-    def link_title_whitespace(self):
+    def link_title_whitespace(self) -> Optional[str]:
         """
         Returns the whitespace that occurs after the link title.
         """
@@ -386,7 +386,7 @@ class AtxHeadingMarkdownToken(LeafMarkdownToken):
         self,
         hash_count: int,
         remove_trailing_count: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         position_marker: PositionMarker,
     ) -> None:
         self.__hash_count, self.__remove_trailing_count = (
@@ -406,20 +406,20 @@ class AtxHeadingMarkdownToken(LeafMarkdownToken):
         self.__compose_extra_data_field()
 
     @property
-    def hash_count(self):
+    def hash_count(self) -> int:
         """
         Returns the number of hash marks specified at the start of the line.
         """
         return self.__hash_count
 
     @property
-    def remove_trailing_count(self):
+    def remove_trailing_count(self) -> int:
         """
         Returns the number of hash marks specified at the end of the line.
         """
         return self.__remove_trailing_count
 
-    def __compose_extra_data_field(self):
+    def __compose_extra_data_field(self) -> None:
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
@@ -444,7 +444,7 @@ class SetextHeadingMarkdownToken(LeafMarkdownToken):
         self,
         heading_character: str,
         heading_character_count: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         position_marker: PositionMarker,
         para_token: ParagraphMarkdownToken,
     ) -> None:
@@ -483,48 +483,48 @@ class SetextHeadingMarkdownToken(LeafMarkdownToken):
     # pylint: enable=too-many-arguments
 
     @property
-    def final_whitespace(self):
+    def final_whitespace(self) -> str:
         """
         Returns any final whitespace at the end of the heading that was removed.
         """
         return self.__final_whitespace
 
     @property
-    def heading_character(self):
+    def heading_character(self) -> str:
         """
         Returns the character associated with the heading start.
         """
         return self.__heading_character
 
     @property
-    def hash_count(self):
+    def hash_count(self) -> int:
         """
         Returns the count in equivalence of "Atx Hash" counts.
         """
         return self.__hash_count
 
     @property
-    def heading_character_count(self):
+    def heading_character_count(self) -> int:
         """
         Returns the count of characters associated with the heading start.
         """
         return self.__heading_character_count
 
     @property
-    def original_line_number(self):
+    def original_line_number(self) -> int:
         """
         Returns the line number where this element actually started.
         """
         return self.__original_line_number
 
     @property
-    def original_column_number(self):
+    def original_column_number(self) -> int:
         """
         Returns the column number where this element actually started.
         """
         return self.__original_column_number
 
-    def set_final_whitespace(self, whitespace_to_set):
+    def set_final_whitespace(self, whitespace_to_set: str) -> None:
         """
         Set the final whitespace for the paragraph. That is any whitespace at the very
         end of the paragraph, removed to prevent hard lines at the end.
@@ -533,7 +533,7 @@ class SetextHeadingMarkdownToken(LeafMarkdownToken):
         self.__final_whitespace = whitespace_to_set
         self.__compose_extra_data_field()
 
-    def __compose_extra_data_field(self):
+    def __compose_extra_data_field(self) -> None:
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
@@ -558,7 +558,7 @@ class IndentedCodeBlockMarkdownToken(LeafMarkdownToken):
     """
 
     def __init__(
-        self, extracted_whitespace: Optional[str], line_number: int, column_number: int
+        self, extracted_whitespace: str, line_number: int, column_number: int
     ) -> None:
         self.__indented_whitespace = ""
         LeafMarkdownToken.__init__(
@@ -573,13 +573,13 @@ class IndentedCodeBlockMarkdownToken(LeafMarkdownToken):
         self.__compose_extra_data_field()
 
     @property
-    def indented_whitespace(self):
+    def indented_whitespace(self) -> str:
         """
         Returns any indented whitespace that comes before the text.
         """
         return self.__indented_whitespace
 
-    def __compose_extra_data_field(self):
+    def __compose_extra_data_field(self) -> None:
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
@@ -589,7 +589,7 @@ class IndentedCodeBlockMarkdownToken(LeafMarkdownToken):
             )
         )
 
-    def add_indented_whitespace(self, indented_whitespace):
+    def add_indented_whitespace(self, indented_whitespace: str) -> None:
         """
         Add the indented whitespace that comes before the text.
         """
@@ -614,10 +614,10 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
         pre_extracted_text: str,
         text_after_extracted_text: str,
         pre_text_after_extracted_text: str,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         extracted_whitespace_before_info_string: str,
         position_marker: PositionMarker,
-    ):
+    ) -> None:
         (
             self.__extracted_text,
             self.__pre_extracted_text,
@@ -648,55 +648,55 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
     # pylint: enable=too-many-arguments
 
     @property
-    def fence_character(self):
+    def fence_character(self) -> str:
         """
         Returns the character used for the fence.
         """
         return self.__fence_character
 
     @property
-    def fence_count(self):
+    def fence_count(self) -> int:
         """
         Returns the number of fence characters used for the fence.
         """
         return self.__fence_count
 
     @property
-    def extracted_text(self):
+    def extracted_text(self) -> str:
         """
         Returns the text extracted from the info string.
         """
         return self.__extracted_text
 
     @property
-    def pre_extracted_text(self):
+    def pre_extracted_text(self) -> str:
         """
         Returns the text extracted from the info string.
         """
         return self.__pre_extracted_text
 
     @property
-    def text_after_extracted_text(self):
+    def text_after_extracted_text(self) -> str:
         """
         Returns the text extracted after the info string.
         """
         return self.__text_after_extracted_text
 
     @property
-    def pre_text_after_extracted_text(self):
+    def pre_text_after_extracted_text(self) -> str:
         """
         Returns the text extracted after after the info string.
         """
         return self.__pre_text_after_extracted_text
 
     @property
-    def extracted_whitespace_before_info_string(self):
+    def extracted_whitespace_before_info_string(self) -> str:
         """
         Returns any whitespace that was extracted before the info string was processed.
         """
         return self.__extracted_whitespace_before_info_string
 
-    def __compose_extra_data_field(self):
+    def __compose_extra_data_field(self) -> None:
         """
         Compose the object's self.extra_data field from the local object's variables.
         """

@@ -93,7 +93,7 @@ class StackToken:
 
     def generate_close_markdown_token_from_stack_token(
         self,
-        extracted_whitespace: Optional[str] = None,
+        extracted_whitespace: str = "",
         extra_end_data: Optional[str] = None,
         was_forced: bool = False,
     ) -> EndMarkdownToken:

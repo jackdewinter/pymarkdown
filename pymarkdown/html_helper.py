@@ -3,7 +3,7 @@ Module to provide helper functions for parsing html.
 """
 import logging
 import string
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, cast
 
 from pymarkdown.constants import Constants
 from pymarkdown.inline_markdown_token import RawHtmlMarkdownToken, TextMarkdownToken
@@ -849,13 +849,15 @@ class HtmlHelper:
         via an empty line or BLANK.
         """
 
-        if parser_state.token_stack[-1].html_block_type in [
+        assert parser_state.token_stack[-1].is_html_block
+        html_token = cast(HtmlBlockStackToken, parser_state.token_stack[-1])
+        if html_token.html_block_type in [
             HtmlHelper.html_block_6,
             HtmlHelper.html_block_7,
         ]:
             new_tokens, _ = parser_state.close_open_blocks_fn(
                 parser_state,
-                only_these_blocks=[type(parser_state.token_stack[-1])],
+                only_these_blocks=[HtmlBlockStackToken],
             )
         else:
             new_tokens = []
@@ -867,7 +869,7 @@ class HtmlHelper:
         parser_state: ParserState,
         line_to_parse: str,
         start_index: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         position_marker: PositionMarker,
     ) -> List[MarkdownToken]:
         """
@@ -884,23 +886,25 @@ class HtmlHelper:
         ]
 
         is_block_terminated, adj_line = False, line_to_parse[start_index:]
-        if parser_state.token_stack[-1].html_block_type == HtmlHelper.html_block_1:
+        assert parser_state.token_stack[-1].is_html_block
+        html_token = cast(HtmlBlockStackToken, parser_state.token_stack[-1])
+        if html_token.html_block_type == HtmlHelper.html_block_1:
             for next_end_tag in HtmlHelper.__html_block_1_end_tags:
                 if next_end_tag in adj_line:
                     is_block_terminated = True
-        elif parser_state.token_stack[-1].html_block_type == HtmlHelper.html_block_2:
+        elif html_token.html_block_type == HtmlHelper.html_block_2:
             is_block_terminated = HtmlHelper.__html_block_2_end in adj_line
-        elif parser_state.token_stack[-1].html_block_type == HtmlHelper.html_block_3:
+        elif html_token.html_block_type == HtmlHelper.html_block_3:
             is_block_terminated = HtmlHelper.__html_block_3_end in adj_line
-        elif parser_state.token_stack[-1].html_block_type == HtmlHelper.html_block_4:
+        elif html_token.html_block_type == HtmlHelper.html_block_4:
             is_block_terminated = HtmlHelper.__html_block_4_end in adj_line
-        elif parser_state.token_stack[-1].html_block_type == HtmlHelper.html_block_5:
+        elif html_token.html_block_type == HtmlHelper.html_block_5:
             is_block_terminated = HtmlHelper.__html_block_5_end in adj_line
 
         if is_block_terminated:
             terminated_block_tokens, _ = parser_state.close_open_blocks_fn(
                 parser_state,
-                only_these_blocks=[type(parser_state.token_stack[-1])],
+                only_these_blocks=[HtmlBlockStackToken],
             )
             assert terminated_block_tokens
             new_tokens.extend(terminated_block_tokens)
