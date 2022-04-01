@@ -1184,22 +1184,31 @@ class LinkHelper:
             )
         return update_index, inline_link, inline_title
 
-    # pylint: disable=too-many-arguments, too-many-locals
+    # pylint: disable=too-many-arguments,too-many-locals
     @staticmethod
-    def __handle_link_types(
+    def __excavate_link(
         inline_blocks: List[MarkdownToken],
         ind: int,
         source_text: str,
         new_index: int,
-        start_text: str,
-        remaining_line: str,
         current_string_unresolved: str,
-        xx_fn: Callable[[str], str],
-    ) -> Tuple[int, Optional[MarkdownToken], bool]:
-        """
-        After finding a link specifier, figure out what type of link it is.
-        """
-
+        remaining_line: str,
+    ) -> Tuple[
+        int,
+        str,
+        str,
+        Optional[str],
+        Optional[str],
+        Optional[str],
+        Optional[str],
+        Optional[str],
+        Optional[str],
+        bool,
+        Optional[str],
+        Optional[str],
+        Optional[str],
+        Optional[str],
+    ]:
         POGGER.debug(
             "handle_link_types>>$<<$<<",
             inline_blocks,
@@ -1257,6 +1266,64 @@ class LinkHelper:
             ) = LinkHelper.__look_for_shortcut_link(
                 inline_blocks, text_from_blocks, new_index
             )
+        return (
+            update_index,
+            text_from_blocks,
+            text_from_blocks_raw,
+            inline_link,
+            pre_inline_link,
+            inline_title,
+            pre_inline_title,
+            ex_label,
+            label_type,
+            did_use_angle_start,
+            inline_title_bounding_character,
+            before_link_whitespace,
+            before_title_whitespace,
+            after_title_whitespace,
+        )
+
+    # pylint: enable=too-many-arguments,too-many-locals
+
+    # pylint: disable=too-many-arguments, too-many-locals
+    @staticmethod
+    def __handle_link_types(
+        inline_blocks: List[MarkdownToken],
+        ind: int,
+        source_text: str,
+        new_index: int,
+        start_text: str,
+        remaining_line: str,
+        current_string_unresolved: str,
+        xx_fn: Callable[[str], str],
+    ) -> Tuple[int, Optional[MarkdownToken], bool]:
+        """
+        After finding a link specifier, figure out what type of link it is.
+        """
+
+        (
+            update_index,
+            text_from_blocks,
+            text_from_blocks_raw,
+            inline_link,
+            pre_inline_link,
+            inline_title,
+            pre_inline_title,
+            ex_label,
+            label_type,
+            did_use_angle_start,
+            inline_title_bounding_character,
+            before_link_whitespace,
+            before_title_whitespace,
+            after_title_whitespace,
+        ) = LinkHelper.__excavate_link(
+            inline_blocks,
+            ind,
+            source_text,
+            new_index,
+            current_string_unresolved,
+            remaining_line,
+        )
 
         POGGER.debug("<<<<<<<new_index<<<<<<<$<<", new_index)
         POGGER.debug("<<<<<<<update_index<<<<<<<$<<", update_index)

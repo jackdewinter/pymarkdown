@@ -11,9 +11,7 @@
         "pymarkdown/coalesce_processor.py": {
             "too-few-public-methods": 1
         },
-        "pymarkdown/constants.py": {
-            "no-self-argument": 1
-        },
+        "pymarkdown/constants.py": {},
         "pymarkdown/container_block_processor.py": {
             "too-many-arguments": 26,
             "too-many-locals": 16,
@@ -81,12 +79,12 @@
             "too-many-instance-attributes": 1
         },
         "pymarkdown/link_helper.py": {
-            "too-many-arguments": 6,
-            "too-many-locals": 5
+            "too-many-arguments": 7,
+            "too-many-locals": 6
         },
         "pymarkdown/link_reference_definition_helper.py": {
             "too-many-locals": 3,
-            "too-many-arguments": 6
+            "too-many-arguments": 7
         },
         "pymarkdown/link_reference_info.py": {},
         "pymarkdown/link_reference_titles.py": {},
@@ -168,7 +166,8 @@
         "pymarkdown/plugins/rule_md_025.py": {},
         "pymarkdown/plugins/rule_md_026.py": {},
         "pymarkdown/plugins/rule_md_027.py": {
-            "too-many-instance-attributes": 1
+            "too-many-instance-attributes": 1,
+            "too-many-arguments": 1
         },
         "pymarkdown/plugins/rule_md_028.py": {},
         "pymarkdown/plugins/rule_md_029.py": {},
@@ -222,10 +221,9 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 137,
-        "too-many-locals": 46,
+        "too-many-arguments": 140,
+        "too-many-locals": 47,
         "too-few-public-methods": 5,
-        "no-self-argument": 1,
         "too-many-boolean-expressions": 1,
         "chained-comparison": 1,
         "too-many-instance-attributes": 17,

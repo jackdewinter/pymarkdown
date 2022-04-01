@@ -122,20 +122,7 @@ class RuleMd007(RulePlugin):
                 ParserHelper.newline_character
             )
         elif token.is_link_reference_definition:
-            lrd_token = cast(LinkReferenceDefinitionMarkdownToken, token)
-            assert lrd_token.link_title_raw is not None
-            assert lrd_token.link_title_whitespace is not None
-            assert lrd_token.link_destination_whitespace is not None
-            assert lrd_token.link_name_debug is not None
-            bq_delta = (
-                1
-                + lrd_token.link_name_debug.count(ParserHelper.newline_character)
-                + lrd_token.link_destination_whitespace.count(
-                    ParserHelper.newline_character
-                )
-                + lrd_token.link_title_whitespace.count(ParserHelper.newline_character)
-                + lrd_token.link_title_raw.count(ParserHelper.newline_character)
-            )
+            bq_delta = self.__manage_lrd_token(token)
         elif token.is_text and self.__last_leaf_token:
             text_token = cast(TextMarkdownToken, token)
             if self.__last_leaf_token.is_setext_heading:
@@ -152,6 +139,23 @@ class RuleMd007(RulePlugin):
                     text_token.token_text.count(ParserHelper.newline_character) + 1
                 )
         self.__bq_line_index[len(self.__container_token_stack)] += bq_delta
+
+    @classmethod
+    def __manage_lrd_token(cls, token: MarkdownToken) -> int:
+        lrd_token = cast(LinkReferenceDefinitionMarkdownToken, token)
+        assert lrd_token.link_title_raw is not None
+        assert lrd_token.link_title_whitespace is not None
+        assert lrd_token.link_destination_whitespace is not None
+        assert lrd_token.link_name_debug is not None
+        return (
+            1
+            + lrd_token.link_name_debug.count(ParserHelper.newline_character)
+            + lrd_token.link_destination_whitespace.count(
+                ParserHelper.newline_character
+            )
+            + lrd_token.link_title_whitespace.count(ParserHelper.newline_character)
+            + lrd_token.link_title_raw.count(ParserHelper.newline_character)
+        )
 
     def manage_container_tokens(self, token: MarkdownToken) -> None:
         """
@@ -192,11 +196,10 @@ class RuleMd007(RulePlugin):
         list_depth = 0
         if self.__container_token_stack:
             stack_index = len(self.__container_token_stack) - 1
-            while stack_index >= 0:
-                if not self.__container_token_stack[
-                    stack_index
-                ].is_unordered_list_start:
-                    break
+            while (
+                stack_index >= 0
+                and self.__container_token_stack[stack_index].is_unordered_list_start
+            ):
                 list_depth += 1
                 stack_index -= 1
             # print(f"stack_index={stack_index}")

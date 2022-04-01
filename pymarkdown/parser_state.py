@@ -187,9 +187,10 @@ class ParserState:
         If no block quotes are found, 0 is returned.
         """
         last_stack_index = len(self.token_stack) - 1
-        while not self.token_stack[last_stack_index].is_document:
-            if self.token_stack[last_stack_index].is_block_quote:
-                break
+        while (
+            not self.token_stack[last_stack_index].is_document
+            and not self.token_stack[last_stack_index].is_block_quote
+        ):
             last_stack_index -= 1
         return last_stack_index
 
@@ -199,9 +200,10 @@ class ParserState:
         If no block quotes are found, 0 is returned.
         """
         last_stack_index = len(self.token_stack) - 1
-        while not self.token_stack[last_stack_index].is_document:
-            if self.token_stack[last_stack_index].is_list:
-                break
+        while (
+            not self.token_stack[last_stack_index].is_document
+            and not self.token_stack[last_stack_index].is_list
+        ):
             last_stack_index -= 1
         return last_stack_index
 
@@ -211,12 +213,10 @@ class ParserState:
         If no container tokens are found, 0 is returned.
         """
         last_stack_index = len(self.token_stack) - 1
-        while not self.token_stack[last_stack_index].is_document:
-            if (
-                self.token_stack[last_stack_index].is_block_quote
-                or self.token_stack[last_stack_index].is_list
-            ):
-                break
+        while not self.token_stack[last_stack_index].is_document and not (
+            self.token_stack[last_stack_index].is_block_quote
+            or self.token_stack[last_stack_index].is_list
+        ):
             last_stack_index -= 1
         return last_stack_index
 

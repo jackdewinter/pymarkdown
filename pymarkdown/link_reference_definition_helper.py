@@ -525,6 +525,35 @@ class LinkReferenceDefinitionHelper:
         if not keep_going:
             return keep_going, new_index, None
 
+        return LinkReferenceDefinitionHelper.__create_lrd_token(
+            new_index,
+            collected_destination,
+            normalized_destination,
+            line_destination_whitespace,
+            inline_link,
+            inline_raw_link,
+            inline_title,
+            inline_raw_title,
+            line_title_whitespace,
+            end_whitespace,
+        )
+
+    # pylint: enable=too-many-locals
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __create_lrd_token(
+        new_index: Optional[int],
+        collected_destination: Optional[str],
+        normalized_destination: Optional[str],
+        line_destination_whitespace: Optional[str],
+        inline_link: Optional[str],
+        inline_raw_link: Optional[str],
+        inline_title: Optional[str],
+        inline_raw_title: Optional[str],
+        line_title_whitespace: Optional[str],
+        end_whitespace: Optional[str],
+    ) -> Tuple[bool, Optional[int], Optional[LinkReferenceDefinitionTuple]]:
         assert new_index != -1
 
         POGGER.debug(
@@ -555,7 +584,7 @@ class LinkReferenceDefinitionHelper:
         )
         return True, new_index, parsed_lrd_tuple
 
-    # pylint: enable=too-many-locals
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     @staticmethod
