@@ -45,7 +45,7 @@ class RulePlugin(ABC):
 
     def set_configuration_map(
         self, plugin_specific_facade: ApplicationPropertiesFacade
-    ):
+    ) -> None:
         """
         Set the configuration map with values for the plugin.
         """
@@ -96,7 +96,7 @@ class RulePlugin(ABC):
         self,
         context: PluginScanContext,
         column_number: int,
-        line_number_delta=0,
+        line_number_delta: int = 0,
         extra_error_information: Optional[str] = None,
     ) -> None:
         """
@@ -121,7 +121,7 @@ class RulePlugin(ABC):
         line_number_delta: int = 0,
         column_number_delta: int = 0,
         use_original_position: bool = False,
-    ):
+    ) -> None:
         """
         Report an error with the current token being processed.
         """

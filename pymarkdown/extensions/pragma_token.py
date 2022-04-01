@@ -2,7 +2,7 @@
 Module to provide for linter instructions that can be embedded within the document.
 """
 import logging
-from typing import Dict, Optional
+from typing import Callable, Dict, Optional, Set
 
 from application_properties import ApplicationPropertiesFacade
 
@@ -12,8 +12,10 @@ from pymarkdown.extension_manager.extension_manager_constants import (
 )
 from pymarkdown.extension_manager.parser_extension import ParserExtension
 from pymarkdown.markdown_token import MarkdownToken, MarkdownTokenClass
+from pymarkdown.parse_block_pass_properties import ParseBlockPassProperties
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.plugin_manager.found_plugin import FoundPlugin
 from pymarkdown.position_marker import PositionMarker
 
 POGGER = ParserLogger(logging.getLogger(__name__))
@@ -62,7 +64,7 @@ class PragmaExtension(ParserExtension):
         line_to_parse: str,
         container_depth: int,
         extracted_whitespace: Optional[str],
-        parser_properties,
+        parser_properties: ParseBlockPassProperties,
     ) -> bool:
         """
         Look for a pragma in the current line.
@@ -104,13 +106,13 @@ class PragmaExtension(ParserExtension):
     # pylint: disable=too-many-locals, too-many-arguments
     @staticmethod
     def compile_single_pragma(
-        scan_file,
-        next_line_number,
-        pragma_lines,
-        all_ids,
-        document_pragmas,
-        log_pragma_failure,
-    ):
+        scan_file: str,
+        next_line_number: int,
+        pragma_lines: Dict[int, str],
+        all_ids: Dict[str, FoundPlugin],
+        document_pragmas: Dict[int, Set[str]],
+        log_pragma_failure: Callable[[str, int, str], None],
+    ) -> None:
         """
         Compile a single pragma line, validating it before adding it to the dictionary of pragmas.
         """
@@ -125,6 +127,7 @@ class PragmaExtension(ParserExtension):
         after_whitespace_index, _ = ParserHelper.extract_whitespace(
             line_after_prefix, 0
         )
+        assert after_whitespace_index is not None
         command_data = line_after_prefix[
             after_whitespace_index
             + len(PragmaToken.pragma_title) : -len(PragmaToken.pragma_suffix)
@@ -132,6 +135,7 @@ class PragmaExtension(ParserExtension):
         after_command_index, command = ParserHelper.extract_until_whitespace(
             command_data, 0
         )
+        assert command is not None
         command = command.lower()
         if not command:
             log_pragma_failure(
@@ -199,7 +203,7 @@ class PragmaToken(MarkdownToken):
         )
 
     @property
-    def pragma_lines(self):
+    def pragma_lines(self) -> Dict[int, str]:
         """
         Returns the pragma lines for the document.
         """

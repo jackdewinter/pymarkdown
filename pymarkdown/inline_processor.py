@@ -796,6 +796,7 @@ class InlineProcessor:
         delta_line: int,
         repeat_count: int,
     ) -> Tuple[int, int]:
+        assert current_token.ex_label is not None
         if newline_count := ParserHelper.count_newlines_in_text(current_token.ex_label):
             POGGER.debug(">>ex_label")
             delta_line += newline_count
@@ -826,11 +827,15 @@ class InlineProcessor:
         assert current_token.is_inline_link or current_token.is_inline_image
         active_link_title = current_token.active_link_title
 
+        assert current_token.before_title_whitespace is not None
         link_part_lengths = [0] * 5
         link_part_lengths[0] = len(current_token.active_link_uri) + len(
             current_token.before_title_whitespace
         )
         if current_token.inline_title_bounding_character:
+            assert active_link_title is not None
+            assert current_token.after_title_whitespace is not None
+
             link_part_lengths[1] = 1
             link_part_lengths[2] = len(active_link_title) + 1
             link_part_lengths[3] = len(current_token.after_title_whitespace)
@@ -840,6 +845,7 @@ class InlineProcessor:
             current_token
         )
 
+        assert current_token.before_link_whitespace is not None
         (
             link_part_index,
             delta_line,
@@ -866,6 +872,7 @@ class InlineProcessor:
             last_spaces,
         )
 
+        assert active_link_title is not None
         (
             link_part_index,
             delta_line,
@@ -877,6 +884,7 @@ class InlineProcessor:
         if new_link_part_length is not None:
             link_part_lengths[2] = new_link_part_length
 
+        assert current_token.after_title_whitespace is not None
         (
             link_part_index,
             delta_line,
@@ -1605,6 +1613,7 @@ class InlineProcessor:
                     "coalesced_list[-1]..leading_text_index=$",
                     block_quote_token.leading_text_index,
                 )
+                assert block_quote_token.leading_spaces is not None
                 split_leading_spaces = block_quote_token.leading_spaces.split(
                     ParserHelper.newline_character
                 )
@@ -1630,6 +1639,7 @@ class InlineProcessor:
                     "coalesced_list[-1].leading_text_index=$",
                     block_quote_token.leading_text_index,
                 )
+                assert block_quote_token.leading_spaces is not None
                 split_leading_spaces = block_quote_token.leading_spaces.split(
                     ParserHelper.newline_character
                 )

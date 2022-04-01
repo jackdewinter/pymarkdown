@@ -111,19 +111,24 @@ class StartOfLineTokenParser:
                 ParserHelper.newline_character
             )
             if link_token.label_type == Constants.link_type__inline:
+                assert link_token.before_link_whitespace is not None
                 self.__paragraph_index += link_token.before_link_whitespace.count(
                     ParserHelper.newline_character
                 )
+                assert link_token.before_title_whitespace is not None
                 self.__paragraph_index += link_token.before_title_whitespace.count(
                     ParserHelper.newline_character
                 )
+                assert link_token.after_title_whitespace is not None
                 self.__paragraph_index += link_token.after_title_whitespace.count(
                     ParserHelper.newline_character
                 )
+                assert link_token.active_link_title is not None
                 self.__paragraph_index += link_token.active_link_title.count(
                     ParserHelper.newline_character
                 )
             if link_token.label_type == Constants.link_type__full:
+                assert link_token.ex_label is not None
                 self.__paragraph_index += link_token.ex_label.count(
                     ParserHelper.newline_character
                 )
@@ -156,13 +161,15 @@ class StartOfLineTokenParser:
             if (
                 self.__first_line_after_hard_break
                 or self.__first_line_after_other_token
-            ) or split_index:
-                if self.__first_line_after_other_token:
-                    adjusted_column_number = self.__paragraph_column_number
-                else:
-                    adjusted_column_number = self.__paragraph_column_number + len(
-                        split_whitespace[split_index + self.__paragraph_index]
-                    )
+                or split_index
+            ):
+                adjusted_column_number = (
+                    self.__paragraph_column_number
+                    if self.__first_line_after_other_token
+                    else self.__paragraph_column_number
+                    + len(split_whitespace[split_index + self.__paragraph_index])
+                )
+
                 if split_index == len(split_text) - 1:
                     self.__delayed_line = (
                         combined_text,

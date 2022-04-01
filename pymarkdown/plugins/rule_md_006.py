@@ -52,6 +52,7 @@ class RuleMd006(RulePlugin):
                 block_quote_token = cast(
                     BlockQuoteMarkdownToken, self.__token_stack[-2]
                 )
+                assert block_quote_token.leading_spaces is not None
                 split_spaces = block_quote_token.leading_spaces.split(
                     ParserHelper.newline_character
                 )

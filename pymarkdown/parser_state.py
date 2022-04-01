@@ -4,10 +4,11 @@ Module to provide for an encapsulation of the high level state of the parser.
 from __future__ import annotations
 
 import copy
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, cast
 
 from typing_extensions import Protocol
 
+from pymarkdown.container_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.requeue_line_info import RequeueLineInfo
@@ -80,29 +81,29 @@ class ParserState:
             self.__handle_blank_line_fn,
         ) = (token_stack, token_document, close_open_blocks_fn, handle_blank_line_fn)
 
-        (
-            self.__last_block_quote_stack_token,
-            self.__last_block_quote_markdown_token_index,
-            self.__copy_of_last_block_quote_markdown_token,
-            self.__original_stack_depth,
-            self.__original_document_depth,
-            self.__no_para_start_if_empty,
-        ) = (None, None, None, 0, 0, False)
+        self.__no_para_start_if_empty: bool = False
+        self.__last_block_quote_stack_token: Optional[StackToken] = None
+        self.__last_block_quote_markdown_token_index: Optional[int] = None
+        self.__copy_of_last_block_quote_markdown_token: Optional[
+            BlockQuoteMarkdownToken
+        ] = None
+        self.__original_stack_depth: int = 0
+        self.__original_document_depth: int = 0
         self.__original_line_to_parse: Optional[str] = None
         self.__same_line_container_tokens: Optional[List[MarkdownToken]] = None
         self.nested_list_start: Optional[ListStackToken] = None
         self.copy_of_token_stack: List[StackToken] = []
-        self.block_copy: List[MarkdownToken] = []
+        self.block_copy: List[Optional[MarkdownToken]] = []
 
     @property
-    def token_stack(self):
+    def token_stack(self) -> List[StackToken]:
         """
         Stack array containing the currently active stack tokens.
         """
         return self.__token_stack
 
     @property
-    def token_document(self):
+    def token_document(self) -> List[MarkdownToken]:
         """
         Document array containing any Markdown tokens.
         """
@@ -130,21 +131,23 @@ class ParserState:
         return self.__same_line_container_tokens
 
     @property
-    def last_block_quote_stack_token(self):
+    def last_block_quote_stack_token(self) -> Optional[StackToken]:
         """
         Last block quote token.
         """
         return self.__last_block_quote_stack_token
 
     @property
-    def last_block_quote_markdown_token_index(self):
+    def last_block_quote_markdown_token_index(self) -> Optional[int]:
         """
         Index of the last block quote token.
         """
         return self.__last_block_quote_markdown_token_index
 
     @property
-    def copy_of_last_block_quote_markdown_token(self):
+    def copy_of_last_block_quote_markdown_token(
+        self,
+    ) -> Optional[BlockQuoteMarkdownToken]:
         """
         Copy of the last block quote markdown token, before any changes.
         """
@@ -158,14 +161,14 @@ class ParserState:
         return self.__original_line_to_parse
 
     @property
-    def original_stack_depth(self):
+    def original_stack_depth(self) -> int:
         """
         Length of the token_stack array at the start of the line.
         """
         return self.__original_stack_depth
 
     @property
-    def original_document_depth(self):
+    def original_document_depth(self) -> int:
         """
         Length of the token_document array at the start of the line.
         """
@@ -184,9 +187,10 @@ class ParserState:
         If no block quotes are found, 0 is returned.
         """
         last_stack_index = len(self.token_stack) - 1
-        while not self.token_stack[last_stack_index].is_document:
-            if self.token_stack[last_stack_index].is_block_quote:
-                break
+        while (
+            not self.token_stack[last_stack_index].is_document
+            and not self.token_stack[last_stack_index].is_block_quote
+        ):
             last_stack_index -= 1
         return last_stack_index
 
@@ -196,9 +200,10 @@ class ParserState:
         If no block quotes are found, 0 is returned.
         """
         last_stack_index = len(self.token_stack) - 1
-        while not self.token_stack[last_stack_index].is_document:
-            if self.token_stack[last_stack_index].is_list:
-                break
+        while (
+            not self.token_stack[last_stack_index].is_document
+            and not self.token_stack[last_stack_index].is_list
+        ):
             last_stack_index -= 1
         return last_stack_index
 
@@ -208,12 +213,10 @@ class ParserState:
         If no container tokens are found, 0 is returned.
         """
         last_stack_index = len(self.token_stack) - 1
-        while not self.token_stack[last_stack_index].is_document:
-            if (
-                self.token_stack[last_stack_index].is_block_quote
-                or self.token_stack[last_stack_index].is_list
-            ):
-                break
+        while not self.token_stack[last_stack_index].is_document and not (
+            self.token_stack[last_stack_index].is_block_quote
+            or self.token_stack[last_stack_index].is_list
+        ):
             last_stack_index -= 1
         return last_stack_index
 
@@ -249,15 +252,20 @@ class ParserState:
         (
             self.__last_block_quote_stack_token,
             self.__last_block_quote_markdown_token_index,
-            self.__copy_of_last_block_quote_markdown_token,
-        ) = (None, None, None)
+        ) = (None, None)
+        self.__copy_of_last_block_quote_markdown_token = None
         if not self.token_stack[last_stack_index].is_document:
             self.__last_block_quote_stack_token = self.token_stack[last_stack_index]
+            markdown_token = self.token_stack[last_stack_index].matching_markdown_token
+            assert markdown_token is not None
             self.__last_block_quote_markdown_token_index = self.token_document.index(
-                self.token_stack[last_stack_index].matching_markdown_token
+                markdown_token
             )
-            self.__copy_of_last_block_quote_markdown_token = copy.deepcopy(
-                self.token_document[self.__last_block_quote_markdown_token_index]
+            self.__copy_of_last_block_quote_markdown_token = cast(
+                BlockQuoteMarkdownToken,
+                copy.deepcopy(
+                    self.token_document[self.__last_block_quote_markdown_token_index]
+                ),
             )
 
     def mark_for_leaf_processing(

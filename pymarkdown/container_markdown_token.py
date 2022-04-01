@@ -20,12 +20,12 @@ class ContainerMarkdownToken(MarkdownToken):
 
     def __init__(
         self,
-        token_name,
-        extra_data,
-        line_number=0,
-        column_number=0,
-        position_marker=None,
-    ):
+        token_name: str,
+        extra_data: str,
+        line_number: int = 0,
+        column_number: int = 0,
+        position_marker: Optional[PositionMarker] = None,
+    ) -> None:
         MarkdownToken.__init__(
             self,
             token_name,
@@ -186,7 +186,6 @@ class ListStartMarkdownToken(ContainerMarkdownToken):
         Compose the object's self.extra_data field from the local object's variables.
         """
 
-        assert self.__extracted_whitespace is not None
         item_list = [
             self.__list_start_sequence,
             self.__list_start_content,
@@ -285,7 +284,7 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
     """
 
     def __init__(
-        self, extracted_whitespace: Optional[str], position_marker: PositionMarker
+        self, extracted_whitespace: str, position_marker: PositionMarker
     ) -> None:
         self.__extracted_whitespace, self.__leading_spaces, self.leading_text_index = (
             extracted_whitespace,
@@ -301,14 +300,14 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
         self.__compose_extra_data_field()
 
     @property
-    def extracted_whitespace(self):
+    def extracted_whitespace(self) -> str:
         """
         Returns any whitespace that was extracted before the processing of this element occurred.
         """
         return self.__extracted_whitespace
 
     @property
-    def leading_spaces(self):
+    def leading_spaces(self) -> Optional[str]:
         """
         Returns any leading spaces that preface the block quote.
         """
@@ -351,7 +350,7 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
         self.__compose_extra_data_field()
         return extracted_text
 
-    def __compose_extra_data_field(self):
+    def __compose_extra_data_field(self) -> None:
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
@@ -365,6 +364,7 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
         Calculate the next leading space based on the leading_text_index,
         optonally incrementing it as well.
         """
+        assert self.leading_spaces is not None
         split_leading_spaces = self.leading_spaces.split(ParserHelper.newline_character)
         absolute_index = self.leading_text_index + delta
         if allow_overflow and absolute_index >= len(split_leading_spaces):

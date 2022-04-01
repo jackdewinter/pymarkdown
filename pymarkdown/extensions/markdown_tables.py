@@ -2,6 +2,8 @@
 Module to provide for the recognition of Markdown tables.
 """
 
+from application_properties import ApplicationPropertiesFacade
+
 from pymarkdown.extension_manager.extension_impl import ExtensionDetails
 from pymarkdown.extension_manager.extension_manager_constants import (
     ExtensionManagerConstants,
@@ -15,14 +17,14 @@ class MarkdownTablesExtension(ParserExtension):
     """
 
     @classmethod
-    def get_identifier(cls):
+    def get_identifier(cls) -> str:
         """
         Get the identifier associated with this extension.
         """
         return "markdown-tables"
 
     @classmethod
-    def get_details(cls):
+    def get_details(cls) -> ExtensionDetails:
         """
         Get the details for the extension.
         """
@@ -38,7 +40,9 @@ class MarkdownTablesExtension(ParserExtension):
         )
 
     @classmethod
-    def apply_configuration(cls, extension_specific_facade):
+    def apply_configuration(
+        cls, extension_specific_facade: ApplicationPropertiesFacade
+    ) -> None:
         """
         Apply any configuration required by the extension.
         """

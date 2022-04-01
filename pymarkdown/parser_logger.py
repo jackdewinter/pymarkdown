@@ -39,7 +39,7 @@ class ParserLogger:
         """
         ParserLogger.__global_count += 1
 
-    def info(self, log_format, *args: Any) -> None:
+    def info(self, log_format: str, *args: Any) -> None:
         """
         Log information at an "INFO" level to the logger.
         """
@@ -56,7 +56,7 @@ class ParserLogger:
         """
         return self.__is_debug_enabled
 
-    def debug(self, log_format, *args: Any) -> None:
+    def debug(self, log_format: str, *args: Any) -> None:
         """
         Log information at a "DEBUG" level to the logger.
         """
