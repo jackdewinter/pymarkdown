@@ -47,7 +47,7 @@ class RuleMd025(RulePlugin):
         found_value = found_value.strip()
         if not found_value:
             raise ValueError("Empty strings are not allowable values.")
-        if found_value.find(":") != -1:
+        if ":" in found_value:
             raise ValueError("Colons (:) are not allowed in the value.")
 
     def initialize_from_config(self) -> None:
@@ -75,9 +75,7 @@ class RuleMd025(RulePlugin):
         """
         Event that a new token is being processed.
         """
-        # print(">>>" + str(token).replace(ParserHelper.newline_character, "\\n"))
-        is_token_heading = token.is_atx_heading or token.is_setext_heading
-        if is_token_heading:
+        if is_token_heading := token.is_atx_heading or token.is_setext_heading:
             atx_token = cast(AtxHeadingMarkdownToken, token)
             if atx_token.hash_count == self.__level and self.__have_top_level:
                 self.report_next_token_error(context, token)

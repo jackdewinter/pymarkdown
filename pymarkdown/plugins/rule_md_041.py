@@ -47,7 +47,7 @@ class RuleMd041(RulePlugin):
     @classmethod
     def __validate_configuration_title(cls, found_value: str) -> None:
         found_value = found_value.strip()
-        if found_value.find(":") != -1:
+        if ":" in found_value:
             raise ValueError("Colons (:) are not allowed in the value.")
 
     def initialize_from_config(self) -> None:
