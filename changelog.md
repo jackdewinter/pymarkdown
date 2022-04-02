@@ -4,6 +4,20 @@
 
 ### Added
 
+- None
+
+### Changed
+
+- None
+
+### Fixed
+
+- None
+
+## Version 0.9.6 - Date: 2022-04-02
+
+### Added
+
 - [Added - Issue 293](https://github.com/jackdewinter/pymarkdown/issues/293)
   - next round of nested level tests, with new list items
 - [Added - Issue 319](https://github.com/jackdewinter/pymarkdown/issues/319)
