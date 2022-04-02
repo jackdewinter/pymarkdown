@@ -30,7 +30,7 @@
   - markdown generator: needed to take list items into account
 - [Fixed - Issue 295](https://github.com/jackdewinter/pymarkdown/issues/295)
   - markdown generator: fixed by work on 294
-- [Fixed - Issue 296][https://github.com/jackdewinter/pymarkdown/issues/296]
+- [Fixed - Issue 296](https://github.com/jackdewinter/pymarkdown/issues/296)
   - parser: improper closing of previous block caused duplicate list items
 - [Fixed - Issue 297](https://github.com/jackdewinter/pymarkdown/issues/297)
   - markdown generator: not indenting enough
