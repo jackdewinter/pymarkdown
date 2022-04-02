@@ -21,7 +21,7 @@
 - [Added - Issue 293](https://github.com/jackdewinter/pymarkdown/issues/293)
   - next round of nested level tests, with new list items
 - [Added - Issue 319](https://github.com/jackdewinter/pymarkdown/issues/319)
-  - added mypy typing to entire project and removed stubs for application_properties
+  - added mypy typing to entire project and removed stubs for `application_properties`
 
 ### Changed
 
