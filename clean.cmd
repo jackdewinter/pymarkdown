@@ -74,7 +74,7 @@ if ERRORLEVEL 1 (
 )
 
 echo {Executing mypy static analyzer on Python source code.}
-pipenv run mypy %PYTHON_MODULE_NAME% stubs
+pipenv run mypy --strict %PYTHON_MODULE_NAME% stubs
 if ERRORLEVEL 1 (
 	echo.
 	echo {Executing mypy static analyzer on Python source code failed.}

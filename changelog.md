@@ -6,6 +6,8 @@
 
 - [Added - Issue 293](https://github.com/jackdewinter/pymarkdown/issues/293)
   - next round of nested level tests, with new list items
+- [Added - Issue 319](https://github.com/jackdewinter/pymarkdown/issues/319)
+  - added mypy typing to entire project and removed stubs for application_properties
 
 ### Changed
 
@@ -26,8 +28,18 @@
   - parser: code to handle indent was greedy with respect to HTML blocks and fenced code blocks
 - [Fixed - Issue 294](https://github.com/jackdewinter/pymarkdown/issues/294)
   - markdown generator: needed to take list items into account
-- [Fixed - Isse 295](https://github.com/jackdewinter/pymarkdown/issues/295)
+- [Fixed - Issue 295](https://github.com/jackdewinter/pymarkdown/issues/295)
   - markdown generator: fixed by work on 294
+- [Fixed - Issue 296](https://github.com/jackdewinter/pymarkdown/issues/296)
+  - parser: improper closing of previous block caused duplicate list items
+- [Fixed - Issue 297](https://github.com/jackdewinter/pymarkdown/issues/297)
+  - markdown generator: not indenting enough
+- [Fixed - Issue 298](https://github.com/jackdewinter/pymarkdown/issues/298)
+  - parser: list processing go confused between block quote and list
+- [Fixed - Issue 299](https://github.com/jackdewinter/pymarkdown/issues/299)
+  - parser: not recognizing inner list
+- [Fixed - Issue 300](https://github.com/jackdewinter/pymarkdown/issues/300)
+  - parser: various issues with lists not being properly handled in nested scenarios
 
 ## Version 0.9.5 - Date: 2022-02-07
 

@@ -16,8 +16,8 @@ class PluginOne(RulePlugin):
 
     def __init__(self) -> None:
         super().__init__()
-        self.test_value = None
-        self.other_test_value = None
+        self.test_value: int = -1
+        self.other_test_value: int = -1
 
     def get_details(self) -> PluginDetails:
         """

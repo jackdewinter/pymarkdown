@@ -21,7 +21,7 @@ class RuleMd001(RulePlugin):
     def __init__(self) -> None:
         super().__init__()
         self.__last_heading_count: int = 0
-        self.__front_matter_title = None
+        self.__front_matter_title: str = ""
 
     def get_details(self) -> PluginDetails:
         """

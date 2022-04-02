@@ -19,7 +19,7 @@ class RuleMd033(RulePlugin):
     def __init__(self) -> None:
         super().__init__()
         self.__allowed_elements: List[str] = []
-        self.__allow_first_image_element = None
+        self.__allow_first_image_element: bool = False
         self.__is_next_html_block_start: bool = False
         self.__is_first_element: bool = False
         self.__is_first_html_block: bool = False
