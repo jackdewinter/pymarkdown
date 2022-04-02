@@ -19,8 +19,8 @@ class RuleMd025(RulePlugin):
     def __init__(self) -> None:
         super().__init__()
         self.__have_top_level = False
-        self.__front_matter_title = None
-        self.__level = None
+        self.__front_matter_title: str = ""
+        self.__level: int = -1
 
     def get_details(self) -> PluginDetails:
         """

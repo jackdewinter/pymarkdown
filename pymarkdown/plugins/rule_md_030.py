@@ -19,10 +19,10 @@ class RuleMd030(RulePlugin):
     def __init__(self) -> None:
         super().__init__()
         # self.__debug = False
-        self.__ul_single = None
-        self.__ul_multi = None
-        self.__ol_single = None
-        self.__ol_multi = None
+        self.__ul_single: int = -1
+        self.__ul_multi: int = -1
+        self.__ol_single: int = -1
+        self.__ol_multi: int = -1
         self.__list_stack: List[MarkdownToken] = []
         self.__list_tokens: List[List[MarkdownToken]] = []
         self.__current_list_parent: Optional[MarkdownToken] = None

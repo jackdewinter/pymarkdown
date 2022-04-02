@@ -23,7 +23,7 @@ class RuleMd024(RulePlugin):
         self.__start_token: Optional[MarkdownToken] = None
         self.__hash_count: int = -1
         self.__last_hash_count: int = 0
-        self.__siblings_only = None
+        self.__siblings_only: bool = False
         self.__heading_content_map: List[Dict[str, str]] = []
 
     def get_details(self) -> PluginDetails:

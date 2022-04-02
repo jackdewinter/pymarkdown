@@ -19,8 +19,8 @@ class RuleMd041(RulePlugin):
 
     def __init__(self) -> None:
         super().__init__()
-        self.__start_level = None
-        self.__front_matter_title = None
+        self.__start_level: int = -1
+        self.__front_matter_title: str = ""
         self.__have_seen_first_token: bool = False
         self.__seen_html_block_start: Optional[MarkdownToken] = None
 

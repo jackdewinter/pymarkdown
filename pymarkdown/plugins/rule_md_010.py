@@ -13,7 +13,7 @@ class RuleMd010(RulePlugin):
 
     def __init__(self) -> None:
         super().__init__()
-        self.__allow_in_code_blocks = None
+        self.__allow_in_code_blocks: bool = False
 
     def get_details(self) -> PluginDetails:
         """
