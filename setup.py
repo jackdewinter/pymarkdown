@@ -51,7 +51,9 @@ PROJECT_CLASSIFIERS = [
 
 PACKAGE_MODULES = [
     "pymarkdown",
+    "pymarkdown.extension_manager",
     "pymarkdown.extensions",
+    "pymarkdown.plugin_manager",
     "pymarkdown.plugins",
     "pymarkdown.resources",
 ]

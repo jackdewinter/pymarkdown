@@ -1,0 +1,19 @@
+version: 2
+
+# https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+updates:
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: daily
+      # Check for updates at 1am Pacific time
+      time: "01:00"
+      timezone: "America/Los_Angeles"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      # Check for updates at 1am Pacific time
+      time: "01:00"
+      timezone: "America/Los_Angeles"
