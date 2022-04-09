@@ -18,7 +18,7 @@ To enable pre-commit hook support in a repository,
 the `.pre-commit-config.yaml` file must exist in the
 root of that repository and start with the text:
 
-```text
+```yaml
 default_stages: [commit, push]
 
 repos:
@@ -31,10 +31,11 @@ pre-commit hooks, append the following configuration to
 the `.pre-commit-config.yaml` file:
 
 ```yaml
--   repo: https://github.com/jackdewinter/pymarkdown
-    rev: main
-    hooks:
-    -   id: pymarkdown
+repos:
+    - repo: https://github.com/jackdewinter/pymarkdown
+      rev: main
+      hooks:
+          - id: pymarkdown
 ```
 
 For a good example of a working `` file, please feel free to look at that file
@@ -66,16 +67,18 @@ to use for the pre-commit check.
 In the above section, the `rev` value was set to `main`:
 
 ```yaml
--   repo: https://github.com/jackdewinter/pymarkdown
-    rev: main
+repos:
+    - repo: https://github.com/jackdewinter/pymarkdown
+      rev: main
 ```
 
 This instructs the pre-commit hooks to use the head commit in
 the `main` branch.  Other alternatives are:
 
 ```yaml
--   repo: https://github.com/jackdewinter/pymarkdown
-    rev: 0.9.0
+repos:
+    - repo: https://github.com/jackdewinter/pymarkdown
+      rev: 0.9.0
 ```
 
 to use the beta release, tagged with `0.9.0`.  Another possibility
@@ -83,8 +86,9 @@ for this value is to specify the exact SHA hash of the commit in the repository.
 For the `0.9.0` release, this would be:
 
 ```yaml
--   repo: https://github.com/jackdewinter/pymarkdown
-    rev: 47ab4e6e6c57c4187398870ffb9632375975fd64
+repos:
+    - repo: https://github.com/jackdewinter/pymarkdown
+      rev: 47ab4e6e6c57c4187398870ffb9632375975fd64
 ```
 
 #### Recommendations
@@ -107,31 +111,42 @@ locate the `- id: pymarkdown` line in the file and change it
 in one of these two ways:
 
 ```yaml
-      -   id: pymarkdown
-          args: [option1, scan]
+repos:
+    - repo: https://github.com/jackdewinter/pymarkdown
+      rev: main
+          - id: pymarkdown
+            args: [option1, scan]
 ```
 
 or:
 
 ```yaml
-      -   id: pymarkdown
-          args:
-          -   option1
-          -   scan
+repos:
+    - repo: https://github.com/jackdewinter/pymarkdown
+      rev: main
+      hooks:
+          - id: pymarkdown
+            args:
+                - option1
+                - scan
 ```
 
 where `option1` is one of the specified options.
 
-For command-line arguments that take positional values, the
+For arguments that are followed by a specified value, the
 argument and the value must be separate `args`, for example
 like this:
 
 ```yaml
-    -   id: pymarkdown
-        args:
-        -   --disable-rules
-        -   line-length
-        -   scan
+repos:
+    - repo: https://github.com/jackdewinter/pymarkdown
+      rev: main
+      hooks:
+          - id: pymarkdown
+            args:
+                - --disable-rules
+                - line-length
+                - scan
 ```
 
 Note that
@@ -163,10 +178,14 @@ If any of those reasons are applicable, then the `args` section
 of the `.pre-commit-config.yaml` file should look like this:
 
 ```yaml
-      -   id: pymarkdown
-          args:
-          -   --config=.pymarkdown.json
-          -   scan
+repos:
+    - repo: https://github.com/jackdewinter/pymarkdown
+      rev: main
+      hooks:
+          - id: pymarkdown
+            args:
+                - --config=.pymarkdown.json
+                - scan
 ```
 
 with a configuration file named `.pymarkdown.json` in the root of
@@ -210,9 +229,13 @@ in narrowing down the list of files to scan.
 A simple example of this is the following configuration:
 
 ```yaml
-      -   id: pymarkdown
-          exclude: ^docs/todo\.md$
-          files: ^docs/
+repos:
+    - repo: https://github.com/jackdewinter/pymarkdown
+      rev: main
+      hooks:
+          - id: pymarkdown
+            exclude: ^docs/todo\.md$
+            files: ^docs/
 ```
 
 That configuration instructs the pre-commit hooks to pass
