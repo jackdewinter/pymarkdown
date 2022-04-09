@@ -24,6 +24,7 @@ def test_gfm_bad_token():
     ]
 
     # Act
+    captured_exception = None
     try:
         transformer.transform(tokens_to_test)
         raise AssertionError("should have failed")
@@ -50,6 +51,7 @@ def test_gfm_bad_end_token():
     ]
 
     # Act
+    captured_exception = None
     try:
         transformer.transform(tokens_to_test)
         raise AssertionError("should have failed")
