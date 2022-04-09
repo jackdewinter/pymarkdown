@@ -57,6 +57,14 @@ if ERRORLEVEL 1 (
 	goto error_end
 )
 
+echo {Executing pre-commit hooks on Python code.}
+pipenv run pre-commit run --all
+if ERRORLEVEL 1 (
+	echo.
+	echo {Executing pre-commit hooks on Python code failed.}
+	goto error_end
+)
+
 echo {Executing flake8 static analyzer on Python code.}
 pipenv run flake8 -j 4 --exclude dist,build %MY_VERBOSE%
 if ERRORLEVEL 1 (
@@ -66,7 +74,8 @@ if ERRORLEVEL 1 (
 )
 
 echo {Executing pylint static analyzer on Python source code.}
-pipenv run pylint -j 4 --rcfile=setup.cfg %MY_VERBOSE% %PYTHON_MODULE_NAME% %PYTHON_MODULE_NAME%/extensions %PYTHON_MODULE_NAME%/extension_manager %PYTHON_MODULE_NAME%/plugins %PYTHON_MODULE_NAME%/plugin_manager
+set TEST_EXECUTION_FAILED=
+pipenv run pylint -j 1 --rcfile=setup.cfg --recursive=y %MY_VERBOSE% %PYTHON_MODULE_NAME%
 if ERRORLEVEL 1 (
 	echo.
 	echo {Executing pylint static analyzer on Python source code failed.}
@@ -80,7 +89,6 @@ if ERRORLEVEL 1 (
 	echo {Executing mypy static analyzer on Python source code failed.}
 	goto error_end
 )
-rem pipenv run stubgen --output stubs -p application_properties
 rem pipenv run stubgen --output stubs -p columnar
 rem pipenv run stubgen --output stubs -p wcwidth
 
@@ -93,7 +101,7 @@ if ERRORLEVEL 1 (
 )
 
 echo {Executing pylint static analyzer on test Python code.}
-pipenv run pylint -j 4 --rcfile=setup.cfg test --ignore test\resources %MY_VERBOSE%
+pipenv run pylint -j 1 --rcfile=setup.cfg --ignore test\resources %MY_VERBOSE% test test\basic test\extensions test\gfm test\nested_three test\paragraph_series test\rules
 if ERRORLEVEL 1 (
 	echo.
 	echo {Executing pylint static analyzer on test Python code failed.}

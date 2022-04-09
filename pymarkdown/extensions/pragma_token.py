@@ -26,20 +26,18 @@ class PragmaExtension(ParserExtension):
     Extension to implement the pragma extensions.
     """
 
-    @classmethod
-    def get_identifier(cls) -> str:
+    def get_identifier(self) -> str:
         """
         Get the identifier associated with this extension.
         """
         return "linter-pragmas"
 
-    @classmethod
-    def get_details(cls) -> ExtensionDetails:
+    def get_details(self) -> ExtensionDetails:
         """
         Get the details for the extension.
         """
         return ExtensionDetails(
-            extension_id=cls.get_identifier(),
+            extension_id=self.get_identifier(),
             extension_name="Pragma Linter Instructions",
             extension_description="Allows parsing of instructions for the linter.",
             extension_enabled_by_default=True,
@@ -49,9 +47,8 @@ class PragmaExtension(ParserExtension):
             extension_configuration=None,
         )
 
-    @classmethod
     def apply_configuration(
-        cls, extension_specific_facade: ApplicationPropertiesFacade
+        self, extension_specific_facade: ApplicationPropertiesFacade
     ) -> None:
         """
         Apply any configuration required by the extension.

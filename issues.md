@@ -51,8 +51,6 @@ md010 - tabs "converted"
 - show url for failed rules as option
 - combine traversal for 027 and 007?
 
-- [mypy?](https://mypy.readthedocs.io/en/stable/getting_started.html)
-
 - determine which errors to print and which to log
 - (performance) debug: search for any cases where adding a call to `is_debug_enabled` would be helpful
 - (performance) assert: do as little as possible to ensure better performance

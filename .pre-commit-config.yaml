@@ -3,10 +3,10 @@ repos:
     rev: v0.9.5
     hooks:
       - id: pymarkdown
-        name: PyMarkdown
-        description: "PyMarkdown"
-        files: ^README\.md$
-        entry: pymarkdown
+        pass_filenames: false
         args:
-          - --config=clean.json
+          - --config
+          - clean.json
           - scan
+          - .
+          - ./docs
