@@ -22,7 +22,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@master
       - name: Setup Python 3.8
-        uses: actions/setup-python@v3.1.1
+        uses: actions/setup-python@v3.1.2
         with:
           python-version: 3.8
       - name: Install PipEnv
@@ -59,7 +59,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@master
       - name: Setup Python 3.8
-        uses: actions/setup-python@v3.1.1
+        uses: actions/setup-python@v3.1.2
         with:
           python-version: 3.8
       - name: Install PipEnv
