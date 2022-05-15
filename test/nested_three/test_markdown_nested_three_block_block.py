@@ -4806,7 +4806,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_max_block_max_unordered_max_no_bq2_with_li():
     """
     Verify that a nesting of block quote, block quote, unordered list, with
@@ -4821,8 +4820,8 @@ def test_nested_three_block_max_block_max_unordered_max_no_bq2_with_li():
         "[block-quote(1,4):   :   > ]",
         "[block-quote(1,9)::   >    > \n   > ]",
         "[ulist(1,14):+::15:   :        ]",
-        "[para(1,16):\n        ]",
-        "[text(1,16):list\n+ item::\n]",
+        "[para(1,16):\n]",
+        "[text(1,16):list\n+ item::\n]",  # text should be split
         "[end-para:::True]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
@@ -4839,6 +4838,7 @@ def test_nested_three_block_max_block_max_unordered_max_no_bq2_with_li():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    # assert False
 
 
 @pytest.mark.gfm
@@ -5770,7 +5770,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_max_block_max_ordered_max_no_bq2_with_li():
     """
     Verify that a nesting of block quote, block quote, ordered list, with
@@ -5785,7 +5784,7 @@ def test_nested_three_block_max_block_max_ordered_max_no_bq2_with_li():
         "[block-quote(1,4):   :   > ]",
         "[block-quote(1,9)::   >    > \n   > ]",
         "[olist(1,14):.:1:16:   :        ]",
-        "[para(1,17):\n        ]",
+        "[para(1,17):\n]",
         "[text(1,17):list\n1. item::\n]",
         "[end-para:::True]",
         "[end-olist:::True]",

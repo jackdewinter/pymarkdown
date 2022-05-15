@@ -3,8 +3,20 @@ setlocal EnableDelayedExpansion
 pushd %~dp0
 
 rem Set needed environment variables.
-set CLEAN_TEMPFILE=temp_clean.txt
-set PYTHON_MODULE_NAME=pymarkdown
+set PROPERTIES_FILE=project.properties
+set CLEAN_TEMPFILE=%TEMP%\temp_clean_%RANDOM%.txt
+
+rem Read properties from the properties file and set in the current environment.
+FOR /f %%N IN (%PROPERTIES_FILE%) DO (
+	set TEST_LINE=%%N
+	IF NOT "!TEST_LINE:~0,1!"=="#" (
+		SET %%N
+	)
+)
+if not defined PYTHON_MODULE_NAME (
+	echo "Property 'PYTHON_MODULE_NAME' must be set in the %PROPERTIES_FILE% file."
+	goto error_end
+)
 
 rem Look for options on the command line.
 
@@ -93,7 +105,7 @@ rem pipenv run stubgen --output stubs -p columnar
 rem pipenv run stubgen --output stubs -p wcwidth
 
 echo {Executing pylint utils analyzer on Python source code to verify suppressions and document them.}
-pipenv run python ..\pylint_utils\main.py --config setup.cfg --recurse -r publish\pylint_suppression.json  pymarkdown
+pipenv run python ..\pylint_utils\main.py --config setup.cfg --recurse -r publish\pylint_suppression.json %PYTHON_MODULE_NAME%
 if ERRORLEVEL 1 (
 	echo.
 	echo {Executing reporting of pylint suppressions in Python source code failed.}
@@ -101,7 +113,7 @@ if ERRORLEVEL 1 (
 )
 
 echo {Executing pylint static analyzer on test Python code.}
-pipenv run pylint -j 1 --rcfile=setup.cfg --ignore test\resources %MY_VERBOSE% test test\basic test\extensions test\gfm test\nested_three test\paragraph_series test\rules
+pipenv run pylint -j 1 --rcfile=setup.cfg --ignore test\resources --recursive=y %MY_VERBOSE% test
 if ERRORLEVEL 1 (
 	echo.
 	echo {Executing pylint static analyzer on test Python code failed.}
@@ -124,14 +136,6 @@ if "%ALL_FILES%" == "" (
 		echo {Executing reporting of unused pylint suppressions in modified Python source code failed.}
 		goto error_end
 	)
-)
-
-echo {Executing PyMarkdown scan on Markdown documents.}
-pipenv run python main.py --config clean.json scan . ./docs
-if ERRORLEVEL 1 (
-	echo.
-	echo {PyMarkdown scan on Markdown documents failed.}
-	goto error_end
 )
 
 echo {Executing unit tests on Python code.}
