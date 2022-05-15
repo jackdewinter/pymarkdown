@@ -3614,7 +3614,6 @@ def test_extra_027x():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_027a():
     """
     TBD
@@ -3631,7 +3630,7 @@ def test_extra_027a():
         "[BLANK(1,16):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
-        "[li(2,4):9::1]",
+        "[li(2,4):9:   :1]",
         "[block-quote(2,10):         :         > ]",
         "[ulist(2,15):+::16:   ]",
         "[BLANK(2,16):]",
@@ -3643,11 +3642,23 @@ def test_extra_027a():
         "[end-icode-block:::True]",
     ]
     expected_gfm = """<ol>
-<li>Item with code.
-<pre><code class="language-text">    this is some text
-</code></pre>
+<li>
+<blockquote>
+<ul>
+<li></li>
+</ul>
+</blockquote>
 </li>
-</ol>"""
+<li>
+<blockquote>
+<ul>
+<li></li>
+</ul>
+</blockquote>
+</li>
+</ol>
+<pre><code>   abc
+</code></pre>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)

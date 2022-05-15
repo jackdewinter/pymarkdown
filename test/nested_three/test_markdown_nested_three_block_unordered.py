@@ -4715,7 +4715,7 @@ def test_nested_three_block_max_unordered_max_block_max_empty_no_bq2_with_li():
     """
 
     # Arrange
-    source_markdown = """     >    +    >
+    source_markdown = """   >    +    >
    >    +      item"""
     expected_tokens = [
         "[block-quote(1,4):   :   > \n   > ]",

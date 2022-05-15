@@ -176,6 +176,7 @@ class BlockQuoteProcessor:
         Optional[str],
         bool,
         Optional[RequeueLineInfo],
+        bool,
     ]:
         """
         Handle the processing of a block quote block.
@@ -223,6 +224,7 @@ class BlockQuoteProcessor:
             parser_state, position_marker, extracted_whitespace, adj_ws
         )
 
+        force_list_continuation = False
         if really_start:
             POGGER.debug("handle_block_quote_block>>block-start")
             (
@@ -237,6 +239,7 @@ class BlockQuoteProcessor:
                 text_removed_by_container,
                 avoid_block_starts,
                 requeue_line_info,
+                force_list_continuation,
             ) = BlockQuoteProcessor.__handle_block_quote_section(
                 parser_state,
                 position_marker,
@@ -244,6 +247,7 @@ class BlockQuoteProcessor:
                 extracted_whitespace,
                 container_start_bq_count,
             )
+            POGGER.debug("force_list_continuation=$", force_list_continuation)
             POGGER.debug("adjusted_index_number>>:$:", adjusted_index_number)
             POGGER.debug(">>avoid_block_starts>>$", avoid_block_starts)
             POGGER.debug(">>text_removed_by_container>>:$:", text_removed_by_container)
@@ -287,6 +291,7 @@ class BlockQuoteProcessor:
             text_removed_by_container,
             avoid_block_starts,
             requeue_line_info,
+            force_list_continuation,
         )
 
     # pylint: enable=too-many-arguments, too-many-locals
@@ -690,6 +695,7 @@ class BlockQuoteProcessor:
                     start_index = next_bq_index
         return continue_processing, start_index
 
+    # pylint: disable=too-many-locals
     @staticmethod
     def __handle_block_quote_section(
         parser_state: ParserState,
@@ -709,6 +715,7 @@ class BlockQuoteProcessor:
         Optional[str],
         bool,
         Optional[RequeueLineInfo],
+        bool,
     ]:
         """
         Handle the processing of a section clearly identified as having block quotes.
@@ -773,6 +780,7 @@ class BlockQuoteProcessor:
                 did_blank,
                 text_removed_by_container,
                 requeue_line_info,
+                force_list_continuation,
             ) = BlockQuoteProcessor.__handle_existing_block_quote(
                 parser_state,
                 block_quote_data,
@@ -785,6 +793,7 @@ class BlockQuoteProcessor:
                 leaf_tokens,
                 container_level_tokens,
             )
+            POGGER.debug("force_list_continuation=$", force_list_continuation)
             POGGER.debug("start_index>>:$:", start_index)
         else:
             (
@@ -793,6 +802,7 @@ class BlockQuoteProcessor:
                 removed_chars_at_start,
                 requeue_line_info,
             ) = (None, False, 0, None)
+            force_list_continuation = False
 
         return (
             line_to_parse,
@@ -806,7 +816,10 @@ class BlockQuoteProcessor:
             text_removed_by_container,
             avoid_block_starts,
             requeue_line_info,
+            force_list_continuation,
         )
+
+    # pylint: enable=too-many-locals
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -831,6 +844,7 @@ class BlockQuoteProcessor:
         bool,
         Optional[str],
         Optional[RequeueLineInfo],
+        bool,
     ]:
 
         POGGER.debug(
@@ -856,6 +870,7 @@ class BlockQuoteProcessor:
                 block_quote_data.stack_count,
             )
 
+        force_list_continuation = False
         if not parser_state.token_stack[-1].is_fenced_code_block:
             (
                 container_level_tokens,
@@ -865,6 +880,7 @@ class BlockQuoteProcessor:
                 text_removed_by_container,
                 did_blank,
                 leaf_tokens,
+                force_list_continuation,
             ) = BlockQuoteProcessor.__handle_non_fenced_code_section(
                 parser_state,
                 block_quote_data,
@@ -876,6 +892,7 @@ class BlockQuoteProcessor:
                 start_index,
                 leaf_tokens,
             )
+            POGGER.debug("force_list_continuation=$", force_list_continuation)
         else:
             did_blank, requeue_line_info, removed_chars_at_start = False, None, 0
             (
@@ -905,6 +922,7 @@ class BlockQuoteProcessor:
             did_blank,
             text_removed_by_container,
             requeue_line_info,
+            force_list_continuation,
         )
 
     # pylint: enable=too-many-arguments
@@ -929,6 +947,7 @@ class BlockQuoteProcessor:
         Optional[str],
         bool,
         List[MarkdownToken],
+        bool,
     ]:
 
         did_blank, removed_chars_at_start, text_removed_by_container = False, 0, None
@@ -937,6 +956,7 @@ class BlockQuoteProcessor:
             container_level_tokens,
             requeue_line_info,
             extra_consumed_whitespace,
+            force_list_continuation,
         ) = BlockQuoteProcessor.__ensure_stack_at_level(
             parser_state,
             block_quote_data,
@@ -945,6 +965,7 @@ class BlockQuoteProcessor:
             original_start_index,
             container_start_bq_count,
         )
+        POGGER.debug("force_list_continuation=$", force_list_continuation)
         if not requeue_line_info:
             POGGER.debug("extracted_whitespace:$:", extracted_whitespace)
             POGGER.debug("line_to_parse:$:", line_to_parse)
@@ -1012,6 +1033,7 @@ class BlockQuoteProcessor:
             text_removed_by_container,
             did_blank,
             leaf_tokens,
+            force_list_continuation,
         )
 
     # pylint: enable=too-many-arguments, too-many-locals
@@ -1437,13 +1459,16 @@ class BlockQuoteProcessor:
             )
         return stack_hard_limit, extra_consumed_whitespace
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __calculate_stack_hard_limit(
         parser_state: ParserState,
         position_marker: PositionMarker,
         adjust_current_block_quote: bool,
         stack_increase_needed: bool,
-    ) -> Tuple[Optional[int], Optional[int]]:
+        stack_decrease_needed: bool,
+        block_quote_data: BlockQuoteData,
+    ) -> Tuple[Optional[int], Optional[int], bool]:
         POGGER.debug(">>__calculate_stack_hard_limit>>")
         POGGER.debug("original_line_to_parse>>:$:", parser_state.original_line_to_parse)
         POGGER.debug(
@@ -1501,6 +1526,7 @@ class BlockQuoteProcessor:
             conditional_2,
             conditional_3,
         )
+        force_list_continuation = False
         if conditional_1 and conditional_2 and conditional_3:
             assert length_of_available_whitespace is not None
             (
@@ -1513,12 +1539,48 @@ class BlockQuoteProcessor:
                 adjust_current_block_quote,
                 last_bq_index,
             )
+            if extra_consumed_whitespace is None:
+                POGGER.debug(f">>>>>stack_increase_needed:{stack_increase_needed}")
+                POGGER.debug(f">>>>>stack_decrease_needed:{stack_decrease_needed}")
+                POGGER.debug(
+                    f">>>>>adjust_current_block_quote:{adjust_current_block_quote}"
+                )
+                POGGER.debug(
+                    ">>block_quote_data.current_count>>$",
+                    block_quote_data.current_count,
+                )
+                POGGER.debug(
+                    ">>block_quote_data.stack_count>>$", block_quote_data.stack_count
+                )
+
+                if (
+                    not stack_increase_needed
+                    and not stack_decrease_needed
+                    and adjust_current_block_quote
+                ):
+                    POGGER.debug(f">>>>>last_bq_index:{last_bq_index}")
+                    POGGER.debug(
+                        f">>>>>parser_state.token_stack:{parser_state.token_stack}"
+                    )
+                    POGGER.debug(
+                        f">>>>>len(parser_state.token_stack):{len(parser_state.token_stack)}"
+                    )
+                    if (
+                        last_bq_index + 1 < len(parser_state.token_stack)
+                        and parser_state.token_stack[last_bq_index + 1].is_list
+                        and block_quote_data.current_count
+                        != block_quote_data.stack_count
+                    ):
+                        force_list_continuation = True
         POGGER.debug(
             "<<__calculate_stack_hard_limit<<$,$",
             stack_hard_limit,
             extra_consumed_whitespace,
         )
-        return stack_hard_limit, extra_consumed_whitespace
+        POGGER.debug("force_list_continuation=$", force_list_continuation)
+        return stack_hard_limit, extra_consumed_whitespace, force_list_continuation
+
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -1529,7 +1591,7 @@ class BlockQuoteProcessor:
         position_marker: PositionMarker,
         original_start_index: int,
         container_start_bq_count: int,
-    ) -> Tuple[List[MarkdownToken], Optional[RequeueLineInfo], Optional[int]]:
+    ) -> Tuple[List[MarkdownToken], Optional[RequeueLineInfo], Optional[int], bool]:
         """
         Ensure that the block quote stack is at the proper level on the stack.
         """
@@ -1568,15 +1630,22 @@ class BlockQuoteProcessor:
                 requeue_reset=True,
             )
             if requeue_line_info:
-                return [], requeue_line_info, None
+                return [], requeue_line_info, None, False
 
             POGGER.debug("esal>>__calculate_stack_hard_limit(delta)")
             (
                 stack_hard_limit,
                 extra_consumed_whitespace,
+                force_list_continuation,
             ) = BlockQuoteProcessor.__calculate_stack_hard_limit(
-                parser_state, position_marker, False, stack_increase_needed
+                parser_state,
+                position_marker,
+                False,
+                stack_increase_needed,
+                stack_decrease_needed,
+                block_quote_data,
             )
+            POGGER.debug("force_list_continuation=$", force_list_continuation)
             POGGER.debug("esal>>__calculate_stack_hard_limit>>$", stack_hard_limit)
 
             BlockQuoteProcessor.__decrease_stack(
@@ -1603,12 +1672,18 @@ class BlockQuoteProcessor:
             (
                 stack_hard_limit,
                 extra_consumed_whitespace,
+                force_list_continuation,
             ) = BlockQuoteProcessor.__calculate_stack_hard_limit(
-                parser_state, position_marker, True, False
+                parser_state, position_marker, True, False, False, block_quote_data
             )
             POGGER.debug("esal>>__calculate_stack_hard_limit>>$", stack_hard_limit)
 
-        return container_level_tokens, None, extra_consumed_whitespace
+        return (
+            container_level_tokens,
+            None,
+            extra_consumed_whitespace,
+            force_list_continuation,
+        )
 
     # pylint: enable=too-many-arguments
 
