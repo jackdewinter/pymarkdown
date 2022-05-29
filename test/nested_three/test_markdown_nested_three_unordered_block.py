@@ -4271,6 +4271,8 @@ def test_nested_three_unordered_max_block_max_block_max_plus_one():
     """
     Verify that a nesting of unordered list, block quote, block quote, with
     the maximum number of spaces (plus one for the third) allowed, works properly.
+
+    ISSUE: https://github.com/jackdewinter/pymarkdown/issues/253
     """
 
     # Arrange

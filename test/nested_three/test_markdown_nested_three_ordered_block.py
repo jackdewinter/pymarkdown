@@ -3705,7 +3705,6 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_max_block_max_block_max_no_bq2_with_li():
     """
     Verify that a nesting of ordered list, block quote, block quote, with
@@ -3719,11 +3718,17 @@ def test_nested_three_ordered_max_block_max_block_max_no_bq2_with_li():
     expected_tokens = [
         "[olist(1,4):.:1:9:   :]",
         "[block-quote(1,10):         :         > ]",
-        "[block-quote(1,15)::         >    > \n         > ]",
-        "[para(1,17):\n     ]",
-        "[text(1,17):list\nitem::\n]",
+        "[block-quote(1,15)::         >    > ]",
+        "[para(1,17):]",
+        "[text(1,17):list:]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[li(2,4):9:   :1]",
+        "[block-quote(2,10):         :         > ]",
+        "[icode-block(2,16):    :]",
+        "[text(2,16):item: ]",
+        "[end-icode-block:::True]",
         "[end-block-quote:::True]",
         "[end-olist:::True]",
     ]
@@ -3731,9 +3736,14 @@ def test_nested_three_ordered_max_block_max_block_max_no_bq2_with_li():
 <li>
 <blockquote>
 <blockquote>
-<p>list
-item</p>
+<p>list</p>
 </blockquote>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<pre><code> item
+</code></pre>
 </blockquote>
 </li>
 </ol>"""
@@ -4198,6 +4208,8 @@ def test_nested_three_ordered_max_block_max_block_max_plus_one():
     """
     Verify that a nesting of ordered list, block quote, block quote, with
     the maximum number of spaces (plus one for the third) allowed, works properly.
+
+    ISSUE: https://github.com/jackdewinter/pymarkdown/issues/253
     """
 
     # Arrange
