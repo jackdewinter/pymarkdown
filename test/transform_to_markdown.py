@@ -1194,7 +1194,11 @@ class TransformToMarkdown:
     def __look_backward_for_list_or_block_quote_start(self):
         token_stack_index = len(self.container_token_stack) - 1
         print(f"rls>>token_stack_index>>{token_stack_index}<<")
-        while token_stack_index >= 0 and not self.container_token_stack[token_stack_index].is_list_start and not self.container_token_stack[token_stack_index].is_block_quote_start:
+        while (
+            token_stack_index >= 0
+            and not self.container_token_stack[token_stack_index].is_list_start
+            and not self.container_token_stack[token_stack_index].is_block_quote_start
+        ):
             token_stack_index -= 1
         return token_stack_index
 
@@ -1280,7 +1284,7 @@ class TransformToMarkdown:
                 deeper_containing_block_quote_token,
                 extracted_whitespace,
                 previous_token,
-                next_token
+                next_token,
             )
 
         print(f"xx>>previous_indent:{previous_indent}:")
@@ -1385,17 +1389,25 @@ class TransformToMarkdown:
         if previous_token:
             print(f"previous_token:{ParserHelper.make_value_visible(previous_token)}:")
         if previous_token.is_end_token:
-            print(f"previous_token.start_markdown_token:{previous_token.start_markdown_token}:")
+            print(
+                f"previous_token.start_markdown_token:{previous_token.start_markdown_token}:"
+            )
         if deeper_containing_block_quote_token:
-            print(f"deeper_containing_block_quote_token:{ParserHelper.make_value_visible(deeper_containing_block_quote_token)}:")
+            print(
+                f"deeper_containing_block_quote_token:{ParserHelper.make_value_visible(deeper_containing_block_quote_token)}:"
+            )
         if (
             previous_token
             and previous_token.is_end_token
             and previous_token.start_markdown_token.is_block_quote_start
         ):
             print(f"previous_token:{previous_token}:")
-            print(f"previous_token.start_markdown_token:{previous_token.start_markdown_token}:")
-            print(f"previous_token.start_markdown_token.leading_spaces:{previous_token.start_markdown_token.leading_spaces}:")
+            print(
+                f"previous_token.start_markdown_token:{previous_token.start_markdown_token}:"
+            )
+            print(
+                f"previous_token.start_markdown_token.leading_spaces:{previous_token.start_markdown_token.leading_spaces}:"
+            )
             split_leading_spaces = (
                 previous_token.start_markdown_token.leading_spaces.split(
                     ParserHelper.newline_character
@@ -1494,7 +1506,7 @@ class TransformToMarkdown:
 
     # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @classmethod
     def __rehydrate_list_start_contained_in_list(
         cls,
@@ -1503,7 +1515,7 @@ class TransformToMarkdown:
         deeper_containing_block_quote_token,
         extracted_whitespace,
         previous_token,
-        next_token
+        next_token,
     ):
 
         print(
@@ -1584,7 +1596,7 @@ class TransformToMarkdown:
             did_container_start_midline,
         )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
 
     # pylint: disable=too-many-arguments
     @classmethod
