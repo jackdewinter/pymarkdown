@@ -4314,7 +4314,6 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_max_unordered_max_block_max_with_li():
     """
     Verify that a nesting of block quote, unordered list, block quote, with
@@ -4743,7 +4742,7 @@ def test_nested_three_block_max_unordered_max_block_max_empty_no_bq2_with_li():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
