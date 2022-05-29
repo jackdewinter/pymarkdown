@@ -737,10 +737,14 @@ class TransformToMarkdown:
         split_leading_spaces = leading_spaces.split(ParserHelper.newline_character)
         inner_token_index = container_token_indices[nested_list_start_index]
         if inner_token_index < len(split_leading_spaces):
-            print(f"inner_index->{str(container_token_indices[nested_list_start_index])}")
+            print(
+                f"inner_index->{str(container_token_indices[nested_list_start_index])}"
+            )
             container_line = split_leading_spaces[inner_token_index] + container_line
             container_token_indices[nested_list_start_index] = inner_token_index + 1
-            print(f"inner_index->{str(container_token_indices[nested_list_start_index])}")
+            print(
+                f"inner_index->{str(container_token_indices[nested_list_start_index])}"
+            )
         return container_line
 
     # pylint: enable=too-many-arguments
