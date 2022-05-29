@@ -341,7 +341,7 @@ class TransformToMarkdown:
             container_token_indices.append(0)
         else:
             print(f"   -->{ParserHelper.make_value_visible(token_stack)}")
-            print("   -->" + ParserHelper.make_value_visible(container_token_indices))
+            print(f"   -->{ParserHelper.make_value_visible(container_token_indices)}")
 
             if token_stack[-1].is_new_list_item:
                 removed_tokens.append(token_stack[-1])
@@ -363,7 +363,7 @@ class TransformToMarkdown:
             + ParserHelper.make_value_visible(current_changed_record)
         )
         print(f"   -->{ParserHelper.make_value_visible(token_stack)}")
-        print("   -->" + ParserHelper.make_value_visible(container_token_indices))
+        print(f"   -->{ParserHelper.make_value_visible(container_token_indices)}")
         old_record_index += 1
         return old_record_index, did_move_ahead, current_changed_record
 
@@ -461,10 +461,10 @@ class TransformToMarkdown:
         current_changed_record,
         container_line,
     ):
-        print(" -->did_move_ahead>" + ParserHelper.make_value_visible(did_move_ahead))
+        print(f" -->did_move_ahead>{ParserHelper.make_value_visible(did_move_ahead)}")
         print(f" -->{ParserHelper.make_value_visible(token_stack)}")
         print(f" -->{ParserHelper.make_value_visible(container_token_indices)}")
-        print(" -->did_move_ahead>" + ParserHelper.make_value_visible(did_move_ahead))
+        print(f" -->did_move_ahead>{ParserHelper.make_value_visible(did_move_ahead)}")
         print(
             " -->current_changed_record>"
             + ParserHelper.make_value_visible(current_changed_record)
@@ -475,12 +475,12 @@ class TransformToMarkdown:
             did_move_ahead and current_changed_record[0]
         )
         if applied_leading_spaces_to_start_of_container_line:
-            print(" container->" + ParserHelper.make_value_visible(token_stack[-1]))
+            print(f" container->{ParserHelper.make_value_visible(token_stack[-1])}")
             split_leading_spaces = token_stack[-1].leading_spaces.split(
                 ParserHelper.newline_character
             )
             if last_container_token_index < len(split_leading_spaces):
-                print(" -->" + ParserHelper.make_value_visible(split_leading_spaces))
+                print(f" -->{ParserHelper.make_value_visible(split_leading_spaces)}")
                 print(
                     " -->container_line>"
                     + ParserHelper.make_value_visible(container_line)
@@ -737,14 +737,10 @@ class TransformToMarkdown:
         split_leading_spaces = leading_spaces.split(ParserHelper.newline_character)
         inner_token_index = container_token_indices[nested_list_start_index]
         if inner_token_index < len(split_leading_spaces):
-            print(
-                "inner_index->" + str(container_token_indices[nested_list_start_index])
-            )
+            print(f"inner_index->{str(container_token_indices[nested_list_start_index])}")
             container_line = split_leading_spaces[inner_token_index] + container_line
             container_token_indices[nested_list_start_index] = inner_token_index + 1
-            print(
-                "inner_index->" + str(container_token_indices[nested_list_start_index])
-            )
+            print(f"inner_index->{str(container_token_indices[nested_list_start_index])}")
         return container_line
 
     # pylint: enable=too-many-arguments
@@ -754,8 +750,9 @@ class TransformToMarkdown:
         print(f">>incoming>>:{ParserHelper.make_value_visible(container_text)}:<<")
 
         print(
-            ">>container_records>>" + ParserHelper.make_value_visible(container_records)
+            f">>container_records>>{ParserHelper.make_value_visible(container_records)}"
         )
+
         (
             base_line_number,
             delta_line,
@@ -1414,7 +1411,7 @@ class TransformToMarkdown:
                 )
             )
             print(f"split_leading_spaces>>{split_leading_spaces}")
-            print("current_token>>" + ParserHelper.make_value_visible(current_token))
+            print(f"current_token>>{ParserHelper.make_value_visible(current_token)}")
             # if (
             #     current_token.is_new_list_item
             #     and len(split_leading_spaces) <= 2
