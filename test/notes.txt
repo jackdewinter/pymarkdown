@@ -1,0 +1,215 @@
+Damariscotta, Maine
+- https://www.msn.com/en-us/travel/tripideas/40-american-towns-you-haven-t-heard-of-but-should-visit-asap/ss-BB1ffjpM?ocid=msedgntp#image=2
+- small fishing village
+Galena, Illinois
+- https://www.msn.com/en-us/travel/tripideas/40-american-towns-you-haven-t-heard-of-but-should-visit-asap/ss-BB1ffjpM?ocid=msedgntp#image=3
+- old small mining town
+Pella, Iowa
+- may tulip festival
+Corning, New York
+- https://www.msn.com/en-us/travel/tripideas/40-american-towns-you-haven-t-heard-of-but-should-visit-asap/ss-BB1ffjpM?ocid=msedgntp#image=7
+- nice small town with good food
+Cedar Key, Florida
+- https://www.msn.com/en-us/travel/tripideas/40-american-towns-you-haven-t-heard-of-but-should-visit-asap/ss-BB1ffjpM?ocid=msedgntp#image=16
+Grand Haven, Michigan
+- https://www.msn.com/en-us/travel/tripideas/40-american-towns-you-haven-t-heard-of-but-should-visit-asap/ss-BB1ffjpM?ocid=msedgntp#image=17
+Paia, Hawaii
+- https://www.msn.com/en-us/travel/tripideas/40-american-towns-you-haven-t-heard-of-but-should-visit-asap/ss-BB1ffjpM?ocid=msedgntp#image=23
+Hood River, Oregon
+Sitka, AK
+Davis, Oklahoma
+- https://www.msn.com/en-us/travel/tripideas/40-american-towns-you-haven-t-heard-of-but-should-visit-asap/ss-BB1ffjpM?ocid=msedgntp#image=29
+Capitola, California
+- https://www.msn.com/en-us/travel/tripideas/40-american-towns-you-haven-t-heard-of-but-should-visit-asap/ss-BB1ffjpM?ocid=msedgntp#image=31
+Lead, South Dakota
+- https://www.msn.com/en-us/travel/tripideas/40-american-towns-you-haven-t-heard-of-but-should-visit-asap/ss-BB1ffjpM?ocid=msedgntp#image=33
+Creede, Colorado
+- https://www.msn.com/en-us/travel/tripideas/40-american-towns-you-haven-t-heard-of-but-should-visit-asap/ss-BB1ffjpM?ocid=msedgntp#image=36
+
+
+
+Alabama - Russell Cave National Monument
+- https://www.msn.com/en-us/travel/tripideas/the-coolest-national-park-in-every-state/ss-AAPhTSP?ocid=msedgntp#image=2
+- https://www.nps.gov/ruca/index.htm
+Alaska - Denali National Park
+- https://www.msn.com/en-us/travel/tripideas/the-coolest-national-park-in-every-state/ss-AAPhTSP?ocid=msedgntp#image=3
+- https://www.nps.gov/dena/index.htm
+Arizona - Grand Canyon National Park
+- https://www.msn.com/en-us/travel/tripideas/the-coolest-national-park-in-every-state/ss-AAPhTSP?ocid=msedgntp#image=4
+- https://www.nps.gov/grca/index.htm
+Arkansas - Hot Springs National Park
+- https://www.msn.com/en-us/travel/tripideas/the-coolest-national-park-in-every-state/ss-AAPhTSP?ocid=msedgntp#image=5
+- https://www.nps.gov/hosp/index.htm
+California - Yosemite National Park
+- https://www.msn.com/en-us/travel/tripideas/the-coolest-national-park-in-every-state/ss-AAPhTSP?ocid=msedgntp#image=6
+- https://www.nps.gov/yose/index.htm
+Colorado - Mesa Verde National Park
+- https://www.msn.com/en-us/travel/tripideas/the-coolest-national-park-in-every-state/ss-AAPhTSP?ocid=msedgntp#image=7
+- https://www.nps.gov/meve/index.htm
+Connecticut - Weir Farm National Historic Site
+- https://www.msn.com/en-us/travel/tripideas/the-coolest-national-park-in-every-state/ss-AAPhTSP?ocid=msedgntp#image=8
+- https://www.nps.gov/wefa/index.htm
+Delaware - First State National Historical Park
+- https://www.msn.com/en-us/travel/tripideas/the-coolest-national-park-in-every-state/ss-AAPhTSP?ocid=msedgntp#image=9
+- https://www.nps.gov/frst/index.htm
+Florida - Dry Tortugas National Park
+- https://www.msn.com/en-us/travel/tripideas/the-coolest-national-park-in-every-state/ss-AAPhTSP?ocid=msedgntp#image=10
+- https://www.nps.gov/drto/index.htm
+Georgia - Martin Luther King Jr. National Historical Park
+- https://www.msn.com/en-us/travel/tripideas/the-coolest-national-park-in-every-state/ss-AAPhTSP?ocid=msedgntp#image=11
+- https://www.nps.gov/malu/index.htm
+Hawaii - Hawai 'i Volcanoes
+- https://www.msn.com/en-us/travel/tripideas/the-coolest-national-park-in-every-state/ss-AAPhTSP?ocid=msedgntp#image=12
+- https://www.nps.gov/havo/index.htm
+Idaho - Craters of the Moon National Monument
+- https://www.msn.com/en-us/travel/tripideas/the-coolest-national-park-in-every-state/ss-AAPhTSP?ocid=msedgntp#image=13
+- https://www.nps.gov/crmo/index.htm
+Illinois - Lincoln Home National Historic Site
+- https://www.msn.com/en-us/travel/tripideas/the-coolest-national-park-in-every-state/ss-AAPhTSP?ocid=msedgntp#image=14
+- https://www.nps.gov/liho/index.htm
+
+
+
+disable_consistency_checks is still true on html
+
+make sure each disabled test has an issue associated with it
+
+https://github.com/vinta/awesome-python#configuration
+https://github.com/vinta/awesome-python#job-scheduler
+https://github.com/vinta/awesome-python#restful-api
+https://github.com/cookiecutter-flask/cookiecutter-flask
+https://github.com/kirang89/pycrumbs#flask
+
+https://github.com/cookiecutter/cookiecutter
+https://cookiecutter.readthedocs.io/en/2.0.1/sprint-contributors.html
+https://github.com/MaaniBeigy/python-package-template
+https://github.com/AGProjects/python-application/tree/master/examples
+https://github.com/MasoniteFramework/exceptionite
+
+https://github.com/facebookresearch/hydra
+https://github.com/rq/rq
+https://github.com/marshmallow-code/webargs
+https://github.com/coleifer/huey
+
+https://github.com/seanfisk/python-project-template
+https://github.com/chriskiehl/Gooey#examples
+
+https://github.com/beeware/briefcase
+https://toga.readthedocs.io/en/latest/
+https://github.com/Jahaja/psdash
+https://github.com/flexxui/flexx
+https://vega.github.io/vega/tutorials/bar-chart/
+https://frappe.io/charts/docs/reference/configuration
+https://github.com/asrp/pymetaterp
+https://github.com/erikrose/parsimonious
+https://github.com/tqdm/tqdm
+https://github.com/magic-wormhole/magic-wormhole
+https://github.com/tasdikrahman/spaceShooter
+https://github.com/timofurrer/shellfuncs
+https://pynput.readthedocs.io/en/latest/
+https://github.com/apiguy/flask-classy
+https://github.com/Bogdanp/dramatiq
+https://github.com/spotify/luigi
+https://github.com/kvesteri/validators
+
+https://github.com/celery/celery
+https://github.com/celery/kombu
+https://github.com/ansible/ansible
+https://github.com/martinohanlon/BlueDot
+https://dramatiq.io/motivation.html
+https://github.com/baroquehq/baroque
+https://github.com/lig/decoratorium
+https://github.com/jiffyclub/snakeviz
+https://github.com/suzaku/plain_obj
+
+https://github.com/rdegges/skele-cli
+https://github.com/eventbrite/conformity/
+
+https://github.com/Instagram/MonkeyType
+https://github.com/thombashi/typepy
+https://github.com/zhebrak/raftos
+https://github.com/pyopenapi/pyswagger
+https://github.com/secdev/scapy
+https://twistedmatrix.com/trac/
+
+https://github.com/python-telegram-bot/python-telegram-bot
+https://github.com/evansd/whitenoise
+https://github.com/python-pillow/Pillow
+
+https://github.com/xonsh/xonsh
+https://github.com/rochacbruno/dynaconf
+https://www.fullstackpython.com/bots.html
+https://github.com/skoczen/will
+https://sigtools.readthedocs.io/en/latest/
+https://github.com/Scout24/succubus
+https://github.com/materialsvirtuallab/monty/tree/master/monty
+https://github.com/siyei/python-whatsapp-bot
+
+https://github.com/algos-all/algos-py
+https://github.com/chen0040/pyalgs
+
+https://helga.readthedocs.io/en/latest/
+https://github.com/llimllib/limbo
+
+https://github.com/wimglenn/readabledelta
+https://github.com/thombashi/DateTimeRange
+
+https://github.com/wdbm/shijian
+https://github.com/avakar/limecc
+https://github.com/cyriac/pymdtoc
+https://github.com/audreyfeldroy/cookiecutter-pypackage
+https://github.com/amueller/word_cloud
+https://github.com/progaymanalaiwah/Downlaod-Youtube
+https://github.com/progaymanalaiwah/CheckTheValueUsingPyhton
+https://bitbucket.org/daycoder/timingsutil/src/master/
+https://github.com/pythonprofilers/memory_profiler
+http://www.pygame.org/hifi.html
+https://github.com/adamlwgriffiths/PyGLy
+https://github.com/getsentry/sentry
+https://github.com/justanr/datestuff
+https://github.com/Jackevansevo/basic-utils
+https://github.com/ramonsaraiva/timy
+https://github.com/iCHAIT/moviemon
+https://github.com/pcastellazzi/tauon/
+https://github.com/timofurrer/colorful
+https://github.com/zalando/connexion
+https://github.com/dmranck/ticketutil
+https://github.com/linkdd/dirwatcher
+https://github.com/topper-123/freezedata
+https://github.com/jingz/Flask-Boost
+https://mrq.readthedocs.io/en/latest/
+https://github.com/jruizgit/rules
+https://github.com/SethMMorton/fastnumbers
+https://imageio.readthedocs.io/en/stable/
+https://github.com/buildbot/buildbot
+
+TTS using espeak
+https://github.com/asrp/espeakui
+- 2 years old?
+
+Redis toolkit for Python
+https://github.com/coleifer/walrus
+
+Data Structure Validation
+https://github.com/spy16/pyschemes
+- 5 years
+
+Computer Vision
+https://github.com/sightmachine/SimpleCV
+- use opencv or openrv instead
+
+
+
+rainmeter
+- power toys - shift when dragging to define window american
+- spicetify - https://spicetify.app/docs/getting-started/simple-installation
+  - https://www.drmare.com/spotify-music/rainmeter-spotify-skin.html#:~:text=%20%20%201%20Step%201.%20Launch%20the,songs%20to%20enjoy%20with%20Rainmeter%20skin.%20More%20
+  - may have to https://github.com/marcopixel/monstercat-visualizer/issues/374
+  - and https://github.com/spicetify/spicetify-cli/issues/338
+- maybe https://github.com/tjhrulz/WebNowPlaying
+- https://docs.rainmeter.net/tips/
+- https://www.reddit.com/r/Rainmeter/comments/swopk3/i_like_to_keep_it_simple/
+- https://hdqwalls.com/category/digital-universe-wallpapers
+- https://hdqwalls.com/download/2560x1440/forest-mist
+- https://wallpapersafari.com/collection/space/
+- https://www.reddit.com/r/Rainmeter/comments/so6d26/editing_rainmeter_skins_finding_it_difficult_to/
