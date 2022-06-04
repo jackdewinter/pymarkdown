@@ -1246,6 +1246,7 @@ class TransformToMarkdown:
             containing_block_quote_token = None
 
         did_container_start_midline = False
+        had_weird_block_quote_in_list = False
         if previous_token.is_list_start:
             print("rlspt>>is_list_start")
             (
@@ -1279,6 +1280,7 @@ class TransformToMarkdown:
                 extracted_whitespace,
                 post_adjust_whitespace,
                 did_container_start_midline,
+                had_weird_block_quote_in_list,
             ) = self.__rehydrate_list_start_contained_in_list(
                 current_token,
                 containing_list_token,
@@ -1299,6 +1301,7 @@ class TransformToMarkdown:
             was_within_block_token,
             post_adjust_whitespace,
             did_container_start_midline,
+            had_weird_block_quote_in_list,
         )
 
     @classmethod
@@ -1380,6 +1383,7 @@ class TransformToMarkdown:
         )
         return previous_indent, extracted_whitespace
 
+    # pylint: disable=too-many-locals
     @classmethod
     def __rehydrate_list_start_contained_in_list_deeper_block_quote(
         cls, previous_token, deeper_containing_block_quote_token, current_token
@@ -1397,11 +1401,14 @@ class TransformToMarkdown:
             print(
                 f"deeper_containing_block_quote_token:{ParserHelper.make_value_visible(deeper_containing_block_quote_token)}:"
             )
+        do_perform_block_quote_ending = False
+        had_weird_block_quote_in_list = False
         if (
             previous_token
             and previous_token.is_end_token
             and previous_token.start_markdown_token.is_block_quote_start
         ):
+            had_weird_block_quote_in_list = True
             print(f"previous_token:{previous_token}:")
             print(
                 f"previous_token.start_markdown_token:{previous_token.start_markdown_token}:"
@@ -1409,6 +1416,18 @@ class TransformToMarkdown:
             print(
                 f"previous_token.start_markdown_token.leading_spaces:{previous_token.start_markdown_token.leading_spaces}:"
             )
+            newline_count = ParserHelper.count_characters_in_text(
+                previous_token.start_markdown_token.leading_spaces, "\n"
+            )
+            previous_start_line = previous_token.start_markdown_token.line_number
+            print(f"newline_count:{newline_count}:")
+            print(f"previous_start_line:{previous_start_line}:")
+            projected_start_line = previous_start_line + (newline_count + 1)
+            print(f"projected_start_line:{projected_start_line}:")
+            do_perform_block_quote_ending = (
+                projected_start_line != current_token.line_number
+            )
+        if do_perform_block_quote_ending:
             split_leading_spaces = (
                 previous_token.start_markdown_token.leading_spaces.split(
                     ParserHelper.newline_character
@@ -1454,6 +1473,8 @@ class TransformToMarkdown:
                 + ParserHelper.make_value_visible(split_leading_spaces)
             )
             block_quote_leading_space = split_leading_spaces[line_number_delta]
+            if had_weird_block_quote_in_list:
+                starting_whitespace = block_quote_leading_space
         print(
             "block_quote_leading_space:"
             + ParserHelper.make_value_visible(block_quote_leading_space)
@@ -1466,7 +1487,10 @@ class TransformToMarkdown:
             starting_whitespace,
             did_container_start_midline,
             block_quote_leading_space_length,
+            had_weird_block_quote_in_list,
         )
+
+    # pylint: enable=too-many-locals
 
     # pylint: disable=too-many-arguments
     @classmethod
@@ -1534,12 +1558,14 @@ class TransformToMarkdown:
         starting_whitespace = ""
         did_container_start_midline = False
         check_list_for_indent = True
+        had_weird_block_quote_in_list = False
         if deeper_containing_block_quote_token:
             (
                 check_list_for_indent,
                 starting_whitespace,
                 did_container_start_midline,
                 block_quote_leading_space_length,
+                had_weird_block_quote_in_list,
             ) = cls.__rehydrate_list_start_contained_in_list_deeper_block_quote(
                 previous_token, deeper_containing_block_quote_token, current_token
             )
@@ -1595,6 +1621,7 @@ class TransformToMarkdown:
             extracted_whitespace,
             post_adjust_whitespace,
             did_container_start_midline,
+            had_weird_block_quote_in_list,
         )
 
     # pylint: enable=too-many-arguments, too-many-locals
@@ -1661,6 +1688,7 @@ class TransformToMarkdown:
         print(f">>current_token>>{ParserHelper.make_value_visible(current_token)}<<")
         extracted_whitespace = current_token.extracted_whitespace
         print(f">>extracted_whitespace>>{extracted_whitespace}<<")
+        had_weird_block_quote_in_list = False
         if previous_token:
             (
                 previous_indent,
@@ -1668,6 +1696,7 @@ class TransformToMarkdown:
                 was_within_block_token,
                 post_adjust_whitespace,
                 _,
+                had_weird_block_quote_in_list,
             ) = self.__rehydrate_list_start_previous_token(
                 current_token, previous_token, next_token, extracted_whitespace
             )
@@ -1680,6 +1709,7 @@ class TransformToMarkdown:
                 False,
             )
 
+        print(f">>had_weird_block_quote_in_list>>{had_weird_block_quote_in_list}<<")
         self.container_token_stack.append(copy.deepcopy(current_token))
 
         print(f">>extracted_whitespace>>{extracted_whitespace}<<")
@@ -1818,28 +1848,64 @@ class TransformToMarkdown:
         start_sequence += ParserHelper.repeat_string(" ", new_column_number)
         return start_sequence
 
+    # pylint: disable=too-many-arguments
     def __rehydrate_next_list_item_not_blank_line(
-        self, start_sequence, did_container_start_midline, adjustment_since_newline
+        self,
+        start_sequence,
+        did_container_start_midline,
+        adjustment_since_newline,
+        had_weird_block_quote_in_list,
+        next_token,
     ):
+        print("__rehydrate_next_list_item_not_blank_line")
+        print(f"start_sequence={start_sequence}=")
+        print(f"did_container_start_midline={did_container_start_midline}=")
+        print(f"adjustment_since_newline={adjustment_since_newline}=")
         if did_container_start_midline:
             print("did start midline")
-            start_sequence = start_sequence.ljust(
-                self.container_token_stack[-1].indent_level, " "
-            )
+            print(f"next_token:{ParserHelper.make_value_visible(next_token)}")
+            project_indent_level = self.container_token_stack[-1].indent_level
+            if next_token and next_token.is_block_quote_start:
+                next_block_quote_leading_space = (
+                    next_token.calculate_next_leading_space_part(increment_index=False)
+                )
+                print(
+                    f"did start midline:next_block_quote_leading_space:{next_block_quote_leading_space}:"
+                )
+                ex_whitespace, _ = ParserHelper.extract_whitespace(
+                    next_block_quote_leading_space, 0
+                )
+                print(f"did start midline:ab:{ex_whitespace}:")
+                project_indent_level -= ex_whitespace
+            start_sequence = start_sequence.ljust(project_indent_level, " ")
         else:
             print("did not start midline")
             calculated_indent = (
                 self.container_token_stack[-1].indent_level - adjustment_since_newline
             )
             print(
-                f"rnli->calculated_indent>{calculated_indent} = "
+                f"calculated_indent:{calculated_indent} = indent_level:{self.container_token_stack[-1].indent_level} - adjustment_since_newline:{adjustment_since_newline}"
+            )
+            print(f"had_weird_block_quote_in_list:{had_weird_block_quote_in_list}")
+            if had_weird_block_quote_in_list:
+                print(f"calculated_indent:{calculated_indent}")
+                calculated_indent += 2
+                print(f"calculated_indent:{calculated_indent}")
+            print(
+                f"rnli->calculated_indent={calculated_indent} = "
                 + f"indent_level={self.container_token_stack[-1].indent_level} - "
-                + f"adjustment_since_newline{adjustment_since_newline}"
+                + f"adjustment_since_newline={adjustment_since_newline}"
             )
             print(f"start_sequence:{start_sequence}")
             start_sequence = start_sequence.ljust(calculated_indent, " ")
+
+            # TODO This is a kludge.  The calc_indent is not properly computed.
+            if not start_sequence.endswith(" "):
+                start_sequence = f"{start_sequence} "
             print(f"start_sequence:{start_sequence}")
         return start_sequence
+
+    # pylint: enable=too-many-arguments
 
     def __rehydrate_next_list_item(
         self, current_token, previous_token, next_token, transformed_data
@@ -1864,6 +1930,7 @@ class TransformToMarkdown:
         print(f"rnli->extracted_whitespace>:{extracted_whitespace}:")
 
         did_container_start_midline = False
+        had_weird_block_quote_in_list = False
         if previous_token:
             (
                 previous_indent,
@@ -1871,6 +1938,7 @@ class TransformToMarkdown:
                 _,
                 post_adjust_whitespace,
                 did_container_start_midline,
+                had_weird_block_quote_in_list,
             ) = self.__rehydrate_list_start_previous_token(
                 current_token, previous_token, next_token, extracted_whitespace
             )
@@ -1879,6 +1947,7 @@ class TransformToMarkdown:
         print(f">>previous_indent>>{previous_indent}<<")
         print(f">>extracted_whitespace2>>{extracted_whitespace2}<<")
         print(f">>post_adjust_whitespace>>{post_adjust_whitespace}<<")
+        print(f">>had_weird_block_quote_in_list>>{had_weird_block_quote_in_list}<<")
 
         adjustment_since_newline = self.__recalc_adjustment_since_newline(
             adjustment_since_newline
@@ -1887,7 +1956,7 @@ class TransformToMarkdown:
 
         whitespace_to_use = (
             post_adjust_whitespace
-            if did_container_start_midline
+            if did_container_start_midline or had_weird_block_quote_in_list
             else extracted_whitespace
         )
 
@@ -1906,7 +1975,11 @@ class TransformToMarkdown:
             )
         else:
             start_sequence = self.__rehydrate_next_list_item_not_blank_line(
-                start_sequence, did_container_start_midline, adjustment_since_newline
+                start_sequence,
+                did_container_start_midline,
+                adjustment_since_newline,
+                had_weird_block_quote_in_list,
+                next_token,
             )
         print(f"rnli->start_sequence>:{start_sequence}:")
 

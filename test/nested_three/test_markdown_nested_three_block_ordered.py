@@ -4206,7 +4206,7 @@ def test_nested_three_block_max_ordered_max_block_max_with_li():
         "[end-para:::True]",
         "[end-block-quote:::True]",
         "[li(2,9):14:   :1]",
-        "[block-quote(2,15)::> ]",
+        "[block-quote(2,15)::   > ]",
         "[para(2,17):]",
         "[text(2,17):item:]",
         "[end-para:::True]",
@@ -4270,7 +4270,6 @@ def test_nested_three_block_max_ordered_max_block_max_empty_x():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_max_ordered_max_block_max_empty_with_li():
     """
     Verify that a nesting of block quote, ordered list, block quote, with
@@ -4284,13 +4283,16 @@ def test_nested_three_block_max_ordered_max_block_max_empty_with_li():
    >    1.    > item"""
     expected_tokens = [
         "[block-quote(1,4):   :   > \n   > ]",
-        "[olist(1,9):.:1:14:   :        ]",
+        "[olist(1,9):.:1:14:   :]",
         "[block-quote(1,15)::>]",
         "[BLANK(1,16):]",
         "[end-block-quote:::True]",
-        "[para(2,9):]",
-        "[text(2,9):1.    \a>\a&gt;\a item:]",
+        "[li(2,9):14:   :1]",
+        "[block-quote(2,15)::   > ]",
+        "[para(2,17):]",
+        "[text(2,17):item:]",
         "[end-para:::True]",
+        "[end-block-quote:::True]",
         "[end-olist:::True]",
         "[end-block-quote:::True]",
     ]
@@ -4580,7 +4582,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_max_ordered_max_block_max_empty_no_bq2_with_li():
     """
     Verify that a nesting of block quote, ordered list, block quote, with
@@ -4595,13 +4596,14 @@ def test_nested_three_block_max_ordered_max_block_max_empty_no_bq2_with_li():
    >    1.      item"""
     expected_tokens = [
         "[block-quote(1,4):   :   > \n   > ]",
-        "[olist(1,9):.:1:14:   :        ]",
+        "[olist(1,9):.:1:14:   ]",
         "[block-quote(1,15)::>]",
         "[BLANK(1,16):]",
         "[end-block-quote:::True]",
-        "[para(2,9):]",
-        "[text(2,9):1.      item:]",
-        "[end-para:::True]",
+        "[li(2,9):11:   :1]",
+        "[icode-block(2,16):    :]",
+        "[text(2,16):item: ]",
+        "[end-icode-block:::True]",
         "[end-olist:::True]",
         "[end-block-quote:::True]",
     ]
