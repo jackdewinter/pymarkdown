@@ -4332,7 +4332,7 @@ def test_nested_three_block_max_unordered_max_block_max_with_li():
         "[end-para:::True]",
         "[end-block-quote:::True]",
         "[li(2,9):13:   :]",
-        "[block-quote(2,14)::> ]",
+        "[block-quote(2,14)::   > ]",
         "[para(2,16):]",
         "[text(2,16):item:]",
         "[end-para:::True]",
@@ -4356,7 +4356,7 @@ def test_nested_three_block_max_unordered_max_block_max_with_li():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
@@ -4396,14 +4396,11 @@ def test_nested_three_block_max_unordered_max_block_max_empty():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_max_unordered_max_block_max_empty_with_li():
     """
     Verify that a nesting of block quote, unordered list, block quote, with
     the maximum number of spaces allowed, and no text on the first line, works properly,
     with a list item.
-
-    ISSUE: https://github.com/jackdewinter/pymarkdown/issues/296
     """
 
     # Arrange
@@ -4411,13 +4408,16 @@ def test_nested_three_block_max_unordered_max_block_max_empty_with_li():
    >    +    > item"""
     expected_tokens = [
         "[block-quote(1,4):   :   > \n   > ]",
-        "[ulist(1,9):+::13:   :        ]",
+        "[ulist(1,9):+::13:   :]",
         "[block-quote(1,14)::>]",
         "[BLANK(1,15):]",
         "[end-block-quote:::True]",
-        "[para(2,9):]",
-        "[text(2,9):+    \a>\a&gt;\a item:]",
+        "[li(2,9):13:   :]",
+        "[block-quote(2,14)::   > ]",
+        "[para(2,16):]",
+        "[text(2,16):item:]",
         "[end-para:::True]",
+        "[end-block-quote:::True]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
     ]
@@ -4436,7 +4436,7 @@ def test_nested_three_block_max_unordered_max_block_max_empty_with_li():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
@@ -4707,14 +4707,11 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_max_unordered_max_block_max_empty_no_bq2_with_li():
     """
     Verify that a nesting of block quote, unordered list, block quote, with
     the maximum number of spaces allowed, and no text on the first line, works properly,
     with no block quote characters on the second line, with a list item.
-
-    ISSUE: https://github.com/jackdewinter/pymarkdown/issues/296
     """
 
     # Arrange
@@ -4722,13 +4719,14 @@ def test_nested_three_block_max_unordered_max_block_max_empty_no_bq2_with_li():
    >    +      item"""
     expected_tokens = [
         "[block-quote(1,4):   :   > \n   > ]",
-        "[ulist(1,9):+::13:   :        ]",
+        "[ulist(1,9):+::13:   ]",
         "[block-quote(1,14)::>]",
         "[BLANK(1,15):]",
         "[end-block-quote:::True]",
-        "[para(2,9):]",
-        "[text(2,9):+      item:]",
-        "[end-para:::True]",
+        "[li(2,9):10:   :]",
+        "[icode-block(2,15):    :]",
+        "[text(2,15):item: ]",
+        "[end-icode-block:::True]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
     ]
