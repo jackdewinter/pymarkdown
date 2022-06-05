@@ -315,7 +315,27 @@ class ContainerBlockProcessor:
         weird_adjusted_text: Optional[str],
         line_to_parse: Optional[str],
         removed_chars_at_start: Optional[int],
+        have_pre_processed_indent : bool
     ) -> Tuple[bool, Optional[str], bool, Optional[str], int, Optional[int]]:
+        # POGGER.debug("have_pre_processed_indent:$:", have_pre_processed_indent)
+        # POGGER.debug("indent_already_processed=$", indent_already_processed)
+        if have_pre_processed_indent:
+            (
+                can_continue,
+                line_to_parse,
+                start_index,
+                removed_chars_at_start,
+                container_used_indent,
+            ) = (
+                True,
+                position_marker.text_to_parse[used_pre_indent:],
+                used_pre_indent,
+                used_pre_indent,
+                -1,
+            )
+            # POGGER.debug("was_paragraph_continuation>>$", was_paragraph_continuation)
+            # POGGER.debug("line_to_parse>>$", line_to_parse)
+            # POGGER.debug("start_index>>$", start_index)
         keep_processing = not can_continue and not skip_containers_before_leaf_blocks
         if keep_processing:
             assert adj_ws is not None
@@ -469,25 +489,6 @@ class ContainerBlockProcessor:
         # POGGER.debug(
         #     "skip_containers_before_leaf_blocks:$:", skip_containers_before_leaf_blocks
         # )
-        # POGGER.debug("have_pre_processed_indent:$:", have_pre_processed_indent)
-        # POGGER.debug("indent_already_processed=$", indent_already_processed)
-        if have_pre_processed_indent:
-            (
-                can_continue,
-                line_to_parse,
-                start_index,
-                removed_chars_at_start,
-                container_used_indent,
-            ) = (
-                True,
-                position_marker.text_to_parse[used_pre_indent:],
-                used_pre_indent,
-                used_pre_indent,
-                -1,
-            )
-            # POGGER.debug("was_paragraph_continuation>>$", was_paragraph_continuation)
-            # POGGER.debug("line_to_parse>>$", line_to_parse)
-            # POGGER.debug("start_index>>$", start_index)
         # POGGER.debug(
         #     "not can_continue=$ and not skip_containers_before_leaf_blocks=$",
         #     can_continue,
@@ -513,6 +514,7 @@ class ContainerBlockProcessor:
             weird_adjusted_text,
             line_to_parse,
             removed_chars_at_start,
+            have_pre_processed_indent
         )
         if keep_processing:
             (
@@ -2328,6 +2330,39 @@ class ContainerBlockProcessor:
 
     # pylint: enable=too-many-arguments
 
+    @staticmethod
+    def __look_for_any_list_start(parser_state:ParserState) -> Tuple[int, Optional[BlockQuoteMarkdownToken]]:
+        found_block_quote_token: Optional[BlockQuoteMarkdownToken] = None
+        token_index = len(parser_state.token_document) - 1
+        while token_index >= 0 and not (
+            parser_state.token_document[token_index].is_any_list_token
+        ):
+            if (
+                not found_block_quote_token
+                and parser_state.token_document[token_index].is_block_quote_start
+            ):
+                found_block_quote_token = cast(
+                    BlockQuoteMarkdownToken,
+                    parser_state.token_document[token_index],
+                )
+            token_index -= 1
+        POGGER.debug(
+            "PLFCB>>Started list-last token>>$",
+            parser_state.token_document[token_index],
+        )
+
+        POGGER.debug(
+            "CAW>>found_block_quote_token>>:$:",
+            ParserHelper.make_value_visible(found_block_quote_token),
+        )
+        if found_block_quote_token:
+            POGGER.debug(
+                "PLFCB>>leading_text_index>>$",
+                found_block_quote_token.leading_text_index,
+            )
+        assert token_index >= 0
+        return token_index, found_block_quote_token
+
     # pylint: disable=too-many-arguments
     @staticmethod
     def __calculate_adjusted_whitespace(
@@ -2356,8 +2391,8 @@ class ContainerBlockProcessor:
         )
         POGGER.debug("CAW>>adj_ws:$:($)", adj_ws, len(adj_ws))
         if stack_index <= 0:
-            POGGER.debug("PLFCB>>No Started lists")
             assert not current_container_blocks
+            POGGER.debug("PLFCB>>No Started lists")
             if foobar is None:
                 POGGER.debug("PLFCB>>No Started Block Quote")
             else:
@@ -2374,36 +2409,8 @@ class ContainerBlockProcessor:
                 "PLFCB>>Started list-last stack>>$",
                 parser_state.token_stack[stack_index],
             )
-            token_index = len(parser_state.token_document) - 1
 
-            found_block_quote_token: Optional[BlockQuoteMarkdownToken] = None
-            while token_index >= 0 and not (
-                parser_state.token_document[token_index].is_any_list_token
-            ):
-                if (
-                    not found_block_quote_token
-                    and parser_state.token_document[token_index].is_block_quote_start
-                ):
-                    found_block_quote_token = cast(
-                        BlockQuoteMarkdownToken,
-                        parser_state.token_document[token_index],
-                    )
-                token_index -= 1
-            POGGER.debug(
-                "PLFCB>>Started list-last token>>$",
-                parser_state.token_document[token_index],
-            )
-
-            POGGER.debug(
-                "CAW>>found_block_quote_token>>:$:",
-                ParserHelper.make_value_visible(found_block_quote_token),
-            )
-            if found_block_quote_token:
-                POGGER.debug(
-                    "PLFCB>>leading_text_index>>$",
-                    found_block_quote_token.leading_text_index,
-                )
-            assert token_index >= 0
+            token_index, found_block_quote_token = ContainerBlockProcessor.__look_for_any_list_start(parser_state)
 
             assert adj_ws is not None
             POGGER.debug("CAW>>adj_ws:$:($)", adj_ws, len(adj_ws))
@@ -2984,44 +2991,8 @@ class ContainerBlockProcessor:
                 block_quote_token = cast(
                     BlockQuoteMarkdownToken, parser_state.token_document[-1]
                 )
-                assert block_quote_token.leading_spaces is not None
-                split_spaces = block_quote_token.leading_spaces.split(
-                    ParserHelper.newline_character
-                )
-                nested_removed_text = str(split_spaces[-1])
-                POGGER.debug("nested_removed_text:$:", nested_removed_text)
-                if (
-                    len(parser_state.token_document) > 1
-                    and parser_state.token_document[-2].is_new_list_item
-                    and parser_state.token_document[-2].line_number
-                    == parser_state.token_document[-1].line_number
-                ):
-                    column_number_delta = (
-                        parser_state.token_document[-1].column_number
-                        - parser_state.token_document[-2].column_number
-                    )
-                    block_quote_character_index = nested_removed_text.index(">")
-                    nested_removed_text_length = len(nested_removed_text)
-                    POGGER.debug(
-                        "column_number_delta=$, block_quote_character_index=$, nested_removed_text_length=$",
-                        column_number_delta,
-                        block_quote_character_index,
-                        nested_removed_text_length,
-                    )
-                    adjusted_length = (
-                        parser_state.token_document[-2].column_number
-                        - 1
-                        + column_number_delta
-                        + (nested_removed_text_length - block_quote_character_index)
-                    )
-                    POGGER.debug("adjusted_length=$", adjusted_length)
-                    if adjusted_length != nested_removed_text_length:
-                        assert parser_state.original_line_to_parse
-                        nested_removed_text = parser_state.original_line_to_parse[
-                            :adjusted_length
-                        ]
-                        POGGER.debug("previous:$:", nested_removed_text)
-                        weird_adjusted_text = nested_removed_text
+                nested_removed_text, weird_adjusted_text = \
+                    ContainerBlockProcessor.__calculate_nested_removed_text_block_quote(parser_state, block_quote_token)
         if not nested_removed_text:
             POGGER.debug("__cnrt:nested_removed_text:$:", nested_removed_text)
             last_container_index = parser_state.find_last_container_on_stack()
@@ -3041,6 +3012,49 @@ class ContainerBlockProcessor:
                 )
                 nested_removed_text = str(split_spaces[-1])
         POGGER.debug("__calculate_nested_removed_text<<:$:", nested_removed_text)
+        return nested_removed_text, weird_adjusted_text
+
+    @staticmethod
+    def __calculate_nested_removed_text_block_quote(parser_state: ParserState, block_quote_token:BlockQuoteMarkdownToken):
+        assert block_quote_token.leading_spaces is not None
+        split_spaces = block_quote_token.leading_spaces.split(
+            ParserHelper.newline_character
+        )
+        nested_removed_text = str(split_spaces[-1])
+        weird_adjusted_text = None
+        POGGER.debug("nested_removed_text:$:", nested_removed_text)
+        if (
+            len(parser_state.token_document) > 1
+            and parser_state.token_document[-2].is_new_list_item
+            and parser_state.token_document[-2].line_number
+            == parser_state.token_document[-1].line_number
+        ):
+            column_number_delta = (
+                parser_state.token_document[-1].column_number
+                - parser_state.token_document[-2].column_number
+            )
+            block_quote_character_index = nested_removed_text.index(">")
+            nested_removed_text_length = len(nested_removed_text)
+            POGGER.debug(
+                "column_number_delta=$, block_quote_character_index=$, nested_removed_text_length=$",
+                column_number_delta,
+                block_quote_character_index,
+                nested_removed_text_length,
+            )
+            adjusted_length = (
+                parser_state.token_document[-2].column_number
+                - 1
+                + column_number_delta
+                + (nested_removed_text_length - block_quote_character_index)
+            )
+            POGGER.debug("adjusted_length=$", adjusted_length)
+            if adjusted_length != nested_removed_text_length:
+                assert parser_state.original_line_to_parse
+                nested_removed_text = parser_state.original_line_to_parse[
+                    :adjusted_length
+                ]
+                POGGER.debug("previous:$:", nested_removed_text)
+                weird_adjusted_text = nested_removed_text
         return nested_removed_text, weird_adjusted_text
 
     # pylint: disable=too-many-arguments, too-many-locals
@@ -3592,86 +3606,12 @@ class ContainerBlockProcessor:
             )
 
             assert parser_state.original_line_to_parse
-            POGGER.debug(
-                "parser_state.original_line_to_parse>>:$:($)",
-                parser_state.original_line_to_parse,
-                len(parser_state.original_line_to_parse),
-            )
-            POGGER.debug(
-                "xposition_marker.text_to_parse>>:$:($)",
-                xposition_marker.text_to_parse,
-                len(xposition_marker.text_to_parse),
-            )
-            if weird_adjusted_text:
-                POGGER.debug(
-                    "weird_adjusted_text>>:$:($)",
-                    weird_adjusted_text,
-                    len(weird_adjusted_text),
-                )
-                prefix_text = weird_adjusted_text
-                new_index_indent = len(weird_adjusted_text)
-                text_removed_by_container = weird_adjusted_text
-                new_text_to_parse = parser_state.original_line_to_parse[
-                    new_index_indent:
-                ]
-            else:
-                # POGGER.debug("total_ws>>:$:<", total_ws)
-                POGGER.debug("current_indent_level>>:$:<", current_indent_level)
-                current_indent_level -= xposition_marker.index_indent
-                # total_ws -= xposition_marker.index_indent
-                # POGGER.debug("total_ws>>:$:<", total_ws)
-                POGGER.debug("current_indent_level>>:$:<", current_indent_level)
-                assert current_indent_level >= 0
-
-                prefix_text = xposition_marker.text_to_parse[:current_indent_level]
-                new_text_to_parse = xposition_marker.text_to_parse[
-                    current_indent_level:
-                ]
-                new_index_indent = xposition_marker.index_indent + current_indent_level
-
-                new_index_indent = len(parser_state.original_line_to_parse) - len(
-                    new_text_to_parse
-                )
-
-                POGGER.debug("new_text_to_parse>>:$:<", new_text_to_parse)
-                POGGER.debug("new_index_indent>>:$:<", new_index_indent)
-                text_removed_by_container = (
-                    text_removed_by_container + prefix_text
-                    if text_removed_by_container
-                    else prefix_text
-                )
+            new_index_indent, text_removed_by_container, new_text_to_parse = \
+                ContainerBlockProcessor.__xyz(parser_state, xposition_marker, weird_adjusted_text, text_removed_by_container, current_indent_level)
             # POGGER.debug(
             #     "original_line_to_parse>>:$:<", parser_state.original_line_to_parse
             # )
-            assert parser_state.original_line_to_parse is not None
-            if len(parser_state.original_line_to_parse) == len(new_text_to_parse):
-                assert parser_state.original_line_to_parse.replace(
-                    ">", " "
-                ) == new_text_to_parse.replace(">", " "), (
-                    "cheat=:"
-                    + ParserHelper.make_value_visible(
-                        parser_state.original_line_to_parse
-                    )
-                    + ":,new_text_to_parse=:"
-                    + ParserHelper.make_value_visible(new_text_to_parse)
-                    + ":"
-                )
-            else:
-                is_valid = parser_state.original_line_to_parse.endswith(
-                    new_text_to_parse
-                )
-                # if not is_valid and new_text_to_parse[0] == " ":
-                #     new_parse = ">" + new_text_to_parse[1:]
-                #     is_valid = parser_state.original_line_to_parse.endswith(new_parse)
-                assert is_valid, (
-                    "cheat=:"
-                    + ParserHelper.make_value_visible(
-                        parser_state.original_line_to_parse
-                    )
-                    + ":,new_text_to_parse=:"
-                    + ParserHelper.make_value_visible(new_text_to_parse)
-                    + ":"
-                )
+            ContainerBlockProcessor.__val(parser_state, new_text_to_parse)
         else:
             POGGER.debug("not adjust_containers_before_leaf_blocks")
             new_text_to_parse = xposition_marker.text_to_parse
@@ -3687,6 +3627,89 @@ class ContainerBlockProcessor:
         return position_marker, text_removed_by_container
 
     # pylint: enable=too-many-arguments, too-many-locals
+
+    @staticmethod
+    def __xyz(parser_state:ParserState, xposition_marker:PositionMarker, weird_adjusted_text:Optional[str], text_removed_by_container:str, current_indent_level:int):
+        POGGER.debug(
+            "parser_state.original_line_to_parse>>:$:($)",
+            parser_state.original_line_to_parse,
+            len(parser_state.original_line_to_parse),
+        )
+        POGGER.debug(
+            "xposition_marker.text_to_parse>>:$:($)",
+            xposition_marker.text_to_parse,
+            len(xposition_marker.text_to_parse),
+        )
+        if weird_adjusted_text:
+            POGGER.debug(
+                "weird_adjusted_text>>:$:($)",
+                weird_adjusted_text,
+                len(weird_adjusted_text),
+            )
+            new_index_indent = len(weird_adjusted_text)
+            text_removed_by_container = weird_adjusted_text
+            new_text_to_parse = parser_state.original_line_to_parse[
+                new_index_indent:
+            ]
+        else:
+            # POGGER.debug("total_ws>>:$:<", total_ws)
+            POGGER.debug("current_indent_level>>:$:<", current_indent_level)
+            current_indent_level -= xposition_marker.index_indent
+            # total_ws -= xposition_marker.index_indent
+            # POGGER.debug("total_ws>>:$:<", total_ws)
+            POGGER.debug("current_indent_level>>:$:<", current_indent_level)
+            assert current_indent_level >= 0
+
+            prefix_text = xposition_marker.text_to_parse[:current_indent_level]
+            new_text_to_parse = xposition_marker.text_to_parse[
+                current_indent_level:
+            ]
+            new_index_indent = xposition_marker.index_indent + current_indent_level
+
+            new_index_indent = len(parser_state.original_line_to_parse) - len(
+                new_text_to_parse
+            )
+
+            POGGER.debug("new_text_to_parse>>:$:<", new_text_to_parse)
+            POGGER.debug("new_index_indent>>:$:<", new_index_indent)
+            text_removed_by_container = (
+                text_removed_by_container + prefix_text
+                if text_removed_by_container
+                else prefix_text
+            )
+        return new_index_indent, text_removed_by_container, new_text_to_parse
+
+    @staticmethod
+    def __val(parser_state:ParserState, new_text_to_parse:str):
+        assert parser_state.original_line_to_parse is not None
+        if len(parser_state.original_line_to_parse) == len(new_text_to_parse):
+            assert parser_state.original_line_to_parse.replace(
+                ">", " "
+            ) == new_text_to_parse.replace(">", " "), (
+                "cheat=:"
+                + ParserHelper.make_value_visible(
+                    parser_state.original_line_to_parse
+                )
+                + ":,new_text_to_parse=:"
+                + ParserHelper.make_value_visible(new_text_to_parse)
+                + ":"
+            )
+        else:
+            is_valid = parser_state.original_line_to_parse.endswith(
+                new_text_to_parse
+            )
+            # if not is_valid and new_text_to_parse[0] == " ":
+            #     new_parse = ">" + new_text_to_parse[1:]
+            #     is_valid = parser_state.original_line_to_parse.endswith(new_parse)
+            assert is_valid, (
+                "cheat=:"
+                + ParserHelper.make_value_visible(
+                    parser_state.original_line_to_parse
+                )
+                + ":,new_text_to_parse=:"
+                + ParserHelper.make_value_visible(new_text_to_parse)
+                + ":"
+            )
 
     @staticmethod
     def __handle_special_block_quote_reduction(
