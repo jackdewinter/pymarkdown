@@ -1087,7 +1087,7 @@ def test_nested_three_ordered_max_unordered_max_unordered_max_empty_with_li4():
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2844,7 +2844,7 @@ def test_nested_three_ordered_max_unordered_max_block_max_empty_no_bq1_with_li3(
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm

@@ -507,7 +507,7 @@ item</li>
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1532,7 +1532,7 @@ item</p>
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2111,7 +2111,7 @@ def test_nested_three_ordered_max_block_max_unordered_max_no_bq1_with_li2():
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2834,7 +2834,7 @@ def test_nested_three_ordered_max_block_max_ordered_max_empty_with_li3():
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3158,7 +3158,7 @@ def test_nested_three_ordered_max_block_max_ordered_max_empty_no_bq1_with_li3():
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3421,7 +3421,7 @@ def test_nested_three_ordered_max_block_max_block_max_with_li():
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4203,28 +4203,22 @@ def test_nested_three_ordered_max_block_max_plus_one_block_max_no_bq3():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_nested_three_ordered_max_block_max_block_max_plus_one():
+def test_nested_three_ordered_max_block_max_block_max_plus_one_x():
     """
     Verify that a nesting of ordered list, block quote, block quote, with
     the maximum number of spaces (plus one for the third) allowed, works properly.
-
-    ISSUE: https://github.com/jackdewinter/pymarkdown/issues/253
     """
 
     # Arrange
     source_markdown = """   1.    >     > list
          >     > item"""
     expected_tokens = [
-        "[olist(1,4):.:1:9:   :         ]",
-        "[block-quote(1,10):         :         > ]",
-        "[icode-block(1,16):    :]",
-        "[text(1,16):\a>\a&gt;\a list:]",
+        "[olist(1,4):.:1:9:   :]",
+        "[block-quote(1,10):         :         > \n         > \n]",
+        "[icode-block(1,16):    :\n    ]",
+        "[text(1,16):\a>\a&gt;\a list\n\a>\a&gt;\a item:]",
         "[end-icode-block:::True]",
         "[end-block-quote:::True]",
-        "[icode-block(2,14):    :]",
-        "[text(2,14):\a>\a&gt;\a item:  ]",
-        "[end-icode-block:::True]",
         "[end-olist:::True]",
     ]
     expected_gfm = """<ol>

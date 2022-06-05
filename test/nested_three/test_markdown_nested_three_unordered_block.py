@@ -431,7 +431,7 @@ item</li>
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -651,7 +651,7 @@ def test_nested_three_unordered_text_nl_block_text_nl_ordered_wo_bq():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3318,7 +3318,7 @@ def test_nested_three_unordered_max_block_max_ordered_max_plus_one():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3392,7 +3392,7 @@ item</p>
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3442,7 +3442,7 @@ def test_nested_three_unordered_max_block_max_block_max_with_li():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3478,7 +3478,7 @@ def test_nested_three_unordered_max_block_max_block_max_empty():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3525,7 +3525,7 @@ def test_nested_three_unordered_max_block_max_block_max_empty_with_li():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3562,7 +3562,7 @@ def test_nested_three_unordered_max_block_max_block_max_no_bq1():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3613,7 +3613,7 @@ def test_nested_three_unordered_max_block_max_block_max_no_bq1_with_li():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3651,7 +3651,7 @@ def test_nested_three_unordered_max_block_max_block_max_empty_no_bq1():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3699,7 +3699,7 @@ def test_nested_three_unordered_max_block_max_block_max_empty_no_bq1_with_li():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3736,7 +3736,7 @@ item</p>
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3784,7 +3784,7 @@ def test_nested_three_unordered_max_block_max_block_max_no_bq2_with_li():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3822,7 +3822,7 @@ def test_nested_three_unordered_max_block_max_block_max_empty_no_bq2():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3867,7 +3867,7 @@ def test_nested_three_unordered_max_block_max_block_max_empty_no_bq2_with_li():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3904,7 +3904,7 @@ item</p>
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3948,7 +3948,7 @@ def test_nested_three_unordered_max_block_max_block_max_no_bq3_with_li():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3986,7 +3986,7 @@ def test_nested_three_unordered_max_block_max_block_max_empty_no_bq3():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4027,7 +4027,7 @@ def test_nested_three_unordered_max_block_max_block_max_empty_no_bq3_with_li():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4266,13 +4266,10 @@ def test_nested_three_unordered_max_block_max_plus_one_block_max_no_bq3():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_nested_three_unordered_max_block_max_block_max_plus_one():
+def test_nested_three_unordered_max_block_max_block_max_plus_one_x():
     """
     Verify that a nesting of unordered list, block quote, block quote, with
     the maximum number of spaces (plus one for the third) allowed, works properly.
-
-    ISSUE: https://github.com/jackdewinter/pymarkdown/issues/253
     """
 
     # Arrange
@@ -4280,15 +4277,9 @@ def test_nested_three_unordered_max_block_max_block_max_plus_one():
         >     > item"""
     expected_tokens = [
         "[ulist(1,4):+::8:   :]",
-        "[block-quote(1,9):        :        > ]",
-        "[icode-block(1,15):    :]",
-        "[text(1,15):\a>\a&gt;\a list:]",
-        "[end-icode-block:::True]",
-        "[end-block-quote:::True]",
-        "[li(2,4):8:   :]",
-        "[block-quote(2,9):        :        > ]",
-        "[icode-block(2,15):    :]",
-        "[text(2,15):\a>\a&gt;\a item:]",
+        "[block-quote(1,9):        :        > \n        > \n]",
+        "[icode-block(1,15):    :\n    ]",
+        "[text(1,15):\a>\a&gt;\a list\n\a>\a&gt;\a item:]",
         "[end-icode-block:::True]",
         "[end-block-quote:::True]",
         "[end-ulist:::True]",
@@ -4304,7 +4295,7 @@ def test_nested_three_unordered_max_block_max_block_max_plus_one():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
