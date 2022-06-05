@@ -318,10 +318,12 @@ class ContainerBlockProcessor:
     ) -> Tuple[bool, Optional[str], bool, Optional[str], int, Optional[int]]:
         keep_processing = not can_continue and not skip_containers_before_leaf_blocks
         if keep_processing:
+            assert adj_ws is not None
             POGGER.debug("adj_ws:$:($)", adj_ws, len(adj_ws))
             POGGER.debug("container_used_indent>>$", container_used_indent)
             POGGER.debug("start_index>>$", start_index)
             POGGER.debug("parser_state.token_document=$", parser_state.token_document)
+            assert extracted_whitespace is not None
             POGGER.debug(
                 "extracted_whitespace:$:($)",
                 extracted_whitespace,
@@ -332,8 +334,14 @@ class ContainerBlockProcessor:
             ]
             POGGER.debug("last_container_stack_token>>$", last_container_stack_token)
             if last_container_stack_token.is_block_quote:
-                block_token = cast(BlockQuoteMarkdownToken, last_container_stack_token.matching_markdown_token)
-                split_spaces = block_token.leading_spaces.split(ParserHelper.newline_character)
+                block_token = cast(
+                    BlockQuoteMarkdownToken,
+                    last_container_stack_token.matching_markdown_token,
+                )
+                assert block_token.leading_spaces is not None
+                split_spaces = block_token.leading_spaces.split(
+                    ParserHelper.newline_character
+                )
                 POGGER.debug("split_spaces>>$", split_spaces)
                 last_leading_space = split_spaces[-1]
                 POGGER.debug(
