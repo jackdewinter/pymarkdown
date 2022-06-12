@@ -13,9 +13,9 @@
         },
         "pymarkdown/constants.py": {},
         "pymarkdown/container_block_processor.py": {
-            "too-few-public-methods": 1,
-            "too-many-arguments": 27,
-            "too-many-locals": 17,
+            "too-many-instance-attributes": 1,
+            "too-many-arguments": 24,
+            "too-many-locals": 15,
             "too-many-boolean-expressions": 1,
             "chained-comparison": 1
         },
@@ -222,12 +222,12 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 142,
-        "too-many-locals": 49,
-        "too-few-public-methods": 6,
+        "too-many-arguments": 139,
+        "too-many-locals": 47,
+        "too-few-public-methods": 5,
+        "too-many-instance-attributes": 18,
         "too-many-boolean-expressions": 1,
         "chained-comparison": 1,
-        "too-many-instance-attributes": 17,
         "broad-except": 2,
         "too-many-public-methods": 2
     }
