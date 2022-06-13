@@ -15,7 +15,7 @@
         "pymarkdown/container_block_processor.py": {
             "too-many-instance-attributes": 1,
             "too-many-arguments": 24,
-            "too-many-locals": 15,
+            "too-many-locals": 12,
             "too-many-boolean-expressions": 1,
             "chained-comparison": 1
         },
@@ -223,7 +223,7 @@
     },
     "disables-by-name": {
         "too-many-arguments": 139,
-        "too-many-locals": 47,
+        "too-many-locals": 44,
         "too-few-public-methods": 5,
         "too-many-instance-attributes": 18,
         "too-many-boolean-expressions": 1,

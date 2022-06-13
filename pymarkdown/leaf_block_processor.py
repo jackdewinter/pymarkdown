@@ -870,7 +870,7 @@ class LeafBlockProcessor:
         position_marker: PositionMarker,
         extracted_whitespace: Optional[str],
         block_quote_data: BlockQuoteData,
-        text_removed_by_container: str,
+        text_removed_by_container: Optional[str],
     ) -> List[MarkdownToken]:
         """
         Handle the parsing of a paragraph.
