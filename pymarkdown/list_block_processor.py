@@ -7,6 +7,7 @@ import string
 from typing import Callable, List, Optional, Tuple, cast
 
 from pymarkdown.block_quote_data import BlockQuoteData
+from pymarkdown.container_grab_bag import ContainerGrabBag
 from pymarkdown.container_markdown_token import (
     BlockQuoteMarkdownToken,
     ListStartMarkdownToken,
@@ -625,33 +626,26 @@ class ListBlockProcessor:
 
     # pylint: enable=too-many-locals, too-many-arguments
 
-    # pylint: disable=too-many-locals, too-many-arguments
+    # pylint: disable=too-many-locals
     @staticmethod
     def handle_list_block(
         is_ulist: bool,
         parser_state: ParserState,
         position_marker: PositionMarker,
-        extracted_whitespace: Optional[str],
-        adj_ws: Optional[str],
-        block_quote_data: BlockQuoteData,
-        removed_chars_at_start: int,
-        current_container_blocks: List[StackToken],
-        container_depth: int,
-        indent_already_processed: bool,
-    ) -> Tuple[
-        bool,
-        int,
-        Optional[str],
-        List[MarkdownToken],
-        int,
-        BlockQuoteData,
-        Optional[RequeueLineInfo],
-        bool,
-        Optional[str],
-    ]:
+        grab_bag: ContainerGrabBag,
+    ) -> Tuple[bool, int, Optional[str], List[MarkdownToken]]:
         """
         Handle the processing of a ulist block.
         """
+        extracted_whitespace: Optional[str] = grab_bag.extracted_whitespace
+        adj_ws: Optional[str] = grab_bag.adj_ws
+        block_quote_data: BlockQuoteData = grab_bag.block_quote_data
+        assert grab_bag.removed_chars_at_start_of_line is not None
+        removed_chars_at_start: int = grab_bag.removed_chars_at_start_of_line
+        current_container_blocks: List[StackToken] = grab_bag.current_container_blocks
+        container_depth: int = grab_bag.container_depth
+        indent_already_processed: bool = grab_bag.was_indent_already_processed
+
         (
             did_process,
             requeue_line_info,
@@ -758,18 +752,20 @@ class ListBlockProcessor:
         else:
             extracted_whitespace = old_extracted_whitespace
             indent_already_processed = old_indent_already_processed
+
+        grab_bag.removed_chars_at_start_of_line = removed_chars_at_start
+        grab_bag.block_quote_data = block_quote_data
+        grab_bag.requeue_line_info = requeue_line_info
+        grab_bag.was_indent_already_processed = indent_already_processed
+        grab_bag.extracted_whitespace = extracted_whitespace
+
         return (
             did_process,
             end_of_ulist_start_index,
             adjusted_text_to_parse,
             container_level_tokens,
-            removed_chars_at_start,
-            block_quote_data,
-            requeue_line_info,
-            indent_already_processed,
-            extracted_whitespace,
         )
-        # pylint: enable=too-many-locals, too-many-arguments
+        # pylint: enable=too-many-locals
 
     @staticmethod
     def __find_block_quote_before_list(
@@ -1019,17 +1015,15 @@ class ListBlockProcessor:
 
     @staticmethod
     def list_in_process(
-        parser_state: ParserState,
-        line_to_parse: str,
-        start_index: int,
-        extracted_whitespace: Optional[str],
-        ind: Optional[int],
-    ) -> Tuple[
-        List[MarkdownToken], str, Optional[str], Optional[RequeueLineInfo], bool
-    ]:
+        parser_state: ParserState, ind: Optional[int], grab_bag: ContainerGrabBag
+    ) -> List[MarkdownToken]:
         """
         Handle the processing of a line where there is a list in process.
         """
+        line_to_parse = grab_bag.line_to_parse
+        start_index = grab_bag.start_index
+        extracted_whitespace = grab_bag.extracted_whitespace
+
         assert extracted_whitespace is not None
         assert ind is not None
         assert parser_state.token_stack[ind].is_list
@@ -1110,18 +1104,22 @@ class ListBlockProcessor:
                 ind,
             )
             if requeue_line_info:
-                return [], line_to_parse, None, requeue_line_info, False
+                grab_bag.line_to_parse = line_to_parse
+                grab_bag.indent_used_by_list = None
+                grab_bag.requeue_line_info = requeue_line_info
+                grab_bag.was_paragraph_continuation = False
+                return []
 
         ListBlockProcessor.__list_in_process_update_containers(
             parser_state, ind, used_indent, was_paragraph_continuation, start_index
         )
-        return (
-            container_level_tokens,
-            line_to_parse,
-            used_indent,
-            None,
-            was_paragraph_continuation,
-        )
+
+        grab_bag.line_to_parse = line_to_parse
+        grab_bag.indent_used_by_list = used_indent
+        grab_bag.requeue_line_info = None
+        grab_bag.was_paragraph_continuation = was_paragraph_continuation
+
+        return container_level_tokens
 
     @staticmethod
     def __can_list_continue(

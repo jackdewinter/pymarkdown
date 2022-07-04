@@ -9,6 +9,7 @@ from application_properties import ApplicationProperties
 
 from pymarkdown.bad_tokenization_error import BadTokenizationError
 from pymarkdown.coalesce_processor import CoalesceProcessor
+from pymarkdown.container_block_leaf_processor import ContainerBlockLeafProcessor
 from pymarkdown.container_block_processor import ContainerBlockProcessor
 from pymarkdown.container_markdown_token import (
     BlockQuoteMarkdownToken,
@@ -655,7 +656,7 @@ class TokenizedMarkdown:
         extra_elements = []
         if parser_state.token_stack[-1].is_indented_code_block:
             extra_elements.extend(
-                ContainerBlockProcessor.extract_markdown_tokens_back_to_blank_line(
+                ContainerBlockLeafProcessor.extract_markdown_tokens_back_to_blank_line(
                     parser_state, was_forced
                 )
             )

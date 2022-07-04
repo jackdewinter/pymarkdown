@@ -5,7 +5,7 @@ Module to provide for encapsulation on a group of container indices.
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(frozen=True)
 class ContainerIndices:
     """
     Class to provide for encapsulation on a group of container indices.

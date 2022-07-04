@@ -5,18 +5,26 @@
         "pymarkdown/bad_tokenization_error.py": {},
         "pymarkdown/block_quote_data.py": {},
         "pymarkdown/block_quote_processor.py": {
-            "too-many-arguments": 13,
+            "too-many-arguments": 12,
             "too-many-locals": 3
         },
         "pymarkdown/coalesce_processor.py": {
             "too-few-public-methods": 1
         },
         "pymarkdown/constants.py": {},
-        "pymarkdown/container_block_processor.py": {
-            "too-many-arguments": 27,
-            "too-many-locals": 17,
-            "too-many-boolean-expressions": 1,
+        "pymarkdown/container_block_leaf_processor.py": {
+            "too-many-arguments": 3,
             "chained-comparison": 1
+        },
+        "pymarkdown/container_block_processor.py": {
+            "too-few-public-methods": 1,
+            "too-many-arguments": 2
+        },
+        "pymarkdown/container_grab_bag.py": {
+            "too-many-statements": 1,
+            "too-many-instance-attributes": 1,
+            "too-many-public-methods": 1,
+            "too-many-arguments": 1
         },
         "pymarkdown/container_indices.py": {},
         "pymarkdown/container_markdown_token.py": {
@@ -89,7 +97,7 @@
         "pymarkdown/link_reference_info.py": {},
         "pymarkdown/link_reference_titles.py": {},
         "pymarkdown/list_block_processor.py": {
-            "too-many-arguments": 20,
+            "too-many-arguments": 19,
             "too-many-locals": 7
         },
         "pymarkdown/main.py": {
@@ -221,13 +229,13 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 142,
-        "too-many-locals": 49,
-        "too-few-public-methods": 5,
-        "too-many-boolean-expressions": 1,
+        "too-many-arguments": 119,
+        "too-many-locals": 32,
+        "too-few-public-methods": 6,
         "chained-comparison": 1,
-        "too-many-instance-attributes": 17,
-        "broad-except": 2,
-        "too-many-public-methods": 2
+        "too-many-statements": 1,
+        "too-many-instance-attributes": 18,
+        "too-many-public-methods": 3,
+        "broad-except": 2
     }
 }

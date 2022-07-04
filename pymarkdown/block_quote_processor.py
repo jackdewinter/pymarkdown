@@ -5,6 +5,7 @@ import logging
 from typing import List, Optional, Tuple, cast
 
 from pymarkdown.block_quote_data import BlockQuoteData
+from pymarkdown.container_grab_bag import ContainerGrabBag
 from pymarkdown.container_markdown_token import (
     BlockQuoteMarkdownToken,
     ListStartMarkdownToken,
@@ -153,35 +154,21 @@ class BlockQuoteProcessor:
 
     # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments, too-many-locals
+    # pylint: disable=too-many-locals
     @staticmethod
     def handle_block_quote_block(
         parser_state: ParserState,
         position_marker: PositionMarker,
-        extracted_whitespace: Optional[str],
-        adj_ws: Optional[str],
-        block_quote_data: BlockQuoteData,
-        container_start_bq_count: int,
-    ) -> Tuple[
-        bool,
-        int,
-        BlockQuoteData,
-        str,
-        int,
-        List[MarkdownToken],
-        List[MarkdownToken],
-        int,
-        bool,
-        int,
-        Optional[str],
-        bool,
-        Optional[RequeueLineInfo],
-        bool,
-    ]:
+        grab_bag: ContainerGrabBag,
+    ) -> Tuple[bool, int, List[MarkdownToken], List[MarkdownToken], bool]:
         """
         Handle the processing of a block quote block.
         """
         POGGER.debug("handle_block_quote_block>>start")
+        extracted_whitespace: Optional[str] = grab_bag.extracted_whitespace
+        adj_ws: Optional[str] = grab_bag.adj_ws
+        block_quote_data: BlockQuoteData = grab_bag.block_quote_data
+        container_start_bq_count: Optional[int] = grab_bag.container_start_bq_count
 
         (
             did_process,
@@ -227,6 +214,7 @@ class BlockQuoteProcessor:
         )
 
         if really_start:
+            assert container_start_bq_count is not None
             POGGER.debug("handle_block_quote_block>>block-start")
             (
                 adjusted_text_to_parse,
@@ -278,24 +266,25 @@ class BlockQuoteProcessor:
             container_level_tokens,
         )
 
+        grab_bag.block_quote_data = block_quote_data
+        grab_bag.removed_chars_at_start_of_line = removed_chars_at_start
+        grab_bag.did_blank = did_blank
+        grab_bag.last_block_quote_index = last_block_quote_index
+        grab_bag.text_removed_by_container = text_removed_by_container
+        grab_bag.requeue_line_info = requeue_line_info
+        grab_bag.do_force_list_continuation = force_list_continuation
+        grab_bag.start_index = adjusted_index_number
+        grab_bag.line_to_parse = adjusted_text_to_parse
+
         return (
             did_process,
             end_of_bquote_start_index,
-            block_quote_data,
-            adjusted_text_to_parse,
-            adjusted_index_number,
             leaf_tokens,
             container_level_tokens,
-            removed_chars_at_start,
-            did_blank,
-            last_block_quote_index,
-            text_removed_by_container,
             avoid_block_starts,
-            requeue_line_info,
-            force_list_continuation,
         )
 
-    # pylint: enable=too-many-arguments, too-many-locals
+    # pylint: enable=too-many-locals
 
     @staticmethod
     def __handle_block_quote_block_lrd_kludges(parser_state: ParserState) -> None:
