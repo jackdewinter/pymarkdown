@@ -16,6 +16,10 @@
 
 ## Version 0.9.7 - Date: 2022-07-04
 
+### Added
+
+- None
+
 ### Changed
 
 - Bumping of versions of dependent packages
