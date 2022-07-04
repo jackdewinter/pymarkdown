@@ -14,6 +14,27 @@
 
 - None
 
+## Version 0.9.7 - Date: 2022-07-04
+
+### Changed
+
+- Bumping of versions of dependent packages
+- [Changed - Issue 361](https://github.com/jackdewinter/pymarkdown/issues/361)
+  - cleaning up badges to make them consistent
+- [Changed - Issue 392](https://github.com/jackdewinter/pymarkdown/issues/392)
+  - moved many of the "one-off" parameters out of arguments into a "grab-bag" with logging
+
+### Fixed
+
+- [Fixed - Issue 355](https://github.com/jackdewinter/pymarkdown/issues/355)
+  - issues uncovered by bumping pylint version
+- [Fixed](https://github.com/jackdewinter/pymarkdown/issues/305)
+  - issues with whitespace in certain situations being applied to both container and leaf tokens
+- [Fixed](https://github.com/jackdewinter/pymarkdown/issues/302)
+  - issues with whitespace missing from certain scenarios
+- [Fixed](https://github.com/jackdewinter/pymarkdown/issues/253)
+  - issues with lists and block quotes interacting badly, resulting in block quote being missed
+
 ## Version 0.9.6 - Date: 2022-04-02
 
 ### Added
