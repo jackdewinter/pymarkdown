@@ -15,6 +15,7 @@ def test_pragmas_01():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--stack-trace",
         "scan",
         "test/resources/pragmas/atx_heading_with_multiple_spaces_no_command.md",
     ]
