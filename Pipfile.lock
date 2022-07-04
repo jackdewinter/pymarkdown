@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "839376aa6854456110c95a60aec2df734ea765c995cca57c902aebd2c1a7c24e"
+            "sha256": "470e67f95678c9bed31dea83ddaf3f660a3e27653574da281438f0b8279f4cb1"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -638,11 +638,11 @@
         },
         "pylint": {
             "hashes": [
-                "sha256:13ddbbd8872c804574149e81197c28877eba75224ba6b76cd8652fc31df55c1c",
-                "sha256:911d3a97c808f7554643bcc5416028cfdc42eae34ed129b150741888c688d5d5"
+                "sha256:47705453aa9dce520e123a7d51843d5f0032cbfa06870f89f00927aa1f735a4a",
+                "sha256:89b61867db16eefb7b3c5b84afc94081edaf11544189e2b238154677529ad69f"
             ],
             "index": "pypi",
-            "version": "==2.13.7"
+            "version": "==2.14.4"
         },
         "pylint-utils": {
             "hashes": [
@@ -873,6 +873,14 @@
             ],
             "markers": "python_full_version < '3.11.0'",
             "version": "==2.0.1"
+        },
+        "tomlkit": {
+            "hashes": [
+                "sha256:0f4050db66fd445b885778900ce4dd9aea8c90c4721141fde0d6ade893820ef1",
+                "sha256:71ceb10c0eefd8b8f11fe34e8a51ad07812cb1dc3de23247425fbc9ddc47b9dd"
+            ],
+            "markers": "python_version >= '3.6' and python_version < '4'",
+            "version": "==0.11.0"
         },
         "toolz": {
             "hashes": [
