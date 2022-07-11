@@ -124,7 +124,14 @@ git diff --name-only --staged > %CLEAN_TEMPFILE%
 set ALL_FILES=
 for /f "tokens=*" %%x in (%CLEAN_TEMPFILE%) do (
 	set TEST_FILE=%%x
-	if /i [!TEST_FILE:~-3!]==[.py] set ALL_FILES=!ALL_FILES! !TEST_FILE!
+	if /i [!TEST_FILE:~-3!]==[.py] (
+		if EXIST !TEST_FILE! (
+			echo {Adding !TEST_FILE! to pylint suppression list.}
+			set ALL_FILES=!ALL_FILES! !TEST_FILE!
+		) else (
+			echo {Skipping scan of !TEST_FILE! as it no longer exists.}
+		)
+	)
 )
 if "%ALL_FILES%" == "" (
 	echo {Not executing pylint suppression checker on Python source code. No eligible Python files staged.}
