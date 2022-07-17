@@ -656,15 +656,17 @@ class ContainerBlockLeafProcessor:
                 return position_marker
 
             POGGER.debug("yes adjust_containers_before_leaf_blocks")
-            current_indent_level = (
-                ContainerBlockLeafProcessor.__calculate_current_indent_level(
-                    parser_state,
-                    last_block_index,
-                    grab_bag.text_removed_by_container,
-                    total_ws,
-                    xposition_marker.line_number,
-                )
+            (
+                current_indent_level,
+                close_tokens,
+            ) = ContainerBlockLeafProcessor.__calculate_current_indent_level(
+                parser_state,
+                last_block_index,
+                total_ws,
+                xposition_marker.line_number,
+                grab_bag,
             )
+            grab_bag.extend_container_tokens(close_tokens)
 
             assert parser_state.original_line_to_parse
             (
@@ -825,12 +827,16 @@ class ContainerBlockLeafProcessor:
     def __calculate_current_indent_level(
         parser_state: ParserState,
         last_block_index: int,
-        text_removed_by_container: Optional[str],
         total_ws: int,
         line_number: int,
-    ) -> int:
+        grab_bag: ContainerGrabBag,
+    ) -> Tuple[int, List[MarkdownToken]]:
+        text_removed_by_container = grab_bag.text_removed_by_container
         current_indent_level = 0
         non_last_block_index = 0
+        last_list_index = 0
+        had_non_block_token = False
+        did_hit_indent_level_threshold = False
         POGGER.debug_with_visible_whitespace("token-stack:$:", parser_state.token_stack)
         for current_stack_index in range(1, len(parser_state.token_stack)):
             proposed_indent_level = 0
@@ -838,6 +844,7 @@ class ContainerBlockLeafProcessor:
                 "token:$:", parser_state.token_stack[current_stack_index]
             )
             if parser_state.token_stack[current_stack_index].is_block_quote:
+                last_list_index = 0
                 (
                     new_indent_level,
                     non_last_block_index,
@@ -854,12 +861,14 @@ class ContainerBlockLeafProcessor:
                     continue
                 proposed_indent_level = new_indent_level
             elif parser_state.token_stack[current_stack_index].is_list:
+                last_list_index = current_stack_index
                 proposed_indent_level = (
                     ContainerBlockLeafProcessor.__calculate_current_indent_level_list(
                         parser_state, current_stack_index
                     )
                 )
             else:
+                had_non_block_token = True
                 break
             POGGER.debug(
                 "proposed_indent_level:$ <= total_ws:$<",
@@ -867,11 +876,32 @@ class ContainerBlockLeafProcessor:
                 total_ws,
             )
             if proposed_indent_level > total_ws:
+                did_hit_indent_level_threshold = True
                 break
             current_indent_level = proposed_indent_level
             POGGER.debug("current_indent_level:$", current_indent_level)
         POGGER.debug("<<current_indent_level:$", current_indent_level)
-        return current_indent_level
+        close_tokens: List[MarkdownToken] = []
+        if last_list_index:
+            POGGER.debug("<<had_non_block_token:$", had_non_block_token)
+            POGGER.debug("<<grab_bag.is_para_continue:$", grab_bag.is_para_continue)
+            if (
+                not had_non_block_token
+                and did_hit_indent_level_threshold
+                and not grab_bag.is_para_continue
+            ):
+                POGGER.debug("<<last_list_index:$", last_list_index)
+                (
+                    close_tokens,
+                    grab_bag.requeue_line_info,
+                ) = parser_state.close_open_blocks_fn(
+                    parser_state,
+                    include_lists=True,
+                    was_forced=True,
+                    until_this_index=last_list_index,
+                )
+                POGGER.debug("<<close_tokens:$", close_tokens)
+        return current_indent_level, close_tokens
 
     # pylint: disable=too-many-arguments
     @staticmethod
