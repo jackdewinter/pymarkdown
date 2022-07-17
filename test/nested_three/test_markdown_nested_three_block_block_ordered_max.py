@@ -452,8 +452,7 @@ def test_nested_three_block_max_block_max_ordered_max_empty():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_nested_three_block_max_block_max_ordered_max_empty_drop_ordered():
+def test_nested_three_block_max_block_max_ordered_max_empty_drop_ordered_x():
     """
     Verify that a nesting of block quote, block quote, ordered list, and
     no text on the first line, with
@@ -468,10 +467,46 @@ def test_nested_three_block_max_block_max_ordered_max_empty_drop_ordered():
         "[block-quote(1,9)::   >    > \n   >    > ]",
         "[olist(1,14):.:1:16:   :   ]",
         "[BLANK(1,16):]",
+        "[end-olist:::True]",
         "[para(2,14):   ]",
         "[text(2,14):item:]",
         "[end-para:::True]",
-        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<blockquote>
+<ol>
+<li></li>
+</ol>
+<p>item</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_max_block_max_ordered_max_empty_drop_ordered_no_item_indent():
+    """
+    Verify that a nesting of block quote, block quote, ordered list, and
+    no text on the first line, with
+    the maximum number of spaces allowed works properly.
+    """
+
+    # Arrange
+    source_markdown = """   >    >    1.
+   >    > item"""
+    expected_tokens = [
+        "[block-quote(1,4):   :   > ]",
+        "[block-quote(1,9)::   >    > \n   >    > ]",
+        "[olist(1,14):.:1:16:   ]",
+        "[end-olist:::False]",
+        "[BLANK(1,16):]",
+        "[para(2,11):]",
+        "[text(2,11):item:]",
+        "[end-para:::True]",
         "[end-block-quote:::True]",
         "[end-block-quote:::True]",
     ]

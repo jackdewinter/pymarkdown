@@ -596,10 +596,10 @@
         },
         {
             "name": "test.nested_three.test_markdown_nested_three_block_block_ordered_max",
-            "totalTests": 148,
+            "totalTests": 149,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 3,
+            "skippedTests": 2,
             "elapsedTimeInMilliseconds": 0
         },
         {
