@@ -2634,7 +2634,6 @@ continued here.</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_list_blocks_270a():
     """
     Test case 270a: variation of 270 that starts and stops with a blank
@@ -2709,7 +2708,6 @@ continued here.</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_list_blocks_270c():
     """
     Test case 270:  variation where bq starts before
@@ -2944,7 +2942,6 @@ def test_list_blocks_271b():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_list_blocks_271c():
     """
     Test case 271:  variation where bq starts before

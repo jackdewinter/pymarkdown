@@ -706,6 +706,7 @@ class TransformToMarkdown:
         previous_token = token_stack[nested_list_start_index]
         print(f"nested_list_start_index->{nested_list_start_index}")
         print(f" yes->{ParserHelper.make_value_visible(previous_token)}")
+
         print(f"token_stack[-1].line_number->{token_stack[-1].line_number}")
         print(f"previous_token.line_number->{previous_token.line_number}")
         print(f"line_number->{line_number}")
@@ -729,17 +730,17 @@ class TransformToMarkdown:
                 print(
                     f" pre_previous_token->{ParserHelper.make_value_visible(pre_previous_token)}"
                 )
-                if (
-                    pre_previous_token.is_block_quote_start
-                    and pre_previous_token.line_number == previous_token.line_number
-                ):
-                    cls.__adjust(
+                if pre_previous_token.is_block_quote_start:
+                    different_line_prefix = cls.__adjust(
                         next_level_index,
                         token_stack,
                         container_token_indices,
                         "",
                         False,
                     )
+                    print(f"different_line_prefix>:{different_line_prefix}:<")
+                    if pre_previous_token.line_number != previous_token.line_number:
+                        container_line = different_line_prefix + container_line
         return container_line
 
     # pylint: enable=too-many-arguments
