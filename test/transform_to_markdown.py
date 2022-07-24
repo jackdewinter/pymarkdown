@@ -729,17 +729,17 @@ class TransformToMarkdown:
                 print(
                     f" pre_previous_token->{ParserHelper.make_value_visible(pre_previous_token)}"
                 )
-                if (
-                    pre_previous_token.is_block_quote_start
-                    and pre_previous_token.line_number == previous_token.line_number
-                ):
-                    cls.__adjust(
+                if pre_previous_token.is_block_quote_start:
+                    different_line_prefix = cls.__adjust(
                         next_level_index,
                         token_stack,
                         container_token_indices,
                         "",
                         False,
                     )
+                    print(f"different_line_prefix>:{different_line_prefix}:<")
+                    if pre_previous_token.line_number != previous_token.line_number:
+                        container_line = different_line_prefix + container_line
         return container_line
 
     # pylint: enable=too-many-arguments
