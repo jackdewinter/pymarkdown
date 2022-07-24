@@ -2823,27 +2823,24 @@ continued here.</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_list_blocks_271a():
+def test_list_blocks_271ax():
     """
-    Test case 271a:  variation of 271 with blank line before and after
+    Test case 271a:  variation of 271 with blank line after
     """
 
     # Arrange
-    source_markdown = """
-> 1. > Blockquote
+    source_markdown = """> 1. > Blockquote
 > continued here.
 """
     expected_tokens = [
-        "[BLANK(1,1):]",
-        "[block-quote(2,1)::> ]",
-        "[olist(2,3):.:1:5::\n]",
-        "[block-quote(2,6)::> \n> \n]",
-        "[para(2,8):\n]",
-        "[text(2,8):Blockquote\ncontinued here.::\n]",
+        "[block-quote(1,1)::> ]",
+        "[olist(1,3):.:1:5::\n]",
+        "[block-quote(1,6)::> \n> \n]",
+        "[para(1,8):\n]",
+        "[text(1,8):Blockquote\ncontinued here.::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
-        "[BLANK(4,1):]",
+        "[BLANK(3,1):]",
         "[end-olist:::True]",
         "[end-block-quote:::True]",
     ]
@@ -2857,6 +2854,48 @@ continued here.</p>
 </li>
 </ol>
 </blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_271aa():
+    """
+    Test case 271a:  variation of 271 with blank line after
+    """
+
+    # Arrange
+    source_markdown = """> 1. > Blockquote
+> continued here.
+
+not here"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[olist(1,3):.:1:5::\n]",
+        "[block-quote(1,6)::> \n> \n]",
+        "[para(1,8):\n]",
+        "[text(1,8):Blockquote\ncontinued here.::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(3,1):]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+        "[para(4,1):]",
+        "[text(4,1):not here:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>
+<blockquote>
+<p>Blockquote
+continued here.</p>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+<p>not here</p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
