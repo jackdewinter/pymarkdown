@@ -42,8 +42,7 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_nested_three_block_max_block_max_ordered_max_drop_ordered():
+def test_nested_three_block_max_block_max_ordered_max_drop_ordered_x():
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly.
@@ -56,7 +55,7 @@ def test_nested_three_block_max_block_max_ordered_max_drop_ordered():
         "[block-quote(1,4):   :   > ]",
         "[block-quote(1,9)::   >    > \n   >    > ]",
         "[olist(1,14):.:1:16:   :   ]",
-        "[para(1,17):\n   ]",
+        "[para(1,17):\n]",
         "[text(1,17):list\nitem::\n]",
         "[end-para:::True]",
         "[end-olist:::True]",
@@ -2939,7 +2938,6 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_drop_ordered():
     """
     Verify that a nesting of block quote, block quote, ordered list, with
@@ -2969,7 +2967,7 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_drop_ordered(
 </ol>
 </blockquote>
 </blockquote>
-<pre><code>         item
+<pre><code>            item
 </code></pre>"""
 
     # Act & Assert
