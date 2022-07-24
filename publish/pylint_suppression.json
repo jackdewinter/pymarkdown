@@ -14,7 +14,8 @@
         "pymarkdown/constants.py": {},
         "pymarkdown/container_block_leaf_processor.py": {
             "too-many-arguments": 3,
-            "chained-comparison": 1
+            "chained-comparison": 1,
+            "too-many-boolean-expressions": 1
         },
         "pymarkdown/container_block_processor.py": {
             "too-few-public-methods": 1,
@@ -233,6 +234,7 @@
         "too-many-locals": 32,
         "too-few-public-methods": 6,
         "chained-comparison": 1,
+        "too-many-boolean-expressions": 1,
         "too-many-statements": 1,
         "too-many-instance-attributes": 18,
         "too-many-public-methods": 3,

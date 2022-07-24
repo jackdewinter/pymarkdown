@@ -25,6 +25,8 @@ from pymarkdown.stack_token import ListStackToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
+# pylint: disable=too-many-lines
+
 
 class ContainerBlockLeafProcessor:
     """
@@ -143,6 +145,16 @@ class ContainerBlockLeafProcessor:
         #     position_marker.index_indent,
         #     position_marker.text_to_parse,
         # )
+        # POGGER.debug("actual_removed_leading_space>>:$:",actual_removed_leading_space)
+        # POGGER.debug(
+        #     "original_line_to_parse>>:$:<", parser_state.original_line_to_parse
+        # )
+        # xx = parser_state.original_line_to_parse[position_marker.index_indent:]
+        # xy = position_marker.text_to_parse[position_marker.index_number:]
+        # POGGER.debug("xx>>:$:",xx)
+        # POGGER.debug("xy>>:$:",xy)
+        # assert xx == xy
+
         # POGGER.debug(
         #     ">>orig_text_removed_by_container>>:$:<<", orig_text_removed_by_container
         # )
@@ -517,6 +529,7 @@ class ContainerBlockLeafProcessor:
         removed_leading_space = None
         actual_removed_leading_space = None
         assert extracted_leaf_whitespace is not None
+        list_token: Optional[ListStartMarkdownToken] = None
         # pylint: disable=chained-comparison
         if (
             not grab_bag.was_indent_already_processed
@@ -541,9 +554,10 @@ class ContainerBlockLeafProcessor:
                     parser_state.token_stack[last_list_index].matching_markdown_token,
                 )
                 calc_indent_level = list_token.indent_level
+                # POGGER.debug("calc_indent_level>>:$:<", calc_indent_level)
                 if grab_bag.text_removed_by_container:
                     calc_indent_level -= len(grab_bag.text_removed_by_container)
-                # POGGER.debug("calc_indent_level>>:$:<", calc_indent_level)
+                    # POGGER.debug("calc_indent_level>>:$:<", calc_indent_level)
                 # POGGER.debug("extracted_leaf_whitespace>>:$:<", extracted_leaf_whitespace)
                 if len(extracted_leaf_whitespace) > calc_indent_level:
                     extracted_leaf_whitespace = extracted_leaf_whitespace[
@@ -580,14 +594,46 @@ class ContainerBlockLeafProcessor:
                 # )
         else:
             POGGER.debug("not adjust_for_list_container")
-        # POGGER.debug("removed_leading_space:$:", removed_leading_space)
         if removed_leading_space:
+            # POGGER.debug("removed_leading_space:$:", removed_leading_space)
             xposition_marker = PositionMarker(
                 xposition_marker.line_number,
                 len(removed_leading_space),
                 xposition_marker.text_to_parse,
                 index_indent=xposition_marker.index_indent,
             )
+        # POGGER.debug("removed_leading_space:$:", removed_leading_space)
+        # POGGER.debug("actual_removed_leading_space:$:", actual_removed_leading_space)
+        # POGGER.debug("list_token:$:", list_token)
+        # POGGER.debug("grab_bag.is_para_continue:$:", grab_bag.is_para_continue)
+        # POGGER.debug("grab_bag.text_removed_by_container:$:", grab_bag.text_removed_by_container)
+        # POGGER.debug("xposition_marker($:$):$:", xposition_marker.index_number, xposition_marker.index_indent, xposition_marker.text_to_parse)
+        # pylint: disable=too-many-boolean-expressions
+        if (
+            removed_leading_space is None
+            and actual_removed_leading_space
+            and list_token
+            and grab_bag.block_quote_data.current_count
+            == grab_bag.block_quote_data.stack_count
+            and grab_bag.block_quote_data.stack_count > 1
+            and grab_bag.is_para_continue
+        ):
+            assert grab_bag.text_removed_by_container is not None
+            total_removed = len(grab_bag.text_removed_by_container) + len(
+                actual_removed_leading_space
+            )
+            # POGGER.debug("total_removed:$:", total_removed)
+            # POGGER.debug("indent_level:$:", list_token.indent_level)
+            delta = list_token.indent_level - total_removed
+            # assert t1 >= list_token.indent_level
+            xposition_marker = PositionMarker(
+                xposition_marker.line_number,
+                xposition_marker.index_number,
+                xposition_marker.text_to_parse[delta:],
+                xposition_marker.index_indent,
+            )
+            # POGGER.debug("xposition_marker($:$):$:", xposition_marker.index_number, xposition_marker.index_indent, xposition_marker.text_to_parse)
+        # pylint: enable=too-many-boolean-expressions
         return removed_leading_space, actual_removed_leading_space, xposition_marker
 
     # pylint: enable=too-many-arguments
@@ -666,7 +712,8 @@ class ContainerBlockLeafProcessor:
                 xposition_marker.line_number,
                 grab_bag,
             )
-            grab_bag.extend_container_tokens(close_tokens)
+            if close_tokens:
+                grab_bag.extend_container_tokens(close_tokens)
 
             assert parser_state.original_line_to_parse
             (
@@ -688,12 +735,28 @@ class ContainerBlockLeafProcessor:
             new_index_indent = xposition_marker.index_indent
 
         # POGGER.debug("parser_state.token_document>>$", parser_state.token_document)
+
+        # POGGER.debug(
+        #     "xxxx($:$)>>:$:",
+        #     0,
+        #     new_index_indent,
+        #     new_text_to_parse,
+        # )
+        # POGGER.debug("actual_removed_leading_space>>:$:",actual_removed_leading_space)
+        indent_adjust = 0
+        if actual_removed_leading_space and new_index_indent == len(
+            actual_removed_leading_space
+        ):
+            indent_adjust += new_index_indent
+            new_index_indent = 0
+
         position_marker = PositionMarker(
             xposition_marker.line_number,
-            0,
+            indent_adjust,
             new_text_to_parse,
             new_index_indent,
         )
+        # POGGER.debug("done adjust_containers_before_leaf_blocks")
         return position_marker
 
     # pylint: enable=too-many-arguments

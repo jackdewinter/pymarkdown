@@ -599,7 +599,7 @@
             "totalTests": 149,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 2,
+            "skippedTests": 0,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -607,7 +607,7 @@
             "totalTests": 140,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 5,
+            "skippedTests": 0,
             "elapsedTimeInMilliseconds": 0
         },
         {
