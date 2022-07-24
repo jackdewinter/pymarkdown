@@ -460,10 +460,10 @@
         },
         {
             "name": "test.gfm.test_markdown_list_blocks",
-            "totalTests": 132,
+            "totalTests": 133,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 8,
+            "skippedTests": 7,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -599,7 +599,7 @@
             "totalTests": 149,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 2,
+            "skippedTests": 0,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -607,7 +607,7 @@
             "totalTests": 140,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 5,
+            "skippedTests": 0,
             "elapsedTimeInMilliseconds": 0
         },
         {

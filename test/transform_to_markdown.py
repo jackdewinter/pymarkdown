@@ -519,15 +519,17 @@ class TransformToMarkdown:
             if last_container_token_index < len(split_leading_spaces):
                 print(f" -->{ParserHelper.make_value_visible(split_leading_spaces)}")
                 print(
-                    " -->container_line>"
+                    " primary-->container_line>:"
                     + ParserHelper.make_value_visible(container_line)
+                    + ":<"
                 )
                 container_line = (
                     split_leading_spaces[last_container_token_index] + container_line
                 )
                 print(
-                    " -->container_line>"
+                    " -->container_line>:"
                     + ParserHelper.make_value_visible(container_line)
+                    + ":<"
                 )
         return (
             last_container_token_index,
@@ -602,7 +604,9 @@ class TransformToMarkdown:
                 TransformToMarkdown.__find_last_block_quote_on_stack(token_stack)
             )
             if nested_block_start_index != -1:
+                print(f"nested_block_start_index>{nested_block_start_index}")
                 previous_token = token_stack[nested_block_start_index]
+                print(f"previous={ParserHelper.make_value_visible(previous_token)}")
                 print(
                     " applied_leading_spaces_to_start_of_container_line->"
                     + str(applied_leading_spaces_to_start_of_container_line)
@@ -622,17 +626,22 @@ class TransformToMarkdown:
                     split_leading_spaces = previous_token.leading_spaces.split(
                         ParserHelper.newline_character
                     )
+                    print(
+                        f"inner_token_index={inner_token_index} < len(split)={len(split_leading_spaces)}"
+                    )
                     if inner_token_index < len(split_leading_spaces):
                         print(
-                            " -->container_line>"
+                            " adj-->container_line>:"
                             + ParserHelper.make_value_visible(container_line)
+                            + ":<"
                         )
                         container_line = (
                             split_leading_spaces[inner_token_index] + container_line
                         )
                         print(
-                            " -->container_line>"
+                            " adj-->container_line>:"
                             + ParserHelper.make_value_visible(container_line)
+                            + ":<"
                         )
                 container_token_indices[nested_block_start_index] = (
                     inner_token_index + 1
@@ -695,6 +704,7 @@ class TransformToMarkdown:
         line_number,
     ):
         previous_token = token_stack[nested_list_start_index]
+        print(f"nested_list_start_index->{nested_list_start_index}")
         print(f" yes->{ParserHelper.make_value_visible(previous_token)}")
         print(f"token_stack[-1].line_number->{token_stack[-1].line_number}")
         print(f"previous_token.line_number->{previous_token.line_number}")
@@ -703,6 +713,7 @@ class TransformToMarkdown:
             token_stack[-1].line_number != previous_token.line_number
             or line_number != previous_token.line_number
         ):
+            print("different line as list start")
             container_line = cls.__adjust(
                 nested_list_start_index,
                 token_stack,
@@ -710,6 +721,25 @@ class TransformToMarkdown:
                 container_line,
                 False,
             )
+        else:
+            print("same line as list start")
+            if nested_list_start_index > 0:
+                next_level_index = nested_list_start_index - 1
+                pre_previous_token = token_stack[next_level_index]
+                print(
+                    f" pre_previous_token->{ParserHelper.make_value_visible(pre_previous_token)}"
+                )
+                if (
+                    pre_previous_token.is_block_quote_start
+                    and pre_previous_token.line_number == previous_token.line_number
+                ):
+                    cls.__adjust(
+                        next_level_index,
+                        token_stack,
+                        container_token_indices,
+                        "",
+                        False,
+                    )
         return container_line
 
     # pylint: enable=too-many-arguments
