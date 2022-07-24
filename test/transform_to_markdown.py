@@ -706,6 +706,7 @@ class TransformToMarkdown:
         previous_token = token_stack[nested_list_start_index]
         print(f"nested_list_start_index->{nested_list_start_index}")
         print(f" yes->{ParserHelper.make_value_visible(previous_token)}")
+
         print(f"token_stack[-1].line_number->{token_stack[-1].line_number}")
         print(f"previous_token.line_number->{previous_token.line_number}")
         print(f"line_number->{line_number}")
