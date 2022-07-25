@@ -74,6 +74,29 @@ class PyMarkdownLint:
             return argument
         raise ValueError(f"Value '{argument}' is not a valid log level.")
 
+    @staticmethod
+    def alternate_extension_type(argument: str) -> str:
+        """
+        Function to help argparse limit the valid log levels.
+        """
+        split_argument = argument.split(",")
+        for next_split in split_argument:
+            if not next_split.startswith("."):
+                raise argparse.ArgumentTypeError(
+                    f"Extension '{next_split}' must start with a period."
+                )
+            clean_split = next_split[1:]
+            if not clean_split:
+                raise argparse.ArgumentTypeError(
+                    f"Extension '{next_split}' must have at least one character after the period."
+                )
+            for clean_split_char in clean_split:
+                if not clean_split_char.isalnum():
+                    raise argparse.ArgumentTypeError(
+                        f"Extension '{next_split}' must only contain alphanumeric characters after the period."
+                    )
+        return argument.lower()
+
     def __parse_arguments(self) -> argparse.Namespace:
         parser = argparse.ArgumentParser(description="Lint any found Markdown files.")
 
@@ -185,6 +208,15 @@ class PyMarkdownLint:
             help="recursively scan directories",
         )
         new_sub_parser.add_argument(
+            "-ae",
+            "--alternate-extensions",
+            dest="alternate_extensions",
+            action="store",
+            default=".md",
+            type=PyMarkdownLint.alternate_extension_type,
+            help="provider an alternate set of file extensions to scan",
+        )
+        new_sub_parser.add_argument(
             "paths",
             metavar="path",
             type=str,
@@ -205,11 +237,16 @@ class PyMarkdownLint:
         return parse_arguments
 
     @classmethod
-    def __is_file_eligible_to_scan(cls, path_to_test: str) -> bool:
+    def __is_file_eligible_to_scan(
+        cls, path_to_test: str, eligible_extensions: List[str]
+    ) -> bool:
         """
         Determine if the presented path is one that we want to scan.
         """
-        return path_to_test.endswith(".md")
+        return any(
+            path_to_test.endswith(next_extension)
+            for next_extension in eligible_extensions
+        )
 
     def __scan_file(self, args: argparse.Namespace, next_file: str) -> None:
         """
@@ -255,7 +292,11 @@ class PyMarkdownLint:
             raise
 
     def __process_next_path(
-        self, next_path: str, files_to_parse: Set[str], recurse_directories: bool
+        self,
+        next_path: str,
+        files_to_parse: Set[str],
+        recurse_directories: bool,
+        eligible_extensions: List[str],
     ) -> bool:
 
         did_find_any = False
@@ -268,10 +309,10 @@ class PyMarkdownLint:
             POGGER.debug("Provided path '$' does not exist.", next_path)
         elif os.path.isdir(next_path):
             self.__process_next_path_directory(
-                next_path, files_to_parse, recurse_directories
+                next_path, files_to_parse, recurse_directories, eligible_extensions
             )
             did_find_any = True
-        elif self.__is_file_eligible_to_scan(next_path):
+        elif self.__is_file_eligible_to_scan(next_path, eligible_extensions):
             POGGER.debug(
                 "Provided path '$' is a valid file. Adding.",
                 next_path,
@@ -290,7 +331,11 @@ class PyMarkdownLint:
         return did_find_any
 
     def __process_next_path_directory(
-        self, next_path: str, files_to_parse: Set[str], recurse_directories: bool
+        self,
+        next_path: str,
+        files_to_parse: Set[str],
+        recurse_directories: bool,
+        eligible_extensions: List[str],
     ) -> None:
         POGGER.debug("Provided path '$' is a directory. Walking directory.", next_path)
         normalized_next_path = next_path.replace("\\", "/")
@@ -305,12 +350,19 @@ class PyMarkdownLint:
             )
             for file in files:
                 rooted_file_path = f"{normalized_root}/{file}"
-                if self.__is_file_eligible_to_scan(rooted_file_path):
+                if self.__is_file_eligible_to_scan(
+                    rooted_file_path, eligible_extensions
+                ):
                     files_to_parse.add(rooted_file_path)
 
     def __determine_files_to_scan(
-        self, eligible_paths: List[str], recurse_directories: bool
+        self,
+        eligible_paths: List[str],
+        recurse_directories: bool,
+        eligible_extensions: str,
     ) -> Tuple[List[str], bool]:
+
+        split_eligible_extensions: List[str] = eligible_extensions.split(",")
 
         did_error_scanning_files = False
         files_to_parse: Set[str] = set()
@@ -327,10 +379,16 @@ class PyMarkdownLint:
                 for next_globbed_path in globbed_paths:
                     next_globbed_path = next_globbed_path.replace("\\", "/")
                     self.__process_next_path(
-                        next_globbed_path, files_to_parse, recurse_directories
+                        next_globbed_path,
+                        files_to_parse,
+                        recurse_directories,
+                        split_eligible_extensions,
                     )
             elif not self.__process_next_path(
-                next_path, files_to_parse, recurse_directories
+                next_path,
+                files_to_parse,
+                recurse_directories,
+                split_eligible_extensions,
             ):
                 did_error_scanning_files = True
                 break
@@ -429,13 +487,9 @@ class PyMarkdownLint:
             self.__properties.set_manual_property(args.set_configuration)
 
     def __initialize_strict_mode(self, args: argparse.Namespace) -> None:
-        effective_strict_configuration = args.strict_configuration
-        if not effective_strict_configuration:
-            effective_strict_configuration = self.__properties.get_boolean_property(
-                "mode.strict-config", strict_mode=True
-            )
-
-        if effective_strict_configuration:
+        if args.strict_configuration or self.__properties.get_boolean_property(
+            "mode.strict-config", strict_mode=True
+        ):
             self.__properties.enable_strict_mode()
 
     def __initialize_logging(
@@ -546,7 +600,7 @@ class PyMarkdownLint:
 
             POGGER.info("Determining files to scan.")
             files_to_scan, did_error_scanning_files = self.__determine_files_to_scan(
-                args.paths, args.recurse_directories
+                args.paths, args.recurse_directories, args.alternate_extensions
             )
             if did_error_scanning_files:
                 total_error_count = 1
