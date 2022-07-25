@@ -14,15 +14,17 @@ def test_markdown_with_dash_h():
     supplied_arguments = ["scan", "-h"]
 
     expected_return_code = 0
-    expected_output = """usage: main.py scan [-h] [-l] [-r] path [path ...]
+    expected_output = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS] path [path ...]
 
 positional arguments:
-  path              one or more paths to scan for eligible Markdown files
+  path                  one or more paths to scan for eligible Markdown files
 
 optional arguments:
-  -h, --help        show this help message and exit
-  -l, --list-files  list the markdown files found and exit
-  -r, --recurse     recursively scan directories
+  -h, --help            show this help message and exit
+  -l, --list-files      list the markdown files found and exit
+  -r, --recurse         recursively scan directories
+  -ae ALTERNATE_EXTENSIONS, --alternate-extensions ALTERNATE_EXTENSIONS
+                        provider an alternate set of file extensions to scan
 """
     expected_error = ""
 
@@ -46,7 +48,7 @@ def test_markdown_with_dash_l_only():
 
     expected_return_code = 2
     expected_output = ""
-    expected_error = """usage: main.py scan [-h] [-l] [-r] path [path ...]
+    expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS] path [path ...]
 main.py scan: error: the following arguments are required: path
 """
 
