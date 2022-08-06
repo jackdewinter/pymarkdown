@@ -708,6 +708,7 @@ class ListBlockProcessor:
                 block_quote_data,
                 adj_ws,
                 position_marker,
+                container_depth,
             )
 
             POGGER.debug(
@@ -1389,6 +1390,7 @@ class ListBlockProcessor:
         block_quote_data: BlockQuoteData,
         adj_ws: Optional[str],
         position_marker: PositionMarker,
+        container_depth: int,
     ) -> Tuple[int, int, int, int, int, List[MarkdownToken], BlockQuoteData]:
         """
         Handle the processing of the first part of the list.
@@ -1415,6 +1417,7 @@ class ListBlockProcessor:
             ws_after_marker,
             ws_before_marker,
             adj_ws,
+            container_depth,
         )
 
         check_list_nesting = True
@@ -1502,20 +1505,33 @@ class ListBlockProcessor:
         ws_after_marker: int,
         ws_before_marker: int,
         adj_ws: str,
+        container_depth: int,
     ) -> Tuple[int, int, int]:
         POGGER.debug(
             "--ws_before_marker>>$>>marker_width_minus_one>>$",
             ws_before_marker,
             marker_width_minus_one,
         )
-        POGGER.debug(">>>>>XX>>$>>$<<", after_marker_ws_index, line_to_parse_size)
-        if after_marker_ws_index == line_to_parse_size and ws_after_marker:
+        POGGER.debug("container_depth($)", container_depth)
+        POGGER.debug(
+            "after_marker_ws_index($) == line_to_parse_size($) and ws_after_marker($)",
+            after_marker_ws_index,
+            line_to_parse_size,
+            ws_after_marker,
+        )
+        if (
+            after_marker_ws_index == line_to_parse_size
+            and ws_after_marker
+            and not container_depth
+        ):
+            POGGER.debug("indent1")
             indent_level, remaining_whitespace, ws_after_marker = (
                 2 + marker_width_minus_one + len(adj_ws),
                 ws_after_marker,
                 0,
             )
         else:
+            POGGER.debug("indent2")
             if after_marker_ws_index == line_to_parse_size and ws_after_marker == 0:
                 ws_after_marker += 1
 
