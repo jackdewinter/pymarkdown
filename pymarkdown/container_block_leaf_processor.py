@@ -15,6 +15,7 @@ from pymarkdown.container_markdown_token import (
 from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.inline_markdown_token import TextMarkdownToken
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
+from pymarkdown.leaf_block_processor_paragraph import LeafBlockProcessorParagraph
 from pymarkdown.link_reference_definition_helper import LinkReferenceDefinitionHelper
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
@@ -204,7 +205,6 @@ class ContainerBlockLeafProcessor:
                     leaf_token_whitespace,
                     grab_bag.removed_chars_at_start_of_line,
                     grab_bag.last_block_quote_index,
-                    grab_bag.last_list_start_index,
                 )
                 or LeafBlockProcessor.parse_setext_headings(
                     parser_state,
@@ -218,7 +218,7 @@ class ContainerBlockLeafProcessor:
                     leaf_token_whitespace,
                     grab_bag.block_quote_data,
                 )
-                or LeafBlockProcessor.parse_paragraph(
+                or LeafBlockProcessorParagraph.parse_paragraph(
                     parser_state,
                     leaf_block_position_marker,
                     leaf_token_whitespace,
@@ -734,15 +734,6 @@ class ContainerBlockLeafProcessor:
             new_text_to_parse = xposition_marker.text_to_parse
             new_index_indent = xposition_marker.index_indent
 
-        # POGGER.debug("parser_state.token_document>>$", parser_state.token_document)
-
-        # POGGER.debug(
-        #     "xxxx($:$)>>:$:",
-        #     0,
-        #     new_index_indent,
-        #     new_text_to_parse,
-        # )
-        # POGGER.debug("actual_removed_leading_space>>:$:",actual_removed_leading_space)
         indent_adjust = 0
         if actual_removed_leading_space and new_index_indent == len(
             actual_removed_leading_space
@@ -756,7 +747,6 @@ class ContainerBlockLeafProcessor:
             new_text_to_parse,
             new_index_indent,
         )
-        # POGGER.debug("done adjust_containers_before_leaf_blocks")
         return position_marker
 
     # pylint: enable=too-many-arguments
@@ -790,10 +780,6 @@ class ContainerBlockLeafProcessor:
             parser_state.token_stack[last_block_index].matching_markdown_token,
         )
 
-        # POGGER.debug(
-        #     "orig_text_removed_by_container>>:$:", orig_text_removed_by_container
-        # )
-
         if (
             not orig_text_removed_by_container
         ) and last_block_token.line_number != line_number:
@@ -826,9 +812,6 @@ class ContainerBlockLeafProcessor:
             )
         else:
             is_valid = parser_state.original_line_to_parse.endswith(new_text_to_parse)
-            # if not is_valid and new_text_to_parse[0] == " ":
-            #     new_parse = ">" + new_text_to_parse[1:]
-            #     is_valid = parser_state.original_line_to_parse.endswith(new_parse)
             assert is_valid, (
                 "cheat=:"
                 + ParserHelper.make_value_visible(parser_state.original_line_to_parse)

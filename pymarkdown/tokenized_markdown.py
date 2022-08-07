@@ -21,7 +21,7 @@ from pymarkdown.extensions.pragma_token import PragmaToken
 from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.inline_helper import InlineHelper
 from pymarkdown.inline_processor import InlineProcessor
-from pymarkdown.leaf_block_processor import LeafBlockProcessor
+from pymarkdown.leaf_block_processor_paragraph import LeafBlockProcessorParagraph
 from pymarkdown.leaf_markdown_token import BlankLineMarkdownToken
 from pymarkdown.link_helper import LinkHelper
 from pymarkdown.link_reference_definition_helper import LinkReferenceDefinitionHelper
@@ -769,9 +769,10 @@ class TokenizedMarkdown:
     def __handle_blank_line_token_stack(
         parser_state: ParserState,
     ) -> Tuple[Optional[List[MarkdownToken]], bool, Optional[RequeueLineInfo]]:
-        is_processing_list, in_index = LeafBlockProcessor.check_for_list_in_process(
-            parser_state
-        )
+        (
+            is_processing_list,
+            in_index,
+        ) = LeafBlockProcessorParagraph.check_for_list_in_process(parser_state)
         POGGER.debug(
             "hbl>>is_processing_list>>$>>in_index>>$>>last_stack>>$",
             is_processing_list,
