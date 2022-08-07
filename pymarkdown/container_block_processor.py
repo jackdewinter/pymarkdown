@@ -17,7 +17,7 @@ from pymarkdown.container_markdown_token import (
     ListStartMarkdownToken,
 )
 from pymarkdown.extensions.pragma_token import PragmaExtension
-from pymarkdown.leaf_block_processor import LeafBlockProcessor
+from pymarkdown.leaf_block_processor_paragraph import LeafBlockProcessorParagraph
 from pymarkdown.list_block_processor import ListBlockProcessor
 from pymarkdown.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
@@ -1907,7 +1907,9 @@ class ContainerBlockProcessor:
         grab_bag: ContainerGrabBag,
     ) -> bool:
 
-        did_process, ind = LeafBlockProcessor.check_for_list_in_process(parser_state)
+        did_process, ind = LeafBlockProcessorParagraph.check_for_list_in_process(
+            parser_state
+        )
         if did_process:
             assert not grab_bag.container_tokens
             POGGER.debug("clt>>list-in-progress")

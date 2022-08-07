@@ -17,6 +17,7 @@ from pymarkdown.container_markdown_token import (
 )
 from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
+from pymarkdown.leaf_block_processor_paragraph import LeafBlockProcessorParagraph
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
@@ -1336,7 +1337,7 @@ class ListBlockProcessor:
             (
                 did_find,
                 last_list_index,
-            ) = LeafBlockProcessor.check_for_list_in_process(parser_state)
+            ) = LeafBlockProcessorParagraph.check_for_list_in_process(parser_state)
             POGGER.debug(
                 "2>>did_find>>$>>$>>",
                 did_find,
@@ -1425,7 +1426,9 @@ class ListBlockProcessor:
             parser_state.token_stack[-1].is_html_block
             or parser_state.token_stack[-1].is_fenced_code_block
         ):
-            did_find, _ = LeafBlockProcessor.check_for_list_in_process(parser_state)
+            did_find, _ = LeafBlockProcessorParagraph.check_for_list_in_process(
+                parser_state
+            )
             if not did_find:
                 indent_level = -1
                 after_marker_ws_index = -1
@@ -1433,9 +1436,10 @@ class ListBlockProcessor:
         else:
             POGGER.debug("stack:$:", parser_state.token_stack)
             POGGER.debug("document:$:", parser_state.token_document)
-            did_find, last_list_index = LeafBlockProcessor.check_for_list_in_process(
-                parser_state
-            )
+            (
+                did_find,
+                last_list_index,
+            ) = LeafBlockProcessorParagraph.check_for_list_in_process(parser_state)
             if did_find:
                 POGGER.debug(
                     "stack[last_list_index]:$:",
@@ -1705,9 +1709,10 @@ class ListBlockProcessor:
         POGGER.debug("new_stack>>$", new_stack)
         POGGER.debug("indent_level>>$", indent_level)
 
-        did_find, last_list_index = LeafBlockProcessor.check_for_list_in_process(
-            parser_state
-        )
+        (
+            did_find,
+            last_list_index,
+        ) = LeafBlockProcessorParagraph.check_for_list_in_process(parser_state)
         if did_find:
             POGGER.debug(
                 "list-in-process>>$",
@@ -1971,7 +1976,7 @@ class ListBlockProcessor:
             (
                 did_find,
                 last_list_index,
-            ) = LeafBlockProcessor.check_for_list_in_process(parser_state)
+            ) = LeafBlockProcessorParagraph.check_for_list_in_process(parser_state)
             POGGER.debug(
                 "did_find>>$--last_list_index--$",
                 did_find,
@@ -2006,7 +2011,7 @@ class ListBlockProcessor:
         (
             did_find,
             last_list_index,
-        ) = LeafBlockProcessor.check_for_list_in_process(parser_state)
+        ) = LeafBlockProcessorParagraph.check_for_list_in_process(parser_state)
         assert last_list_index > 0
         last_list_index_token = cast(
             ListStackToken, parser_state.token_stack[last_list_index]
