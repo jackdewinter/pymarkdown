@@ -206,7 +206,7 @@ class RuleMd007(RulePlugin):
             ignore_list_starts = False
             while stack_index >= 0:
                 # print(f"stack_index>{stack_index}," + \
-                #   f"token={self.__container_token_stack[t]}".replace(ParserHelper.newline_character, "\\n"))
+                #   f"token={self.__container_token_stack[stack_index]}".replace(ParserHelper.newline_character, "\\n"))
                 if self.__container_token_stack[stack_index].is_ordered_list_start:
                     if not ignore_list_starts:
                         list_token = cast(
@@ -247,14 +247,19 @@ class RuleMd007(RulePlugin):
             block_quote_base,
             list_depth,
         ) = self.__calculate_base_column()
+        # print(f"container_base_column={container_base_column}, block_quote_base={block_quote_base}, list_depth={list_depth}")
+
+        # print(f"list_depth={list_depth}")
         if token.is_new_list_item:
+            # print(f"list_depth={list_depth}")
             list_depth -= 1
 
         if self.__start_indented:
+            # print(f"list_depth={list_depth}")
             list_depth += 1
 
         adjusted_column_number = token.column_number - 1 - container_base_column
-        # print(f"adjusted_column_number={adjusted_column_number}")
+        # print(f"adjusted_column_number={adjusted_column_number} = token.column_number({token.column_number}) -1 -container_base_column={container_base_column}")
         calculated_column_number = list_depth * self.__indent_basis
         # print(f"adjusted_column_number={adjusted_column_number}, calculated_column_number=" + \
         #   f"{calculated_column_number},block_quote_base={block_quote_base}")
