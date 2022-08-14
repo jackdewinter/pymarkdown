@@ -3665,6 +3665,121 @@ def test_extra_027a():
 
 
 @pytest.mark.gfm
+def test_extra_028():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """# Demo markdown
+
+- Item
+    - Sub item
+
+1. Ordered item
+    - Sub unordered item"""
+    expected_tokens = [
+        "[atx(1,1):1:0:]",
+        "[text(1,3):Demo markdown: ]",
+        "[end-atx::]",
+        "[BLANK(2,1):]",
+        "[ulist(3,1):-::2:]",
+        "[para(3,3):]",
+        "[text(3,3):Item:]",
+        "[end-para:::True]",
+        "[ulist(4,5):-::6:    :]",
+        "[para(4,7):]",
+        "[text(4,7):Sub item:]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+        "[olist(6,1):.:1:3:]",
+        "[para(6,4):]",
+        "[text(6,4):Ordered item:]",
+        "[end-para:::True]",
+        "[ulist(7,5):-::6:    ]",
+        "[para(7,7):]",
+        "[text(7,7):Sub unordered item:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<h1>Demo markdown</h1>
+<ul>
+<li>Item
+<ul>
+<li>Sub item</li>
+</ul>
+</li>
+</ul>
+<ol>
+<li>Ordered item
+<ul>
+<li>Sub unordered item</li>
+</ul>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_028a():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """1. Item
+    - Sub item
+
+- Ordered item
+    - Sub unordered item"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):Item:]",
+        "[end-para:::True]",
+        "[ulist(2,5):-::6:    :]",
+        "[para(2,7):]",
+        "[text(2,7):Sub item:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[end-ulist:::True]",
+        "[end-olist:::True]",
+        "[ulist(4,1):-::2:]",
+        "[para(4,3):]",
+        "[text(4,3):Ordered item:]",
+        "[end-para:::True]",
+        "[ulist(5,5):-::6:    ]",
+        "[para(5,7):]",
+        "[text(5,7):Sub unordered item:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>Item
+<ul>
+<li>Sub item</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>Ordered item
+<ul>
+<li>Sub unordered item</li>
+</ul>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_extra_999():
     """
     Temporary test to keep coverage up while consistency checks disabled.

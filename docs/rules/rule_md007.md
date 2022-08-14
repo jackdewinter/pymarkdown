@@ -65,6 +65,27 @@ In addition, to start the first level of lists with the specified amount
 of indentation, the `start_indented` configuration value can be set to
 `True`.
 
+### Notes
+
+The indentation measured by this rule solely covers the indentation for any
+unordered list items.  Therefore, if the following Markdown is scanned under
+normal circumstance:
+
+```Markdown
+1. ordered indent
+   * unordered indent
+```
+
+this rule will not be triggered.  However, the following Markdown:
+
+```Markdown
+1. ordered indent
+    * unordered indent
+```
+
+will trigger the rule as it is expecting the unordered list to start at column
+4, not column 5.
+
 ## Configuration
 
 | Prefixes |

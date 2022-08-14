@@ -1991,10 +1991,32 @@ class ListBlockProcessor:
                     last_list_stack_token,
                     new_stack,
                 )
-                repeat_check = (
-                    new_stack.indent_level <= last_list_stack_token.indent_level
+                POGGER.debug(
+                    "ARE-EQUAL>>stack>>$>>new>>$",
+                    last_list_stack_token.matching_markdown_token,
+                    new_token,
                 )
-                POGGER.debug("repeat_check>>$", repeat_check)
+                last_list_markdown_token = cast(
+                    ListStartMarkdownToken,
+                    last_list_stack_token.matching_markdown_token,
+                )
+                old_indent = 2
+                if last_list_markdown_token.is_ordered_list_start:
+                    old_indent += len(last_list_markdown_token.list_start_content)
+                POGGER.debug(
+                    "new_token.column_number($) <= old_indent($)",
+                    new_token.column_number,
+                    old_indent,
+                )
+                repeat_check = (
+                    new_token.column_number <= last_list_stack_token.indent_level
+                )
+                POGGER.debug(
+                    "repeat_check($) = new_token.column_number($) - last_list_stack_token.indent_level($)",
+                    repeat_check,
+                    new_token.column_number,
+                    last_list_stack_token.indent_level,
+                )
         return repeat_check, emit_li_token_instead_of_list_start_token, last_list_index
 
     @staticmethod

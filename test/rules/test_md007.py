@@ -1012,3 +1012,31 @@ def test_md007_good_list_indentation_with_start():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md007_issue_301():
+    """
+    Test to make sure that the reported issue 301 does not happen.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--set",
+        "plugins.md007.indent=$#4",
+        "scan",
+        "test/resources/rules/md007/issue-301.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = "test/resources/rules/md007/issue-301.md:7:5: MD007: Unordered list indentation [Expected: 4, Actual=5] (ul-indent)"
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
