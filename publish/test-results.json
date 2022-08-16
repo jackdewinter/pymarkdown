@@ -1324,7 +1324,7 @@
         },
         {
             "name": "test.test_main",
-            "totalTests": 46,
+            "totalTests": 49,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
