@@ -170,6 +170,7 @@ class SystemState:
         Initializes a new instance of the SystemState class.
         """
 
+        self.saved_stdin = sys.stdin
         self.saved_stdout = sys.stdout
         self.saved_stderr = sys.stderr
         self.saved_cwd = os.getcwd()
@@ -184,6 +185,7 @@ class SystemState:
         os.chdir(self.saved_cwd)
         os.environ = self.saved_env  # noqa B003
         sys.argv = self.saved_argv
+        sys.stdin = self.saved_stdin
         sys.stdout = self.saved_stdout
         sys.stderr = self.saved_stderr
 
@@ -239,7 +241,7 @@ class InProcessExecution(ABC):
 
     # pylint: disable=broad-except
     def invoke_main(
-        self, arguments=None, cwd=None, suppress_first_line_heading_rule=True
+        self, arguments=None, cwd=None, suppress_first_line_heading_rule=True, xyz=None
     ):
         """
         Invoke the mainline so that we can capture results.
@@ -260,8 +262,11 @@ class InProcessExecution(ABC):
 
         saved_state = SystemState()
 
+        if xyz is not None:
+            sys.stdin = io.StringIO(xyz)
         std_output = io.StringIO()
         std_error = io.StringIO()
+
         sys.stdout = std_output
         sys.stderr = std_error
 

@@ -33,15 +33,16 @@ def test_markdown_with_no_parameters():
                [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE]
-               {plugins,extensions,scan,version} ...
+               {plugins,extensions,scan,scan-stdin,version} ...
 
 Lint any found Markdown files.
 
 positional arguments:
-  {plugins,extensions,scan,version}
+  {plugins,extensions,scan,scan-stdin,version}
     plugins             plugin commands
     extensions          extension commands
     scan                scan the Markdown files in the specified paths
+    scan-stdin          scan the standard input as a Markdown files
     version             version of the application
 
 optional arguments:
@@ -91,15 +92,16 @@ def test_markdown_with_no_parameters_through_module():
                    [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
                    [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                    [--log-file LOG_FILE]
-                   {plugins,extensions,scan,version} ...
+                   {plugins,extensions,scan,scan-stdin,version} ...
 
 Lint any found Markdown files.
 
 positional arguments:
-  {plugins,extensions,scan,version}
+  {plugins,extensions,scan,scan-stdin,version}
     plugins             plugin commands
     extensions          extension commands
     scan                scan the Markdown files in the specified paths
+    scan-stdin          scan the standard input as a Markdown files
     version             version of the application
 
 optional arguments:
@@ -149,15 +151,16 @@ def test_markdown_with_no_parameters_through_main():
                [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE]
-               {plugins,extensions,scan,version} ...
+               {plugins,extensions,scan,scan-stdin,version} ...
 
 Lint any found Markdown files.
 
 positional arguments:
-  {plugins,extensions,scan,version}
+  {plugins,extensions,scan,scan-stdin,version}
     plugins             plugin commands
     extensions          extension commands
     scan                scan the Markdown files in the specified paths
+    scan-stdin          scan the standard input as a Markdown files
     version             version of the application
 
 optional arguments:
@@ -206,15 +209,16 @@ def test_markdown_with_dash_h():
                [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE]
-               {plugins,extensions,scan,version} ...
+               {plugins,extensions,scan,scan-stdin,version} ...
 
 Lint any found Markdown files.
 
 positional arguments:
-  {plugins,extensions,scan,version}
+  {plugins,extensions,scan,scan-stdin,version}
     plugins             plugin commands
     extensions          extension commands
     scan                scan the Markdown files in the specified paths
+    scan-stdin          scan the standard input as a Markdown files
     version             version of the application
 
 optional arguments:
@@ -710,7 +714,7 @@ def test_markdown_with_dash_dash_log_level_invalid(caplog):
                [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE]
-               {plugins,extensions,scan,version} ...
+               {plugins,extensions,scan,scan-stdin,version} ...
 main.py: error: argument --log-level: invalid log_level_type value: 'invalid'
 """
 
@@ -1769,6 +1773,90 @@ main.py scan: error: argument -ae/--alternate-extensions: Extension '' must star
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_scan_stdin_without_triggers():
+    """
+    Test to make sure
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan-stdin",
+    ]
+
+    supplied_standard_input = "test\nme\n"
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments, xyz=supplied_standard_input
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_scan_stdin_with_triggers():
+    """
+    Test to make sure
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan-stdin",
+    ]
+
+    supplied_standard_input = "# test"
+    expected_return_code = 1
+    expected_output = """stdin:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)
+stdin:1:6: MD047: Each file should end with a single newline character. (single-trailing-newline)"""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments, xyz=supplied_standard_input
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_scan_stdin_with_bad_write():
+    """
+    Test to make sure
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "-x-stdin",
+        "scan-stdin",
+    ]
+
+    supplied_standard_input = f"# test{os.linesep}"
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = """OSError encountered while scanning 'stdin':
+Temporary file to capture stdin was not written (made up)."""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments, xyz=supplied_standard_input
+    )
 
     # Assert
     execute_results.assert_results(
