@@ -361,7 +361,7 @@ def test_md034_bad_with_local_url():
     ]
 
     expected_return_code = 1
-    expected_output = f"{source_path}:1:11: " + "MD034: Bare URL used (no-bare-urls)"
+    expected_output = f"{source_path}:1:11: MD034: Bare URL used (no-bare-urls)"
     expected_error = ""
 
     # Act

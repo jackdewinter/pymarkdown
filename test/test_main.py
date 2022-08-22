@@ -703,11 +703,11 @@ def test_markdown_with_dash_dash_log_level_info(caplog):
 
     # Info messages
     assert "Number of files found: " in caplog.text
-    assert "Determining files to scan for path " + f"'{source_path}'." in caplog.text
+    assert f"Determining files to scan for path '{source_path}'." in caplog.text
 
     # Debug messages
     assert (
-        f"Provided path '{source_path}' " + "is a valid file. Adding."
+        f"Provided path '{source_path}' is a valid file. Adding."
         not in caplog.text
     )
 
@@ -810,13 +810,14 @@ def test_markdown_with_dash_dash_log_level_info_with_file():
 
         # Info messages
         assert "Number of files found: " in file_data, f">{file_data}<"
-        assert "Determining files to scan for path " + f"'{source_path}'." in file_data
+        assert f"Determining files to scan for path '{source_path}'." in file_data
 
         # Debug messages
         assert (
-            f"Provided path '{source_path}' " + "is a valid file. Adding."
+            f"Provided path '{source_path}' is a valid file. Adding."
             not in file_data
         )
+
     finally:
         if os.path.exists(log_file_name):
             os.remove(log_file_name)
