@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD019 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -17,9 +18,12 @@ def test_md019_good_single_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md019", "single_spacing.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md019/single_spacing.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -44,16 +48,19 @@ def test_md019_bad_multiple_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md019", "multiple_spacing.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md019/multiple_spacing.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md019/multiple_spacing.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
-        "test/resources/rules/md019/multiple_spacing.md:3:1: "
+        + f"{source_path}:3:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
     expected_error = ""
@@ -76,16 +83,19 @@ def test_md019_bad_multiple_spacing_with_inline():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md019", "multiple_spacing_with_inline.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md019/multiple_spacing_with_inline.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md019/multiple_spacing_with_inline.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
-        "test/resources/rules/md019/multiple_spacing_with_inline.md:3:1: "
+        + f"{source_path}:3:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
     expected_error = ""
@@ -108,18 +118,21 @@ def test_md019_bad_multiple_spacing_with_indent():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md019", "multiple_spacing_with_indent.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md023",
         "scan",
-        "test/resources/rules/md019/multiple_spacing_with_indent.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md019/multiple_spacing_with_indent.md:1:2: "
+        f"{source_path}:1:2: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
-        "test/resources/rules/md019/multiple_spacing_with_indent.md:3:3: "
+        + f"{source_path}:3:3: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
     expected_error = ""
@@ -141,18 +154,21 @@ def test_md019_bad_single_space_single_tab():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md019", "single_space_single_tab.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md010",
         "scan",
-        "test/resources/rules/md019/single_space_single_tab.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md019/single_space_single_tab.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
-        + "test/resources/rules/md019/single_space_single_tab.md:3:1: "
+        + f"{source_path}:3:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)"
     )
     expected_error = ""

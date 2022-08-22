@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD033 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -15,12 +16,15 @@ def test_md033_bad_configuration_allowed_elements():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md004", "good_list_asterisk_single_level.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md033.allowed_elements=$#1",
         "--strict-config",
         "scan",
-        "test/resources/rules/md004/good_list_asterisk_single_level.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -48,12 +52,15 @@ def test_md033_bad_configuration_allow_first_image_element():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md004", "good_list_asterisk_single_level.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md033.allow_first_image_element=1",
         "--strict-config",
         "scan",
-        "test/resources/rules/md004/good_list_asterisk_single_level.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -81,23 +88,26 @@ def test_md033_bad_html_block_present():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md033", "bad_html_block_present.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md033/bad_html_block_present.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md033/bad_html_block_present.md:3:1: "
+        f"{source_path}:3:1: "
         + "MD033: Inline HTML [Element: script] (no-inline-html)\n"
-        + "test/resources/rules/md033/bad_html_block_present.md:16:1: "
+        + f"{source_path}:16:1: "
         + "MD033: Inline HTML "
         + "[Element: !A] (no-inline-html)\n"
-        + "test/resources/rules/md033/bad_html_block_present.md:24:1: "
+        + f"{source_path}:24:1: "
         + "MD033: Inline HTML [Element: p] (no-inline-html)\n"
-        + "test/resources/rules/md033/bad_html_block_present.md:28:1: "
+        + f"{source_path}:28:1: "
         + "MD033: Inline HTML [Element: robert] (no-inline-html)\n"
-        + "test/resources/rules/md033/bad_html_block_present.md:34:1: "
+        + f"{source_path}:34:1: "
         + "MD033: Inline HTML [Element: robert] (no-inline-html)"
     )
     expected_error = ""
@@ -120,34 +130,37 @@ def test_md033_bad_html_block_present_with_configuration():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md033", "bad_html_block_present.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md033.allowed_elements=",
         "scan",
-        "test/resources/rules/md033/bad_html_block_present.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md033/bad_html_block_present.md:3:1: "
+        f"{source_path}:3:1: "
         + "MD033: Inline HTML [Element: script] (no-inline-html)\n"
-        + "test/resources/rules/md033/bad_html_block_present.md:7:1: "
+        + f"{source_path}:7:1: "
         + "MD033: Inline HTML "
         + "[Element: !--] (no-inline-html)\n"
-        + "test/resources/rules/md033/bad_html_block_present.md:12:1: "
+        + f"{source_path}:12:1: "
         + "MD033: Inline HTML "
         + "[Element: ?] (no-inline-html)\n"
-        + "test/resources/rules/md033/bad_html_block_present.md:16:1: "
+        + f"{source_path}:16:1: "
         + "MD033: Inline HTML "
         + "[Element: !A] (no-inline-html)\n"
-        + "test/resources/rules/md033/bad_html_block_present.md:20:1: "
+        + f"{source_path}:20:1: "
         + "MD033: Inline HTML "
         + "[Element: ![CDATA[] (no-inline-html)\n"
-        + "test/resources/rules/md033/bad_html_block_present.md:24:1: "
+        + f"{source_path}:24:1: "
         + "MD033: Inline HTML [Element: p] (no-inline-html)\n"
-        + "test/resources/rules/md033/bad_html_block_present.md:28:1: "
+        + f"{source_path}:28:1: "
         + "MD033: Inline HTML [Element: robert] (no-inline-html)\n"
-        + "test/resources/rules/md033/bad_html_block_present.md:34:1: "
+        + f"{source_path}:34:1: "
         + "MD033: Inline HTML [Element: robert] (no-inline-html)"
     )
     expected_error = ""
@@ -170,6 +183,9 @@ def test_md033_bad_html_block_present_with_other_configuration():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md033", "bad_html_block_present.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md033.allowed_elements=robert,p,!A",
@@ -179,15 +195,15 @@ def test_md033_bad_html_block_present_with_other_configuration():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md033/bad_html_block_present.md:3:1: "
+        f"{source_path}:3:1: "
         + "MD033: Inline HTML [Element: script] (no-inline-html)\n"
-        + "test/resources/rules/md033/bad_html_block_present.md:7:1: "
+        + f"{source_path}:7:1: "
         + "MD033: Inline HTML "
         + "[Element: !--] (no-inline-html)\n"
-        + "test/resources/rules/md033/bad_html_block_present.md:12:1: "
+        + f"{source_path}:12:1: "
         + "MD033: Inline HTML "
         + "[Element: ?] (no-inline-html)\n"
-        + "test/resources/rules/md033/bad_html_block_present.md:20:1: "
+        + f"{source_path}:20:1: "
         + "MD033: Inline HTML "
         + "[Element: ![CDATA[] (no-inline-html)"
     )
@@ -211,15 +227,17 @@ def test_md033_bad_inline_html_present():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md033", "bad_inline_html_present.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md033/bad_inline_html_present.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md033/bad_inline_html_present.md:3:9: "
-        + "MD033: Inline HTML [Element: a] (no-inline-html)"
+        f"{source_path}:3:9: " + "MD033: Inline HTML [Element: a] (no-inline-html)"
     )
     expected_error = ""
 
@@ -241,17 +259,20 @@ def test_md033_bad_html_in_atx_heading():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md033", "bad_html_in_atx_heading.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md033/bad_html_in_atx_heading.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md033/bad_html_in_atx_heading.md:1:3: "
+        f"{source_path}:1:3: "
         + "MD033: Inline HTML "
         + "[Element: foo] (no-inline-html)\n"
-        + "test/resources/rules/md033/bad_html_in_atx_heading.md:1:14: "
+        + f"{source_path}:1:14: "
         + "MD033: Inline HTML "
         + "[Element: foo] (no-inline-html) "
     )
@@ -275,9 +296,12 @@ def test_md033_good_html_comment():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md033", "good_html_comment.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md033/good_html_comment.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -302,9 +326,12 @@ def test_md033_good_html_image_heading():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md033", "good_html_image_heading.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md033/good_html_image_heading.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -330,17 +357,20 @@ def test_md033_good_html_image_heading_with_config():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md033", "good_html_image_heading.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md033.allow_first_image_element=$!false",
         "--strict-config",
         "scan",
-        "test/resources/rules/md033/good_html_image_heading.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md033/good_html_image_heading.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD033: Inline HTML "
         + "[Element: h1] (no-inline-html)"
     )
@@ -364,15 +394,18 @@ def test_md033_bad_html_heading():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md033", "bad_html_heading.md"
+    )
     supplied_arguments = [
         "--stack-trace",
         "scan",
-        "test/resources/rules/md033/bad_html_heading.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md033/bad_html_heading.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD033: Inline HTML "
         + "[Element: h1] (no-inline-html)"
     )
@@ -396,14 +429,17 @@ def test_md033_bad_html_image_heading_blank():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md033", "bad_html_image_heading_blank.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md033/bad_html_image_heading_blank.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md033/bad_html_image_heading_blank.md:2:1: "
+        f"{source_path}:2:1: "
         + "MD033: Inline HTML "
         + "[Element: h1] (no-inline-html)"
     )
@@ -427,14 +463,17 @@ def test_md033_bad_html_image_with_other():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md033", "bad_html_image_with_other.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md033/bad_html_image_with_other.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md033/bad_html_image_with_other.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD033: Inline HTML "
         + "[Element: h1] (no-inline-html)"
     )
@@ -458,9 +497,12 @@ def test_md033_good_convoluted():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md033", "good_convoluted.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md033/good_convoluted.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -485,14 +527,17 @@ def test_md033_bad_html_dangling():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md033", "bad_html_dangling.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md033/bad_html_dangling.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md033/bad_html_dangling.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD033: Inline HTML "
         + "[Element: h1] (no-inline-html)"
     )

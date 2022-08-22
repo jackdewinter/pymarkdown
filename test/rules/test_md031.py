@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD031 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -15,12 +16,15 @@ def test_md031_bad_configuration_list_items():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md031", "good_fenced_block_surrounded.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md031.list_items=bad",
         "--strict-config",
         "scan",
-        "test/resources/rules/md031/good_fenced_block_surrounded.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -48,9 +52,12 @@ def test_md031_good_fenced_block_surrounded():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md031", "good_fenced_block_surrounded.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md031/good_fenced_block_surrounded.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -75,14 +82,17 @@ def test_md031_bad_fenced_block_only_after():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md031", "bad_fenced_block_only_after.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md031/bad_fenced_block_only_after.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md031/bad_fenced_block_only_after.md:2:1: "
+        f"{source_path}:2:1: "
         + "MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"
     )
     expected_error = ""
@@ -105,14 +115,17 @@ def test_md031_bad_fenced_block_only_before():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md031", "bad_fenced_block_only_before.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md031/bad_fenced_block_only_before.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md031/bad_fenced_block_only_before.md:5:1: "
+        f"{source_path}:5:1: "
         + "MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"
     )
     expected_error = ""
@@ -135,9 +148,12 @@ def test_md031_good_fenced_block_at_start():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md031", "good_fenced_block_at_start.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md031/good_fenced_block_at_start.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -162,11 +178,14 @@ def test_md031_good_fenced_block_at_end():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md031", "good_fenced_block_at_end.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md047",
         "scan",
-        "test/resources/rules/md031/good_fenced_block_at_end.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -192,14 +211,21 @@ def test_md031_bad_fenced_block_only_after_start_indent():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md031",
+        "bad_fenced_block_only_after_start_indent.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md031/bad_fenced_block_only_after_start_indent.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md031/bad_fenced_block_only_after_start_indent.md:2:2: "
+        f"{source_path}:2:2: "
         + "MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"
     )
     expected_error = ""
@@ -223,14 +249,21 @@ def test_md031_bad_fenced_block_only_before_start_indent():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md031",
+        "bad_fenced_block_only_before_start_indent.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md031/bad_fenced_block_only_before_start_indent.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md031/bad_fenced_block_only_before_start_indent.md:5:1: "
+        f"{source_path}:5:1: "
         + "MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"
     )
     expected_error = ""
@@ -254,14 +287,21 @@ def test_md031_bad_fenced_block_only_before_end_indent():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md031",
+        "bad_fenced_block_only_before_end_indent.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md031/bad_fenced_block_only_before_end_indent.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md031/bad_fenced_block_only_before_end_indent.md:5:2: "
+        f"{source_path}:5:2: "
         + "MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"
     )
     expected_error = ""
@@ -285,9 +325,16 @@ def test_md031_good_fenced_block_surrounded_in_block_quote():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md031",
+        "good_fenced_block_surrounded_in_block_quote.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md031/good_fenced_block_surrounded_in_block_quote.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -313,9 +360,16 @@ def test_md031_good_fenced_block_surrounded_in_ordered_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md031",
+        "good_fenced_block_surrounded_in_ordered_list.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md031/good_fenced_block_surrounded_in_ordered_list.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -341,9 +395,16 @@ def test_md031_good_fenced_block_surrounded_in_unordered_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md031",
+        "good_fenced_block_surrounded_in_unordered_list.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md031/good_fenced_block_surrounded_in_unordered_list.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -369,14 +430,21 @@ def test_md031_bad_fenced_block_only_after_in_block_quote():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md031",
+        "bad_fenced_block_only_after_in_block_quote.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md031/bad_fenced_block_only_after_in_block_quote.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md031/bad_fenced_block_only_after_in_block_quote.md:2:3: "
+        f"{source_path}:2:3: "
         + "MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"
     )
     expected_error = ""
@@ -400,14 +468,21 @@ def test_md031_bad_fenced_block_only_after_in_unordered_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md031",
+        "bad_fenced_block_only_after_in_unordered_list.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md031/bad_fenced_block_only_after_in_unordered_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md031/bad_fenced_block_only_after_in_unordered_list.md:2:3: "
+        f"{source_path}:2:3: "
         + "MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"
     )
     expected_error = ""
@@ -431,14 +506,21 @@ def test_md031_bad_fenced_block_only_before_in_unordered_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md031",
+        "bad_fenced_block_only_before_in_unordered_list.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md031/bad_fenced_block_only_before_in_unordered_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md031/bad_fenced_block_only_before_in_unordered_list.md:5:3: "
+        f"{source_path}:5:3: "
         + "MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"
     )
     expected_error = ""
@@ -462,12 +544,19 @@ def test_md031_good_fenced_block_only_after_in_unordered_list_with_config():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md031",
+        "bad_fenced_block_only_after_in_unordered_list.md",
+    )
     supplied_arguments = [
         "--set",
         "plugins.md031.list_items=$!False",
         "--strict-config",
         "scan",
-        "test/resources/rules/md031/bad_fenced_block_only_after_in_unordered_list.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -493,11 +582,18 @@ def test_md031_good_fenced_block_only_before_in_unordered_list_with_config():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md031",
+        "bad_fenced_block_only_before_in_unordered_list.md",
+    )
     supplied_arguments = [
         "--set",
         "plugins.md031.list_items=$!False",
         "scan",
-        "test/resources/rules/md031/bad_fenced_block_only_before_in_unordered_list.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -522,9 +618,12 @@ def test_md031_good_fenced_block_empty():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md031", "good_fenced_block_empty.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md031/good_fenced_block_empty.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -549,16 +648,19 @@ def test_md031_bad_fenced_block_in_block_quote():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md031", "bad_fenced_block_in_block_quote.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md031/bad_fenced_block_in_block_quote.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md031/bad_fenced_block_in_block_quote.md:2:1: "
+        f"{source_path}:2:1: "
         + "MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)\n"
-        + "test/resources/rules/md031/bad_fenced_block_in_block_quote.md:4:1: "
+        + f"{source_path}:4:1: "
         + "MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"
     )
     expected_error = ""
@@ -581,18 +683,21 @@ def test_md031_bad_fenced_block_in_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md031", "bad_fenced_block_in_list.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md032",
         "scan",
-        "test/resources/rules/md031/bad_fenced_block_in_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md031/bad_fenced_block_in_list.md:2:1: "
+        f"{source_path}:2:1: "
         + "MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)\n"
-        + "test/resources/rules/md031/bad_fenced_block_in_list.md:4:1: "
+        + f"{source_path}:4:1: "
         + "MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"
     )
     expected_error = ""
@@ -615,18 +720,25 @@ def test_md031_bad_fenced_block_in_block_quote_in_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md031",
+        "bad_fenced_block_in_block_quote_in_list.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md032",
         "scan",
-        "test/resources/rules/md031/bad_fenced_block_in_block_quote_in_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md031/bad_fenced_block_in_block_quote_in_list.md:2:4: "
+        f"{source_path}:2:4: "
         + "MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)\n"
-        + "test/resources/rules/md031/bad_fenced_block_in_block_quote_in_list.md:4:4: "
+        + f"{source_path}:4:4: "
         + "MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"
     )
     expected_error = ""
@@ -649,18 +761,25 @@ def test_md031_bad_fenced_block_in_list_in_block_quote():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md031",
+        "bad_fenced_block_in_list_in_block_quote.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md032",
         "scan",
-        "test/resources/rules/md031/bad_fenced_block_in_list_in_block_quote.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md031/bad_fenced_block_in_list_in_block_quote.md:2:3: "
+        f"{source_path}:2:3: "
         + "MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)\n"
-        + "test/resources/rules/md031/bad_fenced_block_in_list_in_block_quote.md:4:3: "
+        + f"{source_path}:4:3: "
         + "MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"
     )
     expected_error = ""

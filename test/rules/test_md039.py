@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD039 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -15,9 +16,12 @@ def test_md039_good_inline_link():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md039", "good_inline_link.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md039/good_inline_link.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -42,15 +46,17 @@ def test_md039_bad_inline_link_trailing_space():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md039", "bad_inline_link_trailing_space.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md039/bad_inline_link_trailing_space.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md039/bad_inline_link_trailing_space.md:2:1: "
-        + "MD039: Spaces inside link text (no-space-in-links)"
+        f"{source_path}:2:1: " + "MD039: Spaces inside link text (no-space-in-links)"
     )
     expected_error = ""
 
@@ -72,15 +78,17 @@ def test_md039_bad_inline_link_leading_space():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md039", "bad_inline_link_leading_space.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md039/bad_inline_link_leading_space.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md039/bad_inline_link_leading_space.md:2:1: "
-        + "MD039: Spaces inside link text (no-space-in-links)"
+        f"{source_path}:2:1: " + "MD039: Spaces inside link text (no-space-in-links)"
     )
     expected_error = ""
 
@@ -102,15 +110,17 @@ def test_md039_bad_inline_link_both_space():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md039", "bad_inline_link_both_space.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md039/bad_inline_link_both_space.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md039/bad_inline_link_both_space.md:2:1: "
-        + "MD039: Spaces inside link text (no-space-in-links)"
+        f"{source_path}:2:1: " + "MD039: Spaces inside link text (no-space-in-links)"
     )
     expected_error = ""
 
@@ -132,9 +142,12 @@ def test_md039_good_full_link():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md039", "good_full_link.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md039/good_full_link.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -159,15 +172,17 @@ def test_md039_bad_full_link_both_space():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md039", "bad_full_link_both_space.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md039/bad_full_link_both_space.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md039/bad_full_link_both_space.md:2:1: "
-        + "MD039: Spaces inside link text (no-space-in-links)"
+        f"{source_path}:2:1: " + "MD039: Spaces inside link text (no-space-in-links)"
     )
     expected_error = ""
 
@@ -189,9 +204,12 @@ def test_md039_good_collapsed_link():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md039", "good_collapsed_link.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md039/good_collapsed_link.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -216,15 +234,17 @@ def test_md039_bad_collapsed_link_both_space():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md039", "bad_collapsed_link_both_space.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md039/bad_collapsed_link_both_space.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md039/bad_collapsed_link_both_space.md:2:1: "
-        + "MD039: Spaces inside link text (no-space-in-links)"
+        f"{source_path}:2:1: " + "MD039: Spaces inside link text (no-space-in-links)"
     )
     expected_error = ""
 
@@ -246,9 +266,12 @@ def test_md039_good_shortcut_link():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md039", "good_shortcut_link.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md039/good_shortcut_link.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -273,15 +296,17 @@ def test_md039_bad_shortcut_link_both_space():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md039", "bad_shortcut_link_both_space.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md039/bad_shortcut_link_both_space.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md039/bad_shortcut_link_both_space.md:2:1: "
-        + "MD039: Spaces inside link text (no-space-in-links)"
+        f"{source_path}:2:1: " + "MD039: Spaces inside link text (no-space-in-links)"
     )
     expected_error = ""
 
@@ -303,9 +328,12 @@ def test_md039_good_inline_image():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md039", "good_inline_image.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md039/good_inline_image.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -330,15 +358,17 @@ def test_md039_bad_inline_image_trailing_space():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md039", "bad_inline_image_trailing_space.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md039/bad_inline_image_trailing_space.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md039/bad_inline_image_trailing_space.md:2:1: "
-        + "MD039: Spaces inside link text (no-space-in-links)"
+        f"{source_path}:2:1: " + "MD039: Spaces inside link text (no-space-in-links)"
     )
     expected_error = ""
 
@@ -360,15 +390,17 @@ def test_md039_bad_inline_image_leading_space():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md039", "bad_inline_image_leading_space.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md039/bad_inline_image_leading_space.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md039/bad_inline_image_leading_space.md:2:1: "
-        + "MD039: Spaces inside link text (no-space-in-links)"
+        f"{source_path}:2:1: " + "MD039: Spaces inside link text (no-space-in-links)"
     )
     expected_error = ""
 
@@ -390,15 +422,17 @@ def test_md039_bad_inline_image_both_space():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md039", "bad_inline_image_both_space.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md039/bad_inline_image_both_space.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md039/bad_inline_image_both_space.md:2:1: "
-        + "MD039: Spaces inside link text (no-space-in-links)"
+        f"{source_path}:2:1: " + "MD039: Spaces inside link text (no-space-in-links)"
     )
     expected_error = ""
 
@@ -420,9 +454,12 @@ def test_md039_good_full_image():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md039", "good_full_image.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md039/good_full_image.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -447,15 +484,17 @@ def test_md039_bad_full_image_both_space():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md039", "bad_full_image_both_space.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md039/bad_full_image_both_space.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md039/bad_full_image_both_space.md:2:1: "
-        + "MD039: Spaces inside link text (no-space-in-links)"
+        f"{source_path}:2:1: " + "MD039: Spaces inside link text (no-space-in-links)"
     )
     expected_error = ""
 
@@ -477,9 +516,12 @@ def test_md039_good_collapsed_image():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md039", "good_collapsed_image.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md039/good_collapsed_image.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -504,15 +546,17 @@ def test_md039_bad_collapsed_image_both_space():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md039", "bad_collapsed_image_both_space.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md039/bad_collapsed_image_both_space.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md039/bad_collapsed_image_both_space.md:2:1: "
-        + "MD039: Spaces inside link text (no-space-in-links)"
+        f"{source_path}:2:1: " + "MD039: Spaces inside link text (no-space-in-links)"
     )
     expected_error = ""
 
@@ -534,9 +578,12 @@ def test_md039_good_shortcut_image():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md039", "good_shortcut_image.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md039/good_shortcut_image.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -561,15 +608,17 @@ def test_md039_bad_shortcut_image_both_space():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md039", "bad_shortcut_image_both_space.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md039/bad_shortcut_image_both_space.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md039/bad_shortcut_image_both_space.md:2:1: "
-        + "MD039: Spaces inside link text (no-space-in-links)"
+        f"{source_path}:2:1: " + "MD039: Spaces inside link text (no-space-in-links)"
     )
     expected_error = ""
 

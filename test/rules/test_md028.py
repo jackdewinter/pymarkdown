@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD026 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -15,9 +16,12 @@ def test_md028_good_split_block_quote():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md028", "good_split_block_quote.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md028/good_split_block_quote.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -42,14 +46,17 @@ def test_md028_bad_split_block_quote():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md028", "bad_split_block_quote.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md028/bad_split_block_quote.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md028/bad_split_block_quote.md:2:1: "
+        f"{source_path}:2:1: "
         + "MD028: Blank line inside blockquote (no-blanks-blockquote)"
     )
     expected_error = ""
@@ -72,18 +79,25 @@ def test_md028_bad_split_block_quote_multiple_blanks():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md028",
+        "bad_split_block_quote_multiple_blanks.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md012",
         "scan",
-        "test/resources/rules/md028/bad_split_block_quote_multiple_blanks.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md028/bad_split_block_quote_multiple_blanks.md:2:1: "
+        f"{source_path}:2:1: "
         + "MD028: Blank line inside blockquote (no-blanks-blockquote)\n"
-        + "test/resources/rules/md028/bad_split_block_quote_multiple_blanks.md:3:1: "
+        + f"{source_path}:3:1: "
         + "MD028: Blank line inside blockquote (no-blanks-blockquote)"
     )
     expected_error = ""
@@ -106,11 +120,14 @@ def test_md028_good_split_atx():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md028", "good_split_atx.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md022",
         "scan",
-        "test/resources/rules/md028/good_split_atx.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -135,11 +152,14 @@ def test_md028_good_split_blank_atx():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md028", "good_split_blank_atx.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md022",
         "scan",
-        "test/resources/rules/md028/good_split_blank_atx.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -165,9 +185,12 @@ def test_md028_good_blank_paragraph_blank():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md028", "good_blank_paragraph_blank.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md028/good_blank_paragraph_blank.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -192,14 +215,17 @@ def test_md028_bad_blank_paragraph():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md028", "bad_blank_paragraph.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md028/bad_blank_paragraph.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md028/bad_blank_paragraph.md:3:1: "
+        f"{source_path}:3:1: "
         + "MD028: Blank line inside blockquote (no-blanks-blockquote)"
     )
     expected_error = ""
@@ -222,9 +248,12 @@ def test_md028_good_blank_paragraph():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md028", "good_blank_paragraph.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md028/good_blank_paragraph.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -250,14 +279,17 @@ def test_md028_bad_split_block_quote_in_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md028", "bad_split_block_quote_in_list.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md028/bad_split_block_quote_in_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md028/bad_split_block_quote_in_list.md:2:1: "
+        f"{source_path}:2:1: "
         + "MD028: Blank line inside blockquote (no-blanks-blockquote)"
     )
     expected_error = ""
@@ -280,14 +312,21 @@ def test_md028_bad_para_and_split_block_quote_in_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md028",
+        "bad_para_and_split_block_quote_in_list.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md028/bad_para_and_split_block_quote_in_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md028/bad_para_and_split_block_quote_in_list.md:3:1: "
+        f"{source_path}:3:1: "
         + "MD028: Blank line inside blockquote (no-blanks-blockquote)"
     )
     expected_error = ""
@@ -310,14 +349,17 @@ def test_md028_bad_split_blank_with_nested_bq():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md028", "bad_split_blank_with_nested_bq.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md028/bad_split_blank_with_nested_bq.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md028/bad_split_blank_with_nested_bq.md:2:1: "
+        f"{source_path}:2:1: "
         + "MD028: Blank line inside blockquote (no-blanks-blockquote)"
     )
     expected_error = ""

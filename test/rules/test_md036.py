@@ -17,12 +17,15 @@ def test_md036_bad_configuration_punctuation():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md036", "proper_headings_atx.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md036.punctuation=$#1",
         "--strict-config",
         "scan",
-        "test/resources/rules/md036/proper_headings_atx.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -52,9 +55,12 @@ def test_md036_good_proper_headings_atx():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md036", "proper_headings_atx.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md036/proper_headings_atx.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -79,9 +85,12 @@ def test_md036_good_proper_headings_setext():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md036", "proper_headings_setext.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md036/proper_headings_setext.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -106,9 +115,12 @@ def test_md036_good_proper_emphasis_with_link():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md036", "proper_emphasis_with_link.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md036/proper_emphasis_with_link.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -133,9 +145,12 @@ def test_md036_good_proper_emphasis_with_text_then_link():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md036", "proper_emphasis_with_text_then_link.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md036/proper_emphasis_with_text_then_link.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -160,9 +175,16 @@ def test_md036_good_proper_emphasis_with_text_then_link_then_text():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md036",
+        "proper_emphasis_with_text_then_link_then_text.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md036/proper_emphasis_with_text_then_link_then_text.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -188,9 +210,16 @@ def test_md036_good_proper_emphasis_with_text_end_emphasis_more_text():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md036",
+        "proper_emphasis_with_text_end_emphasis_more_text.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md036/proper_emphasis_with_text_end_emphasis_more_text.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -215,9 +244,12 @@ def test_md036_good_proper_emphasis_within_text():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md036", "proper_emphasis_within_text.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md036/proper_emphasis_within_text.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -242,9 +274,16 @@ def test_md036_good_proper_emphasis_within_multiline_text():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md036",
+        "proper_emphasis_within_multiline_text.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md036/proper_emphasis_within_multiline_text.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -269,9 +308,16 @@ def test_md036_good_proper_emphasis_ending_with_punctuation():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md036",
+        "proper_emphasis_ending_with_punctuation.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md036/proper_emphasis_ending_with_punctuation.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -297,6 +343,13 @@ def test_md036_bad_proper_emphasis_ending_with_punctuation_with_configuration():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md036",
+        "proper_emphasis_ending_with_punctuation.md",
+    )
     supplied_configuration = {"plugins": {"md036": {"punctuation": ".!"}}}
     configuration_file = None
     try:
@@ -305,14 +358,14 @@ def test_md036_bad_proper_emphasis_ending_with_punctuation_with_configuration():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md036/proper_emphasis_ending_with_punctuation.md",
+            source_path,
         ]
 
         expected_return_code = 1
         expected_output = (
-            "test/resources/rules/md036/proper_emphasis_ending_with_punctuation.md:1:1: "
+            f"{source_path}:1:1: "
             + "MD036: Emphasis possibly used instead of a heading element. (no-emphasis-as-heading,no-emphasis-as-header)\n"
-            + "test/resources/rules/md036/proper_emphasis_ending_with_punctuation.md:5:1: "
+            + f"{source_path}:5:1: "
             + "MD036: Emphasis possibly used instead of a heading element. (no-emphasis-as-heading,no-emphasis-as-header)\n"
         )
 
@@ -339,16 +392,19 @@ def test_md036_bad_valid_emphasis_headings():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md036", "valid_emphasis_headings.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md036/valid_emphasis_headings.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md036/valid_emphasis_headings.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD036: Emphasis possibly used instead of a heading element. (no-emphasis-as-heading,no-emphasis-as-header)\n"
-        + "test/resources/rules/md036/valid_emphasis_headings.md:5:1: "
+        + f"{source_path}:5:1: "
         + "MD036: Emphasis possibly used instead of a heading element. (no-emphasis-as-heading,no-emphasis-as-header)\n"
     )
     expected_error = ""
@@ -371,16 +427,19 @@ def test_md036_bad_valid_emphasis_headings_in_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md036", "valid_emphasis_headings_in_list.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md036/valid_emphasis_headings_in_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md036/valid_emphasis_headings_in_list.md:1:3: "
+        f"{source_path}:1:3: "
         + "MD036: Emphasis possibly used instead of a heading element. (no-emphasis-as-heading,no-emphasis-as-header)\n"
-        + "test/resources/rules/md036/valid_emphasis_headings_in_list.md:5:3: "
+        + f"{source_path}:5:3: "
         + "MD036: Emphasis possibly used instead of a heading element. (no-emphasis-as-heading,no-emphasis-as-header)\n"
     )
     expected_error = ""
@@ -403,16 +462,23 @@ def test_md036_bad_valid_emphasis_headings_in_block_quote():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md036",
+        "valid_emphasis_headings_in_block_quote.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md036/valid_emphasis_headings_in_block_quote.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md036/valid_emphasis_headings_in_block_quote.md:1:3: "
+        f"{source_path}:1:3: "
         + "MD036: Emphasis possibly used instead of a heading element. (no-emphasis-as-heading,no-emphasis-as-header)\n"
-        + "test/resources/rules/md036/valid_emphasis_headings_in_block_quote.md:5:3: "
+        + f"{source_path}:5:3: "
         + "MD036: Emphasis possibly used instead of a heading element. (no-emphasis-as-heading,no-emphasis-as-header)\n"
     )
     expected_error = ""

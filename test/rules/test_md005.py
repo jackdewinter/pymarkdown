@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD005 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -15,9 +16,12 @@ def test_md005_good_unordered_list_single_level():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md005", "good_unordered_list_single_level.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md005/good_unordered_list_single_level.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -42,16 +46,19 @@ def test_md005_bad_unordered_list_single_level():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md005", "bad_unordered_list_single_level.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md007",
         "scan",
-        "test/resources/rules/md005/bad_unordered_list_single_level.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md005/bad_unordered_list_single_level.md:2:2: "
+        f"{source_path}:2:2: "
         + "MD005: Inconsistent indentation for list items at the same level "
         + "[Expected: 0; Actual: 1] (list-indent)"
     )
@@ -76,9 +83,12 @@ def test_md005_good_unordered_list_double_level():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md005", "good_unordered_list_double_level.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md005/good_unordered_list_double_level.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -104,22 +114,29 @@ def test_md005_bad_unordered_list_double_level_bad_first():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md005",
+        "bad_unordered_list_double_level_bad_first.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md007",
         "scan",
-        "test/resources/rules/md005/bad_unordered_list_double_level_bad_first.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md005/bad_unordered_list_double_level_bad_first.md:4:2: "
+        f"{source_path}:4:2: "
         + "MD005: Inconsistent indentation for list items at the same level "
         + "[Expected: 0; Actual: 1] (list-indent)\n"
-        + "test/resources/rules/md005/bad_unordered_list_double_level_bad_first.md:5:4: "
+        + f"{source_path}:5:4: "
         + "MD005: Inconsistent indentation for list items at the same level "
         + "[Expected: 2; Actual: 3] (list-indent)\n"
-        + "test/resources/rules/md005/bad_unordered_list_double_level_bad_first.md:6:4: "
+        + f"{source_path}:6:4: "
         + "MD005: Inconsistent indentation for list items at the same level "
         + "[Expected: 2; Actual: 3] (list-indent)"
     )
@@ -144,16 +161,23 @@ def test_md005_bad_unordered_list_double_level_bad_second():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md005",
+        "bad_unordered_list_double_level_bad_second.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md007",
         "scan",
-        "test/resources/rules/md005/bad_unordered_list_double_level_bad_second.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md005/bad_unordered_list_double_level_bad_second.md:6:4: "
+        f"{source_path}:6:4: "
         + "MD005: Inconsistent indentation for list items at the same level "
         + "[Expected: 2; Actual: 3] (list-indent)"
     )
@@ -177,11 +201,14 @@ def test_md005_good_unordered_list_separate_lists():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md005", "good_unordered_list_separate_lists.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md007",
         "scan",
-        "test/resources/rules/md005/good_unordered_list_separate_lists.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -206,19 +233,26 @@ def test_md005_bad_unordered_list_single_level_twice():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md005",
+        "bad_unordered_list_single_level_twice.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md007",
         "scan",
-        "test/resources/rules/md005/bad_unordered_list_single_level_twice.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md005/bad_unordered_list_single_level_twice.md:2:2: "
+        f"{source_path}:2:2: "
         + "MD005: Inconsistent indentation for list items at the same level "
         + "[Expected: 0; Actual: 1] (list-indent)\n"
-        + "test/resources/rules/md005/bad_unordered_list_single_level_twice.md:3:2: "
+        + f"{source_path}:3:2: "
         + "MD005: Inconsistent indentation for list items at the same level "
         + "[Expected: 0; Actual: 1] (list-indent)"
     )
@@ -242,9 +276,12 @@ def test_md005_good_ordered_list_single_level():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md005", "good_ordered_list_single_level.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md005/good_ordered_list_single_level.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -269,14 +306,17 @@ def test_md005_bad_ordered_list_single_level_x():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md005", "bad_ordered_list_single_level.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md005/bad_ordered_list_single_level.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md005/bad_ordered_list_single_level.md:2:2: "
+        f"{source_path}:2:2: "
         + "MD005: Inconsistent indentation for list items at the same level "
         + "[Expected: 0; Actual: 1] (list-indent)"
     )
@@ -301,11 +341,18 @@ def test_md005_good_ordered_list_single_level_widths():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md005",
+        "good_ordered_list_single_level_widths.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md029",
         "scan",
-        "test/resources/rules/md005/good_ordered_list_single_level_widths.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -331,16 +378,19 @@ def test_md005_bad_ordered_list_single_level_widths():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md005", "bad_ordered_list_single_level_widths.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md029",
         "scan",
-        "test/resources/rules/md005/bad_ordered_list_single_level_widths.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md005/bad_ordered_list_single_level_widths.md:2:2: "
+        f"{source_path}:2:2: "
         + "MD005: Inconsistent indentation for list items at the same level "
         + "[Expected: 0; Actual: 1] (list-indent)"
     )
@@ -364,11 +414,18 @@ def test_md005_good_ordered_list_single_level_widths_right():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md005",
+        "good_ordered_list_single_level_widths_right.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md029",
         "scan",
-        "test/resources/rules/md005/good_ordered_list_single_level_widths_right.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -394,16 +451,23 @@ def test_md005_bad_ordered_list_single_level_widths_right():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md005",
+        "bad_ordered_list_single_level_widths_right.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md029",
         "scan",
-        "test/resources/rules/md005/bad_ordered_list_single_level_widths_right.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md005/bad_ordered_list_single_level_widths_right.md:2:1: "
+        f"{source_path}:2:1: "
         + "MD005: Inconsistent indentation for list items at the same level "
         + "[Expected: 3; Actual: 0] (list-indent)"
     )
@@ -427,11 +491,18 @@ def test_md005_good_ordered_list_single_level_short_widths_right():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md005",
+        "good_ordered_list_single_level_short_widths_right.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md029",
         "scan",
-        "test/resources/rules/md005/good_ordered_list_single_level_short_widths_right.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -456,11 +527,18 @@ def test_md005_good_ordered_list_separate_single_level_short_widths_right():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md005",
+        "good_ordered_list_seperate_single_level_short_widths_right.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md029",
         "scan",
-        "test/resources/rules/md005/good_ordered_list_seperate_single_level_short_widths_right.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -485,11 +563,18 @@ def test_md005_good_ordered_list_separate_single_level_short_widths():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md005",
+        "good_ordered_list_seperate_single_level_short_widths.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md029,md030",
         "scan",
-        "test/resources/rules/md005/good_ordered_list_seperate_single_level_short_widths.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -514,11 +599,14 @@ def test_md005_good_ordered_list_double_level():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md005", "good_ordered_list_double_level.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md029",
         "scan",
-        "test/resources/rules/md005/good_ordered_list_double_level.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -543,11 +631,14 @@ def test_md005_good_ordered_list_double_level_right():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md005", "good_ordered_list_double_level_right.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md029",
         "scan",
-        "test/resources/rules/md005/good_ordered_list_double_level_right.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -572,16 +663,19 @@ def test_md005_bad_ordered_list_double_level_weirdx():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md005", "bad_ordered_list_double_level_weird.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md029",
         "scan",
-        "test/resources/rules/md005/bad_ordered_list_double_level_weird.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md005/bad_ordered_list_double_level_weird.md:3:5: "
+        f"{source_path}:3:5: "
         + "MD005: Inconsistent indentation for list items at the same level "
         + "[Expected: 3; Actual: 4] (list-indent)"
     )
@@ -605,17 +699,24 @@ def test_md005_bad_ordered_list_double_level_weirder():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md005",
+        "bad_ordered_list_double_level_weirder.md",
+    )
     supplied_arguments = [
         "--stack-trace",
         "--disable-rules",
         "md029",
         "scan",
-        "test/resources/rules/md005/bad_ordered_list_double_level_weirder.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md005/bad_ordered_list_double_level_weirder.md:3:3: "
+        f"{source_path}:3:3: "
         + "MD005: Inconsistent indentation for list items at the same level "
         + "[Expected: 0; Actual: 2] (list-indent)"
     )
@@ -639,9 +740,16 @@ def test_md005_good_unordered_list_double_level_in_block_quote():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md005",
+        "good_unordered_list_double_level_in_block_quote.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md005/good_unordered_list_double_level_in_block_quote.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -666,16 +774,23 @@ def test_md005_good_unordered_list_double_level_in_block_quote_first():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md005",
+        "bad_unordered_list_double_level_in_block_quote_first.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md007,md027",
         "scan",
-        "test/resources/rules/md005/bad_unordered_list_double_level_in_block_quote_first.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md005/bad_unordered_list_double_level_in_block_quote_first.md:4:4: "
+        f"{source_path}:4:4: "
         + "MD005: Inconsistent indentation for list items at the same level "
         + "[Expected: 2; Actual: 3] (list-indent)"
     )
@@ -699,19 +814,26 @@ def test_md005_good_unordered_list_double_level_in_block_quote_second():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md005",
+        "bad_unordered_list_double_level_in_block_quote_second.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md007",
         "scan",
-        "test/resources/rules/md005/bad_unordered_list_double_level_in_block_quote_second.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md005/bad_unordered_list_double_level_in_block_quote_second.md:5:6: "
+        f"{source_path}:5:6: "
         + "MD005: Inconsistent indentation for list items at the same level "
         + "[Expected: 4; Actual: 5] (list-indent)\n"
-        + "test/resources/rules/md005/bad_unordered_list_double_level_in_block_quote_second.md:6:6: "
+        + f"{source_path}:6:6: "
         + "MD005: Inconsistent indentation for list items at the same level "
         + "[Expected: 4; Actual: 5] (list-indent)"
     )
@@ -736,19 +858,22 @@ def test_md005_bad_ordered_list_double_level_left():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md005", "bad_ordered_list_double_level_left.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md029",
         "scan",
-        "test/resources/rules/md005/bad_ordered_list_double_level_left.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md005/bad_ordered_list_double_level_left.md:5:5: "
+        f"{source_path}:5:5: "
         + "MD005: Inconsistent indentation for list items at the same level "
         + "[Expected: 3; Actual: 4] (list-indent)\n"
-        + "test/resources/rules/md005/bad_ordered_list_double_level_left.md:6:5: "
+        + f"{source_path}:6:5: "
         + "MD005: Inconsistent indentation for list items at the same level "
         + "[Expected: 3; Actual: 4] (list-indent)"
     )
@@ -773,19 +898,22 @@ def test_md005_bad_ordered_list_double_level_right_x():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md005", "bad_ordered_list_double_level_right.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md029",
         "scan",
-        "test/resources/rules/md005/bad_ordered_list_double_level_right.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md005/bad_ordered_list_double_level_right.md:5:6: "
+        f"{source_path}:5:6: "
         + "MD005: Inconsistent indentation for list items at the same level "
         + "[Expected: 4; Actual: 5] (list-indent)\n"
-        + "test/resources/rules/md005/bad_ordered_list_double_level_right.md:6:5: "
+        + f"{source_path}:6:5: "
         + "MD005: Inconsistent indentation for list items at the same level "
         + "[Expected: 3; Actual: 4] (list-indent)"
     )
@@ -810,16 +938,23 @@ def test_md005_bad_ordered_list_double_level_left_then_right():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md005",
+        "bad_ordered_list_double_level_left_then_right.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md029",
         "scan",
-        "test/resources/rules/md005/bad_ordered_list_double_level_left_then_right.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md005/bad_ordered_list_double_level_left_then_right.md:5:5: "
+        f"{source_path}:5:5: "
         + "MD005: Inconsistent indentation for list items at the same level "
         + "[Expected: 3; Actual: 4] (list-indent)"
     )
@@ -844,16 +979,23 @@ def test_md005_bad_ordered_list_double_level_right_then_left():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md005",
+        "bad_ordered_list_double_level_right_then_left.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md029",
         "scan",
-        "test/resources/rules/md005/bad_ordered_list_double_level_right_then_left.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md005/bad_ordered_list_double_level_right_then_left.md:5:4: "
+        f"{source_path}:5:4: "
         + "MD005: Inconsistent indentation for list items at the same level "
         + "[Expected: 4; Actual: 3] (list-indent)"
     )
@@ -878,16 +1020,23 @@ def test_md005_bad_ordered_list_single_level_left_then_right():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md005",
+        "bad_ordered_list_single_level_left_then_right.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md029",
         "scan",
-        "test/resources/rules/md005/bad_ordered_list_single_level_left_then_right.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md005/bad_ordered_list_single_level_left_then_right.md:3:2: "
+        f"{source_path}:3:2: "
         + "MD005: Inconsistent indentation for list items at the same level "
         + "[Expected: 0; Actual: 1] (list-indent)"
     )
@@ -912,17 +1061,24 @@ def test_md005_bad_ordered_list_single_level_right_then_left():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md005",
+        "bad_ordered_list_single_level_right_then_left.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md029",
         "--stack-trace",
         "scan",
-        "test/resources/rules/md005/bad_ordered_list_single_level_right_then_left.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md005/bad_ordered_list_single_level_right_then_left.md:3:1: "
+        f"{source_path}:3:1: "
         + "MD005: Inconsistent indentation for list items at the same level "
         + "[Expected: 1; Actual: 0] (list-indent)"
     )

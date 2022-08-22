@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD034 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -15,9 +16,12 @@ def test_md034_good_no_base_url():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md034", "good_no_base_url.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md034/good_no_base_url.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -42,9 +46,12 @@ def test_md034_good_no_url_marker():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md034", "good_no_url_marker.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md034/good_no_url_marker.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -69,15 +76,18 @@ def test_md034_bad_with_http_url():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md034", "bad_with_http_url.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md034/bad_with_http_url.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md034/bad_with_http_url.md:3:6: MD034: Bare URL used (no-bare-urls)\n"
-        + "test/resources/rules/md034/bad_with_http_url.md:5:1: MD034: Bare URL used (no-bare-urls)"
+        f"{source_path}:3:6: MD034: Bare URL used (no-bare-urls)\n"
+        + f"{source_path}:5:1: MD034: Bare URL used (no-bare-urls)"
     )
     expected_error = ""
 
@@ -99,15 +109,18 @@ def test_md034_bad_with_ftp_url():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md034", "bad_with_ftp_url.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md034/bad_with_ftp_url.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md034/bad_with_ftp_url.md:3:6: MD034: Bare URL used (no-bare-urls)\n"
-        + "test/resources/rules/md034/bad_with_ftp_url.md:5:1: MD034: Bare URL used (no-bare-urls)"
+        f"{source_path}:3:6: MD034: Bare URL used (no-bare-urls)\n"
+        + f"{source_path}:5:1: MD034: Bare URL used (no-bare-urls)"
     )
     expected_error = ""
 
@@ -129,13 +142,16 @@ def test_md034_bad_with_http_url_in_atx():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md034", "bad_with_http_url_in_atx.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md034/bad_with_http_url_in_atx.md",
+        source_path,
     ]
 
     expected_return_code = 1
-    expected_output = "test/resources/rules/md034/bad_with_http_url_in_atx.md:1:9: MD034: Bare URL used (no-bare-urls)"
+    expected_output = f"{source_path}:1:9: MD034: Bare URL used (no-bare-urls)"
     expected_error = ""
 
     # Act
@@ -156,13 +172,16 @@ def test_md034_bad_with_http_url_in_setext():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md034", "bad_with_http_url_in_setext.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md034/bad_with_http_url_in_setext.md",
+        source_path,
     ]
 
     expected_return_code = 1
-    expected_output = "test/resources/rules/md034/bad_with_http_url_in_setext.md:1:7: MD034: Bare URL used (no-bare-urls)"
+    expected_output = f"{source_path}:1:7: MD034: Bare URL used (no-bare-urls)"
     expected_error = ""
 
     # Act
@@ -183,9 +202,12 @@ def test_md034_good_http_url_in_indented():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md034", "good_http_url_in_indented.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md034/good_http_url_in_indented.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -210,9 +232,12 @@ def test_md034_good_http_url_in_fenced():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md034", "good_http_url_in_fenced.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md034/good_http_url_in_fenced.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -237,9 +262,12 @@ def test_md034_good_http_url_in_html():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md034", "good_http_url_in_html.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md034/good_http_url_in_html.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -264,9 +292,12 @@ def test_md034_good_http_url_in_inline_link():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md034", "good_http_url_in_inline_link.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md034/good_http_url_in_inline_link.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -291,9 +322,12 @@ def test_md034_good_http_url_in_full_link():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md034", "good_http_url_in_full_link.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md034/good_http_url_in_full_link.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -318,16 +352,16 @@ def test_md034_bad_with_local_url():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md034", "bad_with_local_url.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md034/bad_with_local_url.md",
+        source_path,
     ]
 
     expected_return_code = 1
-    expected_output = (
-        "test/resources/rules/md034/bad_with_local_url.md:1:11: "
-        + "MD034: Bare URL used (no-bare-urls)"
-    )
+    expected_output = f"{source_path}:1:11: " + "MD034: Bare URL used (no-bare-urls)"
     expected_error = ""
 
     # Act
@@ -348,9 +382,12 @@ def test_md034_good_with_leading_character():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md034", "good_with_leading_character.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md034/good_with_leading_character.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -375,9 +412,12 @@ def test_md034_good_only_url_marker():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md034", "good_only_url_marker.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md034/good_only_url_marker.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -402,9 +442,12 @@ def test_md034_good_only_url_marker_and_leading():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md034", "good_only_url_marker_and_leading.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md034/good_only_url_marker_and_leading.md",
+        source_path,
     ]
 
     expected_return_code = 0

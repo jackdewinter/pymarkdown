@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD010 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -15,12 +16,15 @@ def test_md010_bad_configuration_code_blocks():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md004", "good_list_asterisk_single_level.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md010.code_blocks=bad",
         "--strict-config",
         "scan",
-        "test/resources/rules/md004/good_list_asterisk_single_level.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -48,9 +52,12 @@ def test_md010_good_simple_text_no_tab():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md010", "good_simple_text_no_tab.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md010/good_simple_text_no_tab.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -75,26 +82,29 @@ def test_md010_bad_simple_text_with_tab():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md010", "bad_simple_text_with_tab.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md010/bad_simple_text_with_tab.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md010/bad_simple_text_with_tab.md:1:11: MD010: "
+        f"{source_path}:1:11: MD010: "
         + "Hard tabs [Column: 11] (no-hard-tabs)\n"
-        + "test/resources/rules/md010/bad_simple_text_with_tab.md:2:11: MD010: "
+        + f"{source_path}:2:11: MD010: "
         + "Hard tabs [Column: 11] (no-hard-tabs)\n"
-        + "test/resources/rules/md010/bad_simple_text_with_tab.md:3:11: MD010: "
+        + f"{source_path}:3:11: MD010: "
         + "Hard tabs [Column: 11] (no-hard-tabs)\n"
-        + "test/resources/rules/md010/bad_simple_text_with_tab.md:3:21: MD010: "
+        + f"{source_path}:3:21: MD010: "
         + "Hard tabs [Column: 21] (no-hard-tabs)\n"
-        + "test/resources/rules/md010/bad_simple_text_with_tab.md:4:2: MD010: "
+        + f"{source_path}:4:2: MD010: "
         + "Hard tabs [Column: 2] (no-hard-tabs)\n"
-        + "test/resources/rules/md010/bad_simple_text_with_tab.md:4:5: MD010: "
+        + f"{source_path}:4:5: MD010: "
         + "Hard tabs [Column: 5] (no-hard-tabs)\n"
-        + "test/resources/rules/md010/bad_simple_text_with_tab.md:4:9: MD010: "
+        + f"{source_path}:4:9: MD010: "
         + "Hard tabs [Column: 9] (no-hard-tabs)"
     )
     expected_error = ""

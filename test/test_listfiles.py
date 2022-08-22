@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the "-l" option.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 
@@ -119,11 +120,14 @@ def test_markdown_with_dash_l_on_md_directory():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_arguments = ["scan", "-l", "simple"]
+    source_path = f"simple{os.sep}"
+    supplied_arguments = ["scan", "-l", source_path]
 
     expected_return_code = 0
-    expected_output = """simple/simple.md
-"""
+    expected_output = """{source_path}simple.md
+""".replace(
+        "{source_path}", source_path
+    )
     expected_error = ""
 
     # Act
@@ -145,11 +149,14 @@ def test_markdown_with_dash_l_on_mixed_directories():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_arguments = ["scan", "-l", "only-text", "simple"]
+    source_path = f"simple{os.sep}"
+    supplied_arguments = ["scan", "-l", "only-text", source_path]
 
     expected_return_code = 0
-    expected_output = """simple/simple.md
-"""
+    expected_output = """{source_path}simple.md
+""".replace(
+        "{source_path}", source_path
+    )
     expected_error = ""
 
     # Act
@@ -170,12 +177,15 @@ def test_markdown_with_dash_l_on_non_md_file():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_arguments = ["scan", "-l", "only-text/simple_text_file.txt"]
+    source_path = os.path.join("only-text", "simple_text_file.txt")
+    supplied_arguments = ["scan", "-l", source_path]
 
     expected_return_code = 1
     expected_output = ""
-    expected_error = """Provided file path 'only-text/simple_text_file.txt' is not a valid file. Skipping.
-"""
+    expected_error = """Provided file path '{source_path}' is not a valid file. Skipping.
+""".replace(
+        "{source_path}", source_path
+    )
 
     # Act
     execute_results = scanner.invoke_main(
@@ -196,11 +206,14 @@ def test_markdown_with_dash_l_on_md_file():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_arguments = ["scan", "-l", "simple/simple.md"]
+    source_path = os.path.join("simple", "simple.md")
+    supplied_arguments = ["scan", "-l", source_path]
 
     expected_return_code = 0
-    expected_output = """simple/simple.md
-"""
+    expected_output = """{source_path}
+""".replace(
+        "{source_path}", source_path
+    )
     expected_error = ""
 
     # Act
@@ -222,17 +235,21 @@ def test_markdown_with_dash_l_on_mixed_files():
 
     # Arrange
     scanner = MarkdownScanner()
+    existing_source_path = os.path.join("simple", "simple.md")
+    nonexisting_source_path = os.path.join("only-text", "simple_text_file.txt")
     supplied_arguments = [
         "scan",
         "-l",
-        "only-text/simple_text_file.txt",
-        "simple/simple.md",
+        nonexisting_source_path,
+        existing_source_path,
     ]
 
     expected_return_code = 1
     expected_output = """"""
-    expected_error = """Provided file path 'only-text/simple_text_file.txt' is not a valid file. Skipping.
-"""
+    expected_error = """Provided file path '{nonexisting_source_path}' is not a valid file. Skipping.
+""".replace(
+        "{nonexisting_source_path}", nonexisting_source_path
+    )
 
     # Act
     execute_results = scanner.invoke_main(
@@ -253,17 +270,20 @@ def test_markdown_with_dash_l_on_globbed_files():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_arguments = ["scan", "-l", "rules/md001/*.md"]
+    source_path = os.path.join("rules", "md001") + os.sep
+    supplied_arguments = ["scan", "-l", f"{source_path}*.md"]
 
     expected_return_code = 0
-    expected_output = """rules/md001/empty.md
-rules/md001/front_matter_with_alternate_title.md
-rules/md001/front_matter_with_no_title.md
-rules/md001/front_matter_with_title.md
-rules/md001/improper_atx_heading_incrementing.md
-rules/md001/improper_setext_heading_incrementing.md
-rules/md001/proper_atx_heading_incrementing.md
-rules/md001/proper_setext_heading_incrementing.md"""
+    expected_output = """{source_path}empty.md
+{source_path}front_matter_with_alternate_title.md
+{source_path}front_matter_with_no_title.md
+{source_path}front_matter_with_title.md
+{source_path}improper_atx_heading_incrementing.md
+{source_path}improper_setext_heading_incrementing.md
+{source_path}proper_atx_heading_incrementing.md
+{source_path}proper_setext_heading_incrementing.md""".replace(
+        "{source_path}", source_path
+    )
     expected_error = """"""
 
     # Act
@@ -285,13 +305,12 @@ def test_markdown_with_dash_l_on_non_matching_globbed_files():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_arguments = ["scan", "-l", "rules/md001/z*.md"]
+    source_path = os.path.join("rules", "md001", "z*.md")
+    supplied_arguments = ["scan", "-l", source_path]
 
     expected_return_code = 1
     expected_output = """"""
-    expected_error = (
-        """Provided glob path 'rules/md001/z*.md' did not match any files."""
-    )
+    expected_error = f"Provided glob path '{source_path}' did not match any files."
 
     # Act
     execute_results = scanner.invoke_main(
@@ -312,18 +331,21 @@ def test_markdown_with_dash_l_on_directory():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_arguments = ["scan", "-l", "../../docs"]
+    source_path = os.path.join("..", "..", "docs") + os.sep
+    supplied_arguments = ["scan", "-l", source_path]
 
     expected_return_code = 0
-    expected_output = """../../docs/advanced_configuration.md
-../../docs/advanced_plugins.md
-../../docs/advanced_scanning.md
-../../docs/developer.md
-../../docs/extensions.md
-../../docs/faq.md
-../../docs/pre-commit.md
-../../docs/rules.md
-../../docs/writing_rule_plugins.md"""
+    expected_output = """{source_path}advanced_configuration.md
+{source_path}advanced_plugins.md
+{source_path}advanced_scanning.md
+{source_path}developer.md
+{source_path}extensions.md
+{source_path}faq.md
+{source_path}pre-commit.md
+{source_path}rules.md
+{source_path}writing_rule_plugins.md""".replace(
+        "{source_path}", source_path
+    )
     expected_error = ""
 
     # Act
@@ -346,64 +368,73 @@ def test_markdown_with_dash_l_and_dash_r_on_directory():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_arguments = ["scan", "-l", "-r", "../../docs"]
+    source_path = os.path.join("..", "..", "docs") + os.sep
+    extensions_source_path = os.path.join("..", "..", "docs", "extensions") + os.sep
+    rules_source_path = os.path.join("..", "..", "docs", "rules") + os.sep
+    supplied_arguments = ["scan", "-l", "-r", source_path]
 
     expected_return_code = 0
-    expected_output = """../../docs/advanced_configuration.md
-../../docs/advanced_plugins.md
-../../docs/advanced_scanning.md
-../../docs/developer.md
-../../docs/extensions.md
-../../docs/extensions/front-matter.md
-../../docs/extensions/pragmas.md
-../../docs/faq.md
-../../docs/pre-commit.md
-../../docs/rules.md
-../../docs/rules/rule_md001.md
-../../docs/rules/rule_md002.md
-../../docs/rules/rule_md003.md
-../../docs/rules/rule_md004.md
-../../docs/rules/rule_md005.md
-../../docs/rules/rule_md006.md
-../../docs/rules/rule_md007.md
-../../docs/rules/rule_md009.md
-../../docs/rules/rule_md010.md
-../../docs/rules/rule_md011.md
-../../docs/rules/rule_md012.md
-../../docs/rules/rule_md013.md
-../../docs/rules/rule_md014.md
-../../docs/rules/rule_md018.md
-../../docs/rules/rule_md019.md
-../../docs/rules/rule_md020.md
-../../docs/rules/rule_md021.md
-../../docs/rules/rule_md022.md
-../../docs/rules/rule_md023.md
-../../docs/rules/rule_md024.md
-../../docs/rules/rule_md025.md
-../../docs/rules/rule_md026.md
-../../docs/rules/rule_md027.md
-../../docs/rules/rule_md028.md
-../../docs/rules/rule_md029.md
-../../docs/rules/rule_md030.md
-../../docs/rules/rule_md031.md
-../../docs/rules/rule_md032.md
-../../docs/rules/rule_md033.md
-../../docs/rules/rule_md034.md
-../../docs/rules/rule_md035.md
-../../docs/rules/rule_md036.md
-../../docs/rules/rule_md037.md
-../../docs/rules/rule_md038.md
-../../docs/rules/rule_md039.md
-../../docs/rules/rule_md040.md
-../../docs/rules/rule_md041.md
-../../docs/rules/rule_md042.md
-../../docs/rules/rule_md043.md
-../../docs/rules/rule_md044.md
-../../docs/rules/rule_md045.md
-../../docs/rules/rule_md046.md
-../../docs/rules/rule_md047.md
-../../docs/rules/rule_md048.md
-../../docs/writing_rule_plugins.md"""
+    expected_output = (
+        """{source_path}advanced_configuration.md
+{source_path}advanced_plugins.md
+{source_path}advanced_scanning.md
+{source_path}developer.md
+{source_path}extensions.md
+{extensions_source_path}front-matter.md
+{extensions_source_path}pragmas.md
+{source_path}faq.md
+{source_path}pre-commit.md
+{source_path}rules.md
+{rules_source_path}rule_md001.md
+{rules_source_path}rule_md002.md
+{rules_source_path}rule_md003.md
+{rules_source_path}rule_md004.md
+{rules_source_path}rule_md005.md
+{rules_source_path}rule_md006.md
+{rules_source_path}rule_md007.md
+{rules_source_path}rule_md009.md
+{rules_source_path}rule_md010.md
+{rules_source_path}rule_md011.md
+{rules_source_path}rule_md012.md
+{rules_source_path}rule_md013.md
+{rules_source_path}rule_md014.md
+{rules_source_path}rule_md018.md
+{rules_source_path}rule_md019.md
+{rules_source_path}rule_md020.md
+{rules_source_path}rule_md021.md
+{rules_source_path}rule_md022.md
+{rules_source_path}rule_md023.md
+{rules_source_path}rule_md024.md
+{rules_source_path}rule_md025.md
+{rules_source_path}rule_md026.md
+{rules_source_path}rule_md027.md
+{rules_source_path}rule_md028.md
+{rules_source_path}rule_md029.md
+{rules_source_path}rule_md030.md
+{rules_source_path}rule_md031.md
+{rules_source_path}rule_md032.md
+{rules_source_path}rule_md033.md
+{rules_source_path}rule_md034.md
+{rules_source_path}rule_md035.md
+{rules_source_path}rule_md036.md
+{rules_source_path}rule_md037.md
+{rules_source_path}rule_md038.md
+{rules_source_path}rule_md039.md
+{rules_source_path}rule_md040.md
+{rules_source_path}rule_md041.md
+{rules_source_path}rule_md042.md
+{rules_source_path}rule_md043.md
+{rules_source_path}rule_md044.md
+{rules_source_path}rule_md045.md
+{rules_source_path}rule_md046.md
+{rules_source_path}rule_md047.md
+{rules_source_path}rule_md048.md
+{source_path}writing_rule_plugins.md""".replace(
+            "{source_path}", source_path
+        )
+        .replace("{extensions_source_path}", extensions_source_path)
+        .replace("{rules_source_path}", rules_source_path)
+    )
     expected_error = ""
 
     # Act

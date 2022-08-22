@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD037 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -15,9 +16,12 @@ def test_md037_good_valid_emphasis():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md037", "good_valid_emphasis.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md037/good_valid_emphasis.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -42,17 +46,20 @@ def test_md037_bad_surrounding_emphasis():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md037", "bad_surrounding_emphasis.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md037/bad_surrounding_emphasis.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md037/bad_surrounding_emphasis.md:1:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
-        + "test/resources/rules/md037/bad_surrounding_emphasis.md:3:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
-        + "test/resources/rules/md037/bad_surrounding_emphasis.md:5:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
-        + "test/resources/rules/md037/bad_surrounding_emphasis.md:7:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)"
+        f"{source_path}:1:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
+        + f"{source_path}:3:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
+        + f"{source_path}:5:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
+        + f"{source_path}:7:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)"
     )
     expected_error = ""
 
@@ -74,17 +81,20 @@ def test_md037_bad_leading_emphasis():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md037", "bad_leading_emphasis.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md037/bad_leading_emphasis.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md037/bad_leading_emphasis.md:1:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
-        + "test/resources/rules/md037/bad_leading_emphasis.md:3:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
-        + "test/resources/rules/md037/bad_leading_emphasis.md:5:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
-        + "test/resources/rules/md037/bad_leading_emphasis.md:7:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)"
+        f"{source_path}:1:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
+        + f"{source_path}:3:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
+        + f"{source_path}:5:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
+        + f"{source_path}:7:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)"
     )
     expected_error = ""
 
@@ -106,17 +116,20 @@ def test_md037_bad_trailing_emphasis():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md037", "bad_trailing_emphasis.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md037/bad_trailing_emphasis.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md037/bad_trailing_emphasis.md:1:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
-        + "test/resources/rules/md037/bad_trailing_emphasis.md:3:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
-        + "test/resources/rules/md037/bad_trailing_emphasis.md:5:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
-        + "test/resources/rules/md037/bad_trailing_emphasis.md:7:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)"
+        f"{source_path}:1:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
+        + f"{source_path}:3:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
+        + f"{source_path}:5:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
+        + f"{source_path}:7:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)"
     )
     expected_error = ""
 
@@ -139,17 +152,20 @@ def test_md037_bad_surrounding_emphasis_multiline():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md037", "bad_surrounding_emphasis_multiline.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md037/bad_surrounding_emphasis_multiline.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md037/bad_surrounding_emphasis_multiline.md:1:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
-        + "test/resources/rules/md037/bad_surrounding_emphasis_multiline.md:4:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
-        + "test/resources/rules/md037/bad_surrounding_emphasis_multiline.md:7:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
-        + "test/resources/rules/md037/bad_surrounding_emphasis_multiline.md:10:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)"
+        f"{source_path}:1:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
+        + f"{source_path}:4:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
+        + f"{source_path}:7:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
+        + f"{source_path}:10:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)"
     )
     expected_error = ""
 
@@ -172,17 +188,20 @@ def test_md037_bad_surrounding_empahsis_setext():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md037", "bad_surrounding_empahsis_setext.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md037/bad_surrounding_empahsis_setext.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md037/bad_surrounding_empahsis_setext.md:1:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
-        + "test/resources/rules/md037/bad_surrounding_empahsis_setext.md:4:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
-        + "test/resources/rules/md037/bad_surrounding_empahsis_setext.md:7:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
-        + "test/resources/rules/md037/bad_surrounding_empahsis_setext.md:10:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)"
+        f"{source_path}:1:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
+        + f"{source_path}:4:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
+        + f"{source_path}:7:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
+        + f"{source_path}:10:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)"
     )
     expected_error = ""
 
@@ -205,17 +224,20 @@ def test_md037_bad_surrounding_empahsis_atx():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md037", "bad_surrounding_empahsis_atx.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md037/bad_surrounding_empahsis_atx.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md037/bad_surrounding_empahsis_atx.md:1:13: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
-        + "test/resources/rules/md037/bad_surrounding_empahsis_atx.md:3:14: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
-        + "test/resources/rules/md037/bad_surrounding_empahsis_atx.md:5:14: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
-        + "test/resources/rules/md037/bad_surrounding_empahsis_atx.md:7:14: MD037: Spaces inside emphasis markers (no-space-in-emphasis)"
+        f"{source_path}:1:13: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
+        + f"{source_path}:3:14: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
+        + f"{source_path}:5:14: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
+        + f"{source_path}:7:14: MD037: Spaces inside emphasis markers (no-space-in-emphasis)"
     )
     expected_error = ""
 
@@ -238,16 +260,19 @@ def test_md037_bad_surrounding_emphasis_containers():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md037", "bad_surrounding_emphasis_containers.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md037/bad_surrounding_emphasis_containers.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md037/bad_surrounding_emphasis_containers.md:1:12: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
-        + "test/resources/rules/md037/bad_surrounding_emphasis_containers.md:3:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
-        + "test/resources/rules/md037/bad_surrounding_emphasis_containers.md:5:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)"
+        f"{source_path}:1:12: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
+        + f"{source_path}:3:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)\n"
+        + f"{source_path}:5:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)"
     )
     expected_error = ""
 
@@ -270,9 +295,12 @@ def test_md037_good_emphasis_with_code_span():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md037", "good_emphasis_with_code_span.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md037/good_emphasis_with_code_span.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -298,9 +326,12 @@ def test_md037_good_no_emphasis_but_stars():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md037", "good_no_emphasis_but_stars.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md037/good_no_emphasis_but_stars.md",
+        source_path,
     ]
 
     expected_return_code = 0

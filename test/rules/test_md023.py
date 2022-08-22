@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD023 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -15,11 +16,14 @@ def test_md023_good_proper_indent_atx():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md023", "proper_indent_atx.md"
+    )
     supplied_arguments = [
         "--enable-rules",
         "MD023",
         "scan",
-        "test/resources/rules/md023/proper_indent_atx.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -44,11 +48,14 @@ def test_md023_good_proper_indent_setext():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md023", "proper_indent_setext.md"
+    )
     supplied_arguments = [
         "--enable-rules",
         "MD023",
         "scan",
-        "test/resources/rules/md023/proper_indent_setext.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -73,16 +80,19 @@ def test_md023_bad_improper_indent_atx():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md023", "improper_indent_atx.md"
+    )
     supplied_arguments = [
         "--enable-rules",
         "MD023",
         "scan",
-        "test/resources/rules/md023/improper_indent_atx.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md023/improper_indent_atx.md:3:3: "
+        f"{source_path}:3:3: "
         + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)\n"
     )
     expected_error = ""
@@ -105,11 +115,14 @@ def test_md023_good_proper_indent_atx_in_list_item():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md023", "proper_indent_atx_in_list_item.md"
+    )
     supplied_arguments = [
         "--enable-rules",
         "MD023",
         "scan",
-        "test/resources/rules/md023/proper_indent_atx_in_list_item.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -134,18 +147,21 @@ def test_md023_bad_improper_indent_atx_in_list_item():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md023", "improper_indent_atx_in_list_item.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "MD022,md030",
         "--enable-rules",
         "MD023",
         "scan",
-        "test/resources/rules/md023/improper_indent_atx_in_list_item.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md023/improper_indent_atx_in_list_item.md:4:6: "
+        f"{source_path}:4:6: "
         + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)"
     )
     expected_error = ""
@@ -168,11 +184,14 @@ def test_md023_good_proper_indent_atx_in_block_quote():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md023", "proper_indent_atx_in_block_quote.md"
+    )
     supplied_arguments = [
         "--enable-rules",
         "MD023",
         "scan",
-        "test/resources/rules/md023/proper_indent_atx_in_block_quote.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -197,18 +216,21 @@ def test_md023_bad_improper_indent_atx_in_block_quote():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md023", "improper_indent_atx_in_block_quote.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "MD027",
         "--enable-rules",
         "MD023",
         "scan",
-        "test/resources/rules/md023/improper_indent_atx_in_block_quote.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md023/improper_indent_atx_in_block_quote.md:3:4: "
+        f"{source_path}:3:4: "
         + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)"
     )
     expected_error = ""
@@ -232,22 +254,25 @@ def test_md023_bad_improper_indent_setext_x():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md023", "improper_indent_setext.md"
+    )
     supplied_arguments = [
         "--enable-rules",
         "MD023",
         "scan",
-        "test/resources/rules/md023/improper_indent_setext.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md023/improper_indent_setext.md:4:3: "
+        f"{source_path}:4:3: "
         + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)\n"
-        + "test/resources/rules/md023/improper_indent_setext.md:9:3: "
+        + f"{source_path}:9:3: "
         + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)\n"
-        + "test/resources/rules/md023/improper_indent_setext.md:14:1: "
+        + f"{source_path}:14:1: "
         + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)\n"
-        + "test/resources/rules/md023/improper_indent_setext.md:22:1: "
+        + f"{source_path}:22:1: "
         + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)\n"
     )
     expected_error = ""
@@ -271,24 +296,31 @@ def test_md023_bad_improper_indent_setext_in_block_quote():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md023",
+        "improper_indent_setext_in_block_quote.md",
+    )
     supplied_arguments = [
         "--enable-rules",
         "MD023",
         "--disable-rules",
         "MD027,md022",
         "scan",
-        "test/resources/rules/md023/improper_indent_setext_in_block_quote.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md023/improper_indent_setext_in_block_quote.md:4:5: "
+        f"{source_path}:4:5: "
         + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)\n"
-        + "test/resources/rules/md023/improper_indent_setext_in_block_quote.md:9:5: "
+        + f"{source_path}:9:5: "
         + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)\n"
-        + "test/resources/rules/md023/improper_indent_setext_in_block_quote.md:14:3: "
+        + f"{source_path}:14:3: "
         + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)\n"
-        + "test/resources/rules/md023/improper_indent_setext_in_block_quote.md:22:3: "
+        + f"{source_path}:22:3: "
         + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)\n"
     )
     expected_error = ""
@@ -312,20 +344,23 @@ def test_md023_bad_improper_indent_setext_in_list_item():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md023", "improper_indent_setext_in_list_item.md"
+    )
     supplied_arguments = [
         "--enable-rules",
         "MD023",
         "--disable-rules",
         "MD005,md030,md032",
         "scan",
-        "test/resources/rules/md023/improper_indent_setext_in_list_item.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md023/improper_indent_setext_in_list_item.md:9:6: "
+        f"{source_path}:9:6: "
         + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)\n"
-        + "test/resources/rules/md023/improper_indent_setext_in_list_item.md:22:3: "
+        + f"{source_path}:22:3: "
         + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)\n"
     )
     expected_error = ""
@@ -348,11 +383,14 @@ def test_md023_bad_improper_indented_atx_after_emphasis():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md023", "improper_indented_atx_after_emphasis.md"
+    )
     supplied_arguments = [
         "--enable-rules",
         "MD023",
         "scan",
-        "test/resources/rules/md023/improper_indented_atx_after_emphasis.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -377,13 +415,16 @@ def test_md023_proper_indent_setext_trailing_x():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md023", "proper_indent_setext_trailing.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "MD009",
         "--enable-rules",
         "MD023",
         "scan",
-        "test/resources/rules/md023/proper_indent_setext_trailing.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -408,13 +449,16 @@ def test_md023_proper_indent_setext_trailing_first():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md023", "proper_indent_setext_trailing_first.md"
+    )
     supplied_arguments = [
         "--enable-rules",
         "MD023",
         "--disable-rules",
         "MD009",
         "scan",
-        "test/resources/rules/md023/proper_indent_setext_trailing_first.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -439,13 +483,16 @@ def test_md023_proper_indent_setext_trailing_second():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md023", "proper_indent_setext_trailing_second.md"
+    )
     supplied_arguments = [
         "--enable-rules",
         "MD023",
         "--disable-rules",
         "MD009",
         "scan",
-        "test/resources/rules/md023/proper_indent_setext_trailing_second.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -470,13 +517,16 @@ def test_md023_proper_indent_setext_trailing_third():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md023", "proper_indent_setext_trailing_third.md"
+    )
     supplied_arguments = [
         "--enable-rules",
         "MD023",
         "--disable-rules",
         "MD009",
         "scan",
-        "test/resources/rules/md023/proper_indent_setext_trailing_third.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -501,13 +551,20 @@ def test_md023_proper_indent_setext_larger_trailing_middle():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md023",
+        "proper_indent_setext_larger_trailing_middle.md",
+    )
     supplied_arguments = [
         "--enable-rules",
         "MD023",
         "--disable-rules",
         "MD009",
         "scan",
-        "test/resources/rules/md023/proper_indent_setext_larger_trailing_middle.md",
+        source_path,
     ]
 
     expected_return_code = 0

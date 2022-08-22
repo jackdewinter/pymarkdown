@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD018 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -17,9 +18,12 @@ def test_md018_good_start_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md018", "good_start_spacing.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md018/good_start_spacing.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -45,9 +49,12 @@ def test_md018_good_start_spacing_in_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md018", "good_start_spacing_in_list.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md018/good_start_spacing_in_list.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -73,9 +80,12 @@ def test_md018_good_start_spacing_in_block_quotes():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md018", "good_start_spacing_in_block_quote.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md018/good_start_spacing_in_block_quote.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -101,11 +111,14 @@ def test_md018_bad_ignore_bad_atx_closed_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md018", "ignore_bad_atx_closed_spacing.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md020",
         "scan",
-        "test/resources/rules/md018/ignore_bad_atx_closed_spacing.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -130,16 +143,19 @@ def test_md018_bad_missing_atx_start_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md018", "missing_start_spacing.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md018/missing_start_spacing.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md018/missing_start_spacing.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + "test/resources/rules/md018/missing_start_spacing.md:3:1: "
+        + f"{source_path}:3:1: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -163,16 +179,19 @@ def test_md018_bad_missing_atx_start_spacing_in_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md018", "missing_start_spacing_in_list.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md018/missing_start_spacing_in_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md018/missing_start_spacing_in_list.md:1:4: "
+        f"{source_path}:1:4: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + "test/resources/rules/md018/missing_start_spacing_in_list.md:3:4: "
+        + f"{source_path}:3:4: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -196,16 +215,19 @@ def test_md018_bad_missing_atx_start_spacing_in_block_quote():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md018", "missing_start_spacing_in_block_quote.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md018/missing_start_spacing_in_block_quote.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md018/missing_start_spacing_in_block_quote.md:1:3: "
+        f"{source_path}:1:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + "test/resources/rules/md018/missing_start_spacing_in_block_quote.md:3:3: "
+        + f"{source_path}:3:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -229,9 +251,12 @@ def test_md018_good_with_setext_headings():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md018", "with_setext_headings.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md018/with_setext_headings.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -257,11 +282,14 @@ def test_md018_good_with_code_blocks():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md018", "with_code_blocks.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md046",
         "scan",
-        "test/resources/rules/md018/with_code_blocks.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -287,11 +315,14 @@ def test_md018_good_with_html_blocks():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md018", "with_html_blocks.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md033",
         "scan",
-        "test/resources/rules/md018/with_html_blocks.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -317,16 +348,19 @@ def test_md018_bad_multiple_within_paragraph():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md018", "multiple_within_paragraph.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md018/multiple_within_paragraph.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md018/multiple_within_paragraph.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + "test/resources/rules/md018/multiple_within_paragraph.md:2:1: "
+        + f"{source_path}:2:1: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -350,16 +384,23 @@ def test_md018_bad_multiple_within_paragraph_separated_codespan():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md018",
+        "multiple_within_paragraph_separated_codespan.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md018/multiple_within_paragraph_separated_codespan.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md018/multiple_within_paragraph_separated_codespan.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + "test/resources/rules/md018/multiple_within_paragraph_separated_codespan.md:3:1: "
+        + f"{source_path}:3:1: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -383,16 +424,23 @@ def test_md018_bad_multiple_within_paragraph_separated_codespan_multi():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md018",
+        "multiple_within_paragraph_separated_codespan_multi.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md018/multiple_within_paragraph_separated_codespan_multi.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md018/multiple_within_paragraph_separated_codespan_multi.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + "test/resources/rules/md018/multiple_within_paragraph_separated_codespan_multi.md:4:1: "
+        + f"{source_path}:4:1: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -417,14 +465,21 @@ def test_md018_bad_multiple_within_paragraph_separated_inline_codespan_multi():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md018",
+        "multiple_within_paragraph_separated_inline_codespan_multi.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md018/multiple_within_paragraph_separated_inline_codespan_multi.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md018/multiple_within_paragraph_separated_inline_codespan_multi.md:4:3: "
+        f"{source_path}:4:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -449,16 +504,23 @@ def test_md018_bad_multiple_within_paragraph_separated_inline_rawhtml_multi():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md018",
+        "multiple_within_paragraph_separated_inline_rawhtml_multi.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md033",
         "scan",
-        "test/resources/rules/md018/multiple_within_paragraph_separated_inline_rawhtml_multi.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md018/multiple_within_paragraph_separated_inline_rawhtml_multi.md:4:3: "
+        f"{source_path}:4:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -483,14 +545,21 @@ def test_md018_bad_multiple_within_paragraph_separated_inline_image_multi():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md018",
+        "multiple_within_paragraph_separated_inline_image_multi.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md018/multiple_within_paragraph_separated_inline_image_multi.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md018/multiple_within_paragraph_separated_inline_image_multi.md:8:3: "
+        f"{source_path}:8:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -515,14 +584,21 @@ def test_md018_bad_multiple_within_paragraph_separated_full_image_multi():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md018",
+        "multiple_within_paragraph_separated_full_image_multi.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md018/multiple_within_paragraph_separated_full_image_multi.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md018/multiple_within_paragraph_separated_full_image_multi.md:5:3: "
+        f"{source_path}:5:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -547,14 +623,21 @@ def test_md018_bad_multiple_within_paragraph_separated_shortcut_image_multi():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md018",
+        "multiple_within_paragraph_separated_shortcut_image_multi.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md018/multiple_within_paragraph_separated_shortcut_image_multi.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md018/multiple_within_paragraph_separated_shortcut_image_multi.md:4:3: "
+        f"{source_path}:4:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -579,14 +662,21 @@ def test_md018_bad_multiple_within_paragraph_separated_collapsed_image_multi():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md018",
+        "multiple_within_paragraph_separated_collapsed_image_multi.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md018/multiple_within_paragraph_separated_collapsed_image_multi.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md018/multiple_within_paragraph_separated_collapsed_image_multi.md:4:3: "
+        f"{source_path}:4:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -611,14 +701,21 @@ def test_md018_bad_multiple_within_paragraph_separated_inline_link_multi():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md018",
+        "multiple_within_paragraph_separated_inline_link_multi.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md018/multiple_within_paragraph_separated_inline_link_multi.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md018/multiple_within_paragraph_separated_inline_link_multi.md:8:3: "
+        f"{source_path}:8:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -643,14 +740,21 @@ def test_md018_bad_multiple_within_paragraph_separated_full_link_multi():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md018",
+        "multiple_within_paragraph_separated_full_link_multi.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md018/multiple_within_paragraph_separated_full_link_multi.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md018/multiple_within_paragraph_separated_full_link_multi.md:5:3: "
+        f"{source_path}:5:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -675,14 +779,21 @@ def test_md018_bad_multiple_within_paragraph_separated_shortcut_link_multi():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md018",
+        "multiple_within_paragraph_separated_shortcut_link_multi.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md018/multiple_within_paragraph_separated_shortcut_link_multi.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md018/multiple_within_paragraph_separated_shortcut_link_multi.md:4:3: "
+        f"{source_path}:4:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -707,14 +818,21 @@ def test_md018_bad_multiple_within_paragraph_separated_collapsed_link_multi():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md018",
+        "multiple_within_paragraph_separated_collapsed_link_multi.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md018/multiple_within_paragraph_separated_collapsed_link_multi.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md018/multiple_within_paragraph_separated_collapsed_link_multi.md:4:3: "
+        f"{source_path}:4:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -738,14 +856,21 @@ def test_md018_bad_multiple_within_paragraph_separated_inline_hardbreak_multi():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md018",
+        "multiple_within_paragraph_separated_inline_hardbreak_multi.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md018/multiple_within_paragraph_separated_inline_hardbreak_multi.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md018/multiple_within_paragraph_separated_inline_hardbreak_multi.md:3:3: "
+        f"{source_path}:3:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -769,20 +894,23 @@ def test_md018_bad_paragraphs_with_starting_whitespace():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md018", "paragraphs_with_starting_whitespace.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md018/paragraphs_with_starting_whitespace.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md018/paragraphs_with_starting_whitespace.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + "test/resources/rules/md018/paragraphs_with_starting_whitespace.md:3:2: "
+        + f"{source_path}:3:2: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + "test/resources/rules/md018/paragraphs_with_starting_whitespace.md:5:3: "
+        + f"{source_path}:5:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + "test/resources/rules/md018/paragraphs_with_starting_whitespace.md:7:4: "
+        + f"{source_path}:7:4: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -806,20 +934,23 @@ def test_md018_bad_single_paragraph_with_starting_space():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md018", "single_paragraph_with_starting_space.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md018/single_paragraph_with_starting_space.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md018/single_paragraph_with_starting_space.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + "test/resources/rules/md018/single_paragraph_with_starting_space.md:2:2: "
+        + f"{source_path}:2:2: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + "test/resources/rules/md018/single_paragraph_with_starting_space.md:3:3: "
+        + f"{source_path}:3:3: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + "test/resources/rules/md018/single_paragraph_with_starting_space.md:4:4: "
+        + f"{source_path}:4:4: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -843,16 +974,23 @@ def test_md018_bad_single_paragraph_with_starting_whitespace():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md018",
+        "single_paragraph_with_starting_whitespace.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md010",
         "scan",
-        "test/resources/rules/md018/single_paragraph_with_starting_whitespace.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md018/single_paragraph_with_starting_whitespace.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -876,18 +1014,21 @@ def test_md018_bad_single_paragraph_with_whitespace():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md018", "single_paragraph_with_whitespace.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md010,md022,md023",
         "scan",
-        "test/resources/rules/md018/single_paragraph_with_whitespace.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md018/single_paragraph_with_whitespace.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + "test/resources/rules/md018/single_paragraph_with_whitespace.md:2:2: "
+        + f"{source_path}:2:2: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""

@@ -17,9 +17,12 @@ def test_md024_good_different_heading_content_atx():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md024", "different_heading_content_atx.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md024/different_heading_content_atx.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -44,14 +47,17 @@ def test_md024_bad_same_heading_content_atx():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md024", "same_heading_content_atx.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md024/same_heading_content_atx.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md024/same_heading_content_atx.md:3:1: "
+        f"{source_path}:3:1: "
         + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -75,9 +81,16 @@ def test_md024_bad_same_heading_content_atx_with_extra_whitespace():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md024",
+        "same_heading_content_atx_with_extra_whitespace.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md024/same_heading_content_atx_with_extra_whitespace.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -102,9 +115,16 @@ def test_md024_bad_same_heading_content_atx_with_extra_emphasis():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md024",
+        "same_heading_content_atx_with_extra_emphasis.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md024/same_heading_content_atx_with_extra_emphasis.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -129,14 +149,21 @@ def test_md024_bad_same_heading_content_atx_in_same_list_item():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md024",
+        "same_heading_content_atx_in_same_list_item.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md024/same_heading_content_atx_in_same_list_item.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md024/same_heading_content_atx_in_same_list_item.md:3:3: "
+        f"{source_path}:3:3: "
         + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -159,14 +186,21 @@ def test_md024_bad_same_heading_content_atx_in_different_list_items():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md024",
+        "same_heading_content_atx_in_different_list_items.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md024/same_heading_content_atx_in_different_list_items.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md024/same_heading_content_atx_in_different_list_items.md:3:3: "
+        f"{source_path}:3:3: "
         + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -189,14 +223,21 @@ def test_md024_bad_same_heading_content_atx_in_same_block_quote():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md024",
+        "same_heading_content_atx_in_same_block_quote.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md024/same_heading_content_atx_in_same_block_quote.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md024/same_heading_content_atx_in_same_block_quote.md:3:3: "
+        f"{source_path}:3:3: "
         + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -219,16 +260,23 @@ def test_md024_bad_same_heading_content_atx_in_different_block_quotes():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md024",
+        "same_heading_content_atx_in_different_block_quotes.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md028",
         "scan",
-        "test/resources/rules/md024/same_heading_content_atx_in_different_block_quotes.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md024/same_heading_content_atx_in_different_block_quotes.md:3:3: "
+        f"{source_path}:3:3: "
         + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -251,16 +299,19 @@ def test_md024_bad_same_heading_in_siblings_atx():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md024", "same_heading_in_siblings_atx.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md024/same_heading_in_siblings_atx.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md024/same_heading_in_siblings_atx.md:7:1: "
+        f"{source_path}:7:1: "
         + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
-        + "test/resources/rules/md024/same_heading_in_siblings_atx.md:11:1: "
+        + f"{source_path}:11:1: "
         + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -283,14 +334,17 @@ def test_md024_bad_same_heading_but_not_in_siblings_atx():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md024", "same_heading_but_not_in_siblings_atx.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md024/same_heading_but_not_in_siblings_atx.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md024/same_heading_but_not_in_siblings_atx.md:9:1: "
+        f"{source_path}:9:1: "
         + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -313,6 +367,9 @@ def test_md024_good_different_heading_content_atx_with_configuration():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md024", "different_heading_content_atx.md"
+    )
     supplied_configuration = {"plugins": {"md024": {"siblings_only": True}}}
     configuration_file = None
     try:
@@ -321,7 +378,7 @@ def test_md024_good_different_heading_content_atx_with_configuration():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md024/different_heading_content_atx.md",
+            source_path,
         ]
 
         expected_return_code = 0
@@ -349,6 +406,9 @@ def test_md024_good_same_heading_content_atx_with_configuration():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md024", "same_heading_content_atx.md"
+    )
     supplied_configuration = {"plugins": {"md024": {"siblings_only": True}}}
     configuration_file = None
     try:
@@ -357,7 +417,7 @@ def test_md024_good_same_heading_content_atx_with_configuration():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md024/same_heading_content_atx.md",
+            source_path,
         ]
 
         expected_return_code = 0
@@ -385,6 +445,9 @@ def test_md024_bad_same_heading_in_siblings_atx_with_configuration():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md024", "same_heading_in_siblings_atx.md"
+    )
     supplied_configuration = {"plugins": {"md024": {"siblings_only": True}}}
     configuration_file = None
     try:
@@ -393,12 +456,12 @@ def test_md024_bad_same_heading_in_siblings_atx_with_configuration():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md024/same_heading_in_siblings_atx.md",
+            source_path,
         ]
 
         expected_return_code = 1
         expected_output = (
-            "test/resources/rules/md024/same_heading_in_siblings_atx.md:7:1: "
+            f"{source_path}:7:1: "
             + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
         )
         expected_error = ""
@@ -424,6 +487,9 @@ def test_md024_good_same_heading_but_not_in_siblings_atx_with_configuration():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md024", "same_heading_but_not_in_siblings_atx.md"
+    )
     supplied_configuration = {"plugins": {"md024": {"siblings_only": True}}}
     configuration_file = None
     try:
@@ -432,7 +498,7 @@ def test_md024_good_same_heading_but_not_in_siblings_atx_with_configuration():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md024/same_heading_but_not_in_siblings_atx.md",
+            source_path,
         ]
 
         expected_return_code = 0
@@ -460,6 +526,9 @@ def test_md024_good_same_heading_but_not_in_siblings_atx_with_alternate_configur
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md024", "same_heading_but_not_in_siblings_atx.md"
+    )
     supplied_configuration = {"plugins": {"md024": {"allow_different_nesting": True}}}
     configuration_file = None
     try:
@@ -468,7 +537,7 @@ def test_md024_good_same_heading_but_not_in_siblings_atx_with_alternate_configur
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md024/same_heading_but_not_in_siblings_atx.md",
+            source_path,
         ]
 
         expected_return_code = 0
@@ -496,9 +565,12 @@ def test_md024_good_different_inline_heading_content_atx():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md024", "different_inline_heading_content_atx.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md024/different_inline_heading_content_atx.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -523,9 +595,12 @@ def test_md024_good_different_heading_content_setext():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md024", "different_heading_content_setext.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md024/different_heading_content_setext.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -550,14 +625,17 @@ def test_md024_bad_same_heading_content_setext():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md024", "same_heading_content_setext.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md024/same_heading_content_setext.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md024/same_heading_content_setext.md:4:1: "
+        f"{source_path}:4:1: "
         + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -580,18 +658,21 @@ def test_md024_bad_same_heading_in_siblings_setext():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md024", "same_heading_in_siblings_setext.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md025",
         "scan",
-        "test/resources/rules/md024/same_heading_in_siblings_setext.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md024/same_heading_in_siblings_setext.md:7:1: "
+        f"{source_path}:7:1: "
         + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
-        + "test/resources/rules/md024/same_heading_in_siblings_setext.md:13:1: "
+        + f"{source_path}:13:1: "
         + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -614,16 +695,23 @@ def test_md024_bad_same_heading_but_not_in_siblings_setext():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md024",
+        "same_heading_but_not_in_siblings_setext.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md025",
         "scan",
-        "test/resources/rules/md024/same_heading_but_not_in_siblings_setext.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md024/same_heading_but_not_in_siblings_setext.md:10:1: "
+        f"{source_path}:10:1: "
         + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -646,6 +734,9 @@ def test_md024_good_different_heading_content_setext_with_configuration():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md024", "different_heading_content_setext.md"
+    )
     supplied_configuration = {"plugins": {"md024": {"siblings_only": True}}}
     configuration_file = None
     try:
@@ -654,7 +745,7 @@ def test_md024_good_different_heading_content_setext_with_configuration():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md024/different_heading_content_setext.md",
+            source_path,
         ]
 
         expected_return_code = 0
@@ -682,6 +773,9 @@ def test_md024_good_same_heading_content_setext_with_configuration():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md024", "same_heading_content_setext.md"
+    )
     supplied_configuration = {"plugins": {"md024": {"siblings_only": True}}}
     configuration_file = None
     try:
@@ -690,7 +784,7 @@ def test_md024_good_same_heading_content_setext_with_configuration():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md024/same_heading_content_setext.md",
+            source_path,
         ]
 
         expected_return_code = 0
@@ -718,6 +812,9 @@ def test_md024_bad_same_heading_in_siblings_setext_with_configuration():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md024", "same_heading_in_siblings_setext.md"
+    )
     supplied_configuration = {"plugins": {"md024": {"siblings_only": True}}}
     configuration_file = None
     try:
@@ -728,12 +825,12 @@ def test_md024_bad_same_heading_in_siblings_setext_with_configuration():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md024/same_heading_in_siblings_setext.md",
+            source_path,
         ]
 
         expected_return_code = 1
         expected_output = (
-            "test/resources/rules/md024/same_heading_in_siblings_setext.md:7:1: "
+            f"{source_path}:7:1: "
             + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
         )
         expected_error = ""
@@ -759,6 +856,13 @@ def test_md024_good_same_heading_but_not_in_siblings_setext_with_configuration()
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md024",
+        "same_heading_but_not_in_siblings_setext.md",
+    )
     supplied_configuration = {"plugins": {"md024": {"siblings_only": True}}}
     configuration_file = None
     try:
@@ -769,7 +873,7 @@ def test_md024_good_same_heading_but_not_in_siblings_setext_with_configuration()
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md024/same_heading_but_not_in_siblings_setext.md",
+            source_path,
         ]
 
         expected_return_code = 0

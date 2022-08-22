@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD044 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -17,12 +18,15 @@ def test_md044_bad_configuration_names():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_paragraph_text.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=$#1",
         "--strict-config",
         "scan",
-        "test/resources/rules/md044/good_paragraph_text.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -50,12 +54,15 @@ def test_md044_bad_configuration_names_empty_elements():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_paragraph_text.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=,,",
         "--strict-config",
         "scan",
-        "test/resources/rules/md044/good_paragraph_text.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -83,12 +90,15 @@ def test_md044_bad_configuration_names_repeated_elements():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_paragraph_text.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=one,two,One",
         "--strict-config",
         "scan",
-        "test/resources/rules/md044/good_paragraph_text.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -116,12 +126,15 @@ def test_md044_bad_configuration_code_blocks():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_paragraph_text.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.code_blocks=one",
         "--strict-config",
         "scan",
-        "test/resources/rules/md044/good_paragraph_text.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -149,11 +162,14 @@ def test_md044_good_paragraph_text():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_paragraph_text.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=paragraph",
         "scan",
-        "test/resources/rules/md044/good_paragraph_text.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -179,16 +195,19 @@ def test_md044_bad_paragraph_text():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_paragraph_text.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_paragraph_text.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_paragraph_text.md:1:11: "
+        f"{source_path}:1:11: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -213,11 +232,14 @@ def test_md044_good_paragraph_text_prefix():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_paragraph_text_prefix.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_paragraph_text_prefix.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -243,11 +265,14 @@ def test_md044_good_paragraph_text_suffix():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_paragraph_text_suffix.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_paragraph_text_suffix.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -274,16 +299,19 @@ def test_md044_bad_paragraph_text_start():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_paragraph_text_start.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_paragraph_text_start.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_paragraph_text_start.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -309,16 +337,19 @@ def test_md044_bad_paragraph_text_end():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_paragraph_text_end.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_paragraph_text_end.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_paragraph_text_end.md:1:20: "
+        f"{source_path}:1:20: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -344,16 +375,23 @@ def test_md044_bad_paragraph_text_followed_non_alpha():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md044",
+        "good_paragraph_text_followed_non_alpha.md",
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_paragraph_text_followed_non_alpha.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_paragraph_text_followed_non_alpha.md:1:11: "
+        f"{source_path}:1:11: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -378,19 +416,22 @@ def test_md044_bar_paragraph_text_multiples():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_paragraph_text_multiples.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_paragraph_text_multiples.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_paragraph_text_multiples.md:1:11: "
+        f"{source_path}:1:11: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_paragraph_text_multiples.md:1:26: "
+        + f"{source_path}:1:26: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -415,19 +456,26 @@ def test_md044_bar_paragraph_text_multiples_on_multiple_lines():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md044",
+        "good_paragraph_text_multiples_on_multiple_lines.md",
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_paragraph_text_multiples_on_multiple_lines.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_paragraph_text_multiples_on_multiple_lines.md:1:33: "
+        f"{source_path}:1:33: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_paragraph_text_multiples_on_multiple_lines.md:3:39: "
+        + f"{source_path}:3:39: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -453,19 +501,22 @@ def test_md044_bar_atx_heading_text():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_atx_heading_text.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_atx_heading_text.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_atx_heading_text.md:1:27: "
+        f"{source_path}:1:27: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_atx_heading_text.md:3:8: "
+        + f"{source_path}:3:8: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -491,19 +542,22 @@ def test_md044_bad_setext_heading_text():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_setext_heading_text.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_setext_heading_text.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_setext_heading_text.md:1:25: "
+        f"{source_path}:1:25: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_setext_heading_text.md:4:8: "
+        + f"{source_path}:4:8: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -529,19 +583,22 @@ def test_md044_bad_indented_code_block_text():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_indented_code_block_text.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_indented_code_block_text.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_indented_code_block_text.md:1:27: "
+        f"{source_path}:1:27: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_indented_code_block_text.md:3:12: "
+        + f"{source_path}:3:12: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -567,19 +624,22 @@ def test_md044_bad_fenced_code_block_text():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_fenced_code_block_text.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_fenced_code_block_text.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_fenced_code_block_text.md:1:27: "
+        f"{source_path}:1:27: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_fenced_code_block_text.md:4:8: "
+        + f"{source_path}:4:8: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -605,6 +665,9 @@ def test_md044_good_indented_code_block_text():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_indented_code_block_text.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
@@ -612,12 +675,12 @@ def test_md044_good_indented_code_block_text():
         "plugins.md044.code_blocks=$!False",
         "--strict-config",
         "scan",
-        "test/resources/rules/md044/good_indented_code_block_text.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_indented_code_block_text.md:1:27: "
+        f"{source_path}:1:27: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -643,6 +706,9 @@ def test_md044_good_fenced_code_block_text():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_fenced_code_block_text.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
@@ -650,12 +716,12 @@ def test_md044_good_fenced_code_block_text():
         "plugins.md044.code_blocks=$!False",
         "--strict-config",
         "scan",
-        "test/resources/rules/md044/good_fenced_code_block_text.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_fenced_code_block_text.md:1:27: "
+        f"{source_path}:1:27: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -681,19 +747,22 @@ def test_md044_good_html_block_text():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_html_block_text.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_html_block_text.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_html_block_text.md:1:27: "
+        f"{source_path}:1:27: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_html_block_text.md:4:8: "
+        + f"{source_path}:4:8: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -719,19 +788,22 @@ def test_md044_good_block_quote_text():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_block_quote_text.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_block_quote_text.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_block_quote_text.md:1:27: "
+        f"{source_path}:1:27: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_block_quote_text.md:3:10: "
+        + f"{source_path}:3:10: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -757,19 +829,22 @@ def test_md044_good_code_span_text():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_code_span_text.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_code_span_text.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_code_span_text.md:1:27: "
+        f"{source_path}:1:27: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_code_span_text.md:3:7: "
+        + f"{source_path}:3:7: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -795,22 +870,25 @@ def test_md044_good_code_span_text_multiple_lines():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_code_span_text_multiple_lines.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_code_span_text_multiple_lines.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_code_span_text_multiple_lines.md:1:27: "
+        f"{source_path}:1:27: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_code_span_text_multiple_lines.md:3:7: "
+        + f"{source_path}:3:7: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_code_span_text_multiple_lines.md:4:6: "
+        + f"{source_path}:4:6: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -836,19 +914,22 @@ def test_md044_good_inline_link():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_inline_link.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_inline_link.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_inline_link.md:1:4: "
+        f"{source_path}:1:4: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_inline_link.md:1:41: "
+        + f"{source_path}:1:41: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -874,19 +955,22 @@ def test_md044_good_inline_link_multiple_lines_x():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_inline_link_multiple_lines.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_inline_link_multiple_lines.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_inline_link_multiple_lines.md:1:4: "
+        f"{source_path}:1:4: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_inline_link_multiple_lines.md:3:2: "
+        + f"{source_path}:3:2: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -912,19 +996,22 @@ def test_md044_good_inline_link_multiple_lines_two():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_inline_link_multiple_lines_two.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_inline_link_multiple_lines_two.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_inline_link_multiple_lines_two.md:1:4: "
+        f"{source_path}:1:4: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_inline_link_multiple_lines_two.md:4:13: "
+        + f"{source_path}:4:13: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -950,19 +1037,26 @@ def test_md044_good_inline_link_multiple_lines_three():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md044",
+        "good_inline_link_multiple_lines_three.md",
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_inline_link_multiple_lines_three.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_inline_link_multiple_lines_three.md:2:1: "
+        f"{source_path}:2:1: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_inline_link_multiple_lines_three.md:4:2: "
+        + f"{source_path}:4:2: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -988,19 +1082,22 @@ def test_md044_good_inline_image():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_inline_image.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_inline_image.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_inline_image.md:1:5: "
+        f"{source_path}:1:5: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_inline_image.md:1:42: "
+        + f"{source_path}:1:42: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -1026,19 +1123,22 @@ def test_md044_good_inline_image_multiple_lines():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_inline_image_multiple_lines.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_inline_image_multiple_lines.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_inline_image_multiple_lines.md:1:5: "
+        f"{source_path}:1:5: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_inline_image_multiple_lines.md:3:2: "
+        + f"{source_path}:3:2: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -1064,19 +1164,22 @@ def test_md044_good_inline_image_multiple_lines_two():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_inline_image_multiple_lines_two.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_inline_image_multiple_lines_two.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_inline_image_multiple_lines_two.md:1:5: "
+        f"{source_path}:1:5: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_inline_image_multiple_lines_two.md:4:13: "
+        + f"{source_path}:4:13: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -1102,19 +1205,22 @@ def test_md044_good_full_link():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_full_link.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_full_link.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_full_link.md:2:4: "
+        f"{source_path}:2:4: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_full_link.md:5:16: "
+        + f"{source_path}:5:16: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -1140,19 +1246,22 @@ def test_md044_good_full_link_multiple():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_full_link_multiple.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_full_link_multiple.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_full_link_multiple.md:3:1: "
+        f"{source_path}:3:1: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_full_link_multiple.md:9:1: "
+        + f"{source_path}:9:1: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -1178,19 +1287,22 @@ def test_md044_good_full_image():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_full_image.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_full_image.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_full_image.md:2:5: "
+        f"{source_path}:2:5: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_full_image.md:5:16: "
+        + f"{source_path}:5:16: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -1216,19 +1328,22 @@ def test_md044_good_full_image_multiple():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_full_image_multiple.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_full_image_multiple.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_full_image_multiple.md:3:1: "
+        f"{source_path}:3:1: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_full_image_multiple.md:9:1: "
+        + f"{source_path}:9:1: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -1254,22 +1369,25 @@ def test_md044_good_collapsed_link():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_collapsed_link.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_collapsed_link.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_collapsed_link.md:3:1: "
+        f"{source_path}:3:1: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_collapsed_link.md:7:1: "
+        + f"{source_path}:7:1: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_collapsed_link.md:7:21: "
+        + f"{source_path}:7:21: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -1295,22 +1413,25 @@ def test_md044_good_collapsed_link_multiple():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_collapsed_link_multiple.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_collapsed_link_multiple.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_collapsed_link_multiple.md:3:6: "
+        f"{source_path}:3:6: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_collapsed_link_multiple.md:7:6: "
+        + f"{source_path}:7:6: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_collapsed_link_multiple.md:8:5: "
+        + f"{source_path}:8:5: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -1336,22 +1457,25 @@ def test_md044_good_collapsed_image():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_collapsed_image.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_collapsed_image.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_collapsed_image.md:3:1: "
+        f"{source_path}:3:1: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_collapsed_image.md:7:1: "
+        + f"{source_path}:7:1: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_collapsed_image.md:7:21: "
+        + f"{source_path}:7:21: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )
@@ -1377,22 +1501,25 @@ def test_md044_good_collapsed_image_multiple():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md044", "good_collapsed_image_multiple.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=ParaGraph",
         "scan",
-        "test/resources/rules/md044/good_collapsed_image_multiple.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md044/good_collapsed_image_multiple.md:3:1: "
+        f"{source_path}:3:1: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_collapsed_image_multiple.md:7:1: "
+        + f"{source_path}:7:1: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
-        + "test/resources/rules/md044/good_collapsed_image_multiple.md:8:5: "
+        + f"{source_path}:8:5: "
         + "MD044: Proper names should have the correct capitalization "
         + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
     )

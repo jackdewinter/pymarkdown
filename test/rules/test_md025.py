@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD025 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -15,12 +16,15 @@ def test_md025_bad_configuration_level():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md025", "good_single_top_level.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md025.level=1",
         "--strict-config",
         "scan",
-        "test/resources/rules/md025/good_single_top_level.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -48,12 +52,15 @@ def test_md025_good_configuration_level():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md025", "good_single_top_level_atx.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md025.level=$#1",
         "--strict-config",
         "scan",
-        "test/resources/rules/md025/good_single_top_level_atx.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -78,12 +85,15 @@ def test_md025_bad_configuration_level_bad():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md025", "good_single_top_level.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md025.level=$#0",
         "--strict-config",
         "scan",
-        "test/resources/rules/md025/good_single_top_level.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -111,12 +121,15 @@ def test_md025_bad_configuration_front_matter_title():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md025", "good_single_top_level.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md025.front_matter_title=$#1",
         "--strict-config",
         "scan",
-        "test/resources/rules/md025/good_single_top_level.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -144,12 +157,15 @@ def test_md025_good_configuration_front_matter_title():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md025", "good_single_top_level_atx.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md025.front_matter_title=subject",
         "--strict-config",
         "scan",
-        "test/resources/rules/md025/good_single_top_level_atx.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -174,12 +190,15 @@ def test_md025_bad_configuration_front_matter_title_bad():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md025", "good_single_top_level.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md025.front_matter_title=",
         "--strict-config",
         "scan",
-        "test/resources/rules/md025/good_single_top_level.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -207,12 +226,15 @@ def test_md025_bad_configuration_front_matter_title_invalid():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md025", "good_single_top_level.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md025.front_matter_title=a:b",
         "--strict-config",
         "scan",
-        "test/resources/rules/md025/good_single_top_level.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -240,9 +262,12 @@ def test_md025_good_single_top_level_atx():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md025", "good_single_top_level_atx.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md025/good_single_top_level_atx.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -267,9 +292,12 @@ def test_md025_good_single_top_level_setext():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md025", "good_single_top_level_setext.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md025/good_single_top_level_setext.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -294,14 +322,17 @@ def test_md025_bad_top_level_atx_top_level_atx():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md025", "bad_top_level_atx_top_level_atx.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md025/bad_top_level_atx_top_level_atx.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md025/bad_top_level_atx_top_level_atx.md:5:1: "
+        f"{source_path}:5:1: "
         + "MD025: Multiple top-level headings in the same document (single-title,single-h1)"
     )
     expected_error = ""
@@ -324,16 +355,19 @@ def test_md025_bad_top_level_atx_top_level_setext():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md025", "bad_top_level_atx_top_level_setext.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md003",
         "scan",
-        "test/resources/rules/md025/bad_top_level_atx_top_level_setext.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md025/bad_top_level_atx_top_level_setext.md:6:1: "
+        f"{source_path}:6:1: "
         + "MD025: Multiple top-level headings in the same document (single-title,single-h1)"
     )
     expected_error = ""
@@ -356,14 +390,21 @@ def test_md025_bad_top_level_setext_top_level_setext():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md025",
+        "bad_top_level_setext_top_level_setext.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md025/bad_top_level_setext_top_level_setext.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md025/bad_top_level_setext_top_level_setext.md:7:1: "
+        f"{source_path}:7:1: "
         + "MD025: Multiple top-level headings in the same document (single-title,single-h1)"
     )
     expected_error = ""
@@ -386,16 +427,19 @@ def test_md025_bad_top_level_setext_top_level_atx():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md025", "bad_top_level_setext_top_level_atx.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md003",
         "scan",
-        "test/resources/rules/md025/bad_top_level_setext_top_level_atx.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md025/bad_top_level_setext_top_level_atx.md:6:1: "
+        f"{source_path}:6:1: "
         + "MD025: Multiple top-level headings in the same document (single-title,single-h1)"
     )
     expected_error = ""
@@ -418,11 +462,14 @@ def test_md025_good_front_matter_title():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md025", "good_front_matter_title.md"
+    )
     supplied_arguments = [
         "--set",
         "extensions.front-matter.enabled=$!True",
         "scan",
-        "test/resources/rules/md025/good_front_matter_title.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -447,16 +494,19 @@ def test_md025_bad_front_matter_title_top_level_atx():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md025", "bad_front_matter_title_top_level_atx.md"
+    )
     supplied_arguments = [
         "--set",
         "extensions.front-matter.enabled=$!True",
         "scan",
-        "test/resources/rules/md025/bad_front_matter_title_top_level_atx.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md025/bad_front_matter_title_top_level_atx.md:7:1: "
+        f"{source_path}:7:1: "
         + "MD025: Multiple top-level headings in the same document (single-title,single-h1)"
     )
     expected_error = ""
@@ -479,16 +529,23 @@ def test_md025_bad_front_matter_title_top_level_setext():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md025",
+        "bad_front_matter_title_top_level_setext.md",
+    )
     supplied_arguments = [
         "--set",
         "extensions.front-matter.enabled=$!True",
         "scan",
-        "test/resources/rules/md025/bad_front_matter_title_top_level_setext.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md025/bad_front_matter_title_top_level_setext.md:8:1: "
+        f"{source_path}:8:1: "
         + "MD025: Multiple top-level headings in the same document (single-title,single-h1)"
     )
     expected_error = ""

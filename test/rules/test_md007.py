@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD007 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -17,12 +18,15 @@ def test_md007_bad_configuration_indent():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md007", "good_list_indentation.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md007.indent=bad",
         "--strict-config",
         "scan",
-        "test/resources/rules/md007/good_list_indentation.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -50,12 +54,15 @@ def test_md007_bad_configuration_start_indented():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md007", "good_list_indentation.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md007.start_indented=bad",
         "--strict-config",
         "scan",
-        "test/resources/rules/md007/good_list_indentation.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -83,12 +90,15 @@ def test_md007_bad_configuration_indent_bad():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md007", "good_list_indentation.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md007.indent=$#5",
         "--strict-config",
         "scan",
-        "test/resources/rules/md007/good_list_indentation.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -116,9 +126,12 @@ def test_md007_good_list_indentation_x():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md007", "good_list_indentation.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md007/good_list_indentation.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -143,14 +156,17 @@ def test_md007_bad_list_indentation_level_0():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md007", "bad_list_indentation_level_0.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md007/bad_list_indentation_level_0.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md007/bad_list_indentation_level_0.md:3:2: "
+        f"{source_path}:3:2: "
         + "MD007: Unordered list indentation "
         + "[Expected: 0, Actual=1] (ul-indent)"
     )
@@ -174,14 +190,17 @@ def test_md007_bad_list_indentation_level_1():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md007", "bad_list_indentation_level_1.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md007/bad_list_indentation_level_1.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md007/bad_list_indentation_level_1.md:4:4: "
+        f"{source_path}:4:4: "
         + "MD007: Unordered list indentation "
         + "[Expected: 2, Actual=3] (ul-indent)"
     )
@@ -205,14 +224,17 @@ def test_md007_bad_list_indentation_level_2():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md007", "bad_list_indentation_level_2.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md007/bad_list_indentation_level_2.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md007/bad_list_indentation_level_2.md:5:6: "
+        f"{source_path}:5:6: "
         + "MD007: Unordered list indentation "
         + "[Expected: 4, Actual=5] (ul-indent)"
     )
@@ -236,9 +258,12 @@ def test_md007_good_list_indentation_in_block_quote():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md007", "good_list_indentation_in_block_quote.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md007/good_list_indentation_in_block_quote.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -263,9 +288,16 @@ def test_md007_good_list_indentation_in_double_block_quote():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md007",
+        "good_list_indentation_in_double_block_quote.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md007/good_list_indentation_in_double_block_quote.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -290,11 +322,14 @@ def test_md007_good_unordered_list_in_ordered_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md007", "good_unordered_list_in_ordered_list.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md030",
         "scan",
-        "test/resources/rules/md007/good_unordered_list_in_ordered_list.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -319,16 +354,19 @@ def test_md007_bad_unordered_list_in_ordered_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md007", "bad_unordered_list_in_ordered_list.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md030",
         "scan",
-        "test/resources/rules/md007/bad_unordered_list_in_ordered_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md007/bad_unordered_list_in_ordered_list.md:2:6: "
+        f"{source_path}:2:6: "
         + "MD007: Unordered list indentation "
         + "[Expected: 5, Actual=6] (ul-indent)"
     )
@@ -353,16 +391,23 @@ def test_md007_bad_level_1_unordered_list_in_ordered_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md007",
+        "bad_level_1_unordered_list_in_ordered_list.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md030",
         "scan",
-        "test/resources/rules/md007/bad_level_1_unordered_list_in_ordered_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md007/bad_level_1_unordered_list_in_ordered_list.md:3:8: "
+        f"{source_path}:3:8: "
         + "MD007: Unordered list indentation "
         + "[Expected: 7, Actual=8] (ul-indent)"
     )
@@ -387,9 +432,16 @@ def test_md007_good_unordered_list_in_double_ordered_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md007",
+        "good_unordered_list_in_double_ordered_list.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md007/good_unordered_list_in_double_ordered_list.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -415,14 +467,21 @@ def test_md007_bad_unordered_list_in_double_ordered_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md007",
+        "bad_unordered_list_in_double_ordered_list.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md007/bad_unordered_list_in_double_ordered_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md007/bad_unordered_list_in_double_ordered_list.md:3:8: "
+        f"{source_path}:3:8: "
         + "MD007: Unordered list indentation "
         + "[Expected: 7, Actual=8] (ul-indent)"
     )
@@ -446,9 +505,16 @@ def test_md007_good_unordered_ordered_unordere_ordered_unordered():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md007",
+        "good_unordered_ordered_unordere_ordered_unordered.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md007/good_unordered_ordered_unordere_ordered_unordered.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -473,14 +539,21 @@ def test_md007_bad_unordered_bad_ordered_unordered_ordered_unordered():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md007",
+        "bad_unordered_bad_ordered_unordered_ordered_unordered.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md007/bad_unordered_bad_ordered_unordered_ordered_unordered.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md007/bad_unordered_bad_ordered_unordered_ordered_unordered.md:1:2: "
+        f"{source_path}:1:2: "
         + "MD007: Unordered list indentation "
         + "[Expected: 0, Actual=1] (ul-indent)"
     )
@@ -504,14 +577,21 @@ def test_md007_bad_unordered_ordered_unordered_bad_ordered_unordered():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md007",
+        "bad_unordered_ordered_unordered_bad_ordered_unordered.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md007/bad_unordered_ordered_unordered_bad_ordered_unordered.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md007/bad_unordered_ordered_unordered_bad_ordered_unordered.md:3:7: "
+        f"{source_path}:3:7: "
         + "MD007: Unordered list indentation "
         + "[Expected: 6, Actual=7] (ul-indent)"
     )
@@ -535,14 +615,21 @@ def test_md007_bad_unordered_ordered_unordered_ordered_unordered_bad():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md007",
+        "bad_unordered_ordered_unordered_ordered_unordered_bad.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md007/bad_unordered_ordered_unordered_ordered_unordered_bad.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md007/bad_unordered_ordered_unordered_ordered_unordered_bad.md:5:12: "
+        f"{source_path}:5:12: "
         + "MD007: Unordered list indentation "
         + "[Expected: 11, Actual=12] (ul-indent)"
     )
@@ -566,22 +653,29 @@ def test_md007_bad_list_indentation_in_block_quote_level_0():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md007",
+        "bad_list_indentation_in_block_quote_level_0.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md027",
         "scan",
-        "test/resources/rules/md007/bad_list_indentation_in_block_quote_level_0.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md007/bad_list_indentation_in_block_quote_level_0.md:3:4: "
+        f"{source_path}:3:4: "
         + "MD007: Unordered list indentation "
         + "[Expected: 0, Actual=1] (ul-indent)\n"
-        + "test/resources/rules/md007/bad_list_indentation_in_block_quote_level_0.md:4:6: "
+        + f"{source_path}:4:6: "
         + "MD007: Unordered list indentation "
         + "[Expected: 2, Actual=3] (ul-indent)\n"
-        + "test/resources/rules/md007/bad_list_indentation_in_block_quote_level_0.md:5:8: "
+        + f"{source_path}:5:8: "
         + "MD007: Unordered list indentation "
         + "[Expected: 4, Actual=5] (ul-indent)"
     )
@@ -605,14 +699,17 @@ def test_md007_bad_list_in_block_quote_after_text():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md007", "bad_list_in_block_quote_after_text.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md007/bad_list_in_block_quote_after_text.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md007/bad_list_in_block_quote_after_text.md:4:6: "
+        f"{source_path}:4:6: "
         + "MD007: Unordered list indentation "
         + "[Expected: 2, Actual=3] (ul-indent)"
     )
@@ -636,14 +733,21 @@ def test_md007_bad_list_in_block_quote_after_atx_heading():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md007",
+        "bad_list_in_block_quote_after_atx_heading.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md007/bad_list_in_block_quote_after_atx_heading.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md007/bad_list_in_block_quote_after_atx_heading.md:4:6: "
+        f"{source_path}:4:6: "
         + "MD007: Unordered list indentation "
         + "[Expected: 2, Actual=3] (ul-indent)"
     )
@@ -667,14 +771,21 @@ def test_md007_bad_list_in_block_quote_after_thematic_break():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md007",
+        "bad_list_in_block_quote_after_thematic_break.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md007/bad_list_in_block_quote_after_thematic_break.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md007/bad_list_in_block_quote_after_thematic_break.md:6:6: "
+        f"{source_path}:6:6: "
         + "MD007: Unordered list indentation "
         + "[Expected: 2, Actual=3] (ul-indent)"
     )
@@ -698,14 +809,21 @@ def test_md007_bad_list_in_block_quote_after_setext_heading():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md007",
+        "bad_list_in_block_quote_after_setext_heading.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md007/bad_list_in_block_quote_after_setext_heading.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md007/bad_list_in_block_quote_after_setext_heading.md:5:6: "
+        f"{source_path}:5:6: "
         + "MD007: Unordered list indentation "
         + "[Expected: 2, Actual=3] (ul-indent)"
     )
@@ -729,14 +847,21 @@ def test_md007_bad_list_in_block_quote_after_html_block():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md007",
+        "bad_list_in_block_quote_after_html_block.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md007/bad_list_in_block_quote_after_html_block.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md007/bad_list_in_block_quote_after_html_block.md:6:6: "
+        f"{source_path}:6:6: "
         + "MD007: Unordered list indentation "
         + "[Expected: 2, Actual=3] (ul-indent)"
     )
@@ -760,14 +885,21 @@ def test_md007_bad_list_in_block_quote_after_fenced_block():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md007",
+        "bad_list_in_block_quote_after_fenced_block.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md007/bad_list_in_block_quote_after_fenced_block.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md007/bad_list_in_block_quote_after_fenced_block.md:6:6: "
+        f"{source_path}:6:6: "
         + "MD007: Unordered list indentation "
         + "[Expected: 2, Actual=3] (ul-indent)"
     )
@@ -791,14 +923,21 @@ def test_md007_bad_list_in_block_quote_after_indented_block():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md007",
+        "bad_list_in_block_quote_after_indented_block.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md007/bad_list_in_block_quote_after_indented_block.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md007/bad_list_in_block_quote_after_indented_block.md:4:6: "
+        f"{source_path}:4:6: "
         + "MD007: Unordered list indentation "
         + "[Expected: 2, Actual=3] (ul-indent)"
     )
@@ -822,14 +961,21 @@ def test_md007_bad_list_in_block_quote_after_link_reference_definition():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md007",
+        "bad_list_in_block_quote_after_link_reference_definition.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md007/bad_list_in_block_quote_after_link_reference_definition.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md007/bad_list_in_block_quote_after_link_reference_definition.md:4:6: "
+        f"{source_path}:4:6: "
         + "MD007: Unordered list indentation "
         + "[Expected: 2, Actual=3] (ul-indent)"
     )
@@ -853,14 +999,21 @@ def test_md007_bad_list_in_block_quote_after_other_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md007",
+        "bad_list_in_block_quote_after_other_list.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md007/bad_list_in_block_quote_after_other_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md007/bad_list_in_block_quote_after_other_list.md:4:6: "
+        f"{source_path}:4:6: "
         + "MD007: Unordered list indentation "
         + "[Expected: 2, Actual=3] (ul-indent)"
     )
@@ -884,9 +1037,12 @@ def test_md007_good_unordered_list_elements():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md007", "good_unordered_list_elements.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md007/good_unordered_list_elements.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -911,37 +1067,40 @@ def test_md007_bad_unordered_list_elements():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md007", "bad_unordered_list_elements.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md005",
         "scan",
-        "test/resources/rules/md007/bad_unordered_list_elements.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md007/bad_unordered_list_elements.md:3:2: "
+        f"{source_path}:3:2: "
         + "MD007: Unordered list indentation "
         + "[Expected: 0, Actual=1] (ul-indent)\n"
-        + "test/resources/rules/md007/bad_unordered_list_elements.md:4:2: "
+        + f"{source_path}:4:2: "
         + "MD007: Unordered list indentation "
         + "[Expected: 0, Actual=1] (ul-indent)\n"
-        + "test/resources/rules/md007/bad_unordered_list_elements.md:5:4: "
+        + f"{source_path}:5:4: "
         + "MD007: Unordered list indentation "
         + "[Expected: 2, Actual=3] (ul-indent)\n"
-        + "test/resources/rules/md007/bad_unordered_list_elements.md:6:4: "
+        + f"{source_path}:6:4: "
         + "MD007: Unordered list indentation "
         + "[Expected: 2, Actual=3] (ul-indent)\n"
-        + "test/resources/rules/md007/bad_unordered_list_elements.md:7:7: "
+        + f"{source_path}:7:7: "
         + "MD007: Unordered list indentation "
         + "[Expected: 4, Actual=6] (ul-indent)\n"
-        + "test/resources/rules/md007/bad_unordered_list_elements.md:8:4: "
+        + f"{source_path}:8:4: "
         + "MD007: Unordered list indentation "
         + "[Expected: 2, Actual=3] (ul-indent)\n"
-        + "test/resources/rules/md007/bad_unordered_list_elements.md:9:5: "
+        + f"{source_path}:9:5: "
         + "MD007: Unordered list indentation "
         + "[Expected: 2, Actual=4] (ul-indent)\n"
-        + "test/resources/rules/md007/bad_unordered_list_elements.md:10:5: "
+        + f"{source_path}:10:5: "
         + "MD007: Unordered list indentation "
         + "[Expected: 2, Actual=4] (ul-indent)"
     )
@@ -965,11 +1124,14 @@ def test_md007_good_list_indentation_by_four():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md007", "good_list_indentation_by_four.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md007.indent=$#4",
         "scan",
-        "test/resources/rules/md007/good_list_indentation_by_four.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -994,11 +1156,14 @@ def test_md007_good_list_indentation_with_start():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md007", "good_list_indentation_with_start.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md007.start_indented=$!True",
         "scan",
-        "test/resources/rules/md007/good_list_indentation_with_start.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -1022,15 +1187,16 @@ def test_md007_issue_301():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join("test", "resources", "rules", "md007", "issue-301.md")
     supplied_arguments = [
         "--set",
         "plugins.md007.indent=$#4",
         "scan",
-        "test/resources/rules/md007/issue-301.md",
+        source_path,
     ]
 
     expected_return_code = 1
-    expected_output = "test/resources/rules/md007/issue-301.md:7:5: MD007: Unordered list indentation [Expected: 4, Actual=5] (ul-indent)"
+    expected_output = f"{source_path}:7:5: MD007: Unordered list indentation [Expected: 4, Actual=5] (ul-indent)"
     expected_error = ""
 
     # Act

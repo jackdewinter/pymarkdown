@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD046 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -15,12 +16,15 @@ def test_md046_bad_configuration_style():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md046", "good_both_fenced.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md046.style=$#1",
         "--strict-config",
         "scan",
-        "test/resources/rules/md046/good_both_fenced.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -48,12 +52,15 @@ def test_md046_bad_configuration_style_bad():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md046", "good_both_fenced.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md046.style=not-matching",
         "--strict-config",
         "scan",
-        "test/resources/rules/md046/good_both_fenced.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -81,11 +88,14 @@ def test_md046_good_both_fenced_with_consistent():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md046", "good_both_fenced.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md046.style=consistent",
         "scan",
-        "test/resources/rules/md046/good_both_fenced.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -110,11 +120,14 @@ def test_md046_good_both_indented_with_consistent():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md046", "good_both_indented.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md046.style=consistent",
         "scan",
-        "test/resources/rules/md046/good_both_indented.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -139,16 +152,19 @@ def test_md046_bad_fenced_and_indented_with_consistent():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md046", "bad_fenced_and_indented.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md046.style=consistent",
         "scan",
-        "test/resources/rules/md046/bad_fenced_and_indented.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md046/bad_fenced_and_indented.md:5:5: "
+        f"{source_path}:5:5: "
         + "MD046: Code block style "
         + "[Expected: fenced; Actual: indented] (code-block-style)"
     )
@@ -172,11 +188,14 @@ def test_md046_good_both_fenced_with_fenced():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md046", "good_both_fenced.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md046.style=fenced",
         "scan",
-        "test/resources/rules/md046/good_both_fenced.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -201,19 +220,22 @@ def test_md046_good_both_indented_with_fenced():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md046", "good_both_indented.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md046.style=fenced",
         "scan",
-        "test/resources/rules/md046/good_both_indented.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md046/good_both_indented.md:1:5: "
+        f"{source_path}:1:5: "
         + "MD046: Code block style "
         + "[Expected: fenced; Actual: indented] (code-block-style)\n"
-        + "test/resources/rules/md046/good_both_indented.md:5:5: "
+        + f"{source_path}:5:5: "
         + "MD046: Code block style "
         + "[Expected: fenced; Actual: indented] (code-block-style)"
     )
@@ -237,16 +259,19 @@ def test_md046_bad_fenced_and_indented_with_fenced():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md046", "bad_fenced_and_indented.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md046.style=fenced",
         "scan",
-        "test/resources/rules/md046/bad_fenced_and_indented.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md046/bad_fenced_and_indented.md:5:5: "
+        f"{source_path}:5:5: "
         + "MD046: Code block style "
         + "[Expected: fenced; Actual: indented] (code-block-style)"
     )
@@ -270,19 +295,22 @@ def test_md046_good_both_fenced_with_indented():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md046", "good_both_fenced.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md046.style=indented",
         "scan",
-        "test/resources/rules/md046/good_both_fenced.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md046/good_both_fenced.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD046: Code block style "
         + "[Expected: indented; Actual: fenced] (code-block-style)\n"
-        + "test/resources/rules/md046/good_both_fenced.md:5:1: "
+        + f"{source_path}:5:1: "
         + "MD046: Code block style "
         + "[Expected: indented; Actual: fenced] (code-block-style)"
     )
@@ -306,11 +334,14 @@ def test_md046_good_both_indented_with_indented():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md046", "good_both_indented.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md046.style=indented",
         "scan",
-        "test/resources/rules/md046/good_both_indented.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -335,16 +366,19 @@ def test_md046_bad_fenced_and_indented_with_indented():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md046", "bad_fenced_and_indented.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md046.style=indented",
         "scan",
-        "test/resources/rules/md046/bad_fenced_and_indented.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md046/bad_fenced_and_indented.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD046: Code block style "
         + "[Expected: indented; Actual: fenced] (code-block-style)"
     )

@@ -261,7 +261,8 @@ def test_markdown_with_dash_dash_version():
     scanner = MarkdownScanner()
     supplied_arguments = ["version"]
 
-    version_meta = runpy.run_path("./pymarkdown/version.py")
+    version_path = os.path.join(".", "pymarkdown", "version.py")
+    version_meta = runpy.run_path(version_path)
     semantic_version = version_meta["__version__"]
 
     expected_return_code = 0
@@ -289,11 +290,14 @@ def test_markdown_with_dash_e_single_by_name():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
     supplied_arguments = [
         "-e",
         "debug-only",
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -335,11 +339,14 @@ def test_markdown_with_dash_e_single_by_id():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
     supplied_arguments = [
         "-e",
         "MD999",
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -382,6 +389,9 @@ def test_markdown_with_enabled_by_configuration_id():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
     supplied_configuration = {"plugins": {"md999": {"enabled": True}}}
     configuration_file = None
     try:
@@ -392,7 +402,7 @@ def test_markdown_with_enabled_by_configuration_id():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md047/end_with_blank_line.md",
+            source_path,
         ]
 
         expected_return_code = 0
@@ -438,6 +448,9 @@ def test_markdown_with_enabled_by_configuration_name():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
     supplied_configuration = {"plugins": {"debug-only": {"enabled": True}}}
     configuration_file = None
     try:
@@ -449,7 +462,7 @@ def test_markdown_with_enabled_by_configuration_name():
             "--log-level",
             "DEBUG",
             "scan",
-            "test/resources/rules/md047/end_with_blank_line.md",
+            source_path,
         ]
 
         expected_return_code = 0
@@ -494,11 +507,14 @@ def test_markdown_with_dash_d_single_by_name():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
     supplied_arguments = [
         "-d",
         "single-trailing-newline",
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -523,11 +539,14 @@ def test_markdown_with_dash_d_single_by_id():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
     supplied_arguments = [
         "-d",
         "MD047",
         "scan",
-        "test/resources/rules/md047/end_with_no_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -553,13 +572,16 @@ def test_markdown_with_dash_d_and_dash_e_single_by_name():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
     supplied_arguments = [
         "-d",
         "single-trailing-newline",
         "-e",
         "single-trailing-newline",
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -583,17 +605,22 @@ def test_markdown_with_dash_x_scan():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
     supplied_arguments = [
         "-x-scan",
         "scan",
-        "test/resources/rules/md047/end_with_no_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = ""
-    expected_error = """BadTokenizationError encountered while scanning 'test/resources/rules/md047/end_with_no_blank_line.md':
+    expected_error = """BadTokenizationError encountered while scanning '{source_path}':
 An unhandled error occurred processing the document.
-"""
+""".replace(
+        "{source_path}", source_path
+    )
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -612,11 +639,14 @@ def test_markdown_with_dash_dash_log_level_debug(caplog):
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
     supplied_arguments = [
         "--log-level",
         "DEBUG",
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -634,18 +664,10 @@ def test_markdown_with_dash_dash_log_level_debug(caplog):
 
     # Info messages
     assert "Number of files found: " in caplog.text
-    assert (
-        "Determining files to scan for path "
-        + "'test/resources/rules/md047/end_with_blank_line.md'."
-        in caplog.text
-    )
+    assert f"Determining files to scan for path '{source_path}'." in caplog.text
 
     # Debug messages
-    assert (
-        "Provided path 'test/resources/rules/md047/end_with_blank_line.md' "
-        + "is a valid file. Adding."
-        in caplog.text
-    )
+    assert f"Provided path '{source_path}' is a valid file. Adding." in caplog.text
 
 
 def test_markdown_with_dash_dash_log_level_info(caplog):
@@ -656,11 +678,14 @@ def test_markdown_with_dash_dash_log_level_info(caplog):
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
     supplied_arguments = [
         "--log-level",
         "INFO",
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -678,16 +703,11 @@ def test_markdown_with_dash_dash_log_level_info(caplog):
 
     # Info messages
     assert "Number of files found: " in caplog.text
-    assert (
-        "Determining files to scan for path "
-        + "'test/resources/rules/md047/end_with_blank_line.md'."
-        in caplog.text
-    )
+    assert "Determining files to scan for path " + f"'{source_path}'." in caplog.text
 
     # Debug messages
     assert (
-        "Provided path 'test/resources/rules/md047/end_with_blank_line.md' "
-        + "is a valid file. Adding."
+        f"Provided path '{source_path}' " + "is a valid file. Adding."
         not in caplog.text
     )
 
@@ -700,11 +720,14 @@ def test_markdown_with_dash_dash_log_level_invalid(caplog):
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
     supplied_arguments = [
         "--log-level",
         "invalid",
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 2
@@ -752,6 +775,9 @@ def test_markdown_with_dash_dash_log_level_info_with_file():
 
     # Arrange
     temp_file = None
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
     with tempfile.NamedTemporaryFile(delete=False) as temp_file:
         log_file_name = temp_file.name
 
@@ -763,7 +789,7 @@ def test_markdown_with_dash_dash_log_level_info_with_file():
             "--log-file",
             log_file_name,
             "scan",
-            "test/resources/rules/md047/end_with_blank_line.md",
+            source_path,
         ]
 
         expected_return_code = 0
@@ -784,16 +810,11 @@ def test_markdown_with_dash_dash_log_level_info_with_file():
 
         # Info messages
         assert "Number of files found: " in file_data, f">{file_data}<"
-        assert (
-            "Determining files to scan for path "
-            + "'test/resources/rules/md047/end_with_blank_line.md'."
-            in file_data
-        )
+        assert "Determining files to scan for path " + f"'{source_path}'." in file_data
 
         # Debug messages
         assert (
-            "Provided path 'test/resources/rules/md047/end_with_blank_line.md' "
-            + "is a valid file. Adding."
+            f"Provided path '{source_path}' " + "is a valid file. Adding."
             not in file_data
         )
     finally:
@@ -809,10 +830,13 @@ def test_markdown_with_dash_x_init():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
     supplied_arguments = [
         "-x-init",
         "scan",
-        "test/resources/rules/md047/end_with_no_blank_line.md",
+        source_path,
     ]
     fake_directory = "fredo"
     fake_file = "entities.json"
@@ -849,6 +873,9 @@ def test_markdown_with_dash_e_single_by_id_and_good_config():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
     supplied_configuration = {"plugins": {"md999": {"test_value": 2}}}
     configuration_file = None
     try:
@@ -859,7 +886,7 @@ def test_markdown_with_dash_e_single_by_id_and_good_config():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md047/end_with_blank_line.md",
+            source_path,
         ]
 
         expected_return_code = 0
@@ -904,6 +931,9 @@ def test_markdown_with_dash_e_single_by_id_and_bad_config():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
     supplied_configuration = {"plugins": {"md999": {"test_value": "fred"}}}
     configuration_file = None
     try:
@@ -914,7 +944,7 @@ def test_markdown_with_dash_e_single_by_id_and_bad_config():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md047/end_with_blank_line.md",
+            source_path,
         ]
 
         expected_return_code = 0
@@ -958,6 +988,9 @@ def test_markdown_with_dash_e_single_by_id_and_bad_config_file():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
     supplied_configuration = {"plugins": {"myrule.md999": {"test_value": "fred"}}}
     configuration_file = None
     try:
@@ -968,7 +1001,7 @@ def test_markdown_with_dash_e_single_by_id_and_bad_config_file():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md047/end_with_blank_line.md",
+            source_path,
         ]
 
         expected_return_code = 1
@@ -999,6 +1032,9 @@ def test_markdown_with_dash_e_single_by_id_and_non_json_config_file():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
     supplied_configuration = "not a json file"
     configuration_file = None
     try:
@@ -1009,7 +1045,7 @@ def test_markdown_with_dash_e_single_by_id_and_non_json_config_file():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md047/end_with_blank_line.md",
+            source_path,
         ]
 
         expected_return_code = 1
@@ -1040,6 +1076,9 @@ def test_markdown_with_dash_e_single_by_id_and_non_present_config_file():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
     configuration_file = "not-exists"
     assert not os.path.exists(configuration_file)
     supplied_arguments = [
@@ -1048,7 +1087,7 @@ def test_markdown_with_dash_e_single_by_id_and_non_present_config_file():
         "-c",
         configuration_file,
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -1076,6 +1115,9 @@ def test_markdown_with_dash_e_single_by_id_and_good_select_config():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
     supplied_configuration = {"plugins": {"md999": {"other_test_value": 2}}}
     configuration_file = None
     try:
@@ -1086,7 +1128,7 @@ def test_markdown_with_dash_e_single_by_id_and_good_select_config():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md047/end_with_blank_line.md",
+            source_path,
         ]
 
         expected_return_code = 0
@@ -1131,6 +1173,9 @@ def test_markdown_with_dash_e_single_by_id_and_bad_select_config():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
     supplied_configuration = {"plugins": {"MD999": {"other_test_value": 9}}}
     configuration_file = None
     try:
@@ -1141,7 +1186,7 @@ def test_markdown_with_dash_e_single_by_id_and_bad_select_config():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md047/end_with_blank_line.md",
+            source_path,
         ]
 
         expected_return_code = 0
@@ -1185,6 +1230,9 @@ def test_markdown_with_dash_e_single_by_id_and_config_causing_config_exception()
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
     supplied_configuration = {"plugins": {"md999": {"test_value": 10}}}
     configuration_file = None
     try:
@@ -1195,7 +1243,7 @@ def test_markdown_with_dash_e_single_by_id_and_config_causing_config_exception()
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md047/end_with_blank_line.md",
+            source_path,
         ]
 
         expected_return_code = 1
@@ -1227,6 +1275,9 @@ def test_markdown_with_dash_e_single_by_id_and_config_causing_next_token_excepti
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
     supplied_configuration = {"plugins": {"md999": {"test_value": 20}}}
     configuration_file = None
     try:
@@ -1237,7 +1288,7 @@ def test_markdown_with_dash_e_single_by_id_and_config_causing_next_token_excepti
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md047/end_with_blank_line.md",
+            source_path,
         ]
 
         expected_return_code = 1
@@ -1247,9 +1298,11 @@ MD999>>other_test_value>>1
 MD999>>starting_new_file>>
 MD999>>token:[atx(1,1):1:0:]
 """
-        expected_error = """BadPluginError encountered while scanning 'test/resources/rules/md047/end_with_blank_line.md':
+        expected_error = """BadPluginError encountered while scanning '{source_path}':
 (1,1): Plugin id 'MD999' had a critical failure during the 'next_token' action.
-"""
+""".replace(
+            "{source_path}", source_path
+        )
 
         # Act
         execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -1437,6 +1490,9 @@ def test_markdown_with_bad_strict_config_type():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
     supplied_configuration = {"mode": {"strict-config": 2}}
     configuration_file = None
     try:
@@ -1445,7 +1501,7 @@ def test_markdown_with_bad_strict_config_type():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md047/end_with_blank_line.md",
+            source_path,
         ]
 
         expected_return_code = 1
@@ -1472,6 +1528,9 @@ def test_markdown_with_good_strict_config_type():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
     supplied_configuration = {"mode": {"strict-config": True}, "log": {"file": 0}}
     configuration_file = None
     try:
@@ -1480,7 +1539,7 @@ def test_markdown_with_good_strict_config_type():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md047/end_with_blank_line.md",
+            source_path,
         ]
 
         expected_return_code = 1
@@ -1506,28 +1565,35 @@ def test_markdown_with_multiple_errors_reported():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md020",
+        "single_paragraph_with_whitespace_at_end.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md020/single_paragraph_with_whitespace_at_end.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/single_paragraph_with_whitespace_at_end.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
-        + "test/resources/rules/md020/single_paragraph_with_whitespace_at_end.md:1:12: "
+        + f"{source_path}:1:12: "
         + "MD010: Hard tabs "
         + "[Column: 12] (no-hard-tabs)\n"
-        + "test/resources/rules/md020/single_paragraph_with_whitespace_at_end.md:2:2: "
+        + f"{source_path}:2:2: "
         + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
         + "(no-multiple-space-closed-atx)\n"
-        + "test/resources/rules/md020/single_paragraph_with_whitespace_at_end.md:2:2: "
+        + f"{source_path}:2:2: "
         + "MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
-        + "test/resources/rules/md020/single_paragraph_with_whitespace_at_end.md:2:2: "
+        + f"{source_path}:2:2: "
         + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)\n"
-        + "test/resources/rules/md020/single_paragraph_with_whitespace_at_end.md:2:14: "
+        + f"{source_path}:2:14: "
         + "MD010: Hard tabs "
         + "[Column: 14] (no-hard-tabs)"
     )
@@ -1549,7 +1615,9 @@ def test_markdown_with_dash_ae_with_invalid_file_extension():
 
     # Arrange
     scanner = MarkdownScanner()
-    file_to_scan = "test/resources/double-line-with-blank-and-trailing.txt"
+    file_to_scan = os.path.join(
+        "test", "resources", "double-line-with-blank-and-trailing.txt"
+    )
     supplied_arguments = [
         "scan",
         "-ae",
@@ -1579,7 +1647,9 @@ def test_markdown_with_dash_ae_with_valid_file_extension():
 
     # Arrange
     scanner = MarkdownScanner()
-    file_to_scan = "test/resources/double-line-with-blank-and-trailing.txt"
+    file_to_scan = os.path.join(
+        "test", "resources", "double-line-with-blank-and-trailing.txt"
+    )
     supplied_arguments = [
         "--stack-trace",
         "scan",
@@ -1637,7 +1707,9 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_no_period():
 
     # Arrange
     scanner = MarkdownScanner()
-    file_to_scan = "test/resources/double-line-with-blank-and-trailing.txt"
+    file_to_scan = os.path.join(
+        "test", "resources", "double-line-with-blank-and-trailing.txt"
+    )
     supplied_arguments = [
         "--stack-trace",
         "scan",
@@ -1667,7 +1739,9 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_no_alphanum():
 
     # Arrange
     scanner = MarkdownScanner()
-    file_to_scan = "test/resources/double-line-with-blank-and-trailing.txt"
+    file_to_scan = os.path.join(
+        "test", "resources", "double-line-with-blank-and-trailing.txt"
+    )
     supplied_arguments = [
         "--stack-trace",
         "scan",
@@ -1697,7 +1771,9 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_only_period():
 
     # Arrange
     scanner = MarkdownScanner()
-    file_to_scan = "test/resources/double-line-with-blank-and-trailing.txt"
+    file_to_scan = os.path.join(
+        "test", "resources", "double-line-with-blank-and-trailing.txt"
+    )
     supplied_arguments = [
         "--stack-trace",
         "scan",
@@ -1727,7 +1803,9 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_semicolon_as_sep():
 
     # Arrange
     scanner = MarkdownScanner()
-    file_to_scan = "test/resources/double-line-with-blank-and-trailing.txt"
+    file_to_scan = os.path.join(
+        "test", "resources", "double-line-with-blank-and-trailing.txt"
+    )
     supplied_arguments = [
         "--stack-trace",
         "scan",
@@ -1757,7 +1835,9 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_empty():
 
     # Arrange
     scanner = MarkdownScanner()
-    file_to_scan = "test/resources/double-line-with-blank-and-trailing.txt"
+    file_to_scan = os.path.join(
+        "test", "resources", "double-line-with-blank-and-trailing.txt"
+    )
     supplied_arguments = [
         "--stack-trace",
         "scan",

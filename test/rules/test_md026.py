@@ -17,9 +17,12 @@ def test_md026_good_ends_without_punctuation_atx():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md026", "ends_without_punctuation_atx.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md026/ends_without_punctuation_atx.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -44,9 +47,12 @@ def test_md026_good_ends_with_entity_atx():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md026", "ends_with_entity_atx.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md026/ends_with_entity_atx.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -71,14 +77,17 @@ def test_md026_bad_ends_with_punctuation_atx():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md026", "ends_with_punctuation_atx.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md026/ends_with_punctuation_atx.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md026/ends_with_punctuation_atx.md:1:18: "
+        f"{source_path}:1:18: "
         + "MD026: Trailing punctuation present in heading text. (no-trailing-punctuation)\n"
     )
     expected_error = ""
@@ -101,9 +110,16 @@ def test_md026_good_ends_with_punctuation_then_inline_atx():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md026",
+        "ends_with_punctuation_then_inline_atx.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md026/ends_with_punctuation_then_inline_atx.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -129,6 +145,9 @@ def test_md026_good_ends_with_punctuation_atx_with_configuration():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md026", "ends_with_punctuation_atx.md"
+    )
     supplied_configuration = {"plugins": {"md026": {"punctuation": "?!"}}}
     configuration_file = None
     try:
@@ -137,7 +156,7 @@ def test_md026_good_ends_with_punctuation_atx_with_configuration():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md026/ends_with_punctuation_atx.md",
+            source_path,
         ]
 
         expected_return_code = 0
@@ -165,9 +184,12 @@ def test_md026_good_ends_without_punctuation_setext():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md026", "ends_without_punctuation_setext.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md026/ends_without_punctuation_setext.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -192,9 +214,12 @@ def test_md026_good_ends_with_entity_setext():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md026", "ends_with_entity_setext.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md026/ends_with_entity_setext.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -219,14 +244,17 @@ def test_md026_bad_ends_with_punctuation_setext():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md026", "ends_with_punctuation_setext.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md026/ends_with_punctuation_setext.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md026/ends_with_punctuation_setext.md:1:18: "
+        f"{source_path}:1:18: "
         + "MD026: Trailing punctuation present in heading text. (no-trailing-punctuation)\n"
     )
     expected_error = ""
@@ -249,14 +277,21 @@ def test_md026_bad_ends_with_punctuation_setext_multiline():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md026",
+        "ends_with_punctuation_setext_multiline.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md026/ends_with_punctuation_setext_multiline.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md026/ends_with_punctuation_setext_multiline.md:2:18: "
+        f"{source_path}:2:18: "
         + "MD026: Trailing punctuation present in heading text. (no-trailing-punctuation)\n"
     )
     expected_error = ""
@@ -279,9 +314,16 @@ def test_md026_good_ends_with_punctuation_then_inline_setext():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md026",
+        "ends_with_punctuation_then_inline_setext.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md026/ends_with_punctuation_then_inline_setext.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -306,6 +348,9 @@ def test_md026_good_ends_with_punctuation_setext_with_configuration():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md026", "ends_with_punctuation_setext.md"
+    )
     supplied_configuration = {"plugins": {"md026": {"punctuation": "?!"}}}
     configuration_file = None
     try:
@@ -314,7 +359,7 @@ def test_md026_good_ends_with_punctuation_setext_with_configuration():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md026/ends_with_punctuation_setext.md",
+            source_path,
         ]
 
         expected_return_code = 0

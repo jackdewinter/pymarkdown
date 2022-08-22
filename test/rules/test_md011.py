@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD011 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -15,9 +16,12 @@ def test_md011_good_no_reversed():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md011", "good_no_reversed.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md011/good_no_reversed.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -42,14 +46,17 @@ def test_md011_bad_with_reversed():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md011", "bad_with_reversed.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md011/bad_with_reversed.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md011/bad_with_reversed.md:2:8: "
+        f"{source_path}:2:8: "
         + "MD011: Reversed link syntax "
         + "[(reversed)[link]] (no-reversed-links)"
     )
@@ -73,9 +80,12 @@ def test_md011_good_markdown_footnote():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md011", "good_markdown_extra.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md011/good_markdown_extra.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -100,9 +110,12 @@ def test_md011_good_with_reversed_in_code_block():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md011", "good_with_reversed_in_code_block.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md011/good_with_reversed_in_code_block.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -127,9 +140,12 @@ def test_md011_good_with_reversed_in_html_block():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md011", "good_with_reversed_in_html_block.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md011/good_with_reversed_in_html_block.md",
+        source_path,
     ]
 
     expected_return_code = 0

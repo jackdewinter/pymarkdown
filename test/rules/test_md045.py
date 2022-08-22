@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD045 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -15,11 +16,14 @@ def test_md045_good_inline_image():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md045", "good_inline_image.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=paragraph",
         "scan",
-        "test/resources/rules/md045/good_inline_image.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -44,16 +48,19 @@ def test_md045_bad_inline_image():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md045", "bad_inline_image.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=paragraph",
         "scan",
-        "test/resources/rules/md045/bad_inline_image.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md045/bad_inline_image.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD045: Images should have alternate text (alt text) (no-alt-text)"
     )
     expected_error = ""
@@ -76,18 +83,21 @@ def test_md045_bad_inline_image_whitespace_only():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md045", "bad_inline_image_whitespace_only.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md039",
         "--set",
         "plugins.md044.names=paragraph",
         "scan",
-        "test/resources/rules/md045/bad_inline_image_whitespace_only.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md045/bad_inline_image_whitespace_only.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD045: Images should have alternate text (alt text) (no-alt-text)"
     )
     expected_error = ""
@@ -110,11 +120,14 @@ def test_md045_good_full_image():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md045", "good_full_image.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=paragraph",
         "scan",
-        "test/resources/rules/md045/good_full_image.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -139,16 +152,19 @@ def test_md045_bad_full_image():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md045", "bad_full_image.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=paragraph",
         "scan",
-        "test/resources/rules/md045/bad_full_image.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md045/bad_full_image.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD045: Images should have alternate text (alt text) (no-alt-text)"
     )
     expected_error = ""
@@ -171,11 +187,14 @@ def test_md045_good_shortcut_image():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md045", "good_shortcut_image.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md044.names=paragraph",
         "scan",
-        "test/resources/rules/md045/good_shortcut_image.md",
+        source_path,
     ]
 
     expected_return_code = 0
