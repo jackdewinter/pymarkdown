@@ -55,9 +55,8 @@ def test_md039_bad_inline_link_trailing_space():
     ]
 
     expected_return_code = 1
-    expected_output = (
-        f"{source_path}:2:1: " + "MD039: Spaces inside link text (no-space-in-links)"
-    )
+    expected_output = f"{source_path}:2:1: MD039: Spaces inside link text (no-space-in-links)"
+
     expected_error = ""
 
     # Act
@@ -87,9 +86,8 @@ def test_md039_bad_inline_link_leading_space():
     ]
 
     expected_return_code = 1
-    expected_output = (
-        f"{source_path}:2:1: " + "MD039: Spaces inside link text (no-space-in-links)"
-    )
+    expected_output = f"{source_path}:2:1: MD039: Spaces inside link text (no-space-in-links)"
+
     expected_error = ""
 
     # Act
@@ -119,9 +117,8 @@ def test_md039_bad_inline_link_both_space():
     ]
 
     expected_return_code = 1
-    expected_output = (
-        f"{source_path}:2:1: " + "MD039: Spaces inside link text (no-space-in-links)"
-    )
+    expected_output = f"{source_path}:2:1: MD039: Spaces inside link text (no-space-in-links)"
+
     expected_error = ""
 
     # Act
@@ -181,9 +178,8 @@ def test_md039_bad_full_link_both_space():
     ]
 
     expected_return_code = 1
-    expected_output = (
-        f"{source_path}:2:1: " + "MD039: Spaces inside link text (no-space-in-links)"
-    )
+    expected_output = f"{source_path}:2:1: MD039: Spaces inside link text (no-space-in-links)"
+
     expected_error = ""
 
     # Act
@@ -243,9 +239,8 @@ def test_md039_bad_collapsed_link_both_space():
     ]
 
     expected_return_code = 1
-    expected_output = (
-        f"{source_path}:2:1: " + "MD039: Spaces inside link text (no-space-in-links)"
-    )
+    expected_output = f"{source_path}:2:1: MD039: Spaces inside link text (no-space-in-links)"
+
     expected_error = ""
 
     # Act
@@ -305,9 +300,8 @@ def test_md039_bad_shortcut_link_both_space():
     ]
 
     expected_return_code = 1
-    expected_output = (
-        f"{source_path}:2:1: " + "MD039: Spaces inside link text (no-space-in-links)"
-    )
+    expected_output = f"{source_path}:2:1: MD039: Spaces inside link text (no-space-in-links)"
+
     expected_error = ""
 
     # Act
@@ -367,9 +361,8 @@ def test_md039_bad_inline_image_trailing_space():
     ]
 
     expected_return_code = 1
-    expected_output = (
-        f"{source_path}:2:1: " + "MD039: Spaces inside link text (no-space-in-links)"
-    )
+    expected_output = f"{source_path}:2:1: MD039: Spaces inside link text (no-space-in-links)"
+
     expected_error = ""
 
     # Act
@@ -399,9 +392,8 @@ def test_md039_bad_inline_image_leading_space():
     ]
 
     expected_return_code = 1
-    expected_output = (
-        f"{source_path}:2:1: " + "MD039: Spaces inside link text (no-space-in-links)"
-    )
+    expected_output = f"{source_path}:2:1: MD039: Spaces inside link text (no-space-in-links)"
+
     expected_error = ""
 
     # Act
@@ -431,9 +423,8 @@ def test_md039_bad_inline_image_both_space():
     ]
 
     expected_return_code = 1
-    expected_output = (
-        f"{source_path}:2:1: " + "MD039: Spaces inside link text (no-space-in-links)"
-    )
+    expected_output = f"{source_path}:2:1: MD039: Spaces inside link text (no-space-in-links)"
+
     expected_error = ""
 
     # Act
@@ -493,9 +484,8 @@ def test_md039_bad_full_image_both_space():
     ]
 
     expected_return_code = 1
-    expected_output = (
-        f"{source_path}:2:1: " + "MD039: Spaces inside link text (no-space-in-links)"
-    )
+    expected_output = f"{source_path}:2:1: MD039: Spaces inside link text (no-space-in-links)"
+
     expected_error = ""
 
     # Act
@@ -555,9 +545,8 @@ def test_md039_bad_collapsed_image_both_space():
     ]
 
     expected_return_code = 1
-    expected_output = (
-        f"{source_path}:2:1: " + "MD039: Spaces inside link text (no-space-in-links)"
-    )
+    expected_output = f"{source_path}:2:1: MD039: Spaces inside link text (no-space-in-links)"
+
     expected_error = ""
 
     # Act
@@ -617,9 +606,8 @@ def test_md039_bad_shortcut_image_both_space():
     ]
 
     expected_return_code = 1
-    expected_output = (
-        f"{source_path}:2:1: " + "MD039: Spaces inside link text (no-space-in-links)"
-    )
+    expected_output = f"{source_path}:2:1: MD039: Spaces inside link text (no-space-in-links)"
+
     expected_error = ""
 
     # Act

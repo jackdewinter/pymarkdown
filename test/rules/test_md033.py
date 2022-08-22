@@ -237,8 +237,9 @@ def test_md033_bad_inline_html_present():
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:9: " + "MD033: Inline HTML [Element: a] (no-inline-html)"
+        f"{source_path}:3:9: MD033: Inline HTML [Element: a] (no-inline-html)"
     )
+
     expected_error = ""
 
     # Act

@@ -55,7 +55,7 @@ def test_md042_bad_empty_link():
     ]
 
     expected_return_code = 1
-    expected_output = f"{source_path}:2:1: " + "MD042: No empty links (no-empty-links)"
+    expected_output = f"{source_path}:2:1: MD042: No empty links (no-empty-links)"
     expected_error = ""
 
     # Act
@@ -85,7 +85,7 @@ def test_md042_bad_whitespace_link():
     ]
 
     expected_return_code = 1
-    expected_output = f"{source_path}:2:1: " + "MD042: No empty links (no-empty-links)"
+    expected_output = f"{source_path}:2:1: MD042: No empty links (no-empty-links)"
     expected_error = ""
 
     # Act
@@ -145,7 +145,7 @@ def test_md042_bad_link_empty_fragment():
     ]
 
     expected_return_code = 1
-    expected_output = f"{source_path}:2:1: " + "MD042: No empty links (no-empty-links)"
+    expected_output = f"{source_path}:2:1: MD042: No empty links (no-empty-links)"
     expected_error = ""
 
     # Act
@@ -175,7 +175,7 @@ def test_md042_bad_link_whitespace_fragment():
     ]
 
     expected_return_code = 1
-    expected_output = f"{source_path}:2:1: " + "MD042: No empty links (no-empty-links)"
+    expected_output = f"{source_path}:2:1: MD042: No empty links (no-empty-links)"
     expected_error = ""
 
     # Act
@@ -235,7 +235,7 @@ def test_md042_bad_empty_image():
     ]
 
     expected_return_code = 1
-    expected_output = f"{source_path}:2:1: " + "MD042: No empty links (no-empty-links)"
+    expected_output = f"{source_path}:2:1: MD042: No empty links (no-empty-links)"
     expected_error = ""
 
     # Act
