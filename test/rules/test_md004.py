@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD004 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -15,12 +16,15 @@ def test_md004_bad_configuration_style():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md004", "good_list_asterisk_single_level.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md004.style=bad",
         "--strict-config",
         "scan",
-        "test/resources/rules/md004/good_list_asterisk_single_level.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -49,11 +53,14 @@ def test_md004_good_asterisk_single_level():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md004", "good_list_asterisk_single_level.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md004.style=asterisk",
         "scan",
-        "test/resources/rules/md004/good_list_asterisk_single_level.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -79,9 +86,12 @@ def test_md004_good_asterisk_single_level_consistent():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md004", "good_list_asterisk_single_level.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md004/good_list_asterisk_single_level.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -107,16 +117,19 @@ def test_md004_bad_asterisk_dash_single_level():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md004", "good_list_dash_single_level.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md004.style=asterisk",
         "scan",
-        "test/resources/rules/md004/good_list_dash_single_level.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md004/good_list_dash_single_level.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD004: Inconsistent Unordered List Start style "
         + "[Expected: asterisk; Actual: dash] (ul-style)"
     )
@@ -141,16 +154,19 @@ def test_md004_bad_asterisk_plus_single_level():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md004", "good_list_plus_single_level.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md004.style=asterisk",
         "scan",
-        "test/resources/rules/md004/good_list_plus_single_level.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md004/good_list_plus_single_level.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD004: Inconsistent Unordered List Start style "
         + "[Expected: asterisk; Actual: plus] (ul-style)"
     )
@@ -175,11 +191,14 @@ def test_md004_good_dash_single_level():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md004", "good_list_dash_single_level.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md004.style=dash",
         "scan",
-        "test/resources/rules/md004/good_list_dash_single_level.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -205,9 +224,12 @@ def test_md004_good_dash_single_level_consistent():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md004", "good_list_dash_single_level.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md004/good_list_dash_single_level.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -233,16 +255,19 @@ def test_md004_bad_dash_asterisk_single_level():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md004", "good_list_asterisk_single_level.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md004.style=dash",
         "scan",
-        "test/resources/rules/md004/good_list_asterisk_single_level.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md004/good_list_asterisk_single_level.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD004: Inconsistent Unordered List Start style "
         + "[Expected: dash; Actual: asterisk] (ul-style)"
     )
@@ -267,16 +292,19 @@ def test_md004_bad_dash_plus_single_level():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md004", "good_list_plus_single_level.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md004.style=dash",
         "scan",
-        "test/resources/rules/md004/good_list_plus_single_level.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md004/good_list_plus_single_level.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD004: Inconsistent Unordered List Start style "
         + "[Expected: dash; Actual: plus] (ul-style)"
     )
@@ -301,11 +329,14 @@ def test_md004_good_plus_single_level():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md004", "good_list_plus_single_level.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md004.style=plus",
         "scan",
-        "test/resources/rules/md004/good_list_plus_single_level.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -331,9 +362,12 @@ def test_md004_good_plus_single_level_consistent():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md004", "good_list_plus_single_level.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md004/good_list_plus_single_level.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -359,16 +393,19 @@ def test_md004_bad_plus_asterisk_single_level():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md004", "good_list_asterisk_single_level.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md004.style=plus",
         "scan",
-        "test/resources/rules/md004/good_list_asterisk_single_level.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md004/good_list_asterisk_single_level.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD004: Inconsistent Unordered List Start style "
         + "[Expected: plus; Actual: asterisk] (ul-style)"
     )
@@ -393,16 +430,19 @@ def test_md004_bad_plus_dash_single_level():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md004", "good_list_dash_single_level.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md004.style=plus",
         "scan",
-        "test/resources/rules/md004/good_list_dash_single_level.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md004/good_list_dash_single_level.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD004: Inconsistent Unordered List Start style "
         + "[Expected: plus; Actual: dash] (ul-style)"
     )
@@ -426,19 +466,22 @@ def test_md004_bad_single_level_consistent():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md004", "bad_list_different_single_level.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md032",
         "scan",
-        "test/resources/rules/md004/bad_list_different_single_level.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md004/bad_list_different_single_level.md:2:1: "
+        f"{source_path}:2:1: "
         + "MD004: Inconsistent Unordered List Start style "
         + "[Expected: asterisk; Actual: plus] (ul-style)\n"
-        + "test/resources/rules/md004/bad_list_different_single_level.md:3:1: "
+        + f"{source_path}:3:1: "
         + "MD004: Inconsistent Unordered List Start style "
         + "[Expected: asterisk; Actual: dash] (ul-style)"
     )
@@ -462,11 +505,14 @@ def test_md004_good_multi_level_sublevel():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md004", "good_multi_level_sublevel.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md004.style=sublist",
         "scan",
-        "test/resources/rules/md004/good_multi_level_sublevel.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -490,11 +536,14 @@ def test_md004_good_multi_level_sublevel_complex():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md004", "good_multi_level_complex.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md004.style=sublist",
         "scan",
-        "test/resources/rules/md004/good_multi_level_complex.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -519,16 +568,19 @@ def test_md004_bad_multi_level_sublevel_complex():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md004", "bad_multi_level_complex.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md004.style=sublist",
         "scan",
-        "test/resources/rules/md004/bad_multi_level_complex.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md004/bad_multi_level_complex.md:6:6: "
+        f"{source_path}:6:6: "
         + "MD004: Inconsistent Unordered List Start style "
         + "[Expected: dash; Actual: plus] (ul-style)"
     )
@@ -553,22 +605,25 @@ def test_md004_bad_multi_level_sublevel_complex_asterisk():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md004", "bad_multi_level_complex.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md004.style=asterisk",
         "scan",
-        "test/resources/rules/md004/bad_multi_level_complex.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md004/bad_multi_level_complex.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD004: Inconsistent Unordered List Start style "
         + "[Expected: asterisk; Actual: plus] (ul-style)\n"
-        + "test/resources/rules/md004/bad_multi_level_complex.md:3:6: "
+        + f"{source_path}:3:6: "
         + "MD004: Inconsistent Unordered List Start style "
         + "[Expected: asterisk; Actual: dash] (ul-style)\n"
-        + "test/resources/rules/md004/bad_multi_level_complex.md:6:6: "
+        + f"{source_path}:6:6: "
         + "MD004: Inconsistent Unordered List Start style "
         + "[Expected: asterisk; Actual: plus] (ul-style)"
     )
@@ -593,16 +648,19 @@ def test_md004_bad_dual_lists_with_separator():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md004", "bad_dual_lists_with_separator.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md004.style=sublist",
         "scan",
-        "test/resources/rules/md004/bad_dual_lists_with_separator.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md004/bad_dual_lists_with_separator.md:6:1: "
+        f"{source_path}:6:1: "
         + "MD004: Inconsistent Unordered List Start style "
         + "[Expected: plus; Actual: asterisk] (ul-style)"
     )

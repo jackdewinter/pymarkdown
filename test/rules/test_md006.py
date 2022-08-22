@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD006 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -15,11 +16,14 @@ def test_md006_good_indentation():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md006", "good_indentation.md"
+    )
     supplied_arguments = [
         "--enable-rules",
         "MD006",
         "scan",
-        "test/resources/rules/md006/good_indentation.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -44,11 +48,14 @@ def test_md006_good_indentation_in_block_quote():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md006", "good_indentation_in_block_quote.md"
+    )
     supplied_arguments = [
         "--enable-rules",
         "MD006",
         "scan",
-        "test/resources/rules/md006/good_indentation_in_block_quote.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -73,20 +80,23 @@ def test_md006_bad_indentation_x():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md006", "bad_indentation.md"
+    )
     supplied_arguments = [
         "--enable-rules",
         "MD006",
         "--disable-rules",
         "MD007",
         "scan",
-        "test/resources/rules/md006/bad_indentation.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md006/bad_indentation.md:1:2: MD006: "
+        f"{source_path}:1:2: MD006: "
         + "Consider starting bulleted lists at the beginning of the line (ul-start-left)\n"
-        + "test/resources/rules/md006/bad_indentation.md:2:2: MD006: "
+        + f"{source_path}:2:2: MD006: "
         + "Consider starting bulleted lists at the beginning of the line (ul-start-left)"
     )
     expected_error = ""
@@ -112,11 +122,14 @@ def test_md006_bad_indentation_unordered():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md006", "bad_indentation_unordered.md"
+    )
     supplied_arguments = [
         "--enable-rules",
         "MD006",
         "scan",
-        "test/resources/rules/md006/bad_indentation_unordered.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -142,20 +155,23 @@ def test_md006_bad_indentation_in_block_quote():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md006", "bad_indentation_in_block_quote.md"
+    )
     supplied_arguments = [
         "--enable-rules",
         "MD006",
         "--disable-rules",
         "MD007,md027",
         "scan",
-        "test/resources/rules/md006/bad_indentation_in_block_quote.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md006/bad_indentation_in_block_quote.md:1:4: MD006: "
+        f"{source_path}:1:4: MD006: "
         + "Consider starting bulleted lists at the beginning of the line (ul-start-left)\n"
-        + "test/resources/rules/md006/bad_indentation_in_block_quote.md:2:4: MD006: "
+        + f"{source_path}:2:4: MD006: "
         + "Consider starting bulleted lists at the beginning of the line (ul-start-left)"
     )
     expected_error = ""
@@ -178,20 +194,23 @@ def test_md006_good_ignore_bad_second_level():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md006", "good_ignore_bad_second_level.md"
+    )
     supplied_arguments = [
         "--enable-rules",
         "MD006",
         "--disable-rules",
         "MD005,Md007",
         "scan",
-        "test/resources/rules/md006/good_ignore_bad_second_level.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md006/good_ignore_bad_second_level.md:3:4: "
+        f"{source_path}:3:4: "
         + "MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)\n"
-        + "test/resources/rules/md006/good_ignore_bad_second_level.md:4:5: "
+        + f"{source_path}:4:5: "
         + "MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)"
     )
     expected_error = ""
@@ -214,11 +233,14 @@ def test_md006_good_not_ordered():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md006", "good_not_ordered.md"
+    )
     supplied_arguments = [
         "--enable-rules",
         "MD006",
         "scan",
-        "test/resources/rules/md006/good_not_ordered.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -243,11 +265,14 @@ def test_md006_good_items_with_multiple_lines():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md006", "good_items_with_multiple_lines.md"
+    )
     supplied_arguments = [
         "--enable-rules",
         "MD006",
         "scan",
-        "test/resources/rules/md006/good_items_with_multiple_lines.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -272,11 +297,18 @@ def test_md006_good_items_with_multiple_lines_in_block_quote():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md006",
+        "good_items_with_multiple_lines_in_block_quote.md",
+    )
     supplied_arguments = [
         "--enable-rules",
         "MD006",
         "scan",
-        "test/resources/rules/md006/good_items_with_multiple_lines_in_block_quote.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -300,11 +332,18 @@ def test_md006_good_indentation_ordered_in_unordered():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md006",
+        "good_indentation_ordered_in_unordered.md",
+    )
     supplied_arguments = [
         "--enable-rules",
         "MD006",
         "scan",
-        "test/resources/rules/md006/good_indentation_ordered_in_unordered.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -328,11 +367,18 @@ def test_md006_good_indentation_unordered_in_ordered():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md006",
+        "good_indentation_unordered_in_ordered.md",
+    )
     supplied_arguments = [
         "--enable-rules",
         "MD006",
         "scan",
-        "test/resources/rules/md006/good_indentation_unordered_in_ordered.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -356,18 +402,21 @@ def test_md006_bad_indentation_ordered_in_unordered():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md006", "bad_indentation_ordered_in_unordered.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "MD007",
         "--enable-rules",
         "MD006",
         "scan",
-        "test/resources/rules/md006/bad_indentation_ordered_in_unordered.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md006/bad_indentation_ordered_in_unordered.md:1:2: "
+        f"{source_path}:1:2: "
         + "MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)"
     )
     expected_error = ""
@@ -389,18 +438,21 @@ def test_md006_bad_indentation_unordered_in_ordered():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md006", "bad_indentation_unordered_in_ordered.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "MD007",
         "--enable-rules",
         "MD006",
         "scan",
-        "test/resources/rules/md006/bad_indentation_unordered_in_ordered.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md006/bad_indentation_unordered_in_ordered.md:2:6: "
+        f"{source_path}:2:6: "
         + "MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)"
     )
     expected_error = ""
@@ -422,12 +474,15 @@ def test_md006_good_indentation_nested():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md006", "good_indentation_nested.md"
+    )
     supplied_arguments = [
         "--enable-rules",
         "MD006",
         "--stack-trace",
         "scan",
-        "test/resources/rules/md006/good_indentation_nested.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -451,24 +506,27 @@ def test_md006_bad_indentation_nested():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md006", "bad_indentation_nested.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "MD007",
         "--enable-rules",
         "MD006",
         "scan",
-        "test/resources/rules/md006/bad_indentation_nested.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md006/bad_indentation_nested.md:2:4: "
+        f"{source_path}:2:4: "
         + "MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)\n"
-        + "test/resources/rules/md006/bad_indentation_nested.md:3:4: "
+        + f"{source_path}:3:4: "
         + "MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)\n"
-        + "test/resources/rules/md006/bad_indentation_nested.md:5:4: "
+        + f"{source_path}:5:4: "
         + "MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)\n"
-        + "test/resources/rules/md006/bad_indentation_nested.md:6:4: "
+        + f"{source_path}:6:4: "
         + "MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)"
     )
     expected_error = ""

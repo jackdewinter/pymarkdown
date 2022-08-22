@@ -1,6 +1,7 @@
 """
 Tests for the optional front-matter processing
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -14,17 +15,20 @@ def test_pragmas_01():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "pragmas", "atx_heading_with_multiple_spaces_no_command.md"
+    )
     supplied_arguments = [
         "--stack-trace",
         "scan",
-        "test/resources/pragmas/atx_heading_with_multiple_spaces_no_command.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/pragmas/atx_heading_with_multiple_spaces_no_command.md:1:1: "
+        f"{source_path}:1:1: "
         + "INLINE: Inline configuration specified without command.\n"
-        + "test/resources/pragmas/atx_heading_with_multiple_spaces_no_command.md:2:1: "
+        + f"{source_path}:2:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
     expected_error = ""
@@ -46,16 +50,22 @@ def test_pragmas_02():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "pragmas",
+        "atx_heading_with_multiple_spaces_bad_command.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/pragmas/atx_heading_with_multiple_spaces_bad_command.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/pragmas/atx_heading_with_multiple_spaces_bad_command.md:1:1: "
+        f"{source_path}:1:1: "
         + "INLINE: Inline configuration command 'bad' not understood.\n"
-        + "test/resources/pragmas/atx_heading_with_multiple_spaces_bad_command.md:2:1: "
+        + f"{source_path}:2:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
     expected_error = ""
@@ -77,16 +87,22 @@ def test_pragmas_03():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "pragmas",
+        "atx_heading_with_multiple_spaces_disable_with_no_id.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/pragmas/atx_heading_with_multiple_spaces_disable_with_no_id.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/pragmas/atx_heading_with_multiple_spaces_disable_with_no_id.md:1:1: "
+        f"{source_path}:1:1: "
         + "INLINE: Inline configuration command 'disable-next-line' specified a plugin with a blank id.\n"
-        + "test/resources/pragmas/atx_heading_with_multiple_spaces_disable_with_no_id.md:2:1: "
+        + f"{source_path}:2:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
     expected_error = ""
@@ -108,16 +124,22 @@ def test_pragmas_04():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "pragmas",
+        "atx_heading_with_multiple_spaces_disable_with_bad_id.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/pragmas/atx_heading_with_multiple_spaces_disable_with_bad_id.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/pragmas/atx_heading_with_multiple_spaces_disable_with_bad_id.md:1:1: "
+        f"{source_path}:1:1: "
         + "INLINE: Inline configuration command 'disable-next-line' unable to find a plugin with the id 'bad-plugin-id'.\n"
-        + "test/resources/pragmas/atx_heading_with_multiple_spaces_disable_with_bad_id.md:2:1: "
+        + f"{source_path}:2:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
     expected_error = ""
@@ -139,9 +161,15 @@ def test_pragmas_05():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "pragmas",
+        "atx_heading_with_multiple_spaces_disable_line_by_id.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/pragmas/atx_heading_with_multiple_spaces_disable_line_by_id.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -165,9 +193,15 @@ def test_pragmas_06():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "pragmas",
+        "atx_heading_with_multiple_spaces_disable_line_by_name.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/pragmas/atx_heading_with_multiple_spaces_disable_line_by_name.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -191,9 +225,15 @@ def test_pragmas_07():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "pragmas",
+        "atx_heading_with_multiple_spaces_disable_line_by_id_and_name.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/pragmas/atx_heading_with_multiple_spaces_disable_line_by_id_and_name.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -218,9 +258,15 @@ def test_pragmas_08():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "pragmas",
+        "atx_heading_with_multiple_spaces_disable_line_by_id_and_alternate_start.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/pragmas/atx_heading_with_multiple_spaces_disable_line_by_id_and_alternate_start.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -245,15 +291,20 @@ def test_pragmas_09():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "pragmas",
+        "atx_heading_with_multiple_spaces_disable_line_by_id_with_non_firing.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/pragmas/atx_heading_with_multiple_spaces_disable_line_by_id_with_non_firing.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        ""
-        + "test/resources/pragmas/atx_heading_with_multiple_spaces_disable_line_by_id_with_non_firing.md:2:1: "
+        f"{source_path}:2:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
     expected_error = ""
@@ -278,18 +329,24 @@ def test_pragmas_10():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "pragmas",
+        "atx_heading_with_multiple_spaces_disable_line_by_id.md",
+    )
     supplied_arguments = [
         "--set",
         "extensions.linter-pragmas.enabled=$!False",
         "scan",
-        "test/resources/pragmas/atx_heading_with_multiple_spaces_disable_line_by_id.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/pragmas/atx_heading_with_multiple_spaces_disable_line_by_id.md:2:1: "
+        f"{source_path}:2:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
-        + "test/resources/pragmas/atx_heading_with_multiple_spaces_disable_line_by_id.md:2:1: "
+        + f"{source_path}:2:1: "
         + "MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
     )
     expected_error = ""
@@ -310,9 +367,15 @@ def test_pragmas_11():
     """
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "pragmas",
+        "atx_heading_with_multiple_spaces_disable_line_by_id_with_space_before_pyml.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/pragmas/atx_heading_with_multiple_spaces_disable_line_by_id_with_space_before_pyml.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -335,16 +398,24 @@ def test_pragmas_12():
     """
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "pragmas",
+        "atx_heading_with_multiple_spaces_disable_line_by_id_with_space_after_pyml.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/pragmas/atx_heading_with_multiple_spaces_disable_line_by_id_with_space_after_pyml.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = """
-test/resources/pragmas/atx_heading_with_multiple_spaces_disable_line_by_id_with_space_after_pyml.md:1:1: INLINE: Inline configuration specified without command.
-test/resources/pragmas/atx_heading_with_multiple_spaces_disable_line_by_id_with_space_after_pyml.md:2:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)
-"""
+{source_path}:1:1: INLINE: Inline configuration specified without command.
+{source_path}:2:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)
+""".replace(
+        "{source_path}", source_path
+    )
     expected_error = ""
 
     # Act
@@ -363,9 +434,15 @@ def test_pragmas_13():
     """
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "pragmas",
+        "atx_heading_with_multiple_spaces_disable_line_by_id_with_space_after_pyml_command.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/pragmas/atx_heading_with_multiple_spaces_disable_line_by_id_with_space_after_pyml_command.md",
+        source_path,
     ]
 
     expected_return_code = 0

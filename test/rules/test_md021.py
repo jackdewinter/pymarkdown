@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD021 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -17,9 +18,12 @@ def test_md021_good_single_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md021", "single_spacing.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md021/single_spacing.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -44,17 +48,20 @@ def test_md021_bad_multiple_spacing_both():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md021", "multiple_spacing.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md021/multiple_spacing.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md021/multiple_spacing.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
         + "(no-multiple-space-closed-atx)\n"
-        + "test/resources/rules/md021/multiple_spacing.md:3:1: "
+        + f"{source_path}:3:1: "
         + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
         + "(no-multiple-space-closed-atx)\n"
     )
@@ -78,17 +85,20 @@ def test_md021_bad_multiple_spacing_left():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md021", "multiple_spacing_left.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md021/multiple_spacing_left.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md021/multiple_spacing_left.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
         + "(no-multiple-space-closed-atx)\n"
-        + "test/resources/rules/md021/multiple_spacing_left.md:3:1: "
+        + f"{source_path}:3:1: "
         + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
         + "(no-multiple-space-closed-atx)\n"
     )
@@ -112,17 +122,20 @@ def test_md021_bad_multiple_spacing_right():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md021", "multiple_spacing_right.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md021/multiple_spacing_right.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md021/multiple_spacing_right.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
         + "(no-multiple-space-closed-atx)\n"
-        + "test/resources/rules/md021/multiple_spacing_right.md:3:1: "
+        + f"{source_path}:3:1: "
         + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
         + "(no-multiple-space-closed-atx)\n"
     )
@@ -146,9 +159,12 @@ def test_md021_good_multiple_spacing_with_inline():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md021", "multiple_spacing_with_inline.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md021/multiple_spacing_with_inline.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -173,19 +189,22 @@ def test_md021_good_multiple_spacing_with_indent():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md021", "multiple_spacing_with_indent.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md023",
         "scan",
-        "test/resources/rules/md021/multiple_spacing_with_indent.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md021/multiple_spacing_with_indent.md:1:2: "
+        f"{source_path}:1:2: "
         + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
         + "(no-multiple-space-closed-atx)\n"
-        + "test/resources/rules/md021/multiple_spacing_with_indent.md:3:3: "
+        + f"{source_path}:3:3: "
         + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
         + "(no-multiple-space-closed-atx)\n"
     )
@@ -209,19 +228,22 @@ def test_md021_good_single_space_single_tab_before():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md021", "single_space_single_tab_before.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md010",
         "scan",
-        "test/resources/rules/md021/single_space_single_tab_before.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md021/single_space_single_tab_before.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
         + "(no-multiple-space-closed-atx)\n"
-        + "test/resources/rules/md021/single_space_single_tab_before.md:3:1: "
+        + f"{source_path}:3:1: "
         + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
         + "(no-multiple-space-closed-atx)"
     )
@@ -245,19 +267,22 @@ def test_md021_good_single_space_single_tab_after():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md021", "single_space_single_tab_after.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md010",
         "scan",
-        "test/resources/rules/md021/single_space_single_tab_after.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md021/single_space_single_tab_after.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
         + "(no-multiple-space-closed-atx)\n"
-        + "test/resources/rules/md021/single_space_single_tab_after.md:3:1: "
+        + f"{source_path}:3:1: "
         + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
         + "(no-multiple-space-closed-atx)"
     )

@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD012 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -15,12 +16,15 @@ def test_md012_bad_configuration_maximum():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md012", "good_simple_paragraphs_single_blanks.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md012.maximum=$#-2",
         "--strict-config",
         "scan",
-        "test/resources/rules/md012/good_simple_paragraphs_single_blanks.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -48,9 +52,12 @@ def test_md012_good_simple_paragraphs_single_blanks():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md012", "good_simple_paragraphs_single_blanks.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md012/good_simple_paragraphs_single_blanks.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -75,14 +82,18 @@ def test_md012_bad_simple_paragraphs_double_blanks():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md012", "good_simple_paragraphs_double_blanks.md"
+    )
     supplied_arguments = [
+        # "--log-level", "DEBUG",
         "scan",
-        "test/resources/rules/md012/good_simple_paragraphs_double_blanks.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md012/good_simple_paragraphs_double_blanks.md:3:1: "
+        f"{source_path}:3:1: "
         + "MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)"
     )
     expected_error = ""
@@ -106,12 +117,15 @@ def test_md012_good_simple_paragraphs_double_blanks():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md012", "good_simple_paragraphs_double_blanks.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md012.maximum=$#2",
         "--strict-config",
         "scan",
-        "test/resources/rules/md012/good_simple_paragraphs_double_blanks.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -136,14 +150,17 @@ def test_md012_good_simple_paragraphs_triple_blanks():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md012", "good_simple_paragraphs_triple_blanks.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md012/good_simple_paragraphs_triple_blanks.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md012/good_simple_paragraphs_triple_blanks.md:4:1: "
+        f"{source_path}:4:1: "
         + "MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)"
     )
     expected_error = ""
@@ -166,14 +183,17 @@ def test_md012_bad_double_blanks_at_end():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md012", "bad_double_blanks_at_end.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md012/bad_double_blanks_at_end.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md012/bad_double_blanks_at_end.md:3:1: "
+        f"{source_path}:3:1: "
         + "MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)"
     )
     expected_error = ""
@@ -196,14 +216,17 @@ def test_md012_bad_multiple_blanks_in_block_quote():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md012", "bad_multiple_blanks_in_block_quote.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md012/bad_multiple_blanks_in_block_quote.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md012/bad_multiple_blanks_in_block_quote.md:3:2: "
+        f"{source_path}:3:2: "
         + "MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)"
     )
     expected_error = ""
@@ -226,16 +249,19 @@ def test_md012_bad_multiple_blanks_in_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md012", "bad_multiple_blanks_in_list.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md009",
         "scan",
-        "test/resources/rules/md012/bad_multiple_blanks_in_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md012/bad_multiple_blanks_in_list.md:3:1: "
+        f"{source_path}:3:1: "
         + "MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)"
     )
     expected_error = ""
@@ -258,9 +284,12 @@ def test_md012_good_multiple_blanks_in_fenced():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md012", "good_multiple_blanks_in_fenced.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md012/good_multiple_blanks_in_fenced.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -285,9 +314,12 @@ def test_md012_good_multiple_blanks_in_indented():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md012", "good_multiple_blanks_in_indented.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md012/good_multiple_blanks_in_indented.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -312,14 +344,17 @@ def test_md012_bad_multiple_blanks_in_html():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md012", "bad_multiple_blanks_in_html.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md012/bad_multiple_blanks_in_html.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md012/bad_multiple_blanks_in_html.md:3:1: "
+        f"{source_path}:3:1: "
         + "MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)"
     )
     expected_error = ""

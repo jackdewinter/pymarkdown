@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD029 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -17,12 +18,15 @@ def test_md029_bad_configuration_style():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "good_one_list.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md029.style=$#1",
         "--strict-config",
         "scan",
-        "test/resources/rules/md029/good_one_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -50,12 +54,15 @@ def test_md029_bad_configuration_style_invalid():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "good_one_list.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md029.style=not-matching",
         "--strict-config",
         "scan",
-        "test/resources/rules/md029/good_one_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -83,9 +90,12 @@ def test_md029_good_one_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "good_one_list.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md029/good_one_list.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -110,14 +120,17 @@ def test_md029_bad_one_one_three_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "bad_one_one_three_list.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md029/bad_one_one_three_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md029/bad_one_one_three_list.md:3:1: "
+        f"{source_path}:3:1: "
         + "MD029: Ordered list item prefix "
         + "[Expected: 1; Actual: 3; Style: 1/1/1] (ol-prefix)"
     )
@@ -141,14 +154,17 @@ def test_md029_bad_one_two_one_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "bad_one_two_one_list.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md029/bad_one_two_one_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md029/bad_one_two_one_list.md:3:1: "
+        f"{source_path}:3:1: "
         + "MD029: Ordered list item prefix "
         + "[Expected: 3; Actual: 1; Style: 1/2/3] (ol-prefix)"
     )
@@ -172,9 +188,12 @@ def test_md029_good_one_two_three_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "good_one_two_three_list.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md029/good_one_two_three_list.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -199,14 +218,17 @@ def test_md029_bad_two_three_four_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "bad_two_three_four_list.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md029/bad_two_three_four_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md029/bad_two_three_four_list.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD029: Ordered list item prefix "
         + "[Expected: 1; Actual: 2; Style: 1/2/3] (ol-prefix)"
     )
@@ -230,9 +252,12 @@ def test_md029_good_zero_one_two_three_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "good_zero_one_two_three_list.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md029/good_zero_one_two_three_list.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -257,14 +282,17 @@ def test_md029_good_zero_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "good_zero_list.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md029/good_zero_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md029/good_zero_list.md:2:1: "
+        f"{source_path}:2:1: "
         + "MD029: Ordered list item prefix "
         + "[Expected: 1; Actual: 0; Style: 1/2/3] (ol-prefix)"
     )
@@ -288,12 +316,15 @@ def test_md029_good_one_list_with_config_one():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "good_one_list.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md029.style=one",
         "--strict-config",
         "scan",
-        "test/resources/rules/md029/good_one_list.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -318,17 +349,20 @@ def test_md029_bad_one_one_three_list_with_config_one():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "bad_one_one_three_list.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md029.style=one",
         "--strict-config",
         "scan",
-        "test/resources/rules/md029/bad_one_one_three_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md029/bad_one_one_three_list.md:3:1: "
+        f"{source_path}:3:1: "
         + "MD029: Ordered list item prefix "
         + "[Expected: 1; Actual: 3; Style: 1/1/1] (ol-prefix)"
     )
@@ -352,17 +386,20 @@ def test_md029_bad_one_two_one_list_with_config_one():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "bad_one_two_one_list.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md029.style=one",
         "--strict-config",
         "scan",
-        "test/resources/rules/md029/bad_one_two_one_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md029/bad_one_two_one_list.md:2:1: "
+        f"{source_path}:2:1: "
         + "MD029: Ordered list item prefix "
         + "[Expected: 1; Actual: 2; Style: 1/1/1] (ol-prefix)"
     )
@@ -386,17 +423,20 @@ def test_md029_good_one_two_three_list_with_config_one():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "good_one_two_three_list.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md029.style=one",
         "--strict-config",
         "scan",
-        "test/resources/rules/md029/good_one_two_three_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md029/good_one_two_three_list.md:2:1: "
+        f"{source_path}:2:1: "
         + "MD029: Ordered list item prefix "
         + "[Expected: 1; Actual: 2; Style: 1/1/1] (ol-prefix)"
     )
@@ -420,17 +460,20 @@ def test_md029_bad_two_three_four_list_with_config_one():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "bad_two_three_four_list.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md029.style=one",
         "--strict-config",
         "scan",
-        "test/resources/rules/md029/bad_two_three_four_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md029/bad_two_three_four_list.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD029: Ordered list item prefix "
         + "[Expected: 1; Actual: 2; Style: 1/1/1] (ol-prefix)"
     )
@@ -454,17 +497,20 @@ def test_md029_good_zero_one_two_list_with_config_one():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "good_zero_one_two_three_list.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md029.style=one",
         "--strict-config",
         "scan",
-        "test/resources/rules/md029/good_zero_one_two_three_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md029/good_zero_one_two_three_list.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD029: Ordered list item prefix "
         + "[Expected: 1; Actual: 0; Style: 1/1/1] (ol-prefix)"
     )
@@ -488,17 +534,20 @@ def test_md029_good_zero_list_with_config_one():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "good_zero_list.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md029.style=one",
         "--strict-config",
         "scan",
-        "test/resources/rules/md029/good_zero_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md029/good_zero_list.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD029: Ordered list item prefix "
         + "[Expected: 1; Actual: 0; Style: 1/1/1] (ol-prefix)"
     )
@@ -522,17 +571,20 @@ def test_md029_good_one_list_with_config_ordered():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "good_one_list.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md029.style=ordered",
         "--strict-config",
         "scan",
-        "test/resources/rules/md029/good_one_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md029/good_one_list.md:2:1: "
+        f"{source_path}:2:1: "
         + "MD029: Ordered list item prefix "
         + "[Expected: 2; Actual: 1; Style: 1/2/3] (ol-prefix)"
     )
@@ -556,17 +608,20 @@ def test_md029_bad_one_one_three_list_with_config_ordered():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "bad_one_one_three_list.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md029.style=ordered",
         "--strict-config",
         "scan",
-        "test/resources/rules/md029/bad_one_one_three_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md029/bad_one_one_three_list.md:2:1: "
+        f"{source_path}:2:1: "
         + "MD029: Ordered list item prefix "
         + "[Expected: 2; Actual: 1; Style: 1/2/3] (ol-prefix)"
     )
@@ -590,17 +645,20 @@ def test_md029_bad_one_two_one_list_with_config_ordered():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "bad_one_two_one_list.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md029.style=ordered",
         "--strict-config",
         "scan",
-        "test/resources/rules/md029/bad_one_two_one_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md029/bad_one_two_one_list.md:3:1: "
+        f"{source_path}:3:1: "
         + "MD029: Ordered list item prefix "
         + "[Expected: 3; Actual: 1; Style: 1/2/3] (ol-prefix)"
     )
@@ -624,12 +682,15 @@ def test_md029_good_one_two_three_list_with_config_ordered():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "good_one_two_three_list.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md029.style=ordered",
         "--strict-config",
         "scan",
-        "test/resources/rules/md029/good_one_two_three_list.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -654,17 +715,20 @@ def test_md029_bad_two_three_four_list_with_config_ordered():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "bad_two_three_four_list.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md029.style=ordered",
         "--strict-config",
         "scan",
-        "test/resources/rules/md029/bad_two_three_four_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md029/bad_two_three_four_list.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD029: Ordered list item prefix "
         + "[Expected: 1; Actual: 2; Style: 1/2/3] (ol-prefix)"
     )
@@ -688,12 +752,15 @@ def test_md029_good_zero_one_two_list_with_config_ordered():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "good_zero_one_two_three_list.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md029.style=ordered",
         "--strict-config",
         "scan",
-        "test/resources/rules/md029/good_zero_one_two_three_list.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -718,17 +785,20 @@ def test_md029_good_zero_list_with_config_ordered():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "good_zero_list.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md029.style=ordered",
         "--strict-config",
         "scan",
-        "test/resources/rules/md029/good_zero_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md029/good_zero_list.md:2:1: "
+        f"{source_path}:2:1: "
         + "MD029: Ordered list item prefix "
         + "[Expected: 1; Actual: 0; Style: 1/2/3] (ol-prefix)"
     )
@@ -752,17 +822,20 @@ def test_md029_good_one_list_with_config_zero():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "good_one_list.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md029.style=zero",
         "--strict-config",
         "scan",
-        "test/resources/rules/md029/good_one_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md029/good_one_list.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD029: Ordered list item prefix "
         + "[Expected: 0; Actual: 1; Style: 0/0/0] (ol-prefix)"
     )
@@ -786,17 +859,20 @@ def test_md029_bad_one_one_three_list_with_config_zero():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "bad_one_one_three_list.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md029.style=zero",
         "--strict-config",
         "scan",
-        "test/resources/rules/md029/bad_one_one_three_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md029/bad_one_one_three_list.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD029: Ordered list item prefix "
         + "[Expected: 0; Actual: 1; Style: 0/0/0] (ol-prefix)"
     )
@@ -820,17 +896,20 @@ def test_md029_bad_one_two_one_list_with_config_zero():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "bad_one_two_one_list.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md029.style=zero",
         "--strict-config",
         "scan",
-        "test/resources/rules/md029/bad_one_two_one_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md029/bad_one_two_one_list.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD029: Ordered list item prefix "
         + "[Expected: 0; Actual: 1; Style: 0/0/0] (ol-prefix)"
     )
@@ -854,17 +933,20 @@ def test_md029_good_one_two_three_list_with_config_zero():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "good_one_two_three_list.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md029.style=zero",
         "--strict-config",
         "scan",
-        "test/resources/rules/md029/good_one_two_three_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md029/good_one_two_three_list.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD029: Ordered list item prefix "
         + "[Expected: 0; Actual: 1; Style: 0/0/0] (ol-prefix)"
     )
@@ -888,17 +970,20 @@ def test_md029_bad_two_three_four_list_with_config_zero():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "bad_two_three_four_list.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md029.style=zero",
         "--strict-config",
         "scan",
-        "test/resources/rules/md029/bad_two_three_four_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md029/bad_two_three_four_list.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD029: Ordered list item prefix "
         + "[Expected: 0; Actual: 2; Style: 0/0/0] (ol-prefix)"
     )
@@ -922,17 +1007,20 @@ def test_md029_good_zero_one_two_list_with_config_zero():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "good_zero_one_two_three_list.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md029.style=zero",
         "--strict-config",
         "scan",
-        "test/resources/rules/md029/good_zero_one_two_three_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md029/good_zero_one_two_three_list.md:2:1: "
+        f"{source_path}:2:1: "
         + "MD029: Ordered list item prefix "
         + "[Expected: 0; Actual: 1; Style: 0/0/0] (ol-prefix)"
     )
@@ -956,12 +1044,15 @@ def test_md029_good_zero_list_with_config_zero():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md029", "good_zero_list.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md029.style=zero",
         "--strict-config",
         "scan",
-        "test/resources/rules/md029/good_zero_list.md",
+        source_path,
     ]
 
     expected_return_code = 0

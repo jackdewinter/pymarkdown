@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD040 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -15,9 +16,12 @@ def test_md040_good_fenced_block_with_language():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md040", "good_fenced_block_with_language.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md040/good_fenced_block_with_language.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -42,9 +46,16 @@ def test_md040_good_fenced_block_with_space_before_language():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md040",
+        "good_fenced_block_with_space_before_language.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md040/good_fenced_block_with_space_before_language.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -69,14 +80,17 @@ def test_md040_bad_fenced_block_with_no_language():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md040", "bad_fenced_block_with_no_language.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md040/bad_fenced_block_with_no_language.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md040/bad_fenced_block_with_no_language.md:3:1: "
+        f"{source_path}:3:1: "
         + "MD040: Fenced code blocks should have a language specified (fenced-code-language)"
     )
     expected_error = ""
@@ -99,14 +113,17 @@ def test_md040_bad_fenced_block_with_whitespace():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md040", "bad_fenced_block_with_whitespace.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md040/bad_fenced_block_with_whitespace.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md040/bad_fenced_block_with_whitespace.md:4:1: "
+        f"{source_path}:4:1: "
         + "MD040: Fenced code blocks should have a language specified (fenced-code-language)"
     )
     expected_error = ""

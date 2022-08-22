@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD042 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -15,9 +16,12 @@ def test_md042_good_non_empty_link():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md042", "good_non_empty_link.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md042/good_non_empty_link.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -42,16 +46,16 @@ def test_md042_bad_empty_link():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md042", "bad_empty_link.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md042/bad_empty_link.md",
+        source_path,
     ]
 
     expected_return_code = 1
-    expected_output = (
-        "test/resources/rules/md042/bad_empty_link.md:2:1: "
-        + "MD042: No empty links (no-empty-links)"
-    )
+    expected_output = f"{source_path}:2:1: MD042: No empty links (no-empty-links)"
     expected_error = ""
 
     # Act
@@ -72,16 +76,16 @@ def test_md042_bad_whitespace_link():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md042", "bad_whitespace_link.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md042/bad_whitespace_link.md",
+        source_path,
     ]
 
     expected_return_code = 1
-    expected_output = (
-        "test/resources/rules/md042/bad_whitespace_link.md:2:1: "
-        + "MD042: No empty links (no-empty-links)"
-    )
+    expected_output = f"{source_path}:2:1: MD042: No empty links (no-empty-links)"
     expected_error = ""
 
     # Act
@@ -102,9 +106,12 @@ def test_md042_good_non_empty_fragment():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md042", "good_non_empty_fragment.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md042/good_non_empty_fragment.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -129,16 +136,16 @@ def test_md042_bad_link_empty_fragment():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md042", "bad_link_empty_fragment.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md042/bad_link_empty_fragment.md",
+        source_path,
     ]
 
     expected_return_code = 1
-    expected_output = (
-        "test/resources/rules/md042/bad_link_empty_fragment.md:2:1: "
-        + "MD042: No empty links (no-empty-links)"
-    )
+    expected_output = f"{source_path}:2:1: MD042: No empty links (no-empty-links)"
     expected_error = ""
 
     # Act
@@ -159,16 +166,16 @@ def test_md042_bad_link_whitespace_fragment():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md042", "bad_link_whitespace_fragment.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md042/bad_link_whitespace_fragment.md",
+        source_path,
     ]
 
     expected_return_code = 1
-    expected_output = (
-        "test/resources/rules/md042/bad_link_whitespace_fragment.md:2:1: "
-        + "MD042: No empty links (no-empty-links)"
-    )
+    expected_output = f"{source_path}:2:1: MD042: No empty links (no-empty-links)"
     expected_error = ""
 
     # Act
@@ -189,9 +196,12 @@ def test_md042_good_non_empty_image():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md042", "good_non_empty_image.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md042/good_non_empty_image.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -216,16 +226,16 @@ def test_md042_bad_empty_image():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md042", "bad_empty_image.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md042/bad_empty_image.md",
+        source_path,
     ]
 
     expected_return_code = 1
-    expected_output = (
-        "test/resources/rules/md042/bad_empty_image.md:2:1: "
-        + "MD042: No empty links (no-empty-links)"
-    )
+    expected_output = f"{source_path}:2:1: MD042: No empty links (no-empty-links)"
     expected_error = ""
 
     # Act

@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD013 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -17,12 +18,15 @@ def test_md013_bad_configuration_line_length():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "good_small_line.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md013.line_length=not-integer",
         "--strict-config",
         "scan",
-        "test/resources/rules/md013/good_small_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -50,12 +54,15 @@ def test_md013_bad_configuration_line_length_zero():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "good_small_line.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md013.line_length=$#0",
         "--strict-config",
         "scan",
-        "test/resources/rules/md013/good_small_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -83,12 +90,15 @@ def test_md013_bad_configuration_heading_line_length():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "good_small_line.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md013.heading_line_length=not-integer",
         "--strict-config",
         "scan",
-        "test/resources/rules/md013/good_small_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -116,12 +126,15 @@ def test_md013_bad_configuration_headings_active():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "good_small_line.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md013.headings=not-integer",
         "--strict-config",
         "scan",
-        "test/resources/rules/md013/good_small_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -149,12 +162,15 @@ def test_md013_bad_configuration_code_block_line_length():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "good_small_line.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md013.code_block_line_length=not-integer",
         "--strict-config",
         "scan",
-        "test/resources/rules/md013/good_small_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -182,12 +198,15 @@ def test_md013_bad_configuration_code_blocks_active():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "good_small_line.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md013.code_blocks=not-integer",
         "--strict-config",
         "scan",
-        "test/resources/rules/md013/good_small_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -215,12 +234,15 @@ def test_md013_bad_configuration_strict_mode():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "good_small_line.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md013.strict=not-integer",
         "--strict-config",
         "scan",
-        "test/resources/rules/md013/good_small_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -248,12 +270,15 @@ def test_md013_bad_configuration_stern_mode():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "good_small_line.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md013.stern=not-integer",
         "--strict-config",
         "scan",
-        "test/resources/rules/md013/good_small_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -281,9 +306,12 @@ def test_md013_good_small_line():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "good_small_line.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md013/good_small_line.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -309,17 +337,20 @@ def test_md013_good_small_line_with_config():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "good_small_line.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md013.line_length=$#25",
         "--strict-config",
         "scan",
-        "test/resources/rules/md013/good_small_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md013/good_small_line.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD013: Line length "
         + "[Expected: 25, Actual: 38] (line-length)"
     )
@@ -343,9 +374,12 @@ def test_md013_good_medium_line():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "good_medium_line.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md013/good_medium_line.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -371,17 +405,20 @@ def test_md013_good_medium_line_with_config():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "good_medium_line.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md013.line_length=$#50",
         "--strict-config",
         "scan",
-        "test/resources/rules/md013/good_medium_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md013/good_medium_line.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD013: Line length "
         + "[Expected: 50, Actual: 80] (line-length)"
     )
@@ -405,14 +442,17 @@ def test_md013_good_long_line():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "good_long_line.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md013/good_long_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md013/good_long_line.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD013: Line length "
         + "[Expected: 80, Actual: 100] (line-length)"
     )
@@ -437,12 +477,15 @@ def test_md013_good_long_line_with_config():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "good_long_line.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md013.line_length=$#110",
         "--strict-config",
         "scan",
-        "test/resources/rules/md013/good_long_line.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -468,9 +511,16 @@ def test_md013_good_medium_line_with_long_last_word():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md013",
+        "good_medium_line_with_very_long_last_word.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md013/good_medium_line_with_very_long_last_word.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -496,17 +546,24 @@ def test_md013_good_medium_line_with_long_last_word_with_config_strict():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md013",
+        "good_medium_line_with_very_long_last_word.md",
+    )
     supplied_arguments = [
         "--set",
         "plugins.md013.strict=$!True",
         "--strict-config",
         "scan",
-        "test/resources/rules/md013/good_medium_line_with_very_long_last_word.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md013/good_medium_line_with_very_long_last_word.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD013: Line length "
         + "[Expected: 80, Actual: 102] (line-length)"
     )
@@ -531,17 +588,24 @@ def test_md013_good_medium_line_with_long_last_word_with_config_stern():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md013",
+        "good_medium_line_with_very_long_last_word.md",
+    )
     supplied_arguments = [
         "--set",
         "plugins.md013.stern=$!True",
         "--strict-config",
         "scan",
-        "test/resources/rules/md013/good_medium_line_with_very_long_last_word.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md013/good_medium_line_with_very_long_last_word.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD013: Line length "
         + "[Expected: 80, Actual: 102] (line-length)"
     )
@@ -566,14 +630,21 @@ def test_md013_bad_medium_line_with_long_last_word():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md013",
+        "bad_medium_line_with_very_long_last_word.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md013/bad_medium_line_with_very_long_last_word.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md013/bad_medium_line_with_very_long_last_word.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD013: Line length "
         + "[Expected: 80, Actual: 102] (line-length)"
     )
@@ -598,17 +669,24 @@ def test_md013_bad_medium_line_with_long_last_word_with_config_strict():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md013",
+        "bad_medium_line_with_very_long_last_word.md",
+    )
     supplied_arguments = [
         "--set",
         "plugins.md013.strict=$!True",
         "--strict-config",
         "scan",
-        "test/resources/rules/md013/bad_medium_line_with_very_long_last_word.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md013/bad_medium_line_with_very_long_last_word.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD013: Line length "
         + "[Expected: 80, Actual: 102] (line-length)"
     )
@@ -633,12 +711,19 @@ def test_md013_bad_medium_line_with_long_last_word_with_config_stern():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md013",
+        "bad_medium_line_with_very_long_last_word.md",
+    )
     supplied_arguments = [
         "--set",
         "plugins.md013.stern=$!True",
         "--strict-config",
         "scan",
-        "test/resources/rules/md013/bad_medium_line_with_very_long_last_word.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -663,14 +748,21 @@ def test_md013_bad_paragraph_with_long_line_in_middle():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md013",
+        "bad_paragraph_with_long_line_in_middle.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md013/bad_paragraph_with_long_line_in_middle.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md013/bad_paragraph_with_long_line_in_middle.md:3:1: "
+        f"{source_path}:3:1: "
         + "MD013: Line length "
         + "[Expected: 80, Actual: 91] (line-length)"
     )
@@ -694,9 +786,12 @@ def test_md013_good_fenced_code_block():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "good_fenced_code_block.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md013/good_fenced_code_block.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -721,13 +816,16 @@ def test_md013_bad_fenced_code_block():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "bad_fenced_code_block.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md013/bad_fenced_code_block.md",
+        source_path,
     ]
 
     expected_return_code = 1
-    expected_output = "test/resources/rules/md013/bad_fenced_code_block.md:6:1: MD013: Line length [Expected: 80, Actual: 146] (line-length)"
+    expected_output = f"{source_path}:6:1: MD013: Line length [Expected: 80, Actual: 146] (line-length)"
     expected_error = ""
 
     # Act
@@ -749,16 +847,19 @@ def test_md013_bad_fenced_code_block_with_config():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "bad_fenced_code_block.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md013.code_block_line_length=$#100",
         "--strict-config",
         "scan",
-        "test/resources/rules/md013/bad_fenced_code_block.md",
+        source_path,
     ]
 
     expected_return_code = 1
-    expected_output = "test/resources/rules/md013/bad_fenced_code_block.md:6:1: MD013: Line length [Expected: 100, Actual: 146] (line-length)"
+    expected_output = f"{source_path}:6:1: MD013: Line length [Expected: 100, Actual: 146] (line-length)"
     expected_error = ""
 
     # Act
@@ -780,12 +881,15 @@ def test_md013_bad_fenced_code_block_with_config_active():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "bad_fenced_code_block.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md013.code_blocks=$!False",
         "--strict-config",
         "scan",
-        "test/resources/rules/md013/bad_fenced_code_block.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -811,9 +915,12 @@ def test_md013_good_indented_code_block():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "good_indented_code_block.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md013/good_indented_code_block.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -838,13 +945,16 @@ def test_md013_bad_indented_code_block():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "bad_indented_code_block.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md013/bad_indented_code_block.md",
+        source_path,
     ]
 
     expected_return_code = 1
-    expected_output = "test/resources/rules/md013/bad_indented_code_block.md:5:1: MD013: Line length [Expected: 80, Actual: 154] (line-length)"
+    expected_output = f"{source_path}:5:1: MD013: Line length [Expected: 80, Actual: 154] (line-length)"
     expected_error = ""
 
     # Act
@@ -866,16 +976,19 @@ def test_md013_bad_indented_code_block_with_config():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "bad_indented_code_block.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md013.code_block_line_length=$#100",
         "--strict-config",
         "scan",
-        "test/resources/rules/md013/bad_indented_code_block.md",
+        source_path,
     ]
 
     expected_return_code = 1
-    expected_output = "test/resources/rules/md013/bad_indented_code_block.md:5:1: MD013: Line length [Expected: 100, Actual: 154] (line-length)"
+    expected_output = f"{source_path}:5:1: MD013: Line length [Expected: 100, Actual: 154] (line-length)"
     expected_error = ""
 
     # Act
@@ -897,12 +1010,15 @@ def test_md013_bad_indented_code_block_with_config_active():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "bad_indented_code_block.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md013.code_blocks=$!False",
         "--strict-config",
         "scan",
-        "test/resources/rules/md013/bad_indented_code_block.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -927,9 +1043,12 @@ def test_md013_good_thematic_break():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "good_thematic_break.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md013/good_thematic_break.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -954,13 +1073,16 @@ def test_md013_bad_thematic_break():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "bad_thematic_break.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md013/bad_thematic_break.md",
+        source_path,
     ]
 
     expected_return_code = 1
-    expected_output = "test/resources/rules/md013/bad_thematic_break.md:1:1: MD013: Line length [Expected: 80, Actual: 87] (line-length)"
+    expected_output = f"{source_path}:1:1: MD013: Line length [Expected: 80, Actual: 87] (line-length)"
     expected_error = ""
 
     # Act
@@ -982,12 +1104,15 @@ def test_md013_bad_thematic_break_with_config():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "bad_thematic_break.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md013.line_length=$#100",
         "--strict-config",
         "scan",
-        "test/resources/rules/md013/bad_thematic_break.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -1012,9 +1137,12 @@ def test_md013_good_atx_heading():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "good_atx_heading.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md013/good_atx_heading.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -1039,13 +1167,16 @@ def test_md013_bad_atx_heading():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "bad_atx_heading.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md013/bad_atx_heading.md",
+        source_path,
     ]
 
     expected_return_code = 1
-    expected_output = "test/resources/rules/md013/bad_atx_heading.md:1:1: MD013: Line length [Expected: 80, Actual: 88] (line-length)"
+    expected_output = f"{source_path}:1:1: MD013: Line length [Expected: 80, Actual: 88] (line-length)"
     expected_error = ""
 
     # Act
@@ -1067,12 +1198,15 @@ def test_md013_bad_atx_heading_with_config():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "bad_atx_heading.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md013.heading_line_length=$#100",
         "--strict-config",
         "scan",
-        "test/resources/rules/md013/bad_atx_heading.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -1098,12 +1232,15 @@ def test_md013_bad_atx_heading_with_config_active():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "bad_atx_heading.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md013.headings=$!False",
         "--strict-config",
         "scan",
-        "test/resources/rules/md013/bad_atx_heading.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -1128,9 +1265,12 @@ def test_md013_good_setext_heading():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "good_setext_heading.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md013/good_setext_heading.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -1155,13 +1295,16 @@ def test_md013_bad_setext_heading():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "bad_setext_heading.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md013/bad_setext_heading.md",
+        source_path,
     ]
 
     expected_return_code = 1
-    expected_output = "test/resources/rules/md013/bad_setext_heading.md:1:1: MD013: Line length [Expected: 80, Actual: 86] (line-length)"
+    expected_output = f"{source_path}:1:1: MD013: Line length [Expected: 80, Actual: 86] (line-length)"
     expected_error = ""
 
     # Act
@@ -1183,12 +1326,15 @@ def test_md013_bad_setext_heading_with_config():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "bad_setext_heading.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md013.heading_line_length=$#100",
         "--strict-config",
         "scan",
-        "test/resources/rules/md013/bad_setext_heading.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -1214,12 +1360,15 @@ def test_md013_bad_setext_heading_with_config_active():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "bad_setext_heading.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md013.headings=$!False",
         "--strict-config",
         "scan",
-        "test/resources/rules/md013/bad_setext_heading.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -1244,9 +1393,12 @@ def test_md013_good_html_block():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "good_html_block.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md013/good_html_block.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -1271,13 +1423,16 @@ def test_md013_bad_html_block():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "bad_html_block.md"
+    )
     supplied_arguments = [
         "scan",
         "test/resources/rules/md013/bad_html_block.md",
     ]
 
     expected_return_code = 1
-    expected_output = "test/resources/rules/md013/bad_html_block.md:2:1: MD013: Line length [Expected: 80, Actual: 89] (line-length)"
+    expected_output = f"{source_path}:2:1: MD013: Line length [Expected: 80, Actual: 89] (line-length)"
     expected_error = ""
 
     # Act
@@ -1299,12 +1454,15 @@ def test_md013_bad_html_block_with_config():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md013", "bad_html_block.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md013.line_length=$#100",
         "--strict-config",
         "scan",
-        "test/resources/rules/md013/bad_html_block.md",
+        source_path,
     ]
 
     expected_return_code = 0

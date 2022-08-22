@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD048 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -15,12 +16,15 @@ def test_md048_bad_configuration_style():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md048", "good_both_tildes.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md048.style=$#1",
         "--strict-config",
         "scan",
-        "test/resources/rules/md048/good_both_tildes.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -48,12 +52,15 @@ def test_md048_bad_configuration_style_bad():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md048", "good_both_tildes.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md048.style=not-matching",
         "--strict-config",
         "scan",
-        "test/resources/rules/md048/good_both_tildes.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -81,11 +88,14 @@ def test_md048_good_fenced_tildes_with_consistent():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md048", "good_fenced_tildes.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md048.style=consistent",
         "scan",
-        "test/resources/rules/md048/good_fenced_tildes.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -110,11 +120,14 @@ def test_md048_good_fenced_backticks_with_consistent():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md048", "good_fenced_backticks.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md048.style=consistent",
         "scan",
-        "test/resources/rules/md048/good_fenced_backticks.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -139,16 +152,19 @@ def test_md048_bad_fenced_backticks_and_tildes_with_consistent():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md048", "bad_fenced_backticks_and_tildes.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md048.style=consistent",
         "scan",
-        "test/resources/rules/md048/bad_fenced_backticks_and_tildes.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md048/bad_fenced_backticks_and_tildes.md:6:1: "
+        f"{source_path}:6:1: "
         + "MD048: Code fence style "
         + "[Expected: backtick; Actual: tilde] (code-fence-style)"
     )
@@ -172,11 +188,14 @@ def test_md048_good_fenced_backticks_with_backticks():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md048", "good_fenced_backticks.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md048.style=backtick",
         "scan",
-        "test/resources/rules/md048/good_fenced_backticks.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -201,19 +220,22 @@ def test_md048_good_fenced_tildes_with_backticks():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md048", "good_fenced_tildes.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md048.style=backtick",
         "scan",
-        "test/resources/rules/md048/good_fenced_tildes.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md048/good_fenced_tildes.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD048: Code fence style "
         + "[Expected: backtick; Actual: tilde] (code-fence-style)\n"
-        + "test/resources/rules/md048/good_fenced_tildes.md:6:1: "
+        + f"{source_path}:6:1: "
         + "MD048: Code fence style "
         + "[Expected: backtick; Actual: tilde] (code-fence-style)"
     )
@@ -237,16 +259,19 @@ def test_md048_bad_fenced_backticks_and_tildes_with_backticks():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md048", "bad_fenced_backticks_and_tildes.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md048.style=backtick",
         "scan",
-        "test/resources/rules/md048/bad_fenced_backticks_and_tildes.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md048/bad_fenced_backticks_and_tildes.md:6:1: "
+        f"{source_path}:6:1: "
         + "MD048: Code fence style "
         + "[Expected: backtick; Actual: tilde] (code-fence-style)"
     )
@@ -270,11 +295,14 @@ def test_md048_good_fenced_tildes_with_tilde():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md048", "good_fenced_tildes.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md048.style=tilde",
         "scan",
-        "test/resources/rules/md048/good_fenced_tildes.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -299,19 +327,22 @@ def test_md048_good_fenced_backticks_with_tilde():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md048", "good_fenced_backticks.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md048.style=tilde",
         "scan",
-        "test/resources/rules/md048/good_fenced_backticks.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md048/good_fenced_backticks.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD048: Code fence style "
         + "[Expected: tilde; Actual: backtick] (code-fence-style)\n"
-        + "test/resources/rules/md048/good_fenced_backticks.md:6:1: "
+        + f"{source_path}:6:1: "
         + "MD048: Code fence style "
         + "[Expected: tilde; Actual: backtick] (code-fence-style)"
     )
@@ -335,16 +366,19 @@ def test_md048_bad_fenced_backticks_and_tildes_with_indented():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md048", "bad_fenced_backticks_and_tildes.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md048.style=tilde",
         "scan",
-        "test/resources/rules/md048/bad_fenced_backticks_and_tildes.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md048/bad_fenced_backticks_and_tildes.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD048: Code fence style "
         + "[Expected: tilde; Actual: backtick] (code-fence-style)"
     )

@@ -7,6 +7,8 @@ from test.utils import write_temporary_configuration
 
 import pytest
 
+source_path = os.path.join("test", "resources", "rules", "md002") + os.sep
+
 
 @pytest.mark.rules
 def test_md002_all_samples():
@@ -23,15 +25,15 @@ def test_md002_all_samples():
         "--enable-rules",
         "MD002",
         "scan",
-        "test/resources/rules/md002",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md002/improper_atx_heading_start.md:1:1: "
+        f"{source_path}improper_atx_heading_start.md:1:1: "
         + "MD002: First heading of the document should be a top level heading. "
         + "[Expected: h1; Actual: h2] (first-heading-h1,first-header-h1)\n"
-        + "test/resources/rules/md002/improper_setext_heading_start.md:2:1: "
+        + f"{source_path}improper_setext_heading_start.md:2:1: "
         + "MD002: First heading of the document should be a top level heading. "
         + "[Expected: h1; Actual: h2] (first-heading-h1,first-header-h1)\n"
     )
@@ -62,7 +64,7 @@ def test_md002_bad_configuration_level():
         "--enable-rules",
         "MD002",
         "scan",
-        "test/resources/rules/md002/proper_atx_heading_start.md",
+        f"{source_path}proper_atx_heading_start.md",
     ]
 
     expected_return_code = 1
@@ -97,7 +99,7 @@ def test_md002_bad_configuration_level_value():
         "--enable-rules",
         "MD002",
         "scan",
-        "test/resources/rules/md002/proper_atx_heading_start.md",
+        f"{source_path}proper_atx_heading_start.md",
     ]
 
     expected_return_code = 1
@@ -129,7 +131,7 @@ def test_md002_good_proper_atx_heading_start():
         "--enable-rules",
         "MD002",
         "scan",
-        "test/resources/rules/md002/proper_atx_heading_start.md",
+        f"{source_path}proper_atx_heading_start.md",
     ]
 
     expected_return_code = 0
@@ -164,12 +166,12 @@ def test_md002_bad_proper_atx_heading_start_with_alternate_configuration():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md002/proper_atx_heading_start.md",
+            f"{source_path}proper_atx_heading_start.md",
         ]
 
         expected_return_code = 1
         expected_output = (
-            "test/resources/rules/md002/proper_atx_heading_start.md:1:1: "
+            f"{source_path}proper_atx_heading_start.md:1:1: "
             + "MD002: First heading of the document should be a top level heading. "
             + "[Expected: h2; Actual: h1] (first-heading-h1,first-header-h1)\n"
         )
@@ -200,7 +202,7 @@ def test_md002_good_proper_setext_heading_start():
         "--enable-rules",
         "MD002",
         "scan",
-        "test/resources/rules/md002/proper_setext_heading_start.md",
+        f"{source_path}proper_setext_heading_start.md",
     ]
 
     expected_return_code = 0
@@ -235,12 +237,12 @@ def test_md002_bad_proper_setext_heading_start_with_alternate_configuration():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md002/proper_setext_heading_start.md",
+            f"{source_path}proper_setext_heading_start.md",
         ]
 
         expected_return_code = 1
         expected_output = (
-            "test/resources/rules/md002/proper_setext_heading_start.md:2:1: "
+            f"{source_path}proper_setext_heading_start.md:2:1: "
             + "MD002: First heading of the document should be a top level heading. "
             + "[Expected: h2; Actual: h1] (first-heading-h1,first-header-h1)\n"
         )
@@ -271,12 +273,12 @@ def test_md002_bad_improper_atx_heading_start():
         "--enable-rules",
         "MD002",
         "scan",
-        "test/resources/rules/md002/improper_atx_heading_start.md",
+        f"{source_path}improper_atx_heading_start.md",
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md002/improper_atx_heading_start.md:1:1: "
+        f"{source_path}improper_atx_heading_start.md:1:1: "
         + "MD002: First heading of the document should be a top level heading. "
         + "[Expected: h1; Actual: h2] (first-heading-h1,first-header-h1)\n"
     )
@@ -310,7 +312,7 @@ def test_md002_good_improper_atx_heading_start_with_alternate_configuration():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md002/improper_atx_heading_start.md",
+            f"{source_path}improper_atx_heading_start.md",
         ]
 
         expected_return_code = 0
@@ -344,12 +346,12 @@ def test_md002_bad_improper_setext_heading_start():
         "--enable-rules",
         "MD002",
         "scan",
-        "test/resources/rules/md002/improper_setext_heading_start.md",
+        f"{source_path}improper_setext_heading_start.md",
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md002/improper_setext_heading_start.md:2:1: "
+        f"{source_path}improper_setext_heading_start.md:2:1: "
         + "MD002: First heading of the document should be a top level heading. "
         + "[Expected: h1; Actual: h2] (first-heading-h1,first-header-h1)\n"
     )
@@ -385,7 +387,7 @@ def test_md002_good_improper_setext_heading_start_with_alternate_configuration()
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md002/improper_setext_heading_start.md",
+            f"{source_path}improper_setext_heading_start.md",
         ]
 
         expected_return_code = 0

@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD030 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -17,12 +18,15 @@ def test_md030_bad_configuration_ol_single():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md030", "good_one_list.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md030.ol_single=not-integer",
         "--strict-config",
         "scan",
-        "test/resources/rules/md030/good_one_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -50,12 +54,15 @@ def test_md030_bad_configuration_ol_single_zero():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md030", "good_one_list.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md030.ol_single=$#0",
         "--strict-config",
         "scan",
-        "test/resources/rules/md030/good_one_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -83,12 +90,15 @@ def test_md030_bad_configuration_ol_multi():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md030", "good_one_list.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md030.ol_multi=not-integer",
         "--strict-config",
         "scan",
-        "test/resources/rules/md030/good_one_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -116,12 +126,15 @@ def test_md030_bad_configuration_ol_multi_zero():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md030", "good_one_list.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md030.ol_multi=$#0",
         "--strict-config",
         "scan",
-        "test/resources/rules/md030/good_one_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -149,9 +162,12 @@ def test_md030_good_spacing_ol_single_x():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md030", "good_spacing_ol_single.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md030/good_spacing_ol_single.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -178,6 +194,9 @@ def test_md030_good_spacing_ol_single_with_config_1_2():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md030", "good_spacing_ol_single.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md030.ol_single=$#1",
@@ -185,7 +204,7 @@ def test_md030_good_spacing_ol_single_with_config_1_2():
         "plugins.md030.ol_multi=$#2",
         "--strict-config",
         "scan",
-        "test/resources/rules/md030/good_spacing_ol_single.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -211,6 +230,9 @@ def test_md030_good_spacing_ol_single_with_config_2_1():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md030", "good_spacing_ol_single.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md030.ol_single=$#2",
@@ -218,18 +240,18 @@ def test_md030_good_spacing_ol_single_with_config_2_1():
         "plugins.md030.ol_multi=$#1",
         "--strict-config",
         "scan",
-        "test/resources/rules/md030/good_spacing_ol_single.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md030/good_spacing_ol_single.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 2; Actual: 1] (list-marker-space)\n"
-        + "test/resources/rules/md030/good_spacing_ol_single.md:2:1: "
+        + f"{source_path}:2:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 2; Actual: 1] (list-marker-space)\n"
-        + "test/resources/rules/md030/good_spacing_ol_single.md:3:1: "
+        + f"{source_path}:3:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 2; Actual: 1] (list-marker-space)"
     )
@@ -253,21 +275,24 @@ def test_md030_bad_spacing_ol_single():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md030", "bad_spacing_ol_single.md"
+    )
     supplied_arguments = [
         "--stack-trace",
         "scan",
-        "test/resources/rules/md030/bad_spacing_ol_single.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md030/bad_spacing_ol_single.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)\n"
-        + "test/resources/rules/md030/bad_spacing_ol_single.md:2:1: "
+        + f"{source_path}:2:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)\n"
-        + "test/resources/rules/md030/bad_spacing_ol_single.md:3:1: "
+        + f"{source_path}:3:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)"
     )
@@ -292,6 +317,9 @@ def test_md030_bad_spacing_ol_single_config_1_2():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md030", "bad_spacing_ol_single.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md030.ol_single=$#1",
@@ -300,18 +328,18 @@ def test_md030_bad_spacing_ol_single_config_1_2():
         "--strict-config",
         "--stack-trace",
         "scan",
-        "test/resources/rules/md030/bad_spacing_ol_single.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md030/bad_spacing_ol_single.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)\n"
-        + "test/resources/rules/md030/bad_spacing_ol_single.md:2:1: "
+        + f"{source_path}:2:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)\n"
-        + "test/resources/rules/md030/bad_spacing_ol_single.md:3:1: "
+        + f"{source_path}:3:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)"
     )
@@ -336,6 +364,9 @@ def test_md030_bad_spacing_ol_single_config_2_1():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md030", "bad_spacing_ol_single.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md030.ol_single=$#2",
@@ -344,7 +375,7 @@ def test_md030_bad_spacing_ol_single_config_2_1():
         "--strict-config",
         "--stack-trace",
         "scan",
-        "test/resources/rules/md030/bad_spacing_ol_single.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -369,9 +400,12 @@ def test_md030_good_spacing_ol_double():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md030", "good_spacing_ol_double.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md030/good_spacing_ol_double.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -397,6 +431,9 @@ def test_md030_good_spacing_ol_double_config_1_2():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md030", "good_spacing_ol_double.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md030.ol_single=$#1",
@@ -404,12 +441,12 @@ def test_md030_good_spacing_ol_double_config_1_2():
         "plugins.md030.ol_multi=$#2",
         "--strict-config",
         "scan",
-        "test/resources/rules/md030/good_spacing_ol_double.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md030/good_spacing_ol_double.md:2:1: "
+        f"{source_path}:2:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 2; Actual: 1] (list-marker-space)\n"
     )
@@ -434,6 +471,9 @@ def test_md030_good_spacing_ol_double_config_2_1():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md030", "good_spacing_ol_double.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md030.ol_single=$#2",
@@ -441,15 +481,15 @@ def test_md030_good_spacing_ol_double_config_2_1():
         "plugins.md030.ol_multi=$#1",
         "--strict-config",
         "scan",
-        "test/resources/rules/md030/good_spacing_ol_double.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md030/good_spacing_ol_double.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 2; Actual: 1] (list-marker-space)\n"
-        + "test/resources/rules/md030/good_spacing_ol_double.md:5:1: "
+        + f"{source_path}:5:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 2; Actual: 1] (list-marker-space)"
     )
@@ -473,21 +513,24 @@ def test_md030_bad_spacing_ol_double():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md030", "bad_spacing_ol_double.md"
+    )
     supplied_arguments = [
         "--stack-trace",
         "scan",
-        "test/resources/rules/md030/bad_spacing_ol_double.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md030/bad_spacing_ol_double.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)\n"
-        + "test/resources/rules/md030/bad_spacing_ol_double.md:2:1: "
+        + f"{source_path}:2:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)\n"
-        + "test/resources/rules/md030/bad_spacing_ol_double.md:5:1: "
+        + f"{source_path}:5:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)"
     )
@@ -512,6 +555,9 @@ def test_md030_bad_spacing_ol_double_config_1_2():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md030", "bad_spacing_ol_double.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md030.ol_single=$#1",
@@ -519,15 +565,15 @@ def test_md030_bad_spacing_ol_double_config_1_2():
         "plugins.md030.ol_multi=$#2",
         "--stack-trace",
         "scan",
-        "test/resources/rules/md030/bad_spacing_ol_double.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md030/bad_spacing_ol_double.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)\n"
-        + "test/resources/rules/md030/bad_spacing_ol_double.md:5:1: "
+        + f"{source_path}:5:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)"
     )
@@ -552,6 +598,9 @@ def test_md030_bad_spacing_ol_double_config_2_1():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md030", "bad_spacing_ol_double.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md030.ol_single=$#2",
@@ -559,12 +608,12 @@ def test_md030_bad_spacing_ol_double_config_2_1():
         "plugins.md030.ol_multi=$#1",
         "--stack-trace",
         "scan",
-        "test/resources/rules/md030/bad_spacing_ol_double.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md030/bad_spacing_ol_double.md:2:1: "
+        f"{source_path}:2:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)\n"
     )
@@ -589,9 +638,12 @@ def test_md030_good_spacing_ol_single_nested():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md030", "good_spacing_ol_single_nested.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md030/good_spacing_ol_single_nested.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -617,22 +669,25 @@ def test_md030_bad_spacing_ol_single_nested():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md030", "bad_spacing_ol_single_nested.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md007",
         "scan",
-        "test/resources/rules/md030/bad_spacing_ol_single_nested.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md030/bad_spacing_ol_single_nested.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)\n"
-        + "test/resources/rules/md030/bad_spacing_ol_single_nested.md:2:5: "
+        + f"{source_path}:2:5: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)\n"
-        + "test/resources/rules/md030/bad_spacing_ol_single_nested.md:3:1: "
+        + f"{source_path}:3:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)"
     )
@@ -657,9 +712,12 @@ def test_md030_good_spacing_ol_single_nested_double():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md030", "good_spacing_ol_single_nested_double.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md030/good_spacing_ol_single_nested_double.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -685,6 +743,9 @@ def test_md030_good_spacing_ol_single_nested_double_2_1():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md030", "good_spacing_ol_single_nested_double.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md030.ol_single=$#2",
@@ -692,15 +753,15 @@ def test_md030_good_spacing_ol_single_nested_double_2_1():
         "plugins.md030.ol_multi=$#1",
         "--strict-config",
         "scan",
-        "test/resources/rules/md030/good_spacing_ol_single_nested_double.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md030/good_spacing_ol_single_nested_double.md:4:4: "
+        f"{source_path}:4:4: "
         + "MD030: Spaces after list markers "
         + "[Expected: 2; Actual: 1] (list-marker-space)\n"
-        + "test/resources/rules/md030/good_spacing_ol_single_nested_double.md:7:1: "
+        + f"{source_path}:7:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 2; Actual: 1] (list-marker-space)"
     )
@@ -725,22 +786,25 @@ def test_md030_bad_spacing_ol_single_nested_double():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md030", "bad_spacing_ol_single_nested_double.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md007",
         "scan",
-        "test/resources/rules/md030/bad_spacing_ol_single_nested_double.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md030/bad_spacing_ol_single_nested_double.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)\n"
-        + "test/resources/rules/md030/bad_spacing_ol_single_nested_double.md:2:5: "
+        + f"{source_path}:2:5: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)\n"
-        + "test/resources/rules/md030/bad_spacing_ol_single_nested_double.md:5:1: "
+        + f"{source_path}:5:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)"
     )
@@ -765,6 +829,9 @@ def test_md030_bad_spacing_ol_single_nested_double_2_1():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md030", "bad_spacing_ol_single_nested_double.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md030.ol_single=$#2",
@@ -774,12 +841,12 @@ def test_md030_bad_spacing_ol_single_nested_double_2_1():
         "--disable-rules",
         "md007",
         "scan",
-        "test/resources/rules/md030/bad_spacing_ol_single_nested_double.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md030/bad_spacing_ol_single_nested_double.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)"
     )

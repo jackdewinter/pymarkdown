@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD027 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -16,16 +17,19 @@ def test_md027_bad_block_quote_atx_heading_plus_one():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md027", "bad_block_quote_atx_heading_plus_one.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md022,md023",
         "scan",
-        "test/resources/rules/md027/bad_block_quote_atx_heading_plus_one.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md027/bad_block_quote_atx_heading_plus_one.md:2:4: "
+        f"{source_path}:2:4: "
         + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
     )
     expected_error = ""
@@ -49,16 +53,23 @@ def test_md027_bad_block_quote_atx_heading_misaligned():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md027",
+        "bad_block_quote_atx_heading_misaligned.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md022,md023",
         "scan",
-        "test/resources/rules/md027/bad_block_quote_atx_heading_misaligned.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md027/bad_block_quote_atx_heading_misaligned.md:2:3: "
+        f"{source_path}:2:3: "
         + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
     )
     expected_error = ""
@@ -82,16 +93,23 @@ def test_md027_bad_block_quote_fenced_first_plus_one():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md027",
+        "bad_block_quote_fenced_first_plus_one.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md031",
         "scan",
-        "test/resources/rules/md027/bad_block_quote_fenced_first_plus_one.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md027/bad_block_quote_fenced_first_plus_one.md:2:4: "
+        f"{source_path}:2:4: "
         + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
     )
     expected_error = ""
@@ -115,16 +133,19 @@ def test_md027_bad_block_quote_fenced_last_plus_one():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md027", "bad_block_quote_fenced_last_plus_one.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md031",
         "scan",
-        "test/resources/rules/md027/bad_block_quote_fenced_last_plus_one.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md027/bad_block_quote_fenced_last_plus_one.md:4:4: "
+        f"{source_path}:4:4: "
         + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
     )
     expected_error = ""
@@ -148,16 +169,23 @@ def test_md027_bad_block_quote_fenced_last_misaligned():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md027",
+        "bad_block_quote_fenced_last_misaligned.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md031",
         "scan",
-        "test/resources/rules/md027/bad_block_quote_fenced_last_misaligned.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md027/bad_block_quote_fenced_last_misaligned.md:4:3: "
+        f"{source_path}:4:3: "
         + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
     )
     expected_error = ""
@@ -181,14 +209,21 @@ def test_md027_bad_block_quote_lrd_multiple_one_plus_one():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md027",
+        "bad_block_quote_lrd_multiple_one_plus_one.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md027/bad_block_quote_lrd_multiple_one_plus_one.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md027/bad_block_quote_lrd_multiple_one_plus_one.md:3:4: "
+        f"{source_path}:3:4: "
         + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
     )
     expected_error = ""
@@ -212,14 +247,21 @@ def test_md027_bad_block_quote_lrd_multiple_three_plus_one():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md027",
+        "bad_block_quote_lrd_multiple_three_plus_one.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md027/bad_block_quote_lrd_multiple_three_plus_one.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md027/bad_block_quote_lrd_multiple_three_plus_one.md:5:4: "
+        f"{source_path}:5:4: "
         + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
     )
     expected_error = ""
@@ -243,14 +285,21 @@ def test_md027_bad_block_quote_lrd_multiple_three_misaligned():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md027",
+        "bad_block_quote_lrd_multiple_three_misaligned.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md027/bad_block_quote_lrd_multiple_three_misaligned.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md027/bad_block_quote_lrd_multiple_three_misaligned.md:5:3: "
+        f"{source_path}:5:3: "
         + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
     )
     expected_error = ""
@@ -274,14 +323,21 @@ def test_md027_bad_block_quote_lrd_multiple_four_plus_one():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md027",
+        "bad_block_quote_lrd_multiple_four_plus_one.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md027/bad_block_quote_lrd_multiple_four_plus_one.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md027/bad_block_quote_lrd_multiple_four_plus_one.md:6:4: "
+        f"{source_path}:6:4: "
         + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
     )
     expected_error = ""
@@ -305,14 +361,21 @@ def test_md027_bad_block_quote_lrd_multiple_four_misaligned():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md027",
+        "bad_block_quote_lrd_multiple_four_misaligned.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md027/bad_block_quote_lrd_multiple_four_misaligned.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md027/bad_block_quote_lrd_multiple_four_misaligned.md:6:3: "
+        f"{source_path}:6:3: "
         + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
     )
     expected_error = ""
@@ -335,14 +398,17 @@ def test_md027_bad_block_quote_thematic_plus_one():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md027", "bad_block_quote_thematic_plus_one.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md027/bad_block_quote_thematic_plus_one.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md027/bad_block_quote_thematic_plus_one.md:3:4: "
+        f"{source_path}:3:4: "
         + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
     )
     expected_error = ""
@@ -365,16 +431,23 @@ def test_md027_bad_block_quote_setext_heading_first_line_plus_one():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md027",
+        "bad_block_quote_setext_heading_first_line_plus_one.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md023",
         "scan",
-        "test/resources/rules/md027/bad_block_quote_setext_heading_first_line_plus_one.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md027/bad_block_quote_setext_heading_first_line_plus_one.md:3:4: "
+        f"{source_path}:3:4: "
         + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
     )
     expected_error = ""
@@ -397,16 +470,23 @@ def test_md027_bad_block_quote_setext_heading_multiples_first_plus_one():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md027",
+        "bad_block_quote_setext_heading_multiples_first_plus_one.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md023",
         "scan",
-        "test/resources/rules/md027/bad_block_quote_setext_heading_multiples_first_plus_one.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md027/bad_block_quote_setext_heading_multiples_first_plus_one.md:3:4: "
+        f"{source_path}:3:4: "
         + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
     )
     expected_error = ""
@@ -429,16 +509,23 @@ def test_md027_bad_block_quote_setext_heading_multiples_middle_plus_one():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md027",
+        "bad_block_quote_setext_heading_multiples_middle_plus_one.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md023",
         "scan",
-        "test/resources/rules/md027/bad_block_quote_setext_heading_multiples_middle_plus_one.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md027/bad_block_quote_setext_heading_multiples_middle_plus_one.md:4:4: "
+        f"{source_path}:4:4: "
         + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
     )
     expected_error = ""
@@ -462,16 +549,23 @@ def test_md027_bad_block_quote_setext_heading_multiples_middle_misaligned():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md027",
+        "bad_block_quote_setext_heading_multiples_middle_misaligned.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md023",
         "scan",
-        "test/resources/rules/md027/bad_block_quote_setext_heading_multiples_middle_misaligned.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md027/bad_block_quote_setext_heading_multiples_middle_misaligned.md:4:3: "
+        f"{source_path}:4:3: "
         + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
     )
     expected_error = ""
@@ -494,16 +588,23 @@ def test_md027_bad_block_quote_setext_heading_multiples_last_plus_one():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md027",
+        "bad_block_quote_setext_heading_multiples_last_plus_one.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md023",
         "scan",
-        "test/resources/rules/md027/bad_block_quote_setext_heading_multiples_last_plus_one.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md027/bad_block_quote_setext_heading_multiples_last_plus_one.md:5:4: "
+        f"{source_path}:5:4: "
         + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
     )
     expected_error = ""
@@ -526,16 +627,23 @@ def test_md027_bad_block_quote_setext_heading_multiples_last_misaligned():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md027",
+        "bad_block_quote_setext_heading_multiples_last_misaligned.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md023",
         "scan",
-        "test/resources/rules/md027/bad_block_quote_setext_heading_multiples_last_misaligned.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md027/bad_block_quote_setext_heading_multiples_last_misaligned.md:5:3: "
+        f"{source_path}:5:3: "
         + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
     )
     expected_error = ""
@@ -558,16 +666,23 @@ def test_md027_bad_block_quote_setext_heading_second_line_plus_one():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md027",
+        "bad_block_quote_setext_heading_second_line_plus_one.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md023",
         "scan",
-        "test/resources/rules/md027/bad_block_quote_setext_heading_second_line_plus_one.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md027/bad_block_quote_setext_heading_second_line_plus_one.md:4:4: "
+        f"{source_path}:4:4: "
         + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
     )
     expected_error = ""
@@ -590,16 +705,23 @@ def test_md027_bad_block_quote_setext_heading_second_line_misaligned():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md027",
+        "bad_block_quote_setext_heading_second_line_misaligned.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md023",
         "scan",
-        "test/resources/rules/md027/bad_block_quote_setext_heading_second_line_misaligned.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md027/bad_block_quote_setext_heading_second_line_misaligned.md:4:3: "
+        f"{source_path}:4:3: "
         + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
     )
     expected_error = ""

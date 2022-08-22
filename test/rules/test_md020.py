@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD020 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -17,9 +18,12 @@ def test_md020_good_start_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md020", "good_start_spacing.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md020/good_start_spacing.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -44,9 +48,12 @@ def test_md020_good_start_spacing_in_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md020", "good_start_spacing_in_list.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md020/good_start_spacing_in_list.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -71,9 +78,12 @@ def test_md020_good_start_spacing_in_block_quote():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md020", "good_start_spacing_in_block_quote.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md020/good_start_spacing_in_block_quote.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -98,11 +108,14 @@ def test_md020_bad_ignore_bad_atx_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md020", "ignore_bad_atx_spacing.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md018",
         "scan",
-        "test/resources/rules/md020/ignore_bad_atx_spacing.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -127,17 +140,20 @@ def test_md020_bad_missing_start_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md020", "missing_start_spacing.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md020/missing_start_spacing.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/missing_start_spacing.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/missing_start_spacing.md:3:1: "
+        + f"{source_path}:3:1: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
     )
@@ -162,17 +178,20 @@ def test_md020_bad_missing_start_spacing_in_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md020", "missing_start_spacing_in_list.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md020/missing_start_spacing_in_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/missing_start_spacing_in_list.md:1:4: "
+        f"{source_path}:1:4: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/missing_start_spacing_in_list.md:3:4: "
+        + f"{source_path}:3:4: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
     )
@@ -197,19 +216,26 @@ def test_md020_bad_missing_start_spacing_in_block_quotes():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md020",
+        "missing_start_spacing_in_block_quotes.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md009",
         "scan",
-        "test/resources/rules/md020/missing_start_spacing_in_block_quotes.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/missing_start_spacing_in_block_quotes.md:1:3: "
+        f"{source_path}:1:3: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/missing_start_spacing_in_block_quotes.md:3:3: "
+        + f"{source_path}:3:3: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
     )
@@ -233,17 +259,20 @@ def test_md020_bad_missing_end_spacingx():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md020", "missing_end_spacing.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md020/missing_end_spacing.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/missing_end_spacing.md:1:12: "
+        f"{source_path}:1:12: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/missing_end_spacing.md:3:13: "
+        + f"{source_path}:3:13: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
     )
@@ -267,17 +296,20 @@ def test_md020_bad_missing_end_spacing_in_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md020", "missing_end_spacing_in_list.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md020/missing_end_spacing_in_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/missing_end_spacing_in_list.md:1:15: "
+        f"{source_path}:1:15: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/missing_end_spacing_in_list.md:3:16: "
+        + f"{source_path}:3:16: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
     )
@@ -301,17 +333,20 @@ def test_md020_bad_missing_end_spacing_in_block_quotes():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md020", "missing_end_spacing_in_block_quotes.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md020/missing_end_spacing_in_block_quotes.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/missing_end_spacing_in_block_quotes.md:1:14: "
+        f"{source_path}:1:14: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/missing_end_spacing_in_block_quotes.md:3:15: "
+        + f"{source_path}:3:15: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
     )
@@ -336,9 +371,12 @@ def test_md020_good_almost_missing_end_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md020", "almost_missing_end_spacing.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md020/almost_missing_end_spacing.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -364,17 +402,20 @@ def test_md020_bad_missing_both_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md020", "missing_both_spacing.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md020/missing_both_spacing.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/missing_both_spacing.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/missing_both_spacing.md:3:1: "
+        + f"{source_path}:3:1: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
     )
@@ -399,17 +440,20 @@ def test_md020_bad_missing_both_spacing_in_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md020", "missing_both_spacing_in_list.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md020/missing_both_spacing_in_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/missing_both_spacing_in_list.md:1:4: "
+        f"{source_path}:1:4: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/missing_both_spacing_in_list.md:3:4: "
+        + f"{source_path}:3:4: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
     )
@@ -434,19 +478,22 @@ def test_md020_bad_missing_both_spacing_in_block_quotes():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md020", "missing_both_spacing_in_block_quotes.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md009",
         "scan",
-        "test/resources/rules/md020/missing_both_spacing_in_block_quotes.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/missing_both_spacing_in_block_quotes.md:1:3: "
+        f"{source_path}:1:3: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/missing_both_spacing_in_block_quotes.md:3:3: "
+        + f"{source_path}:3:3: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
     )
@@ -470,9 +517,12 @@ def test_md020_good_with_setext_headings():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md020", "with_setext_headings.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md020/with_setext_headings.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -497,11 +547,14 @@ def test_md020_good_with_code_blocks():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md020", "with_code_blocks.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md046",
         "scan",
-        "test/resources/rules/md020/with_code_blocks.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -526,11 +579,14 @@ def test_md020_good_with_html_blocks():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md020", "with_html_blocks.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md033",
         "scan",
-        "test/resources/rules/md020/with_html_blocks.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -555,17 +611,20 @@ def test_md020_bad_multiple_within_paragraph():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md020", "multiple_within_paragraph.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md020/multiple_within_paragraph.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/multiple_within_paragraph.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/multiple_within_paragraph.md:2:1: "
+        + f"{source_path}:2:1: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
     )
@@ -590,17 +649,24 @@ def test_md020_bad_multiple_within_paragraph_separated_codespan():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md020",
+        "multiple_within_paragraph_separated_codespan.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md020/multiple_within_paragraph_separated_codespan.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/multiple_within_paragraph_separated_codespan.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/multiple_within_paragraph_separated_codespan.md:3:1: "
+        + f"{source_path}:3:1: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
     )
@@ -625,17 +691,24 @@ def test_md020_bad_multiple_within_paragraph_separated_codespan_multi():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md020",
+        "multiple_within_paragraph_separated_codespan_multi.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md020/multiple_within_paragraph_separated_codespan_multi.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/multiple_within_paragraph_separated_codespan_multi.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/multiple_within_paragraph_separated_codespan_multi.md:4:1: "
+        + f"{source_path}:4:1: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
     )
@@ -660,14 +733,21 @@ def test_md020_bad_multiple_within_paragraph_separated_inline_codespan_multi():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md020",
+        "multiple_within_paragraph_separated_inline_codespan_multi.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_codespan_multi.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_codespan_multi.md:4:3: "
+        f"{source_path}:4:3: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
     )
@@ -692,16 +772,23 @@ def test_md020_bad_multiple_within_paragraph_separated_inline_rawhtml_multi():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md020",
+        "multiple_within_paragraph_separated_inline_rawhtml_multi.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md033",
         "scan",
-        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_rawhtml_multi.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_rawhtml_multi.md:4:3: "
+        f"{source_path}:4:3: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
     )
@@ -726,14 +813,21 @@ def test_md020_bad_multiple_within_paragraph_separated_inline_image_multi():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md020",
+        "multiple_within_paragraph_separated_inline_image_multi.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_image_multi.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_image_multi.md:8:3: "
+        f"{source_path}:8:3: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
     )
@@ -758,14 +852,21 @@ def test_md020_bad_multiple_within_paragraph_separated_full_image_multi():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md020",
+        "multiple_within_paragraph_separated_full_image_multi.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md020/multiple_within_paragraph_separated_full_image_multi.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/multiple_within_paragraph_separated_full_image_multi.md:5:3: "
+        f"{source_path}:5:3: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
     )
@@ -790,14 +891,21 @@ def test_md020_bad_multiple_within_paragraph_separated_shortcut_image_multi():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md020",
+        "multiple_within_paragraph_separated_shortcut_image_multi.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md020/multiple_within_paragraph_separated_shortcut_image_multi.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/multiple_within_paragraph_separated_shortcut_image_multi.md:4:3: "
+        f"{source_path}:4:3: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
     )
@@ -822,14 +930,21 @@ def test_md020_bad_multiple_within_paragraph_separated_collapsed_image_multi():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md020",
+        "multiple_within_paragraph_separated_collapsed_image_multi.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md020/multiple_within_paragraph_separated_collapsed_image_multi.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/multiple_within_paragraph_separated_collapsed_image_multi.md:4:3: "
+        f"{source_path}:4:3: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
     )
@@ -854,14 +969,21 @@ def test_md020_bad_multiple_within_paragraph_separated_inline_link_multi():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md020",
+        "multiple_within_paragraph_separated_inline_link_multi.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_link_multi.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_link_multi.md:8:3: "
+        f"{source_path}:8:3: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
     )
@@ -886,14 +1008,21 @@ def test_md020_bad_multiple_within_paragraph_separated_full_link_multi():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md020",
+        "multiple_within_paragraph_separated_full_link_multi.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md020/multiple_within_paragraph_separated_full_link_multi.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/multiple_within_paragraph_separated_full_link_multi.md:5:3: "
+        f"{source_path}:5:3: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
     )
@@ -918,14 +1047,21 @@ def test_md020_bad_multiple_within_paragraph_separated_separated_shortcut_link_m
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md020",
+        "multiple_within_paragraph_separated_shortcut_link_multi.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md020/multiple_within_paragraph_separated_shortcut_link_multi.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/multiple_within_paragraph_separated_shortcut_link_multi.md:4:3: "
+        f"{source_path}:4:3: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
     )
@@ -950,14 +1086,21 @@ def test_md020_bad_multiple_within_paragraph_separated_collapsed_link_multi():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md020",
+        "multiple_within_paragraph_separated_collapsed_link_multi.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md020/multiple_within_paragraph_separated_collapsed_link_multi.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/multiple_within_paragraph_separated_collapsed_link_multi.md:4:3: "
+        f"{source_path}:4:3: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
     )
@@ -982,14 +1125,21 @@ def test_md020_bad_multiple_within_paragraph_separated_inline_hardbreak_multi():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md020",
+        "multiple_within_paragraph_separated_inline_hardbreak_multi.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_hardbreak_multi.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_hardbreak_multi.md:3:3: "
+        f"{source_path}:3:3: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
     )
@@ -1014,23 +1164,26 @@ def test_md020_bad_paragraphs_with_starting_whitespace():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md020", "paragraphs_with_starting_whitespace.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md020/paragraphs_with_starting_whitespace.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/paragraphs_with_starting_whitespace.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/paragraphs_with_starting_whitespace.md:3:2: "
+        + f"{source_path}:3:2: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/paragraphs_with_starting_whitespace.md:5:3: "
+        + f"{source_path}:5:3: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/paragraphs_with_starting_whitespace.md:7:4: "
+        + f"{source_path}:7:4: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
     )
@@ -1055,23 +1208,30 @@ def test_md020_bad_single_paragraph_with_starting_whitespace():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md020",
+        "single_paragraph_with_starting_whitespace.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md020/single_paragraph_with_starting_whitespace.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/single_paragraph_with_starting_whitespace.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/single_paragraph_with_starting_whitespace.md:2:2: "
+        + f"{source_path}:2:2: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/single_paragraph_with_starting_whitespace.md:3:3: "
+        + f"{source_path}:3:3: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/single_paragraph_with_starting_whitespace.md:4:4: "
+        + f"{source_path}:4:4: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
         + "(no-missing-space-closed-atx)\n"
     )
@@ -1096,11 +1256,18 @@ def test_md020_bad_single_paragraph_with_whitespace_at_start():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md020",
+        "single_paragraph_with_whitespace_at_start.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md010,md021,md022,md023",
         "scan",
-        "test/resources/rules/md020/single_paragraph_with_whitespace_at_start.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -1126,11 +1293,18 @@ def test_md020_bad_single_paragraph_with_whitespace_at_end():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md020",
+        "single_paragraph_with_whitespace_at_end.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md010,md021,md022,md023",
         "scan",
-        "test/resources/rules/md020/single_paragraph_with_whitespace_at_end.md",
+        source_path,
     ]
 
     expected_return_code = 0

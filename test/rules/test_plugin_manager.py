@@ -48,11 +48,14 @@ def test_markdown_with_dash_dash_add_plugin_and_bad_path():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
     supplied_arguments = [
         "--add-plugin",
         "MD047",
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -78,11 +81,14 @@ def test_markdown_with_dash_dash_add_plugin_and_single_plugin_file():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
     supplied_arguments = [
         "--add-plugin",
         "test/resources/plugins/plugin_two.py",
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -112,11 +118,14 @@ def test_markdown_with_dash_dash_add_plugin_and_single_plugin_directory():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
     supplied_arguments = [
         "--add-plugin",
         "test/resources/plugins/",
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -147,11 +156,17 @@ def test_markdown_with_repeated_identifier():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    plugin_path = os.path.join(
+        "test", "resources", "plugins", "bad", "duplicate_id_debug.py"
+    )
     supplied_arguments = [
         "--add-plugin",
-        "test/resources/plugins/bad/duplicate_id_debug.py",
+        plugin_path,
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -176,11 +191,15 @@ def test_markdown_with_bad_identifier():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    plugin_path = os.path.join("test", "resources", "plugins", "bad", "bad_id.py")
     supplied_arguments = [
         "--add-plugin",
-        "test/resources/plugins/bad/bad_id.py",
+        plugin_path,
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -205,11 +224,17 @@ def test_markdown_with_repeated_name():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    plugin_path = os.path.join(
+        "test", "resources", "plugins", "bad", "duplicate_name_debug.py"
+    )
     supplied_arguments = [
         "--add-plugin",
-        "test/resources/plugins/bad/duplicate_name_debug.py",
+        plugin_path,
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -234,11 +259,15 @@ def test_markdown_with_bad_name():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    plugin_path = os.path.join("test", "resources", "plugins", "bad", "bad_name.py")
     supplied_arguments = [
         "--add-plugin",
-        "test/resources/plugins/bad/bad_name.py",
+        plugin_path,
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -263,11 +292,17 @@ def test_markdown_with_dash_dash_add_plugin_and_bad_plugin_file():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    plugin_path = os.path.join(
+        "test", "resources", "plugins", "bad", "not-a-python-file.txt"
+    )
     supplied_arguments = [
         "--add-plugin",
-        "test/resources/plugins/bad/not-a-python-file.txt",
+        plugin_path,
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -294,11 +329,15 @@ def test_markdown_with_dash_dash_add_plugin_and_missing_class():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    plugin_path = os.path.join("test", "resources", "plugins", "bad", "misnamed.py")
     supplied_arguments = [
         "--add-plugin",
-        "test/resources/plugins/bad/misnamed.py",
+        plugin_path,
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -325,18 +364,26 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_starting_new_file():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    plugin_path = os.path.join(
+        "test", "resources", "plugins", "bad", "bad_starting_new_file.py"
+    )
     supplied_arguments = [
         "--add-plugin",
-        "test/resources/plugins/bad/bad_starting_new_file.py",
+        plugin_path,
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = ""
-    expected_error = """BadPluginError encountered while scanning 'test/resources/rules/md047/end_with_blank_line.md':
+    expected_error = """BadPluginError encountered while scanning '{source_path}':
 Plugin id 'MDE001' had a critical failure during the 'starting_new_file' action.
-"""
+""".replace(
+        "{source_path}", source_path
+    )
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -355,18 +402,26 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_completed_file():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    plugin_path = os.path.join(
+        "test", "resources", "plugins", "bad", "bad_completed_file.py"
+    )
     supplied_arguments = [
         "--add-plugin",
-        "test/resources/plugins/bad/bad_completed_file.py",
+        plugin_path,
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = ""
-    expected_error = """BadPluginError encountered while scanning 'test/resources/rules/md047/end_with_blank_line.md':
+    expected_error = """BadPluginError encountered while scanning '{source_path}':
 Plugin id 'MDE002' had a critical failure during the 'completed_file' action.
-"""
+""".replace(
+        "{source_path}", source_path
+    )
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -385,18 +440,26 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_line():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    plugin_path = os.path.join(
+        "test", "resources", "plugins", "bad", "bad_next_line.py"
+    )
     supplied_arguments = [
         "--add-plugin",
-        "test/resources/plugins/bad/bad_next_line.py",
+        plugin_path,
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = ""
-    expected_error = """BadPluginError encountered while scanning 'test/resources/rules/md047/end_with_blank_line.md':
+    expected_error = """BadPluginError encountered while scanning '{source_path}':
 (Line 1): Plugin id 'MDE003' had a critical failure during the 'next_line' action.
-"""
+""".replace(
+        "{source_path}", source_path
+    )
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -415,21 +478,29 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_line_with_stack_trace(
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    plugin_path = os.path.join(
+        "test", "resources", "plugins", "bad", "bad_next_line.py"
+    )
     supplied_arguments = [
         "--stack-trace",
         "--add-plugin",
-        "test/resources/plugins/bad/bad_next_line.py",
+        plugin_path,
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = ""
-    expected_error = """BadPluginError encountered while scanning 'test/resources/rules/md047/end_with_blank_line.md':
+    expected_error = """BadPluginError encountered while scanning '{source_path}':
 (Line 1): Plugin id 'MDE003' had a critical failure during the 'next_line' action.
 Actual Line: # This is a test
 Traceback (most recent call last):
-"""
+""".replace(
+        "{source_path}", source_path
+    )
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -463,23 +534,31 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_line_with_configuratio
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    plugin_path = os.path.join(
+        "test", "resources", "plugins", "bad", "bad_next_line.py"
+    )
     supplied_arguments = [
         "--stack-trace",
         "--add-plugin",
-        "test/resources/plugins/bad/bad_next_line.py",
+        plugin_path,
         "--set",
         "log.stack-trace=$!True",
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = ""
-    expected_error = """BadPluginError encountered while scanning 'test/resources/rules/md047/end_with_blank_line.md':
+    expected_error = """BadPluginError encountered while scanning '{source_path}':
 (Line 1): Plugin id 'MDE003' had a critical failure during the 'next_line' action.
 Actual Line: # This is a test
 Traceback (most recent call last):
-"""
+""".replace(
+        "{source_path}", source_path
+    )
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -513,18 +592,26 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_token():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    plugin_path = os.path.join(
+        "test", "resources", "plugins", "bad", "bad_next_token.py"
+    )
     supplied_arguments = [
         "--add-plugin",
-        "test/resources/plugins/bad/bad_next_token.py",
+        plugin_path,
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = ""
-    expected_error = """BadPluginError encountered while scanning 'test/resources/rules/md047/end_with_blank_line.md':
+    expected_error = """BadPluginError encountered while scanning '{source_path}':
 (1,1): Plugin id 'MDE003' had a critical failure during the 'next_token' action.
-"""
+""".replace(
+        "{source_path}", source_path
+    )
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -543,21 +630,29 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_token_with_stack_trace
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    plugin_path = os.path.join(
+        "test", "resources", "plugins", "bad", "bad_next_token.py"
+    )
     supplied_arguments = [
         "--stack-trace",
         "--add-plugin",
-        "test/resources/plugins/bad/bad_next_token.py",
+        plugin_path,
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = ""
-    expected_error = """BadPluginError encountered while scanning 'test/resources/rules/md047/end_with_blank_line.md':
+    expected_error = """BadPluginError encountered while scanning '{source_path}':
 (1,1): Plugin id 'MDE003' had a critical failure during the 'next_token' action.
 Actual Token: [atx(1,1):1:0:]
 Traceback (most recent call last):
-"""
+""".replace(
+        "{source_path}", source_path
+    )
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -591,11 +686,17 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_constructor():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    plugin_path = os.path.join(
+        "test", "resources", "plugins", "bad", "bad_constructor.py"
+    )
     supplied_arguments = [
         "--add-plugin",
-        "test/resources/plugins/bad/bad_constructor.py",
+        plugin_path,
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -622,11 +723,15 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_details():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    plugin_path = os.path.join("test", "resources", "plugins", "bad", "bad_details.py")
     supplied_arguments = [
         "--add-plugin",
-        "test/resources/plugins/bad/bad_details.py",
+        plugin_path,
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -652,12 +757,16 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_details_with_stack_trace():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    plugin_path = os.path.join("test", "resources", "plugins", "bad", "bad_details.py")
     supplied_arguments = [
         "--stack-trace",
         "--add-plugin",
-        "test/resources/plugins/bad/bad_details.py",
+        plugin_path,
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -697,11 +806,17 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_string_detail():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    plugin_path = os.path.join(
+        "test", "resources", "plugins", "bad", "bad_string_detail_is_int.py"
+    )
     supplied_arguments = [
         "--add-plugin",
-        "test/resources/plugins/bad/bad_string_detail_is_int.py",
+        plugin_path,
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -727,11 +842,13 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_string_detail_from_configur
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {
-        "plugins": {
-            "additional_paths": "test/resources/plugins/bad/bad_string_detail_is_int.py"
-        }
-    }
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    plugin_path = os.path.join(
+        "test", "resources", "plugins", "bad", "bad_string_detail_is_int.py"
+    )
+    supplied_configuration = {"plugins": {"additional_paths": plugin_path}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -739,7 +856,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_string_detail_from_configur
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md047/end_with_blank_line.md",
+            source_path,
         ]
 
         expected_return_code = 1
@@ -767,11 +884,17 @@ def test_markdown_with_dash_dash_add_plugin_with_empty_string_detail():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    plugin_path = os.path.join(
+        "test", "resources", "plugins", "bad", "bad_string_detail_is_empty.py"
+    )
     supplied_arguments = [
         "--add-plugin",
-        "test/resources/plugins/bad/bad_string_detail_is_empty.py",
+        plugin_path,
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -796,11 +919,17 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_boolean_detail():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    plugin_path = os.path.join(
+        "test", "resources", "plugins", "bad", "bad_boolean_detail_is_int.py"
+    )
     supplied_arguments = [
         "--add-plugin",
-        "test/resources/plugins/bad/bad_boolean_detail_is_int.py",
+        plugin_path,
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -825,11 +954,17 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_integer_detail():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    plugin_path = os.path.join(
+        "test", "resources", "plugins", "bad", "bad_integer_detail_is_string.py"
+    )
     supplied_arguments = [
         "--add-plugin",
-        "test/resources/plugins/bad/bad_integer_detail_is_string.py",
+        plugin_path,
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -854,11 +989,17 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_description():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    plugin_path = os.path.join(
+        "test", "resources", "plugins", "bad", "bad_description.py"
+    )
     supplied_arguments = [
         "--add-plugin",
-        "test/resources/plugins/bad/bad_description.py",
+        plugin_path,
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -883,11 +1024,17 @@ def test_markdown_with_dash_dash_add_plugin_with_empty_description():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    plugin_path = os.path.join(
+        "test", "resources", "plugins", "bad", "empty_description.py"
+    )
     supplied_arguments = [
         "--add-plugin",
-        "test/resources/plugins/bad/empty_description.py",
+        plugin_path,
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -912,11 +1059,17 @@ def test_markdown_with_dash_dash_add_plugin_with_blank_description():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    plugin_path = os.path.join(
+        "test", "resources", "plugins", "bad", "blank_description.py"
+    )
     supplied_arguments = [
         "--add-plugin",
-        "test/resources/plugins/bad/blank_description.py",
+        plugin_path,
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -941,11 +1094,17 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_semantic_version():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    plugin_path = os.path.join(
+        "test", "resources", "plugins", "bad", "bad_semantic_version.py"
+    )
     supplied_arguments = [
         "--add-plugin",
-        "test/resources/plugins/bad/bad_semantic_version.py",
+        plugin_path,
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -970,11 +1129,17 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_interface_version():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    plugin_path = os.path.join(
+        "test", "resources", "plugins", "bad", "bad_interface_version.py"
+    )
     supplied_arguments = [
         "--add-plugin",
-        "test/resources/plugins/bad/bad_interface_version.py",
+        plugin_path,
         "scan",
-        "test/resources/rules/md047/end_with_blank_line.md",
+        source_path,
     ]
 
     expected_return_code = 1

@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD032 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -15,9 +16,12 @@ def test_md032_good_list_surrounded():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md032", "good_list_surrounded.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md032/good_list_surrounded.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -42,9 +46,12 @@ def test_md032_good_list_at_start():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md032", "good_list_at_start.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md032/good_list_at_start.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -69,11 +76,14 @@ def test_md032_good_list_at_end():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md032", "good_list_at_end.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md047",
         "scan",
-        "test/resources/rules/md032/good_list_at_end.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -98,14 +108,17 @@ def test_md032_bad_list_before():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md032", "bad_list_before.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md032/bad_list_before.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md032/bad_list_before.md:2:1: "
+        f"{source_path}:2:1: "
         + "MD032: Lists should be surrounded by blank lines (blanks-around-lists)"
     )
     expected_error = ""
@@ -128,16 +141,19 @@ def test_md032_bad_list_after():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md032", "bad_list_after.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md022",
         "scan",
-        "test/resources/rules/md032/bad_list_after.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md032/bad_list_after.md:3:1: "
+        f"{source_path}:3:1: "
         + "MD032: Lists should be surrounded by blank lines (blanks-around-lists)"
     )
     expected_error = ""
@@ -160,16 +176,19 @@ def test_md032_bad_block_quote_list_block_quote():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md032", "bad_block_quote_list_block_quote.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md032/bad_block_quote_list_block_quote.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md032/bad_block_quote_list_block_quote.md:2:1: "
+        f"{source_path}:2:1: "
         + "MD032: Lists should be surrounded by blank lines (blanks-around-lists)\n"
-        + "test/resources/rules/md032/bad_block_quote_list_block_quote.md:3:1: "
+        + f"{source_path}:3:1: "
         + "MD032: Lists should be surrounded by blank lines (blanks-around-lists)"
     )
     expected_error = ""
@@ -192,20 +211,23 @@ def test_md032_bad_other_list_list_other_list():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md032", "bad_other_list_list_other_list.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md032/bad_other_list_list_other_list.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md032/bad_other_list_list_other_list.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD032: Lists should be surrounded by blank lines (blanks-around-lists)\n"
-        + "test/resources/rules/md032/bad_other_list_list_other_list.md:2:1: "
+        + f"{source_path}:2:1: "
         + "MD032: Lists should be surrounded by blank lines (blanks-around-lists)\n"
-        + "test/resources/rules/md032/bad_other_list_list_other_list.md:3:1: "
+        + f"{source_path}:3:1: "
         + "MD032: Lists should be surrounded by blank lines (blanks-around-lists)\n"
-        + "test/resources/rules/md032/bad_other_list_list_other_list.md:4:1: "
+        + f"{source_path}:4:1: "
         + "MD032: Lists should be surrounded by blank lines (blanks-around-lists)"
     )
     expected_error = ""
@@ -228,9 +250,12 @@ def test_md032_good_list_within_list_surrounded():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md032", "good_list_within_list_surrounded.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md032/good_list_within_list_surrounded.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -255,9 +280,16 @@ def test_md032_good_list_within_block_quote_surrounded():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md032",
+        "good_list_within_block_quote_surrounded.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md032/good_list_within_block_quote_surrounded.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -283,14 +315,21 @@ def test_md032_bad_list_within_block_quote_surrounded():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md032",
+        "bad_list_within_block_quote_surrounded.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md032/bad_list_within_block_quote_surrounded.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md032/bad_list_within_block_quote_surrounded.md:4:3: "
+        f"{source_path}:4:3: "
         + "MD032: Lists should be surrounded by blank lines (blanks-around-lists)"
     )
     expected_error = ""
@@ -313,9 +352,12 @@ def test_md032_good_nested_lists():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md032", "good_nested_lists.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md032/good_nested_lists.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -340,9 +382,12 @@ def test_md032_good_list_levels_1_2_3_2_1():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md032", "good_list_levels_1_2_3_2_1.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md032/good_list_levels_1_2_3_2_1.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -367,9 +412,12 @@ def test_md032_good_list_levels_1_2_3_space_1():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md032", "good_list_levels_1_2_3_space_1.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md032/good_list_levels_1_2_3_space_1.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -395,9 +443,12 @@ def test_md032_good_list_levels_1_2_3_1():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md032", "good_list_levels_1_2_3_1.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md032/good_list_levels_1_2_3_1.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -422,18 +473,25 @@ def test_md032_bad_fenced_block_in_list_in_block_quote():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md032",
+        "bad_fenced_block_in_list_in_block_quote.md",
+    )
     supplied_arguments = [
         "--disable-rules",
         "md031",
         "scan",
-        "test/resources/rules/md031/bad_fenced_block_in_list_in_block_quote.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md031/bad_fenced_block_in_list_in_block_quote.md:1:3: "
+        f"{source_path}:1:3: "
         + "MD032: Lists should be surrounded by blank lines (blanks-around-lists)\n"
-        + "test/resources/rules/md031/bad_fenced_block_in_list_in_block_quote.md:5:3: "
+        + f"{source_path}:5:3: "
         + "MD032: Lists should be surrounded by blank lines (blanks-around-lists)"
     )
     expected_error = ""

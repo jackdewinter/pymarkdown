@@ -9,6 +9,8 @@ import pytest
 
 # pylint: disable=too-many-lines
 
+source_path = os.path.join("test", "resources", "rules", "md003") + os.sep
+
 
 @pytest.mark.rules
 def test_md003_bad_configuration_style():
@@ -24,7 +26,7 @@ def test_md003_bad_configuration_style():
         "--set",
         "plugins.md003.style=fred",
         "scan",
-        "test/resources/rules/md003/headings_atx.md",
+        f"{source_path}headings_atx.md",
     ]
 
     expected_return_code = 1
@@ -58,7 +60,7 @@ def test_md003_good_consistent_headings_atx():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md003/headings_atx.md",
+        f"{source_path}headings_atx.md",
     ]
 
     expected_return_code = 0
@@ -88,7 +90,7 @@ def test_md003_good_consistent_headings_atx_closed():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md003/headings_atx_closed.md",
+        f"{source_path}headings_atx_closed.md",
     ]
 
     expected_return_code = 0
@@ -118,7 +120,7 @@ def test_md003_good_consistent_headings_setext():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md003/headings_setext.md",
+        f"{source_path}headings_setext.md",
     ]
 
     expected_return_code = 0
@@ -135,7 +137,7 @@ def test_md003_good_consistent_headings_setext():
 
 
 CONSISTENT_SETEXT_WITH_ATX_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_setext_with_atx.md:7:1: "
+    f"{source_path}headings_setext_with_atx.md:7:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: setext; Actual: atx] (heading-style,header-style)\n"
 )
@@ -153,7 +155,7 @@ def test_md003_bad_consistent_headings_setext_with_atx():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md003/headings_setext_with_atx.md",
+        f"{source_path}headings_setext_with_atx.md",
     ]
 
     expected_return_code = 1
@@ -190,7 +192,7 @@ def test_md003_bad_consistent_headings_setext_with_atx_and_allow_config():
             configuration_file,
             "--strict-config",
             "scan",
-            "test/resources/rules/md003/headings_setext_with_atx.md",
+            f"{source_path}headings_setext_with_atx.md",
         ]
 
         expected_return_code = 0
@@ -230,12 +232,12 @@ def test_md003_bad_consistent_headings_setext_with_level_2_atx_and_allow_config(
             configuration_file,
             "--strict-config",
             "scan",
-            "test/resources/rules/md003/headings_setext_with_level_2_atx.md",
+            f"{source_path}headings_setext_with_level_2_atx.md",
         ]
 
         expected_return_code = 1
         expected_output = (
-            "test/resources/rules/md003/headings_setext_with_level_2_atx.md:7:1: "
+            f"{source_path}headings_setext_with_level_2_atx.md:7:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: setext; Actual: atx] (heading-style,header-style)"
         )
@@ -274,12 +276,12 @@ def test_md003_bad_consistent_headings_setext_with_level_3_then_level_2_atx_and_
             configuration_file,
             "--strict-config",
             "scan",
-            "test/resources/rules/md003/headings_setext_with_level_3_then_level_2_atx.md",
+            f"{source_path}headings_setext_with_level_3_then_level_2_atx.md",
         ]
 
         expected_return_code = 1
         expected_output = (
-            "test/resources/rules/md003/headings_setext_with_level_3_then_level_2_atx.md:9:1: "
+            f"{source_path}headings_setext_with_level_3_then_level_2_atx.md:9:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: setext_with_atx; Actual: atx] (heading-style,header-style)"
         )
@@ -298,7 +300,7 @@ def test_md003_bad_consistent_headings_setext_with_level_3_then_level_2_atx_and_
 
 
 CONSISTENT_SETEXT_WITH_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_setext_with_atx_closed.md:7:1: "
+    f"{source_path}headings_setext_with_atx_closed.md:7:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: setext; Actual: atx_closed] (heading-style,header-style)\n"
 )
@@ -316,7 +318,7 @@ def test_md003_bad_consistent_headings_setext_with_atx_closed():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md003/headings_setext_with_atx_closed.md",
+        f"{source_path}headings_setext_with_atx_closed.md",
     ]
 
     expected_return_code = 1
@@ -341,7 +343,7 @@ def test_md003_consistent_all_samples():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_arguments = ["scan", "test/resources/rules/md003"]
+    supplied_arguments = ["scan", source_path]
 
     expected_return_code = 1
     expected_output = (
@@ -350,13 +352,13 @@ def test_md003_consistent_all_samples():
         + CONSISTENT_SETEXT_HEADINGS_SAMPLE_OUTPUT
         + CONSISTENT_SETEXT_WITH_ATX_HEADINGS_SAMPLE_OUTPUT
         + CONSISTENT_SETEXT_WITH_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT
-        + "test/resources/rules/md003/headings_setext_with_level_2_atx.md:7:1: "
+        + f"{source_path}headings_setext_with_level_2_atx.md:7:1: "
         + "MD003: Heading style should be consistent throughout the document. "
         + "[Expected: setext; Actual: atx] (heading-style,header-style)\n"
-        + "test/resources/rules/md003/headings_setext_with_level_3_then_level_2_atx.md:7:1: "
+        + f"{source_path}headings_setext_with_level_3_then_level_2_atx.md:7:1: "
         + "MD003: Heading style should be consistent throughout the document. "
         + "[Expected: setext; Actual: atx] (heading-style,header-style)\n"
-        + "test/resources/rules/md003/headings_setext_with_level_3_then_level_2_atx.md:9:1: "
+        + f"{source_path}headings_setext_with_level_3_then_level_2_atx.md:9:1: "
         + "MD003: Heading style should be consistent throughout the document. "
         + "[Expected: setext; Actual: atx] (heading-style,header-style)"
     )
@@ -391,7 +393,7 @@ def test_md003_good_atx_headings_atx():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003/headings_atx.md",
+            f"{source_path}headings_atx.md",
         ]
 
         expected_return_code = 0
@@ -426,7 +428,7 @@ def test_md003_good_atx_headings_atxx():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003/headings_atx.md",
+            f"{source_path}headings_atx.md",
         ]
 
         expected_return_code = 0
@@ -446,10 +448,10 @@ def test_md003_good_atx_headings_atxx():
 
 
 ATX_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_atx_closed.md:1:1: "
+    f"{source_path}headings_atx_closed.md:1:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: atx; Actual: atx_closed] (heading-style,header-style)\n"
-    + "test/resources/rules/md003/headings_atx_closed.md:3:1: "
+    + f"{source_path}headings_atx_closed.md:3:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: atx; Actual: atx_closed] (heading-style,header-style)\n"
 )
@@ -472,7 +474,7 @@ def test_md003_bad_atx_headings_atx_closed():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003/headings_atx_closed.md",
+            f"{source_path}headings_atx_closed.md",
         ]
 
         expected_return_code = 1
@@ -492,10 +494,10 @@ def test_md003_bad_atx_headings_atx_closed():
 
 
 ATX_SETEXT_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_setext.md:2:1: "
+    f"{source_path}headings_setext.md:2:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: atx; Actual: setext] (heading-style,header-style)\n"
-    + "test/resources/rules/md003/headings_setext.md:5:1: "
+    + f"{source_path}headings_setext.md:5:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: atx; Actual: setext] (heading-style,header-style)\n"
 )
@@ -518,7 +520,7 @@ def test_md003_bad_atx_headings_setext():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003/headings_setext.md",
+            f"{source_path}headings_setext.md",
         ]
 
         expected_return_code = 1
@@ -538,10 +540,10 @@ def test_md003_bad_atx_headings_setext():
 
 
 ATX_SETEXT_WITH_ATX_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_setext_with_atx.md:2:1: "
+    f"{source_path}headings_setext_with_atx.md:2:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: atx; Actual: setext] (heading-style,header-style)\n"
-    + "test/resources/rules/md003/headings_setext_with_atx.md:5:1: "
+    + f"{source_path}headings_setext_with_atx.md:5:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: atx; Actual: setext] (heading-style,header-style)\n"
 )
@@ -564,7 +566,7 @@ def test_md003_bad_atx_headings_setext_with_atx():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003/headings_setext_with_atx.md",
+            f"{source_path}headings_setext_with_atx.md",
         ]
 
         expected_return_code = 1
@@ -584,13 +586,13 @@ def test_md003_bad_atx_headings_setext_with_atx():
 
 
 ATX_SETEXT_WITH_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_setext_with_atx_closed.md:2:1: "
+    f"{source_path}headings_setext_with_atx_closed.md:2:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: atx; Actual: setext] (heading-style,header-style)\n"
-    + "test/resources/rules/md003/headings_setext_with_atx_closed.md:5:1: "
+    + f"{source_path}headings_setext_with_atx_closed.md:5:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: atx; Actual: setext] (heading-style,header-style)\n"
-    + "test/resources/rules/md003/headings_setext_with_atx_closed.md:7:1: "
+    + f"{source_path}headings_setext_with_atx_closed.md:7:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: atx; Actual: atx_closed] (heading-style,header-style)\n"
 )
@@ -613,7 +615,7 @@ def test_md003_bad_atx_headings_setext_with_atx_closed():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003/headings_setext_with_atx_closed.md",
+            f"{source_path}headings_setext_with_atx_closed.md",
         ]
 
         expected_return_code = 1
@@ -649,7 +651,7 @@ def test_md003_atx_all_samples():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003",
+            source_path,
         ]
 
         expected_return_code = 1
@@ -659,16 +661,16 @@ def test_md003_atx_all_samples():
             + ATX_SETEXT_HEADINGS_SAMPLE_OUTPUT
             + ATX_SETEXT_WITH_ATX_HEADINGS_SAMPLE_OUTPUT
             + ATX_SETEXT_WITH_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT
-            + "test/resources/rules/md003/headings_setext_with_level_2_atx.md:2:1: "
+            + f"{source_path}headings_setext_with_level_2_atx.md:2:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: atx; Actual: setext] (heading-style,header-style)\n"
-            + "test/resources/rules/md003/headings_setext_with_level_2_atx.md:5:1: "
+            + f"{source_path}headings_setext_with_level_2_atx.md:5:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: atx; Actual: setext] (heading-style,header-style)\n"
-            + "test/resources/rules/md003/headings_setext_with_level_3_then_level_2_atx.md:2:1: "
+            + f"{source_path}headings_setext_with_level_3_then_level_2_atx.md:2:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: atx; Actual: setext] (heading-style,header-style)\n"
-            + "test/resources/rules/md003/headings_setext_with_level_3_then_level_2_atx.md:5:1: "
+            + f"{source_path}headings_setext_with_level_3_then_level_2_atx.md:5:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: atx; Actual: setext] (heading-style,header-style)"
         )
@@ -687,10 +689,10 @@ def test_md003_atx_all_samples():
 
 
 ATXCLOSED_ATX_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_atx.md:1:1: "
+    f"{source_path}headings_atx.md:1:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: atx_closed; Actual: atx] (heading-style,header-style)\n"
-    + "test/resources/rules/md003/headings_atx.md:3:1: "
+    + f"{source_path}headings_atx.md:3:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: atx_closed; Actual: atx] (heading-style,header-style)\n"
 )
@@ -713,7 +715,7 @@ def test_md003_bad_atxclosed_headings_atx():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003/headings_atx.md",
+            f"{source_path}headings_atx.md",
         ]
 
         expected_return_code = 1
@@ -752,7 +754,7 @@ def test_md003_good_atxclosed_headings_atx_closed():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003/headings_atx_closed.md",
+            f"{source_path}headings_atx_closed.md",
         ]
 
         expected_return_code = 0
@@ -772,10 +774,10 @@ def test_md003_good_atxclosed_headings_atx_closed():
 
 
 ATXCLOSED_SETEXT_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_setext.md:2:1: "
+    f"{source_path}headings_setext.md:2:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: atx_closed; Actual: setext] (heading-style,header-style)\n"
-    + "test/resources/rules/md003/headings_setext.md:5:1: "
+    + f"{source_path}headings_setext.md:5:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: atx_closed; Actual: setext] (heading-style,header-style)\n"
 )
@@ -798,7 +800,7 @@ def test_md003_bad_atxclosed_headings_setext():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003/headings_setext.md",
+            f"{source_path}headings_setext.md",
         ]
 
         expected_return_code = 1
@@ -818,13 +820,13 @@ def test_md003_bad_atxclosed_headings_setext():
 
 
 ATXCLOSED_SETEXT_WITH_ATX_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_setext_with_atx.md:2:1: "
+    f"{source_path}headings_setext_with_atx.md:2:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: atx_closed; Actual: setext] (heading-style,header-style)\n"
-    + "test/resources/rules/md003/headings_setext_with_atx.md:5:1: "
+    + f"{source_path}headings_setext_with_atx.md:5:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: atx_closed; Actual: setext] (heading-style,header-style)\n"
-    + "test/resources/rules/md003/headings_setext_with_atx.md:7:1: "
+    + f"{source_path}headings_setext_with_atx.md:7:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: atx_closed; Actual: atx] (heading-style,header-style)\n"
 )
@@ -847,7 +849,7 @@ def test_md003_bad_atxclosed_headings_setext_with_atx():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003/headings_setext_with_atx.md",
+            f"{source_path}headings_setext_with_atx.md",
         ]
 
         expected_return_code = 1
@@ -867,10 +869,10 @@ def test_md003_bad_atxclosed_headings_setext_with_atx():
 
 
 ATXCLOSED_SETEXT_WITH_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_setext_with_atx_closed.md:2:1: "
+    f"{source_path}headings_setext_with_atx_closed.md:2:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: atx_closed; Actual: setext] (heading-style,header-style)\n"
-    + "test/resources/rules/md003/headings_setext_with_atx_closed.md:5:1: "
+    + f"{source_path}headings_setext_with_atx_closed.md:5:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: atx_closed; Actual: setext] (heading-style,header-style)\n"
 )
@@ -893,7 +895,7 @@ def test_md003_bad_atxclosed_headings_setext_with_atx_closed():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003/headings_setext_with_atx_closed.md",
+            f"{source_path}headings_setext_with_atx_closed.md",
         ]
 
         expected_return_code = 1
@@ -929,7 +931,7 @@ def test_md003_atxclosed_all_samples():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003",
+            source_path,
         ]
 
         expected_return_code = 1
@@ -939,25 +941,25 @@ def test_md003_atxclosed_all_samples():
             + ATXCLOSED_SETEXT_HEADINGS_SAMPLE_OUTPUT
             + ATXCLOSED_SETEXT_WITH_ATX_HEADINGS_SAMPLE_OUTPUT
             + ATXCLOSED_SETEXT_WITH_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT
-            + "test/resources/rules/md003/headings_setext_with_level_2_atx.md:2:1: "
+            + f"{source_path}headings_setext_with_level_2_atx.md:2:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: atx_closed; Actual: setext] (heading-style,header-style)\n"
-            + "test/resources/rules/md003/headings_setext_with_level_2_atx.md:5:1: "
+            + f"{source_path}headings_setext_with_level_2_atx.md:5:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: atx_closed; Actual: setext] (heading-style,header-style)\n"
-            + "test/resources/rules/md003/headings_setext_with_level_2_atx.md:7:1: "
+            + f"{source_path}headings_setext_with_level_2_atx.md:7:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: atx_closed; Actual: atx] (heading-style,header-style)\n"
-            + "test/resources/rules/md003/headings_setext_with_level_3_then_level_2_atx.md:2:1: "
+            + f"{source_path}headings_setext_with_level_3_then_level_2_atx.md:2:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: atx_closed; Actual: setext] (heading-style,header-style)\n"
-            + "test/resources/rules/md003/headings_setext_with_level_3_then_level_2_atx.md:5:1: "
+            + f"{source_path}headings_setext_with_level_3_then_level_2_atx.md:5:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: atx_closed; Actual: setext] (heading-style,header-style)\n"
-            + "test/resources/rules/md003/headings_setext_with_level_3_then_level_2_atx.md:7:1: "
+            + f"{source_path}headings_setext_with_level_3_then_level_2_atx.md:7:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: atx_closed; Actual: atx] (heading-style,header-style)\n"
-            + "test/resources/rules/md003/headings_setext_with_level_3_then_level_2_atx.md:9:1: "
+            + f"{source_path}headings_setext_with_level_3_then_level_2_atx.md:9:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: atx_closed; Actual: atx] (heading-style,header-style)"
         )
@@ -976,10 +978,10 @@ def test_md003_atxclosed_all_samples():
 
 
 SETEXT_ATX_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_atx.md:1:1: "
+    f"{source_path}headings_atx.md:1:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: setext; Actual: atx] (heading-style,header-style)\n"
-    + "test/resources/rules/md003/headings_atx.md:3:1: "
+    + f"{source_path}headings_atx.md:3:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: setext; Actual: atx] (heading-style,header-style)\n"
 )
@@ -1002,7 +1004,7 @@ def test_md003_bad_setext_headings_atx():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003/headings_atx.md",
+            f"{source_path}headings_atx.md",
         ]
 
         expected_return_code = 1
@@ -1022,10 +1024,10 @@ def test_md003_bad_setext_headings_atx():
 
 
 SETEXT_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_atx_closed.md:1:1: "
+    f"{source_path}headings_atx_closed.md:1:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: setext; Actual: atx_closed] (heading-style,header-style)\n"
-    + "test/resources/rules/md003/headings_atx_closed.md:3:1: "
+    + f"{source_path}headings_atx_closed.md:3:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: setext; Actual: atx_closed] (heading-style,header-style)\n"
 )
@@ -1048,7 +1050,7 @@ def test_md003_bad_setext_headings_atx_closed():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003/headings_atx_closed.md",
+            f"{source_path}headings_atx_closed.md",
         ]
 
         expected_return_code = 1
@@ -1087,7 +1089,7 @@ def test_md003_good_setext_headings_setext():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003/headings_setext.md",
+            f"{source_path}headings_setext.md",
         ]
 
         expected_return_code = 0
@@ -1107,7 +1109,7 @@ def test_md003_good_setext_headings_setext():
 
 
 SETEXT_SETEXT_WITH_ATX_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_setext_with_atx.md:7:1: "
+    f"{source_path}headings_setext_with_atx.md:7:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: setext; Actual: atx] (heading-style,header-style)\n"
 )
@@ -1130,7 +1132,7 @@ def test_md003_bad_setext_headings_setext_with_atx():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003/headings_setext_with_atx.md",
+            f"{source_path}headings_setext_with_atx.md",
         ]
 
         expected_return_code = 1
@@ -1150,7 +1152,7 @@ def test_md003_bad_setext_headings_setext_with_atx():
 
 
 SETEXT_SETEXT_WITH_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_setext_with_atx_closed.md:7:1: "
+    f"{source_path}headings_setext_with_atx_closed.md:7:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: setext; Actual: atx_closed] (heading-style,header-style)\n"
 )
@@ -1173,7 +1175,7 @@ def test_md003_bad_setext_headings_setext_with_atx_closed():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003/headings_setext_with_atx_closed.md",
+            f"{source_path}headings_setext_with_atx_closed.md",
         ]
 
         expected_return_code = 1
@@ -1209,7 +1211,7 @@ def test_md003_setext_all_samples():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003",
+            source_path,
         ]
 
         expected_return_code = 1
@@ -1219,13 +1221,13 @@ def test_md003_setext_all_samples():
             + SETEXT_SETEXT_HEADINGS_SAMPLE_OUTPUT
             + SETEXT_SETEXT_WITH_ATX_HEADINGS_SAMPLE_OUTPUT
             + SETEXT_SETEXT_WITH_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT
-            + "test/resources/rules/md003/headings_setext_with_level_2_atx.md:7:1: "
+            + f"{source_path}headings_setext_with_level_2_atx.md:7:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: setext; Actual: atx] (heading-style,header-style)\n"
-            + "test/resources/rules/md003/headings_setext_with_level_3_then_level_2_atx.md:7:1: "
+            + f"{source_path}headings_setext_with_level_3_then_level_2_atx.md:7:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: setext; Actual: atx] (heading-style,header-style)\n"
-            + "test/resources/rules/md003/headings_setext_with_level_3_then_level_2_atx.md:9:1: "
+            + f"{source_path}headings_setext_with_level_3_then_level_2_atx.md:9:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: setext; Actual: atx] (heading-style,header-style)"
         )
@@ -1270,15 +1272,15 @@ def test_md003_bad_setext_with_atx_headings_atx():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003/headings_atx.md",
+            f"{source_path}headings_atx.md",
         ]
 
         expected_return_code = 1
         expected_output = (
-            "test/resources/rules/md003/headings_atx.md:1:1: "
+            f"{source_path}headings_atx.md:1:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: setext_with_atx; Actual: atx] (heading-style,header-style)\n"
-            + "test/resources/rules/md003/headings_atx.md:3:1: "
+            + f"{source_path}headings_atx.md:3:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: setext_with_atx; Actual: atx] (heading-style,header-style)"
         )
@@ -1323,15 +1325,15 @@ def test_md003_bad_setext_with_atx_headings_atx_closed():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003/headings_atx_closed.md",
+            f"{source_path}headings_atx_closed.md",
         ]
 
         expected_return_code = 1
         expected_output = (
-            "test/resources/rules/md003/headings_atx_closed.md:1:1: "
+            f"{source_path}headings_atx_closed.md:1:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: setext_with_atx; Actual: atx_closed] (heading-style,header-style)\n"
-            + "test/resources/rules/md003/headings_atx_closed.md:3:1: "
+            + f"{source_path}headings_atx_closed.md:3:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: setext_with_atx; Actual: atx_closed] (heading-style,header-style)"
         )
@@ -1369,7 +1371,7 @@ def test_md003_good_setext_with_atx_headings_setext():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003/headings_setext.md",
+            f"{source_path}headings_setext.md",
         ]
 
         expected_return_code = 0
@@ -1408,7 +1410,7 @@ def test_md003_good_setext_with_atx_headings_setext_with_atx():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003/headings_setext_with_atx.md",
+            f"{source_path}headings_setext_with_atx.md",
         ]
 
         expected_return_code = 0
@@ -1428,7 +1430,7 @@ def test_md003_good_setext_with_atx_headings_setext_with_atx():
 
 
 SETEXT_WITH_ATX_SETEXT_WITH_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_setext_with_atx_closed.md:7:1: "
+    f"{source_path}headings_setext_with_atx_closed.md:7:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: atx; Actual: atx_closed] (heading-style,header-style)\n"
 )
@@ -1451,7 +1453,7 @@ def test_md003_bad_setext_with_atx_headings_setext_with_atx_closed():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003/headings_setext_with_atx_closed.md",
+            f"{source_path}headings_setext_with_atx_closed.md",
         ]
 
         expected_return_code = 1
@@ -1487,30 +1489,30 @@ def test_md003_setext_with_atx_all_samples():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003",
+            source_path,
         ]
 
         expected_return_code = 1
         expected_output = (
-            "test/resources/rules/md003/headings_atx.md:1:1: "
+            f"{source_path}headings_atx.md:1:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: setext_with_atx; Actual: atx] (heading-style,header-style)\n"
-            + "test/resources/rules/md003/headings_atx.md:3:1: "
+            + f"{source_path}headings_atx.md:3:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: setext_with_atx; Actual: atx] (heading-style,header-style)\n"
-            + "test/resources/rules/md003/headings_atx_closed.md:1:1: "
+            + f"{source_path}headings_atx_closed.md:1:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: setext_with_atx; Actual: atx_closed] (heading-style,header-style)\n"
-            + "test/resources/rules/md003/headings_atx_closed.md:3:1: "
+            + f"{source_path}headings_atx_closed.md:3:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: setext_with_atx; Actual: atx_closed] (heading-style,header-style)\n"
-            + "test/resources/rules/md003/headings_setext_with_atx_closed.md:7:1: "
+            + f"{source_path}headings_setext_with_atx_closed.md:7:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: atx; Actual: atx_closed] (heading-style,header-style)\n"
-            + "test/resources/rules/md003/headings_setext_with_level_2_atx.md:7:1: "
+            + f"{source_path}headings_setext_with_level_2_atx.md:7:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: setext_with_atx; Actual: atx] (heading-style,header-style)\n"
-            + "test/resources/rules/md003/headings_setext_with_level_3_then_level_2_atx.md:9:1: "
+            + f"{source_path}headings_setext_with_level_3_then_level_2_atx.md:9:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: setext_with_atx; Actual: atx] (heading-style,header-style)"
         )
@@ -1529,10 +1531,10 @@ def test_md003_setext_with_atx_all_samples():
 
 
 SETEXT_WITH_ATX_CLOSED_ATX_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_atx.md:1:1: "
+    f"{source_path}headings_atx.md:1:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: setext; Actual: atx] (heading-style,header-style)\n"
-    + "test/resources/rules/md003/headings_atx.md:3:1: "
+    + f"{source_path}headings_atx.md:3:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: setext; Actual: atx] (heading-style,header-style)\n"
 )
@@ -1555,7 +1557,7 @@ def test_md003_bad_setext_with_atx_closed_headings_atx():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003/headings_atx.md",
+            f"{source_path}headings_atx.md",
         ]
 
         expected_return_code = 1
@@ -1575,10 +1577,10 @@ def test_md003_bad_setext_with_atx_closed_headings_atx():
 
 
 SETEXT_WITH_ATX_CLOSED_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_atx_closed.md:1:1: "
+    f"{source_path}headings_atx_closed.md:1:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: setext; Actual: atx_closed] (heading-style,header-style)\n"
-    + "test/resources/rules/md003/headings_atx_closed.md:3:1: "
+    + f"{source_path}headings_atx_closed.md:3:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: setext; Actual: atx_closed] (heading-style,header-style)\n"
 )
@@ -1601,7 +1603,7 @@ def test_md003_bad_setext_with_atx_closed_headings_atx_closed():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003/headings_atx_closed.md",
+            f"{source_path}headings_atx_closed.md",
         ]
 
         expected_return_code = 1
@@ -1640,7 +1642,7 @@ def test_md003_good_setext_with_atx_closed_headings_setext():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003/headings_setext.md",
+            f"{source_path}headings_setext.md",
         ]
 
         expected_return_code = 0
@@ -1660,7 +1662,7 @@ def test_md003_good_setext_with_atx_closed_headings_setext():
 
 
 SETEXT_WITH_ATX_CLOSED_SETEXT_WITH_ATX_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_setext_with_atx.md:7:1: "
+    f"{source_path}headings_setext_with_atx.md:7:1: "
     + "MD003: Heading style should be consistent throughout the document. "
     + "[Expected: atx_closed; Actual: atx] (heading-style,header-style)\n"
 )
@@ -1683,7 +1685,7 @@ def test_md003_bad_setext_with_atx_closed_headings_setext_with_atx():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003/headings_setext_with_atx.md",
+            f"{source_path}headings_setext_with_atx.md",
         ]
 
         expected_return_code = 1
@@ -1722,7 +1724,7 @@ def test_md003_good_setext_with_atx_closed_headings_setext_with_atx_closed():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003/headings_setext_with_atx_closed.md",
+            f"{source_path}headings_setext_with_atx_closed.md",
         ]
 
         expected_return_code = 0
@@ -1760,7 +1762,7 @@ def test_md003_setext_with_atx_closed_all_samples():
             "-c",
             configuration_file,
             "scan",
-            "test/resources/rules/md003",
+            source_path,
         ]
 
         expected_return_code = 1
@@ -1770,13 +1772,13 @@ def test_md003_setext_with_atx_closed_all_samples():
             + SETEXT_WITH_ATX_CLOSED_SETEXT_HEADINGS_SAMPLE_OUTPUT
             + SETEXT_WITH_ATX_CLOSED_SETEXT_WITH_ATX_HEADINGS_SAMPLE_OUTPUT
             + SETEXT_WITH_ATX_CLOSED_SETEXT_WITH_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT
-            + "test/resources/rules/md003/headings_setext_with_level_2_atx.md:7:1: "
+            + f"{source_path}headings_setext_with_level_2_atx.md:7:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: setext; Actual: atx] (heading-style,header-style)\n"
-            + "test/resources/rules/md003/headings_setext_with_level_3_then_level_2_atx.md:7:1: "
+            + f"{source_path}headings_setext_with_level_3_then_level_2_atx.md:7:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: atx_closed; Actual: atx] (heading-style,header-style)\n"
-            + "test/resources/rules/md003/headings_setext_with_level_3_then_level_2_atx.md:9:1: "
+            + f"{source_path}headings_setext_with_level_3_then_level_2_atx.md:9:1: "
             + "MD003: Heading style should be consistent throughout the document. "
             + "[Expected: setext; Actual: atx] (heading-style,header-style)"
         )

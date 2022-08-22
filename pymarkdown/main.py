@@ -263,7 +263,7 @@ class PyMarkdownLint:
         """
         Determine if the presented path is one that we want to scan.
         """
-        return any(
+        return os.path.isfile(path_to_test) and any(
             path_to_test.endswith(next_extension)
             for next_extension in eligible_extensions
         )
@@ -341,7 +341,10 @@ class PyMarkdownLint:
                 "Provided path '$' is a valid file. Adding.",
                 next_path,
             )
-            files_to_parse.add(next_path)
+            normalized_path = (
+                next_path.replace(os.altsep, os.sep) if os.altsep else next_path
+            )
+            files_to_parse.add(normalized_path)
             did_find_any = True
         else:
             POGGER.debug(
@@ -362,18 +365,20 @@ class PyMarkdownLint:
         eligible_extensions: List[str],
     ) -> None:
         POGGER.debug("Provided path '$' is a directory. Walking directory.", next_path)
-        normalized_next_path = next_path.replace("\\", "/")
-        for root, _, files in os.walk(next_path):
-            normalized_root = root.replace("\\", "/")
+        normalized_next_path = (
+            next_path.replace(os.altsep, os.sep) if os.altsep else next_path
+        )
+        for root, _, files in os.walk(normalized_next_path):
+            normalized_root = root.replace(os.altsep, os.sep) if os.altsep else root
             if not recurse_directories and normalized_root != normalized_next_path:
                 continue
             normalized_root = (
                 normalized_root[:-1]
-                if normalized_root.endswith("/")
+                if normalized_root.endswith(os.sep)
                 else normalized_root
             )
             for file in files:
-                rooted_file_path = f"{normalized_root}/{file}"
+                rooted_file_path = f"{normalized_root}{os.sep}{file}"
                 if self.__is_file_eligible_to_scan(
                     rooted_file_path, eligible_extensions
                 ):
@@ -401,7 +406,6 @@ class PyMarkdownLint:
                     did_error_scanning_files = True
                     break
                 for next_globbed_path in globbed_paths:
-                    next_globbed_path = next_globbed_path.replace("\\", "/")
                     self.__process_next_path(
                         next_globbed_path,
                         files_to_parse,

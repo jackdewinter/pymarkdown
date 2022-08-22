@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD038 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -15,9 +16,12 @@ def test_md038_good_code_span():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md038", "good_code_span.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md038/good_code_span.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -42,14 +46,17 @@ def test_md038_bad_code_span_trailing():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md038", "bad_code_span_trailing.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md038/bad_code_span_trailing.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md038/bad_code_span_trailing.md:1:9: "
+        f"{source_path}:1:9: "
         + "MD038: Spaces inside code span elements (no-space-in-code)"
     )
     expected_error = ""
@@ -72,14 +79,17 @@ def test_md038_bad_code_span_leading():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md038", "bad_code_span_leading.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md038/bad_code_span_leading.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md038/bad_code_span_leading.md:1:9: "
+        f"{source_path}:1:9: "
         + "MD038: Spaces inside code span elements (no-space-in-code)"
     )
     expected_error = ""
@@ -102,9 +112,12 @@ def test_md038_good_code_span_both():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md038", "good_code_span_both.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md038/good_code_span_both.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -129,14 +142,17 @@ def test_md038_bad_code_span_both_extra():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md038", "bad_code_span_both_extra.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md038/bad_code_span_both_extra.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md038/bad_code_span_both_extra.md:1:9: "
+        f"{source_path}:1:9: "
         + "MD038: Spaces inside code span elements (no-space-in-code)"
     )
     expected_error = ""
@@ -160,9 +176,16 @@ def test_md038_good_code_span_embedded_leading_backtick():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md038",
+        "good_code_span_embedded_leading_backtick.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md038/good_code_span_embedded_leading_backtick.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -188,9 +211,16 @@ def test_md038_good_code_span_embedded_trailing_backtick():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md038",
+        "good_code_span_embedded_trailing_backtick.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md038/good_code_span_embedded_trailing_backtick.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -216,16 +246,19 @@ def test_md038_bad_code_span_empty():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md038", "bad_code_span_empty.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md038/bad_code_span_empty.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md038/bad_code_span_empty.md:1:25: "
+        f"{source_path}:1:25: "
         + "MD038: Spaces inside code span elements (no-space-in-code)\n"
-        + "test/resources/rules/md038/bad_code_span_empty.md:3:24: "
+        + f"{source_path}:3:24: "
         + "MD038: Spaces inside code span elements (no-space-in-code)"
     )
     expected_error = ""

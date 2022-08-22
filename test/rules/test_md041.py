@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD026 rule.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
 import pytest
@@ -15,12 +16,15 @@ def test_md041_bad_configuration_level():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md041", "good_single_top_level.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md041.level=1",
         "--strict-config",
         "scan",
-        "test/resources/rules/md041/good_single_top_level.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -50,12 +54,15 @@ def test_md041_good_configuration_level():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md041", "good_heading_top_level_atx.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md041.level=$#1",
         "--strict-config",
         "scan",
-        "test/resources/rules/md041/good_heading_top_level_atx.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -82,12 +89,15 @@ def test_md041_bad_configuration_level_bad():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md041", "good_single_top_level.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md041.level=$#0",
         "--strict-config",
         "scan",
-        "test/resources/rules/md041/good_single_top_level.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -117,12 +127,15 @@ def test_md041_bad_configuration_front_matter_title():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md041", "good_single_top_level.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md041.front_matter_title=$#1",
         "--strict-config",
         "scan",
-        "test/resources/rules/md041/good_single_top_level.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -152,12 +165,15 @@ def test_md041_good_configuration_front_matter_title():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md041", "good_heading_top_level_atx.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md041.front_matter_title=subject",
         "--strict-config",
         "scan",
-        "test/resources/rules/md041/good_heading_top_level_atx.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -184,12 +200,15 @@ def test_md041_bad_configuration_front_matter_title_bad():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md041", "good_heading_top_level_atx.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md041.front_matter_title=",
         "--strict-config",
         "scan",
-        "test/resources/rules/md041/good_heading_top_level_atx.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -216,12 +235,15 @@ def test_md041_bad_configuration_front_matter_title_invalid():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md041", "good_single_top_level.md"
+    )
     supplied_arguments = [
         "--set",
         "plugins.md041.front_matter_title=a:b",
         "--strict-config",
         "scan",
-        "test/resources/rules/md041/good_single_top_level.md",
+        source_path,
     ]
 
     expected_return_code = 1
@@ -251,9 +273,12 @@ def test_md041_good_single_top_level_atx():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md041", "good_heading_top_level_atx.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md041/good_heading_top_level_atx.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -280,9 +305,16 @@ def test_md041_good_blank_lines_top_level_atx_heading():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md041",
+        "good_blank_lines_top_level_atx_heading.md",
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md041/good_blank_lines_top_level_atx_heading.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -309,14 +341,17 @@ def test_md041_bad_single_top_level_atx():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md041", "bad_heading_top_level_atx.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md041/bad_heading_top_level_atx.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md041/bad_heading_top_level_atx.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD041: First line in file should be a top level heading (first-line-heading,first-line-h1)"
     )
     expected_error = ""
@@ -341,9 +376,12 @@ def test_md041_good_heading_top_level_setext():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md041", "good_heading_top_level_setext.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md041/good_heading_top_level_setext.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -370,14 +408,17 @@ def test_md041_bad_single_top_level_setext():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md041", "bad_heading_top_level_setext.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md041/bad_heading_top_level_setext.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md041/bad_heading_top_level_setext.md:2:1: "
+        f"{source_path}:2:1: "
         + "MD041: First line in file should be a top level heading (first-line-heading,first-line-h1)"
     )
     expected_error = ""
@@ -402,16 +443,19 @@ def test_md041_good_front_matter_top_level():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md041", "good_front_matter_top_level.md"
+    )
     supplied_arguments = [
         "--set",
         "extensions.front-matter.enabled=$!True",
         "scan",
-        "test/resources/rules/md041/good_front_matter_top_level.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md041/good_front_matter_top_level.md:5:1: "
+        f"{source_path}:5:1: "
         + "MD025: Multiple top-level headings in the same document (single-title,single-h1)"
     )
     expected_error = ""
@@ -436,11 +480,14 @@ def test_md041_good_bad_front_matter_top_level():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md041", "good_bad_front_matter_top_level.md"
+    )
     supplied_arguments = [
         "--set",
         "extensions.front-matter.enabled=$!True",
         "scan",
-        "test/resources/rules/md041/good_bad_front_matter_top_level.md",
+        source_path,
     ]
 
     expected_return_code = 0
@@ -467,14 +514,17 @@ def test_md041_bad_fenced_code_block():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md041", "bad_fenced_code_block.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md041/bad_fenced_code_block.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md041/bad_fenced_code_block.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD041: First line in file should be a top level heading (first-line-heading,first-line-h1)"
     )
     expected_error = ""
@@ -499,14 +549,17 @@ def test_md041_bad_thematic_break():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md041", "bad_thematic_break.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md041/bad_thematic_break.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md041/bad_thematic_break.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD041: First line in file should be a top level heading (first-line-heading,first-line-h1)"
     )
     expected_error = ""
@@ -531,14 +584,17 @@ def test_md041_bad_indented_code_block():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md041", "bad_indented_code_block.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md041/bad_indented_code_block.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md041/bad_indented_code_block.md:1:5: "
+        f"{source_path}:1:5: "
         + "MD041: First line in file should be a top level heading (first-line-heading,first-line-h1)"
     )
     expected_error = ""
@@ -563,14 +619,17 @@ def test_md041_bad_html_block():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md041", "bad_html_block.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md041/bad_html_block.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md041/bad_html_block.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD041: First line in file should be a top level heading (first-line-heading,first-line-h1)"
     )
     expected_error = ""
@@ -595,16 +654,19 @@ def test_md041_bad_html_block_heading():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md041", "bad_html_block_heading.md"
+    )
     supplied_arguments = [
         "--disable-rules",
         "md033",
         "scan",
-        "test/resources/rules/md041/bad_html_block_heading.md",
+        source_path,
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md041/bad_html_block_heading.md:1:1: "
+        f"{source_path}:1:1: "
         + "MD041: First line in file should be a top level heading (first-line-heading,first-line-h1)"
     )
     expected_error = ""
@@ -629,9 +691,12 @@ def test_md041_good_html_block_heading():
 
     # Arrange
     scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md041", "good_html_block_heading.md"
+    )
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md041/good_html_block_heading.md",
+        source_path,
     ]
 
     expected_return_code = 0
