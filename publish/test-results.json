@@ -171,6 +171,14 @@
             "elapsedTimeInMilliseconds": 0
         },
         {
+            "name": "test.extensions.test_markdown_pragma_parsing",
+            "totalTests": 12,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
             "name": "test.extensions.test_markdown_pragmas",
             "totalTests": 13,
             "failedTests": 0,
@@ -405,14 +413,6 @@
         {
             "name": "test.gfm.test_markdown_html_blocks",
             "totalTests": 76,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.gfm.test_markdown_html_blocks_extra",
-            "totalTests": 12,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,

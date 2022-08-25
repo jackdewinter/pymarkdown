@@ -1,5 +1,5 @@
 """
-https://github.github.com/gfm/#html-blocks
+Pragmas
 """
 from test.utils import act_and_assert
 
@@ -9,7 +9,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_html_blocks_extrax_01():
+def test_pragma_parsing_01():
     """
     Test case 01:  Pragma alone in a document.
     """
@@ -20,13 +20,11 @@ def test_html_blocks_extrax_01():
     expected_gfm = """"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-def test_html_blocks_extrax_02():
+def test_pragma_parsing_02():
     """
     Test case 02:  Pargma within a paragraph.
     """
@@ -48,13 +46,11 @@ and still going.
     expected_gfm = """<p>This is a paragraph\nstill a paragraph\nand still going.</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-def test_html_blocks_extrax_03():
+def test_pragma_parsing_03():
     """
     Test case 03:  Pragma at the start and end of the document.
     """
@@ -74,13 +70,11 @@ and still going.
     expected_gfm = """<p>This is a paragraph\nstill a paragraph\nand still going.</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-def test_html_blocks_extrax_03a():
+def test_pragma_parsing_03a():
     """
     Test case 03a:  Pragma at start and end with a single line paragraph.
     """
@@ -98,13 +92,11 @@ This is a paragraph.
     expected_gfm = """<p>This is a paragraph.</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-def test_html_blocks_extrax_04():
+def test_pragma_parsing_04():
     """
     Test case 04:  Only two pragmas in entire document.
     """
@@ -116,13 +108,11 @@ def test_html_blocks_extrax_04():
     expected_gfm = ""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-def test_html_blocks_extrax_05():
+def test_pragma_parsing_05():
     """
     Test case 05:  Single line paragraph with double pragmas to start and end document.
     """
@@ -142,13 +132,11 @@ this is a paragraph
     expected_gfm = "<p>this is a paragraph</p>"
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-def test_html_blocks_extrax_06():
+def test_pragma_parsing_06():
     """
     Test case 06:  Verify that an HTML comment followed by the "pyml " title without any whitespace is parsed.
     """
@@ -167,13 +155,11 @@ this is a paragraph
     expected_gfm = "<p>this is a paragraph</p>"
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-def test_html_blocks_extrax_07():
+def test_pragma_parsing_07():
     """
     Test case 07:  Verify that an HTML comment followed by the "pyml " title with multiple whitespace is parsed.
     """
@@ -192,13 +178,11 @@ this is a paragraph
     expected_gfm = "<p>this is a paragraph</p>"
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-def test_html_blocks_extrax_08():
+def test_pragma_parsing_08():
     """
     Test case 08:  Pragma-like, without the space after the pragma title.
     """
@@ -219,13 +203,11 @@ this is a paragraph
     expected_gfm = "<!-- pyml-->\n<p>this is a paragraph</p>"
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-def test_html_blocks_extrax_09():
+def test_pragma_parsing_09():
     """
     Test case 08:  Pragma-like, without the closing comment sequence.
     """
@@ -243,13 +225,11 @@ this is a paragraph
     expected_gfm = "<!-- pyml--\nthis is a paragraph\n"
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-def test_html_blocks_extrax_010():
+def test_pragma_parsing_010():
     """
     Test case 10:  Pragma heading, but with different casing.
     """
@@ -268,13 +248,11 @@ this is a paragraph
     expected_gfm = "<p>this is a paragraph</p>"
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-def test_html_blocks_extrax_011():
+def test_pragma_parsing_011():
     """
     Test case 11:  Pragma heading, but with extra spacing after the closing comment.
     """
@@ -295,6 +273,4 @@ this is a paragraph
     expected_gfm = "<p>this is a paragraph</p>"
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

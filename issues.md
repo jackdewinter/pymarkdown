@@ -4,8 +4,6 @@
 
 ## Priority 2 - Like To Solve Before Initial
 
-- pragma tests need to remove `disable_consistency_checks=True`
-
 - make sure to generated ordered/unordered tests to make sure both covered
   - every unordered tests should have an ordered counterpart
   - every ordered tests should have an unordered counterpart
