@@ -706,10 +706,7 @@ def test_markdown_with_dash_dash_log_level_info(caplog):
     assert f"Determining files to scan for path '{source_path}'." in caplog.text
 
     # Debug messages
-    assert (
-        f"Provided path '{source_path}' is a valid file. Adding."
-        not in caplog.text
-    )
+    assert f"Provided path '{source_path}' is a valid file. Adding." not in caplog.text
 
 
 def test_markdown_with_dash_dash_log_level_invalid(caplog):
@@ -814,8 +811,7 @@ def test_markdown_with_dash_dash_log_level_info_with_file():
 
         # Debug messages
         assert (
-            f"Provided path '{source_path}' is a valid file. Adding."
-            not in file_data
+            f"Provided path '{source_path}' is a valid file. Adding." not in file_data
         )
 
     finally:

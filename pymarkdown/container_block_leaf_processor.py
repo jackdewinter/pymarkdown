@@ -883,12 +883,10 @@ class ContainerBlockLeafProcessor:
         last_list_index = 0
         had_non_block_token = False
         did_hit_indent_level_threshold = False
-        POGGER.debug_with_visible_whitespace("token-stack:$:", parser_state.token_stack)
+        POGGER.debug("token-stack:$:", parser_state.token_stack)
         for current_stack_index in range(1, len(parser_state.token_stack)):
             proposed_indent_level = 0
-            POGGER.debug_with_visible_whitespace(
-                "token:$:", parser_state.token_stack[current_stack_index]
-            )
+            POGGER.debug("token:$:", parser_state.token_stack[current_stack_index])
             if parser_state.token_stack[current_stack_index].is_block_quote:
                 last_list_index = 0
                 (

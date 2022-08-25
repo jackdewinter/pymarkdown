@@ -67,6 +67,8 @@ class PragmaExtension(ParserExtension):
         Look for a pragma in the current line.
         """
 
+        POGGER.debug("look_for_pragmas - >$<", line_to_parse)
+        POGGER.debug("look_for_pragmas - ws >$<", extracted_whitespace)
         if (
             not container_depth
             and not extracted_whitespace
@@ -97,7 +99,9 @@ class PragmaExtension(ParserExtension):
                     else position_marker.line_number
                 )
                 parser_properties.pragma_lines[index_number] = line_to_parse
+                POGGER.debug("pragma $ extracted - >$<", index_number, line_to_parse)
                 return True
+        POGGER.debug("pragma not extracted - >$<", line_to_parse)
         return False
 
     # pylint: disable=too-many-locals, too-many-arguments

@@ -971,14 +971,23 @@ class TransformToMarkdown:
         )
 
         for next_line_number in ordered_lines:
+
+            print(
+                f"pragma-->{ParserHelper.make_value_visible(ordered_lines[next_line_number])}<--"
+            )
+            detabified_pragma = ParserHelper.detabify_string(
+                ordered_lines[next_line_number]
+            )
+            print(f"pragma-->{ParserHelper.make_value_visible(detabified_pragma)}<--")
+
             if next_line_number == 1:
                 if transformed_data:
                     transformed_data = (
-                        f"{ordered_lines[next_line_number]}"
+                        f"{detabified_pragma}"
                         + f"{ParserHelper.newline_character}{transformed_data}"
                     )
                 else:
-                    transformed_data = ordered_lines[next_line_number]
+                    transformed_data = detabified_pragma
             else:
                 nth_index = ParserHelper.find_nth_occurrence(
                     transformed_data,
@@ -988,12 +997,12 @@ class TransformToMarkdown:
                 if nth_index == -1:
                     transformed_data = (
                         f"{transformed_data}{ParserHelper.newline_character}"
-                        + f"{ordered_lines[next_line_number]}"
+                        + f"{detabified_pragma}"
                     )
                 else:
                     transformed_data = (
                         f"{transformed_data[:nth_index]}{ParserHelper.newline_character}"
-                        + f"{ordered_lines[next_line_number]}{transformed_data[nth_index:]}"
+                        + f"{detabified_pragma}{transformed_data[nth_index:]}"
                     )
         return transformed_data
 

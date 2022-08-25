@@ -576,6 +576,7 @@ class ParserHelper:
             str(value_to_modify)
             .replace(ParserHelper.__backspace_character, "\\b")
             .replace(ParserHelper.__alert_character, "\\a")
+            .replace(ParserHelper.tab_character, "\\t")
             .replace(ParserHelper.newline_character, "\\n")
             .replace(ParserHelper.whitespace_split_character, "\\x02")
             .replace(ParserHelper.replace_noop_character, "\\x03")
