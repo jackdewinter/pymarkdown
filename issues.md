@@ -13,9 +13,6 @@
 - 4+ levels of nesting
   - `test_list_blocks_271fx` and `test_list_blocks_271fa`
 
-md010 - tabs "converted"
-      - tabs in code blocks
-
 ### Like To Have - Issues
 
 - md033 - <? and <! with alpha character after
