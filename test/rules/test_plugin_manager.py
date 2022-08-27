@@ -1201,7 +1201,7 @@ def test_markdown_with_plugins_list_only():
   md030  list-marker-space                       True       True       0.5.0
   md031  blanks-around-fences                    True       True       0.5.0
   md032  blanks-around-lists                     True       True       0.5.0
-  md033  no-inline-html                          True       True       0.5.0
+  md033  no-inline-html                          True       True       0.5.1
   md034  no-bare-urls                            True       True       0.5.0
   md035  hr-style                                True       True       0.5.0
   md036  no-emphasis-as-heading, no-emphasis-as  True       True       0.5.0
@@ -1278,7 +1278,7 @@ def test_markdown_with_plugins_list_only_all():
   md030  list-marker-space                       True       True       0.5.0
   md031  blanks-around-fences                    True       True       0.5.0
   md032  blanks-around-lists                     True       True       0.5.0
-  md033  no-inline-html                          True       True       0.5.0
+  md033  no-inline-html                          True       True       0.5.1
   md034  no-bare-urls                            True       True       0.5.0
   md035  hr-style                                True       True       0.5.0
   md036  no-emphasis-as-heading, no-emphasis-as  True       True       0.5.0

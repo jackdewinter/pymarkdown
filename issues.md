@@ -13,12 +13,7 @@
 - 4+ levels of nesting
   - `test_list_blocks_271fx` and `test_list_blocks_271fa`
 
-md010 - tabs "converted"
-      - tabs in code blocks
-
 ### Like To Have - Issues
-
-- md033 - <? and <! with alpha character after
 
 - better solution than `no-space-in-code` for scenario-cases.md
 - take `__consume_text_for_image_alt_text` and other functions like it and move as much as possible into token classes
