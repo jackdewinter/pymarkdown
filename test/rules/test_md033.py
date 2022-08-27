@@ -100,6 +100,7 @@ def test_md033_bad_html_block_present():
     expected_output = (
         f"{source_path}:3:1: "
         + "MD033: Inline HTML [Element: script] (no-inline-html)\n"
+        + f"{source_path}:12:1: MD033: Inline HTML [Element: ?] (no-inline-html)\n"
         + f"{source_path}:16:1: "
         + "MD033: Inline HTML "
         + "[Element: !A] (no-inline-html)\n"
@@ -542,6 +543,69 @@ def test_md033_bad_html_dangling():
         + "MD033: Inline HTML "
         + "[Element: h1] (no-inline-html)"
     )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md033_good_by_default():
+    """
+    Test to make sure this rule does not trigger with a document that
+    contains some of the weirder HTML elements, but still valid
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md033", "good_by_default.md"
+    )
+    supplied_arguments = [
+        "scan",
+        source_path,
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md033_bad_html_declaration():
+    """
+    Test to make sure this rule does not trigger with a document that
+    contains a HTML declaration that is not the DOCTYPE declaration.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md033", "bad_html_declaration.md"
+    )
+    supplied_arguments = [
+        "scan",
+        source_path,
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        f"{source_path}:1:1: MD033: Inline HTML [Element: !OTHER] (no-inline-html)"
+    )
+
     expected_error = ""
 
     # Act

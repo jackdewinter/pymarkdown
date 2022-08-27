@@ -33,7 +33,7 @@ class RuleMd033(RulePlugin):
             plugin_id="MD033",
             plugin_enabled_by_default=True,
             plugin_description="Inline HTML",
-            plugin_version="0.5.0",
+            plugin_version="0.5.1",
             plugin_interface_version=1,
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md033.md",
             plugin_configuration="allowed_elements, allow_first_image_element",
@@ -50,7 +50,7 @@ class RuleMd033(RulePlugin):
         )
         allowed_elements = self.plugin_configuration.get_string_property(
             "allowed_elements",
-            default_value="!--,![CDATA[,?",
+            default_value="!--,![CDATA[,!DOCTYPE",
         )
         self.__allowed_elements = []
         for next_element in allowed_elements.split(","):
@@ -75,6 +75,8 @@ class RuleMd033(RulePlugin):
             tag_text = "![CDATA["
         elif tag_text.startswith("!--"):
             tag_text = "!--"
+        elif tag_text.startswith("!DOCTYPE"):
+            tag_text = "!DOCTYPE"
         else:
             _, new_tag_text = ParserHelper.collect_until_one_of_characters(
                 tag_text, 0, " \n\t/>"

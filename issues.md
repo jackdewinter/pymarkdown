@@ -15,8 +15,6 @@
 
 ### Like To Have - Issues
 
-- md033 - <? and <! with alpha character after
-
 - better solution than `no-space-in-code` for scenario-cases.md
 - take `__consume_text_for_image_alt_text` and other functions like it and move as much as possible into token classes
   - TransformToGfmListLooseness.__handle_block_quote_start

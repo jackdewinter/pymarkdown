@@ -63,7 +63,7 @@ image tags than the default `!--` (HTML comment) are strongly discouraged.
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
-| `allowed_elements` | `string` | `!--,![CDATA[,?` | Comma separated list of tag starts that are allowable. |
+| `allowed_elements` | `string` | `!--,![CDATA[,!DOCTYPE` | Comma separated list of tag starts that are allowable. |
 | `allow_first_image_element` | `boolean` | `True` | Whether to allow an image HTML block. |
 
 To be clear, if using the `allowed_elements` configuration value, the supplied
@@ -103,6 +103,22 @@ exception is specifically for the very first element in the document, and only
 triggers if that HTML Block element starts and ends with a `h1` tag, with only an `img`
 tag between them.
 
+### Special Sequences - Processing Instructions and the DODCTYPE Directive
+
+In earlier versions of the rule plugin, support for identifying a generic Processing
+Instruction starting with the `?` character was supported.  After doing some needed
+research, it was determined that Processing Instructions are supported in XML documents,
+[but not in HTML documents](https://www.tutorialspoint.com/xml/xml_processing.htm).  After
+confirming that information at other sources, the Processing Instruction sequence was
+removed from the default for the `allowed_elements` configuration value.
+
+At the same, research was performed on Declarations that start with the `!` character.
+Related to Processing Instructions, these elements are also used in XML documents
+for special instructions, but do not appear in HTML documents.  The one exception is
+the `!DOCTYPE` declaration.  The [DOCTYPE declaration](https://en.wikipedia.org/wiki/Document_type_declaration)
+is included in HTML documents to ensure that browser interprets the HTML document
+in the manner that it was intended to be parsed.
+
 ## Origination of Rule
 
 This rule is largely inspired by the MarkdownLint rule
@@ -118,7 +134,7 @@ number 2 to number 5 and the closing tag case for number 7.
 
 In creating this rule to work with all HTML tags, including the missing
 HTML start conditions, the
-`allowed_elements` configuration default value is set to `!--,![CDATA[,?` to allow
+`allowed_elements` configuration default value is set to `!--,![CDATA[` to allow
 for common HTML tags to not trigger this rule by default.
 
 To provide better support for the "image as a heading" scenario, the
