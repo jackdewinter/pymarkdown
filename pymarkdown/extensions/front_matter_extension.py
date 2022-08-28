@@ -200,7 +200,7 @@ class FrontMatterExtension(ParserExtension):
 
         for next_line in collected_lines:
             POGGER.debug("Next fm:>$s<", next_line)
-            next_index, _ = ParserHelper.extract_whitespace(next_line, 0)
+            next_index, _ = ParserHelper.extract_spaces(next_line, 0)
             assert next_index is not None
             if next_index >= 4:
                 POGGER.debug("Indented line established.")

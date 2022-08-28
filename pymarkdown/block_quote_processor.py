@@ -1063,7 +1063,7 @@ class BlockQuoteProcessor:
                 adj_leading_spaces + adjusted_removed_text
             )
             adj_leading_spaces = adj_leading_spaces + ParserHelper.repeat_string(
-                " ", delta
+                ParserHelper.space_character, delta
             )
             adjusted_removed_text = adj_leading_spaces + adjusted_removed_text
             POGGER.debug("__hbqs>>adjusted_removed_text>>:$:<", adjusted_removed_text)
@@ -1421,7 +1421,7 @@ class BlockQuoteProcessor:
                 BlockQuoteMarkdownToken,
                 parser_state.token_stack[last_bq_index].matching_markdown_token,
             )
-            block_token.add_leading_spaces(ParserHelper.repeat_string(" ", delta), True)
+            block_token.add_leading_spaces(ParserHelper.repeat_string(ParserHelper.space_character, delta), True)
             POGGER.debug(
                 "__calculate_stack_hard_limit>>last_block_token>>$", block_token
             )
@@ -1461,7 +1461,7 @@ class BlockQuoteProcessor:
             indent_text_count = start_index + 1
             assert (
                 indent_text_count < len(remaining_text)
-                and remaining_text[indent_text_count] == " "
+                and remaining_text[indent_text_count] == ParserHelper.space_character
             )
             POGGER.debug("bq-space-found")
             indent_text_count += 1
@@ -1507,7 +1507,7 @@ class BlockQuoteProcessor:
         (
             length_of_available_whitespace,
             _,
-        ) = ParserHelper.extract_whitespace(position_marker.text_to_parse, 0)
+        ) = ParserHelper.extract_spaces(position_marker.text_to_parse, 0)
         POGGER.debug("len(ws)>>:$:", length_of_available_whitespace)
 
         stack_hard_limit, extra_consumed_whitespace, last_bq_index = (

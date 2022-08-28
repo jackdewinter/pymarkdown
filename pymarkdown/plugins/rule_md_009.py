@@ -129,7 +129,7 @@ class RuleMd009(RulePlugin):
             (
                 first_non_whitespace_index,
                 extracted_whitespace,
-            ) = ParserHelper.extract_whitespace_from_end(line)
+            ) = ParserHelper.extract_spaces_from_end(line)
             extracted_whitespace_length = len(extracted_whitespace)
 
             is_list_empty_line = False

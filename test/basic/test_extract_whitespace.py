@@ -15,7 +15,7 @@ def test_empty_string_with_good_index():
     expected_output = (0, "")
 
     # Act
-    actual_output = ParserHelper.extract_whitespace(input_string, start_index)
+    actual_output = ParserHelper.extract_spaces(input_string, start_index)
 
     # Assert
     assert expected_output == actual_output
@@ -32,7 +32,7 @@ def test_empty_string_with_bad_right_index():
     expected_output = (None, None)
 
     # Act
-    actual_output = ParserHelper.extract_whitespace(input_string, start_index)
+    actual_output = ParserHelper.extract_spaces(input_string, start_index)
 
     # Assert
     assert expected_output == actual_output
@@ -49,7 +49,7 @@ def test_empty_string_with_bad_left_index():
     expected_output = (None, None)
 
     # Act
-    actual_output = ParserHelper.extract_whitespace(input_string, start_index)
+    actual_output = ParserHelper.extract_spaces(input_string, start_index)
 
     # Assert
     assert expected_output == actual_output
@@ -66,7 +66,7 @@ def test_simple_case_from_start_with_whitespace():
     expected_output = (2, "  ")
 
     # Act
-    actual_output = ParserHelper.extract_whitespace(input_string, start_index)
+    actual_output = ParserHelper.extract_spaces(input_string, start_index)
 
     # Assert
     assert expected_output == actual_output
@@ -83,7 +83,7 @@ def test_simple_case_from_start_without_whitespace():
     expected_output = (start_index, "")
 
     # Act
-    actual_output = ParserHelper.extract_whitespace(input_string, start_index)
+    actual_output = ParserHelper.extract_spaces(input_string, start_index)
 
     # Assert
     assert expected_output == actual_output
@@ -100,7 +100,7 @@ def test_simple_case_from_middle_with_whitespace():
     expected_output = (5, " ")
 
     # Act
-    actual_output = ParserHelper.extract_whitespace(input_string, start_index)
+    actual_output = ParserHelper.extract_spaces(input_string, start_index)
 
     # Assert
     assert expected_output == actual_output
@@ -117,7 +117,7 @@ def test_simple_case_from_middle_without_whitespace():
     expected_output = (start_index, "")
 
     # Act
-    actual_output = ParserHelper.extract_whitespace(input_string, start_index)
+    actual_output = ParserHelper.extract_spaces(input_string, start_index)
 
     # Assert
     assert expected_output == actual_output
@@ -134,7 +134,7 @@ def test_simple_case_from_end_with_whitespace():
     expected_output = (len(input_string), "  ")
 
     # Act
-    actual_output = ParserHelper.extract_whitespace(input_string, start_index)
+    actual_output = ParserHelper.extract_spaces(input_string, start_index)
 
     # Assert
     assert expected_output == actual_output
@@ -151,7 +151,7 @@ def test_simple_case_from_end_without_whitespace():
     expected_output = (len(input_string), "")
 
     # Act
-    actual_output = ParserHelper.extract_whitespace(input_string, start_index)
+    actual_output = ParserHelper.extract_spaces(input_string, start_index)
 
     # Assert
     assert expected_output == actual_output

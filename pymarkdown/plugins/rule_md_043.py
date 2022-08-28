@@ -80,7 +80,7 @@ class RuleMd043(RulePlugin):
                     )
                 assert next_part is not None
                 assert new_index is not None
-                new_index, extracted_whitespace = ParserHelper.extract_any_whitespace(
+                new_index, extracted_whitespace = ParserHelper.extract_ascii_whitespace(
                     next_part, new_index
                 )
                 if not extracted_whitespace:

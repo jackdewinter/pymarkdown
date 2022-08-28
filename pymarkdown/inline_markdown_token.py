@@ -642,7 +642,7 @@ class TextMarkdownToken(InlineMarkdownToken):
             collected_whitespace_length,
             first_non_whitespace_index,
         ) = ParserHelper.collect_backwards_while_one_of_characters(
-            self.__token_text, -1, Constants.whitespace
+            self.__token_text, -1, Constants.ascii_whitespace
         )
         assert first_non_whitespace_index is not None
         if collected_whitespace_length:

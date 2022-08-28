@@ -212,7 +212,7 @@ class ContainerBlockProcessor:
                 #     last_leading_space,
                 #     len(last_leading_space),
                 # )
-                ex_ws_index, _ = ParserHelper.extract_whitespace(last_leading_space, 0)
+                ex_ws_index, _ = ParserHelper.extract_spaces(last_leading_space, 0)
                 # POGGER.debug("ex_ws_index>:$", ex_ws_index)
                 assert grab_bag.adj_ws is not None
                 if (
@@ -288,13 +288,13 @@ class ContainerBlockProcessor:
             if parser_state.token_stack[stack_search_index].is_block_quote:
                 current_indent = parser_state.original_line_to_parse.find(">")
                 assert current_indent != -1
-                assert parser_state.original_line_to_parse[current_indent + 1] == " "
+                assert parser_state.original_line_to_parse[current_indent + 1] == ParserHelper.space_character
                 current_indent += 1
 
                 # TODO add tests with no space between `>` and next block
                 assert (
                     current_indent < len(parser_state.original_line_to_parse)
-                    and parser_state.original_line_to_parse[current_indent] == " "
+                    and parser_state.original_line_to_parse[current_indent] == ParserHelper.space_character
                 )
                 current_indent += 1
             else:
@@ -307,7 +307,7 @@ class ContainerBlockProcessor:
                 current_indent += delta
             stack_search_index += 1
         assert stack_search_index > grab_bag.container_depth
-        _, leading_whitespace = ParserHelper.extract_whitespace(
+        _, leading_whitespace = ParserHelper.extract_spaces(
             parser_state.original_line_to_parse, current_indent
         )
         POGGER.debug("leading_whitespace=:$:", leading_whitespace)
@@ -769,7 +769,7 @@ class ContainerBlockProcessor:
         (
             new_start_index,
             grab_bag.extracted_whitespace,
-        ) = ParserHelper.extract_whitespace(position_marker.text_to_parse, 0)
+        ) = ParserHelper.extract_spaces(position_marker.text_to_parse, 0)
         assert new_start_index is not None
         grab_bag.start_index = new_start_index
         ContainerBlockProcessor.__calculate_for_container_blocks(
@@ -1504,7 +1504,7 @@ class ContainerBlockProcessor:
         end_container_indices: ContainerIndices,
     ) -> Tuple[int, int, bool, int]:
 
-        start_index, _ = ParserHelper.extract_whitespace(adj_line_to_parse, 0)
+        start_index, _ = ParserHelper.extract_spaces(adj_line_to_parse, 0)
         assert start_index is not None
         POGGER.debug("start_index>>$<<", start_index)
 
@@ -1589,7 +1589,7 @@ class ContainerBlockProcessor:
         elif (
             not nested_container_starts.block_index
             and grab_bag.adj_line_to_parse
-            and grab_bag.adj_line_to_parse[0] == " "
+            and grab_bag.adj_line_to_parse[0] == ParserHelper.space_character
             and indent_was_adjusted
             and parser_state.nested_list_start
         ):
@@ -1686,7 +1686,7 @@ class ContainerBlockProcessor:
         POGGER.debug("check next container_start>")
         POGGER.debug("check next container_start>stack>>$", parser_state.token_stack)
 
-        _, ex_ws_test = ParserHelper.extract_whitespace(line_to_parse, 0)
+        _, ex_ws_test = ParserHelper.extract_spaces(line_to_parse, 0)
         assert ex_ws_test is not None
 
         whitespace_scan_start_index = 0
@@ -1696,7 +1696,7 @@ class ContainerBlockProcessor:
                 if list_stack_token.ws_before_marker <= len(ex_ws_test):
                     whitespace_scan_start_index = list_stack_token.ws_before_marker
 
-        after_ws_index, ex_whitespace = ParserHelper.extract_whitespace(
+        after_ws_index, ex_whitespace = ParserHelper.extract_spaces(
             line_to_parse, whitespace_scan_start_index
         )
         if not ex_whitespace:
@@ -1932,7 +1932,7 @@ class ContainerBlockProcessor:
         assert grab_bag.is_leaf_tokens_empty()
         POGGER.debug("clt>>lazy-check")
 
-        after_ws_index, ex_whitespace = ParserHelper.extract_whitespace(
+        after_ws_index, ex_whitespace = ParserHelper.extract_spaces(
             grab_bag.line_to_parse, 0
         )
         remaining_line = grab_bag.line_to_parse[after_ws_index:]
@@ -1959,7 +1959,7 @@ class ContainerBlockProcessor:
         grab_bag: ContainerGrabBag,
     ) -> bool:
 
-        _, pragma_whitespace = ParserHelper.extract_whitespace(
+        _, pragma_whitespace = ParserHelper.extract_spaces(
             position_marker.text_to_parse, 0
         )
         return (

@@ -59,7 +59,7 @@ class ContainerBlockLeafProcessor:
         (
             new_index_number,
             extracted_leaf_whitespace,
-        ) = ParserHelper.extract_whitespace(position_marker.text_to_parse, 0)
+        ) = ParserHelper.extract_spaces(position_marker.text_to_parse, 0)
         # POGGER.debug("new_index_number>>:$:<", new_index_number)
         # POGGER.debug("extracted_leaf_whitespace>>:$:<", extracted_leaf_whitespace)
         assert new_index_number is not None
@@ -244,7 +244,7 @@ class ContainerBlockLeafProcessor:
         remaining_line_to_parse = incoming_position_marker.text_to_parse[
             incoming_position_marker.index_number :
         ]
-        (new_index_number, leaf_token_whitespace) = ParserHelper.extract_whitespace(
+        (new_index_number, leaf_token_whitespace) = ParserHelper.extract_spaces(
             incoming_position_marker.text_to_parse,
             incoming_position_marker.index_number,
         )
@@ -802,8 +802,8 @@ class ContainerBlockLeafProcessor:
         assert parser_state.original_line_to_parse is not None
         if len(parser_state.original_line_to_parse) == len(new_text_to_parse):
             assert parser_state.original_line_to_parse.replace(
-                ">", " "
-            ) == new_text_to_parse.replace(">", " "), (
+                ">", ParserHelper.space_character
+            ) == new_text_to_parse.replace(">", ParserHelper.space_character), (
                 "cheat=:"
                 + ParserHelper.make_value_visible(parser_state.original_line_to_parse)
                 + ":,new_text_to_parse=:"

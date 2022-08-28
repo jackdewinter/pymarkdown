@@ -300,7 +300,7 @@ class ListBlockProcessor:
 
         start_index += 1
         line_to_parse_size = len(line_to_parse)
-        after_all_whitespace_index, _ = ParserHelper.extract_whitespace(
+        after_all_whitespace_index, _ = ParserHelper.extract_spaces(
             line_to_parse, start_index
         )
         assert after_all_whitespace_index is not None
@@ -1479,7 +1479,7 @@ class ListBlockProcessor:
         (
             after_marker_ws_index,
             after_marker_whitespace,
-        ) = ParserHelper.extract_whitespace(line_to_parse, start_index + 1)
+        ) = ParserHelper.extract_spaces(line_to_parse, start_index + 1)
         assert after_marker_ws_index is not None
         assert after_marker_whitespace is not None
         assert extracted_whitespace is not None
@@ -2085,7 +2085,7 @@ class ListBlockProcessor:
                         last_list_index_token.matching_markdown_token,
                     )
                     delta = new_token.column_number - list_token.column_number
-                    new_token.set_extracted_whitespace("".rjust(delta, " "))
+                    new_token.set_extracted_whitespace("".rjust(delta,ParserHelper.space_character))
         return did_find, last_list_index, repeat_check
 
     # pylint: enable=too-many-arguments, too-many-locals
@@ -2219,7 +2219,7 @@ class ListBlockProcessor:
             )
             POGGER.debug("parser_state.token_stack>>$", parser_state.token_stack)
             new_token.set_extracted_whitespace(
-                "".rjust(new_token.column_number - 1, " ")
+                "".rjust(new_token.column_number - 1, ParserHelper.space_character)
             )
         return are_equal, balancing_tokens
 

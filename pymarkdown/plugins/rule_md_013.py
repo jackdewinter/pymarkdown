@@ -153,7 +153,7 @@ class RuleMd013(RulePlugin):
             if self.__strict_mode:
                 trigger_rule = True
             else:
-                next_space_index, _ = ParserHelper.extract_until_whitespace(
+                next_space_index, _ = ParserHelper.extract_until_spaces(
                     line, compare_length
                 )
                 # print("next_index=" + str(next_space_index))

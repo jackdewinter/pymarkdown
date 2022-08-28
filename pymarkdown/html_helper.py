@@ -43,7 +43,7 @@ class HtmlHelper:
     __valid_tag_name_start = string.ascii_letters
     __valid_tag_name_characters = f"{string.ascii_letters}{string.digits}-"
     __tag_attribute_name_characters = f"{string.ascii_letters}{string.digits}_.:-"
-    __unquoted_attribute_value_stop = f"\"'=<>`{Constants.whitespace}"
+    __unquoted_attribute_value_stop = f"\"'=<>`{Constants.ascii_whitespace}"
     __tag_attribute_name_start = f"{string.ascii_letters}_:"
     __html_block_1_start_tag_prefix = ["script", "pre", "style"]
     __html_tag_attribute_value_terminators = " \"'=<>`"
@@ -187,7 +187,7 @@ class HtmlHelper:
         Determine and extract an optional attribute value.
         """
 
-        non_whitespace_index, _ = ParserHelper.extract_whitespace(
+        non_whitespace_index, _ = ParserHelper.extract_spaces(
             line_to_parse, value_index
         )
         assert non_whitespace_index is not None
@@ -199,7 +199,7 @@ class HtmlHelper:
         ) or non_whitespace_index >= line_to_parse_size:
             return non_whitespace_index
 
-        non_whitespace_index, _ = ParserHelper.extract_whitespace(
+        non_whitespace_index, _ = ParserHelper.extract_spaces(
             line_to_parse, non_whitespace_index + 1
         )
         assert non_whitespace_index is not None
@@ -258,7 +258,7 @@ class HtmlHelper:
         """
 
         is_valid = HtmlHelper.is_valid_tag_name(tag_name)
-        non_whitespace_index, _ = ParserHelper.extract_whitespace(
+        non_whitespace_index, _ = ParserHelper.extract_spaces(
             line_to_parse, next_char_index
         )
         assert non_whitespace_index is not None
@@ -288,7 +288,7 @@ class HtmlHelper:
             tag_name
         ) and not HtmlHelper.__is_valid_block_1_tag_name(tag_name)
 
-        non_whitespace_index, extracted_whitespace = ParserHelper.extract_whitespace(
+        non_whitespace_index, extracted_whitespace = ParserHelper.extract_spaces(
             line_to_parse, next_char_index
         )
         assert non_whitespace_index is not None
@@ -320,7 +320,7 @@ class HtmlHelper:
             (
                 non_whitespace_index,
                 extracted_whitespace,
-            ) = ParserHelper.extract_whitespace(line_to_parse, non_whitespace_index)
+            ) = ParserHelper.extract_spaces(line_to_parse, non_whitespace_index)
             assert non_whitespace_index is not None
 
         if non_whitespace_index < line_to_parse_size:
@@ -334,7 +334,7 @@ class HtmlHelper:
         else:
             is_end_of_tag_present = False
 
-        non_whitespace_index, _ = ParserHelper.extract_whitespace(
+        non_whitespace_index, _ = ParserHelper.extract_spaces(
             line_to_parse, non_whitespace_index
         )
         return (
@@ -372,7 +372,7 @@ class HtmlHelper:
             text_to_parse, start_index, HtmlHelper.__tag_attribute_name_characters
         )
         assert parse_index is not None
-        end_name_index, extracted_whitespace = ParserHelper.extract_any_whitespace(
+        end_name_index, extracted_whitespace = ParserHelper.extract_ascii_whitespace(
             text_to_parse, parse_index
         )
         assert end_name_index is not None
@@ -384,7 +384,7 @@ class HtmlHelper:
             (
                 value_start_index,
                 extracted_whitespace,
-            ) = ParserHelper.extract_any_whitespace(text_to_parse, end_name_index + 1)
+            ) = ParserHelper.extract_ascii_whitespace(text_to_parse, end_name_index + 1)
             assert value_start_index is not None
             value_end_index: Optional[int] = None
             if ParserHelper.is_character_at_index_one_of(
@@ -430,7 +430,7 @@ class HtmlHelper:
                     HtmlHelper.__unquoted_attribute_value_stop,
                 )
             assert value_end_index is not None
-            end_name_index, extracted_whitespace = ParserHelper.extract_any_whitespace(
+            end_name_index, extracted_whitespace = ParserHelper.extract_ascii_whitespace(
                 text_to_parse, value_end_index
             )
 
@@ -448,7 +448,7 @@ class HtmlHelper:
             HtmlHelper.__parse_raw_tag_name(text_to_parse, 0),
         )
         if tag_name:
-            parse_index, extracted_whitespace = ParserHelper.extract_any_whitespace(
+            parse_index, extracted_whitespace = ParserHelper.extract_ascii_whitespace(
                 text_to_parse, len(tag_name)
             )
             assert parse_index is not None
@@ -491,7 +491,7 @@ class HtmlHelper:
                 assert parse_index is not None
                 text_to_parse_size = len(text_to_parse)
                 if parse_index != text_to_parse_size:
-                    parse_index, _ = ParserHelper.extract_whitespace(
+                    parse_index, _ = ParserHelper.extract_spaces(
                         text_to_parse, parse_index
                     )
                 if parse_index == text_to_parse_size:
@@ -734,7 +734,7 @@ class HtmlHelper:
                         complete_parse_index,
                     )
             if html_block_type == HtmlHelper.html_block_7:
-                new_index, _ = ParserHelper.extract_whitespace(
+                new_index, _ = ParserHelper.extract_ascii_whitespace(
                     line_to_parse, character_index
                 )
                 if new_index != line_to_parse_size:
