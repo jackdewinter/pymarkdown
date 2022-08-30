@@ -430,9 +430,10 @@ class HtmlHelper:
                     HtmlHelper.__unquoted_attribute_value_stop,
                 )
             assert value_end_index is not None
-            end_name_index, extracted_whitespace = ParserHelper.extract_ascii_whitespace(
-                text_to_parse, value_end_index
-            )
+            (
+                end_name_index,
+                extracted_whitespace,
+            ) = ParserHelper.extract_ascii_whitespace(text_to_parse, value_end_index)
 
         return end_name_index, extracted_whitespace
 

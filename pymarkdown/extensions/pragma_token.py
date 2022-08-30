@@ -125,9 +125,7 @@ class PragmaExtension(ParserExtension):
             actual_line_number = -next_line_number
 
         line_after_prefix = pragma_lines[next_line_number][prefix_length:].rstrip()
-        after_whitespace_index, _ = ParserHelper.extract_spaces(
-            line_after_prefix, 0
-        )
+        after_whitespace_index, _ = ParserHelper.extract_spaces(line_after_prefix, 0)
         assert after_whitespace_index is not None
         command_data = line_after_prefix[
             after_whitespace_index

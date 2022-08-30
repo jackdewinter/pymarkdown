@@ -464,9 +464,17 @@ class InlineHelper:
         if (
             len(between_text) > 2
             and between_text[0]
-            in [ParserHelper.space_character, ParserHelper.tab_character, ParserHelper.newline_character]
+            in [
+                ParserHelper.space_character,
+                ParserHelper.tab_character,
+                ParserHelper.newline_character,
+            ]
             and between_text[-1]
-            in [ParserHelper.space_character, ParserHelper.tab_character, ParserHelper.newline_character]
+            in [
+                ParserHelper.space_character,
+                ParserHelper.tab_character,
+                ParserHelper.newline_character,
+            ]
         ):
             stripped_between_attempt = between_text[1:-1]
             if len(stripped_between_attempt.strip()) != 0:
@@ -973,7 +981,10 @@ class InlineHelper:
                 and text_to_parse[path_index] == InlineHelper.__scheme_end_character
             ):
                 path_index += 1
-                while path_index < text_to_parse_size and ord(text_to_parse[path_index]) > 32:
+                while (
+                    path_index < text_to_parse_size
+                    and ord(text_to_parse[path_index]) > 32
+                ):
                     path_index += 1
                 if path_index == text_to_parse_size:
                     return UriAutolinkMarkdownToken(

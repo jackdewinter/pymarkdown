@@ -673,7 +673,8 @@ class LeafBlockProcessor:
         if remove_trailing_count:
             if end_index > 0:
                 if ParserHelper.is_character_at_index_whitespace(
-                    remaining_line, end_index - 1):
+                    remaining_line, end_index - 1
+                ):
                     remaining_line = remaining_line[:end_index]
                     (
                         _,

@@ -442,7 +442,9 @@ class LinkReferenceDefinitionHelper:
 
         assert new_index is not None
         POGGER.debug("look for EOL-ws>>$<<", line_to_parse[new_index:])
-        new_index, ex_ws = ParserHelper.extract_ascii_whitespace(line_to_parse, new_index)
+        new_index, ex_ws = ParserHelper.extract_ascii_whitespace(
+            line_to_parse, new_index
+        )
         assert new_index is not None
         POGGER.debug("look for EOL>>$<<", line_to_parse[new_index:])
         if new_index < len(line_to_parse):

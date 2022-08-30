@@ -2085,7 +2085,9 @@ class ListBlockProcessor:
                         last_list_index_token.matching_markdown_token,
                     )
                     delta = new_token.column_number - list_token.column_number
-                    new_token.set_extracted_whitespace("".rjust(delta,ParserHelper.space_character))
+                    new_token.set_extracted_whitespace(
+                        "".rjust(delta, ParserHelper.space_character)
+                    )
         return did_find, last_list_index, repeat_check
 
     # pylint: enable=too-many-arguments, too-many-locals

@@ -1421,7 +1421,9 @@ class BlockQuoteProcessor:
                 BlockQuoteMarkdownToken,
                 parser_state.token_stack[last_bq_index].matching_markdown_token,
             )
-            block_token.add_leading_spaces(ParserHelper.repeat_string(ParserHelper.space_character, delta), True)
+            block_token.add_leading_spaces(
+                ParserHelper.repeat_string(ParserHelper.space_character, delta), True
+            )
             POGGER.debug(
                 "__calculate_stack_hard_limit>>last_block_token>>$", block_token
             )

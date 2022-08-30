@@ -288,13 +288,17 @@ class ContainerBlockProcessor:
             if parser_state.token_stack[stack_search_index].is_block_quote:
                 current_indent = parser_state.original_line_to_parse.find(">")
                 assert current_indent != -1
-                assert parser_state.original_line_to_parse[current_indent + 1] == ParserHelper.space_character
+                assert (
+                    parser_state.original_line_to_parse[current_indent + 1]
+                    == ParserHelper.space_character
+                )
                 current_indent += 1
 
                 # TODO add tests with no space between `>` and next block
                 assert (
                     current_indent < len(parser_state.original_line_to_parse)
-                    and parser_state.original_line_to_parse[current_indent] == ParserHelper.space_character
+                    and parser_state.original_line_to_parse[current_indent]
+                    == ParserHelper.space_character
                 )
                 current_indent += 1
             else:

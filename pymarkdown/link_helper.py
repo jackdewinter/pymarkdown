@@ -168,7 +168,9 @@ class LinkHelper:
         """
         POGGER.debug("before ws>>$>", line_to_parse[new_index:])
         assert new_index is not None
-        new_index, ex_ws = ParserHelper.extract_ascii_whitespace(line_to_parse, new_index)
+        new_index, ex_ws = ParserHelper.extract_ascii_whitespace(
+            line_to_parse, new_index
+        )
         assert new_index is not None
         POGGER.debug(
             "after ws>>$>ex_ws>$",
@@ -243,7 +245,9 @@ class LinkHelper:
 
         # Fold all whitespace characters (except for space) into a space character
         link_label = ParserHelper.replace_any_of(
-            link_label, Constants.non_space_ascii_whitespace, ParserHelper.space_character
+            link_label,
+            Constants.non_space_ascii_whitespace,
+            ParserHelper.space_character,
         )
 
         # Fold multiple spaces into a single space character.

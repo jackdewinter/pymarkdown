@@ -242,7 +242,17 @@ class ParserHelper:
     def collect_backwards_while_spaces(
         source_string: str, end_index: int
     ) -> Tuple[Optional[int], Optional[int]]:
-        return ParserHelper.collect_backwards_while_one_of_characters(source_string, end_index, ParserHelper.__normal_whitespace)
+        """
+        Collect from a given starting point in a string going backwards
+        towards the start of the string while the character is a space character
+        or a tab character.
+
+        Returns the number of characters collected and the index of the first non-matching
+        character and any extracted text in a tuple.
+        """
+        return ParserHelper.collect_backwards_while_one_of_characters(
+            source_string, end_index, ParserHelper.__normal_whitespace
+        )
 
     @staticmethod
     def collect_backwards_while_character(
@@ -315,7 +325,16 @@ class ParserHelper:
     def collect_while_spaces(
         source_string: str, start_index: int
     ) -> Tuple[Optional[int], Optional[str]]:
-        return ParserHelper.collect_while_one_of_characters(source_string, start_index, ParserHelper.__normal_whitespace)
+        """
+        Collect characters from a given starting point in a string as long
+        as the character is either a string or a tab character.
+
+        Returns the index of the first non-matching character and any extracted text
+        in a tuple.
+        """
+        return ParserHelper.collect_while_one_of_characters(
+            source_string, start_index, ParserHelper.__normal_whitespace
+        )
 
     @staticmethod
     def collect_while_one_of_characters(
@@ -405,7 +424,9 @@ class ParserHelper:
             whitespace_actual_length = ParserHelper.calculate_length(
                 whitespace_section, realized_start_index
             )
-            rebuilt_string += ParserHelper.repeat_string(ParserHelper.space_character, whitespace_actual_length)
+            rebuilt_string += ParserHelper.repeat_string(
+                ParserHelper.space_character, whitespace_actual_length
+            )
             current_start_index += start_index + whitespace_actual_length
 
             source_string = source_string[end_index:]
