@@ -524,20 +524,21 @@ class LinkReferenceDefinitionHelper:
                 keep_going, new_index = False, -1
         else:
             normalized_destination = None
-        if not keep_going:
-            return keep_going, new_index, None
-
-        return LinkReferenceDefinitionHelper.__create_lrd_token(
-            new_index,
-            collected_destination,
-            normalized_destination,
-            line_destination_whitespace,
-            inline_link,
-            inline_raw_link,
-            inline_title,
-            inline_raw_title,
-            line_title_whitespace,
-            end_whitespace,
+        return (
+            LinkReferenceDefinitionHelper.__create_lrd_token(
+                new_index,
+                collected_destination,
+                normalized_destination,
+                line_destination_whitespace,
+                inline_link,
+                inline_raw_link,
+                inline_title,
+                inline_raw_title,
+                line_title_whitespace,
+                end_whitespace,
+            )
+            if keep_going
+            else (keep_going, new_index, None)
         )
 
     # pylint: enable=too-many-locals
