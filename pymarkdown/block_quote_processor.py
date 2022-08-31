@@ -1489,6 +1489,63 @@ class BlockQuoteProcessor:
 
     # pylint: disable=too-many-arguments
     @staticmethod
+    def __calculate_limit_and_continuation(
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        adjust_current_block_quote: bool,
+        last_bq_index: int,
+        stack_increase_needed: bool,
+        stack_decrease_needed: bool,
+        block_quote_data: BlockQuoteData,
+    ) -> Tuple[Optional[int], Optional[int], bool]:
+        (
+            length_of_available_whitespace,
+            _,
+        ) = ParserHelper.extract_spaces(position_marker.text_to_parse, 0)
+        POGGER.debug("len(ws)>>:$:", length_of_available_whitespace)
+
+        assert length_of_available_whitespace is not None
+        (
+            stack_hard_limit,
+            extra_consumed_whitespace,
+        ) = BlockQuoteProcessor.__calculate_stack_hard_limit_if_eligible(
+            parser_state,
+            position_marker,
+            length_of_available_whitespace,
+            adjust_current_block_quote,
+            last_bq_index,
+        )
+        POGGER.debug(f">>>>>stack_increase_needed:{stack_increase_needed}")
+        POGGER.debug(f">>>>>stack_decrease_needed:{stack_decrease_needed}")
+        POGGER.debug(f">>>>>adjust_current_block_quote:{adjust_current_block_quote}")
+        POGGER.debug(
+            ">>block_quote_data.current_count>>$",
+            block_quote_data.current_count,
+        )
+        POGGER.debug(">>block_quote_data.stack_count>>$", block_quote_data.stack_count)
+        force_list_continuation = (
+            extra_consumed_whitespace is None
+            and not stack_increase_needed
+            and not stack_decrease_needed
+            and adjust_current_block_quote
+        )
+        if force_list_continuation:
+            POGGER.debug(f">>>>>last_bq_index:{last_bq_index}")
+            POGGER.debug(f">>>>>parser_state.token_stack:{parser_state.token_stack}")
+            POGGER.debug(
+                f">>>>>len(parser_state.token_stack):{len(parser_state.token_stack)}"
+            )
+            force_list_continuation = (
+                last_bq_index + 1 < len(parser_state.token_stack)
+                and parser_state.token_stack[last_bq_index + 1].is_list
+                and block_quote_data.current_count != block_quote_data.stack_count
+            )
+        return stack_hard_limit, extra_consumed_whitespace, force_list_continuation
+
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
     def __calculate_stack_hard_limit(
         parser_state: ParserState,
         position_marker: PositionMarker,
@@ -1505,12 +1562,6 @@ class BlockQuoteProcessor:
             position_marker.index_number,
             position_marker.text_to_parse,
         )
-
-        (
-            length_of_available_whitespace,
-            _,
-        ) = ParserHelper.extract_spaces(position_marker.text_to_parse, 0)
-        POGGER.debug("len(ws)>>:$:", length_of_available_whitespace)
 
         stack_hard_limit, extra_consumed_whitespace, last_bq_index = (
             None,
@@ -1556,49 +1607,19 @@ class BlockQuoteProcessor:
         )
         force_list_continuation = False
         if conditional_1 and conditional_2 and conditional_3:
-            assert length_of_available_whitespace is not None
             (
                 stack_hard_limit,
                 extra_consumed_whitespace,
-            ) = BlockQuoteProcessor.__calculate_stack_hard_limit_if_eligible(
+                force_list_continuation,
+            ) = BlockQuoteProcessor.__calculate_limit_and_continuation(
                 parser_state,
                 position_marker,
-                length_of_available_whitespace,
                 adjust_current_block_quote,
                 last_bq_index,
+                stack_increase_needed,
+                stack_decrease_needed,
+                block_quote_data,
             )
-            if extra_consumed_whitespace is None:
-                POGGER.debug(f">>>>>stack_increase_needed:{stack_increase_needed}")
-                POGGER.debug(f">>>>>stack_decrease_needed:{stack_decrease_needed}")
-                POGGER.debug(
-                    f">>>>>adjust_current_block_quote:{adjust_current_block_quote}"
-                )
-                POGGER.debug(
-                    ">>block_quote_data.current_count>>$",
-                    block_quote_data.current_count,
-                )
-                POGGER.debug(
-                    ">>block_quote_data.stack_count>>$", block_quote_data.stack_count
-                )
-
-                if (
-                    not stack_increase_needed
-                    and not stack_decrease_needed
-                    and adjust_current_block_quote
-                ):
-                    POGGER.debug(f">>>>>last_bq_index:{last_bq_index}")
-                    POGGER.debug(
-                        f">>>>>parser_state.token_stack:{parser_state.token_stack}"
-                    )
-                    POGGER.debug(
-                        f">>>>>len(parser_state.token_stack):{len(parser_state.token_stack)}"
-                    )
-                    force_list_continuation = (
-                        last_bq_index + 1 < len(parser_state.token_stack)
-                        and parser_state.token_stack[last_bq_index + 1].is_list
-                        and block_quote_data.current_count
-                        != block_quote_data.stack_count
-                    )
         POGGER.debug(
             "<<__calculate_stack_hard_limit<<$,$",
             stack_hard_limit,
