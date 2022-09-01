@@ -13,7 +13,7 @@
         },
         "pymarkdown/constants.py": {},
         "pymarkdown/container_block_leaf_processor.py": {
-            "too-many-arguments": 3,
+            "too-many-arguments": 4,
             "chained-comparison": 1,
             "too-many-boolean-expressions": 1
         },
@@ -231,7 +231,7 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 118,
+        "too-many-arguments": 119,
         "too-many-locals": 32,
         "too-few-public-methods": 6,
         "chained-comparison": 1,
