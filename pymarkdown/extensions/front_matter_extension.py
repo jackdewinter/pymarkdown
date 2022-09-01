@@ -236,6 +236,4 @@ class FrontMatterExtension(ParserExtension):
 
             # This is specifically to trigger test_front_matter_20.
             assert current_title != "test" or current_value != "assert"
-        if not value_map:
-            return "No valid metadata header lines were found."
-        return value_map
+        return value_map or "No valid metadata header lines were found."
