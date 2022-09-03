@@ -1153,7 +1153,6 @@ def test_whitespaces_html_with_spaces_before():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.gfm
 def test_whitespaces_html_with_tabs_before():
     """
     Test case:  HTML block followed by spaces and tabs.
