@@ -2,12 +2,12 @@
     "projectName": "pymarkdown",
     "reportSource": "pytest",
     "branchLevel": {
-        "totalMeasured": 3517,
-        "totalCovered": 3517
+        "totalMeasured": 3519,
+        "totalCovered": 3519
     },
     "lineLevel": {
-        "totalMeasured": 12325,
-        "totalCovered": 12325
+        "totalMeasured": 12341,
+        "totalCovered": 12341
     }
 }
 
