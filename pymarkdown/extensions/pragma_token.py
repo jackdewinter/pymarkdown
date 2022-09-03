@@ -81,7 +81,7 @@ class PragmaExtension(ParserExtension):
                 PragmaToken.pragma_alternate_prefix
             )
 
-            start_index, _ = ParserHelper.extract_whitespace(
+            start_index, _ = ParserHelper.extract_spaces(
                 line_to_parse,
                 len(
                     PragmaToken.pragma_alternate_prefix
@@ -125,15 +125,13 @@ class PragmaExtension(ParserExtension):
             actual_line_number = -next_line_number
 
         line_after_prefix = pragma_lines[next_line_number][prefix_length:].rstrip()
-        after_whitespace_index, _ = ParserHelper.extract_whitespace(
-            line_after_prefix, 0
-        )
+        after_whitespace_index, _ = ParserHelper.extract_spaces(line_after_prefix, 0)
         assert after_whitespace_index is not None
         command_data = line_after_prefix[
             after_whitespace_index
             + len(PragmaToken.pragma_title) : -len(PragmaToken.pragma_suffix)
         ]
-        after_command_index, command = ParserHelper.extract_until_whitespace(
+        after_command_index, command = ParserHelper.extract_until_spaces(
             command_data, 0
         )
         assert command is not None

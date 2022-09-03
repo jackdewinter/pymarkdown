@@ -76,7 +76,7 @@
         },
         {
             "name": "test.basic.test_container_grab_bag",
-            "totalTests": 21,
+            "totalTests": 24,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -584,6 +584,14 @@
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.gfm.test_markdown_whitespaces",
+            "totalTests": 133,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 33,
             "elapsedTimeInMilliseconds": 0
         },
         {

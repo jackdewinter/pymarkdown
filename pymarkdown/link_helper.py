@@ -168,7 +168,9 @@ class LinkHelper:
         """
         POGGER.debug("before ws>>$>", line_to_parse[new_index:])
         assert new_index is not None
-        new_index, ex_ws = ParserHelper.extract_any_whitespace(line_to_parse, new_index)
+        new_index, ex_ws = ParserHelper.extract_ascii_whitespace(
+            line_to_parse, new_index
+        )
         assert new_index is not None
         POGGER.debug(
             "after ws>>$>ex_ws>$",
@@ -210,7 +212,7 @@ class LinkHelper:
         # TODO if new_index recomputed, why being passed?
         new_index: Optional[int] = None
         new_index, prefix_whitespace = ParserHelper.collect_while_one_of_characters(
-            line_to_parse, new_indexx, Constants.whitespace
+            line_to_parse, new_indexx, Constants.ascii_whitespace
         )
         assert new_index is not None
         if new_index == len(line_to_parse) and not is_blank_line:
@@ -243,7 +245,9 @@ class LinkHelper:
 
         # Fold all whitespace characters (except for space) into a space character
         link_label = ParserHelper.replace_any_of(
-            link_label, Constants.non_space_whitespace, ParserHelper.space_character
+            link_label,
+            Constants.non_space_ascii_whitespace,
+            ParserHelper.space_character,
         )
 
         # Fold multiple spaces into a single space character.
@@ -1010,7 +1014,7 @@ class LinkHelper:
         POGGER.debug("process_inline_link_body>>$<<", source_text[new_index:])
 
         newer_index: Optional[int] = new_index
-        newer_index, before_link_whitespace = ParserHelper.extract_any_whitespace(
+        newer_index, before_link_whitespace = ParserHelper.extract_ascii_whitespace(
             source_text, new_index
         )
 
@@ -1120,7 +1124,7 @@ class LinkHelper:
             (
                 newer_index,
                 before_title_whitespace,
-            ) = ParserHelper.extract_any_whitespace(source_text, newer_index)
+            ) = ParserHelper.extract_ascii_whitespace(source_text, newer_index)
             POGGER.debug(
                 "after ws>>$>",
                 source_text[newer_index:],
@@ -1139,7 +1143,7 @@ class LinkHelper:
             (
                 newer_index,
                 after_title_whitespace,
-            ) = ParserHelper.extract_any_whitespace(source_text, newer_index)
+            ) = ParserHelper.extract_ascii_whitespace(source_text, newer_index)
         return (
             inline_link,
             pre_inline_link,

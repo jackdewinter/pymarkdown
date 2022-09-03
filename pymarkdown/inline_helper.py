@@ -464,9 +464,17 @@ class InlineHelper:
         if (
             len(between_text) > 2
             and between_text[0]
-            in [ParserHelper.space_character, ParserHelper.newline_character]
+            in [
+                ParserHelper.space_character,
+                ParserHelper.tab_character,
+                ParserHelper.newline_character,
+            ]
             and between_text[-1]
-            in [ParserHelper.space_character, ParserHelper.newline_character]
+            in [
+                ParserHelper.space_character,
+                ParserHelper.tab_character,
+                ParserHelper.newline_character,
+            ]
         ):
             stripped_between_attempt = between_text[1:-1]
             if len(stripped_between_attempt.strip()) != 0:
@@ -526,8 +534,8 @@ class InlineHelper:
         POGGER.debug(">>current_string>>$>>", current_string)
         POGGER.debug(">>end_string>>$>>", end_string)
         POGGER.debug(">>remaining_line>>$>>", remaining_line)
-        _, last_non_whitespace_index = ParserHelper.collect_backwards_while_character(
-            remaining_line, -1, InlineHelper.__line_end_whitespace
+        _, last_non_whitespace_index = ParserHelper.collect_backwards_while_spaces(
+            remaining_line, -1
         )
         POGGER.debug(">>last_non_whitespace_index>>$", last_non_whitespace_index)
         removed_end_whitespace = remaining_line[last_non_whitespace_index:]
@@ -659,7 +667,7 @@ class InlineHelper:
                 and inline_blocks[-1].is_inline_hard_break
                 and not current_string
             ):
-                new_index, ex_ws = ParserHelper.extract_whitespace(remaining_line, 0)
+                new_index, ex_ws = ParserHelper.extract_spaces(remaining_line, 0)
                 POGGER.debug("<<new_index<<$<<", new_index)
                 POGGER.debug("<<ex_ws<<$<<", ex_ws)
                 assert new_index
@@ -973,9 +981,10 @@ class InlineHelper:
                 and text_to_parse[path_index] == InlineHelper.__scheme_end_character
             ):
                 path_index += 1
-                while path_index < text_to_parse_size:
-                    if ord(text_to_parse[path_index]) <= 32:
-                        break
+                while (
+                    path_index < text_to_parse_size
+                    and ord(text_to_parse[path_index]) > 32
+                ):
                     path_index += 1
                 if path_index == text_to_parse_size:
                     return UriAutolinkMarkdownToken(

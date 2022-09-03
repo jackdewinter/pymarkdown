@@ -44,9 +44,9 @@ class Constants:
     Constants to use throughout the parser.
     """
 
-    __whitespace = "\x20\x09\x0a\x0b\x0c\x0d"
+    __ascii_whitespace = "\x20\x09\x0a\x0b\x0c\x0d"
 
-    __non_space_whitespace = __whitespace[1:]
+    __non_space_ascii_whitespace = __ascii_whitespace[1:]
 
     __ascii_control_characters = (
         "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f"
@@ -98,15 +98,15 @@ class Constants:
         return self.__ascii_control_characters
 
     @ClassProperty
-    def non_space_whitespace(self) -> str:
+    def non_space_ascii_whitespace(self) -> str:
         """
         Standard ASCII whitespace characters minus the space character.
         """
-        return self.__non_space_whitespace
+        return self.__non_space_ascii_whitespace
 
     @ClassProperty
-    def whitespace(self) -> str:
+    def ascii_whitespace(self) -> str:
         """
         Standard ASCII whitespace characters.
         """
-        return self.__whitespace
+        return self.__ascii_whitespace

@@ -92,6 +92,19 @@ class ParserHelper:
         )
 
     @staticmethod
+    def is_character_at_index_not_whitespace(
+        source_string: str, index_in_string: int
+    ) -> bool:
+        """
+        Determine if the specified character is valid and not a whitespace character.
+        """
+
+        return (
+            0 <= index_in_string < len(source_string)
+            and source_string[index_in_string] not in ParserHelper.__normal_whitespace
+        )
+
+    @staticmethod
     def is_character_at_index_one_of(
         source_string: str, index_in_string: int, valid_characters: str
     ) -> bool:
@@ -120,20 +133,7 @@ class ParserHelper:
         )
 
     @staticmethod
-    def is_character_at_index_not_whitespace(
-        source_string: str, index_in_string: int
-    ) -> bool:
-        """
-        Determine if the specified character is valid and not a whitespace character.
-        """
-
-        return (
-            0 <= index_in_string < len(source_string)
-            and source_string[index_in_string] != " "
-        )
-
-    @staticmethod
-    def extract_whitespace(
+    def extract_spaces(
         source_string: str, start_index: int
     ) -> Tuple[Optional[int], Optional[str]]:
         """
@@ -153,7 +153,7 @@ class ParserHelper:
         return index, source_string[start_index:index]
 
     @staticmethod
-    def extract_any_whitespace(
+    def extract_ascii_whitespace(
         source_string: str, start_index: int
     ) -> Tuple[Optional[int], Optional[str]]:
         """
@@ -168,14 +168,14 @@ class ParserHelper:
 
         index = start_index
         while ParserHelper.is_character_at_index_one_of(
-            source_string, index, Constants.whitespace
+            source_string, index, Constants.ascii_whitespace
         ):
             index += 1
 
         return index, source_string[start_index:index]
 
     @staticmethod
-    def extract_whitespace_from_end(
+    def extract_spaces_from_end(
         source_string: str, start_index: Optional[int] = None
     ) -> Tuple[int, str]:
         """
@@ -198,7 +198,7 @@ class ParserHelper:
         return index + 1, source_string[index + 1 :]
 
     @staticmethod
-    def extract_until_whitespace(
+    def extract_until_spaces(
         source_string: str, start_index: int
     ) -> Tuple[Optional[int], Optional[str]]:
         """
@@ -237,6 +237,22 @@ class ParserHelper:
         while index < source_string_size and source_string[index] == match_character:
             index += 1
         return index - start_index, index
+
+    @staticmethod
+    def collect_backwards_while_spaces(
+        source_string: str, end_index: int
+    ) -> Tuple[Optional[int], Optional[int]]:
+        """
+        Collect from a given starting point in a string going backwards
+        towards the start of the string while the character is a space character
+        or a tab character.
+
+        Returns the number of characters collected and the index of the first non-matching
+        character and any extracted text in a tuple.
+        """
+        return ParserHelper.collect_backwards_while_one_of_characters(
+            source_string, end_index, ParserHelper.__normal_whitespace
+        )
 
     @staticmethod
     def collect_backwards_while_character(
@@ -304,6 +320,21 @@ class ParserHelper:
             index += 1
 
         return index, source_string[start_index:index]
+
+    @staticmethod
+    def collect_while_spaces(
+        source_string: str, start_index: int
+    ) -> Tuple[Optional[int], Optional[str]]:
+        """
+        Collect characters from a given starting point in a string as long
+        as the character is either a string or a tab character.
+
+        Returns the index of the first non-matching character and any extracted text
+        in a tuple.
+        """
+        return ParserHelper.collect_while_one_of_characters(
+            source_string, start_index, ParserHelper.__normal_whitespace
+        )
 
     @staticmethod
     def collect_while_one_of_characters(
@@ -379,26 +410,23 @@ class ParserHelper:
         current_start_index = 0
         next_tab_index = source_string.find(ParserHelper.tab_character)
         while next_tab_index != -1:
-            _, start_index = ParserHelper.collect_backwards_while_one_of_characters(
-                source_string, next_tab_index, " \t"
+            _, start_index = ParserHelper.collect_backwards_while_spaces(
+                source_string, next_tab_index
             )
             assert start_index is not None
-            end_index, _ = ParserHelper.collect_while_one_of_characters(
-                source_string, next_tab_index, " \t"
+            end_index, _ = ParserHelper.collect_while_spaces(
+                source_string, next_tab_index
             )
-            # print("si:" + str(start_index))
-            # print("ei:" + str(end_index))
             whitespace_section = source_string[start_index:end_index]
-            # print("whitespace_section:" + ParserHelper.make_whitespace_visible(whitespace_section) + ":")
             if start_index:
                 rebuilt_string += source_string[:start_index]
             realized_start_index = current_start_index + start_index
-            # print("xxx:" + str(xxx) + "=" + str(current_start_index) + "+" + str(start_index))
             whitespace_actual_length = ParserHelper.calculate_length(
                 whitespace_section, realized_start_index
             )
-            # print("whitespace_actual_length:" + str(whitespace_actual_length) + ":")
-            rebuilt_string += ParserHelper.repeat_string(" ", whitespace_actual_length)
+            rebuilt_string += ParserHelper.repeat_string(
+                ParserHelper.space_character, whitespace_actual_length
+            )
             current_start_index += start_index + whitespace_actual_length
 
             source_string = source_string[end_index:]

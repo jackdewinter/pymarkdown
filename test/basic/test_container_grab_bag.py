@@ -332,3 +332,50 @@ def test_change_last_list_start_index_set_same():
 
     # Assert
     assert new_value == -1
+
+
+def test_initial_last_block_quote_index():
+    """
+    xxx
+    """
+
+    # Arrange
+    container_grab_bag = ContainerGrabBag(None, None, None, None, None, None, None)
+
+    # Act
+    initial_value = container_grab_bag.last_block_quote_index
+
+    # Assert
+    assert initial_value == -1
+
+
+def test_change_last_block_quote_index_set_different():
+    """
+    xxx
+    """
+
+    # Arrange
+    container_grab_bag = ContainerGrabBag(None, None, None, None, None, None, None)
+
+    # Act
+    container_grab_bag.last_block_quote_index = 0
+    new_value = container_grab_bag.last_block_quote_index
+
+    # Assert
+    assert new_value == 0
+
+
+def test_change_last_block_quote_index_set_same():
+    """
+    xxx
+    """
+
+    # Arrange
+    container_grab_bag = ContainerGrabBag(None, None, None, None, None, None, None)
+
+    # Act
+    container_grab_bag.last_block_quote_index = -1
+    new_value = container_grab_bag.last_block_quote_index
+
+    # Assert
+    assert new_value == -1

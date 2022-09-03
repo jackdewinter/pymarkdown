@@ -77,7 +77,7 @@ class LinkReferenceDefinitionHelper:
                 lrd_stack_token.continuation_lines,
             )
             line_to_parse = lrd_stack_token.get_joined_lines(line_to_parse)
-            start_index, extracted_whitespace = ParserHelper.extract_whitespace(
+            start_index, extracted_whitespace = ParserHelper.extract_ascii_whitespace(
                 line_to_parse, 0
             )
             POGGER.debug(">>line_to_parse>>$<<", line_to_parse)
@@ -442,7 +442,9 @@ class LinkReferenceDefinitionHelper:
 
         assert new_index is not None
         POGGER.debug("look for EOL-ws>>$<<", line_to_parse[new_index:])
-        new_index, ex_ws = ParserHelper.extract_any_whitespace(line_to_parse, new_index)
+        new_index, ex_ws = ParserHelper.extract_ascii_whitespace(
+            line_to_parse, new_index
+        )
         assert new_index is not None
         POGGER.debug("look for EOL>>$<<", line_to_parse[new_index:])
         if new_index < len(line_to_parse):
@@ -522,20 +524,21 @@ class LinkReferenceDefinitionHelper:
                 keep_going, new_index = False, -1
         else:
             normalized_destination = None
-        if not keep_going:
-            return keep_going, new_index, None
-
-        return LinkReferenceDefinitionHelper.__create_lrd_token(
-            new_index,
-            collected_destination,
-            normalized_destination,
-            line_destination_whitespace,
-            inline_link,
-            inline_raw_link,
-            inline_title,
-            inline_raw_title,
-            line_title_whitespace,
-            end_whitespace,
+        return (
+            LinkReferenceDefinitionHelper.__create_lrd_token(
+                new_index,
+                collected_destination,
+                normalized_destination,
+                line_destination_whitespace,
+                inline_link,
+                inline_raw_link,
+                inline_title,
+                inline_raw_title,
+                line_title_whitespace,
+                end_whitespace,
+            )
+            if keep_going
+            else (keep_going, new_index, None)
         )
 
     # pylint: enable=too-many-locals
@@ -733,7 +736,7 @@ class LinkReferenceDefinitionHelper:
                 ""
             )
             line_to_parse = line_to_parse[:-1]
-            start_index, extracted_whitespace = ParserHelper.extract_whitespace(
+            start_index, extracted_whitespace = ParserHelper.extract_spaces(
                 line_to_parse, 0
             )
             assert start_index is not None

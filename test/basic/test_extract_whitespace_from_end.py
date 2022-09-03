@@ -14,7 +14,7 @@ def test_empty_string():
     expected_output = (0, "")
 
     # Act
-    actual_output = ParserHelper.extract_whitespace_from_end(input_string)
+    actual_output = ParserHelper.extract_spaces_from_end(input_string)
 
     # Assert
     assert expected_output == actual_output
@@ -30,7 +30,7 @@ def test_string_with_no_trailing_spaces():
     expected_output = (len(input_string), "")
 
     # Act
-    actual_output = ParserHelper.extract_whitespace_from_end(input_string)
+    actual_output = ParserHelper.extract_spaces_from_end(input_string)
 
     # Assert
     assert expected_output == actual_output
@@ -46,7 +46,7 @@ def test_string_with_some_trailing_spaces():
     expected_output = (len(input_string) - 2, "  ")
 
     # Act
-    actual_output = ParserHelper.extract_whitespace_from_end(input_string)
+    actual_output = ParserHelper.extract_spaces_from_end(input_string)
 
     # Assert
     assert expected_output == actual_output

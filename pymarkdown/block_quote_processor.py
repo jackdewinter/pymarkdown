@@ -156,6 +156,81 @@ class BlockQuoteProcessor:
 
     # pylint: disable=too-many-locals
     @staticmethod
+    def __handle_block_quote_block_really_start(
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        extracted_whitespace: Optional[str],
+        grab_bag: ContainerGrabBag,
+    ) -> Tuple[
+        Optional[RequeueLineInfo],
+        bool,
+        int,
+        bool,
+        List[MarkdownToken],
+        List[MarkdownToken],
+    ]:
+        container_start_bq_count: Optional[int] = grab_bag.container_start_bq_count
+        block_quote_data: BlockQuoteData = grab_bag.block_quote_data
+
+        assert container_start_bq_count is not None
+        POGGER.debug("handle_block_quote_block>>block-start")
+        (
+            adjusted_text_to_parse,
+            adjusted_index_number,
+            leaf_tokens,
+            container_level_tokens,
+            block_quote_data,
+            removed_chars_at_start,
+            did_blank,
+            last_block_quote_index,
+            text_removed_by_container,
+            avoid_block_starts,
+            requeue_line_info,
+            force_list_continuation,
+        ) = BlockQuoteProcessor.__handle_block_quote_section(
+            parser_state,
+            position_marker,
+            block_quote_data,
+            extracted_whitespace,
+            container_start_bq_count,
+        )
+        POGGER.debug("force_list_continuation=$", force_list_continuation)
+        POGGER.debug("adjusted_index_number>>:$:", adjusted_index_number)
+        POGGER.debug(">>avoid_block_starts>>$", avoid_block_starts)
+        POGGER.debug(">>text_removed_by_container>>:$:", text_removed_by_container)
+
+        (
+            did_process,
+            end_of_bquote_start_index,
+        ) = BlockQuoteProcessor.__handle_block_quote_block_kludges(
+            parser_state,
+            block_quote_data,
+            leaf_tokens,
+            container_level_tokens,
+            adjusted_text_to_parse,
+            last_block_quote_index,
+            adjusted_index_number,
+        )
+        grab_bag.did_blank = did_blank
+        grab_bag.do_force_list_continuation = force_list_continuation
+        grab_bag.removed_chars_at_start_of_line = removed_chars_at_start
+        grab_bag.start_index = adjusted_index_number
+        grab_bag.line_to_parse = adjusted_text_to_parse
+        grab_bag.text_removed_by_container = text_removed_by_container
+        grab_bag.last_block_quote_index = last_block_quote_index
+        grab_bag.block_quote_data = block_quote_data
+        return (
+            requeue_line_info,
+            did_process,
+            end_of_bquote_start_index,
+            avoid_block_starts,
+            leaf_tokens,
+            container_level_tokens,
+        )
+
+    # pylint: enable=too-many-locals
+
+    @staticmethod
     def handle_block_quote_block(
         parser_state: ParserState,
         position_marker: PositionMarker,
@@ -167,38 +242,28 @@ class BlockQuoteProcessor:
         POGGER.debug("handle_block_quote_block>>start")
         extracted_whitespace: Optional[str] = grab_bag.extracted_whitespace
         adj_ws: Optional[str] = grab_bag.adj_ws
-        block_quote_data: BlockQuoteData = grab_bag.block_quote_data
-        container_start_bq_count: Optional[int] = grab_bag.container_start_bq_count
 
         (
             did_process,
             avoid_block_starts,
-            did_blank,
-            removed_chars_at_start,
-            last_block_quote_index,
             end_of_bquote_start_index,
-            text_removed_by_container,
             requeue_line_info,
-            adjusted_text_to_parse,
-            adjusted_index_number,
-            force_list_continuation,
         ) = (
             False,
             False,
-            False,
-            0,
-            0,
             -1,
             None,
-            None,
-            position_marker.text_to_parse,
-            position_marker.index_number,
-            False,
         )
+        grab_bag.do_force_list_continuation = False
+        grab_bag.did_blank = False
+        grab_bag.removed_chars_at_start_of_line = 0
+        grab_bag.start_index = position_marker.index_number
+        grab_bag.line_to_parse = position_marker.text_to_parse
+        grab_bag.text_removed_by_container = None
+        grab_bag.last_block_quote_index = 0
+
         leaf_tokens: List[MarkdownToken] = []
         container_level_tokens: List[MarkdownToken] = []
-
-        POGGER.debug("adjusted_index_number>>:$:", adjusted_index_number)
 
         POGGER.debug(
             "handle_block_quote_block>>was_link_definition_started>:$:<",
@@ -214,44 +279,16 @@ class BlockQuoteProcessor:
         )
 
         if really_start:
-            assert container_start_bq_count is not None
-            POGGER.debug("handle_block_quote_block>>block-start")
+            assert not requeue_line_info
             (
-                adjusted_text_to_parse,
-                adjusted_index_number,
-                leaf_tokens,
-                container_level_tokens,
-                block_quote_data,
-                removed_chars_at_start,
-                did_blank,
-                last_block_quote_index,
-                text_removed_by_container,
-                avoid_block_starts,
                 requeue_line_info,
-                force_list_continuation,
-            ) = BlockQuoteProcessor.__handle_block_quote_section(
-                parser_state,
-                position_marker,
-                block_quote_data,
-                extracted_whitespace,
-                container_start_bq_count,
-            )
-            POGGER.debug("force_list_continuation=$", force_list_continuation)
-            POGGER.debug("adjusted_index_number>>:$:", adjusted_index_number)
-            POGGER.debug(">>avoid_block_starts>>$", avoid_block_starts)
-            POGGER.debug(">>text_removed_by_container>>:$:", text_removed_by_container)
-
-            (
                 did_process,
                 end_of_bquote_start_index,
-            ) = BlockQuoteProcessor.__handle_block_quote_block_kludges(
-                parser_state,
-                block_quote_data,
+                avoid_block_starts,
                 leaf_tokens,
                 container_level_tokens,
-                adjusted_text_to_parse,
-                last_block_quote_index,
-                adjusted_index_number,
+            ) = BlockQuoteProcessor.__handle_block_quote_block_really_start(
+                parser_state, position_marker, extracted_whitespace, grab_bag
             )
         elif (
             parser_state.token_stack[-1].was_link_definition_started
@@ -266,15 +303,7 @@ class BlockQuoteProcessor:
             container_level_tokens,
         )
 
-        grab_bag.block_quote_data = block_quote_data
-        grab_bag.removed_chars_at_start_of_line = removed_chars_at_start
-        grab_bag.did_blank = did_blank
-        grab_bag.last_block_quote_index = last_block_quote_index
-        grab_bag.text_removed_by_container = text_removed_by_container
         grab_bag.requeue_line_info = requeue_line_info
-        grab_bag.do_force_list_continuation = force_list_continuation
-        grab_bag.start_index = adjusted_index_number
-        grab_bag.line_to_parse = adjusted_text_to_parse
 
         return (
             did_process,
@@ -283,8 +312,6 @@ class BlockQuoteProcessor:
             container_level_tokens,
             avoid_block_starts,
         )
-
-    # pylint: enable=too-many-locals
 
     @staticmethod
     def __handle_block_quote_block_lrd_kludges(parser_state: ParserState) -> None:
@@ -1063,7 +1090,7 @@ class BlockQuoteProcessor:
                 adj_leading_spaces + adjusted_removed_text
             )
             adj_leading_spaces = adj_leading_spaces + ParserHelper.repeat_string(
-                " ", delta
+                ParserHelper.space_character, delta
             )
             adjusted_removed_text = adj_leading_spaces + adjusted_removed_text
             POGGER.debug("__hbqs>>adjusted_removed_text>>:$:<", adjusted_removed_text)
@@ -1421,7 +1448,9 @@ class BlockQuoteProcessor:
                 BlockQuoteMarkdownToken,
                 parser_state.token_stack[last_bq_index].matching_markdown_token,
             )
-            block_token.add_leading_spaces(ParserHelper.repeat_string(" ", delta), True)
+            block_token.add_leading_spaces(
+                ParserHelper.repeat_string(ParserHelper.space_character, delta), True
+            )
             POGGER.debug(
                 "__calculate_stack_hard_limit>>last_block_token>>$", block_token
             )
@@ -1461,7 +1490,7 @@ class BlockQuoteProcessor:
             indent_text_count = start_index + 1
             assert (
                 indent_text_count < len(remaining_text)
-                and remaining_text[indent_text_count] == " "
+                and remaining_text[indent_text_count] == ParserHelper.space_character
             )
             POGGER.debug("bq-space-found")
             indent_text_count += 1
@@ -1487,6 +1516,63 @@ class BlockQuoteProcessor:
 
     # pylint: disable=too-many-arguments
     @staticmethod
+    def __calculate_limit_and_continuation(
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        adjust_current_block_quote: bool,
+        last_bq_index: int,
+        stack_increase_needed: bool,
+        stack_decrease_needed: bool,
+        block_quote_data: BlockQuoteData,
+    ) -> Tuple[Optional[int], Optional[int], bool]:
+        (
+            length_of_available_whitespace,
+            _,
+        ) = ParserHelper.extract_spaces(position_marker.text_to_parse, 0)
+        POGGER.debug("len(ws)>>:$:", length_of_available_whitespace)
+
+        assert length_of_available_whitespace is not None
+        (
+            stack_hard_limit,
+            extra_consumed_whitespace,
+        ) = BlockQuoteProcessor.__calculate_stack_hard_limit_if_eligible(
+            parser_state,
+            position_marker,
+            length_of_available_whitespace,
+            adjust_current_block_quote,
+            last_bq_index,
+        )
+        POGGER.debug(f">>>>>stack_increase_needed:{stack_increase_needed}")
+        POGGER.debug(f">>>>>stack_decrease_needed:{stack_decrease_needed}")
+        POGGER.debug(f">>>>>adjust_current_block_quote:{adjust_current_block_quote}")
+        POGGER.debug(
+            ">>block_quote_data.current_count>>$",
+            block_quote_data.current_count,
+        )
+        POGGER.debug(">>block_quote_data.stack_count>>$", block_quote_data.stack_count)
+        force_list_continuation = (
+            extra_consumed_whitespace is None
+            and not stack_increase_needed
+            and not stack_decrease_needed
+            and adjust_current_block_quote
+        )
+        if force_list_continuation:
+            POGGER.debug(f">>>>>last_bq_index:{last_bq_index}")
+            POGGER.debug(f">>>>>parser_state.token_stack:{parser_state.token_stack}")
+            POGGER.debug(
+                f">>>>>len(parser_state.token_stack):{len(parser_state.token_stack)}"
+            )
+            force_list_continuation = (
+                last_bq_index + 1 < len(parser_state.token_stack)
+                and parser_state.token_stack[last_bq_index + 1].is_list
+                and block_quote_data.current_count != block_quote_data.stack_count
+            )
+        return stack_hard_limit, extra_consumed_whitespace, force_list_continuation
+
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
     def __calculate_stack_hard_limit(
         parser_state: ParserState,
         position_marker: PositionMarker,
@@ -1503,12 +1589,6 @@ class BlockQuoteProcessor:
             position_marker.index_number,
             position_marker.text_to_parse,
         )
-
-        (
-            length_of_available_whitespace,
-            _,
-        ) = ParserHelper.extract_whitespace(position_marker.text_to_parse, 0)
-        POGGER.debug("len(ws)>>:$:", length_of_available_whitespace)
 
         stack_hard_limit, extra_consumed_whitespace, last_bq_index = (
             None,
@@ -1554,49 +1634,19 @@ class BlockQuoteProcessor:
         )
         force_list_continuation = False
         if conditional_1 and conditional_2 and conditional_3:
-            assert length_of_available_whitespace is not None
             (
                 stack_hard_limit,
                 extra_consumed_whitespace,
-            ) = BlockQuoteProcessor.__calculate_stack_hard_limit_if_eligible(
+                force_list_continuation,
+            ) = BlockQuoteProcessor.__calculate_limit_and_continuation(
                 parser_state,
                 position_marker,
-                length_of_available_whitespace,
                 adjust_current_block_quote,
                 last_bq_index,
+                stack_increase_needed,
+                stack_decrease_needed,
+                block_quote_data,
             )
-            if extra_consumed_whitespace is None:
-                POGGER.debug(f">>>>>stack_increase_needed:{stack_increase_needed}")
-                POGGER.debug(f">>>>>stack_decrease_needed:{stack_decrease_needed}")
-                POGGER.debug(
-                    f">>>>>adjust_current_block_quote:{adjust_current_block_quote}"
-                )
-                POGGER.debug(
-                    ">>block_quote_data.current_count>>$",
-                    block_quote_data.current_count,
-                )
-                POGGER.debug(
-                    ">>block_quote_data.stack_count>>$", block_quote_data.stack_count
-                )
-
-                if (
-                    not stack_increase_needed
-                    and not stack_decrease_needed
-                    and adjust_current_block_quote
-                ):
-                    POGGER.debug(f">>>>>last_bq_index:{last_bq_index}")
-                    POGGER.debug(
-                        f">>>>>parser_state.token_stack:{parser_state.token_stack}"
-                    )
-                    POGGER.debug(
-                        f">>>>>len(parser_state.token_stack):{len(parser_state.token_stack)}"
-                    )
-                    force_list_continuation = (
-                        last_bq_index + 1 < len(parser_state.token_stack)
-                        and parser_state.token_stack[last_bq_index + 1].is_list
-                        and block_quote_data.current_count
-                        != block_quote_data.stack_count
-                    )
         POGGER.debug(
             "<<__calculate_stack_hard_limit<<$,$",
             stack_hard_limit,

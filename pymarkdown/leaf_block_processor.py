@@ -78,7 +78,7 @@ class LeafBlockProcessor:
             (
                 non_whitespace_index,
                 extracted_whitespace_before_info_string,
-            ) = ParserHelper.extract_whitespace(line_to_parse, new_index)
+            ) = ParserHelper.extract_ascii_whitespace(line_to_parse, new_index)
 
             if collected_count >= 3:
                 POGGER.debug("ifcb:True")
@@ -184,7 +184,7 @@ class LeafBlockProcessor:
             (
                 after_extracted_text_index,
                 extracted_text,
-            ) = ParserHelper.extract_until_whitespace(
+            ) = ParserHelper.extract_until_spaces(
                 position_marker.text_to_parse, non_whitespace_index
             )
             assert extracted_text is not None
@@ -550,8 +550,8 @@ class LeafBlockProcessor:
             )
 
             assert new_index is not None
-            _, non_whitespace_index = ParserHelper.collect_while_character(
-                line_to_parse, new_index, " "
+            non_whitespace_index, _ = ParserHelper.collect_while_spaces(
+                line_to_parse, new_index
             )
             extracted_whitespace_at_start = line_to_parse[
                 new_index:non_whitespace_index
@@ -663,7 +663,7 @@ class LeafBlockProcessor:
         (
             end_index,
             extracted_whitespace_at_end,
-        ) = ParserHelper.extract_whitespace_from_end(remaining_line)
+        ) = ParserHelper.extract_spaces_from_end(remaining_line)
         while (
             end_index > 0
             and remaining_line[end_index - 1] == LeafBlockProcessor.__atx_character
@@ -672,15 +672,15 @@ class LeafBlockProcessor:
             remove_trailing_count += 1
         if remove_trailing_count:
             if end_index > 0:
-                if ParserHelper.is_character_at_index(
-                    remaining_line, end_index - 1, " "
+                if ParserHelper.is_character_at_index_whitespace(
+                    remaining_line, end_index - 1
                 ):
                     remaining_line = remaining_line[:end_index]
                     (
                         _,
                         new_non_whitespace_index,
-                    ) = ParserHelper.collect_backwards_while_character(
-                        remaining_line, len(remaining_line) - 1, " "
+                    ) = ParserHelper.collect_backwards_while_spaces(
+                        remaining_line, len(remaining_line) - 1
                     )
                     assert new_non_whitespace_index is not None
                     end_index = new_non_whitespace_index
@@ -742,7 +742,7 @@ class LeafBlockProcessor:
             (
                 after_whitespace_index,
                 extra_whitespace_after_setext,
-            ) = ParserHelper.extract_whitespace(
+            ) = ParserHelper.extract_spaces(
                 position_marker.text_to_parse, collected_to_index
             )
 

@@ -684,7 +684,7 @@ class TokenizedMarkdown:
         POGGER.debug("hbl>>close_only_these_blocks>>$", close_only_these_blocks)
         POGGER.debug("hbl>>do_include_block_quotes>>$", do_include_block_quotes)
 
-        non_whitespace_index, extracted_whitespace = ParserHelper.extract_whitespace(
+        non_whitespace_index, extracted_whitespace = ParserHelper.extract_spaces(
             input_line, 0
         )
         assert extracted_whitespace is not None

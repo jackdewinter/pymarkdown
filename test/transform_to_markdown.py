@@ -1957,7 +1957,7 @@ class TransformToMarkdown:
                 print(
                     f"did start midline:next_block_quote_leading_space:{next_block_quote_leading_space}:"
                 )
-                ex_whitespace, _ = ParserHelper.extract_whitespace(
+                ex_whitespace, _ = ParserHelper.extract_spaces(
                     next_block_quote_leading_space, 0
                 )
                 print(f"did start midline:ab:{ex_whitespace}:")

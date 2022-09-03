@@ -1909,7 +1909,7 @@ class InlineProcessor:
                 source_text,
             )
             assert inline_response.new_index is not None
-            new_index, extracted_whitespace = ParserHelper.extract_whitespace(
+            new_index, extracted_whitespace = ParserHelper.extract_spaces(
                 source_text, inline_response.new_index
             )
             POGGER.debug("__arw>>$>>", source_text[: inline_response.new_index])
@@ -2095,7 +2095,7 @@ class InlineProcessor:
                 and end_string is None
                 and (inline_blocks and inline_blocks[-1].is_inline_hard_break)
             ):
-                new_index, ex_ws = ParserHelper.extract_whitespace(current_string, 0)
+                new_index, ex_ws = ParserHelper.extract_spaces(current_string, 0)
                 POGGER.debug("__cibp>new_index>$<", new_index)
                 POGGER.debug("__cibp>b>$<", ex_ws)
                 if new_index:
