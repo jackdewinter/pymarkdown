@@ -99,8 +99,8 @@
         "pymarkdown/link_reference_info.py": {},
         "pymarkdown/link_reference_titles.py": {},
         "pymarkdown/list_block_processor.py": {
-            "too-many-arguments": 19,
-            "too-many-locals": 7
+            "too-many-arguments": 20,
+            "too-many-locals": 8
         },
         "pymarkdown/main.py": {
             "broad-except": 2
@@ -231,8 +231,8 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 119,
-        "too-many-locals": 32,
+        "too-many-arguments": 120,
+        "too-many-locals": 33,
         "too-few-public-methods": 6,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 1,

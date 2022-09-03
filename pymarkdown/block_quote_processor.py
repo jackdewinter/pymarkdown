@@ -156,6 +156,81 @@ class BlockQuoteProcessor:
 
     # pylint: disable=too-many-locals
     @staticmethod
+    def __handle_block_quote_block_really_start(
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        extracted_whitespace: Optional[str],
+        grab_bag: ContainerGrabBag,
+    ) -> Tuple[
+        Optional[RequeueLineInfo],
+        bool,
+        int,
+        bool,
+        List[MarkdownToken],
+        List[MarkdownToken],
+    ]:
+        container_start_bq_count: Optional[int] = grab_bag.container_start_bq_count
+        block_quote_data: BlockQuoteData = grab_bag.block_quote_data
+
+        assert container_start_bq_count is not None
+        POGGER.debug("handle_block_quote_block>>block-start")
+        (
+            adjusted_text_to_parse,
+            adjusted_index_number,
+            leaf_tokens,
+            container_level_tokens,
+            block_quote_data,
+            removed_chars_at_start,
+            did_blank,
+            last_block_quote_index,
+            text_removed_by_container,
+            avoid_block_starts,
+            requeue_line_info,
+            force_list_continuation,
+        ) = BlockQuoteProcessor.__handle_block_quote_section(
+            parser_state,
+            position_marker,
+            block_quote_data,
+            extracted_whitespace,
+            container_start_bq_count,
+        )
+        POGGER.debug("force_list_continuation=$", force_list_continuation)
+        POGGER.debug("adjusted_index_number>>:$:", adjusted_index_number)
+        POGGER.debug(">>avoid_block_starts>>$", avoid_block_starts)
+        POGGER.debug(">>text_removed_by_container>>:$:", text_removed_by_container)
+
+        (
+            did_process,
+            end_of_bquote_start_index,
+        ) = BlockQuoteProcessor.__handle_block_quote_block_kludges(
+            parser_state,
+            block_quote_data,
+            leaf_tokens,
+            container_level_tokens,
+            adjusted_text_to_parse,
+            last_block_quote_index,
+            adjusted_index_number,
+        )
+        grab_bag.did_blank = did_blank
+        grab_bag.do_force_list_continuation = force_list_continuation
+        grab_bag.removed_chars_at_start_of_line = removed_chars_at_start
+        grab_bag.start_index = adjusted_index_number
+        grab_bag.line_to_parse = adjusted_text_to_parse
+        grab_bag.text_removed_by_container = text_removed_by_container
+        grab_bag.last_block_quote_index = last_block_quote_index
+        grab_bag.block_quote_data = block_quote_data
+        return (
+            requeue_line_info,
+            did_process,
+            end_of_bquote_start_index,
+            avoid_block_starts,
+            leaf_tokens,
+            container_level_tokens,
+        )
+
+    # pylint: enable=too-many-locals
+
+    @staticmethod
     def handle_block_quote_block(
         parser_state: ParserState,
         position_marker: PositionMarker,
@@ -167,38 +242,28 @@ class BlockQuoteProcessor:
         POGGER.debug("handle_block_quote_block>>start")
         extracted_whitespace: Optional[str] = grab_bag.extracted_whitespace
         adj_ws: Optional[str] = grab_bag.adj_ws
-        block_quote_data: BlockQuoteData = grab_bag.block_quote_data
-        container_start_bq_count: Optional[int] = grab_bag.container_start_bq_count
 
         (
             did_process,
             avoid_block_starts,
-            did_blank,
-            removed_chars_at_start,
-            last_block_quote_index,
             end_of_bquote_start_index,
-            text_removed_by_container,
             requeue_line_info,
-            adjusted_text_to_parse,
-            adjusted_index_number,
-            force_list_continuation,
         ) = (
             False,
             False,
-            False,
-            0,
-            0,
             -1,
             None,
-            None,
-            position_marker.text_to_parse,
-            position_marker.index_number,
-            False,
         )
+        grab_bag.do_force_list_continuation = False
+        grab_bag.did_blank = False
+        grab_bag.removed_chars_at_start_of_line = 0
+        grab_bag.start_index = position_marker.index_number
+        grab_bag.line_to_parse = position_marker.text_to_parse
+        grab_bag.text_removed_by_container = None
+        grab_bag.last_block_quote_index = 0
+
         leaf_tokens: List[MarkdownToken] = []
         container_level_tokens: List[MarkdownToken] = []
-
-        POGGER.debug("adjusted_index_number>>:$:", adjusted_index_number)
 
         POGGER.debug(
             "handle_block_quote_block>>was_link_definition_started>:$:<",
@@ -214,44 +279,16 @@ class BlockQuoteProcessor:
         )
 
         if really_start:
-            assert container_start_bq_count is not None
-            POGGER.debug("handle_block_quote_block>>block-start")
+            assert not requeue_line_info
             (
-                adjusted_text_to_parse,
-                adjusted_index_number,
-                leaf_tokens,
-                container_level_tokens,
-                block_quote_data,
-                removed_chars_at_start,
-                did_blank,
-                last_block_quote_index,
-                text_removed_by_container,
-                avoid_block_starts,
                 requeue_line_info,
-                force_list_continuation,
-            ) = BlockQuoteProcessor.__handle_block_quote_section(
-                parser_state,
-                position_marker,
-                block_quote_data,
-                extracted_whitespace,
-                container_start_bq_count,
-            )
-            POGGER.debug("force_list_continuation=$", force_list_continuation)
-            POGGER.debug("adjusted_index_number>>:$:", adjusted_index_number)
-            POGGER.debug(">>avoid_block_starts>>$", avoid_block_starts)
-            POGGER.debug(">>text_removed_by_container>>:$:", text_removed_by_container)
-
-            (
                 did_process,
                 end_of_bquote_start_index,
-            ) = BlockQuoteProcessor.__handle_block_quote_block_kludges(
-                parser_state,
-                block_quote_data,
+                avoid_block_starts,
                 leaf_tokens,
                 container_level_tokens,
-                adjusted_text_to_parse,
-                last_block_quote_index,
-                adjusted_index_number,
+            ) = BlockQuoteProcessor.__handle_block_quote_block_really_start(
+                parser_state, position_marker, extracted_whitespace, grab_bag
             )
         elif (
             parser_state.token_stack[-1].was_link_definition_started
@@ -266,15 +303,7 @@ class BlockQuoteProcessor:
             container_level_tokens,
         )
 
-        grab_bag.block_quote_data = block_quote_data
-        grab_bag.removed_chars_at_start_of_line = removed_chars_at_start
-        grab_bag.did_blank = did_blank
-        grab_bag.last_block_quote_index = last_block_quote_index
-        grab_bag.text_removed_by_container = text_removed_by_container
         grab_bag.requeue_line_info = requeue_line_info
-        grab_bag.do_force_list_continuation = force_list_continuation
-        grab_bag.start_index = adjusted_index_number
-        grab_bag.line_to_parse = adjusted_text_to_parse
 
         return (
             did_process,
@@ -283,8 +312,6 @@ class BlockQuoteProcessor:
             container_level_tokens,
             avoid_block_starts,
         )
-
-    # pylint: enable=too-many-locals
 
     @staticmethod
     def __handle_block_quote_block_lrd_kludges(parser_state: ParserState) -> None:

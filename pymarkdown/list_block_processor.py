@@ -627,6 +627,76 @@ class ListBlockProcessor:
 
     # pylint: enable=too-many-locals, too-many-arguments
 
+    # pylint: disable=too-many-arguments, too-many-locals
+    @staticmethod
+    def __create_new_list_if_indented(
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        indent_level: int,
+        ws_before_marker: int,
+        ws_after_marker: int,
+        extracted_whitespace: Optional[str],
+        forced_container_whitespace: Optional[str],
+        adj_ws: Optional[str],
+        adjusted_text_to_parse: Optional[str],
+        index: int,
+        container_level_tokens: List[MarkdownToken],
+        remaining_whitespace: int,
+        after_marker_ws_index: int,
+        current_container_blocks: List[StackToken],
+        create_token_fn: Callable[
+            [PositionMarker, int, Optional[str], int, int, int],
+            Tuple[ListStartMarkdownToken, ListStackToken],
+        ],
+        container_depth: int,
+    ) -> Tuple[bool, Optional[str], Optional[RequeueLineInfo]]:
+        requeue_line_info = None
+        did_process = False
+        POGGER.debug(
+            "total=$;ws-before=$;ws_after=$;start_index=$",
+            indent_level,
+            ws_before_marker,
+            ws_after_marker,
+            position_marker.index_number,
+        )
+        POGGER.debug("extracted_whitespace=$=", extracted_whitespace)
+        if indent_level >= 0:
+            POGGER.debug("indent_level=$=", indent_level)
+            POGGER.debug("ws_before_marker=$=", ws_before_marker)
+            POGGER.debug("forced_container_whitespace=$=", forced_container_whitespace)
+            create_adj_ws = ListBlockProcessor.__calculate_create_adj_ws(
+                adj_ws, position_marker, parser_state
+            )
+            (
+                adjusted_text_to_parse,
+                requeue_line_info,
+            ) = ListBlockProcessor.__create_new_list(
+                parser_state,
+                position_marker,
+                indent_level,
+                extracted_whitespace,
+                ws_before_marker,
+                ws_after_marker,
+                index,
+                container_level_tokens,
+                remaining_whitespace,
+                after_marker_ws_index,
+                current_container_blocks,
+                create_token_fn,
+                container_depth,
+                adj_ws=create_adj_ws,
+                alt_adj_ws=adj_ws,
+                forced_container_whitespace=forced_container_whitespace,
+            )
+            did_process = True
+        return (
+            did_process,
+            adjusted_text_to_parse,
+            requeue_line_info,
+        )
+
+    # pylint: enable=too-many-arguments, too-many-locals
+
     # pylint: disable=too-many-locals
     @staticmethod
     def handle_list_block(
@@ -712,45 +782,28 @@ class ListBlockProcessor:
                 container_depth,
             )
 
-            POGGER.debug(
-                "total=$;ws-before=$;ws_after=$;start_index=$",
+            (
+                did_process,
+                adjusted_text_to_parse,
+                requeue_line_info,
+            ) = ListBlockProcessor.__create_new_list_if_indented(
+                parser_state,
+                position_marker,
                 indent_level,
                 ws_before_marker,
                 ws_after_marker,
-                position_marker.index_number,
+                extracted_whitespace,
+                forced_container_whitespace,
+                adj_ws,
+                adjusted_text_to_parse,
+                index,
+                container_level_tokens,
+                remaining_whitespace,
+                after_marker_ws_index,
+                current_container_blocks,
+                create_token_fn,
+                container_depth,
             )
-            POGGER.debug("extracted_whitespace=$=", extracted_whitespace)
-            if indent_level >= 0:
-                POGGER.debug("indent_level=$=", indent_level)
-                POGGER.debug("ws_before_marker=$=", ws_before_marker)
-                POGGER.debug(
-                    "forced_container_whitespace=$=", forced_container_whitespace
-                )
-                create_adj_ws = ListBlockProcessor.__calculate_create_adj_ws(
-                    adj_ws, position_marker, parser_state
-                )
-                (
-                    adjusted_text_to_parse,
-                    requeue_line_info,
-                ) = ListBlockProcessor.__create_new_list(
-                    parser_state,
-                    position_marker,
-                    indent_level,
-                    extracted_whitespace,
-                    ws_before_marker,
-                    ws_after_marker,
-                    index,
-                    container_level_tokens,
-                    remaining_whitespace,
-                    after_marker_ws_index,
-                    current_container_blocks,
-                    create_token_fn,
-                    container_depth,
-                    adj_ws=create_adj_ws,
-                    alt_adj_ws=adj_ws,
-                    forced_container_whitespace=forced_container_whitespace,
-                )
-                did_process = True
         else:
             extracted_whitespace = old_extracted_whitespace
             indent_already_processed = old_indent_already_processed
