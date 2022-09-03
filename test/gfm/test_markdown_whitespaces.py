@@ -279,7 +279,6 @@ def test_whitespaces_thematic_breaks_with_tabs_before():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_thematic_breaks_with_form_feeds_before():
     """
     Test case:  Thematic breaks preceeded by spaces and form feeds.
@@ -288,13 +287,12 @@ def test_whitespaces_thematic_breaks_with_form_feeds_before():
     # Arrange
     source_markdown = """ \u000C * * *"""
     expected_tokens = [
-        "[para(1,2): ]",
-        "[text(1,2):\u000C :]",
+        "[para(1,2): \u000C ]",
+        "[text(1,2):*:]",
+        "[text(1,3): :]",
         "[text(1,4):*:]",
         "[text(1,5): :]",
         "[text(1,6):*:]",
-        "[text(1,7): :]",
-        "[text(1,8):*:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>* * *</p>"""
@@ -446,11 +444,11 @@ def test_whitespaces_atx_headings_with_form_feeds_before():
     # Arrange
     source_markdown = """ \u000C # abc"""
     expected_tokens = [
-        "[para(1,2): ]",
-        "[text(1,2):\u000C # abc:]",
+        "[para(1,2): \u000C ]",
+        "[text(1,2):# abc:]",
         "[end-para:::True]",
     ]
-    expected_gfm = """<p>\u000C # abc</p>"""
+    expected_gfm = """<p># abc</p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -786,7 +784,6 @@ def test_whitespaces_indented_code_with_tabs_before():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_indented_code_with_form_feeds_before():
     """
     Test case:  Indented Code blocks preceeded by form feeds.
@@ -795,8 +792,8 @@ def test_whitespaces_indented_code_with_form_feeds_before():
     # Arrange
     source_markdown = """\u000C\u000C\u000C\u000Cindented block"""
     expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):\u000C\u000C\u000C\u000Cindented block:]",
+        "[para(1,1):\u000C\u000C\u000C\u000C]",
+        "[text(1,1):indented block:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>indented block</p>"""
@@ -852,7 +849,6 @@ abc"""
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_fenced_code_open_with_form_feeds_before():
     """
     Test case:  Fenced Code blocks preceeded by form feeds.
@@ -862,8 +858,8 @@ def test_whitespaces_fenced_code_open_with_form_feeds_before():
     source_markdown = """ \u000C```python
 abc"""
     expected_tokens = [
-        "[para(1,2): \n]",
-        "[text(1,2):\u000C```python\nabc::\n]",
+        "[para(1,2): \u000C\n]",
+        "[text(1,2):```python\nabc::\n]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>```python
@@ -1023,7 +1019,6 @@ abc
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_fenced_code_closed_with_tabs_before():
     """
     Test case:  Fenced Code block closed preceeded by spaces and tabs.
@@ -1039,10 +1034,8 @@ abc
         "[end-fcode-block:::True]",
     ]
     expected_gfm = """<pre><code class="language-python">abc
-{tab}```
-</code></pre>""".replace(
-        "{tab}", "\t"
-    )
+    ```
+</code></pre>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -1142,7 +1135,6 @@ abc
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_html_with_spaces_before():
     """
     Test case:  Html blocks closed followed by spaces.
@@ -1155,14 +1147,13 @@ def test_whitespaces_html_with_spaces_before():
         "[text(1,3):<!-- comment:  ]",
         "[end-html-block:::True]",
     ]
-    expected_gfm = """<!-- comment"""
+    expected_gfm = """  <!-- comment"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_html_with_tabs_before():
     """
     Test case:  HTML block followed by spaces and tabs.
@@ -1175,7 +1166,7 @@ def test_whitespaces_html_with_tabs_before():
         "[text(1,5):\a<\a&lt;\a!-- comment:]",
         "[end-icode-block:::True]",
     ]
-    expected_gfm = """<pre><code>&lt;!- comment
+    expected_gfm = """<pre><code>&lt;!-- comment
 </code></pre>"""
 
     # Act & Assert
@@ -1183,7 +1174,6 @@ def test_whitespaces_html_with_tabs_before():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_html_with_form_feeds_before():
     """
     Test case:  HTML blocks followed by form feeds.
@@ -1192,11 +1182,11 @@ def test_whitespaces_html_with_form_feeds_before():
     # Arrange
     source_markdown = """ \u000C<!-- comment"""
     expected_tokens = [
-        "[para(1,2): ]",
-        "[text(1,2):\u000C\a<\a&lt;\a!-- comment:]",
+        "[para(1,2): \u000C]",
+        "[text(1,2):\a<\a&lt;\a!-- comment:]",
         "[end-para:::True]",
     ]
-    expected_gfm = """<p>&lt;!- comment</p>"""
+    expected_gfm = """<p>&lt;!-- comment</p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -1222,7 +1212,6 @@ def test_whitespaces_html_start_6_with_spaces_after():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_html_start_6_with_tabs_after():
     """
     Test case:  HTML block followed by spaces and tabs.
@@ -1235,14 +1224,13 @@ def test_whitespaces_html_start_6_with_tabs_after():
         "[text(1,1):<dialog :]",
         "[end-html-block:::True]",
     ]
-    expected_gfm = """<dialog"""
+    expected_gfm = """<dialog """
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_html_start_6_with_form_feeds_after():
     """
     Test case:  HTML blocks followed by form feeds.
@@ -1255,7 +1243,7 @@ def test_whitespaces_html_start_6_with_form_feeds_after():
         "[text(1,1):\a<\a&lt;\adialog:]",
         "[end-para:::True]",
     ]
-    expected_gfm = """<dialog"""
+    expected_gfm = """<p>&lt;dialog</p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -1342,7 +1330,6 @@ def test_whitespaces_lrd_with_spaces_before():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_lrd_with_tabs_before():
     """
     Test case:  LRD preceeded by tabs.
@@ -1361,7 +1348,7 @@ def test_whitespaces_lrd_with_tabs_before():
         "[text(2,6):]:]",
         "[end-para:::True]",
     ]
-    expected_gfm = """<pre><code> [fred]: /url
+    expected_gfm = """<pre><code>[fred]: /url
 </code></pre>
 <p>[fred]</p>"""
 
@@ -1370,7 +1357,6 @@ def test_whitespaces_lrd_with_tabs_before():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_lrd_with_form_feeds_before():
     """
     Test case:  LRD preceeded by form feeds.
@@ -1380,12 +1366,11 @@ def test_whitespaces_lrd_with_form_feeds_before():
     source_markdown = """\u000c[fred]: /url
 [fred]"""
     expected_tokens = [
-        "[para(1,1):\n]",
-        "[text(1,1):\u000c:]",
-        "[text(1,2):[:]",
-        "[text(1,3):fred:]",
-        "[text(1,7):]:]",
-        "[text(1,8):: /url\n::\n]",
+        "[para(1,1):\u000c\n]",
+        "[text(1,1):[:]",
+        "[text(1,2):fred:]",
+        "[text(1,6):]:]",
+        "[text(1,7):: /url\n::\n]",
         "[text(2,1):[:]",
         "[text(2,2):fred:]",
         "[text(2,6):]:]",
@@ -1583,7 +1568,6 @@ def test_whitespaces_lrd_with_tabs_in_label():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_lrd_with_form_feeds_in_label():
     """
     Test case:  LRD link label followed by form feeds.
@@ -1593,14 +1577,14 @@ def test_whitespaces_lrd_with_form_feeds_in_label():
     source_markdown = """[fred\u000c\u000cboy]: /url
 [fred boy]"""
     expected_tokens = [
-        "[link-ref-def(1,1):True::fred:fred\u000c: :/url:::::]",
+        "[link-ref-def(1,1):True::fred boy:fred\u000c\u000cboy: :/url:::::]",
         "[para(2,1):]",
-        "[link(2,1):shortcut:/url:::::fred :False::::]",
-        "[text(2,2):fred :]",
+        "[link(2,1):shortcut:/url:::::fred boy:False::::]",
+        "[text(2,2):fred boy:]",
         "[end-link::]",
         "[end-para:::True]",
     ]
-    expected_gfm = """<p><a href="/url">fred </a></p>"""
+    expected_gfm = """<p><a href="/url">fred boy</a></p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -1653,7 +1637,6 @@ def test_whitespaces_lrd_with_tabs_before_destination():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_lrd_with_form_feeds_before_destination():
     """
     Test case:  LRD destination preceeded by form feeds.
@@ -1663,9 +1646,12 @@ def test_whitespaces_lrd_with_form_feeds_before_destination():
     source_markdown = """[fred]:\u000c/url
 [fred]"""
     expected_tokens = [
-        "[html-block(1,1)]",
-        "[text(1,1):<dialog>\u000c:]",
-        "[end-html-block:::True]",
+        "[link-ref-def(1,1):True::fred::\u000c:/url:::::]",
+        "[para(2,1):]",
+        "[link(2,1):shortcut:/url:::::fred:False::::]",
+        "[text(2,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/url">fred</a></p>"""
 
@@ -1720,7 +1706,6 @@ def test_whitespaces_lrd_with_tabs_after_destination():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_lrd_with_form_feeds_after_destination():
     """
     Test case:  LRD destination followed by form feeds.
@@ -1730,9 +1715,12 @@ def test_whitespaces_lrd_with_form_feeds_after_destination():
     source_markdown = """[fred]: /url\u000c\u000c
 [fred]"""
     expected_tokens = [
-        "[html-block(1,1)]",
-        "[text(1,1):<dialog>\u000c:]",
-        "[end-html-block:::True]",
+        "[link-ref-def(1,1):True::fred:: :/url::\u000c\u000c:::]",
+        "[para(2,1):]",
+        "[link(2,1):shortcut:/url:::::fred:False::::]",
+        "[text(2,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/url">fred</a></p>"""
 
@@ -1787,7 +1775,6 @@ def test_whitespaces_lrd_with_tabs_before_title():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_lrd_with_form_feeds_before_title():
     """
     Test case:  LRD title preceeded by form feeds.
@@ -1797,11 +1784,14 @@ def test_whitespaces_lrd_with_form_feeds_before_title():
     source_markdown = """[fred]: /url\u000c"title"
 [fred]"""
     expected_tokens = [
-        "[html-block(1,1)]",
-        "[text(1,1):<dialog>\u000c:]",
-        "[end-html-block:::True]",
+        '[link-ref-def(1,1):True::fred:: :/url::\u000c:title:"title":]',
+        "[para(2,1):]",
+        "[link(2,1):shortcut:/url:title::::fred:False::::]",
+        "[text(2,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
     ]
-    expected_gfm = """<p><a href="/url">fred</a></p>"""
+    expected_gfm = """<p><a href="/url" title="title">fred</a></p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -1854,7 +1844,6 @@ def test_whitespaces_lrd_with_tabs_after_title():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_lrd_with_form_feeds_after_title():
     """
     Test case:  LRD title followed by form feeds.
@@ -1864,11 +1853,14 @@ def test_whitespaces_lrd_with_form_feeds_after_title():
     source_markdown = """[fred]: /url "title"\u000c\u000c
 [fred]"""
     expected_tokens = [
-        "[html-block(1,1)]",
-        "[text(1,1):<dialog>\u000c:]",
-        "[end-html-block:::True]",
+        '[link-ref-def(1,1):True::fred:: :/url:: :title:"title":\u000c\u000c]',
+        "[para(2,1):]",
+        "[link(2,1):shortcut:/url:title::::fred:False::::]",
+        "[text(2,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
     ]
-    expected_gfm = """<p><a href="/url">fred</a></p>"""
+    expected_gfm = """<p><a href="/url" title="title">fred</a></p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -1914,7 +1906,6 @@ def test_whitespaces_paragraph_with_tabs_paragraph():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_paragraph_with_form_feeds_before():
     """
     Test case:  paragraph preceeded by form feeds.
@@ -1923,8 +1914,46 @@ def test_whitespaces_paragraph_with_form_feeds_before():
     # Arrange
     source_markdown = """\u000ca paragraph"""
     expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):\u000ca paragraph:]",
+        "[para(1,1):\u000c]",
+        "[text(1,1):a paragraph:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>a paragraph</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_paragraph_with_spaces_and_form_feeds_before():
+    """
+    Test case:  paragraph preceeded by form feeds.
+    """
+
+    # Arrange
+    source_markdown = """ \u000ca paragraph"""
+    expected_tokens = [
+        "[para(1,2): \u000c]",
+        "[text(1,2):a paragraph:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>a paragraph</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_paragraph_with_spaces_and_form_feeds_before_and_after():
+    """
+    Test case:  paragraph preceeded by form feeds.
+    """
+
+    # Arrange
+    source_markdown = """ \u000c a paragraph"""
+    expected_tokens = [
+        "[para(1,2): \u000c ]",
+        "[text(1,2):a paragraph:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>a paragraph</p>"""
@@ -2144,7 +2173,6 @@ def test_whitespaces_autolink_uri_with_spaces():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_autolink_uri_with_tabs():
     """
     Test case:  autolink_uri with tabs
@@ -2157,9 +2185,7 @@ def test_whitespaces_autolink_uri_with_tabs():
         "[text(1,1):\a<\a&lt;\ahttp://foo.bar.baz/test?q=hello    man\a&\a&amp;\aid=22\a&\a&amp;\aboolean\a>\a&gt;\a:]",
         "[end-para:::True]",
     ]
-    expected_gfm = (
-        """<p>&lt;http://foo.bar.baz/test?q=hello  man&amp;id=22&amp;boolean&gt;</p>"""
-    )
+    expected_gfm = """<p>&lt;http://foo.bar.baz/test?q=hello    man&amp;id=22&amp;boolean&gt;</p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -2206,7 +2232,6 @@ def test_whitespaces_inline_link_with_spaces_before_label():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_inline_link_with_tabs_before_label():
     """
     Test case:  inline link label with tabs before
@@ -2221,7 +2246,7 @@ def test_whitespaces_inline_link_with_tabs_before_label():
         "[end-link::]",
         "[end-para:::True]",
     ]
-    expected_gfm = """<p><a href="/url">    fred</a></p>"""
+    expected_gfm = """<p><a href="/url">   fred</a></p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -2276,7 +2301,6 @@ def test_whitespaces_shortcut_link_with_spaces_before_label():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_shortcut_link_with_tabs_before_label():
     """
     Test case:  shortcut link label with tabs before
@@ -2295,7 +2319,7 @@ def test_whitespaces_shortcut_link_with_tabs_before_label():
         "[BLANK(2,1):]",
         "[link-ref-def(3,1):True::fred: fred: :/url:::::]",
     ]
-    expected_gfm = """<p><a href="/url">		fred</a></p>"""
+    expected_gfm = """<p><a href="/url">       fred</a></p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -2348,7 +2372,6 @@ def test_whitespaces_inline_link_with_spaces_in_label():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_inline_link_with_tabs_in_label():
     """
     Test case:  inline link label with tabs in
@@ -2363,7 +2386,7 @@ def test_whitespaces_inline_link_with_tabs_in_label():
         "[end-link::]",
         "[end-para:::True]",
     ]
-    expected_gfm = """<p><a href="/url">fred		boy</a></p>"""
+    expected_gfm = """<p><a href="/url">fred       boy</a></p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -2416,7 +2439,6 @@ def test_whitespaces_shortcut_link_with_spaces_in_label():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_shortcut_link_with_tabs_in_label():
     """
     Test case:  shortcut link label with tabs in
@@ -2435,7 +2457,7 @@ def test_whitespaces_shortcut_link_with_tabs_in_label():
         "[BLANK(2,1):]",
         "[link-ref-def(3,1):True::fred boy:: :/url:::::]",
     ]
-    expected_gfm = """<p><a href="/url">fred		boy</a></p>"""
+    expected_gfm = """<p><a href="/url">fred       boy</a></p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -2488,7 +2510,6 @@ def test_whitespaces_inline_link_with_spaces_after_label():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_inline_link_with_tabs_after_label():
     """
     Test case:  inline link label with tabs after
@@ -2503,7 +2524,7 @@ def test_whitespaces_inline_link_with_tabs_after_label():
         "[end-link::]",
         "[end-para:::True]",
     ]
-    expected_gfm = """<p><a href="/url">fred		</a></p>"""
+    expected_gfm = """<p><a href="/url">fred       </a></p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -2556,7 +2577,6 @@ def test_whitespaces_shortcut_link_with_spaces_after_label():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_shortcut_link_with_tabs_after_label():
     """
     Test case:  shortcut link label with tabs after
@@ -2575,7 +2595,7 @@ def test_whitespaces_shortcut_link_with_tabs_after_label():
         "[BLANK(2,1):]",
         "[link-ref-def(3,1):True::fred:fred : :/url:::::]",
     ]
-    expected_gfm = """<p><a href="/url">fred		</a></p>"""
+    expected_gfm = """<p><a href="/url">fred       </a></p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)

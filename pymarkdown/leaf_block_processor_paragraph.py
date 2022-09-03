@@ -5,12 +5,14 @@ import logging
 from typing import List, Optional, Tuple, cast
 
 from pymarkdown.block_quote_data import BlockQuoteData
+from pymarkdown.constants import Constants
 from pymarkdown.inline_markdown_token import TextMarkdownToken
 from pymarkdown.leaf_markdown_token import (
     BlankLineMarkdownToken,
     ParagraphMarkdownToken,
 )
 from pymarkdown.markdown_token import MarkdownToken
+from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.parser_state import ParserState
 from pymarkdown.position_marker import PositionMarker
@@ -43,19 +45,15 @@ class LeafBlockProcessorParagraph:
         """
         POGGER.debug(">>text_removed_by_container>>:$:<<", text_removed_by_container)
         assert extracted_whitespace is not None
+        POGGER.debug(">>extracted_whitespace>>:$:<<", extracted_whitespace)
+        POGGER.debug("position_marker.text_to_parse=:$:", position_marker.text_to_parse)
+        POGGER.debug("position_marker.index_number=:$:", position_marker.index_number)
+        POGGER.debug("position_marker.index_indent=:$:", position_marker.index_indent)
+
         if parser_state.no_para_start_if_empty and position_marker.index_number >= len(
             position_marker.text_to_parse
         ):
             POGGER.debug("Escaping paragraph due to empty w/ blank")
-            POGGER.debug(
-                "position_marker.text_to_parse=:$:", position_marker.text_to_parse
-            )
-            POGGER.debug(
-                "position_marker.index_number=:$:", position_marker.index_number
-            )
-            POGGER.debug(
-                "position_marker.index_indent=:$:", position_marker.index_indent
-            )
             return [
                 BlankLineMarkdownToken(
                     extracted_whitespace, position_marker, len(extracted_whitespace)
@@ -82,9 +80,12 @@ class LeafBlockProcessorParagraph:
                 )
             )
 
+        POGGER.debug("extracted_whitespace=:$:", extracted_whitespace)
+        POGGER.debug("adjusted_whitespace_length=:$:", adjusted_whitespace_length)
         (
             new_tokens,
             extracted_whitespace,
+            did_add_paragraph_token,
         ) = LeafBlockProcessorParagraph.__handle_paragraph_prep(
             parser_state,
             block_quote_data,
@@ -92,10 +93,23 @@ class LeafBlockProcessorParagraph:
             extracted_whitespace,
         )
 
+        adjusted_index = position_marker.index_number
+        if did_add_paragraph_token and ParserHelper.is_character_at_index_one_of(
+            position_marker.text_to_parse, adjusted_index, Constants.ascii_whitespace
+        ):
+            new_index, end_string = ParserHelper.extract_ascii_whitespace(
+                position_marker.text_to_parse, adjusted_index
+            )
+            assert new_index is not None and end_string
+            assert not extracted_whitespace
+            adjusted_index = new_index
+            extracted_whitespace = end_string
+
+        POGGER.debug("extracted_whitespace=:$:", extracted_whitespace)
         assert extracted_whitespace is not None
         new_tokens.append(
             TextMarkdownToken(
-                position_marker.text_to_parse[position_marker.index_number :],
+                position_marker.text_to_parse[adjusted_index:],
                 extracted_whitespace,
                 position_marker=position_marker,
             )
@@ -168,7 +182,7 @@ class LeafBlockProcessorParagraph:
         block_quote_data: BlockQuoteData,
         position_marker: PositionMarker,
         extracted_whitespace: Optional[str],
-    ) -> Tuple[List[MarkdownToken], Optional[str]]:
+    ) -> Tuple[List[MarkdownToken], Optional[str], bool]:
 
         # In cases where the list ended on the same line as we are processing, the
         # container tokens will not yet be added to the token_document.  As such,
@@ -177,6 +191,7 @@ class LeafBlockProcessorParagraph:
         adjusted_document = parser_state.token_document[:]
         assert parser_state.same_line_container_tokens is not None
         adjusted_document.extend(parser_state.same_line_container_tokens)
+        did_add_paragraph_token = False
 
         if (
             len(adjusted_document) >= 2
@@ -209,7 +224,8 @@ class LeafBlockProcessorParagraph:
             parser_state.token_stack.append(ParagraphStackToken(new_paragraph_token))
             new_tokens.append(new_paragraph_token)
             extracted_whitespace = ""
-        return new_tokens, extracted_whitespace
+            did_add_paragraph_token = True
+        return new_tokens, extracted_whitespace, did_add_paragraph_token
 
     @staticmethod
     def check_for_list_in_process(parser_state: ParserState) -> Tuple[bool, int]:

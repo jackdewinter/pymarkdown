@@ -350,6 +350,8 @@ class ContainerBlockLeafProcessor:
             assert html_tokens
             new_tokens.extend(html_tokens)
             outer_processed = True
+        else:
+            POGGER.debug(">>html not encountered>>")
 
         return outer_processed
 
