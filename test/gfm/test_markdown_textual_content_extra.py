@@ -386,7 +386,7 @@ foo
     expected_tokens = [
         "[fcode-block(1,1):`:3:foo\b+\bbar:foo\b\\+\bbar:::: ]",
         "[text(2,1):foo:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
     ]
     expected_gfm = """<pre><code class="language-foo\b+\bbar">foo\n</code></pre>"""
 

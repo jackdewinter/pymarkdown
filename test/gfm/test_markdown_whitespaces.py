@@ -814,7 +814,7 @@ abc"""
     expected_tokens = [
         "[fcode-block(1,3):`:3:python::::  :]",
         "[text(2,1):abc:]",
-        "[end-fcode-block:::True]",
+        "[end-fcode-block::::True]",
     ]
     expected_gfm = """<pre><code class="language-python">abc
 </code></pre>"""
@@ -881,7 +881,7 @@ abc"""
     expected_tokens = [
         "[fcode-block(1,1):`:3:python:::::  ]",
         "[text(2,1):abc:]",
-        "[end-fcode-block:::True]",
+        "[end-fcode-block::::True]",
     ]
     expected_gfm = """<pre><code class="language-python">abc
 </code></pre>"""
@@ -902,7 +902,7 @@ abc"""
     expected_tokens = [
         "[fcode-block(1,1):`:3:python::::: ]",
         "[text(2,1):abc:]",
-        "[end-fcode-block:::True]",
+        "[end-fcode-block::::True]",
     ]
     expected_gfm = """<pre><code class="language-python">abc
 </code></pre>"""
@@ -923,7 +923,7 @@ abc"""
     expected_tokens = [
         "[fcode-block(1,1):`:3:python:::::\u000C]",
         "[text(2,1):abc:]",
-        "[end-fcode-block:::True]",
+        "[end-fcode-block::::True]",
     ]
     expected_gfm = """<pre><code class="language-python">abc
 </code></pre>"""
@@ -944,7 +944,7 @@ abc"""
     expected_tokens = [
         "[fcode-block(1,1):`:3:python::  :::]",
         "[text(2,1):abc:]",
-        "[end-fcode-block:::True]",
+        "[end-fcode-block::::True]",
     ]
     expected_gfm = """<pre><code class="language-python">abc
 </code></pre>"""
@@ -965,7 +965,7 @@ abc"""
     expected_tokens = [
         "[fcode-block(1,1):`:3:python::   :::]",
         "[text(2,1):abc:]",
-        "[end-fcode-block:::True]",
+        "[end-fcode-block::::True]",
     ]
     expected_gfm = """<pre><code class="language-python">abc
 </code></pre>"""
@@ -987,7 +987,7 @@ abc"""
     expected_tokens = [
         "[fcode-block(1,1):`:3:python\u000C:::::]",
         "[text(2,1):abc:]",
-        "[end-fcode-block:::True]",
+        "[end-fcode-block::::True]",
     ]
     expected_gfm = """<pre><code class="language-python">abc
 </code></pre>"""
@@ -1009,7 +1009,7 @@ abc
     expected_tokens = [
         "[fcode-block(1,1):`:3:python:::::]",
         "[text(2,1):abc:]",
-        "[end-fcode-block:  :3:False]",
+        "[end-fcode-block:  ::3:False]",
     ]
     expected_gfm = """<pre><code class="language-python">abc
 </code></pre>"""
@@ -1031,7 +1031,7 @@ abc
     expected_tokens = [
         "[fcode-block(1,1):`:3:python:::::]",
         "[text(2,1):abc\n    ```:]",
-        "[end-fcode-block:::True]",
+        "[end-fcode-block::::True]",
     ]
     expected_gfm = """<pre><code class="language-python">abc
     ```
@@ -1054,7 +1054,7 @@ abc
     expected_tokens = [
         "[fcode-block(1,1):`:3:python:::::]",
         "[text(2,1):abc\n\u000C```:]",
-        "[end-fcode-block:::True]",
+        "[end-fcode-block::::True]",
     ]
     expected_gfm = """<pre><code class="language-python">abc
 \u000C```
@@ -1065,7 +1065,6 @@ abc
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_fenced_code_closed_with_spaces_after():
     """
     Test case:  Fenced Code blocks closed followed by spaces.
@@ -1078,7 +1077,7 @@ abc
     expected_tokens = [
         "[fcode-block(1,1):`:3:python::  :::]",
         "[text(2,1):abc:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:: :3:False]",
     ]
     expected_gfm = """<pre><code class="language-python">abc
 </code></pre>"""
@@ -1101,7 +1100,7 @@ abc
     expected_tokens = [
         "[fcode-block(1,1):`:3:python::  :::]",
         "[text(2,1):abc:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
     ]
     expected_gfm = """<pre><code class="language-python">abc
 </code></pre>"""
@@ -1111,7 +1110,6 @@ abc
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_fenced_code_closed_with_form_feeds_after():
     """
     Test case:  Fenced Code blocks closed followed by form feeds.
@@ -1123,15 +1121,15 @@ abc
 ```\u000C"""
     expected_tokens = [
         "[fcode-block(1,1):`:3:python::  :::]",
-        "[text(2,1):abc:]",
-        "[end-fcode-block::3:False]",
+        "[text(2,1):abc\n```\u000C:]",
+        "[end-fcode-block::::True]",
     ]
     expected_gfm = """<pre><code class="language-python">abc
 ```\u000C
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm

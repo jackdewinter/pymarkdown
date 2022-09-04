@@ -654,16 +654,19 @@ class TokenizedMarkdown:
         POGGER.debug("cob->top_element->$", parser_state.token_stack[-1])
         POGGER.debug("cob->was_forced->$", was_forced)
         extra_elements = []
+        extra_end_data = None
         if parser_state.token_stack[-1].is_indented_code_block:
             extra_elements.extend(
                 ContainerBlockLeafProcessor.extract_markdown_tokens_back_to_blank_line(
                     parser_state, was_forced
                 )
             )
+        elif parser_state.token_stack[-1].is_fenced_code_block:
+            extra_end_data = ":"
 
         new_tokens = [
             parser_state.token_stack[-1].generate_close_markdown_token_from_stack_token(
-                was_forced=was_forced
+                was_forced=was_forced, extra_end_data=extra_end_data
             ),
             *extra_elements,
         ]

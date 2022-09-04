@@ -368,6 +368,7 @@ class ContainerBlockLeafProcessor:
         if parser_state.token_stack[-1].was_link_definition_started:
             return False
 
+        POGGER.debug(">>__handle_fenced_code_block>>start")
         (
             fenced_tokens,
             leaf_token_whitespace,
@@ -378,6 +379,7 @@ class ContainerBlockLeafProcessor:
         )
         if fenced_tokens:
             new_tokens.extend(fenced_tokens)
+            POGGER.debug(">>new_tokens>>$", new_tokens)
         elif parser_state.token_stack[-1].is_fenced_code_block:
             assert leaf_token_whitespace is not None
             new_tokens.append(
@@ -387,6 +389,7 @@ class ContainerBlockLeafProcessor:
                     position_marker=position_marker,
                 )
             )
+            POGGER.debug(">>new_tokens>>$", new_tokens)
         else:
             return False
         return True

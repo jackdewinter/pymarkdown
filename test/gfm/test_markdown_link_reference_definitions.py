@@ -664,7 +664,7 @@ def test_link_reference_definitions_181():
     expected_tokens = [
         "[fcode-block(1,1):`:3::::::]",
         "[text(2,1):[foo]: /url:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
         "[BLANK(4,1):]",
         "[para(5,1):]",
         "[text(5,1):[:]",
@@ -860,7 +860,7 @@ indented code block
     expected_tokens = [
         "[fcode-block(1,1):`:3:text:::::]",
         "[text(2,1):indented code block:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
         "[link-ref-def(4,1):True::foo:: :/url:::::]",
         "[block-quote(5,1)::> ]",
         "[para(5,3):]",
@@ -1369,7 +1369,7 @@ my text
         "[link-ref-def(1,1):True::foo:: :/url:::::]",
         "[fcode-block(2,1):`:3:text:::::]",
         "[text(3,1):my text:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
         "[para(5,1):]",
         "[link(5,1):shortcut:/url:::::foo:False::::]",
         "[text(5,2):foo:]",

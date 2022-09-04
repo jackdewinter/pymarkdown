@@ -1169,8 +1169,9 @@ class TransformToMarkdown:
         if not current_token.was_forced:
             # We need to do this as the ending fence may be longer than the opening fence.
             split_extra_data = current_token.extra_data.split(":")
-            assert len(split_extra_data) >= 2
-            fence_count = int(split_extra_data[1])
+            assert len(split_extra_data) >= 3
+            extra_end_space = split_extra_data[1]
+            fence_count = int(split_extra_data[2])
 
             fence_parts = [
                 ""
@@ -1180,6 +1181,7 @@ class TransformToMarkdown:
                 ParserHelper.repeat_string(
                     current_token.start_markdown_token.fence_character, fence_count
                 ),
+                extra_end_space,
                 ParserHelper.newline_character,
             ]
 

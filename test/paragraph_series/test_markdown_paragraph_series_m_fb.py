@@ -27,7 +27,7 @@ foo
         "[end-olist:::True]",
         "[fcode-block(2,1):`:3::::::]",
         "[text(3,1):foo:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
         "[BLANK(5,1):]",
     ]
     expected_gfm = """<ol>
@@ -57,7 +57,7 @@ def test_paragraph_series_m_fb_ol_nl_all_i3_fb():
         "[BLANK(1,3):]",
         "[fcode-block(2,4):`:3::::::]",
         "[text(3,4):foo:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
         "[BLANK(5,1):]",
         "[end-olist:::True]",
     ]
@@ -91,7 +91,7 @@ foo
         "[end-olist:::True]",
         "[fcode-block(2,3):`:3:::::  :]",
         "[text(3,1):foo:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
         "[BLANK(5,1):]",
     ]
     expected_gfm = """<ol>
@@ -121,14 +121,14 @@ foo
         "[olist(1,1):.:1:3::   ]",
         "[BLANK(1,3):]",
         "[fcode-block(2,4):`:3::::::]",
-        "[end-fcode-block:::True]",
+        "[end-fcode-block::::True]",
         "[end-olist:::True]",
         "[para(3,1):]",
         "[text(3,1):foo:]",
         "[end-para:::False]",
         "[fcode-block(4,1):`:3::::::]",
         "[text(5,1)::]",
-        "[end-fcode-block:::True]",
+        "[end-fcode-block::::True]",
     ]
     expected_gfm = """<ol>
 <li>
@@ -163,7 +163,7 @@ foo
         "[end-olist:::True]",
         "[fcode-block(2,1):`:3::::::]",
         "[text(3,1):foo:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
         "[BLANK(5,1):]",
     ]
     expected_gfm = """<ol>
@@ -195,7 +195,7 @@ def test_paragraph_series_m_fb_ol_t_nl_all_i4_fb():
         "[end-para:::False]",
         "[fcode-block(2,5):`:3::::::]",
         "[text(3,5):foo:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
         "[BLANK(5,1):]",
         "[end-olist:::True]",
     ]
@@ -231,7 +231,7 @@ foo
         "[end-olist:::True]",
         "[fcode-block(2,3):`:3:::::  :]",
         "[text(3,1):foo:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
         "[BLANK(5,1):]",
     ]
     expected_gfm = """<ol>
@@ -265,7 +265,7 @@ foo
         "[end-olist:::True]",
         "[fcode-block(2,4):`:3:::::   :]",
         "[text(3,1):foo:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
         "[BLANK(5,1):]",
     ]
     expected_gfm = """<ol>
@@ -298,7 +298,7 @@ foo
         "[end-olist:::True]",
         "[fcode-block(2,1):`:3::::::]",
         "[text(3,1):foo:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
         "[BLANK(5,1):]",
     ]
     expected_gfm = """<ol>
@@ -333,7 +333,7 @@ def test_paragraph_series_m_fb_ol_ol_nl_all_i6_fb():
         "[BLANK(1,6):]",
         "[fcode-block(2,7):`:3::::::]",
         "[text(3,7):foo:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
         "[BLANK(5,1):]",
         "[end-olist:::True]",
         "[end-olist:::True]",
@@ -376,7 +376,7 @@ foo
         "[end-olist:::True]",
         "[fcode-block(2,1):`:3::::::]",
         "[text(3,1):foo:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
         "[BLANK(5,1):]",
     ]
     expected_gfm = """<ol>
@@ -413,7 +413,7 @@ def test_paragraph_series_m_fb_ol_ol_t_nl_all_i6_fb():
         "[end-para:::False]",
         "[fcode-block(2,7):`:3::::::]",
         "[text(3,7):foo:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
         "[BLANK(5,1):]",
         "[end-olist:::True]",
         "[end-olist:::True]",
@@ -455,7 +455,7 @@ foo
         "[end-olist:::True]",
         "[fcode-block(3,1):`:3::::::]",
         "[text(4,1):foo:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
         "[BLANK(6,1):]",
     ]
     expected_gfm = """<ol>
@@ -493,7 +493,7 @@ foo
         "[end-olist:::True]",
         "[fcode-block(3,1):`:3::::::]",
         "[text(4,1):foo:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
         "[BLANK(6,1):]",
     ]
     expected_gfm = """<ol>
@@ -528,7 +528,7 @@ foo
         "[end-ulist:::True]",
         "[fcode-block(3,1):`:3::::::]",
         "[text(4,1):foo:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
         "[BLANK(6,1):]",
     ]
     expected_gfm = """<ul>
@@ -565,7 +565,7 @@ foo
         "[end-ulist:::True]",
         "[fcode-block(3,1):`:3::::::]",
         "[text(4,1):foo:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
         "[BLANK(6,1):]",
     ]
     expected_gfm = """<ul>
@@ -604,7 +604,7 @@ foo
         "[end-olist:::True]",
         "[fcode-block(3,1):`:3::::::]",
         "[text(4,1):foo:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
         "[BLANK(6,1):]",
     ]
     expected_gfm = """<ol>
@@ -647,7 +647,7 @@ foo
         "[end-olist:::True]",
         "[fcode-block(3,1):`:3::::::]",
         "[text(4,1):foo:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
         "[BLANK(6,1):]",
     ]
     expected_gfm = """<ol>
@@ -686,7 +686,7 @@ foo
         "[end-olist:::True]",
         "[fcode-block(3,3):`:3:::::  :]",
         "[text(4,1):foo:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
         "[BLANK(6,1):]",
     ]
     expected_gfm = """<ol>
@@ -724,7 +724,7 @@ foo
         "[end-olist:::True]",
         "[fcode-block(3,3):`:3:::::  :]",
         "[text(4,1):foo:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
         "[BLANK(6,1):]",
     ]
     expected_gfm = """<ol>
@@ -759,7 +759,7 @@ foo
         "[end-ulist:::True]",
         "[fcode-block(3,2):`:3::::: :]",
         "[text(4,1):foo:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
         "[BLANK(6,1):]",
     ]
     expected_gfm = """<ul>
@@ -796,7 +796,7 @@ foo
         "[end-ulist:::True]",
         "[fcode-block(3,2):`:3::::: :]",
         "[text(4,1):foo:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
         "[BLANK(6,1):]",
     ]
     expected_gfm = """<ul>
@@ -835,7 +835,7 @@ foo
         "[end-olist:::True]",
         "[fcode-block(3,3):`:3:::::  :]",
         "[text(4,1):foo:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
         "[BLANK(6,1):]",
     ]
     expected_gfm = """<ol>
@@ -878,7 +878,7 @@ foo
         "[end-olist:::True]",
         "[fcode-block(3,3):`:3:::::  :]",
         "[text(4,1):foo:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
         "[BLANK(6,1):]",
     ]
     expected_gfm = """<ol>
@@ -915,14 +915,14 @@ foo
         "[BLANK(2,6):]",
         "[end-olist:::True]",
         "[fcode-block(3,4):`:3::::::]",
-        "[end-fcode-block:::True]",
+        "[end-fcode-block::::True]",
         "[end-olist:::True]",
         "[para(4,1):]",
         "[text(4,1):foo:]",
         "[end-para:::False]",
         "[fcode-block(5,1):`:3::::::]",
         "[text(6,1)::]",
-        "[end-fcode-block:::True]",
+        "[end-fcode-block::::True]",
     ]
     expected_gfm = """<ol>
 <li>
@@ -958,14 +958,14 @@ foo
         "[text(1,4):abc\n1.::\n]",
         "[end-para:::False]",
         "[fcode-block(3,4):`:3::::::]",
-        "[end-fcode-block:::True]",
+        "[end-fcode-block::::True]",
         "[end-olist:::True]",
         "[para(4,1):]",
         "[text(4,1):foo:]",
         "[end-para:::False]",
         "[fcode-block(5,1):`:3::::::]",
         "[text(6,1)::]",
-        "[end-fcode-block:::True]",
+        "[end-fcode-block::::True]",
     ]
     expected_gfm = """<ol>
 <li>abc
@@ -999,14 +999,14 @@ foo
         "[text(1,3):abc:]",
         "[end-setext::]",
         "[fcode-block(3,3):`:3::::::]",
-        "[end-fcode-block:::True]",
+        "[end-fcode-block::::True]",
         "[end-ulist:::True]",
         "[para(4,1):]",
         "[text(4,1):foo:]",
         "[end-para:::False]",
         "[fcode-block(5,1):`:3::::::]",
         "[text(6,1)::]",
-        "[end-fcode-block:::True]",
+        "[end-fcode-block::::True]",
     ]
     expected_gfm = """<ul>
 <li>
@@ -1041,14 +1041,14 @@ foo
         "[text(2,1):*:]",
         "[end-para:::False]",
         "[fcode-block(3,3):`:3::::::]",
-        "[end-fcode-block:::True]",
+        "[end-fcode-block::::True]",
         "[end-ulist:::True]",
         "[para(4,1):]",
         "[text(4,1):foo:]",
         "[end-para:::False]",
         "[fcode-block(5,1):`:3::::::]",
         "[text(6,1)::]",
-        "[end-fcode-block:::True]",
+        "[end-fcode-block::::True]",
     ]
     expected_gfm = """<ul>
 <li>abc
@@ -1086,14 +1086,14 @@ foo
         "[end-para:::True]",
         "[end-olist:::True]",
         "[fcode-block(3,4):`:3::::::]",
-        "[end-fcode-block:::True]",
+        "[end-fcode-block::::True]",
         "[end-olist:::True]",
         "[para(4,1):]",
         "[text(4,1):foo:]",
         "[end-para:::False]",
         "[fcode-block(5,1):`:3::::::]",
         "[text(6,1)::]",
-        "[end-fcode-block:::True]",
+        "[end-fcode-block::::True]",
     ]
     expected_gfm = """<ol>
 <li>
@@ -1134,14 +1134,14 @@ foo
         "[end-para:::True]",
         "[end-olist:::True]",
         "[fcode-block(3,4):`:3::::::]",
-        "[end-fcode-block:::True]",
+        "[end-fcode-block::::True]",
         "[end-olist:::True]",
         "[para(4,1):]",
         "[text(4,1):foo:]",
         "[end-para:::False]",
         "[fcode-block(5,1):`:3::::::]",
         "[text(6,1)::]",
-        "[end-fcode-block:::True]",
+        "[end-fcode-block::::True]",
     ]
     expected_gfm = """<ol>
 <li>abc

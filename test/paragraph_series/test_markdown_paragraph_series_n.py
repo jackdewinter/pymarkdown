@@ -585,7 +585,7 @@ def test_paragraph_series_n_bq_t_nl_bq_fb():
         "[end-para:::False]",
         "[fcode-block(2,3):`:3::::::]",
         "[text(3,3):def:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -619,7 +619,7 @@ def test_paragraph_series_n_bq_t_nl_bq_fb_nl_with_bq():
         "[end-para:::False]",
         "[fcode-block(2,3):`:3::::::]",
         "[text(3,3):\ndef\n:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -654,7 +654,7 @@ def test_paragraph_series_n_bq_t_nl_bq_fb_nl_without_bq():
         "[text(1,3):uvw:]",
         "[end-para:::False]",
         "[fcode-block(2,3):`:3::::::]",
-        "[end-fcode-block:::True]",
+        "[end-fcode-block::::True]",
         "[end-block-quote:::True]",
         "[BLANK(3,1):]",
         "[block-quote(4,1)::> \n]",
@@ -665,7 +665,7 @@ def test_paragraph_series_n_bq_t_nl_bq_fb_nl_without_bq():
         "[BLANK(5,1):]",
         "[block-quote(6,1)::> ]",
         "[fcode-block(6,3):`:3::::::]",
-        "[end-fcode-block:::True]",
+        "[end-fcode-block::::True]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -702,7 +702,7 @@ def test_paragraph_series_n_bq_t_nl_i2_fb():
         "[end-block-quote:::True]",
         "[fcode-block(2,3):`:3:::::  :]",
         "[text(3,3):def:\a  \a\x03\a]",
-        "[end-fcode-block:  :3:False]",
+        "[end-fcode-block:  ::3:False]",
     ]
     expected_gfm = """<blockquote>
 <p>uvw</p>
@@ -739,7 +739,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_fb():
         "[end-para:::False]",
         "[fcode-block(3,5):`:3::::::]",
         "[text(4,5):def:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::3:False]",
         "[end-block-quote:::True]",
         "[li(6,1):2::]",
         "[para(6,3):]",
@@ -788,7 +788,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i4_fb():
         "[end-block-quote:::True]",
         "[fcode-block(3,5):`:3:::::  :]",
         "[text(4,3):def:\a  \a\x03\a]",
-        "[end-fcode-block:  :3:False]",
+        "[end-fcode-block:  ::3:False]",
         "[li(6,1):2::]",
         "[para(6,3):]",
         "[text(6,3):def:]",
