@@ -512,25 +512,9 @@ class TransformToMarkdown:
             and not is_list_start_after_two_block_starts
         )
         if applied_leading_spaces_to_start_of_container_line:
-            print(f" container->{ParserHelper.make_value_visible(token_stack[-1])}")
-            split_leading_spaces = token_stack[-1].leading_spaces.split(
-                ParserHelper.newline_character
+            container_line = cls.__apply_primary_transformation_adjust_container_line(
+                token_stack, last_container_token_index, container_line
             )
-            if last_container_token_index < len(split_leading_spaces):
-                print(f" -->{ParserHelper.make_value_visible(split_leading_spaces)}")
-                print(
-                    " primary-->container_line>:"
-                    + ParserHelper.make_value_visible(container_line)
-                    + ":<"
-                )
-                container_line = (
-                    split_leading_spaces[last_container_token_index] + container_line
-                )
-                print(
-                    " -->container_line>:"
-                    + ParserHelper.make_value_visible(container_line)
-                    + ":<"
-                )
         return (
             last_container_token_index,
             applied_leading_spaces_to_start_of_container_line,
@@ -538,6 +522,31 @@ class TransformToMarkdown:
         )
 
     # pylint: enable=too-many-arguments
+
+    @classmethod
+    def __apply_primary_transformation_adjust_container_line(
+        cls, token_stack, last_container_token_index, container_line
+    ):
+        print(f" container->{ParserHelper.make_value_visible(token_stack[-1])}")
+        split_leading_spaces = token_stack[-1].leading_spaces.split(
+            ParserHelper.newline_character
+        )
+        if last_container_token_index < len(split_leading_spaces):
+            print(f" -->{ParserHelper.make_value_visible(split_leading_spaces)}")
+            print(
+                " primary-->container_line>:"
+                + ParserHelper.make_value_visible(container_line)
+                + ":<"
+            )
+            container_line = (
+                split_leading_spaces[last_container_token_index] + container_line
+            )
+            print(
+                " -->container_line>:"
+                + ParserHelper.make_value_visible(container_line)
+                + ":<"
+            )
+        return container_line
 
     @classmethod
     def __find_last_block_quote_on_stack(cls, token_stack):
@@ -1470,9 +1479,6 @@ class TransformToMarkdown:
     def __rehydrate_list_start_contained_in_list_deeper_block_quote(
         cls, previous_token, deeper_containing_block_quote_token, current_token
     ):
-        starting_whitespace = ""
-        did_container_start_midline = False
-        check_list_for_indent = True
         if previous_token:
             print(f"previous_token:{ParserHelper.make_value_visible(previous_token)}:")
         if previous_token.is_end_token:
@@ -1509,6 +1515,48 @@ class TransformToMarkdown:
             do_perform_block_quote_ending = (
                 projected_start_line != current_token.line_number
             )
+        (
+            block_quote_leading_space,
+            starting_whitespace,
+            did_container_start_midline,
+            check_list_for_indent,
+        ) = cls.__rehydrate_list_start_deep(
+            do_perform_block_quote_ending,
+            previous_token,
+            current_token,
+            deeper_containing_block_quote_token,
+            had_weird_block_quote_in_list,
+        )
+        print(
+            "block_quote_leading_space:"
+            + ParserHelper.make_value_visible(block_quote_leading_space)
+            + ":"
+        )
+        block_quote_leading_space_length = len(block_quote_leading_space)
+        print(f"starting_whitespace:{starting_whitespace}:")
+        return (
+            check_list_for_indent,
+            starting_whitespace,
+            did_container_start_midline,
+            block_quote_leading_space_length,
+            had_weird_block_quote_in_list,
+        )
+
+    # pylint: enable=too-many-locals
+
+    # pylint: disable=too-many-arguments
+    @classmethod
+    def __rehydrate_list_start_deep(
+        cls,
+        do_perform_block_quote_ending,
+        previous_token,
+        current_token,
+        deeper_containing_block_quote_token,
+        had_weird_block_quote_in_list,
+    ):
+        check_list_for_indent = True
+        starting_whitespace = ""
+        did_container_start_midline = False
         if do_perform_block_quote_ending:
             split_leading_spaces = (
                 previous_token.start_markdown_token.leading_spaces.split(
@@ -1557,22 +1605,14 @@ class TransformToMarkdown:
             block_quote_leading_space = split_leading_spaces[line_number_delta]
             if had_weird_block_quote_in_list:
                 starting_whitespace = block_quote_leading_space
-        print(
-            "block_quote_leading_space:"
-            + ParserHelper.make_value_visible(block_quote_leading_space)
-            + ":"
-        )
-        block_quote_leading_space_length = len(block_quote_leading_space)
-        print(f"starting_whitespace:{starting_whitespace}:")
         return (
-            check_list_for_indent,
+            block_quote_leading_space,
             starting_whitespace,
             did_container_start_midline,
-            block_quote_leading_space_length,
-            had_weird_block_quote_in_list,
+            check_list_for_indent,
         )
 
-    # pylint: enable=too-many-locals
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     @classmethod
