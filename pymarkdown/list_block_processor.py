@@ -1222,7 +1222,7 @@ class ListBlockProcessor:
             line_to_parse, start_index, extracted_whitespace, skip_whitespace_check=True
         )
         POGGER.debug("is_atx_heading>>$", is_atx_heading)
-        is_fenced_start, _, _, _ = LeafBlockProcessor.is_fenced_code_block(
+        is_fenced_start, _, _, _, _ = LeafBlockProcessor.is_fenced_code_block(
             line_to_parse, start_index, extracted_whitespace, skip_whitespace_check=True
         )
         POGGER.debug("is_fenced_start>>$", is_fenced_start)
