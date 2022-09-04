@@ -5,6 +5,7 @@ import logging
 from typing import List, Optional, Tuple, cast
 
 from pymarkdown.block_quote_data import BlockQuoteData
+from pymarkdown.constants import Constants
 from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.inline_helper import InlineHelper
 from pymarkdown.inline_markdown_token import TextMarkdownToken
@@ -170,7 +171,7 @@ class LeafBlockProcessor:
                 extracted_whitespace = f"{removed_whitespace}{whitespace_padding}"
         return new_tokens, extracted_whitespace
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __process_fenced_start(
         parser_state: ParserState,
@@ -190,12 +191,19 @@ class LeafBlockProcessor:
             not in position_marker.text_to_parse[non_whitespace_index:]
         ):
             POGGER.debug("pfcb->start")
+
+            (
+                _,
+                proper_end_index,
+            ) = ParserHelper.collect_backwards_while_one_of_characters(
+                position_marker.text_to_parse, -1, Constants.ascii_whitespace
+            )
+            adjusted_string = position_marker.text_to_parse[:proper_end_index]
+            non_whitespace_index = min(non_whitespace_index, len(adjusted_string))
             (
                 after_extracted_text_index,
                 extracted_text,
-            ) = ParserHelper.extract_until_spaces(
-                position_marker.text_to_parse, non_whitespace_index
-            )
+            ) = ParserHelper.extract_until_spaces(adjusted_string, non_whitespace_index)
             assert extracted_text is not None
             text_after_extracted_text = position_marker.text_to_parse[
                 after_extracted_text_index:
@@ -264,7 +272,7 @@ class LeafBlockProcessor:
             )
         return new_tokens
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
 
     # pylint: disable=too-many-arguments
     @staticmethod

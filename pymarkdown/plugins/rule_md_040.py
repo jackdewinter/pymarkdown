@@ -33,7 +33,9 @@ class RuleMd040(RulePlugin):
         """
         Event that a new token is being processed.
         """
+        # print(f">>{token}<<")
         if token.is_fenced_code_block:
             fenced_token = cast(FencedCodeBlockMarkdownToken, token)
+            # print(f":::>>{fenced_token.extracted_text}<<")
             if not fenced_token.extracted_text.strip():
                 self.report_next_token_error(context, token)
