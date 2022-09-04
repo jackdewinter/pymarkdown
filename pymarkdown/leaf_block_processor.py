@@ -173,6 +173,83 @@ class LeafBlockProcessor:
 
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
+    def __add_fenced_tokens(
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        non_whitespace_index: int,
+        collected_count: int,
+        extracted_whitespace: Optional[str],
+        extracted_whitespace_before_info_string: Optional[str],
+    ) -> Tuple[StackToken, List[MarkdownToken]]:
+        (_, proper_end_index,) = ParserHelper.collect_backwards_while_one_of_characters(
+            position_marker.text_to_parse, -1, Constants.ascii_whitespace
+        )
+        adjusted_string = position_marker.text_to_parse[:proper_end_index]
+        non_whitespace_index = min(non_whitespace_index, len(adjusted_string))
+        (
+            after_extracted_text_index,
+            extracted_text,
+        ) = ParserHelper.extract_until_spaces(adjusted_string, non_whitespace_index)
+        assert extracted_text is not None
+        text_after_extracted_text = position_marker.text_to_parse[
+            after_extracted_text_index:
+        ]
+
+        old_top_of_stack = parser_state.token_stack[-1]
+        new_tokens, _ = parser_state.close_open_blocks_fn(
+            parser_state,
+            only_these_blocks=[ParagraphStackToken],
+        )
+
+        pre_extracted_text, pre_text_after_extracted_text = (
+            extracted_text,
+            text_after_extracted_text,
+        )
+
+        assert extracted_text is not None
+        extracted_text = InlineHelper.handle_backslashes(extracted_text)
+        text_after_extracted_text = InlineHelper.handle_backslashes(
+            text_after_extracted_text
+        )
+
+        if pre_extracted_text == extracted_text:
+            pre_extracted_text = ""
+        if pre_text_after_extracted_text == text_after_extracted_text:
+            pre_text_after_extracted_text = ""
+
+        assert extracted_whitespace is not None
+        assert extracted_whitespace_before_info_string is not None
+        new_token = FencedCodeBlockMarkdownToken(
+            position_marker.text_to_parse[position_marker.index_number],
+            collected_count,
+            extracted_text,
+            pre_extracted_text,
+            text_after_extracted_text,
+            pre_text_after_extracted_text,
+            extracted_whitespace,
+            extracted_whitespace_before_info_string,
+            position_marker,
+        )
+        new_tokens.append(new_token)
+        assert extracted_whitespace is not None
+        parser_state.token_stack.append(
+            FencedCodeBlockStackToken(
+                code_fence_character=position_marker.text_to_parse[
+                    position_marker.index_number
+                ],
+                fence_character_count=collected_count,
+                whitespace_start_count=ParserHelper.calculate_length(
+                    extracted_whitespace
+                ),
+                matching_markdown_token=new_token,
+            )
+        )
+        return old_top_of_stack, new_tokens
+
+    # pylint: enable=too-many-arguments, too-many-locals
+
+    # pylint: disable=too-many-arguments, too-many-locals
+    @staticmethod
     def __process_fenced_start(
         parser_state: ParserState,
         position_marker: PositionMarker,
@@ -192,72 +269,15 @@ class LeafBlockProcessor:
         ):
             POGGER.debug("pfcb->start")
 
-            (
-                _,
-                proper_end_index,
-            ) = ParserHelper.collect_backwards_while_one_of_characters(
-                position_marker.text_to_parse, -1, Constants.ascii_whitespace
-            )
-            adjusted_string = position_marker.text_to_parse[:proper_end_index]
-            non_whitespace_index = min(non_whitespace_index, len(adjusted_string))
-            (
-                after_extracted_text_index,
-                extracted_text,
-            ) = ParserHelper.extract_until_spaces(adjusted_string, non_whitespace_index)
-            assert extracted_text is not None
-            text_after_extracted_text = position_marker.text_to_parse[
-                after_extracted_text_index:
-            ]
-
-            old_top_of_stack = parser_state.token_stack[-1]
-            new_tokens, _ = parser_state.close_open_blocks_fn(
+            old_top_of_stack, new_tokens = LeafBlockProcessor.__add_fenced_tokens(
                 parser_state,
-                only_these_blocks=[ParagraphStackToken],
-            )
-
-            pre_extracted_text, pre_text_after_extracted_text = (
-                extracted_text,
-                text_after_extracted_text,
-            )
-
-            assert extracted_text is not None
-            extracted_text = InlineHelper.handle_backslashes(extracted_text)
-            text_after_extracted_text = InlineHelper.handle_backslashes(
-                text_after_extracted_text
-            )
-
-            if pre_extracted_text == extracted_text:
-                pre_extracted_text = ""
-            if pre_text_after_extracted_text == text_after_extracted_text:
-                pre_text_after_extracted_text = ""
-
-            assert extracted_whitespace is not None
-            assert extracted_whitespace_before_info_string is not None
-            new_token = FencedCodeBlockMarkdownToken(
-                position_marker.text_to_parse[position_marker.index_number],
+                position_marker,
+                non_whitespace_index,
                 collected_count,
-                extracted_text,
-                pre_extracted_text,
-                text_after_extracted_text,
-                pre_text_after_extracted_text,
                 extracted_whitespace,
                 extracted_whitespace_before_info_string,
-                position_marker,
             )
-            new_tokens.append(new_token)
-            assert extracted_whitespace is not None
-            parser_state.token_stack.append(
-                FencedCodeBlockStackToken(
-                    code_fence_character=position_marker.text_to_parse[
-                        position_marker.index_number
-                    ],
-                    fence_character_count=collected_count,
-                    whitespace_start_count=ParserHelper.calculate_length(
-                        extracted_whitespace
-                    ),
-                    matching_markdown_token=new_token,
-                )
-            )
+
             POGGER.debug("StackToken-->$<<", parser_state.token_stack[-1])
             POGGER.debug(
                 "StackToken>start_markdown_token-->$<<",
