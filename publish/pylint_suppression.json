@@ -81,7 +81,8 @@
             "too-many-instance-attributes": 1
         },
         "pymarkdown/leaf_block_processor.py": {
-            "too-many-arguments": 3
+            "too-many-arguments": 4,
+            "too-many-locals": 2
         },
         "pymarkdown/leaf_block_processor_paragraph.py": {},
         "pymarkdown/leaf_markdown_token.py": {
@@ -231,8 +232,8 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 120,
-        "too-many-locals": 33,
+        "too-many-arguments": 121,
+        "too-many-locals": 35,
         "too-few-public-methods": 6,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 1,

@@ -975,8 +975,7 @@ abc"""
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_whitespaces_fenced_code_open_with_form_feeds_after_info():
+def test_whitespaces_fenced_code_open_with_form_feeds_after_language():
     """
     Test case:  Fenced Code blocks info string followed by form feeds.
     """
@@ -985,7 +984,7 @@ def test_whitespaces_fenced_code_open_with_form_feeds_after_info():
     source_markdown = """```python\u000C
 abc"""
     expected_tokens = [
-        "[fcode-block(1,1):`:3:python\u000C:::::]",
+        "[fcode-block(1,1):`:3:python::\u000C:::]",
         "[text(2,1):abc:]",
         "[end-fcode-block::::True]",
     ]
@@ -993,7 +992,30 @@ abc"""
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_whitespaces_fenced_code_open_with_form_feeds_after_info():
+    """
+    Test case:  Fenced Code blocks info string followed by form feeds.
+    """
+
+    # Arrange
+    source_markdown = """```python a\u000C\a
+abc""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[fcode-block(1,1):`:3:python:: a\u000C :::]",
+        "[text(2,1):abc:]",
+        "[end-fcode-block::::True]",
+    ]
+    expected_gfm = """<pre><code class="language-python">abc
+</code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
