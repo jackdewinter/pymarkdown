@@ -218,7 +218,6 @@ def test_whitespaces_unordered_lists_with_tabs():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_unordered_lists_with_form_feeds():
     """
     Test case:  Unordered lists preceeded by spaces and form feeds (ascii whitespace).
@@ -236,11 +235,11 @@ def test_whitespaces_unordered_lists_with_form_feeds():
     ]
     expected_gfm = """<ul>
 <li>list item
-\u000C+ inner list item</li>
+\u000C + inner list item</li>
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
@@ -722,7 +721,6 @@ def test_whitespaces_setext_headings_with_tabs_after():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_setext_headings_with_form_feeds_after():
     """
     Test case:  SetExt Headings followed by form feeds.
@@ -737,7 +735,7 @@ def test_whitespaces_setext_headings_with_form_feeds_after():
         "[end-para:::True]",
     ]
     expected_gfm = """<p>abc
---- \u000C</p>"""
+---</p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
