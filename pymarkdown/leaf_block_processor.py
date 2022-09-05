@@ -99,6 +99,7 @@ class LeafBlockProcessor:
         parser_state: ParserState,
         position_marker: PositionMarker,
         extracted_whitespace: Optional[str],
+        original_line: str,
     ) -> Tuple[List[MarkdownToken], Optional[str]]:
         """
         Handle the parsing of a fenced code block
@@ -136,6 +137,7 @@ class LeafBlockProcessor:
                     extracted_whitespace,
                     new_tokens,
                     after_fence_index,
+                    original_line,
                 )
             else:
                 POGGER.debug("parse_fenced_code_block:check fence start")
@@ -148,28 +150,39 @@ class LeafBlockProcessor:
                     extracted_whitespace_before_info_string,
                 )
         elif parser_state.token_stack[-1].is_fenced_code_block:
-            fenced_token = cast(FencedCodeBlockStackToken, parser_state.token_stack[-1])
-            if fenced_token.whitespace_start_count and extracted_whitespace:
-                current_whitespace_length = ParserHelper.calculate_length(
-                    extracted_whitespace
+            extracted_whitespace = (
+                LeafBlockProcessor.__parse_fenced_code_block_already_in(
+                    parser_state, extracted_whitespace
                 )
-                whitespace_left = max(
-                    0,
-                    current_whitespace_length - fenced_token.whitespace_start_count,
-                )
-                POGGER.debug("previous_ws>>$", current_whitespace_length)
-                POGGER.debug("whitespace_left>>$", whitespace_left)
-                removed_whitespace = ParserHelper.create_replace_with_nothing_marker(
-                    ParserHelper.repeat_string(
-                        ParserHelper.space_character,
-                        current_whitespace_length - whitespace_left,
-                    )
-                )
-                whitespace_padding = ParserHelper.repeat_string(
-                    ParserHelper.space_character, whitespace_left
-                )
-                extracted_whitespace = f"{removed_whitespace}{whitespace_padding}"
+            )
         return new_tokens, extracted_whitespace
+
+    @staticmethod
+    def __parse_fenced_code_block_already_in(
+        parser_state: ParserState, extracted_whitespace: Optional[str]
+    ) -> Optional[str]:
+        fenced_token = cast(FencedCodeBlockStackToken, parser_state.token_stack[-1])
+        if fenced_token.whitespace_start_count and extracted_whitespace:
+            current_whitespace_length = ParserHelper.calculate_length(
+                extracted_whitespace
+            )
+            whitespace_left = max(
+                0,
+                current_whitespace_length - fenced_token.whitespace_start_count,
+            )
+            POGGER.debug("previous_ws>>$", current_whitespace_length)
+            POGGER.debug("whitespace_left>>$", whitespace_left)
+            removed_whitespace = ParserHelper.create_replace_with_nothing_marker(
+                ParserHelper.repeat_string(
+                    ParserHelper.space_character,
+                    current_whitespace_length - whitespace_left,
+                )
+            )
+            whitespace_padding = ParserHelper.repeat_string(
+                ParserHelper.space_character, whitespace_left
+            )
+            extracted_whitespace = f"{removed_whitespace}{whitespace_padding}"
+        return extracted_whitespace
 
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
@@ -248,7 +261,7 @@ class LeafBlockProcessor:
 
     # pylint: enable=too-many-arguments, too-many-locals
 
-    # pylint: disable=too-many-arguments, too-many-locals
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __process_fenced_start(
         parser_state: ParserState,
@@ -292,9 +305,9 @@ class LeafBlockProcessor:
             )
         return new_tokens
 
-    # pylint: enable=too-many-arguments, too-many-locals
+    # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __check_for_fenced_end(
         parser_state: ParserState,
@@ -304,6 +317,7 @@ class LeafBlockProcessor:
         extracted_whitespace: Optional[str],
         new_tokens: List[MarkdownToken],
         after_fence_index: int,
+        original_line: str,
     ) -> None:
         POGGER.debug("pfcb->end")
         POGGER.debug("extracted_whitespace:$:", extracted_whitespace)
@@ -313,6 +327,26 @@ class LeafBlockProcessor:
             "len(position_marker.text_to_parse):$:", len(position_marker.text_to_parse)
         )
         POGGER.debug("after_fence_index:$:", after_fence_index)
+
+        POGGER.debug("original_line:$:", original_line)
+        only_spaces_after_fence = True
+        if "\t" in original_line:
+            fence_string = position_marker.text_to_parse[:after_fence_index]
+            POGGER.debug("fence_string:$:", fence_string)
+            fence_index_in_original = original_line.find(fence_string)
+            POGGER.debug("xy:$:", fence_index_in_original)
+            assert fence_index_in_original != -1
+            after_fence_in_original = original_line[
+                fence_index_in_original + collected_count :
+            ]
+            POGGER.debug("xz:$:", after_fence_in_original)
+            _, after_space_in_original_index = ParserHelper.collect_while_character(
+                after_fence_in_original, 0, " "
+            )
+            only_spaces_after_fence = after_space_in_original_index == len(
+                after_fence_in_original
+            )
+            POGGER.debug("only_spaces_after_fence:$:", only_spaces_after_fence)
 
         after_fence_and_spaces_index, extracted_spaces = ParserHelper.extract_spaces(
             position_marker.text_to_parse, after_fence_index
@@ -326,6 +360,7 @@ class LeafBlockProcessor:
             == position_marker.text_to_parse[position_marker.index_number]
             and collected_count >= fenced_token.fence_character_count
             and after_fence_and_spaces_index >= len(position_marker.text_to_parse)
+            and only_spaces_after_fence
         ):
             assert extracted_whitespace is not None
             assert extracted_spaces is not None
@@ -339,7 +374,7 @@ class LeafBlockProcessor:
             new_tokens.append(new_end_token)
             del parser_state.token_stack[-1]
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
 
     @staticmethod
     def __recalculate_whitespace(

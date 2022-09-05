@@ -114,6 +114,7 @@ class ContainerBlockProcessor:
             container_start_bq_count,
             parser_properties,
             ignore_link_definition_start,
+            position_marker.text_to_parse,
         )
         (
             position_marker,

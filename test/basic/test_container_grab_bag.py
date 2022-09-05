@@ -11,7 +11,9 @@ def test_initial_do_force_leaf_token_parse():
     """
 
     # Arrange
-    container_grab_bag = ContainerGrabBag(None, None, None, None, None, None, None)
+    container_grab_bag = ContainerGrabBag(
+        None, None, None, None, None, None, None, None
+    )
 
     # Act
     initial_value = container_grab_bag.do_force_leaf_token_parse
@@ -26,7 +28,9 @@ def test_change_do_force_leaf_token_parse_set_different():
     """
 
     # Arrange
-    container_grab_bag = ContainerGrabBag(None, None, None, None, None, None, None)
+    container_grab_bag = ContainerGrabBag(
+        None, None, None, None, None, None, None, None
+    )
 
     # Act
     container_grab_bag.do_force_leaf_token_parse = True
@@ -42,7 +46,9 @@ def test_change_do_force_leaf_token_parse_set_same():
     """
 
     # Arrange
-    container_grab_bag = ContainerGrabBag(None, None, None, None, None, None, None)
+    container_grab_bag = ContainerGrabBag(
+        None, None, None, None, None, None, None, None
+    )
 
     # Act
     container_grab_bag.do_force_leaf_token_parse = False
@@ -58,7 +64,9 @@ def test_initial_did_indent_processing():
     """
 
     # Arrange
-    container_grab_bag = ContainerGrabBag(None, None, None, None, None, None, None)
+    container_grab_bag = ContainerGrabBag(
+        None, None, None, None, None, None, None, None
+    )
 
     # Act
     initial_value = container_grab_bag.did_indent_processing
@@ -73,7 +81,9 @@ def test_change_did_indent_processing_set_different():
     """
 
     # Arrange
-    container_grab_bag = ContainerGrabBag(None, None, None, None, None, None, None)
+    container_grab_bag = ContainerGrabBag(
+        None, None, None, None, None, None, None, None
+    )
 
     # Act
     container_grab_bag.did_indent_processing = True
@@ -89,7 +99,9 @@ def test_change_did_indent_processing_set_same():
     """
 
     # Arrange
-    container_grab_bag = ContainerGrabBag(None, None, None, None, None, None, None)
+    container_grab_bag = ContainerGrabBag(
+        None, None, None, None, None, None, None, None
+    )
 
     # Act
     container_grab_bag.did_indent_processing = False
@@ -105,7 +117,9 @@ def test_initial_indent_used_by_container():
     """
 
     # Arrange
-    container_grab_bag = ContainerGrabBag(None, None, None, None, None, None, None)
+    container_grab_bag = ContainerGrabBag(
+        None, None, None, None, None, None, None, None
+    )
 
     # Act
     initial_value = container_grab_bag.indent_used_by_container
@@ -120,7 +134,9 @@ def test_change_indent_used_by_container_set_different():
     """
 
     # Arrange
-    container_grab_bag = ContainerGrabBag(None, None, None, None, None, None, None)
+    container_grab_bag = ContainerGrabBag(
+        None, None, None, None, None, None, None, None
+    )
 
     # Act
     container_grab_bag.indent_used_by_container = 0
@@ -136,7 +152,9 @@ def test_change_indent_used_by_container_set_same():
     """
 
     # Arrange
-    container_grab_bag = ContainerGrabBag(None, None, None, None, None, None, None)
+    container_grab_bag = ContainerGrabBag(
+        None, None, None, None, None, None, None, None
+    )
 
     # Act
     container_grab_bag.indent_used_by_container = -1
@@ -152,7 +170,9 @@ def test_initial_indent_already_processed():
     """
 
     # Arrange
-    container_grab_bag = ContainerGrabBag(None, None, None, None, None, None, None)
+    container_grab_bag = ContainerGrabBag(
+        None, None, None, None, None, None, None, None
+    )
 
     # Act
     initial_value = container_grab_bag.indent_already_processed
@@ -167,7 +187,9 @@ def test_change_indent_already_processed_set_different():
     """
 
     # Arrange
-    container_grab_bag = ContainerGrabBag(None, None, None, None, None, None, None)
+    container_grab_bag = ContainerGrabBag(
+        None, None, None, None, None, None, None, None
+    )
 
     # Act
     container_grab_bag.indent_already_processed = 0
@@ -183,7 +205,9 @@ def test_change_indent_already_processed_set_same():
     """
 
     # Arrange
-    container_grab_bag = ContainerGrabBag(None, None, None, None, None, None, None)
+    container_grab_bag = ContainerGrabBag(
+        None, None, None, None, None, None, None, None
+    )
 
     # Act
     container_grab_bag.indent_already_processed = -1
@@ -199,7 +223,9 @@ def test_initial_weird_adjusted_text():
     """
 
     # Arrange
-    container_grab_bag = ContainerGrabBag(None, None, None, None, None, None, None)
+    container_grab_bag = ContainerGrabBag(
+        None, None, None, None, None, None, None, None
+    )
 
     # Act
     initial_value = container_grab_bag.weird_adjusted_text
@@ -214,7 +240,9 @@ def test_change_weird_adjusted_text_set_different():
     """
 
     # Arrange
-    container_grab_bag = ContainerGrabBag(None, None, None, None, None, None, None)
+    container_grab_bag = ContainerGrabBag(
+        None, None, None, None, None, None, None, None
+    )
 
     # Act
     container_grab_bag.weird_adjusted_text = "text"
@@ -230,7 +258,9 @@ def test_change_weird_adjusted_text_set_same():
     """
 
     # Arrange
-    container_grab_bag = ContainerGrabBag(None, None, None, None, None, None, None)
+    container_grab_bag = ContainerGrabBag(
+        None, None, None, None, None, None, None, None
+    )
 
     # Act
     container_grab_bag.weird_adjusted_text = None
@@ -246,7 +276,9 @@ def test_initial_adj_line_to_parse():
     """
 
     # Arrange
-    container_grab_bag = ContainerGrabBag(None, None, None, None, None, None, None)
+    container_grab_bag = ContainerGrabBag(
+        None, None, None, None, None, None, None, None
+    )
 
     # Act
     initial_value = container_grab_bag.adj_line_to_parse
@@ -261,7 +293,9 @@ def test_change_adj_line_to_parse_set_different():
     """
 
     # Arrange
-    container_grab_bag = ContainerGrabBag(None, None, None, None, None, None, None)
+    container_grab_bag = ContainerGrabBag(
+        None, None, None, None, None, None, None, None
+    )
 
     # Act
     container_grab_bag.adj_line_to_parse = "text"
@@ -277,7 +311,9 @@ def test_change_adj_line_to_parse_set_same():
     """
 
     # Arrange
-    container_grab_bag = ContainerGrabBag(None, None, None, None, None, None, None)
+    container_grab_bag = ContainerGrabBag(
+        None, None, None, None, None, None, None, None
+    )
 
     # Act
     container_grab_bag.adj_line_to_parse = ""
@@ -293,7 +329,9 @@ def test_initial_last_list_start_index():
     """
 
     # Arrange
-    container_grab_bag = ContainerGrabBag(None, None, None, None, None, None, None)
+    container_grab_bag = ContainerGrabBag(
+        None, None, None, None, None, None, None, None
+    )
 
     # Act
     initial_value = container_grab_bag.last_list_start_index
@@ -308,7 +346,9 @@ def test_change_last_list_start_index_set_different():
     """
 
     # Arrange
-    container_grab_bag = ContainerGrabBag(None, None, None, None, None, None, None)
+    container_grab_bag = ContainerGrabBag(
+        None, None, None, None, None, None, None, None
+    )
 
     # Act
     container_grab_bag.last_list_start_index = 0
@@ -324,7 +364,9 @@ def test_change_last_list_start_index_set_same():
     """
 
     # Arrange
-    container_grab_bag = ContainerGrabBag(None, None, None, None, None, None, None)
+    container_grab_bag = ContainerGrabBag(
+        None, None, None, None, None, None, None, None
+    )
 
     # Act
     container_grab_bag.last_list_start_index = -1
@@ -340,7 +382,9 @@ def test_initial_last_block_quote_index():
     """
 
     # Arrange
-    container_grab_bag = ContainerGrabBag(None, None, None, None, None, None, None)
+    container_grab_bag = ContainerGrabBag(
+        None, None, None, None, None, None, None, None
+    )
 
     # Act
     initial_value = container_grab_bag.last_block_quote_index
@@ -355,7 +399,9 @@ def test_change_last_block_quote_index_set_different():
     """
 
     # Arrange
-    container_grab_bag = ContainerGrabBag(None, None, None, None, None, None, None)
+    container_grab_bag = ContainerGrabBag(
+        None, None, None, None, None, None, None, None
+    )
 
     # Act
     container_grab_bag.last_block_quote_index = 0
@@ -371,7 +417,9 @@ def test_change_last_block_quote_index_set_same():
     """
 
     # Arrange
-    container_grab_bag = ContainerGrabBag(None, None, None, None, None, None, None)
+    container_grab_bag = ContainerGrabBag(
+        None, None, None, None, None, None, None, None
+    )
 
     # Act
     container_grab_bag.last_block_quote_index = -1

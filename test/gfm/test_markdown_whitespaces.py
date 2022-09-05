@@ -1107,7 +1107,6 @@ abc
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_fenced_code_closed_with_tabs_after():
     """
     Test case:  Fenced Code block closed followed by spaces and tabs.
@@ -1119,14 +1118,38 @@ abc
 ```\t"""
     expected_tokens = [
         "[fcode-block(1,1):`:3:python::  :::]",
-        "[text(2,1):abc:]",
-        "[end-fcode-block:::3:False]",
+        "[text(2,1):abc\n``` :]",
+        "[end-fcode-block::::True]",
     ]
     expected_gfm = """<pre><code class="language-python">abc
+``` 
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_whitespaces_fenced_code_closed_with_tabs_after_and_before():
+    """
+    Test case:  Fenced Code block close followed by tabs and preceeded be spaces.
+    """
+
+    # Arrange
+    source_markdown = """```python  
+abc
+  ```\t"""
+    expected_tokens = [
+        "[fcode-block(1,1):`:3:python::  :::]",
+        "[text(2,1):abc\n  ```   :]",
+        "[end-fcode-block::::True]",
+    ]
+    expected_gfm = """<pre><code class="language-python">abc
+  ```   
+</code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
@@ -2074,10 +2097,10 @@ def test_whitespaces_code_span_with_tabs():
         "[text(1,14): paragraph:]",
         "[end-para:::True]",
     ]
-    expected_gfm = """<p>a <code>good</code> paragraph</p>"""
+    expected_gfm = """<p>a <code>   good    </code> paragraph</p>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm

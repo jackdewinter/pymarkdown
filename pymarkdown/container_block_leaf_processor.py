@@ -270,6 +270,7 @@ class ContainerBlockLeafProcessor:
             position_marker,
             leaf_token_whitespace,
             new_tokens,
+            grab_bag.original_line,
         )
 
         ignore_lrd_start = (
@@ -361,6 +362,7 @@ class ContainerBlockLeafProcessor:
         position_marker: PositionMarker,
         leaf_token_whitespace: Optional[str],
         new_tokens: List[MarkdownToken],
+        original_line: str,
     ) -> bool:
         """
         Take care of the processing for fenced code blocks.
@@ -373,9 +375,7 @@ class ContainerBlockLeafProcessor:
             fenced_tokens,
             leaf_token_whitespace,
         ) = LeafBlockProcessor.parse_fenced_code_block(
-            parser_state,
-            position_marker,
-            leaf_token_whitespace,
+            parser_state, position_marker, leaf_token_whitespace, original_line
         )
         if fenced_tokens:
             new_tokens.extend(fenced_tokens)
@@ -687,6 +687,74 @@ class ContainerBlockLeafProcessor:
 
     # pylint: disable=too-many-arguments
     @staticmethod
+    def __adjust_containers_before_leaf_blocks_adjust(
+        parser_state: ParserState,
+        xposition_marker: PositionMarker,
+        last_block_index: int,
+        total_ws: int,
+        actual_removed_leading_space: Optional[str],
+        grab_bag: ContainerGrabBag,
+    ) -> Tuple[str, int, Optional[PositionMarker]]:
+        # POGGER.debug(
+        #     "xposition_marker.text_to_parse=$", xposition_marker.text_to_parse
+        # )
+        # POGGER.debug(
+        #     "xposition_marker.index_number=$", xposition_marker.index_number
+        # )
+        # POGGER.debug(
+        #     "xposition_marker.index_indent=$", xposition_marker.index_indent
+        # )
+        if grab_bag.do_force_list_continuation:
+            POGGER.debug(
+                "actual_removed_leading_space=$=", actual_removed_leading_space
+            )
+            if not actual_removed_leading_space:
+                actual_removed_leading_space = ""
+            assert xposition_marker.text_to_parse.startswith(
+                actual_removed_leading_space
+            )
+            position_marker = PositionMarker(
+                xposition_marker.line_number,
+                0,
+                xposition_marker.text_to_parse[len(actual_removed_leading_space) :],
+                xposition_marker.index_indent,
+            )
+            return "", -1, position_marker
+
+        POGGER.debug("yes adjust_containers_before_leaf_blocks")
+        (
+            current_indent_level,
+            close_tokens,
+        ) = ContainerBlockLeafProcessor.__calculate_current_indent_level(
+            parser_state,
+            last_block_index,
+            total_ws,
+            xposition_marker.line_number,
+            grab_bag,
+        )
+        if close_tokens:
+            grab_bag.extend_container_tokens(close_tokens)
+
+        assert parser_state.original_line_to_parse
+        (
+            new_index_indent,
+            new_text_to_parse,
+        ) = ContainerBlockLeafProcessor.__make_adjustments(
+            parser_state,
+            xposition_marker,
+            current_indent_level,
+            grab_bag,
+        )
+        # POGGER.debug(
+        #     "original_line_to_parse>>:$:<", parser_state.original_line_to_parse
+        # )
+        ContainerBlockLeafProcessor.__val(parser_state, new_text_to_parse)
+        return new_text_to_parse, new_index_indent, None
+
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
     def __adjust_containers_before_leaf_blocks(
         parser_state: ParserState,
         xposition_marker: PositionMarker,
@@ -702,60 +770,20 @@ class ContainerBlockLeafProcessor:
             and not grab_bag.was_paragraph_continuation
             and not grab_bag.was_indent_already_processed
         ):
-            POGGER.debug(
-                "xposition_marker.text_to_parse=$", xposition_marker.text_to_parse
-            )
-            POGGER.debug(
-                "xposition_marker.index_number=$", xposition_marker.index_number
-            )
-            POGGER.debug(
-                "xposition_marker.index_indent=$", xposition_marker.index_indent
-            )
-            if grab_bag.do_force_list_continuation:
-                POGGER.debug(
-                    "actual_removed_leading_space=$=", actual_removed_leading_space
-                )
-                if not actual_removed_leading_space:
-                    actual_removed_leading_space = ""
-                assert xposition_marker.text_to_parse.startswith(
-                    actual_removed_leading_space
-                )
-                position_marker = PositionMarker(
-                    xposition_marker.line_number,
-                    0,
-                    xposition_marker.text_to_parse[len(actual_removed_leading_space) :],
-                    xposition_marker.index_indent,
-                )
-                return position_marker
-
-            POGGER.debug("yes adjust_containers_before_leaf_blocks")
             (
-                current_indent_level,
-                close_tokens,
-            ) = ContainerBlockLeafProcessor.__calculate_current_indent_level(
-                parser_state,
-                last_block_index,
-                total_ws,
-                xposition_marker.line_number,
-                grab_bag,
-            )
-            if close_tokens:
-                grab_bag.extend_container_tokens(close_tokens)
-
-            assert parser_state.original_line_to_parse
-            (
-                new_index_indent,
                 new_text_to_parse,
-            ) = ContainerBlockLeafProcessor.__make_adjustments(
+                new_index_indent,
+                new_position_marker,
+            ) = ContainerBlockLeafProcessor.__adjust_containers_before_leaf_blocks_adjust(
                 parser_state,
                 xposition_marker,
-                current_indent_level,
+                last_block_index,
+                total_ws,
+                actual_removed_leading_space,
                 grab_bag,
             )
-            # POGGER.debug(
-            #     "original_line_to_parse>>:$:<", parser_state.original_line_to_parse
-            # )
-            ContainerBlockLeafProcessor.__val(parser_state, new_text_to_parse)
+            if new_position_marker:
+                return new_position_marker
         else:
             POGGER.debug("not adjust_containers_before_leaf_blocks")
             new_text_to_parse = xposition_marker.text_to_parse
@@ -768,13 +796,12 @@ class ContainerBlockLeafProcessor:
             indent_adjust += new_index_indent
             new_index_indent = 0
 
-        position_marker = PositionMarker(
+        return PositionMarker(
             xposition_marker.line_number,
             indent_adjust,
             new_text_to_parse,
             new_index_indent,
         )
-        return position_marker
 
     # pylint: enable=too-many-arguments
 
