@@ -657,12 +657,12 @@ class InlineHelper:
             append_to_current_string = ""
         else:
             POGGER.debug(">>normal end")
-            POGGER.debug("<<is_setext<<$<<", is_setext)
-            POGGER.debug("<<inline_blocks<<$<<", inline_blocks)
-            POGGER.debug("<<current_string<<$<<", current_string)
-            POGGER.debug("<<remaining_line<<$<<", remaining_line)
-            POGGER.debug("<<end_string<<$<<", end_string)
-            POGGER.debug("<<removed_end_whitespace<<$<<", removed_end_whitespace)
+            # POGGER.debug("<<is_setext<<$<<", is_setext)
+            # POGGER.debug("<<inline_blocks<<$<<", inline_blocks)
+            # POGGER.debug("<<current_string<<$<<", current_string)
+            # POGGER.debug("<<remaining_line<<$<<", remaining_line)
+            # POGGER.debug("<<end_string<<$<<", end_string)
+            # POGGER.debug("<<removed_end_whitespace<<$<<", removed_end_whitespace)
             if (
                 is_setext
                 and inline_blocks
@@ -670,8 +670,8 @@ class InlineHelper:
                 and not current_string
             ):
                 new_index, ex_ws = ParserHelper.extract_spaces(remaining_line, 0)
-                POGGER.debug("<<new_index<<$<<", new_index)
-                POGGER.debug("<<ex_ws<<$<<", ex_ws)
+                # POGGER.debug("<<new_index<<$<<", new_index)
+                # POGGER.debug("<<ex_ws<<$<<", ex_ws)
                 assert new_index
                 end_string = f"{ex_ws}{ParserHelper.whitespace_split_character}"
                 remaining_line = remaining_line[new_index:]
@@ -821,6 +821,54 @@ class InlineHelper:
     # pylint: enable=too-many-arguments
 
     @staticmethod
+    def __handle_numeric_character_reference_hex(
+        new_index: int, source_text: str, source_text_size: int
+    ) -> Tuple[str, int, int]:
+        hex_char = source_text[new_index]
+        new_index += 1
+        end_index, collected_string = ParserHelper.collect_while_one_of_characters(
+            source_text, new_index, string.hexdigits
+        )
+
+        assert end_index is not None
+        assert collected_string is not None
+        POGGER.debug(
+            "&#x>>a>>$>>b>>$>>$", end_index, collected_string, source_text_size
+        )
+
+        delta = end_index - new_index
+        POGGER.debug("delta>>$>>", delta)
+        translated_reference = int(collected_string, 16) if 1 <= delta <= 6 else -1
+        new_string, new_index = (
+            f"{InlineHelper.character_reference_start_character}"
+            + f"{InlineHelper.__numeric_character_reference_start_character}{hex_char}{collected_string}"
+        ), end_index
+
+        return new_string, new_index, translated_reference
+
+    @staticmethod
+    def __handle_numeric_character_reference_decimal(
+        new_index: int, source_text: str, source_text_size: int
+    ) -> Tuple[str, int, int]:
+        end_index, collected_string = ParserHelper.collect_while_one_of_characters(
+            source_text, new_index, string.digits
+        )
+
+        assert end_index is not None
+        assert collected_string is not None
+        POGGER.debug("&#>>a>>$>>b>>$>>$", end_index, collected_string, source_text_size)
+
+        delta = end_index - new_index
+        POGGER.debug("delta>>$>>", delta)
+        translated_reference = int(collected_string) if 1 <= delta <= 7 else -1
+        new_string, new_index = (
+            f"{InlineHelper.character_reference_start_character}"
+            + f"{InlineHelper.__numeric_character_reference_start_character}{collected_string}"
+        ), end_index
+
+        return new_string, new_index, translated_reference
+
+    @staticmethod
     def __handle_numeric_character_reference_inner(
         source_text: str, new_index: int
     ) -> Tuple[str, int, Optional[str]]:
@@ -828,58 +876,29 @@ class InlineHelper:
         Handle a character reference that is numeric in nature.
         """
 
-        original_reference, new_index, translated_reference, source_text_size = (
+        original_reference, new_index, source_text_size = (
             None,
             new_index + 1,
-            -1,
             len(source_text),
         )
         if new_index < source_text_size and (
             source_text[new_index]
             in InlineHelper.__hex_character_reference_start_character
         ):
-            hex_char = source_text[new_index]
-            new_index += 1
-            end_index, collected_string = ParserHelper.collect_while_one_of_characters(
-                source_text, new_index, string.hexdigits
-            )
-            assert end_index is not None
-            assert collected_string is not None
-            POGGER.debug(
-                "&#x>>a>>$>>b>>$>>$",
-                end_index,
-                collected_string,
-                source_text_size,
-            )
-            delta = end_index - new_index
-            POGGER.debug("delta>>$>>", delta)
-            if 1 <= delta <= 6:
-                translated_reference = int(collected_string, 16)
-            new_string, new_index = (
-                f"{InlineHelper.character_reference_start_character}"
-                + f"{InlineHelper.__numeric_character_reference_start_character}{hex_char}{collected_string}",
-                end_index,
+            (
+                new_string,
+                new_index,
+                translated_reference,
+            ) = InlineHelper.__handle_numeric_character_reference_hex(
+                new_index, source_text, source_text_size
             )
         else:
-            end_index, collected_string = ParserHelper.collect_while_one_of_characters(
-                source_text, new_index, string.digits
-            )
-            assert end_index is not None
-            assert collected_string is not None
-            POGGER.debug(
-                "&#>>a>>$>>b>>$>>$",
-                end_index,
-                collected_string,
-                source_text_size,
-            )
-            delta = end_index - new_index
-            POGGER.debug("delta>>$>>", delta)
-            if 1 <= delta <= 7:
-                translated_reference = int(collected_string)
-            new_string, new_index = (
-                f"{InlineHelper.character_reference_start_character}"
-                + f"{InlineHelper.__numeric_character_reference_start_character}{collected_string}",
-                end_index,
+            (
+                new_string,
+                new_index,
+                translated_reference,
+            ) = InlineHelper.__handle_numeric_character_reference_decimal(
+                new_index, source_text, source_text_size
             )
 
         if (

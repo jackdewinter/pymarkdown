@@ -150,28 +150,39 @@ class LeafBlockProcessor:
                     extracted_whitespace_before_info_string,
                 )
         elif parser_state.token_stack[-1].is_fenced_code_block:
-            fenced_token = cast(FencedCodeBlockStackToken, parser_state.token_stack[-1])
-            if fenced_token.whitespace_start_count and extracted_whitespace:
-                current_whitespace_length = ParserHelper.calculate_length(
-                    extracted_whitespace
+            extracted_whitespace = (
+                LeafBlockProcessor.__parse_fenced_code_block_already_in(
+                    parser_state, extracted_whitespace
                 )
-                whitespace_left = max(
-                    0,
-                    current_whitespace_length - fenced_token.whitespace_start_count,
-                )
-                POGGER.debug("previous_ws>>$", current_whitespace_length)
-                POGGER.debug("whitespace_left>>$", whitespace_left)
-                removed_whitespace = ParserHelper.create_replace_with_nothing_marker(
-                    ParserHelper.repeat_string(
-                        ParserHelper.space_character,
-                        current_whitespace_length - whitespace_left,
-                    )
-                )
-                whitespace_padding = ParserHelper.repeat_string(
-                    ParserHelper.space_character, whitespace_left
-                )
-                extracted_whitespace = f"{removed_whitespace}{whitespace_padding}"
+            )
         return new_tokens, extracted_whitespace
+
+    @staticmethod
+    def __parse_fenced_code_block_already_in(
+        parser_state: ParserState, extracted_whitespace: Optional[str]
+    ) -> Optional[str]:
+        fenced_token = cast(FencedCodeBlockStackToken, parser_state.token_stack[-1])
+        if fenced_token.whitespace_start_count and extracted_whitespace:
+            current_whitespace_length = ParserHelper.calculate_length(
+                extracted_whitespace
+            )
+            whitespace_left = max(
+                0,
+                current_whitespace_length - fenced_token.whitespace_start_count,
+            )
+            POGGER.debug("previous_ws>>$", current_whitespace_length)
+            POGGER.debug("whitespace_left>>$", whitespace_left)
+            removed_whitespace = ParserHelper.create_replace_with_nothing_marker(
+                ParserHelper.repeat_string(
+                    ParserHelper.space_character,
+                    current_whitespace_length - whitespace_left,
+                )
+            )
+            whitespace_padding = ParserHelper.repeat_string(
+                ParserHelper.space_character, whitespace_left
+            )
+            extracted_whitespace = f"{removed_whitespace}{whitespace_padding}"
+        return extracted_whitespace
 
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
@@ -250,7 +261,7 @@ class LeafBlockProcessor:
 
     # pylint: enable=too-many-arguments, too-many-locals
 
-    # pylint: disable=too-many-arguments, too-many-locals
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __process_fenced_start(
         parser_state: ParserState,
@@ -294,7 +305,7 @@ class LeafBlockProcessor:
             )
         return new_tokens
 
-    # pylint: enable=too-many-arguments, too-many-locals
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
