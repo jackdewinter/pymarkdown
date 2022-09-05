@@ -270,6 +270,7 @@ class ContainerBlockLeafProcessor:
             position_marker,
             leaf_token_whitespace,
             new_tokens,
+            grab_bag.original_line,
         )
 
         ignore_lrd_start = (
@@ -361,6 +362,7 @@ class ContainerBlockLeafProcessor:
         position_marker: PositionMarker,
         leaf_token_whitespace: Optional[str],
         new_tokens: List[MarkdownToken],
+        original_line: str,
     ) -> bool:
         """
         Take care of the processing for fenced code blocks.
@@ -373,9 +375,7 @@ class ContainerBlockLeafProcessor:
             fenced_tokens,
             leaf_token_whitespace,
         ) = LeafBlockProcessor.parse_fenced_code_block(
-            parser_state,
-            position_marker,
-            leaf_token_whitespace,
+            parser_state, position_marker, leaf_token_whitespace, original_line
         )
         if fenced_tokens:
             new_tokens.extend(fenced_tokens)

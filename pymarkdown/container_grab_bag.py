@@ -35,6 +35,7 @@ class ContainerGrabBag:
         container_start_bq_count: int,
         parser_properties: ParseBlockPassProperties,
         ignore_link_definition_start: bool,
+        original_line: str,
     ) -> None:
 
         # Booleans
@@ -146,6 +147,7 @@ class ContainerGrabBag:
         self.__container_start_bq_count = container_start_bq_count
         self.__parser_properties = parser_properties
         self.__do_ignore_link_definition_start = ignore_link_definition_start
+        self.__original_line = original_line
         self.__log_read_only_value("container_depth", self.__container_depth)
         self.__log_read_only_value(
             "initial_block_quote_count", self.__initial_block_quote_count
@@ -158,6 +160,7 @@ class ContainerGrabBag:
         self.__log_read_only_value(
             "do_ignore_link_definition_start", self.__do_ignore_link_definition_start
         )
+        self.__log_read_only_value("original_line", self.__original_line)
 
         self.__is_para_continue = (
             bool(
@@ -185,6 +188,13 @@ class ContainerGrabBag:
         Xxx
         """
         return self.__is_para_continue
+
+    @property
+    def original_line(self) -> str:
+        """
+        Get the original line that was passed to be processed.
+        """
+        return self.__original_line
 
     @property
     def container_depth(self) -> int:

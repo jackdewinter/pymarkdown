@@ -449,6 +449,9 @@ class InlineHelper:
     def __calculate_backtick_between_text(
         inline_request: InlineRequest, new_index: int, end_backtick_start_index: int
     ) -> Tuple[str, str, str, str]:
+        POGGER.debug("inline_request.source_text>>$<<", inline_request.source_text)
+        POGGER.debug("new_index>>$<<", new_index)
+        POGGER.debug("end_backtick_start_index>>$<<", end_backtick_start_index)
         between_text = inline_request.source_text[new_index:end_backtick_start_index]
         original_between_text, leading_whitespace, trailing_whitespace = (
             between_text,
@@ -461,18 +464,17 @@ class InlineHelper:
             end_backtick_start_index,
             inline_request.source_text[end_backtick_start_index:],
         )
+        POGGER.debug("between_text>>$<<", between_text)
         if (
             len(between_text) > 2
             and between_text[0]
             in [
                 ParserHelper.space_character,
-                ParserHelper.tab_character,
                 ParserHelper.newline_character,
             ]
             and between_text[-1]
             in [
                 ParserHelper.space_character,
-                ParserHelper.tab_character,
                 ParserHelper.newline_character,
             ]
         ):
