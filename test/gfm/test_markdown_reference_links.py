@@ -991,7 +991,7 @@ def test_reference_links_564():
         '[link-ref-def(4,1):True::foo:: :/url:: :title:"title":]',
         "[BLANK(5,1):]",
     ]
-    expected_gfm = """<p><a href="/url" title="title">foo</a>
+    expected_gfm = """<p><a href="/url" title="title">foo</a> 
 []</p>"""
 
     # Act & Assert

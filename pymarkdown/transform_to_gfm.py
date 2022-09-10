@@ -345,7 +345,7 @@ class TransformToGfm:
         text_token = cast(TextMarkdownToken, next_token)
         adjusted_text_token = ParserHelper.resolve_all_from_text(text_token.token_text)
 
-        token_parts = []
+        token_parts: List[str] = []
         if transform_state.is_in_code_block:
             token_parts.extend(
                 [
@@ -361,11 +361,115 @@ class TransformToGfm:
                     ParserHelper.newline_character,
                 ]
             )
-        else:
+        elif transform_state.is_in_setext_block:
             token_parts.append(adjusted_text_token)
+        else:
+            cls.__handle_text_token_normal(token_parts, text_token, adjusted_text_token)
 
         token_parts.insert(0, output_html)
         return "".join(token_parts)
+
+    @classmethod
+    def __handle_text_token_normal(
+        cls,
+        token_parts: List[str],
+        text_token: TextMarkdownToken,
+        adjusted_text_token: str,
+    ) -> None:
+        POGGER.debug("adjusted_text_token>:$:<", adjusted_text_token)
+        POGGER.debug("text_token.end_whitespace>:$:<", text_token.end_whitespace)
+        if text_token.end_whitespace is not None:
+
+            newlines_in_adjusted = ParserHelper.count_newlines_in_text(
+                adjusted_text_token
+            )
+
+            resolved_whitespace = ParserHelper.resolve_all_from_text(
+                text_token.end_whitespace
+            )
+            POGGER.debug("resolved_whitespace>:$:<", resolved_whitespace)
+            newlines_in_whitespace = ParserHelper.count_newlines_in_text(
+                resolved_whitespace
+            )
+            arrays_to_combine: List[List[str]] = []
+            if newlines_in_adjusted == newlines_in_whitespace:
+                arrays_to_combine.append(adjusted_text_token.split("\n"))
+            else:
+                cls.__handle_text_token_normal_enhanced(arrays_to_combine, text_token)
+
+            arrays_to_combine.append(resolved_whitespace.split("\n"))
+            assert len(arrays_to_combine[0]) == len(arrays_to_combine[1])
+            POGGER.debug("arrays_to_combine>:$:<", arrays_to_combine)
+            final_parts: List[str] = []
+            for loop_index in range(len(arrays_to_combine[0]) * 2):
+                loop_index_mod = loop_index % 2
+                loop_index_div = loop_index // 2
+                if loop_index_mod == 0 and final_parts:
+                    final_parts.append("\n")
+                POGGER.debug(
+                    "$-->final_parts>:$:<...$,$",
+                    loop_index,
+                    final_parts,
+                    loop_index_mod,
+                    loop_index_div,
+                )
+                final_parts.append(arrays_to_combine[loop_index_mod][loop_index_div])
+                POGGER.debug("final_parts>:$:<", final_parts)
+            adjusted_text_token = "".join(final_parts)
+        token_parts.append(adjusted_text_token)
+
+    @classmethod
+    def __handle_text_token_normal_enhanced(
+        cls, arrays_to_combine: List[List[str]], text_token: TextMarkdownToken
+    ) -> None:
+        """
+        This should only happen in the case where there are replacement characters that
+        include replacing a character sequence with a newline.  Specifically target that.
+        """
+
+        assert "\a" in text_token.token_text
+        replace_character_count = ParserHelper.count_characters_in_text(
+            text_token.token_text, "\a"
+        )
+        assert replace_character_count % 3 == 0
+
+        start_index = 0
+        current_line = ""
+        processed_lines: List[str] = []
+        next_index, found_prefix = ParserHelper.collect_until_one_of_characters(
+            text_token.token_text, start_index, "\a\n"
+        )
+        assert next_index is not None
+        assert found_prefix is not None
+        # POGGER.debug("next_index>:$:<", next_index)
+        # POGGER.debug("found_prefix>:$:<", found_prefix)
+        while next_index < len(text_token.token_text):
+            current_line += found_prefix
+            if text_token.token_text[next_index] == "\a":
+                # POGGER.debug("before>:$:<", text_token.token_text[start_index:next_index])
+                middle_index = text_token.token_text.find("\a", next_index + 1)
+                # POGGER.debug("replace>:$:<", text_token.token_text[next_index+1:middle_index])
+                start_index = text_token.token_text.find("\a", middle_index + 1)
+                # POGGER.debug("with>:$:<", text_token.token_text[middle_index+1:start_index])
+                current_line += text_token.token_text[middle_index + 1 : start_index]
+            else:
+                processed_lines.append(current_line)
+                current_line = ""
+                start_index = next_index
+            next_index, found_prefix = ParserHelper.collect_until_one_of_characters(
+                text_token.token_text, start_index + 1, "\a\n"
+            )
+            assert next_index is not None
+            assert found_prefix is not None
+            # POGGER.debug("next_index>:$:<", next_index)
+            # POGGER.debug("found_prefix>:$:<", found_prefix)
+        current_line += found_prefix
+
+        # POGGER.debug("currernt_line>:$:<", current_line)
+        assert len(current_line)
+        processed_lines.append(current_line)
+
+        arrays_to_combine.append(processed_lines)
 
     @classmethod
     def __handle_start_paragraph_token(
@@ -709,6 +813,7 @@ class TransformToGfm:
         token_parts.extend(
             ["<h", "1" if setext_token.heading_character == "=" else "2", ">"]
         )
+        transform_state.is_in_setext_block = True
         return "".join(token_parts)
 
     @classmethod
@@ -737,6 +842,7 @@ class TransformToGfm:
             ">",
             ParserHelper.newline_character,
         ]
+        transform_state.is_in_setext_block = False
         return "".join(token_parts)
 
     @classmethod

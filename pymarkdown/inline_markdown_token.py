@@ -565,12 +565,14 @@ class TextMarkdownToken(InlineMarkdownToken):
         line_number: int = 0,
         column_number: int = 0,
         is_special: bool = False,
+        tabified_text: Optional[str] = None,
     ):
         (
             self.__token_text,
             self.__extracted_whitespace,
             self.__end_whitespace,
-        ) = (token_text, extracted_whitespace, end_whitespace)
+            self.__tabified_text,
+        ) = (token_text, extracted_whitespace, end_whitespace, tabified_text)
         InlineMarkdownToken.__init__(
             self,
             MarkdownToken._token_text,
@@ -609,6 +611,13 @@ class TextMarkdownToken(InlineMarkdownToken):
         """
         return self.__end_whitespace
 
+    @property
+    def tabified_text(self) -> Optional[str]:
+        """
+        Returns any text that had a tab character in it.
+        """
+        return self.__tabified_text
+
     def create_copy(self) -> "TextMarkdownToken":
         """
         Create a copy of this token.
@@ -629,6 +638,10 @@ class TextMarkdownToken(InlineMarkdownToken):
         data_field_parts = [self.__token_text, self.__extracted_whitespace]
         if self.__end_whitespace:
             data_field_parts.append(self.__end_whitespace)
+            assert not self.__tabified_text
+        elif self.__tabified_text:
+            data_field_parts.append("")
+            data_field_parts.append(self.__tabified_text)
         self._set_extra_data(MarkdownToken.extra_data_separator.join(data_field_parts))
 
     def remove_final_whitespace(self) -> str:

@@ -279,11 +279,13 @@ def test_extra_007cx():
     expected_gfm = """<blockquote>
 <p>this is text
 <a href="/link" title="a
-title">a
+title">a\a
 not
 so simple</a>
 a real test</p>
-</blockquote>"""
+</blockquote>""".replace(
+        "\a", " "
+    )
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -323,7 +325,7 @@ def test_extra_007ca():
 <p>this is text
 <a href="/link" title="a
 title">a
-not
+not 
 so simple</a>
 a real test</p>
 </blockquote>"""
@@ -2892,7 +2894,7 @@ item</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2940,7 +2942,7 @@ item</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3105,7 +3107,7 @@ is</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3149,7 +3151,7 @@ is</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm

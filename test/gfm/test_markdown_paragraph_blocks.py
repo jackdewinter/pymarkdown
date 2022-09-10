@@ -251,17 +251,175 @@ def test_paragraph_blocks_196a():
     """
 
     # Arrange
-    source_markdown = """aaa\t\t\t\t\t
+    source_markdown = """aaa\t\t\t
 bbb\t\t\t\t\t"""
     expected_tokens = [
         "[para(1,1):\n:                 ]",
-        "[text(1,1):aaa:]",
-        "[hard-break(1,4):                 :\n]",
-        "[text(2,1):bbb:]",
+        "[text(1,1):aaa\nbbb::         \n]",
         "[end-para:::True]",
     ]
-    expected_gfm = """<p>aaa<br />
-bbb</p>"""
+    expected_gfm = """<p>aaa\a\a\a\a\a\a\a\a\a
+bbb</p>""".replace(
+        "\a", " "
+    )
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_blocks_196b():
+    """
+    Test case 196a:  variation of 196, but with tabs instead of spaces, and in a list
+    """
+
+    # Arrange
+    source_markdown = """- aaa\t\t\t\t\t
+  bbb\t\t\t\t\t"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[para(1,3):\n:                   ]",
+        "[text(1,3):aaa\nbbb::                   \n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>aaa\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a
+bbb</li>
+</ul>""".replace(
+        "\a", " "
+    )
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_blocks_196c():
+    """
+    Test case 196a:  variation of 196, but with tabs instead of spaces, and in a list
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  - aaa\t\t\t\t\t
+    bbb\t\t\t\t\t"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[ulist(2,3):-::4:  :    ]",
+        "[para(2,5):\n:                 ]",
+        "[text(2,5):aaa\nbbb::                 \n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+<ul>
+<li>aaa\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a
+bbb</li>
+</ul>
+</li>
+</ul>""".replace(
+        "\a", " "
+    )
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_blocks_196d():
+    """
+    Test case 196a:  variation of 196, but with tabs instead of spaces, and in a list
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  - def
+\t- aaa\t\t\t\t\t
+\t  bbb\t\t\t\t\t"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[ulist(2,3):-::4:  ]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::True]",
+        "[ulist(3,5):-::6:    :      ]",
+        "[para(3,7):\n:                   ]",
+        "[text(3,7):aaa\nbbb::                   \n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+<ul>
+<li>def
+<ul>
+<li>aaa\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a
+bbb</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>""".replace(
+        "\a", " "
+    )
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_blocks_196e():
+    """
+    Test case 196a:  variation of 196, but with tabs instead of spaces, and in a list
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  - def
+\t - aaa\t\t\t\t\t
+\t   bbb\t\t\t\t\t"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[ulist(2,3):-::4:  ]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::True]",
+        "[ulist(3,6):-::7:     :       ]",
+        "[para(3,8):\n:                  ]",
+        "[text(3,8):aaa\nbbb::                  \n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+<ul>
+<li>def
+<ul>
+<li>aaa\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a
+bbb</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>""".replace(
+        "\a", " "
+    )
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)

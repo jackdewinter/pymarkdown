@@ -527,6 +527,7 @@ class InlineHelper:
         line_number: int,
         column_number: int,
         coalesced_stack: List[MarkdownToken],
+        tabified_text: Optional[str],
     ) -> Tuple[str, Optional[str], List[MarkdownToken], str, Optional[str], str]:
         """
         Handle the inline case of having the end of line character encountered.
@@ -582,6 +583,7 @@ class InlineHelper:
             remaining_line,
             inline_blocks,
             is_setext,
+            tabified_text,
         )
 
         if coalesced_stack and coalesced_stack[-1].is_block_quote_start:
@@ -603,7 +605,8 @@ class InlineHelper:
     def __is_proper_hard_break(
         current_string: str, removed_end_whitespace_size: int
     ) -> bool:
-        POGGER.debug(">>current_string>>$>>", current_string)
+        POGGER.debug("__is_proper_hard_break>>current_string>>$>>", current_string)
+        POGGER.debug("removed_end_whitespace_size>>$>>", removed_end_whitespace_size)
 
         current_string_size = len(current_string)
         if (
@@ -618,9 +621,11 @@ class InlineHelper:
             POGGER.debug(">>$<<", is_proper_hard_break)
         else:
             is_proper_hard_break = False
+
+        POGGER.debug("__is_proper_hard_break>>$>>", is_proper_hard_break)
         return is_proper_hard_break
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __select_line_ending(
         new_tokens: List[MarkdownToken],
@@ -636,7 +641,11 @@ class InlineHelper:
         remaining_line: str,
         inline_blocks: List[MarkdownToken],
         is_setext: bool,
+        tabified_text: Optional[str],
     ) -> Tuple[str, Optional[str], str, Optional[str], str]:
+        POGGER.debug(">>removed_end_whitespace>:$:<", removed_end_whitespace)
+        POGGER.debug(">>tabified_text>:$:<", tabified_text)
+        is_proper_end = not tabified_text or tabified_text.endswith("  ")
         if is_proper_hard_break:
             POGGER.debug(">>proper hard break")
             new_tokens.append(
@@ -646,7 +655,7 @@ class InlineHelper:
             )
             current_string, whitespace_to_add = current_string[:-1], None
             append_to_current_string = ""
-        elif removed_end_whitespace_size >= 2:
+        elif removed_end_whitespace_size >= 2 and is_proper_end:
             POGGER.debug(">>whitespace hard break")
             new_tokens.append(
                 HardBreakMarkdownToken(
@@ -700,7 +709,7 @@ class InlineHelper:
             remaining_line,
         )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
 
     @staticmethod
     def extract_bounded_string(

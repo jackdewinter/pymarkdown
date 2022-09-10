@@ -388,7 +388,7 @@
         },
         {
             "name": "test.gfm.test_markdown_entity_and_numeric_character_references",
-            "totalTests": 32,
+            "totalTests": 35,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -476,7 +476,7 @@
         },
         {
             "name": "test.gfm.test_markdown_paragraph_blocks",
-            "totalTests": 10,
+            "totalTests": 14,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -588,10 +588,10 @@
         },
         {
             "name": "test.gfm.test_markdown_whitespaces",
-            "totalTests": 137,
+            "totalTests": 139,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 3,
+            "skippedTests": 2,
             "elapsedTimeInMilliseconds": 0
         },
         {

@@ -523,7 +523,7 @@ def test_image_link_595():
         '[link-ref-def(4,1):True::foo:: :/url:: :title:"title":]',
         "[BLANK(5,1):]",
     ]
-    expected_gfm = """<p><img src="/url" alt="foo" title="title" />
+    expected_gfm = """<p><img src="/url" alt="foo" title="title" /> 
 []</p>"""
 
     # Act & Assert

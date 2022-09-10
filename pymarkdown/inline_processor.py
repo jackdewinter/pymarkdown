@@ -266,6 +266,7 @@ class InlineProcessor:
             line_number=text_token.line_number,
             column_number=text_token.column_number,
             para_owner=paragraph_token,
+            tabified_text=text_token.tabified_text,
         )
 
     @staticmethod
@@ -1051,6 +1052,7 @@ class InlineProcessor:
         line_number: int = 0,
         column_number: int = 0,
         para_owner: Optional[ParagraphMarkdownToken] = None,
+        tabified_text: Optional[str] = None,
     ) -> List[MarkdownToken]:
         """
         Process a text block for any inline items.
@@ -1175,6 +1177,7 @@ class InlineProcessor:
                 last_line_number,
                 last_column_number,
                 fold_space,
+                tabified_text,
             )
 
         # POGGER.debug("<<__complete_inline_block_processing<<")
@@ -1216,6 +1219,7 @@ class InlineProcessor:
         last_line_number: int,
         last_column_number: int,
         fold_space: Optional[List[str]],
+        tabified_text: Optional[str],
     ) -> Tuple[
         int,
         int,
@@ -1282,6 +1286,7 @@ class InlineProcessor:
             is_setext,
             whitespace_to_recombine,
             para_owner,
+            tabified_text,
         )
 
         (
@@ -1397,6 +1402,7 @@ class InlineProcessor:
         is_setext: bool,
         whitespace_to_recombine: Optional[str],
         para_owner: Optional[ParagraphMarkdownToken],
+        tabified_text: Optional[str],
     ) -> Tuple[
         InlineResponse,
         int,
@@ -1448,6 +1454,7 @@ class InlineProcessor:
                 coalesced_stack,
                 whitespace_to_recombine,
                 para_owner,
+                tabified_text,
             )
         return (
             inline_response,
@@ -1821,6 +1828,7 @@ class InlineProcessor:
         coalesced_stack: List[MarkdownToken],
         whitespace_to_recombine: Optional[str],
         para_owner: Optional[ParagraphMarkdownToken],
+        tabified_text: Optional[str],
     ) -> Tuple[Optional[str], str, Optional[str], str, bool]:
 
         assert source_text[next_index] == ParserHelper.newline_character
@@ -1844,6 +1852,7 @@ class InlineProcessor:
             line_number,
             column_number,
             coalesced_stack,
+            tabified_text,
         )
         inline_response.new_index = next_index + 1
         # POGGER.debug("2<<end_string<<$<<", end_string)

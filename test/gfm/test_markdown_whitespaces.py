@@ -239,7 +239,7 @@ def test_whitespaces_unordered_lists_with_form_feeds():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -990,7 +990,7 @@ abc"""
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1013,7 +1013,7 @@ abc""".replace(
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1126,7 +1126,7 @@ abc
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1149,7 +1149,7 @@ abc
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1172,7 +1172,7 @@ abc
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1927,7 +1927,7 @@ def test_whitespaces_paragraph_with_spaces_before():
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_paragraph():
+def test_whitespaces_paragraph_with_tabs_before():
     """
     Test case:  paragraph preceeded by tabs.
     """
@@ -1941,6 +1941,48 @@ def test_whitespaces_paragraph_with_tabs_paragraph():
     ]
     expected_gfm = """<pre><code>a paragraph
 </code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_paragraph_with_tabs_inside():
+    """
+    Test case:  paragraph preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """a\tlong\tparagraph"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a   long    paragraph:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>a   long    paragraph</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_paragraph_with_tabs_inside_and_emphasis():
+    """
+    Test case:  paragraph preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """a\t*long*\tparagraph"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a   :]",
+        "[emphasis(1,5):1:*]",
+        "[text(1,6):long:]",
+        "[end-emphasis(1,10)::]",
+        "[text(1,11):  paragraph:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>a   <em>long</em>  paragraph</p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -2100,7 +2142,7 @@ def test_whitespaces_code_span_with_tabs():
     expected_gfm = """<p>a <code>   good    </code> paragraph</p>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2148,7 +2190,6 @@ bar</p>"""
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_hard_break_with_tabs():
     """
     Test case:  hard_break with tabs
@@ -2159,13 +2200,13 @@ def test_whitespaces_hard_break_with_tabs():
 bar"""
     expected_tokens = [
         "[para(1,1):\n]",
-        "[text(1,1):foo:]",
-        "[hard-break(1,4):     :\n]",
-        "[text(2,1):bar:]",
+        "[text(1,1):foo\nbar::     \n]",
         "[end-para:::True]",
     ]
-    expected_gfm = """<p>foo		
-bar</p>"""
+    expected_gfm = """<p>foo\a\a\a\a\a
+bar</p>""".replace(
+        "\a", " "
+    )
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)

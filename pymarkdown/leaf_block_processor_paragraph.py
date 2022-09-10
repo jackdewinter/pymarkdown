@@ -32,6 +32,7 @@ class LeafBlockProcessorParagraph:
     Class to provide processing for the leaf blocks.
     """
 
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def parse_paragraph(
         parser_state: ParserState,
@@ -39,6 +40,7 @@ class LeafBlockProcessorParagraph:
         extracted_whitespace: Optional[str],
         block_quote_data: BlockQuoteData,
         text_removed_by_container: Optional[str],
+        original_line: str,
     ) -> List[MarkdownToken]:
         """
         Handle the parsing of a paragraph.
@@ -105,16 +107,51 @@ class LeafBlockProcessorParagraph:
             adjusted_index = new_index
             extracted_whitespace = end_string
 
+        text_to_parse = position_marker.text_to_parse[adjusted_index:]
+        POGGER.debug("--add-text-token--")
+        POGGER.debug("text_to_parse=:$:", text_to_parse)
         POGGER.debug("extracted_whitespace=:$:", extracted_whitespace)
+        POGGER.debug("original_line=:$:", original_line)
         assert extracted_whitespace is not None
+
+        corrected_tab_text = ""
+        if "\t" in original_line:
+            corrected_index = -1
+            ends_without_modification = original_line.endswith(text_to_parse)
+            POGGER.debug("ends_without_modification=:$:", ends_without_modification)
+            if ends_without_modification:
+                corrected_index = len(original_line) - len(text_to_parse)
+                corrected_tab_text = original_line[corrected_index:]
+                assert corrected_tab_text == text_to_parse
+            else:
+                # start_delta = -1
+                # for start_delta in range(4):
+                #     test_string = ParserHelper.detabify_string(
+                #         original_line, start_delta
+                #     )
+                #     POGGER.debug("test_string($)=:$:", start_delta, test_string)
+                #     if test_string.endswith(text_to_parse):
+                #         POGGER.debug("break")
+                #         break
+                # POGGER.debug("start_delta=$", start_delta)
+                # assert start_delta <= 3
+                test_string = ParserHelper.detabify_string(original_line, 0)
+                assert test_string.endswith(text_to_parse)
+                corrected_index = 0
+                corrected_tab_text = original_line[:]
+            assert corrected_index != -1
+
         new_tokens.append(
             TextMarkdownToken(
-                position_marker.text_to_parse[adjusted_index:],
+                text_to_parse,
                 extracted_whitespace,
                 position_marker=position_marker,
+                tabified_text=corrected_tab_text,
             )
         )
         return new_tokens
+
+    # pylint: enable=too-many-arguments, too-many-locals
 
     @staticmethod
     def __adjust_paragraph_for_containers(
