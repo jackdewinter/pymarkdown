@@ -2,7 +2,7 @@
 Module to provide for an inline element that can be added to markdown parsing stream.
 """
 import logging
-from typing import Optional, cast
+from typing import Optional, Tuple, cast
 
 from pymarkdown.constants import Constants
 from pymarkdown.markdown_token import MarkdownToken, MarkdownTokenClass
@@ -336,7 +336,9 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
 
     # pylint: enable=too-many-arguments, too-many-locals
 
-    def __build_extra_data(self, extra_data, label_type):
+    def __build_extra_data(
+        self, extra_data: Optional[str], label_type: str
+    ) -> Tuple[str, str]:
         assert self.__link_title is not None
         assert extra_data is not None
         part_1 = MarkdownToken.extra_data_separator.join(
@@ -362,6 +364,7 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
             ]
         )
         return part_1, part_2
+
     @property
     def label_type(self) -> str:
         """

@@ -62,7 +62,7 @@
         "pymarkdown/extensions/task_list_items.py": {},
         "pymarkdown/html_helper.py": {},
         "pymarkdown/inline_helper.py": {
-            "too-many-arguments": 3,
+            "too-many-arguments": 4,
             "too-many-locals": 2
         },
         "pymarkdown/inline_markdown_token.py": {
@@ -71,7 +71,7 @@
             "too-many-locals": 2
         },
         "pymarkdown/inline_processor.py": {
-            "too-many-arguments": 16,
+            "too-many-arguments": 18,
             "too-many-locals": 6
         },
         "pymarkdown/inline_request.py": {
@@ -235,7 +235,7 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 123,
+        "too-many-arguments": 126,
         "too-many-locals": 37,
         "too-few-public-methods": 6,
         "chained-comparison": 1,

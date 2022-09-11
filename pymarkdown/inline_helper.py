@@ -666,8 +666,14 @@ class InlineHelper:
             append_to_current_string = ""
         else:
             POGGER.debug(">>normal end")
-            end_string, remaining_line = \
-                InlineHelper.__select_line_ending_normal(is_setext, inline_blocks, current_string, removed_end_whitespace, end_string, remaining_line)
+            end_string, remaining_line = InlineHelper.__select_line_ending_normal(
+                is_setext,
+                inline_blocks,
+                current_string,
+                removed_end_whitespace,
+                end_string,
+                remaining_line,
+            )
 
         POGGER.debug(
             "<<append_to_current_string<<$<<",
@@ -689,8 +695,16 @@ class InlineHelper:
         )
 
     # pylint: enable=too-many-arguments, too-many-locals
+    # pylint: disable=too-many-arguments
     @staticmethod
-    def __select_line_ending_normal(is_setext, inline_blocks, current_string, removed_end_whitespace, end_string, remaining_line):
+    def __select_line_ending_normal(
+        is_setext: bool,
+        inline_blocks: List[MarkdownToken],
+        current_string: str,
+        removed_end_whitespace: str,
+        end_string: Optional[str],
+        remaining_line: str,
+    ) -> Tuple[str, str]:
         # POGGER.debug("<<is_setext<<$<<", is_setext)
         # POGGER.debug("<<inline_blocks<<$<<", inline_blocks)
         # POGGER.debug("<<current_string<<$<<", current_string)
@@ -710,11 +724,11 @@ class InlineHelper:
             end_string = f"{ex_ws}{ParserHelper.whitespace_split_character}"
             remaining_line = remaining_line[new_index:]
 
-        end_string = InlineHelper.modify_end_string(
-            end_string, removed_end_whitespace
-        )
+        end_string = InlineHelper.modify_end_string(end_string, removed_end_whitespace)
         # POGGER.debug("<<end_string<<$<<", end_string)
         return end_string, remaining_line
+
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def extract_bounded_string(

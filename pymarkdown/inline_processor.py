@@ -899,10 +899,29 @@ class InlineProcessor:
             last_spaces,
         )
 
-        return InlineProcessor.__calculate_inline_delta_adjustments(link_part_index, total_newlines, delta_line, repeat_count, para_owner, split_paragraph_lines, link_part_lengths, last_spaces)
+        return InlineProcessor.__calculate_inline_delta_adjustments(
+            link_part_index,
+            total_newlines,
+            delta_line,
+            repeat_count,
+            para_owner,
+            split_paragraph_lines,
+            link_part_lengths,
+            last_spaces,
+        )
 
+    # pylint: disable=too-many-arguments
     @staticmethod
-    def __calculate_inline_delta_adjustments(link_part_index, total_newlines, delta_line, repeat_count, para_owner, split_paragraph_lines, link_part_lengths, last_spaces):
+    def __calculate_inline_delta_adjustments(
+        link_part_index: int,
+        total_newlines: int,
+        delta_line: int,
+        repeat_count: int,
+        para_owner: Optional[ParagraphMarkdownToken],
+        split_paragraph_lines: Optional[List[str]],
+        link_part_lengths: List[int],
+        last_spaces: str,
+    ) -> Tuple[int, int]:
 
         POGGER.debug(">>link_part_index>>$<<", link_part_index)
         POGGER.debug(">>total_newlines>>$<<", total_newlines)
@@ -931,6 +950,8 @@ class InlineProcessor:
             POGGER.debug(">>link_part_lengths>>$<<", link_part_lengths)
             POGGER.debug(">>repeat_count>>$<<", delta_line)
         return delta_line, repeat_count
+
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __calculate_inline_label(current_token: MarkdownToken) -> Tuple[int, int]:
@@ -2102,8 +2123,18 @@ class InlineProcessor:
 
         have_processed_once = len(inline_blocks) != 0 or start_index != 0
         if current_string or not have_processed_once:
-            current_string, end_string = \
-                InlineProcessor.__complete_inline_block_processing_build_token(current_string, end_string, starting_whitespace, is_setext, inline_blocks, line_number, column_number)
+            (
+                current_string,
+                end_string,
+            ) = InlineProcessor.__complete_inline_block_processing_build_token(
+                current_string,
+                end_string,
+                starting_whitespace,
+                is_setext,
+                inline_blocks,
+                line_number,
+                column_number,
+            )
         POGGER.debug(">>$<<", inline_blocks)
 
         EmphasisHelper.resolve_inline_emphasis(inline_blocks, None)
@@ -2111,8 +2142,17 @@ class InlineProcessor:
 
     # pylint: enable=too-many-arguments
 
+    # pylint: disable=too-many-arguments
     @staticmethod
-    def __complete_inline_block_processing_build_token(current_string, end_string, starting_whitespace, is_setext, inline_blocks, line_number, column_number):
+    def __complete_inline_block_processing_build_token(
+        current_string: str,
+        end_string: Optional[str],
+        starting_whitespace: str,
+        is_setext: bool,
+        inline_blocks: List[MarkdownToken],
+        line_number: int,
+        column_number: int,
+    ) -> Tuple[str, Optional[str]]:
         POGGER.debug("__cibp>current_string>$<", current_string)
         POGGER.debug("__cibp>starting_whitespace>$<", starting_whitespace)
         if (
@@ -2137,3 +2177,5 @@ class InlineProcessor:
             )
         )
         return current_string, end_string
+
+    # pylint: enable=too-many-arguments
