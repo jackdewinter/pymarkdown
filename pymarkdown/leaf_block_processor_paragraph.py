@@ -114,6 +114,22 @@ class LeafBlockProcessorParagraph:
         POGGER.debug("original_line=:$:", original_line)
         assert extracted_whitespace is not None
 
+        corrected_tab_text = LeafBlockProcessorParagraph.__calculate_corrected_tab_text(original_line, text_to_parse)
+
+        new_tokens.append(
+            TextMarkdownToken(
+                text_to_parse,
+                extracted_whitespace,
+                position_marker=position_marker,
+                tabified_text=corrected_tab_text,
+            )
+        )
+        return new_tokens
+
+    # pylint: enable=too-many-arguments, too-many-locals
+
+    @staticmethod
+    def __calculate_corrected_tab_text(original_line, text_to_parse):
         corrected_tab_text = ""
         if "\t" in original_line:
             corrected_index = -1
@@ -140,18 +156,7 @@ class LeafBlockProcessorParagraph:
                 corrected_index = 0
                 corrected_tab_text = original_line[:]
             assert corrected_index != -1
-
-        new_tokens.append(
-            TextMarkdownToken(
-                text_to_parse,
-                extracted_whitespace,
-                position_marker=position_marker,
-                tabified_text=corrected_tab_text,
-            )
-        )
-        return new_tokens
-
-    # pylint: enable=too-many-arguments, too-many-locals
+        return corrected_tab_text
 
     @staticmethod
     def __adjust_paragraph_for_containers(

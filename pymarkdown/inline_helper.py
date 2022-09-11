@@ -666,29 +666,8 @@ class InlineHelper:
             append_to_current_string = ""
         else:
             POGGER.debug(">>normal end")
-            # POGGER.debug("<<is_setext<<$<<", is_setext)
-            # POGGER.debug("<<inline_blocks<<$<<", inline_blocks)
-            # POGGER.debug("<<current_string<<$<<", current_string)
-            # POGGER.debug("<<remaining_line<<$<<", remaining_line)
-            # POGGER.debug("<<end_string<<$<<", end_string)
-            # POGGER.debug("<<removed_end_whitespace<<$<<", removed_end_whitespace)
-            if (
-                is_setext
-                and inline_blocks
-                and inline_blocks[-1].is_inline_hard_break
-                and not current_string
-            ):
-                new_index, ex_ws = ParserHelper.extract_spaces(remaining_line, 0)
-                # POGGER.debug("<<new_index<<$<<", new_index)
-                # POGGER.debug("<<ex_ws<<$<<", ex_ws)
-                assert new_index
-                end_string = f"{ex_ws}{ParserHelper.whitespace_split_character}"
-                remaining_line = remaining_line[new_index:]
-
-            end_string = InlineHelper.modify_end_string(
-                end_string, removed_end_whitespace
-            )
-            POGGER.debug("<<end_string<<$<<", end_string)
+            end_string, remaining_line = \
+                InlineHelper.__select_line_ending_normal(is_setext, inline_blocks, current_string, removed_end_whitespace, end_string, remaining_line)
 
         POGGER.debug(
             "<<append_to_current_string<<$<<",
@@ -710,6 +689,32 @@ class InlineHelper:
         )
 
     # pylint: enable=too-many-arguments, too-many-locals
+    @staticmethod
+    def __select_line_ending_normal(is_setext, inline_blocks, current_string, removed_end_whitespace, end_string, remaining_line):
+        # POGGER.debug("<<is_setext<<$<<", is_setext)
+        # POGGER.debug("<<inline_blocks<<$<<", inline_blocks)
+        # POGGER.debug("<<current_string<<$<<", current_string)
+        # POGGER.debug("<<remaining_line<<$<<", remaining_line)
+        # POGGER.debug("<<end_string<<$<<", end_string)
+        # POGGER.debug("<<removed_end_whitespace<<$<<", removed_end_whitespace)
+        if (
+            is_setext
+            and inline_blocks
+            and inline_blocks[-1].is_inline_hard_break
+            and not current_string
+        ):
+            new_index, ex_ws = ParserHelper.extract_spaces(remaining_line, 0)
+            # POGGER.debug("<<new_index<<$<<", new_index)
+            # POGGER.debug("<<ex_ws<<$<<", ex_ws)
+            assert new_index
+            end_string = f"{ex_ws}{ParserHelper.whitespace_split_character}"
+            remaining_line = remaining_line[new_index:]
+
+        end_string = InlineHelper.modify_end_string(
+            end_string, removed_end_whitespace
+        )
+        # POGGER.debug("<<end_string<<$<<", end_string)
+        return end_string, remaining_line
 
     @staticmethod
     def extract_bounded_string(

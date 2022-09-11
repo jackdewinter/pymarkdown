@@ -322,6 +322,21 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
             extra_data = f"{extra_data}{MarkdownToken.extra_data_separator}"
 
         # Purposefully split this way to accommodate the extra data
+        part_1, part_2 = self.__build_extra_data(extra_data, label_type)
+
+        InlineMarkdownToken.__init__(
+            self,
+            token_name,
+            f"{part_1}{part_2}",
+            line_number=line_number,
+            column_number=column_number,
+            requires_end_token=requires_end_token,
+            can_force_close=can_force_close,
+        )
+
+    # pylint: enable=too-many-arguments, too-many-locals
+
+    def __build_extra_data(self, extra_data, label_type):
         assert self.__link_title is not None
         assert extra_data is not None
         part_1 = MarkdownToken.extra_data_separator.join(
@@ -346,19 +361,7 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
                 self.__after_title_whitespace,
             ]
         )
-
-        InlineMarkdownToken.__init__(
-            self,
-            token_name,
-            f"{part_1}{part_2}",
-            line_number=line_number,
-            column_number=column_number,
-            requires_end_token=requires_end_token,
-            can_force_close=can_force_close,
-        )
-
-    # pylint: enable=too-many-arguments, too-many-locals
-
+        return part_1, part_2
     @property
     def label_type(self) -> str:
         """

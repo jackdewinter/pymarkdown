@@ -899,6 +899,11 @@ class InlineProcessor:
             last_spaces,
         )
 
+        return InlineProcessor.__calculate_inline_delta_adjustments(link_part_index, total_newlines, delta_line, repeat_count, para_owner, split_paragraph_lines, link_part_lengths, last_spaces)
+
+    @staticmethod
+    def __calculate_inline_delta_adjustments(link_part_index, total_newlines, delta_line, repeat_count, para_owner, split_paragraph_lines, link_part_lengths, last_spaces):
+
         POGGER.debug(">>link_part_index>>$<<", link_part_index)
         POGGER.debug(">>total_newlines>>$<<", total_newlines)
         POGGER.debug(">>delta_line>>$<<", delta_line)
@@ -2097,32 +2102,38 @@ class InlineProcessor:
 
         have_processed_once = len(inline_blocks) != 0 or start_index != 0
         if current_string or not have_processed_once:
-            POGGER.debug("__cibp>current_string>$<", current_string)
-            POGGER.debug("__cibp>starting_whitespace>$<", starting_whitespace)
-            if (
-                is_setext
-                and end_string is None
-                and (inline_blocks and inline_blocks[-1].is_inline_hard_break)
-            ):
-                new_index, ex_ws = ParserHelper.extract_spaces(current_string, 0)
-                POGGER.debug("__cibp>new_index>$<", new_index)
-                POGGER.debug("__cibp>b>$<", ex_ws)
-                if new_index:
-                    end_string = f"{ex_ws}{ParserHelper.whitespace_split_character}"
-                    current_string = current_string[new_index:]
-            POGGER.debug("__cibp>end_string>$<", end_string)
-            inline_blocks.append(
-                TextMarkdownToken(
-                    current_string,
-                    starting_whitespace,
-                    end_whitespace=end_string,
-                    line_number=line_number,
-                    column_number=column_number,
-                )
-            )
+            current_string, end_string = \
+                InlineProcessor.__complete_inline_block_processing_build_token(current_string, end_string, starting_whitespace, is_setext, inline_blocks, line_number, column_number)
         POGGER.debug(">>$<<", inline_blocks)
 
         EmphasisHelper.resolve_inline_emphasis(inline_blocks, None)
         return inline_blocks
 
     # pylint: enable=too-many-arguments
+
+    @staticmethod
+    def __complete_inline_block_processing_build_token(current_string, end_string, starting_whitespace, is_setext, inline_blocks, line_number, column_number):
+        POGGER.debug("__cibp>current_string>$<", current_string)
+        POGGER.debug("__cibp>starting_whitespace>$<", starting_whitespace)
+        if (
+            is_setext
+            and end_string is None
+            and (inline_blocks and inline_blocks[-1].is_inline_hard_break)
+        ):
+            new_index, ex_ws = ParserHelper.extract_spaces(current_string, 0)
+            POGGER.debug("__cibp>new_index>$<", new_index)
+            POGGER.debug("__cibp>b>$<", ex_ws)
+            if new_index:
+                end_string = f"{ex_ws}{ParserHelper.whitespace_split_character}"
+                current_string = current_string[new_index:]
+        POGGER.debug("__cibp>end_string>$<", end_string)
+        inline_blocks.append(
+            TextMarkdownToken(
+                current_string,
+                starting_whitespace,
+                end_whitespace=end_string,
+                line_number=line_number,
+                column_number=column_number,
+            )
+        )
+        return current_string, end_string
