@@ -306,6 +306,8 @@ class InlineHelper:
         Handle the inline case of backticks for code spans.
         """
         POGGER.debug("before_collect>$", inline_request.next_index)
+        POGGER.debug("inline_request.source_text>:$:<", inline_request.source_text)
+        POGGER.debug("inline_request.tabified_text>:$:<", inline_request.tabified_text)
         (
             new_index,
             extracted_start_backticks,
@@ -446,13 +448,115 @@ class InlineHelper:
         )
 
     @staticmethod
+    def __backtick_split_lines(input_string: str) -> List[str]:
+        current_index: Optional[int] = 0
+        assert current_index is not None
+        next_index, extracted_text = ParserHelper.collect_while_one_of_characters(
+            input_string, current_index, " \t"
+        )
+        assert next_index is not None
+        assert extracted_text is not None
+        split_array: List[str] = [extracted_text]
+        # POGGER.debug("next_index:$, extracted_text>:$:<", next_index, extracted_text)
+        while next_index < len(input_string):
+            current_index = None
+            (
+                current_index,
+                extracted_text,
+            ) = ParserHelper.collect_until_one_of_characters(
+                input_string, next_index, " \t"
+            )
+            assert current_index is not None
+            assert extracted_text is not None
+            split_array.append(extracted_text)
+            next_index, extracted_text = ParserHelper.collect_while_one_of_characters(
+                input_string, current_index, " \t"
+            )
+            assert next_index is not None
+            assert extracted_text is not None
+            split_array.append(extracted_text)
+        return split_array
+
+    @staticmethod
+    def __find_index_in_split_lines(
+        split_array: List[str], index_to_find: int
+    ) -> Tuple[int, int, int]:
+        start_index = 0
+        _array_index = 0
+        for _array_index, array_element in enumerate(split_array):  # pragma: no cover
+            # POGGER.debug("$--$ >>:$:<<", array_index, start_index, split_array[array_index])
+            if start_index <= index_to_find < start_index + len(array_element):
+                break
+            start_index += len(array_element)
+        assert start_index != len(split_array)
+        delta = index_to_find - start_index
+        # POGGER.debug("i=$,start_index=$,delta=$", array_index, start_index, delta)
+        return _array_index, delta, start_index
+
+    # pylint: disable=too-many-locals
+    @staticmethod
     def __calculate_backtick_between_text(
         inline_request: InlineRequest, new_index: int, end_backtick_start_index: int
     ) -> Tuple[str, str, str, str]:
         POGGER.debug("inline_request.source_text>>$<<", inline_request.source_text)
         POGGER.debug("new_index>>$<<", new_index)
         POGGER.debug("end_backtick_start_index>>$<<", end_backtick_start_index)
+
         between_text = inline_request.source_text[new_index:end_backtick_start_index]
+        actual_between_text = between_text
+        if inline_request.tabified_text:
+            POGGER.debug(
+                "inline_request.tabified_text>>$<<", inline_request.tabified_text
+            )
+            split_source_lines = InlineHelper.__backtick_split_lines(
+                inline_request.source_text
+            )
+            POGGER.debug("rt>>$<<", split_source_lines)
+            split_tabified_lines = InlineHelper.__backtick_split_lines(
+                inline_request.tabified_text
+            )
+            POGGER.debug("rtx>>$<<", split_tabified_lines)
+            assert len(split_tabified_lines) == len(split_source_lines)
+
+            (
+                start_array_index,
+                start_delta,
+                calculated_index,
+            ) = InlineHelper.__find_index_in_split_lines(split_source_lines, new_index)
+            POGGER.debug(
+                "start_array_index=$, start_delta=$, calculated_index=$",
+                start_array_index,
+                start_delta,
+                calculated_index,
+            )
+            assert calculated_index + start_delta == new_index
+
+            (
+                end_array_index,
+                end_delta,
+                calculated_index,
+            ) = InlineHelper.__find_index_in_split_lines(
+                split_source_lines, end_backtick_start_index
+            )
+            POGGER.debug(
+                "end_array_index=$, end_delta=$, calculated_index=$",
+                end_array_index,
+                end_delta,
+                calculated_index,
+            )
+            assert calculated_index + end_delta == end_backtick_start_index
+
+            if start_array_index == end_array_index:
+                actual_between_text = split_tabified_lines[start_array_index][
+                    start_delta:end_delta
+                ]
+            else:
+                actual_between_text = "".join(
+                    split_tabified_lines[i]
+                    for i in range(start_array_index, end_array_index)
+                )
+            POGGER.debug("actual_between_text>:$:<", actual_between_text)
+
         original_between_text, leading_whitespace, trailing_whitespace = (
             between_text,
             "",
@@ -465,14 +569,15 @@ class InlineHelper:
             inline_request.source_text[end_backtick_start_index:],
         )
         POGGER.debug("between_text>>$<<", between_text)
+        POGGER.debug("actual_between_text>>$<<", actual_between_text)
         if (
-            len(between_text) > 2
-            and between_text[0]
+            len(actual_between_text) > 2
+            and actual_between_text[0]
             in [
                 ParserHelper.space_character,
                 ParserHelper.newline_character,
             ]
-            and between_text[-1]
+            and actual_between_text[-1]
             in [
                 ParserHelper.space_character,
                 ParserHelper.newline_character,
@@ -515,6 +620,8 @@ class InlineHelper:
             leading_whitespace,
             trailing_whitespace,
         )
+
+    # pylint: enable=too-many-locals
 
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
@@ -625,7 +732,7 @@ class InlineHelper:
         POGGER.debug("__is_proper_hard_break>>$>>", is_proper_hard_break)
         return is_proper_hard_break
 
-    # pylint: disable=too-many-arguments, too-many-locals
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __select_line_ending(
         new_tokens: List[MarkdownToken],
@@ -694,7 +801,7 @@ class InlineHelper:
             remaining_line,
         )
 
-    # pylint: enable=too-many-arguments, too-many-locals
+    # pylint: enable=too-many-arguments
     # pylint: disable=too-many-arguments
     @staticmethod
     def __select_line_ending_normal(
