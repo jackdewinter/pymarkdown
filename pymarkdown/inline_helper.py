@@ -505,7 +505,11 @@ class InlineHelper:
         between_text = inline_request.source_text[new_index:end_backtick_start_index]
         actual_between_text = between_text
         if inline_request.tabified_text:
-            actual_between_text = InlineHelper.__xx(inline_request, new_index, end_backtick_start_index)
+            actual_between_text = (
+                InlineHelper.__calculate_backtick_between_tabified_text(
+                    inline_request, new_index, end_backtick_start_index
+                )
+            )
         original_between_text, leading_whitespace, trailing_whitespace = (
             between_text,
             "",
@@ -573,14 +577,15 @@ class InlineHelper:
     # pylint: enable=too-many-locals
 
     @staticmethod
-    def __xx(inline_request :InlineRequest, new_index:int, end_backtick_start_index:int) -> str:
-        POGGER.debug(
-            "inline_request.tabified_text>>$<<", inline_request.tabified_text
-        )
+    def __calculate_backtick_between_tabified_text(
+        inline_request: InlineRequest, new_index: int, end_backtick_start_index: int
+    ) -> str:
+        POGGER.debug("inline_request.tabified_text>>$<<", inline_request.tabified_text)
         split_source_lines = InlineHelper.__backtick_split_lines(
             inline_request.source_text
         )
         POGGER.debug("rt>>$<<", split_source_lines)
+        assert inline_request.tabified_text is not None
         split_tabified_lines = InlineHelper.__backtick_split_lines(
             inline_request.tabified_text
         )
