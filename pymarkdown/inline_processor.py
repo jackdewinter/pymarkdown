@@ -2103,7 +2103,7 @@ class InlineProcessor:
         have_processed_once = len(inline_blocks) != 0 or start_index != 0
         if current_string or not have_processed_once:
             current_string, end_string = \
-                InlineProcessor.__complete_inline_block_processing_build_token(current_string, end_string, starting_whitespace, is_setext, inline_blocks, line_number, column_number)
+                    InlineProcessor.__complete_inline_block_processing_build_token(current_string, end_string, starting_whitespace, is_setext, inline_blocks, line_number, column_number)
         POGGER.debug(">>$<<", inline_blocks)
 
         EmphasisHelper.resolve_inline_emphasis(inline_blocks, None)
