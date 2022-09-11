@@ -505,58 +505,7 @@ class InlineHelper:
         between_text = inline_request.source_text[new_index:end_backtick_start_index]
         actual_between_text = between_text
         if inline_request.tabified_text:
-            POGGER.debug(
-                "inline_request.tabified_text>>$<<", inline_request.tabified_text
-            )
-            split_source_lines = InlineHelper.__backtick_split_lines(
-                inline_request.source_text
-            )
-            POGGER.debug("rt>>$<<", split_source_lines)
-            split_tabified_lines = InlineHelper.__backtick_split_lines(
-                inline_request.tabified_text
-            )
-            POGGER.debug("rtx>>$<<", split_tabified_lines)
-            assert len(split_tabified_lines) == len(split_source_lines)
-
-            (
-                start_array_index,
-                start_delta,
-                calculated_index,
-            ) = InlineHelper.__find_index_in_split_lines(split_source_lines, new_index)
-            POGGER.debug(
-                "start_array_index=$, start_delta=$, calculated_index=$",
-                start_array_index,
-                start_delta,
-                calculated_index,
-            )
-            assert calculated_index + start_delta == new_index
-
-            (
-                end_array_index,
-                end_delta,
-                calculated_index,
-            ) = InlineHelper.__find_index_in_split_lines(
-                split_source_lines, end_backtick_start_index
-            )
-            POGGER.debug(
-                "end_array_index=$, end_delta=$, calculated_index=$",
-                end_array_index,
-                end_delta,
-                calculated_index,
-            )
-            assert calculated_index + end_delta == end_backtick_start_index
-
-            if start_array_index == end_array_index:
-                actual_between_text = split_tabified_lines[start_array_index][
-                    start_delta:end_delta
-                ]
-            else:
-                actual_between_text = "".join(
-                    split_tabified_lines[i]
-                    for i in range(start_array_index, end_array_index)
-                )
-            POGGER.debug("actual_between_text>:$:<", actual_between_text)
-
+            actual_between_text = InlineHelper.__xx(inline_request, new_index, end_backtick_start_index)
         original_between_text, leading_whitespace, trailing_whitespace = (
             between_text,
             "",
@@ -622,6 +571,61 @@ class InlineHelper:
         )
 
     # pylint: enable=too-many-locals
+
+    @staticmethod
+    def __xx(inline_request :InlineRequest, new_index:int, end_backtick_start_index:int) -> str:
+        POGGER.debug(
+            "inline_request.tabified_text>>$<<", inline_request.tabified_text
+        )
+        split_source_lines = InlineHelper.__backtick_split_lines(
+            inline_request.source_text
+        )
+        POGGER.debug("rt>>$<<", split_source_lines)
+        split_tabified_lines = InlineHelper.__backtick_split_lines(
+            inline_request.tabified_text
+        )
+        POGGER.debug("rtx>>$<<", split_tabified_lines)
+        assert len(split_tabified_lines) == len(split_source_lines)
+
+        (
+            start_array_index,
+            start_delta,
+            calculated_index,
+        ) = InlineHelper.__find_index_in_split_lines(split_source_lines, new_index)
+        POGGER.debug(
+            "start_array_index=$, start_delta=$, calculated_index=$",
+            start_array_index,
+            start_delta,
+            calculated_index,
+        )
+        assert calculated_index + start_delta == new_index
+
+        (
+            end_array_index,
+            end_delta,
+            calculated_index,
+        ) = InlineHelper.__find_index_in_split_lines(
+            split_source_lines, end_backtick_start_index
+        )
+        POGGER.debug(
+            "end_array_index=$, end_delta=$, calculated_index=$",
+            end_array_index,
+            end_delta,
+            calculated_index,
+        )
+        assert calculated_index + end_delta == end_backtick_start_index
+
+        if start_array_index == end_array_index:
+            actual_between_text = split_tabified_lines[start_array_index][
+                start_delta:end_delta
+            ]
+        else:
+            actual_between_text = "".join(
+                split_tabified_lines[i]
+                for i in range(start_array_index, end_array_index)
+            )
+        POGGER.debug("actual_between_text>:$:<", actual_between_text)
+        return actual_between_text
 
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
@@ -802,40 +806,7 @@ class InlineHelper:
         )
 
     # pylint: enable=too-many-arguments, too-many-locals
-    # pylint: disable=too-many-arguments
-    @staticmethod
-    def __select_line_ending_normal(
-        is_setext: bool,
-        inline_blocks: List[MarkdownToken],
-        current_string: str,
-        removed_end_whitespace: str,
-        end_string: Optional[str],
-        remaining_line: str,
-    ) -> Tuple[str, str]:
-        # POGGER.debug("<<is_setext<<$<<", is_setext)
-        # POGGER.debug("<<inline_blocks<<$<<", inline_blocks)
-        # POGGER.debug("<<current_string<<$<<", current_string)
-        # POGGER.debug("<<remaining_line<<$<<", remaining_line)
-        # POGGER.debug("<<end_string<<$<<", end_string)
-        # POGGER.debug("<<removed_end_whitespace<<$<<", removed_end_whitespace)
-        if (
-            is_setext
-            and inline_blocks
-            and inline_blocks[-1].is_inline_hard_break
-            and not current_string
-        ):
-            new_index, ex_ws = ParserHelper.extract_spaces(remaining_line, 0)
-            # POGGER.debug("<<new_index<<$<<", new_index)
-            # POGGER.debug("<<ex_ws<<$<<", ex_ws)
-            assert new_index
-            end_string = f"{ex_ws}{ParserHelper.whitespace_split_character}"
-            remaining_line = remaining_line[new_index:]
 
-        end_string = InlineHelper.modify_end_string(end_string, removed_end_whitespace)
-        # POGGER.debug("<<end_string<<$<<", end_string)
-        return end_string, remaining_line
-
-    # pylint: enable=too-many-arguments
     # pylint: disable=too-many-arguments
     @staticmethod
     def __select_line_ending_normal(
