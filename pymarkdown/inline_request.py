@@ -24,6 +24,7 @@ class InlineRequest:
     line_number: Optional[int] = None
     column_number: Optional[int] = None
     para_owner: Optional[ParagraphMarkdownToken] = None
+    tabified_text: Optional[str] = None
 
 
 # pylint: enable=too-many-instance-attributes

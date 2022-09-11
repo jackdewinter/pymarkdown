@@ -1285,6 +1285,7 @@ class InlineProcessor:
             line_number,
             column_number,
             para_owner,
+            tabified_text,
         )
         (
             inline_response,
