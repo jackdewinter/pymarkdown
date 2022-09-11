@@ -643,8 +643,7 @@ class TextMarkdownToken(InlineMarkdownToken):
             data_field_parts.append(self.__end_whitespace)
             assert not self.__tabified_text
         elif self.__tabified_text:
-            data_field_parts.append("")
-            data_field_parts.append(self.__tabified_text)
+            data_field_parts.extend(("", self.__tabified_text))
         self._set_extra_data(MarkdownToken.extra_data_separator.join(data_field_parts))
 
     def remove_final_whitespace(self) -> str:
