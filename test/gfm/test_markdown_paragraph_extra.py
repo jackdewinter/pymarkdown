@@ -8384,7 +8384,11 @@ def test_paragraph_extra_j0b():
         "[text(5,3):\ndef:: \n]",
         "[end-para:::True]",
     ]
-    expected_gfm = """<p>abc\n<a href="/uri" title="title">link</a>\ndef</p>"""
+    expected_gfm = """<p>abc
+<a href="/uri" title="title">link</a>\a
+def</p>""".replace(
+        "\a", " "
+    )
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -8405,7 +8409,11 @@ def test_paragraph_extra_j0c():
         "[text(5,3):\ndef:: \n]",
         "[end-para:::True]",
     ]
-    expected_gfm = """<p>abc\n<img src="/uri" alt="link" title="title" />\ndef</p>"""
+    expected_gfm = """<p>abc
+<img src="/uri" alt="link" title="title" />\a
+def</p>""".replace(
+        "\a", " "
+    )
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)

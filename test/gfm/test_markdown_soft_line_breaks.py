@@ -44,7 +44,7 @@ def test_soft_line_breaks_670():
         "[text(1,1):foo\nbaz:: \n]",
         "[end-para:::True]",
     ]
-    expected_gfm = """<p>foo
+    expected_gfm = """<p>foo 
 baz</p>"""
 
     # Act & Assert

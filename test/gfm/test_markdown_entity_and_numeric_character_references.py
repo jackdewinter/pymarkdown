@@ -416,6 +416,75 @@ bar</p>"""
 
 
 @pytest.mark.gfm
+def test_character_references_335a():
+    """
+    Test case 335a:  variation of 335 with extra lines
+    """
+
+    # Arrange
+    source_markdown = """foo&#10;\a
+\aand\a
+&#10;bar""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[para(1,1):\n \n]",
+        "[text(1,1):foo\a&#10;\a\n\a\nand\n\a&#10;\a\n\abar:: \n \n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = "<p>foo\n \nand \n\nbar</p>"
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_character_references_335b():
+    """
+    Test case 335a:  variation of 335 with extra lines
+    """
+
+    # Arrange
+    source_markdown = """foo\a
+\aand\a
+bar""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[para(1,1):\n \n]",
+        "[text(1,1):foo\nand\nbar:: \n \n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = "<p>foo \nand \nbar</p>"
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_character_references_335c():
+    """
+    Test case 335a:  variation of 335 with extra lines
+    """
+
+    # Arrange
+    source_markdown = """foo &#10;
+ and &#10;
+bar&#10;""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[para(1,1):\n \n]",
+        "[text(1,1):foo \a&#10;\a\n\a\nand \a&#10;\a\n\a\nbar\a&#10;\a\n\a::\n\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = "<p>foo \n\nand \n\nbar\n</p>"
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_character_references_336():
     """
     Test case 336:  (part 4) Entity and numeric character references cannot be used in place of symbols indicating structure in CommonMark documents.

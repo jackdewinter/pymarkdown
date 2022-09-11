@@ -224,6 +224,7 @@ class ContainerBlockLeafProcessor:
                     leaf_token_whitespace,
                     grab_bag.block_quote_data,
                     grab_bag.text_removed_by_container,
+                    grab_bag.original_line,
                 )
             )
             # POGGER.debug(">>leaf--adding>>$", new_tokens)

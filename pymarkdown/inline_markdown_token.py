@@ -2,7 +2,7 @@
 Module to provide for an inline element that can be added to markdown parsing stream.
 """
 import logging
-from typing import Optional, cast
+from typing import Optional, Tuple, cast
 
 from pymarkdown.constants import Constants
 from pymarkdown.markdown_token import MarkdownToken, MarkdownTokenClass
@@ -322,6 +322,23 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
             extra_data = f"{extra_data}{MarkdownToken.extra_data_separator}"
 
         # Purposefully split this way to accommodate the extra data
+        part_1, part_2 = self.__build_extra_data(extra_data, label_type)
+
+        InlineMarkdownToken.__init__(
+            self,
+            token_name,
+            f"{part_1}{part_2}",
+            line_number=line_number,
+            column_number=column_number,
+            requires_end_token=requires_end_token,
+            can_force_close=can_force_close,
+        )
+
+    # pylint: enable=too-many-arguments, too-many-locals
+
+    def __build_extra_data(
+        self, extra_data: Optional[str], label_type: str
+    ) -> Tuple[str, str]:
         assert self.__link_title is not None
         assert extra_data is not None
         part_1 = MarkdownToken.extra_data_separator.join(
@@ -346,18 +363,7 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
                 self.__after_title_whitespace,
             ]
         )
-
-        InlineMarkdownToken.__init__(
-            self,
-            token_name,
-            f"{part_1}{part_2}",
-            line_number=line_number,
-            column_number=column_number,
-            requires_end_token=requires_end_token,
-            can_force_close=can_force_close,
-        )
-
-    # pylint: enable=too-many-arguments, too-many-locals
+        return part_1, part_2
 
     @property
     def label_type(self) -> str:
@@ -565,12 +571,14 @@ class TextMarkdownToken(InlineMarkdownToken):
         line_number: int = 0,
         column_number: int = 0,
         is_special: bool = False,
+        tabified_text: Optional[str] = None,
     ):
         (
             self.__token_text,
             self.__extracted_whitespace,
             self.__end_whitespace,
-        ) = (token_text, extracted_whitespace, end_whitespace)
+            self.__tabified_text,
+        ) = (token_text, extracted_whitespace, end_whitespace, tabified_text)
         InlineMarkdownToken.__init__(
             self,
             MarkdownToken._token_text,
@@ -609,6 +617,13 @@ class TextMarkdownToken(InlineMarkdownToken):
         """
         return self.__end_whitespace
 
+    @property
+    def tabified_text(self) -> Optional[str]:
+        """
+        Returns any text that had a tab character in it.
+        """
+        return self.__tabified_text
+
     def create_copy(self) -> "TextMarkdownToken":
         """
         Create a copy of this token.
@@ -629,6 +644,9 @@ class TextMarkdownToken(InlineMarkdownToken):
         data_field_parts = [self.__token_text, self.__extracted_whitespace]
         if self.__end_whitespace:
             data_field_parts.append(self.__end_whitespace)
+            assert not self.__tabified_text
+        elif self.__tabified_text:
+            data_field_parts.extend(("", self.__tabified_text))
         self._set_extra_data(MarkdownToken.extra_data_separator.join(data_field_parts))
 
     def remove_final_whitespace(self) -> str:

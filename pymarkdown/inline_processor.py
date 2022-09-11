@@ -266,6 +266,7 @@ class InlineProcessor:
             line_number=text_token.line_number,
             column_number=text_token.column_number,
             para_owner=paragraph_token,
+            tabified_text=text_token.tabified_text,
         )
 
     @staticmethod
@@ -898,6 +899,30 @@ class InlineProcessor:
             last_spaces,
         )
 
+        return InlineProcessor.__calculate_inline_delta_adjustments(
+            link_part_index,
+            total_newlines,
+            delta_line,
+            repeat_count,
+            para_owner,
+            split_paragraph_lines,
+            link_part_lengths,
+            last_spaces,
+        )
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __calculate_inline_delta_adjustments(
+        link_part_index: int,
+        total_newlines: int,
+        delta_line: int,
+        repeat_count: int,
+        para_owner: Optional[ParagraphMarkdownToken],
+        split_paragraph_lines: Optional[List[str]],
+        link_part_lengths: List[int],
+        last_spaces: str,
+    ) -> Tuple[int, int]:
+
         POGGER.debug(">>link_part_index>>$<<", link_part_index)
         POGGER.debug(">>total_newlines>>$<<", total_newlines)
         POGGER.debug(">>delta_line>>$<<", delta_line)
@@ -925,6 +950,8 @@ class InlineProcessor:
             POGGER.debug(">>link_part_lengths>>$<<", link_part_lengths)
             POGGER.debug(">>repeat_count>>$<<", delta_line)
         return delta_line, repeat_count
+
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __calculate_inline_label(current_token: MarkdownToken) -> Tuple[int, int]:
@@ -1051,6 +1078,7 @@ class InlineProcessor:
         line_number: int = 0,
         column_number: int = 0,
         para_owner: Optional[ParagraphMarkdownToken] = None,
+        tabified_text: Optional[str] = None,
     ) -> List[MarkdownToken]:
         """
         Process a text block for any inline items.
@@ -1175,6 +1203,7 @@ class InlineProcessor:
                 last_line_number,
                 last_column_number,
                 fold_space,
+                tabified_text,
             )
 
         # POGGER.debug("<<__complete_inline_block_processing<<")
@@ -1216,6 +1245,7 @@ class InlineProcessor:
         last_line_number: int,
         last_column_number: int,
         fold_space: Optional[List[str]],
+        tabified_text: Optional[str],
     ) -> Tuple[
         int,
         int,
@@ -1282,6 +1312,7 @@ class InlineProcessor:
             is_setext,
             whitespace_to_recombine,
             para_owner,
+            tabified_text,
         )
 
         (
@@ -1397,6 +1428,7 @@ class InlineProcessor:
         is_setext: bool,
         whitespace_to_recombine: Optional[str],
         para_owner: Optional[ParagraphMarkdownToken],
+        tabified_text: Optional[str],
     ) -> Tuple[
         InlineResponse,
         int,
@@ -1448,6 +1480,7 @@ class InlineProcessor:
                 coalesced_stack,
                 whitespace_to_recombine,
                 para_owner,
+                tabified_text,
             )
         return (
             inline_response,
@@ -1821,6 +1854,7 @@ class InlineProcessor:
         coalesced_stack: List[MarkdownToken],
         whitespace_to_recombine: Optional[str],
         para_owner: Optional[ParagraphMarkdownToken],
+        tabified_text: Optional[str],
     ) -> Tuple[Optional[str], str, Optional[str], str, bool]:
 
         assert source_text[next_index] == ParserHelper.newline_character
@@ -1844,6 +1878,7 @@ class InlineProcessor:
             line_number,
             column_number,
             coalesced_stack,
+            tabified_text,
         )
         inline_response.new_index = next_index + 1
         # POGGER.debug("2<<end_string<<$<<", end_string)
@@ -2088,32 +2123,59 @@ class InlineProcessor:
 
         have_processed_once = len(inline_blocks) != 0 or start_index != 0
         if current_string or not have_processed_once:
-            POGGER.debug("__cibp>current_string>$<", current_string)
-            POGGER.debug("__cibp>starting_whitespace>$<", starting_whitespace)
-            if (
-                is_setext
-                and end_string is None
-                and (inline_blocks and inline_blocks[-1].is_inline_hard_break)
-            ):
-                new_index, ex_ws = ParserHelper.extract_spaces(current_string, 0)
-                POGGER.debug("__cibp>new_index>$<", new_index)
-                POGGER.debug("__cibp>b>$<", ex_ws)
-                if new_index:
-                    end_string = f"{ex_ws}{ParserHelper.whitespace_split_character}"
-                    current_string = current_string[new_index:]
-            POGGER.debug("__cibp>end_string>$<", end_string)
-            inline_blocks.append(
-                TextMarkdownToken(
-                    current_string,
-                    starting_whitespace,
-                    end_whitespace=end_string,
-                    line_number=line_number,
-                    column_number=column_number,
-                )
+            (
+                current_string,
+                end_string,
+            ) = InlineProcessor.__complete_inline_block_processing_build_token(
+                current_string,
+                end_string,
+                starting_whitespace,
+                is_setext,
+                inline_blocks,
+                line_number,
+                column_number,
             )
         POGGER.debug(">>$<<", inline_blocks)
 
         EmphasisHelper.resolve_inline_emphasis(inline_blocks, None)
         return inline_blocks
+
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __complete_inline_block_processing_build_token(
+        current_string: str,
+        end_string: Optional[str],
+        starting_whitespace: str,
+        is_setext: bool,
+        inline_blocks: List[MarkdownToken],
+        line_number: int,
+        column_number: int,
+    ) -> Tuple[str, Optional[str]]:
+        POGGER.debug("__cibp>current_string>$<", current_string)
+        POGGER.debug("__cibp>starting_whitespace>$<", starting_whitespace)
+        if (
+            is_setext
+            and end_string is None
+            and (inline_blocks and inline_blocks[-1].is_inline_hard_break)
+        ):
+            new_index, ex_ws = ParserHelper.extract_spaces(current_string, 0)
+            POGGER.debug("__cibp>new_index>$<", new_index)
+            POGGER.debug("__cibp>b>$<", ex_ws)
+            if new_index:
+                end_string = f"{ex_ws}{ParserHelper.whitespace_split_character}"
+                current_string = current_string[new_index:]
+        POGGER.debug("__cibp>end_string>$<", end_string)
+        inline_blocks.append(
+            TextMarkdownToken(
+                current_string,
+                starting_whitespace,
+                end_whitespace=end_string,
+                line_number=line_number,
+                column_number=column_number,
+            )
+        )
+        return current_string, end_string
 
     # pylint: enable=too-many-arguments

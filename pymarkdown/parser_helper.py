@@ -398,7 +398,7 @@ class ParserHelper:
         return string_length - start_index
 
     @staticmethod
-    def detabify_string(source_string: str) -> str:
+    def detabify_string(source_string: str, additional_start_delta: int = 0) -> str:
         """
         Given a string that may have one or more tabstops in it, resolve the
         tabstops into more easily handled space characters.
@@ -420,7 +420,9 @@ class ParserHelper:
             whitespace_section = source_string[start_index:end_index]
             if start_index:
                 rebuilt_string += source_string[:start_index]
-            realized_start_index = current_start_index + start_index
+            realized_start_index = (
+                current_start_index + start_index + additional_start_delta
+            )
             whitespace_actual_length = ParserHelper.calculate_length(
                 whitespace_section, realized_start_index
             )

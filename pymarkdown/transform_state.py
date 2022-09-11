@@ -21,10 +21,11 @@ class TransformState:
             self.__is_in_code_block,
             self.__is_in_fenced_code_block,
             self.__is_in_html_block,
+            self.__is_in_setext_block,
             self.__is_in_loose_list,
             self.__actual_tokens,
             self.__actual_token_index,
-        ) = (False, False, False, True, actual_tokens, 0)
+        ) = (False, False, False, False, True, actual_tokens, 0)
         self.__add_trailing_text: Optional[str] = None
         self.__add_leading_text: Optional[str] = None
         self.__next_token: Optional[MarkdownToken] = None
@@ -44,6 +45,20 @@ class TransformState:
         Set whether the generator is currently inside of a code block.
         """
         self.__is_in_code_block = value
+
+    @property
+    def is_in_setext_block(self) -> bool:
+        """
+        Whether the generator is currently inside of a setext block.
+        """
+        return self.__is_in_setext_block
+
+    @is_in_setext_block.setter
+    def is_in_setext_block(self, value: bool) -> None:
+        """
+        Set whether the generator is currently inside of a setext block.
+        """
+        self.__is_in_setext_block = value
 
     @property
     def is_in_fenced_code_block(self) -> bool:
