@@ -132,7 +132,6 @@
 
 ## Features - Correctness - Whitespace and Punctuation
 
-- complete list of Unicode punctuation characters
 - Atx headings only consider space, not whitespace?
   - impact to MD018 to MD021?
 

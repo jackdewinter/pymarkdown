@@ -62,27 +62,29 @@ class EmphasisHelper:
         stack_bottom: int,
         openers_bottom: int,
     ) -> Tuple[SpecialTextMarkdownToken, Optional[SpecialTextMarkdownToken]]:
+
+        # POGGER.debug("delimiter_stack-->$",delimiter_stack)
         scan_index = current_position - 1
         found_opener: Optional[SpecialTextMarkdownToken] = None
         close_token = delimiter_stack[current_position]
-        POGGER.debug("potential closer-->$", current_position)
+        # POGGER.debug("potential closer-->$", current_position)
         while (
             scan_index >= 0
             and scan_index > stack_bottom
             and scan_index > openers_bottom
         ):
-            POGGER.debug("potential opener:$", scan_index)
+            # POGGER.debug("potential opener:$", scan_index)
             open_token = delimiter_stack[scan_index]
             if EmphasisHelper.__is_open_close_emphasis_valid(open_token, close_token):
                 found_opener = open_token
                 break
             scan_index -= 1
-            POGGER.debug(
-                "scan_index-->$>stack_bottom>$>openers_bottom>$>",
-                scan_index,
-                stack_bottom,
-                openers_bottom,
-            )
+            # POGGER.debug(
+            #     "scan_index-->$>stack_bottom>$>openers_bottom>$>",
+            #     scan_index,
+            #     stack_bottom,
+            #     openers_bottom,
+            # )
         return close_token, found_opener
 
     @staticmethod
@@ -432,15 +434,20 @@ class EmphasisHelper:
         # Rule 1
         if current_token.token_text[0] == EmphasisHelper.__simple_emphasis:
             is_opener = EmphasisHelper.__is_left_flanking_delimiter_run(current_token)
+            # POGGER.debug("is_opener (simple)=$", is_opener)
         else:
             assert current_token.token_text[0] == EmphasisHelper.__complex_emphasis
             is_opener = EmphasisHelper.__is_left_flanking_delimiter_run(current_token)
+            # POGGER.debug("is_opener (complex)=$", is_opener)
             if is_opener:
                 assert current_token.preceding_two is not None
                 is_right_flanking, preceding_two = (
                     EmphasisHelper.__is_right_flanking_delimiter_run(current_token),
-                    current_token.preceding_two.ljust(2, ParserHelper.space_character),
+                    current_token.preceding_two.rjust(2, ParserHelper.space_character),
                 )
+                # POGGER.debug("is_opener (is_right_flanking)=$", is_right_flanking)
+                # POGGER.debug("is_opener (preceding_two)=:$:", current_token.preceding_two)
+                # POGGER.debug("is_opener (preceding_two)=:$:", preceding_two)
                 is_opener = not is_right_flanking or (
                     is_right_flanking
                     and Constants.punctuation_characters.contains(preceding_two[-1])
@@ -455,6 +462,9 @@ class EmphasisHelper:
         Determine if these two tokens together make a valid open/close emphasis pair.
         """
 
+        # POGGER.debug("  __is_open_close_emphasis_valid")
+        # POGGER.debug("  open_token: token_text=:$:, is_active=$", open_token.token_text, open_token.is_active)
+        # POGGER.debug("  close_token: token_text=:$:, is_active=$", close_token.token_text, close_token.is_active)
         is_valid_opener = False
         if not (
             open_token.token_text
@@ -463,28 +473,31 @@ class EmphasisHelper:
             POGGER.debug("  delimiter mismatch")
         elif not open_token.is_active:
             POGGER.debug("  not active")
-        elif open_token.is_active and EmphasisHelper.__is_potential_opener(open_token):
-            is_valid_opener, is_closer_both = (
-                True,
-                EmphasisHelper.__is_potential_closer(close_token)
-                and EmphasisHelper.__is_potential_opener(close_token),
-            )
-            POGGER.debug("is_closer_both>>$", is_closer_both)
-            is_opener_both = EmphasisHelper.__is_potential_closer(
-                open_token
-            ) and EmphasisHelper.__is_potential_opener(open_token)
-            POGGER.debug("is_opener_both>>$", is_opener_both)
-            if is_closer_both or is_opener_both:
-                sum_repeat_count = close_token.repeat_count + open_token.repeat_count
-                POGGER.debug("sum_delims>>$", sum_repeat_count)
-                POGGER.debug("closer_delims>>$", close_token.repeat_count)
-                POGGER.debug("opener_delims>>$", open_token.repeat_count)
-
-                if sum_repeat_count % 3 == 0:
-                    is_valid_opener = (
-                        close_token.repeat_count % 3 == 0
-                        and open_token.repeat_count % 3 == 0
+        else:
+            is_valid_opener = EmphasisHelper.__is_potential_opener(open_token)
+            POGGER.debug("is_valid_opener>>$", is_valid_opener)
+            if is_valid_opener:
+                is_closer_both = EmphasisHelper.__is_potential_closer(
+                    close_token
+                ) and EmphasisHelper.__is_potential_opener(close_token)
+                # POGGER.debug("is_closer_both>>$", is_closer_both)
+                is_opener_both = EmphasisHelper.__is_potential_closer(
+                    open_token
+                ) and EmphasisHelper.__is_potential_opener(open_token)
+                # POGGER.debug("is_opener_both>>$", is_opener_both)
+                if is_closer_both or is_opener_both:
+                    sum_repeat_count = (
+                        close_token.repeat_count + open_token.repeat_count
                     )
+                    # POGGER.debug("sum_delims>>$", sum_repeat_count)
+                    # POGGER.debug("closer_delims>>$", close_token.repeat_count)
+                    # POGGER.debug("opener_delims>>$", open_token.repeat_count)
+
+                    if sum_repeat_count % 3 == 0:
+                        is_valid_opener = (
+                            close_token.repeat_count % 3 == 0
+                            and open_token.repeat_count % 3 == 0
+                        )
 
         return is_valid_opener
 
