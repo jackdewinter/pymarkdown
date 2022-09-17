@@ -130,11 +130,6 @@
 - disallowed raw html
 - autolinks extension
 
-## Features - Correctness - Whitespace and Punctuation
-
-- Atx headings only consider space, not whitespace?
-  - impact to MD018 to MD021?
-
 ## Features - Correctness
 
 - go back and see if can replace some of the end token fiddling with start_markdown_token

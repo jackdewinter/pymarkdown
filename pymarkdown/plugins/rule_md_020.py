@@ -35,7 +35,7 @@ class MyStartOfLineTokenParser(StartOfLineTokenParser):
         """
         Check for a pattern at the start of the line.
         """
-        if re.search(r"^\s{0,3}#{1,6}.*#+\s*$", combined_text):
+        if re.search(r"^[ ]{0,3}#{1,6}.*#+[ ]*$", combined_text):
             self.__owner.report_next_token_error(
                 context,
                 token,
