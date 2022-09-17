@@ -234,8 +234,8 @@ class MyStartOfLineTokenParser(StartOfLineTokenParser):
         already.  Hence, what is left is any other whitespace character which is not
         the space character, which should still trigger the rule.
         """
-        if re.search(r"^\s{0,3}#{1,6}\S", combined_text) and not re.search(
-            r"#\s*$", combined_text
+        if re.search(r"^[ ]{0,3}#{1,6}[^ ]", combined_text) and not re.search(
+            r"#[ ]*$", combined_text
         ):
             self.__owner.report_next_token_error(
                 context,
