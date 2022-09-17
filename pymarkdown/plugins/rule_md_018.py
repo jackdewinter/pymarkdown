@@ -90,7 +90,6 @@ class StartOfLineTokenParser:
     def __next_token_paragraph_non_text_inline(self, token: MarkdownToken) -> None:
         if token.is_inline_code_span:
             code_span_token = cast(InlineCodeSpanMarkdownToken, token)
-            self.__delayed_line = None
             self.__paragraph_index += (
                 code_span_token.leading_whitespace.count(ParserHelper.newline_character)
                 + code_span_token.span_text.count(ParserHelper.newline_character)
@@ -100,13 +99,11 @@ class StartOfLineTokenParser:
             )
         elif token.is_inline_raw_html:
             raw_html_token = cast(RawHtmlMarkdownToken, token)
-            self.__delayed_line = None
             self.__paragraph_index += raw_html_token.raw_tag.count(
                 ParserHelper.newline_character
             )
         elif token.is_inline_image or token.is_inline_link:
             link_token = cast(LinkStartMarkdownToken, token)
-            self.__delayed_line = None
             self.__paragraph_index += link_token.text_from_blocks.count(
                 ParserHelper.newline_character
             )
@@ -134,7 +131,6 @@ class StartOfLineTokenParser:
                 )
             self.__inside_of_link = token.is_inline_link
         elif token.is_inline_hard_break:
-            self.__delayed_line = None
             self.__paragraph_index += 1
             self.__first_line_after_hard_break = True
         else:
@@ -143,7 +139,8 @@ class StartOfLineTokenParser:
                 or token.is_inline_emphasis_end
                 or token.is_inline_autolink
             )
-            self.__delayed_line = None
+
+        self.__delayed_line = None
 
     def __next_token_paragraph_text_inline(
         self, token: TextMarkdownToken, context: PluginScanContext
