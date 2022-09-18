@@ -1010,6 +1010,7 @@ class ContainerBlockLeafProcessor:
         did_hit_indent_level_threshold = False
         POGGER.debug("token-stack:$:", parser_state.token_stack)
         for current_stack_index in range(1, len(parser_state.token_stack)):
+            POGGER.debug("<<current_indent_level:$", current_indent_level)
             (
                 current_indent_level,
                 non_last_block_index,
@@ -1030,6 +1031,7 @@ class ContainerBlockLeafProcessor:
                 had_non_block_token,
                 did_hit_indent_level_threshold,
             )
+            POGGER.debug("<<current_indent_level:$", current_indent_level)
             if not continue_in_loop:
                 break
         POGGER.debug("<<current_indent_level:$", current_indent_level)
@@ -1084,11 +1086,14 @@ class ContainerBlockLeafProcessor:
         valid_mark = non_last_block_index and non_last_block_index != (
             last_block_index - 1
         )
+        POGGER.debug("current_indent_level=:$:", current_indent_level)
         base_indent_level = (
             current_indent_level
             if valid_mark and line_number == matching_token.line_number
             else 0
         )
+        POGGER.debug("text_removed_by_container=:$:", text_removed_by_container)
+        POGGER.debug("base_indent_level=:$:", base_indent_level)
         proposed_indent_level = (
             len(text_removed_by_container) if text_removed_by_container else 0
         ) + base_indent_level

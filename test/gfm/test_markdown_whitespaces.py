@@ -30,7 +30,6 @@ def test_whitespaces_block_quotes_with_spaces():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_block_quotes_with_tabs():
     """
     Test case:  Block quotes preceeded by spaces and tabs.
@@ -40,9 +39,16 @@ def test_whitespaces_block_quotes_with_tabs():
     source_markdown = """ > block quote
  >\t> another block quote"""
     expected_tokens = [
-        "[atx(1,1):2:0:]",
-        "[text(1,4):\\\b\\this is a fun day: ]",
-        "[end-atx::]",
+        "[block-quote(1,2): : > \n > ]",
+        "[para(1,4):]",
+        "[text(1,4):block quote:]",
+        "[end-para:::True]",
+        "[block-quote(2,5):: >  > ]",
+        "[para(2,7):]",
+        "[text(2,7):another block quote:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <p>block quote</p>
@@ -52,7 +58,41 @@ def test_whitespaces_block_quotes_with_tabs():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_whitespaces_block_quotes_with_tabs_2():
+    """
+    Test case:  Block quotes preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """ > block quote
+ >\t> another block quote
+ >\t> same block quote"""
+    expected_tokens = [
+        "[block-quote(1,2): : > \n > ]",
+        "[para(1,4):]",
+        "[text(1,4):block quote:]",
+        "[end-para:::True]",
+        "[block-quote(2,5):: >  > \n >  > ]",
+        "[para(2,7):\n]",
+        "[text(2,7):another block quote\nsame block quote::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>block quote</p>
+<blockquote>
+<p>another block quote
+same block quote</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm

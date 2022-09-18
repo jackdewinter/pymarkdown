@@ -666,6 +666,23 @@ class BlockQuoteProcessor:
             current_count,
         )
 
+    @staticmethod
+    def __find_double_block_case_index(
+        parser_state: ParserState, current_count: int
+    ) -> int:
+        count_to_consume, stack_index, final_stack_index = current_count, 0, 0
+        while not final_stack_index and stack_index < len(parser_state.token_stack):
+            stack_token = parser_state.token_stack[stack_index]
+            POGGER.debug("stack>:$:$:", stack_index, stack_token)
+            if stack_token.is_block_quote:
+                count_to_consume -= 1
+                if not count_to_consume:
+                    final_stack_index = stack_index
+            stack_index += 1
+        assert not count_to_consume
+        assert final_stack_index
+        return final_stack_index
+
     # pylint: enable=too-many-arguments
     @staticmethod
     def __is_special_double_block_case(
@@ -679,17 +696,9 @@ class BlockQuoteProcessor:
         POGGER.debug("not block>$ of :$:", start_index, adjusted_line)
         POGGER.debug("not block>:$:", adjusted_line[start_index:])
         if current_count < stack_count:
-            count_to_consume, stack_index, final_stack_index = current_count, 0, 0
-            while not final_stack_index and stack_index < len(parser_state.token_stack):
-                stack_token = parser_state.token_stack[stack_index]
-                POGGER.debug("stack>:$:$:", stack_index, stack_token)
-                if stack_token.is_block_quote:
-                    count_to_consume -= 1
-                    if not count_to_consume:
-                        final_stack_index = stack_index
-                stack_index += 1
-            assert not count_to_consume
-            assert final_stack_index
+            final_stack_index = BlockQuoteProcessor.__find_double_block_case_index(
+                parser_state, current_count
+            )
             POGGER.debug(
                 ">>stack>:$:$:",
                 final_stack_index,
@@ -1080,11 +1089,24 @@ class BlockQuoteProcessor:
             adj_leading_spaces = block_quote_token.leading_spaces
             assert adj_leading_spaces is not None
             POGGER.debug("__hbqs>>count_of_actual_starts>>$", count_of_actual_starts)
-            POGGER.debug("__hbqs>>adj_leading_spaces>>:$:<", adj_leading_spaces)
             POGGER.debug(
-                "__hbqs>>text_removed_by_container>>:$:<",
+                "__hbqs>>adj_leading_spaces>>:$:$:<",
+                len(adj_leading_spaces),
+                adj_leading_spaces,
+            )
+            POGGER.debug(
+                "__hbqs>>adjusted_removed_text>>:$:$:<",
+                len(adjusted_removed_text),
+                adjusted_removed_text,
+            )
+            POGGER.debug(
+                "__hbqs>>text_removed_by_container>>:$:$:<",
+                len(text_removed_by_container),
                 text_removed_by_container,
             )
+            last_line_index = adj_leading_spaces.rfind("\n")
+            if last_line_index != -1:
+                adj_leading_spaces = adj_leading_spaces[last_line_index + 1 :]
 
             delta = len(text_removed_by_container) - len(
                 adj_leading_spaces + adjusted_removed_text
@@ -1157,29 +1179,53 @@ class BlockQuoteProcessor:
                 assert current_leading_spaces.startswith(
                     original_block_quote_token.leading_spaces
                 )
-                POGGER.debug("original_removed_text>>:$:", original_removed_text)
-                POGGER.debug("adjusted_removed_text>>:$:", adjusted_removed_text)
-                if len(current_leading_spaces) > len(
-                    original_block_quote_token.leading_spaces
-                ):
-                    current_leading_spaces = current_leading_spaces[
-                        len(original_block_quote_token.leading_spaces) :
-                    ]
-                    POGGER.debug("current_leading_spaces>>:$:", current_leading_spaces)
-                    assert current_leading_spaces[0] == "\n"
-                    current_leading_spaces = current_leading_spaces[1:]
-                    POGGER.debug(
-                        "current_leading_spaces>>:$:($)",
-                        current_leading_spaces,
-                        len(current_leading_spaces),
-                    )
-                    special_case = True
-                    if not extra_consumed_whitespace:
-                        extra_consumed_whitespace = 0
-                    adjusted_removed_text = original_removed_text[
-                        len(current_leading_spaces) - extra_consumed_whitespace :
-                    ]
+                (
+                    special_case,
+                    adjusted_removed_text,
+                ) = BlockQuoteProcessor.__adjust_2_fix_leading_spaces(
+                    special_case,
+                    adjusted_removed_text,
+                    original_removed_text,
+                    original_block_quote_token,
+                    current_leading_spaces,
+                    extra_consumed_whitespace,
+                )
         return special_case, adjusted_removed_text
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __adjust_2_fix_leading_spaces(
+        special_case: bool,
+        adjusted_removed_text: str,
+        original_removed_text: str,
+        original_block_quote_token: BlockQuoteMarkdownToken,
+        current_leading_spaces: str,
+        extra_consumed_whitespace: Optional[int],
+    ) -> Tuple[bool, str]:
+        POGGER.debug("original_removed_text>>:$:", original_removed_text)
+        POGGER.debug("adjusted_removed_text>>:$:", adjusted_removed_text)
+        assert original_block_quote_token.leading_spaces is not None
+        if len(current_leading_spaces) > len(original_block_quote_token.leading_spaces):
+            current_leading_spaces = current_leading_spaces[
+                len(original_block_quote_token.leading_spaces) :
+            ]
+            POGGER.debug("current_leading_spaces>>:$:", current_leading_spaces)
+            assert current_leading_spaces[0] == "\n"
+            current_leading_spaces = current_leading_spaces[1:]
+            POGGER.debug(
+                "current_leading_spaces>>:$:($)",
+                current_leading_spaces,
+                len(current_leading_spaces),
+            )
+            special_case = True
+            if not extra_consumed_whitespace:
+                extra_consumed_whitespace = 0
+            adjusted_removed_text = original_removed_text[
+                len(current_leading_spaces) - extra_consumed_whitespace :
+            ]
+        return special_case, adjusted_removed_text
+
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __block_quote_start_adjust(
@@ -1263,6 +1309,7 @@ class BlockQuoteProcessor:
 
         POGGER.debug("__hbqs>>adjusted_removed_text>>:$:<", adjusted_removed_text)
         POGGER.debug("token_stack--$", parser_state.token_stack)
+        POGGER.debug("token_document--$", parser_state.token_document)
         POGGER.debug("dbqlsa>>found_bq_stack_token>>$", found_bq_stack_token)
         POGGER.debug("dbqlsa>>bq>>$", block_quote_token)
 
