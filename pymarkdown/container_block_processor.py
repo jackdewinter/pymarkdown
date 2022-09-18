@@ -72,6 +72,11 @@ class ContainerBlockProcessor:
             and parser_state.token_stack[1].is_list
         )
 
+        POGGER.debug(
+            "position_marker>:$:$:",
+            position_marker.index_number,
+            position_marker.text_to_parse,
+        )
         return (
             position_marker,
             False,
@@ -1841,6 +1846,12 @@ class ContainerBlockProcessor:
         )
         new_container_depth = grab_bag.container_depth + 1
 
+        POGGER.debug(
+            "position_marker>:$:$:",
+            position_marker.index_number,
+            position_marker.text_to_parse,
+        )
+        POGGER.debug("adj_block>:$:", adj_block)
         POGGER.debug("\n\nRECURSING\n")
         # POGGER.debug("parser_state.token_document>$", parser_state.token_document)
         previous_document_length = len(parser_state.token_document)

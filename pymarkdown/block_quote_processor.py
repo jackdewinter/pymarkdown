@@ -1080,11 +1080,24 @@ class BlockQuoteProcessor:
             adj_leading_spaces = block_quote_token.leading_spaces
             assert adj_leading_spaces is not None
             POGGER.debug("__hbqs>>count_of_actual_starts>>$", count_of_actual_starts)
-            POGGER.debug("__hbqs>>adj_leading_spaces>>:$:<", adj_leading_spaces)
             POGGER.debug(
-                "__hbqs>>text_removed_by_container>>:$:<",
+                "__hbqs>>adj_leading_spaces>>:$:$:<",
+                len(adj_leading_spaces),
+                adj_leading_spaces,
+            )
+            POGGER.debug(
+                "__hbqs>>adjusted_removed_text>>:$:$:<",
+                len(adjusted_removed_text),
+                adjusted_removed_text,
+            )
+            POGGER.debug(
+                "__hbqs>>text_removed_by_container>>:$:$:<",
+                len(text_removed_by_container),
                 text_removed_by_container,
             )
+            last_line_index = adj_leading_spaces.rfind("\n")
+            if last_line_index != -1:
+                adj_leading_spaces = adj_leading_spaces[last_line_index + 1 :]
 
             delta = len(text_removed_by_container) - len(
                 adj_leading_spaces + adjusted_removed_text
@@ -1263,6 +1276,7 @@ class BlockQuoteProcessor:
 
         POGGER.debug("__hbqs>>adjusted_removed_text>>:$:<", adjusted_removed_text)
         POGGER.debug("token_stack--$", parser_state.token_stack)
+        POGGER.debug("token_document--$", parser_state.token_document)
         POGGER.debug("dbqlsa>>found_bq_stack_token>>$", found_bq_stack_token)
         POGGER.debug("dbqlsa>>bq>>$", block_quote_token)
 
