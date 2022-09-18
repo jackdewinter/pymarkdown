@@ -424,41 +424,21 @@ class ContainerBlockProcessor:
         #     container_depth,
         #     len(parser_state.token_stack) - 1,
         # )
+        # POGGER.debug("token-stack:$", parser_state.token_stack)
         # POGGER.debug("text_to_parse=:$:", position_marker.text_to_parse)
         # POGGER.debug("index_number=:$:", position_marker.index_number)
         # POGGER.debug("index_indent=:$:", position_marker.index_indent)
-
-        need_trailing_indent_processing = (
-            grab_bag.container_depth >= len(parser_state.token_stack) - 1
-            and position_marker.index_number == -1
-        )
-        # POGGER.debug(
-        #     "need_trailing_indent_processing($) = container_depth($) >= len(token)-1($) and index_number($) == -1",
-        #     need_trailing_indent_processing,
-        #     grab_bag.container_depth,
-        #     len(parser_state.token_stack) - 1,
-        #     position_marker.index_number,
-        # )
-        # POGGER.debug("token-stack:$", parser_state.token_stack)
         assert grab_bag.extracted_whitespace is not None
         need_leading_whitespace_processing = (
             grab_bag.container_depth < (len(parser_state.token_stack) - 1)
             and len(grab_bag.extracted_whitespace) >= 4
-            and not (
-                parser_state.token_stack[-1].is_html_block
-                or parser_state.token_stack[-1].is_fenced_code_block
-            )
+            and not parser_state.token_stack[-1].is_html_block
+            and not parser_state.token_stack[-1].is_fenced_code_block
         )
-        # POGGER.debug(
-        #     "need_leading_whitespace_processing($) = "
-        #     + "not is_para_continue($) and container_depth($) < (len(parser_state.token_stack) - 1)($)"
-        #     + " and len(grab_bag.extracted_whitespace)($) >= 4",
-        #     need_leading_whitespace_processing,
-        #     is_para_continue,
-        #     grab_bag.container_depth,
-        #     len(parser_state.token_stack) - 1,
-        #     len(grab_bag.extracted_whitespace),
-        # )
+        need_trailing_indent_processing = (
+            grab_bag.container_depth >= len(parser_state.token_stack) - 1
+            and position_marker.index_number == -1
+        )
         if need_trailing_indent_processing:
             POGGER.debug(">>trailing_indent_processing")
             ContainerBlockProcessor.__handle_trailing_indent_with_block_quote(
