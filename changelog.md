@@ -14,6 +14,83 @@
 
 - None
 
+## Version 0.9.8 - Date: 2022-09-20
+
+This was a point release.  Issues that were addressed:
+
+- fixed issues with block quotes and other containers
+- added support for file extensions other than .md
+- added support for linting markdown from standard input
+- cleared up issue with using proper path separators on Windows
+- added and fixed tests for proper handling of whitespaces
+- added proper support for Unicode whitespace and Unicode punctuation around emphasis elements
+- updated all Python dependencies to their current versions
+
+NOTE for Windows users:
+
+Prior to this release, when executing PyMarkdown against a file on a Windows
+machine, any paths were reported using the Posix format.  This has been
+corrected as of the 0.9.8 release, with Linux and MacOs reporting paths
+in Posix format and Windows reporting paths in Windows format.  If you have
+scripts that invoke PyMarkdown and interprets any returned paths, please
+examine those scripts to see if they need to be changed.
+
+### Added
+
+- [Issue 407](https://github.com/jackdewinter/pymarkdown/issues/407)
+  - added support for other file extensions
+- [Issue 413](https://github.com/jackdewinter/pymarkdown/issues/413)
+  - added more variants for nested-three-block-block tests
+- [Issue 441](https://github.com/jackdewinter/pymarkdown/issues/441)
+  - added support for linting markdown from standard input
+- [Issue 456](https://github.com/jackdewinter/pymarkdown/issues/456)
+  - added lots of new tests for different forms of whitespace with each element
+- [Issue 480](https://github.com/jackdewinter/pymarkdown/issues/480)
+  - added proper support for Unicode whitespace and Unicode punctuation around emphasis elements
+
+### Changed
+
+- [Issue 168](https://github.com/jackdewinter/pymarkdown/issues/168)
+  - moved paragraph handling code to own module
+- [Issue 330](https://github.com/jackdewinter/pymarkdown/issues/330)
+  - cleared up issue with using proper path separators on Windows
+- [Issue 408](https://github.com/jackdewinter/pymarkdown/issues/408)
+  - split tests for blocks into more discrete files
+- [Issue 450](https://github.com/jackdewinter/pymarkdown/issues/450)
+  - enabled proper tests for pragmas
+- [Issue 454](https://github.com/jackdewinter/pymarkdown/issues/454)
+  - fixed special HTML sequences that were detected by Md033
+
+### Fixed
+
+- [Issue 301](https://github.com/jackdewinter/pymarkdown/issues/301)
+  - fixed issue where was checking indent_level instead of column_number
+  - clarified documentation
+- [Issue 410](https://github.com/jackdewinter/pymarkdown/issues/410)
+  - not putting Markdown back together properly
+- [Issue 419](https://github.com/jackdewinter/pymarkdown/issues/419)
+  - fixed parsing issue with trailing spaces in empty list items
+- [Issue 420](https://github.com/jackdewinter/pymarkdown/issues/420)
+  - fix improper parsing with nested blocks quotes
+- [Issue 421](https://github.com/jackdewinter/pymarkdown/issues/421)
+  - Markdown was not put back together properly with weird Block Quote/List combinations
+- [Issue 460](https://github.com/jackdewinter/pymarkdown/issues/460)
+  - fixed up mismatching output with tabs
+- [Issue 461](https://github.com/jackdewinter/pymarkdown/issues/461)
+  - generated HTML not removing whitespace before and after paragraphs
+- [Issue 465](https://github.com/jackdewinter/pymarkdown/issues/465)
+  - not properly handling whitespace before fenced block info string
+- [Issue 468](https://github.com/jackdewinter/pymarkdown/issues/468)
+  - closing fence block allowed tabs after the fence characters
+- [Issue 471](https://github.com/jackdewinter/pymarkdown/issues/471)
+  - merging of end of line spaces not being handled properly
+- [Issue 476](https://github.com/jackdewinter/pymarkdown/issues/476)
+  - tabs within code spans were triggered stripping of whitespace
+- [Issue 483](https://github.com/jackdewinter/pymarkdown/issues/483)
+  - fixed RegEx within Md018 and Md021 to properly reflect spaces, not whitespaces
+- [Issue 486](https://github.com/jackdewinter/pymarkdown/issues/486)
+  - fixed problem with tabs causing weird parsing with a new block quote
+
 ## Version 0.9.7 - Date: 2022-07-04
 
 ### Added
