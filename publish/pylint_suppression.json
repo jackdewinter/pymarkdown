@@ -2,6 +2,9 @@
     "disables-by-file": {
         "pymarkdown/__init__.py": {},
         "pymarkdown/__main__.py": {},
+        "pymarkdown/application_file_scanner.py": {
+            "too-many-arguments": 1
+        },
         "pymarkdown/bad_tokenization_error.py": {},
         "pymarkdown/block_quote_data.py": {},
         "pymarkdown/block_quote_processor.py": {
@@ -235,7 +238,7 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 127,
+        "too-many-arguments": 128,
         "too-many-locals": 38,
         "too-few-public-methods": 6,
         "chained-comparison": 1,

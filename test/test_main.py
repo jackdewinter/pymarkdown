@@ -42,7 +42,7 @@ positional arguments:
     plugins             plugin commands
     extensions          extension commands
     scan                scan the Markdown files in the specified paths
-    scan-stdin          scan the standard input as a Markdown files
+    scan-stdin          scan the standard input as a Markdown file
     version             version of the application
 
 optional arguments:
@@ -101,7 +101,7 @@ positional arguments:
     plugins             plugin commands
     extensions          extension commands
     scan                scan the Markdown files in the specified paths
-    scan-stdin          scan the standard input as a Markdown files
+    scan-stdin          scan the standard input as a Markdown file
     version             version of the application
 
 optional arguments:
@@ -160,7 +160,7 @@ positional arguments:
     plugins             plugin commands
     extensions          extension commands
     scan                scan the Markdown files in the specified paths
-    scan-stdin          scan the standard input as a Markdown files
+    scan-stdin          scan the standard input as a Markdown file
     version             version of the application
 
 optional arguments:
@@ -218,7 +218,7 @@ positional arguments:
     plugins             plugin commands
     extensions          extension commands
     scan                scan the Markdown files in the specified paths
-    scan-stdin          scan the standard input as a Markdown files
+    scan-stdin          scan the standard input as a Markdown file
     version             version of the application
 
 optional arguments:
@@ -1569,15 +1569,14 @@ def test_markdown_with_multiple_errors_reported():
         "md020",
         "single_paragraph_with_whitespace_at_end.md",
     )
+    expected_return_code = 1
     supplied_arguments = [
         "scan",
         source_path,
     ]
 
-    expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
+        f"{source_path}:1:1: MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
         + f"{source_path}:1:12: "
         + "MD010: Hard tabs "
@@ -1594,6 +1593,7 @@ def test_markdown_with_multiple_errors_reported():
         + "MD010: Hard tabs "
         + "[Column: 14] (no-hard-tabs)"
     )
+
     expected_error = ""
 
     # Act
