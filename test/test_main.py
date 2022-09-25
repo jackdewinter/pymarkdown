@@ -42,7 +42,7 @@ positional arguments:
     plugins             plugin commands
     extensions          extension commands
     scan                scan the Markdown files in the specified paths
-    scan-stdin          scan the standard input as a Markdown files
+    scan-stdin          scan the standard input as a Markdown file
     version             version of the application
 
 optional arguments:
@@ -101,7 +101,7 @@ positional arguments:
     plugins             plugin commands
     extensions          extension commands
     scan                scan the Markdown files in the specified paths
-    scan-stdin          scan the standard input as a Markdown files
+    scan-stdin          scan the standard input as a Markdown file
     version             version of the application
 
 optional arguments:
@@ -160,7 +160,7 @@ positional arguments:
     plugins             plugin commands
     extensions          extension commands
     scan                scan the Markdown files in the specified paths
-    scan-stdin          scan the standard input as a Markdown files
+    scan-stdin          scan the standard input as a Markdown file
     version             version of the application
 
 optional arguments:
@@ -218,7 +218,7 @@ positional arguments:
     plugins             plugin commands
     extensions          extension commands
     scan                scan the Markdown files in the specified paths
-    scan-stdin          scan the standard input as a Markdown files
+    scan-stdin          scan the standard input as a Markdown file
     version             version of the application
 
 optional arguments:

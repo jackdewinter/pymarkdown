@@ -2,24 +2,23 @@
 Module to provide for a simple implementation of a title case algorithm.
 """
 import argparse
-import glob
 import logging
 import os
 import runpy
 import sys
 import tempfile
 import traceback
-from typing import List, Optional, Set, Tuple, cast
+from typing import List, Optional, cast
 
 from application_properties import (
     ApplicationProperties,
     ApplicationPropertiesJsonLoader,
 )
 
+from pymarkdown.application_file_scanner import ApplicationFileScanner
 from pymarkdown.bad_tokenization_error import BadTokenizationError
 from pymarkdown.extension_manager.extension_manager import ExtensionManager
 from pymarkdown.extensions.pragma_token import PragmaToken
-from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.plugin_manager.bad_plugin_error import BadPluginError
 from pymarkdown.plugin_manager.plugin_manager import PluginManager
@@ -77,29 +76,6 @@ class PyMarkdownLint:
         if argument in PyMarkdownLint.available_log_maps:
             return argument
         raise ValueError(f"Value '{argument}' is not a valid log level.")
-
-    @staticmethod
-    def alternate_extension_type(argument: str) -> str:
-        """
-        Function to help argparse limit the valid log levels.
-        """
-        split_argument = argument.split(",")
-        for next_split in split_argument:
-            if not next_split.startswith("."):
-                raise argparse.ArgumentTypeError(
-                    f"Extension '{next_split}' must start with a period."
-                )
-            clean_split = next_split[1:]
-            if not clean_split:
-                raise argparse.ArgumentTypeError(
-                    f"Extension '{next_split}' must have at least one character after the period."
-                )
-            for clean_split_char in clean_split:
-                if not clean_split_char.isalnum():
-                    raise argparse.ArgumentTypeError(
-                        f"Extension '{next_split}' must only contain alphanumeric characters after the period."
-                    )
-        return argument.lower()
 
     def __parse_arguments(self) -> argparse.Namespace:
         parser = argparse.ArgumentParser(description="Lint any found Markdown files.")
@@ -205,43 +181,13 @@ class PyMarkdownLint:
             PyMarkdownLint.__normal_scan_subcommand,
             help="scan the Markdown files in the specified paths",
         )
-        subparsers.add_parser(
-            PyMarkdownLint.__stdin_scan_subcommand,
-            help="scan the standard input as a Markdown files",
+        ApplicationFileScanner.add_default_command_line_arguments(
+            new_sub_parser, ".md", "Markdown"
         )
 
-        new_sub_parser.add_argument(
-            "-l",
-            "--list-files",
-            dest="list_files",
-            action="store_true",
-            default=False,
-            help="list the markdown files found and exit",
-        )
-        new_sub_parser.add_argument(
-            "-r",
-            "--recurse",
-            dest="recurse_directories",
-            action="store_true",
-            default=False,
-            help="recursively scan directories",
-        )
-        new_sub_parser.add_argument(
-            "-ae",
-            "--alternate-extensions",
-            dest="alternate_extensions",
-            action="store",
-            default=".md",
-            type=PyMarkdownLint.alternate_extension_type,
-            help="provider an alternate set of file extensions to scan",
-        )
-        new_sub_parser.add_argument(
-            "paths",
-            metavar="path",
-            type=str,
-            nargs="+",
-            default=None,
-            help="one or more paths to scan for eligible Markdown files",
+        subparsers.add_parser(
+            PyMarkdownLint.__stdin_scan_subcommand,
+            help="scan the standard input as a Markdown file",
         )
 
         subparsers.add_parser("version", help="version of the application")
@@ -255,18 +201,6 @@ class PyMarkdownLint:
             print(f"{self.__version_number}")
             sys.exit(0)
         return parse_arguments
-
-    @classmethod
-    def __is_file_eligible_to_scan(
-        cls, path_to_test: str, eligible_extensions: List[str]
-    ) -> bool:
-        """
-        Determine if the presented path is one that we want to scan.
-        """
-        return os.path.isfile(path_to_test) and any(
-            path_to_test.endswith(next_extension)
-            for next_extension in eligible_extensions
-        )
 
     def __scan_file(
         self, args: argparse.Namespace, next_file: str, next_file_name: str
@@ -314,125 +248,6 @@ class PyMarkdownLint:
         except Exception:
             context.report_on_triggered_rules()
             raise
-
-    def __process_next_path(
-        self,
-        next_path: str,
-        files_to_parse: Set[str],
-        recurse_directories: bool,
-        eligible_extensions: List[str],
-    ) -> bool:
-
-        did_find_any = False
-        POGGER.info("Determining files to scan for path '$'.", next_path)
-        if not os.path.exists(next_path):
-            print(
-                f"Provided path '{next_path}' does not exist.",
-                file=sys.stderr,
-            )
-            POGGER.debug("Provided path '$' does not exist.", next_path)
-        elif os.path.isdir(next_path):
-            self.__process_next_path_directory(
-                next_path, files_to_parse, recurse_directories, eligible_extensions
-            )
-            did_find_any = True
-        elif self.__is_file_eligible_to_scan(next_path, eligible_extensions):
-            POGGER.debug(
-                "Provided path '$' is a valid file. Adding.",
-                next_path,
-            )
-            normalized_path = (
-                next_path.replace(os.altsep, os.sep) if os.altsep else next_path
-            )
-            files_to_parse.add(normalized_path)
-            did_find_any = True
-        else:
-            POGGER.debug(
-                "Provided path '$' is not a valid file. Skipping.",
-                next_path,
-            )
-            print(
-                f"Provided file path '{next_path}' is not a valid file. Skipping.",
-                file=sys.stderr,
-            )
-        return did_find_any
-
-    def __process_next_path_directory(
-        self,
-        next_path: str,
-        files_to_parse: Set[str],
-        recurse_directories: bool,
-        eligible_extensions: List[str],
-    ) -> None:
-        POGGER.debug("Provided path '$' is a directory. Walking directory.", next_path)
-        normalized_next_path = (
-            next_path.replace(os.altsep, os.sep) if os.altsep else next_path
-        )
-        for root, _, files in os.walk(normalized_next_path):
-            normalized_root = root.replace(os.altsep, os.sep) if os.altsep else root
-            if not recurse_directories and normalized_root != normalized_next_path:
-                continue
-            normalized_root = (
-                normalized_root[:-1]
-                if normalized_root.endswith(os.sep)
-                else normalized_root
-            )
-            for file in files:
-                rooted_file_path = f"{normalized_root}{os.sep}{file}"
-                if self.__is_file_eligible_to_scan(
-                    rooted_file_path, eligible_extensions
-                ):
-                    files_to_parse.add(rooted_file_path)
-
-    def __determine_files_to_scan(
-        self,
-        eligible_paths: List[str],
-        recurse_directories: bool,
-        eligible_extensions: str,
-    ) -> Tuple[List[str], bool]:
-
-        split_eligible_extensions: List[str] = eligible_extensions.split(",")
-
-        did_error_scanning_files = False
-        files_to_parse: Set[str] = set()
-        for next_path in eligible_paths:
-            if "*" in next_path or "?" in next_path:
-                globbed_paths = glob.glob(next_path)
-                if not globbed_paths:
-                    print(
-                        f"Provided glob path '{next_path}' did not match any files.",
-                        file=sys.stderr,
-                    )
-                    did_error_scanning_files = True
-                    break
-                for next_globbed_path in globbed_paths:
-                    self.__process_next_path(
-                        next_globbed_path,
-                        files_to_parse,
-                        recurse_directories,
-                        split_eligible_extensions,
-                    )
-            elif not self.__process_next_path(
-                next_path,
-                files_to_parse,
-                recurse_directories,
-                split_eligible_extensions,
-            ):
-                did_error_scanning_files = True
-                break
-
-        sorted_files_to_parse = sorted(files_to_parse)
-        POGGER.info("Number of files found: $", len(sorted_files_to_parse))
-        return sorted_files_to_parse, did_error_scanning_files
-
-    @classmethod
-    def __handle_list_files(cls, files_to_scan: List[str]) -> int:
-
-        if files_to_scan:
-            print(ParserHelper.newline_character.join(files_to_scan))
-            return 0
-        print("No matching files found.", file=sys.stderr)
-        return 1
 
     # pylint: disable=broad-except
     def __apply_configuration_to_plugins(self) -> None:
@@ -605,13 +420,6 @@ class PyMarkdownLint:
         if args.primary_subparser == ExtensionManager.argparse_subparser_name():
             sys.exit(self.__extensions.handle_argparse_subparser(args))
 
-    def __handle_main_list_files(
-        self, args: argparse.Namespace, files_to_scan: List[str]
-    ) -> None:
-        if args.list_files:
-            POGGER.info("Sending list of files that would have been scanned to stdout.")
-            sys.exit(self.__handle_list_files(files_to_scan))
-
     def __scan_specific_file(
         self, args: argparse.Namespace, next_file: str, next_file_name: str
     ) -> None:
@@ -655,7 +463,6 @@ class PyMarkdownLint:
                 except IOError as this_exception:
                     self.__handle_scan_error("stdin", this_exception)
         else:
-            self.__handle_main_list_files(args, files_to_scan)
             for next_file in files_to_scan:
                 self.__scan_specific_file(args, next_file, next_file)
 
@@ -684,9 +491,7 @@ class PyMarkdownLint:
                 (
                     files_to_scan,
                     did_error_scanning_files,
-                ) = self.__determine_files_to_scan(
-                    args.paths, args.recurse_directories, args.alternate_extensions
-                )
+                ) = ApplicationFileScanner.determine_files_to_scan_with_args(args)
             if did_error_scanning_files:
                 total_error_count = 1
             else:

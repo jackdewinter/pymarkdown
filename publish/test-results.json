@@ -1323,6 +1323,14 @@
             "elapsedTimeInMilliseconds": 0
         },
         {
+            "name": "test.test_application_file_scanner",
+            "totalTests": 7,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
             "name": "test.test_listfiles",
             "totalTests": 13,
             "failedTests": 0,

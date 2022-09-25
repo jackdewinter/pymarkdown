@@ -22,10 +22,11 @@ positional arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
-  -l, --list-files      list the markdown files found and exit
-  -r, --recurse         recursively scan directories
+  -l, --list-files      list the eligible Markdown files and exit
+  -r, --recurse         recursively scan directories for files
   -ae ALTERNATE_EXTENSIONS, --alternate-extensions ALTERNATE_EXTENSIONS
-                        provider an alternate set of file extensions to scan
+                        provide an alternate set of file extensions to scan
+                        for
 """
     expected_error = ""
 
@@ -74,7 +75,7 @@ def test_markdown_with_dash_l_on_bad_path():
     expected_return_code = 1
     expected_output = ""
     expected_error = """Provided path 'my-bad-path' does not exist.
-"""
+No matching files found."""
 
     # Act
     execute_results = scanner.invoke_main(
@@ -183,7 +184,7 @@ def test_markdown_with_dash_l_on_non_md_file():
     expected_return_code = 1
     expected_output = ""
     expected_error = """Provided file path '{source_path}' is not a valid file. Skipping.
-""".replace(
+No matching files found.""".replace(
         "{source_path}", source_path
     )
 
@@ -247,7 +248,7 @@ def test_markdown_with_dash_l_on_mixed_files():
     expected_return_code = 1
     expected_output = """"""
     expected_error = """Provided file path '{nonexisting_source_path}' is not a valid file. Skipping.
-""".replace(
+No matching files found.""".replace(
         "{nonexisting_source_path}", nonexisting_source_path
     )
 
@@ -310,7 +311,7 @@ def test_markdown_with_dash_l_on_non_matching_globbed_files():
 
     expected_return_code = 1
     expected_output = """"""
-    expected_error = f"Provided glob path '{source_path}' did not match any files."
+    expected_error = f"Provided glob path '{source_path}' did not match any files.\nNo matching files found."
 
     # Act
     execute_results = scanner.invoke_main(
