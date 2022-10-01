@@ -5,6 +5,7 @@
         "pymarkdown/application_file_scanner.py": {
             "too-many-arguments": 1
         },
+        "pymarkdown/application_logging.py": {},
         "pymarkdown/bad_tokenization_error.py": {},
         "pymarkdown/block_quote_data.py": {},
         "pymarkdown/block_quote_processor.py": {
@@ -110,6 +111,7 @@
             "too-many-locals": 8
         },
         "pymarkdown/main.py": {
+            "too-few-public-methods": 1,
             "broad-except": 2
         },
         "pymarkdown/markdown_token.py": {
@@ -240,7 +242,7 @@
     "disables-by-name": {
         "too-many-arguments": 128,
         "too-many-locals": 38,
-        "too-few-public-methods": 6,
+        "too-few-public-methods": 7,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 1,
         "too-many-statements": 1,

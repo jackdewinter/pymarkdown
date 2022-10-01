@@ -168,6 +168,8 @@ def test_pragmas_05():
         "atx_heading_with_multiple_spaces_disable_line_by_id.md",
     )
     supplied_arguments = [
+        # "--stack-trace",
+        # "--log-level", "DEBUG",
         "scan",
         source_path,
     ]

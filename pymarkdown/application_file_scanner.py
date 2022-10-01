@@ -174,7 +174,7 @@ class ApplicationFileScanner:
         """
         Add a set of default command line arguments to an argparse styled command line.
         """
-        if argument_error := ApplicationFileScanner.is_valid_extension(
+        if argument_error := ApplicationFileScanner.__is_valid_extension(
             extension_to_look_for
         ):
             raise argparse.ArgumentTypeError(
@@ -213,7 +213,7 @@ class ApplicationFileScanner:
                 dest="alternate_extensions",
                 action="store",
                 default=extension_to_look_for,
-                type=ApplicationFileScanner.alternate_extension_type,
+                type=ApplicationFileScanner.__is_valid_comma_separated_extension_list,
                 help="provide an alternate set of file extensions to scan for",
             )
 
@@ -229,7 +229,7 @@ class ApplicationFileScanner:
     # pylint: enable=too-many-arguments
 
     @staticmethod
-    def is_valid_extension(possible_extension: str) -> Optional[str]:
+    def __is_valid_extension(possible_extension: str) -> Optional[str]:
         """
         Determine if the parameter is a string that has the form of a valid extension.
         """
@@ -249,13 +249,13 @@ class ApplicationFileScanner:
         )
 
     @staticmethod
-    def alternate_extension_type(argument: str) -> str:
+    def __is_valid_comma_separated_extension_list(argument: str) -> str:
         """
         Function to help argparse limit the valid log levels.
         """
         split_argument = argument.split(",")
         for next_split in split_argument:
-            if error_string := ApplicationFileScanner.is_valid_extension(next_split):
+            if error_string := ApplicationFileScanner.__is_valid_extension(next_split):
                 raise argparse.ArgumentTypeError(error_string)
         return argument.lower()
 

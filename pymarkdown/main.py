@@ -16,6 +16,7 @@ from application_properties import (
 )
 
 from pymarkdown.application_file_scanner import ApplicationFileScanner
+from pymarkdown.application_logging import ApplicationLogging
 from pymarkdown.bad_tokenization_error import BadTokenizationError
 from pymarkdown.extension_manager.extension_manager import ExtensionManager
 from pymarkdown.extensions.pragma_token import PragmaToken
@@ -29,32 +30,25 @@ POGGER = ParserLogger(logging.getLogger(__name__))
 
 LOGGER = logging.getLogger(__name__)
 
+# pylint: disable=too-few-public-methods
+
 
 class PyMarkdownLint:
     """
     Class to provide for a simple implementation of a title case algorithm.
     """
 
-    available_log_maps = {
-        "CRITICAL": logging.CRITICAL,
-        "ERROR": logging.ERROR,
-        "WARNING": logging.WARNING,
-        "INFO": logging.INFO,
-        "DEBUG": logging.DEBUG,
-    }
-
     __normal_scan_subcommand = "scan"
     __stdin_scan_subcommand = "scan-stdin"
 
     def __init__(self) -> None:
-        (
-            self.__version_number,
-            self.__show_stack_trace,
-            self.default_log_level,
-        ) = (PyMarkdownLint.__get_semantic_version(), False, "CRITICAL")
-        self.__tokenizer: Optional[TokenizedMarkdown] = None
+        self.__version_number = PyMarkdownLint.__get_semantic_version()
 
         self.__properties: ApplicationProperties = ApplicationProperties()
+        self.__logging = ApplicationLogging(
+            self.__properties, default_log_level="CRITICAL"
+        )
+        self.__tokenizer: Optional[TokenizedMarkdown] = None
         self.__plugins: PluginManager = PluginManager()
         self.__extensions: ExtensionManager = ExtensionManager()
 
@@ -67,15 +61,6 @@ class PyMarkdownLint:
         file_path = f"{file_path[: last_index + 1]}version.py"
         version_meta = runpy.run_path(file_path)
         return str(version_meta["__version__"])
-
-    @staticmethod
-    def log_level_type(argument: str) -> str:
-        """
-        Function to help argparse limit the valid log levels.
-        """
-        if argument in PyMarkdownLint.available_log_maps:
-            return argument
-        raise ValueError(f"Value '{argument}' is not a valid log level.")
 
     def __parse_arguments(self) -> argparse.Namespace:
         parser = argparse.ArgumentParser(description="Lint any found Markdown files.")
@@ -150,27 +135,7 @@ class PyMarkdownLint:
             default=False,
             help="throw an error if configuration is bad, instead of assuming default",
         )
-        parser.add_argument(
-            "--stack-trace",
-            dest="show_stack_trace",
-            action="store_true",
-            default=False,
-            help="if an error occurs, print out the stack trace for debug purposes",
-        )
-        parser.add_argument(
-            "--log-level",
-            dest="log_level",
-            action="store",
-            help="minimum level required to log messages",
-            type=PyMarkdownLint.log_level_type,
-            choices=list(PyMarkdownLint.available_log_maps.keys()),
-        )
-        parser.add_argument(
-            "--log-file",
-            dest="log_file",
-            action="store",
-            help="destination file for log messages",
-        )
+        ApplicationLogging.add_default_command_line_arguments(parser)
 
         subparsers = parser.add_subparsers(dest="primary_subparser")
 
@@ -213,6 +178,8 @@ class PyMarkdownLint:
         context = self.__plugins.starting_new_file(next_file_name)
 
         try:
+            POGGER.info("Starting file '$'.", next_file_name)
+
             POGGER.info("Scanning file '$' token-by-token.", next_file_name)
             source_provider = (
                 None if args.x_test_scan_fault else FileSourceProvider(next_file)
@@ -245,8 +212,10 @@ class PyMarkdownLint:
             self.__plugins.completed_file(context, line_number)
 
             context.report_on_triggered_rules()
+            POGGER.info("Ending file '$'.", next_file_name)
         except Exception:
             context.report_on_triggered_rules()
+            POGGER.info("Ending file '$' with exception.", next_file_name)
             raise
 
     # pylint: disable=broad-except
@@ -290,7 +259,7 @@ class PyMarkdownLint:
                 args.enable_rules,
                 args.disable_rules,
                 self.__properties,
-                self.__show_stack_trace,
+                self.__logging.show_stack_trace,
             )
         except BadPluginError as this_exception:
             formatted_error = (
@@ -300,11 +269,13 @@ class PyMarkdownLint:
 
     def __handle_error(self, formatted_error: str, thrown_error: Exception) -> None:
 
-        show_error = self.__show_stack_trace or not isinstance(thrown_error, ValueError)
+        show_error = self.__logging.show_stack_trace or not isinstance(
+            thrown_error, ValueError
+        )
         LOGGER.warning(formatted_error, exc_info=show_error)
 
         print(f"\n\n{formatted_error}", file=sys.stderr)
-        if self.__show_stack_trace:
+        if self.__logging.show_stack_trace:
             traceback.print_exc(file=sys.stderr)
         sys.exit(1)
 
@@ -315,12 +286,7 @@ class PyMarkdownLint:
 
     def __set_initial_state(self, args: argparse.Namespace) -> None:
 
-        self.__show_stack_trace = args.show_stack_trace
-        base_logger = logging.getLogger()
-        base_logger.setLevel(
-            logging.DEBUG if self.__show_stack_trace else logging.WARNING
-        )
-
+        self.__logging.pre_initialize_with_args(args)
         if args.configuration_file:
             LOGGER.debug("Loading configuration file: %s", args.configuration_file)
             ApplicationPropertiesJsonLoader.load_and_set(
@@ -329,50 +295,10 @@ class PyMarkdownLint:
         if args.set_configuration:
             self.__properties.set_manual_property(args.set_configuration)
 
-    def __initialize_strict_mode(self, args: argparse.Namespace) -> None:
         if args.strict_configuration or self.__properties.get_boolean_property(
             "mode.strict-config", strict_mode=True
         ):
             self.__properties.enable_strict_mode()
-
-    def __initialize_logging(
-        self, args: argparse.Namespace
-    ) -> Optional[logging.FileHandler]:
-
-        self.__show_stack_trace = args.show_stack_trace
-        if not self.__show_stack_trace:
-            self.__show_stack_trace = self.__properties.get_boolean_property(
-                "log.stack-trace"
-            )
-
-        effective_log_file = (
-            self.__properties.get_string_property("log.file")
-            if args.log_file is None
-            else args.log_file
-        )
-        new_handler = None
-        if effective_log_file:
-            new_handler = logging.FileHandler(effective_log_file)
-            logging.getLogger().addHandler(new_handler)
-        else:
-            temp_log_level = (
-                logging.DEBUG if self.__show_stack_trace else logging.CRITICAL
-            )
-            logging.basicConfig(stream=sys.stdout, level=temp_log_level)
-
-        effective_log_level = args.log_level or None
-        if effective_log_level is None:
-            effective_log_level = self.__properties.get_string_property(
-                "log.level", valid_value_fn=PyMarkdownLint.log_level_type
-            )
-        if effective_log_level is None:
-            effective_log_level = self.default_log_level
-
-        log_level_to_enact = PyMarkdownLint.available_log_maps[effective_log_level]
-
-        logging.getLogger().setLevel(log_level_to_enact)
-        ParserLogger.sync_on_next_call()
-        return new_handler
 
     def __initialize_plugins(self, args: argparse.Namespace) -> None:
         try:
@@ -435,6 +361,8 @@ class PyMarkdownLint:
     ) -> None:
         # sourcery skip: raise-specific-error
         if use_standard_in:
+            POGGER.debug("Scanning from: (stdin)")
+
             temporary_file = None
             scan_exception = None
             try:
@@ -463,6 +391,7 @@ class PyMarkdownLint:
                 except IOError as this_exception:
                     self.__handle_scan_error("stdin", this_exception)
         else:
+            POGGER.debug("Scanning from: $", files_to_scan)
             for next_file in files_to_scan:
                 self.__scan_specific_file(args, next_file, next_file)
 
@@ -470,13 +399,13 @@ class PyMarkdownLint:
         """
         Main entrance point.
         """
-        args = self.__parse_arguments()
-        self.__set_initial_state(args)
-
-        new_handler, total_error_count = None, 0
+        total_error_count = 0
         try:
-            self.__initialize_strict_mode(args)
-            new_handler = self.__initialize_logging(args)
+            args = self.__parse_arguments()
+            self.__set_initial_state(args)
+
+            self.__logging.initialize(args)
+            ParserLogger.sync_on_next_call()
 
             self.__handle_plugins_and_extensions(args)
 
@@ -495,19 +424,23 @@ class PyMarkdownLint:
             if did_error_scanning_files:
                 total_error_count = 1
             else:
+                POGGER.info("Initializing parser.")
                 self.__initialize_parser(args)
 
+                POGGER.info("Processing files with parser.")
                 self.__process_files_to_scan(args, use_standard_in, files_to_scan)
+                POGGER.info("Files have been processed.")
         except ValueError as this_exception:
             formatted_error = f"Configuration Error: {this_exception}"
             self.__handle_error(formatted_error, this_exception)
         finally:
-            if new_handler:
-                new_handler.close()
+            self.__logging.terminate()
 
         if self.__plugins.number_of_scan_failures or total_error_count:
             sys.exit(1)
 
+
+# pylint: enable=too-few-public-methods
 
 if __name__ == "__main__":
     PyMarkdownLint().main()
