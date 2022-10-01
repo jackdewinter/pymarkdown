@@ -231,7 +231,16 @@ def test_markdown_with_extensions_error_during_configuration():
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        supplied_arguments = ["-c", configuration_file, "extensions", "list", "f*r"]
+        supplied_arguments = [
+            # "--stack-trace",
+            "--log-level",
+            "DEBUG",
+            "-c",
+            configuration_file,
+            "extensions",
+            "list",
+            "f*r",
+        ]
 
         expected_return_code = 1
         expected_output = ""

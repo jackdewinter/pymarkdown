@@ -735,7 +735,7 @@ def test_markdown_with_dash_dash_log_level_invalid(caplog):
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE]
                {plugins,extensions,scan,scan-stdin,version} ...
-main.py: error: argument --log-level: invalid log_level_type value: 'invalid'
+main.py: error: argument --log-level: invalid __log_level_type value: 'invalid'
 """
 
     # Act
