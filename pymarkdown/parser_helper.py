@@ -966,5 +966,30 @@ class ParserHelper:
             ), source_string.find(ParserHelper.newline_character, newline_index + 1)
         return col_adjust, line_adjust
 
+    @staticmethod
+    def find_detabify_string(
+        original_line: str, detabified_line_to_match: str
+    ) -> Tuple[Optional[str], int]:
+        """
+        Find a detabified line within the original line.
+        """
+
+        original_index = 0
+        adjusted_original_line = original_line[original_index:]
+        err = ParserHelper.detabify_string(
+            original_line, additional_start_delta=original_index
+        )
+        while len(err) >= len(detabified_line_to_match):
+            adjusted_original_line = original_line[original_index:]
+            err = ParserHelper.detabify_string(
+                adjusted_original_line, additional_start_delta=original_index
+            )
+            if detabified_line_to_match == err:
+                break
+            original_index += 1
+        if detabified_line_to_match == err:
+            return adjusted_original_line, original_index
+        return None, -1
+
 
 # pylint: enable=too-many-public-methods

@@ -55,7 +55,7 @@ class LeafBlockProcessor:
         start_index: int,
         extracted_whitespace: Optional[str],
         skip_whitespace_check: bool = False,
-    ) -> Tuple[bool, Optional[int], Optional[int], Optional[str], Optional[int]]:
+    ) -> Tuple[bool, Optional[int], Optional[int], Optional[int], Optional[int]]:
         """
         Determine if we have the start of a fenced code block.
         """
@@ -80,7 +80,7 @@ class LeafBlockProcessor:
             after_fence_index = new_index
             (
                 non_whitespace_index,
-                extracted_whitespace_before_info_string,
+                _,
             ) = ParserHelper.extract_ascii_whitespace(line_to_parse, new_index)
 
             if collected_count >= 3:
@@ -89,8 +89,8 @@ class LeafBlockProcessor:
                     True,
                     non_whitespace_index,
                     after_fence_index,
-                    extracted_whitespace_before_info_string,
                     collected_count,
+                    new_index,
                 )
         return False, None, None, None, None
 
@@ -100,6 +100,7 @@ class LeafBlockProcessor:
         position_marker: PositionMarker,
         extracted_whitespace: Optional[str],
         original_line: str,
+        detabified_original_start_index: int,
     ) -> Tuple[List[MarkdownToken], Optional[str]]:
         """
         Handle the parsing of a fenced code block
@@ -115,8 +116,8 @@ class LeafBlockProcessor:
             is_fence_start,
             non_whitespace_index,
             after_fence_index,
-            extracted_whitespace_before_info_string,
             collected_count,
+            new_index,
         ) = LeafBlockProcessor.is_fenced_code_block(
             position_marker.text_to_parse,
             position_marker.index_number,
@@ -133,21 +134,23 @@ class LeafBlockProcessor:
                     parser_state,
                     position_marker,
                     collected_count,
-                    non_whitespace_index,
                     extracted_whitespace,
                     new_tokens,
                     after_fence_index,
                     original_line,
+                    detabified_original_start_index,
                 )
             else:
                 POGGER.debug("parse_fenced_code_block:check fence start")
+                assert new_index is not None
                 new_tokens = LeafBlockProcessor.__process_fenced_start(
                     parser_state,
                     position_marker,
                     non_whitespace_index,
                     collected_count,
                     extracted_whitespace,
-                    extracted_whitespace_before_info_string,
+                    original_line,
+                    new_index,
                 )
         elif parser_state.token_stack[-1].is_fenced_code_block:
             extracted_whitespace = (
@@ -192,21 +195,52 @@ class LeafBlockProcessor:
         non_whitespace_index: int,
         collected_count: int,
         extracted_whitespace: Optional[str],
-        extracted_whitespace_before_info_string: Optional[str],
+        original_line: str,
+        new_index: int,
     ) -> Tuple[StackToken, List[MarkdownToken]]:
-        (_, proper_end_index,) = ParserHelper.collect_backwards_while_one_of_characters(
-            position_marker.text_to_parse, -1, Constants.ascii_whitespace
+
+        POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
+        POGGER.debug("collected_count>:$:<", collected_count)
+        POGGER.debug("text_to_parse>>:$:<", position_marker.text_to_parse)
+        POGGER.debug("index_number>>:$:<", position_marker.index_number)
+        POGGER.debug("original_line>:$:<", original_line)
+        POGGER.debug("new_index>:$:<", new_index)
+
+        line_to_parse = position_marker.text_to_parse
+        if "\t" in original_line:
+            adj_original_line, adj_index = ParserHelper.find_detabify_string(
+                original_line, line_to_parse
+            )
+            assert adj_index != -1
+            assert adj_original_line is not None
+            line_to_parse = adj_original_line
+            (
+                new_non_whitespace_index,
+                extracted_whitespace_before_info_string,
+            ) = ParserHelper.extract_ascii_whitespace(line_to_parse, new_index)
+            assert new_non_whitespace_index is not None
+            non_whitespace_index = new_non_whitespace_index
+        else:
+            (
+                _,
+                extracted_whitespace_before_info_string,
+            ) = ParserHelper.extract_ascii_whitespace(line_to_parse, new_index)
+        POGGER.debug("non_whitespace_index>:$:<", non_whitespace_index)
+        POGGER.debug(
+            "extracted_whitespace_before_info_string>:$:<",
+            extracted_whitespace_before_info_string,
         )
-        adjusted_string = position_marker.text_to_parse[:proper_end_index]
+        (_, proper_end_index,) = ParserHelper.collect_backwards_while_one_of_characters(
+            line_to_parse, -1, Constants.ascii_whitespace
+        )
+        adjusted_string = line_to_parse[:proper_end_index]
         non_whitespace_index = min(non_whitespace_index, len(adjusted_string))
         (
             after_extracted_text_index,
             extracted_text,
         ) = ParserHelper.extract_until_spaces(adjusted_string, non_whitespace_index)
         assert extracted_text is not None
-        text_after_extracted_text = position_marker.text_to_parse[
-            after_extracted_text_index:
-        ]
+        text_after_extracted_text = line_to_parse[after_extracted_text_index:]
 
         old_top_of_stack = parser_state.token_stack[-1]
         new_tokens, _ = parser_state.close_open_blocks_fn(
@@ -247,9 +281,7 @@ class LeafBlockProcessor:
         assert extracted_whitespace is not None
         parser_state.token_stack.append(
             FencedCodeBlockStackToken(
-                code_fence_character=position_marker.text_to_parse[
-                    position_marker.index_number
-                ],
+                code_fence_character=line_to_parse[position_marker.index_number],
                 fence_character_count=collected_count,
                 whitespace_start_count=ParserHelper.calculate_length(
                     extracted_whitespace
@@ -269,7 +301,8 @@ class LeafBlockProcessor:
         non_whitespace_index: int,
         collected_count: int,
         extracted_whitespace: Optional[str],
-        extracted_whitespace_before_info_string: Optional[str],
+        original_line: str,
+        new_index: int,
     ) -> List[MarkdownToken]:
 
         POGGER.debug("pfcb->check")
@@ -288,7 +321,8 @@ class LeafBlockProcessor:
                 non_whitespace_index,
                 collected_count,
                 extracted_whitespace,
-                extracted_whitespace_before_info_string,
+                original_line,
+                new_index,
             )
 
             POGGER.debug("StackToken-->$<<", parser_state.token_stack[-1])
@@ -313,33 +347,44 @@ class LeafBlockProcessor:
         parser_state: ParserState,
         position_marker: PositionMarker,
         collected_count: int,
-        non_whitespace_index: int,
         extracted_whitespace: Optional[str],
         new_tokens: List[MarkdownToken],
         after_fence_index: int,
         original_line: str,
+        detabified_original_start_index: int,
     ) -> None:
         POGGER.debug("pfcb->end")
         POGGER.debug("extracted_whitespace:$:", extracted_whitespace)
-        POGGER.debug("non_whitespace_index:$:", non_whitespace_index)
         POGGER.debug("position_marker.text_to_parse:$:", position_marker.text_to_parse)
         POGGER.debug(
             "len(position_marker.text_to_parse):$:", len(position_marker.text_to_parse)
         )
         POGGER.debug("after_fence_index:$:", after_fence_index)
+        POGGER.debug(
+            "detabified_original_start_index:$:", detabified_original_start_index
+        )
 
         POGGER.debug("original_line:$:", original_line)
         only_spaces_after_fence = True
         if "\t" in original_line:
-            fence_string = position_marker.text_to_parse[:after_fence_index]
+            adj_original_line = original_line[detabified_original_start_index:]
+            POGGER.debug("adj_original_line:$:", adj_original_line)
+            # detabified_adj_original_line = ParserHelper.detabify_string(adj_original_line, detabified_original_start_index % 4)
+            # POGGER.debug("detabified_adj_original_line:$:", detabified_adj_original_line)
+            after_whitespace_index, _ = ParserHelper.extract_spaces(
+                adj_original_line, 0
+            )
+            assert after_whitespace_index is not None
+            POGGER.debug("after_whitespace_index=$", after_whitespace_index)
+            after_fence_index = after_whitespace_index + collected_count
+
+            fence_string = original_line[:after_fence_index]
             POGGER.debug("fence_string:$:", fence_string)
             fence_index_in_original = original_line.find(fence_string)
-            POGGER.debug("xy:$:", fence_index_in_original)
+            POGGER.debug("fence_index_in_original:$:", fence_index_in_original)
             assert fence_index_in_original != -1
-            after_fence_in_original = original_line[
-                fence_index_in_original + collected_count :
-            ]
-            POGGER.debug("xz:$:", after_fence_in_original)
+            after_fence_in_original = original_line[after_fence_index:]
+            POGGER.debug("after_fence_in_original:$:", after_fence_in_original)
             _, after_space_in_original_index = ParserHelper.collect_while_character(
                 after_fence_in_original, 0, " "
             )

@@ -667,6 +667,15 @@ class LinkReferenceDefinitionHelper:
                     position_marker=link_def_token.start_position_marker,
                 )
             ]
+            POGGER.debug(">>link_info>>$", parsed_lrd_tuple.link_info)
+            assert parsed_lrd_tuple.link_info.line_destination_whitespace is not None
+            POGGER.debug(
+                ">>line_destination_whitespace>>$",
+                ParserHelper.make_whitespace_visible(
+                    parsed_lrd_tuple.link_info.line_destination_whitespace
+                ),
+            )
+            POGGER.debug(">>new_tokens>>$", new_tokens)
             force_ignore_first_as_lrd = len(lines_to_requeue) > 1
         else:
             new_tokens = []
@@ -710,7 +719,15 @@ class LinkReferenceDefinitionHelper:
         while link_ref_stack_token.continuation_lines:
             POGGER.debug(
                 "continuation_lines>>$<<",
-                link_ref_stack_token.continuation_lines,
+                ParserHelper.make_whitespace_visible(
+                    str(link_ref_stack_token.continuation_lines)
+                ),
+            )
+            POGGER.debug(
+                "unmodified_lines>>$<<",
+                ParserHelper.make_whitespace_visible(
+                    str(link_ref_stack_token.unmodified_lines)
+                ),
             )
 
             lines_to_requeue.append(link_ref_stack_token.unmodified_lines[-1])

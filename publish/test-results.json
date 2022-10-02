@@ -83,6 +83,14 @@
             "elapsedTimeInMilliseconds": 0
         },
         {
+            "name": "test.basic.test_detabify_string",
+            "totalTests": 2,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
             "name": "test.basic.test_extract_any_whitespace",
             "totalTests": 9,
             "failedTests": 0,
@@ -588,10 +596,10 @@
         },
         {
             "name": "test.gfm.test_markdown_whitespaces",
-            "totalTests": 218,
+            "totalTests": 221,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 44,
             "elapsedTimeInMilliseconds": 0
         },
         {
