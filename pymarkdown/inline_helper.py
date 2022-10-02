@@ -861,12 +861,13 @@ class InlineHelper:
         """
         Extract a string that is bounded by some manner of characters.
         """
+        nesting_level: int = 0
         break_characters = (
             f"{InlineHelper.backslash_character}{close_character}{start_character}"
             if start_character
             else f"{InlineHelper.backslash_character}{close_character}"
         )
-        nesting_level: int = 0
+
         POGGER.debug(
             "extract_bounded_string>>new_index>>$>>data>>$>>",
             new_index,
@@ -883,8 +884,8 @@ class InlineHelper:
             data,
         )
         assert next_index is not None
-        while next_index < len(source_text) and not (
-            source_text[next_index] == close_character and nesting_level == 0
+        while next_index < len(source_text) and (
+            source_text[next_index] != close_character or nesting_level != 0
         ):
             (
                 next_index,
