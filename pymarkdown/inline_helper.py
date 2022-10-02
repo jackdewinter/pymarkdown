@@ -493,7 +493,6 @@ class InlineHelper:
         # POGGER.debug("i=$,start_index=$,delta=$", array_index, start_index, delta)
         return _array_index, delta, start_index
 
-    # pylint: disable=too-many-locals
     @staticmethod
     def __calculate_backtick_between_text(
         inline_request: InlineRequest, new_index: int, end_backtick_start_index: int
@@ -503,18 +502,17 @@ class InlineHelper:
         POGGER.debug("end_backtick_start_index>>$<<", end_backtick_start_index)
 
         between_text = inline_request.source_text[new_index:end_backtick_start_index]
-        actual_between_text = between_text
-        if inline_request.tabified_text:
-            actual_between_text = (
-                InlineHelper.__calculate_backtick_between_tabified_text(
-                    inline_request, new_index, end_backtick_start_index
-                )
-            )
+
         original_between_text, leading_whitespace, trailing_whitespace = (
             between_text,
             "",
             "",
         )
+
+        if inline_request.tabified_text:
+            between_text = InlineHelper.__calculate_backtick_between_tabified_text(
+                inline_request, new_index, end_backtick_start_index
+            )
         POGGER.debug(
             "after_collect>$>>$>>$<<",
             between_text,
@@ -522,15 +520,14 @@ class InlineHelper:
             inline_request.source_text[end_backtick_start_index:],
         )
         POGGER.debug("between_text>>$<<", between_text)
-        POGGER.debug("actual_between_text>>$<<", actual_between_text)
         if (
-            len(actual_between_text) > 2
-            and actual_between_text[0]
+            len(between_text) > 2
+            and between_text[0]
             in [
                 ParserHelper.space_character,
                 ParserHelper.newline_character,
             ]
-            and actual_between_text[-1]
+            and between_text[-1]
             in [
                 ParserHelper.space_character,
                 ParserHelper.newline_character,
@@ -574,8 +571,6 @@ class InlineHelper:
             trailing_whitespace,
         )
 
-    # pylint: enable=too-many-locals
-
     @staticmethod
     def __calculate_backtick_between_tabified_text(
         inline_request: InlineRequest, new_index: int, end_backtick_start_index: int
@@ -584,12 +579,12 @@ class InlineHelper:
         split_source_lines = InlineHelper.__backtick_split_lines(
             inline_request.source_text
         )
-        POGGER.debug("rt>>$<<", split_source_lines)
+        POGGER.debug("split_source_lines>>$<<", split_source_lines)
         assert inline_request.tabified_text is not None
         split_tabified_lines = InlineHelper.__backtick_split_lines(
             inline_request.tabified_text
         )
-        POGGER.debug("rtx>>$<<", split_tabified_lines)
+        POGGER.debug("split_tabified_lines>>$<<", split_tabified_lines)
         assert len(split_tabified_lines) == len(split_source_lines)
 
         (
@@ -620,15 +615,24 @@ class InlineHelper:
         )
         assert calculated_index + end_delta == end_backtick_start_index
 
-        if start_array_index == end_array_index:
-            actual_between_text = split_tabified_lines[start_array_index][
-                start_delta:end_delta
-            ]
+        assert start_array_index != end_array_index
+        # if start_array_index == end_array_index:
+        #     POGGER.debug("same")
+        #     actual_between_text = split_tabified_lines[start_array_index][
+        #         start_delta:end_delta
+        #     ]
+        # else:
+        POGGER.debug("borders")
+        if start_delta:
+            actual_between_text = split_tabified_lines[start_array_index][start_delta:]
+            start_array_index += 1
         else:
-            actual_between_text = "".join(
-                split_tabified_lines[i]
-                for i in range(start_array_index, end_array_index)
-            )
+            actual_between_text = ""
+        actual_between_text += "".join(
+            split_tabified_lines[i] for i in range(start_array_index, end_array_index)
+        )
+        if end_delta:
+            actual_between_text += split_tabified_lines[end_array_index][:end_delta]
         POGGER.debug("actual_between_text>:$:<", actual_between_text)
         return actual_between_text
 
@@ -741,7 +745,7 @@ class InlineHelper:
         POGGER.debug("__is_proper_hard_break>>$>>", is_proper_hard_break)
         return is_proper_hard_break
 
-    # pylint: disable=too-many-arguments, too-many-locals
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __select_line_ending(
         new_tokens: List[MarkdownToken],
@@ -810,7 +814,7 @@ class InlineHelper:
             remaining_line,
         )
 
-    # pylint: enable=too-many-arguments, too-many-locals
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -857,12 +861,13 @@ class InlineHelper:
         """
         Extract a string that is bounded by some manner of characters.
         """
+        nesting_level: int = 0
         break_characters = (
             f"{InlineHelper.backslash_character}{close_character}{start_character}"
             if start_character
             else f"{InlineHelper.backslash_character}{close_character}"
         )
-        nesting_level: int = 0
+
         POGGER.debug(
             "extract_bounded_string>>new_index>>$>>data>>$>>",
             new_index,
@@ -879,8 +884,8 @@ class InlineHelper:
             data,
         )
         assert next_index is not None
-        while next_index < len(source_text) and not (
-            source_text[next_index] == close_character and nesting_level == 0
+        while next_index < len(source_text) and (
+            source_text[next_index] != close_character or nesting_level != 0
         ):
             (
                 next_index,

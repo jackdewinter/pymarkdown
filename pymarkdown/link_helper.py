@@ -202,35 +202,41 @@ class LinkHelper:
 
     @staticmethod
     def extract_link_destination(
-        line_to_parse: str, new_indexx: int, is_blank_line: bool
+        line_to_parse: str, start_index: int, is_blank_line: bool
     ) -> Tuple[
         bool, Optional[int], Optional[str], Optional[str], Optional[str], Optional[str]
     ]:
         """
         Extract the link reference definition's link destination.
         """
-        # TODO if new_index recomputed, why being passed?
-        new_index: Optional[int] = None
-        new_index, prefix_whitespace = ParserHelper.collect_while_one_of_characters(
-            line_to_parse, new_indexx, Constants.ascii_whitespace
+        after_whitespace_index: Optional[int] = None
+        (
+            after_whitespace_index,
+            prefix_whitespace,
+        ) = ParserHelper.collect_while_one_of_characters(
+            line_to_parse, start_index, Constants.ascii_whitespace
         )
-        assert new_index is not None
-        if new_index == len(line_to_parse) and not is_blank_line:
-            return False, new_index, None, None, None, None
+        assert after_whitespace_index is not None
+        if after_whitespace_index == len(line_to_parse) and not is_blank_line:
+            return False, after_whitespace_index, None, None, None, None
 
-        POGGER.debug("LD>>$<<", line_to_parse[new_index:])
+        assert prefix_whitespace is not None
+        POGGER.debug(
+            "Pre-LD>>$<<", ParserHelper.make_whitespace_visible(prefix_whitespace)
+        )
+        POGGER.debug("LD>>$<<", line_to_parse[after_whitespace_index:])
         (
             inline_link,
             pre_inline_link,
-            new_index,
+            after_whitespace_index,
             inline_raw_link,
             _,
-        ) = LinkHelper.__parse_link_destination(line_to_parse, new_index)
-        if new_index == -1:
+        ) = LinkHelper.__parse_link_destination(line_to_parse, after_whitespace_index)
+        if after_whitespace_index == -1:
             return False, -1, None, None, None, None
         return (
             True,
-            new_index,
+            after_whitespace_index,
             inline_link,
             pre_inline_link,
             prefix_whitespace,
@@ -747,8 +753,7 @@ class LinkHelper:
         if converted_text == "\\":
             text_parts.append(converted_text)
         text_parts.append(ParserHelper.newline_character)
-        text_raw_parts.append(converted_text)
-        text_raw_parts.append(ParserHelper.newline_character)
+        text_raw_parts.extend((converted_text, ParserHelper.newline_character))
         POGGER.debug("is_inline_hard_break>>collected_text_raw>>$<<", text_raw_parts)
 
     @staticmethod

@@ -26,6 +26,7 @@ def act_and_assert(
     show_debug=False,
     config_map=None,
     disable_consistency_checks=False,
+    allow_alternate_markdown=True,
 ):
     """
     Act and assert on the expected behavior of parsing the source_markdown.
@@ -55,7 +56,9 @@ def act_and_assert(
         raise AssertionError()
     assert_if_strings_different(expected_gfm, actual_gfm)
     if not disable_consistency_checks:
-        assert_token_consistency(source_markdown, actual_tokens)
+        __assert_token_consistency(
+            source_markdown, actual_tokens, allow_alternate_markdown
+        )
 
 
 # pylint: enable=too-many-arguments
@@ -131,31 +134,47 @@ def assert_if_strings_different(expected_string, actual_string):
     assert expected_string == actual_string, f"Strings are not equal.{diff_values}"
 
 
-def assert_token_consistency(source_markdown, actual_tokens):
+def __assert_token_consistency(
+    source_markdown, actual_tokens, allow_alternate_markdown
+):
     """
     Compare the markdown document against the tokens that are expected.
     """
-    verify_markdown_roundtrip(source_markdown, actual_tokens)
+    __verify_markdown_roundtrip(
+        source_markdown, actual_tokens, allow_alternate_markdown
+    )
     # verify_line_and_column_numbers(source_markdown, actual_tokens)
 
 
-def verify_markdown_roundtrip(source_markdown, actual_tokens):
+def __verify_markdown_roundtrip(
+    source_markdown, actual_tokens, allow_alternate_markdown
+):
     """
     Verify that we can use the information in the tokens to do a round trip back
     to the original Markdown that created the token.
     """
 
-    if "\t" in source_markdown:
+    if "\t" in source_markdown and allow_alternate_markdown:
         new_source = []
+        alternate_source = []
         split_source = source_markdown.split(ParserHelper.newline_character)
         for next_line in split_source:
-            if "\t" in next_line:
-                next_line = ParserHelper.detabify_string(next_line)
+            alternate_line = (
+                ParserHelper.detabify_string(next_line)
+                if "\t" in next_line
+                else next_line
+            )
+            alternate_source.append(alternate_line)
             new_source.append(next_line)
         source_markdown = ParserHelper.newline_character.join(new_source)
+        detabified_source_markdown = ParserHelper.newline_character.join(
+            alternate_source
+        )
+    else:
+        detabified_source_markdown = None
 
     transformer = TransformToMarkdown()
-    original_markdown = transformer.transform(actual_tokens)
+    markdown_from_tokens = transformer.transform(actual_tokens)
 
     print(
         "".join(
@@ -163,12 +182,12 @@ def verify_markdown_roundtrip(source_markdown, actual_tokens):
                 "\n-=-=-\nExpected\n-=-=-\n-->",
                 ParserHelper.make_value_visible(source_markdown),
                 "<--\n-=-=-\nActual\n-=-=-\n-->",
-                ParserHelper.make_value_visible(original_markdown),
+                ParserHelper.make_value_visible(markdown_from_tokens),
                 "<--\n-=-=-\n",
             ]
         )
     )
-    diff = difflib.ndiff(source_markdown, original_markdown)
+    diff = difflib.ndiff(source_markdown, markdown_from_tokens)
     diff_values = "".join(
         [
             "\n-=-=-n",
@@ -176,11 +195,12 @@ def verify_markdown_roundtrip(source_markdown, actual_tokens):
             "\n-=-=-expected\n-->",
             ParserHelper.make_value_visible(source_markdown),
             "<--\n-=-=-actual\n-->",
-            ParserHelper.make_value_visible(original_markdown),
+            ParserHelper.make_value_visible(markdown_from_tokens),
             "<--\n-=-=-\n",
         ]
     )
 
-    assert (
-        source_markdown == original_markdown
+    assert source_markdown == markdown_from_tokens or (
+        (detabified_source_markdown is not None)
+        and (detabified_source_markdown == markdown_from_tokens)
     ), f"Markdown strings are not equal.{diff_values}"
