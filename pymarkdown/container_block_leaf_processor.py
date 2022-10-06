@@ -206,7 +206,10 @@ class ContainerBlockLeafProcessor:
         if not outer_processed:
             new_tokens = (
                 LeafBlockProcessor.parse_atx_headings(
-                    parser_state, leaf_block_position_marker, leaf_token_whitespace
+                    parser_state,
+                    leaf_block_position_marker,
+                    leaf_token_whitespace,
+                    grab_bag.original_line,
                 )
                 or LeafBlockProcessor.parse_indented_code_block(
                     parser_state,
@@ -220,12 +223,14 @@ class ContainerBlockLeafProcessor:
                     leaf_block_position_marker,
                     leaf_token_whitespace,
                     grab_bag.block_quote_data,
+                    grab_bag.original_line,
                 )
                 or LeafBlockProcessor.parse_thematic_break(
                     parser_state,
                     leaf_block_position_marker,
                     leaf_token_whitespace,
                     grab_bag.block_quote_data,
+                    grab_bag.original_line,
                 )
                 or LeafBlockProcessorParagraph.parse_paragraph(
                     parser_state,
@@ -309,6 +314,7 @@ class ContainerBlockLeafProcessor:
             outer_processed,
             leaf_token_whitespace,
             new_tokens,
+            grab_bag,
         )
         grab_bag.extend_leaf_tokens(pre_tokens)
         grab_bag.extend_leaf_tokens(new_tokens)
@@ -318,6 +324,7 @@ class ContainerBlockLeafProcessor:
             leaf_token_whitespace,
         )
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __handle_html_block(
         parser_state: ParserState,
@@ -325,6 +332,7 @@ class ContainerBlockLeafProcessor:
         outer_processed: bool,
         leaf_token_whitespace: Optional[str],
         new_tokens: List[MarkdownToken],
+        grab_bag: ContainerGrabBag,
     ) -> bool:
         """
         Take care of the processing for html blocks.
@@ -359,6 +367,7 @@ class ContainerBlockLeafProcessor:
                 position_marker.index_number,
                 leaf_token_whitespace,
                 position_marker,
+                grab_bag.original_line,
             )
             assert html_tokens
             new_tokens.extend(html_tokens)
@@ -367,6 +376,8 @@ class ContainerBlockLeafProcessor:
             POGGER.debug(">>html not encountered>>")
 
         return outer_processed
+
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -406,34 +417,12 @@ class ContainerBlockLeafProcessor:
             assert leaf_token_whitespace is not None
             token_text = position_marker.text_to_parse[position_marker.index_number :]
             if "\t" in original_line:
-                POGGER.debug(">>token_text>:$:<", token_text)
-                adj_original, adj_original_index = ParserHelper.find_detabify_string(
-                    original_line, token_text
-                )
-                assert adj_original_index != -1
-                assert adj_original is not None
-                token_text = adj_original
-                POGGER.debug(
-                    ">>adj_original_index=$, leaf_token_whitespace=>:$:<",
-                    adj_original_index,
+                (
                     leaf_token_whitespace,
+                    token_text,
+                ) = ContainerBlockLeafProcessor.__handle_fenced_code_block_with_tab(
+                    original_line, leaf_token_whitespace, token_text
                 )
-                POGGER.debug(
-                    ">>detabified_original_start_index=>:$:<",
-                    detabified_original_start_index,
-                )
-
-                original_whitespace = original_line[
-                    detabified_original_start_index:adj_original_index
-                ]
-                POGGER.debug(">>original_whitespace>:$:<", original_whitespace)
-                detabified_original_whitespace = ParserHelper.detabify_string(
-                    original_whitespace,
-                    additional_start_delta=detabified_original_start_index,
-                )
-                POGGER.debug(">>err>:$:<", detabified_original_whitespace)
-                assert leaf_token_whitespace == detabified_original_whitespace
-                leaf_token_whitespace = original_whitespace
             new_tokens.append(
                 TextMarkdownToken(
                     token_text,
@@ -447,6 +436,27 @@ class ContainerBlockLeafProcessor:
         return True
 
     # pylint: enable=too-many-arguments
+
+    @staticmethod
+    def __handle_fenced_code_block_with_tab(
+        original_line: str, leaf_token_whitespace: str, token_text: str
+    ) -> Tuple[str, str]:
+
+        reconstructed_line = leaf_token_whitespace + token_text
+        adj_original, adj_original_index = ParserHelper.find_detabify_string(
+            original_line, reconstructed_line
+        )
+        assert adj_original_index != -1
+        assert adj_original is not None
+
+        space_end_index, extracted_whitespace = ParserHelper.extract_spaces(
+            adj_original, 0
+        )
+        assert extracted_whitespace is not None
+
+        token_text = adj_original[space_end_index:]
+        leaf_token_whitespace = extracted_whitespace
+        return leaf_token_whitespace, token_text
 
     @staticmethod
     def __close_indented_block_if_indent_not_there(

@@ -866,21 +866,54 @@ class HtmlHelper:
         return new_tokens
 
     @staticmethod
+    def __check_normal_html_block_end_with_tab(
+        original_line: str, extracted_whitespace: str, token_text: str
+    ) -> Tuple[str, str]:
+
+        reconstructed_line = extracted_whitespace + token_text
+        adj_original, adj_original_index = ParserHelper.find_detabify_string(
+            original_line, reconstructed_line
+        )
+        assert adj_original_index != -1
+        assert adj_original is not None
+
+        space_end_index, ex_whitespace = ParserHelper.extract_spaces(adj_original, 0)
+        assert ex_whitespace is not None
+
+        token_text = adj_original[space_end_index:]
+        extracted_whitespace = ex_whitespace
+        return extracted_whitespace, token_text
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
     def check_normal_html_block_end(
         parser_state: ParserState,
         line_to_parse: str,
         start_index: int,
         extracted_whitespace: str,
         position_marker: PositionMarker,
+        original_line: str,
     ) -> List[MarkdownToken]:
         """
         Check to see if we have encountered the end of the current HTML block
         via text on a normal line.
         """
 
+        token_text = line_to_parse[start_index:]
+        POGGER.debug("extracted_whitespace=:$:", extracted_whitespace)
+        POGGER.debug("token_text=:$:", token_text)
+        POGGER.debug("original_line=:$:", original_line)
+        if "\t" in original_line:
+            (
+                extracted_whitespace,
+                token_text,
+            ) = HtmlHelper.__check_normal_html_block_end_with_tab(
+                original_line, extracted_whitespace, token_text
+            )
+
         new_tokens: List[MarkdownToken] = [
             TextMarkdownToken(
-                line_to_parse[start_index:],
+                token_text,
                 extracted_whitespace,
                 position_marker=position_marker,
             )
@@ -910,3 +943,5 @@ class HtmlHelper:
             assert terminated_block_tokens
             new_tokens.extend(terminated_block_tokens)
         return new_tokens
+
+    # pylint: enable=too-many-arguments

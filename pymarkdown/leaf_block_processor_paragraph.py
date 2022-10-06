@@ -32,7 +32,7 @@ class LeafBlockProcessorParagraph:
     Class to provide processing for the leaf blocks.
     """
 
-    # pylint: disable=too-many-arguments, too-many-locals
+    # pylint: disable=too-many-arguments
     @staticmethod
     def parse_paragraph(
         parser_state: ParserState,
@@ -128,7 +128,7 @@ class LeafBlockProcessorParagraph:
         )
         return new_tokens
 
-    # pylint: enable=too-many-arguments, too-many-locals
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __calculate_corrected_tab_text(original_line: str, text_to_parse: str) -> str:
@@ -142,17 +142,6 @@ class LeafBlockProcessorParagraph:
                 corrected_tab_text = original_line[corrected_index:]
                 assert corrected_tab_text == text_to_parse
             else:
-                # start_delta = -1
-                # for start_delta in range(4):
-                #     test_string = ParserHelper.detabify_string(
-                #         original_line, start_delta
-                #     )
-                #     POGGER.debug("test_string($)=:$:", start_delta, test_string)
-                #     if test_string.endswith(text_to_parse):
-                #         POGGER.debug("break")
-                #         break
-                # POGGER.debug("start_delta=$", start_delta)
-                # assert start_delta <= 3
                 test_string = ParserHelper.detabify_string(original_line, 0)
                 assert test_string.endswith(text_to_parse)
                 corrected_index = 0
