@@ -370,3 +370,24 @@ def test_detabify_string_building_sequences():
 
     # Assert
     assert expected_output == actual_output
+
+
+def test_find_detabify_string_ex_bad():
+    """
+    TBD - tab stop starts at 5, moves it to 9, second tab stop normal of 4
+    """
+
+    # Arrange
+    original_line = "\t0\t01\t012\t0123\t"
+    input_string = "abc"
+    expected_output = None
+    expected_index = -1
+
+    # Act
+    actual_output, actual_index = ParserHelper.find_detabify_string_ex(
+        original_line, input_string
+    )
+
+    # Assert
+    assert expected_output == actual_output
+    assert expected_index == actual_index

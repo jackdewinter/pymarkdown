@@ -539,11 +539,7 @@ def test_whitespaces_atx_headings_with_tabs_within():
 
     # Act & Assert
     act_and_assert(
-        source_markdown,
-        expected_gfm,
-        expected_tokens,
-        allow_alternate_markdown=False,
-        show_debug=True,
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
     )
 
 
@@ -1599,11 +1595,7 @@ def test_whitespaces_html_with_tabs_before_inside():
 
     # Act & Assert
     act_and_assert(
-        source_markdown,
-        expected_gfm,
-        expected_tokens,
-        allow_alternate_markdown=False,
-        show_debug=True,
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
     )
 
 
@@ -2398,7 +2390,6 @@ def test_whitespaces_paragraph_with_tabs_before():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_paragraph_with_tabs_inside():
     """
     Test case:  paragraph preceeded by tabs.
@@ -2411,7 +2402,7 @@ def test_whitespaces_paragraph_with_tabs_inside():
         "[text(1,1):a\tlong\tparagraph:]",
         "[end-para:::True]",
     ]
-    expected_gfm = """<p>a   long    paragraph</p>"""
+    expected_gfm = """<p>a\tlong\tparagraph</p>"""
 
     # Act & Assert
     act_and_assert(
@@ -2420,7 +2411,6 @@ def test_whitespaces_paragraph_with_tabs_inside():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_paragraph_with_tabs_inside_and_emphasis():
     """
     Test case:  paragraph preceeded by tabs.
@@ -2437,7 +2427,7 @@ def test_whitespaces_paragraph_with_tabs_inside_and_emphasis():
         "[text(1,11):\tparagraph:]",
         "[end-para:::True]",
     ]
-    expected_gfm = """<p>a   <em>long</em>  paragraph</p>"""
+    expected_gfm = """<p>a\t<em>long</em>\tparagraph</p>"""
 
     # Act & Assert
     act_and_assert(
@@ -2522,7 +2512,6 @@ def test_whitespaces_paragraph_with_spaces_after():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_paragraph_with_tabs_after():
     """
     Test case:  paragraph followed by tabs.
@@ -2536,6 +2525,156 @@ def test_whitespaces_paragraph_with_tabs_after():
         "[end-para:::True]",
     ]
     expected_gfm = """<p>a paragraph</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_paragraph_with_tabs_after_double():
+    """
+    Test case:  paragraph followed by tabs.
+    """
+
+    # Arrange
+    source_markdown = """a paragraph\t
+another paragraph\t\t"""
+    expected_tokens = [
+        "[para(1,1):\n:\t\t]",
+        "[text(1,1):a paragraph\nanother paragraph::\t\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>a paragraph\t
+another paragraph</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_paragraph_with_tabs_after_double_only_first():
+    """
+    Test case:  paragraph followed by tabs.
+    """
+
+    # Arrange
+    source_markdown = """a paragraph\t
+another paragraph"""
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):a paragraph\nanother paragraph::\t\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>a paragraph\t
+another paragraph</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_paragraph_with_tabs_after_double_only_second():
+    """
+    Test case:  paragraph followed by tabs.
+    """
+
+    # Arrange
+    source_markdown = """a paragraph
+another paragraph\t\t"""
+    expected_tokens = [
+        "[para(1,1):\n:\t\t]",
+        "[text(1,1):a paragraph\nanother paragraph::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>a paragraph
+another paragraph</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_paragraph_with_tabs_after_only_middle():
+    """
+    Test case:  paragraph followed by tabs.
+    """
+
+    # Arrange
+    source_markdown = """a paragraph
+another paragraph\t\t
+yet another paragraph"""
+    expected_tokens = [
+        "[para(1,1):\n\n]",
+        "[text(1,1):a paragraph\nanother paragraph\nyet another paragraph::\n\t\t\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>a paragraph
+another paragraph\t\t
+yet another paragraph</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_paragraph_with_tabs_mixed_and_no_newline():
+    """
+    Test case:  paragraph followed by tabs.
+    """
+
+    # Arrange
+    source_markdown = """before-tab\tafter-tab
+before-tab\tafter-tab
+before-tab\tafter-tab\tafter-another
+a\tbb\tccc\tddd"""
+    expected_tokens = [
+        "[para(1,1):\n\n\n]",
+        "[text(1,1):before-tab\tafter-tab\nbefore-tab\tafter-tab\nbefore-tab\tafter-tab\tafter-another\na\tbb\tccc\tddd::\n\n\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>before-tab\tafter-tab
+before-tab\tafter-tab
+before-tab\tafter-tab\tafter-another
+a\tbb\tccc\tddd</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_paragraph_with_tabs_mixed_and_newline():
+    """
+    Test case:  paragraph followed by tabs.
+    """
+
+    # Arrange
+    source_markdown = """before-tab\tafter-tab
+before-tab\tafter-tab
+before-tab\tafter-tab\tafter-another
+a\tbb\tccc\tddd
+"""
+    expected_tokens = [
+        "[para(1,1):\n\n\n]",
+        "[text(1,1):before-tab\tafter-tab\nbefore-tab\tafter-tab\nbefore-tab\tafter-tab\tafter-another\na\tbb\tccc\tddd::\n\n\n]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<p>before-tab\tafter-tab
+before-tab\tafter-tab
+before-tab\tafter-tab\tafter-another
+a\tbb\tccc\tddd</p>"""
 
     # Act & Assert
     act_and_assert(
@@ -2931,6 +3070,32 @@ def test_whitespaces_code_span_with_tabs_5c():
 
 
 @pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_code_span_with_tabs_6():
+    """
+    Test case:  code span with tabs at the front and end
+    """
+
+    # Arrange
+    source_markdown = """a\tvery `&#09;good&#09;`xx\t paragraph"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a\t:]",
+        "[icode-span(1,5):\a&\a&amp;\a#09;good\a&\a&amp;\a#09;:`::]",
+        "[text(1,21):\t paragraph:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = (
+        """<p>a\tvery <code>&amp;#09;good&amp;#09;</code>xx\t paragraph</p>"""
+    )
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
 def test_whitespaces_code_spans_with_form_feeds():
     """
     Test case: code span with form feeds at the front and end
@@ -2975,7 +3140,6 @@ bar</p>"""
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_hard_break_with_tabs():
     """
     Test case:  hard_break with tabs
@@ -2996,6 +3160,7 @@ bar</p>"""
     act_and_assert(
         source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
     )
+    # assert False
 
 
 @pytest.mark.gfm
@@ -3041,8 +3206,7 @@ def test_whitespaces_autolink_uri_with_spaces():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_whitespaces_autolink_uri_with_tabs():
+def test_whitespaces_autolink_uri_with_tabs_inside():
     """
     Test case:  autolink_uri with tabs
     """
@@ -3057,6 +3221,29 @@ def test_whitespaces_autolink_uri_with_tabs():
     expected_gfm = (
         """<p>&lt;http://foo.bar.baz/test?q=hello\tman&amp;id=22&amp;boolean&gt;</p>"""
     )
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_autolink_uri_with_tabs_outside():
+    """
+    Test case:  autolink_uri with tabs
+    """
+
+    # Arrange
+    source_markdown = """this\tis <http://foo.bar.baz> an\tautolink"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):this\tis :]",
+        "[uri-autolink(1,12):http://foo.bar.baz]",
+        "[text(1,32): an\tautolink:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>this\tis <a href="http://foo.bar.baz">http://foo.bar.baz</a> an\tautolink</p>"""
 
     # Act & Assert
     act_and_assert(
@@ -3102,6 +3289,484 @@ def test_whitespaces_inline_link_with_spaces_before_label():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_inline_link_with_tabs_outside():
+    """
+    Test case:  inline link label with tabs before
+    """
+
+    # Arrange
+    source_markdown = """this\tis [fred](/url) a\tlink"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):this\tis :]",
+        "[link(1,12):inline:/url:::::fred:False::::]",
+        "[text(1,13):fred:]",
+        "[end-link::]",
+        "[text(1,24): a\tlink:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>this\tis <a href="/url">fred</a> a\tlink</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_inline_link_with_tabs_large_outside():
+    """
+    Test case:  inline link label with tabs before
+    """
+
+    # Arrange
+    source_markdown = """an\tlink
+this\tis [fred](/url) a\tlink
+large\text"""
+    expected_tokens = [
+        "[para(1,1):\n\n]",
+        "[text(1,1):an\tlink\nthis\tis ::\n]",
+        "[link(2,12):inline:/url:::::fred:False::::]",
+        "[text(2,13):fred:]",
+        "[end-link::]",
+        "[text(2,24): a\tlink\nlarge\text::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>an\tlink
+this\tis <a href="/url">fred</a> a\tlink
+large\text</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_inline_link_with_tabs_large_outside_no_spaces():
+    """
+    Test case:  inline link label with tabs before
+    """
+
+    # Arrange
+    source_markdown = """an\tlink
+this\tis[fred](/url)a\tlink
+large\text"""
+    expected_tokens = [
+        "[para(1,1):\n\n]",
+        "[text(1,1):an\tlink\nthis\tis::\n]",
+        "[link(2,11):inline:/url:::::fred:False::::]",
+        "[text(2,12):fred:]",
+        "[end-link::]",
+        "[text(2,23):a\tlink\nlarge\text::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>an\tlink
+this\tis<a href="/url">fred</a>a\tlink
+large\text</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_inline_link_with_tabs_large_outside_with_duplicate_outside():
+    """
+    Test case:  inline link label with tabs before
+    """
+
+    # Arrange
+    source_markdown = """an\tlink an\tlink
+this\tis this\tis [fred](/url) a\tlink a\tlink
+large\text large\text"""
+    expected_tokens = [
+        "[para(1,1):\n\n]",
+        "[text(1,1):an\tlink an\tlink\nthis\tis this\tis ::\n]",
+        "[link(2,20):inline:/url:::::fred:False::::]",
+        "[text(2,21):fred:]",
+        "[end-link::]",
+        "[text(2,32): a\tlink a\tlink\nlarge\text large\text::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>an\tlink an\tlink
+this\tis this\tis <a href="/url">fred</a> a\tlink a\tlink
+large\text large\text</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_inline_link_with_tabs_large_outside_with_duplicate_outside_first_two():
+    """
+    Test case:  inline link label with tabs before
+    """
+
+    # Arrange
+    source_markdown = """an\tlink an\tlink
+this\tis this\tis [fred](/url) a\tlink a\tlink"""
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):an\tlink an\tlink\nthis\tis this\tis ::\n]",
+        "[link(2,20):inline:/url:::::fred:False::::]",
+        "[text(2,21):fred:]",
+        "[end-link::]",
+        "[text(2,32): a\tlink a\tlink:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>an\tlink an\tlink
+this\tis this\tis <a href="/url">fred</a> a\tlink a\tlink</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        allow_alternate_markdown=False,
+        show_debug=True,
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_inline_link_with_tabs_large_outside_with_duplicate_outside_and_links():
+    """
+    Test case:  inline link label with tabs before
+    """
+
+    # Arrange
+    source_markdown = """an\tlink an\tlink
+this\tis this\tis [fred](/url) a\tlink a\tlink [barney](/url) another\tlink another\tlink
+large\text large\text"""
+    expected_tokens = [
+        "[para(1,1):\n\n]",
+        "[text(1,1):an\tlink an\tlink\nthis\tis this\tis ::\n]",
+        "[link(2,20):inline:/url:::::fred:False::::]",
+        "[text(2,21):fred:]",
+        "[end-link::]",
+        "[text(2,32): a\tlink a\tlink :]",
+        "[link(2,50):inline:/url:::::barney:False::::]",
+        "[text(2,51):barney:]",
+        "[end-link::]",
+        "[text(2,64): another\tlink another\tlink\nlarge\text large\text::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>an\tlink an\tlink
+this\tis this\tis <a href="/url">fred</a> a\tlink a\tlink <a href="/url">barney</a> another\tlink another\tlink
+large\text large\text</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_inline_link_with_tabs_large_outside_with_duplicate_outside_and_links_no_space():
+    """
+    Test case:  inline link label with tabs before
+    """
+
+    # Arrange
+    source_markdown = """an\tlink an\tlink
+this\tis this\tis[fred](/url)a\tlink a\tlink[barney](/url)another\tlink another\tlink
+large\text large\text"""
+    expected_tokens = [
+        "[para(1,1):\n\n]",
+        "[text(1,1):an\tlink an\tlink\nthis\tis this\tis::\n]",
+        "[link(2,19):inline:/url:::::fred:False::::]",
+        "[text(2,20):fred:]",
+        "[end-link::]",
+        "[text(2,31):a\tlink a\tlink:]",
+        "[link(2,45):inline:/url:::::barney:False::::]",
+        "[text(2,46):barney:]",
+        "[end-link::]",
+        "[text(2,59):another\tlink another\tlink\nlarge\text large\text::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>an\tlink an\tlink
+this\tis this\tis<a href="/url">fred</a>a\tlink a\tlink<a href="/url">barney</a>another\tlink another\tlink
+large\text large\text</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_inline_link_with_tabs_large_outside_with_duplicate_outside_and_links_no_word_just_space():
+    """
+    Test case:  inline link label with tabs before
+    """
+
+    # Arrange
+    source_markdown = """an\tlink an\tlink
+this\tis this\tis[fred](/url) [barney](/url)another\tlink another\tlink
+large\text large\text"""
+    expected_tokens = [
+        "[para(1,1):\n\n]",
+        "[text(1,1):an\tlink an\tlink\nthis\tis this\tis::\n]",
+        "[link(2,19):inline:/url:::::fred:False::::]",
+        "[text(2,20):fred:]",
+        "[end-link::]",
+        "[text(2,31): :]",
+        "[link(2,32):inline:/url:::::barney:False::::]",
+        "[text(2,33):barney:]",
+        "[end-link::]",
+        "[text(2,46):another\tlink another\tlink\nlarge\text large\text::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>an\tlink an\tlink
+this\tis this\tis<a href="/url">fred</a> <a href="/url">barney</a>another\tlink another\tlink
+large\text large\text</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_inline_link_with_tabs_large_outside_with_duplicate_outside_and_links_no_word_just_tab():
+    """
+    Test case:  inline link label with tabs before
+    """
+
+    # Arrange
+    source_markdown = """an\tlink an\tlink
+this\tis this\tis[fred](/url)\t[barney](/url)another\tlink another\tlink
+large\text large\text"""
+    expected_tokens = [
+        "[para(1,1):\n\n]",
+        "[text(1,1):an\tlink an\tlink\nthis\tis this\tis::\n]",
+        "[link(2,19):inline:/url:::::fred:False::::]",
+        "[text(2,20):fred:]",
+        "[end-link::]",
+        "[text(2,31):\t:]",
+        "[link(2,33):inline:/url:::::barney:False::::]",
+        "[text(2,34):barney:]",
+        "[end-link::]",
+        "[text(2,47):another\tlink another\tlink\nlarge\text large\text::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>an\tlink an\tlink
+this\tis this\tis<a href="/url">fred</a>\t<a href="/url">barney</a>another\tlink another\tlink
+large\text large\text</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_inline_link_with_tabs_large_outside_with_duplicate_outside_and_links_more_links():
+    """
+    Test case:  inline link label with tabs before
+    """
+
+    # Arrange
+    source_markdown = """an\tlink [wilma](/url) an\tlink
+this\tis this\tis[fred](/url)a\tlink a\tlink[barney](/url)another\tlink another\tlink
+large\text[betty](/url)large\text"""
+    expected_tokens = [
+        "[para(1,1):\n\n]",
+        "[text(1,1):an\tlink :]",
+        "[link(1,10):inline:/url:::::wilma:False::::]",
+        "[text(1,11):wilma:]",
+        "[end-link::]",
+        "[text(1,23): an\tlink\nthis\tis this\tis::\n]",
+        "[link(2,19):inline:/url:::::fred:False::::]",
+        "[text(2,20):fred:]",
+        "[end-link::]",
+        "[text(2,31):a\tlink a\tlink:]",
+        "[link(2,45):inline:/url:::::barney:False::::]",
+        "[text(2,46):barney:]",
+        "[end-link::]",
+        "[text(2,59):another\tlink another\tlink\nlarge\text::\n]",
+        "[link(3,12):inline:/url:::::betty:False::::]",
+        "[text(3,13):betty:]",
+        "[end-link::]",
+        "[text(3,25):large\text:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>an\tlink <a href="/url">wilma</a> an\tlink
+this\tis this\tis<a href="/url">fred</a>a\tlink a\tlink<a href="/url">barney</a>another\tlink another\tlink
+large\text<a href="/url">betty</a>large\text</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_inline_link_with_tabs_large_outside_with_more_links_and_middle_surrounding_spaces():
+    """
+    Test case:  inline link label with tabs before
+    """
+
+    # Arrange
+    source_markdown = """an\tlink [wilma](/url) an\tlink
+this\tis this\tis[fred](/url) a\tlink a\tlink [barney](/url)another\tlink another\tlink
+large\text[betty](/url)large\text"""
+    expected_tokens = [
+        "[para(1,1):\n\n]",
+        "[text(1,1):an\tlink :]",
+        "[link(1,10):inline:/url:::::wilma:False::::]",
+        "[text(1,11):wilma:]",
+        "[end-link::]",
+        "[text(1,23): an\tlink\nthis\tis this\tis::\n]",
+        "[link(2,19):inline:/url:::::fred:False::::]",
+        "[text(2,20):fred:]",
+        "[end-link::]",
+        "[text(2,31): a\tlink a\tlink :]",
+        "[link(2,50):inline:/url:::::barney:False::::]",
+        "[text(2,51):barney:]",
+        "[end-link::]",
+        "[text(2,64):another\tlink another\tlink\nlarge\text::\n]",
+        "[link(3,12):inline:/url:::::betty:False::::]",
+        "[text(3,13):betty:]",
+        "[end-link::]",
+        "[text(3,25):large\text:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>an\tlink <a href="/url">wilma</a> an\tlink
+this\tis this\tis<a href="/url">fred</a> a\tlink a\tlink <a href="/url">barney</a>another\tlink another\tlink
+large\text<a href="/url">betty</a>large\text</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_inline_link_with_tabs_large_outside_with_more_links_and_middle_surrounding_tabs():
+    """
+    Test case:  inline link label with tabs before
+    """
+
+    # Arrange
+    source_markdown = """an\tlink\t[wilma](/url)\tan\tlink
+this\tis this\tis\t[fred](/url)\ta\tlink a\tlink\t[barney](/url)\tanother\tlink another\tlink
+large\text\t[betty](/url)\tlarge\text"""
+    expected_tokens = [
+        "[para(1,1):\n\n]",
+        "[text(1,1):an\tlink\t:]",
+        "[link(1,13):inline:/url:::::wilma:False::::]",
+        "[text(1,14):wilma:]",
+        "[end-link::]",
+        "[text(1,26):\tan\tlink\nthis\tis this\tis\t::\n]",
+        "[link(2,21):inline:/url:::::fred:False::::]",
+        "[text(2,22):fred:]",
+        "[end-link::]",
+        "[text(2,33):\ta\tlink a\tlink\t:]",
+        "[link(2,57):inline:/url:::::barney:False::::]",
+        "[text(2,58):barney:]",
+        "[end-link::]",
+        "[text(2,71):\tanother\tlink another\tlink\nlarge\text\t::\n]",
+        "[link(3,13):inline:/url:::::betty:False::::]",
+        "[text(3,14):betty:]",
+        "[end-link::]",
+        "[text(3,26):\tlarge\text:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>an\tlink\t<a href="/url">wilma</a>\tan\tlink
+this\tis this\tis\t<a href="/url">fred</a>\ta\tlink a\tlink\t<a href="/url">barney</a>\tanother\tlink another\tlink
+large\text\t<a href="/url">betty</a>\tlarge\text</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_inline_link_with_tabs_large_outside_with_more_links_and_ending_with_spaces():
+    """
+    Test case:  inline link label with tabs before
+    """
+
+    # Arrange
+    source_markdown = """an\tlink\t[wilma](/url)\tan\tlink
+this\tis this\tis\t[fred](/url)\ta\tlink a\tlink\t[barney](/url)\tanother\tlink another\tlink
+large\text\t[betty](/url)  """
+    expected_tokens = [
+        "[para(1,1):\n\n:  ]",
+        "[text(1,1):an\tlink\t:]",
+        "[link(1,13):inline:/url:::::wilma:False::::]",
+        "[text(1,14):wilma:]",
+        "[end-link::]",
+        "[text(1,26):\tan\tlink\nthis\tis this\tis\t::\n]",
+        "[link(2,21):inline:/url:::::fred:False::::]",
+        "[text(2,22):fred:]",
+        "[end-link::]",
+        "[text(2,33):\ta\tlink a\tlink\t:]",
+        "[link(2,57):inline:/url:::::barney:False::::]",
+        "[text(2,58):barney:]",
+        "[end-link::]",
+        "[text(2,71):\tanother\tlink another\tlink\nlarge\text\t::\n]",
+        "[link(3,13):inline:/url:::::betty:False::::]",
+        "[text(3,14):betty:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>an\tlink\t<a href="/url">wilma</a>\tan\tlink
+this\tis this\tis\t<a href="/url">fred</a>\ta\tlink a\tlink\t<a href="/url">barney</a>\tanother\tlink another\tlink
+large\text\t<a href="/url">betty</a></p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_inline_link_with_tabs_large_outside_with_more_links_and_ending_with_tabs():
+    """
+    Test case:  inline link label with tabs before
+    """
+
+    # Arrange
+    source_markdown = """an\tlink\t[wilma](/url)\tan\tlink
+this\tis this\tis\t[fred](/url)\ta\tlink a\tlink\t[barney](/url)\tanother\tlink another\tlink
+large\text\t[betty](/url)\t\t"""
+    expected_tokens = [
+        "[para(1,1):\n\n:\t\t]",
+        "[text(1,1):an\tlink\t:]",
+        "[link(1,13):inline:/url:::::wilma:False::::]",
+        "[text(1,14):wilma:]",
+        "[end-link::]",
+        "[text(1,26):\tan\tlink\nthis\tis this\tis\t::\n]",
+        "[link(2,21):inline:/url:::::fred:False::::]",
+        "[text(2,22):fred:]",
+        "[end-link::]",
+        "[text(2,33):\ta\tlink a\tlink\t:]",
+        "[link(2,57):inline:/url:::::barney:False::::]",
+        "[text(2,58):barney:]",
+        "[end-link::]",
+        "[text(2,71):\tanother\tlink another\tlink\nlarge\text\t::\n]",
+        "[link(3,13):inline:/url:::::betty:False::::]",
+        "[text(3,14):betty:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>an\tlink\t<a href="/url">wilma</a>\tan\tlink
+this\tis this\tis\t<a href="/url">fred</a>\ta\tlink a\tlink\t<a href="/url">barney</a>\tanother\tlink another\tlink
+large\text\t<a href="/url">betty</a></p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
 
 
 @pytest.mark.gfm

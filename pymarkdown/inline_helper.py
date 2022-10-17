@@ -435,19 +435,6 @@ class InlineHelper:
         return inline_response
 
     @staticmethod
-    def modify_end_string(
-        end_string: Optional[str], removed_end_whitespace: str
-    ) -> str:
-        """
-        Modify the string at the end of the paragraph.
-        """
-        return (
-            f"{removed_end_whitespace}{ParserHelper.newline_character}"
-            if end_string is None
-            else f"{end_string}{removed_end_whitespace}{ParserHelper.newline_character}"
-        )
-
-    @staticmethod
     def __backtick_split_lines(input_string: str) -> List[str]:
         current_index: Optional[int] = 0
         assert current_index is not None
@@ -648,6 +635,7 @@ class InlineHelper:
         column_number: int,
         coalesced_stack: List[MarkdownToken],
         tabified_text: Optional[str],
+        inline_request: InlineRequest,
     ) -> Tuple[str, Optional[str], List[MarkdownToken], str, Optional[str], str]:
         """
         Handle the inline case of having the end of line character encountered.
@@ -704,6 +692,7 @@ class InlineHelper:
             inline_blocks,
             is_setext,
             tabified_text,
+            inline_request,
         )
 
         if coalesced_stack and coalesced_stack[-1].is_block_quote_start:
@@ -745,7 +734,7 @@ class InlineHelper:
         POGGER.debug("__is_proper_hard_break>>$>>", is_proper_hard_break)
         return is_proper_hard_break
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __select_line_ending(
         new_tokens: List[MarkdownToken],
@@ -762,9 +751,17 @@ class InlineHelper:
         inline_blocks: List[MarkdownToken],
         is_setext: bool,
         tabified_text: Optional[str],
+        inline_request: InlineRequest,
     ) -> Tuple[str, Optional[str], str, Optional[str], str]:
         POGGER.debug(">>removed_end_whitespace>:$:<", removed_end_whitespace)
         POGGER.debug(">>tabified_text>:$:<", tabified_text)
+        POGGER.debug(
+            ">>inline_request.tabified_text>:$:<", inline_request.tabified_text
+        )
+        POGGER.debug(
+            ">>inline_request.tabified_remaining_line>:$:<",
+            inline_request.tabified_remaining_line,
+        )
         is_proper_end = not tabified_text or tabified_text.endswith("  ")
         if is_proper_hard_break:
             POGGER.debug(">>proper hard break")
@@ -786,11 +783,16 @@ class InlineHelper:
             append_to_current_string = ""
         else:
             POGGER.debug(">>normal end")
+            POGGER.debug("current_string>:$:<", current_string)
+            POGGER.debug("removed_end_whitespace>:$:<", removed_end_whitespace)
+            POGGER.debug("end_string>:$:<", end_string)
+            POGGER.debug("remaining_line>:$:<", remaining_line)
             end_string, remaining_line = InlineHelper.__select_line_ending_normal(
                 is_setext,
                 inline_blocks,
                 current_string,
                 removed_end_whitespace,
+                inline_request.tabified_remaining_line,
                 end_string,
                 remaining_line,
             )
@@ -814,7 +816,7 @@ class InlineHelper:
             remaining_line,
         )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -823,15 +825,16 @@ class InlineHelper:
         inline_blocks: List[MarkdownToken],
         current_string: str,
         removed_end_whitespace: str,
+        tabified_remaining_line: Optional[str],
         end_string: Optional[str],
         remaining_line: str,
     ) -> Tuple[str, str]:
         # POGGER.debug("<<is_setext<<$<<", is_setext)
         # POGGER.debug("<<inline_blocks<<$<<", inline_blocks)
         # POGGER.debug("<<current_string<<$<<", current_string)
-        # POGGER.debug("<<remaining_line<<$<<", remaining_line)
-        # POGGER.debug("<<end_string<<$<<", end_string)
-        # POGGER.debug("<<removed_end_whitespace<<$<<", removed_end_whitespace)
+        POGGER.debug("<<remaining_line<<$<<", remaining_line)
+        POGGER.debug("<<end_string<<$<<", end_string)
+        POGGER.debug("<<removed_end_whitespace<<$<<", removed_end_whitespace)
         if (
             is_setext
             and inline_blocks
@@ -844,9 +847,23 @@ class InlineHelper:
             assert new_index
             end_string = f"{ex_ws}{ParserHelper.whitespace_split_character}"
             remaining_line = remaining_line[new_index:]
+        if not is_setext and tabified_remaining_line and removed_end_whitespace:
+            POGGER.debug("<<tabified_remaining_line>:$:<", tabified_remaining_line)
+            POGGER.debug("<<removed_end_whitespace>:$:<", removed_end_whitespace)
+            adj_original, _ = ParserHelper.find_detabify_string_ex(
+                tabified_remaining_line, removed_end_whitespace
+            )
+            POGGER.debug("<<adj_original<<$<<", adj_original)
+            assert adj_original is not None
+            removed_end_whitespace = adj_original
 
-        end_string = InlineHelper.modify_end_string(end_string, removed_end_whitespace)
-        # POGGER.debug("<<end_string<<$<<", end_string)
+        POGGER.debug("<<end_string<<$<<", end_string)
+        end_string = (
+            f"{removed_end_whitespace}{ParserHelper.newline_character}"
+            if end_string is None
+            else f"{end_string}{removed_end_whitespace}{ParserHelper.newline_character}"
+        )
+        POGGER.debug("<<end_string<<$<<", end_string)
         return end_string, remaining_line
 
     # pylint: enable=too-many-arguments
