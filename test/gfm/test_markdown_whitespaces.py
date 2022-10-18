@@ -3288,7 +3288,9 @@ def test_whitespaces_inline_link_with_spaces_before_label():
     expected_gfm = """<p><a href="/url"> fred</a></p>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
 
 
 @pytest.mark.gfm
