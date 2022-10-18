@@ -1607,16 +1607,15 @@ class InlineProcessor:
                     stop_character_in_tabified_index,
                     current_line_leading_space,
                 )
-            adj_original_line = adj_tabified_text[
+            return adj_tabified_text[
                 tabified_start_index:stop_character_in_tabified_index
             ]
-        else:
-            ex_original_line, _ = ParserHelper.find_detabify_string_ex(
-                adj_tabified_text, current_line_source_text
-            )
-            assert ex_original_line is not None
-            adj_original_line = ex_original_line
-        return adj_original_line
+
+        ex_original_line, _ = ParserHelper.find_detabify_string_ex(
+            adj_tabified_text, current_line_source_text
+        )
+        assert ex_original_line is not None
+        return ex_original_line
 
     # pylint: enable=too-many-locals
 

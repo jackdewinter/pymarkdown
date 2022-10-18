@@ -750,12 +750,9 @@ class TextMarkdownToken(InlineMarkdownToken):
                 + f"{ParserHelper.newline_character}{whitespace_to_append}"
             )
         if self.__tabified_text or tabified_text_to_combine:
-            # POGGER.debug("self>:$:<", self)
-            # POGGER.debug("self.__tabified_text>:$:<", self.__tabified_text)
-            # POGGER.debug("self.__token_text>:$:<", self.__token_text)
-            this_token_text = self.__tabified_text or self.__token_text
             other_token_text = tabified_text_to_combine or text_to_combine
 
+            this_token_text = self.__tabified_text or self.__token_text
             # POGGER.debug("this_token_text>:$:<", this_token_text)
             # POGGER.debug("blank_line_sequence>:$:<", blank_line_sequence)
             # POGGER.debug("prefix_whitespace>:$:<", prefix_whitespace)
