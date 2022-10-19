@@ -142,10 +142,13 @@ class LeafBlockProcessorParagraph:
                 corrected_tab_text = original_line[corrected_index:]
                 assert corrected_tab_text == text_to_parse
             else:
-                test_string = ParserHelper.detabify_string(original_line, 0)
-                assert test_string.endswith(text_to_parse)
+                adj_text_to_parse, _ = ParserHelper.find_detabify_string(
+                    original_line, text_to_parse
+                )
+                POGGER.debug("adj_text_to_parse=:$:", adj_text_to_parse)
+                assert adj_text_to_parse is not None
                 corrected_index = 0
-                corrected_tab_text = original_line[:]
+                corrected_tab_text = adj_text_to_parse
             assert corrected_index != -1
         return corrected_tab_text
 

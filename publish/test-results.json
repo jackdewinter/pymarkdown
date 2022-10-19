@@ -4,7 +4,7 @@
     "measurements": [
         {
             "name": "test.basic.test_calculate_length",
-            "totalTests": 22,
+            "totalTests": 23,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -484,10 +484,10 @@
         },
         {
             "name": "test.gfm.test_markdown_paragraph_blocks",
-            "totalTests": 14,
+            "totalTests": 16,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 2,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -516,7 +516,7 @@
         },
         {
             "name": "test.gfm.test_markdown_setext_headings",
-            "totalTests": 40,
+            "totalTests": 41,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -596,10 +596,10 @@
         },
         {
             "name": "test.gfm.test_markdown_whitespaces",
-            "totalTests": 230,
+            "totalTests": 252,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 35,
+            "skippedTests": 31,
             "elapsedTimeInMilliseconds": 0
         },
         {
