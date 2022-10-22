@@ -91,7 +91,8 @@
             "too-many-locals": 2
         },
         "pymarkdown/leaf_block_processor_paragraph.py": {
-            "too-many-arguments": 1
+            "too-many-arguments": 1,
+            "too-many-locals": 1
         },
         "pymarkdown/leaf_markdown_token.py": {
             "too-many-arguments": 4,
@@ -99,7 +100,7 @@
         },
         "pymarkdown/link_helper.py": {
             "too-many-arguments": 7,
-            "too-many-locals": 6
+            "too-many-locals": 10
         },
         "pymarkdown/link_reference_definition_helper.py": {
             "too-many-locals": 3,
@@ -242,7 +243,7 @@
     },
     "disables-by-name": {
         "too-many-arguments": 134,
-        "too-many-locals": 40,
+        "too-many-locals": 45,
         "too-few-public-methods": 7,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 1,
