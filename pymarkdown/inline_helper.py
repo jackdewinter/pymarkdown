@@ -471,13 +471,15 @@ class InlineHelper:
         start_index = 0
         _array_index = 0
         for _array_index, array_element in enumerate(split_array):  # pragma: no cover
-            # POGGER.debug("$--$ >>:$:<<", array_index, start_index, split_array[array_index])
+            POGGER.debug(
+                "$--$ >>:$:<<", _array_index, start_index, split_array[_array_index]
+            )
             if start_index <= index_to_find < start_index + len(array_element):
                 break
             start_index += len(array_element)
-        assert start_index != len(split_array)
+        assert start_index != (start_index + len(split_array))
         delta = index_to_find - start_index
-        # POGGER.debug("i=$,start_index=$,delta=$", array_index, start_index, delta)
+        POGGER.debug("i=$,start_index=$,delta=$", _array_index, start_index, delta)
         return _array_index, delta, start_index
 
     @staticmethod
@@ -602,24 +604,26 @@ class InlineHelper:
         )
         assert calculated_index + end_delta == end_backtick_start_index
 
-        assert start_array_index != end_array_index
-        # if start_array_index == end_array_index:
-        #     POGGER.debug("same")
-        #     actual_between_text = split_tabified_lines[start_array_index][
-        #         start_delta:end_delta
-        #     ]
-        # else:
-        POGGER.debug("borders")
-        if start_delta:
-            actual_between_text = split_tabified_lines[start_array_index][start_delta:]
-            start_array_index += 1
+        if start_array_index == end_array_index:
+            POGGER.debug("same")
+            actual_between_text = split_tabified_lines[start_array_index][
+                start_delta:end_delta
+            ]
         else:
-            actual_between_text = ""
-        actual_between_text += "".join(
-            split_tabified_lines[i] for i in range(start_array_index, end_array_index)
-        )
-        if end_delta:
-            actual_between_text += split_tabified_lines[end_array_index][:end_delta]
+            POGGER.debug("borders")
+            if start_delta:
+                actual_between_text = split_tabified_lines[start_array_index][
+                    start_delta:
+                ]
+                start_array_index += 1
+            else:
+                actual_between_text = ""
+            actual_between_text += "".join(
+                split_tabified_lines[i]
+                for i in range(start_array_index, end_array_index)
+            )
+            if end_delta:
+                actual_between_text += split_tabified_lines[end_array_index][:end_delta]
         POGGER.debug("actual_between_text>:$:<", actual_between_text)
         return actual_between_text
 
