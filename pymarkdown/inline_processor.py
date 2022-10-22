@@ -402,10 +402,12 @@ class InlineProcessor:
             inline_request.inline_blocks,
             1,
             inline_request.remaining_line,
+            inline_request.tabified_remaining_line,
             inline_request.current_string_unresolved,
             inline_request.line_number,
             inline_request.column_number,
             inline_request.para_owner,
+            inline_request.tabified_text,
         )
 
     @staticmethod
@@ -423,10 +425,12 @@ class InlineProcessor:
                 inline_request.inline_blocks,
                 2,
                 inline_request.remaining_line,
+                inline_request.tabified_remaining_line,
                 inline_request.current_string_unresolved,
                 inline_request.line_number,
                 inline_request.column_number,
                 inline_request.para_owner,
+                inline_request.tabified_text,
             )
             assert not inline_response.consume_rest_of_line
         else:
@@ -446,10 +450,12 @@ class InlineProcessor:
         inline_blocks: List[MarkdownToken],
         special_length: int,
         remaining_line: Optional[str],
+        tabified_remaining_line: Optional[str],
         current_string_unresolved: Optional[str],
         line_number: Optional[int],
         column_number: Optional[int],
         para_owner: Optional[ParagraphMarkdownToken],
+        tabified_text: Optional[str],
     ) -> InlineResponse:
         """
         Handle the collection of special inline characters for later processing.
@@ -458,6 +464,7 @@ class InlineProcessor:
         assert column_number is not None
         assert current_string_unresolved is not None
 
+        POGGER.debug(">>tabified_text>:$:<", tabified_text)
         remaining_line_size = len(remaining_line)
         POGGER.debug(">>column_number>>$<<", column_number)
         POGGER.debug(">>remaining_line>>$<<", remaining_line)
@@ -478,11 +485,13 @@ class InlineProcessor:
             special_length,
             inline_blocks,
             remaining_line,
+            tabified_remaining_line,
             current_string_unresolved,
             source_text,
             next_index,
             para_owner,
             remaining_line_size,
+            tabified_text,
         )
 
         if not new_token:
@@ -521,11 +530,13 @@ class InlineProcessor:
         special_length: int,
         inline_blocks: List[MarkdownToken],
         remaining_line: str,
+        tabified_remaining_line: Optional[str],
         current_string_unresolved: str,
         source_text: str,
         next_index: int,
         para_owner: Optional[ParagraphMarkdownToken],
         remaining_line_size: int,
+        tabified_text: Optional[str],
     ) -> Tuple[
         str,
         Optional[int],
@@ -574,6 +585,7 @@ class InlineProcessor:
             ) = InlineProcessor.__handle_link_label_end(
                 inline_blocks,
                 remaining_line,
+                tabified_remaining_line,
                 current_string_unresolved,
                 source_text,
                 next_index,
@@ -581,6 +593,7 @@ class InlineProcessor:
                 remaining_line_size,
                 delta_line,
                 repeat_count,
+                tabified_text,
             )
         else:
             repeat_count, new_index = special_length, next_index + special_length
@@ -603,6 +616,7 @@ class InlineProcessor:
     def __handle_link_label_end(
         inline_blocks: List[MarkdownToken],
         remaining_line: str,
+        tabified_remaining_line: Optional[str],
         current_string_unresolved: str,
         source_text: str,
         next_index: int,
@@ -610,6 +624,7 @@ class InlineProcessor:
         remaining_line_size: int,
         delta_line: int,
         repeat_count: int,
+        tabified_text: Optional[str],
     ) -> Tuple[int, bool, Optional[MarkdownToken], bool, int, int]:
         POGGER.debug(
             ">>inline_blocks>>$<<",
@@ -620,18 +635,32 @@ class InlineProcessor:
             remaining_line,
         )
         POGGER.debug(
+            ">>tabified_remaining_line>>$<<",
+            tabified_remaining_line,
+        )
+        POGGER.debug(
             ">>current_string_unresolved>>$<<",
             current_string_unresolved,
         )
         POGGER.debug(
-            ">>source_text>>$<<",
+            ">>source_text[next_index=$:]>:$:<",
+            next_index,
             source_text[next_index:],
+        )
+        POGGER.debug(
+            ">>source_text>:$:<",
+            source_text,
+        )
+        POGGER.debug(
+            ">>tabified_text>>$<<",
+            tabified_text,
         )
         POGGER.debug("")
         old_inline_blocks_count, old_inline_blocks_last_token = (
             len(inline_blocks),
             inline_blocks[-1] if inline_blocks else None,
         )
+
         (
             new_index,
             is_active,
@@ -642,8 +671,10 @@ class InlineProcessor:
             source_text,
             next_index,
             remaining_line,
+            tabified_remaining_line,
             current_string_unresolved,
             InlineProcessor.__process_simple_inline_fn,
+            tabified_text,
         )
         POGGER.debug(">>next_index>>$<<", next_index)
         POGGER.debug(">>new_index>>$<<", new_index)

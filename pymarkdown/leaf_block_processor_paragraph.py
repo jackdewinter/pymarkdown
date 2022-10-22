@@ -32,7 +32,7 @@ class LeafBlockProcessorParagraph:
     Class to provide processing for the leaf blocks.
     """
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def parse_paragraph(
         parser_state: ParserState,
@@ -114,26 +114,43 @@ class LeafBlockProcessorParagraph:
         POGGER.debug("original_line=:$:", original_line)
         assert extracted_whitespace is not None
 
-        corrected_tab_text = LeafBlockProcessorParagraph.__calculate_corrected_tab_text(
-            original_line, text_to_parse
+        (
+            corrected_tab_text,
+            corrected_extracted_whitespace,
+        ) = LeafBlockProcessorParagraph.__calculate_corrected_tab_text(
+            original_line, text_to_parse, extracted_whitespace
         )
 
         new_tokens.append(
             TextMarkdownToken(
                 text_to_parse,
-                extracted_whitespace,
+                corrected_extracted_whitespace,
                 position_marker=position_marker,
                 tabified_text=corrected_tab_text,
             )
         )
         return new_tokens
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
 
     @staticmethod
-    def __calculate_corrected_tab_text(original_line: str, text_to_parse: str) -> str:
+    def __calculate_corrected_tab_text(
+        original_line: str, text_to_parse: str, extracted_whitespace: str
+    ) -> Tuple[str, str]:
         corrected_tab_text = ""
+        corrected_extracted_whitespace = extracted_whitespace
         if "\t" in original_line:
+
+            if corrected_extracted_whitespace:
+                first_non_whitespace_character = text_to_parse[0]
+                first_non_whitespace_character_index = original_line.find(
+                    first_non_whitespace_character
+                )
+                corrected_extracted_whitespace = original_line[
+                    :first_non_whitespace_character_index
+                ]
+                original_line = original_line[first_non_whitespace_character_index:]
+
             corrected_index = -1
             ends_without_modification = original_line.endswith(text_to_parse)
             POGGER.debug("ends_without_modification=:$:", ends_without_modification)
@@ -142,6 +159,8 @@ class LeafBlockProcessorParagraph:
                 corrected_tab_text = original_line[corrected_index:]
                 assert corrected_tab_text == text_to_parse
             else:
+                POGGER.debug("original_line=:$:", original_line)
+                POGGER.debug("text_to_parse=:$:", text_to_parse)
                 adj_text_to_parse, _ = ParserHelper.find_detabify_string(
                     original_line, text_to_parse
                 )
@@ -150,7 +169,7 @@ class LeafBlockProcessorParagraph:
                 corrected_index = 0
                 corrected_tab_text = adj_text_to_parse
             assert corrected_index != -1
-        return corrected_tab_text
+        return corrected_tab_text, corrected_extracted_whitespace
 
     @staticmethod
     def __adjust_paragraph_for_containers(

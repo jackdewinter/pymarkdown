@@ -596,10 +596,10 @@
         },
         {
             "name": "test.gfm.test_markdown_whitespaces",
-            "totalTests": 252,
+            "totalTests": 259,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 31,
+            "skippedTests": 22,
             "elapsedTimeInMilliseconds": 0
         },
         {

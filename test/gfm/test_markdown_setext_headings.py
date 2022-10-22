@@ -90,11 +90,7 @@ baz</em></h1>"""
 
     # Act & Assert
     act_and_assert(
-        source_markdown,
-        expected_gfm,
-        expected_tokens,
-        allow_alternate_markdown=False,
-        show_debug=False,
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
     )
 
 
