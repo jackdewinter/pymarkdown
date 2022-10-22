@@ -2882,7 +2882,6 @@ def test_whitespaces_code_span_with_tabs_3():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_code_span_with_tabs_4():
     """
     Test case:  code span with tabs at the front and end
@@ -2892,7 +2891,7 @@ def test_whitespaces_code_span_with_tabs_4():
     source_markdown = """a \t`&#09;good&#09;`\t paragraph"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):a\t:]",
+        "[text(1,1):a \t:]",
         "[icode-span(1,5):\a&\a&amp;\a#09;good\a&\a&amp;\a#09;:`::]",
         "[text(1,21):\t paragraph:]",
         "[end-para:::True]",
@@ -2906,7 +2905,6 @@ def test_whitespaces_code_span_with_tabs_4():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_code_span_with_tabs_4a():
     """
     Test case:  code span with tabs at the front and end
@@ -2930,7 +2928,6 @@ def test_whitespaces_code_span_with_tabs_4a():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_code_span_with_tabs_4b():
     """
     Test case:  code span with tabs at the front and end
@@ -3070,7 +3067,6 @@ def test_whitespaces_code_span_with_tabs_5c():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_code_span_with_tabs_6():
     """
     Test case:  code span with tabs at the front and end
@@ -3080,9 +3076,9 @@ def test_whitespaces_code_span_with_tabs_6():
     source_markdown = """a\tvery `&#09;good&#09;`xx\t paragraph"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):a\t:]",
-        "[icode-span(1,5):\a&\a&amp;\a#09;good\a&\a&amp;\a#09;:`::]",
-        "[text(1,21):\t paragraph:]",
+        "[text(1,1):a\tvery :]",
+        "[icode-span(1,10):\a&\a&amp;\a#09;good\a&\a&amp;\a#09;:`::]",
+        "[text(1,26):xx\t paragraph:]",
         "[end-para:::True]",
     ]
     expected_gfm = (
@@ -3091,7 +3087,37 @@ def test_whitespaces_code_span_with_tabs_6():
 
     # Act & Assert
     act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        allow_alternate_markdown=False,
+        show_debug=False,
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_code_span_with_tabs_6a():
+    """
+    Test case:  code span with tabs at the front and end
+    """
+
+    # Arrange
+    source_markdown = """a\tvery `&#09;good&#09;`"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a\tvery :]",
+        "[icode-span(1,10):\a&\a&amp;\a#09;good\a&\a&amp;\a#09;:`::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>a\tvery <code>&amp;#09;good&amp;#09;</code></p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        allow_alternate_markdown=False,
+        show_debug=False,
     )
 
 
@@ -4198,7 +4224,6 @@ def test_whitespaces_inline_link_with_tabs_and_references():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_inline_link_with_tabs_and_code_span():
     """
     Test case:  inline link label with tabs after
@@ -4208,8 +4233,10 @@ def test_whitespaces_inline_link_with_tabs_and_code_span():
     source_markdown = """[fred\t`bob`\tboy](/url)"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link(1,1):inline:/url:::::fred\t&amp;\tboy:False::::]",
-        "[text(1,2):fred\t\a&amp;\a\a&\a&amp;\a\a\tboy:]",
+        "[link(1,1):inline:/url:::::fred\t`bob`\tboy:False::::]",
+        "[text(1,2):fred\t:]",
+        "[icode-span(1,9):bob:`::]",
+        "[text(1,14):\tboy:]",
         "[end-link::]",
         "[end-para:::True]",
     ]
