@@ -471,18 +471,20 @@ class LeafBlockProcessor:
             additional_start_delta = 0
             length_so_far = 0
             last_index = 0
-            for next_character_index, next_character in enumerate(
-                tabified_extracted_space
+            next_character_index = 0
+            while (
+                next_character_index < len(tabified_extracted_space)
+                and length_so_far < 4
             ):
+                next_character = tabified_extracted_space[next_character_index]
                 POGGER.debug("next_character>:$:<", next_character)
                 if next_character == "\t":
                     length_so_far = (1 + (length_so_far // 4)) * 4
                 else:
                     length_so_far += 1
-                last_index = next_character_index + 1
+                last_index += 1
                 POGGER.debug("length_so_far>:$:<", length_so_far)
-                if length_so_far >= 4:
-                    break
+                next_character_index += 1
             POGGER.debug("length_so_far>:$:<", length_so_far)
             assert length_so_far == 4
             POGGER.debug("last_index>:$:<", last_index)
@@ -592,9 +594,8 @@ class LeafBlockProcessor:
                 POGGER.debug("left_ws>:$:<", left_ws)
                 extracted_whitespace = adj_ws
 
-                if tabified_extracted_space:
-                    adj_ws_length = len(adj_ws)
-                    indented_text = original_line[adj_ws_length:]
+                adj_ws_length = len(adj_ws)
+                indented_text = original_line[adj_ws_length:]
 
             POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
             POGGER.debug("indented_text>:$:<", indented_text)
