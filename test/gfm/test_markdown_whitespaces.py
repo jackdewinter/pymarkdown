@@ -298,7 +298,6 @@ def test_whitespaces_thematic_breaks_with_spaces():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_thematic_breaks_with_tabs_before():
     """
     Test case:  Thematic breaks preceeded by spaces and tabs.
@@ -308,7 +307,7 @@ def test_whitespaces_thematic_breaks_with_tabs_before():
     source_markdown = """ \t * * *"""
     expected_tokens = [
         "[icode-block(1,5): \t:]",
-        "[text(1,5):* * *: ]",
+        "[text(1,5): * * *:]",
         "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code> * * *
@@ -490,7 +489,6 @@ def test_whitespaces_atx_headings_with_spaces_before():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_atx_headings_with_tabs_before():
     """
     Test case:  Atx Headings preceeded by spaces and tabs.
@@ -500,7 +498,7 @@ def test_whitespaces_atx_headings_with_tabs_before():
     source_markdown = """ \t # abc"""
     expected_tokens = [
         "[icode-block(1,5): \t:]",
-        "[text(1,5):# abc: ]",
+        "[text(1,5): # abc:]",
         "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code> # abc
@@ -790,7 +788,6 @@ def test_whitespaces_setext_headings_with_spaces_before():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_setext_headings_with_tabs_before():
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
@@ -981,7 +978,6 @@ def test_whitespaces_indented_code_with_spaces_before():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_indented_code_with_tabs_before():
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
@@ -1044,7 +1040,6 @@ abc"""
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_fenced_code_open_with_tabs_before():
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
@@ -1546,7 +1541,6 @@ def test_whitespaces_html_with_spaces_before():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_html_with_tabs_before():
     """
     Test case:  HTML block followed by spaces and tabs.
@@ -1564,7 +1558,11 @@ def test_whitespaces_html_with_tabs_before():
 
     # Act & Assert
     act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        allow_alternate_markdown=False,
+        show_debug=True,
     )
 
 
@@ -2367,7 +2365,6 @@ def test_whitespaces_paragraph_with_spaces_before():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_paragraph_with_tabs_before():
     """
     Test case:  paragraph preceeded by tabs.
@@ -2951,7 +2948,6 @@ def test_whitespaces_code_span_with_tabs_4b():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_code_span_with_tabs_4c():
     """
     Test case:  code span with tabs at the front and end

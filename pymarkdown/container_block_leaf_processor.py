@@ -217,6 +217,8 @@ class ContainerBlockLeafProcessor:
                     leaf_token_whitespace,
                     grab_bag.removed_chars_at_start_of_line,
                     grab_bag.last_block_quote_index,
+                    grab_bag.last_list_start_index,
+                    grab_bag.original_line,
                 )
                 or LeafBlockProcessor.parse_setext_headings(
                     parser_state,
