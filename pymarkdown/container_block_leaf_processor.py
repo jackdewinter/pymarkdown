@@ -308,6 +308,7 @@ class ContainerBlockLeafProcessor:
             remaining_line_to_parse,
             ignore_lrd_start,
             pre_tokens,
+            grab_bag.original_line,
         )
 
         outer_processed = ContainerBlockLeafProcessor.__handle_html_block(
