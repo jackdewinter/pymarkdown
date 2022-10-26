@@ -550,7 +550,7 @@ class LinkDefinitionStackToken(StackToken):
     #     """
     #     self.__original_lines.append(new_line)
 
-    def get_joined_lines(self, join_suffix: str) -> str:
+    def add_joined_lines_before_suffix(self, join_suffix: str) -> str:
         """
         Grab the continuation lines as a single line.
         """

@@ -601,11 +601,7 @@ def test_tabs_007x():
 
     # Act & Assert
     act_and_assert(
-        source_markdown,
-        expected_gfm,
-        expected_tokens,
-        allow_alternate_markdown=False,
-        show_debug=True,
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
     )
 
 

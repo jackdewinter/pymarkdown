@@ -320,8 +320,31 @@ def test_whitespaces_thematic_breaks_with_tabs_before():
 
 
 @pytest.mark.gfm
+def test_whitespaces_thematic_breaks_with_form_feeds_before():
+    """
+    Test case:  Thematic breaks preceeded by spaces and form feeds.
+    """
+
+    # Arrange
+    source_markdown = """ \u000C * * *"""
+    expected_tokens = [
+        "[para(1,2): \u000C ]",
+        "[text(1,2):*:]",
+        "[text(1,3): :]",
+        "[text(1,4):*:]",
+        "[text(1,5): :]",
+        "[text(1,6):*:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>* * *</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 @pytest.mark.skip
-def test_whitespaces_thematic_breaks_with_tabs_before_within():
+def test_whitespaces_thematic_breaks_with_spaces_before_within_list():
     """
     Test case:  Thematic breaks preceeded by spaces and tabs.
     """
@@ -345,29 +368,6 @@ def test_whitespaces_thematic_breaks_with_tabs_before_within():
     act_and_assert(
         source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
     )
-
-
-@pytest.mark.gfm
-def test_whitespaces_thematic_breaks_with_form_feeds_before():
-    """
-    Test case:  Thematic breaks preceeded by spaces and form feeds.
-    """
-
-    # Arrange
-    source_markdown = """ \u000C * * *"""
-    expected_tokens = [
-        "[para(1,2): \u000C ]",
-        "[text(1,2):*:]",
-        "[text(1,3): :]",
-        "[text(1,4):*:]",
-        "[text(1,5): :]",
-        "[text(1,6):*:]",
-        "[end-para:::True]",
-    ]
-    expected_gfm = """<p>* * *</p>"""
-
-    # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1558,11 +1558,7 @@ def test_whitespaces_html_with_tabs_before():
 
     # Act & Assert
     act_and_assert(
-        source_markdown,
-        expected_gfm,
-        expected_tokens,
-        allow_alternate_markdown=False,
-        show_debug=True,
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
     )
 
 
@@ -1785,7 +1781,6 @@ def test_whitespaces_lrd_with_spaces_before():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_lrd_with_tabs_before():
     """
     Test case:  LRD preceeded by tabs.
@@ -1865,7 +1860,6 @@ def test_whitespaces_lrd_with_spaces_before_label():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_lrd_with_tabs_before_label():
     """
     Test case:  LRD link label preceeded by tabs.
@@ -1937,7 +1931,6 @@ def test_whitespaces_lrd_with_spaces_after_label():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_lrd_with_tabs_after_label():
     """
     Test case:  LRD link label followwed by tabs.
@@ -2009,7 +2002,6 @@ def test_whitespaces_lrd_with_spaces_in_label():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_lrd_with_tabs_in_label():
     """
     Test case:  LRD link label followwed by tabs.
@@ -2081,7 +2073,6 @@ def test_whitespaces_lrd_with_spaces_before_destination():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_lrd_with_tabs_before_destination():
     """
     Test case:  LRD destination preceeded by tabs.
@@ -2153,7 +2144,6 @@ def test_whitespaces_lrd_with_spaces_after_destination():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_lrd_with_tabs_after_destination():
     """
     Test case:  LRD destination followed by tabs.
@@ -2225,7 +2215,6 @@ def test_whitespaces_lrd_with_spaces_before_title():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_lrd_with_tabs_before_title():
     """
     Test case:  LRD title preceeded by tabs.
@@ -2297,7 +2286,6 @@ def test_whitespaces_lrd_with_spaces_after_title():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_lrd_with_tabs_after_title():
     """
     Test case:  LRD title followed by tabs.
@@ -3083,11 +3071,7 @@ def test_whitespaces_code_span_with_tabs_6():
 
     # Act & Assert
     act_and_assert(
-        source_markdown,
-        expected_gfm,
-        expected_tokens,
-        allow_alternate_markdown=False,
-        show_debug=False,
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
     )
 
 
@@ -3109,11 +3093,7 @@ def test_whitespaces_code_span_with_tabs_6a():
 
     # Act & Assert
     act_and_assert(
-        source_markdown,
-        expected_gfm,
-        expected_tokens,
-        allow_alternate_markdown=False,
-        show_debug=False,
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
     )
 
 
@@ -4635,11 +4615,7 @@ def test_whitespaces_full_link_with_tabs_in_reference():
 
     # Act & Assert
     act_and_assert(
-        source_markdown,
-        expected_gfm,
-        expected_tokens,
-        allow_alternate_markdown=False,
-        show_debug=True,
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
     )
 
 

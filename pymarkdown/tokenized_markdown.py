@@ -614,7 +614,7 @@ class TokenizedMarkdown:
             requeue_line_info,
             adjusted_tokens,
         ) = LinkReferenceDefinitionHelper.process_link_reference_definition(
-            parser_state, empty_position_marker, "", "", "", 0, 0
+            parser_state, empty_position_marker, "", "", "", 0, 0, ""
         )
 
         POGGER.debug("BOOOM: caller_can_handle_requeue=$", caller_can_handle_requeue)
@@ -699,7 +699,6 @@ class TokenizedMarkdown:
             extracted_whitespace,
         )
 
-    # pylint: disable=too-many-locals
     @staticmethod
     def __handle_blank_line(
         parser_state: ParserState,
@@ -766,8 +765,6 @@ class TokenizedMarkdown:
 
         return new_tokens, requeue_line_info
 
-    # pylint: enable=too-many-locals
-
     @staticmethod
     def __handle_blank_line_token_stack(
         parser_state: ParserState,
@@ -800,7 +797,7 @@ class TokenizedMarkdown:
                 requeue_line_info,
                 new_tokens,
             ) = LinkReferenceDefinitionHelper.process_link_reference_definition(
-                parser_state, empty_position_marker, "", "", "", 0, 0
+                parser_state, empty_position_marker, "", "", "", 0, 0, ""
             )
             assert not did_pause_lrd
             POGGER.debug(

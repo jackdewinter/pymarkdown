@@ -227,8 +227,7 @@
             "too-many-instance-attributes": 1
         },
         "pymarkdown/tokenized_markdown.py": {
-            "too-many-arguments": 4,
-            "too-many-locals": 1
+            "too-many-arguments": 4
         },
         "pymarkdown/transform_state.py": {
             "too-many-instance-attributes": 1
@@ -243,7 +242,7 @@
     },
     "disables-by-name": {
         "too-many-arguments": 136,
-        "too-many-locals": 46,
+        "too-many-locals": 45,
         "too-few-public-methods": 7,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 1,

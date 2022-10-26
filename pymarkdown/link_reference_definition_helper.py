@@ -49,19 +49,42 @@ class LinkReferenceDefinitionHelper:
         unmodified_line_to_parse: str,
         original_stack_depth: int,
         original_document_depth: int,
+        original_line: str,
     ) -> Tuple[bool, bool, bool, Optional[RequeueLineInfo], List[MarkdownToken]]:
         """
         Process a link deference definition.  Note, this requires a lot of work to
         handle properly because of partial definitions across lines.
         """
+
         line_to_parse = position_marker.text_to_parse
         lrd_stack_token: Optional[LinkDefinitionStackToken] = None
-        start_index: Optional[int] = position_marker.index_number
+        start_index: int = position_marker.index_number
         lines_to_requeue: List[str] = []
 
         is_blank_line: Optional[bool] = not line_to_parse and not start_index
-        was_started = parser_state.token_stack[-1].was_link_definition_started
-        if was_started:
+
+        POGGER.debug(">>remaining_line_to_parse>:$:<", remaining_line_to_parse)
+        POGGER.debug(">>line_to_parse>:$:<", line_to_parse)
+        POGGER.debug(">>start_index>:$:<", start_index)
+        POGGER.debug(">>original_line>:$:<", original_line)
+        if "\t" in original_line and not is_blank_line:
+            POGGER.debug(">>tabified>:$:<", original_line)
+
+            first_character_to_parse = line_to_parse[start_index]
+            POGGER.debug(">>xx>:$:<", first_character_to_parse)
+            first_character_to_parse_index = original_line.find(
+                first_character_to_parse
+            )
+            assert first_character_to_parse_index != -1
+
+            line_to_parse = original_line[first_character_to_parse_index:]
+            unmodified_line_to_parse = original_line
+            remaining_line_to_parse = line_to_parse
+            start_index = 0
+
+        POGGER.debug(">>line_to_parse>:$:<", line_to_parse)
+
+        if was_started := parser_state.token_stack[-1].was_link_definition_started:
             lrd_stack_token = cast(
                 LinkDefinitionStackToken, parser_state.token_stack[-1]
             )
@@ -76,12 +99,25 @@ class LinkReferenceDefinitionHelper:
                 ">>continuation_lines>>$<<",
                 lrd_stack_token.continuation_lines,
             )
-            line_to_parse = lrd_stack_token.get_joined_lines(line_to_parse)
-            start_index, extracted_whitespace = ParserHelper.extract_ascii_whitespace(
-                line_to_parse, 0
+            line_to_parse = lrd_stack_token.add_joined_lines_before_suffix(
+                line_to_parse
             )
+            (
+                new_start_index,
+                extracted_whitespace,
+            ) = ParserHelper.extract_ascii_whitespace(line_to_parse, 0)
+            assert new_start_index is not None
+            start_index = new_start_index
+
+            POGGER.debug(
+                ">>unmodified_lines>>$<<",
+                lrd_stack_token.unmodified_lines,
+            )
+            # TODO match?
+
             POGGER.debug(">>line_to_parse>>$<<", line_to_parse)
 
+        POGGER.debug(">>line_to_parse>:$:<", line_to_parse)
         line_to_parse_size = len(line_to_parse)
         assert start_index is not None
 
@@ -466,7 +502,7 @@ class LinkReferenceDefinitionHelper:
         """
         POGGER.debug("parse_link_reference_definition:$:", line_to_parse)
         POGGER.debug("start_index:$:", start_index)
-        POGGER.debug("start_index:$:", extracted_whitespace)
+        POGGER.debug("extracted_whitespace:$:", extracted_whitespace)
         did_start = LinkReferenceDefinitionHelper.__is_link_reference_definition(
             parser_state, line_to_parse, start_index, extracted_whitespace
         )
@@ -624,7 +660,10 @@ class LinkReferenceDefinitionHelper:
             new_token.copy_of_token_stack = parser_state.copy_of_token_stack
         else:
             new_token = cast(LinkDefinitionStackToken, parser_state.token_stack[-1])
-        POGGER.debug(">>parse_link_reference_definition>>add>:$<<", line_to_store)
+
+        POGGER.debug(">>line_to_store>>add>:$<<", line_to_store)
+        POGGER.debug(">>unmodified_line_to_parse>>add>:$<<", unmodified_line_to_parse)
+        assert unmodified_line_to_parse.endswith(line_to_store)
         new_token.add_continuation_line(line_to_store)
         new_token.add_unmodified_line(unmodified_line_to_parse)
 
@@ -714,6 +753,10 @@ class LinkReferenceDefinitionHelper:
         link_ref_stack_token = cast(
             LinkDefinitionStackToken, parser_state.token_stack[-1]
         )
+
+        POGGER.debug(">>remaining_line_to_parse>>add>:$<<", remaining_line_to_parse)
+        POGGER.debug(">>unmodified_line_to_parse>>add>:$<<", unmodified_line_to_parse)
+        assert unmodified_line_to_parse.endswith(remaining_line_to_parse)
         link_ref_stack_token.add_continuation_line(remaining_line_to_parse)
         link_ref_stack_token.add_unmodified_line(unmodified_line_to_parse)
         while link_ref_stack_token.continuation_lines:
@@ -749,9 +792,14 @@ class LinkReferenceDefinitionHelper:
                 ">>continuation_lines>>$<<",
                 link_ref_stack_token.continuation_lines,
             )
-            is_blank_line, line_to_parse = True, link_ref_stack_token.get_joined_lines(
-                ""
+            POGGER.debug(
+                ">>unmodified_lines>>$<<",
+                link_ref_stack_token.unmodified_lines,
             )
+            (
+                is_blank_line,
+                line_to_parse,
+            ) = True, link_ref_stack_token.add_joined_lines_before_suffix("")
             line_to_parse = line_to_parse[:-1]
             start_index, extracted_whitespace = ParserHelper.extract_spaces(
                 line_to_parse, 0
@@ -796,6 +844,7 @@ class LinkReferenceDefinitionHelper:
         remaining_line_to_parse: str,
         ignore_link_definition_start: bool,
         pre_tokens: List[MarkdownToken],
+        original_line: str,
     ) -> Tuple[bool, Optional[RequeueLineInfo]]:
         """
         Take care of the processing for link reference definitions.
@@ -825,6 +874,7 @@ class LinkReferenceDefinitionHelper:
                 parser_state.original_line_to_parse,
                 parser_state.original_stack_depth,
                 parser_state.original_document_depth,
+                original_line,
             )
             if requeue_line_info:
                 outer_processed = True
