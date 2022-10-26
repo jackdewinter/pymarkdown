@@ -1558,7 +1558,11 @@ def test_whitespaces_html_with_tabs_before():
 
     # Act & Assert
     act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        allow_alternate_markdown=False,
+        show_debug=True,
     )
 
 
