@@ -109,12 +109,6 @@ class LinkReferenceDefinitionHelper:
             assert new_start_index is not None
             start_index = new_start_index
 
-            POGGER.debug(
-                ">>unmodified_lines>>$<<",
-                lrd_stack_token.unmodified_lines,
-            )
-            # TODO match?
-
             POGGER.debug(">>line_to_parse>>$<<", line_to_parse)
 
         POGGER.debug(">>line_to_parse>:$:<", line_to_parse)
