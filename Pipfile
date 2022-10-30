@@ -27,7 +27,7 @@ setuptools = "==65.3.0"
 snakeviz = "==2.1.1"
 twine = "==4.0.1"
 typing-extensions = "==4.4.0"
-mypy = "==0.971"
+mypy = "==0.982"
 columnar = "==1.4.1"
 application-properties = "==0.5.2"
 
