@@ -343,25 +343,384 @@ def test_whitespaces_thematic_breaks_with_form_feeds_before():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_thematic_breaks_with_spaces_before_within_list():
     """
     Test case:  Thematic breaks preceeded by spaces and tabs.
     """
-    # NOTE: thematic break takes precedece: https://github.github.com/gfm/#example-30
 
     # Arrange
     source_markdown = """- abc
     * * *"""
     expected_tokens = [
-        "[icode-block(1,5): \t:]",
-        "[text(1,5):* * *: ]",
-        "[end-icode-block:::True]",
+        "[ulist(1,1):-::2::  ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::False]",
+        "[tbreak(2,5):*:  :* * *]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>abc
 <hr />
 </li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_thematic_breaks_with_tabs_before_within_list():
+    """
+    Test case:  Thematic breaks preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """- abc
+\t* * *"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::False]",
+        "[tbreak(2,5):*:  :* * *]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+<hr />
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_thematic_breaks_with_formfeeds_before_within_list():
+    """
+    Test case:  Thematic breaks preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """- abc
+ \u000C \u000C* * *"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::]",
+        "[para(1,3):\n ]",
+        "[text(1,3):abc\n\u000C \u000C::\n]",
+        "[text(2,5):*:]",
+        "[text(2,6): :]",
+        "[text(2,7):*:]",
+        "[text(2,8): :]",
+        "[text(2,9):*:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+\u000C \u000C* * *</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_thematic_breaks_with_spaces_before_within_block_quotes():
+    """
+    Test case:  Thematic breaks preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> def
+    * * *"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n]",
+        "[para(1,3):\n\n    ]",
+        "[text(1,3):abc\ndef\n::\n\n]",
+        "[text(3,5):*:]",
+        "[text(3,6): :]",
+        "[text(3,7):*:]",
+        "[text(3,8): :]",
+        "[text(3,9):*:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc
+def
+* * *</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_thematic_breaks_with_spaces_before_within_double_block_quotes():
+    """
+    Test case:  Thematic breaks preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+    * * *"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n]",
+        "[para(2,5):\n    ]",
+        "[text(2,5):def\n::\n]",
+        "[text(3,5):*:]",
+        "[text(3,6): :]",
+        "[text(3,7):*:]",
+        "[text(3,8): :]",
+        "[text(3,9):*:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def
+* * *</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_thematic_breaks_with_spaces_before_within_double_block_quotes_with_single():
+    """
+    Test case:  Thematic breaks preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+>   * * *"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n> ]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::False]",
+        "[tbreak(3,5):*:  :* * *]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def</p>
+</blockquote>
+<hr />
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_thematic_breaks_with_tabs_before_within_block_quotes():
+    """
+    Test case:  Thematic breaks preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> def
+\t* * *"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n]",
+        "[para(1,3):\n\n\t]",
+        "[text(1,3):abc\ndef\n::\n\n]",
+        "[text(3,2):*:]",
+        "[text(3,3): :]",
+        "[text(3,4):*:]",
+        "[text(3,5): :]",
+        "[text(3,6):*:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc
+def
+* * *</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_thematic_breaks_with_tabs_before_within_double_block_quotes():
+    """
+    Test case:  Thematic breaks preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+\t* * *"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n]",
+        "[para(2,5):\n\t]",
+        "[text(2,5):def\n::\n]",
+        "[text(3,2):*:]",
+        "[text(3,3): :]",
+        "[text(3,4):*:]",
+        "[text(3,5): :]",
+        "[text(3,6):*:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def
+* * *</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_thematic_breaks_with_tabs_before_within_double_block_quotes_with_single():
+    """
+    Test case:  Thematic breaks preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+>\t* * *"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n> ]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::False]",
+        "[tbreak(3,5):*:  :* * *]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def</p>
+</blockquote>
+<hr />
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_thematic_breaks_with_tabs_before_within_double_block_quotes_with_single_and_space():
+    """
+    Test case:  Thematic breaks preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+> \t* * *"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n> ]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::False]",
+        "[tbreak(3,5):*:  :* * *]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def</p>
+</blockquote>
+<hr />
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_thematic_breaks_with_formfeeds_before_within_block_quotes():
+    """
+    Test case:  Thematic breaks preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """- abc
+ \u000C \u000C* * *"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::]",
+        "[para(1,3):\n ]",
+        "[text(1,3):abc\n\u000C \u000C::\n]",
+        "[text(2,5):*:]",
+        "[text(2,6): :]",
+        "[text(2,7):*:]",
+        "[text(2,8): :]",
+        "[text(2,9):*:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+\u000C \u000C* * *</li>
 </ul>"""
 
     # Act & Assert
@@ -489,6 +848,122 @@ def test_whitespaces_atx_headings_with_spaces_before():
 
 
 @pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_atx_headings_with_spaces_before_within_list():
+    """
+    Test case:  Atx Headings preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """- abc
+\t# abc"""
+    expected_tokens = ["[atx(1,3):1:0:  ]", "[text(1,5):abc: ]", "[end-atx::]"]
+    expected_gfm = """<h1>abc</h1>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_atx_headings_with_spaces_before_within_block_quotes():
+    """
+    Test case:  Atx Headings preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> def
+    # abc"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n]",
+        "[para(1,3):\n\n    ]",
+        "[text(1,3):abc\ndef\n# abc::\n\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc
+def
+# abc</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_atx_headings_with_spaces_before_within_double_block_quotes():
+    """
+    Test case:  Atx Headings preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+    # abc"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n]",
+        "[para(2,5):\n    ]",
+        "[text(2,5):def\n# abc::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def
+# abc</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_atx_headings_with_spaces_before_within_double_block_quotes_with_single():
+    """
+    Test case:  Atx Headings preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+>   # abc"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n> ]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::False]",
+        "[atx(3,5):1:0:  ]",
+        "[text(3,7):abc: ]",
+        "[end-atx::]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def</p>
+</blockquote>
+<h1>abc</h1>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_whitespaces_atx_headings_with_tabs_before():
     """
     Test case:  Atx Headings preceeded by spaces and tabs.
@@ -511,7 +986,7 @@ def test_whitespaces_atx_headings_with_tabs_before():
 
 
 @pytest.mark.gfm
-def test_whitespaces_atx_headings_with_tabs_within():
+def test_whitespaces_atx_headings_with_tabs_before_within_list():
     """
     Test case:  Atx Headings preceeded by spaces and tabs.
     """
@@ -534,6 +1009,146 @@ def test_whitespaces_atx_headings_with_tabs_within():
 <h1>abc</h1>
 </li>
 </ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_atx_headings_with_tabs_before_within_block_quotes():
+    """
+    Test case:  Atx Headings preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> def
+  \t# abc"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n]",
+        "[para(1,3):\n\n  \t]",
+        "[text(1,3):abc\ndef\n# abc::\n\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc
+def
+# abc</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_atx_headings_with_tabs_before_within_double_block_quotes():
+    """
+    Test case:  Atx Headings preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+  \t# abc"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n]",
+        "[para(2,5):\n  \t]",
+        "[text(2,5):def\n# abc::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def
+# abc</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_atx_headings_with_tabs_before_within_double_block_quotes_with_single():
+    """
+    Test case:  Atx Headings preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+>\t# abc"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::False]",
+        "[atx(2,5):1:0:\t]",
+        "[text(2,7):abc: ]",
+        "[end-atx::]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def</p>
+</blockquote>
+<h1>abc</h1>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_atx_headings_with_tabs_before_within_double_block_quotes_with_single_and_space():
+    """
+    Test case:  Atx Headings preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+> \t# abc"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n> ]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::False]",
+        "[atx(3,5):1:0:\t]",
+        "[text(3,7):abc: ]",
+        "[end-atx::]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def</p>
+</blockquote>
+<h1>abc</h1>
+</blockquote>"""
 
     # Act & Assert
     act_and_assert(
@@ -768,6 +1383,26 @@ def test_whitespaces_atx_headings_closed_with_form_feeds_after():
 
 
 @pytest.mark.gfm
+def test_whitespaces_setext_headings_with_only_enough_spaces_before():
+    """
+    Test case:  SetExt Headings preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """abc
+   ---"""
+    expected_tokens = [
+        "[setext(2,4):-:3::(1,1)]",
+        "[text(1,1):abc:]",
+        "[end-setext:   :]",
+    ]
+    expected_gfm = """<h2>abc</h2>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_whitespaces_setext_headings_with_spaces_before():
     """
     Test case:  SetExt Headings preceeded by spaces.
@@ -775,13 +1410,132 @@ def test_whitespaces_setext_headings_with_spaces_before():
 
     # Arrange
     source_markdown = """abc
-  ---"""
+    ---"""
+    expected_tokens = [
+        "[para(1,1):\n    ]",
+        "[text(1,1):abc\n---::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc
+---</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_setext_headings_with_spaces_before_within_list():
+    """
+    Test case:  SetExt Headings preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """- abc
+    ---"""
     expected_tokens = [
         "[setext(2,3):-:3::(1,1)]",
         "[text(1,1):abc:]",
         "[end-setext:  :]",
     ]
     expected_gfm = """<h2>abc</h2>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_setext_headings_with_spaces_before_within_block_quotes():
+    """
+    Test case:  SetExt Headings preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> def
+    ---"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n]",
+        "[para(1,3):\n\n    ]",
+        "[text(1,3):abc\ndef\n---::\n\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc
+def
+---</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_setext_headings_with_spaces_before_within_double_block_quotes():
+    """
+    Test case:  SetExt Headings preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+    ---"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n]",
+        "[para(2,5):\n    ]",
+        "[text(2,5):def\n---::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def
+---</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_setext_headings_with_spaces_before_within_double_block_quotes_with_single():
+    """
+    Test case:  SetExt Headings preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+>   ---"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n> ]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::False]",
+        "[tbreak(3,5):-:  :---]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def</p>
+</blockquote>
+<hr />
+</blockquote>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -812,7 +1566,7 @@ def test_whitespaces_setext_headings_with_tabs_before():
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within():
+def test_whitespaces_setext_headings_with_tabs_before_within_list():
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -832,6 +1586,159 @@ def test_whitespaces_setext_headings_with_tabs_before_within():
 <h2>abc</h2>
 </li>
 </ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        allow_alternate_markdown=False,
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_setext_headings_with_tabs_before_within_block_quote():
+    """
+    Test case:  SetExt Headings preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> def
+\t---"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n]",
+        "[para(1,3):\n\n\t]",
+        "[text(1,3):abc\ndef\n---::\n\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc
+def
+---</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        allow_alternate_markdown=False,
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quote():
+    """
+    Test case:  SetExt Headings preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+\t---"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n]",
+        "[para(2,5):\n\t]",
+        "[text(2,5):def\n---::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def
+---</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        allow_alternate_markdown=False,
+    )
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quote_with_single():
+    """
+    Test case:  SetExt Headings preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+>\t---"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n> ]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::False]",
+        "[tbreak(3,5):-:  :---]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def</p>
+</blockquote>
+<hr />
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        allow_alternate_markdown=False,
+    )
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quote_with_single_and_space():
+    """
+    Test case:  SetExt Headings preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+> \t---"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n> ]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::False]",
+        "[tbreak(3,5):-:  :---]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def</p>
+</blockquote>
+<hr />
+</blockquote>"""
 
     # Act & Assert
     act_and_assert(
@@ -978,6 +1885,123 @@ def test_whitespaces_indented_code_with_spaces_before():
 
 
 @pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_indented_code_with_spaces_before_within_list():
+    """
+    Test case:  Indented Code blocks preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """- abc
+        indented block"""
+    expected_tokens = [
+        "[icode-block(1,5):    :]",
+        "[text(1,5):indented block:]",
+        "[end-icode-block:::True]",
+    ]
+    expected_gfm = """<pre><code>indented block
+</code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_indented_code_with_spaces_before_within_block_quote():
+    """
+    Test case:  Indented Code blocks preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> def
+        indented block"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n]",
+        "[para(1,3):\n\n        ]",
+        "[text(1,3):abc\ndef\nindented block::\n\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc
+def
+indented block</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_indented_code_with_spaces_before_within_double_block_quote():
+    """
+    Test case:  Indented Code blocks preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+        indented block"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n]",
+        "[para(2,5):\n        ]",
+        "[text(2,5):def\nindented block::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def
+indented block</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_indented_code_with_spaces_before_within_double_block_quote_with_single():
+    """
+    Test case:  Indented Code blocks preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+>       indented block"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n> ]",
+        "[para(2,5):\n      ]",
+        "[text(2,5):def\nindented block::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def
+indented block</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_whitespaces_indented_code_with_tabs_before():
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
@@ -992,6 +2016,275 @@ def test_whitespaces_indented_code_with_tabs_before():
     ]
     expected_gfm = """<pre><code>indented block
 </code></pre>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_indented_code_with_tabs_before_with_block_quote():
+    """
+    Test case:  Indented Code blocks preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> def
+\tindented block"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n]",
+        "[para(1,3):\n\n\t]",
+        "[text(1,3):abc\ndef\nindented block::\n\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc
+def
+indented block</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_indented_code_with_tabs_before_with_block_quote_with_blank():
+    """
+    Test case:  Indented Code blocks preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> def
+>
+\tindented block"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n>]",
+        "[para(1,3):\n]",
+        "[text(1,3):abc\ndef::\n]",
+        "[end-para:::True]",
+        "[BLANK(3,2):]",
+        "[end-block-quote:::False]",
+        "[icode-block(4,5):\t:]",
+        "[text(4,5):indented block:]",
+        "[end-icode-block:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc
+def</p>
+</blockquote>
+<pre><code>indented block
+</code></pre>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote():
+    """
+    Test case:  Indented Code blocks preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+\tindented block"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n]",
+        "[para(2,5):\n\t]",
+        "[text(2,5):def\nindented block::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def
+indented block</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with_blank():
+    """
+    Test case:  Indented Code blocks preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+> >
+\tindented block"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n> >]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::True]",
+        "[BLANK(3,4):]",
+        "[end-block-quote:::False]",
+        "[end-block-quote:::False]",
+        "[icode-block(4,5):\t:]",
+        "[text(4,5):indented block:]",
+        "[end-icode-block:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def</p>
+</blockquote>
+</blockquote>
+<pre><code>indented block
+</code></pre>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with_single_with_blank():
+    """
+    Test case:  Indented Code blocks preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+> >
+>\tindented block"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n> >]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::True]",
+        "[BLANK(3,4):]",
+        "[end-block-quote:::True]",
+        "[para(4,5):  ]",
+        "[text(4,5):indented block:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def</p>
+</blockquote>
+<p>indented block</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with_single_with_blank_and_space():
+    """
+    Test case:  Indented Code blocks preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+> >
+> \tindented block"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n> >]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::True]",
+        "[BLANK(3,4):]",
+        "[end-block-quote:::True]",
+        "[para(4,5):  ]",
+        "[text(4,5):indented block:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def</p>
+</blockquote>
+<p>indented block</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with_single_with_spaces_and_blank():
+    """
+    Test case:  Indented Code blocks preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+> >
+> \t  indented block"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n> >]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::True]",
+        "[BLANK(3,4):]",
+        "[end-block-quote:::True]",
+        "[icode-block(4,7):    :]",
+        "[text(4,7):indented block:]",
+        "[end-icode-block:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def</p>
+</blockquote>
+<pre><code>indented block
+</code></pre>
+</blockquote>"""
 
     # Act & Assert
     act_and_assert(
@@ -1040,6 +2333,104 @@ abc"""
 
 
 @pytest.mark.gfm
+def test_whitespaces_fenced_code_open_with_spaces_before_within_block_quote():
+    """
+    Test case:  Fenced Code blocks preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> def
+    ```python"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n]",
+        "[para(1,3):\n\n    ]",
+        "[text(1,3):abc\ndef\n```python::\n\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc
+def
+```python</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quote():
+    """
+    Test case:  Fenced Code blocks preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+    ```python"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n]",
+        "[para(2,5):\n    ]",
+        "[text(2,5):def\n```python::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def
+```python</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quote_with_single():
+    """
+    Test case:  Fenced Code blocks preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+>   ```python"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n> ]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::False]",
+        "[fcode-block(3,5):`:3:python::::  :]",
+        "[end-fcode-block::::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def</p>
+</blockquote>
+<pre><code class="language-python"></code></pre>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_whitespaces_fenced_code_open_with_tabs_before():
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
@@ -1059,6 +2450,139 @@ abc"""
     expected_gfm = """<pre><code>```python
 </code></pre>
 <p>abc</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote():
+    """
+    Test case:  Fenced Code block preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> def
+\t```python"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n]",
+        "[para(1,3):\n\n\t]",
+        "[text(1,3):abc\ndef\n```python::\n\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc
+def
+```python</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_fenced_code_open_with_tabs_before_within_double_block_quote():
+    """
+    Test case:  Fenced Code block preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+\t```python"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n]",
+        "[para(2,5):\n\t]",
+        "[text(2,5):def\n```python::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def
+```python</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_fenced_code_open_with_tabs_before_within_double_block_quote_with_single():
+    """
+    Test case:  Fenced Code block preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+>\t```python"""
+    expected_tokens = [
+        "[icode-block(1,5): \t:]",
+        "[text(1,5):```python:]",
+        "[end-icode-block:::False]",
+        "[para(2,1):]",
+        "[text(2,1):abc:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<pre><code>```python
+</code></pre>
+<p>abc</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_fenced_code_open_with_tabs_before_within_double_block_quote_with_single_and_space():
+    """
+    Test case:  Fenced Code block preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+> \t```python"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n> ]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::False]",
+        "[fcode-block(3,5):`:3:ython::::  :]",
+        "[end-fcode-block::::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def</p>
+</blockquote>
+<pre><code class="language-python"></code></pre>
+</blockquote>"""
 
     # Act & Assert
     act_and_assert(
@@ -1541,6 +3065,105 @@ def test_whitespaces_html_with_spaces_before():
 
 
 @pytest.mark.gfm
+def test_whitespaces_html_with_spaces_before_in_block_quotes():
+    """
+    Test case:  Html blocks closed followed by spaces.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> def
+    <!-- comment"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n]",
+        "[para(1,3):\n\n    ]",
+        "[text(1,3):abc\ndef\n\a<\a&lt;\a!-- comment::\n\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc
+def
+&lt;!-- comment</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_html_with_spaces_before_in_double_block_quotes():
+    """
+    Test case:  Html blocks closed followed by spaces.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+    <!-- comment"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n]",
+        "[para(2,5):\n    ]",
+        "[text(2,5):def\n\a<\a&lt;\a!-- comment::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def
+&lt;!-- comment</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_html_with_spaces_before_in_double_block_quotes_with_single():
+    """
+    Test case:  Html blocks closed followed by spaces.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+>   <!-- comment"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n> ]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::False]",
+        "[html-block(3,3)]",
+        "[text(3,5):<!-- comment:  ]",
+        "[end-html-block:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def</p>
+</blockquote>
+  <!-- comment
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_whitespaces_html_with_tabs_before():
     """
     Test case:  HTML block followed by spaces and tabs.
@@ -1567,7 +3190,7 @@ def test_whitespaces_html_with_tabs_before():
 
 
 @pytest.mark.gfm
-def test_whitespaces_html_with_tabs_before_inside():
+def test_whitespaces_html_with_tabs_before_inside_list():
     """
     Test case:  HTML block followed by spaces and tabs.
     """
@@ -1590,6 +3213,146 @@ def test_whitespaces_html_with_tabs_before_inside():
 \t<!-- comment
 </li>
 </ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_html_with_tabs_before_inside_block_quotes():
+    """
+    Test case:  HTML block followed by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> def
+\t<!-- comment"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n]",
+        "[para(1,3):\n\n\t]",
+        "[text(1,3):abc\ndef\n\a<\a&lt;\a!-- comment::\n\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+\t<!-- comment
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_html_with_tabs_before_inside_double_block_quotes():
+    """
+    Test case:  HTML block followed by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+\t<!-- comment"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n]",
+        "[para(2,5):\n\t]",
+        "[text(2,5):def\n\a<\a&lt;\a!-- comment::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+\t<!-- comment
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_html_with_tabs_before_inside_double_block_quotes_with_single():
+    """
+    Test case:  HTML block followed by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+>\t<!-- comment"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::False]",
+        "[html-block(2,3)]",
+        "[text(2,5):<!-- comment:\t]",
+        "[end-html-block:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def</p>
+</blockquote>
+  <!-- comment
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_html_with_tabs_before_inside_double_block_quotes_with_single_and_space():
+    """
+    Test case:  HTML block followed by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+> \t<!-- comment"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n> ]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::False]",
+        "[html-block(3,3)]",
+        "[text(3,5):<!-- comment:\t]",
+        "[end-html-block:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def</p>
+</blockquote>
+\t<!-- comment
+</blockquote>"""
 
     # Act & Assert
     act_and_assert(
@@ -1785,6 +3548,164 @@ def test_whitespaces_lrd_with_spaces_before():
 
 
 @pytest.mark.gfm
+def test_whitespaces_lrd_with_spaces_before_within_block_quote():
+    """
+    Test case:  LRD preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> def
+    [fred]: /url
+[fred]"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n\n]",
+        "[para(1,3):\n\n    \n]",
+        "[text(1,3):abc\ndef\n::\n\n]",
+        "[text(3,5):[:]",
+        "[text(3,6):fred:]",
+        "[text(3,10):]:]",
+        "[text(3,11):: /url\n::\n]",
+        "[text(4,1):[:]",
+        "[text(4,2):fred:]",
+        "[text(4,6):]:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc
+def
+[fred]: /url
+[fred]</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_spaces_before_within_block_quote_just_enough():
+    """
+    Test case:  LRD preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> def
+   [fred]: /url
+[fred]"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n\n]",
+        "[para(1,3):\n\n   \n]",
+        "[text(1,3):abc\ndef\n::\n\n]",
+        "[text(3,4):[:]",
+        "[text(3,5):fred:]",
+        "[text(3,9):]:]",
+        "[text(3,10):: /url\n::\n]",
+        "[text(4,1):[:]",
+        "[text(4,2):fred:]",
+        "[text(4,6):]:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc
+def
+[fred]: /url
+[fred]</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_spaces_before_within_double_block_quote():
+    """
+    Test case:  LRD preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+    [fred]: /url
+[fred]"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n\n]",
+        "[para(2,5):\n    \n]",
+        "[text(2,5):def\n::\n]",
+        "[text(3,5):[:]",
+        "[text(3,6):fred:]",
+        "[text(3,10):]:]",
+        "[text(3,11):: /url\n::\n]",
+        "[text(4,1):[:]",
+        "[text(4,2):fred:]",
+        "[text(4,6):]:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def
+[fred]: /url
+[fred]</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_spaces_before_within_double_block_quote_with_single():
+    """
+    Test case:  LRD preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+>   [fred]: /url
+[fred]"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n> \n]",
+        "[para(2,5):\n  \n]",
+        "[text(2,5):def\n::\n]",
+        "[text(3,5):[:]",
+        "[text(3,6):fred:]",
+        "[text(3,10):]:]",
+        "[text(3,11):: /url\n::\n]",
+        "[text(4,1):[:]",
+        "[text(4,2):fred:]",
+        "[text(4,6):]:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def
+[fred]: /url
+[fred]</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_whitespaces_lrd_with_tabs_before():
     """
     Test case:  LRD preceeded by tabs.
@@ -1806,6 +3727,181 @@ def test_whitespaces_lrd_with_tabs_before():
     expected_gfm = """<pre><code>[fred]: /url
 </code></pre>
 <p>[fred]</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes():
+    """
+    Test case:  LRD preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> def
+\t[fred]: /url
+[fred]"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n\n]",
+        "[para(1,3):\n\n\t\n]",
+        "[text(1,3):abc\ndef\n::\n\n]",
+        "[text(3,2):[:]",
+        "[text(3,3):fred:]",
+        "[text(3,7):]:]",
+        "[text(3,8):: /url\n::\n]",
+        "[text(4,1):[:]",
+        "[text(4,2):fred:]",
+        "[text(4,6):]:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc
+def
+[fred]: /url
+[fred]</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_tabs_before_within_double_block_quotes():
+    """
+    Test case:  LRD preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+\t[fred]: /url
+[fred]"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n\n]",
+        "[para(2,5):\n\t\n]",
+        "[text(2,5):def\n::\n]",
+        "[text(3,2):[:]",
+        "[text(3,3):fred:]",
+        "[text(3,7):]:]",
+        "[text(3,8):: /url\n::\n]",
+        "[text(4,1):[:]",
+        "[text(4,2):fred:]",
+        "[text(4,6):]:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def
+[fred]: /url
+[fred]</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_lrd_with_tabs_before_within_double_block_quotes_with_single():
+    """
+    Test case:  LRD preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+>\t[fred]: /url
+[fred]"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n> \n]",
+        "[para(2,5):\n>\t\n]",
+        "[text(2,5):def\n::\n]",
+        "[text(3,5):[:]",
+        "[text(3,6):fred:]",
+        "[text(3,10):]:]",
+        "[text(3,11):: /url\n::\n]",
+        "[text(4,1):[:]",
+        "[text(4,2):fred:]",
+        "[text(4,6):]:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def
+[fred]: /url
+[fred]</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_lrd_with_tabs_before_within_double_block_quotes_with_single_and_space():
+    """
+    Test case:  LRD preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+>\t[fred]: /url
+[fred]"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n> \n]",
+        "[para(2,5):\n>\t\n]",
+        "[text(2,5):def\n::\n]",
+        "[text(3,5):[:]",
+        "[text(3,6):fred:]",
+        "[text(3,10):]:]",
+        "[text(3,11):: /url\n::\n]",
+        "[text(4,1):[:]",
+        "[text(4,2):fred:]",
+        "[text(4,6):]:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def
+[fred]: /url
+[fred]</p>
+</blockquote>
+</blockquote>"""
 
     # Act & Assert
     act_and_assert(
@@ -2357,6 +4453,101 @@ def test_whitespaces_paragraph_with_spaces_before():
 
 
 @pytest.mark.gfm
+def test_whitespaces_paragraph_with_spaces_before_within_block_quote():
+    """
+    Test case:  paragraph preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> def
+    a paragraph"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n]",
+        "[para(1,3):\n\n    ]",
+        "[text(1,3):abc\ndef\na paragraph::\n\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc
+def
+a paragraph</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_paragraph_with_spaces_before_within_double_block_quote():
+    """
+    Test case:  paragraph preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+    a paragraph"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n]",
+        "[para(2,5):\n    ]",
+        "[text(2,5):def\na paragraph::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def
+a paragraph</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_paragraph_with_spaces_before_within_double_block_quote_with_single():
+    """
+    Test case:  paragraph preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+>   a paragraph"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n> ]",
+        "[para(2,5):\n  ]",
+        "[text(2,5):def\na paragraph::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def
+a paragraph</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_whitespaces_paragraph_with_tabs_before():
     """
     Test case:  paragraph preceeded by tabs.
@@ -2371,6 +4562,145 @@ def test_whitespaces_paragraph_with_tabs_before():
     ]
     expected_gfm = """<pre><code>a paragraph
 </code></pre>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_paragraph_with_tabs_before_within_block_quote():
+    """
+    Test case:  paragraph preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> def
+\ta paragraph"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n]",
+        "[para(1,3):\n\n\t]",
+        "[text(1,3):abc\ndef\na paragraph::\n\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc
+def
+a paragraph</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_paragraph_with_tabs_before_within_double_block_quote():
+    """
+    Test case:  paragraph preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+\ta paragraph"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n]",
+        "[para(2,5):\n\t]",
+        "[text(2,5):def\na paragraph::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def
+a paragraph</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_paragraph_with_tabs_before_within_double_block_quote_with_single():
+    """
+    Test case:  paragraph preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+>\ta paragraph"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n> ]",
+        "[para(2,5):\n>\t]",
+        "[text(2,5):def\na paragraph::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def
+a paragraph</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_paragraph_with_tabs_before_within_double_block_quote_with_single_and_space():
+    """
+    Test case:  paragraph preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+> \ta paragraph"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n> ]",
+        "[para(2,5):\n> \t]",
+        "[text(2,5):def\na paragraph::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def
+a paragraph</p>
+</blockquote>
+</blockquote>"""
 
     # Act & Assert
     act_and_assert(
