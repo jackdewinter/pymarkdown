@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "e0a563566b1adf4e5f5c41c33055845688be50f16d97f338f722857593f2c060"
+            "sha256": "cd43eceed9d867f057f23b85118c040545a512ce6eee81443a4c5993163837e9"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -237,6 +237,14 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==0.19"
+        },
+        "exceptiongroup": {
+            "hashes": [
+                "sha256:2ac84b496be68464a2da60da518af3785fff8b7ec0d090a581604bc870bdee41",
+                "sha256:affbabf13fb6e98988c38d9c5650e701569fe3c1de3233cfb61c5f33774690ad"
+            ],
+            "markers": "python_version < '3.11'",
+            "version": "==1.0.0"
         },
         "execnet": {
             "hashes": [
@@ -573,11 +581,11 @@
         },
         "pytest": {
             "hashes": [
-                "sha256:1377bda3466d70b55e3f5cecfa55bb7cfcf219c7964629b967c37cf0bda818b7",
-                "sha256:4f365fec2dff9c1162f834d9f18af1ba13062db0c708bf7b946f8a5c76180c39"
+                "sha256:892f933d339f068883b6fd5a459f03d85bfcb355e4981e146d2c7616c21fef71",
+                "sha256:c4014eb40e10f11f355ad4e3c2fb2c6c6d1919c73f3b5a433de4708202cade59"
             ],
             "index": "pypi",
-            "version": "==7.1.3"
+            "version": "==7.2.0"
         },
         "pytest-console-scripts": {
             "hashes": [
@@ -589,11 +597,11 @@
         },
         "pytest-cov": {
             "hashes": [
-                "sha256:578d5d15ac4a25e5f961c938b85a05b09fdaae9deef3bb6de9a6e766622ca7a6",
-                "sha256:e7f0f5b1617d2210a2cabc266dfe2f4c75a8d32fb89eafb7ad9d06f6d076d470"
+                "sha256:2feb1b751d66a8bd934e5edfa2e961d11309dc37b73b0eabe73b5945fee20f6b",
+                "sha256:996b79efde6433cdbd0088872dbc5fb3ed7fe1578b68cdbba634f14bb8dd0470"
             ],
             "index": "pypi",
-            "version": "==3.0.0"
+            "version": "==4.0.0"
         },
         "pytest-forked": {
             "hashes": [

@@ -167,8 +167,7 @@ class RuleMd005(RulePlugin):
     def __handle_ordered_list_start(self, token: OrderedListStartMarkdownToken) -> None:
         self.__list_stack.append(token)
         list_level = len(self.__list_stack)
-        self.__ordered_tokens[list_level] = []
-        self.__ordered_tokens[list_level].append(token)
+        self.__ordered_tokens[list_level] = [token]
         if list_level not in self.__ordered_list_starts:
             self.__ordered_list_starts[list_level] = token
             self.__ordered_list_alignment[list_level] = OrderedListAlignment.UNKNOWN
