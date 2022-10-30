@@ -731,12 +731,14 @@ class LeafBlockProcessor:
         is_thematic_character = ParserHelper.is_character_at_index_one_of(
             line_to_parse, start_index, LeafBlockProcessor.__thematic_break_characters
         )
+        POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
         POGGER.debug("skip_whitespace_check>>$", skip_whitespace_check)
         POGGER.debug("is_thematic_character>>$", is_thematic_character)
         if (
             ParserHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
             or skip_whitespace_check
         ) and is_thematic_character:
+            POGGER.debug("checking for thematic break")
             start_char, index, char_count, line_to_parse_size = (
                 line_to_parse[start_index],
                 start_index,
