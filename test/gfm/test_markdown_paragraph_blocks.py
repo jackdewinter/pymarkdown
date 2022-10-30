@@ -254,17 +254,17 @@ def test_paragraph_blocks_196a():
     source_markdown = """aaa\t\t\t
 bbb\t\t\t\t\t"""
     expected_tokens = [
-        "[para(1,1):\n:                 ]",
-        "[text(1,1):aaa\nbbb::         \n]",
+        "[para(1,1):\n:\t\t\t\t\t]",
+        "[text(1,1):aaa\nbbb::\t\t\t\n]",
         "[end-para:::True]",
     ]
-    expected_gfm = """<p>aaa\a\a\a\a\a\a\a\a\a
-bbb</p>""".replace(
-        "\a", " "
-    )
+    expected_gfm = """<p>aaa\t\t\t
+bbb</p>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
 
 
 @pytest.mark.gfm
@@ -275,23 +275,23 @@ def test_paragraph_blocks_196b():
 
     # Arrange
     source_markdown = """- aaa\t\t\t\t\t
-  bbb\t\t\t\t\t"""
+  bbb\t\t\t"""
     expected_tokens = [
         "[ulist(1,1):-::2::  ]",
-        "[para(1,3):\n:                   ]",
-        "[text(1,3):aaa\nbbb::                   \n]",
+        "[para(1,3):\n:\t\t\t]",
+        "[text(1,3):aaa\nbbb::\t\t\t\t\t\n]",
         "[end-para:::True]",
         "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
-<li>aaa\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a
+<li>aaa\t\t\t\t\t
 bbb</li>
-</ul>""".replace(
-        "\a", " "
-    )
+</ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
 
 
 @pytest.mark.gfm
@@ -310,8 +310,8 @@ def test_paragraph_blocks_196c():
         "[text(1,3):abc:]",
         "[end-para:::True]",
         "[ulist(2,3):-::4:  :    ]",
-        "[para(2,5):\n:                 ]",
-        "[text(2,5):aaa\nbbb::                 \n]",
+        "[para(2,5):\n:\t\t\t\t\t]",
+        "[text(2,5):aaa\nbbb::\t\t\t\t\t\n]",
         "[end-para:::True]",
         "[end-ulist:::True]",
         "[end-ulist:::True]",
@@ -319,20 +319,85 @@ def test_paragraph_blocks_196c():
     expected_gfm = """<ul>
 <li>abc
 <ul>
-<li>aaa\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a
+<li>aaa\t\t\t\t\t
 bbb</li>
 </ul>
 </li>
-</ul>""".replace(
-        "\a", " "
-    )
+</ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
 
 
 @pytest.mark.gfm
 def test_paragraph_blocks_196d():
+    """
+    Test case 196a:  variation of 196, but with tabs instead of spaces, and in a list
+    """
+
+    # Arrange
+    source_markdown = """1. aaa\t\t\t\t\t
+   bbb\t\t\t"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   ]",
+        "[para(1,4):\n:\t\t\t]",
+        "[text(1,4):aaa\nbbb::\t\t\t\t\t\n]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>aaa\t\t\t\t\t
+bbb</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+def test_paragraph_blocks_196e():
+    """
+    Test case 196a:  variation of 196, but with tabs instead of spaces, and in a list
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+   1. aaa\t\t\t\t\t
+      bbb\t\t\t\t\t"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[olist(2,4):.:1:6:   :      ]",
+        "[para(2,7):\n:\t\t\t\t\t]",
+        "[text(2,7):aaa\nbbb::\t\t\t\t\t\n]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<ol>
+<li>aaa\t\t\t\t\t
+bbb</li>
+</ol>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_paragraph_blocks_196f():
     """
     Test case 196a:  variation of 196, but with tabs instead of spaces, and in a list
     """
@@ -375,11 +440,14 @@ bbb</li>
     )
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )
 
 
 @pytest.mark.gfm
-def test_paragraph_blocks_196e():
+@pytest.mark.skip
+def test_paragraph_blocks_196g():
     """
     Test case 196a:  variation of 196, but with tabs instead of spaces, and in a list
     """
@@ -422,4 +490,6 @@ bbb</li>
     )
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
+    )

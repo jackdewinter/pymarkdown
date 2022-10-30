@@ -77,8 +77,12 @@ class ListBlockProcessor:
             ParserHelper.is_length_less_than_or_equal_to(adj_ws, 3 + parent_indent)
             or skip_whitespace_check
         ):
+            assert extracted_whitespace is not None
+            adj_extracted_whitespace = extracted_whitespace
+            if parent_indent:
+                adj_extracted_whitespace = extracted_whitespace[parent_indent:]
             is_start = ListBlockProcessor.__is_start_ulist(
-                line_to_parse, start_index, extracted_whitespace
+                line_to_parse, start_index, adj_extracted_whitespace
             )
         else:
             is_start = False

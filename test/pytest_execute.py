@@ -41,7 +41,7 @@ class InProcessResult:
         if additional_text:
             assert actual_stream.getvalue().strip().startswith(expected_text.strip()), (
                 f"Block\n---\n{expected_text}\n---\nwas not found at the start of"
-                + "\n---\n{actual_stream.getvalue()}\nExtra:{log_extra}"
+                + f"\n---\n{actual_stream.getvalue()}\nExtra:{log_extra}"
             )
 
             for next_text_block in additional_text:

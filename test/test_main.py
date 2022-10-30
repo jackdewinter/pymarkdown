@@ -735,7 +735,7 @@ def test_markdown_with_dash_dash_log_level_invalid(caplog):
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE]
                {plugins,extensions,scan,scan-stdin,version} ...
-main.py: error: argument --log-level: invalid log_level_type value: 'invalid'
+main.py: error: argument --log-level: invalid __log_level_type value: 'invalid'
 """
 
     # Act
@@ -1581,9 +1581,9 @@ def test_markdown_with_multiple_errors_reported():
         + f"{source_path}:1:12: "
         + "MD010: Hard tabs "
         + "[Column: 12] (no-hard-tabs)\n"
-        + f"{source_path}:2:2: "
-        + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
-        + "(no-multiple-space-closed-atx)\n"
+        # + f"{source_path}:2:2: "
+        # + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
+        # + "(no-multiple-space-closed-atx)\n"
         + f"{source_path}:2:2: "
         + "MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"

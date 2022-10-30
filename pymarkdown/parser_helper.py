@@ -2,9 +2,12 @@
 Module to provide helper functions for parsing.
 """
 
+import logging
 from typing import Any, List, Optional, Tuple
 
 from pymarkdown.constants import Constants
+
+LOGGER = logging.getLogger(__name__)
 
 
 # pylint: disable=too-many-lines
@@ -409,6 +412,8 @@ class ParserHelper:
         rebuilt_string = ""
         current_start_index = 0
         next_tab_index = source_string.find(ParserHelper.tab_character)
+        # LOGGER.debug("next_tab_index=:%d:", next_tab_index)
+        # LOGGER.debug("additional_start_delta=:%d:", additional_start_delta)
         while next_tab_index != -1:
             _, start_index = ParserHelper.collect_backwards_while_spaces(
                 source_string, next_tab_index
@@ -418,14 +423,17 @@ class ParserHelper:
                 source_string, next_tab_index
             )
             whitespace_section = source_string[start_index:end_index]
+            # LOGGER.debug("whitespace_section=:%s:", ParserHelper.make_whitespace_visible(whitespace_section.replace("\t", "\\t")))
             if start_index:
                 rebuilt_string += source_string[:start_index]
             realized_start_index = (
                 current_start_index + start_index + additional_start_delta
             )
+            # LOGGER.debug("realized_start_index=:%d:", realized_start_index)
             whitespace_actual_length = ParserHelper.calculate_length(
                 whitespace_section, realized_start_index
             )
+            # LOGGER.debug("whitespace_actual_length=:%d:", whitespace_actual_length)
             rebuilt_string += ParserHelper.repeat_string(
                 ParserHelper.space_character, whitespace_actual_length
             )
@@ -433,6 +441,7 @@ class ParserHelper:
 
             source_string = source_string[end_index:]
             next_tab_index = source_string.find(ParserHelper.tab_character)
+            # LOGGER.debug("next_tab_index=:%d:", next_tab_index)
         if source_string:
             rebuilt_string += source_string
         return rebuilt_string
@@ -965,6 +974,55 @@ class ParserHelper:
                 end_index - newline_index
             ), source_string.find(ParserHelper.newline_character, newline_index + 1)
         return col_adjust, line_adjust
+
+    @staticmethod
+    def find_detabify_string(
+        original_line: str, detabified_line_to_match: str, initial_offset: int = 0
+    ) -> Tuple[Optional[str], int]:
+        """
+        Find a detabified line within the original line.
+        """
+
+        # LOGGER.debug("original_line=:%s:", ParserHelper.make_whitespace_visible(original_line.replace("\t", "\\t")))
+        # LOGGER.debug("detabified_line_to_match=:%s:", ParserHelper.make_whitespace_visible(detabified_line_to_match))
+        # LOGGER.debug("initial_offset=:%d:", initial_offset)
+        original_index = 0
+        adjusted_original_line = original_line[original_index:]
+        err = ParserHelper.detabify_string(
+            original_line, additional_start_delta=original_index + initial_offset
+        )
+        # LOGGER.debug("err=:%s:", ParserHelper.make_whitespace_visible(str(err)))
+        # LOGGER.debug("len(err)=%s >= len(detabified_line_to_match)=%s ", str(len(err)), str(len(detabified_line_to_match)))
+        while (len(err)) >= len(detabified_line_to_match):
+            adjusted_original_line = original_line[original_index:]
+            err = ParserHelper.detabify_string(
+                adjusted_original_line,
+                additional_start_delta=original_index + initial_offset,
+            )
+            # LOGGER.debug("err=:%s:", ParserHelper.make_whitespace_visible(str(err)))
+            if detabified_line_to_match == err:
+                break
+            original_index += 1
+            # LOGGER.debug("len(err)=%s >= len(detabified_line_to_match)=%s ", str(len(err)), str(len(detabified_line_to_match)))
+        if detabified_line_to_match == err:
+            return adjusted_original_line, original_index
+        return None, -1
+
+    @staticmethod
+    def find_detabify_string_ex(
+        original_line: str, detabified_line_to_match: str
+    ) -> Tuple[Optional[str], int]:
+        """
+        Find a detabified line within the original line, automatically looking at all four tab offsets.
+        """
+
+        for initial_offset in range(4):
+            adjusted_original_line, original_index = ParserHelper.find_detabify_string(
+                original_line, detabified_line_to_match, initial_offset
+            )
+            if adjusted_original_line is not None:
+                return adjusted_original_line, original_index
+        return None, -1
 
 
 # pylint: enable=too-many-public-methods

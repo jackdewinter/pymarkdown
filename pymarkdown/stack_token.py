@@ -492,6 +492,7 @@ class LinkDefinitionStackToken(StackToken):
         self.copy_of_token_stack: Optional[List[StackToken]] = None
         self.__continuation_lines: List[str] = []
         self.__unmodified_lines: List[str] = []
+        # self.__original_lines: List[str] = []
         StackToken.__init__(self, StackToken._stack_link_definition)
 
     @property
@@ -515,6 +516,13 @@ class LinkDefinitionStackToken(StackToken):
         """
         return self.__unmodified_lines
 
+    # @property
+    # def original_lines(self) -> List[str]:
+    #     """
+    #     Returns the original lines associated with this stack token.
+    #     """
+    #     return self.__original_lines
+
     @property
     def start_position_marker(self) -> PositionMarker:
         """
@@ -536,7 +544,13 @@ class LinkDefinitionStackToken(StackToken):
         """
         self.__unmodified_lines.append(new_line)
 
-    def get_joined_lines(self, join_suffix: str) -> str:
+    # def add_original_line(self, new_line: str) -> None:
+    #     """
+    #     ...
+    #     """
+    #     self.__original_lines.append(new_line)
+
+    def add_joined_lines_before_suffix(self, join_suffix: str) -> str:
         """
         Grab the continuation lines as a single line.
         """

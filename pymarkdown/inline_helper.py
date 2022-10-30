@@ -435,19 +435,6 @@ class InlineHelper:
         return inline_response
 
     @staticmethod
-    def modify_end_string(
-        end_string: Optional[str], removed_end_whitespace: str
-    ) -> str:
-        """
-        Modify the string at the end of the paragraph.
-        """
-        return (
-            f"{removed_end_whitespace}{ParserHelper.newline_character}"
-            if end_string is None
-            else f"{end_string}{removed_end_whitespace}{ParserHelper.newline_character}"
-        )
-
-    @staticmethod
     def __backtick_split_lines(input_string: str) -> List[str]:
         current_index: Optional[int] = 0
         assert current_index is not None
@@ -484,16 +471,17 @@ class InlineHelper:
         start_index = 0
         _array_index = 0
         for _array_index, array_element in enumerate(split_array):  # pragma: no cover
-            # POGGER.debug("$--$ >>:$:<<", array_index, start_index, split_array[array_index])
+            POGGER.debug(
+                "$--$ >>:$:<<", _array_index, start_index, split_array[_array_index]
+            )
             if start_index <= index_to_find < start_index + len(array_element):
                 break
             start_index += len(array_element)
-        assert start_index != len(split_array)
+        assert start_index != (start_index + len(split_array))
         delta = index_to_find - start_index
-        # POGGER.debug("i=$,start_index=$,delta=$", array_index, start_index, delta)
+        POGGER.debug("i=$,start_index=$,delta=$", _array_index, start_index, delta)
         return _array_index, delta, start_index
 
-    # pylint: disable=too-many-locals
     @staticmethod
     def __calculate_backtick_between_text(
         inline_request: InlineRequest, new_index: int, end_backtick_start_index: int
@@ -503,18 +491,17 @@ class InlineHelper:
         POGGER.debug("end_backtick_start_index>>$<<", end_backtick_start_index)
 
         between_text = inline_request.source_text[new_index:end_backtick_start_index]
-        actual_between_text = between_text
-        if inline_request.tabified_text:
-            actual_between_text = (
-                InlineHelper.__calculate_backtick_between_tabified_text(
-                    inline_request, new_index, end_backtick_start_index
-                )
-            )
+
         original_between_text, leading_whitespace, trailing_whitespace = (
             between_text,
             "",
             "",
         )
+
+        if inline_request.tabified_text:
+            between_text = InlineHelper.__calculate_backtick_between_tabified_text(
+                inline_request, new_index, end_backtick_start_index
+            )
         POGGER.debug(
             "after_collect>$>>$>>$<<",
             between_text,
@@ -522,15 +509,14 @@ class InlineHelper:
             inline_request.source_text[end_backtick_start_index:],
         )
         POGGER.debug("between_text>>$<<", between_text)
-        POGGER.debug("actual_between_text>>$<<", actual_between_text)
         if (
-            len(actual_between_text) > 2
-            and actual_between_text[0]
+            len(between_text) > 2
+            and between_text[0]
             in [
                 ParserHelper.space_character,
                 ParserHelper.newline_character,
             ]
-            and actual_between_text[-1]
+            and between_text[-1]
             in [
                 ParserHelper.space_character,
                 ParserHelper.newline_character,
@@ -574,8 +560,6 @@ class InlineHelper:
             trailing_whitespace,
         )
 
-    # pylint: enable=too-many-locals
-
     @staticmethod
     def __calculate_backtick_between_tabified_text(
         inline_request: InlineRequest, new_index: int, end_backtick_start_index: int
@@ -584,12 +568,12 @@ class InlineHelper:
         split_source_lines = InlineHelper.__backtick_split_lines(
             inline_request.source_text
         )
-        POGGER.debug("rt>>$<<", split_source_lines)
+        POGGER.debug("split_source_lines>>$<<", split_source_lines)
         assert inline_request.tabified_text is not None
         split_tabified_lines = InlineHelper.__backtick_split_lines(
             inline_request.tabified_text
         )
-        POGGER.debug("rtx>>$<<", split_tabified_lines)
+        POGGER.debug("split_tabified_lines>>$<<", split_tabified_lines)
         assert len(split_tabified_lines) == len(split_source_lines)
 
         (
@@ -621,14 +605,25 @@ class InlineHelper:
         assert calculated_index + end_delta == end_backtick_start_index
 
         if start_array_index == end_array_index:
+            POGGER.debug("same")
             actual_between_text = split_tabified_lines[start_array_index][
                 start_delta:end_delta
             ]
         else:
-            actual_between_text = "".join(
+            POGGER.debug("borders")
+            if start_delta:
+                actual_between_text = split_tabified_lines[start_array_index][
+                    start_delta:
+                ]
+                start_array_index += 1
+            else:
+                actual_between_text = ""
+            actual_between_text += "".join(
                 split_tabified_lines[i]
                 for i in range(start_array_index, end_array_index)
             )
+            if end_delta:
+                actual_between_text += split_tabified_lines[end_array_index][:end_delta]
         POGGER.debug("actual_between_text>:$:<", actual_between_text)
         return actual_between_text
 
@@ -644,6 +639,7 @@ class InlineHelper:
         column_number: int,
         coalesced_stack: List[MarkdownToken],
         tabified_text: Optional[str],
+        inline_request: InlineRequest,
     ) -> Tuple[str, Optional[str], List[MarkdownToken], str, Optional[str], str]:
         """
         Handle the inline case of having the end of line character encountered.
@@ -700,6 +696,7 @@ class InlineHelper:
             inline_blocks,
             is_setext,
             tabified_text,
+            inline_request,
         )
 
         if coalesced_stack and coalesced_stack[-1].is_block_quote_start:
@@ -758,9 +755,17 @@ class InlineHelper:
         inline_blocks: List[MarkdownToken],
         is_setext: bool,
         tabified_text: Optional[str],
+        inline_request: InlineRequest,
     ) -> Tuple[str, Optional[str], str, Optional[str], str]:
         POGGER.debug(">>removed_end_whitespace>:$:<", removed_end_whitespace)
         POGGER.debug(">>tabified_text>:$:<", tabified_text)
+        POGGER.debug(
+            ">>inline_request.tabified_text>:$:<", inline_request.tabified_text
+        )
+        POGGER.debug(
+            ">>inline_request.tabified_remaining_line>:$:<",
+            inline_request.tabified_remaining_line,
+        )
         is_proper_end = not tabified_text or tabified_text.endswith("  ")
         if is_proper_hard_break:
             POGGER.debug(">>proper hard break")
@@ -782,11 +787,16 @@ class InlineHelper:
             append_to_current_string = ""
         else:
             POGGER.debug(">>normal end")
+            POGGER.debug("current_string>:$:<", current_string)
+            POGGER.debug("removed_end_whitespace>:$:<", removed_end_whitespace)
+            POGGER.debug("end_string>:$:<", end_string)
+            POGGER.debug("remaining_line>:$:<", remaining_line)
             end_string, remaining_line = InlineHelper.__select_line_ending_normal(
                 is_setext,
                 inline_blocks,
                 current_string,
                 removed_end_whitespace,
+                inline_request.tabified_remaining_line,
                 end_string,
                 remaining_line,
             )
@@ -819,15 +829,16 @@ class InlineHelper:
         inline_blocks: List[MarkdownToken],
         current_string: str,
         removed_end_whitespace: str,
+        tabified_remaining_line: Optional[str],
         end_string: Optional[str],
         remaining_line: str,
     ) -> Tuple[str, str]:
         # POGGER.debug("<<is_setext<<$<<", is_setext)
         # POGGER.debug("<<inline_blocks<<$<<", inline_blocks)
         # POGGER.debug("<<current_string<<$<<", current_string)
-        # POGGER.debug("<<remaining_line<<$<<", remaining_line)
-        # POGGER.debug("<<end_string<<$<<", end_string)
-        # POGGER.debug("<<removed_end_whitespace<<$<<", removed_end_whitespace)
+        POGGER.debug("<<remaining_line<<$<<", remaining_line)
+        POGGER.debug("<<end_string<<$<<", end_string)
+        POGGER.debug("<<removed_end_whitespace<<$<<", removed_end_whitespace)
         if (
             is_setext
             and inline_blocks
@@ -840,9 +851,23 @@ class InlineHelper:
             assert new_index
             end_string = f"{ex_ws}{ParserHelper.whitespace_split_character}"
             remaining_line = remaining_line[new_index:]
+        if not is_setext and tabified_remaining_line and removed_end_whitespace:
+            POGGER.debug("<<tabified_remaining_line>:$:<", tabified_remaining_line)
+            POGGER.debug("<<removed_end_whitespace>:$:<", removed_end_whitespace)
+            adj_original, _ = ParserHelper.find_detabify_string_ex(
+                tabified_remaining_line, removed_end_whitespace
+            )
+            POGGER.debug("<<adj_original<<$<<", adj_original)
+            assert adj_original is not None
+            removed_end_whitespace = adj_original
 
-        end_string = InlineHelper.modify_end_string(end_string, removed_end_whitespace)
-        # POGGER.debug("<<end_string<<$<<", end_string)
+        POGGER.debug("<<end_string<<$<<", end_string)
+        end_string = (
+            f"{removed_end_whitespace}{ParserHelper.newline_character}"
+            if end_string is None
+            else f"{end_string}{removed_end_whitespace}{ParserHelper.newline_character}"
+        )
+        POGGER.debug("<<end_string<<$<<", end_string)
         return end_string, remaining_line
 
     # pylint: enable=too-many-arguments
@@ -857,12 +882,13 @@ class InlineHelper:
         """
         Extract a string that is bounded by some manner of characters.
         """
+        nesting_level: int = 0
         break_characters = (
             f"{InlineHelper.backslash_character}{close_character}{start_character}"
             if start_character
             else f"{InlineHelper.backslash_character}{close_character}"
         )
-        nesting_level: int = 0
+
         POGGER.debug(
             "extract_bounded_string>>new_index>>$>>data>>$>>",
             new_index,
@@ -879,8 +905,8 @@ class InlineHelper:
             data,
         )
         assert next_index is not None
-        while next_index < len(source_text) and not (
-            source_text[next_index] == close_character and nesting_level == 0
+        while next_index < len(source_text) and (
+            source_text[next_index] != close_character or nesting_level != 0
         ):
             (
                 next_index,

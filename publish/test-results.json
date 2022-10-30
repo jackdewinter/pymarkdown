@@ -4,7 +4,7 @@
     "measurements": [
         {
             "name": "test.basic.test_calculate_length",
-            "totalTests": 22,
+            "totalTests": 23,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -77,6 +77,14 @@
         {
             "name": "test.basic.test_container_grab_bag",
             "totalTests": 24,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.basic.test_detabify_string",
+            "totalTests": 2,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -476,10 +484,10 @@
         },
         {
             "name": "test.gfm.test_markdown_paragraph_blocks",
-            "totalTests": 14,
+            "totalTests": 16,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 2,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -508,7 +516,7 @@
         },
         {
             "name": "test.gfm.test_markdown_setext_headings",
-            "totalTests": 40,
+            "totalTests": 41,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -548,10 +556,10 @@
         },
         {
             "name": "test.gfm.test_markdown_tabs",
-            "totalTests": 20,
+            "totalTests": 30,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 13,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -588,10 +596,10 @@
         },
         {
             "name": "test.gfm.test_markdown_whitespaces",
-            "totalTests": 218,
+            "totalTests": 327,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 28,
             "elapsedTimeInMilliseconds": 0
         },
         {

@@ -656,12 +656,17 @@ class TextMarkdownToken(InlineMarkdownToken):
         """
 
         removed_whitespace = ""
+        # POGGER.debug("self.__tabified_text=:$:", self.__tabified_text)
+        # POGGER.debug("self.__token_text=:$:", self.__token_text)
         (
             collected_whitespace_length,
             first_non_whitespace_index,
         ) = ParserHelper.collect_backwards_while_one_of_characters(
             self.__token_text, -1, Constants.ascii_whitespace
         )
+        # POGGER.debug("collected_whitespace_length=:$:", collected_whitespace_length)
+        # POGGER.debug("first_non_whitespace_index=:$:", first_non_whitespace_index)
+
         assert first_non_whitespace_index is not None
         if collected_whitespace_length:
             removed_whitespace = self.__token_text[
@@ -669,6 +674,23 @@ class TextMarkdownToken(InlineMarkdownToken):
                 + collected_whitespace_length
             ]
             self.__token_text = self.__token_text[:first_non_whitespace_index]
+            if self.__tabified_text:
+                (
+                    collected_whitespace_length,
+                    first_non_whitespace_index,
+                ) = ParserHelper.collect_backwards_while_one_of_characters(
+                    self.__tabified_text, -1, Constants.ascii_whitespace
+                )
+                # POGGER.debug("collected_whitespace_length=:$:", collected_whitespace_length)
+                # POGGER.debug("first_non_whitespace_index=:$:", first_non_whitespace_index)
+                assert collected_whitespace_length is not None
+                assert first_non_whitespace_index is not None
+                removed_whitespace = self.__tabified_text[
+                    first_non_whitespace_index : first_non_whitespace_index
+                    + collected_whitespace_length
+                ]
+                self.__tabified_text = self.__tabified_text[:first_non_whitespace_index]
+        self.__compose_extra_data_field()
         return removed_whitespace
 
     def combine(
@@ -683,16 +705,19 @@ class TextMarkdownToken(InlineMarkdownToken):
         """
 
         if other_text_token.is_blank_line:
-            text_to_combine, whitespace_present, blank_line_sequence = (
-                "",
+            text_to_combine = ""
+            tabified_text_to_combine: Optional[str] = ""
+            (whitespace_present, blank_line_sequence,) = (
                 other_text_token.extra_data,
                 ParserHelper.replace_noop_character,
             )
         else:
             assert other_text_token.is_text
             text_other_token = cast(TextMarkdownToken, other_text_token)
-            text_to_combine, whitespace_present, blank_line_sequence = (
-                text_other_token.token_text,
+
+            text_to_combine = text_other_token.token_text
+            tabified_text_to_combine = text_other_token.tabified_text
+            (whitespace_present, blank_line_sequence,) = (
                 text_other_token.extracted_whitespace,
                 "",
             )
@@ -723,6 +748,19 @@ class TextMarkdownToken(InlineMarkdownToken):
             self.__extracted_whitespace = (
                 f"{self.__extracted_whitespace}"
                 + f"{ParserHelper.newline_character}{whitespace_to_append}"
+            )
+        if self.__tabified_text or tabified_text_to_combine:
+            other_token_text = tabified_text_to_combine or text_to_combine
+
+            this_token_text = self.__tabified_text or self.__token_text
+            # POGGER.debug("this_token_text>:$:<", this_token_text)
+            # POGGER.debug("blank_line_sequence>:$:<", blank_line_sequence)
+            # POGGER.debug("prefix_whitespace>:$:<", prefix_whitespace)
+            # POGGER.debug("other_token_text>:$:<", other_token_text)
+
+            self.__tabified_text = (
+                f"{this_token_text}{ParserHelper.newline_character}{blank_line_sequence}"
+                + f"{prefix_whitespace}{other_token_text}"
             )
         self.__token_text = (
             f"{self.__token_text}{ParserHelper.newline_character}{blank_line_sequence}"

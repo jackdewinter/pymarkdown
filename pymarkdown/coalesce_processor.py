@@ -29,12 +29,14 @@ class CoalesceProcessor:
         Take a pass and combine any two adjacent text blocks into one.
         """
         coalesced_list = [first_pass_results[0]]
+        # POGGER.debug("coalesced_list:$:", coalesced_list)
         for coalesce_index in range(1, len(first_pass_results)):
             POGGER.debug(
                 "coalesce_text_blocks>>>>$<<",
                 first_pass_results[coalesce_index],
             )
             if coalesced_list[-1].is_text:
+                # POGGER.debug("__coalesce_with_previous")
                 did_process = CoalesceProcessor.__coalesce_with_previous(
                     first_pass_results, coalesced_list, coalesce_index
                 )
@@ -44,13 +46,17 @@ class CoalesceProcessor:
                     and coalesced_list[-1].is_code_block
                 )
                 if did_process:
+                    # POGGER.debug("__coalesce_with_blank_line")
                     CoalesceProcessor.__coalesce_with_blank_line(
                         first_pass_results, coalesced_list, coalesce_index
                     )
             if not did_process:
                 coalesced_list.append(first_pass_results[coalesce_index])
+                # POGGER.debug("coalesced_list:$:", coalesced_list)
 
+        # POGGER.debug("--Final--coalesced_list:$:", coalesced_list)
         CoalesceProcessor.__calculate_final_whitespaces(coalesced_list)
+        # POGGER.debug("coalesced_list:$:", coalesced_list)
 
         return coalesced_list
 
@@ -67,6 +73,8 @@ class CoalesceProcessor:
                     "full_paragraph_text>$<",
                     text_token.token_text,
                 )
+                # POGGER.debug("text_token.tabified_text=:$:", text_token.tabified_text)
+                # POGGER.debug("text_token.token_text=:$:", text_token.token_text)
                 removed_ws = text_token.remove_final_whitespace()
                 POGGER.debug(
                     "full_paragraph_text>$<",
@@ -99,6 +107,10 @@ class CoalesceProcessor:
                     IndentedCodeBlockMarkdownToken, coalesced_list[-2]
                 )
                 remove_leading_spaces = len(indented_token.extracted_whitespace)
+                if "\t" in indented_token.extracted_whitespace:
+                    remove_leading_spaces = CoalesceProcessor.__calculate_real_length(
+                        indented_token.extracted_whitespace
+                    )
             elif (
                 coalesced_list[-2].is_paragraph or coalesced_list[-2].is_setext_heading
             ):
@@ -122,6 +134,19 @@ class CoalesceProcessor:
                 indented_token.add_indented_whitespace(indented_whitespace)
             return True
         return False
+
+    @staticmethod
+    def __calculate_real_length(string_to_calculate: str) -> int:
+        length_so_far = 0
+        for next_character in string_to_calculate:
+            POGGER.debug("next_character>:$:<", next_character)
+            if next_character == "\t":
+                length_so_far = (1 + (length_so_far // 4)) * 4
+            else:
+                length_so_far += 1
+            POGGER.debug("length_so_far>:$:<", length_so_far)
+        POGGER.debug("length_so_far>:$:<", length_so_far)
+        return length_so_far
 
     @staticmethod
     def __coalesce_with_blank_line(
