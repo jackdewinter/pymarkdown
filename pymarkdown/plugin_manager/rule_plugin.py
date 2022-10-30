@@ -147,27 +147,29 @@ class RulePlugin(ABC):
 
     # pylint: enable=too-many-arguments
 
-    def initialize_from_config(self) -> None:
+    def initialize_from_config(self) -> None:  # noqa: B027
         """
         Event to allow the plugin to load configuration information.
         """
 
-    def starting_new_file(self) -> None:
+    def starting_new_file(self) -> None:  # noqa: B027
         """
         Event that the a new file to be scanned is starting.
         """
 
-    def completed_file(self, context: PluginScanContext) -> None:
+    def completed_file(self, context: PluginScanContext) -> None:  # noqa: B027
         """
         Event that the file being currently scanned is now completed.
         """
 
-    def next_line(self, context: PluginScanContext, line: str) -> None:
+    def next_line(self, context: PluginScanContext, line: str) -> None:  # noqa: B027
         """
         Event that a new line is being processed.
         """
 
-    def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
+    def next_token(  # noqa: B027
+        self, context: PluginScanContext, token: MarkdownToken
+    ) -> None:
         """
         Event that a new token is being processed.
         """
