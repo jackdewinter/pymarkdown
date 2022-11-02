@@ -672,6 +672,13 @@ class EndMarkdownToken(MarkdownToken):
         """
         return self.__extra_end_data
 
+    def set_extra_end_data(self, new_end_data: Optional[str]) -> None:
+        """
+        Sets the extra data specifically tied to the end element. Use sparingly.
+        """
+        self.__extra_end_data = new_end_data
+        self.__compose_data_field()
+
     @property
     def start_markdown_token(self) -> MarkdownToken:
         """

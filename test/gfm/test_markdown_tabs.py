@@ -23,9 +23,7 @@ def test_tabs_001():
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -47,9 +45,7 @@ foo\tbaz\t\tbim
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -71,9 +67,7 @@ def test_tabs_001b():
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -95,9 +89,7 @@ def test_tabs_001c():
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -119,9 +111,7 @@ def test_tabs_001d():
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -141,9 +131,7 @@ def test_tabs_002():
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -218,9 +206,7 @@ foo\tbaz\t\tbim
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -242,9 +228,7 @@ def test_tabs_003():
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -280,9 +264,7 @@ def test_tabs_004x():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -352,9 +334,7 @@ def test_tabs_005x():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -401,9 +381,7 @@ def test_tabs_005a():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -440,13 +418,10 @@ def test_tabs_005b():
 </ol>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_tabs_006x():
     """
     Test case 006:  case > is followed by a tab, which is treated as if it were expanded into three spaces.
@@ -455,9 +430,9 @@ def test_tabs_006x():
     # Arrange
     source_markdown = """>\t\tfoo"""
     expected_tokens = [
-        "[block-quote(1,1)::> ]",
-        "[icode-block(1,7):    :]",
-        "[text(1,7):foo:  ]",
+        "[block-quote(1,1)::>]",
+        "[icode-block(1,7):\t:]",
+        "[text(1,7):\a\t\a  \afoo:]",
         "[end-icode-block:::True]",
         "[end-block-quote:::True]",
     ]
@@ -467,13 +442,10 @@ def test_tabs_006x():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_tabs_006a():
     """
     Test case 006a:  variation of 006 with spaces leading in instead of tab
@@ -483,8 +455,8 @@ def test_tabs_006a():
     source_markdown = """>   \tfoo"""
     expected_tokens = [
         "[block-quote(1,1)::> ]",
-        "[icode-block(1,7):    :]",
-        "[text(1,7):foo:  ]",
+        "[icode-block(1,7):  :]",
+        "[text(1,7):\a\t\a  \afoo:]",
         "[end-icode-block:::True]",
         "[end-block-quote:::True]",
     ]
@@ -494,13 +466,10 @@ def test_tabs_006a():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_tabs_006b():
     """
     Test case 006b:  variation of 006 with spaces leading in instead of tab
@@ -509,9 +478,9 @@ def test_tabs_006b():
     # Arrange
     source_markdown = """>\t    foo"""
     expected_tokens = [
-        "[block-quote(1,1)::> ]",
-        "[icode-block(1,7):    :]",
-        "[text(1,7):foo:  ]",
+        "[block-quote(1,1)::>]",
+        "[icode-block(1,7):\t  :]",
+        "[text(1,7):  foo:]",
         "[end-icode-block:::True]",
         "[end-block-quote:::True]",
     ]
@@ -521,9 +490,7 @@ def test_tabs_006b():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -551,7 +518,6 @@ def test_tabs_006c():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_tabs_006d():
     """
     Test case 006b:  variation of 006 with spaces leading in instead of tab
@@ -560,8 +526,8 @@ def test_tabs_006d():
     # Arrange
     source_markdown = """>\tfoo"""
     expected_tokens = [
-        "[block-quote(1,1)::> ]",
-        "[para(1,5):  ]",
+        "[block-quote(1,1)::>]",
+        "[para(1,5):\t]",
         "[text(1,5):foo:]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
@@ -571,9 +537,7 @@ def test_tabs_006d():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -600,9 +564,7 @@ def test_tabs_007x():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -629,9 +591,7 @@ def test_tabs_007a():
 </ol>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -658,9 +618,7 @@ def test_tabs_007b():
 </ol>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -687,9 +645,7 @@ def test_tabs_007c():
 </ol>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -712,9 +668,7 @@ bar
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -737,9 +691,7 @@ bar
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -762,9 +714,7 @@ bar
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -809,9 +759,7 @@ def test_tabs_009():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -826,9 +774,7 @@ def test_tabs_010():
     expected_gfm = """<h1>Foo</h1>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -843,6 +789,4 @@ def test_tabs_011():
     expected_gfm = """<hr />"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

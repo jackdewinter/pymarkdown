@@ -913,9 +913,7 @@ def test_atx_headings_extra_44x():
     expected_gfm = """<h1>Heading 1 with no blank lines</h1>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -934,6 +932,4 @@ def test_atx_headings_extra_44a():
     expected_gfm = """<h1>Heading 1 with no blank lines</h1>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

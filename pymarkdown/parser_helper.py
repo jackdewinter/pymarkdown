@@ -413,15 +413,18 @@ class ParserHelper:
         current_start_index = 0
         next_tab_index = source_string.find(ParserHelper.tab_character)
         # LOGGER.debug("next_tab_index=:%d:", next_tab_index)
+        # LOGGER.debug("source_string=:%s:", ParserHelper.make_whitespace_visible(source_string.replace("\t", "\\t")))
         # LOGGER.debug("additional_start_delta=:%d:", additional_start_delta)
         while next_tab_index != -1:
             _, start_index = ParserHelper.collect_backwards_while_spaces(
                 source_string, next_tab_index
             )
             assert start_index is not None
+            # LOGGER.debug("start_index=:%d:", start_index)
             end_index, _ = ParserHelper.collect_while_spaces(
                 source_string, next_tab_index
             )
+            # LOGGER.debug("end_index=:%d:", end_index)
             whitespace_section = source_string[start_index:end_index]
             # LOGGER.debug("whitespace_section=:%s:", ParserHelper.make_whitespace_visible(whitespace_section.replace("\t", "\\t")))
             if start_index:

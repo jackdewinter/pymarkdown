@@ -26,7 +26,7 @@ def act_and_assert(
     show_debug=False,
     config_map=None,
     disable_consistency_checks=False,
-    allow_alternate_markdown=True,
+    allow_alternate_markdown=False,
 ):
     """
     Act and assert on the expected behavior of parsing the source_markdown.

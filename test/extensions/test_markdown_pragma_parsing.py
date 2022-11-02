@@ -178,7 +178,9 @@ this is a paragraph
     expected_gfm = "<p>this is a paragraph</p>"
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=True
+    )
 
 
 @pytest.mark.gfm

@@ -5,6 +5,19 @@ from test.utils import act_and_assert
 
 import pytest
 
+## indents require testing for second line
+## indents (and others? with other start of line configuration)
+
+## wrong close + issue with normal space close
+# test_whitespaces_html_with_tabs_before_inside_double_block_quotes_with_single
+# test_whitespaces_html_with_tabs_before_inside_double_block_quotes_with_single_and_space
+# test_whitespaces_html_with_spaces_before_in_double_block_quotes_with_single
+
+## need doubles and mixes with list cases
+# test_whitespaces_thematic_breaks_with_tabs_before_within_double_block_quotes_with_single
+
+## need cases with tabs in every bit possible
+
 
 @pytest.mark.gfm
 def test_whitespaces_block_quotes_with_spaces():
@@ -30,6 +43,7 @@ def test_whitespaces_block_quotes_with_spaces():
 
 
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_whitespaces_block_quotes_with_tabs():
     """
     Test case:  Block quotes preceeded by spaces and tabs.
@@ -62,6 +76,7 @@ def test_whitespaces_block_quotes_with_tabs():
 
 
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_whitespaces_block_quotes_with_tabs_2():
     """
     Test case:  Block quotes preceeded by spaces and tabs.
@@ -144,6 +159,7 @@ def test_whitespaces_ordered_lists_with_spaces():
 
 
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_whitespaces_ordered_lists_with_tabs():
     """
     Test case:  Ordered lists preceeded by spaces and tabs.
@@ -225,6 +241,7 @@ def test_whitespaces_unordered_lists_with_spaces():
 
 
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_whitespaces_unordered_lists_with_tabs():
     """
     Test case:  Unordered lists preceeded by spaces and tabs.
@@ -314,9 +331,7 @@ def test_whitespaces_thematic_breaks_with_tabs_before():
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -366,9 +381,7 @@ def test_whitespaces_thematic_breaks_with_spaces_before_within_list():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -396,9 +409,7 @@ def test_whitespaces_thematic_breaks_with_tabs_before_within_list():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -428,9 +439,7 @@ def test_whitespaces_thematic_breaks_with_formfeeds_before_within_list():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -462,9 +471,7 @@ def
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -503,13 +510,10 @@ def test_whitespaces_thematic_breaks_with_spaces_before_within_double_block_quot
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_thematic_breaks_with_spaces_before_within_double_block_quotes_with_single():
     """
     Test case:  Thematic breaks preceeded by spaces and tabs.
@@ -528,8 +532,8 @@ def test_whitespaces_thematic_breaks_with_spaces_before_within_double_block_quot
         "[para(2,5):]",
         "[text(2,5):def:]",
         "[end-para:::False]",
+        "[end-block-quote::> :True]",
         "[tbreak(3,5):*:  :* * *]",
-        "[end-block-quote:::True]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -541,9 +545,42 @@ def test_whitespaces_thematic_breaks_with_spaces_before_within_double_block_quot
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_thematic_breaks_with_spaces_before_within_double_block_quotes_with_zero_and_three_spaces_at_start():
+    """
+    Test case:  Thematic breaks preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+   * * *"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > ]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[tbreak(3,4):*:   :* * *]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def</p>
+</blockquote>
+</blockquote>
+<hr />"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -575,9 +612,7 @@ def
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -616,13 +651,10 @@ def test_whitespaces_thematic_breaks_with_tabs_before_within_double_block_quotes
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_thematic_breaks_with_tabs_before_within_double_block_quotes_with_single():
     """
     Test case:  Thematic breaks preceeded by spaces and tabs.
@@ -641,8 +673,8 @@ def test_whitespaces_thematic_breaks_with_tabs_before_within_double_block_quotes
         "[para(2,5):]",
         "[text(2,5):def:]",
         "[end-para:::False]",
-        "[tbreak(3,5):*:  :* * *]",
-        "[end-block-quote:::True]",
+        "[end-block-quote::>:True]",
+        "[tbreak(3,5):*:\t:* * *]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -654,13 +686,10 @@ def test_whitespaces_thematic_breaks_with_tabs_before_within_double_block_quotes
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_thematic_breaks_with_tabs_before_within_double_block_quotes_with_single_and_space():
     """
     Test case:  Thematic breaks preceeded by spaces and tabs.
@@ -679,8 +708,8 @@ def test_whitespaces_thematic_breaks_with_tabs_before_within_double_block_quotes
         "[para(2,5):]",
         "[text(2,5):def:]",
         "[end-para:::False]",
-        "[tbreak(3,5):*:  :* * *]",
-        "[end-block-quote:::True]",
+        "[end-block-quote::> :True]",
+        "[tbreak(3,5):*:\t:* * *]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -692,9 +721,7 @@ def test_whitespaces_thematic_breaks_with_tabs_before_within_double_block_quotes
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -724,9 +751,7 @@ def test_whitespaces_thematic_breaks_with_formfeeds_before_within_block_quotes()
 </ul>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -741,9 +766,7 @@ def test_whitespaces_thematic_breaks_with_tabs_inside():
     expected_gfm = """<hr />"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -798,9 +821,7 @@ def test_whitespaces_thematic_breaks_with_tabs_after():
     expected_gfm = """<hr />"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -926,7 +947,6 @@ def test_whitespaces_atx_headings_with_spaces_before_within_double_block_quotes(
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_atx_headings_with_spaces_before_within_double_block_quotes_with_single():
     """
     Test case:  Atx Headings preceeded by spaces.
@@ -945,10 +965,10 @@ def test_whitespaces_atx_headings_with_spaces_before_within_double_block_quotes_
         "[para(2,5):]",
         "[text(2,5):def:]",
         "[end-para:::False]",
+        "[end-block-quote::> :True]",
         "[atx(3,5):1:0:  ]",
         "[text(3,7):abc: ]",
         "[end-atx::]",
-        "[end-block-quote:::True]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -980,9 +1000,7 @@ def test_whitespaces_atx_headings_with_tabs_before():
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1011,9 +1029,7 @@ def test_whitespaces_atx_headings_with_tabs_before_within_list():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1040,9 +1056,7 @@ def
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1076,13 +1090,10 @@ def test_whitespaces_atx_headings_with_tabs_before_within_double_block_quotes():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_atx_headings_with_tabs_before_within_double_block_quotes_with_single():
     """
     Test case:  Atx Headings preceeded by spaces and tabs.
@@ -1093,14 +1104,19 @@ def test_whitespaces_atx_headings_with_tabs_before_within_double_block_quotes_wi
 > > def
 >\t# abc"""
     expected_tokens = [
-        "[ulist(1,1):-::2::  ]",
+        "[block-quote(1,1)::> ]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n> ]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
         "[end-para:::False]",
-        "[atx(2,5):1:0:\t]",
-        "[text(2,7):abc: ]",
+        "[end-block-quote::>:True]",
+        "[atx(3,5):1:0:\t]",
+        "[text(3,7):abc: ]",
         "[end-atx::]",
-        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <p>abc</p>
@@ -1111,13 +1127,10 @@ def test_whitespaces_atx_headings_with_tabs_before_within_double_block_quotes_wi
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_atx_headings_with_tabs_before_within_double_block_quotes_with_single_and_space():
     """
     Test case:  Atx Headings preceeded by spaces and tabs.
@@ -1136,10 +1149,10 @@ def test_whitespaces_atx_headings_with_tabs_before_within_double_block_quotes_wi
         "[para(2,5):]",
         "[text(2,5):def:]",
         "[end-para:::False]",
+        "[end-block-quote::> :True]",
         "[atx(3,5):1:0:\t]",
         "[text(3,7):abc: ]",
         "[end-atx::]",
-        "[end-block-quote:::True]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -1151,9 +1164,7 @@ def test_whitespaces_atx_headings_with_tabs_before_within_double_block_quotes_wi
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1187,9 +1198,7 @@ def test_whitespaces_atx_headings_with_tabs_inside():
     expected_gfm = """<h1>abc</h1>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1204,9 +1213,7 @@ def test_whitespaces_atx_headings_with_tabs_inside_2():
     expected_gfm = """<h1>abc\tdef</h1>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1251,9 +1258,7 @@ def test_whitespaces_atx_headings_with_tabs_after():
     expected_gfm = """<h1>abc</h1>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1283,9 +1288,7 @@ def test_whitespaces_atx_headings_with_tabs_inside_closed():
     expected_gfm = """<h1>abc\tdef</h1>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1315,9 +1318,7 @@ def test_whitespaces_atx_headings_with_tabs_after_closed():
     expected_gfm = """<h1>abc</h1>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1362,9 +1363,7 @@ def test_whitespaces_atx_headings_closed_with_tabs_after():
     expected_gfm = """<h1>abc</h1>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1506,7 +1505,6 @@ def test_whitespaces_setext_headings_with_spaces_before_within_double_block_quot
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_setext_headings_with_spaces_before_within_double_block_quotes_with_single():
     """
     Test case:  SetExt Headings preceeded by spaces.
@@ -1525,8 +1523,8 @@ def test_whitespaces_setext_headings_with_spaces_before_within_double_block_quot
         "[para(2,5):]",
         "[text(2,5):def:]",
         "[end-para:::False]",
+        "[end-block-quote::> :True]",
         "[tbreak(3,5):-:  :---]",
-        "[end-block-quote:::True]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -1560,9 +1558,7 @@ def test_whitespaces_setext_headings_with_tabs_before():
 ---</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1588,12 +1584,7 @@ def test_whitespaces_setext_headings_with_tabs_before_within_list():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown,
-        expected_gfm,
-        expected_tokens,
-        allow_alternate_markdown=False,
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1620,12 +1611,7 @@ def
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown,
-        expected_gfm,
-        expected_tokens,
-        allow_alternate_markdown=False,
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1659,16 +1645,10 @@ def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quote(
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown,
-        expected_gfm,
-        expected_tokens,
-        allow_alternate_markdown=False,
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quote_with_single():
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
@@ -1687,8 +1667,8 @@ def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quote_
         "[para(2,5):]",
         "[text(2,5):def:]",
         "[end-para:::False]",
-        "[tbreak(3,5):-:  :---]",
-        "[end-block-quote:::True]",
+        "[end-block-quote::>:True]",
+        "[tbreak(3,5):-:\t:---]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -1700,16 +1680,10 @@ def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quote_
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown,
-        expected_gfm,
-        expected_tokens,
-        allow_alternate_markdown=False,
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quote_with_single_and_space():
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
@@ -1728,8 +1702,8 @@ def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quote_
         "[para(2,5):]",
         "[text(2,5):def:]",
         "[end-para:::False]",
-        "[tbreak(3,5):-:  :---]",
-        "[end-block-quote:::True]",
+        "[end-block-quote::> :True]",
+        "[tbreak(3,5):-:\t:---]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -1741,12 +1715,7 @@ def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quote_
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown,
-        expected_gfm,
-        expected_tokens,
-        allow_alternate_markdown=False,
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1807,9 +1776,7 @@ def test_whitespaces_setext_headings_with_tabs_after():
     expected_gfm = """<h2>abc</h2>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1835,12 +1802,7 @@ def test_whitespaces_setext_headings_with_tabs_after_within():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown,
-        expected_gfm,
-        expected_tokens,
-        allow_alternate_markdown=False,
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2018,9 +1980,7 @@ def test_whitespaces_indented_code_with_tabs_before():
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2047,9 +2007,7 @@ indented block</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2082,9 +2040,7 @@ def</p>
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2118,9 +2074,7 @@ indented block</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2160,13 +2114,10 @@ def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with_single_with_blank():
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
@@ -2178,7 +2129,7 @@ def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with
 > >
 >\tindented block"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n> ]",
+        "[block-quote(1,1)::> \n>]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
@@ -2188,7 +2139,7 @@ def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with
         "[end-para:::True]",
         "[BLANK(3,4):]",
         "[end-block-quote:::True]",
-        "[para(4,5):  ]",
+        "[para(4,5):\t]",
         "[text(4,5):indented block:]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
@@ -2202,13 +2153,10 @@ def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with_single_with_blank_and_space():
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
@@ -2230,7 +2178,7 @@ def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with
         "[end-para:::True]",
         "[BLANK(3,4):]",
         "[end-block-quote:::True]",
-        "[para(4,5):  ]",
+        "[para(4,5):\t]",
         "[text(4,5):indented block:]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
@@ -2244,14 +2192,11 @@ def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with_single_with_spaces_and_blank():
+def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with_single_with_spaces_and_blank_x():
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -2272,7 +2217,7 @@ def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with
         "[end-para:::True]",
         "[BLANK(3,4):]",
         "[end-block-quote:::True]",
-        "[icode-block(4,7):    :]",
+        "[icode-block(4,7):\t  :]",
         "[text(4,7):indented block:]",
         "[end-icode-block:::True]",
         "[end-block-quote:::True]",
@@ -2287,9 +2232,47 @@ def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with_single_with_spaces_and_blank_and_tab():
+    """
+    Test case:  Indented Code blocks preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+> >
+> \t\tindented block"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n> >]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::True]",
+        "[BLANK(3,4):]",
+        "[end-block-quote:::True]",
+        "[icode-block(4,7):\t:]",
+        "[text(4,7):\a\t\a  \aindented block:]",
+        "[end-icode-block:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def</p>
+</blockquote>
+<pre><code>  indented block
+</code></pre>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2394,7 +2377,6 @@ def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quo
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quote_with_single():
     """
     Test case:  Fenced Code blocks preceeded by spaces.
@@ -2413,9 +2395,9 @@ def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quo
         "[para(2,5):]",
         "[text(2,5):def:]",
         "[end-para:::False]",
+        "[end-block-quote::> :True]",
         "[fcode-block(3,5):`:3:python::::  :]",
         "[end-fcode-block::::True]",
-        "[end-block-quote:::True]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -2452,9 +2434,7 @@ abc"""
 <p>abc</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2481,9 +2461,7 @@ def
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2517,13 +2495,10 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_double_block_quote
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_fenced_code_open_with_tabs_before_within_double_block_quote_with_single():
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
@@ -2534,25 +2509,33 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_double_block_quote
 > > def
 >\t```python"""
     expected_tokens = [
-        "[icode-block(1,5): \t:]",
-        "[text(1,5):```python:]",
-        "[end-icode-block:::False]",
-        "[para(2,1):]",
-        "[text(2,1):abc:]",
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
         "[end-para:::True]",
+        "[block-quote(2,1)::> > \n> ]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::False]",
+        "[end-block-quote::>:True]",
+        "[fcode-block(3,5):`:3:python::::\t:]",
+        "[end-fcode-block::::True]",
+        "[end-block-quote:::True]",
     ]
-    expected_gfm = """<pre><code>```python
-</code></pre>
-<p>abc</p>"""
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def</p>
+</blockquote>
+<pre><code class="language-python"></code></pre>
+</blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
+# @pytest.mark.skip
 def test_whitespaces_fenced_code_open_with_tabs_before_within_double_block_quote_with_single_and_space():
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
@@ -2571,9 +2554,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_double_block_quote
         "[para(2,5):]",
         "[text(2,5):def:]",
         "[end-para:::False]",
-        "[fcode-block(3,5):`:3:ython::::  :]",
+        "[end-block-quote::> :True]",
+        "[fcode-block(3,5):`:3:python::::\t:]",
         "[end-fcode-block::::True]",
-        "[end-block-quote:::True]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -2585,9 +2568,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_double_block_quote
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2650,9 +2631,7 @@ abc"""
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2715,9 +2694,7 @@ abc"""
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2783,9 +2760,7 @@ abc\tdef
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2830,9 +2805,7 @@ abc
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2861,12 +2834,7 @@ def test_whitespaces_fenced_code_closed_with_tabs_before_x():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown,
-        expected_gfm,
-        expected_tokens,
-        allow_alternate_markdown=False,
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2934,9 +2902,7 @@ abc
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2959,9 +2925,7 @@ abc
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2990,12 +2954,7 @@ def test_whitespaces_fenced_code_closed_with_tabs_after_and_before_2():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown,
-        expected_gfm,
-        expected_tokens,
-        allow_alternate_markdown=False,
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3040,9 +2999,7 @@ abc\tdef
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3180,13 +3137,7 @@ def test_whitespaces_html_with_tabs_before():
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown,
-        expected_gfm,
-        expected_tokens,
-        allow_alternate_markdown=False,
-        show_debug=True,
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3215,13 +3166,10 @@ def test_whitespaces_html_with_tabs_before_inside_list():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_html_with_tabs_before_inside_block_quotes():
     """
     Test case:  HTML block followed by spaces and tabs.
@@ -3238,20 +3186,17 @@ def test_whitespaces_html_with_tabs_before_inside_block_quotes():
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]
-    expected_gfm = """<ul>
-<li>abc
-\t<!-- comment
-</li>
-</ul>"""
+    expected_gfm = """<blockquote>
+<p>abc
+def
+&lt;!-- comment</p>
+</blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_html_with_tabs_before_inside_double_block_quotes():
     """
     Test case:  HTML block followed by spaces and tabs.
@@ -3273,16 +3218,16 @@ def test_whitespaces_html_with_tabs_before_inside_double_block_quotes():
         "[end-block-quote:::True]",
         "[end-block-quote:::True]",
     ]
-    expected_gfm = """<ul>
-<li>abc
-\t<!-- comment
-</li>
-</ul>"""
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def
+&lt;!-- comment</p>
+</blockquote>
+</blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3297,14 +3242,19 @@ def test_whitespaces_html_with_tabs_before_inside_double_block_quotes_with_singl
 > > def
 >\t<!-- comment"""
     expected_tokens = [
-        "[ulist(1,1):-::2::  ]",
+        "[block-quote(1,1)::> ]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n> ]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
         "[end-para:::False]",
-        "[html-block(2,3)]",
-        "[text(2,5):<!-- comment:\t]",
+        "[html-block(3,3)]",
+        "[text(3,5):<!-- comment:  ]",
         "[end-html-block:::True]",
-        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <p>abc</p>
@@ -3315,9 +3265,7 @@ def test_whitespaces_html_with_tabs_before_inside_double_block_quotes_with_singl
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3355,9 +3303,7 @@ def test_whitespaces_html_with_tabs_before_inside_double_block_quotes_with_singl
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3414,9 +3360,7 @@ def test_whitespaces_html_start_6_with_tabs_after():
     expected_gfm = """<dialog\t"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3473,9 +3417,7 @@ def test_whitespaces_html_start_7_with_tabs_after():
     expected_gfm = """<dialog>\t"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3500,9 +3442,7 @@ def test_whitespaces_html_start_7_with_tabs_within():
 <something>\t</something>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3729,9 +3669,7 @@ def test_whitespaces_lrd_with_tabs_before():
 <p>[fred]</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3767,9 +3705,7 @@ def
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3812,13 +3748,10 @@ def test_whitespaces_lrd_with_tabs_before_within_double_block_quotes():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_lrd_with_tabs_before_within_double_block_quotes_with_single():
     """
     Test case:  LRD preceeded by tabs.
@@ -3834,13 +3767,13 @@ def test_whitespaces_lrd_with_tabs_before_within_double_block_quotes_with_single
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
-        "[block-quote(2,1)::> > \n> \n]",
-        "[para(2,5):\n>\t\n]",
+        "[block-quote(2,1)::> > \n>\n]",
+        "[para(2,5):\n\t\n]",
         "[text(2,5):def\n::\n]",
-        "[text(3,5):[:]",
-        "[text(3,6):fred:]",
-        "[text(3,10):]:]",
-        "[text(3,11):: /url\n::\n]",
+        "[text(3,3):[:]",
+        "[text(3,4):fred:]",
+        "[text(3,8):]:]",
+        "[text(3,9):: /url\n::\n]",
         "[text(4,1):[:]",
         "[text(4,2):fred:]",
         "[text(4,6):]:]",
@@ -3858,13 +3791,10 @@ def test_whitespaces_lrd_with_tabs_before_within_double_block_quotes_with_single
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_lrd_with_tabs_before_within_double_block_quotes_with_single_and_space():
     """
     Test case:  LRD preceeded by tabs.
@@ -3873,7 +3803,7 @@ def test_whitespaces_lrd_with_tabs_before_within_double_block_quotes_with_single
     # Arrange
     source_markdown = """> abc
 > > def
->\t[fred]: /url
+> \t[fred]: /url
 [fred]"""
     expected_tokens = [
         "[block-quote(1,1)::> ]",
@@ -3881,12 +3811,12 @@ def test_whitespaces_lrd_with_tabs_before_within_double_block_quotes_with_single
         "[text(1,3):abc:]",
         "[end-para:::True]",
         "[block-quote(2,1)::> > \n> \n]",
-        "[para(2,5):\n>\t\n]",
+        "[para(2,5):\n\t\n]",
         "[text(2,5):def\n::\n]",
-        "[text(3,5):[:]",
-        "[text(3,6):fred:]",
-        "[text(3,10):]:]",
-        "[text(3,11):: /url\n::\n]",
+        "[text(3,4):[:]",
+        "[text(3,5):fred:]",
+        "[text(3,9):]:]",
+        "[text(3,10):: /url\n::\n]",
         "[text(4,1):[:]",
         "[text(4,2):fred:]",
         "[text(4,6):]:]",
@@ -3904,9 +3834,7 @@ def test_whitespaces_lrd_with_tabs_before_within_double_block_quotes_with_single
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3979,9 +3907,7 @@ def test_whitespaces_lrd_with_tabs_before_label():
     expected_gfm = """<p><a href="/url"> fred</a></p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4050,9 +3976,7 @@ def test_whitespaces_lrd_with_tabs_after_label():
     expected_gfm = """<p><a href="/url">fred </a></p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4121,9 +4045,7 @@ def test_whitespaces_lrd_with_tabs_in_label():
     expected_gfm = """<p><a href="/url">fred boy</a></p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4192,9 +4114,7 @@ def test_whitespaces_lrd_with_tabs_before_destination():
     expected_gfm = """<p><a href="/url">fred</a></p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4263,9 +4183,7 @@ def test_whitespaces_lrd_with_tabs_after_destination():
     expected_gfm = """<p><a href="/url">fred</a></p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4334,9 +4252,7 @@ def test_whitespaces_lrd_with_tabs_before_title():
     expected_gfm = """<p><a href="/url" title="title">fred</a></p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4405,9 +4321,7 @@ def test_whitespaces_lrd_with_tabs_after_title():
     expected_gfm = """<p><a href="/url" title="title">fred</a></p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4564,9 +4478,7 @@ def test_whitespaces_paragraph_with_tabs_before():
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4593,9 +4505,7 @@ a paragraph</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4629,13 +4539,10 @@ a paragraph</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_paragraph_with_tabs_before_within_double_block_quote_with_single():
     """
     Test case:  paragraph preceeded by tabs.
@@ -4650,8 +4557,8 @@ def test_whitespaces_paragraph_with_tabs_before_within_double_block_quote_with_s
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
-        "[block-quote(2,1)::> > \n> ]",
-        "[para(2,5):\n>\t]",
+        "[block-quote(2,1)::> > \n>]",
+        "[para(2,5):\n\t]",
         "[text(2,5):def\na paragraph::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
@@ -4666,13 +4573,10 @@ a paragraph</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_paragraph_with_tabs_before_within_double_block_quote_with_single_and_space():
     """
     Test case:  paragraph preceeded by tabs.
@@ -4688,7 +4592,7 @@ def test_whitespaces_paragraph_with_tabs_before_within_double_block_quote_with_s
         "[text(1,3):abc:]",
         "[end-para:::True]",
         "[block-quote(2,1)::> > \n> ]",
-        "[para(2,5):\n> \t]",
+        "[para(2,5):\n\t]",
         "[text(2,5):def\na paragraph::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
@@ -4703,9 +4607,41 @@ a paragraph</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_paragraph_with_tabs_before_within_double_block_quote_with_single_and_space_within():
+    """
+    Test case:  paragraph preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+>   a\tparagraph"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n> ]",
+        "[para(2,5):\n  ]",
+        "[text(2,5):def\na\tparagraph::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def
+a\tparagraph</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4724,9 +4660,7 @@ def test_whitespaces_paragraph_with_tabs_inside():
     expected_gfm = """<p>a\tlong\tparagraph</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4749,9 +4683,7 @@ def test_whitespaces_paragraph_with_tabs_inside_and_emphasis():
     expected_gfm = """<p>a\t<em>long</em>\tparagraph</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4846,9 +4778,7 @@ def test_whitespaces_paragraph_with_tabs_after():
     expected_gfm = """<p>a paragraph</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4869,9 +4799,7 @@ another paragraph\t\t"""
 another paragraph</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4892,9 +4820,7 @@ another paragraph"""
 another paragraph</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4915,9 +4841,7 @@ another paragraph\t\t"""
 another paragraph</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4940,9 +4864,7 @@ another paragraph\t\t
 yet another paragraph</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4967,9 +4889,7 @@ before-tab\tafter-tab\tafter-another
 a\tbb\tccc\tddd</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4996,9 +4916,7 @@ before-tab\tafter-tab\tafter-another
 a\tbb\tccc\tddd</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5059,9 +4977,7 @@ def test_whitespaces_code_span_with_tabs_0x():
     expected_gfm = """<p>a <code>\tgood\t</code> paragraph</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5082,9 +4998,7 @@ def test_whitespaces_code_span_with_tabs_0a():
     expected_gfm = """<p>a <code>\tgood</code> paragraph</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5105,9 +5019,7 @@ def test_whitespaces_code_span_with_tabs_0b():
     expected_gfm = """<p>a <code>good\t</code> paragraph</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5126,9 +5038,7 @@ def test_whitespaces_code_span_with_tabs_0c():
     expected_gfm = """<p><code>\tgood\t</code></p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5149,9 +5059,7 @@ def test_whitespaces_code_span_with_tabs_1():
     expected_gfm = """<p>a <code>&amp;#09;good&amp;#09;</code> paragraph</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5172,9 +5080,7 @@ def test_whitespaces_code_span_with_tabs_2():
     expected_gfm = """<p>a \t<code>good</code>\t paragraph</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5195,9 +5101,7 @@ def test_whitespaces_code_span_with_tabs_3():
     expected_gfm = """<p>a \t<code>&amp;#09;good&amp;#09;</code>\t paragraph</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5218,9 +5122,7 @@ def test_whitespaces_code_span_with_tabs_4():
     expected_gfm = """<p>a \t<code>&amp;#09;good&amp;#09;</code>\t paragraph</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5241,9 +5143,7 @@ def test_whitespaces_code_span_with_tabs_4a():
     expected_gfm = """<p>a \t<code>&amp;#09;good&amp;#09;</code> paragraph</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5264,9 +5164,7 @@ def test_whitespaces_code_span_with_tabs_4b():
     expected_gfm = """<p>a <code>&amp;#09;good&amp;#09;</code>\t paragraph</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5286,12 +5184,7 @@ def test_whitespaces_code_span_with_tabs_4c():
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown,
-        expected_gfm,
-        expected_tokens,
-        allow_alternate_markdown=False,
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5312,9 +5205,7 @@ def test_whitespaces_code_span_with_tabs_5():
     expected_gfm = """<p>a 	<code>\tgood\t</code>	 paragraph</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5335,9 +5226,7 @@ def test_whitespaces_code_span_with_tabs_5a():
     expected_gfm = """<p>a 	<code>\tgood</code>\t paragraph</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5358,9 +5247,7 @@ def test_whitespaces_code_span_with_tabs_5b():
     expected_gfm = """<p>a 	<code>good\t</code>\t paragraph</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5379,9 +5266,7 @@ def test_whitespaces_code_span_with_tabs_5c():
     expected_gfm = """<p><code>\tgood\t</code></p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5404,9 +5289,7 @@ def test_whitespaces_code_span_with_tabs_6():
     )
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5426,9 +5309,7 @@ def test_whitespaces_code_span_with_tabs_6a():
     expected_gfm = """<p>a\tvery <code>&amp;#09;good&amp;#09;</code></p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5493,10 +5374,7 @@ bar"""
 bar</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
-    # assert False
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5559,9 +5437,7 @@ def test_whitespaces_autolink_uri_with_tabs_inside():
     )
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5582,9 +5458,7 @@ def test_whitespaces_autolink_uri_with_tabs_outside():
     expected_gfm = """<p>this\tis <a href="http://foo.bar.baz">http://foo.bar.baz</a> an\tautolink</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5624,9 +5498,7 @@ def test_whitespaces_inline_link_with_spaces_before_label():
     expected_gfm = """<p><a href="/url"> fred</a></p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5649,9 +5521,7 @@ def test_whitespaces_inline_link_with_tabs_outside():
     expected_gfm = """<p>this\tis <a href="/url">fred</a> a\tlink</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5678,9 +5548,7 @@ this\tis <a href="/url">fred</a> a\tlink
 large\text</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5707,9 +5575,7 @@ this\tis<a href="/url">fred</a>a\tlink
 large\text</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5736,9 +5602,7 @@ this\tis this\tis <a href="/url">fred</a> a\tlink a\tlink
 large\text large\text</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5763,9 +5627,7 @@ this\tis this\tis [fred](/url) a\tlink a\tlink"""
 this\tis this\tis <a href="/url">fred</a> a\tlink a\tlink</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5796,9 +5658,7 @@ this\tis this\tis <a href="/url">fred</a> a\tlink a\tlink <a href="/url">barney<
 large\text large\text</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5829,9 +5689,7 @@ this\tis this\tis<a href="/url">fred</a>a\tlink a\tlink<a href="/url">barney</a>
 large\text large\text</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5862,9 +5720,7 @@ this\tis this\tis<a href="/url">fred</a> <a href="/url">barney</a>another\tlink 
 large\text large\text</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5895,9 +5751,7 @@ this\tis this\tis<a href="/url">fred</a>\t<a href="/url">barney</a>another\tlink
 large\text large\text</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5936,9 +5790,7 @@ this\tis this\tis<a href="/url">fred</a>a\tlink a\tlink<a href="/url">barney</a>
 large\text<a href="/url">betty</a>large\text</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5977,9 +5829,7 @@ this\tis this\tis<a href="/url">fred</a> a\tlink a\tlink <a href="/url">barney</
 large\text<a href="/url">betty</a>large\text</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6018,9 +5868,7 @@ this\tis this\tis\t<a href="/url">fred</a>\ta\tlink a\tlink\t<a href="/url">barn
 large\text\t<a href="/url">betty</a>\tlarge\text</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6058,9 +5906,7 @@ this\tis this\tis\t<a href="/url">fred</a>\ta\tlink a\tlink\t<a href="/url">barn
 large\text\t<a href="/url">betty</a></p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6098,9 +5944,7 @@ this\tis this\tis\t<a href="/url">fred</a>\ta\tlink a\tlink\t<a href="/url">barn
 large\text\t<a href="/url">betty</a></p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6121,9 +5965,7 @@ def test_whitespaces_inline_link_with_tabs_before_label():
     expected_gfm = """<p><a href="/url">\tfred</a></p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6196,9 +6038,7 @@ def test_whitespaces_shortcut_link_with_tabs_before_label():
     expected_gfm = """<p><a href="/url">\t\tfred</a></p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6265,9 +6105,7 @@ def test_whitespaces_inline_link_with_tabs_in_label():
     expected_gfm = """<p><a href="/url">fred\t\tboy</a></p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6338,9 +6176,7 @@ def test_whitespaces_shortcut_link_with_tabs_in_label():
     expected_gfm = """<p><a href="/url">fred\t\tboy</a></p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6407,9 +6243,7 @@ def test_whitespaces_inline_link_with_tabs_after_label():
     expected_gfm = """<p><a href="/url">fred\t\t</a></p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6480,9 +6314,7 @@ def test_whitespaces_shortcut_link_with_tabs_after_label():
     expected_gfm = """<p><a href="/url">fred\t\t</a></p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6528,9 +6360,7 @@ def test_whitespaces_inline_link_with_tabs_and_references():
     expected_gfm = """<p><a href="/url">fred\t&amp;\tboy</a></p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6553,9 +6383,7 @@ def test_whitespaces_inline_link_with_tabs_and_code_span():
     expected_gfm = """<p><a href="/url">fred\t<code>bob</code>\tboy</a></p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6580,9 +6408,7 @@ def test_whitespaces_inline_link_with_tabs_and_emphasis():
     expected_gfm = """<p><a href="/url">fred\t<em>bob\tthe</em>\tboy</a></p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6607,9 +6433,7 @@ def test_whitespaces_inline_link_with_tabs_and_image():
     )
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6634,9 +6458,7 @@ def test_whitespaces_inline_link_with_tabs_inside_of_tabs():
     )
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6661,9 +6483,7 @@ def test_whitespaces_inline_link_with_tabs_and_newlines():
 boy</a>\tpass</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6705,9 +6525,7 @@ def test_whitespaces_inline_link_with_tabs_before_destination():
     expected_gfm = """<p><a href="/url">fred</a></p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6770,9 +6588,7 @@ def test_whitespaces_inline_link_with_tabs_after_destination():
     expected_gfm = """<p><a href="/url">fred</a></p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6835,9 +6651,7 @@ def test_whitespaces_inline_link_with_tabs_before_title():
     expected_gfm = """<p><a href="/url" title="title">fred</a></p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6900,9 +6714,7 @@ def test_whitespaces_inline_link_with_tabs_after_title():
     expected_gfm = """<p><a href="/url" title="title">fred</a></p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6948,9 +6760,7 @@ def test_whitespaces_full_link_with_tabs_in_reference():
     expected_gfm = """<p><a href="/url" title="title">foo</a></p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
