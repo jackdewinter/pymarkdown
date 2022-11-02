@@ -295,7 +295,7 @@ class LeafBlockProcessorParagraph:
         """
         Match any tabbed whitespace with its non-tabbed counterpart.
         """
-        assert len(corrected_extracted_whitespace) > 0
+        assert corrected_extracted_whitespace != ""
         detabified_suffix = ""
         detabified_prefix = ""
         corrected_prefix = ""
