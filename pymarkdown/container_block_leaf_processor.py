@@ -12,7 +12,6 @@ from pymarkdown.container_markdown_token import (
     BlockQuoteMarkdownToken,
     ListStartMarkdownToken,
 )
-from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.inline_markdown_token import TextMarkdownToken
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.leaf_block_processor_paragraph import LeafBlockProcessorParagraph
@@ -209,6 +208,7 @@ class ContainerBlockLeafProcessor:
                     parser_state,
                     leaf_block_position_marker,
                     leaf_token_whitespace,
+                    grab_bag.block_quote_data,
                     grab_bag.original_line,
                 )
                 or LeafBlockProcessor.parse_indented_code_block(
@@ -290,6 +290,7 @@ class ContainerBlockLeafProcessor:
             new_tokens,
             grab_bag.original_line,
             detabified_original_start_index,
+            grab_bag.block_quote_data,
         )
 
         ignore_lrd_start = (
@@ -311,7 +312,7 @@ class ContainerBlockLeafProcessor:
             grab_bag.original_line,
         )
 
-        outer_processed = ContainerBlockLeafProcessor.__handle_html_block(
+        outer_processed = LeafBlockProcessor.handle_html_block(
             parser_state,
             position_marker,
             outer_processed,
@@ -329,61 +330,6 @@ class ContainerBlockLeafProcessor:
 
     # pylint: disable=too-many-arguments
     @staticmethod
-    def __handle_html_block(
-        parser_state: ParserState,
-        position_marker: PositionMarker,
-        outer_processed: bool,
-        leaf_token_whitespace: Optional[str],
-        new_tokens: List[MarkdownToken],
-        grab_bag: ContainerGrabBag,
-    ) -> bool:
-        """
-        Take care of the processing for html blocks.
-        """
-
-        POGGER.debug(">>position_marker>>ttp>>$>>", position_marker.text_to_parse)
-        POGGER.debug(">>position_marker>>in>>$>>", position_marker.index_number)
-        POGGER.debug(">>position_marker>>ln>>$>>", position_marker.line_number)
-        if not outer_processed and not parser_state.token_stack[-1].is_html_block:
-            POGGER.debug(">>html started?>>")
-            old_top_of_stack = parser_state.token_stack[-1]
-            html_tokens = HtmlHelper.parse_html_block(
-                parser_state,
-                position_marker,
-                leaf_token_whitespace,
-            )
-            if html_tokens:
-                POGGER.debug(">>html started>>")
-                LeafBlockProcessor.correct_for_leaf_block_start_in_list(
-                    parser_state,
-                    position_marker.index_indent,
-                    old_top_of_stack,
-                    html_tokens,
-                )
-            new_tokens.extend(html_tokens)
-        if parser_state.token_stack[-1].is_html_block:
-            POGGER.debug(">>html continued>>")
-            assert leaf_token_whitespace is not None
-            html_tokens = HtmlHelper.check_normal_html_block_end(
-                parser_state,
-                position_marker.text_to_parse,
-                position_marker.index_number,
-                leaf_token_whitespace,
-                position_marker,
-                grab_bag.original_line,
-            )
-            assert html_tokens
-            new_tokens.extend(html_tokens)
-            outer_processed = True
-        else:
-            POGGER.debug(">>html not encountered>>")
-
-        return outer_processed
-
-    # pylint: enable=too-many-arguments
-
-    # pylint: disable=too-many-arguments
-    @staticmethod
     def __handle_fenced_code_block(
         parser_state: ParserState,
         position_marker: PositionMarker,
@@ -391,6 +337,7 @@ class ContainerBlockLeafProcessor:
         new_tokens: List[MarkdownToken],
         original_line: str,
         detabified_original_start_index: int,
+        block_quote_data: BlockQuoteData,
     ) -> bool:
         """
         Take care of the processing for fenced code blocks.
@@ -409,6 +356,7 @@ class ContainerBlockLeafProcessor:
             leaf_token_whitespace,
             original_line,
             detabified_original_start_index,
+            block_quote_data,
         )
         POGGER.debug(">>leaf_token_whitespace>:$:<", leaf_token_whitespace)
         if fenced_tokens:

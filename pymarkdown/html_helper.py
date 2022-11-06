@@ -3,8 +3,9 @@ Module to provide helper functions for parsing html.
 """
 import logging
 import string
-from typing import List, Optional, Tuple, cast
+from typing import Any, List, Optional, Tuple, cast
 
+from pymarkdown.block_quote_data import BlockQuoteData
 from pymarkdown.constants import Constants
 from pymarkdown.inline_markdown_token import RawHtmlMarkdownToken, TextMarkdownToken
 from pymarkdown.inline_request import InlineRequest
@@ -817,10 +818,14 @@ class HtmlHelper:
         parser_state: ParserState,
         position_marker: PositionMarker,
         extracted_whitespace: Optional[str],
+        block_quote_data: BlockQuoteData,
+        reduce_containers_if_required_fn: Any,
     ) -> List[MarkdownToken]:
         """
         Determine if we have the criteria that we need to start an HTML block.
         """
+
+        _ = (block_quote_data, reduce_containers_if_required_fn)
 
         html_block_type, _ = HtmlHelper.is_html_block(
             position_marker.text_to_parse,
@@ -833,6 +838,10 @@ class HtmlHelper:
                 parser_state,
                 only_these_blocks=[ParagraphStackToken],
             )
+            POGGER.debug("new_tokens=$", new_tokens)
+
+            # reduce_containers_if_required_fn(parser_state, block_quote_data, new_tokens)
+
             assert extracted_whitespace is not None
             new_token = HtmlBlockMarkdownToken(position_marker, extracted_whitespace)
             new_tokens.append(new_token)
@@ -860,6 +869,7 @@ class HtmlHelper:
                 parser_state,
                 only_these_blocks=[HtmlBlockStackToken],
             )
+            POGGER.debug("new_tokens=$", new_tokens)
         else:
             new_tokens = []
 
@@ -870,18 +880,39 @@ class HtmlHelper:
         original_line: str, extracted_whitespace: str, token_text: str
     ) -> Tuple[str, str]:
 
+        POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
+        POGGER.debug("token_text>:$:<", token_text)
         reconstructed_line = extracted_whitespace + token_text
-        adj_original, adj_original_index = ParserHelper.find_detabify_string(
+        POGGER.debug("original_line>:$:<", original_line)
+        POGGER.debug("reconstructed_line>:$:<", reconstructed_line)
+        adj_original, _ = ParserHelper.find_detabify_string(
             original_line, reconstructed_line
         )
-        assert adj_original_index != -1
-        assert adj_original is not None
+        POGGER.debug("adj_original>:$:<", adj_original)
+        if adj_original is None:
+            # split
 
-        space_end_index, ex_whitespace = ParserHelper.extract_spaces(adj_original, 0)
-        assert ex_whitespace is not None
+            _, ex_ws = ParserHelper.extract_until_spaces(token_text, 0)
+            # POGGER.debug("ni>:$:<", ni)
+            POGGER.debug("ex_ws>:$:<", ex_ws)
+            assert ex_ws is not None
 
-        token_text = adj_original[space_end_index:]
-        extracted_whitespace = ex_whitespace
+            ex_ws_index = original_line.find(ex_ws)
+            POGGER.debug("ex_ws_index>:$:<", ex_ws_index)
+            adj_original = original_line[ex_ws_index:]
+            POGGER.debug("adj_original>:$:<", adj_original)
+            # new_index = collected_count
+            # extracted_whitespace = ""
+        else:
+            assert adj_original is not None
+
+            space_end_index, ex_whitespace = ParserHelper.extract_spaces(
+                adj_original, 0
+            )
+            assert ex_whitespace is not None
+
+            token_text = adj_original[space_end_index:]
+            extracted_whitespace = ex_whitespace
         return extracted_whitespace, token_text
 
     # pylint: disable=too-many-arguments
@@ -940,6 +971,7 @@ class HtmlHelper:
                 parser_state,
                 only_these_blocks=[HtmlBlockStackToken],
             )
+            POGGER.debug("terminated_block_tokens=$", terminated_block_tokens)
             assert terminated_block_tokens
             new_tokens.extend(terminated_block_tokens)
         return new_tokens

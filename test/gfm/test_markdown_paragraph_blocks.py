@@ -262,9 +262,7 @@ bbb\t\t\t\t\t"""
 bbb</p>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -289,9 +287,7 @@ bbb</li>
 </ul>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -326,9 +322,7 @@ bbb</li>
 </ul>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -353,9 +347,7 @@ bbb</li>
 </ol>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -390,9 +382,7 @@ bbb</li>
 </ol>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -440,9 +430,7 @@ bbb</li>
     )
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -490,6 +478,4 @@ bbb</li>
     )
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

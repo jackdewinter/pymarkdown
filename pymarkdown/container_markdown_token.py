@@ -343,9 +343,13 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
         """
         Remove the last leading space and return it.
         """
-        last_separator_index = self.__leading_spaces.rindex("\n")
-        extracted_text = self.__leading_spaces[last_separator_index:]
-        self.__leading_spaces = self.__leading_spaces[:last_separator_index]
+        last_separator_index = self.__leading_spaces.rfind("\n")
+        if last_separator_index == -1:
+            extracted_text = self.__leading_spaces
+            self.__leading_spaces = ""
+        else:
+            extracted_text = self.__leading_spaces[last_separator_index:]
+            self.__leading_spaces = self.__leading_spaces[:last_separator_index]
         self.leading_text_index -= 1
         self.__compose_extra_data_field()
         return extracted_text

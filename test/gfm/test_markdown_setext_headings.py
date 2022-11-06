@@ -89,9 +89,7 @@ baz*\t
 baz</em></h1>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, allow_alternate_markdown=False
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
