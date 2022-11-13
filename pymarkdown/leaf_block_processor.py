@@ -678,7 +678,7 @@ class LeafBlockProcessor:
         POGGER.debug("left_ws>>$<<", left_ws)
         return actual_whitespace_index, adj_ws, left_ws
 
-    # pylint: disable=too-many-arguments, too-many-locals
+    # pylint: disable=too-many-arguments, too-many-locals, too-many-statements
     @staticmethod
     def parse_indented_code_block(
         parser_state: ParserState,
@@ -808,7 +808,7 @@ class LeafBlockProcessor:
             )
         return new_tokens
 
-    # pylint: enable=too-many-arguments, too-many-locals
+    # pylint: enable=too-many-arguments, too-many-locals, too-many-statements
 
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
