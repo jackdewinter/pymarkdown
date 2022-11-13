@@ -69,7 +69,7 @@
         },
         "pymarkdown/extensions/task_list_items.py": {},
         "pymarkdown/html_helper.py": {
-            "too-many-arguments": 1
+            "too-many-arguments": 3
         },
         "pymarkdown/inline_helper.py": {
             "too-many-arguments": 4,

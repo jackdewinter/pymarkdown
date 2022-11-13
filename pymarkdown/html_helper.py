@@ -817,6 +817,7 @@ class HtmlHelper:
             html_block_type, remaining_html_tag = None, None
         return html_block_type, remaining_html_tag
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def parse_html_block(
         parser_state: ParserState,
@@ -906,6 +907,7 @@ class HtmlHelper:
 
         return new_tokens
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __check_normal_html_block_end_with_tab(
         parser_state: ParserState,
