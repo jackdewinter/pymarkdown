@@ -1117,7 +1117,8 @@ class ParserHelper:
         # POGGER.debug("tabified_leading_spaces>>:$:<", tabified_leading_spaces)
         tabified_suffix = extracted_whitespace
 
-        if split_tab := len(tabified_leading_spaces) > 0:
+        split_tab = False
+        if len(tabified_leading_spaces) > 0:
             assert extracted_whitespace is not None
             (_, tabified_suffix, split_tab,) = ParserHelper.match_tabbed_whitespace(
                 extracted_whitespace, tabified_leading_spaces

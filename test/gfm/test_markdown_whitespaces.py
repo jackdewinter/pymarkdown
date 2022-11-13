@@ -557,7 +557,7 @@ def test_whitespaces_thematic_breaks_with_spaces_before_within_double_block_quot
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
@@ -727,7 +727,7 @@ def test_whitespaces_thematic_breaks_with_tabs_before_within_block_quotes_bare_w
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm

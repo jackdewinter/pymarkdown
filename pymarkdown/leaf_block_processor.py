@@ -1186,9 +1186,9 @@ class LeafBlockProcessor:
                 LeafBlockProcessorParagraph.adjust_block_quote_indent_for_tab(
                     parser_state
                 )
-            LeafBlockProcessor.__reduce_containers_if_required(
-                parser_state, block_quote_data, new_tokens, split_tab
-            )
+            # LeafBlockProcessor.__reduce_containers_if_required(
+            #     parser_state, block_quote_data, new_tokens, split_tab
+            # )
 
             new_tokens.append(
                 ThematicBreakMarkdownToken(
@@ -1245,9 +1245,8 @@ class LeafBlockProcessor:
             )
             assert matching_start_token.leading_spaces is not None
             last_newline_index = matching_start_token.leading_spaces.rfind("\n")
-            assert last_newline_index != -1
             # if last_newline_index == -1:
-            #     tz =matching_start_token.leading_spaces
+            #     last_newline_part =matching_start_token.leading_spaces
             # else:
             last_newline_part = matching_start_token.leading_spaces[
                 last_newline_index + 1 :
