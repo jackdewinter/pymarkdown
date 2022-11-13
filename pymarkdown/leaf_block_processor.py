@@ -1186,6 +1186,9 @@ class LeafBlockProcessor:
                 LeafBlockProcessorParagraph.adjust_block_quote_indent_for_tab(
                     parser_state
                 )
+            LeafBlockProcessor.__reduce_containers_if_required(
+                parser_state, block_quote_data, new_tokens, split_tab
+            )
 
             new_tokens.append(
                 ThematicBreakMarkdownToken(

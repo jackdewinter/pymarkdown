@@ -832,6 +832,8 @@ class HtmlHelper:
         Determine if we have the criteria that we need to start an HTML block.
         """
 
+        _ = (block_quote_data, reduce_containers_if_required_fn)
+
         html_block_type, _ = HtmlHelper.is_html_block(
             position_marker.text_to_parse,
             position_marker.index_number,
