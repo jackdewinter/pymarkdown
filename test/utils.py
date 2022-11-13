@@ -52,9 +52,9 @@ def act_and_assert(
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
     if "\t" in expected_gfm and "\t" not in actual_gfm:
         raise AssertionError()
-    assert_if_strings_different(expected_gfm, actual_gfm)
     if not disable_consistency_checks:
         __assert_token_consistency(
             source_markdown, actual_tokens, allow_alternate_markdown

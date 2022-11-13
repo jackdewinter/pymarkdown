@@ -232,9 +232,11 @@ class TransformToGfm:
 
             if transform_state.add_trailing_text:
                 output_html = self.__apply_trailing_text(output_html, transform_state)
+                POGGER.debug("output_html    -->$<--", output_html)
 
             if transform_state.add_leading_text:
                 output_html = self.__apply_leading_text(output_html, transform_state)
+                POGGER.debug("output_html    -->$<--", output_html)
 
             POGGER.debug("------")
             POGGER.debug("next_token     -->$<--", next_token)
@@ -267,17 +269,22 @@ class TransformToGfm:
             ]
         if next_token.token_name in self.start_token_handlers:
             start_handler_fn = self.start_token_handlers[next_token.token_name]
+            POGGER.debug("next_token>:$:<", next_token)
+            POGGER.debug("output_html>:$:<", output_html)
             output_html = start_handler_fn(output_html, next_token, transform_state)
+            POGGER.debug("output_html>:$:<", output_html)
 
         elif next_token.is_end_token:
             end_token = cast(EndMarkdownToken, next_token)
-            if end_token.type_name in self.end_token_handlers:
-                end_handler_fn = self.end_token_handlers[end_token.type_name]
-                output_html = end_handler_fn(output_html, end_token, transform_state)
-            else:
+            if end_token.type_name not in self.end_token_handlers:
                 raise AssertionError(
                     f"Markdown token end type {end_token.type_name} not supported."
                 )
+            end_handler_fn = self.end_token_handlers[end_token.type_name]
+            POGGER.debug("end_token>:$:<", end_token)
+            POGGER.debug("output_html>:$:<", output_html)
+            output_html = end_handler_fn(output_html, end_token, transform_state)
+            POGGER.debug("output_html>:$:<", output_html)
         else:
             raise AssertionError(
                 f"Markdown token type {type(next_token)} not supported."
@@ -347,21 +354,43 @@ class TransformToGfm:
 
         token_parts: List[str] = []
         if transform_state.is_in_code_block:
+            POGGER.debug(
+                "text_token.extracted_whitespace>:$:<", text_token.extracted_whitespace
+            )
+            leading_space = ParserHelper.resolve_all_from_text(
+                text_token.extracted_whitespace
+            )
+
+            POGGER.debug("leading_space>:$:<", leading_space)
+            POGGER.debug("adjusted_text_token>:$:<", adjusted_text_token)
             token_parts.extend(
                 [
-                    ParserHelper.resolve_all_from_text(text_token.extracted_whitespace),
+                    leading_space,
                     adjusted_text_token,
                 ]
             )
         elif transform_state.is_in_html_block:
+            POGGER.debug(
+                "text_token.extracted_whitespace>:$:<", text_token.extracted_whitespace
+            )
+            leading_space = ParserHelper.resolve_all_from_text(
+                text_token.extracted_whitespace
+            )
+
+            POGGER.debug("leading_space>:$:<", leading_space)
+            POGGER.debug("adjusted_text_token>:$:<", adjusted_text_token)
+            POGGER.debug("newline_character>:$:<", ParserHelper.newline_character)
             token_parts.extend(
                 [
-                    text_token.extracted_whitespace,
+                    leading_space,
                     adjusted_text_token,
                     ParserHelper.newline_character,
                 ]
             )
         elif transform_state.is_in_setext_block:
+            leading_space = ParserHelper.resolve_all_from_text(
+                text_token.extracted_whitespace
+            )
             token_parts.append(adjusted_text_token)
         else:
             cls.__handle_text_token_normal(token_parts, text_token, adjusted_text_token)

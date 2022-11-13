@@ -621,7 +621,8 @@ class BlockQuoteProcessor:
                 )
                 POGGER.debug("avoid_block_starts=$", avoid_block_starts)
                 continue_processing = False
-            elif current_count > stack_count:
+            else:
+                assert current_count > stack_count
                 (
                     start_index,
                     adjusted_line,
@@ -1105,8 +1106,9 @@ class BlockQuoteProcessor:
                 text_removed_by_container,
             )
             last_line_index = adj_leading_spaces.rfind("\n")
-            if last_line_index != -1:
-                adj_leading_spaces = adj_leading_spaces[last_line_index + 1 :]
+            assert last_line_index == -1
+            # if last_line_index != -1:
+            #     adj_leading_spaces = adj_leading_spaces[last_line_index + 1 :]
 
             delta = len(text_removed_by_container) - len(
                 adj_leading_spaces + adjusted_removed_text

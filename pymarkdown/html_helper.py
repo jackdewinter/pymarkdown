@@ -3,7 +3,7 @@ Module to provide helper functions for parsing html.
 """
 import logging
 import string
-from typing import Any, List, Optional, Tuple, cast
+from typing import Callable, List, Optional, Tuple, cast
 
 from pymarkdown.block_quote_data import BlockQuoteData
 from pymarkdown.constants import Constants
@@ -18,6 +18,8 @@ from pymarkdown.position_marker import PositionMarker
 from pymarkdown.stack_token import HtmlBlockStackToken, ParagraphStackToken, StackToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
+
+# pylint: disable=too-many-lines
 
 
 class HtmlHelper:
@@ -813,14 +815,19 @@ class HtmlHelper:
             html_block_type, remaining_html_tag = None, None
         return html_block_type, remaining_html_tag
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def parse_html_block(
         parser_state: ParserState,
         position_marker: PositionMarker,
         extracted_whitespace: Optional[str],
         block_quote_data: BlockQuoteData,
-        reduce_containers_if_required_fn: Any,
-    ) -> List[MarkdownToken]:
+        original_line: str,
+        reduce_containers_if_required_fn: Callable[
+            [ParserState, BlockQuoteData, List[MarkdownToken], bool], bool
+        ],
+        adjust_block_quote_indent_for_tab: Callable[[ParserState], str],
+    ) -> Tuple[List[MarkdownToken], bool]:
         """
         Determine if we have the criteria that we need to start an HTML block.
         """
@@ -833,6 +840,8 @@ class HtmlHelper:
             extracted_whitespace,
             parser_state.token_stack,
         )
+        did_adjust_block_quote = False
+        POGGER.debug("did_adjust_block_quote=$", did_adjust_block_quote)
         if html_block_type:
             new_tokens, _ = parser_state.close_open_blocks_fn(
                 parser_state,
@@ -840,7 +849,33 @@ class HtmlHelper:
             )
             POGGER.debug("new_tokens=$", new_tokens)
 
-            # reduce_containers_if_required_fn(parser_state, block_quote_data, new_tokens)
+            split_tab = False
+            if "\t" in original_line:
+                token_text = position_marker.text_to_parse[
+                    position_marker.index_number :
+                ]
+                POGGER.debug("original_line=:$:", original_line)
+                POGGER.debug("token_text=:$:", token_text)
+                POGGER.debug("extracted_whitespace=:$:", extracted_whitespace)
+                _, split_tab, _ = ParserHelper.parse_thematic_break_with_tab(
+                    original_line, token_text, extracted_whitespace
+                )
+                POGGER.debug("split_tab=:$:", split_tab)
+
+            POGGER.debug("did_adjust_block_quote=$", did_adjust_block_quote)
+            POGGER.debug("split_tab=$", split_tab)
+            old_split_tab = split_tab
+            did_adjust_block_quote = False
+            if split_tab := reduce_containers_if_required_fn(
+                parser_state, block_quote_data, new_tokens, split_tab
+            ):
+                adjust_block_quote_indent_for_tab(parser_state)
+                did_adjust_block_quote = True
+                POGGER.debug("did_adjust_block_quote=$", did_adjust_block_quote)
+            POGGER.debug("split_tab=$", split_tab)
+            did_adjust_block_quote = (
+                split_tab != old_split_tab or did_adjust_block_quote
+            )
 
             assert extracted_whitespace is not None
             new_token = HtmlBlockMarkdownToken(position_marker, extracted_whitespace)
@@ -850,7 +885,10 @@ class HtmlHelper:
             )
         else:
             new_tokens = []
-        return new_tokens
+        POGGER.debug("did_adjust_block_quote=$", did_adjust_block_quote)
+        return new_tokens, did_adjust_block_quote
+
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def check_blank_html_block_end(parser_state: ParserState) -> List[MarkdownToken]:
@@ -875,45 +913,43 @@ class HtmlHelper:
 
         return new_tokens
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __check_normal_html_block_end_with_tab(
-        original_line: str, extracted_whitespace: str, token_text: str
+        parser_state: ParserState,
+        original_line: str,
+        extracted_whitespace: str,
+        token_text: str,
+        adjust_block_quote_indent_for_tab_fn: Callable[[ParserState], str],
+        did_adjust_block_quote: bool,
     ) -> Tuple[str, str]:
 
-        POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
-        POGGER.debug("token_text>:$:<", token_text)
-        reconstructed_line = extracted_whitespace + token_text
-        POGGER.debug("original_line>:$:<", original_line)
-        POGGER.debug("reconstructed_line>:$:<", reconstructed_line)
-        adj_original, _ = ParserHelper.find_detabify_string(
-            original_line, reconstructed_line
+        POGGER.debug("did_adjust_block_quote>:$:<", did_adjust_block_quote)
+        (
+            tabified_text,
+            split_tab,
+            tabified_whitespace,
+        ) = ParserHelper.parse_thematic_break_with_tab(
+            original_line, token_text, extracted_whitespace
         )
-        POGGER.debug("adj_original>:$:<", adj_original)
-        if adj_original is None:
-            # split
 
-            _, ex_ws = ParserHelper.extract_until_spaces(token_text, 0)
-            # POGGER.debug("ni>:$:<", ni)
-            POGGER.debug("ex_ws>:$:<", ex_ws)
-            assert ex_ws is not None
+        POGGER.debug("tabified_text>:$:<", tabified_text)
+        POGGER.debug("tabified_whitespace>:$:<", tabified_whitespace)
+        POGGER.debug("split_tab>:$:<", split_tab)
 
-            ex_ws_index = original_line.find(ex_ws)
-            POGGER.debug("ex_ws_index>:$:<", ex_ws_index)
-            adj_original = original_line[ex_ws_index:]
-            POGGER.debug("adj_original>:$:<", adj_original)
-            # new_index = collected_count
-            # extracted_whitespace = ""
-        else:
-            assert adj_original is not None
-
-            space_end_index, ex_whitespace = ParserHelper.extract_spaces(
-                adj_original, 0
+        if split_tab:
+            POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
+            assert tabified_whitespace is not None
+            tabified_whitespace = ParserHelper.create_replacement_markers(
+                tabified_whitespace, extracted_whitespace
             )
-            assert ex_whitespace is not None
+            POGGER.debug("tabified_whitespace>:$:<", tabified_whitespace)
+            if not did_adjust_block_quote:
+                adjust_block_quote_indent_for_tab_fn(parser_state)
+        assert tabified_whitespace is not None
+        return tabified_whitespace, tabified_text
 
-            token_text = adj_original[space_end_index:]
-            extracted_whitespace = ex_whitespace
-        return extracted_whitespace, token_text
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -924,6 +960,8 @@ class HtmlHelper:
         extracted_whitespace: str,
         position_marker: PositionMarker,
         original_line: str,
+        did_adjust_block_quote: bool,
+        adjust_block_quote_indent_for_tab_fn: Callable[[ParserState], str],
     ) -> List[MarkdownToken]:
         """
         Check to see if we have encountered the end of the current HTML block
@@ -939,7 +977,12 @@ class HtmlHelper:
                 extracted_whitespace,
                 token_text,
             ) = HtmlHelper.__check_normal_html_block_end_with_tab(
-                original_line, extracted_whitespace, token_text
+                parser_state,
+                original_line,
+                extracted_whitespace,
+                token_text,
+                adjust_block_quote_indent_for_tab_fn,
+                did_adjust_block_quote,
             )
 
         new_tokens: List[MarkdownToken] = [

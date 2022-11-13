@@ -179,8 +179,8 @@ class LeafBlockProcessorParagraph:
             else:
                 POGGER.debug("original_line=:$:", original_line)
                 POGGER.debug("text_to_parse=:$:", text_to_parse)
-                adj_text_to_parse, _ = ParserHelper.find_detabify_string(
-                    original_line, text_to_parse
+                adj_text_to_parse, _, _ = ParserHelper.find_detabify_string(
+                    original_line, text_to_parse, use_proper_traverse=True
                 )
                 POGGER.debug("adj_text_to_parse=:$:", adj_text_to_parse)
                 assert adj_text_to_parse is not None
@@ -210,31 +210,24 @@ class LeafBlockProcessorParagraph:
             POGGER.debug(
                 "corrected_extracted_whitespace=:$:", corrected_extracted_whitespace
             )
-            if len(corrected_extracted_whitespace) > 0:
-                (
-                    detabified_prefix,
-                    detabified_suffix,
-                    corrected_prefix,
-                    corrected_suffix,
-                    split_tab,
-                ) = LeafBlockProcessorParagraph.match_tabbed_whitespace(
-                    extracted_whitespace, corrected_extracted_whitespace
+            assert len(corrected_extracted_whitespace) > 0
+            (_, corrected_suffix, split_tab,) = ParserHelper.match_tabbed_whitespace(
+                extracted_whitespace, corrected_extracted_whitespace
+            )
+            POGGER.debug("extracted_whitespace=:$:", extracted_whitespace)
+            if split_tab:
+                LeafBlockProcessorParagraph.adjust_block_quote_indent_for_tab(
+                    parser_state
                 )
-                _ = (detabified_prefix, detabified_suffix, corrected_prefix)
-                POGGER.debug("extracted_whitespace=:$:", extracted_whitespace)
-                if split_tab:
-                    LeafBlockProcessorParagraph.adjust_block_quote_indent_for_tab(
-                        parser_state
-                    )
 
-                corrected_extracted_whitespace = corrected_suffix
+            corrected_extracted_whitespace = corrected_suffix
             original_line = original_line[first_non_whitespace_character_index:]
         else:
             corrected_extracted_whitespace = extracted_whitespace
         return corrected_extracted_whitespace, original_line
 
     @staticmethod
-    def adjust_block_quote_indent_for_tab(parser_state: ParserState) -> None:
+    def adjust_block_quote_indent_for_tab(parser_state: ParserState) -> str:
         """
         Adjust the last block quote for a tab.
         """
@@ -287,54 +280,7 @@ class LeafBlockProcessorParagraph:
             "parser_state=:$:",
             block_quote_token,
         )
-
-    @staticmethod
-    def match_tabbed_whitespace(
-        extracted_whitespace: str, corrected_extracted_whitespace: str
-    ) -> Tuple[str, str, str, str, bool]:
-        """
-        Match any tabbed whitespace with its non-tabbed counterpart.
-        """
-        assert len(corrected_extracted_whitespace) > 0
-        detabified_suffix = ""
-        detabified_prefix = ""
-        corrected_prefix = ""
-        corrected_suffix = corrected_extracted_whitespace
-        index_from_end = len(corrected_extracted_whitespace) - 1
-        while index_from_end >= 0 and len(detabified_suffix) < len(
-            extracted_whitespace
-        ):
-            corrected_suffix = corrected_extracted_whitespace[index_from_end:]
-            corrected_prefix = corrected_extracted_whitespace[:index_from_end]
-            POGGER.debug(
-                "index_from_end=:$: of :$:",
-                index_from_end,
-                len(corrected_extracted_whitespace),
-            )
-            POGGER.debug("corrected_suffix=:$:", corrected_suffix)
-            POGGER.debug("corrected_prefix=:$:", corrected_prefix)
-            detabified_prefix = ParserHelper.detabify_string(corrected_prefix)
-            POGGER.debug("detabified_prefix=:$:", detabified_prefix)
-            detabified_suffix = ParserHelper.detabify_string(
-                corrected_suffix, additional_start_delta=len(detabified_prefix)
-            )
-            POGGER.debug("detabified_suffix=:$:", detabified_suffix)
-            if len(detabified_suffix) < len(extracted_whitespace):
-                index_from_end -= 1
-        assert index_from_end >= 0
-
-        split_tab = detabified_suffix != extracted_whitespace
-        if split_tab:
-            assert detabified_prefix.endswith(">")
-            assert detabified_suffix[1:] == extracted_whitespace
-
-        return (
-            detabified_prefix,
-            detabified_suffix,
-            corrected_prefix,
-            corrected_suffix,
-            split_tab,
-        )
+        return last_block_quote_leading_space
 
     @staticmethod
     def __adjust_paragraph_for_containers(
@@ -445,31 +391,34 @@ class LeafBlockProcessorParagraph:
                 POGGER.debug(">>text_to_parse>>$>>", position_marker.text_to_parse)
                 POGGER.debug(">>index_number>>$>>", position_marker.index_number)
 
+                POGGER.debug(">>original_line>:$:<", original_line)
+                POGGER.debug(
+                    ">>position_marker.text_to_parse[position_marker.index_number:]>:$:<",
+                    position_marker.text_to_parse[position_marker.index_number :],
+                )
                 (
                     rest_of_string,
+                    _,
                     rest_of_string_index,
                 ) = ParserHelper.find_detabify_string(
                     original_line,
                     position_marker.text_to_parse[position_marker.index_number :],
+                    use_proper_traverse=True,
                 )
                 POGGER.debug(">>rest_of_string>>$>>", rest_of_string)
                 POGGER.debug(">>rest_of_string_index>>$>>", rest_of_string_index)
                 assert rest_of_string is not None
                 prefix = original_line[:rest_of_string_index]
                 if prefix and "\t" in prefix:
+                    POGGER.debug(">>extracted_whitespace>:$:<", extracted_whitespace)
+                    POGGER.debug(">>prefix>:$:<", prefix)
                     (
-                        detabified_prefix,
-                        detabified_suffix,
-                        corrected_prefix,
+                        _,
                         corrected_suffix,
                         split_tab,
-                    ) = LeafBlockProcessorParagraph.match_tabbed_whitespace(
+                    ) = ParserHelper.match_tabbed_whitespace(
                         extracted_whitespace, prefix
                     )
-                    _ = (detabified_prefix, detabified_suffix, corrected_prefix)
-                    POGGER.debug(">>detabified_prefix>>$>>", detabified_prefix)
-                    POGGER.debug(">>detabified_suffix>>$>>", detabified_suffix)
-                    POGGER.debug(">>corrected_prefix>>$>>", corrected_prefix)
                     POGGER.debug(">>corrected_suffix>>$>>", corrected_suffix)
                     POGGER.debug(">>split_tab>>$>>", split_tab)
                     extracted_whitespace = corrected_suffix

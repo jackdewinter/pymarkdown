@@ -631,6 +631,7 @@ class InlineHelper:
     @staticmethod
     def handle_line_end(
         remaining_line: str,
+        tabified_remaining_line: Optional[str],
         end_string: Optional[str],
         current_string: str,
         inline_blocks: List[MarkdownToken],
@@ -649,14 +650,20 @@ class InlineHelper:
         POGGER.debug(">>current_string>>$>>", current_string)
         POGGER.debug(">>end_string>>$>>", end_string)
         POGGER.debug(">>remaining_line>>$>>", remaining_line)
-        _, last_non_whitespace_index = ParserHelper.collect_backwards_while_spaces(
-            remaining_line, -1
+        POGGER.debug(">>tabified_remaining_line>>$>>", tabified_remaining_line)
+        line_to_use = (
+            tabified_remaining_line
+            if tabified_remaining_line and is_setext
+            else remaining_line
+        )
+        _, last_non_whitespace_index = ParserHelper.collect_backwards_while_character(
+            line_to_use, -1, " "
         )
         POGGER.debug(">>last_non_whitespace_index>>$", last_non_whitespace_index)
-        removed_end_whitespace = remaining_line[last_non_whitespace_index:]
-        remaining_line = remaining_line[:last_non_whitespace_index]
+        removed_end_whitespace = line_to_use[last_non_whitespace_index:]
+        remaining_line = line_to_use[:last_non_whitespace_index]
         POGGER.debug(">>removed_end_whitespace>>$>>", removed_end_whitespace)
-        POGGER.debug(">>remaining_line>>$>>", remaining_line)
+        POGGER.debug(">>line_to_use>>$>>", line_to_use)
 
         POGGER.debug(">>current_string>>$>>", current_string)
         (append_to_current_string, removed_end_whitespace_size, adj_hard_column,) = (

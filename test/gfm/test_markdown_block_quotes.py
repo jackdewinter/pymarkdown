@@ -1991,6 +1991,7 @@ comments
 
 
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_block_quotes_229jx():
     """
     Test case 229j:  variation of 229 with different spacing
@@ -2027,6 +2028,7 @@ comments
 
 
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_block_quotes_229ja():
     """
     Test case 229ja:  variation of 229j with different spacing

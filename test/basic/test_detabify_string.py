@@ -86,7 +86,7 @@ def test_find_detabify_string_simple_case():
     expected_adjusted_line = line_with_tabs
 
     # Act
-    adjusted_original_line, actual_index = ParserHelper.find_detabify_string(
+    adjusted_original_line, actual_index, _ = ParserHelper.find_detabify_string(
         line_with_tabs, detabified_line_to_match
     )
 
@@ -106,7 +106,7 @@ def test_find_detabify_string_simple_case_x():
 
     expected_index = -1
     # Act
-    adjusted_original_line, actual_index = ParserHelper.find_detabify_string(
+    adjusted_original_line, actual_index, _ = ParserHelper.find_detabify_string(
         line_with_tabs, detabified_line_to_match
     )
 
