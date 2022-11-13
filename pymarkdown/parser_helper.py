@@ -980,8 +980,11 @@ class ParserHelper:
 
     @staticmethod
     def find_detabify_string(
-        original_line: str, detabified_line_to_match: str, initial_offset: int = 0
-    ) -> Tuple[Optional[str], int]:
+        original_line: str,
+        detabified_line_to_match: str,
+        initial_offset: int = 0,
+        use_proper_traverse: bool = False,
+    ) -> Tuple[Optional[str], int, int]:
         """
         Find a detabified line within the original line.
         """
@@ -989,27 +992,36 @@ class ParserHelper:
         # LOGGER.debug("original_line=:%s:", ParserHelper.make_whitespace_visible(original_line.replace("\t", "\\t")))
         # LOGGER.debug("detabified_line_to_match=:%s:", ParserHelper.make_whitespace_visible(detabified_line_to_match))
         # LOGGER.debug("initial_offset=:%d:", initial_offset)
-        original_index = 0
-        adjusted_original_line = original_line[original_index:]
-        err = ParserHelper.detabify_string(
-            original_line, additional_start_delta=original_index + initial_offset
+        original_start_index = 0
+        original_line_index = 0
+        adjusted_original_line = original_line[original_line_index:]
+        adjusted_start_index = original_start_index + initial_offset
+        detabified_original_line = ParserHelper.detabify_string(
+            original_line, additional_start_delta=adjusted_start_index
         )
-        # LOGGER.debug("err=:%s:", ParserHelper.make_whitespace_visible(str(err)))
-        # LOGGER.debug("len(err)=%s >= len(detabified_line_to_match)=%s ", str(len(err)), str(len(detabified_line_to_match)))
-        while (len(err)) >= len(detabified_line_to_match):
-            adjusted_original_line = original_line[original_index:]
-            err = ParserHelper.detabify_string(
+        # LOGGER.debug("detabified_original_line=:%s:", ParserHelper.make_whitespace_visible(str(detabified_original_line)))
+        # LOGGER.debug("len(detabified_original_line)=%s >= len(detabified_line_to_match)=%s ", str(len(detabified_original_line)), str(len(detabified_line_to_match)))
+        while (len(detabified_original_line)) >= len(detabified_line_to_match):
+            adjusted_original_line = original_line[original_line_index:]
+            adjusted_start_index = original_start_index + initial_offset
+            # LOGGER.debug("adjusted_original_line=:%s:", adjusted_original_line.replace("\t", "\\t"))
+            # LOGGER.debug("adjusted_start_index=:%d:", adjusted_start_index)
+            detabified_original_line = ParserHelper.detabify_string(
                 adjusted_original_line,
-                additional_start_delta=original_index + initial_offset,
+                additional_start_delta=adjusted_start_index,
             )
-            # LOGGER.debug("err=:%s:", ParserHelper.make_whitespace_visible(str(err)))
-            if detabified_line_to_match == err:
+            # LOGGER.debug("detabified_original_line=:%s:", ParserHelper.make_whitespace_visible(str(detabified_original_line)))
+            if detabified_line_to_match == detabified_original_line:
                 break
-            original_index += 1
-            # LOGGER.debug("len(err)=%s >= len(detabified_line_to_match)=%s ", str(len(err)), str(len(detabified_line_to_match)))
-        if detabified_line_to_match == err:
-            return adjusted_original_line, original_index
-        return None, -1
+            if use_proper_traverse and adjusted_original_line[0] == "\t":
+                original_start_index = (1 + (original_start_index // 4)) * 4
+            else:
+                original_start_index += 1
+            original_line_index += 1
+            # LOGGER.debug("len(detabified_original_line)=%s >= len(detabified_line_to_match)=%s ", str(len(detabified_original_line)), str(len(detabified_line_to_match)))
+        if detabified_line_to_match == detabified_original_line:
+            return adjusted_original_line, original_start_index, original_line_index
+        return None, -1, -1
 
     @staticmethod
     def find_detabify_string_ex(
@@ -1020,12 +1032,97 @@ class ParserHelper:
         """
 
         for initial_offset in range(4):
-            adjusted_original_line, original_index = ParserHelper.find_detabify_string(
+            (
+                adjusted_original_line,
+                original_index,
+                _,
+            ) = ParserHelper.find_detabify_string(
                 original_line, detabified_line_to_match, initial_offset
             )
             if adjusted_original_line is not None:
                 return adjusted_original_line, original_index
         return None, -1
+
+    @staticmethod
+    def match_tabbed_whitespace(
+        extracted_whitespace: str, corrected_extracted_whitespace: str
+    ) -> Tuple[str, str, bool]:
+        """
+        Match any tabbed whitespace with its non-tabbed counterpart.
+        """
+        assert corrected_extracted_whitespace != ""
+        detabified_suffix = ""
+        detabified_prefix = ""
+        corrected_prefix = ""
+        corrected_suffix = corrected_extracted_whitespace
+        index_from_end = len(corrected_extracted_whitespace) - 1
+        while index_from_end >= 0 and len(detabified_suffix) < len(
+            extracted_whitespace
+        ):
+            corrected_suffix = corrected_extracted_whitespace[index_from_end:]
+            corrected_prefix = corrected_extracted_whitespace[:index_from_end]
+            # LOGGER.debug(
+            #     "index_from_end=:%s: of :%s:",
+            #     index_from_end,
+            #     len(corrected_extracted_whitespace),
+            # )
+            # LOGGER.debug("corrected_suffix=:%s:", corrected_suffix)
+            # LOGGER.debug("corrected_prefix=:%s:", ParserHelper.make_whitespace_visible(corrected_prefix))
+            detabified_prefix = ParserHelper.detabify_string(corrected_prefix)
+            # LOGGER.debug("detabified_prefix=:%s:", detabified_prefix)
+            detabified_suffix = ParserHelper.detabify_string(
+                corrected_suffix, additional_start_delta=len(detabified_prefix)
+            )
+            # LOGGER.debug("detabified_suffix=:%s:", detabified_suffix)
+            if len(detabified_suffix) < len(extracted_whitespace):
+                index_from_end -= 1
+        assert index_from_end >= 0
+
+        split_tab = detabified_suffix != extracted_whitespace
+        # if split_tab:
+        #     assert detabified_prefix.endswith(">")
+        #     assert detabified_suffix[1:] == extracted_whitespace
+
+        return (
+            corrected_prefix,
+            corrected_suffix,
+            split_tab,
+        )
+
+    @staticmethod
+    def parse_thematic_break_with_tab(
+        original_line: str, token_text: str, extracted_whitespace: Optional[str]
+    ) -> Tuple[str, bool, Optional[str]]:
+        """
+        Generic type of algorithm to deal with tabs, in this case, used by thematic breaks
+        and HTML blocks.
+        """
+
+        # LOGGER.debug("original_line>>:%s:<", ParserHelper.make_value_visible(original_line))
+        # LOGGER.debug("token_text>>:%s:<", ParserHelper.make_value_visible(token_text))
+        # LOGGER.debug("extracted_whitespace>>:%s:<", ParserHelper.make_value_visible(extracted_whitespace))
+        (
+            tabified_token_text,
+            _,
+            tabified_token_text_index,
+        ) = ParserHelper.find_detabify_string(
+            original_line, token_text, use_proper_traverse=True
+        )
+        # LOGGER.debug("tabified_token_text>>:%s:<", ParserHelper.make_value_visible(tabified_token_text))
+        # LOGGER.debug("tabified_token_text_index>>:%d:<", tabified_token_text_index)
+        assert tabified_token_text_index != -1
+        assert tabified_token_text is not None
+
+        tabified_leading_spaces = original_line[:tabified_token_text_index]
+        # POGGER.debug("tabified_leading_spaces>>:$:<", tabified_leading_spaces)
+        tabified_suffix = extracted_whitespace
+
+        if split_tab := len(tabified_leading_spaces) > 0:
+            assert extracted_whitespace is not None
+            (_, tabified_suffix, split_tab,) = ParserHelper.match_tabbed_whitespace(
+                extracted_whitespace, tabified_leading_spaces
+            )
+        return tabified_token_text, split_tab, tabified_suffix
 
 
 # pylint: enable=too-many-public-methods
