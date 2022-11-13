@@ -12,6 +12,7 @@ from application_properties import ApplicationProperties
 from pymarkdown.extension_manager.extension_manager import ExtensionManager
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.tab_helper import TabHelper
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
 from pymarkdown.transform_to_gfm import TransformToGfm
 
@@ -53,7 +54,10 @@ def act_and_assert(
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
-    if "\t" in expected_gfm and "\t" not in actual_gfm:
+    if (
+        ParserHelper.tab_character in expected_gfm
+        and ParserHelper.tab_character not in actual_gfm
+    ):
         raise AssertionError()
     if not disable_consistency_checks:
         __assert_token_consistency(
@@ -154,14 +158,14 @@ def __verify_markdown_roundtrip(
     to the original Markdown that created the token.
     """
 
-    if "\t" in source_markdown and allow_alternate_markdown:
+    if ParserHelper.tab_character in source_markdown and allow_alternate_markdown:
         new_source = []
         alternate_source = []
         split_source = source_markdown.split(ParserHelper.newline_character)
         for next_line in split_source:
             alternate_line = (
-                ParserHelper.detabify_string(next_line)
-                if "\t" in next_line
+                TabHelper.detabify_string(next_line)
+                if ParserHelper.tab_character in next_line
                 else next_line
             )
             alternate_source.append(alternate_line)

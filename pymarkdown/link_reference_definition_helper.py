@@ -17,6 +17,7 @@ from pymarkdown.parser_state import ParserState
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.requeue_line_info import RequeueLineInfo
 from pymarkdown.stack_token import LinkDefinitionStackToken
+from pymarkdown.tab_helper import TabHelper
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -67,7 +68,7 @@ class LinkReferenceDefinitionHelper:
         POGGER.debug(">>line_to_parse>:$:<", line_to_parse)
         POGGER.debug(">>start_index>:$:<", start_index)
         POGGER.debug(">>original_line>:$:<", original_line)
-        if "\t" in original_line and not is_blank_line:
+        if ParserHelper.tab_character in original_line and not is_blank_line:
             POGGER.debug(">>tabified>:$:<", original_line)
 
             first_character_to_parse = line_to_parse[start_index]
@@ -434,7 +435,7 @@ class LinkReferenceDefinitionHelper:
 
         assert extracted_whitespace is not None
         if (
-            ParserHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
+            TabHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
         ) and ParserHelper.is_character_at_index_one_of(
             line_to_parse,
             start_index,
@@ -710,7 +711,8 @@ class LinkReferenceDefinitionHelper:
             POGGER.debug("lines_to_requeue>:$:<", lines_to_requeue)
 
             does_any_line_have_tabs = any(
-                "\t" in ffg for ffg in link_def_token.unmodified_lines
+                ParserHelper.tab_character in ffg
+                for ffg in link_def_token.unmodified_lines
             )
             POGGER.debug("does_any_line_have_tabs>:$:<", does_any_line_have_tabs)
 

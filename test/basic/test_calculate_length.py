@@ -1,7 +1,7 @@
 """
 Tests for the calculate_length function
 """
-from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.tab_helper import TabHelper
 
 
 def test_calculate_length_empty_string():
@@ -14,7 +14,7 @@ def test_calculate_length_empty_string():
     expected_output = 0
 
     # Act
-    actual_output = ParserHelper.calculate_length(input_string)
+    actual_output = TabHelper.calculate_length(input_string)
 
     # Assert
     assert expected_output == actual_output
@@ -30,7 +30,7 @@ def test_calculate_length_single_space():
     expected_output = 1
 
     # Act
-    actual_output = ParserHelper.calculate_length(input_string)
+    actual_output = TabHelper.calculate_length(input_string)
 
     # Assert
     assert expected_output == actual_output
@@ -47,7 +47,7 @@ def test_calculate_length_multiple_spaces():
         expected_output = i
 
         # Act
-        actual_output = ParserHelper.calculate_length(input_string)
+        actual_output = TabHelper.calculate_length(input_string)
 
         # Assert
         assert expected_output == actual_output
@@ -63,7 +63,7 @@ def test_calculate_length_single_tab():
     expected_output = 4
 
     # Act
-    actual_output = ParserHelper.calculate_length(input_string)
+    actual_output = TabHelper.calculate_length(input_string)
 
     # Assert
     assert expected_output == actual_output
@@ -80,7 +80,7 @@ def test_calculate_length_multiple_tabs():
         expected_output = i * 4
 
         # Act
-        actual_output = ParserHelper.calculate_length(input_string)
+        actual_output = TabHelper.calculate_length(input_string)
 
         # Assert
         assert expected_output == actual_output
@@ -96,7 +96,7 @@ def test_calculate_length_space_then_tab():
     expected_output = 4
 
     # Act
-    actual_output = ParserHelper.calculate_length(input_string)
+    actual_output = TabHelper.calculate_length(input_string)
 
     # Assert
     assert expected_output == actual_output
@@ -113,7 +113,7 @@ def test_calculate_length_space_then_tab_twice():
     expected_output = 8
 
     # Act
-    actual_output = ParserHelper.calculate_length(input_string)
+    actual_output = TabHelper.calculate_length(input_string)
 
     # Assert
     assert expected_output == actual_output
@@ -129,7 +129,7 @@ def test_calculate_length_double_space_then_tab():
     expected_output = 4
 
     # Act
-    actual_output = ParserHelper.calculate_length(input_string)
+    actual_output = TabHelper.calculate_length(input_string)
 
     # Assert
     assert expected_output == actual_output
@@ -145,7 +145,7 @@ def test_calculate_length_triple_space_then_tab():
     expected_output = 4
 
     # Act
-    actual_output = ParserHelper.calculate_length(input_string)
+    actual_output = TabHelper.calculate_length(input_string)
 
     # Assert
     assert expected_output == actual_output
@@ -162,7 +162,7 @@ def test_calculate_length_tab_after_0_index_start():
     expected_output = 4
 
     # Act
-    actual_output = ParserHelper.calculate_length(input_string, start_index)
+    actual_output = TabHelper.calculate_length(input_string, start_index)
 
     # Assert
     assert expected_output == actual_output
@@ -181,7 +181,7 @@ def test_calculate_length_tab_after_1_index_start():
     expected_output = 3
 
     # Act
-    actual_output = ParserHelper.calculate_length(input_string, start_index)
+    actual_output = TabHelper.calculate_length(input_string, start_index)
 
     # Assert
     assert expected_output == actual_output
@@ -200,7 +200,7 @@ def test_calculate_length_tab_after_2_index_start():
     expected_output = 2
 
     # Act
-    actual_output = ParserHelper.calculate_length(input_string, start_index)
+    actual_output = TabHelper.calculate_length(input_string, start_index)
 
     # Assert
     assert expected_output == actual_output
@@ -219,7 +219,7 @@ def test_calculate_length_tab_after_3_index_start():
     expected_output = 1
 
     # Act
-    actual_output = ParserHelper.calculate_length(input_string, start_index)
+    actual_output = TabHelper.calculate_length(input_string, start_index)
 
     # Assert
     assert expected_output == actual_output
@@ -238,7 +238,7 @@ def test_calculate_length_tab_after_4_index_start():
     expected_output = 4
 
     # Act
-    actual_output = ParserHelper.calculate_length(input_string, start_index)
+    actual_output = TabHelper.calculate_length(input_string, start_index)
 
     # Assert
     assert expected_output == actual_output
@@ -254,7 +254,7 @@ def test_detabify_string_multiple_spaces():
         input_string = "".rjust(i, " ")
 
         # Act
-        actual_output = ParserHelper.detabify_string(input_string)
+        actual_output = TabHelper.detabify_string(input_string)
 
         # Assert
         assert input_string == actual_output
@@ -270,7 +270,7 @@ def test_detabify_string_single_tab():
     expected_output = "    "
 
     # Act
-    actual_output = ParserHelper.detabify_string(input_string)
+    actual_output = TabHelper.detabify_string(input_string)
 
     # Assert
     assert expected_output == actual_output
@@ -286,7 +286,7 @@ def test_detabify_string_double_tab():
     expected_output = "        "
 
     # Act
-    actual_output = ParserHelper.detabify_string(input_string)
+    actual_output = TabHelper.detabify_string(input_string)
 
     # Assert
     assert expected_output == actual_output
@@ -302,7 +302,7 @@ def test_detabify_string_double_tab_with_char_before_and_after():
     expected_output = "a       a"
 
     # Act
-    actual_output = ParserHelper.detabify_string(input_string)
+    actual_output = TabHelper.detabify_string(input_string)
 
     # Assert
     assert expected_output == actual_output
@@ -318,7 +318,7 @@ def test_detabify_string_double_tab_with_two_chars_before_and_after():
     expected_output = "aa      aa"
 
     # Act
-    actual_output = ParserHelper.detabify_string(input_string)
+    actual_output = TabHelper.detabify_string(input_string)
 
     # Assert
     assert expected_output == actual_output
@@ -334,7 +334,7 @@ def test_detabify_string_double_tab_with_three_chars_before_and_after():
     expected_output = "aaa     aaa"
 
     # Act
-    actual_output = ParserHelper.detabify_string(input_string)
+    actual_output = TabHelper.detabify_string(input_string)
 
     # Assert
     assert expected_output == actual_output
@@ -350,7 +350,7 @@ def test_detabify_string_double_tab_with_four_chars_before_and_after():
     expected_output = "aaaa        aaaa"
 
     # Act
-    actual_output = ParserHelper.detabify_string(input_string)
+    actual_output = TabHelper.detabify_string(input_string)
 
     # Assert
     assert expected_output == actual_output
@@ -366,7 +366,7 @@ def test_detabify_string_building_sequences():
     expected_output = "    0   01  012 0123    "
 
     # Act
-    actual_output = ParserHelper.detabify_string(input_string)
+    actual_output = TabHelper.detabify_string(input_string)
 
     # Assert
     assert expected_output == actual_output
@@ -384,7 +384,7 @@ def test_find_detabify_string_ex_bad():
     expected_index = -1
 
     # Act
-    actual_output, actual_index = ParserHelper.find_detabify_string_ex(
+    actual_output, actual_index = TabHelper.find_detabify_string_ex(
         original_line, input_string
     )
 

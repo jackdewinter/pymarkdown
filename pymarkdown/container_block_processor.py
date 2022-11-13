@@ -26,6 +26,7 @@ from pymarkdown.parser_state import ParserState
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.requeue_line_info import RequeueLineInfo
 from pymarkdown.stack_token import ListStackToken
+from pymarkdown.tab_helper import TabHelper
 
 if TYPE_CHECKING:  # pragma: no cover
     from pymarkdown.parse_block_pass_properties import ParseBlockPassProperties
@@ -712,9 +713,7 @@ class ContainerBlockProcessor:
             return position_marker
 
         if ParserHelper.tab_character in position_marker.text_to_parse:
-            detabified_line = ParserHelper.detabify_string(
-                position_marker.text_to_parse
-            )
+            detabified_line = TabHelper.detabify_string(position_marker.text_to_parse)
             POGGER.debug("Before tab replacement:$:", position_marker.text_to_parse)
             POGGER.debug("After tab replacement :$:", detabified_line)
             position_marker = PositionMarker(
@@ -1219,8 +1218,7 @@ class ContainerBlockProcessor:
         previous_ws_len = 0
         force_reline, ws_len = (
             False,
-            ParserHelper.calculate_length(grab_bag.extracted_whitespace)
-            + previous_ws_len,
+            TabHelper.calculate_length(grab_bag.extracted_whitespace) + previous_ws_len,
         )
         if (
             found_block_quote_token

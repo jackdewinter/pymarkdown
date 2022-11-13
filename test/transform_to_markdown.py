@@ -38,6 +38,7 @@ from pymarkdown.leaf_markdown_token import (
 from pymarkdown.link_helper import LinkHelper
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.tab_helper import TabHelper
 
 
 # pylint: disable=too-many-lines
@@ -982,7 +983,7 @@ class TransformToMarkdown:
             print(
                 f"pragma-->{ParserHelper.make_value_visible(ordered_lines[next_line_number])}<--"
             )
-            detabified_pragma = ParserHelper.detabify_string(
+            detabified_pragma = TabHelper.detabify_string(
                 ordered_lines[next_line_number]
             )
             print(f"pragma-->{ParserHelper.make_value_visible(detabified_pragma)}<--")

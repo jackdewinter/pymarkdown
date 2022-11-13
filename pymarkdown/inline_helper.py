@@ -23,6 +23,7 @@ from pymarkdown.inline_response import InlineResponse
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.tab_helper import TabHelper
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -861,7 +862,7 @@ class InlineHelper:
         if not is_setext and tabified_remaining_line and removed_end_whitespace:
             POGGER.debug("<<tabified_remaining_line>:$:<", tabified_remaining_line)
             POGGER.debug("<<removed_end_whitespace>:$:<", removed_end_whitespace)
-            adj_original, _ = ParserHelper.find_detabify_string_ex(
+            adj_original, _ = TabHelper.find_detabify_string_ex(
                 tabified_remaining_line, removed_end_whitespace
             )
             POGGER.debug("<<adj_original<<$<<", adj_original)

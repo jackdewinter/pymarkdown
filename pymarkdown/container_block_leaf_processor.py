@@ -12,7 +12,6 @@ from pymarkdown.container_markdown_token import (
     BlockQuoteMarkdownToken,
     ListStartMarkdownToken,
 )
-from pymarkdown.inline_markdown_token import TextMarkdownToken
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.leaf_block_processor_paragraph import LeafBlockProcessorParagraph
 from pymarkdown.link_reference_definition_helper import LinkReferenceDefinitionHelper
@@ -21,11 +20,13 @@ from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.parser_state import ParserState
 from pymarkdown.position_marker import PositionMarker
-from pymarkdown.stack_token import FencedCodeBlockStackToken, ListStackToken
+from pymarkdown.stack_token import ListStackToken
+from pymarkdown.tab_helper import TabHelper
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
 # pylint: disable=too-many-lines
+# pylint: disable=too-few-public-methods
 
 
 class ContainerBlockLeafProcessor:
@@ -185,7 +186,7 @@ class ContainerBlockLeafProcessor:
         POGGER.debug("parsing leaf tokens")
         POGGER.debug("Leaf Line:$:", position_marker.text_to_parse)
         POGGER.debug("original_line:$:", grab_bag.original_line)
-        detabified_original_line = ParserHelper.detabify_string(grab_bag.original_line)
+        detabified_original_line = TabHelper.detabify_string(grab_bag.original_line)
         detabified_original_start_index = detabified_original_line.find(
             position_marker.text_to_parse
         )
@@ -276,14 +277,12 @@ class ContainerBlockLeafProcessor:
             index_indent=incoming_position_marker.index_indent,
         )
 
-        pre_tokens = (
-            ContainerBlockLeafProcessor.__close_indented_block_if_indent_not_there(
-                parser_state, leaf_token_whitespace
-            )
+        pre_tokens = LeafBlockProcessor.close_indented_block_if_indent_not_there(
+            parser_state, leaf_token_whitespace
         )
 
         new_tokens: List[MarkdownToken] = []
-        outer_processed = ContainerBlockLeafProcessor.__handle_fenced_code_block(
+        outer_processed = LeafBlockProcessor.handle_fenced_code_block(
             parser_state,
             position_marker,
             leaf_token_whitespace,
@@ -327,270 +326,6 @@ class ContainerBlockLeafProcessor:
             position_marker,
             leaf_token_whitespace,
         )
-
-    # pylint: disable=too-many-arguments
-    @staticmethod
-    def __handle_fenced_code_block(
-        parser_state: ParserState,
-        position_marker: PositionMarker,
-        leaf_token_whitespace: Optional[str],
-        new_tokens: List[MarkdownToken],
-        original_line: str,
-        detabified_original_start_index: int,
-        block_quote_data: BlockQuoteData,
-    ) -> bool:
-        """
-        Take care of the processing for fenced code blocks.
-        """
-        if parser_state.token_stack[-1].was_link_definition_started:
-            return False
-
-        POGGER.debug(">>__handle_fenced_code_block>>start")
-        POGGER.debug(">>leaf_token_whitespace>:$:<", leaf_token_whitespace)
-        (
-            fenced_tokens,
-            leaf_token_whitespace,
-        ) = LeafBlockProcessor.parse_fenced_code_block(
-            parser_state,
-            position_marker,
-            leaf_token_whitespace,
-            original_line,
-            detabified_original_start_index,
-            block_quote_data,
-        )
-        POGGER.debug(">>leaf_token_whitespace>:$:<", leaf_token_whitespace)
-        if fenced_tokens:
-            new_tokens.extend(fenced_tokens)
-            POGGER.debug(">>new_tokens>>$", new_tokens)
-        elif parser_state.token_stack[-1].is_fenced_code_block:
-
-            POGGER.debug(">>still in fenced block>:$:<", original_line)
-            POGGER.debug(">>leaf_token_whitespace>:$:<", leaf_token_whitespace)
-            assert leaf_token_whitespace is not None
-            token_text = position_marker.text_to_parse[position_marker.index_number :]
-            if "\t" in original_line:
-                (
-                    leaf_token_whitespace,
-                    token_text,
-                ) = ContainerBlockLeafProcessor.__handle_fenced_code_block_with_tab(
-                    parser_state, original_line, leaf_token_whitespace, token_text
-                )
-            new_tokens.append(
-                TextMarkdownToken(
-                    token_text,
-                    leaf_token_whitespace,
-                    position_marker=position_marker,
-                )
-            )
-            POGGER.debug(">>new_tokens>>$", new_tokens)
-        else:
-            return False
-        return True
-
-    # pylint: enable=too-many-arguments
-
-    # pylint: disable=too-many-locals
-    @staticmethod
-    def __handle_fenced_code_block_with_tab(
-        parser_state: ParserState,
-        original_line: str,
-        leaf_token_whitespace: str,
-        token_text: str,
-    ) -> Tuple[str, str]:
-
-        # POGGER.debug("original_line>:$:<", original_line)
-        # POGGER.debug("leaf_token_whitespace>:$:<", leaf_token_whitespace)
-        # POGGER.debug("token_text>:$:<", token_text)
-
-        fenced_stack_token = cast(
-            FencedCodeBlockStackToken, parser_state.token_stack[-1]
-        )
-        whitespace_start_count = fenced_stack_token.whitespace_start_count
-        # POGGER.debug("whitespace_start_count>:$:<", whitespace_start_count)
-        was_indented = False
-        if not parser_state.token_stack[-2].is_document:
-            last_container_token = parser_state.token_stack[-2]
-            # POGGER.debug("last_container_token>:$:<", last_container_token)
-            assert last_container_token.is_block_quote
-            # whitespace_start_count -= len(rttp)
-            # POGGER.debug("whitespace_start_count>:$:<", whitespace_start_count)
-            was_indented = True
-
-        (
-            resolved_leaf_token_whitespace,
-            adj_original,
-            adj_original_index,
-            split_tab,
-        ) = ContainerBlockLeafProcessor.__find_tabified_string(
-            leaf_token_whitespace, token_text, original_line
-        )
-
-        # POGGER.debug("adj_original>:$:<", adj_original)
-        space_end_index, extracted_whitespace = ParserHelper.extract_spaces(
-            adj_original, 0
-        )
-        # POGGER.debug("space_end_index>:$:<", space_end_index)
-        # POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
-        assert extracted_whitespace is not None
-        assert space_end_index != -1
-
-        # POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
-        # POGGER.debug("adj_original_index>:$:<", adj_original_index)
-        detabified_extracted_whitespace = ParserHelper.detabify_string(
-            extracted_whitespace, adj_original_index
-        )
-        # POGGER.debug("detabified_extracted_whitespace>:$:<", detabified_extracted_whitespace)
-        assert detabified_extracted_whitespace == resolved_leaf_token_whitespace
-
-        new_extracted_whitespace = extracted_whitespace
-        if new_extracted_whitespace and whitespace_start_count:
-
-            assert was_indented
-
-            new_index = 0
-            # POGGER.debug("new_index>:$:<", new_index)
-            while new_index < len(new_extracted_whitespace):
-                before_count = new_extracted_whitespace[: new_index + 1]
-                # POGGER.debug("before_count>:$:<", before_count)
-                detabified_before_count = ParserHelper.detabify_string(
-                    before_count, adj_original_index
-                )
-                # POGGER.debug("detabified_before_count>:$:<", detabified_before_count)
-                detabified_before_count_length = len(detabified_before_count)
-                # POGGER.debug("detabified_before_count_length>:$:<", detabified_before_count_length)
-                # POGGER.debug("whitespace_start_count>:$:<", whitespace_start_count)
-                if detabified_before_count_length >= whitespace_start_count:
-                    after_count = new_extracted_whitespace[len(before_count) :]
-                    break
-                new_index += 1
-                # POGGER.debug("new_index>:$:<", new_index)
-
-            # POGGER.debug("new_extracted_whitespace>:$:<", new_extracted_whitespace)
-            # POGGER.debug("detabified_before_count_length>:$:<", detabified_before_count_length)
-            # POGGER.debug("whitespace_start_count>:$:<", whitespace_start_count)
-            if detabified_before_count_length < whitespace_start_count:
-                assert before_count == new_extracted_whitespace
-                after_count = ""
-            # POGGER.debug("before_count>:$:<", before_count)
-            # POGGER.debug("after_count>:$:<", after_count)
-
-            # POGGER.debug("new_extracted_whitespace>:$:<", new_extracted_whitespace)
-            # POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
-            replacement_string = (
-                ParserHelper.replace_noop_character
-                if len(after_count) == 0
-                else after_count
-            )
-            new_extracted_whitespace = ParserHelper.create_replacement_markers(
-                extracted_whitespace, replacement_string
-            )
-            # POGGER.debug("new_extracted_whitespace>:$:<", new_extracted_whitespace)
-
-        # POGGER.debug("leaf_token_whitespace>:$:<", leaf_token_whitespace)
-        # POGGER.debug("token_text>:$:<", token_text)
-        leaf_token_whitespace = new_extracted_whitespace
-        token_text = adj_original[space_end_index:]
-        # POGGER.debug("leaf_token_whitespace>:$:<", leaf_token_whitespace)
-        # POGGER.debug("token_text>:$:<", token_text)
-        if split_tab:
-            LeafBlockProcessorParagraph.adjust_block_quote_indent_for_tab(parser_state)
-
-        return leaf_token_whitespace, token_text
-
-    # pylint: enable=too-many-locals
-
-    @staticmethod
-    def __find_tabified_string(
-        leaf_token_whitespace: str, token_text: str, original_line: str
-    ) -> Tuple[str, str, int, bool]:
-
-        resolved_leaf_token_whitespace = ParserHelper.remove_all_from_text(
-            leaf_token_whitespace
-        )
-        # POGGER.debug("resolved_leaf_token_whitespace>:$:<", resolved_leaf_token_whitespace)
-        reconstructed_line = resolved_leaf_token_whitespace + token_text
-        # POGGER.debug("reconstructed_line>:$:<", reconstructed_line)
-        adj_original, adj_original_index, _ = ParserHelper.find_detabify_string(
-            original_line, reconstructed_line
-        )
-        # POGGER.debug(">>adj_original>:$:<", adj_original)
-        # POGGER.debug(">>adj_original_index>:$:<", adj_original_index)
-        split_tab = False
-        # POGGER.debug("split_tab>:$:<", split_tab)
-        if adj_original is None:
-            # Need to split this tab between two areas.
-            reconstructed_line = f" {reconstructed_line}"
-            # POGGER.debug(">>reconstructed_line>:$:<", reconstructed_line)
-            adj_original, adj_original_index, _ = ParserHelper.find_detabify_string(
-                original_line, reconstructed_line
-            )
-            # POGGER.debug(">>adj_original>:$:<", adj_original)
-            # POGGER.debug(">>adj_original_index>:$:<", adj_original_index)
-            split_tab = True
-            # POGGER.debug("split_tab>:$:<", split_tab)
-            adj_original_index += 1
-            # POGGER.debug(">>adj_original_index>:$:<", adj_original_index)
-        assert adj_original is not None
-        return (
-            resolved_leaf_token_whitespace,
-            adj_original,
-            adj_original_index,
-            split_tab,
-        )
-
-    @staticmethod
-    def __close_indented_block_if_indent_not_there(
-        parser_state: ParserState, leaf_token_whitespace: Optional[str]
-    ) -> List[MarkdownToken]:
-
-        POGGER.debug(
-            "__close_indented_block_if_indent_not_there>>$>",
-            parser_state.token_stack[-1],
-        )
-        POGGER.debug("leaf_token_whitespace>>$>", leaf_token_whitespace)
-        pre_tokens: List[MarkdownToken] = []
-        assert leaf_token_whitespace is not None
-        if parser_state.token_stack[
-            -1
-        ].is_indented_code_block and ParserHelper.is_length_less_than_or_equal_to(
-            leaf_token_whitespace, 3
-        ):
-            pre_tokens.append(
-                parser_state.token_stack[
-                    -1
-                ].generate_close_markdown_token_from_stack_token()
-            )
-            del parser_state.token_stack[-1]
-
-            extracted_blank_line_tokens = (
-                ContainerBlockLeafProcessor.extract_markdown_tokens_back_to_blank_line(
-                    parser_state, False
-                )
-            )
-            extracted_blank_line_tokens.reverse()
-            pre_tokens.extend(extracted_blank_line_tokens)
-        POGGER.debug(
-            "__close_indented_block_if_indent_not_there>>pre_tokens>$>", pre_tokens
-        )
-        return pre_tokens
-
-    @staticmethod
-    def extract_markdown_tokens_back_to_blank_line(
-        parser_state: ParserState, was_forced: bool
-    ) -> List[MarkdownToken]:
-        """
-        Extract tokens going back to the last blank line token.
-        """
-
-        pre_tokens: List[MarkdownToken] = []
-        while parser_state.token_document[-1].is_blank_line:
-            last_element = parser_state.token_document[-1]
-            if was_forced:
-                pre_tokens.insert(0, last_element)
-            else:
-                pre_tokens.append(last_element)
-            del parser_state.token_document[-1]
-        return pre_tokens
 
     @staticmethod
     def __handle_special_block_quote_reduction(
@@ -1244,3 +979,6 @@ class ContainerBlockLeafProcessor:
         return proposed_indent_level, non_last_block_index
 
     # pylint: enable=too-many-arguments
+
+
+# pylint: enable=too-few-public-methods

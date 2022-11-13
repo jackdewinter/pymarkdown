@@ -6,7 +6,6 @@ from typing import List, Optional, Tuple, cast
 
 from pymarkdown.block_quote_data import BlockQuoteData
 from pymarkdown.constants import Constants
-from pymarkdown.container_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.inline_markdown_token import TextMarkdownToken
 from pymarkdown.leaf_markdown_token import (
     BlankLineMarkdownToken,
@@ -22,6 +21,7 @@ from pymarkdown.stack_token import (
     ListStackToken,
     ParagraphStackToken,
 )
+from pymarkdown.tab_helper import TabHelper
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -160,8 +160,7 @@ class LeafBlockProcessorParagraph:
         extracted_whitespace: str,
     ) -> Tuple[str, str]:
         corrected_tab_text = ""
-        if "\t" in original_line:
-
+        if ParserHelper.tab_character in original_line:
             (
                 corrected_extracted_whitespace,
                 original_line,
@@ -179,7 +178,7 @@ class LeafBlockProcessorParagraph:
             else:
                 POGGER.debug("original_line=:$:", original_line)
                 POGGER.debug("text_to_parse=:$:", text_to_parse)
-                adj_text_to_parse, _, _ = ParserHelper.find_detabify_string(
+                adj_text_to_parse, _, _ = TabHelper.find_detabify_string(
                     original_line, text_to_parse, use_proper_traverse=True
                 )
                 POGGER.debug("adj_text_to_parse=:$:", adj_text_to_parse)
@@ -211,76 +210,18 @@ class LeafBlockProcessorParagraph:
                 "corrected_extracted_whitespace=:$:", corrected_extracted_whitespace
             )
             assert len(corrected_extracted_whitespace) > 0
-            (_, corrected_suffix, split_tab,) = ParserHelper.match_tabbed_whitespace(
+            (_, corrected_suffix, split_tab,) = TabHelper.match_tabbed_whitespace(
                 extracted_whitespace, corrected_extracted_whitespace
             )
             POGGER.debug("extracted_whitespace=:$:", extracted_whitespace)
             if split_tab:
-                LeafBlockProcessorParagraph.adjust_block_quote_indent_for_tab(
-                    parser_state
-                )
+                TabHelper.adjust_block_quote_indent_for_tab(parser_state)
 
             corrected_extracted_whitespace = corrected_suffix
             original_line = original_line[first_non_whitespace_character_index:]
         else:
             corrected_extracted_whitespace = extracted_whitespace
         return corrected_extracted_whitespace, original_line
-
-    @staticmethod
-    def adjust_block_quote_indent_for_tab(parser_state: ParserState) -> str:
-        """
-        Adjust the last block quote for a tab.
-        """
-
-        POGGER.debug("parser_state=:$:", parser_state.token_stack)
-        stack_token_index = len(parser_state.token_stack) - 1
-        while (
-            stack_token_index > 0
-            and not parser_state.token_stack[stack_token_index].is_block_quote
-            and not parser_state.token_stack[stack_token_index].is_list
-        ):
-            stack_token_index -= 1
-        POGGER.debug("parser_state=:$:", parser_state.token_stack[stack_token_index])
-        assert parser_state.token_stack[stack_token_index].is_block_quote
-
-        block_quote_token = cast(
-            BlockQuoteMarkdownToken,
-            parser_state.token_stack[stack_token_index].matching_markdown_token,
-        )
-        POGGER.debug(
-            "parser_state=:$:",
-            block_quote_token,
-        )
-        block_quote_leading_spaces = block_quote_token.leading_spaces
-        assert block_quote_leading_spaces is not None
-        POGGER.debug("block_quote_leading_spaces=:$:", block_quote_leading_spaces)
-        block_quote_leading_spaces_index = block_quote_leading_spaces.rfind("\n")
-        last_block_quote_leading_space = block_quote_leading_spaces[
-            block_quote_leading_spaces_index + 1 :
-        ]
-        POGGER.debug(
-            "last_block_quote_leading_space=:$:", last_block_quote_leading_space
-        )
-        assert last_block_quote_leading_space.endswith(" ")
-        last_block_quote_leading_space = last_block_quote_leading_space[:-1]
-        POGGER.debug(
-            "last_block_quote_leading_space=:$:", last_block_quote_leading_space
-        )
-        POGGER.debug(
-            "parser_state=:$:",
-            block_quote_token,
-        )
-        block_quote_token.remove_last_leading_space()
-        POGGER.debug(
-            "parser_state=:$:",
-            block_quote_token,
-        )
-        block_quote_token.add_leading_spaces(last_block_quote_leading_space)
-        POGGER.debug(
-            "parser_state=:$:",
-            block_quote_token,
-        )
-        return last_block_quote_leading_space
 
     @staticmethod
     def __adjust_paragraph_for_containers(
@@ -342,7 +283,6 @@ class LeafBlockProcessorParagraph:
             else 0
         )
 
-    # pylint: disable=too-many-locals
     @staticmethod
     def __handle_paragraph_prep(
         parser_state: ParserState,
@@ -387,45 +327,15 @@ class LeafBlockProcessorParagraph:
         if not parser_state.token_stack[-1].is_paragraph:
 
             assert extracted_whitespace is not None
-            if "\t" in original_line:
-                POGGER.debug(">>text_to_parse>>$>>", position_marker.text_to_parse)
-                POGGER.debug(">>index_number>>$>>", position_marker.index_number)
-
-                POGGER.debug(">>original_line>:$:<", original_line)
-                POGGER.debug(
-                    ">>position_marker.text_to_parse[position_marker.index_number:]>:$:<",
-                    position_marker.text_to_parse[position_marker.index_number :],
-                )
-                (
-                    rest_of_string,
-                    _,
-                    rest_of_string_index,
-                ) = ParserHelper.find_detabify_string(
-                    original_line,
-                    position_marker.text_to_parse[position_marker.index_number :],
-                    use_proper_traverse=True,
-                )
-                POGGER.debug(">>rest_of_string>>$>>", rest_of_string)
-                POGGER.debug(">>rest_of_string_index>>$>>", rest_of_string_index)
-                assert rest_of_string is not None
-                prefix = original_line[:rest_of_string_index]
-                if prefix and "\t" in prefix:
-                    POGGER.debug(">>extracted_whitespace>:$:<", extracted_whitespace)
-                    POGGER.debug(">>prefix>:$:<", prefix)
-                    (
-                        _,
-                        corrected_suffix,
-                        split_tab,
-                    ) = ParserHelper.match_tabbed_whitespace(
-                        extracted_whitespace, prefix
+            if ParserHelper.tab_character in original_line:
+                extracted_whitespace = (
+                    LeafBlockProcessorParagraph.__paragraph_prep_whitespace_with_tab(
+                        parser_state,
+                        position_marker,
+                        original_line,
+                        extracted_whitespace,
                     )
-                    POGGER.debug(">>corrected_suffix>>$>>", corrected_suffix)
-                    POGGER.debug(">>split_tab>>$>>", split_tab)
-                    extracted_whitespace = corrected_suffix
-                    if split_tab:
-                        LeafBlockProcessorParagraph.adjust_block_quote_indent_for_tab(
-                            parser_state
-                        )
+                )
 
             new_paragraph_token = ParagraphMarkdownToken(
                 extracted_whitespace, position_marker
@@ -436,7 +346,44 @@ class LeafBlockProcessorParagraph:
             did_add_paragraph_token = True
         return new_tokens, extracted_whitespace, did_add_paragraph_token
 
-    # pylint: enable=too-many-locals
+    @staticmethod
+    def __paragraph_prep_whitespace_with_tab(
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        original_line: str,
+        extracted_whitespace: str,
+    ) -> str:
+        POGGER.debug(">>text_to_parse>>$>>", position_marker.text_to_parse)
+        POGGER.debug(">>index_number>>$>>", position_marker.index_number)
+
+        POGGER.debug(">>original_line>:$:<", original_line)
+        POGGER.debug(
+            ">>position_marker.text_to_parse[position_marker.index_number:]>:$:<",
+            position_marker.text_to_parse[position_marker.index_number :],
+        )
+        (rest_of_string, _, rest_of_string_index,) = TabHelper.find_detabify_string(
+            original_line,
+            position_marker.text_to_parse[position_marker.index_number :],
+            use_proper_traverse=True,
+        )
+        POGGER.debug(">>rest_of_string>>$>>", rest_of_string)
+        POGGER.debug(">>rest_of_string_index>>$>>", rest_of_string_index)
+        assert rest_of_string is not None
+        prefix = original_line[:rest_of_string_index]
+        if prefix and ParserHelper.tab_character in prefix:
+            POGGER.debug(">>extracted_whitespace>:$:<", extracted_whitespace)
+            POGGER.debug(">>prefix>:$:<", prefix)
+            (
+                _,
+                corrected_suffix,
+                split_tab,
+            ) = TabHelper.match_tabbed_whitespace(extracted_whitespace, prefix)
+            POGGER.debug(">>corrected_suffix>>$>>", corrected_suffix)
+            POGGER.debug(">>split_tab>>$>>", split_tab)
+            extracted_whitespace = corrected_suffix
+            if split_tab:
+                TabHelper.adjust_block_quote_indent_for_tab(parser_state)
+        return extracted_whitespace
 
     @staticmethod
     def check_for_list_in_process(parser_state: ParserState) -> Tuple[bool, int]:

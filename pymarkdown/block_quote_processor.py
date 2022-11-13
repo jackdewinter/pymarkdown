@@ -27,6 +27,7 @@ from pymarkdown.stack_token import (
     ParagraphStackToken,
     StackToken,
 )
+from pymarkdown.tab_helper import TabHelper
 
 # pylint: disable=too-many-lines
 
@@ -52,7 +53,7 @@ class BlockQuoteProcessor:
         """
 
         assert extracted_whitespace is not None
-        return ParserHelper.is_length_less_than_or_equal_to(
+        return TabHelper.is_length_less_than_or_equal_to(
             extracted_whitespace if adj_ws is None else adj_ws, 3
         ) and ParserHelper.is_character_at_index(
             line_to_parse, start_index, BlockQuoteProcessor.__block_quote_character

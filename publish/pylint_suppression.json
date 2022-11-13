@@ -17,8 +17,8 @@
         },
         "pymarkdown/constants.py": {},
         "pymarkdown/container_block_leaf_processor.py": {
-            "too-many-arguments": 6,
-            "too-many-locals": 1,
+            "too-few-public-methods": 1,
+            "too-many-arguments": 5,
             "chained-comparison": 1,
             "too-many-boolean-expressions": 1
         },
@@ -31,6 +31,9 @@
             "too-many-instance-attributes": 1,
             "too-many-public-methods": 1,
             "too-many-arguments": 1
+        },
+        "pymarkdown/container_helper.py": {
+            "too-few-public-methods": 1
         },
         "pymarkdown/container_indices.py": {},
         "pymarkdown/container_markdown_token.py": {
@@ -66,7 +69,7 @@
         },
         "pymarkdown/extensions/task_list_items.py": {},
         "pymarkdown/html_helper.py": {
-            "too-many-arguments": 3
+            "too-many-arguments": 1
         },
         "pymarkdown/inline_helper.py": {
             "too-many-arguments": 4,
@@ -88,13 +91,13 @@
             "too-many-instance-attributes": 1
         },
         "pymarkdown/leaf_block_processor.py": {
-            "too-many-arguments": 11,
-            "too-many-locals": 8,
-            "too-many-statements": 2
+            "too-many-arguments": 12,
+            "too-many-locals": 9,
+            "too-many-statements": 1
         },
         "pymarkdown/leaf_block_processor_paragraph.py": {
             "too-many-arguments": 1,
-            "too-many-locals": 2
+            "too-many-locals": 1
         },
         "pymarkdown/leaf_markdown_token.py": {
             "too-many-arguments": 4,
@@ -112,7 +115,7 @@
         "pymarkdown/link_reference_titles.py": {},
         "pymarkdown/list_block_processor.py": {
             "too-many-arguments": 20,
-            "too-many-locals": 8
+            "too-many-locals": 7
         },
         "pymarkdown/main.py": {
             "too-few-public-methods": 1,
@@ -228,6 +231,7 @@
             "too-many-arguments": 3,
             "too-many-instance-attributes": 1
         },
+        "pymarkdown/tab_helper.py": {},
         "pymarkdown/tokenized_markdown.py": {
             "too-many-arguments": 4
         },
@@ -243,12 +247,12 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 141,
-        "too-many-locals": 52,
-        "too-few-public-methods": 7,
+        "too-many-arguments": 139,
+        "too-many-locals": 50,
+        "too-few-public-methods": 9,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 1,
-        "too-many-statements": 3,
+        "too-many-statements": 2,
         "too-many-instance-attributes": 18,
         "too-many-public-methods": 3,
         "broad-except": 2
