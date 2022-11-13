@@ -10,7 +10,9 @@ from pymarkdown.leaf_markdown_token import (
     ParagraphMarkdownToken,
 )
 from pymarkdown.markdown_token import MarkdownToken
+from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.tab_helper import TabHelper
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -106,11 +108,12 @@ class CoalesceProcessor:
                 indented_token = cast(
                     IndentedCodeBlockMarkdownToken, coalesced_list[-2]
                 )
-                remove_leading_spaces = len(indented_token.extracted_whitespace)
-                if "\t" in indented_token.extracted_whitespace:
-                    remove_leading_spaces = CoalesceProcessor.__calculate_real_length(
+                if ParserHelper.tab_character in indented_token.extracted_whitespace:
+                    remove_leading_spaces = TabHelper.calculate_length(
                         indented_token.extracted_whitespace
                     )
+                else:
+                    remove_leading_spaces = len(indented_token.extracted_whitespace)
             elif (
                 coalesced_list[-2].is_paragraph or coalesced_list[-2].is_setext_heading
             ):
@@ -134,19 +137,6 @@ class CoalesceProcessor:
                 indented_token.add_indented_whitespace(indented_whitespace)
             return True
         return False
-
-    @staticmethod
-    def __calculate_real_length(string_to_calculate: str) -> int:
-        length_so_far = 0
-        for next_character in string_to_calculate:
-            POGGER.debug("next_character>:$:<", next_character)
-            if next_character == "\t":
-                length_so_far = (1 + (length_so_far // 4)) * 4
-            else:
-                length_so_far += 1
-            POGGER.debug("length_so_far>:$:<", length_so_far)
-        POGGER.debug("length_so_far>:$:<", length_so_far)
-        return length_so_far
 
     @staticmethod
     def __coalesce_with_blank_line(

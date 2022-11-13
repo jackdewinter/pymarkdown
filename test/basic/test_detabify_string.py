@@ -2,7 +2,7 @@
 Tests for the detabisty_string functions.
 """
 
-from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.tab_helper import TabHelper
 
 
 def test_detabify_string_simple_case():
@@ -16,7 +16,7 @@ def test_detabify_string_simple_case():
     detabified_line_to_match = "    orig"
 
     # Act
-    adjusted_line = ParserHelper.detabify_string(line_with_tabs, additional_start_delta)
+    adjusted_line = TabHelper.detabify_string(line_with_tabs, additional_start_delta)
 
     # Assert
     assert detabified_line_to_match == adjusted_line
@@ -33,7 +33,7 @@ def test_detabify_string_simple_case_with_offset():
     detabified_line_to_match = "  orig"
 
     # Act
-    adjusted_line = ParserHelper.detabify_string(line_with_tabs, additional_start_delta)
+    adjusted_line = TabHelper.detabify_string(line_with_tabs, additional_start_delta)
 
     # Assert
     assert detabified_line_to_match == adjusted_line
@@ -50,7 +50,7 @@ def test_detabify_string_simple_case_with_spaces():
     detabified_line_to_match = "        "
 
     # Act
-    adjusted_line = ParserHelper.detabify_string(line_with_tabs, additional_start_delta)
+    adjusted_line = TabHelper.detabify_string(line_with_tabs, additional_start_delta)
 
     # Assert
     assert detabified_line_to_match == adjusted_line
@@ -67,7 +67,7 @@ def test_detabify_string_simple_case_with_spaces_and_offset():
     detabified_line_to_match = "      "
 
     # Act
-    adjusted_line = ParserHelper.detabify_string(line_with_tabs, additional_start_delta)
+    adjusted_line = TabHelper.detabify_string(line_with_tabs, additional_start_delta)
 
     # Assert
     assert detabified_line_to_match == adjusted_line
@@ -86,7 +86,7 @@ def test_find_detabify_string_simple_case():
     expected_adjusted_line = line_with_tabs
 
     # Act
-    adjusted_original_line, actual_index, _ = ParserHelper.find_detabify_string(
+    adjusted_original_line, actual_index, _ = TabHelper.find_detabify_string(
         line_with_tabs, detabified_line_to_match
     )
 
@@ -106,7 +106,7 @@ def test_find_detabify_string_simple_case_x():
 
     expected_index = -1
     # Act
-    adjusted_original_line, actual_index, _ = ParserHelper.find_detabify_string(
+    adjusted_original_line, actual_index, _ = TabHelper.find_detabify_string(
         line_with_tabs, detabified_line_to_match
     )
 

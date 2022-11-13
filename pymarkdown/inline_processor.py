@@ -27,6 +27,7 @@ from pymarkdown.link_helper import LinkHelper
 from pymarkdown.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.tab_helper import TabHelper
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -1140,8 +1141,8 @@ class InlineProcessor:
         end_string: Optional[str] = ""
         fold_space: Optional[List[str]] = None
 
-        POGGER.debug("source_text>:$:<", source_text)
-        POGGER.debug("tabified_text>:$:<", tabified_text)
+        # POGGER.debug("source_text>:$:<", source_text)
+        # POGGER.debug("tabified_text>:$:<", tabified_text)
         # POGGER.debug(
         #    "__process_inline_text_block>>starting_whitespace>>$>",
         #    starting_whitespace,
@@ -1333,7 +1334,7 @@ class InlineProcessor:
         # POGGER.debug("so far>:$:<", source_text[start_index:])
         # POGGER.debug("newlines_encountered>:$:<", newlines_encountered)
         tabified_remaining_line: Optional[str] = None
-        POGGER.debug("tabified_text>:$:<", tabified_text)
+        # POGGER.debug("tabified_text>:$:<", tabified_text)
         if tabified_text:
             # POGGER.debug("char>:$:<", source_text[next_index])
             adj_original_line = InlineProcessor.__handle_next_inline_character_tabified(
@@ -1727,7 +1728,7 @@ class InlineProcessor:
                 tabified_start_index:stop_character_in_tabified_index
             ]
 
-        ex_original_line, _ = ParserHelper.find_detabify_string_ex(
+        ex_original_line, _ = TabHelper.find_detabify_string_ex(
             adj_tabified_text, current_line_source_text
         )
         assert ex_original_line is not None
@@ -2328,37 +2329,9 @@ class InlineProcessor:
 
         if tabified_remaining_line and end_string and len(end_string) > 1:
             assert end_string is not None
-            POGGER.debug("end_string>$<", end_string)
-            POGGER.debug("tabified_remaining_line>$<", tabified_remaining_line)
-            assert end_string[-1] in ["\n", ParserHelper.whitespace_split_character]
-            if end_string[-1] == ParserHelper.whitespace_split_character:
-                newline_index = end_string.rfind("\n")
-                assert newline_index != -1
-                end_suffix = end_string[:newline_index]
-            else:
-                end_suffix = end_string[:-1]
-            POGGER.debug("end_suffix>$<", end_suffix)
-            newline_index = end_suffix.rfind("\n")
-            if is_setext:
-                special_index = end_suffix.rfind(
-                    ParserHelper.whitespace_split_character
-                )
-                if special_index != -1 and newline_index != 1:
-                    max_index = max(special_index, special_index)
-                    end_suffix = end_suffix[max_index + 1 :]
-                else:
-                    assert special_index == -1
-                    assert newline_index != 1
-                    end_suffix = end_suffix[newline_index + 1 :]
-            elif newline_index != -1:
-                end_suffix = end_suffix[newline_index + 1 :]
-
-            POGGER.debug("tabified_remaining_line>$<", tabified_remaining_line)
-            POGGER.debug("end_suffix>$<", end_suffix)
-            assert tabified_remaining_line.endswith(end_suffix)
-            if end_suffix:
-                tabified_remaining_line = tabified_remaining_line[: -(len(end_suffix))]
-            POGGER.debug("tabified_remaining_line>$<", tabified_remaining_line)
+            tabified_remaining_line = InlineProcessor.__clean_up_new_line(
+                end_string, is_setext, tabified_remaining_line
+            )
 
         return (
             whitespace_to_add,
@@ -2370,6 +2343,41 @@ class InlineProcessor:
         )
 
     # pylint: enable=too-many-arguments, too-many-locals
+
+    @staticmethod
+    def __clean_up_new_line(
+        end_string: str, is_setext: bool, tabified_remaining_line: str
+    ) -> str:
+        POGGER.debug("end_string>$<", end_string)
+        POGGER.debug("tabified_remaining_line>$<", tabified_remaining_line)
+        assert end_string[-1] in ["\n", ParserHelper.whitespace_split_character]
+        if end_string[-1] == ParserHelper.whitespace_split_character:
+            newline_index = end_string.rfind("\n")
+            assert newline_index != -1
+            end_suffix = end_string[:newline_index]
+        else:
+            end_suffix = end_string[:-1]
+        POGGER.debug("end_suffix>$<", end_suffix)
+        newline_index = end_suffix.rfind("\n")
+        if is_setext:
+            special_index = end_suffix.rfind(ParserHelper.whitespace_split_character)
+            if special_index != -1 and newline_index != 1:
+                max_index = max(special_index, special_index)
+                end_suffix = end_suffix[max_index + 1 :]
+            else:
+                assert special_index == -1
+                assert newline_index != 1
+                end_suffix = end_suffix[newline_index + 1 :]
+        elif newline_index != -1:
+            end_suffix = end_suffix[newline_index + 1 :]
+
+        POGGER.debug("tabified_remaining_line>$<", tabified_remaining_line)
+        POGGER.debug("end_suffix>$<", end_suffix)
+        assert tabified_remaining_line.endswith(end_suffix)
+        if end_suffix:
+            tabified_remaining_line = tabified_remaining_line[: -(len(end_suffix))]
+        POGGER.debug("tabified_remaining_line>$<", tabified_remaining_line)
+        return tabified_remaining_line
 
     @staticmethod
     def __add_recombined_whitespace(

@@ -31,6 +31,7 @@ from pymarkdown.stack_token import (
     StackToken,
     UnorderedListStackToken,
 )
+from pymarkdown.tab_helper import TabHelper
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -74,7 +75,7 @@ class ListBlockProcessor:
         POGGER.debug("parent_indent>>$", parent_indent)
 
         if (
-            ParserHelper.is_length_less_than_or_equal_to(adj_ws, 3 + parent_indent)
+            TabHelper.is_length_less_than_or_equal_to(adj_ws, 3 + parent_indent)
             or skip_whitespace_check
         ):
             assert extracted_whitespace is not None
@@ -142,7 +143,7 @@ class ListBlockProcessor:
         POGGER.debug("len(adj_ws)>>$", len(adj_ws))
 
         if (
-            ParserHelper.is_length_less_than_or_equal_to(adj_ws, 3 + parent_indent)
+            TabHelper.is_length_less_than_or_equal_to(adj_ws, 3 + parent_indent)
             or skip_whitespace_check
         ):
             (
@@ -1088,7 +1089,7 @@ class ListBlockProcessor:
         assert parser_state.token_stack[ind].is_list
         list_stack_token = cast(ListStackToken, parser_state.token_stack[ind])
         before_ws_length = list_stack_token.ws_before_marker
-        leading_space_length = ParserHelper.calculate_length(extracted_whitespace)
+        leading_space_length = TabHelper.calculate_length(extracted_whitespace)
         if list_stack_token.last_new_list_token:
             requested_list_indent = list_stack_token.last_new_list_token.indent_level
         else:
@@ -1541,10 +1542,10 @@ class ListBlockProcessor:
         assert after_marker_whitespace is not None
         assert extracted_whitespace is not None
         ws_after_marker, ws_before_marker, line_to_parse_size = (
-            ParserHelper.calculate_length(
+            TabHelper.calculate_length(
                 after_marker_whitespace, start_index=start_index + 1
             ),
-            ParserHelper.calculate_length(extracted_whitespace),
+            TabHelper.calculate_length(extracted_whitespace),
             len(line_to_parse),
         )
         POGGER.debug(
@@ -2149,7 +2150,7 @@ class ListBlockProcessor:
 
     # pylint: enable=too-many-arguments, too-many-locals
 
-    # pylint: disable=too-many-arguments, too-many-locals
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __are_list_starts_equal(
         parser_state: ParserState,
@@ -2247,7 +2248,7 @@ class ListBlockProcessor:
 
         return are_equal, False, balancing_tokens
 
-    # pylint: enable=too-many-arguments, too-many-locals
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __are_list_starts_equal_cleanup(
