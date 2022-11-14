@@ -884,6 +884,8 @@ class HtmlHelper:
         POGGER.debug("did_adjust_block_quote=$", did_adjust_block_quote)
         return new_tokens, did_adjust_block_quote
 
+    # pylint: enable=too-many-arguments
+
     @staticmethod
     def check_blank_html_block_end(parser_state: ParserState) -> List[MarkdownToken]:
         """
@@ -941,6 +943,8 @@ class HtmlHelper:
                 TabHelper.adjust_block_quote_indent_for_tab(parser_state)
         assert tabified_whitespace is not None
         return tabified_whitespace, tabified_text
+
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     @staticmethod

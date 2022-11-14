@@ -557,7 +557,7 @@ def test_whitespaces_thematic_breaks_with_spaces_before_within_double_block_quot
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -727,7 +727,7 @@ def test_whitespaces_thematic_breaks_with_tabs_before_within_block_quotes_bare_w
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1206,7 +1206,7 @@ def</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2035,7 +2035,7 @@ def</h2>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3110,7 +3110,7 @@ def</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3215,7 +3215,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3241,7 +3241,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3293,7 +3293,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3319,11 +3319,11 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_max_indent():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_max_indent_x():
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
     """
@@ -3345,12 +3345,11 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_max_indent_max():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_max_indent_max_1():
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
     """
@@ -3362,7 +3361,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> ]",
         "[fcode-block(1,6):`:3:python::::   :]",
-        "[text(2,3):abc:\a\t\t\a\t\a]",
+        "[text(2,3):abc:\a\t\a\x03\a\a\t\a   \a]",
         "[end-fcode-block:::3:False]",
         "[end-block-quote:::True]",
     ]
@@ -3372,11 +3371,89 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_varying_indent():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_max_indent_max_2():
+    """
+    Test case:  Fenced Code block preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """>  ```python
+> \tabc
+> ```"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> ]",
+        "[fcode-block(1,4):`:3:python:::: :]",
+        "[text(2,3):abc:\a\t\a \a]",
+        "[end-fcode-block:::3:False]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<pre><code class="language-python"> abc
+</code></pre>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_max_indent_max_3():
+    """
+    Test case:  Fenced Code block preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """>    ```python
+> \t\t abc
+> ```"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> ]",
+        "[fcode-block(1,6):`:3:python::::   :]",
+        "[text(2,3):abc:\a\t\a\x03\a\a\t\a   \a ]",
+        "[end-fcode-block:::3:False]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<pre><code class="language-python">    abc
+</code></pre>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_max_indent_max_4():
+    """
+    Test case:  Fenced Code block preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """>  ```python
+> \t abc
+> ```"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> ]",
+        "[fcode-block(1,4):`:3:python:::: :]",
+        "[text(2,3):abc:\a\t\a \a ]",
+        "[end-fcode-block:::3:False]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<pre><code class="language-python">  abc
+</code></pre>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_varying_indent_1():
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
     """
@@ -3400,7 +3477,35 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_varying_indent_2():
+    """
+    Test case:  Fenced Code block preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """>\t```python
+>\tdef _xyz():
+>\t\t  pass
+>\t```"""
+    expected_tokens = [
+        "[block-quote(1,1)::>\n>\n>\n>]",
+        "[fcode-block(1,5):`:3:python::::\t:]",
+        "[text(2,2):def _xyz():\n\a\t\t  \a\t  \apass:\a\t\a\x03\a]",
+        "[end-fcode-block:\t::3:False]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<pre><code class="language-python">def _xyz():
+\t  pass
+</code></pre>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3470,7 +3575,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_double_block_quote
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3506,7 +3611,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_double_block_quote
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5756,7 +5861,7 @@ a paragraph</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6242,7 +6347,7 @@ before-tab\tafter-tab\tafter-another
 a\tbb\tccc\tddd</p>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -7809,7 +7914,7 @@ def test_whitespaces_inline_link_with_tabs_and_newlines():
 boy</a>\tpass</p>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm

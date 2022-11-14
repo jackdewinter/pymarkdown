@@ -370,3 +370,31 @@ class TabHelper:
         #     block_quote_token,
         # )
         return last_block_quote_leading_space
+
+    @staticmethod
+    def search_for_tabbed_prefix(
+        ex_space: str, whitespace_used_count: int, start_offset: int
+    ) -> Tuple[str, int, Optional[str]]:
+        """
+        Look for a specific tabbed prefix length within a given string.
+        """
+
+        last_good_space_index = -1
+        space_index = 1
+        space_prefix = None
+        detabified_ex_space = ""
+        while (
+            space_index < len(ex_space) + 1
+            and len(detabified_ex_space) < whitespace_used_count
+        ):
+            # POGGER.debug("space_index>:$:<", space_index)
+            last_good_space_index = space_index
+            space_prefix = ex_space[:space_index]
+            # POGGER.debug("sdf>:$:<", space_prefix)
+            detabified_ex_space = TabHelper.detabify_string(
+                space_prefix, additional_start_delta=start_offset
+            )
+            # POGGER.debug("detabified_ex_space>:$:<", detabified_ex_space)
+            space_index += 1
+        assert len(detabified_ex_space) >= whitespace_used_count
+        return detabified_ex_space, last_good_space_index, space_prefix
