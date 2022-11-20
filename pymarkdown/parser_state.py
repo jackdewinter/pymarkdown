@@ -54,7 +54,7 @@ class HandleBlankLineProtocol(Protocol):
         input_line: str,
         from_main_transform: bool,
         position_marker: Optional[PositionMarker] = None,
-    ) -> Tuple[List[MarkdownToken], Optional[RequeueLineInfo]]:
+    ) -> Tuple[Optional[List[MarkdownToken]], Optional[RequeueLineInfo]]:
         ...  # pragma: no cover
 
 

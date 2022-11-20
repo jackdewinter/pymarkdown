@@ -1383,6 +1383,7 @@ class BlockQuoteProcessor:
             )
             list_token.add_leading_spaces("")
 
+        assert leaf_tokens is not None
         return True, leaf_tokens
 
     @staticmethod

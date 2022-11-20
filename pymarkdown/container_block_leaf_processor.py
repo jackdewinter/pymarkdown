@@ -353,6 +353,8 @@ class ContainerBlockLeafProcessor:
                 grab_bag.block_quote_data.stack_count
                 - grab_bag.block_quote_data.current_count
             )
+            if parser_state.token_stack[-1].was_link_definition_started:
+                stack_delta += 1
             (
                 close_tokens,
                 grab_bag.requeue_line_info,

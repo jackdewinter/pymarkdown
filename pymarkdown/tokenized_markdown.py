@@ -125,6 +125,7 @@ class TokenizedMarkdown:
                 "An unhandled error occurred processing the document."
             ) from this_exception
 
+    # pylint: disable=too-many-locals
     def __parse_blocks_pass(self) -> List[MarkdownToken]:
         """
         The first pass at the tokens is to deal with blocks.
@@ -184,15 +185,14 @@ class TokenizedMarkdown:
                     position_marker = PositionMarker(
                         line_number, 0, next_line_in_document
                     )
-                    (
-                        tokens_from_line,
-                        requeue_line_info,
-                    ) = self.__main_pass_did_not_start_close(
+                    (tfl, requeue_line_info,) = self.__main_pass_did_not_start_close(
                         parser_state,
                         position_marker,
                         next_line_in_document,
                         ignore_link_definition_start,
                     )
+                    assert tfl is not None
+                    tokens_from_line = tfl
 
                 if keep_on_going:
                     (
@@ -218,6 +218,8 @@ class TokenizedMarkdown:
                 PragmaToken(self.__parse_properties.pragma_lines)
             )
         return self.__tokenized_document
+
+    # pylint: enable=too-many-locals
 
     def __main_pass_did_start_close(
         self, parser_state: ParserState, line_number: int
@@ -264,7 +266,7 @@ class TokenizedMarkdown:
         position_marker: PositionMarker,
         next_line_in_document: str,
         ignore_link_definition_start: bool,
-    ) -> Tuple[List[MarkdownToken], Optional[RequeueLineInfo]]:
+    ) -> Tuple[Optional[List[MarkdownToken]], Optional[RequeueLineInfo]]:
         POGGER.debug(">>>>$", self.__tokenized_document)
 
         if not next_line_in_document or not next_line_in_document.strip():
@@ -525,6 +527,8 @@ class TokenizedMarkdown:
             until_this_index,
             was_close_forced,
         )
+        POGGER.debug("can_continue>>$", can_continue)
+        POGGER.debug("was_close_forced>>$", was_close_forced)
         if can_continue:
             if parser_state.token_stack[-1].was_link_definition_started:
                 (
@@ -579,6 +583,8 @@ class TokenizedMarkdown:
             else:
                 was_close_forced = True
 
+        POGGER.debug("cob>>can_continue=$", can_continue)
+        POGGER.debug("cob>>was_close_forced=$", was_close_forced)
         return can_continue, was_close_forced
 
     # pylint: enable=too-many-arguments
@@ -614,7 +620,7 @@ class TokenizedMarkdown:
             requeue_line_info,
             adjusted_tokens,
         ) = LinkReferenceDefinitionHelper.process_link_reference_definition(
-            parser_state, empty_position_marker, "", "", "", 0, 0, ""
+            parser_state, empty_position_marker, "", "", "", 0, 0, "", 1
         )
 
         POGGER.debug("BOOOM: caller_can_handle_requeue=$", caller_can_handle_requeue)
@@ -705,7 +711,7 @@ class TokenizedMarkdown:
         input_line: str,
         from_main_transform: bool,
         position_marker: Optional[PositionMarker] = None,
-    ) -> Tuple[List[MarkdownToken], Optional[RequeueLineInfo]]:
+    ) -> Tuple[Optional[List[MarkdownToken]], Optional[RequeueLineInfo]]:
         """
         Handle the processing of a blank line.
         """
@@ -722,6 +728,9 @@ class TokenizedMarkdown:
             force_default_handling,
             requeue_line_info,
         ) = TokenizedMarkdown.__handle_blank_line_token_stack(parser_state)
+
+        if requeue_line_info:
+            return new_tokens, requeue_line_info
 
         if from_main_transform:
             POGGER.debug("hbl>>__handle_blank_line_in_block_quote")
@@ -757,10 +766,8 @@ class TokenizedMarkdown:
 
         POGGER.debug("hbl>>new_tokens>>$", new_tokens)
         assert non_whitespace_index == len(input_line)
-        if not (requeue_line_info and requeue_line_info.force_ignore_first_as_lrd):
-            new_tokens.append(
-                BlankLineMarkdownToken(extracted_whitespace, position_marker)
-            )
+        assert not (requeue_line_info and requeue_line_info.force_ignore_first_as_lrd)
+        new_tokens.append(BlankLineMarkdownToken(extracted_whitespace, position_marker))
         POGGER.debug("hbl>>new_tokens>>$", new_tokens)
 
         return new_tokens, requeue_line_info
@@ -797,7 +804,7 @@ class TokenizedMarkdown:
                 requeue_line_info,
                 new_tokens,
             ) = LinkReferenceDefinitionHelper.process_link_reference_definition(
-                parser_state, empty_position_marker, "", "", "", 0, 0, ""
+                parser_state, empty_position_marker, "", "", "", 0, 0, "", 2
             )
             assert not did_pause_lrd
             POGGER.debug(
@@ -835,9 +842,10 @@ class TokenizedMarkdown:
         POGGER.debug("stack_index>>$", stack_index)
         if new_tokens and stack_index > 0:
             POGGER.debug_with_visible_whitespace("new_tokens[-1]>>$", new_tokens[-1])
-            assert new_tokens[-1].is_html_block_end and stack_index == (
-                len(parser_state.token_stack) - 1
-            )
+            assert (
+                new_tokens[-1].is_html_block_end
+                or new_tokens[-1].is_link_reference_definition
+            ) and stack_index == (len(parser_state.token_stack) - 1)
             close_tokens, _ = parser_state.close_open_blocks_fn(
                 parser_state,
                 only_these_blocks=[BlockQuoteStackToken],
