@@ -5,6 +5,7 @@ import logging
 from dataclasses import dataclass
 from typing import List, Optional, Tuple, cast
 
+from pymarkdown.container_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.inline_helper import InlineHelper
 from pymarkdown.leaf_markdown_token import LinkReferenceDefinitionMarkdownToken
 from pymarkdown.link_helper import LinkHelper
@@ -20,6 +21,8 @@ from pymarkdown.stack_token import LinkDefinitionStackToken
 from pymarkdown.tab_helper import TabHelper
 
 POGGER = ParserLogger(logging.getLogger(__name__))
+
+# pylint: disable=too-many-lines
 
 
 @dataclass(frozen=True)
@@ -51,6 +54,7 @@ class LinkReferenceDefinitionHelper:
         original_stack_depth: int,
         original_document_depth: int,
         original_line: str,
+        process_mode: int,
     ) -> Tuple[bool, bool, bool, Optional[RequeueLineInfo], List[MarkdownToken]]:
         """
         Process a link deference definition.  Note, this requires a lot of work to
@@ -153,6 +157,7 @@ class LinkReferenceDefinitionHelper:
             did_complete_lrd,
             parsed_lrd_tuple,
             lines_to_requeue,
+            process_mode,
         )
         if lines_to_requeue:
             LinkReferenceDefinitionHelper.__prepare_for_requeue(
@@ -161,6 +166,7 @@ class LinkReferenceDefinitionHelper:
                 did_complete_lrd,
                 original_stack_depth,
                 original_document_depth,
+                lines_to_requeue,
             )
             requeue_line_info = RequeueLineInfo(
                 lines_to_requeue, force_ignore_first_as_lrd
@@ -195,6 +201,7 @@ class LinkReferenceDefinitionHelper:
         did_complete_lrd: bool,
         parsed_lrd_tuple: Optional[LinkReferenceDefinitionTuple],
         lines_to_requeue: List[str],
+        process_mode: int,
     ) -> Tuple[bool, bool, List[MarkdownToken]]:
 
         assert is_blank_line is not None
@@ -232,6 +239,7 @@ class LinkReferenceDefinitionHelper:
                 is_blank_line,
                 lines_to_requeue,
                 extracted_whitespace,
+                process_mode,
             )
         else:
             force_ignore_first_as_lrd = False
@@ -336,12 +344,88 @@ class LinkReferenceDefinitionHelper:
     # pylint: enable=too-many-arguments
 
     @staticmethod
+    def __prepare_for_requeue_reset_markdown_token(
+        parser_state: ParserState, lrd_stack_token: LinkDefinitionStackToken
+    ) -> None:
+        assert lrd_stack_token.last_block_quote_markdown_token_index is not None
+        POGGER.debug(
+            ">>XXXXXX>>last_block_quote_markdown_token_index:$:",
+            lrd_stack_token.last_block_quote_markdown_token_index,
+        )
+        POGGER.debug(
+            ">>XXXXXX>>st-now:$:",
+            parser_state.token_document[
+                lrd_stack_token.last_block_quote_markdown_token_index
+            ],
+        )
+
+        del parser_state.token_document[
+            lrd_stack_token.last_block_quote_markdown_token_index
+        ]
+        assert lrd_stack_token.copy_of_last_block_quote_markdown_token is not None
+        parser_state.token_document.insert(
+            lrd_stack_token.last_block_quote_markdown_token_index,
+            lrd_stack_token.copy_of_last_block_quote_markdown_token,
+        )
+        assert lrd_stack_token.last_block_quote_stack_token is not None
+        POGGER.debug(
+            "last_block_quote_stack_token>:$:<",
+            lrd_stack_token.last_block_quote_stack_token,
+        )
+        lrd_stack_token.last_block_quote_stack_token.reset_matching_markdown_token(
+            lrd_stack_token.copy_of_last_block_quote_markdown_token
+        )
+        POGGER.debug(
+            "last_block_quote_stack_token>:$:<",
+            lrd_stack_token.last_block_quote_stack_token,
+        )
+
+    @staticmethod
+    def __prepare_for_requeue_reset_document_and_stack(
+        parser_state: ParserState,
+        lrd_stack_token: LinkDefinitionStackToken,
+        original_stack_depth: int,
+        original_document_depth: int,
+    ) -> None:
+        POGGER.debug(">>XXXXXX>>original_stack_depth:$:", original_stack_depth)
+        POGGER.debug(">>XXXXXX>>token_stack_depth:$:", len(parser_state.token_stack))
+        POGGER.debug(">>XXXXXX>>token_stack(before):$:", parser_state.token_stack)
+        POGGER.debug(
+            ">>XXXXXX>>copy_of_token_stack:$:", parser_state.copy_of_token_stack
+        )
+        POGGER.debug(
+            ">>lrd_stack_token>>copy_of_token_stack:$:",
+            lrd_stack_token.copy_of_token_stack,
+        )
+        if len(parser_state.token_stack) >= original_stack_depth:
+            while len(parser_state.token_stack) > original_stack_depth:
+                del parser_state.token_stack[-1]
+        else:
+            while len(parser_state.token_stack):
+                del parser_state.token_stack[-1]
+            assert lrd_stack_token.copy_of_token_stack is not None
+            parser_state.token_stack.extend(lrd_stack_token.copy_of_token_stack)
+        POGGER.debug(">>XXXXXX>>token_stack(after):$:", parser_state.token_stack)
+
+        POGGER.debug(">>XXXXXX>>original_document_depth:$:", original_document_depth)
+        POGGER.debug(
+            ">>XXXXXX>>token_document_depth:$:",
+            len(parser_state.token_document),
+        )
+        POGGER.debug(">>XXXXXX>>token_document(before):$:", parser_state.token_document)
+        while len(parser_state.token_document) > original_document_depth:
+            del parser_state.token_document[-1]
+        POGGER.debug(">>XXXXXX>>token_document(after):$:", parser_state.token_document)
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
     def __prepare_for_requeue(
         parser_state: ParserState,
         lrd_stack_token: Optional[LinkDefinitionStackToken],
         did_complete_lrd: bool,
         original_stack_depth: int,
         original_document_depth: int,
+        lines_to_requeue: List[str],
     ) -> None:
         # This works because in most cases, we add things.  However, in cases like
         # an indented code block, we process the "is it indented enough" and close
@@ -351,73 +435,24 @@ class LinkReferenceDefinitionHelper:
         # elements so they can be reset on the rewind.
         # i.e. icode would go back on stack, end-icode would not be in document.
         assert lrd_stack_token is not None
+        POGGER.debug("lines_to_requeue:$:", lines_to_requeue)
         POGGER.debug(
             ">>XXXXXX>>copy_of_last_block_quote_markdown_token:$:",
             lrd_stack_token.copy_of_last_block_quote_markdown_token,
         )
-        if lrd_stack_token.copy_of_last_block_quote_markdown_token:
-            assert lrd_stack_token.last_block_quote_markdown_token_index is not None
-            POGGER.debug(
-                ">>XXXXXX>>last_block_quote_markdown_token_index:$:",
-                lrd_stack_token.last_block_quote_markdown_token_index,
-            )
-            POGGER.debug(
-                ">>XXXXXX>>st-now:$:",
-                parser_state.token_document[
-                    lrd_stack_token.last_block_quote_markdown_token_index
-                ],
-            )
-
-            del parser_state.token_document[
-                lrd_stack_token.last_block_quote_markdown_token_index
-            ]
-            parser_state.token_document.insert(
-                lrd_stack_token.last_block_quote_markdown_token_index,
-                lrd_stack_token.copy_of_last_block_quote_markdown_token,
-            )
-            assert lrd_stack_token.last_block_quote_stack_token is not None
-            lrd_stack_token.last_block_quote_stack_token.reset_matching_markdown_token(
-                lrd_stack_token.copy_of_last_block_quote_markdown_token
-            )
-
         if not did_complete_lrd:
-            POGGER.debug(">>XXXXXX>>original_stack_depth:$:", original_stack_depth)
-            POGGER.debug(
-                ">>XXXXXX>>token_stack_depth:$:", len(parser_state.token_stack)
+            if lrd_stack_token.copy_of_last_block_quote_markdown_token:
+                LinkReferenceDefinitionHelper.__prepare_for_requeue_reset_markdown_token(
+                    parser_state, lrd_stack_token
+                )
+            LinkReferenceDefinitionHelper.__prepare_for_requeue_reset_document_and_stack(
+                parser_state,
+                lrd_stack_token,
+                original_stack_depth,
+                original_document_depth,
             )
-            POGGER.debug(">>XXXXXX>>token_stack(before):$:", parser_state.token_stack)
-            POGGER.debug(
-                ">>XXXXXX>>copy_of_token_stack:$:", parser_state.copy_of_token_stack
-            )
-            POGGER.debug(
-                ">>lrd_stack_token>>copy_of_token_stack:$:",
-                lrd_stack_token.copy_of_token_stack,
-            )
-            if len(parser_state.token_stack) >= original_stack_depth:
-                while len(parser_state.token_stack) > original_stack_depth:
-                    del parser_state.token_stack[-1]
-            else:
-                while len(parser_state.token_stack):
-                    del parser_state.token_stack[-1]
-                assert lrd_stack_token.copy_of_token_stack is not None
-                parser_state.token_stack.extend(lrd_stack_token.copy_of_token_stack)
-            POGGER.debug(">>XXXXXX>>token_stack(after):$:", parser_state.token_stack)
 
-            POGGER.debug(
-                ">>XXXXXX>>original_document_depth:$:", original_document_depth
-            )
-            POGGER.debug(
-                ">>XXXXXX>>token_document_depth:$:",
-                len(parser_state.token_document),
-            )
-            POGGER.debug(
-                ">>XXXXXX>>token_document(before):$:", parser_state.token_document
-            )
-            while len(parser_state.token_document) > original_document_depth:
-                del parser_state.token_document[-1]
-            POGGER.debug(
-                ">>XXXXXX>>token_document(after):$:", parser_state.token_document
-            )
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __is_link_reference_definition(
@@ -434,6 +469,13 @@ class LinkReferenceDefinitionHelper:
             return False
 
         assert extracted_whitespace is not None
+        POGGER.debug(
+            "__is_link_reference_definition - extracted_whitespace:>:$:<",
+            extracted_whitespace,
+        )
+        POGGER.debug(
+            "__is_link_reference_definition - line_to_parse:>:$:<", line_to_parse
+        )
         if (
             TabHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
         ) and ParserHelper.is_character_at_index_one_of(
@@ -441,6 +483,7 @@ class LinkReferenceDefinitionHelper:
             start_index,
             LinkReferenceDefinitionHelper.__lrd_start_character,
         ):
+            POGGER.debug("__is_link_reference_definition - potential")
             remaining_line, continue_with_lrd = line_to_parse[start_index + 1 :], True
             if (
                 remaining_line
@@ -513,6 +556,12 @@ class LinkReferenceDefinitionHelper:
         keep_going, new_index, collected_destination = LinkHelper.extract_link_label(
             line_to_parse, start_index + 1
         )
+        POGGER.debug("parse_link_reference_definition: keep_going:>:$:<", keep_going)
+        POGGER.debug("parse_link_reference_definition: new_index:>:$:<", new_index)
+        POGGER.debug(
+            "parse_link_reference_definition: collected_destination:>:$:<",
+            collected_destination,
+        )
         assert is_blank_line is not None
         if keep_going:
             (
@@ -525,6 +574,21 @@ class LinkReferenceDefinitionHelper:
             ) = LinkHelper.extract_link_destination(
                 line_to_parse, new_index, is_blank_line
             )
+            POGGER.debug(
+                "parse_link_reference_definition: keep_going:>:$:<", keep_going
+            )
+            POGGER.debug("parse_link_reference_definition: new_index:>:$:<", new_index)
+            POGGER.debug(
+                "parse_link_reference_definition: inline_link:>:$:<", inline_link
+            )
+            POGGER.debug(
+                "parse_link_reference_definition: line_destination_whitespace:>:$:<",
+                line_destination_whitespace,
+            )
+            POGGER.debug(
+                "parse_link_reference_definition: inline_raw_link:>:$:<",
+                inline_raw_link,
+            )
         else:
             inline_link = None
         if keep_going:
@@ -536,6 +600,21 @@ class LinkReferenceDefinitionHelper:
                 line_title_whitespace,
                 inline_raw_title,
             ) = LinkHelper.extract_link_title(line_to_parse, new_index, is_blank_line)
+            POGGER.debug(
+                "parse_link_reference_definition: keep_going:>:$:<", keep_going
+            )
+            POGGER.debug("parse_link_reference_definition: new_index:>:$:<", new_index)
+            POGGER.debug(
+                "parse_link_reference_definition: inline_title:>:$:<", inline_title
+            )
+            POGGER.debug(
+                "parse_link_reference_definition: line_title_whitespace:>:$:<",
+                line_title_whitespace,
+            )
+            POGGER.debug(
+                "parse_link_reference_definition: inline_raw_title:>:$:<",
+                inline_raw_title,
+            )
         else:
             inline_title = ""
         if keep_going:
@@ -646,6 +725,7 @@ class LinkReferenceDefinitionHelper:
             parser_state.token_stack.append(new_token)
             new_token.original_stack_depth = original_stack_depth
             new_token.original_document_depth = original_document_depth
+
             new_token.last_block_quote_stack_token = (
                 parser_state.last_block_quote_stack_token
             )
@@ -678,6 +758,7 @@ class LinkReferenceDefinitionHelper:
         is_blank_line: bool,
         lines_to_requeue: List[str],
         extracted_whitespace: Optional[str],
+        process_mode: int,
     ) -> Tuple[bool, List[MarkdownToken], Optional[str]]:
         """
         As part of processing a link reference definition, stop a continuation.
@@ -716,50 +797,23 @@ class LinkReferenceDefinitionHelper:
             )
             POGGER.debug("does_any_line_have_tabs>:$:<", does_any_line_have_tabs)
 
-            POGGER.debug("parser_state.token_document>:$:<", parser_state.token_stack)
-            tyu = len(parser_state.token_stack) - 1
-            while (
-                tyu > 0
-                and not parser_state.token_stack[tyu].is_list
-                and not parser_state.token_stack[tyu].is_block_quote
-            ):
-                tyu -= 1
-            POGGER.debug(
-                f"parser_state.token_stack[{tyu}]>:$:<", parser_state.token_stack[tyu]
-            )
-            # if does_any_line_have_tabs and tyu > 0:
-            #     assert parser_state.token_stack[tyu].is_block_quote
-            #     rt = 0
-            #     cl = link_def_token.continuation_lines[rt]
-            #     ul = link_def_token.unmodified_lines[rt]
-            #     rtx, rty = ParserHelper.extract_until_spaces(cl, 0)
-            #     POGGER.debug("rtx>:$:<", rtx)
-            #     POGGER.debug("rty>:$:<", rty)
-            #     rtz = ul.find(rty)
-            #     assert rtz != -1
-            #     abd = ul[:rtz]
-            #     abe = ul[rtz:]
-            #     POGGER.debug("abd>:$:<", abd)
-            #     POGGER.debug("abe>:$:<", abe)
+            last_container_index = parser_state.find_last_container_on_stack()
+            if does_any_line_have_tabs and last_container_index > 0:
+                (
+                    extracted_whitespace,
+                    parsed_lrd_tuple,
+                ) = LinkReferenceDefinitionHelper.__stop_lrd_continuation_with_tab(
+                    parser_state,
+                    link_def_token,
+                    last_container_index,
+                    lines_to_requeue,
+                    process_mode,
+                    extracted_whitespace,
+                    parsed_lrd_tuple,
+                )
 
-            #     POGGER.debug("parser_state.token_stack[tyu].matching_markdown_token>:$:<", parser_state.token_stack[tyu].matching_markdown_token)
-            #     dfg = parser_state.token_stack[tyu].matching_markdown_token.leading_spaces.split("\n")
-            #     POGGER.debug("dfg>:$:<", dfg)
-            #     dff = len(dfg) - 1
-            #     if lines_to_requeue:
-            #         dff -= len(lines_to_requeue)
-            #     POGGER.debug("dff>:$:<", dff)
-            #     assert dff >= 0
-
-            #     we1 = dfg[dff]
-            #     we2 = abd[len(we1)]
-            #     POGGER.debug("we1>:$:<", we1)
-            #     POGGER.debug("we2>:$:<", we2)
-            #     tyyy = we1 + we2 + abe
-            #     POGGER.debug("tyyy>:$:<", tyyy)
-
-            #     extracted_whitespace = we2
-
+            assert extracted_whitespace is not None
+            assert parsed_lrd_tuple.normalized_destination is not None
             new_tokens: List[MarkdownToken] = [
                 LinkReferenceDefinitionMarkdownToken(
                     did_add_definition,
@@ -788,6 +842,214 @@ class LinkReferenceDefinitionHelper:
         return force_ignore_first_as_lrd, new_tokens, extracted_whitespace
 
     # pylint: enable=too-many-arguments
+
+    @staticmethod
+    def __find_line_ws(parsed_lines: str, original_lines: str) -> Tuple[str, bool, int]:
+        start_text_index = original_lines.find(parsed_lines)
+        assert start_text_index != -1
+        POGGER.debug("start_text_index>:$:<", start_text_index)
+        start_whitespace_index, _ = ParserHelper.extract_spaces_from_end(
+            original_lines, start_text_index
+        )
+        POGGER.debug("start_whitespace_index>:$:<", start_whitespace_index)
+        tabified_whitespace = original_lines[start_whitespace_index:start_text_index]
+        POGGER.debug("tabified_whitespace>:$:<", tabified_whitespace)
+        split_tab = bool(tabified_whitespace and tabified_whitespace[0] == "\t")
+        if not split_tab:
+            tabified_whitespace = tabified_whitespace[1:]
+            start_whitespace_index += 1
+        extracted_whitespace = tabified_whitespace
+        POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
+        POGGER.debug("split_tab>:$:<", split_tab)
+        return extracted_whitespace, split_tab, start_whitespace_index
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __stop_lrd_continuation_with_tab(
+        parser_state: ParserState,
+        link_def_token: LinkDefinitionStackToken,
+        last_container_index: int,
+        lines_to_requeue: List[str],
+        process_mode: int,
+        extracted_whitespace: Optional[str],
+        parsed_lrd_tuple: LinkReferenceDefinitionTuple,
+    ) -> Tuple[Optional[str], LinkReferenceDefinitionTuple]:
+        POGGER.debug(
+            "extracted_whitespace>:$:<",
+            link_def_token.extracted_whitespace,
+        )
+        assert parser_state.token_stack[last_container_index].is_block_quote
+        # POGGER.debug("link_def_token>:$:<", link_def_token)
+        # POGGER.debug("link_def_token.last_block_quote_stack_token>:$:<", link_def_token.last_block_quote_stack_token)
+        last_block_quote_index = parser_state.find_last_block_quote_on_stack()
+        last_block_quote_token = parser_state.token_stack[last_block_quote_index]
+        # POGGER.debug("last_block_quote_token>:$:<", last_block_quote_token)
+        block_quote_token = cast(
+            BlockQuoteMarkdownToken, last_block_quote_token.matching_markdown_token
+        )
+        # POGGER.debug("block_quote_token.leading_spaces>:$:<", block_quote_token.leading_spaces)
+
+        POGGER.debug(
+            "link_def_token.continuation_lines>:$:<", link_def_token.continuation_lines
+        )
+        POGGER.debug(
+            "link_def_token.unmodified_lines>:$:<", link_def_token.unmodified_lines
+        )
+
+        if len(link_def_token.continuation_lines) == 1:
+            extracted_whitespace = (
+                LinkReferenceDefinitionHelper.__stop_lrd_continuation_with_tab_single(
+                    parser_state,
+                    link_def_token,
+                    process_mode,
+                    block_quote_token,
+                    lines_to_requeue,
+                )
+            )
+        else:
+            (
+                extracted_whitespace,
+                parsed_lrd_tuple,
+            ) = LinkReferenceDefinitionHelper.__stop_lrd_continuation_with_tab_multiple(
+                parser_state, extracted_whitespace, link_def_token, block_quote_token
+            )
+
+        return extracted_whitespace, parsed_lrd_tuple
+
+    # pylint: enable=too-many-arguments
+
+    @staticmethod
+    def __stop_lrd_continuation_with_tab_single(
+        parser_state: ParserState,
+        link_def_token: LinkDefinitionStackToken,
+        process_mode: int,
+        block_quote_token: BlockQuoteMarkdownToken,
+        lines_to_requeue: List[str],
+    ) -> str:
+        parsed_lines = link_def_token.continuation_lines[0]
+        original_lines = link_def_token.unmodified_lines[0]
+        # POGGER.debug("parsed_lines>:$:<", parsed_lines)
+        # POGGER.debug("original_lines>:$:<", original_lines)
+
+        (
+            extracted_whitespace,
+            split_tab,
+            _,
+        ) = LinkReferenceDefinitionHelper.__find_line_ws(parsed_lines, original_lines)
+
+        POGGER.debug("process_mode>:$:<", process_mode)
+        POGGER.debug(
+            "block_quote_token.leading_spaces>:$:<", block_quote_token.leading_spaces
+        )
+        if process_mode == 1:
+            block_quote_token.remove_last_leading_space()
+            # POGGER.debug("block_quote_token.leading_spaces>:$:<", block_quote_token.leading_spaces)
+        else:
+            # POGGER.debug("lines_to_requeue>:$:<", lines_to_requeue)
+            for _ in lines_to_requeue:
+                # POGGER.debug("block_quote_token.leading_spaces>:$:<", block_quote_token.leading_spaces)
+                block_quote_token.remove_last_leading_space()
+                # POGGER.debug("block_quote_token.leading_spaces>:$:<", block_quote_token.leading_spaces)
+
+        # POGGER.debug("block_quote_token.leading_spaces>:$:<", block_quote_token.leading_spaces)
+        if split_tab:
+            TabHelper.adjust_block_quote_indent_for_tab(parser_state)
+        POGGER.debug(
+            "block_quote_token.leading_spaces>:$:<", block_quote_token.leading_spaces
+        )
+        return extracted_whitespace
+
+    # pylint: disable=too-many-locals
+
+    @staticmethod
+    def __stop_lrd_continuation_with_tab_multiple(
+        parser_state: ParserState,
+        extracted_whitespace: Optional[str],
+        link_def_token: LinkDefinitionStackToken,
+        block_quote_token: BlockQuoteMarkdownToken,
+    ) -> Tuple[Optional[str], LinkReferenceDefinitionTuple]:
+
+        split_tabs_list: List[bool] = []
+        completed_lrd_text: str = ""
+        alt_ws = None
+        for this_line_index, this_line in enumerate(link_def_token.continuation_lines):
+
+            original_this_line = link_def_token.unmodified_lines[this_line_index]
+            POGGER.debug("this_line_index>:$:<", this_line_index)
+            POGGER.debug("this_line>:$:<", this_line)
+            POGGER.debug("original_this_line>:$:<", original_this_line)
+
+            (
+                extracted_ws,
+                split_tab,
+                start_whitespace_index,
+            ) = LinkReferenceDefinitionHelper.__find_line_ws(
+                this_line, original_this_line
+            )
+
+            if completed_lrd_text:
+                completed_lrd_text += "\n"
+            if this_line_index == 0:
+                extracted_whitespace = extracted_ws
+                alt_ws = TabHelper.detabify_string(
+                    extracted_whitespace, start_whitespace_index
+                )
+            else:
+                completed_lrd_text += extracted_ws
+            completed_lrd_text += this_line
+            split_tabs_list.append(split_tab)
+
+        POGGER.debug("completed_lrd_text>:$:<", completed_lrd_text)
+        (
+            did_succeed,
+            next_index,
+            new_parsed_lrd_tuple,
+        ) = LinkReferenceDefinitionHelper.__parse_link_reference_definition(
+            parser_state, completed_lrd_text, 0, alt_ws, True
+        )
+        assert did_succeed
+        assert len(completed_lrd_text) == next_index
+        # POGGER.debug("new_parsed_lrd_tuple>:$:<", new_parsed_lrd_tuple)
+        assert new_parsed_lrd_tuple is not None
+        parsed_lrd_tuple = new_parsed_lrd_tuple
+
+        LinkReferenceDefinitionHelper.__xx_multiple_fix_leading_spaces(
+            block_quote_token, split_tabs_list, link_def_token
+        )
+        return extracted_whitespace, parsed_lrd_tuple
+
+    # pylint: enable=too-many-locals
+
+    @staticmethod
+    def __xx_multiple_fix_leading_spaces(
+        block_quote_token: BlockQuoteMarkdownToken,
+        split_tabs_list: List[bool],
+        link_def_token: LinkDefinitionStackToken,
+    ) -> None:
+        POGGER.debug("split_tabs_list>:$:<", split_tabs_list)
+        POGGER.debug(
+            "block_quote_token.leading_spaces>:$:<", block_quote_token.leading_spaces
+        )
+        assert block_quote_token.leading_spaces is not None
+        leading_spaces: List[str] = []
+        for _ in link_def_token.continuation_lines:
+            last_leading_space = block_quote_token.remove_last_leading_space()
+            POGGER.debug("last_leading_space>:$:<", last_leading_space)
+            if last_leading_space[0] == "\n":
+                last_leading_space = last_leading_space[1:]
+            leading_spaces.append(last_leading_space)
+        assert len(split_tabs_list) == len(leading_spaces)
+        POGGER.debug("leading_spaces>:$:<", leading_spaces)
+        POGGER.debug(
+            "block_quote_token.leading_spaces>:$:<", block_quote_token.leading_spaces
+        )
+        is_first = len(block_quote_token.leading_spaces) == 0
+        for prefix_to_add in leading_spaces:
+            if split_tabs_list[0]:
+                prefix_to_add = prefix_to_add[:-1]
+            del split_tabs_list[0]
+            block_quote_token.add_leading_spaces(prefix_to_add, is_first)
+            is_first = False
 
     @staticmethod
     def __process_lrd_hard_failure(
@@ -939,6 +1201,7 @@ class LinkReferenceDefinitionHelper:
                 parser_state.original_stack_depth,
                 parser_state.original_document_depth,
                 original_line,
+                0,
             )
             if requeue_line_info:
                 outer_processed = True

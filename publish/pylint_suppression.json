@@ -108,8 +108,8 @@
             "too-many-locals": 10
         },
         "pymarkdown/link_reference_definition_helper.py": {
-            "too-many-locals": 3,
-            "too-many-arguments": 7
+            "too-many-locals": 4,
+            "too-many-arguments": 9
         },
         "pymarkdown/link_reference_info.py": {},
         "pymarkdown/link_reference_titles.py": {},
@@ -233,6 +233,7 @@
         },
         "pymarkdown/tab_helper.py": {},
         "pymarkdown/tokenized_markdown.py": {
+            "too-many-locals": 1,
             "too-many-arguments": 4
         },
         "pymarkdown/transform_state.py": {
@@ -247,8 +248,8 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 141,
-        "too-many-locals": 51,
+        "too-many-arguments": 143,
+        "too-many-locals": 53,
         "too-few-public-methods": 9,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 1,
