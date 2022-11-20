@@ -107,20 +107,6 @@
 
 - test_link_reference_definitions_extra_02b vs test_link_reference_definitions_extra_02c
 
-## Bugs - Tabs
-
-- should be able to have tabs and not trigger bad tokens, should be excluded?
-- check is_length_less_than_or_equal_to to see if any issues with tabs
-  - most likely in conjunction with starting another type of block
-- 004
-  - tab is consumed as part of list prefix, not recorded anywhere, assumed to be spaces
-- variations on 005, mostly wired up for scenario
-  - what about tabs with plain icode? different depths?
-- effect of lists and blocks with 1 tab and differing amounts of whitespace on followed text i.e. `- \tfoo' should produced a list item with foo, no icb as it would equate to 2 spaces
-- 235, 236, 252, 255
-  - need to account for the fact that indent may not be all spaces all the time
-  - for indented code blocks, starts at the start of the icb, else at the first non-ws
-
 ## Features - Extensions
 
 - front matter
