@@ -9,8 +9,8 @@
         "pymarkdown/bad_tokenization_error.py": {},
         "pymarkdown/block_quote_data.py": {},
         "pymarkdown/block_quote_processor.py": {
-            "too-many-arguments": 14,
-            "too-many-locals": 3
+            "too-many-arguments": 15,
+            "too-many-locals": 6
         },
         "pymarkdown/coalesce_processor.py": {
             "too-few-public-methods": 1
@@ -248,8 +248,8 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 143,
-        "too-many-locals": 53,
+        "too-many-arguments": 144,
+        "too-many-locals": 56,
         "too-few-public-methods": 9,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 1,

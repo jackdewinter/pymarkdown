@@ -760,9 +760,6 @@ class ListBlockProcessor:
         POGGER.debug("clt>>list-start=$", started_ulist)
         if started_ulist:
 
-            # if not j:
-            #     parser_state.token_stack[j].matching_markdown_token.add_leading_spaces(dfg)
-
             POGGER.debug("clt>>ulist-start")
             removed_chars_at_start = indent_already_used
             assert index is not None
@@ -1010,18 +1007,18 @@ class ListBlockProcessor:
         POGGER.debug(">>used_indent>>$<<", used_indent)
         POGGER.debug(">>was_paragraph_continuation>>$<<", was_paragraph_continuation)
         if used_indent is not None:
-            block_token = cast(
-                BlockQuoteMarkdownToken,
+            list_token = cast(
+                ListStartMarkdownToken,
                 parser_state.token_stack[ind].matching_markdown_token,
             )
             POGGER.debug(
-                "lip>>last_block_token>>$",
-                block_token,
+                "lip>>list_token>>$",
+                list_token,
             )
-            block_token.add_leading_spaces(used_indent)
+            list_token.add_leading_spaces(used_indent)
             POGGER.debug(
-                "lip>>last_block_token>>$",
-                block_token,
+                "lip>>list_token>>$",
+                list_token,
             )
         else:
             need_to_add_leading_spaces = False
@@ -1727,7 +1724,7 @@ class ListBlockProcessor:
             previous_last_block_token,
             current_last_block_token,
         )
-        removed_leading_spaces = previous_last_block_token.remove_last_leading_space()
+        removed_leading_spaces = previous_last_block_token.remove_last_bleading_space()
         POGGER.debug("removed_leading_spaces>>$<<", removed_leading_spaces)
         assert removed_leading_spaces is not None
         POGGER.debug(
@@ -1735,7 +1732,7 @@ class ListBlockProcessor:
             previous_last_block_token,
             current_last_block_token,
         )
-        current_last_block_token.add_leading_spaces(
+        current_last_block_token.add_bleading_spaces(
             removed_leading_spaces, skip_adding_newline=True
         )
         POGGER.debug(

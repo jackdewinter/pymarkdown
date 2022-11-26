@@ -95,6 +95,7 @@ class ContainerBlockProcessor:
         container_depth: int = 0,
         adjusted_block_index: Optional[int] = None,
         initial_block_quote_count: Optional[int] = None,
+        original_line: Optional[str] = None,
     ) -> Tuple[
         List[MarkdownToken],
         Optional[str],
@@ -120,7 +121,9 @@ class ContainerBlockProcessor:
             container_start_bq_count,
             parser_properties,
             ignore_link_definition_start,
-            position_marker.text_to_parse,
+            original_line
+            if original_line is not None
+            else position_marker.text_to_parse,
         )
         (
             position_marker,
@@ -208,8 +211,8 @@ class ContainerBlockProcessor:
                     BlockQuoteMarkdownToken,
                     last_container_stack_token.matching_markdown_token,
                 )
-                assert block_token.leading_spaces is not None
-                split_spaces = block_token.leading_spaces.split(
+                assert block_token.bleading_spaces is not None
+                split_spaces = block_token.bleading_spaces.split(
                     ParserHelper.newline_character
                 )
                 # POGGER.debug("split_spaces>>$", split_spaces)
@@ -478,8 +481,8 @@ class ContainerBlockProcessor:
             )
             if inner_token.is_block_quote_start:
                 block_quote_token = cast(BlockQuoteMarkdownToken, inner_token)
-                assert block_quote_token.leading_spaces is not None
-                split_spaces = block_quote_token.leading_spaces.split("\n")
+                assert block_quote_token.bleading_spaces is not None
+                split_spaces = block_quote_token.bleading_spaces.split("\n")
                 grab_bag.indent_already_processed = len(split_spaces[-1])
             else:
                 assert inner_token.is_list_start
@@ -1159,7 +1162,7 @@ class ContainerBlockProcessor:
                 "PLFCB>>other_block_quote_token.leading_text_index>>:$:",
                 other_block_quote_token.leading_text_index,
             )
-            leading_spaces = other_block_quote_token.calculate_next_leading_space_part(
+            leading_spaces = other_block_quote_token.calculate_next_bleading_space_part(
                 increment_index=False, delta=-1
             )
             POGGER.debug("PLFCB>>leading_spaces>>:$:", leading_spaces)
@@ -1232,7 +1235,7 @@ class ContainerBlockProcessor:
                 "PLFCB>>found_block_quote_token>>:$:",
                 ParserHelper.make_value_visible(found_block_quote_token),
             )
-            leading_spaces = found_block_quote_token.calculate_next_leading_space_part(
+            leading_spaces = found_block_quote_token.calculate_next_bleading_space_part(
                 increment_index=False, delta=-1, allow_overflow=True
             )
             POGGER.debug("PLFCB>>leading_spaces>>:$:", leading_spaces)
@@ -1752,8 +1755,8 @@ class ContainerBlockProcessor:
                         last_container_index
                     ].matching_markdown_token,
                 )
-                assert block_quote_token.leading_spaces is not None
-                split_spaces = block_quote_token.leading_spaces.split(
+                assert block_quote_token.bleading_spaces is not None
+                split_spaces = block_quote_token.bleading_spaces.split(
                     ParserHelper.newline_character
                 )
                 nested_removed_text = str(split_spaces[-1])
@@ -1766,8 +1769,8 @@ class ContainerBlockProcessor:
         block_quote_token: BlockQuoteMarkdownToken,
         grab_bag: ContainerGrabBag,
     ) -> str:
-        assert block_quote_token.leading_spaces is not None
-        split_spaces = block_quote_token.leading_spaces.split(
+        assert block_quote_token.bleading_spaces is not None
+        split_spaces = block_quote_token.bleading_spaces.split(
             ParserHelper.newline_character
         )
         nested_removed_text = str(split_spaces[-1])
@@ -1849,6 +1852,7 @@ class ContainerBlockProcessor:
             container_depth=new_container_depth,
             adjusted_block_index=adj_block,
             initial_block_quote_count=grab_bag.block_quote_data.current_count,
+            original_line=grab_bag.original_line,
         )
         assert (
             not grab_bag.requeue_line_info

@@ -2,7 +2,7 @@
 Module to provide for a container element that can be added to markdown parsing stream.
 """
 import logging
-from typing import Optional
+from typing import Dict, Optional
 
 from pymarkdown.markdown_token import MarkdownToken, MarkdownTokenClass
 from pymarkdown.parser_helper import ParserHelper
@@ -291,6 +291,7 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
             "",
             0,
         )
+        self.__tabbed_leading_spaces: Dict[int, str] = {}
         ContainerMarkdownToken.__init__(
             self,
             MarkdownToken._token_block_quote,
@@ -307,14 +308,24 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
         return self.__extracted_whitespace
 
     @property
-    def leading_spaces(self) -> Optional[str]:
+    def bleading_spaces(self) -> Optional[str]:
         """
         Returns any leading spaces that preface the block quote.
         """
         return self.__leading_spaces
 
-    def add_leading_spaces(
-        self, leading_spaces_to_add: str, skip_adding_newline: bool = False
+    @property
+    def tabbed_bleading_spaces(self) -> Dict[int, str]:
+        """
+        Returns the tabbed information for any leading spaces
+        """
+        return self.__tabbed_leading_spaces
+
+    def add_bleading_spaces(
+        self,
+        leading_spaces_to_add: str,
+        skip_adding_newline: bool = False,
+        tabbed_leading_spaces: Optional[str] = None,
     ) -> None:
         """
         Add any leading spaces to the token, separating them with line feeds.
@@ -337,9 +348,20 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
             "__leading_spaces>>:$:<<",
             self.__leading_spaces,
         )
+        if not skip_adding_newline and tabbed_leading_spaces:
+            POGGER.debug(
+                "__tabbed_leading_spaces>>:$:<<",
+                self.__tabbed_leading_spaces,
+            )
+            newline_count = ParserHelper.count_newlines_in_text(self.__leading_spaces)
+            self.__tabbed_leading_spaces[newline_count] = tabbed_leading_spaces
+            POGGER.debug(
+                "__tabbed_leading_spaces>>:$:<<",
+                self.__tabbed_leading_spaces,
+            )
         self.__compose_extra_data_field()
 
-    def remove_last_leading_space(self) -> str:
+    def remove_last_bleading_space(self) -> str:
         """
         Remove the last leading space and return it.
         """
@@ -359,17 +381,32 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
         Compose the object's self.extra_data field from the local object's variables.
         """
         item_list = [self.__extracted_whitespace, self.__leading_spaces]
+        if self.__tabbed_leading_spaces:
+            item_list.append(
+                ParserHelper.make_value_visible(self.__tabbed_leading_spaces).replace(
+                    "'", '"'
+                )
+            )
         self._set_extra_data(MarkdownToken.extra_data_separator.join(item_list))
 
-    def calculate_next_leading_space_part(
+    def calculate_next_bleading_space_part(
         self, increment_index: bool = True, delta: int = 0, allow_overflow: bool = False
     ) -> str:
         """
         Calculate the next leading space based on the leading_text_index,
         optonally incrementing it as well.
         """
-        assert self.leading_spaces is not None
-        split_leading_spaces = self.leading_spaces.split(ParserHelper.newline_character)
+        assert self.bleading_spaces is not None
+
+        # print(f"increment_index>>:{increment_index}:<<")
+        tabbed_leading = None
+        if increment_index and self.__tabbed_leading_spaces:
+            tabbed_leading = self.__tabbed_leading_spaces[self.leading_text_index]
+            # print(f"dg>>:{ParserHelper.make_value_visible(dg)}:<<")
+
+        split_leading_spaces = self.bleading_spaces.split(
+            ParserHelper.newline_character
+        )
         absolute_index = self.leading_text_index + delta
         if allow_overflow and absolute_index >= len(split_leading_spaces):
             leading_text = ""
@@ -377,4 +414,8 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
             leading_text = split_leading_spaces[self.leading_text_index + delta]
             if increment_index:
                 self.leading_text_index += 1
+
+        if tabbed_leading is not None:
+            leading_text = tabbed_leading
+
         return leading_text

@@ -868,7 +868,7 @@ class TokenizedMarkdown:
             POGGER.debug(
                 "hblibq>>leading_text_index>>$", block_quote_token.leading_text_index
             )
-            block_quote_token.add_leading_spaces("")
+            block_quote_token.add_bleading_spaces("")
             POGGER.debug("hblibq>>last_block_token>>$", block_quote_token)
             POGGER.debug(
                 "hblibq>>leading_text_index>>$", block_quote_token.leading_text_index

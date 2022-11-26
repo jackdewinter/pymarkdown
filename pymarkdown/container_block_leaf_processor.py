@@ -725,7 +725,7 @@ class ContainerBlockLeafProcessor:
             POGGER.debug(
                 "plt-c>>leading_text_index>>$", last_block_token.leading_text_index
             )
-            last_block_token.add_leading_spaces("")
+            last_block_token.add_bleading_spaces("")
             last_block_token.leading_text_index += 1
             POGGER.debug("plt-c>>last_block_token>>$", last_block_token)
             POGGER.debug(
@@ -779,11 +779,8 @@ class ContainerBlockLeafProcessor:
             grab_bag.text_removed_by_container = grab_bag.weird_adjusted_text
             new_text_to_parse = parser_state.original_line_to_parse[new_index_indent:]
         else:
-            # POGGER.debug("total_ws>>:$:<", total_ws)
             POGGER.debug("current_indent_level>>:$:<", current_indent_level)
             current_indent_level -= xposition_marker.index_indent
-            # total_ws -= xposition_marker.index_indent
-            # POGGER.debug("total_ws>>:$:<", total_ws)
             POGGER.debug("current_indent_level>>:$:<", current_indent_level)
             assert current_indent_level >= 0
 

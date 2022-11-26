@@ -595,8 +595,112 @@
             "elapsedTimeInMilliseconds": 0
         },
         {
+            "name": "test.gfm.test_markdown_whitespace_atx",
+            "totalTests": 29,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 1,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.gfm.test_markdown_whitespace_autolink",
+            "totalTests": 4,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.gfm.test_markdown_whitespace_code_spans",
+            "totalTests": 19,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.gfm.test_markdown_whitespace_emphasis",
+            "totalTests": 64,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.gfm.test_markdown_whitespace_fenced",
+            "totalTests": 47,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 2,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.gfm.test_markdown_whitespace_hardbreak",
+            "totalTests": 3,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.gfm.test_markdown_whitespace_html",
+            "totalTests": 22,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.gfm.test_markdown_whitespace_indented",
+            "totalTests": 19,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 1,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.gfm.test_markdown_whitespace_link_reference_definition",
+            "totalTests": 74,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.gfm.test_markdown_whitespace_links",
+            "totalTests": 51,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.gfm.test_markdown_whitespace_paragraph",
+            "totalTests": 29,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.gfm.test_markdown_whitespace_setext",
+            "totalTests": 24,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 1,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.gfm.test_markdown_whitespace_thematic_break",
+            "totalTests": 25,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 1,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
             "name": "test.gfm.test_markdown_whitespaces",
-            "totalTests": 420,
+            "totalTests": 33,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 10,

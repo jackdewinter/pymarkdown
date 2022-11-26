@@ -374,15 +374,17 @@ class LeafBlockProcessorParagraph:
             POGGER.debug(">>extracted_whitespace>:$:<", extracted_whitespace)
             POGGER.debug(">>prefix>:$:<", prefix)
             (
-                _,
+                corrected_prefix,
                 corrected_suffix,
                 split_tab,
             ) = TabHelper.match_tabbed_whitespace(extracted_whitespace, prefix)
-            POGGER.debug(">>corrected_suffix>>$>>", corrected_suffix)
+            POGGER.debug(">>corrected_prefix>:$:<", corrected_prefix)
+            POGGER.debug(">>corrected_suffix>:$:<", corrected_suffix)
             POGGER.debug(">>split_tab>>$>>", split_tab)
             extracted_whitespace = corrected_suffix
             if split_tab:
                 TabHelper.adjust_block_quote_indent_for_tab(parser_state)
+            # assert False
         return extracted_whitespace
 
     @staticmethod

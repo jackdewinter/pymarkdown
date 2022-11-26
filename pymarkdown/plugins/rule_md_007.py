@@ -221,8 +221,8 @@ class RuleMd007(RulePlugin):
                         self.__container_token_stack[stack_index],
                     )
                     bq_index = self.__bq_line_index[stack_index + 1]
-                    assert block_quote_token.leading_spaces is not None
-                    split_leading_spaces = block_quote_token.leading_spaces.split(
+                    assert block_quote_token.bleading_spaces is not None
+                    split_leading_spaces = block_quote_token.bleading_spaces.split(
                         ParserHelper.newline_character
                     )
                     # print(f"bq_index={bq_index},split_leading_spaces={split_leading_spaces}")

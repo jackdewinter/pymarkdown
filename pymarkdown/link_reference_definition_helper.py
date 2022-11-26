@@ -939,23 +939,23 @@ class LinkReferenceDefinitionHelper:
 
         POGGER.debug("process_mode>:$:<", process_mode)
         POGGER.debug(
-            "block_quote_token.leading_spaces>:$:<", block_quote_token.leading_spaces
+            "block_quote_token.leading_spaces>:$:<", block_quote_token.bleading_spaces
         )
         if process_mode == 1:
-            block_quote_token.remove_last_leading_space()
+            block_quote_token.remove_last_bleading_space()
             # POGGER.debug("block_quote_token.leading_spaces>:$:<", block_quote_token.leading_spaces)
         else:
             # POGGER.debug("lines_to_requeue>:$:<", lines_to_requeue)
             for _ in lines_to_requeue:
                 # POGGER.debug("block_quote_token.leading_spaces>:$:<", block_quote_token.leading_spaces)
-                block_quote_token.remove_last_leading_space()
+                block_quote_token.remove_last_bleading_space()
                 # POGGER.debug("block_quote_token.leading_spaces>:$:<", block_quote_token.leading_spaces)
 
         # POGGER.debug("block_quote_token.leading_spaces>:$:<", block_quote_token.leading_spaces)
         if split_tab:
             TabHelper.adjust_block_quote_indent_for_tab(parser_state)
         POGGER.debug(
-            "block_quote_token.leading_spaces>:$:<", block_quote_token.leading_spaces
+            "block_quote_token.leading_spaces>:$:<", block_quote_token.bleading_spaces
         )
         return extracted_whitespace
 
@@ -1028,12 +1028,12 @@ class LinkReferenceDefinitionHelper:
     ) -> None:
         POGGER.debug("split_tabs_list>:$:<", split_tabs_list)
         POGGER.debug(
-            "block_quote_token.leading_spaces>:$:<", block_quote_token.leading_spaces
+            "block_quote_token.leading_spaces>:$:<", block_quote_token.bleading_spaces
         )
-        assert block_quote_token.leading_spaces is not None
+        assert block_quote_token.bleading_spaces is not None
         leading_spaces: List[str] = []
         for _ in link_def_token.continuation_lines:
-            last_leading_space = block_quote_token.remove_last_leading_space()
+            last_leading_space = block_quote_token.remove_last_bleading_space()
             POGGER.debug("last_leading_space>:$:<", last_leading_space)
             if last_leading_space[0] == "\n":
                 last_leading_space = last_leading_space[1:]
@@ -1041,14 +1041,14 @@ class LinkReferenceDefinitionHelper:
         assert len(split_tabs_list) == len(leading_spaces)
         POGGER.debug("leading_spaces>:$:<", leading_spaces)
         POGGER.debug(
-            "block_quote_token.leading_spaces>:$:<", block_quote_token.leading_spaces
+            "block_quote_token.leading_spaces>:$:<", block_quote_token.bleading_spaces
         )
-        is_first = len(block_quote_token.leading_spaces) == 0
+        is_first = len(block_quote_token.bleading_spaces) == 0
         for prefix_to_add in leading_spaces:
             if split_tabs_list[0]:
                 prefix_to_add = prefix_to_add[:-1]
             del split_tabs_list[0]
-            block_quote_token.add_leading_spaces(prefix_to_add, is_first)
+            block_quote_token.add_bleading_spaces(prefix_to_add, is_first)
             is_first = False
 
     @staticmethod
