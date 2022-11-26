@@ -353,11 +353,20 @@ class InlineProcessor:
 
             POGGER.info("coalesced_stack:$<", coalesced_stack)
             if coalesced_stack:
-                list_token = cast(ListStartMarkdownToken, coalesced_stack[-1])
-                assert list_token.leading_spaces
-                split_leading_spaces = list_token.leading_spaces.split(
-                    ParserHelper.newline_character
-                )
+                if coalesced_stack[-1].is_block_quote_start:
+                    block_quote_token = cast(
+                        BlockQuoteMarkdownToken, coalesced_stack[-1]
+                    )
+                    assert block_quote_token.bleading_spaces
+                    split_leading_spaces = block_quote_token.bleading_spaces.split(
+                        ParserHelper.newline_character
+                    )
+                else:
+                    list_token = cast(ListStartMarkdownToken, coalesced_stack[-1])
+                    assert list_token.leading_spaces
+                    split_leading_spaces = list_token.leading_spaces.split(
+                        ParserHelper.newline_character
+                    )
                 new_column_number += (
                     (len(split_leading_spaces[1]))
                     if len(split_leading_spaces) >= 2
@@ -2049,8 +2058,8 @@ class InlineProcessor:
                     "coalesced_list[-1]..leading_text_index=$",
                     block_quote_token.leading_text_index,
                 )
-                assert block_quote_token.leading_spaces is not None
-                split_leading_spaces = block_quote_token.leading_spaces.split(
+                assert block_quote_token.bleading_spaces is not None
+                split_leading_spaces = block_quote_token.bleading_spaces.split(
                     ParserHelper.newline_character
                 )
                 selected_split_length = len(
@@ -2075,8 +2084,8 @@ class InlineProcessor:
                     "coalesced_list[-1].leading_text_index=$",
                     block_quote_token.leading_text_index,
                 )
-                assert block_quote_token.leading_spaces is not None
-                split_leading_spaces = block_quote_token.leading_spaces.split(
+                assert block_quote_token.bleading_spaces is not None
+                split_leading_spaces = block_quote_token.bleading_spaces.split(
                     ParserHelper.newline_character
                 )
                 selected_split_length = len(

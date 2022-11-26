@@ -180,19 +180,19 @@ class RuleMd027(RulePlugin):
         # if self.__debug_on:
         #     print(f"leading_spaces>{ParserHelper.make_value_visible(self.__container_tokens[-1].leading_spaces)}")
         block_quote_token = cast(BlockQuoteMarkdownToken, self.__container_tokens[-1])
-        assert block_quote_token.leading_spaces is not None
-        newlines_in_container = block_quote_token.leading_spaces.count(
+        assert block_quote_token.bleading_spaces is not None
+        newlines_in_container = block_quote_token.bleading_spaces.count(
             ParserHelper.newline_character
         )
         if (
             not (
-                block_quote_token.leading_spaces
-                and block_quote_token.leading_spaces.endswith(
+                block_quote_token.bleading_spaces
+                and block_quote_token.bleading_spaces.endswith(
                     ParserHelper.newline_character
                 )
             )
             and self.__container_tokens
-            and block_quote_token.leading_spaces
+            and block_quote_token.bleading_spaces
         ):
             # if self.__debug_on:
             #     print(f"newlines_in_container>{newlines_in_container}")
@@ -270,8 +270,10 @@ class RuleMd027(RulePlugin):
                     #     print(f"self.__last_token.start_markdown_token>:{ParserHelper.make_value_visible(\
                     #       self.__last_token.start_markdown_token)}:")
                     #     print("BOOM")
-                    assert block_quote_token.leading_spaces is not None
-                    split_line_length = block_quote_token.leading_spaces.split("\n")[-1]
+                    assert block_quote_token.bleading_spaces is not None
+                    split_line_length = block_quote_token.bleading_spaces.split("\n")[
+                        -1
+                    ]
                     # if self.__debug_on:
                     #     print(f"BOOM:{split_line_length}:")
                     whitespace_to_use = whitespace_to_use[len(split_line_length) :]
@@ -458,8 +460,8 @@ class RuleMd027(RulePlugin):
             scoped_block_quote_token = cast(
                 BlockQuoteMarkdownToken, self.__container_tokens[-1]
             )
-            assert scoped_block_quote_token.leading_spaces is not None
-            split_leading_spaces = scoped_block_quote_token.leading_spaces.split(
+            assert scoped_block_quote_token.bleading_spaces is not None
+            split_leading_spaces = scoped_block_quote_token.bleading_spaces.split(
                 ParserHelper.newline_character
             )
             specific_block_quote_prefix = split_leading_spaces[
@@ -499,7 +501,7 @@ class RuleMd027(RulePlugin):
         scoped_block_quote_token: BlockQuoteMarkdownToken,
     ) -> None:
         assert lrd_token.link_name_debug is not None
-        assert scoped_block_quote_token.leading_spaces is not None
+        assert scoped_block_quote_token.bleading_spaces is not None
         line_number_delta = (
             lrd_token.link_name_debug.count(ParserHelper.newline_character) + 1
         )
@@ -507,7 +509,7 @@ class RuleMd027(RulePlugin):
         split_array_index = (
             self.__bq_line_index[num_container_tokens] + line_number_delta
         )
-        split_leading_spaces = scoped_block_quote_token.leading_spaces.split(
+        split_leading_spaces = scoped_block_quote_token.bleading_spaces.split(
             ParserHelper.newline_character
         )
         specific_block_quote_prefix = split_leading_spaces[split_array_index]
@@ -540,7 +542,15 @@ class RuleMd027(RulePlugin):
         scoped_block_quote_token = cast(
             BlockQuoteMarkdownToken, self.__container_tokens[-1]
         )
-        assert scoped_block_quote_token.leading_spaces is not None
+        if scoped_block_quote_token.is_block_quote_start:
+            assert scoped_block_quote_token.bleading_spaces is not None
+            leading_spaces = scoped_block_quote_token.bleading_spaces
+        else:
+            scoped_list_token = cast(
+                ListStartMarkdownToken, self.__container_tokens[-1]
+            )
+            assert scoped_list_token.leading_spaces is not None
+            leading_spaces = scoped_list_token.leading_spaces
         lrd_token = cast(LinkReferenceDefinitionMarkdownToken, token)
         if lrd_token.extracted_whitespace:
             column_number_delta = -(
@@ -584,9 +594,7 @@ class RuleMd027(RulePlugin):
             split_array_index = (
                 self.__bq_line_index[num_container_tokens] + line_number_delta
             )
-            split_leading_spaces = scoped_block_quote_token.leading_spaces.split(
-                ParserHelper.newline_character
-            )
+            split_leading_spaces = leading_spaces.split(ParserHelper.newline_character)
             specific_block_quote_prefix = split_leading_spaces[split_array_index]
 
             column_number_delta = -(len(specific_block_quote_prefix) + 1)
@@ -631,7 +639,7 @@ class RuleMd027(RulePlugin):
                 scoped_block_quote_token = cast(
                     BlockQuoteMarkdownToken, self.__container_tokens[-1]
                 )
-                assert scoped_block_quote_token.leading_spaces is not None
+                assert scoped_block_quote_token.bleading_spaces is not None
                 assert text_token.end_whitespace is not None
 
                 for line_number_delta, next_line in enumerate(
@@ -644,7 +652,7 @@ class RuleMd027(RulePlugin):
                         next_line = next_line[:found_index]
                     if next_line:
                         split_leading_spaces = (
-                            scoped_block_quote_token.leading_spaces.split(
+                            scoped_block_quote_token.bleading_spaces.split(
                                 ParserHelper.newline_character
                             )
                         )
@@ -704,13 +712,13 @@ class RuleMd027(RulePlugin):
                     ParserHelper.newline_character
                 )
             ):
-                if next_line and scoped_block_quote_token.leading_spaces:
+                if next_line and scoped_block_quote_token.bleading_spaces:
                     # if self.__debug_on:
                     #     print(f"1>{self.__bq_line_index[num_container_tokens]}")
                     #     print(f"2>{line_number_delta}")
                     #     print(f"3>{ParserHelper.make_value_visible(scoped_block_quote_token)}")
                     split_leading_spaces = (
-                        scoped_block_quote_token.leading_spaces.split(
+                        scoped_block_quote_token.bleading_spaces.split(
                             ParserHelper.newline_character
                         )
                     )

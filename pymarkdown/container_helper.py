@@ -64,15 +64,15 @@ class ContainerHelper:
                 BlockQuoteMarkdownToken, first_new_token.start_markdown_token
             )
             POGGER.debug(
-                "start_markdown_token.leading>>:$:<",
-                matching_start_token.leading_spaces,
+                "start_markdown_token.bleading>>:$:<",
+                matching_start_token.bleading_spaces,
             )
-            assert matching_start_token.leading_spaces is not None
-            last_newline_index = matching_start_token.leading_spaces.rfind("\n")
+            assert matching_start_token.bleading_spaces is not None
+            last_newline_index = matching_start_token.bleading_spaces.rfind("\n")
             # if last_newline_index == -1:
             #     last_newline_part =matching_start_token.leading_spaces
             # else:
-            last_newline_part = matching_start_token.leading_spaces[
+            last_newline_part = matching_start_token.bleading_spaces[
                 last_newline_index + 1 :
             ]
             POGGER.debug("last_newline_part>>:$:<", last_newline_part)

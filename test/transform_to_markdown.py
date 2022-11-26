@@ -527,9 +527,14 @@ class TransformToMarkdown:
         cls, token_stack, last_container_token_index, container_line
     ):
         print(f" container->{ParserHelper.make_value_visible(token_stack[-1])}")
-        split_leading_spaces = token_stack[-1].leading_spaces.split(
-            ParserHelper.newline_character
-        )
+        if token_stack[-1].is_block_quote_start:
+            split_leading_spaces = token_stack[-1].bleading_spaces.split(
+                ParserHelper.newline_character
+            )
+        else:
+            split_leading_spaces = token_stack[-1].leading_spaces.split(
+                ParserHelper.newline_character
+            )
         if last_container_token_index < len(split_leading_spaces):
             print(f" -->{ParserHelper.make_value_visible(split_leading_spaces)}")
             print(
@@ -575,7 +580,9 @@ class TransformToMarkdown:
             )
         new_list_item_adjust = True
         if len(removed_tokens) == 1 and removed_tokens[-1].is_block_quote_start:
-            leading_spaces_newline_count = removed_tokens[-1].leading_spaces.count("\n")
+            leading_spaces_newline_count = removed_tokens[-1].bleading_spaces.count(
+                "\n"
+            )
             block_quote_end_line = (
                 leading_spaces_newline_count + removed_tokens[-1].line_number
             )
@@ -631,7 +638,7 @@ class TransformToMarkdown:
                     applied_leading_spaces_to_start_of_container_line,
                     previous_token,
                 ):
-                    split_leading_spaces = previous_token.leading_spaces.split(
+                    split_leading_spaces = previous_token.bleading_spaces.split(
                         ParserHelper.newline_character
                     )
                     print(
@@ -805,11 +812,18 @@ class TransformToMarkdown:
             delta = previous_token.indent_level - len(container_line)
             print(f"delta->{delta}")
             container_line += ParserHelper.repeat_string(" ", delta)
-        leading_spaces = (
-            ""
-            if previous_token.leading_spaces is None
-            else previous_token.leading_spaces
-        )
+        if previous_token.is_block_quote_start:
+            leading_spaces = (
+                ""
+                if previous_token.bleading_spaces is None
+                else previous_token.bleading_spaces
+            )
+        else:
+            leading_spaces = (
+                ""
+                if previous_token.leading_spaces is None
+                else previous_token.leading_spaces
+            )
         split_leading_spaces = leading_spaces.split(ParserHelper.newline_character)
         inner_token_index = container_token_indices[nested_list_start_index]
         if inner_token_index < len(split_leading_spaces):
@@ -1219,7 +1233,14 @@ class TransformToMarkdown:
     ):
         _ = (previous_token, transformed_data)
 
+        print(
+            f">bquote>tabbed_bleading_spaces>{ParserHelper.make_value_visible(current_token.tabbed_bleading_spaces)}"
+        )
         new_instance = copy.deepcopy(current_token)
+        print(
+            f">bquote>tabbed_bleading_spaces>{ParserHelper.make_value_visible(new_instance.tabbed_bleading_spaces)}"
+        )
+
         new_instance.leading_text_index = 0
         self.container_token_stack.append(new_instance)
         print(f">bquote>{ParserHelper.make_value_visible(new_instance)}")
@@ -1259,6 +1280,7 @@ class TransformToMarkdown:
 
         print(f">bquote>current_token>{ParserHelper.make_value_visible(current_token)}")
         print(f">bquote>next_token>{ParserHelper.make_value_visible(next_token)}")
+        print(f">next_token.is_block_quote_start>{next_token.is_block_quote_start}")
 
         if (
             next_token
@@ -1268,7 +1290,13 @@ class TransformToMarkdown:
             print(">bquote> will be done by following bquote>")
             selected_leading_sequence = ""
         else:
-            selected_leading_sequence = new_instance.calculate_next_leading_space_part()
+            print(f">bquote>bleading_spaces>{new_instance.bleading_spaces}<")
+            print(
+                f">bquote>tabbed_bleading_spaces>{ParserHelper.make_value_visible(new_instance.tabbed_bleading_spaces)}"
+            )
+            selected_leading_sequence = (
+                new_instance.calculate_next_bleading_space_part()
+            )
             print(f">bquote>selected_leading_sequence>{selected_leading_sequence}<")
 
         print(f">bquote>already_existing_whitespace>:{already_existing_whitespace}:<")
@@ -1407,9 +1435,11 @@ class TransformToMarkdown:
         extracted_whitespace,
     ):
         previous_indent = (
-            len(previous_token.calculate_next_leading_space_part(increment_index=False))
-            if ParserHelper.newline_character in previous_token.leading_spaces
-            else len(previous_token.leading_spaces)
+            len(
+                previous_token.calculate_next_bleading_space_part(increment_index=False)
+            )
+            if ParserHelper.newline_character in previous_token.bleading_spaces
+            else len(previous_token.bleading_spaces)
         )
         print(
             f"adj->current_token>>:{ParserHelper.make_value_visible(current_token)}:<<"
@@ -1418,7 +1448,7 @@ class TransformToMarkdown:
             f"adj->containing_block_quote_token>>:{ParserHelper.make_value_visible(containing_block_quote_token)}:<<"
         )
         assert current_token.line_number == containing_block_quote_token.line_number
-        split_leading_spaces = containing_block_quote_token.leading_spaces.split(
+        split_leading_spaces = containing_block_quote_token.bleading_spaces.split(
             ParserHelper.newline_character
         )
         block_quote_leading_space = split_leading_spaces[0]
@@ -1442,7 +1472,7 @@ class TransformToMarkdown:
         cls, current_token, containing_block_quote_token
     ):
         block_quote_leading_space = (
-            containing_block_quote_token.calculate_next_leading_space_part(
+            containing_block_quote_token.calculate_next_bleading_space_part(
                 increment_index=False, delta=-1
             )
         )
@@ -1499,10 +1529,10 @@ class TransformToMarkdown:
                 f"previous_token.start_markdown_token:{previous_token.start_markdown_token}:"
             )
             print(
-                f"previous_token.start_markdown_token.leading_spaces:{previous_token.start_markdown_token.leading_spaces}:"
+                f"previous_token.start_markdown_token.leading_spaces:{previous_token.start_markdown_token.bleading_spaces}:"
             )
             newline_count = ParserHelper.count_characters_in_text(
-                previous_token.start_markdown_token.leading_spaces, "\n"
+                previous_token.start_markdown_token.bleading_spaces, "\n"
             )
             previous_start_line = previous_token.start_markdown_token.line_number
             print(f"newline_count:{newline_count}:")
@@ -1553,7 +1583,7 @@ class TransformToMarkdown:
         check_list_for_indent = True
         if do_perform_block_quote_ending:
             split_leading_spaces = (
-                previous_token.start_markdown_token.leading_spaces.split(
+                previous_token.start_markdown_token.bleading_spaces.split(
                     ParserHelper.newline_character
                 )
             )
@@ -1588,7 +1618,7 @@ class TransformToMarkdown:
             )
             print(f"index:{line_number_delta}")
             split_leading_spaces = (
-                deeper_containing_block_quote_token.leading_spaces.split(
+                deeper_containing_block_quote_token.bleading_spaces.split(
                     ParserHelper.newline_character
                 )
             )
@@ -1904,7 +1934,7 @@ class TransformToMarkdown:
             f"current_end_token_extra>:{ParserHelper.make_value_visible(current_end_token_extra)}:<"
         )
         start_leading_index = current_start_block_token.leading_text_index
-        split_start_leading = current_start_block_token.leading_spaces.split(
+        split_start_leading = current_start_block_token.bleading_spaces.split(
             ParserHelper.newline_character
         )
         print(
@@ -1970,7 +2000,7 @@ class TransformToMarkdown:
             )
             if found_block_quote_token:
                 leading_space = (
-                    found_block_quote_token.calculate_next_leading_space_part(
+                    found_block_quote_token.calculate_next_bleading_space_part(
                         increment_index=False, delta=-1
                     )
                 )
@@ -2014,7 +2044,7 @@ class TransformToMarkdown:
             project_indent_level = self.container_token_stack[-1].indent_level
             if next_token and next_token.is_block_quote_start:
                 next_block_quote_leading_space = (
-                    next_token.calculate_next_leading_space_part(increment_index=False)
+                    next_token.calculate_next_bleading_space_part(increment_index=False)
                 )
                 print(
                     f"did start midline:next_block_quote_leading_space:{next_block_quote_leading_space}:"

@@ -66,31 +66,43 @@ class TabHelper:
         corrected_prefix = ""
         corrected_suffix = corrected_extracted_whitespace
         index_from_end = len(corrected_extracted_whitespace) - 1
+        have_been_inside_loop = False
         while index_from_end >= 0 and len(detabified_suffix) < len(
             extracted_whitespace
         ):
+            have_been_inside_loop = True
             corrected_suffix = corrected_extracted_whitespace[index_from_end:]
             corrected_prefix = corrected_extracted_whitespace[:index_from_end]
-            # LOGGER.debug(
-            #     "index_from_end=:%s: of :%s:",
-            #     index_from_end,
-            #     len(corrected_extracted_whitespace),
-            # )
-            # LOGGER.debug("corrected_suffix=:%s:", corrected_suffix)
-            # LOGGER.debug("corrected_prefix=:%s:", ParserHelper.make_whitespace_visible(corrected_prefix))
+            LOGGER.debug(
+                "index_from_end=:%s: of :%s:",
+                index_from_end,
+                len(corrected_extracted_whitespace),
+            )
+            LOGGER.debug("corrected_suffix=:%s:", corrected_suffix)
+            LOGGER.debug(
+                "corrected_prefix=:%s:",
+                ParserHelper.make_whitespace_visible(corrected_prefix),
+            )
             detabified_prefix = TabHelper.detabify_string(corrected_prefix)
-            # LOGGER.debug("detabified_prefix=:%s:", detabified_prefix)
+            LOGGER.debug("detabified_prefix=:%s:", detabified_prefix)
             detabified_suffix = TabHelper.detabify_string(
                 corrected_suffix, additional_start_delta=len(detabified_prefix)
             )
-            # LOGGER.debug("detabified_suffix=:%s:", detabified_suffix)
+            LOGGER.debug("detabified_suffix=:%s:", detabified_suffix)
             if len(detabified_suffix) < len(extracted_whitespace):
                 index_from_end -= 1
         assert index_from_end >= 0
 
+        if not have_been_inside_loop:
+            assert not extracted_whitespace
+            corrected_prefix = corrected_extracted_whitespace
+            corrected_suffix = ""
+
         split_tab = detabified_suffix != extracted_whitespace
-        # if split_tab:
-        #     assert detabified_prefix.endswith(">")
+        if split_tab:
+            assert detabified_prefix.endswith(">")
+        elif detabified_prefix:
+            assert detabified_prefix.endswith(" ")
         #     assert detabified_suffix[1:] == extracted_whitespace
 
         return (
@@ -340,7 +352,7 @@ class TabHelper:
         #     "parser_state=:$:",
         #     block_quote_token,
         # )
-        block_quote_leading_spaces = block_quote_token.leading_spaces
+        block_quote_leading_spaces = block_quote_token.bleading_spaces
         assert block_quote_leading_spaces is not None
         # POGGER.debug("block_quote_leading_spaces=:$:", block_quote_leading_spaces)
         block_quote_leading_spaces_index = block_quote_leading_spaces.rfind("\n")
@@ -359,12 +371,12 @@ class TabHelper:
         #     "parser_state=:$:",
         #     block_quote_token,
         # )
-        block_quote_token.remove_last_leading_space()
+        block_quote_token.remove_last_bleading_space()
         # POGGER.debug(
         #     "parser_state=:$:",
         #     block_quote_token,
         # )
-        block_quote_token.add_leading_spaces(last_block_quote_leading_space)
+        block_quote_token.add_bleading_spaces(last_block_quote_leading_space)
         # POGGER.debug(
         #     "parser_state=:$:",
         #     block_quote_token,

@@ -1004,7 +1004,7 @@ class LeafBlockProcessor:
             BlockQuoteMarkdownToken,
             parser_state.token_stack[last_block_quote_index].matching_markdown_token,
         )
-        last_block_quote_lead_spaces = last_block_quote_token.leading_spaces
+        last_block_quote_lead_spaces = last_block_quote_token.bleading_spaces
         assert last_block_quote_lead_spaces is not None
         POGGER.debug("last_block_quote_lead_spaces>:$:<", last_block_quote_lead_spaces)
         lead_space_last_line_index = last_block_quote_lead_spaces.rfind("\n")
