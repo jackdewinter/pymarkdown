@@ -27,7 +27,6 @@ def test_whitespaces_indented_code_with_spaces_before():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_indented_code_with_spaces_before_within_list():
     """
     Test case:  Indented Code blocks preceeded by spaces.
@@ -37,12 +36,16 @@ def test_whitespaces_indented_code_with_spaces_before_within_list():
     source_markdown = """- abc
         indented block"""
     expected_tokens = [
-        "[icode-block(1,5):    :]",
-        "[text(1,5):indented block:]",
-        "[end-icode-block:::True]",
+        "[ulist(1,1):-::2::  ]",
+        "[para(1,3):\n      ]",
+        "[text(1,3):abc\nindented block::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
     ]
-    expected_gfm = """<pre><code>indented block
-</code></pre>"""
+    expected_gfm = """<ul>
+<li>abc
+indented block</li>
+</ul>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)

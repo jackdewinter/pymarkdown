@@ -1789,6 +1789,7 @@ class TransformToMarkdown:
             else f"{extracted_whitespace}{current_token.list_start_content}{current_token.list_start_sequence}"
         )
         print(f">>start_sequence>>:{start_sequence}:<<")
+        old_start_sequence = start_sequence
         if not next_token.is_blank_line:
             if next_token.is_list_end:
                 print("list-end")
@@ -1820,12 +1821,35 @@ class TransformToMarkdown:
                 - list_content_length
             )
             start_sequence += ParserHelper.repeat_string(" ", new_column_number)
+        print(f">>current_token>>:{ParserHelper.make_value_visible(current_token)}:<<")
+        print(f">>next_token>>:{ParserHelper.make_value_visible(next_token)}:<<")
+
+        print(f">>tabbed_adjust>>:{str(current_token.tabbed_adjust)}:<<")
+        if current_token.tabbed_adjust >= 0:
+            print(f">>start_sequence>>:{str(start_sequence)}:<<")
+            print(f">>old_start_sequence>>:{str(old_start_sequence)}:<<")
+            spaces_to_consume = current_token.tabbed_adjust + 1
+            print(f">>spaces_to_consume>>:{str(spaces_to_consume)}:<<")
+            start_sequence = (
+                start_sequence[: len(old_start_sequence)]
+                + "\t"
+                + start_sequence[len(old_start_sequence) + spaces_to_consume :]
+            )
+            print(
+                f">>start_sequence>>:{ParserHelper.make_value_visible(start_sequence)}:<<"
+            )
 
         print(f"<<start_sequence<<:{start_sequence}:<<")
         if post_adjust_whitespace:
             print(f"<<post_adjust_whitespace<<(post):{post_adjust_whitespace}:<<")
             start_sequence = post_adjust_whitespace + start_sequence
             print(f"<<start_sequence<<(post):{start_sequence}:<<")
+
+        if current_token.tabbed_extracted_whitespace is not None:
+            start_sequence = (
+                current_token.tabbed_extracted_whitespace
+                + start_sequence[len(current_token.extracted_whitespace) :]
+            )
         return start_sequence
 
     # pylint: enable=too-many-arguments
@@ -1877,6 +1901,7 @@ class TransformToMarkdown:
             ) = self.__adjust_whitespace_for_block_quote(
                 transformed_data, extracted_whitespace
             )
+        print(f">>adjustment_since_newline>>{adjustment_since_newline}<<")
         print(f">>extracted_whitespace>>{extracted_whitespace}<<")
 
         return self.__rehydrate_list_start_calculate_start(
