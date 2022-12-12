@@ -22,7 +22,6 @@ def test_whitespaces_atx_headings_with_spaces_before():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_atx_headings_with_spaces_before_within_list():
     """
     Test case:  Atx Headings preceeded by spaces.
@@ -30,12 +29,25 @@ def test_whitespaces_atx_headings_with_spaces_before_within_list():
 
     # Arrange
     source_markdown = """- abc
-\t# abc"""
-    expected_tokens = ["[atx(1,3):1:0:  ]", "[text(1,5):abc: ]", "[end-atx::]"]
-    expected_gfm = """<h1>abc</h1>"""
+    # abc"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::False]",
+        "[atx(2,5):1:0:  ]",
+        "[text(2,7):abc: ]",
+        "[end-atx::]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+<h1>abc</h1>
+</li>
+</ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
@@ -157,7 +169,65 @@ def test_whitespaces_atx_headings_with_tabs_before():
 
 
 @pytest.mark.gfm
-def test_whitespaces_atx_headings_with_tabs_before_within_list():
+def test_whitespaces_atx_headings_with_tabs_before_within_list_x():
+    """
+    Test case:  Atx Headings preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """- abc
+\t# abc"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::False]",
+        "[atx(2,5):1:0:\t]",
+        "[text(2,7):abc: ]",
+        "[end-atx::]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+<h1>abc</h1>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_whitespaces_atx_headings_with_tabs_before_within_list_and_single_space():
+    """
+    Test case:  Atx Headings preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """- abc
+ \t# abc"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:: ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::False]",
+        "[atx(2,5):1:0:\t]",
+        "[text(2,7):abc: ]",
+        "[end-atx::]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+<h1>abc</h1>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_whitespaces_atx_headings_with_tabs_before_within_list_and_spaces():
     """
     Test case:  Atx Headings preceeded by spaces and tabs.
     """

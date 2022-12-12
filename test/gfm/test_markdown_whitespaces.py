@@ -833,21 +833,20 @@ def test_whitespaces_ordered_lists_with_spaces():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_whitespaces_ordered_lists_with_tabs():
+def test_whitespaces_ordered_lists_with_tabs_x():
     """
     Test case:  Ordered lists preceeded by spaces and tabs.
     """
 
     # Arrange
     source_markdown = """1. list item
- \t1. inner list item"""
+\t1. inner list item"""
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
         "[para(1,4):]",
         "[text(1,4):list item:]",
         "[end-para:::True]",
-        "[olist(2,5):.:1:7:    ]",
+        "[olist(2,5):.:1:7:    ::\t]",
         "[para(2,8):]",
         "[text(2,8):inner list item:]",
         "[end-para:::True]",
@@ -864,6 +863,138 @@ def test_whitespaces_ordered_lists_with_tabs():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_ordered_lists_with_space_and_tabs():
+    """
+    Test case:  Ordered lists preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """1. list item
+ \t1. inner list item"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):list item:]",
+        "[end-para:::True]",
+        "[olist(2,5):.:1:7:    :: \t]",
+        "[para(2,8):]",
+        "[text(2,8):inner list item:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>list item
+<ol>
+<li>inner list item</li>
+</ol>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_ordered_lists_with_spaces_and_tabs():
+    """
+    Test case:  Ordered lists preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """1. list item
+  \t1. inner list item"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):list item:]",
+        "[end-para:::True]",
+        "[olist(2,5):.:1:7:    ::  \t]",
+        "[para(2,8):]",
+        "[text(2,8):inner list item:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>list item
+<ol>
+<li>inner list item</li>
+</ol>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_ordered_lists_with_spaces_for_indent_and_tab_after():
+    """
+    Test case:  Unordered lists preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """1. list item
+    1.\tinner list item"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):list item:]",
+        "[end-para:::True]",
+        "[olist(2,5):.:1:8:    :::1]",
+        "[para(2,9):]",
+        "[text(2,9):inner list item:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>list item
+<ol>
+<li>inner list item</li>
+</ol>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_whitespaces_ordered_lists_with_spaces_for_indent_and_tab_after_with_space_and_paragraph():
+    """
+    Test case:  Unordered lists preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """1. list item
+    1.\t inner list item"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):list item:]",
+        "[end-para:::True]",
+        "[olist(2,5):.:1:9:    :::1]",
+        "[para(2,10):]",
+        "[text(2,10):inner list item:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>list item
+<ol>
+<li>inner list item</li>
+</ol>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
@@ -915,21 +1046,20 @@ def test_whitespaces_unordered_lists_with_spaces():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_whitespaces_unordered_lists_with_tabs():
+def test_whitespaces_unordered_lists_with_tabs_x():
     """
     Test case:  Unordered lists preceeded by spaces and tabs.
     """
 
     # Arrange
     source_markdown = """+ list item
- \t+ inner list item"""
+\t+ inner list item"""
     expected_tokens = [
         "[ulist(1,1):+::2:]",
         "[para(1,3):]",
         "[text(1,3):list item:]",
         "[end-para:::True]",
-        "[ulist(2,5):+::6:    ]",
+        "[ulist(2,5):+::6:    ::\t]",
         "[para(2,7):]",
         "[text(2,7):inner list item:]",
         "[end-para:::True]",
@@ -945,7 +1075,139 @@ def test_whitespaces_unordered_lists_with_tabs():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_whitespaces_unordered_lists_with_space_and_tabs():
+    """
+    Test case:  Unordered lists preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """+ list item
+ \t+ inner list item"""
+    expected_tokens = [
+        "[ulist(1,1):+::2:]",
+        "[para(1,3):]",
+        "[text(1,3):list item:]",
+        "[end-para:::True]",
+        "[ulist(2,5):+::6:    :: \t]",
+        "[para(2,7):]",
+        "[text(2,7):inner list item:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>list item
+<ul>
+<li>inner list item</li>
+</ul>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_whitespaces_unordered_lists_with_spaces_and_tabs():
+    """
+    Test case:  Unordered lists preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """+ list item
+  \t+ inner list item"""
+    expected_tokens = [
+        "[ulist(1,1):+::2:]",
+        "[para(1,3):]",
+        "[text(1,3):list item:]",
+        "[end-para:::True]",
+        "[ulist(2,5):+::6:    ::  \t]",
+        "[para(2,7):]",
+        "[text(2,7):inner list item:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>list item
+<ul>
+<li>inner list item</li>
+</ul>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_whitespaces_unordered_lists_with_spaces_for_indent_and_tab_after():
+    """
+    Test case:  Unordered lists preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """+ list item
+  +\tinner list item"""
+    expected_tokens = [
+        "[ulist(1,1):+::2:]",
+        "[para(1,3):]",
+        "[text(1,3):list item:]",
+        "[end-para:::True]",
+        "[ulist(2,3):+::4:  :::0]",
+        "[para(2,5):]",
+        "[text(2,5):inner list item:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>list item
+<ul>
+<li>inner list item</li>
+</ul>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_whitespaces_unordered_lists_with_spaces_for_indent_and_tab_after_with_space_and_paragraph():
+    """
+    Test case:  Unordered lists preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """+ list item
+  +\t inner list item"""
+    expected_tokens = [
+        "[ulist(1,1):+::2:]",
+        "[para(1,3):]",
+        "[text(1,3):list item:]",
+        "[end-para:::True]",
+        "[ulist(2,3):+::5:  :::0]",
+        "[para(2,6):]",
+        "[text(2,6):inner list item:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>list item
+<ul>
+<li>inner list item</li>
+</ul>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm

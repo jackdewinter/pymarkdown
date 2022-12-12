@@ -564,7 +564,7 @@ def test_tabs_007x():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
@@ -718,7 +718,6 @@ bar
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_tabs_009():
     """
     Test case 009:  none
@@ -738,7 +737,7 @@ def test_tabs_009():
         "[para(2,6):]",
         "[text(2,6):bar:]",
         "[end-para:::True]",
-        "[ulist(3,6):-::7:     ]",
+        "[ulist(3,6):-::7:     ::\t ]",
         "[para(3,8):]",
         "[text(3,8):baz:]",
         "[end-para:::True]",

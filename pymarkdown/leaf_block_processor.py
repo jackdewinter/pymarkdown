@@ -8,7 +8,10 @@ from pymarkdown.block_quote_data import BlockQuoteData
 from pymarkdown.constants import Constants
 from pymarkdown.container_grab_bag import ContainerGrabBag
 from pymarkdown.container_helper import ContainerHelper
-from pymarkdown.container_markdown_token import BlockQuoteMarkdownToken
+from pymarkdown.container_markdown_token import (
+    BlockQuoteMarkdownToken,
+    ListStartMarkdownToken,
+)
 from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.inline_helper import InlineHelper
 from pymarkdown.inline_markdown_token import TextMarkdownToken
@@ -1403,8 +1406,10 @@ class LeafBlockProcessor:
 
     # pylint: enable=too-many-locals
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __prepare_for_create_atx_heading_with_tab(
+        parser_state: ParserState,
         original_line: str,
         remaining_line: str,
         extracted_whitespace_at_start: str,
@@ -1422,9 +1427,39 @@ class LeafBlockProcessor:
             + extracted_whitespace_at_start
             + remaining_line
         )
+
+        stack_index = len(parser_state.token_stack) - 1
+        while (
+            stack_index != 0
+            and not parser_state.token_stack[stack_index].is_list
+            and not parser_state.token_stack[stack_index].is_block_quote
+        ):
+            stack_index -= 1
+        leading_spaces = None
+        if parser_state.token_stack[stack_index].is_list:
+            POGGER.debug(
+                ">>parser_state.token_stack[stack_index]>:$:<",
+                parser_state.token_stack[stack_index],
+            )
+            POGGER.debug(
+                ">>parser_state.token_stack[stack_index].mdt>:$:<",
+                parser_state.token_stack[stack_index].matching_markdown_token,
+            )
+            list_markdown_token = cast(
+                ListStartMarkdownToken,
+                parser_state.token_stack[stack_index].matching_markdown_token,
+            )
+            leading_spaces = list_markdown_token.leading_spaces
+            POGGER.debug(">>leading_spaces>:$:<", leading_spaces)
+
+        POGGER.debug(">>reconstructed_line>:$:<", reconstructed_line)
         _, adj_original_index, split_tab = TabHelper.find_tabified_string(
-            original_line, reconstructed_line, use_proper_traverse=True
+            original_line,
+            reconstructed_line,
+            use_proper_traverse=True,
+            reconstruct_prefix=leading_spaces,
         )
+        POGGER.debug(">>adj_original_index>:$:<", adj_original_index)
 
         after_pre_hash_whitespace_index, ex_whitespace = ParserHelper.extract_spaces(
             original_line, adj_original_index
@@ -1451,6 +1486,8 @@ class LeafBlockProcessor:
             extracted_whitespace,
             split_tab,
         )
+
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
@@ -1488,12 +1525,14 @@ class LeafBlockProcessor:
                 extracted_whitespace,
                 split_tab,
             ) = LeafBlockProcessor.__prepare_for_create_atx_heading_with_tab(
+                parser_state,
                 original_line,
                 remaining_line,
                 extracted_whitespace_at_start,
                 extracted_whitespace,
                 hash_count,
             )
+            POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
         else:
             split_tab = False
         POGGER.debug("split_tab>:$:<", split_tab)
@@ -1503,7 +1542,11 @@ class LeafBlockProcessor:
         if split_tab := ContainerHelper.reduce_containers_if_required(
             parser_state, block_quote_data, new_tokens, split_tab
         ):
-            TabHelper.adjust_block_quote_indent_for_tab(parser_state)
+            POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
+            extracted_whitespace = TabHelper.adjust_block_quote_indent_for_tab(
+                parser_state, extracted_whitespace=extracted_whitespace
+            )
+            POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
 
         (
             end_index,

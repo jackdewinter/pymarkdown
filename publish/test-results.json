@@ -559,7 +559,7 @@
             "totalTests": 30,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 9,
+            "skippedTests": 8,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -596,10 +596,10 @@
         },
         {
             "name": "test.gfm.test_markdown_whitespace_atx",
-            "totalTests": 29,
+            "totalTests": 31,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 1,
+            "skippedTests": 0,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -655,7 +655,7 @@
             "totalTests": 19,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 1,
+            "skippedTests": 0,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -700,10 +700,10 @@
         },
         {
             "name": "test.gfm.test_markdown_whitespaces",
-            "totalTests": 33,
+            "totalTests": 41,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 10,
+            "skippedTests": 8,
             "elapsedTimeInMilliseconds": 0
         },
         {

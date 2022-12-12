@@ -104,7 +104,9 @@ class ListStartMarkdownToken(ContainerMarkdownToken):
         list_start_sequence: str,
         list_start_content: str,
         indent_level: int,
+        tabbed_adjust: int,
         extracted_whitespace: str,
+        tabbed_whitespace_to_add: Optional[str],
     ) -> None:
         ContainerMarkdownToken.__init__(
             self,
@@ -112,6 +114,8 @@ class ListStartMarkdownToken(ContainerMarkdownToken):
             "",
             position_marker=position_marker,
         )
+        POGGER.debug("tabbed_adjust>:$:<", tabbed_adjust)
+        POGGER.debug("type(tabbed_adjust)>:$:<", type(tabbed_adjust))
         self.leading_spaces_index = 0
         self.is_loose = True
         (
@@ -119,11 +123,15 @@ class ListStartMarkdownToken(ContainerMarkdownToken):
             self.__list_start_content,
             self.__indent_level,
             self.__extracted_whitespace,
+            self.__tabbed_whitespace_to_add,
+            self.__tabbed_adjust,
         ) = (
             list_start_sequence,
             list_start_content,
             indent_level,
             extracted_whitespace,
+            tabbed_whitespace_to_add,
+            tabbed_adjust,
         )
         self.__last_new_list_token: Optional[NewListItemMarkdownToken] = None
         self.__leading_spaces: Optional[str] = None
@@ -160,6 +168,20 @@ class ListStartMarkdownToken(ContainerMarkdownToken):
         return self.__extracted_whitespace
 
     @property
+    def tabbed_extracted_whitespace(self) -> Optional[str]:
+        """
+        extracted_whitespace, but with any tabs.
+        """
+        return self.__tabbed_whitespace_to_add
+
+    @property
+    def tabbed_adjust(self) -> int:
+        """
+        Adjustments for tabbed.
+        """
+        return self.__tabbed_adjust
+
+    @property
     def leading_spaces(self) -> Optional[str]:
         """
         Returns the leading spaces that occur before the list element.
@@ -192,9 +214,38 @@ class ListStartMarkdownToken(ContainerMarkdownToken):
             str(self.__indent_level),
             self.__extracted_whitespace,
         ]
-        if self.__leading_spaces is not None:
-            item_list.append(self.__leading_spaces)
+        is_leading_spaces_valid = self.__leading_spaces is not None
+        is_tabbed_whitespace_valid = self.__tabbed_whitespace_to_add is not None
+        is_tabbed_adjust_valid = (
+            isinstance(self.__tabbed_adjust, int) and self.__tabbed_adjust >= 0
+        )
+
+        if (
+            is_leading_spaces_valid
+            or is_tabbed_whitespace_valid
+            or is_tabbed_adjust_valid
+        ):
+            item_list.append(self.__leading_spaces or "")
+        if is_tabbed_whitespace_valid or is_tabbed_adjust_valid:
+            item_list.append(self.__tabbed_whitespace_to_add or "")
+        if is_tabbed_adjust_valid:
+            item_list.append(str(self.__tabbed_adjust))
         self._set_extra_data(MarkdownToken.extra_data_separator.join(item_list))
+
+    def remove_last_leading_space(self) -> Optional[str]:
+        """
+        Remove the last leading space and return it.
+        """
+        assert self.__leading_spaces is not None
+        last_separator_index = self.__leading_spaces.rfind("\n")
+        assert last_separator_index == -1
+        extracted_text = self.__leading_spaces
+        self.__leading_spaces = None
+        # else:
+        #     extracted_text = self.__leading_spaces[last_separator_index:]
+        #     self.__leading_spaces = self.__leading_spaces[:last_separator_index]
+        self.__compose_extra_data_field()
+        return extracted_text
 
     def add_leading_spaces(self, ws_add: str) -> None:
         """
@@ -239,7 +290,9 @@ class OrderedListStartMarkdownToken(ListStartMarkdownToken):
         list_start_sequence: str,
         list_start_content: str,
         indent_level: int,
+        tabbed_adjust: int,
         extracted_whitespace: str,
+        tabbed_whitespace_to_add: Optional[str],
         position_marker: PositionMarker,
     ) -> None:
         ListStartMarkdownToken.__init__(
@@ -249,7 +302,9 @@ class OrderedListStartMarkdownToken(ListStartMarkdownToken):
             list_start_sequence,
             list_start_content,
             indent_level,
+            tabbed_adjust,
             extracted_whitespace,
+            tabbed_whitespace_to_add,
         )
 
     # pylint: enable=too-many-arguments
@@ -260,11 +315,14 @@ class UnorderedListStartMarkdownToken(ListStartMarkdownToken):
     Class to provide for an encapsulation of the unordered list start element.
     """
 
+    # pylint: disable=too-many-arguments
     def __init__(
         self,
         list_start_sequence: str,
         indent_level: int,
+        tabbed_adjust: int,
         extracted_whitespace: str,
+        tabbed_whitespace_to_add: Optional[str],
         position_marker: PositionMarker,
     ) -> None:
         ListStartMarkdownToken.__init__(
@@ -274,8 +332,12 @@ class UnorderedListStartMarkdownToken(ListStartMarkdownToken):
             list_start_sequence,
             "",
             indent_level,
+            tabbed_adjust,
             extracted_whitespace,
+            tabbed_whitespace_to_add,
         )
+
+    # pylint: enable=too-many-arguments
 
 
 class BlockQuoteMarkdownToken(ContainerMarkdownToken):

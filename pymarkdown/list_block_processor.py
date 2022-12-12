@@ -421,7 +421,7 @@ class ListBlockProcessor:
             Tuple[bool, int, Optional[int], Optional[int]],
         ],
         Callable[
-            [PositionMarker, int, Optional[str], int, int, int],
+            [PositionMarker, int, int, Optional[str], Optional[str], int, int, int],
             Tuple[ListStartMarkdownToken, ListStackToken],
         ],
     ]:
@@ -563,7 +563,7 @@ class ListBlockProcessor:
         indent_already_processed: bool,
     ) -> Tuple[
         Callable[
-            [PositionMarker, int, Optional[str], int, int, int],
+            [PositionMarker, int, int, Optional[str], Optional[str], int, int, int],
             Tuple[ListStartMarkdownToken, ListStackToken],
         ],
         bool,
@@ -650,10 +650,12 @@ class ListBlockProcessor:
         after_marker_ws_index: int,
         current_container_blocks: List[StackToken],
         create_token_fn: Callable[
-            [PositionMarker, int, Optional[str], int, int, int],
+            [PositionMarker, int, int, Optional[str], Optional[str], int, int, int],
             Tuple[ListStartMarkdownToken, ListStackToken],
         ],
         container_depth: int,
+        original_line: str,
+        is_ulist: bool,
     ) -> Tuple[bool, Optional[str], Optional[RequeueLineInfo]]:
         requeue_line_info = None
         did_process = False
@@ -689,6 +691,8 @@ class ListBlockProcessor:
                 current_container_blocks,
                 create_token_fn,
                 container_depth,
+                original_line,
+                is_ulist,
                 adj_ws=create_adj_ws,
                 alt_adj_ws=adj_ws,
                 forced_container_whitespace=forced_container_whitespace,
@@ -721,6 +725,7 @@ class ListBlockProcessor:
         current_container_blocks: List[StackToken] = grab_bag.current_container_blocks
         container_depth: int = grab_bag.container_depth
         indent_already_processed: bool = grab_bag.was_indent_already_processed
+        original_line = grab_bag.original_line
 
         (
             did_process,
@@ -805,6 +810,8 @@ class ListBlockProcessor:
                 current_container_blocks,
                 create_token_fn,
                 container_depth,
+                original_line,
+                is_ulist,
             )
         else:
             extracted_whitespace = old_extracted_whitespace
@@ -848,6 +855,78 @@ class ListBlockProcessor:
         )
         return found_block_quote_before_list
 
+    @staticmethod
+    def __create_new_list_with_tab(
+        position_marker: PositionMarker,
+        original_line: str,
+        is_ulist: bool,
+        whitespace_to_add: Optional[str],
+        index: int,
+    ) -> Tuple[Optional[str], int]:
+        tabbed_whitespace_to_add = None
+        tabbed_adjust = -1
+        (
+            tabbed_extract_spaces_index,
+            tabbed_extract_spaces,
+        ) = ParserHelper.extract_spaces(original_line, 0)
+        POGGER.debug("tabbed_extract_spaces_index>:$:<", tabbed_extract_spaces_index)
+        assert tabbed_extract_spaces_index is not None
+        assert tabbed_extract_spaces is not None
+        POGGER.debug("tabbed_extract_spaces>:$:<", tabbed_extract_spaces)
+        POGGER.debug("text_to_parse>:$:<", position_marker.text_to_parse)
+        POGGER.debug("index_number>:$:<", position_marker.index_number)
+        detabbed_tabbed_extract_spaces = TabHelper.detabify_string(
+            tabbed_extract_spaces
+        )
+        POGGER.debug(
+            "detabbed_tabbed_extract_spaces>:$:<", detabbed_tabbed_extract_spaces
+        )
+        assert detabbed_tabbed_extract_spaces == whitespace_to_add
+        if "\t" in tabbed_extract_spaces:
+            tabbed_whitespace_to_add = tabbed_extract_spaces
+
+        POGGER.debug("is_ulist>:$:<", is_ulist)
+
+        # parse_index = position_marker.text_to_parse[position_marker.index_number]
+        # POGGER.debug("parse_index>:$:<", parse_index)
+        parse_index = 1 if is_ulist else index - position_marker.index_number + 1
+        POGGER.debug("parse_index>:$:<", parse_index)
+
+        new_index = position_marker.index_number + parse_index
+        untabbed_marker = position_marker.text_to_parse[
+            position_marker.index_number : new_index
+        ]
+        POGGER.debug("untabbed_marker>:$:<", untabbed_marker)
+        tabbed_marker = original_line[
+            tabbed_extract_spaces_index : tabbed_extract_spaces_index + parse_index
+        ]
+        POGGER.debug("tabbed_marker>:$:<", tabbed_marker)
+        assert untabbed_marker == tabbed_marker
+
+        tabbed_extract_spaces_index += len(tabbed_marker)
+        POGGER.debug(
+            "position_marker.text_to_parse[new_index:]>:$:<",
+            position_marker.text_to_parse[new_index:],
+        )
+        POGGER.debug(
+            "original_line[tabbed_extract_spaces_index:]>:$:<",
+            original_line[tabbed_extract_spaces_index:],
+        )
+        if original_line[tabbed_extract_spaces_index] == "\t":
+            POGGER.debug("new_index>:$:<", new_index)
+            POGGER.debug(
+                "tabbed_extract_spaces_index>:$:<", tabbed_extract_spaces_index
+            )
+            adj_string = TabHelper.detabify_string(
+                original_line[tabbed_extract_spaces_index],
+                additional_start_delta=new_index,
+            )
+            POGGER.debug("adj_string>:$:<", adj_string)
+            tabbed_adjust = len(adj_string) - 1
+            POGGER.debug("tabbed_adjust>:$:<", tabbed_adjust)
+
+        return tabbed_whitespace_to_add, tabbed_adjust
+
     # pylint: disable=too-many-locals, too-many-arguments
     @staticmethod
     def __create_new_list(
@@ -863,10 +942,12 @@ class ListBlockProcessor:
         after_marker_ws_index: int,
         current_container_blocks: List[StackToken],
         create_token_fn: Callable[
-            [PositionMarker, int, Optional[str], int, int, int],
+            [PositionMarker, int, int, Optional[str], Optional[str], int, int, int],
             Tuple[ListStartMarkdownToken, ListStackToken],
         ],
         container_depth: int,
+        original_line: str,
+        is_ulist: bool,
         adj_ws: Optional[str] = None,
         alt_adj_ws: Optional[str] = None,
         forced_container_whitespace: Optional[str] = None,
@@ -894,10 +975,24 @@ class ListBlockProcessor:
         POGGER.debug_with_visible_whitespace("whitespace_to_add>$:", whitespace_to_add)
         POGGER.debug_with_visible_whitespace("adj_ws>$<", adj_ws)
         POGGER.debug_with_visible_whitespace("alt_adj_ws>$<", alt_adj_ws)
+        POGGER.debug("original_line>:$:<", original_line)
+        POGGER.debug("ws_after_marker=$=", ws_after_marker)
+        tabbed_whitespace_to_add = None
+        tabbed_adjust = -1
+        if "\t" in original_line:
+            (
+                tabbed_whitespace_to_add,
+                tabbed_adjust,
+            ) = ListBlockProcessor.__create_new_list_with_tab(
+                position_marker, original_line, is_ulist, whitespace_to_add, index
+            )
+
         new_token, new_stack = create_token_fn(
             position_marker,
             indent_level,
+            tabbed_adjust,
             whitespace_to_add,
+            tabbed_whitespace_to_add,
             ws_before_marker,
             ws_after_marker,
             index,
@@ -933,7 +1028,9 @@ class ListBlockProcessor:
     def __handle_list_block_unordered(
         position_marker: PositionMarker,
         indent_level: int,
+        tabbed_adjust: int,
         extracted_whitespace: Optional[str],
+        tabbed_whitespace_to_add: Optional[str],
         ws_before_marker: int,
         ws_after_marker: int,
         index: int,
@@ -946,7 +1043,9 @@ class ListBlockProcessor:
         new_token = UnorderedListStartMarkdownToken(
             position_marker.text_to_parse[position_marker.index_number],
             indent_level,
+            tabbed_adjust,
             extracted_whitespace,
+            tabbed_whitespace_to_add,
             position_marker,
         )
 
@@ -968,7 +1067,9 @@ class ListBlockProcessor:
     def __handle_list_block_ordered(
         position_marker: PositionMarker,
         indent_level: int,
+        tabbed_adjust: int,
         extracted_whitespace: Optional[str],
+        tabbed_whitespace_to_add: Optional[str],
         ws_before_marker: int,
         ws_after_marker: int,
         index: int,
@@ -978,7 +1079,9 @@ class ListBlockProcessor:
             position_marker.text_to_parse[index],
             position_marker.text_to_parse[position_marker.index_number : index],
             indent_level,
+            tabbed_adjust,
             extracted_whitespace,
+            tabbed_whitespace_to_add,
             position_marker,
         )
 
