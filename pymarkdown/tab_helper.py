@@ -29,7 +29,7 @@ class TabHelper:
         and HTML blocks.
         """
 
-        # LOGGER.debug("original_line>>:%s:<", ParserHelper.make_value_visible(original_line))
+        # LOGGER.debug("original_line>>:%s:<", ParserHelper.ParserHelper.make_whitespace_visible((original_line))
         # LOGGER.debug("token_text>>:%s:<", ParserHelper.make_value_visible(token_text))
         # LOGGER.debug("extracted_whitespace>>:%s:<", ParserHelper.make_value_visible(extracted_whitespace))
         (
@@ -281,7 +281,13 @@ class TabHelper:
         of a tab character.
         """
 
-        # LOGGER.debug("reconstructed_line>:%s:<", reconstructed_line)
+        LOGGER.debug(
+            "original_line>:%s:<", ParserHelper.make_value_visible(original_line)
+        )
+        LOGGER.debug(
+            "reconstructed_line>:%s:<",
+            ParserHelper.make_value_visible(reconstructed_line),
+        )
         (
             adj_original,
             adj_original_index,

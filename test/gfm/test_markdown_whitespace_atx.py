@@ -169,7 +169,7 @@ def test_whitespaces_atx_headings_with_tabs_before():
 
 
 @pytest.mark.gfm
-def test_whitespaces_atx_headings_with_tabs_before_within_list_x():
+def test_whitespaces_atx_headings_with_tabs_before_within_unordered_list_x():
     """
     Test case:  Atx Headings preceeded by spaces.
     """
@@ -194,11 +194,11 @@ def test_whitespaces_atx_headings_with_tabs_before_within_list_x():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
-def test_whitespaces_atx_headings_with_tabs_before_within_list_and_single_space():
+def test_whitespaces_atx_headings_with_tabs_before_within_unordered_list_and_single_space():
     """
     Test case:  Atx Headings preceeded by spaces.
     """
@@ -227,7 +227,7 @@ def test_whitespaces_atx_headings_with_tabs_before_within_list_and_single_space(
 
 
 @pytest.mark.gfm
-def test_whitespaces_atx_headings_with_tabs_before_within_list_and_spaces():
+def test_whitespaces_atx_headings_with_tabs_before_within_unordered_list_and_spaces():
     """
     Test case:  Atx Headings preceeded by spaces and tabs.
     """
@@ -253,6 +253,45 @@ def test_whitespaces_atx_headings_with_tabs_before_within_list_and_spaces():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_atx_headings_with_tabs_before_within_unordered_double_list():
+    """
+    Test case:  Atx Headings preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  - def
+\t# abc"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[ulist(2,3):-::4:  :\t]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::False]",
+        "[atx(3,5):1:0:]",
+        "[text(3,7):abc: ]",
+        "[end-atx::]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+<ul>
+<li>def
+<h1>abc</h1>
+</li>
+</ul>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
