@@ -1238,6 +1238,7 @@ class ListBlockProcessor:
                 extracted_whitespace,
                 leading_space_length,
                 requested_list_indent,
+                grab_bag.original_line,
             )
             POGGER.debug(
                 "after>>$>>$>>",
@@ -1262,6 +1263,7 @@ class ListBlockProcessor:
                 extracted_whitespace,
                 allow_list_continue,
                 ind,
+                grab_bag.original_line,
             )
             if requeue_line_info:
                 grab_bag.line_to_parse = line_to_parse
@@ -1345,7 +1347,7 @@ class ListBlockProcessor:
             or bool(is_html_start)
         )
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments,too-many-locals
     @staticmethod
     def __process_list_non_continue(
         parser_state: ParserState,
@@ -1357,6 +1359,7 @@ class ListBlockProcessor:
         extracted_whitespace: Optional[str],
         allow_list_continue: bool,
         ind: Optional[int],
+        original_line: str,
     ) -> Tuple[
         List[MarkdownToken],
         str,
@@ -1405,6 +1408,7 @@ class ListBlockProcessor:
                 extracted_whitespace,
                 leading_space_length,
                 original_requested_list_indent,
+                original_line,
             )
             was_paragraph_continuation = used_indent is None
             POGGER.debug(
@@ -1450,6 +1454,7 @@ class ListBlockProcessor:
                 start_index,
                 before_ws_length,
                 leading_space_length,
+                original_line,
             )
 
         return (
@@ -1461,7 +1466,7 @@ class ListBlockProcessor:
             was_paragraph_continuation,
         )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments,too-many-locals
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -1474,6 +1479,7 @@ class ListBlockProcessor:
         start_index: int,
         before_ws_length: int,
         leading_space_length: int,
+        original_line: str,
     ) -> Tuple[str, Optional[str], Optional[int]]:
 
         assert ind is not None
@@ -1529,6 +1535,7 @@ class ListBlockProcessor:
                 extracted_whitespace,
                 leading_space_length,
                 requested_list_indent,
+                original_line,
             )
             POGGER.debug(">>line_to_parse>>$", line_to_parse)
             POGGER.debug(">>used_indent>>$<<", used_indent)
@@ -2565,6 +2572,7 @@ class ListBlockProcessor:
                 list_count,
             )
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __adjust_line_for_list_in_process(
         line_to_parse: str,
@@ -2572,11 +2580,13 @@ class ListBlockProcessor:
         leading_space: Optional[str],
         leading_space_length: int,
         requested_list_indent: int,
+        original_line: str,
     ) -> Tuple[str, Optional[str]]:
         """
         Alter the current line to better represent the current level of lists.
         """
         remaining_indent = leading_space_length - requested_list_indent
+        POGGER.debug("original_line($)", original_line)
         POGGER.debug(
             "enough ws to continue; line($),start_index($),leading_space($)",
             line_to_parse,
@@ -2595,14 +2605,44 @@ class ListBlockProcessor:
             removed_whitespace = None
         else:
             assert leading_space is not None
+            POGGER.debug("requested_list_indent($)", requested_list_indent)
+            POGGER.debug("leading_space($)", leading_space)
             removed_whitespace = leading_space[:requested_list_indent]
             padded_spaces = ParserHelper.repeat_string(
                 ParserHelper.space_character, remaining_indent
             )
+            if "\t" in original_line:
+                _, ex_ws = ParserHelper.extract_spaces(original_line, 0)
+                POGGER.debug("ex_ws($)", ex_ws)
+                assert ex_ws is not None
+                if "\t" in ex_ws:
+                    detabified_ws = TabHelper.detabify_string(ex_ws, 0)
+                    POGGER.debug("detabified_ws($)", detabified_ws)
+                    assert len(detabified_ws) >= remaining_indent
+
+                    sub_ws = None
+                    for i in range(len(ex_ws)):
+                        sub_ws = ex_ws[: i + 1]
+                        POGGER.debug("sub_ws($)", sub_ws)
+                        detabified_ws = TabHelper.detabify_string(sub_ws, 0)
+                        POGGER.debug("detabified_ws($)", detabified_ws)
+                        POGGER.debug(
+                            "detabified_ws($),removed_whitespace($)",
+                            len(detabified_ws),
+                            len(removed_whitespace),
+                        )
+                        if len(detabified_ws) >= len(removed_whitespace):
+                            break
+                    if len(detabified_ws) <= len(removed_whitespace):
+                        assert sub_ws is not None
+                        removed_whitespace = sub_ws
+        POGGER.debug("removed_whitespace($)", removed_whitespace)
         return (
             f"{padded_spaces}{line_to_parse[start_index:]}",
             removed_whitespace,
         )
+
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     @staticmethod
