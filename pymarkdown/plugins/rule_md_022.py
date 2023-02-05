@@ -94,15 +94,16 @@ class RuleMd022(RulePlugin):
             self.__blank_line_count += 1
         if token.is_setext_heading or token.is_atx_heading:
             # print(">>token.is_setext_heading or token.is_atx_heading>>")
-            self.__did_above_line_count_match = bool(
-                self.__blank_line_count in [-1, self.__lines_above]
-            )
+            self.__did_above_line_count_match = self.__blank_line_count in [
+                -1,
+                self.__lines_above,
+            ]
 
             self.__start_heading_token = token
             self.__start_heading_blank_line_count = self.__blank_line_count
             self.__did_heading_end = False
             # print("self.__did_above_line_count_match>>" + str(self.__did_above_line_count_match))
-        elif token.is_thematic_break:
+        elif token.is_thematic_break or token.is_link_reference_definition:
             self.__blank_line_count = 0
         elif token.is_end_token:
             # print(">>token.is_end_token>>")
@@ -126,7 +127,8 @@ class RuleMd022(RulePlugin):
         if ((self.__start_heading_token and self.__did_heading_end)) and (
             not token or (not token.is_blank_line and not token.is_block_quote_end)
         ):
-            did_end_match = bool(self.__blank_line_count == self.__lines_below)
+            did_end_match = self.__blank_line_count == self.__lines_below
+            # print(">>END: did_end_match>>" + str(did_end_match))
             self.report_any_match_failures(context, did_end_match)
             self.__start_heading_token = None
 
@@ -140,6 +142,7 @@ class RuleMd022(RulePlugin):
         assert self.__start_heading_token is not None
         if not self.__did_above_line_count_match:
             extra_info = f"Expected: {self.__lines_above}; Actual: {self.__start_heading_blank_line_count}; Above"
+            # print(">>above>>" + extra_info)
             self.report_next_token_error(
                 context,
                 self.__start_heading_token,
@@ -148,6 +151,7 @@ class RuleMd022(RulePlugin):
             )
         if not did_end_match:
             extra_info = f"Expected: {self.__lines_below}; Actual: {self.__blank_line_count}; Below"
+            # print(">>below>>" + extra_info)
             self.report_next_token_error(
                 context,
                 self.__start_heading_token,
