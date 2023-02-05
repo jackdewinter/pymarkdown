@@ -1107,6 +1107,18 @@ class ListBlockProcessor:
         start_index: int,
     ) -> None:
         assert ind is not None
+
+        stack_index = parser_state.find_last_list_block_on_stack()
+        if stack_index > 0:
+            list_token = cast(
+                ListStartMarkdownToken,
+                parser_state.token_stack[stack_index].matching_markdown_token,
+            )
+            POGGER.debug(
+                "lip>>last_block_token>>$",
+                list_token,
+            )
+
         POGGER.debug(">>used_indent>>$<<", used_indent)
         POGGER.debug(">>was_paragraph_continuation>>$<<", was_paragraph_continuation)
         if used_indent is not None:
@@ -1124,8 +1136,8 @@ class ListBlockProcessor:
                 list_token,
             )
         else:
-            need_to_add_leading_spaces = False
             stack_index = parser_state.find_last_list_block_on_stack()
+            need_to_add_leading_spaces = False
             if stack_index > 0:
 
                 assert parser_state.original_line_to_parse is not None
@@ -1148,11 +1160,11 @@ class ListBlockProcessor:
                 while back_index and parser_state.token_stack[back_index].is_list:
                     back_index -= 1
                 POGGER.debug("back_index=:$:", back_index)
-                need_to_add_leading_spaces = not (
-                    back_index > 0
-                    and consumed_text
-                    and ">" not in consumed_text
-                    and stack_index == last_container_index
+                need_to_add_leading_spaces = (
+                    back_index <= 0
+                    or not consumed_text
+                    or ">" in consumed_text
+                    or stack_index != last_container_index
                 )
                 POGGER.debug(
                     "need_to_add_leading_spaces=:$:", need_to_add_leading_spaces
@@ -1227,6 +1239,7 @@ class ListBlockProcessor:
         )
         if was_paragraph_continuation:
 
+            POGGER.debug("list-in-progress: was_paragraph_continuation")
             container_level_tokens: List[MarkdownToken] = []
             POGGER.debug("before>>$>>", line_to_parse)
             (
@@ -1246,6 +1259,7 @@ class ListBlockProcessor:
                 used_indent,
             )
         else:
+            POGGER.debug("list-in-progress: not was_paragraph_continuation")
             (
                 container_level_tokens,
                 line_to_parse,
@@ -1318,6 +1332,7 @@ class ListBlockProcessor:
         start_index: int,
         extracted_whitespace: Optional[str],
     ) -> bool:
+        POGGER.debug("is_theme_break>>?")
         is_theme_break, _ = LeafBlockProcessor.is_thematic_break(
             line_to_parse,
             start_index,
@@ -1325,14 +1340,17 @@ class ListBlockProcessor:
             skip_whitespace_check=True,
         )
         POGGER.debug("is_theme_break>>$", is_theme_break)
+        POGGER.debug("is_atx_heading>>?")
         is_atx_heading, _, _, _ = LeafBlockProcessor.is_atx_heading(
             line_to_parse, start_index, extracted_whitespace, skip_whitespace_check=True
         )
         POGGER.debug("is_atx_heading>>$", is_atx_heading)
+        POGGER.debug("is_fenced_start>>?")
         is_fenced_start, _, _, _, _ = LeafBlockProcessor.is_fenced_code_block(
             line_to_parse, start_index, extracted_whitespace, skip_whitespace_check=True
         )
         POGGER.debug("is_fenced_start>>$", is_fenced_start)
+        POGGER.debug("is_html_start>>?")
         is_html_start, _ = HtmlHelper.is_html_block(
             line_to_parse,
             start_index,
@@ -2621,7 +2639,12 @@ class ListBlockProcessor:
                     assert len(detabified_ws) >= remaining_indent
 
                     sub_ws = None
-                    for i in range(len(ex_ws)):
+                    i = -1
+                    do_loop = True
+                    # for i in range(len(ex_ws)):
+                    while do_loop:
+                        i += 1
+                        assert i < len(ex_ws)
                         sub_ws = ex_ws[: i + 1]
                         POGGER.debug("sub_ws($)", sub_ws)
                         detabified_ws = TabHelper.detabify_string(sub_ws, 0)
@@ -2632,7 +2655,7 @@ class ListBlockProcessor:
                             len(removed_whitespace),
                         )
                         if len(detabified_ws) >= len(removed_whitespace):
-                            break
+                            do_loop = False
                     if len(detabified_ws) <= len(removed_whitespace):
                         assert sub_ws is not None
                         removed_whitespace = sub_ws

@@ -281,13 +281,13 @@ class TabHelper:
         of a tab character.
         """
 
-        LOGGER.debug(
-            "original_line>:%s:<", ParserHelper.make_value_visible(original_line)
-        )
-        LOGGER.debug(
-            "reconstructed_line>:%s:<",
-            ParserHelper.make_value_visible(reconstructed_line),
-        )
+        # LOGGER.debug(
+        #     "original_line>:%s:<", ParserHelper.make_value_visible(original_line)
+        # )
+        # LOGGER.debug(
+        #     "reconstructed_line>:%s:<",
+        #     ParserHelper.make_value_visible(reconstructed_line),
+        # )
         (
             adj_original,
             adj_original_index,
@@ -326,17 +326,22 @@ class TabHelper:
                 reconstructed_line,
                 use_proper_traverse=use_proper_traverse,
             )
-            # POGGER.debug(">>adj_original>:$:<", adj_original)
-            # POGGER.debug(">>adj_original_index>:$:<", adj_original_index)
-            # POGGER.debug(">>adj_traverse_original_index>:$:<", adj_traverse_original_index)
+            # LOGGER.debug(">>adj_original>:%s:<", adj_original)
+            # LOGGER.debug(">>adj_original_index>:%d:<", adj_original_index)
+            # LOGGER.debug(
+            #     ">>adj_traverse_original_index>:%d:<", adj_traverse_original_index
+            # )
             if abc:
                 adj_original_index += 1
-                # POGGER.debug(">>adj_original_index>:$:<", adj_original_index)
+                # LOGGER.debug(">>adj_original_index>:%d:<", adj_original_index)
         assert adj_original is not None
         return_index = (
             adj_traverse_original_index if use_proper_traverse else adj_original_index
         )
-        # LOGGER.debug("adj_original=:%s:", ParserHelper.make_whitespace_visible(adj_original.replace("\t", "\\t")))
+        # LOGGER.debug(
+        #     "adj_original=:%s:",
+        #     ParserHelper.make_whitespace_visible(adj_original.replace("\t", "\\t")),
+        # )
         # LOGGER.debug(">>return_index>:%d:<", return_index)
         # LOGGER.debug(">>split_tab>:%s:<", str(split_tab))
         return (

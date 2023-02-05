@@ -47,7 +47,7 @@ def test_whitespaces_atx_headings_with_spaces_before_within_list():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -194,7 +194,7 @@ def test_whitespaces_atx_headings_with_tabs_before_within_unordered_list_x():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -223,7 +223,7 @@ def test_whitespaces_atx_headings_with_tabs_before_within_unordered_list_and_sin
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -291,7 +291,285 @@ def test_whitespaces_atx_headings_with_tabs_before_within_unordered_double_list(
 </ul>"""
 
     # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_atx_headings_with_tabs_before_within_ordered_list_x():
+    """
+    Test case:  Atx Headings preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+\t# abc"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::False]",
+        "[atx(2,5):1:0:\t]",
+        "[text(2,7):abc: ]",
+        "[end-atx::]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<h1>abc</h1>
+</li>
+</ol>"""
+
+    # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_whitespaces_atx_headings_with_tabs_before_within_ordered_list_and_single_space():
+    """
+    Test case:  Atx Headings preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+ \t# abc"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:: ]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::False]",
+        "[atx(2,5):1:0:\t]",
+        "[text(2,7):abc: ]",
+        "[end-atx::]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<h1>abc</h1>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_atx_headings_with_tabs_before_within_ordered_list_and_spaces():
+    """
+    Test case:  Atx Headings preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+  \t# abc"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::  ]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::False]",
+        "[atx(2,5):1:0:\t]",
+        "[text(2,7):abc: ]",
+        "[end-atx::]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<h1>abc</h1>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_atx_headings_with_tabs_before_within_ordered_double_list_x():
+    """
+    Test case:  Atx Headings preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+   1. def
+\t  # abc"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[olist(2,4):.:1:6:   :\t  ]",
+        "[para(2,7):]",
+        "[text(2,7):def:]",
+        "[end-para:::False]",
+        "[atx(3,7):1:0:]",
+        "[text(3,9):abc: ]",
+        "[end-atx::]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<ol>
+<li>def
+<h1>abc</h1>
+</li>
+</ol>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_whitespaces_atx_headings_with_tabs_before_within_ordered_double_list_no_spaces():
+    """
+    Test case:  Atx Headings preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+   1. def
+\t# abc"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[olist(2,4):.:1:6:   :]",
+        "[para(2,7):]",
+        "[text(2,7):def:]",
+        "[end-para:::False]",
+        "[end-olist:::True]",
+        "[atx(3,5):1:0:\t]",
+        "[text(3,7):abc: ]",
+        "[end-atx::]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<ol>
+<li>def</li>
+</ol>
+<h1>abc</h1>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+
+
+@pytest.mark.gfm
+def test_whitespaces_atx_headings_with_tabs_before_within_ordered_double_list_tab_after_indent():
+    """
+    Test case:  Atx Headings preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+   1. def
+   # abc\tdef"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   ]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[olist(2,4):.:1:6:   ]",
+        "[para(2,7):]",
+        "[text(2,7):def:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[atx(3,4):1:0:]",
+        "[text(3,6):abc\tdef: ]",
+        "[end-atx::]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<ol>
+<li>def</li>
+</ol>
+<h1>abc	def</h1>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_whitespaces_atx_headings_with_tabs_before_within_ordered_double_list_one_space():
+    """
+    Test case:  Atx Headings preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+   1. def
+\t # abc"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[olist(2,4):.:1:6:   :]",
+        "[para(2,7):]",
+        "[text(2,7):def:]",
+        "[end-para:::False]",
+        "[end-olist:::True]",
+        "[atx(3,6):1:0:\t ]",
+        "[text(3,8):abc: ]",
+        "[end-atx::]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<ol>
+<li>def</li>
+</ol>
+<h1>abc</h1>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_whitespaces_atx_headings_with_tabs_before_within_ordered_double_list_only_spaces():
+    """
+    Test case:  Atx Headings preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+   1. def
+    # abc"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   ]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[olist(2,4):.:1:6:   :]",
+        "[para(2,7):]",
+        "[text(2,7):def:]",
+        "[end-para:::False]",
+        "[end-olist:::True]",
+        "[atx(3,5):1:0: ]",
+        "[text(3,7):abc: ]",
+        "[end-atx::]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<ol>
+<li>def</li>
+</ol>
+<h1>abc</h1>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
