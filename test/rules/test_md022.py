@@ -1842,3 +1842,109 @@ def test_md022_good_heading_in_list():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md022_link_reference_definition_before_header():
+    """
+    Test to make sure this rule
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md022",
+        "link_reference_definition_before_header.md",
+    )
+    supplied_arguments = [
+        "--stack-trace",
+        "scan",
+        source_path,
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md022_link_reference_definition_around_header():
+    """
+    Test to make sure this rule
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md022",
+        "bad_link_reference_definition_around_header.md",
+    )
+    supplied_arguments = [
+        "--stack-trace",
+        "--disable-rules",
+        "md012",
+        "scan",
+        source_path,
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "{source}:1:1: MD022: Headings should be surrounded by blank lines. "
+        + "[Expected: 1; Actual: 2; Below] (blanks-around-headings,blanks-around-headers)\n"
+        + "{source}:7:1: MD022: Headings should be surrounded by blank lines. "
+        + "[Expected: 1; Actual: 2; Above] (blanks-around-headings,blanks-around-headers)"
+    )
+    expected_output = expected_output.replace("{source}", source_path)
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md022_fenced_block_before_header():
+    """
+    Test to make sure this rule
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md022", "fenced_block_before_header.md"
+    )
+    supplied_arguments = [
+        "--stack-trace",
+        "scan",
+        source_path,
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )

@@ -596,7 +596,7 @@
         },
         {
             "name": "test.gfm.test_markdown_whitespace_atx",
-            "totalTests": 31,
+            "totalTests": 40,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1084,7 +1084,7 @@
         },
         {
             "name": "test.rules.test_md006",
-            "totalTests": 15,
+            "totalTests": 16,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1180,7 +1180,7 @@
         },
         {
             "name": "test.rules.test_md022",
-            "totalTests": 46,
+            "totalTests": 49,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1460,7 +1460,7 @@
         },
         {
             "name": "test.test_markdown_extra",
-            "totalTests": 89,
+            "totalTests": 98,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 7,

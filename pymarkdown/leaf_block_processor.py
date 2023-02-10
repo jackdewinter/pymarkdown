@@ -1357,6 +1357,7 @@ class LeafBlockProcessor:
                 new_tokens,
                 extracted_whitespace_at_start,
                 extracted_whitespace,
+                delay_tab_match,
             ) = LeafBlockProcessor.__prepare_for_create_atx_heading(
                 parser_state,
                 position_marker,
@@ -1370,6 +1371,42 @@ class LeafBlockProcessor:
             )
             assert hash_count is not None
             assert extracted_whitespace is not None
+
+            POGGER.debug("extracted_whitespace>>$<<", extracted_whitespace)
+            POGGER.debug("removed_chars_at_start>>$", position_marker.index_indent)
+            POGGER.debug("delay_tab_match>>$", delay_tab_match)
+            if delay_tab_match:
+                _, ex_ws = ParserHelper.extract_spaces(original_line, 0)
+                POGGER.debug("ex_ws>>$<<", ex_ws)
+                assert ex_ws is not None
+
+                loop_index = 0
+                rep = True
+                while rep and loop_index < len(ex_ws):
+                    loop_index += 1
+                    ex_ws_to_index = ex_ws[:loop_index]
+                    POGGER.debug("ex_ws_to_index>>$<<", ex_ws_to_index)
+                    ex_ws_to_index_untabbified = TabHelper.detabify_string(
+                        ex_ws_to_index
+                    )
+                    POGGER.debug(
+                        "ex_ws_to_index_untabbified>>$<<", ex_ws_to_index_untabbified
+                    )
+                    POGGER.debug(
+                        "removed_chars=$ < len(ex_ws_to_index_untabbified)=$",
+                        position_marker.index_indent,
+                        len(ex_ws_to_index_untabbified),
+                    )
+                    rep = position_marker.index_indent > len(ex_ws_to_index_untabbified)
+
+                POGGER.debug(
+                    "removed_chars=$ == len(ex_ws_to_index_untabbified)=$",
+                    position_marker.index_indent,
+                    len(ex_ws_to_index_untabbified),
+                )
+                extracted_whitespace = ex_ws[loop_index - 1 :]
+                POGGER.debug("extracted_whitespace>>$<<", extracted_whitespace)
+
             start_token = AtxHeadingMarkdownToken(
                 hash_count,
                 remove_trailing_count,
@@ -1384,6 +1421,7 @@ class LeafBlockProcessor:
                 old_top_of_stack,
                 new_tokens,
                 was_token_already_added_to_stack=False,
+                delay_tab_match=delay_tab_match,
             )
 
             new_tokens.append(
@@ -1450,6 +1488,11 @@ class LeafBlockProcessor:
                 parser_state.token_stack[stack_index].matching_markdown_token,
             )
             leading_spaces = list_markdown_token.leading_spaces
+
+            # TODO This needs to be fixed at a higher level, should not be needed
+            # if not leading_spaces and parser_state.token_stack[stack_index].is_ordered_list:
+            #     leading_spaces = list_markdown_token.extracted_whitespace
+            #     assert False
             POGGER.debug(">>leading_spaces>:$:<", leading_spaces)
 
         POGGER.debug(">>reconstructed_line>:$:<", reconstructed_line)
@@ -1489,6 +1532,45 @@ class LeafBlockProcessor:
 
     # pylint: enable=too-many-arguments
 
+    @staticmethod
+    def __determine_eligble_for_tab_match_delay(
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        old_top_of_stack: StackToken,
+    ) -> bool:
+        eligble_for_tab_match_delay = False
+        keep_going = len(parser_state.token_stack) >= 2
+        if keep_going:
+            keep_going = False
+            POGGER.debug("old_top_of_stack>:$:<", old_top_of_stack)
+            POGGER.debug(
+                "parser_state.token_stack[-1]>:$:<", parser_state.token_stack[-1]
+            )
+            POGGER.debug(
+                "parser_state.token_stack[-2]>:$:<", parser_state.token_stack[-2]
+            )
+            if old_top_of_stack.is_paragraph:
+                possible_list_index = (
+                    -2 if parser_state.token_stack[-1].is_paragraph else -1
+                )
+                if parser_state.token_stack[possible_list_index].is_list:
+                    POGGER.debug("1!!!!!")
+                    keep_going = True
+        if keep_going:
+            POGGER.debug("2!!!!!")
+            assert parser_state.token_stack[possible_list_index].is_list
+            list_stack_token = cast(
+                ListStackToken, parser_state.token_stack[possible_list_index]
+            )
+
+            removed_chars_at_start = position_marker.index_indent
+            POGGER.debug(">>removed_chars_at_start>>$>>", removed_chars_at_start)
+            POGGER.debug(">>stack indent>>$>>", list_stack_token.indent_level)
+            if removed_chars_at_start < list_stack_token.indent_level:
+                eligble_for_tab_match_delay = True
+                POGGER.debug("3!!!!!")
+        return eligble_for_tab_match_delay
+
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __prepare_for_create_atx_heading(
@@ -1501,7 +1583,9 @@ class LeafBlockProcessor:
         extracted_whitespace: Optional[str],
         hash_count: Optional[int],
         block_quote_data: BlockQuoteData,
-    ) -> Tuple[StackToken, str, int, str, str, List[MarkdownToken], str, Optional[str]]:
+    ) -> Tuple[
+        StackToken, str, int, str, str, List[MarkdownToken], str, Optional[str], bool
+    ]:
 
         (
             old_top_of_stack,
@@ -1514,9 +1598,22 @@ class LeafBlockProcessor:
             0,
             "",
         )
+
+        eligble_for_tab_match_delay = (
+            LeafBlockProcessor.__determine_eligble_for_tab_match_delay(
+                parser_state, position_marker, old_top_of_stack
+            )
+        )
+
         POGGER.debug("remaining_line>:$:<", remaining_line)
         POGGER.debug("original_line>:$:<", original_line)
-        if ParserHelper.tab_character in original_line:
+        delay_tab_match = (
+            ParserHelper.tab_character in original_line and eligble_for_tab_match_delay
+        )
+        if (
+            ParserHelper.tab_character in original_line
+            and not eligble_for_tab_match_delay
+        ):
             assert extracted_whitespace is not None
             assert hash_count is not None
             (
@@ -1591,6 +1688,7 @@ class LeafBlockProcessor:
             new_tokens,
             extracted_whitespace_at_start,
             extracted_whitespace,
+            delay_tab_match,
         )
 
     # pylint: enable=too-many-arguments, too-many-locals
@@ -1771,6 +1869,7 @@ class LeafBlockProcessor:
 
     # pylint: enable=too-many-arguments
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def correct_for_leaf_block_start_in_list(
         parser_state: ParserState,
@@ -1778,6 +1877,7 @@ class LeafBlockProcessor:
         old_top_of_stack_token: StackToken,
         html_tokens: List[MarkdownToken],
         was_token_already_added_to_stack: bool = True,
+        delay_tab_match: bool = False,
     ) -> None:
         """
         Check to see that if a paragraph has been closed within a list and
@@ -1820,7 +1920,7 @@ class LeafBlockProcessor:
         del html_tokens[-1]
 
         LeafBlockProcessor.__handle_leaf_start(
-            parser_state, removed_chars_at_start, html_tokens
+            parser_state, removed_chars_at_start, html_tokens, delay_tab_match
         )
 
         if was_token_already_added_to_stack:
@@ -1835,11 +1935,14 @@ class LeafBlockProcessor:
             ">>correct_for_leaf_block_start_in_list>>tokens_to_add>>$>>", html_tokens
         )
 
+    # pylint: enable=too-many-arguments
+
     @staticmethod
     def __handle_leaf_start(
         parser_state: ParserState,
         removed_chars_at_start: int,
         html_tokens: List[MarkdownToken],
+        delay_tab_match: bool,
     ) -> None:
         POGGER.debug(
             ">>correct_for_leaf_block_start_in_list>>stack>>$>>",
@@ -1849,6 +1952,7 @@ class LeafBlockProcessor:
             ">>correct_for_leaf_block_start_in_list>>tokens_to_add>>$>>", html_tokens
         )
 
+        adjust_with_leading_spaces = False
         is_remaining_list_token = True
         while is_remaining_list_token:
             assert parser_state.token_stack[-1].is_list
@@ -1864,6 +1968,7 @@ class LeafBlockProcessor:
                 until_this_index=(len(parser_state.token_stack) - 1),
                 include_lists=True,
             )
+            adjust_with_leading_spaces = True
             POGGER.debug(
                 ">>correct_for_leaf_block_start_in_list>>tokens_from_close>>$>>",
                 tokens_from_close,
@@ -1871,6 +1976,7 @@ class LeafBlockProcessor:
             html_tokens.extend(tokens_from_close)
 
             is_remaining_list_token = parser_state.token_stack[-1].is_list
+
         if is_remaining_list_token:
             assert parser_state.token_stack[-1].is_list
             list_stack_token = cast(ListStackToken, parser_state.token_stack[-1])
@@ -1880,6 +1986,21 @@ class LeafBlockProcessor:
                 delta_indent,
             )
             assert not delta_indent
+
+            POGGER.debug(">>delay_tab_match>>$>>", delay_tab_match)
+            # assert not delay_tab_match
+            if adjust_with_leading_spaces:
+                if delay_tab_match:
+                    used_indent = ""
+                else:
+                    used_indent = ParserHelper.repeat_string(
+                        " ", removed_chars_at_start
+                    )
+                assert list_stack_token.matching_markdown_token is not None
+                list_markdown_token = cast(
+                    ListStartMarkdownToken, list_stack_token.matching_markdown_token
+                )
+                list_markdown_token.add_leading_spaces(used_indent)
 
     @staticmethod
     def is_paragraph_ending_leaf_block_start(

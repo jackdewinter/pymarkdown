@@ -538,3 +538,35 @@ def test_md006_bad_indentation_nested():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md006_issue_478():
+    """
+    TBD
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join("test", "resources", "rules", "md006", "issue_478.md")
+    supplied_arguments = [
+        "--enable-rules",
+        "MD006",
+        "--disable-rules",
+        "md004,MD007",
+        "--stack-trace",
+        "scan",
+        source_path,
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
