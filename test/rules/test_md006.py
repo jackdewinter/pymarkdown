@@ -405,6 +405,7 @@ def test_md006_bad_indentation_ordered_in_unordered():
     source_path = os.path.join(
         "test", "resources", "rules", "md006", "bad_indentation_ordered_in_unordered.md"
     )
+    expected_return_code = 1
     supplied_arguments = [
         "--disable-rules",
         "MD007",
@@ -413,12 +414,7 @@ def test_md006_bad_indentation_ordered_in_unordered():
         "scan",
         source_path,
     ]
-
-    expected_return_code = 1
-    expected_output = (
-        f"{source_path}:1:2: "
-        + "MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)"
-    )
+    expected_output = f"{source_path}:1:2: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)"
     expected_error = ""
 
     # Act
@@ -441,6 +437,7 @@ def test_md006_bad_indentation_unordered_in_ordered():
     source_path = os.path.join(
         "test", "resources", "rules", "md006", "bad_indentation_unordered_in_ordered.md"
     )
+    expected_return_code = 1
     supplied_arguments = [
         "--disable-rules",
         "MD007",
@@ -449,12 +446,7 @@ def test_md006_bad_indentation_unordered_in_ordered():
         "scan",
         source_path,
     ]
-
-    expected_return_code = 1
-    expected_output = (
-        f"{source_path}:2:6: "
-        + "MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)"
-    )
+    expected_output = f"{source_path}:2:6: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)"
     expected_error = ""
 
     # Act

@@ -82,15 +82,13 @@ def test_md022_bad_no_line_spacing_atx():
     source_path = os.path.join(
         "test", "resources", "rules", "md022", "no_line_spacing_atx.md"
     )
+    expected_return_code = 1
     supplied_arguments = [
         "scan",
         source_path,
     ]
-
-    expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
+        f"{source_path}:1:1: MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
         + f"{source_path}:4:1: "
         + "MD022: Headings should be surrounded by blank lines. "
@@ -126,15 +124,13 @@ def test_md022_bad_no_line_spacing_atx_in_same_block_quote():
         "md022",
         "no_line_spacing_atx_in_same_block_quote.md",
     )
+    expected_return_code = 1
     supplied_arguments = [
         "scan",
         source_path,
     ]
-
-    expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
+        f"{source_path}:1:3: MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
         + f"{source_path}:4:3: "
         + "MD022: Headings should be surrounded by blank lines. "
@@ -170,15 +166,13 @@ def test_md022_bad_no_line_spacing_atx_in_same_list_item():
         "md022",
         "no_line_spacing_atx_in_same_list_item.md",
     )
+    expected_return_code = 1
     supplied_arguments = [
         "scan",
         source_path,
     ]
-
-    expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
+        f"{source_path}:1:3: MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
         + f"{source_path}:4:3: "
         + "MD022: Headings should be surrounded by blank lines. "
@@ -214,15 +208,13 @@ def test_md022_bad_no_line_spacing_atx_in_different_list_items():
         "md022",
         "no_line_spacing_atx_in_different_list_items.md",
     )
+    expected_return_code = 1
     supplied_arguments = [
         "scan",
         source_path,
     ]
-
-    expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
+        f"{source_path}:1:3: MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
         + f"{source_path}:4:3: "
         + "MD022: Headings should be surrounded by blank lines. "
@@ -254,15 +246,13 @@ def test_md022_bad_no_line_spacing_before_atx():
     source_path = os.path.join(
         "test", "resources", "rules", "md022", "no_line_spacing_before_atx.md"
     )
+    expected_return_code = 1
     supplied_arguments = [
         "scan",
         source_path,
     ]
-
-    expected_return_code = 1
     expected_output = (
-        f"{source_path}:5:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
+        f"{source_path}:5:1: MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
     )
     expected_error = ""
@@ -292,15 +282,13 @@ def test_md022_bad_no_line_spacing_before_atx_in_same_list_item():
         "md022",
         "no_line_spacing_before_atx_in_same_list_item.md",
     )
+    expected_return_code = 1
     supplied_arguments = [
         "scan",
         source_path,
     ]
-
-    expected_return_code = 1
     expected_output = (
-        f"{source_path}:5:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
+        f"{source_path}:5:3: MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
     )
     expected_error = ""
@@ -330,15 +318,13 @@ def test_md022_bad_no_line_spacing_before_atx_in_different_list_items():
         "md022",
         "no_line_spacing_before_atx_in_different_list_items.md",
     )
+    expected_return_code = 1
     supplied_arguments = [
         "scan",
         source_path,
     ]
-
-    expected_return_code = 1
     expected_output = (
-        f"{source_path}:5:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
+        f"{source_path}:5:3: MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
     )
     expected_error = ""
@@ -368,15 +354,13 @@ def test_md022_bad_no_line_spacing_before_atx_in_same_block_quote():
         "md022",
         "no_line_spacing_before_atx_in_same_block_quote.md",
     )
+    expected_return_code = 1
     supplied_arguments = [
         "scan",
         source_path,
     ]
-
-    expected_return_code = 1
     expected_output = (
-        f"{source_path}:5:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
+        f"{source_path}:5:3: MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
     )
     expected_error = ""
@@ -432,15 +416,13 @@ def test_md022_bad_no_line_spacing_after_atx():
     source_path = os.path.join(
         "test", "resources", "rules", "md022", "no_line_spacing_after_atx.md"
     )
+    expected_return_code = 1
     supplied_arguments = [
         "scan",
         source_path,
     ]
-
-    expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
+        f"{source_path}:1:1: MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
         + f"{source_path}:5:1: "
         + "MD022: Headings should be surrounded by blank lines. "
@@ -473,15 +455,13 @@ def test_md022_bad_no_line_spacing_after_atx_in_same_list_item():
         "md022",
         "no_line_spacing_after_atx_in_same_list_item.md",
     )
+    expected_return_code = 1
     supplied_arguments = [
         "scan",
         source_path,
     ]
-
-    expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
+        f"{source_path}:1:3: MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
         + f"{source_path}:5:3: "
         + "MD022: Headings should be surrounded by blank lines. "
@@ -514,15 +494,13 @@ def test_md022_bad_no_line_spacing_after_atx_in_same_block_quote():
         "md022",
         "no_line_spacing_after_atx_in_same_block_quote.md",
     )
+    expected_return_code = 1
     supplied_arguments = [
         "scan",
         source_path,
     ]
-
-    expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
+        f"{source_path}:1:3: MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
         + f"{source_path}:5:3: "
         + "MD022: Headings should be surrounded by blank lines. "
@@ -555,15 +533,13 @@ def test_md022_bad_no_line_spacing_after_atx_in_different_list_items():
         "md022",
         "no_line_spacing_after_atx_in_different_list_items.md",
     )
+    expected_return_code = 1
     supplied_arguments = [
         "scan",
         source_path,
     ]
-
-    expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
+        f"{source_path}:1:3: MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
         + f"{source_path}:5:3: "
         + "MD022: Headings should be surrounded by blank lines. "
@@ -596,17 +572,15 @@ def test_md022_bad_no_line_spacing_after_atx_in_different_block_quotes():
         "md022",
         "no_line_spacing_after_atx_in_different_block_quotes.md",
     )
+    expected_return_code = 1
     supplied_arguments = [
         "--disable-rules",
         "md028",
         "scan",
         source_path,
     ]
-
-    expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:3: "
-        + "MD022: Headings should be surrounded by blank lines. "
+        f"{source_path}:1:3: MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
         + f"{source_path}:5:3: "
         + "MD022: Headings should be surrounded by blank lines. "
@@ -667,15 +641,13 @@ def test_md022_bad_atx_with_html_and_bad_line_spacing():
     source_path = os.path.join(
         "test", "resources", "rules", "md022", "atx_with_html_and_bad_line_spacing.md"
     )
+    expected_return_code = 1
     supplied_arguments = [
         "scan",
         source_path,
     ]
-
-    expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
+        f"{source_path}:3:1: MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
         + f"{source_path}:8:1: "
         + "MD022: Headings should be surrounded by blank lines. "
@@ -744,15 +716,13 @@ def test_md022_bad_atx_with_paragraph_and_bad_line_spacing():
         "md022",
         "atx_with_paragraph_and_bad_line_spacing.md",
     )
+    expected_return_code = 1
     supplied_arguments = [
         "scan",
         source_path,
     ]
-
-    expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
+        f"{source_path}:2:1: MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
         + f"{source_path}:7:1: "
         + "MD022: Headings should be surrounded by blank lines. "
@@ -823,17 +793,15 @@ def test_md022_bad_atx_with_code_block_and_bad_line_spacing():
         "md022",
         "atx_with_code_block_and_bad_line_spacing.md",
     )
+    expected_return_code = 1
     supplied_arguments = [
         "--disable-rules",
         "md040,md031",
         "scan",
         source_path,
     ]
-
-    expected_return_code = 1
     expected_output = (
-        f"{source_path}:4:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
+        f"{source_path}:4:1: MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
         + f"{source_path}:9:1: "
         + "MD022: Headings should be surrounded by blank lines. "
@@ -902,15 +870,13 @@ def test_md022_bad_atx_with_thematic_break_and_bad_line_spacing():
         "md022",
         "atx_with_thematic_break_and_bad_line_spacing.md",
     )
+    expected_return_code = 1
     supplied_arguments = [
         "scan",
         source_path,
     ]
-
-    expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
+        f"{source_path}:2:1: MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
         + f"{source_path}:7:1: "
         + "MD022: Headings should be surrounded by blank lines. "
@@ -944,15 +910,13 @@ def test_md022_bad_no_line_spacing_setext():
     source_path = os.path.join(
         "test", "resources", "rules", "md022", "no_line_spacing_setext.md"
     )
+    expected_return_code = 1
     supplied_arguments = [
         "scan",
         source_path,
     ]
-
-    expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
+        f"{source_path}:1:1: MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
         + f"{source_path}:6:1: "
         + "MD022: Headings should be surrounded by blank lines. "
@@ -982,15 +946,13 @@ def test_md022_bad_no_line_spacing_after_setext():
     source_path = os.path.join(
         "test", "resources", "rules", "md022", "no_line_spacing_after_setext.md"
     )
+    expected_return_code = 1
     supplied_arguments = [
         "scan",
         source_path,
     ]
-
-    expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
+        f"{source_path}:1:1: MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
         + f"{source_path}:6:1: "
         + "MD022: Headings should be surrounded by blank lines. "
@@ -1061,17 +1023,15 @@ def test_md022_bad_setext_with_code_block_and_bad_line_spacing():
         "md022",
         "setext_with_code_block_and_bad_line_spacing.md",
     )
+    expected_return_code = 1
     supplied_arguments = [
         "--disable-rules",
         "md040,md031",
         "scan",
         source_path,
     ]
-
-    expected_return_code = 1
     expected_output = (
-        f"{source_path}:4:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
+        f"{source_path}:4:1: MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
         + f"{source_path}:10:1: "
         + "MD022: Headings should be surrounded by blank lines. "
@@ -1140,15 +1100,13 @@ def test_md022_bad_setext_with_html_and_bad_line_spacing():
         "md022",
         "setext_with_html_and_bad_line_spacing.md",
     )
+    expected_return_code = 1
     supplied_arguments = [
         "scan",
         source_path,
     ]
-
-    expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
+        f"{source_path}:3:1: MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
         + f"{source_path}:9:1: "
         + "MD022: Headings should be surrounded by blank lines. "
@@ -1217,15 +1175,13 @@ def test_md022_bad_setext_with_thematic_break_and_bad_line_spacing():
         "md022",
         "setext_with_thematic_break_and_bad_line_spacing.md",
     )
+    expected_return_code = 1
     supplied_arguments = [
         "scan",
         source_path,
     ]
-
-    expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
+        f"{source_path}:2:1: MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
         + f"{source_path}:8:1: "
         + "MD022: Headings should be surrounded by blank lines. "
@@ -1255,8 +1211,8 @@ def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_above():
     source_path = os.path.join(
         "test", "resources", "rules", "md022", "proper_line_spacing_atx.md"
     )
-    supplied_configuration = {"plugins": {"md022": {"lines_above": 2}}}
     configuration_file = None
+    supplied_configuration = {"plugins": {"md022": {"lines_above": 2}}}
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
         supplied_arguments = [
@@ -1268,8 +1224,7 @@ def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_above():
 
         expected_return_code = 1
         expected_output = (
-            f"{source_path}:7:1: "
-            + "MD022: Headings should be surrounded by blank lines. "
+            f"{source_path}:7:1: MD022: Headings should be surrounded by blank lines. "
             + "[Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)\n"
         )
         expected_error = ""
@@ -1341,8 +1296,8 @@ def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_below():
     source_path = os.path.join(
         "test", "resources", "rules", "md022", "proper_line_spacing_atx.md"
     )
-    supplied_configuration = {"plugins": {"md022": {"lines_below": 2}}}
     configuration_file = None
+    supplied_configuration = {"plugins": {"md022": {"lines_below": 2}}}
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
         supplied_arguments = [
@@ -1354,8 +1309,7 @@ def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_below():
 
         expected_return_code = 1
         expected_output = (
-            f"{source_path}:1:1: "
-            + "MD022: Headings should be surrounded by blank lines. "
+            f"{source_path}:1:1: MD022: Headings should be surrounded by blank lines. "
             + "[Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)\n"
             + f"{source_path}:7:1: "
             + "MD022: Headings should be surrounded by blank lines. "
@@ -1511,10 +1465,10 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing():
     source_path = os.path.join(
         "test", "resources", "rules", "md022", "alternating_heading_types.md"
     )
+    configuration_file = None
     supplied_configuration = {
         "plugins": {"md022": {"lines_below": 2, "lines_above": 2}}
     }
-    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
         supplied_arguments = [
@@ -1528,8 +1482,7 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing():
 
         expected_return_code = 1
         expected_output = (
-            f"{source_path}:1:1: "
-            + "MD022: Headings should be surrounded by blank lines. "
+            f"{source_path}:1:1: MD022: Headings should be surrounded by blank lines. "
             + "[Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)\n"
             + f"{source_path}:3:1: "
             + "MD022: Headings should be surrounded by blank lines. "
@@ -1578,10 +1531,10 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_conf
     source_path = os.path.join(
         "test", "resources", "rules", "md022", "alternating_heading_types.md"
     )
+    configuration_file = None
     supplied_configuration = {
         "plugins": {"md022": {"lines_below": -2, "lines_above": 2}}
     }
-    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
         supplied_arguments = [
@@ -1595,8 +1548,7 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_conf
 
         expected_return_code = 1
         expected_output = (
-            f"{source_path}:3:1: "
-            + "MD022: Headings should be surrounded by blank lines. "
+            f"{source_path}:3:1: MD022: Headings should be surrounded by blank lines. "
             + "[Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)\n"
             + f"{source_path}:6:1: "
             + "MD022: Headings should be surrounded by blank lines. "
@@ -1717,15 +1669,13 @@ def test_md022_bad_heading_surrounded_by_block_quote():
         "md022",
         "bad_heading_surrounded_by_block_quote.md",
     )
+    expected_return_code = 1
     supplied_arguments = [
         "scan",
         source_path,
     ]
-
-    expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
+        f"{source_path}:2:1: MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
         + f"{source_path}:2:1: "
         + "MD022: Headings should be surrounded by blank lines. "
@@ -1755,17 +1705,15 @@ def test_md022_bad_heading_surrounded_by_list():
     source_path = os.path.join(
         "test", "resources", "rules", "md022", "bad_heading_surrounded_by_list.md"
     )
+    expected_return_code = 1
     supplied_arguments = [
         "--disable-rules",
         "md032",
         "scan",
         source_path,
     ]
-
-    expected_return_code = 1
     expected_output = (
-        f"{source_path}:2:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
+        f"{source_path}:2:1: MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
         + f"{source_path}:2:1: "
         + "MD022: Headings should be surrounded by blank lines. "
