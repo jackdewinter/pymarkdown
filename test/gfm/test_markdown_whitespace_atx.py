@@ -320,7 +320,7 @@ def test_whitespaces_atx_headings_with_tabs_before_within_ordered_list_x():
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -417,7 +417,7 @@ def test_whitespaces_atx_headings_with_tabs_before_within_ordered_double_list_x(
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -455,7 +455,7 @@ def test_whitespaces_atx_headings_with_tabs_before_within_ordered_double_list_no
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -493,7 +493,7 @@ def test_whitespaces_atx_headings_with_tabs_before_within_ordered_double_list_ta
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -531,7 +531,7 @@ def test_whitespaces_atx_headings_with_tabs_before_within_ordered_double_list_on
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -569,7 +569,7 @@ def test_whitespaces_atx_headings_with_tabs_before_within_ordered_double_list_on
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm

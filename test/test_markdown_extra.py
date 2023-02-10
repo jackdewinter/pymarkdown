@@ -3782,6 +3782,455 @@ def test_extra_028a():
 
 
 @pytest.mark.gfm
+def test_extra_029x():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """- abc
+
+  + def"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[ulist(3,3):+::4:  ]",
+        "[para(3,5):]",
+        "[text(3,5):def:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>abc</p>
+<ul>
+<li>def</li>
+</ul>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_029a():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """- l2:
+  + il2.1
+
+  ip1
+  + il2.2
+- l3
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n]",
+        "[para(1,3):]",
+        "[text(1,3):l2::]",
+        "[end-para:::True]",
+        "[ulist(2,3):+::4:  :]",
+        "[para(2,5):]",
+        "[text(2,5):il2.1:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[end-ulist:::True]",
+        "[para(4,3):]",
+        "[text(4,3):ip1:]",
+        "[end-para:::True]",
+        "[ulist(5,3):+::4:  ]",
+        "[para(5,5):]",
+        "[text(5,5):il2.2:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[li(6,1):2::]",
+        "[para(6,3):]",
+        "[text(6,3):l3:]",
+        "[end-para:::True]",
+        "[BLANK(7,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>l2:</p>
+<ul>
+<li>il2.1</li>
+</ul>
+<p>ip1</p>
+<ul>
+<li>il2.2</li>
+</ul>
+</li>
+<li>
+<p>l3</p>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_029b():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """- l2:
+  - il2.1
+
+  ip1
+  - il2.2
+- l3
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n]",
+        "[para(1,3):]",
+        "[text(1,3):l2::]",
+        "[end-para:::True]",
+        "[ulist(2,3):-::4:  :]",
+        "[para(2,5):]",
+        "[text(2,5):il2.1:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[end-ulist:::True]",
+        "[para(4,3):]",
+        "[text(4,3):ip1:]",
+        "[end-para:::True]",
+        "[ulist(5,3):-::4:  ]",
+        "[para(5,5):]",
+        "[text(5,5):il2.2:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[li(6,1):2::]",
+        "[para(6,3):]",
+        "[text(6,3):l3:]",
+        "[end-para:::True]",
+        "[BLANK(7,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>l2:</p>
+<ul>
+<li>il2.1</li>
+</ul>
+<p>ip1</p>
+<ul>
+<li>il2.2</li>
+</ul>
+</li>
+<li>
+<p>l3</p>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_029c():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """# atx1
+
+p1
+
+- l1
+
+- l2:
+
+  + il2.1
+
+  ip1
+
+  + il2.2
+
+- l3
+
+p4
+"""
+    expected_tokens = [
+        "[atx(1,1):1:0:]",
+        "[text(1,3):atx1: ]",
+        "[end-atx::]",
+        "[BLANK(2,1):]",
+        "[para(3,1):]",
+        "[text(3,1):p1:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[ulist(5,1):-::2::\n\n  \n\n]",
+        "[para(5,3):]",
+        "[text(5,3):l1:]",
+        "[end-para:::True]",
+        "[BLANK(6,1):]",
+        "[li(7,1):2::]",
+        "[para(7,3):]",
+        "[text(7,3):l2::]",
+        "[end-para:::True]",
+        "[BLANK(8,1):]",
+        "[ulist(9,3):+::4:  :]",
+        "[para(9,5):]",
+        "[text(9,5):il2.1:]",
+        "[end-para:::True]",
+        "[BLANK(10,1):]",
+        "[end-ulist:::True]",
+        "[para(11,3):]",
+        "[text(11,3):ip1:]",
+        "[end-para:::True]",
+        "[BLANK(12,1):]",
+        "[ulist(13,3):+::4:  :]",
+        "[para(13,5):]",
+        "[text(13,5):il2.2:]",
+        "[end-para:::True]",
+        "[BLANK(14,1):]",
+        "[end-ulist:::True]",
+        "[li(15,1):2::]",
+        "[para(15,3):]",
+        "[text(15,3):l3:]",
+        "[end-para:::True]",
+        "[BLANK(16,1):]",
+        "[end-ulist:::True]",
+        "[para(17,1):]",
+        "[text(17,1):p4:]",
+        "[end-para:::True]",
+        "[BLANK(18,1):]",
+    ]
+    expected_gfm = """<h1>atx1</h1>
+<p>p1</p>
+<ul>
+<li>
+<p>l1</p>
+</li>
+<li>
+<p>l2:</p>
+<ul>
+<li>il2.1</li>
+</ul>
+<p>ip1</p>
+<ul>
+<li>il2.2</li>
+</ul>
+</li>
+<li>
+<p>l3</p>
+</li>
+</ul>
+<p>p4</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_029d():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """- l2:
+  1. il2.1
+
+  ip1
+  1. il2.2
+- l3
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n]",
+        "[para(1,3):]",
+        "[text(1,3):l2::]",
+        "[end-para:::True]",
+        "[olist(2,3):.:1:5:  :]",
+        "[para(2,6):]",
+        "[text(2,6):il2.1:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[end-olist:::True]",
+        "[para(4,3):]",
+        "[text(4,3):ip1:]",
+        "[end-para:::True]",
+        "[olist(5,3):.:1:5:  ]",
+        "[para(5,6):]",
+        "[text(5,6):il2.2:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[li(6,1):2::]",
+        "[para(6,3):]",
+        "[text(6,3):l3:]",
+        "[end-para:::True]",
+        "[BLANK(7,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>l2:</p>
+<ol>
+<li>il2.1</li>
+</ol>
+<p>ip1</p>
+<ol>
+<li>il2.2</li>
+</ol>
+</li>
+<li>
+<p>l3</p>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_029e():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """- l1
++ l2
+ """
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[para(1,3):]",
+        "[text(1,3):l1:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[ulist(2,1):+::2::]",
+        "[para(2,3):]",
+        "[text(2,3):l2:]",
+        "[end-para:::True]",
+        "[BLANK(3,1): ]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>l1</li>
+</ul>
+<ul>
+<li>l2</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_029f():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """- l1
+1. l2
+ """
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[para(1,3):]",
+        "[text(1,3):l1:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[olist(2,1):.:1:3::]",
+        "[para(2,4):]",
+        "[text(2,4):l2:]",
+        "[end-para:::True]",
+        "[BLANK(3,1): ]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>l1</li>
+</ul>
+<ol>
+<li>l2</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_029g():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """1. l1
++ l2
+ """
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):l1:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[ulist(2,1):+::2::]",
+        "[para(2,3):]",
+        "[text(2,3):l2:]",
+        "[end-para:::True]",
+        "[BLANK(3,1): ]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>l1</li>
+</ol>
+<ul>
+<li>l2</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_029h():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """1. l1
+1) l2
+ """
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):l1:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[olist(2,1):):1:3::]",
+        "[para(2,4):]",
+        "[text(2,4):l2:]",
+        "[end-para:::True]",
+        "[BLANK(3,1): ]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>l1</li>
+</ol>
+<ol>
+<li>l2</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_extra_999():
     """
     Temporary test to keep coverage up while consistency checks disabled.
