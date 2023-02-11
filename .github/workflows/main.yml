@@ -34,14 +34,13 @@ jobs:
           pipenv sync
           pipenv graph
       - name: Execute Tests
-        run: pipenv run pytest --cov-fail-under=90 --cov --cov-branch --cov-report xml:report/coverage.xml --cov-report html:report/coverage
+        run: pipenv run pytest --cov-fail-under=90 --cov --cov-branch --cov-report xml:report/coverage.xml
       - name: Archive coverage artifacts
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.platform }} Coverage
           path: |
             ./report/coverage.xml
-            ./report/coverage
       - name: Report Coverage
         uses: codecov/codecov-action@v3
         if: github.event_name != 'schedule'
