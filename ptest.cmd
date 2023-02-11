@@ -95,7 +95,7 @@ if defined PTEST_KEYWORD (
 ) else (
 	if defined PTEST_COVERAGE_MODE (
 		echo {Executing full test suite with coverage...}
-		set PYTEST_ARGS=--cov --cov-branch --cov-report xml:report/coverage.xml --cov-report html:report/coverage 
+		set PYTEST_ARGS=--cov --cov-branch --cov-fail-under=10 --cov-report xml:report/coverage.xml --cov-report html:report/coverage 
 	) else (
 		echo {Executing full test suite...}
 	)

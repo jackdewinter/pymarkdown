@@ -244,7 +244,7 @@ def test_markdown_with_extensions_error_during_configuration():
 
         expected_return_code = 1
         expected_output = ""
-        expected_error = """Error Exception encountered while initializing extensions:
+        expected_error = """Error ExceptionTestException encountered while initializing extensions:
 blah
 """
 

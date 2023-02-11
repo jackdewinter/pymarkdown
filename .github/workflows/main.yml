@@ -22,7 +22,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@master
       - name: Setup Python 3.8
-        uses: actions/setup-python@v4.3.1
+        uses: actions/setup-python@v4.5.0
         with:
           python-version: 3.8
       - name: Install PipEnv
@@ -33,22 +33,22 @@ jobs:
           pipenv lock
           pipenv sync
           pipenv graph
+          pipenv uninstall pytest-html
       - name: Execute Tests
-        run: pipenv run pytest --cov-fail-under=90 --cov --cov-branch --cov-report xml:report/coverage.xml --cov-report html:report/coverage
-      - name: Archive coverage artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ matrix.platform }} Coverage
-          path: |
-            ./report/coverage.xml
-            ./report/coverage
-      - name: Report Coverage
-        uses: codecov/codecov-action@v3
-        if: github.event_name != 'schedule'
-        with:
-          file: ./report/coverage.xml
-          name: ${{ matrix.python }} - ${{ matrix.platform }}
-          fail_ci_if_error: true
+        run: pipenv run pytest --cov-fail-under=90 --cov --cov-branch
+      # - name: Archive coverage artifacts
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: ${{ matrix.platform }} Coverage
+      #     path: |
+      #       ./report/coverage.xml
+      # - name: Report Coverage
+      #   uses: codecov/codecov-action@v3
+      #   if: github.event_name != 'schedule'
+      #   with:
+      #     file: ./report/coverage.xml
+      #     name: ${{ matrix.python }} - ${{ matrix.platform }}
+      #     fail_ci_if_error: true
   lint:
     strategy:
       matrix:
@@ -59,7 +59,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@master
       - name: Setup Python 3.8
-        uses: actions/setup-python@v4.3.1
+        uses: actions/setup-python@v4.5.0
         with:
           python-version: 3.8
       - name: Install PipEnv

@@ -89,7 +89,7 @@ class RuleMd003(RulePlugin):
     def __handle_simple_styles(
         self, heading_style_type: str, is_heading_level_1_or_2: bool
     ) -> Tuple[bool, str]:
-        is_heading_bad = bool(heading_style_type != self.__actual_style_type)
+        is_heading_bad = heading_style_type != self.__actual_style_type
 
         if (
             is_heading_bad
@@ -176,7 +176,7 @@ class RuleMd003(RulePlugin):
                 if atx_token.remove_trailing_count
                 else RuleMd003.__atx_style
             )
-            is_heading_level_1_or_2 = bool(atx_token.hash_count < 3)
+            is_heading_level_1_or_2 = atx_token.hash_count < 3
         elif token.is_setext_heading:
             heading_style_type = RuleMd003.__setext_style
             is_heading_level_1_or_2 = True

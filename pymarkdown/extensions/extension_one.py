@@ -11,6 +11,16 @@ from pymarkdown.extension_manager.extension_manager_constants import (
 from pymarkdown.extension_manager.parser_extension import ParserExtension
 
 
+class ExceptionTestException(Exception):
+    """
+    Custom exception for the DebugExtension class.
+    """
+
+    def __init__(self, message: str) -> None:
+        self.message = message
+        super().__init__(self.message)
+
+
 class DebugExtension(ParserExtension):
     """
     Extension to provide for a debug extension.
@@ -47,6 +57,6 @@ class DebugExtension(ParserExtension):
             "debug_mode", default_value=0
         )
         if debug_mode == 1:
-            raise Exception("blah")
+            raise ExceptionTestException("blah")
         if debug_mode == 2:
             raise ValueError("blah")
