@@ -8,6 +8,16 @@ from typing import Any, List, cast
 from pymarkdown.parser_helper import ParserHelper
 
 
+class ParserLoggerException(Exception):
+    """
+    Custom exception for the ParserLogger class.
+    """
+
+    def __init__(self, message: str) -> None:
+        self.message = message
+        super().__init__(self.message)
+
+
 class ParserLogger:
     """
     Class to provide for a simple logger wrapper that provides extra
@@ -92,7 +102,7 @@ class ParserLogger:
         split_log_format_length = len(split_log_format)
         args_length = len(args)
         if split_log_format_length != args_length + 1:
-            raise Exception(
+            raise ParserLoggerException(
                 "The number of $ substitution characters does not equal the number of arguments in the list."
             )
 

@@ -77,6 +77,33 @@ if ERRORLEVEL 1 (
 	goto error_end
 )
 
+if "%SOURCERY_USER_KEY%" == "" (
+	echo {Sourcery user key not defined.  Skipping Sourcery static analyzer.}
+) else (
+	echo {Executing Sourcery static analyzer on Python code.}
+	pipenv run sourcery login --token %SOURCERY_USER_KEY%
+	if ERRORLEVEL 1 (
+		echo.
+		echo {Logging into Sourcery failed.}
+		goto error_end
+	)
+	
+	if defined MY_PUBLISH (
+		echo {  Executing Sourcery against full project contents.}
+		set SOURCERY_LIMIT=
+	) else (
+		echo {  Executing Sourcery against changed project contents.}
+		set "SOURCERY_LIMIT=--diff ^"git diff^""
+	)
+
+	pipenv run sourcery review pymarkdown !SOURCERY_LIMIT!
+	if ERRORLEVEL 1 (
+		echo.
+		echo {Executing Sourcery on Python code failed.}
+		goto error_end
+	)
+)
+
 echo {Executing flake8 static analyzer on Python code.}
 pipenv run flake8 -j 4 --exclude dist,build %MY_VERBOSE%
 if ERRORLEVEL 1 (

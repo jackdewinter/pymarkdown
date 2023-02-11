@@ -7,6 +7,16 @@ from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
+class PluginTestException(Exception):
+    """
+    Custom exception for the PluginOne class.
+    """
+
+    def __init__(self, message: str) -> None:
+        self.message = message
+        super().__init__(self.message)
+
+
 class PluginOne(RulePlugin):
     """
     Class to implement a sample plugin that just reports that it has been called.
@@ -55,7 +65,7 @@ class PluginOne(RulePlugin):
             f"{self.get_details().plugin_id}>>other_test_value>>{self.other_test_value}"
         )
         if self.test_value == 10:
-            raise Exception("because")
+            raise PluginTestException("because")
 
     def starting_new_file(self) -> None:
         """
@@ -77,7 +87,7 @@ class PluginOne(RulePlugin):
         _ = context
         print(f"{self.get_details().plugin_id}>>token:{token}")
         if self.test_value == 20:
-            raise Exception("because")
+            raise PluginTestException("because")
 
     def completed_file(self, context: PluginScanContext) -> None:
         """
