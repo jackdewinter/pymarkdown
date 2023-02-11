@@ -33,6 +33,7 @@ jobs:
           pipenv lock
           pipenv sync
           pipenv graph
+          pipenv uninstall pytest-html
       - name: Execute Tests
         run: pipenv run pytest --cov-fail-under=90 --cov --cov-branch
       # - name: Archive coverage artifacts
