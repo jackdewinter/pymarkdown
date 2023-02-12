@@ -93,7 +93,7 @@
         "pymarkdown/leaf_block_processor.py": {
             "too-many-arguments": 14,
             "too-many-locals": 10,
-            "too-many-statements": 2
+            "too-many-statements": 1
         },
         "pymarkdown/leaf_block_processor_paragraph.py": {
             "too-many-arguments": 1,
@@ -254,7 +254,7 @@
         "too-few-public-methods": 9,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 1,
-        "too-many-statements": 3,
+        "too-many-statements": 2,
         "too-many-instance-attributes": 18,
         "too-many-public-methods": 3,
         "broad-except": 2

@@ -1571,6 +1571,51 @@ class LeafBlockProcessor:
                 POGGER.debug("3!!!!!")
         return eligble_for_tab_match_delay
 
+    @staticmethod
+    def __prepare_for_create_atx_heading_adjust(
+        remaining_line: str, remove_trailing_count: int
+    ) -> Tuple[str, str, str, int]:
+        extracted_whitespace_before_end = ""
+        (
+            end_index,
+            extracted_whitespace_at_end,
+        ) = ParserHelper.extract_spaces_from_end(remaining_line)
+        while (
+            end_index > 0
+            and remaining_line[end_index - 1] == LeafBlockProcessor.__atx_character
+        ):
+            end_index -= 1
+            remove_trailing_count += 1
+        if remove_trailing_count:
+            if end_index > 0:
+                if ParserHelper.is_character_at_index_whitespace(
+                    remaining_line, end_index - 1
+                ):
+                    remaining_line = remaining_line[:end_index]
+                    (
+                        _,
+                        new_non_whitespace_index,
+                    ) = ParserHelper.collect_backwards_while_spaces(
+                        remaining_line, len(remaining_line) - 1
+                    )
+                    assert new_non_whitespace_index is not None
+                    end_index = new_non_whitespace_index
+                    extracted_whitespace_before_end = remaining_line[end_index:]
+                    remaining_line = remaining_line[:end_index]
+                else:
+                    extracted_whitespace_at_end, remove_trailing_count = "", 0
+            else:
+                remaining_line = ""
+        else:
+            extracted_whitespace_at_end = remaining_line[end_index:]
+            remaining_line = remaining_line[:end_index]
+        return (
+            extracted_whitespace_at_end,
+            extracted_whitespace_before_end,
+            remaining_line,
+            remove_trailing_count,
+        )
+
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __prepare_for_create_atx_heading(
@@ -1587,16 +1632,10 @@ class LeafBlockProcessor:
         StackToken, str, int, str, str, List[MarkdownToken], str, Optional[str], bool
     ]:
 
-        (
-            old_top_of_stack,
-            remaining_line,
-            remove_trailing_count,
-            extracted_whitespace_before_end,
-        ) = (
+        (old_top_of_stack, remaining_line, remove_trailing_count,) = (
             parser_state.token_stack[-1],
             position_marker.text_to_parse[non_whitespace_index:],
             0,
-            "",
         )
 
         eligble_for_tab_match_delay = (
@@ -1646,38 +1685,13 @@ class LeafBlockProcessor:
             POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
 
         (
-            end_index,
             extracted_whitespace_at_end,
-        ) = ParserHelper.extract_spaces_from_end(remaining_line)
-        while (
-            end_index > 0
-            and remaining_line[end_index - 1] == LeafBlockProcessor.__atx_character
-        ):
-            end_index -= 1
-            remove_trailing_count += 1
-        if remove_trailing_count:
-            if end_index > 0:
-                if ParserHelper.is_character_at_index_whitespace(
-                    remaining_line, end_index - 1
-                ):
-                    remaining_line = remaining_line[:end_index]
-                    (
-                        _,
-                        new_non_whitespace_index,
-                    ) = ParserHelper.collect_backwards_while_spaces(
-                        remaining_line, len(remaining_line) - 1
-                    )
-                    assert new_non_whitespace_index is not None
-                    end_index = new_non_whitespace_index
-                    extracted_whitespace_before_end = remaining_line[end_index:]
-                    remaining_line = remaining_line[:end_index]
-                else:
-                    extracted_whitespace_at_end, remove_trailing_count = "", 0
-            else:
-                remaining_line = ""
-        else:
-            extracted_whitespace_at_end = remaining_line[end_index:]
-            remaining_line = remaining_line[:end_index]
+            extracted_whitespace_before_end,
+            remaining_line,
+            remove_trailing_count,
+        ) = LeafBlockProcessor.__prepare_for_create_atx_heading_adjust(
+            remaining_line, remove_trailing_count
+        )
 
         return (
             old_top_of_stack,
@@ -2182,7 +2196,60 @@ class LeafBlockProcessor:
 
     # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-locals, too-many-statements
+    @staticmethod
+    def __handle_fenced_code_block_with_tab_and_extracted_whitespace(
+        new_extracted_whitespace: str,
+        adj_original_index: int,
+        whitespace_start_count: int,
+        extracted_whitespace: str,
+    ) -> str:
+        new_index = 0
+        POGGER.debug("new_index>:$:<", new_index)
+        while new_index < len(new_extracted_whitespace):
+            before_count = new_extracted_whitespace[: new_index + 1]
+            POGGER.debug("before_count>:$:<", before_count)
+            detabified_before_count = TabHelper.detabify_string(
+                before_count, adj_original_index
+            )
+            POGGER.debug("detabified_before_count>:$:<", detabified_before_count)
+            detabified_before_count_length = len(detabified_before_count)
+            POGGER.debug(
+                "detabified_before_count_length>:$:<",
+                detabified_before_count_length,
+            )
+            POGGER.debug("whitespace_start_count>:$:<", whitespace_start_count)
+            if detabified_before_count_length >= whitespace_start_count:
+                after_count = new_extracted_whitespace[len(before_count) :]
+                break
+            new_index += 1
+            POGGER.debug("new_index>:$:<", new_index)
+
+        POGGER.debug("new_extracted_whitespace>:$:<", new_extracted_whitespace)
+        POGGER.debug(
+            "detabified_before_count_length>:$:<", detabified_before_count_length
+        )
+        POGGER.debug("whitespace_start_count>:$:<", whitespace_start_count)
+        if detabified_before_count_length < whitespace_start_count:
+            assert before_count == new_extracted_whitespace
+            after_count = ""
+        POGGER.debug("before_count>:$:<", before_count)
+        POGGER.debug("after_count>:$:<", after_count)
+
+        POGGER.debug("new_extracted_whitespace>:$:<", new_extracted_whitespace)
+        POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
+        replacement_string = (
+            ParserHelper.replace_noop_character
+            if len(after_count) == 0
+            else after_count
+        )
+
+        new_extracted_whitespace = ParserHelper.create_replacement_markers(
+            extracted_whitespace, replacement_string
+        )
+        POGGER.debug("new_extracted_whitespace>:$:<", new_extracted_whitespace)
+        return new_extracted_whitespace
+
+    # pylint: disable=too-many-locals
     @staticmethod
     def __handle_fenced_code_block_with_tab(
         parser_state: ParserState,
@@ -2265,50 +2332,12 @@ class LeafBlockProcessor:
         if new_extracted_whitespace and whitespace_start_count:
 
             assert was_indented
-
-            new_index = 0
-            POGGER.debug("new_index>:$:<", new_index)
-            while new_index < len(new_extracted_whitespace):
-                before_count = new_extracted_whitespace[: new_index + 1]
-                POGGER.debug("before_count>:$:<", before_count)
-                detabified_before_count = TabHelper.detabify_string(
-                    before_count, adj_original_index
-                )
-                POGGER.debug("detabified_before_count>:$:<", detabified_before_count)
-                detabified_before_count_length = len(detabified_before_count)
-                POGGER.debug(
-                    "detabified_before_count_length>:$:<",
-                    detabified_before_count_length,
-                )
-                POGGER.debug("whitespace_start_count>:$:<", whitespace_start_count)
-                if detabified_before_count_length >= whitespace_start_count:
-                    after_count = new_extracted_whitespace[len(before_count) :]
-                    break
-                new_index += 1
-                POGGER.debug("new_index>:$:<", new_index)
-
-            POGGER.debug("new_extracted_whitespace>:$:<", new_extracted_whitespace)
-            POGGER.debug(
-                "detabified_before_count_length>:$:<", detabified_before_count_length
+            new_extracted_whitespace = LeafBlockProcessor.__handle_fenced_code_block_with_tab_and_extracted_whitespace(
+                new_extracted_whitespace,
+                adj_original_index,
+                whitespace_start_count,
+                extracted_whitespace,
             )
-            POGGER.debug("whitespace_start_count>:$:<", whitespace_start_count)
-            if detabified_before_count_length < whitespace_start_count:
-                assert before_count == new_extracted_whitespace
-                after_count = ""
-            POGGER.debug("before_count>:$:<", before_count)
-            POGGER.debug("after_count>:$:<", after_count)
-
-            POGGER.debug("new_extracted_whitespace>:$:<", new_extracted_whitespace)
-            POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
-            replacement_string = (
-                ParserHelper.replace_noop_character
-                if len(after_count) == 0
-                else after_count
-            )
-            new_extracted_whitespace = ParserHelper.create_replacement_markers(
-                extracted_whitespace, replacement_string
-            )
-            POGGER.debug("new_extracted_whitespace>:$:<", new_extracted_whitespace)
 
         POGGER.debug("leaf_token_whitespace>:$:<", leaf_token_whitespace)
         POGGER.debug("token_text>:$:<", token_text)
@@ -2322,7 +2351,7 @@ class LeafBlockProcessor:
 
         return leaf_token_whitespace, token_text
 
-    # pylint: enable=too-many-locals, too-many-statements
+    # pylint: enable=too-many-locals
 
     @staticmethod
     def close_indented_block_if_indent_not_there(
