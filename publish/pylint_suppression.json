@@ -121,6 +121,7 @@
             "too-few-public-methods": 1,
             "broad-except": 2
         },
+        "pymarkdown/main_presentation.py": {},
         "pymarkdown/markdown_token.py": {
             "too-many-public-methods": 1,
             "too-many-instance-attributes": 1,

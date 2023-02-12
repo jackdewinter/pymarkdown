@@ -10,6 +10,7 @@ from test.transform_to_markdown import TransformToMarkdown
 from application_properties import ApplicationProperties
 
 from pymarkdown.extension_manager.extension_manager import ExtensionManager
+from pymarkdown.main_presentation import MainPresentation
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.tab_helper import TabHelper
@@ -41,7 +42,7 @@ def act_and_assert(
     test_properties = ApplicationProperties()
     if config_map:
         test_properties.load_from_dict(config_map)
-    extension_manager = ExtensionManager()
+    extension_manager = ExtensionManager(MainPresentation())
     extension_manager.initialize(None, test_properties)
     extension_manager.apply_configuration()
     tokenizer.apply_configuration(test_properties, extension_manager)

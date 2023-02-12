@@ -23,6 +23,7 @@ from pymarkdown.extensions.markdown_strikethrough import MarkdownStrikeThroughEx
 from pymarkdown.extensions.markdown_tables import MarkdownTablesExtension
 from pymarkdown.extensions.pragma_token import PragmaExtension
 from pymarkdown.extensions.task_list_items import MarkdownTaskListItemsExtension
+from pymarkdown.main_presentation import MainPresentation
 from pymarkdown.parser_helper import ParserHelper
 
 LOGGER = logging.getLogger(__name__)
@@ -40,7 +41,13 @@ class ExtensionManager:
 
     __DEBUG_EXTENSION = DebugExtension()
 
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        presentation: MainPresentation,
+    ) -> None:
+
+        self.__presentation = presentation
+
         self.__extension_objects: Dict[str, ParserExtension] = {}
         self.__extension_details: Dict[str, ExtensionDetails] = {}
         self.__enabled_extensions: List[str] = []
@@ -140,7 +147,7 @@ class ExtensionManager:
             args, ExtensionManager.__root_subparser_name
         )
         if subparser_value == "list":
-            self.__handle_argparse_subparser_list(args)
+            return_code = self.__handle_argparse_subparser_list(args)
         elif subparser_value == "info":
             return_code = self.__handle_argparse_subparser_info(args)
         else:
@@ -149,7 +156,7 @@ class ExtensionManager:
             sys.exit(2)
         return return_code
 
-    def __handle_argparse_subparser_list(self, args: argparse.Namespace) -> None:
+    def __handle_argparse_subparser_list(self, args: argparse.Namespace) -> int:
         list_re = None
         if args.list_filter:
             list_re = re.compile(
@@ -191,13 +198,18 @@ class ExtensionManager:
                 "enabled\n(current)",
                 "version",
             ]
-            ExtensionManager.__print_column_output(headers, show_rows)
-        else:
-            print(f"No extension identifier matches the pattern '{args.list_filter}'.")
+            self.__print_column_output(headers, show_rows)
+            return 0
+        self.__presentation.print_system_error(
+            f"No extension identifier matches the pattern '{args.list_filter}'."
+        )
+        return 1
 
     def __handle_argparse_subparser_info(self, args: argparse.Namespace) -> int:
         if args.info_filter not in self.__extension_details:
-            print(f"Unable to find an extension with an id of '{args.info_filter}'.")
+            self.__presentation.print_system_error(
+                f"Unable to find an extension with an id of '{args.info_filter}'."
+            )
             return 1
 
         found_extension = self.__extension_details[args.info_filter]
@@ -209,15 +221,18 @@ class ExtensionManager:
         ]
 
         headers = ["Item", "Description"]
-        ExtensionManager.__print_column_output(headers, show_rows)
+        self.__print_column_output(headers, show_rows)
         return 0
 
-    @staticmethod
-    def __print_column_output(headers: List[str], show_rows: List[List[str]]) -> None:
+    def __print_column_output(
+        self, headers: List[str], show_rows: List[List[str]]
+    ) -> None:
         table = columnar(show_rows, headers, no_borders=True)
         split_rows = table.split(ParserHelper.newline_character)
         new_rows = [next_row.rstrip() for next_row in split_rows]
-        print(ParserHelper.newline_character.join(new_rows))
+        self.__presentation.print_system_output(
+            ParserHelper.newline_character.join(new_rows)
+        )
 
     @staticmethod
     def __list_filter_type(argument: str) -> str:

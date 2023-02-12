@@ -188,7 +188,7 @@
         },
         {
             "name": "test.extensions.test_markdown_pragmas",
-            "totalTests": 13,
+            "totalTests": 14,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1428,7 +1428,7 @@
         },
         {
             "name": "test.rules.test_plugin_manager",
-            "totalTests": 41,
+            "totalTests": 43,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1452,7 +1452,7 @@
         },
         {
             "name": "test.test_main",
-            "totalTests": 49,
+            "totalTests": 51,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,

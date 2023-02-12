@@ -344,9 +344,11 @@ def test_markdown_with_extensions_list_and_filter_by_id_ends_with_non_sequence()
     scanner = MarkdownScanner()
     supplied_arguments = ["extensions", "list", "this-is-not-an-used-identifier"]
 
-    expected_return_code = 0
-    expected_output = """No extension identifier matches the pattern 'this-is-not-an-used-identifier'."""
-    expected_error = ""
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = (
+        "No extension identifier matches the pattern 'this-is-not-an-used-identifier'."
+    )
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -449,8 +451,8 @@ def test_markdown_with_extensions_info_and_not_found_filter():
     supplied_arguments = ["extensions", "info", "md00001"]
 
     expected_return_code = 1
-    expected_output = "Unable to find an extension with an id of 'md00001'."
-    expected_error = ""
+    expected_output = ""
+    expected_error = "Unable to find an extension with an id of 'md00001'."
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)

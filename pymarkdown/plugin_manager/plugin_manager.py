@@ -13,6 +13,7 @@ from application_properties import ApplicationProperties, ApplicationPropertiesF
 from columnar import columnar
 
 from pymarkdown.extensions.pragma_token import PragmaExtension
+from pymarkdown.main_presentation import MainPresentation
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.bad_plugin_error import BadPluginError
@@ -40,13 +41,18 @@ class PluginManager:
     __filter_regex = re.compile("^[a-zA-Z0-9-]+$")
     __version_regex = re.compile("^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$")
 
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        presentation: MainPresentation,
+    ) -> None:
         (
             self.number_of_scan_failures,
             self.number_of_pragma_failures,
             self.__show_stack_trace,
         ) = (0, 0, False)
         self.__loaded_classes: List[Tuple[RulePlugin, str]] = []
+
+        self.__presentation = presentation
 
         self.__document_pragmas: Dict[int, Set[str]] = {}
 
@@ -194,7 +200,7 @@ class PluginManager:
         if next_plugin.plugin_version != "0.0.0" or args.show_all:
             self.__show_row_if_matches(list_re, next_plugin_id, next_plugin, show_rows)
 
-    def __handle_argparse_subparser_list(self, args: argparse.Namespace) -> None:
+    def __handle_argparse_subparser_list(self, args: argparse.Namespace) -> int:
         list_re = None
         if args.list_filter:
             list_re = re.compile(
@@ -215,10 +221,11 @@ class PluginManager:
                 "version",
             ]
             self.__print_columnar_data(headers, show_rows)
-        else:
-            print(
-                f"No plugin rule identifiers matches the pattern '{args.list_filter}'."
-            )
+            return 0
+        self.__presentation.print_system_error(
+            f"No plugin rule identifiers matches the pattern '{args.list_filter}'."
+        )
+        return 1
 
     def __show_row_if_matches(
         self,
@@ -246,14 +253,15 @@ class PluginManager:
             ]
             show_rows.append(display_row)
 
-    @classmethod
     def __print_columnar_data(
-        cls, headers: List[str], show_rows: List[List[str]]
+        self, headers: List[str], show_rows: List[List[str]]
     ) -> None:
         table = columnar(show_rows, headers, no_borders=True)
         split_rows = table.split(ParserHelper.newline_character)
         new_rows = [next_row.rstrip() for next_row in split_rows]
-        print(ParserHelper.newline_character.join(new_rows))
+        self.__presentation.print_system_output(
+            ParserHelper.newline_character.join(new_rows)
+        )
 
     def __handle_argparse_subparser_info(self, args: argparse.Namespace) -> int:
         matching_plugins: List[FoundPlugin] = list(
@@ -263,7 +271,7 @@ class PluginManager:
             )
         )
         if not matching_plugins:
-            print(
+            self.__presentation.print_system_error(
                 f"Unable to find a plugin with an id or name of '{args.info_filter}'."
             )
             return 1
@@ -293,7 +301,7 @@ class PluginManager:
             args, PluginManager.__root_subparser_name
         )
         if subparser_value == "list":
-            self.__handle_argparse_subparser_list(args)
+            return_code = self.__handle_argparse_subparser_list(args)
         elif subparser_value == "info":
             return_code = self.__handle_argparse_subparser_info(args)
         else:
@@ -321,12 +329,18 @@ class PluginManager:
             if scan_failure.extra_error_information
             else ""
         )
-
         rule_id = scan_failure.rule_id.upper()
-        print(
-            f"{scan_failure.scan_file}:{scan_failure.line_number}:{scan_failure.column_number}: "
-            + f"{rule_id}: {scan_failure.rule_description}{extra_info} ({scan_failure.rule_name})"
+
+        adjusted_failure = PluginScanFailure(
+            scan_failure.scan_file,
+            scan_failure.line_number,
+            scan_failure.column_number,
+            rule_id,
+            scan_failure.rule_name,
+            scan_failure.rule_description,
+            extra_info,
         )
+        self.__presentation.print_scan_failure(adjusted_failure)
         self.number_of_scan_failures += 1
 
     def log_pragma_failure(
@@ -335,8 +349,7 @@ class PluginManager:
         """
         Log the pragma failure in the appropriate format.
         """
-
-        print(f"{scan_file}:{line_number}:1: INLINE: {pragma_error}")
+        self.__presentation.print_pragma_failure(scan_file, line_number, pragma_error)
         self.number_of_pragma_failures += 1
 
     def compile_pragmas(self, scan_file: str, pragma_lines: Dict[int, str]) -> None:
