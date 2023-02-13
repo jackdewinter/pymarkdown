@@ -51,7 +51,7 @@ rule_settings:
 # rule_tags: {} # Additional rule tags.
 
 metrics:
-  quality_threshold: 30.0
+  quality_threshold: 35.0
 
 # github:
 #   labels: []

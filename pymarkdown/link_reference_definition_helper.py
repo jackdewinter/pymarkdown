@@ -62,7 +62,6 @@ class LinkReferenceDefinitionHelper:
         """
 
         line_to_parse = position_marker.text_to_parse
-        lrd_stack_token: Optional[LinkDefinitionStackToken] = None
         start_index: int = position_marker.index_number
         lines_to_requeue: List[str] = []
 
@@ -89,32 +88,22 @@ class LinkReferenceDefinitionHelper:
 
         POGGER.debug(">>line_to_parse>:$:<", line_to_parse)
 
-        if was_started := parser_state.token_stack[-1].was_link_definition_started:
-            lrd_stack_token = cast(
-                LinkDefinitionStackToken, parser_state.token_stack[-1]
-            )
-            assert lrd_stack_token is not None
-            assert lrd_stack_token.original_stack_depth is not None
-            assert lrd_stack_token.original_document_depth is not None
-            original_stack_depth, original_document_depth = (
-                lrd_stack_token.original_stack_depth,
-                lrd_stack_token.original_document_depth,
-            )
-            POGGER.debug(
-                ">>continuation_lines>>$<<",
-                lrd_stack_token.continuation_lines,
-            )
-            line_to_parse = lrd_stack_token.add_joined_lines_before_suffix(
-                line_to_parse
-            )
-            (
-                new_start_index,
-                extracted_whitespace,
-            ) = ParserHelper.extract_ascii_whitespace(line_to_parse, 0)
-            assert new_start_index is not None
-            start_index = new_start_index
-
-            POGGER.debug(">>line_to_parse>>$<<", line_to_parse)
+        (
+            was_started,
+            lrd_stack_token,
+            original_stack_depth,
+            original_document_depth,
+            line_to_parse,
+            extracted_whitespace,
+            start_index,
+        ) = LinkReferenceDefinitionHelper.__handle_link_reference_definition_started(
+            parser_state,
+            original_stack_depth,
+            original_document_depth,
+            line_to_parse,
+            extracted_whitespace,
+            start_index,
+        )
 
         POGGER.debug(">>line_to_parse>:$:<", line_to_parse)
         line_to_parse_size = len(line_to_parse)
@@ -183,6 +172,59 @@ class LinkReferenceDefinitionHelper:
         )
 
     # pylint: enable=too-many-locals, too-many-arguments
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __handle_link_reference_definition_started(
+        parser_state: ParserState,
+        original_stack_depth: int,
+        original_document_depth: int,
+        line_to_parse: str,
+        extracted_whitespace: Optional[str],
+        start_index: int,
+    ) -> Tuple[
+        bool, Optional[LinkDefinitionStackToken], int, int, str, Optional[str], int
+    ]:
+
+        lrd_stack_token: Optional[LinkDefinitionStackToken] = None
+
+        if was_started := parser_state.token_stack[-1].was_link_definition_started:
+            lrd_stack_token = cast(
+                LinkDefinitionStackToken, parser_state.token_stack[-1]
+            )
+            assert lrd_stack_token is not None
+            assert lrd_stack_token.original_stack_depth is not None
+            assert lrd_stack_token.original_document_depth is not None
+            original_stack_depth, original_document_depth = (
+                lrd_stack_token.original_stack_depth,
+                lrd_stack_token.original_document_depth,
+            )
+            POGGER.debug(
+                ">>continuation_lines>>$<<",
+                lrd_stack_token.continuation_lines,
+            )
+            line_to_parse = lrd_stack_token.add_joined_lines_before_suffix(
+                line_to_parse
+            )
+            (
+                new_start_index,
+                extracted_whitespace,
+            ) = ParserHelper.extract_ascii_whitespace(line_to_parse, 0)
+            assert new_start_index is not None
+            start_index = new_start_index
+
+            POGGER.debug(">>line_to_parse>>$<<", line_to_parse)
+        return (
+            was_started,
+            lrd_stack_token,
+            original_stack_depth,
+            original_document_depth,
+            line_to_parse,
+            extracted_whitespace,
+            start_index,
+        )
+
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-locals, too-many-arguments
     @staticmethod
