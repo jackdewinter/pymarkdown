@@ -1072,7 +1072,7 @@ class BlockQuoteProcessor:
 
     # pylint: enable=too-many-arguments, too-many-locals
 
-    # pylint: disable=too-many-arguments, too-many-locals
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __adjust_1(
         parser_state: ParserState,
@@ -1082,9 +1082,7 @@ class BlockQuoteProcessor:
         stack_index: int,
         block_quote_data: BlockQuoteData,
         original_line: str,
-    ) -> Tuple[str, Optional[str], int]:
-        tabbed_removed_text = None
-        tabbed_removed_text_start_index = 0
+    ) -> Tuple[str, Optional[str]]:
         POGGER.debug("__hbqs>>container_start_bq_count>>$", container_start_bq_count)
         POGGER.debug(
             "__hbqs>>token_stack[stack_index - 1]>>$",
@@ -1137,8 +1135,22 @@ class BlockQuoteProcessor:
             adjusted_removed_text = adj_leading_spaces + adjusted_removed_text
 
             POGGER.debug("__hbqs>>adjusted_removed_text>>:$:<", adjusted_removed_text)
+
+        POGGER.debug("__hbqs>>adjusted_removed_text>>:$:<", adjusted_removed_text)
+        tabbed_removed_text = BlockQuoteProcessor.__adjust_1_with_tab(
+            original_line, adjusted_removed_text
+        )
+        return (adjusted_removed_text, tabbed_removed_text)
+
+    # pylint: enable=too-many-arguments
+
+    @staticmethod
+    def __adjust_1_with_tab(
+        original_line: str, adjusted_removed_text: str
+    ) -> Optional[str]:
+        tabbed_removed_text = None
+
         if "\t" in original_line:
-            # tabbed_removed_text_start_index = 0
             POGGER.debug("original_line>>:$:<", original_line)
             detabified_original_line = TabHelper.detabify_string(original_line)
             POGGER.debug("detabified_original_line>>:$:<", detabified_original_line)
@@ -1167,14 +1179,7 @@ class BlockQuoteProcessor:
                 and detabified_original_line_prefix == adjusted_removed_text
             ):
                 tabbed_removed_text = original_line_prefix
-        POGGER.debug("__hbqs>>adjusted_removed_text>>:$:<", adjusted_removed_text)
-        return (
-            adjusted_removed_text,
-            tabbed_removed_text,
-            tabbed_removed_text_start_index,
-        )
-
-    # pylint: enable=too-many-arguments, too-many-locals
+        return tabbed_removed_text
 
     @staticmethod
     def __find_original_token(
@@ -1352,11 +1357,7 @@ class BlockQuoteProcessor:
         )
 
         POGGER.debug("dbqlsa>>adjusted_removed_text>>:$:<", adjusted_removed_text)
-        (
-            adjusted_removed_text,
-            tabbed_removed_text,
-            tabbed_removed_text_start_index,
-        ) = BlockQuoteProcessor.__adjust_1(
+        (adjusted_removed_text, tabbed_removed_text,) = BlockQuoteProcessor.__adjust_1(
             parser_state,
             container_start_bq_count,
             adjusted_removed_text,
@@ -1367,10 +1368,6 @@ class BlockQuoteProcessor:
         )
         POGGER.debug("dbqlsa>>adjusted_removed_text>>:$:<", adjusted_removed_text)
         POGGER.debug("dbqlsa>>tabbed_removed_text>>:$:<", tabbed_removed_text)
-        POGGER.debug(
-            "dbqlsa>>tabbed_removed_text_start_index>>:$:<",
-            tabbed_removed_text_start_index,
-        )
 
         assert found_bq_stack_token.matching_markdown_token is not None
         block_quote_token = cast(
@@ -1403,10 +1400,6 @@ class BlockQuoteProcessor:
             "dbqlsa>>leading_text_index>>$", block_quote_token.leading_text_index
         )
         POGGER.debug("dbqlsa>>tabbed_removed_text>>$", tabbed_removed_text)
-        POGGER.debug(
-            "dbqlsa>>tabbed_removed_text_start_index>>$",
-            tabbed_removed_text_start_index,
-        )
         block_quote_token.add_bleading_spaces(
             adjusted_removed_text,
             special_case,

@@ -394,6 +394,44 @@ Plugin id 'MDE001' had a critical failure during the 'starting_new_file' action.
     )
 
 
+def test_markdown_with_dash_dash_add_plugin_with_bad_starting_new_file_with_alternate_output():
+    """
+    Test to make sure we get an error logged if a plugin throws an exception
+        within the starting_new_file function.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner(use_main=False, use_alternate_presentation=True)
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    plugin_path = os.path.join(
+        "test", "resources", "plugins", "bad", "bad_starting_new_file.py"
+    )
+    supplied_arguments = [
+        "--add-plugin",
+        plugin_path,
+        "scan",
+        source_path,
+    ]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = """[pse[[fse[BadPluginError encountered while scanning '{source_path}':
+Plugin id 'MDE001' had a critical failure during the 'starting_new_file' action.]]]]
+""".replace(
+        "{source_path}", source_path
+    )
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
 def test_markdown_with_dash_dash_add_plugin_with_bad_completed_file():
     """
     Test to make sure we get an error logged if a plugin throws an exception
@@ -1352,9 +1390,9 @@ def test_markdown_with_plugins_list_and_filter_by_id_ends_with_non_sequence():
     scanner = MarkdownScanner()
     supplied_arguments = ["plugins", "list", "this-is-not-an-used-identifier"]
 
-    expected_return_code = 0
-    expected_output = """No plugin rule identifiers matches the pattern 'this-is-not-an-used-identifier'."""
-    expected_error = ""
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = "No plugin rule identifiers matches the pattern 'this-is-not-an-used-identifier'."
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -1461,8 +1499,8 @@ def test_markdown_with_plugins_info_and_not_found_filter():
     supplied_arguments = ["plugins", "info", "md00001"]
 
     expected_return_code = 1
-    expected_output = "Unable to find a plugin with an id or name of 'md00001'."
-    expected_error = ""
+    expected_output = ""
+    expected_error = "Unable to find a plugin with an id or name of 'md00001'."
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -1551,6 +1589,37 @@ def test_markdown_with_plugins_info_and_found_filter_no_configuration_and_no_url
   Name(s)            debug-only
   Short Description  Debug plugin
 """
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_plugins_and_alternate_output():
+    """
+    Copy of test_md001_bad_improper_atx_heading_incrementing but with output
+    redirected.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner(use_main=False, use_alternate_presentation=True)
+    source_path = os.path.join("test", "resources", "rules", "md001") + os.sep
+    supplied_arguments = [
+        "scan",
+        f"{source_path}improper_atx_heading_incrementing.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        f"[pso[[psf[{source_path}improper_atx_heading_incrementing.md:3:1: "
+        + "MD001: Heading levels should only increment by one level at a time. "
+        + "[Expected: h2; Actual: h3] (heading-increment,header-increment)]]]]\n"
+    )
     expected_error = ""
 
     # Act

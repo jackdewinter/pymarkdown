@@ -927,6 +927,31 @@ class ListBlockProcessor:
 
         return tabbed_whitespace_to_add, tabbed_adjust
 
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __create_new_list_handle_whitespace(
+        forced_container_whitespace: Optional[str],
+        alt_adj_ws: Optional[str],
+        ws_before_marker: int,
+        indent_level: int,
+        extracted_whitespace: Optional[str],
+        adj_ws: Optional[str],
+    ) -> Tuple[Optional[str], Optional[str], int, int]:
+        if forced_container_whitespace:
+            whitespace_to_add: Optional[str] = forced_container_whitespace
+            assert whitespace_to_add is not None
+            if alt_adj_ws:
+                whitespace_to_add += alt_adj_ws
+            ws_before_marker += len(forced_container_whitespace)
+            indent_level += len(forced_container_whitespace)
+            assert alt_adj_ws is not None
+            alt_adj_ws += forced_container_whitespace
+        else:
+            whitespace_to_add = extracted_whitespace if adj_ws is None else adj_ws
+        return whitespace_to_add, alt_adj_ws, ws_before_marker, indent_level
+
+    # pylint: enable=too-many-arguments
+
     # pylint: disable=too-many-locals, too-many-arguments
     @staticmethod
     def __create_new_list(
@@ -958,25 +983,27 @@ class ListBlockProcessor:
         if found_block_quote_before_list and adj_ws is None and alt_adj_ws is not None:
             adj_ws = alt_adj_ws
 
-        POGGER.debug("ws_before_marker=$=", ws_before_marker)
-        POGGER.debug("forced_container_whitespace=$=", forced_container_whitespace)
-        if forced_container_whitespace:
-            whitespace_to_add: Optional[str] = forced_container_whitespace
-            assert whitespace_to_add is not None
-            if alt_adj_ws:
-                whitespace_to_add += alt_adj_ws
-            ws_before_marker += len(forced_container_whitespace)
-            indent_level += len(forced_container_whitespace)
-            assert alt_adj_ws is not None
-            alt_adj_ws += forced_container_whitespace
-        else:
-            whitespace_to_add = extracted_whitespace if adj_ws is None else adj_ws
-        POGGER.debug("ws_before_marker=$=", ws_before_marker)
-        POGGER.debug_with_visible_whitespace("whitespace_to_add>$:", whitespace_to_add)
-        POGGER.debug_with_visible_whitespace("adj_ws>$<", adj_ws)
-        POGGER.debug_with_visible_whitespace("alt_adj_ws>$<", alt_adj_ws)
-        POGGER.debug("original_line>:$:<", original_line)
-        POGGER.debug("ws_after_marker=$=", ws_after_marker)
+        # POGGER.debug("ws_before_marker=$=", ws_before_marker)
+        # POGGER.debug("forced_container_whitespace=$=", forced_container_whitespace)
+        (
+            whitespace_to_add,
+            alt_adj_ws,
+            ws_before_marker,
+            indent_level,
+        ) = ListBlockProcessor.__create_new_list_handle_whitespace(
+            forced_container_whitespace,
+            alt_adj_ws,
+            ws_before_marker,
+            indent_level,
+            extracted_whitespace,
+            adj_ws,
+        )
+        # POGGER.debug("ws_before_marker=$=", ws_before_marker)
+        # POGGER.debug_with_visible_whitespace("whitespace_to_add>$:", whitespace_to_add)
+        # POGGER.debug_with_visible_whitespace("adj_ws>$<", adj_ws)
+        # POGGER.debug_with_visible_whitespace("alt_adj_ws>$<", alt_adj_ws)
+        # POGGER.debug("original_line>:$:<", original_line)
+        # POGGER.debug("ws_after_marker=$=", ws_after_marker)
         tabbed_whitespace_to_add = None
         tabbed_adjust = -1
         if "\t" in original_line:
@@ -997,7 +1024,7 @@ class ListBlockProcessor:
             ws_after_marker,
             index,
         )
-        POGGER.debug_with_visible_whitespace("__create_new_list>$", new_token)
+        # POGGER.debug_with_visible_whitespace("__create_new_list>$", new_token)
 
         (
             new_container_level_tokens,
@@ -2596,6 +2623,41 @@ class ListBlockProcessor:
                 list_count,
             )
 
+    @staticmethod
+    def __adjust_line_for_list_in_process_with_tab(
+        original_line: str, remaining_indent: int, removed_whitespace: str
+    ) -> str:
+        _, ex_ws = ParserHelper.extract_spaces(original_line, 0)
+        POGGER.debug("ex_ws($)", ex_ws)
+        assert ex_ws is not None
+        if "\t" in ex_ws:
+            detabified_ws = TabHelper.detabify_string(ex_ws, 0)
+            POGGER.debug("detabified_ws($)", detabified_ws)
+            assert len(detabified_ws) >= remaining_indent
+
+            sub_ws = None
+            i = -1
+            do_loop = True
+            # for i in range(len(ex_ws)):
+            while do_loop:
+                i += 1
+                assert i < len(ex_ws)
+                sub_ws = ex_ws[: i + 1]
+                POGGER.debug("sub_ws($)", sub_ws)
+                detabified_ws = TabHelper.detabify_string(sub_ws, 0)
+                POGGER.debug("detabified_ws($)", detabified_ws)
+                POGGER.debug(
+                    "detabified_ws($),removed_whitespace($)",
+                    len(detabified_ws),
+                    len(removed_whitespace),
+                )
+                if len(detabified_ws) >= len(removed_whitespace):
+                    do_loop = False
+            if len(detabified_ws) <= len(removed_whitespace):
+                assert sub_ws is not None
+                removed_whitespace = sub_ws
+        return removed_whitespace
+
     # pylint: disable=too-many-arguments
     @staticmethod
     def __adjust_line_for_list_in_process(
@@ -2636,35 +2698,11 @@ class ListBlockProcessor:
                 ParserHelper.space_character, remaining_indent
             )
             if "\t" in original_line:
-                _, ex_ws = ParserHelper.extract_spaces(original_line, 0)
-                POGGER.debug("ex_ws($)", ex_ws)
-                assert ex_ws is not None
-                if "\t" in ex_ws:
-                    detabified_ws = TabHelper.detabify_string(ex_ws, 0)
-                    POGGER.debug("detabified_ws($)", detabified_ws)
-                    assert len(detabified_ws) >= remaining_indent
-
-                    sub_ws = None
-                    i = -1
-                    do_loop = True
-                    # for i in range(len(ex_ws)):
-                    while do_loop:
-                        i += 1
-                        assert i < len(ex_ws)
-                        sub_ws = ex_ws[: i + 1]
-                        POGGER.debug("sub_ws($)", sub_ws)
-                        detabified_ws = TabHelper.detabify_string(sub_ws, 0)
-                        POGGER.debug("detabified_ws($)", detabified_ws)
-                        POGGER.debug(
-                            "detabified_ws($),removed_whitespace($)",
-                            len(detabified_ws),
-                            len(removed_whitespace),
-                        )
-                        if len(detabified_ws) >= len(removed_whitespace):
-                            do_loop = False
-                    if len(detabified_ws) <= len(removed_whitespace):
-                        assert sub_ws is not None
-                        removed_whitespace = sub_ws
+                removed_whitespace = (
+                    ListBlockProcessor.__adjust_line_for_list_in_process_with_tab(
+                        original_line, remaining_indent, removed_whitespace
+                    )
+                )
         POGGER.debug("removed_whitespace($)", removed_whitespace)
         return (
             f"{padded_spaces}{line_to_parse[start_index:]}",

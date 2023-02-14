@@ -26,12 +26,13 @@ def test_pragmas_01():
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
-        + "INLINE: Inline configuration specified without command.\n"
-        + f"{source_path}:2:1: "
+        f"{source_path}:2:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
-    expected_error = ""
+    expected_error = (
+        f"{source_path}:1:1: "
+        + "INLINE: Inline configuration specified without command.\n"
+    )
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -63,12 +64,13 @@ def test_pragmas_02():
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
-        + "INLINE: Inline configuration command 'bad' not understood.\n"
-        + f"{source_path}:2:1: "
+        f"{source_path}:2:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
-    expected_error = ""
+    expected_error = (
+        f"{source_path}:1:1: "
+        + "INLINE: Inline configuration command 'bad' not understood.\n"
+    )
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -100,12 +102,13 @@ def test_pragmas_03():
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
-        + "INLINE: Inline configuration command 'disable-next-line' specified a plugin with a blank id.\n"
-        + f"{source_path}:2:1: "
+        f"{source_path}:2:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
-    expected_error = ""
+    expected_error = (
+        f"{source_path}:1:1: "
+        + "INLINE: Inline configuration command 'disable-next-line' specified a plugin with a blank id.\n"
+    )
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -137,12 +140,13 @@ def test_pragmas_04():
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:1:1: "
-        + "INLINE: Inline configuration command 'disable-next-line' unable to find a plugin with the id 'bad-plugin-id'.\n"
-        + f"{source_path}:2:1: "
+        f"{source_path}:2:1: "
         + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
-    expected_error = ""
+    expected_error = (
+        f"{source_path}:1:1: "
+        + "INLINE: Inline configuration command 'disable-next-line' unable to find a plugin with the id 'bad-plugin-id'.\n"
+    )
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -412,13 +416,49 @@ def test_pragmas_12():
     ]
 
     expected_return_code = 1
-    expected_output = """
-{source_path}:1:1: INLINE: Inline configuration specified without command.
-{source_path}:2:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)
+    expected_output = """{source_path}:2:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)
 """.replace(
         "{source_path}", source_path
     )
-    expected_error = ""
+    expected_error = "{source_path}:1:1: INLINE: Inline configuration specified without command.".replace(
+        "{source_path}", source_path
+    )
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_pragmas_12_with_alternate_output():
+    """
+    Test the case where we specify a 'disable-next-line' pragma with a valid id to disable and extra whitespace
+    after the pyml.
+    """
+    # Arrange
+    scanner = MarkdownScanner(use_main=False, use_alternate_presentation=True)
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "pragmas",
+        "atx_heading_with_multiple_spaces_disable_line_by_id_with_space_after_pyml.md",
+    )
+    supplied_arguments = [
+        "scan",
+        source_path,
+    ]
+
+    expected_return_code = 1
+    expected_output = """[pso[[psf[{source_path}:2:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)]]]]
+""".replace(
+        "{source_path}", source_path
+    )
+    expected_error = "[pse[[ppf[{source_path}:1:1: INLINE: Inline configuration specified without command.]]]]".replace(
+        "{source_path}", source_path
+    )
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)

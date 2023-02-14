@@ -281,6 +281,58 @@ def test_markdown_with_dash_dash_version():
     )
 
 
+def test_markdown_with_direct_args(caplog):
+    """
+    Test to make sure we can specify the arguments directly.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner(use_main=False)
+    supplied_arguments = ["--log-level", "DEBUG", "scan", "does-not-exist.md"]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = "Provided path 'does-not-exist.md' does not exist."
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments, use_direct_arguments=True
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+    assert "Using direct arguments: [" in caplog.text
+
+
+def test_markdown_without_direct_args(caplog):
+    """
+    Test to make sure we can specify the arguments normally.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner(use_main=False)
+    supplied_arguments = ["--log-level", "DEBUG", "scan", "does-not-exist.md"]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = "Provided path 'does-not-exist.md' does not exist."
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments, use_direct_arguments=False
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+    assert "Using supplied command line arguments." in caplog.text
+
+
 def test_markdown_with_dash_e_single_by_name():
     """
     Test to make sure we get enable a rule if '-e' is supplied and the name of the
@@ -1875,7 +1927,7 @@ def test_markdown_with_scan_stdin_without_triggers():
 
     # Act
     execute_results = scanner.invoke_main(
-        arguments=supplied_arguments, xyz=supplied_standard_input
+        arguments=supplied_arguments, standard_input_to_use=supplied_standard_input
     )
 
     # Assert
@@ -1903,7 +1955,7 @@ stdin:1:6: MD047: Each file should end with a single newline character. (single-
 
     # Act
     execute_results = scanner.invoke_main(
-        arguments=supplied_arguments, xyz=supplied_standard_input
+        arguments=supplied_arguments, standard_input_to_use=supplied_standard_input
     )
 
     # Assert
@@ -1932,7 +1984,7 @@ Temporary file to capture stdin was not written (made up)."""
 
     # Act
     execute_results = scanner.invoke_main(
-        arguments=supplied_arguments, xyz=supplied_standard_input
+        arguments=supplied_arguments, standard_input_to_use=supplied_standard_input
     )
 
     # Assert

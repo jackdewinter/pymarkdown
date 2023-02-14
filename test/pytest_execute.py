@@ -199,7 +199,7 @@ class InProcessExecution(ABC):
     """
 
     @abstractmethod
-    def execute_main(self):
+    def execute_main(self, direct_arguments=None):
         """
         Provides the code to execute the mainline.  Should be simple like:
         MyObjectClass().main()
@@ -239,9 +239,14 @@ class InProcessExecution(ABC):
             del trace_back
         return 1
 
-    # pylint: disable=broad-except
+    # pylint: disable=broad-except, too-many-arguments
     def invoke_main(
-        self, arguments=None, cwd=None, suppress_first_line_heading_rule=True, xyz=None
+        self,
+        arguments=None,
+        cwd=None,
+        suppress_first_line_heading_rule=True,
+        standard_input_to_use=None,
+        use_direct_arguments=False,
     ):
         """
         Invoke the mainline so that we can capture results.
@@ -262,23 +267,27 @@ class InProcessExecution(ABC):
 
         saved_state = SystemState()
 
-        if xyz is not None:
-            sys.stdin = io.StringIO(xyz)
+        if standard_input_to_use is not None:
+            sys.stdin = io.StringIO(standard_input_to_use)
         std_output = io.StringIO()
         std_error = io.StringIO()
 
         sys.stdout = std_output
         sys.stderr = std_error
 
-        sys.argv = arguments.copy() if arguments else []
-        sys.argv.insert(0, self.get_main_name())
+        direct_arguments = None
+        if use_direct_arguments:
+            direct_arguments = arguments
+        else:
+            sys.argv = arguments.copy() if arguments else []
+            sys.argv.insert(0, self.get_main_name())
 
         if cwd:
             os.chdir(cwd)
 
         try:
             returncode = 0
-            self.execute_main()
+            self.execute_main(direct_arguments)
         except SystemExit as this_exception:
             returncode = self.handle_system_exit(this_exception, std_error)
         except Exception:
@@ -288,4 +297,4 @@ class InProcessExecution(ABC):
 
         return InProcessResult(returncode, std_output, std_error)
 
-    # pylint: enable=broad-except
+    # pylint: enable=broad-except, too-many-arguments

@@ -20,6 +20,7 @@ from pymarkdown.application_logging import ApplicationLogging
 from pymarkdown.bad_tokenization_error import BadTokenizationError
 from pymarkdown.extension_manager.extension_manager import ExtensionManager
 from pymarkdown.extensions.pragma_token import PragmaToken
+from pymarkdown.main_presentation import MainPresentation
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.plugin_manager.bad_plugin_error import BadPluginError
 from pymarkdown.plugin_manager.plugin_manager import PluginManager
@@ -41,16 +42,17 @@ class PyMarkdownLint:
     __normal_scan_subcommand = "scan"
     __stdin_scan_subcommand = "scan-stdin"
 
-    def __init__(self) -> None:
+    def __init__(self, presentation: Optional[MainPresentation] = None) -> None:
         self.__version_number = PyMarkdownLint.__get_semantic_version()
 
+        self.__presentation = presentation or MainPresentation()
         self.__properties: ApplicationProperties = ApplicationProperties()
         self.__logging = ApplicationLogging(
             self.__properties, default_log_level="CRITICAL"
         )
         self.__tokenizer: Optional[TokenizedMarkdown] = None
-        self.__plugins: PluginManager = PluginManager()
-        self.__extensions: ExtensionManager = ExtensionManager()
+        self.__plugins: PluginManager = PluginManager(self.__presentation)
+        self.__extensions: ExtensionManager = ExtensionManager(self.__presentation)
 
     @staticmethod
     def __get_semantic_version() -> str:
@@ -62,7 +64,7 @@ class PyMarkdownLint:
         version_meta = runpy.run_path(file_path)
         return str(version_meta["__version__"])
 
-    def __parse_arguments(self) -> argparse.Namespace:
+    def __parse_arguments(self, direct_args: Optional[List[str]]) -> argparse.Namespace:
         parser = argparse.ArgumentParser(description="Lint any found Markdown files.")
 
         parser.add_argument(
@@ -157,7 +159,7 @@ class PyMarkdownLint:
 
         subparsers.add_parser("version", help="version of the application")
 
-        parse_arguments = parser.parse_args()
+        parse_arguments = parser.parse_args(args=direct_args)
 
         if not parse_arguments.primary_subparser:
             parser.print_help()
@@ -274,15 +276,19 @@ class PyMarkdownLint:
         )
         LOGGER.warning(formatted_error, exc_info=show_error)
 
-        print(f"\n\n{formatted_error}", file=sys.stderr)
-        if self.__logging.show_stack_trace:
-            traceback.print_exc(file=sys.stderr)
+        stack_trace = (
+            "\n" + traceback.format_exc() if self.__logging.show_stack_trace else ""
+        )
+        self.__presentation.print_system_error(f"\n\n{formatted_error}{stack_trace}")
         sys.exit(1)
 
     def __handle_scan_error(self, next_file: str, this_exception: Exception) -> None:
 
-        formatted_error = f"{type(this_exception).__name__} encountered while scanning '{next_file}':\n{this_exception}"
-        self.__handle_error(formatted_error, this_exception)
+        if formatted_error := self.__presentation.format_scan_error(
+            next_file, this_exception
+        ):
+            self.__handle_error(formatted_error, this_exception)
+        sys.exit(1)
 
     def __set_initial_state(self, args: argparse.Namespace) -> None:
 
@@ -395,26 +401,37 @@ class PyMarkdownLint:
             for next_file in files_to_scan:
                 self.__scan_specific_file(args, next_file, next_file)
 
-    def main(self) -> None:
+    def __initialize_subsystems(
+        self, direct_args: Optional[List[str]]
+    ) -> argparse.Namespace:
+        args = self.__parse_arguments(direct_args=direct_args)
+        self.__set_initial_state(args)
+
+        self.__logging.initialize(args)
+        ParserLogger.sync_on_next_call()
+
+        if direct_args is None:
+            LOGGER.debug("Using supplied command line arguments.")
+        else:
+            LOGGER.debug("Using direct arguments: %s", str(direct_args))
+
+        self.__handle_plugins_and_extensions(args)
+        return args
+
+    def main(self, direct_args: Optional[List[str]] = None) -> None:
         """
         Main entrance point.
         """
         total_error_count = 0
         try:
-            args = self.__parse_arguments()
-            self.__set_initial_state(args)
+            args = self.__initialize_subsystems(direct_args)
 
-            self.__logging.initialize(args)
-            ParserLogger.sync_on_next_call()
-
-            self.__handle_plugins_and_extensions(args)
+            files_to_scan: List[str] = []
+            did_error_scanning_files = False
 
             use_standard_in = (
                 args.primary_subparser == PyMarkdownLint.__stdin_scan_subcommand
             )
-            files_to_scan: List[str] = []
-            did_error_scanning_files = False
-
             if not use_standard_in:
                 POGGER.info("Determining files to scan.")
                 (

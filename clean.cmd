@@ -96,7 +96,7 @@ if "%SOURCERY_USER_KEY%" == "" (
 		set "SOURCERY_LIMIT=--diff ^"git diff^""
 	)
 
-	pipenv run sourcery review pymarkdown !SOURCERY_LIMIT!
+	pipenv run sourcery review --check pymarkdown !SOURCERY_LIMIT!
 	if ERRORLEVEL 1 (
 		echo.
 		echo {Executing Sourcery on Python code failed.}

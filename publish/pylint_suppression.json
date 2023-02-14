@@ -10,7 +10,7 @@
         "pymarkdown/block_quote_data.py": {},
         "pymarkdown/block_quote_processor.py": {
             "too-many-arguments": 15,
-            "too-many-locals": 6
+            "too-many-locals": 5
         },
         "pymarkdown/coalesce_processor.py": {
             "too-few-public-methods": 1
@@ -91,9 +91,9 @@
             "too-many-instance-attributes": 1
         },
         "pymarkdown/leaf_block_processor.py": {
-            "too-many-arguments": 14,
-            "too-many-locals": 10,
-            "too-many-statements": 2
+            "too-many-arguments": 16,
+            "too-many-locals": 9,
+            "too-many-statements": 1
         },
         "pymarkdown/leaf_block_processor_paragraph.py": {
             "too-many-arguments": 1,
@@ -109,18 +109,19 @@
         },
         "pymarkdown/link_reference_definition_helper.py": {
             "too-many-locals": 4,
-            "too-many-arguments": 9
+            "too-many-arguments": 10
         },
         "pymarkdown/link_reference_info.py": {},
         "pymarkdown/link_reference_titles.py": {},
         "pymarkdown/list_block_processor.py": {
-            "too-many-arguments": 21,
+            "too-many-arguments": 22,
             "too-many-locals": 9
         },
         "pymarkdown/main.py": {
             "too-few-public-methods": 1,
             "broad-except": 2
         },
+        "pymarkdown/main_presentation.py": {},
         "pymarkdown/markdown_token.py": {
             "too-many-public-methods": 1,
             "too-many-instance-attributes": 1,
@@ -248,12 +249,12 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 148,
-        "too-many-locals": 58,
+        "too-many-arguments": 152,
+        "too-many-locals": 56,
         "too-few-public-methods": 9,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 1,
-        "too-many-statements": 3,
+        "too-many-statements": 2,
         "too-many-instance-attributes": 18,
         "too-many-public-methods": 3,
         "broad-except": 2
