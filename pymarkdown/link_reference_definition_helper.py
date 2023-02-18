@@ -65,28 +65,23 @@ class LinkReferenceDefinitionHelper:
         start_index: int = position_marker.index_number
         lines_to_requeue: List[str] = []
 
-        is_blank_line: Optional[bool] = not line_to_parse and not start_index
-
         POGGER.debug(">>remaining_line_to_parse>:$:<", remaining_line_to_parse)
         POGGER.debug(">>line_to_parse>:$:<", line_to_parse)
         POGGER.debug(">>start_index>:$:<", start_index)
-        POGGER.debug(">>original_line>:$:<", original_line)
-        if ParserHelper.tab_character in original_line and not is_blank_line:
-            POGGER.debug(">>tabified>:$:<", original_line)
 
-            first_character_to_parse = line_to_parse[start_index]
-            POGGER.debug(">>xx>:$:<", first_character_to_parse)
-            first_character_to_parse_index = original_line.find(
-                first_character_to_parse
-            )
-            assert first_character_to_parse_index != -1
-
-            line_to_parse = original_line[first_character_to_parse_index:]
-            unmodified_line_to_parse = original_line
-            remaining_line_to_parse = line_to_parse
-            start_index = 0
-
-        POGGER.debug(">>line_to_parse>:$:<", line_to_parse)
+        (
+            line_to_parse,
+            unmodified_line_to_parse,
+            remaining_line_to_parse,
+            start_index,
+            is_blank_line,
+        ) = LinkReferenceDefinitionHelper.__handle_link_reference_definition_init(
+            remaining_line_to_parse,
+            line_to_parse,
+            start_index,
+            original_line,
+            unmodified_line_to_parse,
+        )
 
         (
             was_started,
@@ -172,6 +167,42 @@ class LinkReferenceDefinitionHelper:
         )
 
     # pylint: enable=too-many-locals, too-many-arguments
+
+    @staticmethod
+    def __handle_link_reference_definition_init(
+        remaining_line_to_parse: str,
+        line_to_parse: str,
+        start_index: int,
+        original_line: str,
+        unmodified_line_to_parse: str,
+    ) -> Tuple[str, str, str, int, Optional[bool]]:
+
+        is_blank_line: Optional[bool] = not line_to_parse and not start_index
+
+        POGGER.debug(">>original_line>:$:<", original_line)
+        if ParserHelper.tab_character in original_line and not is_blank_line:
+            POGGER.debug(">>tabified>:$:<", original_line)
+
+            first_character_to_parse = line_to_parse[start_index]
+            POGGER.debug(">>xx>:$:<", first_character_to_parse)
+            first_character_to_parse_index = original_line.find(
+                first_character_to_parse
+            )
+            assert first_character_to_parse_index != -1
+
+            line_to_parse = original_line[first_character_to_parse_index:]
+            unmodified_line_to_parse = original_line
+            remaining_line_to_parse = line_to_parse
+            start_index = 0
+
+        POGGER.debug(">>line_to_parse>:$:<", line_to_parse)
+        return (
+            line_to_parse,
+            unmodified_line_to_parse,
+            remaining_line_to_parse,
+            start_index,
+            is_blank_line,
+        )
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -583,9 +614,9 @@ class LinkReferenceDefinitionHelper:
         """
         Handle the parsing of what appears to be a link reference definition.
         """
-        POGGER.debug("parse_link_reference_definition:$:", line_to_parse)
-        POGGER.debug("start_index:$:", start_index)
-        POGGER.debug("extracted_whitespace:$:", extracted_whitespace)
+        # POGGER.debug("parse_link_reference_definition:$:", line_to_parse)
+        # POGGER.debug("start_index:$:", start_index)
+        # POGGER.debug("extracted_whitespace:$:", extracted_whitespace)
         did_start = LinkReferenceDefinitionHelper.__is_link_reference_definition(
             parser_state, line_to_parse, start_index, extracted_whitespace
         )
@@ -593,17 +624,17 @@ class LinkReferenceDefinitionHelper:
             POGGER.debug("BAIL")
             return False, -1, None
 
-        POGGER.debug("parse_link_reference_definition")
+        # POGGER.debug("parse_link_reference_definition")
         new_index: Optional[int] = None
         keep_going, new_index, collected_destination = LinkHelper.extract_link_label(
             line_to_parse, start_index + 1
         )
-        POGGER.debug("parse_link_reference_definition: keep_going:>:$:<", keep_going)
-        POGGER.debug("parse_link_reference_definition: new_index:>:$:<", new_index)
-        POGGER.debug(
-            "parse_link_reference_definition: collected_destination:>:$:<",
-            collected_destination,
-        )
+        # POGGER.debug("parse_link_reference_definition: keep_going:>:$:<", keep_going)
+        # POGGER.debug("parse_link_reference_definition: new_index:>:$:<", new_index)
+        # POGGER.debug(
+        #     "parse_link_reference_definition: collected_destination:>:$:<",
+        #     collected_destination,
+        # )
         assert is_blank_line is not None
         if keep_going:
             (
@@ -616,21 +647,21 @@ class LinkReferenceDefinitionHelper:
             ) = LinkHelper.extract_link_destination(
                 line_to_parse, new_index, is_blank_line
             )
-            POGGER.debug(
-                "parse_link_reference_definition: keep_going:>:$:<", keep_going
-            )
-            POGGER.debug("parse_link_reference_definition: new_index:>:$:<", new_index)
-            POGGER.debug(
-                "parse_link_reference_definition: inline_link:>:$:<", inline_link
-            )
-            POGGER.debug(
-                "parse_link_reference_definition: line_destination_whitespace:>:$:<",
-                line_destination_whitespace,
-            )
-            POGGER.debug(
-                "parse_link_reference_definition: inline_raw_link:>:$:<",
-                inline_raw_link,
-            )
+            # POGGER.debug(
+            #     "parse_link_reference_definition: keep_going:>:$:<", keep_going
+            # )
+            # POGGER.debug("parse_link_reference_definition: new_index:>:$:<", new_index)
+            # POGGER.debug(
+            #     "parse_link_reference_definition: inline_link:>:$:<", inline_link
+            # )
+            # POGGER.debug(
+            #     "parse_link_reference_definition: line_destination_whitespace:>:$:<",
+            #     line_destination_whitespace,
+            # )
+            # POGGER.debug(
+            #     "parse_link_reference_definition: inline_raw_link:>:$:<",
+            #     inline_raw_link,
+            # )
         else:
             inline_link = None
         if keep_going:
@@ -642,21 +673,21 @@ class LinkReferenceDefinitionHelper:
                 line_title_whitespace,
                 inline_raw_title,
             ) = LinkHelper.extract_link_title(line_to_parse, new_index, is_blank_line)
-            POGGER.debug(
-                "parse_link_reference_definition: keep_going:>:$:<", keep_going
-            )
-            POGGER.debug("parse_link_reference_definition: new_index:>:$:<", new_index)
-            POGGER.debug(
-                "parse_link_reference_definition: inline_title:>:$:<", inline_title
-            )
-            POGGER.debug(
-                "parse_link_reference_definition: line_title_whitespace:>:$:<",
-                line_title_whitespace,
-            )
-            POGGER.debug(
-                "parse_link_reference_definition: inline_raw_title:>:$:<",
-                inline_raw_title,
-            )
+            # POGGER.debug(
+            #     "parse_link_reference_definition: keep_going:>:$:<", keep_going
+            # )
+            # POGGER.debug("parse_link_reference_definition: new_index:>:$:<", new_index)
+            # POGGER.debug(
+            #     "parse_link_reference_definition: inline_title:>:$:<", inline_title
+            # )
+            # POGGER.debug(
+            #     "parse_link_reference_definition: line_title_whitespace:>:$:<",
+            #     line_title_whitespace,
+            # )
+            # POGGER.debug(
+            #     "parse_link_reference_definition: inline_raw_title:>:$:<",
+            #     inline_raw_title,
+            # )
         else:
             inline_title = ""
         if keep_going:
@@ -669,9 +700,9 @@ class LinkReferenceDefinitionHelper:
             )
         if keep_going:
             assert collected_destination is not None
-            POGGER.debug(
-                ">>collected_destination(not normalized)>>$", collected_destination
-            )
+            # POGGER.debug(
+            #     ">>collected_destination(not normalized)>>$", collected_destination
+            # )
             normalized_destination = LinkHelper.normalize_link_label(
                 collected_destination
             )

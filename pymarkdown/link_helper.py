@@ -401,12 +401,11 @@ class LinkHelper:
         tabified_text: Optional[str],
     ) -> Tuple[bool, bool, int, Optional[MarkdownToken], bool, Optional[str]]:
         special_text_token = cast(SpecialTextMarkdownToken, inline_blocks[search_index])
-        if POGGER.is_debug_enabled:
-            POGGER.debug(
-                "search_index>>$>>$",
-                search_index,
-                special_text_token.show_process_emphasis(),
-            )
+        # POGGER.debug(
+        #     "search_index>>$>>$",
+        #     search_index,
+        #     special_text_token.show_process_emphasis(),
+        # )
 
         (
             is_done,
@@ -417,7 +416,7 @@ class LinkHelper:
         if special_text_token.token_text in LinkHelper.__valid_link_starts:
             valid_special_start_text: Optional[str] = special_text_token.token_text
             if special_text_token.is_active:
-                POGGER.debug(">>>>>>$", inline_blocks)
+                # POGGER.debug(">>>>>>$", inline_blocks)
                 assert valid_special_start_text is not None
                 (
                     updated_index,
@@ -439,7 +438,7 @@ class LinkHelper:
                     is_valid, is_done = True, True
 
             if not is_done:
-                POGGER.debug("  not active:$", search_index)
+                # POGGER.debug("  not active:$", search_index)
                 LinkHelper.__revert_token_to_normal_text_token(
                     inline_blocks, search_index
                 )
@@ -540,34 +539,85 @@ class LinkHelper:
         return image_alt_text, text_from_blocks_raw
 
     @staticmethod
+    def __handle_next_alt_text_special_text(
+        next_token: MarkdownToken, alt_text_parts: List[str]
+    ) -> None:
+        text_token = cast(TextMarkdownToken, (next_token))
+        if text_token.token_text == "]":
+            alt_text_parts.append(text_token.token_text)
+
+    @staticmethod
+    def __handle_next_alt_text_normal_text(
+        next_token: MarkdownToken, alt_text_parts: List[str]
+    ) -> None:
+        text_token = cast(TextMarkdownToken, next_token)
+        alt_text_parts.append(ParserHelper.resolve_all_from_text(text_token.token_text))
+
+    @staticmethod
+    def __handle_next_alt_text_raw_html(
+        next_token: MarkdownToken, alt_text_parts: List[str]
+    ) -> None:
+        rawhtml_token = cast(RawHtmlMarkdownToken, next_token)
+        alt_text_parts.extend(["<", rawhtml_token.raw_tag, ">"])
+
+    @staticmethod
+    def __handle_next_alt_text_code_span(
+        next_token: MarkdownToken, alt_text_parts: List[str]
+    ) -> None:
+        codespan_token = cast(InlineCodeSpanMarkdownToken, next_token)
+        alt_text_parts.append(
+            ParserHelper.resolve_all_from_text(codespan_token.span_text)
+        )
+
+    @staticmethod
+    def __handle_next_alt_text_auto_link(
+        next_token: MarkdownToken, alt_text_parts: List[str]
+    ) -> None:
+        autolink_token = cast(EmailAutolinkMarkdownToken, next_token)
+        alt_text_parts.append(
+            ParserHelper.resolve_all_from_text(autolink_token.autolink_text)
+        )
+
+    @staticmethod
+    def __handle_next_alt_text_hard_break(
+        next_token: MarkdownToken, alt_text_parts: List[str]
+    ) -> None:
+        _ = next_token
+        alt_text_parts.append(ParserHelper.newline_character)
+
+    @staticmethod
+    def __handle_next_alt_text_else(
+        next_token: MarkdownToken, alt_text_parts: List[str]
+    ) -> None:
+        assert (
+            next_token.is_inline_image
+        ), f"Not handled: {ParserHelper.make_value_visible(next_token)}"
+        image_token = cast(ImageStartMarkdownToken, next_token)
+        alt_text_parts.append(image_token.image_alt_text)
+
+    @staticmethod
     def __handle_next_alt_text(
         inline_blocks: List[MarkdownToken], ind_plus_one: int, alt_text_parts: List[str]
     ) -> None:
         if inline_blocks[ind_plus_one].is_special_text:
-            text_token = cast(TextMarkdownToken, inline_blocks[ind_plus_one])
-            if text_token.token_text == "]":
-                alt_text_parts.append(text_token.token_text)
+            LinkHelper.__handle_next_alt_text_special_text(
+                inline_blocks[ind_plus_one], alt_text_parts
+            )
         elif inline_blocks[ind_plus_one].is_text:
-            text_token = cast(TextMarkdownToken, inline_blocks[ind_plus_one])
-            alt_text_parts.append(
-                ParserHelper.resolve_all_from_text(text_token.token_text)
+            LinkHelper.__handle_next_alt_text_normal_text(
+                inline_blocks[ind_plus_one], alt_text_parts
             )
         elif inline_blocks[ind_plus_one].is_inline_raw_html:
-            rawhtml_token = cast(RawHtmlMarkdownToken, inline_blocks[ind_plus_one])
-            alt_text_parts.extend(["<", rawhtml_token.raw_tag, ">"])
-        elif inline_blocks[ind_plus_one].is_inline_code_span:
-            codespan_token = cast(
-                InlineCodeSpanMarkdownToken, inline_blocks[ind_plus_one]
+            LinkHelper.__handle_next_alt_text_raw_html(
+                inline_blocks[ind_plus_one], alt_text_parts
             )
-            alt_text_parts.append(
-                ParserHelper.resolve_all_from_text(codespan_token.span_text)
+        elif inline_blocks[ind_plus_one].is_inline_code_span:
+            LinkHelper.__handle_next_alt_text_code_span(
+                inline_blocks[ind_plus_one], alt_text_parts
             )
         elif inline_blocks[ind_plus_one].is_inline_autolink:
-            autolink_token = cast(
-                EmailAutolinkMarkdownToken, inline_blocks[ind_plus_one]
-            )
-            alt_text_parts.append(
-                ParserHelper.resolve_all_from_text(autolink_token.autolink_text)
+            LinkHelper.__handle_next_alt_text_auto_link(
+                inline_blocks[ind_plus_one], alt_text_parts
             )
         elif (
             inline_blocks[ind_plus_one].is_inline_link
@@ -577,13 +627,13 @@ class LinkHelper:
         ):
             pass
         elif inline_blocks[ind_plus_one].is_inline_hard_break:
-            alt_text_parts.append(ParserHelper.newline_character)
+            LinkHelper.__handle_next_alt_text_hard_break(
+                inline_blocks[ind_plus_one], alt_text_parts
+            )
         else:
-            assert inline_blocks[
-                ind_plus_one
-            ].is_inline_image, f"Not handled: {ParserHelper.make_value_visible(inline_blocks[ind_plus_one])}"
-            image_token = cast(ImageStartMarkdownToken, inline_blocks[ind_plus_one])
-            alt_text_parts.append(image_token.image_alt_text)
+            LinkHelper.__handle_next_alt_text_else(
+                inline_blocks[ind_plus_one], alt_text_parts
+            )
 
     @staticmethod
     def __collect_text_from_blocks(
@@ -616,59 +666,16 @@ class LinkHelper:
         )
         while collect_index < inline_blocks_size:
 
-            POGGER.debug(">>collect_text>>$<<", inline_blocks[collect_index])
-
-            if inline_blocks[collect_index].is_inline_link_end:
-                is_inside_of_link = LinkHelper.__collect_text_from_inline_link_end()
-            elif inline_blocks[collect_index].is_inline_link:
-                is_inside_of_link = LinkHelper.__collect_text_from_inline_link_start(
-                    inline_blocks, collect_index, text_raw_parts
-                )
-            elif inline_blocks[collect_index].is_inline_image:
-                LinkHelper.__collect_text_from_inline_image(
-                    inline_blocks, collect_index, text_raw_parts, text_parts
-                )
-            elif inline_blocks[collect_index].is_inline_code_span:
-                LinkHelper.__collect_text_from_inline_code_span(
-                    inline_blocks,
-                    collect_index,
-                    text_raw_parts,
-                    text_parts,
-                    is_inside_of_link,
-                )
-            elif inline_blocks[collect_index].is_inline_raw_html:
-                LinkHelper.__collect_text_from_inline_raw_html(
-                    inline_blocks,
-                    collect_index,
-                    text_raw_parts,
-                    text_parts,
-                    is_inside_of_link,
-                )
-            elif inline_blocks[collect_index].is_inline_autolink:
-                LinkHelper.__collect_text_from_inline_autolink(
-                    inline_blocks,
-                    collect_index,
-                    text_raw_parts,
-                    text_parts,
-                    is_inside_of_link,
-                )
-            elif inline_blocks[collect_index].is_inline_hard_break:
-                LinkHelper.__collect_text_from_inline_hard_break(
-                    inline_blocks, collect_index, text_raw_parts, text_parts
-                )
-            elif not is_inside_of_link:
-                LinkHelper.__collect_text_from_text(
-                    inline_blocks, collect_index, text_raw_parts, text_parts
-                )
-            POGGER.debug(
-                ">>collect_text>>$<<$<<", text_parts, inline_blocks[collect_index]
-            )
-            POGGER.debug(">>collected_text_raw>>$<<", text_raw_parts)
-            collect_index += 1
-            POGGER.debug(
-                ">>collect_index:$: < inline_blocks_size:$:",
+            (
+                is_inside_of_link,
                 collect_index,
+            ) = LinkHelper.__collect_text_from_next_block(
+                inline_blocks,
                 inline_blocks_size,
+                collect_index,
+                text_raw_parts,
+                text_parts,
+                is_inside_of_link,
             )
 
         text_parts.append(suffix_text)
@@ -680,6 +687,71 @@ class LinkHelper:
         POGGER.debug(">>text_from_blocks>:$:<", text_from_blocks)
         POGGER.debug(">>text_raw_parts>:$:<", text_raw_parts)
         return text_from_blocks, "".join(text_raw_parts)
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __collect_text_from_next_block(
+        inline_blocks: List[MarkdownToken],
+        inline_blocks_size: int,
+        collect_index: int,
+        text_raw_parts: List[str],
+        text_parts: List[str],
+        is_inside_of_link: bool,
+    ) -> Tuple[bool, int]:
+        POGGER.debug(">>collect_text>>$<<", inline_blocks[collect_index])
+        if inline_blocks[collect_index].is_inline_link_end:
+            is_inside_of_link = LinkHelper.__collect_text_from_inline_link_end()
+        elif inline_blocks[collect_index].is_inline_link:
+            is_inside_of_link = LinkHelper.__collect_text_from_inline_link_start(
+                inline_blocks, collect_index, text_raw_parts
+            )
+        elif inline_blocks[collect_index].is_inline_image:
+            LinkHelper.__collect_text_from_inline_image(
+                inline_blocks, collect_index, text_raw_parts, text_parts
+            )
+        elif inline_blocks[collect_index].is_inline_code_span:
+            LinkHelper.__collect_text_from_inline_code_span(
+                inline_blocks,
+                collect_index,
+                text_raw_parts,
+                text_parts,
+                is_inside_of_link,
+            )
+        elif inline_blocks[collect_index].is_inline_raw_html:
+            LinkHelper.__collect_text_from_inline_raw_html(
+                inline_blocks,
+                collect_index,
+                text_raw_parts,
+                text_parts,
+                is_inside_of_link,
+            )
+        elif inline_blocks[collect_index].is_inline_autolink:
+            LinkHelper.__collect_text_from_inline_autolink(
+                inline_blocks,
+                collect_index,
+                text_raw_parts,
+                text_parts,
+                is_inside_of_link,
+            )
+        elif inline_blocks[collect_index].is_inline_hard_break:
+            LinkHelper.__collect_text_from_inline_hard_break(
+                inline_blocks, collect_index, text_raw_parts, text_parts
+            )
+        elif not is_inside_of_link:
+            LinkHelper.__collect_text_from_text(
+                inline_blocks, collect_index, text_raw_parts, text_parts
+            )
+        POGGER.debug(">>collect_text>>$<<$<<", text_parts, inline_blocks[collect_index])
+        POGGER.debug(">>collected_text_raw>>$<<", text_raw_parts)
+        collect_index += 1
+        POGGER.debug(
+            ">>collect_index:$: < inline_blocks_size:$:",
+            collect_index,
+            inline_blocks_size,
+        )
+        return is_inside_of_link, collect_index
+
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __collect_text_from_inline_link_end() -> bool:
@@ -1020,7 +1092,6 @@ class LinkHelper:
         assert newer_index is not None
         return ex_title, pre_ex_title, newer_index, bounding_character
 
-    # pylint: disable=too-many-locals
     @staticmethod
     def __process_inline_link_body(
         source_text: str, new_index: int, tabified_text: Optional[str]
@@ -1098,23 +1169,9 @@ class LinkHelper:
             newer_index,
         )
         assert newer_index is not None
-        if newer_index != -1:
-            if tabified_text:
-                untabified_newer_index = LinkHelper.__translate_between_strings(
-                    tabified_text, source_text, newer_index
-                )
-                POGGER.debug("untabified_newer_index>:$:<", untabified_newer_index)
-                newer_index = untabified_newer_index
-
-            assert did_use_angle_start is not None
-            if ParserHelper.is_character_at_index(
-                source_text, newer_index, LinkHelper.__link_format_inline_end
-            ):
-                newer_index += 1
-            else:
-                newer_index = -1
-        else:
-            did_use_angle_start = False
+        newer_index, did_use_angle_start = LinkHelper.__process_inline_link_body_final(
+            newer_index, source_text, tabified_text, did_use_angle_start
+        )
         POGGER.debug(
             "process_inline_link_body>>inline_link>>$>>inline_title>>$>new_index>$>",
             inline_link,
@@ -1134,7 +1191,31 @@ class LinkHelper:
             after_title_whitespace,
         )
 
-    # pylint: enable=too-many-locals
+    @staticmethod
+    def __process_inline_link_body_final(
+        newer_index: int,
+        source_text: str,
+        tabified_text: Optional[str],
+        did_use_angle_start: Optional[bool],
+    ) -> Tuple[int, bool]:
+        if newer_index != -1:
+            if tabified_text:
+                untabified_newer_index = LinkHelper.__translate_between_strings(
+                    tabified_text, source_text, newer_index
+                )
+                POGGER.debug("untabified_newer_index>:$:<", untabified_newer_index)
+                newer_index = untabified_newer_index
+
+            assert did_use_angle_start is not None
+            if ParserHelper.is_character_at_index(
+                source_text, newer_index, LinkHelper.__link_format_inline_end
+            ):
+                newer_index += 1
+            else:
+                newer_index = -1
+        else:
+            did_use_angle_start = False
+        return newer_index, did_use_angle_start
 
     @staticmethod
     def __translate_between_strings(
@@ -1563,23 +1644,24 @@ class LinkHelper:
             inline_blocks[ind].column_number,
         )
 
-        POGGER.debug("<<<<<<<start_text<<<<<<<$<<", start_text)
-        POGGER.debug(">>inline_link>>$>>", inline_link)
-        POGGER.debug(">>pre_inline_link>>$>>", pre_inline_link)
-        POGGER.debug(">>inline_title>>$>>", inline_title)
-        POGGER.debug(">>pre_inline_title>>$>>", pre_inline_title)
-        POGGER.debug(
-            ">>text_from_blocks>>$>>",
-            text_from_blocks,
-        )
+        # POGGER.debug("<<<<<<<start_text<<<<<<<$<<", start_text)
+        # POGGER.debug(">>inline_link>>$>>", inline_link)
+        # POGGER.debug(">>pre_inline_link>>$>>", pre_inline_link)
+        # POGGER.debug(">>inline_title>>$>>", inline_title)
+        # POGGER.debug(">>pre_inline_title>>$>>", pre_inline_title)
+        # POGGER.debug(
+        #     ">>text_from_blocks>>$>>",
+        #     text_from_blocks,
+        # )
+        _ = text_from_blocks
         if pre_inline_link == inline_link:
             pre_inline_link = ""
         if pre_inline_title == inline_title:
             pre_inline_title = ""
-        POGGER.debug(">>pre_inline_link>>$>>", pre_inline_link)
+        # POGGER.debug(">>pre_inline_link>>$>>", pre_inline_link)
 
-        POGGER.debug(">>text_from_blocks_raw>>$>>", text_from_blocks_raw)
-        POGGER.debug(">>inline_blocks[ind]>>$>>", inline_blocks[ind])
+        # POGGER.debug(">>text_from_blocks_raw>>$>>", text_from_blocks_raw)
+        # POGGER.debug(">>inline_blocks[ind]>>$>>", inline_blocks[ind])
 
         if start_text == LinkHelper.__link_start_sequence:
             consume_rest_of_line = False
@@ -1963,6 +2045,46 @@ class LinkHelper:
         return f"!{LinkHelper.rehydrate_inline_link_text_from_token(image_token)}"
 
     @staticmethod
+    def __rehydrate_inline_link_text_from_token_type_inline(
+        link_token: ReferenceMarkdownToken, link_parts: List[str]
+    ) -> None:
+        assert link_token.before_title_whitespace is not None
+        assert link_token.before_link_whitespace is not None
+        link_parts.extend(
+            [
+                "[",
+                ParserHelper.remove_all_from_text(link_token.text_from_blocks),
+                "](",
+                link_token.before_link_whitespace,
+                f"<{link_token.active_link_uri}>"
+                if link_token.did_use_angle_start
+                else link_token.active_link_uri,
+                link_token.before_title_whitespace,
+            ]
+        )
+        if link_token.active_link_title:
+            if link_token.inline_title_bounding_character == "'":
+                title_prefix = "'"
+                title_suffix = "'"
+            elif link_token.inline_title_bounding_character == "(":
+                title_prefix = "("
+                title_suffix = ")"
+            else:
+                title_prefix = '"'
+                title_suffix = '"'
+
+            assert link_token.after_title_whitespace is not None
+            link_parts.extend(
+                [
+                    title_prefix,
+                    link_token.active_link_title,
+                    title_suffix,
+                    link_token.after_title_whitespace,
+                ]
+            )
+        link_parts.append(")")
+
+    @staticmethod
     def rehydrate_inline_link_text_from_token(
         link_token: ReferenceMarkdownToken,
     ) -> str:
@@ -1988,40 +2110,8 @@ class LinkHelper:
             link_parts.extend(["[", link_token.text_from_blocks, "][]"])
         else:
             assert link_token.label_type == Constants.link_type__inline
-
-            assert link_token.before_title_whitespace is not None
-            assert link_token.before_link_whitespace is not None
-            link_parts.extend(
-                [
-                    "[",
-                    ParserHelper.remove_all_from_text(link_token.text_from_blocks),
-                    "](",
-                    link_token.before_link_whitespace,
-                    f"<{link_token.active_link_uri}>"
-                    if link_token.did_use_angle_start
-                    else link_token.active_link_uri,
-                    link_token.before_title_whitespace,
-                ]
+            LinkHelper.__rehydrate_inline_link_text_from_token_type_inline(
+                link_token, link_parts
             )
-            if link_token.active_link_title:
-                if link_token.inline_title_bounding_character == "'":
-                    title_prefix = "'"
-                    title_suffix = "'"
-                elif link_token.inline_title_bounding_character == "(":
-                    title_prefix = "("
-                    title_suffix = ")"
-                else:
-                    title_prefix = '"'
-                    title_suffix = '"'
 
-                assert link_token.after_title_whitespace is not None
-                link_parts.extend(
-                    [
-                        title_prefix,
-                        link_token.active_link_title,
-                        title_suffix,
-                        link_token.after_title_whitespace,
-                    ]
-                )
-            link_parts.append(")")
         return "".join(link_parts)

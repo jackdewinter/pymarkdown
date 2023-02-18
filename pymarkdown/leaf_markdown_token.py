@@ -272,6 +272,16 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
                 self.__end_whitespace,
             ) = ("", "", "", "", "", "")
 
+        extra_data = self.__validate_proper_fields_are_valid(extracted_whitespace)
+        LeafMarkdownToken.__init__(
+            self,
+            MarkdownToken._token_link_reference_definition,
+            extra_data,
+            position_marker=position_marker,
+            extracted_whitespace=extracted_whitespace,
+        )
+
+    def __validate_proper_fields_are_valid(self, extracted_whitespace: str) -> str:
         assert self.__end_whitespace is not None
         assert self.__link_title_raw is not None
         assert self.__link_title is not None
@@ -280,26 +290,20 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
         assert self.__link_destination is not None
         assert self.__link_destination_whitespace is not None
         assert self.__link_name_debug is not None
-        LeafMarkdownToken.__init__(
-            self,
-            MarkdownToken._token_link_reference_definition,
-            MarkdownToken.extra_data_separator.join(
-                [
-                    str(self.did_add_definition),
-                    extracted_whitespace,
-                    self.__link_name,
-                    self.__link_name_debug,
-                    self.__link_destination_whitespace,
-                    self.__link_destination,
-                    self.__link_destination_raw,
-                    self.__link_title_whitespace,
-                    self.__link_title,
-                    self.__link_title_raw,
-                    self.__end_whitespace,
-                ]
-            ),
-            position_marker=position_marker,
-            extracted_whitespace=extracted_whitespace,
+        return MarkdownToken.extra_data_separator.join(
+            [
+                str(self.did_add_definition),
+                extracted_whitespace,
+                self.__link_name,
+                self.__link_name_debug,
+                self.__link_destination_whitespace,
+                self.__link_destination,
+                self.__link_destination_raw,
+                self.__link_title_whitespace,
+                self.__link_title,
+                self.__link_title_raw,
+                self.__end_whitespace,
+            ]
         )
 
     # pylint: enable=too-many-arguments

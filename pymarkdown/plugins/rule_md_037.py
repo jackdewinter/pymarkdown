@@ -43,6 +43,30 @@ class RuleMd037(RulePlugin):
         self.__start_emphasis_token = None
         self.__emphasis_token_list = []
 
+    def __handle_emphasis_text(
+        self, context: PluginScanContext, token: MarkdownToken
+    ) -> None:
+        text_token = cast(TextMarkdownToken, token)
+        assert self.__start_emphasis_token is not None
+        if text_token.token_text == self.__start_emphasis_token.token_text:
+            assert self.__emphasis_token_list
+            did_first_start_with_space = self.__handle_emphasis_text_space_check(0)
+            did_last_end_with_space = self.__handle_emphasis_text_space_check(-1)
+            if did_first_start_with_space or did_last_end_with_space:
+                assert self.__start_emphasis_token is not None
+                self.report_next_token_error(context, self.__start_emphasis_token)
+
+            self.__start_emphasis_token = None
+            self.__emphasis_token_list = []
+        else:
+            self.__emphasis_token_list.append(token)
+
+    def __handle_emphasis_text_space_check(self, token_text_index: int) -> bool:
+        first_capture_token = self.__emphasis_token_list[token_text_index]
+        assert first_capture_token.is_text
+        other_text_token = cast(TextMarkdownToken, first_capture_token)
+        return other_text_token.token_text[token_text_index] == " "
+
     def __handle_start_emphasis(
         self, context: PluginScanContext, token: MarkdownToken
     ) -> None:
@@ -55,25 +79,7 @@ class RuleMd037(RulePlugin):
             self.__start_emphasis_token = None
             self.__emphasis_token_list = []
         elif token.is_text and self.__start_emphasis_token is not None:
-            text_token = cast(TextMarkdownToken, token)
-            if text_token.token_text == self.__start_emphasis_token.token_text:
-                assert self.__emphasis_token_list
-                first_capture_token = self.__emphasis_token_list[0]
-                assert first_capture_token.is_text
-                other_text_token = cast(TextMarkdownToken, first_capture_token)
-                did_first_start_with_space = other_text_token.token_text[0] == " "
-                last_capture_token = self.__emphasis_token_list[-1]
-                assert last_capture_token.is_text
-                another_text_token = cast(TextMarkdownToken, last_capture_token)
-                did_last_end_with_space = another_text_token.token_text[-1] == " "
-                if did_first_start_with_space or did_last_end_with_space:
-                    assert self.__start_emphasis_token is not None
-                    self.report_next_token_error(context, self.__start_emphasis_token)
-
-                self.__start_emphasis_token = None
-                self.__emphasis_token_list = []
-            else:
-                self.__emphasis_token_list.append(token)
+            self.__handle_emphasis_text(context, token)
         else:
             self.__emphasis_token_list.append(token)
 

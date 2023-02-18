@@ -97,46 +97,38 @@ class CoalesceProcessor:
         coalesce_index: int,
     ) -> bool:
 
-        POGGER.debug(">>coalesce_text_blocks>>>>$<<", coalesced_list[-1])
-        if first_pass_results[coalesce_index].is_text or (
-            first_pass_results[coalesce_index].is_blank_line
-            and coalesced_list[-2].is_code_block
+        # POGGER.debug(">>coalesce_text_blocks>>>>$<<", coalesced_list[-1])
+        if not first_pass_results[coalesce_index].is_text and (
+            not first_pass_results[coalesce_index].is_blank_line
+            or not coalesced_list[-2].is_code_block
         ):
-
-            POGGER.debug("text-text>>$<<", coalesced_list[-2])
-            if coalesced_list[-2].is_indented_code_block:
-                indented_token = cast(
-                    IndentedCodeBlockMarkdownToken, coalesced_list[-2]
-                )
-                if ParserHelper.tab_character in indented_token.extracted_whitespace:
-                    remove_leading_spaces = TabHelper.calculate_length(
-                        indented_token.extracted_whitespace
-                    )
-                else:
-                    remove_leading_spaces = len(indented_token.extracted_whitespace)
-            elif (
-                coalesced_list[-2].is_paragraph or coalesced_list[-2].is_setext_heading
-            ):
-                remove_leading_spaces = -1
-            else:
-                remove_leading_spaces = 0
-
-            text_token = cast(TextMarkdownToken, coalesced_list[-1])
-            POGGER.debug("remove_leading_spaces>>$", remove_leading_spaces)
-            POGGER.debug("combine1>>$", text_token)
-            POGGER.debug("combine2>>$", first_pass_results[coalesce_index])
-            indented_whitespace = text_token.combine(
-                first_pass_results[coalesce_index], remove_leading_spaces
+            return False
+            # POGGER.debug("text-text>>$<<", coalesced_list[-2])
+        if coalesced_list[-2].is_indented_code_block:
+            indented_token = cast(IndentedCodeBlockMarkdownToken, coalesced_list[-2])
+            remove_leading_spaces = (
+                TabHelper.calculate_length(indented_token.extracted_whitespace)
+                if ParserHelper.tab_character in indented_token.extracted_whitespace
+                else len(indented_token.extracted_whitespace)
             )
-            POGGER.debug("combined>>$", text_token)
-            POGGER.debug("indented_whitespace>>$<<", indented_whitespace)
-            if coalesced_list[-2].is_indented_code_block:
-                indented_token = cast(
-                    IndentedCodeBlockMarkdownToken, coalesced_list[-2]
-                )
-                indented_token.add_indented_whitespace(indented_whitespace)
-            return True
-        return False
+        elif coalesced_list[-2].is_paragraph or coalesced_list[-2].is_setext_heading:
+            remove_leading_spaces = -1
+        else:
+            remove_leading_spaces = 0
+
+        text_token = cast(TextMarkdownToken, coalesced_list[-1])
+        # POGGER.debug("remove_leading_spaces>>$", remove_leading_spaces)
+        # POGGER.debug("combine1>>$", text_token)
+        # POGGER.debug("combine2>>$", first_pass_results[coalesce_index])
+        indented_whitespace = text_token.combine(
+            first_pass_results[coalesce_index], remove_leading_spaces
+        )
+        # POGGER.debug("combined>>$", text_token)
+        # POGGER.debug("indented_whitespace>>$<<", indented_whitespace)
+        if coalesced_list[-2].is_indented_code_block:
+            indented_token = cast(IndentedCodeBlockMarkdownToken, coalesced_list[-2])
+            indented_token.add_indented_whitespace(indented_whitespace)
+        return True
 
     @staticmethod
     def __coalesce_with_blank_line(

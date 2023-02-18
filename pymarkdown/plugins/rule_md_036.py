@@ -67,6 +67,47 @@ class RuleMd036(RulePlugin):
         self.__current_state = RuleMd036States.LOOK_FOR_PARAGRAPH
         self.__start_token = None
 
+    def __handle_look_for_parapgraph(self, token: MarkdownToken) -> RuleMd036States:
+        new_state = RuleMd036States.LOOK_FOR_PARAGRAPH
+        if token.is_paragraph:
+            new_state = RuleMd036States.LOOK_FOR_EMPHASIS_START
+            self.__start_token = token
+        return new_state
+
+    def __handle_look_for_emphasis_start(self, token: MarkdownToken) -> RuleMd036States:
+        return (
+            RuleMd036States.LOOK_FOR_ELIGIBLE_TEXT
+            if token.is_inline_emphasis
+            else RuleMd036States.LOOK_FOR_PARAGRAPH
+        )
+
+    def __handle_look_for_eligible_text(self, token: MarkdownToken) -> RuleMd036States:
+        new_state = RuleMd036States.LOOK_FOR_PARAGRAPH
+        if token.is_text:
+            text_token = cast(TextMarkdownToken, token)
+            if (
+                ParserHelper.newline_character not in text_token.token_text
+                and text_token.token_text[-1] not in self.__punctuation
+            ):
+                new_state = RuleMd036States.LOOK_FOR_EMPHASIS_END
+        return new_state
+
+    def __handle_look_for_emphasis_end(self, token: MarkdownToken) -> RuleMd036States:
+        return (
+            RuleMd036States.LOOK_FOR_PARAGRAPH_END
+            if token.is_inline_emphasis_end
+            else RuleMd036States.LOOK_FOR_PARAGRAPH
+        )
+
+    def __handle_look_for_parapgraph_end(
+        self, context: PluginScanContext, token: MarkdownToken
+    ) -> RuleMd036States:
+        new_state = RuleMd036States.LOOK_FOR_PARAGRAPH
+        if token.is_paragraph_end:
+            assert self.__start_token is not None
+            self.report_next_token_error(context, self.__start_token)
+        return new_state
+
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
@@ -74,27 +115,15 @@ class RuleMd036(RulePlugin):
         new_state = RuleMd036States.LOOK_FOR_PARAGRAPH
 
         if self.__current_state == RuleMd036States.LOOK_FOR_PARAGRAPH:
-            if token.is_paragraph:
-                new_state = RuleMd036States.LOOK_FOR_EMPHASIS_START
-                self.__start_token = token
+            new_state = self.__handle_look_for_parapgraph(token)
         elif self.__current_state == RuleMd036States.LOOK_FOR_EMPHASIS_START:
-            if token.is_inline_emphasis:
-                new_state = RuleMd036States.LOOK_FOR_ELIGIBLE_TEXT
+            new_state = self.__handle_look_for_emphasis_start(token)
         elif self.__current_state == RuleMd036States.LOOK_FOR_ELIGIBLE_TEXT:
-            if token.is_text:
-                text_token = cast(TextMarkdownToken, token)
-                if (
-                    ParserHelper.newline_character not in text_token.token_text
-                    and text_token.token_text[-1] not in self.__punctuation
-                ):
-                    new_state = RuleMd036States.LOOK_FOR_EMPHASIS_END
+            new_state = self.__handle_look_for_eligible_text(token)
         elif self.__current_state == RuleMd036States.LOOK_FOR_EMPHASIS_END:
-            if token.is_inline_emphasis_end:
-                new_state = RuleMd036States.LOOK_FOR_PARAGRAPH_END
+            new_state = self.__handle_look_for_emphasis_end(token)
         else:
             assert self.__current_state == RuleMd036States.LOOK_FOR_PARAGRAPH_END
-            if token.is_paragraph_end:
-                assert self.__start_token is not None
-                self.report_next_token_error(context, self.__start_token)
+            new_state = self.__handle_look_for_parapgraph_end(context, token)
 
         self.__current_state = new_state
