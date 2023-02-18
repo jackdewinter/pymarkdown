@@ -126,29 +126,33 @@ class RuleMd009(RulePlugin):
             and line[-1] == " "
         ):
 
-            (
-                first_non_whitespace_index,
-                extracted_whitespace,
-            ) = ParserHelper.extract_spaces_from_end(line)
-            extracted_whitespace_length = len(extracted_whitespace)
-
-            is_list_empty_line = False
-            leaf_token = self.__leaf_owner_tokens[self.__leaf_token_index]
-            if leaf_token is not None:
-                is_list_empty_line = (
-                    self.__list_item_empty_lines_mode
-                    and leaf_token.is_list_start
-                    and first_non_whitespace_index == 0
-                )
-
-            if extracted_whitespace_length != self.__break_spaces or (
-                self.__strict_mode and not is_list_empty_line
-            ):
-                self.__report_error(
-                    context, extracted_whitespace_length, first_non_whitespace_index
-                )
-
+            self.__next_line_check_for_error(line, context)
         self.__line_index += 1
+
+    def __next_line_check_for_error(
+        self, line: str, context: PluginScanContext
+    ) -> None:
+        (
+            first_non_whitespace_index,
+            extracted_whitespace,
+        ) = ParserHelper.extract_spaces_from_end(line)
+        extracted_whitespace_length = len(extracted_whitespace)
+
+        is_list_empty_line = False
+        leaf_token = self.__leaf_owner_tokens[self.__leaf_token_index]
+        if leaf_token is not None:
+            is_list_empty_line = (
+                self.__list_item_empty_lines_mode
+                and leaf_token.is_list_start
+                and first_non_whitespace_index == 0
+            )
+
+        if extracted_whitespace_length != self.__break_spaces or (
+            self.__strict_mode and not is_list_empty_line
+        ):
+            self.__report_error(
+                context, extracted_whitespace_length, first_non_whitespace_index
+            )
 
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """

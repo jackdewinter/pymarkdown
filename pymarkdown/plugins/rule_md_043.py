@@ -137,12 +137,30 @@ class RuleMd043(RulePlugin):
                 else:
                     heading_index -= 1
 
+    def __verify_single_heading_match_atx(
+        self, matching_all_token_index: int, hash_count: int, expected_text: str
+    ) -> Tuple[Optional[MarkdownToken], Optional[str]]:
+        failure_token, failure_reason = (None, None)
+
+        these_tokens = self.__all_tokens[matching_all_token_index]
+        atx_token = cast(AtxHeadingMarkdownToken, these_tokens[0])
+        if atx_token.hash_count != hash_count:
+            failure_reason = f"Bad heading level: Expected: {hash_count}, Actual: {atx_token.hash_count}"
+        elif len(these_tokens) != 2 or not these_tokens[1].is_text:
+            failure_reason = "Bad heading: Required headings must only be normal text."
+        else:
+            text_token = cast(TextMarkdownToken, these_tokens[1])
+            if text_token.token_text != expected_text:
+                failure_reason = f"Bad heading text: Expected: {expected_text}, Actual: {text_token.token_text}"
+        if failure_reason:
+            failure_token = these_tokens[0]
+        return failure_token, failure_reason
+
     def __verify_single_heading_match(
         self,
         this_compiled_heading: Union[str, Tuple[int, str]],
         matching_all_token_index: int,
     ) -> Tuple[Optional[MarkdownToken], Optional[str]]:
-
         failure_token, failure_reason = (None, None)
 
         assert len(this_compiled_heading) == 2
@@ -153,20 +171,9 @@ class RuleMd043(RulePlugin):
             failure_token = self.__all_tokens[-1][0]
             failure_reason = f"Missing heading: {ParserHelper.repeat_string('#', hash_count)} {expected_text}"
         else:
-            these_tokens = self.__all_tokens[matching_all_token_index]
-            atx_token = cast(AtxHeadingMarkdownToken, these_tokens[0])
-            if atx_token.hash_count != hash_count:
-                failure_reason = f"Bad heading level: Expected: {hash_count}, Actual: {atx_token.hash_count}"
-            elif len(these_tokens) != 2 or not these_tokens[1].is_text:
-                failure_reason = (
-                    "Bad heading: Required headings must only be normal text."
-                )
-            else:
-                text_token = cast(TextMarkdownToken, these_tokens[1])
-                if text_token.token_text != expected_text:
-                    failure_reason = f"Bad heading text: Expected: {expected_text}, Actual: {text_token.token_text}"
-            if failure_reason:
-                failure_token = these_tokens[0]
+            failure_token, failure_reason = self.__verify_single_heading_match_atx(
+                matching_all_token_index, hash_count, expected_text
+            )
         return failure_token, failure_reason
 
     def __verify_group_heading_match(

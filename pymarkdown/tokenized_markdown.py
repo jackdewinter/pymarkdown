@@ -125,7 +125,6 @@ class TokenizedMarkdown:
                 "An unhandled error occurred processing the document."
             ) from this_exception
 
-    # pylint: disable=too-many-locals
     def __parse_blocks_pass(self) -> List[MarkdownToken]:
         """
         The first pass at the tokens is to deal with blocks.
@@ -159,56 +158,22 @@ class TokenizedMarkdown:
             ) = (first_line_in_document is None, False, True, False)
             next_line_in_document = first_line_in_document
             while keep_on_going:
-                POGGER.debug("next-line>>$", next_line_in_document)
-                POGGER.debug("stack>>$", self.__token_stack)
-                POGGER.debug("current_block>>$", self.__token_stack[-1])
-                POGGER.debug("line_number>>$", line_number)
-                POGGER.debug("---")
-
-                parser_state = ParserState(
-                    self.__token_stack,
-                    self.__tokenized_document,
-                    TokenizedMarkdown.__close_open_blocks,
-                    self.__handle_blank_line,
+                (
+                    keep_on_going,
+                    did_start_close,
+                    did_started_close,
+                    ignore_link_definition_start,
+                    requeue,
+                    line_number,
+                    next_line_in_document,
+                ) = self.__parse_blocks_pass_next_line(
+                    next_line_in_document,
+                    line_number,
+                    requeue,
+                    did_start_close,
+                    did_started_close,
+                    ignore_link_definition_start,
                 )
-                if did_start_close:
-                    (
-                        did_started_close,
-                        did_start_close,
-                        tokens_from_line,
-                        line_number,
-                        keep_on_going,
-                        requeue_line_info,
-                    ) = self.__main_pass_did_start_close(parser_state, line_number)
-                else:
-                    assert next_line_in_document is not None
-                    position_marker = PositionMarker(
-                        line_number, 0, next_line_in_document
-                    )
-                    (tfl, requeue_line_info,) = self.__main_pass_did_not_start_close(
-                        parser_state,
-                        position_marker,
-                        next_line_in_document,
-                        ignore_link_definition_start,
-                    )
-                    assert tfl is not None
-                    tokens_from_line = tfl
-
-                if keep_on_going:
-                    (
-                        line_number,
-                        ignore_link_definition_start,
-                        next_line_in_document,
-                        did_start_close,
-                        did_started_close,
-                    ) = self.__main_pass_keep_on_going(
-                        line_number,
-                        requeue_line_info,
-                        requeue,
-                        tokens_from_line,
-                        did_start_close,
-                        did_started_close,
-                    )
         except AssertionError as this_exception:
             error_message = f"A project assertion failed on line {line_number} of the current document."
             raise BadTokenizationError(error_message) from this_exception
@@ -219,7 +184,76 @@ class TokenizedMarkdown:
             )
         return self.__tokenized_document
 
-    # pylint: enable=too-many-locals
+    # pylint: disable=too-many-arguments
+    def __parse_blocks_pass_next_line(
+        self,
+        next_line_in_document: Optional[str],
+        line_number: int,
+        requeue: List[str],
+        did_start_close: bool,
+        did_started_close: bool,
+        ignore_link_definition_start: bool,
+    ) -> Tuple[bool, bool, bool, bool, List[str], int, Optional[str]]:
+        POGGER.debug("next-line>>$", next_line_in_document)
+        POGGER.debug("stack>>$", self.__token_stack)
+        POGGER.debug("current_block>>$", self.__token_stack[-1])
+        POGGER.debug("line_number>>$", line_number)
+        POGGER.debug("---")
+
+        parser_state = ParserState(
+            self.__token_stack,
+            self.__tokenized_document,
+            TokenizedMarkdown.__close_open_blocks,
+            self.__handle_blank_line,
+        )
+        keep_on_going = True
+        if did_start_close:
+            (
+                did_started_close,
+                did_start_close,
+                tokens_from_line,
+                line_number,
+                keep_on_going,
+                requeue_line_info,
+            ) = self.__main_pass_did_start_close(parser_state, line_number)
+        else:
+            assert next_line_in_document is not None
+            position_marker = PositionMarker(line_number, 0, next_line_in_document)
+            (tfl, requeue_line_info,) = self.__main_pass_did_not_start_close(
+                parser_state,
+                position_marker,
+                next_line_in_document,
+                ignore_link_definition_start,
+            )
+            assert tfl is not None
+            tokens_from_line = tfl
+
+        if keep_on_going:
+            (
+                line_number,
+                ignore_link_definition_start,
+                next_line_in_document,
+                did_start_close,
+                did_started_close,
+            ) = self.__main_pass_keep_on_going(
+                line_number,
+                requeue_line_info,
+                requeue,
+                tokens_from_line,
+                did_start_close,
+                did_started_close,
+            )
+        return (
+            keep_on_going,
+            did_start_close,
+            did_started_close,
+            ignore_link_definition_start,
+            requeue,
+            line_number,
+            next_line_in_document,
+        )
+
+    # pylint: enable=too-many-arguments
 
     def __main_pass_did_start_close(
         self, parser_state: ParserState, line_number: int

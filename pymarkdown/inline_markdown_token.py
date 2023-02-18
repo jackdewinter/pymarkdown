@@ -722,8 +722,37 @@ class TextMarkdownToken(InlineMarkdownToken):
                 "",
             )
 
+        removed_whitespace, prefix_whitespace = self.__combine_handle_whitespace(
+            remove_leading_spaces, whitespace_present
+        )
+
+        if self.__tabified_text or tabified_text_to_combine:
+            other_token_text = tabified_text_to_combine or text_to_combine
+
+            this_token_text = self.__tabified_text or self.__token_text
+            # POGGER.debug("this_token_text>:$:<", this_token_text)
+            # POGGER.debug("blank_line_sequence>:$:<", blank_line_sequence)
+            # POGGER.debug("prefix_whitespace>:$:<", prefix_whitespace)
+            # POGGER.debug("other_token_text>:$:<", other_token_text)
+
+            self.__tabified_text = (
+                f"{this_token_text}{ParserHelper.newline_character}{blank_line_sequence}"
+                + f"{prefix_whitespace}{other_token_text}"
+            )
+        self.__token_text = (
+            f"{self.__token_text}{ParserHelper.newline_character}{blank_line_sequence}"
+            + f"{prefix_whitespace}{text_to_combine}"
+        )
+        self.__compose_extra_data_field()
+        return removed_whitespace
+
+    def __combine_handle_whitespace(
+        self, remove_leading_spaces: int, whitespace_present: Optional[str]
+    ) -> Tuple[str, str]:
+        prefix_whitespace = ""
         whitespace_to_append, removed_whitespace = None, ""
         if not remove_leading_spaces:
+            assert whitespace_present is not None
             prefix_whitespace = whitespace_present
         elif remove_leading_spaces == -1:
             whitespace_to_append, prefix_whitespace = whitespace_present, ""
@@ -749,25 +778,7 @@ class TextMarkdownToken(InlineMarkdownToken):
                 f"{self.__extracted_whitespace}"
                 + f"{ParserHelper.newline_character}{whitespace_to_append}"
             )
-        if self.__tabified_text or tabified_text_to_combine:
-            other_token_text = tabified_text_to_combine or text_to_combine
-
-            this_token_text = self.__tabified_text or self.__token_text
-            # POGGER.debug("this_token_text>:$:<", this_token_text)
-            # POGGER.debug("blank_line_sequence>:$:<", blank_line_sequence)
-            # POGGER.debug("prefix_whitespace>:$:<", prefix_whitespace)
-            # POGGER.debug("other_token_text>:$:<", other_token_text)
-
-            self.__tabified_text = (
-                f"{this_token_text}{ParserHelper.newline_character}{blank_line_sequence}"
-                + f"{prefix_whitespace}{other_token_text}"
-            )
-        self.__token_text = (
-            f"{self.__token_text}{ParserHelper.newline_character}{blank_line_sequence}"
-            + f"{prefix_whitespace}{text_to_combine}"
-        )
-        self.__compose_extra_data_field()
-        return removed_whitespace
+        return removed_whitespace, prefix_whitespace
 
 
 class SpecialTextMarkdownToken(TextMarkdownToken):

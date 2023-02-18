@@ -533,6 +533,47 @@ class RuleMd027(RulePlugin):
 
     # pylint: enable=too-many-arguments
 
+    # pylint: disable=too-many-arguments
+    def __handle_link_reference_definition_check_after(
+        self,
+        context: PluginScanContext,
+        token: MarkdownToken,
+        num_container_tokens: int,
+        lrd_token: LinkReferenceDefinitionMarkdownToken,
+        leading_spaces: str,
+    ) -> None:
+        assert lrd_token.link_name_debug is not None
+        assert lrd_token.link_title_whitespace is not None
+        line_number_delta = (
+            lrd_token.link_name_debug.count(ParserHelper.newline_character)
+            + lrd_token.link_title_whitespace.count(ParserHelper.newline_character)
+            + 1
+        )
+
+        split_array_index = (
+            self.__bq_line_index[num_container_tokens] + line_number_delta
+        )
+        split_leading_spaces = leading_spaces.split(ParserHelper.newline_character)
+        specific_block_quote_prefix = split_leading_spaces[split_array_index]
+
+        column_number_delta = -(len(specific_block_quote_prefix) + 1)
+        # if self.__debug_on:
+        #     print("line_number_delta>>" + str(line_number_delta))
+        #     print("split_array_index>>" + str(split_array_index))
+        #     print(f"end-container>>{ParserHelper.make_value_visible(self.__container_tokens[-1])}")
+        #     print(f"split_leading_spaces>>{ParserHelper.make_value_visible(split_leading_spaces)}")
+        #     print("specific_block_quote_prefix>>:" + \
+        #       f"{ParserHelper.make_value_visible(specific_block_quote_prefix)}:")
+        #     print("lrd-3-error")
+        self.report_next_token_error(
+            context,
+            token,
+            line_number_delta=line_number_delta,
+            column_number_delta=column_number_delta,
+        )
+
+    # pylint: enable=too-many-arguments
+
     def __handle_link_reference_definition(
         self,
         context: PluginScanContext,
@@ -584,33 +625,8 @@ class RuleMd027(RulePlugin):
         if found_index != -1 and ParserHelper.is_character_at_index_whitespace(
             lrd_token.link_title_whitespace, found_index + 1
         ):
-            assert lrd_token.link_name_debug is not None
-            line_number_delta = (
-                lrd_token.link_name_debug.count(ParserHelper.newline_character)
-                + lrd_token.link_title_whitespace.count(ParserHelper.newline_character)
-                + 1
-            )
-
-            split_array_index = (
-                self.__bq_line_index[num_container_tokens] + line_number_delta
-            )
-            split_leading_spaces = leading_spaces.split(ParserHelper.newline_character)
-            specific_block_quote_prefix = split_leading_spaces[split_array_index]
-
-            column_number_delta = -(len(specific_block_quote_prefix) + 1)
-            # if self.__debug_on:
-            #     print("line_number_delta>>" + str(line_number_delta))
-            #     print("split_array_index>>" + str(split_array_index))
-            #     print(f"end-container>>{ParserHelper.make_value_visible(self.__container_tokens[-1])}")
-            #     print(f"split_leading_spaces>>{ParserHelper.make_value_visible(split_leading_spaces)}")
-            #     print("specific_block_quote_prefix>>:" + \
-            #       f"{ParserHelper.make_value_visible(specific_block_quote_prefix)}:")
-            #     print("lrd-3-error")
-            self.report_next_token_error(
-                context,
-                token,
-                line_number_delta=line_number_delta,
-                column_number_delta=column_number_delta,
+            self.__handle_link_reference_definition_check_after(
+                context, token, num_container_tokens, lrd_token, leading_spaces
             )
 
         assert lrd_token.link_name_debug is not None
@@ -624,6 +640,45 @@ class RuleMd027(RulePlugin):
             + lrd_token.link_title_whitespace.count(ParserHelper.newline_character)
             + lrd_token.link_title_raw.count(ParserHelper.newline_character)
         )
+
+    # pylint: disable=too-many-arguments
+    def __scan_text(
+        self,
+        context: PluginScanContext,
+        token: MarkdownToken,
+        next_line: str,
+        scoped_block_quote_token: BlockQuoteMarkdownToken,
+        num_container_tokens: int,
+        line_number_delta: int,
+    ) -> None:
+        found_index = next_line.find(ParserHelper.whitespace_split_character)
+        if found_index != -1:
+            next_line = next_line[:found_index]
+        if next_line:
+            assert scoped_block_quote_token.bleading_spaces is not None
+            split_leading_spaces = scoped_block_quote_token.bleading_spaces.split(
+                ParserHelper.newline_character
+            )
+            split_array_index = (
+                self.__bq_line_index[num_container_tokens] + line_number_delta + 1
+            )
+            specific_block_quote_prefix = split_leading_spaces[split_array_index]
+            calculated_column_number = -(len(specific_block_quote_prefix) + 1)
+
+            # if self.__debug_on:
+            #     print(f"split_leading_spaces>>{ParserHelper.make_value_visible(split_leading_spaces)}")
+            #     print(f"split_array_index>>{ParserHelper.make_value_visible(split_array_index)}")
+            #     print("specific_block_quote_prefix>>:" + \
+            #       f"{ParserHelper.make_value_visible(specific_block_quote_prefix)}:")
+            #     print("setext-text-error")
+            self.report_next_token_error(
+                context,
+                token,
+                line_number_delta=line_number_delta,
+                column_number_delta=calculated_column_number,
+            )
+
+    # pylint: enable=too-many-arguments
 
     def __handle_text(
         self,
@@ -645,41 +700,14 @@ class RuleMd027(RulePlugin):
                 for line_number_delta, next_line in enumerate(
                     text_token.end_whitespace.split(ParserHelper.newline_character)
                 ):
-                    found_index = next_line.find(
-                        ParserHelper.whitespace_split_character
+                    self.__scan_text(
+                        context,
+                        token,
+                        next_line,
+                        scoped_block_quote_token,
+                        num_container_tokens,
+                        line_number_delta,
                     )
-                    if found_index != -1:
-                        next_line = next_line[:found_index]
-                    if next_line:
-                        split_leading_spaces = (
-                            scoped_block_quote_token.bleading_spaces.split(
-                                ParserHelper.newline_character
-                            )
-                        )
-                        split_array_index = (
-                            self.__bq_line_index[num_container_tokens]
-                            + line_number_delta
-                            + 1
-                        )
-                        specific_block_quote_prefix = split_leading_spaces[
-                            split_array_index
-                        ]
-                        calculated_column_number = -(
-                            len(specific_block_quote_prefix) + 1
-                        )
-
-                        # if self.__debug_on:
-                        #     print(f"split_leading_spaces>>{ParserHelper.make_value_visible(split_leading_spaces)}")
-                        #     print(f"split_array_index>>{ParserHelper.make_value_visible(split_array_index)}")
-                        #     print("specific_block_quote_prefix>>:" + \
-                        #       f"{ParserHelper.make_value_visible(specific_block_quote_prefix)}:")
-                        #     print("setext-text-error")
-                        self.report_next_token_error(
-                            context,
-                            token,
-                            line_number_delta=line_number_delta,
-                            column_number_delta=calculated_column_number,
-                        )
             assert text_token.end_whitespace is not None
             self.__bq_line_index[num_container_tokens] += (
                 text_token.end_whitespace.count(ParserHelper.newline_character) + 1

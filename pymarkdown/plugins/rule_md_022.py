@@ -77,6 +77,27 @@ class RuleMd022(RulePlugin):
         if (self.__blank_line_count != -1) and self.__blank_line_count >= 0:
             self.perform_close_check(context, None)
 
+    def __next_token_heading_start(self, token: MarkdownToken) -> None:
+        # print(">>token.is_setext_heading or token.is_atx_heading>>")
+        self.__did_above_line_count_match = self.__blank_line_count in [
+            -1,
+            self.__lines_above,
+        ]
+
+        self.__start_heading_token = token
+        self.__start_heading_blank_line_count = self.__blank_line_count
+        self.__did_heading_end = False
+        # print("self.__did_above_line_count_match>>" + str(self.__did_above_line_count_match))
+
+    def __next_token_heading_end(self, token: MarkdownToken) -> None:
+        # print(">>token.is_end_token>>")
+        if not token.is_list_end and not token.is_block_quote_end:
+            self.__blank_line_count = (
+                0 if token.is_leaf_end_token or token.is_container_end_token else -1
+            )
+        if token.is_atx_heading_end or token.is_setext_heading_end:
+            self.__did_heading_end = True
+
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
@@ -93,26 +114,11 @@ class RuleMd022(RulePlugin):
         ):
             self.__blank_line_count += 1
         if token.is_setext_heading or token.is_atx_heading:
-            # print(">>token.is_setext_heading or token.is_atx_heading>>")
-            self.__did_above_line_count_match = self.__blank_line_count in [
-                -1,
-                self.__lines_above,
-            ]
-
-            self.__start_heading_token = token
-            self.__start_heading_blank_line_count = self.__blank_line_count
-            self.__did_heading_end = False
-            # print("self.__did_above_line_count_match>>" + str(self.__did_above_line_count_match))
+            self.__next_token_heading_start(token)
         elif token.is_thematic_break or token.is_link_reference_definition:
             self.__blank_line_count = 0
         elif token.is_end_token:
-            # print(">>token.is_end_token>>")
-            if not token.is_list_end and not token.is_block_quote_end:
-                self.__blank_line_count = (
-                    0 if token.is_leaf_end_token or token.is_container_end_token else -1
-                )
-            if token.is_atx_heading_end or token.is_setext_heading_end:
-                self.__did_heading_end = True
+            self.__next_token_heading_end(token)
         # print(">>self.__blank_line_count>>" + str(self.__blank_line_count))
 
     def perform_close_check(

@@ -1290,6 +1290,72 @@ class InlineProcessor:
 
     # pylint: enable=too-many-locals, too-many-arguments
 
+    # pylint: disable=too-many-locals, too-many-arguments
+    @staticmethod
+    def __handle_next_inline_character_setup(
+        source_text: str,
+        start_index: int,
+        next_index: int,
+        inline_blocks: List[MarkdownToken],
+        tabified_text: Optional[str],
+        newlines_encountered: int,
+        current_string_unresolved: str,
+        line_number: int,
+        column_number: int,
+        para_owner: Optional[ParagraphMarkdownToken],
+    ) -> Tuple[bool, str, int, Optional[MarkdownToken], Optional[str], InlineRequest]:
+        (
+            reset_current_string,
+            remaining_line,
+            old_inline_blocks_count,
+            old_inline_blocks_last_token,
+        ) = (
+            False,
+            source_text[start_index:next_index],
+            len(inline_blocks),
+            inline_blocks[-1] if inline_blocks else None,
+        )
+        # POGGER.debug("__process_inline_text_block>>$,$", start_index, next_index)
+        # POGGER.debug("__process_inline_text_block>:$:<", remaining_line)
+        # POGGER.debug("so far>:$:<", source_text[start_index:])
+        # POGGER.debug("newlines_encountered>:$:<", newlines_encountered)
+        tabified_remaining_line: Optional[str] = None
+        # POGGER.debug("tabified_text>:$:<", tabified_text)
+        if tabified_text:
+            # POGGER.debug("char>:$:<", source_text[next_index])
+            adj_original_line = InlineProcessor.__handle_next_inline_character_tabified(
+                source_text,
+                tabified_text,
+                newlines_encountered,
+                start_index,
+                next_index,
+            )
+            tabified_remaining_line = adj_original_line
+            # POGGER.debug("tabified_remaining_line>:$:<", tabified_remaining_line)
+
+        inline_request = InlineRequest(
+            source_text,
+            next_index,
+            inline_blocks,
+            remaining_line,
+            tabified_remaining_line,
+            current_string_unresolved,
+            line_number,
+            column_number,
+            para_owner,
+            tabified_text,
+        )
+        return (
+            reset_current_string,
+            remaining_line,
+            old_inline_blocks_count,
+            old_inline_blocks_last_token,
+            tabified_remaining_line,
+            inline_request,
+        )
+
+    # pylint: enable=too-many-locals, too-many-arguments
+
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __handle_next_inline_character(
@@ -1331,42 +1397,19 @@ class InlineProcessor:
             remaining_line,
             old_inline_blocks_count,
             old_inline_blocks_last_token,
-        ) = (
-            False,
-            source_text[start_index:next_index],
-            len(inline_blocks),
-            inline_blocks[-1] if inline_blocks else None,
-        )
-
-        # POGGER.debug("__process_inline_text_block>>$,$", start_index, next_index)
-        # POGGER.debug("__process_inline_text_block>:$:<", remaining_line)
-        # POGGER.debug("so far>:$:<", source_text[start_index:])
-        # POGGER.debug("newlines_encountered>:$:<", newlines_encountered)
-        tabified_remaining_line: Optional[str] = None
-        # POGGER.debug("tabified_text>:$:<", tabified_text)
-        if tabified_text:
-            # POGGER.debug("char>:$:<", source_text[next_index])
-            adj_original_line = InlineProcessor.__handle_next_inline_character_tabified(
-                source_text,
-                tabified_text,
-                newlines_encountered,
-                start_index,
-                next_index,
-            )
-            tabified_remaining_line = adj_original_line
-            # POGGER.debug("tabified_remaining_line>:$:<", tabified_remaining_line)
-
-        inline_request = InlineRequest(
+            tabified_remaining_line,
+            inline_request,
+        ) = InlineProcessor.__handle_next_inline_character_setup(
             source_text,
+            start_index,
             next_index,
             inline_blocks,
-            remaining_line,
-            tabified_remaining_line,
+            tabified_text,
+            newlines_encountered,
             current_string_unresolved,
             line_number,
             column_number,
             para_owner,
-            tabified_text,
         )
 
         # POGGER.debug("current_string>:$:<", current_string)

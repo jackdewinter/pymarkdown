@@ -103,6 +103,17 @@ class RuleMd007(RulePlugin):
             or token.is_fenced_code_block_end
         )
 
+    def __manage_leaf_tokens_text(self, token: MarkdownToken) -> int:
+        assert self.__last_leaf_token is not None
+        text_token = cast(TextMarkdownToken, token)
+        if self.__last_leaf_token.is_setext_heading:
+            assert text_token.end_whitespace is not None
+            return text_token.end_whitespace.count(ParserHelper.newline_character) + 1
+        assert (
+            self.__last_leaf_token.is_html_block or self.__last_leaf_token.is_code_block
+        )
+        return text_token.token_text.count(ParserHelper.newline_character) + 1
+
     def __manage_leaf_tokens(self, token: MarkdownToken) -> None:
         bq_delta = 0
         if self.__is_simple_delta(token):
@@ -124,20 +135,7 @@ class RuleMd007(RulePlugin):
         elif token.is_link_reference_definition:
             bq_delta = self.__manage_lrd_token(token)
         elif token.is_text and self.__last_leaf_token:
-            text_token = cast(TextMarkdownToken, token)
-            if self.__last_leaf_token.is_setext_heading:
-                assert text_token.end_whitespace is not None
-                bq_delta = (
-                    text_token.end_whitespace.count(ParserHelper.newline_character) + 1
-                )
-            else:
-                assert (
-                    self.__last_leaf_token.is_html_block
-                    or self.__last_leaf_token.is_code_block
-                )
-                bq_delta = (
-                    text_token.token_text.count(ParserHelper.newline_character) + 1
-                )
+            bq_delta = self.__manage_leaf_tokens_text(token)
         self.__bq_line_index[len(self.__container_token_stack)] += bq_delta
 
     @classmethod
@@ -190,6 +188,40 @@ class RuleMd007(RulePlugin):
 
         self.manage_container_tokens(token)
 
+    def __calculate_base_column_ordered_list(
+        self, stack_index: int, ignore_list_starts: bool, container_base_column: int
+    ) -> Tuple[bool, int]:
+        if not ignore_list_starts:
+            list_token = cast(
+                ListStartMarkdownToken,
+                self.__container_token_stack[stack_index],
+            )
+            container_base_column += list_token.indent_level
+        ignore_list_starts = True
+        return ignore_list_starts, container_base_column
+
+    def __calculate_base_column_block_quote(
+        self, stack_index: int, container_base_column: int, block_quote_base: int
+    ) -> Tuple[bool, int, int]:
+        block_quote_token = cast(
+            BlockQuoteMarkdownToken,
+            self.__container_token_stack[stack_index],
+        )
+        bq_index = self.__bq_line_index[stack_index + 1]
+        assert block_quote_token.bleading_spaces is not None
+        split_leading_spaces = block_quote_token.bleading_spaces.split(
+            ParserHelper.newline_character
+        )
+        # print(f"bq_index={bq_index},split_leading_spaces={split_leading_spaces}")
+        # print(f"split_leading_spaces[bq_index]={split_leading_spaces[bq_index]}=")
+        if not block_quote_base:
+            block_quote_base = container_base_column + len(
+                split_leading_spaces[bq_index]
+            )
+        container_base_column += len(split_leading_spaces[bq_index])
+        ignore_list_starts = False
+        return ignore_list_starts, container_base_column, block_quote_base
+
     def __calculate_base_column(self) -> Tuple[int, int, int]:
         container_base_column = 0
         block_quote_base = 0
@@ -208,31 +240,20 @@ class RuleMd007(RulePlugin):
                 # print(f"stack_index>{stack_index}," + \
                 #   f"token={self.__container_token_stack[stack_index]}".replace(ParserHelper.newline_character, "\\n"))
                 if self.__container_token_stack[stack_index].is_ordered_list_start:
-                    if not ignore_list_starts:
-                        list_token = cast(
-                            ListStartMarkdownToken,
-                            self.__container_token_stack[stack_index],
-                        )
-                        container_base_column += list_token.indent_level
-                    ignore_list_starts = True
+                    (
+                        ignore_list_starts,
+                        container_base_column,
+                    ) = self.__calculate_base_column_ordered_list(
+                        stack_index, ignore_list_starts, container_base_column
+                    )
                 elif self.__container_token_stack[stack_index].is_block_quote_start:
-                    block_quote_token = cast(
-                        BlockQuoteMarkdownToken,
-                        self.__container_token_stack[stack_index],
+                    (
+                        ignore_list_starts,
+                        container_base_column,
+                        block_quote_base,
+                    ) = self.__calculate_base_column_block_quote(
+                        stack_index, container_base_column, block_quote_base
                     )
-                    bq_index = self.__bq_line_index[stack_index + 1]
-                    assert block_quote_token.bleading_spaces is not None
-                    split_leading_spaces = block_quote_token.bleading_spaces.split(
-                        ParserHelper.newline_character
-                    )
-                    # print(f"bq_index={bq_index},split_leading_spaces={split_leading_spaces}")
-                    # print(f"split_leading_spaces[bq_index]={split_leading_spaces[bq_index]}=")
-                    if not block_quote_base:
-                        block_quote_base = container_base_column + len(
-                            split_leading_spaces[bq_index]
-                        )
-                    container_base_column += len(split_leading_spaces[bq_index])
-                    ignore_list_starts = False
                 # print(f"container_base_column>{container_base_column}")
                 stack_index -= 1
         return container_base_column, block_quote_base, list_depth
