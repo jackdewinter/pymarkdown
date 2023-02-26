@@ -736,7 +736,6 @@ class BlockQuoteProcessor:
         Optional[RequeueLineInfo],
         bool,
     ]:
-
         """
         Handle the processing of a section clearly identified as having block quotes.
         """
