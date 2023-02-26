@@ -29,7 +29,7 @@ typing-extensions = "==4.4.0"
 mypy = "==0.991"
 columnar = "==1.4.1"
 application-properties = "==0.5.2"
-coverage = "==6.5.0"
+coverage = "==7.2.1"
 sourcery = "==1.0.4"
 
 [requires]
