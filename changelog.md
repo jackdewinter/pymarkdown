@@ -14,6 +14,43 @@
 
 - None
 
+## Version 0.9.9 - Date: 2023-02-26
+
+This was a point release.  Issues that were addressed:
+
+- proprly dealing with the reintegration of tabs into the HTML output
+- ensuring that tabs are represented properly in the internal token format
+- cleaning up code to reduce various `PyLint` errors
+
+### Added
+
+- [Issue 561](https://github.com/jackdewinter/pymarkdown/issues/561)
+  - added Sourcery.Ai to analysis tools
+    - made sure all code hits 40% Sourcery quality threshold
+    - cleaned up testing scripts
+
+### Changed
+
+- various
+  - updated build, publish, and analysis packages to latest versions
+- [Issue 561](https://github.com/jackdewinter/pymarkdown/issues/561)
+  - changed error output to filter through main module for more control
+- [Issue 504](https://github.com/jackdewinter/pymarkdown/issues/504)
+  - moved file logging code into own module
+- [Issue 496](https://github.com/jackdewinter/pymarkdown/issues/496)
+  - moved file scanner code into own module
+
+### Fixed
+
+- [Issue 561](https://github.com/jackdewinter/pymarkdown/issues/561)
+  - worked to reduce the count of `too-many-locals` reported by `PyLint`
+- [Issue 478](https://github.com/jackdewinter/pymarkdown/issues/478)
+  - fixed false positive in reporting the start of the list
+  - underlying issue was improper closing of the list, which was also fixed
+- [Issue 453](https://github.com/jackdewinter/pymarkdown/issues/453)
+  - still in progress
+  - cleaning up reintegration of tabs into output
+
 ## Version 0.9.8 - Date: 2022-09-20
 
 This was a point release.  Issues that were addressed:
