@@ -36,7 +36,6 @@ class ContainerGrabBag:
         ignore_link_definition_start: bool,
         original_line: str,
     ) -> None:
-
         # Booleans
         self.__did_blank: bool = False
         self.__was_paragraph_continuation: bool = False

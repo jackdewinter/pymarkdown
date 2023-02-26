@@ -143,12 +143,10 @@ class RuleMd013(RulePlugin):
         compare_length = self.__line_length
         is_actually_longer = False
         if line_length > self.__minimum_line_length:
-
             is_actually_longer, compare_length = self.__is_really_longer(
                 line_length, compare_length
             )
         if is_actually_longer:
-
             trigger_rule = False
             if self.__strict_mode:
                 trigger_rule = True

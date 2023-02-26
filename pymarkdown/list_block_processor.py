@@ -257,7 +257,6 @@ class ListBlockProcessor:
         line_to_parse: str,
         start_index: int,
     ) -> Tuple[Optional[str], int]:
-
         assert adj_ws is not None
         (
             child_list_token,
@@ -302,7 +301,6 @@ class ListBlockProcessor:
         start_index: int,
         is_not_one: bool,
     ) -> Tuple[bool, int]:
-
         start_index += 1
         line_to_parse_size = len(line_to_parse)
         after_all_whitespace_index, _ = ParserHelper.extract_spaces(
@@ -487,7 +485,6 @@ class ListBlockProcessor:
         indent_already_processed: bool,
         adj_ws: Optional[str],
     ) -> Tuple[int, Optional[str], Optional[str], Optional[str], bool]:
-
         indent_already_used, forced_container_whitespace = 0, None
         is_in_root_list = (
             not container_depth
@@ -507,7 +504,6 @@ class ListBlockProcessor:
             and len(extracted_whitespace) >= 4
             and not indent_already_processed
         ):
-
             # POGGER.debug("extracted_whitespace>$<", extracted_whitespace)
             # POGGER.debug("parser_state.token_stack>$<", parser_state.token_stack)
             stack_index = 1
@@ -784,7 +780,6 @@ class ListBlockProcessor:
         )
         POGGER.debug("clt>>list-start=$", started_ulist)
         if started_ulist:
-
             POGGER.debug("clt>>ulist-start")
             removed_chars_at_start = indent_already_used
             assert index is not None
@@ -1204,7 +1199,6 @@ class ListBlockProcessor:
             stack_index = parser_state.find_last_list_block_on_stack()
             need_to_add_leading_spaces = False
             if stack_index > 0:
-
                 assert parser_state.original_line_to_parse is not None
 
                 last_container_index = parser_state.find_last_container_on_stack()
@@ -1303,7 +1297,6 @@ class ListBlockProcessor:
             leading_space_length >= requested_list_indent and allow_list_continue
         )
         if was_paragraph_continuation:
-
             POGGER.debug("list-in-progress: was_paragraph_continuation")
             container_level_tokens: List[MarkdownToken] = []
             # POGGER.debug("before>>$>>", line_to_parse)
@@ -1451,7 +1444,6 @@ class ListBlockProcessor:
         Optional[RequeueLineInfo],
         bool,
     ]:
-
         POGGER.debug(
             "requested_list_indent>>$<<",
             requested_list_indent,
@@ -1561,7 +1553,6 @@ class ListBlockProcessor:
         leading_space_length: int,
         original_line: str,
     ) -> Tuple[str, Optional[str], Optional[int]]:
-
         assert ind is not None
         POGGER.debug(
             "2>>__check_for_list_closures>>$>>",
@@ -1847,7 +1838,6 @@ class ListBlockProcessor:
         container_level_tokens: List[MarkdownToken] = []
         adjusted_stack_count = block_quote_data.stack_count
         while block_quote_data.current_count < adjusted_stack_count:
-
             assert not container_level_tokens
             last_block_index = parser_state.find_last_block_quote_on_stack()
             previous_last_block_token = cast(
@@ -2492,7 +2482,6 @@ class ListBlockProcessor:
         current_container_blocks: List[StackToken],
         container_depth: int,
     ) -> Tuple[bool, bool, List[MarkdownToken]]:
-
         ## Determine if the new start is within the range of the old stack.  If so
         ## AND some combination of the IF statement, then switch.
         ## i.e. a + at col 1 followed by a - at column 1 is a new list
@@ -2668,7 +2657,6 @@ class ListBlockProcessor:
 
     @staticmethod
     def __close_required_lists_calc(parser_state: ParserState) -> Tuple[int, int]:
-
         token_stack_index = len(parser_state.token_stack) - 1
         found_list_tokens = []
         while token_stack_index:

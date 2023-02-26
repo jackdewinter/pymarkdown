@@ -499,7 +499,6 @@ class ImageStartMarkdownToken(ReferenceMarkdownToken):
         column_number: int,
         lhp: LinkHelperProperties,
     ) -> None:
-
         assert lhp.label_type is not None
         assert lhp.pre_inline_link is not None
         assert lhp.inline_link is not None
@@ -686,7 +685,10 @@ class TextMarkdownToken(InlineMarkdownToken):
         if other_text_token.is_blank_line:
             text_to_combine = ""
             tabified_text_to_combine: Optional[str] = ""
-            (whitespace_present, blank_line_sequence,) = (
+            (
+                whitespace_present,
+                blank_line_sequence,
+            ) = (
                 other_text_token.extra_data,
                 ParserHelper.replace_noop_character,
             )
@@ -696,7 +698,10 @@ class TextMarkdownToken(InlineMarkdownToken):
 
             text_to_combine = text_other_token.token_text
             tabified_text_to_combine = text_other_token.tabified_text
-            (whitespace_present, blank_line_sequence,) = (
+            (
+                whitespace_present,
+                blank_line_sequence,
+            ) = (
                 text_other_token.extracted_whitespace,
                 "",
             )

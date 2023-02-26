@@ -466,7 +466,6 @@ class LeafBlockProcessor:
         block_quote_data: BlockQuoteData,
         after_fence_index: int,
     ) -> Tuple[StackToken, List[MarkdownToken]]:
-
         # POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
         # POGGER.debug("collected_count>:$:<", collected_count)
         # POGGER.debug("text_to_parse>>:$:<", position_marker.text_to_parse)
@@ -555,7 +554,10 @@ class LeafBlockProcessor:
             after_fence_index,
         )
 
-        (_, proper_end_index,) = ParserHelper.collect_backwards_while_one_of_characters(
+        (
+            _,
+            proper_end_index,
+        ) = ParserHelper.collect_backwards_while_one_of_characters(
             line_to_parse, -1, Constants.ascii_whitespace
         )
         adjusted_string = line_to_parse[:proper_end_index]
@@ -664,7 +666,6 @@ class LeafBlockProcessor:
         block_quote_data: BlockQuoteData,
         after_fence_index: int,
     ) -> List[MarkdownToken]:
-
         POGGER.debug("pfcb->check")
         new_tokens: List[MarkdownToken] = []
         if (
@@ -709,7 +710,6 @@ class LeafBlockProcessor:
         collected_count: int,
         extracted_whitespace: Optional[str],
     ) -> Tuple[int, bool, Optional[str], bool]:
-
         # POGGER.debug("detabified_original_start_index:$:", detabified_original_start_index)
         # POGGER.debug("collected_count:$:", collected_count)
         # POGGER.debug("extracted_whitespace:$:", extracted_whitespace)
@@ -923,7 +923,6 @@ class LeafBlockProcessor:
         last_list_start_index: int,
         original_line: str,
     ) -> List[MarkdownToken]:
-
         """
         Handle the parsing of an indented code block
         """
@@ -1180,7 +1179,6 @@ class LeafBlockProcessor:
     def __get_indented_block_with_tab_quote_properties(
         parser_state: ParserState, last_block_quote_index: int, original_line: str
     ) -> Tuple[str, int, bool]:
-
         adjust_block_quote_indent = False
 
         POGGER.debug(
@@ -1239,7 +1237,6 @@ class LeafBlockProcessor:
         xx_extracted_space: Optional[str],
         xx_left_over: Optional[str],
     ) -> Tuple[int, Optional[str], str]:
-
         assert extracted_whitespace is not None
         column_number = (
             position_marker.index_number
@@ -1622,7 +1619,6 @@ class LeafBlockProcessor:
         extracted_whitespace_at_end: str,
         extracted_whitespace_before_end: str,
     ) -> List[MarkdownToken]:
-
         start_token = AtxHeadingMarkdownToken(
             hash_count,
             remove_trailing_count,
@@ -1697,7 +1693,6 @@ class LeafBlockProcessor:
         extracted_whitespace: str,
         hash_count: int,
     ) -> Tuple[str, str, str, bool]:
-
         POGGER.debug(">>extracted_whitespace>:$:<", extracted_whitespace)
         POGGER.debug(
             ">>extracted_whitespace_at_start>:$:<", extracted_whitespace_at_start
@@ -1873,8 +1868,10 @@ class LeafBlockProcessor:
     ) -> Tuple[
         StackToken, str, int, str, str, List[MarkdownToken], str, Optional[str], bool
     ]:
-
-        (old_top_of_stack, remove_trailing_count,) = (
+        (
+            old_top_of_stack,
+            remove_trailing_count,
+        ) = (
             parser_state.token_stack[-1],
             0,
         )
@@ -1949,7 +1946,6 @@ class LeafBlockProcessor:
     def __parse_setext_headings_with_tab(
         original_line: str, line_to_parse: str, extracted_whitespace: str
     ) -> Tuple[str, str, bool]:
-
         reconstructed_line = extracted_whitespace + line_to_parse
         adj_original, _, split_tab = TabHelper.find_tabified_string(
             original_line, reconstructed_line
@@ -1972,7 +1968,6 @@ class LeafBlockProcessor:
         block_quote_data: BlockQuoteData,
         original_line: str,
     ) -> List[MarkdownToken]:
-
         """
         Handle the parsing of an setext heading.
         """
@@ -2435,7 +2430,6 @@ class LeafBlockProcessor:
             new_tokens.extend(fenced_tokens)
             POGGER.debug(">>new_tokens>>$", new_tokens)
         elif parser_state.token_stack[-1].is_fenced_code_block:
-
             POGGER.debug(">>still in fenced block>:$:<", original_line)
             POGGER.debug(">>leaf_token_whitespace>:$:<", leaf_token_whitespace)
             assert leaf_token_whitespace is not None
@@ -2521,7 +2515,6 @@ class LeafBlockProcessor:
         leaf_token_whitespace: str,
         token_text: str,
     ) -> Tuple[str, str]:
-
         # POGGER.debug("original_line>:$:<", original_line)
         # POGGER.debug("leaf_token_whitespace>:$:<", leaf_token_whitespace)
         # POGGER.debug("token_text>:$:<", token_text)
@@ -2623,7 +2616,6 @@ class LeafBlockProcessor:
         new_extracted_whitespace = extracted_whitespace
         # POGGER.debug("new_extracted_whitespace>:$:<", new_extracted_whitespace)
         if new_extracted_whitespace and whitespace_start_count:
-
             assert was_indented
             new_extracted_whitespace = LeafBlockProcessor.__handle_fenced_code_block_with_tab_and_extracted_whitespace(
                 new_extracted_whitespace,

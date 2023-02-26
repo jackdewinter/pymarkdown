@@ -83,7 +83,6 @@ class RuleMd030(RulePlugin):
         self.__paragraph_count_map = {}
 
     def __handle_list_end(self, context: PluginScanContext) -> None:
-
         for list_token in self.__list_tokens[-1]:
             this_list_token_paragraph_count = 0
             if str(list_token) in self.__paragraph_count_map:

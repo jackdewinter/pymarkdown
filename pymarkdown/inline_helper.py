@@ -965,7 +965,6 @@ class InlineHelper:
         close_character: str,
         break_characters: str,
     ) -> Tuple[int, int]:
-
         if ParserHelper.is_character_at_index(
             source_text, next_index, InlineHelper.backslash_character
         ):
@@ -1127,7 +1126,6 @@ class InlineHelper:
 
         approved_entity_map = {}
         for next_name, char_entity in results_dictionary.items():
-
             # Downloaded file is for HTML5, which includes some names that do
             # not end with ";".  These are excluded.
             if next_name[-1] != InlineHelper.__skip_html5_entities_ending_with:
@@ -1206,7 +1204,6 @@ class InlineHelper:
             InlineHelper.__angle_bracket_end, inline_request.next_index
         )
         if closing_angle_index not in (-1, inline_request.next_index + 1):
-
             between_brackets, remaining_line = (
                 inline_request.source_text[
                     inline_request.next_index + 1 : closing_angle_index

@@ -322,7 +322,6 @@ class TransformToMarkdown:
         print("---\nTransformToMarkdown\n---")
 
         for token_index, current_token in enumerate(actual_tokens):
-
             next_token = (
                 actual_tokens[token_index + 1]
                 if token_index < len(actual_tokens) - 1
@@ -332,7 +331,10 @@ class TransformToMarkdown:
             print(
                 f"pre-h>current_token>:{ParserHelper.make_value_visible(current_token)}:"
             )
-            (new_data, pragma_token,) = self.__process_next_token(
+            (
+                new_data,
+                pragma_token,
+            ) = self.__process_next_token(
                 current_token,
                 previous_token,
                 next_token,
@@ -630,7 +632,6 @@ class TransformToMarkdown:
         previous_token,
     ):
         if not token_stack[-1].is_new_list_item:
-
             return (
                 applied_leading_spaces_to_start_of_container_line
                 or token_stack[-1].line_number != previous_token.line_number
@@ -666,7 +667,6 @@ class TransformToMarkdown:
         container_line,
         removed_tokens,
     ):
-
         if (
             len(token_stack) > 1
             and token_stack[-1].is_list_start
@@ -821,7 +821,6 @@ class TransformToMarkdown:
     def __adjust_for_block_quote(
         cls, token_stack, container_line, container_token_indices, line_number
     ):
-
         if not (len(token_stack) > 1 and token_stack[-1].is_block_quote_start):
             return container_line
 
@@ -1050,7 +1049,6 @@ class TransformToMarkdown:
         )
 
         for next_line_number in ordered_lines:
-
             print(
                 f"pragma-->{ParserHelper.make_value_visible(ordered_lines[next_line_number])}<--"
             )
@@ -1095,7 +1093,6 @@ class TransformToMarkdown:
         actual_tokens,
         token_index,
     ):
-
         pragma_token = None
         if current_token.token_name in self.start_container_token_handlers:
             start_handler_fn = self.start_container_token_handlers[
@@ -1743,7 +1740,6 @@ class TransformToMarkdown:
         previous_token,
         next_token,
     ):
-
         print(
             f"adj->containing_list_token>>:{ParserHelper.make_value_visible(containing_list_token)}:<<"
         )
@@ -2001,7 +1997,6 @@ class TransformToMarkdown:
         return adjustment_since_newline, extracted_whitespace
 
     def __rehydrate_block_quote_end(self, current_token, actual_tokens, token_index):
-
         print(">>__rehydrate_block_quote_end")
         _ = current_token
 

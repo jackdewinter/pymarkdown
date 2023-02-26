@@ -51,7 +51,11 @@ class TabHelper:
         split_tab = False
         if len(tabified_leading_spaces) > 0:
             assert extracted_whitespace is not None
-            (_, tabified_suffix, split_tab,) = TabHelper.match_tabbed_whitespace(
+            (
+                _,
+                tabified_suffix,
+                split_tab,
+            ) = TabHelper.match_tabbed_whitespace(
                 extracted_whitespace, tabified_leading_spaces
             )
         return tabified_token_text, split_tab, tabified_suffix
@@ -374,7 +378,6 @@ class TabHelper:
 
         # POGGER.debug("parser_state=:$:", parser_state.token_stack[stack_token_index])
         if parser_state.token_stack[stack_token_index].is_block_quote:
-
             block_quote_token = cast(
                 BlockQuoteMarkdownToken,
                 parser_state.token_stack[stack_token_index].matching_markdown_token,

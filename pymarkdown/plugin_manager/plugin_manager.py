@@ -383,7 +383,6 @@ class PluginManager:
 
     @classmethod
     def __snake_to_camel(cls, word: str) -> str:
-
         return "".join(x.capitalize() or "_" for x in word.split("_"))
 
     def __attempt_to_load_plugin(

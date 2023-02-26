@@ -284,7 +284,6 @@ class InlineProcessor:
         coalesced_stack: List[MarkdownToken],
         coalesced_list: List[MarkdownToken],
     ) -> List[MarkdownToken]:
-
         assert coalesced_results[coalesce_index].is_text
         text_token = cast(TextMarkdownToken, coalesced_results[coalesce_index])
         POGGER.debug("atx-block>>$<<", text_token)
@@ -317,7 +316,6 @@ class InlineProcessor:
         coalesce_index: int,
         coalesced_stack: List[MarkdownToken],
     ) -> List[MarkdownToken]:
-
         assert coalesced_results[coalesce_index].is_text
         text_token = cast(TextMarkdownToken, coalesced_results[coalesce_index])
         POGGER.debug(">>text_token>>$", text_token)
@@ -344,7 +342,6 @@ class InlineProcessor:
         coalesced_list: List[MarkdownToken],
         coalesced_stack: List[MarkdownToken],
     ) -> List[MarkdownToken]:
-
         assert coalesced_results[coalesce_index].is_text
         text_token = cast(TextMarkdownToken, coalesced_results[coalesce_index])
         encoded_text = InlineHelper.append_text("", text_token.token_text)
@@ -790,7 +787,6 @@ class InlineProcessor:
         para_owner: Optional[ParagraphMarkdownToken],
         delta_line: int,
     ) -> Tuple[int, int]:
-
         if inline_blocks[-1].is_inline_image:
             repeat_count = (new_index - next_index) + remaining_line_size
             (
@@ -1022,7 +1018,6 @@ class InlineProcessor:
         link_part_lengths: List[int],
         last_spaces: str,
     ) -> Tuple[int, int]:
-
         POGGER.debug(">>link_part_index>>$<<", link_part_index)
         POGGER.debug(">>total_newlines>>$<<", total_newlines)
         POGGER.debug(">>delta_line>>$<<", delta_line)
@@ -1055,7 +1050,6 @@ class InlineProcessor:
 
     @staticmethod
     def __calculate_inline_label(current_token: MarkdownToken) -> Tuple[int, int]:
-
         reference_token = cast(ReferenceMarkdownToken, current_token)
         total_newlines = ParserHelper.count_newlines_in_text(
             reference_token.text_from_blocks
@@ -1254,7 +1248,6 @@ class InlineProcessor:
         #     start_index,
         # )
         while next_index != -1:
-
             # POGGER.debug(
             #     "\n\n>>Token_start>>$,$<<",
             #     last_line_number,
@@ -1352,7 +1345,11 @@ class InlineProcessor:
         column_number: int,
         para_owner: Optional[ParagraphMarkdownToken],
     ) -> Tuple[bool, str, int, Optional[MarkdownToken], Optional[str], InlineRequest]:
-        (remaining_line, old_inline_blocks_count, old_inline_blocks_last_token,) = (
+        (
+            remaining_line,
+            old_inline_blocks_count,
+            old_inline_blocks_last_token,
+        ) = (
             source_text[start_index:next_index],
             len(inline_blocks),
             inline_blocks[-1] if inline_blocks else None,
@@ -1434,7 +1431,6 @@ class InlineProcessor:
         Optional[int],
         int,
     ]:
-
         (
             reset_current_string,
             remaining_line,
@@ -1705,7 +1701,6 @@ class InlineProcessor:
         start_index: int,
         next_index: int,
     ) -> Optional[str]:
-
         adj_tabified_text, _ = InlineProcessor.__xdg(
             tabified_text, newlines_encountered
         )
@@ -1959,7 +1954,6 @@ class InlineProcessor:
         bool,
         Optional[str],
     ]:
-
         if source_text[next_index] in InlineProcessor.__inline_character_handlers:
             whitespace_to_add, was_new_line = None, False
             (
@@ -2384,7 +2378,6 @@ class InlineProcessor:
         inline_request: InlineRequest,
         tabified_remaining_line: Optional[str],
     ) -> Tuple[Optional[str], str, Optional[str], str, bool, Optional[str]]:
-
         assert source_text[next_index] == ParserHelper.newline_character
         # POGGER.debug("end_string>:$:<", end_string)
         # POGGER.debug("remaining_line>:$:<", remaining_line)
@@ -2510,7 +2503,6 @@ class InlineProcessor:
         end_string: Optional[str],
         is_setext: bool,
     ) -> Optional[str]:
-
         POGGER.debug("__arw>>did_recombine>>$>>", did_recombine)
         POGGER.debug(
             "__arw>>end_string>>$>>",
@@ -2696,7 +2688,6 @@ class InlineProcessor:
 
         assert start_index is not None
         if start_index < len(source_text):
-
             text_to_append = source_text[start_index:]
             POGGER.debug("text_to_append>:$:<", text_to_append)
 
@@ -2740,7 +2731,6 @@ class InlineProcessor:
         tabified_text: str,
         newlines_encountered: int,
     ) -> str:
-
         source_text_spaces_index, source_text_spaces = ParserHelper.extract_spaces(
             source_text, start_index
         )
@@ -2863,7 +2853,6 @@ class InlineProcessor:
 
     @staticmethod
     def __xdf(tabified_text: str, newlines_encountered: int) -> Tuple[str, int]:
-
         # POGGER.debug("newlines_encountered=>:$:<", newlines_encountered)
         # POGGER.debug("tabified_text>:$:<", tabified_text)
         start_index = 0

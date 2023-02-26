@@ -9,7 +9,6 @@ from pymarkdown.parser_helper import ParserHelper
 
 
 def xtest_block_quotes_extra_perf1():
-
     n = 500
     ex = (
         "\n"
@@ -68,7 +67,6 @@ def xtest_block_quotes_extra_perf3x():
 
 @pytest.mark.timeout(120)
 def xtest_block_quotes_extra_perf3():
-
     assert fred() == barney()
     for _ in range(5):
         xx = timeit.timeit("barney()", globals=globals(), number=100)

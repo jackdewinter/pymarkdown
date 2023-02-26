@@ -48,7 +48,6 @@ class ContainerBlockProcessor:
         position_marker: PositionMarker,
         grab_bag: ContainerGrabBag,
     ) -> Tuple[PositionMarker, bool, bool]:
-
         POGGER.debug(">>")
         POGGER.debug(">>")
         if ContainerBlockProcessor.__look_for_pragmas(
@@ -334,7 +333,6 @@ class ContainerBlockProcessor:
         position_marker: PositionMarker,
         grab_bag: ContainerGrabBag,
     ) -> None:
-
         if not (
             parser_state.token_stack[1].is_list
             and parser_state.token_stack[2].is_block_quote
@@ -383,7 +381,6 @@ class ContainerBlockProcessor:
         position_marker: PositionMarker,
         grab_bag: ContainerGrabBag,
     ) -> None:
-
         assert grab_bag.extracted_whitespace is not None
         grab_bag.indent_used_by_container = 0
         if grab_bag.is_para_continue and not grab_bag.container_depth:
@@ -461,7 +458,6 @@ class ContainerBlockProcessor:
         parser_state: ParserState,
         grab_bag: ContainerGrabBag,
     ) -> None:
-
         grab_bag.did_indent_processing = True
         assert grab_bag.extracted_whitespace is not None
         for stack_capture_index in range(1, len(parser_state.token_stack)):
@@ -806,7 +802,6 @@ class ContainerBlockProcessor:
         position_marker: PositionMarker,
         grab_bag: ContainerGrabBag,
     ) -> Tuple[bool, bool]:
-
         parser_state.nested_list_start = None
         ulist_index = -1
         olist_index = -1
@@ -863,7 +858,6 @@ class ContainerBlockProcessor:
         avoid_block_starts: bool,
         grab_bag: ContainerGrabBag,
     ) -> bool:
-
         # POGGER.debug("was_container_start>>$", was_container_start)
 
         grab_bag.last_list_start_index = 0
@@ -1110,7 +1104,6 @@ class ContainerBlockProcessor:
     def __look_back_in_document_for_block_quote(
         parser_state: ParserState, token_index: int
     ) -> Optional[BlockQuoteMarkdownToken]:
-
         # TODO Look back on stack instead?
         other_block_quote_token, other_token_index = None, token_index
         while other_token_index >= 0:
@@ -1215,7 +1208,6 @@ class ContainerBlockProcessor:
         found_block_quote_token: Optional[BlockQuoteMarkdownToken],
         grab_bag: ContainerGrabBag,
     ) -> None:
-
         assert grab_bag.extracted_whitespace is not None
         previous_ws_len = 0
         force_reline, ws_len = (
@@ -1437,7 +1429,6 @@ class ContainerBlockProcessor:
         nested_container_starts: ContainerIndices,
         grab_bag: ContainerGrabBag,
     ) -> Tuple[int, bool, int]:
-
         active_container_index = max(
             grab_bag.end_container_indices.ulist_index,
             grab_bag.end_container_indices.olist_index,
@@ -1463,7 +1454,6 @@ class ContainerBlockProcessor:
                 "parser_state.token_document>>$<<", parser_state.token_document
             )
             if parser_state.nested_list_start and grab_bag.adj_line_to_parse.strip():
-
                 (
                     grab_bag.start_index,
                     indent_level,
@@ -1493,7 +1483,6 @@ class ContainerBlockProcessor:
         adj_line_to_parse: str,
         end_container_indices: ContainerIndices,
     ) -> Tuple[int, int, bool, int]:
-
         start_index, _ = ParserHelper.extract_spaces(adj_line_to_parse, 0)
         assert start_index is not None
         POGGER.debug("start_index>>$<<", start_index)
@@ -1583,7 +1572,6 @@ class ContainerBlockProcessor:
             and indent_was_adjusted
             and parser_state.nested_list_start
         ):
-
             assert parser_state.nested_list_start is not None
         return False
 
@@ -1622,7 +1610,6 @@ class ContainerBlockProcessor:
         adjusted_text_to_parse: str,
         grab_bag: ContainerGrabBag,
     ) -> Tuple[str, Optional[str], bool, bool]:
-
         POGGER.debug("check next container_start>stack>>$", parser_state.token_stack)
         POGGER.debug(
             "check next container_start>tokenized_document>>$",
@@ -1903,7 +1890,6 @@ class ContainerBlockProcessor:
         parser_state: ParserState,
         grab_bag: ContainerGrabBag,
     ) -> bool:
-
         did_process, ind = LeafBlockProcessorParagraph.check_for_list_in_process(
             parser_state
         )
@@ -1925,7 +1911,6 @@ class ContainerBlockProcessor:
         position_marker: PositionMarker,
         grab_bag: ContainerGrabBag,
     ) -> None:
-
         assert grab_bag.is_leaf_tokens_empty()
         POGGER.debug("clt>>lazy-check")
 
@@ -1955,7 +1940,6 @@ class ContainerBlockProcessor:
         position_marker: PositionMarker,
         grab_bag: ContainerGrabBag,
     ) -> bool:
-
         _, pragma_whitespace = ParserHelper.extract_spaces(
             position_marker.text_to_parse, 0
         )

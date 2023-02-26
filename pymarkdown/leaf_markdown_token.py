@@ -63,7 +63,6 @@ class BlankLineMarkdownToken(LeafMarkdownToken):
         position_marker: Optional[PositionMarker],
         column_delta: int = 0,
     ) -> None:
-
         if position_marker:
             line_number, column_number = position_marker.line_number, (
                 position_marker.index_number
