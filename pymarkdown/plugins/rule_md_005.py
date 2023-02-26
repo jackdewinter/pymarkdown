@@ -119,7 +119,6 @@ class RuleMd005(RulePlugin):
             )
 
     def __compute_ordered_list_alignment(self) -> None:
-
         list_level = len(self.__list_stack)
 
         last_length = 0

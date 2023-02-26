@@ -100,7 +100,6 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
     print("---")
 
     for element_index, next_expected_token in enumerate(expected_tokens):
-
         expected_str = str(next_expected_token)
         actual_str = str(actual_tokens[element_index])
 

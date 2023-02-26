@@ -125,7 +125,6 @@ class RuleMd009(RulePlugin):
             and line
             and line[-1] == " "
         ):
-
             self.__next_line_check_for_error(line, context)
         self.__line_index += 1
 

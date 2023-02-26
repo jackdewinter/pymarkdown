@@ -62,7 +62,6 @@ class EmphasisHelper:
         stack_bottom: int,
         openers_bottom: int,
     ) -> Tuple[SpecialTextMarkdownToken, Optional[SpecialTextMarkdownToken]]:
-
         # POGGER.debug("delimiter_stack-->$",delimiter_stack)
         scan_index = current_position - 1
         found_opener: Optional[SpecialTextMarkdownToken] = None
@@ -93,7 +92,6 @@ class EmphasisHelper:
         delimiter_stack: List[SpecialTextMarkdownToken],
         current_position: int,
     ) -> bool:
-
         special_token = delimiter_stack[current_position]
 
         if is_debug_enabled:
@@ -130,7 +128,6 @@ class EmphasisHelper:
             len(delimiter_stack),
         )
         if current_position < stack_size:
-
             openers_bottom = stack_bottom
             if is_debug_enabled:
                 POGGER.debug("BLOCK($) of ($)", current_position, stack_size)

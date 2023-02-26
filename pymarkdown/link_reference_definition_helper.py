@@ -176,7 +176,6 @@ class LinkReferenceDefinitionHelper:
         original_line: str,
         unmodified_line_to_parse: str,
     ) -> Tuple[str, str, str, int, Optional[bool]]:
-
         is_blank_line: Optional[bool] = not line_to_parse and not start_index
 
         POGGER.debug(">>original_line>:$:<", original_line)
@@ -216,7 +215,6 @@ class LinkReferenceDefinitionHelper:
     ) -> Tuple[
         bool, Optional[LinkDefinitionStackToken], int, int, str, Optional[str], int
     ]:
-
         lrd_stack_token: Optional[LinkDefinitionStackToken] = None
 
         if was_started := parser_state.token_stack[-1].was_link_definition_started:
@@ -277,7 +275,6 @@ class LinkReferenceDefinitionHelper:
         lines_to_requeue: List[str],
         process_mode: int,
     ) -> Tuple[bool, bool, List[MarkdownToken]]:
-
         assert is_blank_line is not None
         assert end_lrd_index is not None
         did_pause_lrd: bool = (
@@ -1032,12 +1029,10 @@ class LinkReferenceDefinitionHelper:
         link_def_token: LinkDefinitionStackToken,
         block_quote_token: BlockQuoteMarkdownToken,
     ) -> Tuple[Optional[str], LinkReferenceDefinitionTuple]:
-
         split_tabs_list: List[bool] = []
         completed_lrd_text: str = ""
         alt_ws: Optional[str] = None
         for this_line_index, this_line in enumerate(link_def_token.continuation_lines):
-
             (
                 completed_lrd_text,
                 extracted_whitespace,

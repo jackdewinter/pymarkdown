@@ -60,7 +60,6 @@ class RuleMd032(RulePlugin):
         elif token.is_block_quote_end:
             del self.__container_token_stack[-1]
         elif token.is_list_start:
-
             if (
                 self.__last_non_end_token
                 and not (

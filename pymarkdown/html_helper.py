@@ -212,7 +212,10 @@ class HtmlHelper:
             first_character_of_value = line_to_parse[non_whitespace_index]
             extracted_text: Optional[str] = None
             if first_character_of_value == HtmlHelper.__html_attribute_value_double:
-                (non_whitespace_index, _,) = ParserHelper.collect_until_character(
+                (
+                    non_whitespace_index,
+                    _,
+                ) = ParserHelper.collect_until_character(
                     line_to_parse,
                     non_whitespace_index + 1,
                     HtmlHelper.__html_attribute_value_double,
@@ -222,7 +225,10 @@ class HtmlHelper:
                     return -1
                 non_whitespace_index += 1
             elif first_character_of_value == HtmlHelper.__html_attribute_value_single:
-                (non_whitespace_index, _,) = ParserHelper.collect_until_character(
+                (
+                    non_whitespace_index,
+                    _,
+                ) = ParserHelper.collect_until_character(
                     line_to_parse,
                     non_whitespace_index + 1,
                     HtmlHelper.__html_attribute_value_single,
@@ -301,7 +307,6 @@ class HtmlHelper:
             and line_to_parse[non_whitespace_index]
             not in [HtmlHelper.__html_tag_end, HtmlHelper.__html_tag_start]
         ):
-
             non_whitespace_index = HtmlHelper.extract_html_attribute_name(
                 line_to_parse, non_whitespace_index
             )
@@ -666,7 +671,6 @@ class HtmlHelper:
     def __check_for_normal_html_blocks_adjust_tag(
         remaining_html_tag: str, line_to_parse: str, character_index: int
     ) -> Tuple[str, int, bool]:
-
         adjusted_remaining_html_tag, line_to_parse_size = remaining_html_tag, len(
             line_to_parse
         )
@@ -908,7 +912,6 @@ class HtmlHelper:
         token_text: str,
         did_adjust_block_quote: bool,
     ) -> Tuple[str, str]:
-
         POGGER.debug("did_adjust_block_quote>:$:<", did_adjust_block_quote)
         (
             tabified_text,

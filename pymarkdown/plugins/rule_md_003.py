@@ -98,7 +98,6 @@ class RuleMd003(RulePlugin):
             and heading_style_type == RuleMd003.__atx_style
             and not is_heading_level_1_or_2
         ):
-
             is_heading_bad = False
             self.__actual_style_type = RuleMd003.__setext_with_atx_style
 
@@ -108,7 +107,6 @@ class RuleMd003(RulePlugin):
     def __handle_complex_styles(
         self, heading_style_type: str, is_heading_level_1_or_2: bool
     ) -> Tuple[bool, str]:
-
         is_heading_bad, expected_style_type = False, ""
         if self.__actual_style_type == RuleMd003.__setext_with_atx_style:
             base_atx_style = RuleMd003.__atx_style

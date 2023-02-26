@@ -96,7 +96,6 @@ class CoalesceProcessor:
         coalesced_list: List[MarkdownToken],
         coalesce_index: int,
     ) -> bool:
-
         # POGGER.debug(">>coalesce_text_blocks>>>>$<<", coalesced_list[-1])
         if not first_pass_results[coalesce_index].is_text and (
             not first_pass_results[coalesce_index].is_blank_line
@@ -136,7 +135,6 @@ class CoalesceProcessor:
         coalesced_list: List[MarkdownToken],
         coalesce_index: int,
     ) -> None:
-
         POGGER.debug("was>>$", first_pass_results[coalesce_index])
         text_token = cast(TextMarkdownToken, first_pass_results[coalesce_index])
         replacement_token = TextMarkdownToken(

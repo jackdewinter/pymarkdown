@@ -131,7 +131,6 @@ class FrontMatterExtension(ParserExtension):
     ) -> Tuple[
         Optional[str], Optional[FrontMatterMarkdownToken], int, Optional[List[str]]
     ]:
-
         starting_line = token_to_use
         clean_starting_line = starting_line.rstrip()
         repeat_again = True
@@ -191,7 +190,6 @@ class FrontMatterExtension(ParserExtension):
     def __is_front_matter_valid(
         collected_lines: List[str],
     ) -> Union[Dict[str, str], str]:
-
         ascii_letters_and_digits = f"{string.ascii_letters}{string.digits}_-"
 
         current_title = ""

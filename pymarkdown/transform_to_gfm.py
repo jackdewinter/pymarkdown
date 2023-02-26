@@ -222,7 +222,6 @@ class TransformToGfm:
         assert not transform_state.is_in_fenced_code_block
 
         for next_token in transform_state.actual_tokens:
-
             output_html = self.__apply_transformation(
                 transform_state,
                 actual_tokens,
@@ -414,7 +413,6 @@ class TransformToGfm:
         POGGER.debug("adjusted_text_token>:$:<", adjusted_text_token)
         POGGER.debug("text_token.end_whitespace>:$:<", text_token.end_whitespace)
         if text_token.end_whitespace is not None:
-
             newlines_in_adjusted = ParserHelper.count_newlines_in_text(
                 adjusted_text_token
             )

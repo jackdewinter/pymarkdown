@@ -252,6 +252,7 @@ def __verify_line_and_column_numbers_last(
 
 # pylint: enable=too-many-arguments
 
+
 # pylint: disable=too-many-arguments
 def __verify_line_and_column_numbers_next_token_pre(
     current_token,
@@ -299,7 +300,6 @@ def __verify_line_and_column_numbers_next_token(
     last_token_index,
     last_token_stack,
 ):
-
     can_continue, current_position = __verify_line_and_column_numbers_next_token_pre(
         current_token,
         token_stack,
@@ -658,7 +658,6 @@ def __adjust_for_lrd(current_block_token, token_stack):
 def __validate_same_line(
     container_block_stack, current_token, current_position, last_token, last_position
 ):
-
     print(">>__validate_same_line")
     if container_block_stack:
         top_block = container_block_stack[-1]
@@ -1464,7 +1463,6 @@ def __verify_next_inline_handle_previous_end_adjust_position(
     adjust_column_by,
     block_container_token,
 ):
-
     if previous_rehydrate_index:
         last_token.rehydrate_index = previous_rehydrate_index
         print(f"rehydrate_index(restored)={last_token.rehydrate_index}")
@@ -1898,7 +1896,6 @@ def __process_previous_token(
     estimated_column_number,
     block_container_token,
 ):
-
     old_line_number = estimated_line_number
 
     print(
@@ -2297,7 +2294,6 @@ def __verify_next_inline_inline_image_inline(  # noqa: C901
     estimated_line_number,
     estimated_column_number,
 ):
-
     include_part_1, include_part_2, include_part_3, include_part_4, include_part_5 = (
         True,
         True,
@@ -2539,7 +2535,6 @@ def __verify_next_inline_inline_image_full(
 def __verify_next_inline_inline_image(  # noqa: C901
     last_token, previous_inline_token, estimated_line_number, estimated_column_number
 ):
-
     print(
         f">>image_alt_text>>{ParserHelper.make_value_visible(previous_inline_token.image_alt_text)}"
     )
@@ -2641,7 +2636,6 @@ def __verify_next_inline_raw_html(
     estimated_column_number,
     link_stack,
 ):
-
     delta_line_number, delta_column_number = ParserHelper.calculate_deltas(
         f"<{previous_inline_token.raw_tag}>"
     )
@@ -2723,7 +2717,6 @@ def __verify_next_inline_code_span(
     estimated_column_number,
     link_stack,
 ):
-
     resolved_leading_whitespace, resolved_span_text, resolved_trailing_whitespace = (
         ParserHelper.remove_all_from_text(previous_inline_token.leading_whitespace),
         ParserHelper.remove_all_from_text(previous_inline_token.span_text),
@@ -2775,7 +2768,6 @@ def __verify_next_inline_emphasis_end(
 
 
 def __create_newline_tuple():
-
     newline_pattern_list = [
         "\a&NewLine;\a",
         "\a&#xa;\a",
@@ -2802,7 +2794,6 @@ def __create_newline_tuple():
 
 
 def __handle_newline_character_entity_split(split_current_line):
-
     try_again = True
     while try_again:
         try_again = False
@@ -3333,6 +3324,7 @@ def __verify_inline_adjust_link_stack(
 
 
 # pylint: enable=too-many-arguments
+
 
 # pylint: disable=too-many-arguments
 def __verify_inline_process(

@@ -179,7 +179,6 @@ class RuleMd043(RulePlugin):
     def __verify_group_heading_match(
         self, heading_index: int, all_token_index: int, scan_limit: int = -1
     ) -> Tuple[int, int, Optional[MarkdownToken], Optional[str]]:
-
         if scan_limit < 0:
             scan_limit = len(self.__compiled_headings)
 
@@ -224,7 +223,6 @@ class RuleMd043(RulePlugin):
         return heading_index, all_token_index, failure_token, failure_reason
 
     def __handle_no_wildcards_match(self, context: PluginScanContext) -> None:
-
         end_index, _, failure_token, failure_reason = self.__verify_group_heading_match(
             0, 0
         )
@@ -241,7 +239,6 @@ class RuleMd043(RulePlugin):
     def __handle_wildcard_prefix(
         self,
     ) -> Tuple[int, int, Optional[MarkdownToken], Optional[str]]:
-
         (
             top_heading_index,
             top_token_index,
@@ -279,7 +276,12 @@ class RuleMd043(RulePlugin):
             failure_token: Optional[MarkdownToken] = self.__all_tokens[-1][0]
             failure_reason: Optional[str] = "Overlapped."
         else:
-            (_, _, failure_token, failure_reason,) = self.__verify_group_heading_match(
+            (
+                _,
+                _,
+                failure_token,
+                failure_reason,
+            ) = self.__verify_group_heading_match(
                 self.__suffix_index, start_all_token_index
             )
             # if self.__show_debug:
@@ -309,7 +311,6 @@ class RuleMd043(RulePlugin):
         remaining_tokens: List[List[MarkdownToken]],
         top_token_index: int,
     ) -> bool:
-
         bottom_heading_index = top_heading_index + len(remaining_headings)
 
         # if self.__show_debug:

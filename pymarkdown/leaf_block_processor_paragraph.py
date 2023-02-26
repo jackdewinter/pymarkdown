@@ -226,7 +226,11 @@ class LeafBlockProcessorParagraph:
                 "corrected_extracted_whitespace=:$:", corrected_extracted_whitespace
             )
             assert len(corrected_extracted_whitespace) > 0
-            (_, corrected_suffix, split_tab,) = TabHelper.match_tabbed_whitespace(
+            (
+                _,
+                corrected_suffix,
+                split_tab,
+            ) = TabHelper.match_tabbed_whitespace(
                 extracted_whitespace, corrected_extracted_whitespace
             )
             POGGER.debug("extracted_whitespace=:$:", extracted_whitespace)
@@ -307,7 +311,6 @@ class LeafBlockProcessorParagraph:
         extracted_whitespace: Optional[str],
         original_line: str,
     ) -> Tuple[List[MarkdownToken], Optional[str], bool]:
-
         # In cases where the list ended on the same line as we are processing, the
         # container tokens will not yet be added to the token_document.  As such,
         # make sure to construct a "proper" list that takes those into account
@@ -322,7 +325,6 @@ class LeafBlockProcessorParagraph:
             and adjusted_document[-1].is_blank_line
             and adjusted_document[-2].is_any_list_token
         ):
-
             (
                 did_find,
                 last_list_index,
@@ -341,7 +343,6 @@ class LeafBlockProcessorParagraph:
             new_tokens = []
 
         if not parser_state.token_stack[-1].is_paragraph:
-
             assert extracted_whitespace is not None
             if ParserHelper.tab_character in original_line:
                 extracted_whitespace = (
@@ -377,7 +378,11 @@ class LeafBlockProcessorParagraph:
             ">>position_marker.text_to_parse[position_marker.index_number:]>:$:<",
             position_marker.text_to_parse[position_marker.index_number :],
         )
-        (rest_of_string, _, rest_of_string_index,) = TabHelper.find_detabify_string(
+        (
+            rest_of_string,
+            _,
+            rest_of_string_index,
+        ) = TabHelper.find_detabify_string(
             original_line,
             position_marker.text_to_parse[position_marker.index_number :],
             use_proper_traverse=True,

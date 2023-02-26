@@ -254,7 +254,6 @@ class ContainerBlockLeafProcessor:
         detabified_original_start_index: int,
         grab_bag: ContainerGrabBag,
     ) -> Tuple[bool, PositionMarker, Optional[str]]:
-
         POGGER.debug(
             "line>>$>>index>>$>>",
             incoming_position_marker.text_to_parse,
@@ -644,7 +643,6 @@ class ContainerBlockLeafProcessor:
         actual_removed_leading_space: Optional[str],
         grab_bag: ContainerGrabBag,
     ) -> PositionMarker:
-
         POGGER.debug("??? adjust_containers_before_leaf_blocks")
         if (
             xposition_marker.text_to_parse
@@ -704,7 +702,6 @@ class ContainerBlockLeafProcessor:
         orig_text_removed_by_container: Optional[str],
         line_number: int,
     ) -> None:
-
         last_block_index = parser_state.find_last_block_quote_on_stack()
         POGGER.debug("last_block_index>>:$:", last_block_index)
         if not last_block_index:

@@ -85,7 +85,6 @@ class ApplicationFileScanner:
         recurse_directories: bool,
         eligible_extensions: List[str],
     ) -> bool:
-
         did_find_any = False
         LOGGER.info("Determining files to scan for path '%s'.", next_path)
         if not os.path.exists(next_path):

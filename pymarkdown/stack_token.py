@@ -478,7 +478,10 @@ class LinkDefinitionStackToken(StackToken):
     def __init__(
         self, extracted_whitespace: Optional[str], position_marker: PositionMarker
     ) -> None:
-        (self.__extracted_whitespace, self.__start_position_marker,) = (
+        (
+            self.__extracted_whitespace,
+            self.__start_position_marker,
+        ) = (
             extracted_whitespace,
             position_marker,
         )

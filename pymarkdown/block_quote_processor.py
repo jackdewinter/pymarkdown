@@ -236,7 +236,11 @@ class BlockQuoteProcessor:
         extracted_whitespace: Optional[str] = grab_bag.extracted_whitespace
         adj_ws: Optional[str] = grab_bag.adj_ws
 
-        (did_process, avoid_block_starts, end_of_bquote_start_index,) = (
+        (
+            did_process,
+            avoid_block_starts,
+            end_of_bquote_start_index,
+        ) = (
             False,
             False,
             -1,
@@ -369,7 +373,6 @@ class BlockQuoteProcessor:
         extracted_whitespace: Optional[str],
         adj_ws: Optional[str],
     ) -> Tuple[bool, Optional[RequeueLineInfo]]:
-
         assert extracted_whitespace is not None
         POGGER.debug(
             "handle_block_quote_block>>text>:$:<", position_marker.text_to_parse
@@ -412,7 +415,6 @@ class BlockQuoteProcessor:
     def __check_if_really_start_paragraph(
         parser_state: ParserState, position_marker: PositionMarker
     ) -> Tuple[bool, Optional[RequeueLineInfo]]:
-
         current_indent, eligible_stack, eligible_stack_index = (
             0,
             parser_state.token_stack[1:-1],
@@ -449,7 +451,6 @@ class BlockQuoteProcessor:
         eligible_stack: List[StackToken],
         eligible_stack_index: int,
     ) -> Tuple[int, Optional[RequeueLineInfo]]:
-
         assert eligible_stack[eligible_stack_index].is_list
         list_token = cast(ListStackToken, eligible_stack[eligible_stack_index])
         current_indent = list_token.indent_level
@@ -475,7 +476,10 @@ class BlockQuoteProcessor:
         else:
             root_index = 0
         POGGER.debug("root_index=$", root_index)
-        (container_level_tokens, _,) = parser_state.close_open_blocks_fn(
+        (
+            container_level_tokens,
+            _,
+        ) = parser_state.close_open_blocks_fn(
             parser_state,
             include_block_quotes=True,
             include_lists=True,
@@ -500,7 +504,11 @@ class BlockQuoteProcessor:
         and count while the block quote pattern is there.
         """
 
-        (last_block_quote_index, avoid_block_starts, adjusted_line,) = (
+        (
+            last_block_quote_index,
+            avoid_block_starts,
+            adjusted_line,
+        ) = (
             -1,
             False,
             line_to_parse,
@@ -588,7 +596,6 @@ class BlockQuoteProcessor:
         avoid_block_starts: bool,
         last_block_quote_index: int,
     ) -> Tuple[bool, bool, int, str, int, int]:
-
         continue_processing = True
         POGGER.debug(
             "current_count--$--stack_count--$--is_top_of_stack_is_html_block--$",
@@ -729,7 +736,6 @@ class BlockQuoteProcessor:
         Optional[RequeueLineInfo],
         bool,
     ]:
-
         """
         Handle the processing of a section clearly identified as having block quotes.
         """
@@ -846,7 +852,6 @@ class BlockQuoteProcessor:
         Optional[RequeueLineInfo],
         bool,
     ]:
-
         POGGER.debug(
             "__handle_block_quote_section---block_quote_data.current_count--$--$--$--",
             block_quote_data.current_count,
@@ -951,7 +956,6 @@ class BlockQuoteProcessor:
         Optional[RequeueLineInfo],
         bool,
     ]:
-
         POGGER.debug("handle_block_quote_section>>not fenced")
         (
             container_level_tokens,
@@ -1052,7 +1056,10 @@ class BlockQuoteProcessor:
         container_level_tokens: List[MarkdownToken],
         original_line: str,
     ) -> Tuple[str, int, str, bool, List[MarkdownToken]]:
-        (line_to_parse, stack_index,) = (
+        (
+            line_to_parse,
+            stack_index,
+        ) = (
             line_to_parse[start_index:],
             parser_state.find_last_block_quote_on_stack(),
         )
@@ -1250,7 +1257,6 @@ class BlockQuoteProcessor:
         special_case = False
         olad = adjusted_removed_text
         if parser_state.block_copy and found_bq_stack_token:
-
             POGGER.debug("parser_state.block_copy>>search")
             if original_token := BlockQuoteProcessor.__find_original_token(
                 parser_state, found_bq_stack_token
@@ -1381,7 +1387,6 @@ class BlockQuoteProcessor:
         container_level_tokens: List[MarkdownToken],
         original_line: str,
     ) -> None:
-
         POGGER.debug("__hbqs>>removed_text>>:$:<", removed_text)
         POGGER.debug("__hbqs>>container_start_bq_count>>$", container_start_bq_count)
         POGGER.debug("__hbqs>>original_start_index>>$", original_start_index)
@@ -1397,7 +1402,10 @@ class BlockQuoteProcessor:
         )
 
         POGGER.debug("dbqlsa>>adjusted_removed_text>>:$:<", adjusted_removed_text)
-        (adjusted_removed_text, tabbed_removed_text,) = BlockQuoteProcessor.__adjust_1(
+        (
+            adjusted_removed_text,
+            tabbed_removed_text,
+        ) = BlockQuoteProcessor.__adjust_1(
             parser_state,
             container_start_bq_count,
             adjusted_removed_text,
@@ -1519,7 +1527,6 @@ class BlockQuoteProcessor:
         line_to_parse: str,
         container_level_tokens: List[MarkdownToken],
     ) -> Tuple[BlockQuoteData, str, List[MarkdownToken], str]:
-
         POGGER.debug("handle_block_quote_section>>fenced")
         assert start_index >= 0
         removed_text, line_to_parse = (
@@ -1537,7 +1544,10 @@ class BlockQuoteProcessor:
         )
 
         if block_quote_data.current_count < block_quote_data.stack_count:
-            (container_level_tokens, _,) = parser_state.close_open_blocks_fn(
+            (
+                container_level_tokens,
+                _,
+            ) = parser_state.close_open_blocks_fn(
                 parser_state,
                 only_these_blocks=[
                     FencedCodeBlockStackToken,
@@ -1586,7 +1596,6 @@ class BlockQuoteProcessor:
         adjust_current_block_quote: bool,
         last_bq_index: int,
     ) -> Tuple[int, int, int, int]:
-
         assert parser_state.token_stack[current_stack_index].is_list
         list_stack_token = cast(
             ListStackToken, parser_state.token_stack[current_stack_index]
@@ -2173,7 +2182,10 @@ class BlockQuoteProcessor:
                 "decreasing block quotes by one>>",
             )
             stack_count -= 1
-            (new_tokens, _,) = parser_state.close_open_blocks_fn(
+            (
+                new_tokens,
+                _,
+            ) = parser_state.close_open_blocks_fn(
                 parser_state,
                 include_block_quotes=True,
                 until_this_index=len(parser_state.token_stack) - 1,

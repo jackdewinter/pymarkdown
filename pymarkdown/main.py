@@ -220,9 +220,8 @@ class PyMarkdownLint:
             POGGER.info("Ending file '$' with exception.", next_file_name)
             raise
 
-    # pylint: disable=broad-except
+    # pylint: disable=broad-exception-caught
     def __apply_configuration_to_plugins(self) -> None:
-
         try:
             self.__plugins.apply_configuration(self.__properties)
         except Exception as this_exception:
@@ -232,10 +231,9 @@ class PyMarkdownLint:
             )
             self.__handle_error(formatted_error, this_exception)
 
-    # pylint: enable=broad-except
+    # pylint: enable=broad-exception-caught
 
     def __initialize_parser(self, args: argparse.Namespace) -> None:
-
         resource_path = "fredo" if args.x_test_init_fault else None
         try:
             self.__tokenizer = TokenizedMarkdown(resource_path)
@@ -270,7 +268,6 @@ class PyMarkdownLint:
             self.__handle_error(formatted_error, this_exception)
 
     def __handle_error(self, formatted_error: str, thrown_error: Exception) -> None:
-
         show_error = self.__logging.show_stack_trace or not isinstance(
             thrown_error, ValueError
         )
@@ -283,7 +280,6 @@ class PyMarkdownLint:
         sys.exit(1)
 
     def __handle_scan_error(self, next_file: str, this_exception: Exception) -> None:
-
         if formatted_error := self.__presentation.format_scan_error(
             next_file, this_exception
         ):
@@ -291,7 +287,6 @@ class PyMarkdownLint:
         sys.exit(1)
 
     def __set_initial_state(self, args: argparse.Namespace) -> None:
-
         self.__logging.pre_initialize_with_args(args)
         if args.configuration_file:
             LOGGER.debug("Loading configuration file: %s", args.configuration_file)
@@ -319,7 +314,7 @@ class PyMarkdownLint:
             )
             self.__handle_error(formatted_error, this_exception)
 
-    # pylint: disable=broad-except
+    # pylint: disable=broad-exception-caught
     def __initialize_extensions(self, args: argparse.Namespace) -> None:
         try:
             self.__extensions.initialize(
@@ -341,7 +336,7 @@ class PyMarkdownLint:
             )
             self.__handle_error(formatted_error, this_exception)
 
-    # pylint: enable=broad-except
+    # pylint: enable=broad-exception-caught
 
     def __handle_plugins_and_extensions(self, args: argparse.Namespace) -> None:
         self.__initialize_plugins(args)

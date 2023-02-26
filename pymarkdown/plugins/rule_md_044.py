@@ -89,7 +89,6 @@ class RuleMd044(RulePlugin):
         line_adjust: int,
         col_adjust: int,
     ) -> None:
-
         original_found_text = original_source[
             found_index : found_index + len(required_capitalization)
         ]
@@ -167,7 +166,6 @@ class RuleMd044(RulePlugin):
         start_x_offset: int = 0,
         start_y_offset: int = 0,
     ) -> None:
-
         string_to_check = ParserHelper.remove_all_from_text(string_to_check)
         string_to_check_lower = string_to_check.lower()
         for next_name in self.__proper_name_list:
@@ -175,7 +173,6 @@ class RuleMd044(RulePlugin):
             search_start = 0
             found_index = string_to_check_lower.find(next_name_lower, search_start)
             while found_index != -1:
-
                 self.__search_for_possible_matches(
                     string_to_check,
                     string_to_check_lower,
@@ -204,7 +201,6 @@ class RuleMd044(RulePlugin):
         string_to_check: str,
         same_line_offset: int,
     ) -> None:
-
         start_x_offset = 0
         start_y_offset = 0
         if ParserHelper.newline_character in link_body_text:

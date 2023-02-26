@@ -117,7 +117,7 @@
         },
         "pymarkdown/main.py": {
             "too-few-public-methods": 1,
-            "broad-except": 2
+            "broad-exception-caught": 2
         },
         "pymarkdown/main_presentation.py": {},
         "pymarkdown/markdown_token.py": {
@@ -253,6 +253,6 @@
         "too-many-instance-attributes": 19,
         "too-many-public-methods": 3,
         "protected-access": 2,
-        "broad-except": 2
+        "broad-exception-caught": 2
     }
 }

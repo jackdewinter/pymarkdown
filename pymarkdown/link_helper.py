@@ -511,11 +511,9 @@ class LinkHelper:
         POGGER.debug("ind>>$<<", ind)
         POGGER.debug(">>$<<", inline_blocks[ind_plus_one:])
         if inline_blocks_size > (ind_plus_one):
-
             alt_text_parts: List[str] = []
 
             while inline_blocks_size > ind_plus_one:
-
                 LinkHelper.__handle_next_alt_text(
                     inline_blocks, ind_plus_one, alt_text_parts
                 )
@@ -666,7 +664,6 @@ class LinkHelper:
             inline_blocks_size,
         )
         while collect_index < inline_blocks_size:
-
             (
                 is_inside_of_link,
                 collect_index,
@@ -1197,7 +1194,6 @@ class LinkHelper:
     def __translate_between_strings(
         source_text: str, destination_text: str, next_index: int
     ) -> int:
-
         stop_character = source_text[next_index]
 
         POGGER.debug("source_text>:$:<", source_text)
@@ -1526,7 +1522,11 @@ class LinkHelper:
         """
         Create the right type of link token.
         """
-        (text_from_blocks_raw, line_number, column_number,) = (
+        (
+            text_from_blocks_raw,
+            line_number,
+            column_number,
+        ) = (
             ParserHelper.resolve_backspaces_from_text(text_from_blocks_raw),
             inline_blocks[ind].line_number,
             inline_blocks[ind].column_number,
@@ -1743,7 +1743,6 @@ class LinkHelper:
             )
 
         if tabified_text and update_index != -1:
-
             assert tabified_text is not None
 
             # Both of the above functions consume the last character of the link.
@@ -1774,7 +1773,11 @@ class LinkHelper:
     ) -> Tuple[Optional[str], str, str, str, int, bool]:
         POGGER.debug("full reference?")
         POGGER.debug(">>did_extract>>$>", text_to_scan[after_open_index:])
-        (did_extract, after_label_index, ex_label,) = LinkHelper.extract_link_label(
+        (
+            did_extract,
+            after_label_index,
+            ex_label,
+        ) = LinkHelper.extract_link_label(
             text_to_scan, after_open_index, include_reference_colon=False
         )
         POGGER.debug(
@@ -1803,7 +1806,6 @@ class LinkHelper:
 
     @staticmethod
     def __encode_link_destination(link_to_encode: str) -> str:
-
         percent_index, before_data = ParserHelper.collect_until_one_of_characters(
             link_to_encode, 0, LinkHelper.__special_link_destination_characters
         )
