@@ -454,7 +454,7 @@ class InlineProcessor:
             ) = (LinkHelper.image_start_sequence[0], inline_request.next_index + 1, 1)
         return inline_response
 
-    # pylint: disable=too-many-arguments, too-many-locals
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __handle_inline_special(
         source_text: str,
@@ -476,23 +476,24 @@ class InlineProcessor:
         assert column_number is not None
         assert current_string_unresolved is not None
 
+        inline_response = InlineResponse()
+        inline_response.new_string = ""
+
         POGGER.debug(">>tabified_text>:$:<", tabified_text)
-        remaining_line_size = len(remaining_line)
         POGGER.debug(">>column_number>>$<<", column_number)
         POGGER.debug(">>remaining_line>>$<<", remaining_line)
-        column_number += remaining_line_size
+        column_number += len(remaining_line)
         POGGER.debug(">>column_number>>$<<", column_number)
 
         (
             special_sequence,
-            repeat_count,
-            new_index,
-            preceding_two,
-            following_two,
+            inline_response.delta_column_number,
+            inline_response.new_index,
+            surrounding_whitespace_pair,
             is_active,
-            new_token,
-            consume_rest_of_line,
-            delta_line,
+            inline_response.new_tokens,
+            inline_response.consume_rest_of_line,
+            inline_response.delta_line_number,
         ) = InlineProcessor.__handle_inline_special_character(
             special_length,
             inline_blocks,
@@ -502,41 +503,31 @@ class InlineProcessor:
             source_text,
             next_index,
             para_owner,
-            remaining_line_size,
+            len(remaining_line),
             tabified_text,
         )
-
-        if not new_token:
+        if not inline_response.new_tokens:
             assert line_number is not None
-            assert repeat_count is not None
             POGGER.debug(">>create>>$,$<<", line_number, column_number)
-            new_token = SpecialTextMarkdownToken(
-                special_sequence,
-                repeat_count,
-                preceding_two,
-                following_two,
-                is_active,
-                line_number,
-                column_number,
-            )
+            inline_response.new_tokens = [
+                SpecialTextMarkdownToken(
+                    special_sequence,
+                    inline_response.delta_column_number,
+                    surrounding_whitespace_pair[0],
+                    surrounding_whitespace_pair[1],
+                    is_active,
+                    line_number,
+                    column_number,
+                )
+            ]
 
-        POGGER.debug(">>delta_line>>$<<", delta_line)
-        POGGER.debug(">>repeat_count>>$<<", repeat_count)
-        assert repeat_count is not None
-        inline_response = InlineResponse()
-        (
-            inline_response.new_string,
-            inline_response.new_index,
-            inline_response.new_tokens,
-            inline_response.consume_rest_of_line,
-            inline_response.delta_line_number,
-            inline_response.delta_column_number,
-        ) = ("", new_index, [new_token], consume_rest_of_line, delta_line, repeat_count)
+        POGGER.debug(">>delta_line>>$<<", inline_response.delta_line_number)
+        POGGER.debug(">>repeat_count>>$<<", inline_response.delta_column_number)
         return inline_response
 
-    # pylint: enable=too-many-arguments, too-many-locals
+    # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments, too-many-locals
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __handle_inline_special_character(
         special_length: int,
@@ -549,52 +540,18 @@ class InlineProcessor:
         para_owner: Optional[ParagraphMarkdownToken],
         remaining_line_size: int,
         tabified_text: Optional[str],
-    ) -> Tuple[
-        str,
-        Optional[int],
-        int,
-        Optional[str],
-        Optional[str],
-        bool,
-        Optional[MarkdownToken],
-        bool,
-        int,
-    ]:
-        (
-            preceding_two,
-            following_two,
-            is_active,
-            new_token,
-            consume_rest_of_line,
-            delta_line,
-        ) = (None, None, True, None, False, 0)
-        repeat_count: Optional[int] = 1
+    ) -> Tuple[str, int, int, Any, bool, List[MarkdownToken], bool, int]:
         special_sequence = source_text[next_index : next_index + special_length]
         if special_length == 1 and special_sequence in EmphasisHelper.inline_emphasis:
-            repeat_count, new_index = ParserHelper.collect_while_character(
-                source_text, next_index, special_sequence
-            )
-            assert new_index is not None
-            special_sequence, preceding_two, following_two = (
-                source_text[next_index:new_index],
-                source_text[max(0, next_index - 2) : next_index],
-                source_text[new_index : min(len(source_text), new_index + 2)],
-            )
-        elif special_sequence[0] == LinkHelper.link_label_end:
-            POGGER.debug(
-                "POSSIBLE LINK CLOSE_FOUND($)>>$>>",
-                special_length,
+            return InlineProcessor.__handle_inline_special_character_emphasis(
+                source_text,
+                next_index,
                 special_sequence,
             )
-            assert repeat_count is not None
-            (
-                new_index,
-                is_active,
-                new_token,
-                consume_rest_of_line,
-                repeat_count,
-                delta_line,
-            ) = InlineProcessor.__handle_link_label_end(
+        if special_sequence[0] == LinkHelper.link_label_end:
+            return InlineProcessor.__handle_inline_special_character_label_end(
+                special_length,
+                special_sequence,
                 inline_blocks,
                 remaining_line,
                 tabified_remaining_line,
@@ -603,25 +560,81 @@ class InlineProcessor:
                 next_index,
                 para_owner,
                 remaining_line_size,
-                delta_line,
-                repeat_count,
                 tabified_text,
             )
-        else:
-            repeat_count, new_index = special_length, next_index + special_length
         return (
             special_sequence,
-            repeat_count,
-            new_index,
-            preceding_two,
-            following_two,
-            is_active,
-            new_token,
-            consume_rest_of_line,
-            delta_line,
+            special_length,
+            next_index + special_length,
+            (None, None),
+            True,
+            [],
+            False,
+            0,
         )
 
-    # pylint: enable=too-many-arguments, too-many-locals
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __handle_inline_special_character_label_end(
+        special_length: int,
+        special_sequence: str,
+        inline_blocks: List[MarkdownToken],
+        remaining_line: str,
+        tabified_remaining_line: Optional[str],
+        current_string_unresolved: str,
+        source_text: str,
+        next_index: int,
+        para_owner: Optional[ParagraphMarkdownToken],
+        remaining_line_size: int,
+        tabified_text: Optional[str],
+    ) -> Tuple[str, int, int, Any, bool, List[MarkdownToken], bool, int]:
+        POGGER.debug(
+            "POSSIBLE LINK CLOSE_FOUND($)>>$>>",
+            special_length,
+            special_sequence,
+        )
+        return InlineProcessor.__handle_link_label_end(
+            inline_blocks,
+            remaining_line,
+            tabified_remaining_line,
+            current_string_unresolved,
+            source_text,
+            next_index,
+            para_owner,
+            remaining_line_size,
+            0,
+            tabified_text,
+            special_sequence,
+        )
+
+    # pylint: enable=too-many-arguments
+
+    @staticmethod
+    def __handle_inline_special_character_emphasis(
+        source_text: str,
+        next_index: int,
+        special_sequence: str,
+    ) -> Tuple[str, int, int, Any, bool, List[MarkdownToken], bool, int]:
+        repeat_count, new_index = ParserHelper.collect_while_character(
+            source_text, next_index, special_sequence
+        )
+        assert new_index is not None
+        assert repeat_count is not None
+        return (
+            source_text[next_index:new_index],
+            repeat_count,
+            new_index,
+            (
+                source_text[max(0, next_index - 2) : next_index],
+                source_text[new_index : min(len(source_text), new_index + 2)],
+            ),
+            True,
+            [],
+            False,
+            0,
+        )
 
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
@@ -635,9 +648,9 @@ class InlineProcessor:
         para_owner: Optional[ParagraphMarkdownToken],
         remaining_line_size: int,
         delta_line: int,
-        repeat_count: int,
         tabified_text: Optional[str],
-    ) -> Tuple[int, bool, Optional[MarkdownToken], bool, int, int]:
+        special_sequence: str,
+    ) -> Tuple[str, int, int, Any, bool, List[MarkdownToken], bool, int]:
         POGGER.debug(
             ">>inline_blocks>>$<<",
             inline_blocks,
@@ -700,9 +713,42 @@ class InlineProcessor:
         POGGER.debug(">>consume_rest_of_line>>$<<", consume_rest_of_line)
         POGGER.debug(">>old_inline_blocks_count>>$<<", old_inline_blocks_count)
 
+        return InlineProcessor.__handle_link_label_end_calc(
+            delta_line,
+            new_token,
+            inline_blocks,
+            new_index,
+            next_index,
+            remaining_line_size,
+            para_owner,
+            old_inline_blocks_count,
+            old_inline_blocks_last_token,
+            is_active,
+            consume_rest_of_line,
+            special_sequence,
+        )
+
+    # pylint: enable=too-many-arguments, too-many-locals
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __handle_link_label_end_calc(
+        delta_line: int,
+        new_token: Optional[MarkdownToken],
+        inline_blocks: List[MarkdownToken],
+        new_index: int,
+        next_index: int,
+        remaining_line_size: int,
+        para_owner: Optional[ParagraphMarkdownToken],
+        old_inline_blocks_count: int,
+        old_inline_blocks_last_token: Optional[MarkdownToken],
+        is_active: bool,
+        consume_rest_of_line: bool,
+        special_sequence: str,
+    ) -> Tuple[str, int, int, Any, bool, List[MarkdownToken], bool, int]:
+        repeat_count = 1
         new_inline_blocks_count = len(inline_blocks)
         POGGER.debug(">>new_inline_blocks_count>>$<<", new_inline_blocks_count)
-
         if (
             new_token
             or old_inline_blocks_count != new_inline_blocks_count
@@ -721,15 +767,17 @@ class InlineProcessor:
                 delta_line,
             )
         return (
-            new_index,
-            is_active,
-            new_token,
-            consume_rest_of_line,
+            special_sequence,
             repeat_count,
+            new_index,
+            (None, None),
+            is_active,
+            [new_token] if new_token else [],
+            consume_rest_of_line,
             delta_line,
         )
 
-    # pylint: enable=too-many-arguments, too-many-locals
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -1117,7 +1165,7 @@ class InlineProcessor:
         POGGER.debug(">>delta_line>>$<<repeat_count>>$<<", delta_line, repeat_count)
         return delta_line, repeat_count
 
-    # pylint: disable=too-many-locals, too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod  # noqa: C901
     def __process_inline_text_block(  # noqa: C901
         source_text: str,
@@ -1288,9 +1336,9 @@ class InlineProcessor:
             newlines_encountered,
         )
 
-    # pylint: enable=too-many-locals, too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
 
-    # pylint: disable=too-many-locals, too-many-arguments
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __handle_next_inline_character_setup(
         source_text: str,
@@ -1304,13 +1352,7 @@ class InlineProcessor:
         column_number: int,
         para_owner: Optional[ParagraphMarkdownToken],
     ) -> Tuple[bool, str, int, Optional[MarkdownToken], Optional[str], InlineRequest]:
-        (
-            reset_current_string,
-            remaining_line,
-            old_inline_blocks_count,
-            old_inline_blocks_last_token,
-        ) = (
-            False,
+        (remaining_line, old_inline_blocks_count, old_inline_blocks_last_token,) = (
             source_text[start_index:next_index],
             len(inline_blocks),
             inline_blocks[-1] if inline_blocks else None,
@@ -1323,14 +1365,15 @@ class InlineProcessor:
         # POGGER.debug("tabified_text>:$:<", tabified_text)
         if tabified_text:
             # POGGER.debug("char>:$:<", source_text[next_index])
-            adj_original_line = InlineProcessor.__handle_next_inline_character_tabified(
-                source_text,
-                tabified_text,
-                newlines_encountered,
-                start_index,
-                next_index,
+            tabified_remaining_line = (
+                InlineProcessor.__handle_next_inline_character_tabified(
+                    source_text,
+                    tabified_text,
+                    newlines_encountered,
+                    start_index,
+                    next_index,
+                )
             )
-            tabified_remaining_line = adj_original_line
             # POGGER.debug("tabified_remaining_line>:$:<", tabified_remaining_line)
 
         inline_request = InlineRequest(
@@ -1346,7 +1389,7 @@ class InlineProcessor:
             tabified_text,
         )
         return (
-            reset_current_string,
+            False,
             remaining_line,
             old_inline_blocks_count,
             old_inline_blocks_last_token,
@@ -1354,7 +1397,7 @@ class InlineProcessor:
             inline_request,
         )
 
-    # pylint: enable=too-many-locals, too-many-arguments
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
@@ -1654,7 +1697,6 @@ class InlineProcessor:
             line_start_index,
         )
 
-    # pylint: disable=too-many-locals
     @staticmethod
     def __handle_next_inline_character_tabified(
         source_text: str,
@@ -1669,124 +1711,153 @@ class InlineProcessor:
         )
         POGGER.debug("adj_tabified_text>:$:<", adj_tabified_text)
 
-        adj_source_text, line_start_index = InlineProcessor.__xdg(
-            source_text, newlines_encountered
-        )
-        POGGER.debug("adj_source_text>:$:<", adj_source_text)
+        _, line_start_index = InlineProcessor.__xdg(source_text, newlines_encountered)
+        # POGGER.debug("adj_source_text>:$:<", adj_source_text)
 
         current_line_source_text = source_text[start_index:next_index]
         POGGER.debug("source_text>:$:<", source_text)
         POGGER.debug("current_line_source_text>:$:<", current_line_source_text)
 
         stop_character = source_text[next_index]
-        if stop_character != "\n":
-            POGGER.debug("stop_character>:$:<", stop_character)
+        if stop_character == "\n":
+            ex_original_line, _ = TabHelper.find_detabify_string_ex(
+                adj_tabified_text, current_line_source_text
+            )
+            assert ex_original_line is not None
+            return ex_original_line
 
-            found_in_source_text_count = 0
-            found_in_source_text_index = source_text.find(
-                stop_character, line_start_index
-            )
-            POGGER.debug(
-                "source_text[$]>:$:<",
-                found_in_source_text_index,
-                source_text[found_in_source_text_index:],
-            )
-            while found_in_source_text_index != next_index:
-                found_in_source_text_count += 1
-                found_in_source_text_index = source_text.find(
-                    stop_character, found_in_source_text_index + 1
-                )
-                POGGER.debug(
-                    "source_text[$]>:$:<",
-                    found_in_source_text_index,
-                    source_text[found_in_source_text_index:],
-                )
-            POGGER.debug("found_in_source_text_count>:$:<", found_in_source_text_count)
-            POGGER.debug(
-                "source_text[$]>:$:<",
-                found_in_source_text_index,
-                source_text[found_in_source_text_index:],
-            )
+        POGGER.debug("stop_character>:$:<", stop_character)
 
-            found_in_tabified_text_count = 0
-            stop_character_in_tabified_index = adj_tabified_text.find(stop_character)
-            POGGER.debug(
-                "adj_tabified_text[$]>:$:<",
-                stop_character_in_tabified_index,
-                adj_tabified_text[stop_character_in_tabified_index:],
+        stop_character_in_tabified_index = (
+            InlineProcessor.__handle_next_inline_character_tabified_find_stop(
+                adj_tabified_text,
+                stop_character,
+                source_text,
+                line_start_index,
+                next_index,
             )
-            while found_in_tabified_text_count != found_in_source_text_count:
-                found_in_tabified_text_count += 1
-                stop_character_in_tabified_index = adj_tabified_text.find(
-                    stop_character, stop_character_in_tabified_index + 1
-                )
-                POGGER.debug(
-                    "adj_tabified_text[$]>:$:<",
-                    stop_character_in_tabified_index,
-                    adj_tabified_text[stop_character_in_tabified_index:],
-                )
-                assert stop_character_in_tabified_index != -1
-            POGGER.debug(
-                "found_in_tabified_text_count>:$:<", found_in_tabified_text_count
-            )
-            POGGER.debug(
-                "adj_tabified_text[$]>:$:<",
-                stop_character_in_tabified_index,
-                adj_tabified_text[stop_character_in_tabified_index:],
-            )
-            assert adj_tabified_text[stop_character_in_tabified_index] == stop_character
-
-            (
-                current_line_leading_space_index,
-                current_line_leading_space,
-            ) = ParserHelper.extract_spaces(current_line_source_text, 0)
-            POGGER.debug(
-                "current_line_leading_space_index>:$:<, current_line_leading_space>:$:<",
-                current_line_leading_space_index,
-                current_line_leading_space,
-            )
-            assert current_line_leading_space_index is not None
-
-            word_stop_characters = " \t" + stop_character
-            (
-                current_line_first_word_index,
-                current_line_first_word,
-            ) = ParserHelper.collect_until_one_of_characters(
-                current_line_source_text,
-                current_line_leading_space_index,
-                word_stop_characters,
-            )
-            POGGER.debug(
-                "current_line_first_word_index>:$:<, current_line_first_word>:$:<",
-                current_line_first_word_index,
-                current_line_first_word,
-            )
-
-            if current_line_leading_space_index == current_line_first_word_index:
-                tabified_start_index, _ = ParserHelper.extract_spaces_from_end(
-                    adj_tabified_text, stop_character_in_tabified_index
-                )
-            else:
-                assert current_line_first_word is not None
-                tabified_start_index = InlineProcessor.__pdff(
-                    current_line_source_text,
-                    current_line_first_word,
-                    current_line_leading_space_index,
-                    adj_tabified_text,
-                    stop_character_in_tabified_index,
-                    current_line_leading_space,
-                )
-            return adj_tabified_text[
-                tabified_start_index:stop_character_in_tabified_index
-            ]
-
-        ex_original_line, _ = TabHelper.find_detabify_string_ex(
-            adj_tabified_text, current_line_source_text
         )
-        assert ex_original_line is not None
-        return ex_original_line
 
-    # pylint: enable=too-many-locals
+        (
+            current_line_leading_space_index,
+            current_line_leading_space,
+        ) = ParserHelper.extract_spaces(current_line_source_text, 0)
+        POGGER.debug(
+            "current_line_leading_space_index>:$:<, current_line_leading_space>:$:<",
+            current_line_leading_space_index,
+            current_line_leading_space,
+        )
+        assert current_line_leading_space_index is not None
+
+        return InlineProcessor.__handle_next_inline_character_tabified_cleanup(
+            current_line_source_text,
+            current_line_leading_space_index,
+            stop_character,
+            adj_tabified_text,
+            stop_character_in_tabified_index,
+            current_line_leading_space,
+        )
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __handle_next_inline_character_tabified_cleanup(
+        current_line_source_text: str,
+        current_line_leading_space_index: int,
+        stop_character: str,
+        adj_tabified_text: str,
+        stop_character_in_tabified_index: int,
+        current_line_leading_space: Optional[str],
+    ) -> str:
+        (
+            current_line_first_word_index,
+            current_line_first_word,
+        ) = ParserHelper.collect_until_one_of_characters(
+            current_line_source_text,
+            current_line_leading_space_index,
+            " \t" + stop_character,
+        )
+        POGGER.debug(
+            "current_line_first_word_index>:$:<, current_line_first_word>:$:<",
+            current_line_first_word_index,
+            current_line_first_word,
+        )
+
+        if current_line_leading_space_index == current_line_first_word_index:
+            tabified_start_index, _ = ParserHelper.extract_spaces_from_end(
+                adj_tabified_text, stop_character_in_tabified_index
+            )
+        else:
+            assert current_line_first_word is not None
+            tabified_start_index = InlineProcessor.__pdff(
+                current_line_source_text,
+                current_line_first_word,
+                current_line_leading_space_index,
+                adj_tabified_text,
+                stop_character_in_tabified_index,
+                current_line_leading_space,
+            )
+        return adj_tabified_text[tabified_start_index:stop_character_in_tabified_index]
+
+    # pylint: enable=too-many-arguments
+
+    @staticmethod
+    def __handle_next_inline_character_tabified_find_stop(
+        adj_tabified_text: str,
+        stop_character: str,
+        source_text: str,
+        line_start_index: int,
+        next_index: int,
+    ) -> int:
+        found_in_source_text_count = 0
+        found_in_source_text_index = source_text.find(stop_character, line_start_index)
+        POGGER.debug(
+            "source_text[$]>:$:<",
+            found_in_source_text_index,
+            source_text[found_in_source_text_index:],
+        )
+        while found_in_source_text_index != next_index:
+            found_in_source_text_count += 1
+            found_in_source_text_index = source_text.find(
+                stop_character, found_in_source_text_index + 1
+            )
+            POGGER.debug(
+                "source_text[$]>:$:<",
+                found_in_source_text_index,
+                source_text[found_in_source_text_index:],
+            )
+        POGGER.debug("found_in_source_text_count>:$:<", found_in_source_text_count)
+        POGGER.debug(
+            "source_text[$]>:$:<",
+            found_in_source_text_index,
+            source_text[found_in_source_text_index:],
+        )
+
+        found_in_tabified_text_count = 0
+        stop_character_in_tabified_index = adj_tabified_text.find(stop_character)
+        POGGER.debug(
+            "adj_tabified_text[$]>:$:<",
+            stop_character_in_tabified_index,
+            adj_tabified_text[stop_character_in_tabified_index:],
+        )
+        while found_in_tabified_text_count != found_in_source_text_count:
+            found_in_tabified_text_count += 1
+            stop_character_in_tabified_index = adj_tabified_text.find(
+                stop_character, stop_character_in_tabified_index + 1
+            )
+            POGGER.debug(
+                "adj_tabified_text[$]>:$:<",
+                stop_character_in_tabified_index,
+                adj_tabified_text[stop_character_in_tabified_index:],
+            )
+            assert stop_character_in_tabified_index != -1
+        POGGER.debug("found_in_tabified_text_count>:$:<", found_in_tabified_text_count)
+        POGGER.debug(
+            "adj_tabified_text[$]>:$:<",
+            stop_character_in_tabified_index,
+            adj_tabified_text[stop_character_in_tabified_index:],
+        )
+        assert adj_tabified_text[stop_character_in_tabified_index] == stop_character
+        return stop_character_in_tabified_index
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -2662,7 +2733,6 @@ class InlineProcessor:
 
     # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-locals
     @staticmethod
     def __complete_inline_block_processing_tabified(
         source_text: str,
@@ -2740,6 +2810,21 @@ class InlineProcessor:
         )
         POGGER.debug("current_line_tabified_text>:$:<", current_line_tabified_text)
 
+        found_word_index = InlineProcessor.__calculate_word_index(
+            current_line_tabified_text,
+            source_text_word,
+            find_word_count,
+            source_text_spaces,
+        )
+        return current_line_tabified_text[found_word_index:]
+
+    @staticmethod
+    def __calculate_word_index(
+        current_line_tabified_text: str,
+        source_text_word: str,
+        find_word_count: int,
+        source_text_spaces: Optional[str],
+    ) -> int:
         POGGER.debug("source_text_word>:$:<", source_text_word)
         found_word_index = current_line_tabified_text.find(source_text_word)
         POGGER.debug(
@@ -2774,10 +2859,7 @@ class InlineProcessor:
                 found_word_index,
                 current_line_tabified_text[found_word_index:],
             )
-
-        return current_line_tabified_text[found_word_index:]
-
-    # pylint: enable=too-many-locals
+        return found_word_index
 
     @staticmethod
     def __xdf(tabified_text: str, newlines_encountered: int) -> Tuple[str, int]:

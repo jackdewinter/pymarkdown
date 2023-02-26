@@ -7,6 +7,7 @@ import inspect
 
 from pymarkdown.container_markdown_token import (
     BlockQuoteMarkdownToken,
+    ContainerMarkdownToken,
     NewListItemMarkdownToken,
     OrderedListStartMarkdownToken,
     UnorderedListStartMarkdownToken,
@@ -19,6 +20,7 @@ from pymarkdown.inline_markdown_token import (
     HardBreakMarkdownToken,
     ImageStartMarkdownToken,
     InlineCodeSpanMarkdownToken,
+    InlineMarkdownToken,
     LinkStartMarkdownToken,
     RawHtmlMarkdownToken,
     TextMarkdownToken,
@@ -30,13 +32,14 @@ from pymarkdown.leaf_markdown_token import (
     FencedCodeBlockMarkdownToken,
     HtmlBlockMarkdownToken,
     IndentedCodeBlockMarkdownToken,
+    LeafMarkdownToken,
     LinkReferenceDefinitionMarkdownToken,
     ParagraphMarkdownToken,
     SetextHeadingMarkdownToken,
     ThematicBreakMarkdownToken,
 )
 from pymarkdown.link_helper import LinkHelper
-from pymarkdown.markdown_token import MarkdownToken
+from pymarkdown.markdown_token import MarkdownToken, MarkdownTokenClass
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.tab_helper import TabHelper
 
@@ -162,24 +165,78 @@ class TransformToMarkdown:
             init_parameters[i] = ""
         return type_name(**init_parameters)
 
-    def register_handlers(self, type_name, start_token_handler, end_token_handler=None):
-        """
-        Register the handlers necessary to deal with token's start and end.
-        """
-        handler_instance = self.__create_type_instance(type_name)
-        assert handler_instance.is_leaf or handler_instance.is_inline
+    def __get_token_type_info(self, token_type):
+        token_name = None
+        token_class = None
+        if "get_markdown_token_type" in token_type.__dict__:
+            token_name = token_type.__dict__["get_markdown_token_type"].__func__()
+            current_token_type = token_type
+            repeat = current_token_type not in [
+                ContainerMarkdownToken,
+                LeafMarkdownToken,
+                InlineMarkdownToken,
+            ]
+            while repeat:
+                new_xx = current_token_type.__bases__
+                # print(str(new_xx))
+                assert len(new_xx) == 1
+                current_token_type = new_xx[0]
+                # print(str(xx.__dict__))
+                repeat = current_token_type not in [
+                    ContainerMarkdownToken,
+                    LeafMarkdownToken,
+                    InlineMarkdownToken,
+                ]
+            if current_token_type == ContainerMarkdownToken:
+                token_class = MarkdownTokenClass.CONTAINER_BLOCK
+            elif current_token_type == LeafMarkdownToken:
+                token_class = MarkdownTokenClass.LEAF_BLOCK
+            else:
+                assert current_token_type == InlineMarkdownToken
+                token_class = MarkdownTokenClass.INLINE_BLOCK
 
-        self.start_token_handlers[handler_instance.token_name] = start_token_handler
-        if end_token_handler:
-            self.end_token_handlers[handler_instance.token_name] = end_token_handler
+        if not token_name:
+            token_init_fn = token_type.__dict__["__init__"]
+            init_parameters = {
+                i: "" for i in inspect.getfullargspec(token_init_fn)[0] if i != "self"
+            }
+            handler_instance = token_type(**init_parameters)  # type: ignore
+            token_name = handler_instance.token_name
+            if handler_instance.is_container:
+                token_class = MarkdownTokenClass.CONTAINER_BLOCK
+            elif handler_instance.is_leaf:
+                token_class = MarkdownTokenClass.LEAF_BLOCK
+            else:
+                assert handler_instance.is_inline
+                token_class = MarkdownTokenClass.INLINE_BLOCK
+        assert token_name is not None
+        assert token_class is not None
+        return token_name, token_class
 
-    def register_container_handlers(
-        self, type_name, start_token_handler, end_token_handler=None
+    def register_handlers(
+        self, token_type, start_token_handler, end_token_handler=None
     ):
         """
         Register the handlers necessary to deal with token's start and end.
         """
-        handler_instance = self.__create_type_instance(type_name)
+        type_name, type_class = self.__get_token_type_info(token_type)
+
+        assert type_class in [
+            MarkdownTokenClass.LEAF_BLOCK,
+            MarkdownTokenClass.INLINE_BLOCK,
+        ]
+
+        self.start_token_handlers[type_name] = start_token_handler
+        if end_token_handler:
+            self.end_token_handlers[type_name] = end_token_handler
+
+    def register_container_handlers(
+        self, token_type, start_token_handler, end_token_handler=None
+    ):
+        """
+        Register the handlers necessary to deal with token's start and end.
+        """
+        handler_instance = self.__create_type_instance(token_type)
         assert handler_instance.is_container
 
         self.start_container_token_handlers[
@@ -1380,7 +1437,6 @@ class TransformToMarkdown:
                 current_token,
                 previous_token,
                 containing_block_quote_token,
-                extracted_whitespace,
             )
         elif containing_block_quote_token:
             print("rlspt>>containing_block_quote_token")
@@ -1432,7 +1488,6 @@ class TransformToMarkdown:
         current_token,
         previous_token,
         containing_block_quote_token,
-        extracted_whitespace,
     ):
         previous_indent = (
             len(

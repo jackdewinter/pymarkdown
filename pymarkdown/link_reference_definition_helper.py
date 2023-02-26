@@ -43,7 +43,7 @@ class LinkReferenceDefinitionHelper:
 
     __lrd_start_character = "["
 
-    # pylint: disable=too-many-locals, too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def process_link_reference_definition(
         parser_state: ParserState,
@@ -166,7 +166,7 @@ class LinkReferenceDefinitionHelper:
             new_tokens,
         )
 
-    # pylint: enable=too-many-locals, too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
 
     @staticmethod
     def __handle_link_reference_definition_init(
@@ -257,7 +257,8 @@ class LinkReferenceDefinitionHelper:
 
     # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-locals, too-many-arguments
+    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-locals
     @staticmethod
     def __determine_continue_or_stop(
         parser_state: ParserState,
@@ -296,14 +297,8 @@ class LinkReferenceDefinitionHelper:
                 original_stack_depth,
                 original_document_depth,
             )
-        new_tokens: List[MarkdownToken] = []
-        if (not did_pause_lrd and was_started) or did_complete_lrd:
-            POGGER.debug(">>parse_link_reference_definition>>was_started")
-            (
-                force_ignore_first_as_lrd,
-                new_tokens,
-                extracted_whitespace,
-            ) = LinkReferenceDefinitionHelper.__stop_lrd_continuation(
+        if not did_pause_lrd and was_started or did_complete_lrd:
+            return LinkReferenceDefinitionHelper.__stop_lrd_continuation(
                 parser_state,
                 did_complete_lrd,
                 parsed_lrd_tuple,
@@ -313,16 +308,14 @@ class LinkReferenceDefinitionHelper:
                 lines_to_requeue,
                 extracted_whitespace,
                 process_mode,
+                did_pause_lrd,
             )
-        else:
-            force_ignore_first_as_lrd = False
-            POGGER.debug(">>parse_link_reference_definition>>other")
 
-        POGGER.debug(">>XXXXXX>>requeue:$:", lines_to_requeue)
-        POGGER.debug(">>XXXXXX>>did_complete_lrd:$:", did_complete_lrd)
-        return did_pause_lrd, force_ignore_first_as_lrd, new_tokens
+        POGGER.debug(">>parse_link_reference_definition>>other")
+        return did_pause_lrd, False, []
 
-    # pylint: enable=too-many-locals, too-many-arguments
+    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-locals
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -832,7 +825,8 @@ class LinkReferenceDefinitionHelper:
         lines_to_requeue: List[str],
         extracted_whitespace: Optional[str],
         process_mode: int,
-    ) -> Tuple[bool, List[MarkdownToken], Optional[str]]:
+        did_pause_lrd: bool,
+    ) -> Tuple[bool, bool, List[MarkdownToken]]:
         """
         As part of processing a link reference definition, stop a continuation.
         """
@@ -906,13 +900,12 @@ class LinkReferenceDefinitionHelper:
                 ),
             )
             POGGER.debug(">>new_tokens>>$", new_tokens)
-            force_ignore_first_as_lrd = len(lines_to_requeue) > 1
-        else:
-            new_tokens = []
-            assert is_blank_line
-            force_ignore_first_as_lrd = True
+            del parser_state.token_stack[-1]
+            return did_pause_lrd, len(lines_to_requeue) > 1, new_tokens
+
+        assert is_blank_line
         del parser_state.token_stack[-1]
-        return force_ignore_first_as_lrd, new_tokens, extracted_whitespace
+        return did_pause_lrd, True, []
 
     # pylint: enable=too-many-arguments
 
@@ -1032,8 +1025,6 @@ class LinkReferenceDefinitionHelper:
         )
         return extracted_whitespace
 
-    # pylint: disable=too-many-locals
-
     @staticmethod
     def __stop_lrd_continuation_with_tab_multiple(
         parser_state: ParserState,
@@ -1044,33 +1035,22 @@ class LinkReferenceDefinitionHelper:
 
         split_tabs_list: List[bool] = []
         completed_lrd_text: str = ""
-        alt_ws = None
+        alt_ws: Optional[str] = None
         for this_line_index, this_line in enumerate(link_def_token.continuation_lines):
 
-            original_this_line = link_def_token.unmodified_lines[this_line_index]
-            POGGER.debug("this_line_index>:$:<", this_line_index)
-            POGGER.debug("this_line>:$:<", this_line)
-            POGGER.debug("original_this_line>:$:<", original_this_line)
-
             (
-                extracted_ws,
-                split_tab,
-                start_whitespace_index,
-            ) = LinkReferenceDefinitionHelper.__find_line_ws(
-                this_line, original_this_line
+                completed_lrd_text,
+                extracted_whitespace,
+                alt_ws,
+            ) = LinkReferenceDefinitionHelper.__stop_lrd_continuation_with_tab_multiple_loop(
+                link_def_token,
+                this_line_index,
+                this_line,
+                completed_lrd_text,
+                extracted_whitespace,
+                alt_ws,
+                split_tabs_list,
             )
-
-            if completed_lrd_text:
-                completed_lrd_text += "\n"
-            if this_line_index == 0:
-                extracted_whitespace = extracted_ws
-                alt_ws = TabHelper.detabify_string(
-                    extracted_whitespace, start_whitespace_index
-                )
-            else:
-                completed_lrd_text += extracted_ws
-            completed_lrd_text += this_line
-            split_tabs_list.append(split_tab)
 
         POGGER.debug("completed_lrd_text>:$:<", completed_lrd_text)
         (
@@ -1091,7 +1071,42 @@ class LinkReferenceDefinitionHelper:
         )
         return extracted_whitespace, parsed_lrd_tuple
 
-    # pylint: enable=too-many-locals
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __stop_lrd_continuation_with_tab_multiple_loop(
+        link_def_token: LinkDefinitionStackToken,
+        this_line_index: int,
+        this_line: str,
+        completed_lrd_text: str,
+        extracted_whitespace: Optional[str],
+        alt_ws: Optional[str],
+        split_tabs_list: List[bool],
+    ) -> Tuple[str, Optional[str], Optional[str]]:
+        original_this_line = link_def_token.unmodified_lines[this_line_index]
+        POGGER.debug("this_line_index>:$:<", this_line_index)
+        POGGER.debug("this_line>:$:<", this_line)
+        POGGER.debug("original_this_line>:$:<", original_this_line)
+
+        (
+            extracted_ws,
+            split_tab,
+            start_whitespace_index,
+        ) = LinkReferenceDefinitionHelper.__find_line_ws(this_line, original_this_line)
+
+        if completed_lrd_text:
+            completed_lrd_text += "\n"
+        if this_line_index == 0:
+            extracted_whitespace = extracted_ws
+            alt_ws = TabHelper.detabify_string(
+                extracted_whitespace, start_whitespace_index
+            )
+        else:
+            completed_lrd_text += extracted_ws
+        completed_lrd_text += this_line
+        split_tabs_list.append(split_tab)
+        return completed_lrd_text, extracted_whitespace, alt_ws
+
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __xx_multiple_fix_leading_spaces(

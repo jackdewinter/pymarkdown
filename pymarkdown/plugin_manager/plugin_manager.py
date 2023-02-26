@@ -36,7 +36,7 @@ class PluginManager:
     __plugin_prefix = "plugins"
     __root_subparser_name = "pm_subcommand"
     __argparse_subparser: Optional[argparse.ArgumentParser] = None
-    __id_regex = re.compile("^[a-z]{2,3}[0-9]{3,3}$")
+    __id_regex = re.compile("^[a-z]{2,3}\\d{3}$")
     __name_regex = re.compile("^[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$")
     __filter_regex = re.compile("^[a-zA-Z0-9-]+$")
     __version_regex = re.compile("^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$")
@@ -545,7 +545,6 @@ class PluginManager:
                 class_name=type(plugin_instance).__name__, field_name=field_name
             )
 
-    # pylint: disable=too-many-locals
     def __get_plugin_details(
         self, plugin_instance: RulePlugin, instance_file_name: str
     ) -> FoundPlugin:
@@ -553,6 +552,62 @@ class PluginManager:
         Query the plugin for details and verify that they are reasonable.
         """
 
+        (
+            plugin_id,
+            plugin_name,
+            plugin_description,
+            plugin_enabled_by_default,
+            plugin_version,
+            plugin_interface_version,
+            plugin_url,
+            plugin_configuration,
+            plugin_names,
+        ) = self.__unpack_plugin_details(plugin_instance)
+
+        self.__verify_string_field(plugin_instance, "plugin_id", plugin_id)
+        self.__verify_string_field(plugin_instance, "plugin_name", plugin_name)
+        self.__verify_string_field(
+            plugin_instance, "plugin_description", plugin_description
+        )
+        self.__verify_boolean_field(
+            plugin_instance, "plugin_enabled_by_default", plugin_enabled_by_default
+        )
+        self.__verify_string_field(plugin_instance, "plugin_version", plugin_version)
+        self.__verify_integer_field(
+            plugin_instance, "plugin_interface_version", plugin_interface_version
+        )
+        if plugin_url:
+            self.__verify_string_field(plugin_instance, "plugin_url", plugin_url)
+        if plugin_configuration:
+            self.__verify_string_field(
+                plugin_instance, "plugin_configuration", plugin_configuration
+            )
+
+        plugin_object = FoundPlugin(
+            plugin_id,
+            plugin_names,
+            plugin_description,
+            plugin_instance,
+            plugin_enabled_by_default,
+            plugin_version,
+            plugin_interface_version,
+            instance_file_name,
+            plugin_url,
+            plugin_configuration,
+            [plugin_id, *plugin_names],
+        )
+
+        if plugin_object.plugin_interface_version != 1:
+            raise BadPluginError(
+                formatted_message=f"Plugin '{instance_file_name}' with an interface version "
+                + f"('{plugin_object.plugin_interface_version}') that is not '1'."
+            )
+
+        return plugin_object
+
+    def __unpack_plugin_details(
+        self, plugin_instance: RulePlugin
+    ) -> Tuple[str, str, str, bool, str, int, Optional[str], Optional[str], List[str]]:
         try:
             instance_details = plugin_instance.get_details()
             (
@@ -579,25 +634,6 @@ class PluginManager:
                 class_name=type(plugin_instance).__name__,
             ) from this_exception
 
-        self.__verify_string_field(plugin_instance, "plugin_id", plugin_id)
-        self.__verify_string_field(plugin_instance, "plugin_name", plugin_name)
-        self.__verify_string_field(
-            plugin_instance, "plugin_description", plugin_description
-        )
-        self.__verify_boolean_field(
-            plugin_instance, "plugin_enabled_by_default", plugin_enabled_by_default
-        )
-        self.__verify_string_field(plugin_instance, "plugin_version", plugin_version)
-        self.__verify_integer_field(
-            plugin_instance, "plugin_interface_version", plugin_interface_version
-        )
-        if plugin_url:
-            self.__verify_string_field(plugin_instance, "plugin_url", plugin_url)
-        if plugin_configuration:
-            self.__verify_string_field(
-                plugin_instance, "plugin_configuration", plugin_configuration
-            )
-
         plugin_id = plugin_id.strip().lower()
 
         plugin_names = []
@@ -605,31 +641,17 @@ class PluginManager:
             if next_name := next_name.strip():
                 plugin_names.append(next_name)
 
-        plugin_identifiers = [plugin_id, *plugin_names]
-
-        plugin_object = FoundPlugin(
+        return (
             plugin_id,
-            plugin_names,
+            plugin_name,
             plugin_description,
-            plugin_instance,
             plugin_enabled_by_default,
             plugin_version,
             plugin_interface_version,
-            instance_file_name,
             plugin_url,
             plugin_configuration,
-            plugin_identifiers,
+            plugin_names,
         )
-
-        if plugin_object.plugin_interface_version != 1:
-            raise BadPluginError(
-                formatted_message=f"Plugin '{instance_file_name}' with an interface version "
-                + f"('{plugin_object.plugin_interface_version}') that is not '1'."
-            )
-
-        return plugin_object
-
-    # pylint: enable=too-many-locals
 
     def __register_plugin_id(
         self, plugin_object: FoundPlugin, instance_file_name: str, next_key: str

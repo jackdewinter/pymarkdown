@@ -130,7 +130,7 @@ class RuleMd022(RulePlugin):
         document is handled properly.
         """
 
-        if ((self.__start_heading_token and self.__did_heading_end)) and (
+        if (self.__start_heading_token and self.__did_heading_end) and (
             not token or (not token.is_blank_line and not token.is_block_quote_end)
         ):
             did_end_match = self.__blank_line_count == self.__lines_below

@@ -112,8 +112,6 @@ class RuleMd036(RulePlugin):
         """
         Event that a new token is being processed.
         """
-        new_state = RuleMd036States.LOOK_FOR_PARAGRAPH
-
         if self.__current_state == RuleMd036States.LOOK_FOR_PARAGRAPH:
             new_state = self.__handle_look_for_parapgraph(token)
         elif self.__current_state == RuleMd036States.LOOK_FOR_EMPHASIS_START:
