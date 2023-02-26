@@ -1084,7 +1084,6 @@ class LeafBlockProcessor:
         original_line: str,
         last_block_quote_index: int,
     ) -> Tuple[Optional[str], Optional[str], Optional[str], bool]:
-
         if not is_in_list and not is_in_block_quote:
             next_character = position_marker.text_to_parse[position_marker.index_number]
             next_character_index = original_line.find(next_character)
