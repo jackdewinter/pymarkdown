@@ -1033,7 +1033,6 @@ class LinkReferenceDefinitionHelper:
         completed_lrd_text: str = ""
         alt_ws: Optional[str] = None
         for this_line_index, this_line in enumerate(link_def_token.continuation_lines):
-
             (
                 completed_lrd_text,
                 extracted_whitespace,

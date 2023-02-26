@@ -956,7 +956,6 @@ class BlockQuoteProcessor:
         Optional[RequeueLineInfo],
         bool,
     ]:
-
         POGGER.debug("handle_block_quote_section>>not fenced")
         (
             container_level_tokens,
