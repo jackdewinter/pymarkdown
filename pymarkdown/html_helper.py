@@ -212,10 +212,7 @@ class HtmlHelper:
             first_character_of_value = line_to_parse[non_whitespace_index]
             extracted_text: Optional[str] = None
             if first_character_of_value == HtmlHelper.__html_attribute_value_double:
-                (
-                    non_whitespace_index,
-                    extracted_text,
-                ) = ParserHelper.collect_until_character(
+                (non_whitespace_index, _,) = ParserHelper.collect_until_character(
                     line_to_parse,
                     non_whitespace_index + 1,
                     HtmlHelper.__html_attribute_value_double,
@@ -225,10 +222,7 @@ class HtmlHelper:
                     return -1
                 non_whitespace_index += 1
             elif first_character_of_value == HtmlHelper.__html_attribute_value_single:
-                (
-                    non_whitespace_index,
-                    extracted_text,
-                ) = ParserHelper.collect_until_character(
+                (non_whitespace_index, _,) = ParserHelper.collect_until_character(
                     line_to_parse,
                     non_whitespace_index + 1,
                     HtmlHelper.__html_attribute_value_single,
@@ -388,7 +382,7 @@ class HtmlHelper:
         ):
             (
                 value_start_index,
-                extracted_whitespace,
+                _,
             ) = ParserHelper.extract_ascii_whitespace(text_to_parse, end_name_index + 1)
             assert value_start_index is not None
             value_end_index: Optional[int] = None
@@ -817,7 +811,6 @@ class HtmlHelper:
             html_block_type, remaining_html_tag = None, None
         return html_block_type, remaining_html_tag
 
-    # pylint: disable=too-many-arguments
     @staticmethod
     def parse_html_block(
         parser_state: ParserState,
@@ -884,8 +877,6 @@ class HtmlHelper:
         POGGER.debug("did_adjust_block_quote=$", did_adjust_block_quote)
         return new_tokens, did_adjust_block_quote
 
-    # pylint: enable=too-many-arguments
-
     @staticmethod
     def check_blank_html_block_end(parser_state: ParserState) -> List[MarkdownToken]:
         """
@@ -909,7 +900,6 @@ class HtmlHelper:
 
         return new_tokens
 
-    # pylint: disable=too-many-arguments
     @staticmethod
     def __check_normal_html_block_end_with_tab(
         parser_state: ParserState,
@@ -943,8 +933,6 @@ class HtmlHelper:
                 TabHelper.adjust_block_quote_indent_for_tab(parser_state)
         assert tabified_whitespace is not None
         return tabified_whitespace, tabified_text
-
-    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     @staticmethod

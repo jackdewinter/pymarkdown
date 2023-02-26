@@ -104,7 +104,7 @@ class PragmaExtension(ParserExtension):
         POGGER.debug("pragma not extracted - >$<", line_to_parse)
         return False
 
-    # pylint: disable=too-many-locals, too-many-arguments
+    # pylint: disable=too-many-arguments
     @staticmethod
     def compile_single_pragma(
         scan_file: str,
@@ -135,6 +135,7 @@ class PragmaExtension(ParserExtension):
             command_data, 0
         )
         assert command is not None
+        assert after_command_index is not None
         command = command.lower()
         if not command:
             log_pragma_failure(
@@ -143,28 +144,16 @@ class PragmaExtension(ParserExtension):
                 "Inline configuration specified without command.",
             )
         elif command == "disable-next-line":
-            ids_to_disable = command_data[after_command_index:].split(",")
-            processed_ids = set()
-            for next_id in ids_to_disable:
-                next_id = next_id.strip().lower()
-                if not next_id:
-                    log_pragma_failure(
-                        scan_file,
-                        actual_line_number,
-                        f"Inline configuration command '{command}' specified a plugin with a blank id.",
-                    )
-                elif next_id in all_ids:
-                    normalized_id = all_ids[next_id].plugin_id
-                    processed_ids.add(normalized_id)
-                else:
-                    log_pragma_failure(
-                        scan_file,
-                        actual_line_number,
-                        f"Inline configuration command '{command}' unable to find a plugin with the id '{next_id}'.",
-                    )
-
-            if processed_ids:
-                document_pragmas[actual_line_number + 1] = processed_ids
+            PragmaExtension.__handle_disable_next_line(
+                command_data,
+                after_command_index,
+                log_pragma_failure,
+                scan_file,
+                actual_line_number,
+                document_pragmas,
+                all_ids,
+                command,
+            )
         else:
             log_pragma_failure(
                 scan_file,
@@ -172,7 +161,44 @@ class PragmaExtension(ParserExtension):
                 f"Inline configuration command '{command}' not understood.",
             )
 
-    # pylint: enable=too-many-locals, too-many-arguments
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __handle_disable_next_line(
+        command_data: str,
+        after_command_index: int,
+        log_pragma_failure: Callable[[str, int, str], None],
+        scan_file: str,
+        actual_line_number: int,
+        document_pragmas: Dict[int, Set[str]],
+        all_ids: Dict[str, FoundPlugin],
+        command: str,
+    ) -> None:
+        ids_to_disable = command_data[after_command_index:].split(",")
+        processed_ids = set()
+        for next_id in ids_to_disable:
+            next_id = next_id.strip().lower()
+            if not next_id:
+                log_pragma_failure(
+                    scan_file,
+                    actual_line_number,
+                    f"Inline configuration command '{command}' specified a plugin with a blank id.",
+                )
+            elif next_id in all_ids:
+                normalized_id = all_ids[next_id].plugin_id
+                processed_ids.add(normalized_id)
+            else:
+                log_pragma_failure(
+                    scan_file,
+                    actual_line_number,
+                    f"Inline configuration command '{command}' unable to find a plugin with the id '{next_id}'.",
+                )
+
+        if processed_ids:
+            document_pragmas[actual_line_number + 1] = processed_ids
+
+    # pylint: enable=too-many-arguments
 
 
 class PragmaToken(MarkdownToken):

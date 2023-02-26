@@ -302,7 +302,6 @@ class RuleMd043(RulePlugin):
         self.__collected_tokens = []
         self.__all_tokens = []
 
-    # pylint: disable=too-many-locals
     def __do_recursive(
         self,
         remaining_headings: List[Union[str, Tuple[int, str]]],
@@ -351,53 +350,96 @@ class RuleMd043(RulePlugin):
         while search_index < len(remaining_headings) and search_index < len(
             remaining_tokens
         ):
-            (
-                end_heading_index,
-                end_token_index,
-                failure_token,
-                _,
-            ) = self.__verify_group_heading_match(
-                heading_index, top_token_index + search_index, scan_limit=scan_limit
+            found_match, search_index = self.__do_recursive_loop(
+                heading_index,
+                top_token_index,
+                search_index,
+                scan_limit,
+                bottom_heading_index,
+                top_heading_index,
+                remaining_tokens,
+                remaining_headings,
             )
-            # if self.__show_debug:
-            #     print(str((end_heading_index, end_token_index, failure_token)))
-            if not failure_token and end_heading_index < len(self.__compiled_headings):
-                # if self.__show_debug:
-                #     print(
-                #         "FOUND:"
-                #         + str((end_heading_index, end_token_index, failure_token))
-                #     )
-                if end_heading_index == bottom_heading_index - 1:
-                    # if self.__show_debug:
-                    #     print("done")
-                    found_match = True
-                else:
-                    new_top_heading_index = end_heading_index
-                    new_remaining_headings = remaining_headings[
-                        (end_heading_index - top_heading_index) :
-                    ]
-
-                    new_remaining_tokens = remaining_tokens[
-                        (end_token_index - top_token_index) :
-                    ]
-                    new_top_token_index = end_token_index
-
-                    # if self.__show_debug:
-                    #     print("recurse")
-                    found_match = self.__do_recursive(
-                        new_remaining_headings,
-                        new_top_heading_index,
-                        new_remaining_tokens,
-                        new_top_token_index,
-                    )
-                    # if self.__show_debug:
-                    #     print("found_match=" + str(found_match))
             if found_match:
                 break
-            search_index += 1
         return found_match
 
-    # pylint: enable=too-many-locals
+    # pylint: disable=too-many-arguments
+    def __do_recursive_loop(
+        self,
+        heading_index: int,
+        top_token_index: int,
+        search_index: int,
+        scan_limit: int,
+        bottom_heading_index: int,
+        top_heading_index: int,
+        remaining_tokens: List[List[MarkdownToken]],
+        remaining_headings: List[Union[str, Tuple[int, str]]],
+    ) -> Tuple[bool, int]:
+        (
+            end_heading_index,
+            end_token_index,
+            failure_token,
+            _,
+        ) = self.__verify_group_heading_match(
+            heading_index, top_token_index + search_index, scan_limit=scan_limit
+        )
+        # if self.__show_debug:
+        #     print(str((end_heading_index, end_token_index, failure_token)))
+        found_match = False
+        if not failure_token and end_heading_index < len(self.__compiled_headings):
+            # if self.__show_debug:
+            #     print(
+            #         "FOUND:"
+            #         + str((end_heading_index, end_token_index, failure_token))
+            #     )
+            if end_heading_index == bottom_heading_index - 1:
+                # if self.__show_debug:
+                #     print("done")
+                found_match = True
+            else:
+                found_match = self.__prepare_and_do_recurse(
+                    end_heading_index,
+                    top_heading_index,
+                    end_token_index,
+                    top_token_index,
+                    remaining_headings,
+                    remaining_tokens,
+                )
+                # if self.__show_debug:
+                #     print("found_match=" + str(found_match))
+        if not found_match:
+            search_index += 1
+        return found_match, search_index
+
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments
+    def __prepare_and_do_recurse(
+        self,
+        end_heading_index: int,
+        top_heading_index: int,
+        end_token_index: int,
+        top_token_index: int,
+        remaining_headings: List[Union[str, Tuple[int, str]]],
+        remaining_tokens: List[List[MarkdownToken]],
+    ) -> bool:
+        new_top_heading_index = end_heading_index
+        new_remaining_headings = remaining_headings[
+            (end_heading_index - top_heading_index) :
+        ]
+
+        new_remaining_tokens = remaining_tokens[(end_token_index - top_token_index) :]
+        new_top_token_index = end_token_index
+
+        return self.__do_recursive(
+            new_remaining_headings,
+            new_top_heading_index,
+            new_remaining_tokens,
+            new_top_token_index,
+        )
+
+    # pylint: enable=too-many-arguments
 
     def completed_file(self, context: PluginScanContext) -> None:
         """

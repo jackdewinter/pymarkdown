@@ -187,15 +187,24 @@ class TransformToGfm:
         # question.  Because it is a rough creation and we have no intentions of
         # using it, each parameter is an empty string.  Therefore, we expect that
         # mypy will have issues when we create the instance, hence ignoring them.
-        token_init_fn = token_type.__dict__["__init__"]
-        init_parameters = {
-            i: "" for i in inspect.getfullargspec(token_init_fn)[0] if i != "self"
-        }
-        handler_instance = token_type(**init_parameters)  # type: ignore
+        #
+        # That was the old way, and had problems.  The new way is to call a new
+        # static method directly.  Both are here until that is completed.
 
-        self.start_token_handlers[handler_instance.token_name] = start_token_handler
+        if "get_markdown_token_type" in token_type.__dict__:
+            token_name = token_type.__dict__["get_markdown_token_type"].__func__()
+        else:
+            token_init_fn = token_type.__dict__["__init__"]
+            init_parameters = {
+                i: "" for i in inspect.getfullargspec(token_init_fn)[0] if i != "self"
+            }
+            handler_instance = token_type(**init_parameters)  # type: ignore
+            token_name = handler_instance.token_name
+
+        assert token_name
+        self.start_token_handlers[token_name] = start_token_handler
         if end_token_handler:
-            self.end_token_handlers[handler_instance.token_name] = end_token_handler
+            self.end_token_handlers[token_name] = end_token_handler
 
     def transform(self, actual_tokens: List[MarkdownToken]) -> str:
         """
@@ -388,9 +397,6 @@ class TransformToGfm:
                 ]
             )
         elif transform_state.is_in_setext_block:
-            leading_space = ParserHelper.resolve_all_from_text(
-                text_token.extracted_whitespace
-            )
             token_parts.append(adjusted_text_token)
         else:
             cls.__handle_text_token_normal(token_parts, text_token, adjusted_text_token)
@@ -786,9 +792,9 @@ class TransformToGfm:
         ]
 
         token_parts = [output_html]
-        if output_html.endswith("</ol>") or output_html.endswith("</ul>"):
-            token_parts.append(ParserHelper.newline_character)
-        elif previous_token.is_paragraph_end and not transform_state.is_in_loose_list:
+        if (output_html.endswith("</ol>") or output_html.endswith("</ul>")) or (
+            previous_token.is_paragraph_end and not transform_state.is_in_loose_list
+        ):
             token_parts.append(ParserHelper.newline_character)
         token_parts.extend(["<h", str(atx_token.hash_count), ">"])
         return "".join(token_parts)

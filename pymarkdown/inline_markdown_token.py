@@ -5,6 +5,7 @@ import logging
 from typing import Optional, Tuple, cast
 
 from pymarkdown.constants import Constants
+from pymarkdown.link_helper_properties import LinkHelperProperties
 from pymarkdown.markdown_token import MarkdownToken, MarkdownTokenClass
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
@@ -268,28 +269,21 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
     Base class for images and links.
     """
 
-    # pylint: disable=too-many-arguments, too-many-locals
+    # pylint: disable=too-many-arguments
     def __init__(
         self,
+        lhp: LinkHelperProperties,
         token_name: str,
-        label_type: str,
-        link_uri: str,
-        link_title: Optional[str],
         extra_data: Optional[str],
-        pre_link_uri: str,
-        pre_link_title: Optional[str],
-        ex_label: Optional[str],
         text_from_blocks: str,
-        did_use_angle_start: bool,
-        inline_title_bounding_character: Optional[str],
-        before_link_whitespace: Optional[str],
-        before_title_whitespace: Optional[str],
-        after_title_whitespace: Optional[str],
         line_number: int = 0,
         column_number: int = 0,
         requires_end_token: bool = False,
         can_force_close: bool = True,
     ):
+        assert lhp.inline_link is not None
+        assert lhp.label_type is not None
+        assert lhp.pre_inline_link is not None
         (
             self.__label_type,
             self.__link_uri,
@@ -304,25 +298,25 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
             self.__before_title_whitespace,
             self.__after_title_whitespace,
         ) = (
-            label_type,
-            link_uri,
-            link_title,
-            pre_link_uri,
-            pre_link_title,
-            ex_label,
+            lhp.label_type,
+            lhp.inline_link,
+            lhp.inline_title,
+            lhp.pre_inline_link,
+            lhp.pre_inline_title,
+            lhp.ex_label,
             text_from_blocks,
-            did_use_angle_start,
-            inline_title_bounding_character,
-            before_link_whitespace,
-            before_title_whitespace,
-            after_title_whitespace,
+            lhp.did_use_angle_start,
+            lhp.bounding_character,
+            lhp.before_link_whitespace,
+            lhp.before_title_whitespace,
+            lhp.after_title_whitespace,
         )
 
         if token_name == MarkdownToken._token_inline_image:
             extra_data = f"{extra_data}{MarkdownToken.extra_data_separator}"
 
         # Purposefully split this way to accommodate the extra data
-        part_1, part_2 = self.__build_extra_data(extra_data, label_type)
+        part_1, part_2 = self.__build_extra_data(extra_data, lhp.label_type)
 
         InlineMarkdownToken.__init__(
             self,
@@ -334,7 +328,7 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
             can_force_close=can_force_close,
         )
 
-    # pylint: enable=too-many-arguments, too-many-locals
+    # pylint: enable=too-many-arguments
 
     def __build_extra_data(
         self, extra_data: Optional[str], label_type: str
@@ -415,7 +409,7 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
         return self.__text_from_blocks
 
     @property
-    def did_use_angle_start(self) -> bool:
+    def did_use_angle_start(self) -> Optional[bool]:
         """
         Returns a value indicating whether an angle start was used around the URI.
         """
@@ -458,47 +452,37 @@ class LinkStartMarkdownToken(ReferenceMarkdownToken):
     Class to provide for an encapsulation of the link element.
     """
 
-    # pylint: disable=too-many-arguments
     def __init__(
         self,
-        link_uri: str,
-        pre_link_uri: str,
-        link_title: str,
-        pre_link_title: str,
-        ex_label: str,
-        label_type: str,
         text_from_blocks: str,
-        did_use_angle_start: bool,
-        inline_title_bounding_character: str,
-        before_link_whitespace: str,
-        before_title_whitespace: str,
-        after_title_whitespace: str,
         line_number: int,
         column_number: int,
+        lhp: LinkHelperProperties,
     ) -> None:
+        assert lhp.pre_inline_link is not None
+        assert lhp.label_type is not None
+        assert lhp.inline_link is not None
         ReferenceMarkdownToken.__init__(
             self,
-            MarkdownToken._token_inline_link,
-            label_type,
-            link_uri,
-            link_title,
+            lhp,
+            LinkStartMarkdownToken.get_markdown_token_type(),
             "",
-            pre_link_uri,
-            pre_link_title,
-            ex_label,
             text_from_blocks,
-            did_use_angle_start,
-            inline_title_bounding_character,
-            before_link_whitespace,
-            before_title_whitespace,
-            after_title_whitespace,
             line_number=line_number,
             column_number=column_number,
             requires_end_token=True,
             can_force_close=False,
         )
 
-    # pylint: enable=too-many-arguments
+    # pylint: disable=protected-access
+    @staticmethod
+    def get_markdown_token_type() -> str:
+        """
+        Get the type of markdown token for rehydration purposes.
+        """
+        return MarkdownToken._token_inline_link
+
+    # pylint: enable=protected-access
 
 
 class ImageStartMarkdownToken(ReferenceMarkdownToken):
@@ -506,47 +490,42 @@ class ImageStartMarkdownToken(ReferenceMarkdownToken):
     Class to provide for an encapsulation of the image element.
     """
 
-    # pylint: disable=too-many-arguments, too-many-locals
+    # pylint: disable=too-many-arguments
     def __init__(
         self,
-        image_uri: str,
-        pre_image_uri: str,
-        image_title: str,
-        pre_image_title: str,
         image_alt_text: str,
-        ex_label: str,
-        label_type: str,
         text_from_blocks: str,
-        did_use_angle_start: bool,
-        inline_title_bounding_character: str,
-        before_link_whitespace: str,
-        before_title_whitespace: str,
-        after_title_whitespace: str,
         line_number: int,
         column_number: int,
+        lhp: LinkHelperProperties,
     ) -> None:
+
+        assert lhp.label_type is not None
+        assert lhp.pre_inline_link is not None
+        assert lhp.inline_link is not None
+
         self.__image_alt_text = image_alt_text
         ReferenceMarkdownToken.__init__(
             self,
-            MarkdownToken._token_inline_image,
-            label_type,
-            image_uri,
-            image_title,
+            lhp,
+            ImageStartMarkdownToken.get_markdown_token_type(),
             self.__image_alt_text,
-            pre_image_uri,
-            pre_image_title,
-            ex_label,
             text_from_blocks,
-            did_use_angle_start,
-            inline_title_bounding_character,
-            before_link_whitespace,
-            before_title_whitespace,
-            after_title_whitespace,
             line_number=line_number,
             column_number=column_number,
         )
 
-    # pylint: enable=too-many-arguments, too-many-locals
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=protected-access
+    @staticmethod
+    def get_markdown_token_type() -> str:
+        """
+        Get the type of markdown token for rehydration purposes.
+        """
+        return MarkdownToken._token_inline_image
+
+    # pylint: enable=protected-access
 
     @property
     def image_alt_text(self) -> str:

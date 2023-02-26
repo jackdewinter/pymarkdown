@@ -61,7 +61,6 @@ class InlineHelper:
     __hex_character_reference_start_character = "xX"
     __character_reference_end_character = ";"
     __invalid_reference_character_substitute = "\ufffd"
-    __line_end_whitespace = ParserHelper.space_character
     __valid_backslash_sequence_starts = (
         f"{backslash_character}{character_reference_start_character}"
     )
@@ -628,7 +627,7 @@ class InlineHelper:
         POGGER.debug("actual_between_text>:$:<", actual_between_text)
         return actual_between_text
 
-    # pylint: disable=too-many-arguments, too-many-locals
+    # pylint: disable=too-many-arguments
     @staticmethod
     def handle_line_end(
         remaining_line: str,
@@ -648,40 +647,18 @@ class InlineHelper:
         """
         new_tokens: List[MarkdownToken] = []
 
-        POGGER.debug(">>current_string>>$>>", current_string)
-        POGGER.debug(">>end_string>>$>>", end_string)
-        POGGER.debug(">>remaining_line>>$>>", remaining_line)
-        POGGER.debug(">>tabified_remaining_line>>$>>", tabified_remaining_line)
-        line_to_use = (
-            tabified_remaining_line
-            if tabified_remaining_line and is_setext
-            else remaining_line
-        )
-        _, last_non_whitespace_index = ParserHelper.collect_backwards_while_character(
-            line_to_use, -1, " "
-        )
-        POGGER.debug(">>last_non_whitespace_index>>$", last_non_whitespace_index)
-        removed_end_whitespace = line_to_use[last_non_whitespace_index:]
-        remaining_line = line_to_use[:last_non_whitespace_index]
-        POGGER.debug(">>removed_end_whitespace>>$>>", removed_end_whitespace)
-        POGGER.debug(">>line_to_use>>$>>", line_to_use)
-
-        POGGER.debug(">>current_string>>$>>", current_string)
-        (append_to_current_string, removed_end_whitespace_size, adj_hard_column,) = (
-            ParserHelper.newline_character,
-            len(removed_end_whitespace),
-            column_number + len(remaining_line),
-        )
-        whitespace_to_add: Optional[str] = None
-        POGGER.debug(
-            ">>len(r_e_w)>>$>>rem>>$>>",
-            removed_end_whitespace_size,
+        # POGGER.debug(">>current_string>>$>>", current_string)
+        # POGGER.debug(">>end_string>>$>>", end_string)
+        # POGGER.debug(">>remaining_line>>$>>", remaining_line)
+        # POGGER.debug(">>tabified_remaining_line>>$>>", tabified_remaining_line)
+        (
+            removed_end_whitespace,
             remaining_line,
+        ) = InlineHelper.__setup_for_select_line_ending(
+            tabified_remaining_line, is_setext, remaining_line
         )
-
-        is_proper_hard_break = InlineHelper.__is_proper_hard_break(
-            current_string, removed_end_whitespace_size
-        )
+        # POGGER.debug(">>line_to_use>>$>>", line_to_use)
+        # POGGER.debug(">>current_string>>$>>", current_string)
 
         (
             current_string,
@@ -691,14 +668,10 @@ class InlineHelper:
             remaining_line,
         ) = InlineHelper.__select_line_ending(
             new_tokens,
-            is_proper_hard_break,
             line_number,
-            adj_hard_column,
+            column_number + len(remaining_line),
             current_string,
             removed_end_whitespace,
-            removed_end_whitespace_size,
-            whitespace_to_add,
-            append_to_current_string,
             end_string,
             remaining_line,
             inline_blocks,
@@ -707,9 +680,7 @@ class InlineHelper:
             inline_request,
         )
 
-        if coalesced_stack and coalesced_stack[-1].is_block_quote_start:
-            block_quote_token = cast(BlockQuoteMarkdownToken, coalesced_stack[-1])
-            block_quote_token.leading_text_index += 1
+        InlineHelper.__handle_line_end_adjust_block_quote(coalesced_stack)
 
         return (
             append_to_current_string,
@@ -720,7 +691,30 @@ class InlineHelper:
             current_string,
         )
 
-    # pylint: enable=too-many-arguments, too-many-locals
+    # pylint: enable=too-many-arguments
+    @staticmethod
+    def __setup_for_select_line_ending(
+        tabified_remaining_line: Optional[str], is_setext: bool, remaining_line: str
+    ) -> Tuple[str, str]:
+        line_to_use = (
+            tabified_remaining_line
+            if tabified_remaining_line and is_setext
+            else remaining_line
+        )
+        _, last_non_whitespace_index = ParserHelper.collect_backwards_while_character(
+            line_to_use, -1, " "
+        )
+        removed_end_whitespace = line_to_use[last_non_whitespace_index:]
+        remaining_line = line_to_use[:last_non_whitespace_index]
+        return removed_end_whitespace, remaining_line
+
+    @staticmethod
+    def __handle_line_end_adjust_block_quote(
+        coalesced_stack: List[MarkdownToken],
+    ) -> None:
+        if coalesced_stack and coalesced_stack[-1].is_block_quote_start:
+            block_quote_token = cast(BlockQuoteMarkdownToken, coalesced_stack[-1])
+            block_quote_token.leading_text_index += 1
 
     @staticmethod
     def __is_proper_hard_break(
@@ -746,18 +740,14 @@ class InlineHelper:
         POGGER.debug("__is_proper_hard_break>>$>>", is_proper_hard_break)
         return is_proper_hard_break
 
-    # pylint: disable=too-many-arguments, too-many-locals
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __select_line_ending(
         new_tokens: List[MarkdownToken],
-        is_proper_hard_break: bool,
         line_number: int,
         adj_hard_column: int,
         current_string: str,
         removed_end_whitespace: str,
-        removed_end_whitespace_size: int,
-        whitespace_to_add: Optional[str],
-        append_to_current_string: str,
         end_string: Optional[str],
         remaining_line: str,
         inline_blocks: List[MarkdownToken],
@@ -765,17 +755,30 @@ class InlineHelper:
         tabified_text: Optional[str],
         inline_request: InlineRequest,
     ) -> Tuple[str, Optional[str], str, Optional[str], str]:
-        POGGER.debug(">>removed_end_whitespace>:$:<", removed_end_whitespace)
-        POGGER.debug(">>tabified_text>:$:<", tabified_text)
-        POGGER.debug(
-            ">>inline_request.tabified_text>:$:<", inline_request.tabified_text
-        )
-        POGGER.debug(
-            ">>inline_request.tabified_remaining_line>:$:<",
-            inline_request.tabified_remaining_line,
-        )
+        # POGGER.debug(">>removed_end_whitespace>:$:<", removed_end_whitespace)
+        # POGGER.debug(">>tabified_text>:$:<", tabified_text)
+        # POGGER.debug(
+        #     ">>inline_request.tabified_text>:$:<", inline_request.tabified_text
+        # )
+        # POGGER.debug(
+        #     ">>inline_request.tabified_remaining_line>:$:<",
+        #     inline_request.tabified_remaining_line,
+        # )
+        append_to_current_string = ParserHelper.newline_character
+        whitespace_to_add: Optional[str] = None
+
+        removed_end_whitespace_size = len(removed_end_whitespace)
+        # POGGER.debug(
+        #     ">>len(r_e_w)>>$>>rem>>$>>",
+        #     removed_end_whitespace_size,
+        #     remaining_line,
+        # )
+
         is_proper_end = not tabified_text or tabified_text.endswith("  ")
-        if is_proper_hard_break:
+
+        if InlineHelper.__is_proper_hard_break(
+            current_string, removed_end_whitespace_size
+        ):
             POGGER.debug(">>proper hard break")
             new_tokens.append(
                 HardBreakMarkdownToken(
@@ -795,10 +798,10 @@ class InlineHelper:
             append_to_current_string = ""
         else:
             POGGER.debug(">>normal end")
-            POGGER.debug("current_string>:$:<", current_string)
-            POGGER.debug("removed_end_whitespace>:$:<", removed_end_whitespace)
-            POGGER.debug("end_string>:$:<", end_string)
-            POGGER.debug("remaining_line>:$:<", remaining_line)
+            # POGGER.debug("current_string>:$:<", current_string)
+            # POGGER.debug("removed_end_whitespace>:$:<", removed_end_whitespace)
+            # POGGER.debug("end_string>:$:<", end_string)
+            # POGGER.debug("remaining_line>:$:<", remaining_line)
             end_string, remaining_line = InlineHelper.__select_line_ending_normal(
                 is_setext,
                 inline_blocks,
@@ -809,17 +812,17 @@ class InlineHelper:
                 remaining_line,
             )
 
-        POGGER.debug(
-            "<<append_to_current_string<<$<<",
-            append_to_current_string,
-        )
-        POGGER.debug(
-            "<<whitespace_to_add<<$<<",
-            whitespace_to_add,
-        )
-        POGGER.debug("<<remaining_line<<$<<", remaining_line)
-        POGGER.debug("<<end_string<<$<<", end_string)
-        POGGER.debug("<<current_string<<$<<", current_string)
+        # POGGER.debug(
+        #     "<<append_to_current_string<<$<<",
+        #     append_to_current_string,
+        # )
+        # POGGER.debug(
+        #     "<<whitespace_to_add<<$<<",
+        #     whitespace_to_add,
+        # )
+        # POGGER.debug("<<remaining_line<<$<<", remaining_line)
+        # POGGER.debug("<<end_string<<$<<", end_string)
+        # POGGER.debug("<<current_string<<$<<", current_string)
         return (
             current_string,
             whitespace_to_add,
@@ -828,7 +831,7 @@ class InlineHelper:
             remaining_line,
         )
 
-    # pylint: enable=too-many-arguments, too-many-locals
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     @staticmethod

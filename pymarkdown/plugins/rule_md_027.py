@@ -366,18 +366,7 @@ class RuleMd027(RulePlugin):
         self.__bq_line_index[num_container_tokens] += 1
         self.__last_leaf_token = token
 
-    def __handle_thematic_break(
-        self,
-        context: PluginScanContext,
-        token: MarkdownToken,
-        num_container_tokens: int,
-        is_directly_within_block_quote: bool,
-    ) -> None:
-        self.__handle_common_element(
-            context, token, num_container_tokens, is_directly_within_block_quote
-        )
-
-    def __handle_atx_heading(
+    def __handle_atx_heading_or_thematic_break(
         self,
         context: PluginScanContext,
         token: MarkdownToken,
@@ -806,8 +795,8 @@ class RuleMd027(RulePlugin):
             self.__delayed_blank_line = token
             # if self.__debug_on:
             #     print("[[Delaying blank line]]")
-        elif token.is_atx_heading:
-            self.__handle_atx_heading(
+        elif token.is_atx_heading or token.is_thematic_break:
+            self.__handle_atx_heading_or_thematic_break(
                 context, token, num_container_tokens, is_directly_within_block_quote
             )
         elif token.is_setext_heading:
@@ -818,10 +807,6 @@ class RuleMd027(RulePlugin):
             )
         elif token.is_atx_heading_end:
             self.__last_leaf_token = None
-        elif token.is_thematic_break:
-            self.__handle_thematic_break(
-                context, token, num_container_tokens, is_directly_within_block_quote
-            )
         elif token.is_link_reference_definition:
             self.__handle_link_reference_definition(
                 context, token, num_container_tokens

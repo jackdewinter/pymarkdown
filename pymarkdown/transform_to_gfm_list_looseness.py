@@ -105,7 +105,6 @@ class TransformToGfmListLooseness:
             ) = TransformToGfmListLooseness.__handle_list_end(
                 stack_count,
                 is_loose,
-                stop_me,
                 actual_tokens,
                 current_token_index,
             )
@@ -143,7 +142,6 @@ class TransformToGfmListLooseness:
     def __handle_list_end(
         stack_count: int,
         is_loose: bool,
-        stop_me: bool,
         actual_tokens: List[MarkdownToken],
         current_token_index: int,
     ) -> Tuple[bool, bool, int]:

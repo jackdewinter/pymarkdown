@@ -397,15 +397,14 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
             self.__leading_spaces,
         )
         POGGER.debug("add_leading_spaces>>:$:<<", leading_spaces_to_add)
-        self.__leading_spaces = (
-            f"{self.__leading_spaces}{leading_spaces_to_add}"
-            if skip_adding_newline
-            else (
+        if skip_adding_newline:
+            self.__leading_spaces = f"{self.__leading_spaces}{leading_spaces_to_add}"
+        else:
+            self.__leading_spaces = (
                 f"{self.__leading_spaces}{ParserHelper.newline_character}{leading_spaces_to_add}"
                 if self.__leading_spaces
                 else leading_spaces_to_add
             )
-        )
         POGGER.debug(
             "__leading_spaces>>:$:<<",
             self.__leading_spaces,

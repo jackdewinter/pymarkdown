@@ -786,7 +786,6 @@ class ContainerBlockLeafProcessor:
 
             prefix_text = xposition_marker.text_to_parse[:current_indent_level]
             new_text_to_parse = xposition_marker.text_to_parse[current_indent_level:]
-            new_index_indent = xposition_marker.index_indent + current_indent_level
 
             new_index_indent = len(parser_state.original_line_to_parse) - len(
                 new_text_to_parse

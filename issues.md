@@ -62,9 +62,6 @@
 
 - (maintenance) clean up pylint warning suppressions where possible
   - too-many-locals
-  - too-many-statements
-  - too-many-branches
-  - too-many-nested-blocks
   - too-many-lines
   - too-many-instance?
 

@@ -33,7 +33,7 @@ class LeafBlockProcessorParagraph:
     Class to provide processing for the leaf blocks.
     """
 
-    # pylint: disable=too-many-arguments, too-many-locals
+    # pylint: disable=too-many-arguments
     @staticmethod
     def parse_paragraph(
         parser_state: ParserState,
@@ -122,6 +122,27 @@ class LeafBlockProcessorParagraph:
             adjusted_index = new_index
             extracted_whitespace = end_string
 
+        new_tokens.append(
+            LeafBlockProcessorParagraph.__parse_paragraph_create_text_token(
+                parser_state,
+                position_marker,
+                adjusted_index,
+                extracted_whitespace,
+                original_line,
+            )
+        )
+        return new_tokens
+
+    # pylint: enable=too-many-arguments
+
+    @staticmethod
+    def __parse_paragraph_create_text_token(
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        adjusted_index: int,
+        extracted_whitespace: Optional[str],
+        original_line: str,
+    ) -> TextMarkdownToken:
         text_to_parse = position_marker.text_to_parse[adjusted_index:]
         POGGER.debug("--add-text-token--")
         POGGER.debug("text_to_parse=:$:", text_to_parse)
@@ -140,17 +161,12 @@ class LeafBlockProcessorParagraph:
             "corrected_extracted_whitespace=:$:", corrected_extracted_whitespace
         )
 
-        new_tokens.append(
-            TextMarkdownToken(
-                text_to_parse,
-                corrected_extracted_whitespace,
-                position_marker=position_marker,
-                tabified_text=corrected_tab_text,
-            )
+        return TextMarkdownToken(
+            text_to_parse,
+            corrected_extracted_whitespace,
+            position_marker=position_marker,
+            tabified_text=corrected_tab_text,
         )
-        return new_tokens
-
-    # pylint: enable=too-many-arguments, too-many-locals
 
     @staticmethod
     def __calculate_corrected_tab_text(

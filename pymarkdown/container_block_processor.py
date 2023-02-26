@@ -702,7 +702,6 @@ class ContainerBlockProcessor:
                 did_process,
                 grab_bag,
             )
-        return
 
     @staticmethod
     def __prepare_container_start_variables(

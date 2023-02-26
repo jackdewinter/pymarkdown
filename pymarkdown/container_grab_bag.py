@@ -1,7 +1,6 @@
 """
 Class to provide a "grab bag" for commonly used properties for the Container Block Processor.
 """
-# pylint: disable=too-many-statements
 # pylint: disable=too-many-instance-attributes
 import logging
 from typing import Any, List, Optional
@@ -40,105 +39,43 @@ class ContainerGrabBag:
 
         # Booleans
         self.__did_blank: bool = False
-        self.__log_read_write_value("did_blank", self.__did_blank)
         self.__was_paragraph_continuation: bool = False
-        self.__log_read_write_value(
-            "was_paragraph_continuation", self.__was_paragraph_continuation
-        )
         self.__do_skip_containers_before_leaf_blocks: bool = False
-        self.__log_read_write_value(
-            "do_skip_containers_before_leaf_blocks",
-            self.__do_skip_containers_before_leaf_blocks,
-        )
         self.__was_indent_already_processed: bool = False
-        self.__log_read_write_value(
-            "was_indent_already_processed", self.__was_indent_already_processed
-        )
         self.__do_force_leaf_token_parse: bool = False
-        self.__log_read_write_value(
-            "do_force_leaf_token_parse", self.__do_force_leaf_token_parse
-        )
         self.__did_indent_processing: bool = False
-        self.__log_read_write_value(
-            "did_indent_processing", self.__did_indent_processing
-        )
         self.__have_pre_processed_indent: bool = False
-        self.__log_read_write_value(
-            "have_pre_processed_indent", self.__have_pre_processed_indent
-        )
         self.__can_continue: bool = False
-        self.__log_read_write_value("can_continue", self.__can_continue)
         self.__do_force_list_continuation = False
-        self.__log_read_write_value(
-            "do_force_list_continuation", self.__do_force_list_continuation
-        )
 
         # Integers
         self.__indent_used_by_container: int = -1
-        self.__log_read_write_value(
-            "indent_used_by_container", self.__indent_used_by_container
-        )
         self.__indent_already_processed: int = -1
-        self.__log_read_write_value(
-            "indent_already_processed", self.__indent_already_processed
-        )
         self.__last_block_quote_index: int = -1
-        self.__log_read_write_value(
-            "last_block_quote_index", self.__last_block_quote_index
-        )
         self.__last_list_start_index: int = -1
-        self.__log_read_write_value(
-            "last_list_start_index", self.__last_list_start_index
-        )
         self.__start_index: int = -1
-        self.__log_read_write_value("start_index", self.__start_index)
 
         # Optional integers
         self.__removed_chars_at_start_of_line: Optional[int] = None
-        self.__log_read_write_value(
-            "removed_chars_at_start_of_line", self.__removed_chars_at_start_of_line
-        )
 
         # Strings
         self.__adj_line_to_parse: str = ""
-        self.__log_read_write_value("adj_line_to_parse", self.__adj_line_to_parse)
         self.__line_to_parse: str = ""
-        self.__log_read_write_value("line_to_parse", self.__line_to_parse)
 
         # Optional strings
         self.__weird_adjusted_text: Optional[str] = None
-        self.__log_read_write_value("weird_adjusted_text", self.__weird_adjusted_text)
         self.__indent_used_by_list: Optional[str] = None
-        self.__log_read_write_value("indent_used_by_list", self.__indent_used_by_list)
         self.__text_removed_by_container: Optional[str] = None
-        self.__log_read_write_value(
-            "text_removed_by_container", self.__text_removed_by_container
-        )
         self.__extracted_whitespace: Optional[str] = None
-        self.__log_read_write_value("extracted_whitespace", self.__extracted_whitespace)
         self.__adj_ws: Optional[str] = None
-        self.__log_read_write_value("adj_ws", self.__adj_ws)
 
         # Others
         self.__block_quote_data = BlockQuoteData(-1, -1)
-        self.__log_read_write_value("block_quote_data", self.__block_quote_data)
         self.__end_container_indices = ContainerIndices(-1, -1, -1)
-        self.__log_read_write_value(
-            "end_container_indices", self.__end_container_indices
-        )
-
         self.__requeue_line_info: Optional[RequeueLineInfo] = None
-        self.__log_read_write_value("requeue_line_info", self.__requeue_line_info)
-
         self.__current_container_blocks: List[StackToken] = []
-
         self.__leaf_tokens: List[MarkdownToken] = []
-        self.__log_read_write_value("leaf_tokens", self.__leaf_tokens)
-
         self.__container_level_tokens: List[MarkdownToken] = []
-        self.__log_read_write_value(
-            "container_level_tokens", self.__container_level_tokens
-        )
 
         # Read only values
         self.__container_depth = container_depth
@@ -148,6 +85,89 @@ class ContainerGrabBag:
         self.__parser_properties = parser_properties
         self.__do_ignore_link_definition_start = ignore_link_definition_start
         self.__original_line = original_line
+        self.__is_para_continue = (
+            bool(
+                parser_state
+                and parser_state.token_stack
+                and len(parser_state.token_stack) >= 2
+                and parser_state.token_stack[-1].is_paragraph
+            )
+            and not parser_state.token_document[-1].is_blank_line
+        )
+        self.__log_initial_values()
+
+    def __log_initial_values(self) -> None:
+        # Booleans
+        self.__log_read_write_value("did_blank", self.__did_blank)
+        self.__log_read_write_value(
+            "was_paragraph_continuation", self.__was_paragraph_continuation
+        )
+        self.__log_read_write_value(
+            "do_skip_containers_before_leaf_blocks",
+            self.__do_skip_containers_before_leaf_blocks,
+        )
+        self.__log_read_write_value(
+            "was_indent_already_processed", self.__was_indent_already_processed
+        )
+        self.__log_read_write_value(
+            "do_force_leaf_token_parse", self.__do_force_leaf_token_parse
+        )
+        self.__log_read_write_value(
+            "did_indent_processing", self.__did_indent_processing
+        )
+        self.__log_read_write_value(
+            "have_pre_processed_indent", self.__have_pre_processed_indent
+        )
+        self.__log_read_write_value("can_continue", self.__can_continue)
+        self.__log_read_write_value(
+            "do_force_list_continuation", self.__do_force_list_continuation
+        )
+
+        # Integers
+        self.__log_read_write_value(
+            "indent_used_by_container", self.__indent_used_by_container
+        )
+        self.__log_read_write_value(
+            "indent_already_processed", self.__indent_already_processed
+        )
+        self.__log_read_write_value(
+            "last_block_quote_index", self.__last_block_quote_index
+        )
+        self.__log_read_write_value(
+            "last_list_start_index", self.__last_list_start_index
+        )
+        self.__log_read_write_value("start_index", self.__start_index)
+
+        # Optional integers
+        self.__log_read_write_value(
+            "removed_chars_at_start_of_line", self.__removed_chars_at_start_of_line
+        )
+
+        # Strings
+        self.__log_read_write_value("adj_line_to_parse", self.__adj_line_to_parse)
+        self.__log_read_write_value("line_to_parse", self.__line_to_parse)
+
+        # Optional strings
+        self.__log_read_write_value("weird_adjusted_text", self.__weird_adjusted_text)
+        self.__log_read_write_value("indent_used_by_list", self.__indent_used_by_list)
+        self.__log_read_write_value(
+            "text_removed_by_container", self.__text_removed_by_container
+        )
+        self.__log_read_write_value("extracted_whitespace", self.__extracted_whitespace)
+        self.__log_read_write_value("adj_ws", self.__adj_ws)
+
+        # Others
+        self.__log_read_write_value("block_quote_data", self.__block_quote_data)
+        self.__log_read_write_value(
+            "end_container_indices", self.__end_container_indices
+        )
+        self.__log_read_write_value("requeue_line_info", self.__requeue_line_info)
+        self.__log_read_write_value("leaf_tokens", self.__leaf_tokens)
+        self.__log_read_write_value(
+            "container_level_tokens", self.__container_level_tokens
+        )
+
+        # Read only values
         self.__log_read_only_value("container_depth", self.__container_depth)
         self.__log_read_only_value(
             "initial_block_quote_count", self.__initial_block_quote_count
@@ -161,16 +181,6 @@ class ContainerGrabBag:
             "do_ignore_link_definition_start", self.__do_ignore_link_definition_start
         )
         self.__log_read_only_value("original_line", self.__original_line)
-
-        self.__is_para_continue = (
-            bool(
-                parser_state
-                and parser_state.token_stack
-                and len(parser_state.token_stack) >= 2
-                and parser_state.token_stack[-1].is_paragraph
-            )
-            and not parser_state.token_document[-1].is_blank_line
-        )
         self.__log_read_only_value("is_para_continue", self.__is_para_continue)
 
     @staticmethod
@@ -702,4 +712,3 @@ class ContainerGrabBag:
 
 # pylint: enable=too-many-public-methods
 # pylint: enable=too-many-instance-attributes
-# pylint: enable=too-many-statements
