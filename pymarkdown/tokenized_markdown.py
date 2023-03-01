@@ -20,8 +20,10 @@ from pymarkdown.extensions.pragma_token import PragmaToken
 from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.inline_helper import InlineHelper
 from pymarkdown.inline_processor import InlineProcessor
-from pymarkdown.leaf_block_processor import LeafBlockProcessor
-from pymarkdown.leaf_block_processor_paragraph import LeafBlockProcessorParagraph
+from pymarkdown.leaf_blocks.leaf_block_helper import LeafBlockHelper
+from pymarkdown.leaf_blocks.leaf_block_processor_paragraph import (
+    LeafBlockProcessorParagraph,
+)
 from pymarkdown.leaf_markdown_token import BlankLineMarkdownToken
 from pymarkdown.link_helper import LinkHelper
 from pymarkdown.link_reference_definition_helper import LinkReferenceDefinitionHelper
@@ -702,7 +704,7 @@ class TokenizedMarkdown:
         extra_end_data = None
         if parser_state.token_stack[-1].is_indented_code_block:
             extra_elements.extend(
-                LeafBlockProcessor.extract_markdown_tokens_back_to_blank_line(
+                LeafBlockHelper.extract_markdown_tokens_back_to_blank_line(
                     parser_state, was_forced
                 )
             )

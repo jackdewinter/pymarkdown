@@ -17,7 +17,9 @@ from pymarkdown.container_markdown_token import (
     ListStartMarkdownToken,
 )
 from pymarkdown.extensions.pragma_token import PragmaExtension
-from pymarkdown.leaf_block_processor_paragraph import LeafBlockProcessorParagraph
+from pymarkdown.leaf_blocks.leaf_block_processor_paragraph import (
+    LeafBlockProcessorParagraph,
+)
 from pymarkdown.list_block_processor import ListBlockProcessor
 from pymarkdown.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.parser_helper import ParserHelper

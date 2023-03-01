@@ -12,8 +12,19 @@ from pymarkdown.container_markdown_token import (
     BlockQuoteMarkdownToken,
     ListStartMarkdownToken,
 )
-from pymarkdown.leaf_block_processor import LeafBlockProcessor
-from pymarkdown.leaf_block_processor_paragraph import LeafBlockProcessorParagraph
+from pymarkdown.leaf_blocks.atx_leaf_block_processor import AtxLeafBlockProcessor
+from pymarkdown.leaf_blocks.fenced_leaf_block_processor import FencedLeafBlockProcessor
+from pymarkdown.leaf_blocks.indented_leaf_block_processor import (
+    IndentedLeafBlockProcessor,
+)
+from pymarkdown.leaf_blocks.leaf_block_processor import LeafBlockProcessor
+from pymarkdown.leaf_blocks.leaf_block_processor_paragraph import (
+    LeafBlockProcessorParagraph,
+)
+from pymarkdown.leaf_blocks.setext_leaf_block_processor import SetextLeafBlockProcessor
+from pymarkdown.leaf_blocks.thematic_leaf_block_processor import (
+    ThematicLeafBlockProcessor,
+)
 from pymarkdown.link_reference_definition_helper import LinkReferenceDefinitionHelper
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
@@ -205,14 +216,14 @@ class ContainerBlockLeafProcessor:
 
         if not outer_processed:
             new_tokens = (
-                LeafBlockProcessor.parse_atx_headings(
+                AtxLeafBlockProcessor.parse_atx_headings(
                     parser_state,
                     leaf_block_position_marker,
                     leaf_token_whitespace,
                     grab_bag.block_quote_data,
                     grab_bag.original_line,
                 )
-                or LeafBlockProcessor.parse_indented_code_block(
+                or IndentedLeafBlockProcessor.parse_indented_code_block(
                     parser_state,
                     leaf_block_position_marker,
                     leaf_token_whitespace,
@@ -221,14 +232,14 @@ class ContainerBlockLeafProcessor:
                     grab_bag.last_list_start_index,
                     grab_bag.original_line,
                 )
-                or LeafBlockProcessor.parse_setext_headings(
+                or SetextLeafBlockProcessor.parse_setext_headings(
                     parser_state,
                     leaf_block_position_marker,
                     leaf_token_whitespace,
                     grab_bag.block_quote_data,
                     grab_bag.original_line,
                 )
-                or LeafBlockProcessor.parse_thematic_break(
+                or ThematicLeafBlockProcessor.parse_thematic_break(
                     parser_state,
                     leaf_block_position_marker,
                     leaf_token_whitespace,
@@ -281,7 +292,7 @@ class ContainerBlockLeafProcessor:
         )
 
         new_tokens: List[MarkdownToken] = []
-        outer_processed = LeafBlockProcessor.handle_fenced_code_block(
+        outer_processed = FencedLeafBlockProcessor.handle_fenced_code_block(
             parser_state,
             position_marker,
             leaf_token_whitespace,

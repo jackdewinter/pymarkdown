@@ -16,8 +16,15 @@ from pymarkdown.container_markdown_token import (
     UnorderedListStartMarkdownToken,
 )
 from pymarkdown.html_helper import HtmlHelper
-from pymarkdown.leaf_block_processor import LeafBlockProcessor
-from pymarkdown.leaf_block_processor_paragraph import LeafBlockProcessorParagraph
+from pymarkdown.leaf_blocks.atx_leaf_block_processor import AtxLeafBlockProcessor
+from pymarkdown.leaf_blocks.fenced_leaf_block_processor import FencedLeafBlockProcessor
+from pymarkdown.leaf_blocks.leaf_block_processor import LeafBlockProcessor
+from pymarkdown.leaf_blocks.leaf_block_processor_paragraph import (
+    LeafBlockProcessorParagraph,
+)
+from pymarkdown.leaf_blocks.thematic_leaf_block_processor import (
+    ThematicLeafBlockProcessor,
+)
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
@@ -192,7 +199,7 @@ class ListBlockProcessor:
 
         # Thematic breaks have precedence, so stop a list start if we find one.
         if is_start:
-            is_break, _ = LeafBlockProcessor.is_thematic_break(
+            is_break, _ = ThematicLeafBlockProcessor.is_thematic_break(
                 line_to_parse, start_index, extracted_whitespace
             )
             is_start = is_start and not is_break
@@ -1391,7 +1398,7 @@ class ListBlockProcessor:
         extracted_whitespace: Optional[str],
     ) -> bool:
         POGGER.debug("is_theme_break>>?")
-        is_theme_break, _ = LeafBlockProcessor.is_thematic_break(
+        is_theme_break, _ = ThematicLeafBlockProcessor.is_thematic_break(
             line_to_parse,
             start_index,
             extracted_whitespace,
@@ -1399,12 +1406,12 @@ class ListBlockProcessor:
         )
         POGGER.debug("is_theme_break>>$", is_theme_break)
         POGGER.debug("is_atx_heading>>?")
-        is_atx_heading, _, _, _ = LeafBlockProcessor.is_atx_heading(
+        is_atx_heading, _, _, _ = AtxLeafBlockProcessor.is_atx_heading(
             line_to_parse, start_index, extracted_whitespace, skip_whitespace_check=True
         )
         POGGER.debug("is_atx_heading>>$", is_atx_heading)
         POGGER.debug("is_fenced_start>>?")
-        is_fenced_start, _, _, _, _ = LeafBlockProcessor.is_fenced_code_block(
+        is_fenced_start, _, _, _, _ = FencedLeafBlockProcessor.is_fenced_code_block(
             line_to_parse, start_index, extracted_whitespace, skip_whitespace_check=True
         )
         POGGER.debug("is_fenced_start>>$", is_fenced_start)

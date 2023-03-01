@@ -13,7 +13,9 @@ from pymarkdown.extension_manager.extension_manager_constants import (
 )
 from pymarkdown.extension_manager.parser_extension import ParserExtension
 from pymarkdown.extensions.front_matter_markdown_token import FrontMatterMarkdownToken
-from pymarkdown.leaf_block_processor import LeafBlockProcessor
+from pymarkdown.leaf_blocks.thematic_leaf_block_processor import (
+    ThematicLeafBlockProcessor,
+)
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
@@ -96,7 +98,7 @@ class FrontMatterExtension(ParserExtension):
         """
         Take care of processing eligibility and processing for front matter support.
         """
-        start_char, extracted_index = LeafBlockProcessor.is_thematic_break(
+        start_char, extracted_index = ThematicLeafBlockProcessor.is_thematic_break(
             first_line_in_document.rstrip(),
             0,
             "",
@@ -141,7 +143,7 @@ class FrontMatterExtension(ParserExtension):
         while repeat_again:
             next_line = source_provider.get_next_line()
             if next_line and next_line.rstrip():
-                start_char, _ = LeafBlockProcessor.is_thematic_break(
+                start_char, _ = ThematicLeafBlockProcessor.is_thematic_break(
                     next_line.rstrip(),
                     0,
                     "",
