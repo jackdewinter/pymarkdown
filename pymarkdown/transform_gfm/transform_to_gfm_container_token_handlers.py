@@ -14,8 +14,10 @@ from pymarkdown.container_markdown_token import (
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.transform_gfm.transform_to_gfm_list_looseness import (
+    TransformToGfmListLooseness,
+)
 from pymarkdown.transform_state import TransformState
-from pymarkdown.transform_to_gfm_list_looseness import TransformToGfmListLooseness
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

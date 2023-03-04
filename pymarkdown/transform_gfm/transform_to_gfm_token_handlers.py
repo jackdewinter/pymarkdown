@@ -23,13 +23,13 @@ from pymarkdown.inline_markdown_token import (
 from pymarkdown.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
-from pymarkdown.transform_state import TransformState
-from pymarkdown.transform_to_gfm_container_token_handlers import (
+from pymarkdown.transform_gfm.transform_to_gfm_container_token_handlers import (
     TransformToGfmContainerTokenHandlers,
 )
-from pymarkdown.transform_to_gfm_leaf_token_handlers import (
+from pymarkdown.transform_gfm.transform_to_gfm_leaf_token_handlers import (
     TransformToGfmLeafTokenHandlers,
 )
+from pymarkdown.transform_state import TransformState
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 # pylint: disable=too-few-public-methods
