@@ -25,8 +25,8 @@ from pymarkdown.leaf_blocks.leaf_block_processor_paragraph import (
     LeafBlockProcessorParagraph,
 )
 from pymarkdown.leaf_markdown_token import BlankLineMarkdownToken
-from pymarkdown.link_helper import LinkHelper
 from pymarkdown.link_reference_definition_helper import LinkReferenceDefinitionHelper
+from pymarkdown.links.link_parse_helper import LinkParseHelper
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parse_block_pass_properties import ParseBlockPassProperties
 from pymarkdown.parser_helper import ParserHelper
@@ -107,7 +107,7 @@ class TokenizedMarkdown:
             self.__token_stack = []
 
             InlineProcessor.initialize()
-            LinkHelper.initialize()
+            LinkParseHelper.initialize()
 
             POGGER.debug("\n\n>>>>>>>parse_blocks_pass>>>>>>")
             first_pass_results = self.__parse_blocks_pass()

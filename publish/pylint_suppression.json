@@ -116,10 +116,6 @@
             "too-many-arguments": 4,
             "too-many-instance-attributes": 1
         },
-        "pymarkdown/link_helper.py": {
-            "too-many-arguments": 8,
-            "too-many-locals": 1
-        },
         "pymarkdown/link_helper_properties.py": {
             "too-many-instance-attributes": 1
         },
@@ -129,6 +125,15 @@
         },
         "pymarkdown/link_reference_info.py": {},
         "pymarkdown/link_reference_titles.py": {},
+        "pymarkdown/links/link_create_helper.py": {
+            "too-few-public-methods": 1,
+            "too-many-arguments": 3
+        },
+        "pymarkdown/links/link_parse_helper.py": {},
+        "pymarkdown/links/link_search_helper.py": {
+            "too-many-arguments": 5,
+            "too-many-locals": 1
+        },
         "pymarkdown/list_block_processor.py": {
             "too-many-arguments": 26,
             "too-many-locals": 4
@@ -278,7 +283,7 @@
     "disables-by-name": {
         "too-many-arguments": 172,
         "too-many-locals": 16,
-        "too-few-public-methods": 16,
+        "too-few-public-methods": 17,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 1,
         "too-many-instance-attributes": 19,

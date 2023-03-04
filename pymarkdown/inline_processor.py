@@ -23,7 +23,8 @@ from pymarkdown.leaf_markdown_token import (
     AtxHeadingMarkdownToken,
     ParagraphMarkdownToken,
 )
-from pymarkdown.link_helper import LinkHelper
+from pymarkdown.links.link_parse_helper import LinkParseHelper
+from pymarkdown.links.link_search_helper import LinkSearchHelper
 from pymarkdown.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
@@ -42,8 +43,8 @@ class InlineProcessor:
     __valid_inline_text_block_sequence_starts = ""
     __valid_inline_simple_text_block_sequence_starts = ""
     __inline_processing_needed = (
-        f"{EmphasisHelper.inline_emphasis}{LinkHelper.link_label_start}"
-        + f"{LinkHelper.link_label_end}"
+        f"{EmphasisHelper.inline_emphasis}{LinkParseHelper.link_label_start}"
+        + f"{LinkParseHelper.link_label_end}"
     )
     __inline_character_handlers: Dict[str, Optional[Any]] = {}
     __inline_simple_character_handlers: Dict[str, Optional[Any]] = {}
@@ -87,7 +88,7 @@ class InlineProcessor:
                 i, InlineProcessor.__handle_inline_special_single_character
             )
         InlineProcessor.register_handlers(
-            LinkHelper.image_start_sequence[0],
+            LinkSearchHelper.image_start_sequence[0],
             InlineProcessor.__handle_inline_image_link_start_character,
         )
         for i in ParserHelper.valid_characters_to_escape():
@@ -426,7 +427,7 @@ class InlineProcessor:
         if ParserHelper.are_characters_at_index(
             inline_request.source_text,
             inline_request.next_index,
-            LinkHelper.image_start_sequence,
+            LinkSearchHelper.image_start_sequence,
         ):
             inline_response = InlineProcessor.__handle_inline_special(
                 inline_request.source_text,
@@ -448,7 +449,11 @@ class InlineProcessor:
                 inline_response.new_string,
                 inline_response.new_index,
                 inline_response.delta_column_number,
-            ) = (LinkHelper.image_start_sequence[0], inline_request.next_index + 1, 1)
+            ) = (
+                LinkSearchHelper.image_start_sequence[0],
+                inline_request.next_index + 1,
+                1,
+            )
         return inline_response
 
     # pylint: disable=too-many-arguments
@@ -545,7 +550,7 @@ class InlineProcessor:
                 next_index,
                 special_sequence,
             )
-        if special_sequence[0] == LinkHelper.link_label_end:
+        if special_sequence[0] == LinkParseHelper.link_label_end:
             return InlineProcessor.__handle_inline_special_character_label_end(
                 special_length,
                 special_sequence,
@@ -688,7 +693,7 @@ class InlineProcessor:
             is_active,
             new_token,
             consume_rest_of_line,
-        ) = LinkHelper.look_for_link_or_image(
+        ) = LinkSearchHelper.look_for_link_or_image(
             inline_blocks,
             source_text,
             next_index,

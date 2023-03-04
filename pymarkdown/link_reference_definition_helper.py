@@ -8,9 +8,9 @@ from typing import List, Optional, Tuple, cast
 from pymarkdown.container_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.inline_helper import InlineHelper
 from pymarkdown.leaf_markdown_token import LinkReferenceDefinitionMarkdownToken
-from pymarkdown.link_helper import LinkHelper
 from pymarkdown.link_reference_info import LinkReferenceInfo
 from pymarkdown.link_reference_titles import LinkReferenceTitles
+from pymarkdown.links.link_parse_helper import LinkParseHelper
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
@@ -616,9 +616,11 @@ class LinkReferenceDefinitionHelper:
 
         # POGGER.debug("parse_link_reference_definition")
         new_index: Optional[int] = None
-        keep_going, new_index, collected_destination = LinkHelper.extract_link_label(
-            line_to_parse, start_index + 1
-        )
+        (
+            keep_going,
+            new_index,
+            collected_destination,
+        ) = LinkParseHelper.extract_link_label(line_to_parse, start_index + 1)
         # POGGER.debug("parse_link_reference_definition: keep_going:>:$:<", keep_going)
         # POGGER.debug("parse_link_reference_definition: new_index:>:$:<", new_index)
         # POGGER.debug(
@@ -634,7 +636,7 @@ class LinkReferenceDefinitionHelper:
                 _,
                 line_destination_whitespace,
                 inline_raw_link,
-            ) = LinkHelper.extract_link_destination(
+            ) = LinkParseHelper.extract_link_destination(
                 line_to_parse, new_index, is_blank_line
             )
             # POGGER.debug(
@@ -662,7 +664,9 @@ class LinkReferenceDefinitionHelper:
                 _,
                 line_title_whitespace,
                 inline_raw_title,
-            ) = LinkHelper.extract_link_title(line_to_parse, new_index, is_blank_line)
+            ) = LinkParseHelper.extract_link_title(
+                line_to_parse, new_index, is_blank_line
+            )
             # POGGER.debug(
             #     "parse_link_reference_definition: keep_going:>:$:<", keep_going
             # )
@@ -693,7 +697,7 @@ class LinkReferenceDefinitionHelper:
             # POGGER.debug(
             #     ">>collected_destination(not normalized)>>$", collected_destination
             # )
-            normalized_destination = LinkHelper.normalize_link_label(
+            normalized_destination = LinkParseHelper.normalize_link_label(
                 collected_destination
             )
             if not normalized_destination:
@@ -832,7 +836,7 @@ class LinkReferenceDefinitionHelper:
         if did_complete_lrd:
             assert parsed_lrd_tuple
             assert parsed_lrd_tuple.normalized_destination is not None
-            did_add_definition = LinkHelper.add_link_definition(
+            did_add_definition = LinkParseHelper.add_link_definition(
                 parsed_lrd_tuple.normalized_destination, parsed_lrd_tuple.link_titles
             )
             assert not (end_lrd_index < -1 and remaining_line_to_parse)
