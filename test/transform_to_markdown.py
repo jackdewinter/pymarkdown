@@ -38,7 +38,7 @@ from pymarkdown.leaf_markdown_token import (
     SetextHeadingMarkdownToken,
     ThematicBreakMarkdownToken,
 )
-from pymarkdown.link_helper import LinkHelper
+from pymarkdown.links.link_search_helper import LinkSearchHelper
 from pymarkdown.markdown_token import MarkdownToken, MarkdownTokenClass
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.tab_helper import TabHelper
@@ -2276,7 +2276,7 @@ class TransformToMarkdown:
         if self.block_stack[-1].is_inline_link:
             return ""
         print(f">>>>>>>>:{ParserHelper.make_value_visible(current_token)}:<<<<<")
-        rehydrated_text = LinkHelper.rehydrate_inline_image_text_from_token(
+        rehydrated_text = LinkSearchHelper.rehydrate_inline_image_text_from_token(
             current_token
         )
         print(f">>>>>>>>:{ParserHelper.make_value_visible(rehydrated_text)}:<<<<<")
@@ -2289,7 +2289,7 @@ class TransformToMarkdown:
         _ = previous_token
 
         self.block_stack.append(current_token)
-        rehydrated_text = LinkHelper.rehydrate_inline_link_text_from_token(
+        rehydrated_text = LinkSearchHelper.rehydrate_inline_link_text_from_token(
             current_token
         )
         return self.__insert_leading_whitespace_at_newlines(rehydrated_text)
