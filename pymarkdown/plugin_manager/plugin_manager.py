@@ -24,8 +24,6 @@ from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 LOGGER = logging.getLogger(__name__)
 
-# pylint: disable=too-many-lines
-
 
 # pylint: disable=too-many-instance-attributes
 class PluginManager:

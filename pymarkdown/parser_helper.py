@@ -10,7 +10,6 @@ from pymarkdown.constants import Constants
 LOGGER = logging.getLogger(__name__)
 
 
-# pylint: disable=too-many-lines
 # pylint: disable=too-many-public-methods
 class ParserHelper:
     """

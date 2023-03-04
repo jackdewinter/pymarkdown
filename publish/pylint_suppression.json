@@ -255,9 +255,22 @@
             "too-many-instance-attributes": 1
         },
         "pymarkdown/transform_to_gfm.py": {
-            "too-many-arguments": 1
+            "too-few-public-methods": 1
+        },
+        "pymarkdown/transform_to_gfm_container_token_handlers.py": {
+            "too-few-public-methods": 1
+        },
+        "pymarkdown/transform_to_gfm_leaf_block_handlers.py": {
+            "too-few-public-methods": 1
+        },
+        "pymarkdown/transform_to_gfm_leaf_token_handlers.py": {
+            "too-few-public-methods": 1
         },
         "pymarkdown/transform_to_gfm_list_looseness.py": {
+            "too-many-arguments": 1
+        },
+        "pymarkdown/transform_to_gfm_token_handlers.py": {
+            "too-few-public-methods": 1,
             "too-many-arguments": 1
         },
         "pymarkdown/version.py": {}
@@ -265,7 +278,7 @@
     "disables-by-name": {
         "too-many-arguments": 172,
         "too-many-locals": 16,
-        "too-few-public-methods": 11,
+        "too-few-public-methods": 16,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 1,
         "too-many-instance-attributes": 19,

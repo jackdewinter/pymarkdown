@@ -20,8 +20,6 @@ from pymarkdown.tab_helper import TabHelper
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
-# pylint: disable=too-many-lines
-
 
 class LeafBlockProcessor:
     """
