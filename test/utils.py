@@ -15,7 +15,7 @@ from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.tab_helper import TabHelper
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
-from pymarkdown.transform_to_gfm import TransformToGfm
+from pymarkdown.transform_gfm.transform_to_gfm import TransformToGfm
 
 # from test.verify_line_and_column_numbers import verify_line_and_column_numbers
 

@@ -8,7 +8,10 @@
 
 ### Changed
 
-- None
+- [Issue 582](https://github.com/jackdewinter/pymarkdown/issues/582)
+  - broke up leaf block processor into more distinct pieces
+- [Issue 589](https://github.com/jackdewinter/pymarkdown/issues/589)
+  - broke up token to GFM module into more distinct pieces
 
 ### Fixed
 

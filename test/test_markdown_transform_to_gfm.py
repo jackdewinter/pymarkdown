@@ -8,7 +8,7 @@ from pymarkdown.markdown_token import (
     MarkdownToken,
     MarkdownTokenClass,
 )
-from pymarkdown.transform_to_gfm import TransformToGfm
+from pymarkdown.transform_gfm.transform_to_gfm import TransformToGfm
 
 
 @pytest.mark.gfm
