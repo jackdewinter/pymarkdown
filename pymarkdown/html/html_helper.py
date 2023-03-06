@@ -19,6 +19,7 @@ from pymarkdown.tab_helper import TabHelper
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
+
 class HtmlHelper:
     """
     Class to provide helper functions for parsing html.
