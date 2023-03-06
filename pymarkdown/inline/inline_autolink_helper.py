@@ -6,7 +6,7 @@ import re
 import string
 from typing import Optional, cast
 
-from pymarkdown.html_helper import HtmlHelper
+from pymarkdown.html.html_raw_helper import HtmlRawHelper
 from pymarkdown.inline.inline_request import InlineRequest
 from pymarkdown.inline.inline_response import InlineResponse
 from pymarkdown.inline_markdown_token import (
@@ -70,7 +70,7 @@ class InlineAutoLinkHelper:
                     between_brackets, inline_request.line_number, new_column_number
                 )
             if not new_token:
-                new_token, after_index = HtmlHelper.parse_raw_html(
+                new_token, after_index = HtmlRawHelper.parse_raw_html(
                     between_brackets,
                     remaining_line,
                     inline_request.line_number,
