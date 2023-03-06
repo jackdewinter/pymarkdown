@@ -3,7 +3,7 @@ Module to provide a tokenization of a markdown-encoded string.
 """
 import logging
 import os
-from typing import Any, List, Optional, Tuple, cast
+from typing import List, Optional, Tuple, cast
 
 from application_properties import ApplicationProperties
 
@@ -18,8 +18,10 @@ from pymarkdown.extension_manager.extension_manager import ExtensionManager
 from pymarkdown.extensions.front_matter_extension import FrontMatterExtension
 from pymarkdown.extensions.pragma_token import PragmaToken
 from pymarkdown.html_helper import HtmlHelper
-from pymarkdown.inline_helper import InlineHelper
-from pymarkdown.inline_processor import InlineProcessor
+from pymarkdown.inline.inline_character_reference_helper import (
+    InlineCharacterReferenceHelper,
+)
+from pymarkdown.inline.inline_processor import InlineProcessor
 from pymarkdown.leaf_blocks.leaf_block_helper import LeafBlockHelper
 from pymarkdown.leaf_blocks.leaf_block_processor_paragraph import (
     LeafBlockProcessorParagraph,
@@ -62,7 +64,7 @@ class TokenizedMarkdown:
 
         if not resource_path:
             resource_path = os.path.join(os.path.split(__file__)[0], "resources")
-        InlineHelper.initialize(resource_path)
+        InlineCharacterReferenceHelper.initialize(resource_path)
 
     def apply_configuration(
         self,
@@ -414,7 +416,7 @@ class TokenizedMarkdown:
         return line_number, ignore_link_definition_start
 
     def __determine_next_line_to_process(
-        self, requeue: Optional[Any], did_start_close: bool, did_started_close: bool
+        self, requeue: List[str], did_start_close: bool, did_started_close: bool
     ) -> Tuple[Optional[str], bool, bool]:
         """
         For the parse_blocks_pass function, determine the next token to parse.

@@ -8,8 +8,8 @@ from typing import List, Optional, Tuple, cast
 from pymarkdown.block_quote_data import BlockQuoteData
 from pymarkdown.constants import Constants
 from pymarkdown.container_helper import ContainerHelper
+from pymarkdown.inline.inline_request import InlineRequest
 from pymarkdown.inline_markdown_token import RawHtmlMarkdownToken, TextMarkdownToken
-from pymarkdown.inline_request import InlineRequest
 from pymarkdown.leaf_markdown_token import HtmlBlockMarkdownToken
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper

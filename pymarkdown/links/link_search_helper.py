@@ -17,8 +17,8 @@ from pymarkdown.inline_markdown_token import (
     SpecialTextMarkdownToken,
     TextMarkdownToken,
 )
-from pymarkdown.link_helper_properties import LinkHelperProperties
 from pymarkdown.links.link_create_helper import LinkCreateHelper
+from pymarkdown.links.link_helper_properties import LinkHelperProperties
 from pymarkdown.links.link_parse_helper import LinkParseHelper
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper

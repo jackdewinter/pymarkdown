@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from typing import List, Optional, Tuple, cast
 
 from pymarkdown.container_markdown_token import BlockQuoteMarkdownToken
-from pymarkdown.inline_helper import InlineHelper
+from pymarkdown.inline.inline_backslash_helper import InlineBackslashHelper
 from pymarkdown.leaf_markdown_token import LinkReferenceDefinitionMarkdownToken
 from pymarkdown.link_reference_info import LinkReferenceInfo
 from pymarkdown.link_reference_titles import LinkReferenceTitles
@@ -550,12 +550,14 @@ class LinkReferenceDefinitionHelper:
             remaining_line, continue_with_lrd = line_to_parse[start_index + 1 :], True
             if (
                 remaining_line
-                and remaining_line[-1] == InlineHelper.backslash_character
+                and remaining_line[-1] == InlineBackslashHelper.backslash_character
             ):
                 remaining_line_size, start_index, found_index = (
                     len(remaining_line),
                     0,
-                    remaining_line.find(InlineHelper.backslash_character, start_index),
+                    remaining_line.find(
+                        InlineBackslashHelper.backslash_character, start_index
+                    ),
                 )
                 POGGER.debug(">>$<<$", remaining_line, remaining_line_size)
                 POGGER.debug(">>$<<$", remaining_line, start_index)
@@ -564,7 +566,7 @@ class LinkReferenceDefinitionHelper:
                     start_index = found_index + 2
                     POGGER.debug(">>$<<$", remaining_line, start_index)
                     found_index = remaining_line.find(
-                        InlineHelper.backslash_character, start_index
+                        InlineBackslashHelper.backslash_character, start_index
                     )
                     POGGER.debug(">>$<<", found_index)
                 POGGER.debug(">>>>>>>$<<", found_index)
