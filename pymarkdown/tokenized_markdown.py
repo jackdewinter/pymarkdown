@@ -27,8 +27,10 @@ from pymarkdown.leaf_blocks.leaf_block_processor_paragraph import (
     LeafBlockProcessorParagraph,
 )
 from pymarkdown.leaf_markdown_token import BlankLineMarkdownToken
-from pymarkdown.link_reference_definition_helper import LinkReferenceDefinitionHelper
 from pymarkdown.links.link_parse_helper import LinkParseHelper
+from pymarkdown.links.link_reference_definition_helper import (
+    LinkReferenceDefinitionHelper,
+)
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parse_block_pass_properties import ParseBlockPassProperties
 from pymarkdown.parser_helper import ParserHelper
