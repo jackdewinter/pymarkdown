@@ -66,9 +66,10 @@
             "too-many-arguments": 2
         },
         "pymarkdown/extensions/task_list_items.py": {},
-        "pymarkdown/html_helper.py": {
+        "pymarkdown/html/html_helper.py": {
             "too-many-arguments": 1
         },
+        "pymarkdown/html/html_raw_helper.py": {},
         "pymarkdown/inline/inline_autolink_helper.py": {},
         "pymarkdown/inline/inline_backslash_helper.py": {},
         "pymarkdown/inline/inline_backtick_helper.py": {},

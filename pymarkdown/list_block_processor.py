@@ -15,7 +15,7 @@ from pymarkdown.container_markdown_token import (
     OrderedListStartMarkdownToken,
     UnorderedListStartMarkdownToken,
 )
-from pymarkdown.html_helper import HtmlHelper
+from pymarkdown.html.html_helper import HtmlHelper
 from pymarkdown.leaf_blocks.atx_leaf_block_processor import AtxLeafBlockProcessor
 from pymarkdown.leaf_blocks.fenced_leaf_block_processor import FencedLeafBlockProcessor
 from pymarkdown.leaf_blocks.leaf_block_processor import LeafBlockProcessor

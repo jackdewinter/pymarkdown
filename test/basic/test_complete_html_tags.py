@@ -1,7 +1,7 @@
 """
 Tests for the functions that deal with parsing of complete html tags.
 """
-from pymarkdown.html_helper import HtmlHelper
+from pymarkdown.html.html_helper import HtmlHelper
 
 
 def test_simple_complete_html_end_tag():

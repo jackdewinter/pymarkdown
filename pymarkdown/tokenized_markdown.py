@@ -17,7 +17,7 @@ from pymarkdown.container_markdown_token import (
 from pymarkdown.extension_manager.extension_manager import ExtensionManager
 from pymarkdown.extensions.front_matter_extension import FrontMatterExtension
 from pymarkdown.extensions.pragma_token import PragmaToken
-from pymarkdown.html_helper import HtmlHelper
+from pymarkdown.html.html_helper import HtmlHelper
 from pymarkdown.inline.inline_character_reference_helper import (
     InlineCharacterReferenceHelper,
 )
