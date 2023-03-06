@@ -25,7 +25,9 @@ from pymarkdown.leaf_blocks.setext_leaf_block_processor import SetextLeafBlockPr
 from pymarkdown.leaf_blocks.thematic_leaf_block_processor import (
     ThematicLeafBlockProcessor,
 )
-from pymarkdown.link_reference_definition_helper import LinkReferenceDefinitionHelper
+from pymarkdown.links.link_reference_definition_helper import (
+    LinkReferenceDefinitionHelper,
+)
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger

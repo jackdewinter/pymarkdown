@@ -10,8 +10,8 @@ from pymarkdown.constants import Constants
 from pymarkdown.inline.inline_backslash_helper import InlineBackslashHelper
 from pymarkdown.inline.inline_helper import InlineHelper
 from pymarkdown.inline.inline_request import InlineRequest
-from pymarkdown.link_reference_titles import LinkReferenceTitles
 from pymarkdown.links.link_helper_properties import LinkHelperProperties
+from pymarkdown.links.link_reference_titles import LinkReferenceTitles
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 

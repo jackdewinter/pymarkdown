@@ -3,8 +3,8 @@ Module to provide for a leaf element that can be added to markdown parsing strea
 """
 from typing import Optional
 
-from pymarkdown.link_reference_info import LinkReferenceInfo
-from pymarkdown.link_reference_titles import LinkReferenceTitles
+from pymarkdown.links.link_reference_info import LinkReferenceInfo
+from pymarkdown.links.link_reference_titles import LinkReferenceTitles
 from pymarkdown.markdown_token import MarkdownToken, MarkdownTokenClass
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.position_marker import PositionMarker
