@@ -7,7 +7,7 @@ from typing import List, Optional, Tuple, cast
 from pymarkdown.block_quote_data import BlockQuoteData
 from pymarkdown.constants import Constants
 from pymarkdown.container_helper import ContainerHelper
-from pymarkdown.inline_helper import InlineHelper
+from pymarkdown.inline.inline_backslash_helper import InlineBackslashHelper
 from pymarkdown.inline_markdown_token import TextMarkdownToken
 from pymarkdown.leaf_blocks.leaf_block_helper import LeafBlockHelper
 from pymarkdown.leaf_markdown_token import FencedCodeBlockMarkdownToken
@@ -613,8 +613,8 @@ class FencedLeafBlockProcessor:
         )
 
         assert extracted_text is not None
-        extracted_text = InlineHelper.handle_backslashes(extracted_text)
-        text_after_extracted_text = InlineHelper.handle_backslashes(
+        extracted_text = InlineBackslashHelper.handle_backslashes(extracted_text)
+        text_after_extracted_text = InlineBackslashHelper.handle_backslashes(
             text_after_extracted_text
         )
 

@@ -7,10 +7,11 @@ import urllib.parse
 from typing import Dict, List, Optional, Tuple
 
 from pymarkdown.constants import Constants
-from pymarkdown.inline_helper import InlineHelper
-from pymarkdown.inline_request import InlineRequest
-from pymarkdown.link_helper_properties import LinkHelperProperties
+from pymarkdown.inline.inline_backslash_helper import InlineBackslashHelper
+from pymarkdown.inline.inline_helper import InlineHelper
+from pymarkdown.inline.inline_request import InlineRequest
 from pymarkdown.link_reference_titles import LinkReferenceTitles
+from pymarkdown.links.link_helper_properties import LinkHelperProperties
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 
@@ -43,13 +44,13 @@ class LinkParseHelper:
     link_label_end = "]"
     __link_label_is_definition_character = ":"
     __link_label_breaks = (
-        f"{link_label_start}{link_label_end}{InlineHelper.backslash_character}"
+        f"{link_label_start}{link_label_end}{InlineBackslashHelper.backslash_character}"
     )
 
     __angle_link_start = "<"
     __angle_link_end = ">"
     __angle_link_destination_breaks = (
-        f"{__angle_link_end}{InlineHelper.backslash_character}"
+        f"{__angle_link_end}{InlineBackslashHelper.backslash_character}"
     )
 
     __non_angle_link_nest = "("
@@ -356,7 +357,7 @@ class LinkParseHelper:
         if ex_title is not None:
             ex_title = InlineHelper.append_text(
                 "",
-                InlineHelper.handle_backslashes(ex_title),
+                InlineBackslashHelper.handle_backslashes(ex_title),
                 add_text_signature=False,
             )
         POGGER.debug("parse_link_title>>pre>>$>>", pre_ex_title)
@@ -508,7 +509,7 @@ class LinkParseHelper:
 
         pre_handle_link = ex_link
         if new_index != -1 and ex_link:
-            ex_link = InlineHelper.handle_backslashes(ex_link)
+            ex_link = InlineBackslashHelper.handle_backslashes(ex_link)
         POGGER.debug(
             "urllib.parse.quote>>ex_link>>$>>",
             ex_link,
@@ -555,12 +556,14 @@ class LinkParseHelper:
             destination_parts.append(before_part)
             POGGER.debug(">>>>>>$<<<<<", source_text[newer_index:])
             if ParserHelper.is_character_at_index(
-                source_text, newer_index, InlineHelper.backslash_character
+                source_text, newer_index, InlineBackslashHelper.backslash_character
             ):
                 POGGER.debug("backslash")
                 old_new_index = newer_index
                 inline_request = InlineRequest(source_text, newer_index)
-                inline_response = InlineHelper.handle_inline_backslash(inline_request)
+                inline_response = InlineBackslashHelper.handle_inline_backslash(
+                    inline_request
+                )
                 newer_index = inline_response.new_index
                 destination_parts.append(source_text[old_new_index:newer_index])
             elif ParserHelper.is_character_at_index(
@@ -608,13 +611,15 @@ class LinkParseHelper:
             destination_parts.append(ert_new)
 
             if not ParserHelper.is_character_at_index(
-                source_text, newer_index, InlineHelper.backslash_character
+                source_text, newer_index, InlineBackslashHelper.backslash_character
             ):
                 break
 
             old_new_index = newer_index
             inline_request = InlineRequest(source_text, newer_index)
-            inline_response = InlineHelper.handle_inline_backslash(inline_request)
+            inline_response = InlineBackslashHelper.handle_inline_backslash(
+                inline_request
+            )
             newer_index = inline_response.new_index
             destination_parts.append(source_text[old_new_index:newer_index])
         if ParserHelper.is_character_at_index(
@@ -700,10 +705,10 @@ class LinkParseHelper:
             new_index = newer_index
             label_parts.append(ert_new)
             if ParserHelper.is_character_at_index(
-                line_to_parse, new_index, InlineHelper.backslash_character
+                line_to_parse, new_index, InlineBackslashHelper.backslash_character
             ):
                 old_new_index = new_index
-                inline_response = InlineHelper.handle_inline_backslash(
+                inline_response = InlineBackslashHelper.handle_inline_backslash(
                     InlineRequest(line_to_parse, new_index)
                 )
                 assert inline_response.new_index is not None

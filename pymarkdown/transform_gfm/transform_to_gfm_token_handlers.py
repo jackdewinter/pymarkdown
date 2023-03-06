@@ -8,7 +8,7 @@ from typing import Callable, Dict, List, Optional, cast
 from pymarkdown.extensions.front_matter_extension import FrontMatterExtension
 from pymarkdown.extensions.front_matter_markdown_token import FrontMatterMarkdownToken
 from pymarkdown.extensions.pragma_token import PragmaToken
-from pymarkdown.inline_helper import InlineHelper
+from pymarkdown.inline.inline_helper import InlineHelper
 from pymarkdown.inline_markdown_token import (
     EmailAutolinkMarkdownToken,
     EmphasisMarkdownToken,

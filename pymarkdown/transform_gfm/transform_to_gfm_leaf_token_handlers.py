@@ -48,7 +48,7 @@ class TransformToGfmLeafTokenHandlers:
         register_fn(
             ThematicBreakMarkdownToken,
             TransformToGfmLeafTokenHandlers.__handle_thematic_break_token,
-            TransformToGfmLeafTokenHandlers.__null,
+            TransformToGfmLeafTokenHandlers.null,
         )
         register_fn(
             AtxHeadingMarkdownToken,
@@ -78,7 +78,7 @@ class TransformToGfmLeafTokenHandlers:
         register_fn(
             LinkReferenceDefinitionMarkdownToken,
             TransformToGfmLeafTokenHandlers.__handle_link_reference_definition_token,
-            TransformToGfmLeafTokenHandlers.__null,
+            TransformToGfmLeafTokenHandlers.null,
         )
         register_fn(
             ParagraphMarkdownToken,
@@ -88,11 +88,11 @@ class TransformToGfmLeafTokenHandlers:
         register_fn(
             BlankLineMarkdownToken,
             TransformToGfmLeafTokenHandlers.__handle_blank_line_token,
-            TransformToGfmLeafTokenHandlers.__null,
+            TransformToGfmLeafTokenHandlers.null,
         )
 
     @staticmethod
-    def __null(
+    def null(
         output_html: str,
         next_token: MarkdownToken,
         transform_state: TransformState,

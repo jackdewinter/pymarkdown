@@ -4,7 +4,7 @@ Module to provide for the creation of a new link.
 import logging
 from typing import Callable, List, Optional, Tuple, cast
 
-from pymarkdown.inline_helper import InlineHelper
+from pymarkdown.inline.inline_helper import InlineHelper
 from pymarkdown.inline_markdown_token import (
     EmailAutolinkMarkdownToken,
     ImageStartMarkdownToken,
@@ -13,7 +13,7 @@ from pymarkdown.inline_markdown_token import (
     RawHtmlMarkdownToken,
     TextMarkdownToken,
 )
-from pymarkdown.link_helper_properties import LinkHelperProperties
+from pymarkdown.links.link_helper_properties import LinkHelperProperties
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger

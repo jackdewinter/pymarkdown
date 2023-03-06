@@ -1468,7 +1468,7 @@
         },
         {
             "name": "test.test_markdown_transform_to_gfm",
-            "totalTests": 2,
+            "totalTests": 3,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,

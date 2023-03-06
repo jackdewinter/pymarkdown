@@ -5,7 +5,7 @@ import logging
 from typing import Optional, Tuple, cast
 
 from pymarkdown.constants import Constants
-from pymarkdown.link_helper_properties import LinkHelperProperties
+from pymarkdown.links.link_helper_properties import LinkHelperProperties
 from pymarkdown.markdown_token import MarkdownToken, MarkdownTokenClass
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
