@@ -4,7 +4,7 @@ Module to provide processing for the leaf blocks.
 import logging
 from typing import List, Optional
 
-from pymarkdown.container_grab_bag import ContainerGrabBag
+from pymarkdown.container_blocks.container_grab_bag import ContainerGrabBag
 from pymarkdown.html.html_helper import HtmlHelper
 from pymarkdown.leaf_blocks.atx_leaf_block_processor import AtxLeafBlockProcessor
 from pymarkdown.leaf_blocks.fenced_leaf_block_processor import FencedLeafBlockProcessor

@@ -7,7 +7,7 @@ import runpy
 import tempfile
 from test.markdown_scanner import MarkdownScanner
 
-from pymarkdown.container_block_processor import ContainerIndices
+from pymarkdown.container_blocks.container_indices import ContainerIndices
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.stack_token import StackToken
 
@@ -1505,7 +1505,7 @@ def test_markdown_logger_arg_list_not_out_of_sync_with_debug():
     new_logger.debug_with_visible_whitespace("one sub $ and one in list", " 1 ")
 
 
-# pylint: disable=broad-except
+# pylint: disable=broad-exception-caught
 def test_markdown_logger_arg_list_out_of_sync():
     """
     Test to verify that if we don't have the same number of
@@ -1528,7 +1528,7 @@ def test_markdown_logger_arg_list_out_of_sync():
         )
 
 
-# pylint: enable=broad-except
+# pylint: enable=broad-exception-caught
 
 
 def test_markdown_with_bad_strict_config_type():
