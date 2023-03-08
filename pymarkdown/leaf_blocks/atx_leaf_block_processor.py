@@ -5,7 +5,7 @@ import logging
 from typing import List, Optional, Tuple, cast
 
 from pymarkdown.block_quote_data import BlockQuoteData
-from pymarkdown.container_helper import ContainerHelper
+from pymarkdown.container_blocks.container_helper import ContainerHelper
 from pymarkdown.container_markdown_token import ListStartMarkdownToken
 from pymarkdown.inline_markdown_token import TextMarkdownToken
 from pymarkdown.leaf_blocks.leaf_block_helper import LeafBlockHelper

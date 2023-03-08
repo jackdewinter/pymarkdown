@@ -9,7 +9,9 @@ from application_properties import ApplicationProperties
 
 from pymarkdown.bad_tokenization_error import BadTokenizationError
 from pymarkdown.coalesce_processor import CoalesceProcessor
-from pymarkdown.container_block_processor import ContainerBlockProcessor
+from pymarkdown.container_blocks.container_block_processor import (
+    ContainerBlockProcessor,
+)
 from pymarkdown.container_markdown_token import (
     BlockQuoteMarkdownToken,
     ListStartMarkdownToken,

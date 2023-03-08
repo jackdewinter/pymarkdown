@@ -7,7 +7,7 @@ import string
 from typing import Callable, List, Optional, Tuple, cast
 
 from pymarkdown.block_quote_data import BlockQuoteData
-from pymarkdown.container_grab_bag import ContainerGrabBag
+from pymarkdown.container_blocks.container_grab_bag import ContainerGrabBag
 from pymarkdown.container_markdown_token import (
     BlockQuoteMarkdownToken,
     ListStartMarkdownToken,

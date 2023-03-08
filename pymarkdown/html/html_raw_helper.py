@@ -13,8 +13,6 @@ from pymarkdown.parser_logger import ParserLogger
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
-# pylint: disable=too-many-lines
-
 
 class HtmlRawHelper:
     """

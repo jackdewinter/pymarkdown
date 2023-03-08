@@ -16,25 +16,30 @@
             "too-few-public-methods": 1
         },
         "pymarkdown/constants.py": {},
-        "pymarkdown/container_block_leaf_processor.py": {
+        "pymarkdown/container_blocks/container_block_leaf_processor.py": {
             "too-few-public-methods": 1,
             "too-many-arguments": 5,
             "chained-comparison": 1,
             "too-many-boolean-expressions": 1
         },
-        "pymarkdown/container_block_processor.py": {
+        "pymarkdown/container_blocks/container_block_nested_processor.py": {
             "too-few-public-methods": 1,
-            "too-many-arguments": 2
+            "too-many-arguments": 1
         },
-        "pymarkdown/container_grab_bag.py": {
+        "pymarkdown/container_blocks/container_block_non_leaf_processor.py": {},
+        "pymarkdown/container_blocks/container_block_processor.py": {
+            "too-few-public-methods": 1,
+            "too-many-arguments": 1
+        },
+        "pymarkdown/container_blocks/container_grab_bag.py": {
             "too-many-instance-attributes": 1,
             "too-many-public-methods": 1,
             "too-many-arguments": 1
         },
-        "pymarkdown/container_helper.py": {
+        "pymarkdown/container_blocks/container_helper.py": {
             "too-few-public-methods": 1
         },
-        "pymarkdown/container_indices.py": {},
+        "pymarkdown/container_blocks/container_indices.py": {},
         "pymarkdown/container_markdown_token.py": {
             "too-many-arguments": 4,
             "too-many-instance-attributes": 1
@@ -310,7 +315,7 @@
     "disables-by-name": {
         "too-many-arguments": 172,
         "too-many-locals": 16,
-        "too-few-public-methods": 20,
+        "too-few-public-methods": 21,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 1,
         "too-many-instance-attributes": 19,
