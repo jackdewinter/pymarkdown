@@ -5,7 +5,7 @@ Class to provide a "grab bag" for commonly used properties for the Container Blo
 import logging
 from typing import Any, Callable, List, Optional, Tuple
 
-from pymarkdown.block_quote_data import BlockQuoteData
+from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
 from pymarkdown.container_blocks.container_indices import ContainerIndices
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parse_block_pass_properties import ParseBlockPassProperties

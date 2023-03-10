@@ -12,6 +12,18 @@
   - broke up leaf block processor into more distinct pieces
 - [Issue 589](https://github.com/jackdewinter/pymarkdown/issues/589)
   - broke up token to GFM module into more distinct pieces
+- [Issue 594](https://github.com/jackdewinter/pymarkdown/issues/594)
+  - broke up token to link helper into more distinct pieces
+- [Issue 596](https://github.com/jackdewinter/pymarkdown/issues/596)
+  - broke up token to inline processor into more distinct pieces
+- [Issue 598](https://github.com/jackdewinter/pymarkdown/issues/598)
+  - broke up token to link reference definition helper into more distinct pieces
+- [Issue 600](https://github.com/jackdewinter/pymarkdown/issues/600)
+  - broke up html helper into more distinct pieces
+- [Issue 603](https://github.com/jackdewinter/pymarkdown/issues/603)
+  - broke up container block processor into more distinct pieces
+- [Issue 605](https://github.com/jackdewinter/pymarkdown/issues/605)
+  - broke up block quote processor
 
 ### Fixed
 

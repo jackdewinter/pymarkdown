@@ -4,7 +4,7 @@ Module to provide processing for the atx heading leaf blocks.
 import logging
 from typing import List, Optional, Tuple, cast
 
-from pymarkdown.block_quote_data import BlockQuoteData
+from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
 from pymarkdown.container_blocks.container_helper import ContainerHelper
 from pymarkdown.container_markdown_token import ListStartMarkdownToken
 from pymarkdown.inline_markdown_token import TextMarkdownToken

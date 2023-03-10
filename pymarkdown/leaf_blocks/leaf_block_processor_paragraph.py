@@ -4,7 +4,7 @@ Module to provide processing for the leaf blocks.
 import logging
 from typing import List, Optional, Tuple, cast
 
-from pymarkdown.block_quote_data import BlockQuoteData
+from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
 from pymarkdown.constants import Constants
 from pymarkdown.inline_markdown_token import TextMarkdownToken
 from pymarkdown.leaf_markdown_token import (

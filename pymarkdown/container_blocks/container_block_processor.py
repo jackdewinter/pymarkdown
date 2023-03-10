@@ -7,7 +7,7 @@ import copy
 import logging
 from typing import TYPE_CHECKING, List, Optional, Tuple, cast
 
-from pymarkdown.block_quote_data import BlockQuoteData
+from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
 from pymarkdown.container_blocks.container_block_leaf_processor import (
     ContainerBlockLeafProcessor,
 )

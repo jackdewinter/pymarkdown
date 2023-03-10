@@ -6,8 +6,8 @@ from __future__ import annotations
 import logging
 from typing import Optional, Tuple, cast
 
-from pymarkdown.block_quote_data import BlockQuoteData
-from pymarkdown.block_quote_processor import BlockQuoteProcessor
+from pymarkdown.block_quotes.block_quote_count_helper import BlockQuoteCountHelper
+from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
 from pymarkdown.container_blocks.container_grab_bag import ContainerGrabBag
 from pymarkdown.container_blocks.container_indices import ContainerIndices
 from pymarkdown.container_markdown_token import BlockQuoteMarkdownToken
@@ -204,7 +204,7 @@ class ContainerBlockNestedProcessor:
         nested_block_start = (
             False
             if avoid_block_starts
-            else BlockQuoteProcessor.is_block_quote_start(
+            else BlockQuoteCountHelper.is_block_quote_start(
                 line_to_parse, after_ws_index, ex_whitespace
             )
         )
