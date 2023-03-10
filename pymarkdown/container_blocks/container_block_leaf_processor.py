@@ -6,7 +6,7 @@ from __future__ import annotations
 import logging
 from typing import List, Optional, Tuple, cast
 
-from pymarkdown.block_quote_data import BlockQuoteData
+from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
 from pymarkdown.container_blocks.container_grab_bag import ContainerGrabBag
 from pymarkdown.container_markdown_token import (
     BlockQuoteMarkdownToken,

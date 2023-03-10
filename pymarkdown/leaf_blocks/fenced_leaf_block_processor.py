@@ -4,7 +4,7 @@ Module to provide processing for the fenced leaf blocks.
 import logging
 from typing import List, Optional, Tuple, cast
 
-from pymarkdown.block_quote_data import BlockQuoteData
+from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
 from pymarkdown.constants import Constants
 from pymarkdown.container_blocks.container_helper import ContainerHelper
 from pymarkdown.inline.inline_backslash_helper import InlineBackslashHelper

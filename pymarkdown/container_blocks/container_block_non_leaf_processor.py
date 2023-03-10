@@ -6,7 +6,7 @@ from __future__ import annotations
 import logging
 from typing import Optional, Tuple, cast
 
-from pymarkdown.block_quote_processor import BlockQuoteProcessor
+from pymarkdown.block_quotes.block_quote_processor import BlockQuoteProcessor
 from pymarkdown.container_blocks.container_block_nested_processor import (
     ContainerBlockNestedProcessor,
 )

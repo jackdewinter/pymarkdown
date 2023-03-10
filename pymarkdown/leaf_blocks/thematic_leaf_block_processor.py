@@ -5,7 +5,7 @@ Module to provide processing for thematic break leaf blocks.
 import logging
 from typing import List, Optional, Tuple
 
-from pymarkdown.block_quote_data import BlockQuoteData
+from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
 from pymarkdown.container_blocks.container_helper import ContainerHelper
 from pymarkdown.leaf_markdown_token import ThematicBreakMarkdownToken
 from pymarkdown.markdown_token import MarkdownToken
