@@ -61,7 +61,6 @@
   easlier i.e. if x: d_a_d = False else: d_a_d = True
 
 - (maintenance) clean up pylint warning suppressions where possible
-  - too-many-lines
   - too-many-instance?
 
 - more tests that include tab characters

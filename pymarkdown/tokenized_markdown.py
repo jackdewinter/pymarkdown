@@ -12,6 +12,9 @@ from pymarkdown.coalesce_processor import CoalesceProcessor
 from pymarkdown.container_blocks.container_block_processor import (
     ContainerBlockProcessor,
 )
+from pymarkdown.container_blocks.parse_block_pass_properties import (
+    ParseBlockPassProperties,
+)
 from pymarkdown.container_markdown_token import (
     BlockQuoteMarkdownToken,
     ListStartMarkdownToken,
@@ -34,7 +37,6 @@ from pymarkdown.links.link_reference_definition_helper import (
     LinkReferenceDefinitionHelper,
 )
 from pymarkdown.markdown_token import MarkdownToken
-from pymarkdown.parse_block_pass_properties import ParseBlockPassProperties
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.parser_state import ParserState

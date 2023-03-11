@@ -6,13 +6,15 @@ from typing import Callable, Dict, Optional, Set
 
 from application_properties import ApplicationPropertiesFacade
 
+from pymarkdown.container_blocks.parse_block_pass_properties import (
+    ParseBlockPassProperties,
+)
 from pymarkdown.extension_manager.extension_impl import ExtensionDetails
 from pymarkdown.extension_manager.extension_manager_constants import (
     ExtensionManagerConstants,
 )
 from pymarkdown.extension_manager.parser_extension import ParserExtension
 from pymarkdown.markdown_token import MarkdownToken, MarkdownTokenClass
-from pymarkdown.parse_block_pass_properties import ParseBlockPassProperties
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.plugin_manager.found_plugin import FoundPlugin

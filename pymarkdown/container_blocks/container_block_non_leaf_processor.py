@@ -19,7 +19,7 @@ from pymarkdown.container_markdown_token import (
 from pymarkdown.leaf_blocks.leaf_block_processor_paragraph import (
     LeafBlockProcessorParagraph,
 )
-from pymarkdown.list_block_processor import ListBlockProcessor
+from pymarkdown.list_blocks.list_block_processor import ListBlockProcessor
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.parser_state import ParserState

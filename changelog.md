@@ -24,6 +24,8 @@
   - broke up container block processor into more distinct pieces
 - [Issue 605](https://github.com/jackdewinter/pymarkdown/issues/605)
   - broke up block quote processor
+- [Issue 607](https://github.com/jackdewinter/pymarkdown/issues/607)
+  - broke up list block processor
 
 ### Fixed
 
