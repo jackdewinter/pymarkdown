@@ -29,7 +29,9 @@ from pymarkdown.requeue_line_info import RequeueLineInfo
 from pymarkdown.tab_helper import TabHelper
 
 if TYPE_CHECKING:  # pragma: no cover
-    from pymarkdown.parse_block_pass_properties import ParseBlockPassProperties
+    from pymarkdown.container_blocks.parse_block_pass_properties import (
+        ParseBlockPassProperties,
+    )
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

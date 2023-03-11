@@ -11,7 +11,7 @@ from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
 from pymarkdown.container_blocks.container_grab_bag import ContainerGrabBag
 from pymarkdown.container_blocks.container_indices import ContainerIndices
 from pymarkdown.container_markdown_token import BlockQuoteMarkdownToken
-from pymarkdown.list_block_processor import ListBlockProcessor
+from pymarkdown.list_blocks.list_block_starts_helper import ListBlockStartsHelper
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.parser_state import ParserState
@@ -195,10 +195,10 @@ class ContainerBlockNestedProcessor:
 
         assert after_ws_index is not None
 
-        nested_ulist_start, _, _, _ = ListBlockProcessor.is_ulist_start(
+        nested_ulist_start, _, _, _ = ListBlockStartsHelper.is_ulist_start(
             parser_state, line_to_parse, after_ws_index, ex_whitespace, False
         )
-        nested_olist_start, _, _, _ = ListBlockProcessor.is_olist_start(
+        nested_olist_start, _, _, _ = ListBlockStartsHelper.is_olist_start(
             parser_state, line_to_parse, after_ws_index, ex_whitespace, False
         )
         nested_block_start = (

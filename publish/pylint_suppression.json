@@ -14,6 +14,13 @@
         "pymarkdown/block_quotes/block_quote_non_fenced_helper.py": {
             "too-few-public-methods": 1,
             "too-many-arguments": 6,
+        "pymarkdown/block_quotes/block_quote_count_helper.py": {
+            "too-many-arguments": 7
+        },
+        "pymarkdown/block_quotes/block_quote_data.py": {},
+        "pymarkdown/block_quotes/block_quote_non_fenced_helper.py": {
+            "too-few-public-methods": 1,
+            "too-many-arguments": 6,
             "too-many-locals": 1
         },
         "pymarkdown/block_quotes/block_quote_processor.py": {
@@ -47,6 +54,7 @@
             "too-few-public-methods": 1
         },
         "pymarkdown/container_blocks/container_indices.py": {},
+        "pymarkdown/container_blocks/parse_block_pass_properties.py": {},
         "pymarkdown/container_markdown_token.py": {
             "too-many-arguments": 4,
             "too-many-instance-attributes": 1
@@ -176,9 +184,22 @@
             "too-many-arguments": 5,
             "too-many-locals": 1
         },
-        "pymarkdown/list_block_processor.py": {
-            "too-many-arguments": 26,
-            "too-many-locals": 4
+        "pymarkdown/list_blocks/list_block_can_close_helper.py": {},
+        "pymarkdown/list_blocks/list_block_create_new_handler.py": {
+            "too-few-public-methods": 1,
+            "too-many-arguments": 12,
+            "too-many-locals": 2
+        },
+        "pymarkdown/list_blocks/list_block_pre_list_helper.py": {
+            "too-few-public-methods": 1,
+            "too-many-arguments": 3
+        },
+        "pymarkdown/list_blocks/list_block_processor.py": {
+            "too-many-arguments": 8,
+            "too-many-locals": 2
+        },
+        "pymarkdown/list_blocks/list_block_starts_helper.py": {
+            "too-many-arguments": 3
         },
         "pymarkdown/main.py": {
             "too-few-public-methods": 1,
@@ -190,7 +211,6 @@
             "too-many-instance-attributes": 1,
             "too-many-arguments": 2
         },
-        "pymarkdown/parse_block_pass_properties.py": {},
         "pymarkdown/parser_helper.py": {
             "too-many-public-methods": 1,
             "too-many-arguments": 1
@@ -321,7 +341,7 @@
     },
     "disables-by-name": {
         "too-many-arguments": 172,
-        "too-few-public-methods": 22,
+        "too-few-public-methods": 24,
         "too-many-locals": 16,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 1,
