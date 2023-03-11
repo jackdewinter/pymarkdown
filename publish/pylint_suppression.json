@@ -14,6 +14,13 @@
         "pymarkdown/block_quotes/block_quote_non_fenced_helper.py": {
             "too-few-public-methods": 1,
             "too-many-arguments": 6,
+        "pymarkdown/block_quotes/block_quote_count_helper.py": {
+            "too-many-arguments": 7
+        },
+        "pymarkdown/block_quotes/block_quote_data.py": {},
+        "pymarkdown/block_quotes/block_quote_non_fenced_helper.py": {
+            "too-few-public-methods": 1,
+            "too-many-arguments": 6,
             "too-many-locals": 1
         },
         "pymarkdown/block_quotes/block_quote_processor.py": {
