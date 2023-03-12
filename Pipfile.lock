@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "a428d3a5ea200928228992ddba816f018d3407690c5f021c9dd34e5fc9f10807"
+            "sha256": "f2d8fd45f4230e7d13d98a40f2e91fcb1ac927ed65a3dd5d85e13945c7eeb985"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -349,11 +349,11 @@
         },
         "flake8-bugbear": {
             "hashes": [
-                "sha256:6ad0ab754507319060695e2f2be80e6d8977cfcea082293089a9226276bd825d",
-                "sha256:a6708608965c9e0de5fff13904fed82e0ba21ac929fe4896459226a797e11cd5"
+                "sha256:39259814a83f33c8409417ee12dd4050c9c0bb4c8707c12fc18ae62b2f3ddee1",
+                "sha256:f136bd0ca2684f101168bba2310dec541e11aa6b252260c17dcf58d18069a740"
             ],
             "index": "pypi",
-            "version": "==22.10.27"
+            "version": "==23.2.13"
         },
         "gitdb": {
             "hashes": [
@@ -714,7 +714,7 @@
                 "sha256:acb739f89fabb3d798c099e9e0c035003062367a441910aaaf2281bc1972ee14",
                 "sha256:fcc653f65fe3035b478820b5284fbf0f52803622ee3f60a2faed7a7d3ba1f41e"
             ],
-            "markers": "python_version >= '3.7' and python_version < '4.0'",
+            "markers": "python_version >= '3.7' and python_version < '4'",
             "version": "==2.0.4"
         },
         "pytest-timeout": {
@@ -800,7 +800,7 @@
                 "sha256:64299f4909223da747622c030b781c0d7811e359c37124b4bd368fb8c6518baa",
                 "sha256:98b1b2782e3c6c4904938b84c0eb932721069dfdb9134313beff7c83c2df24bf"
             ],
-            "markers": "python_version >= '3.7' and python_version < '4.0'",
+            "markers": "python_version >= '3.7' and python_version < '4'",
             "version": "==2.28.2"
         },
         "requests-toolbelt": {
@@ -865,7 +865,7 @@
                 "sha256:2c428d2338976279e8eb2196f7a94910960d9f7ba2f41f3988511e95ca447021",
                 "sha256:bd5a71ff5e5e5f5ea983880e4a1dd1bb47f8feebbb3d95b592398e2f02194771"
             ],
-            "markers": "python_version >= '3.8'",
+            "markers": "python_full_version >= '3.8.0'",
             "version": "==5.0.0"
         },
         "tomli": {
