@@ -555,16 +555,24 @@ class HtmlHelper:
                 token_text = position_marker.text_to_parse[
                     position_marker.index_number :
                 ]
-                POGGER.debug("original_line=:$:", original_line)
-                POGGER.debug("token_text=:$:", token_text)
-                POGGER.debug("extracted_whitespace=:$:", extracted_whitespace)
-                _, split_tab, _ = TabHelper.parse_thematic_break_with_tab(
+                # POGGER.debug("original_line=:$:", original_line)
+                # POGGER.debug("token_text=:$:", token_text)
+                # POGGER.debug("extracted_whitespace=:$:", extracted_whitespace)
+                (
+                    _,
+                    split_tab,
+                    split_tab_with_block_quote_suffix,
+                    _,
+                    _,
+                ) = TabHelper.parse_thematic_break_with_tab(
                     original_line, token_text, extracted_whitespace
                 )
-                POGGER.debug("split_tab=:$:", split_tab)
+                # POGGER.debug("split_tab=:$:", split_tab)
+                if split_tab:
+                    assert split_tab_with_block_quote_suffix
 
-            POGGER.debug("did_adjust_block_quote=$", did_adjust_block_quote)
-            POGGER.debug("split_tab=$", split_tab)
+            # POGGER.debug("did_adjust_block_quote=$", did_adjust_block_quote)
+            # POGGER.debug("split_tab=$", split_tab)
             old_split_tab = split_tab
             did_adjust_block_quote = False
             if split_tab := ContainerHelper.reduce_containers_if_required(
@@ -624,6 +632,8 @@ class HtmlHelper:
         (
             tabified_text,
             split_tab,
+            split_tab_with_block_quote_suffix,
+            _,
             tabified_whitespace,
         ) = TabHelper.parse_thematic_break_with_tab(
             original_line, token_text, extracted_whitespace
@@ -634,6 +644,7 @@ class HtmlHelper:
         POGGER.debug("split_tab>:$:<", split_tab)
 
         if split_tab:
+            assert split_tab_with_block_quote_suffix
             POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
             assert tabified_whitespace is not None
             tabified_whitespace = ParserHelper.create_replacement_markers(
