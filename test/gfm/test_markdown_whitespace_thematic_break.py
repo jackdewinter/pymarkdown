@@ -110,8 +110,7 @@ def test_whitespaces_thematic_breaks_with_spaces_before_within_list():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
-    # assert False
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -244,8 +243,7 @@ def test_whitespaces_thematic_breaks_with_tabs_before_within_unordered_list_x():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
-    # assert False
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -272,7 +270,7 @@ def test_whitespaces_thematic_breaks_with_tabs_before_within_unordered_list_and_
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -339,7 +337,6 @@ def test_whitespaces_thematic_breaks_with_tabs_before_within_unordered_double_li
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_thematic_breaks_with_tabs_before_within_ordered_list_x():
     """
@@ -354,9 +351,7 @@ def test_whitespaces_thematic_breaks_with_tabs_before_within_ordered_list_x():
         "[para(1,4):]",
         "[text(1,4):abc:]",
         "[end-para:::False]",
-        "[atx(2,5):1:0:\t]",
-        "[text(2,7):abc: ]",
-        "[end-atx::]",
+        "[tbreak(2,5):*:\t:* * *]",
         "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
@@ -369,7 +364,6 @@ def test_whitespaces_thematic_breaks_with_tabs_before_within_ordered_list_x():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_thematic_breaks_with_tabs_before_within_ordered_list_and_single_space():
     """
@@ -384,9 +378,7 @@ def test_whitespaces_thematic_breaks_with_tabs_before_within_ordered_list_and_si
         "[para(1,4):]",
         "[text(1,4):abc:]",
         "[end-para:::False]",
-        "[atx(2,5):1:0:\t]",
-        "[text(2,7):abc: ]",
-        "[end-atx::]",
+        "[tbreak(2,5):*:\t:* * *]",
         "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
@@ -399,7 +391,6 @@ def test_whitespaces_thematic_breaks_with_tabs_before_within_ordered_list_and_si
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_thematic_breaks_with_tabs_before_within_ordered_list_and_spaces():
     """
@@ -414,9 +405,7 @@ def test_whitespaces_thematic_breaks_with_tabs_before_within_ordered_list_and_sp
         "[para(1,4):]",
         "[text(1,4):abc:]",
         "[end-para:::False]",
-        "[atx(2,5):1:0:\t]",
-        "[text(2,7):abc: ]",
-        "[end-atx::]",
+        "[tbreak(2,5):*:\t:* * *]",
         "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
@@ -466,7 +455,6 @@ def test_whitespaces_thematic_breaks_with_tabs_before_within_ordered_double_list
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_thematic_breaks_with_tabs_before_within_ordered_double_list_no_spaces():
     """
@@ -482,14 +470,12 @@ def test_whitespaces_thematic_breaks_with_tabs_before_within_ordered_double_list
         "[para(1,4):]",
         "[text(1,4):abc:]",
         "[end-para:::True]",
-        "[olist(2,4):.:1:6:   :]",
+        "[olist(2,4):.:1:6:   ]",
         "[para(2,7):]",
         "[text(2,7):def:]",
-        "[end-para:::False]",
+        "[end-para:::True]",
         "[end-olist:::True]",
-        "[atx(3,5):1:0:\t]",
-        "[text(3,7):abc: ]",
-        "[end-atx::]",
+        "[tbreak(3,5):*:\t:* * *]",
         "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
@@ -541,7 +527,6 @@ def test_whitespaces_thematic_breaks_with_tabs_before_within_ordered_double_list
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_thematic_breaks_with_tabs_before_within_ordered_double_list_one_space():
     """
@@ -557,14 +542,12 @@ def test_whitespaces_thematic_breaks_with_tabs_before_within_ordered_double_list
         "[para(1,4):]",
         "[text(1,4):abc:]",
         "[end-para:::True]",
-        "[olist(2,4):.:1:6:   :]",
+        "[olist(2,4):.:1:6:   ]",
         "[para(2,7):]",
         "[text(2,7):def:]",
-        "[end-para:::False]",
+        "[end-para:::True]",
         "[end-olist:::True]",
-        "[atx(3,6):1:0:\t ]",
-        "[text(3,8):abc: ]",
-        "[end-atx::]",
+        "[tbreak(3,6):*:\t :* * *]",
         "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
@@ -773,7 +756,7 @@ def</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm

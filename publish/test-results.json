@@ -596,7 +596,7 @@
         },
         {
             "name": "test.gfm.test_markdown_whitespace_atx",
-            "totalTests": 40,
+            "totalTests": 47,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -692,10 +692,10 @@
         },
         {
             "name": "test.gfm.test_markdown_whitespace_thematic_break",
-            "totalTests": 25,
+            "totalTests": 39,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 1,
+            "skippedTests": 0,
             "elapsedTimeInMilliseconds": 0
         },
         {
