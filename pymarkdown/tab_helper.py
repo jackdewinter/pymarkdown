@@ -23,15 +23,21 @@ class TabHelper:
     @staticmethod
     def parse_thematic_break_with_tab(
         original_line: str, token_text: str, extracted_whitespace: Optional[str]
-    ) -> Tuple[str, bool, Optional[str]]:
+    ) -> Tuple[str, bool, bool, Optional[str], Optional[str]]:
         """
         Generic type of algorithm to deal with tabs, in this case, used by thematic breaks
         and HTML blocks.
         """
 
-        # LOGGER.debug("original_line>>:%s:<", ParserHelper.ParserHelper.make_whitespace_visible((original_line))
-        # LOGGER.debug("token_text>>:%s:<", ParserHelper.make_value_visible(token_text))
-        # LOGGER.debug("extracted_whitespace>>:%s:<", ParserHelper.make_value_visible(extracted_whitespace))
+        LOGGER.debug(
+            "original_line>>:%s:<",
+            ParserHelper.make_whitespace_visible((original_line)),
+        )
+        LOGGER.debug("token_text>>:%s:<", ParserHelper.make_value_visible(token_text))
+        LOGGER.debug(
+            "extracted_whitespace>>:%s:<",
+            ParserHelper.make_value_visible(extracted_whitespace),
+        )
         (
             tabified_token_text,
             _,
@@ -39,31 +45,61 @@ class TabHelper:
         ) = TabHelper.find_detabify_string(
             original_line, token_text, use_proper_traverse=True
         )
-        # LOGGER.debug("tabified_token_text>>:%s:<", ParserHelper.make_value_visible(tabified_token_text))
-        # LOGGER.debug("tabified_token_text_index>>:%d:<", tabified_token_text_index)
+        LOGGER.debug(
+            "tabified_token_text>>:%s:<",
+            ParserHelper.make_value_visible(tabified_token_text),
+        )
+        LOGGER.debug("tabified_token_text_index>>:%d:<", tabified_token_text_index)
         assert tabified_token_text_index != -1
         assert tabified_token_text is not None
 
         tabified_leading_spaces = original_line[:tabified_token_text_index]
-        # POGGER.debug("tabified_leading_spaces>>:$:<", tabified_leading_spaces)
+        LOGGER.debug(
+            "tabified_leading_spaces>>:%s:<",
+            ParserHelper.make_value_visible(tabified_leading_spaces),
+        )
         tabified_suffix = extracted_whitespace
+        tabified_prefix = None
 
         split_tab = False
+        split_tab_with_block_quote_suffix = False
         if len(tabified_leading_spaces) > 0:
             assert extracted_whitespace is not None
             (
-                _,
+                tabified_prefix,
                 tabified_suffix,
                 split_tab,
+                split_tab_with_block_quote_suffix,
             ) = TabHelper.match_tabbed_whitespace(
                 extracted_whitespace, tabified_leading_spaces
             )
-        return tabified_token_text, split_tab, tabified_suffix
+        LOGGER.debug(
+            "tabified_token_text>>:%s:<",
+            ParserHelper.make_value_visible(tabified_token_text),
+        )
+        LOGGER.debug(
+            "tabified_prefix>>:%s:<", ParserHelper.make_value_visible(tabified_prefix)
+        )
+        LOGGER.debug(
+            "tabified_suffix>>:%s:<", ParserHelper.make_value_visible(tabified_suffix)
+        )
+        LOGGER.debug("split_tab>>:%s:<", str(split_tab))
+        LOGGER.debug(
+            "split_tab_with_block_quote_suffix>>:%s:<",
+            str(split_tab_with_block_quote_suffix),
+        )
+        return (
+            tabified_token_text,
+            split_tab,
+            split_tab_with_block_quote_suffix,
+            tabified_prefix,
+            tabified_suffix,
+        )
 
     @staticmethod
     def match_tabbed_whitespace(
         extracted_whitespace: str, corrected_extracted_whitespace: str
-    ) -> Tuple[str, str, bool]:
+    ) -> Tuple[str, str, bool, bool]:
         """
         Match any tabbed whitespace with its non-tabbed counterpart.
         """
@@ -105,9 +141,23 @@ class TabHelper:
             corrected_prefix = corrected_extracted_whitespace
             corrected_suffix = ""
 
+        LOGGER.debug(
+            "corrected_prefix=:%s:", ParserHelper.make_value_visible(corrected_prefix)
+        )
+        LOGGER.debug(
+            "corrected_suffix=:%s:", ParserHelper.make_value_visible(corrected_suffix)
+        )
         split_tab = detabified_suffix != extracted_whitespace
+        LOGGER.debug(
+            "detabified_prefix=:%s:", ParserHelper.make_value_visible(detabified_prefix)
+        )
+        LOGGER.debug(
+            "detabified_suffix=:%s:", ParserHelper.make_value_visible(detabified_suffix)
+        )
+        LOGGER.debug("split_tab=:%s:", str(split_tab))
+        split_tab_with_block_quote_suffix = False
         if split_tab:
-            assert detabified_prefix.endswith(">")
+            split_tab_with_block_quote_suffix = detabified_prefix.endswith(">")
         elif detabified_prefix:
             assert detabified_prefix.endswith(" ")
         #     assert detabified_suffix[1:] == extracted_whitespace
@@ -116,6 +166,7 @@ class TabHelper:
             corrected_prefix,
             corrected_suffix,
             split_tab,
+            split_tab_with_block_quote_suffix,
         )
 
     @staticmethod
@@ -441,11 +492,14 @@ class TabHelper:
                 ParserHelper.make_value_visible(last_list_leading_space),
             )
             tab_index = extracted_whitespace.find("\t")
+            LOGGER.debug("extracted_whitespace=:%s:", extracted_whitespace)
+            LOGGER.debug("tab_index=:%d:", tab_index)
             assert tab_index < len(last_list_leading_space)
             last_list_leading_space = extracted_whitespace[:tab_index]
             extracted_whitespace = extracted_whitespace[tab_index:]
-
             LOGGER.debug("last_list_leading_space=:%s:", last_list_leading_space)
+            LOGGER.debug("extracted_whitespace=:%s:", extracted_whitespace)
+
             LOGGER.debug(
                 "list_start_token=:%s:",
                 ParserHelper.make_value_visible(list_start_token),

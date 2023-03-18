@@ -748,9 +748,12 @@ class FencedLeafBlockProcessor:
                 corrected_prefix,
                 corrected_suffix,
                 split_tab,
+                split_tab_with_block_quote_suffix,
             ) = TabHelper.match_tabbed_whitespace(extracted_whitespace, prefix)
             extracted_whitespace = corrected_suffix
             corrected_prefix_length = len(corrected_prefix)
+            if split_tab:
+                assert split_tab_with_block_quote_suffix
         return (
             fence_string,
             adj_original_line,

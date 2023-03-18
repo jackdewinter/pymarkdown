@@ -84,6 +84,7 @@ class LeafBlockHelper:
         POGGER.debug(
             ">>correct_for_leaf_block_start_in_list>>tokens_to_add>>$>>", html_tokens
         )
+        # assert False
 
     # pylint: enable=too-many-arguments
     @staticmethod

@@ -384,6 +384,7 @@ class AtxLeafBlockProcessor:
             and not eligble_for_tab_match_delay
         ):
             assert extracted_whitespace is not None
+            POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
             assert hash_count is not None
             (
                 remaining_line,
