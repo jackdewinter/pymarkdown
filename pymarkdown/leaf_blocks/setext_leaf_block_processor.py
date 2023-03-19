@@ -5,6 +5,7 @@ import logging
 from typing import List, Optional, Tuple, cast
 
 from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
+from pymarkdown.leaf_blocks.leaf_block_helper import LeafBlockHelper
 from pymarkdown.leaf_markdown_token import (
     ParagraphMarkdownToken,
     SetextHeadingMarkdownToken,
@@ -14,7 +15,7 @@ from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.parser_state import ParserState
 from pymarkdown.position_marker import PositionMarker
-from pymarkdown.stack_token import ListStackToken
+from pymarkdown.stack_token import ListStackToken, StackToken
 from pymarkdown.tab_helper import TabHelper
 
 POGGER = ParserLogger(logging.getLogger(__name__))
@@ -31,21 +32,37 @@ class SetextLeafBlockProcessor:
 
     @staticmethod
     def __parse_setext_headings_with_tab(
-        original_line: str, line_to_parse: str, extracted_whitespace: str
-    ) -> Tuple[str, str, bool]:
-        reconstructed_line = extracted_whitespace + line_to_parse
-        adj_original, _, split_tab = TabHelper.find_tabified_string(
-            original_line, reconstructed_line
-        )
+        original_line: str,
+        line_to_parse: str,
+        extracted_whitespace: str,
+    ) -> Tuple[str, Optional[str], bool, bool, Optional[str]]:
+        POGGER.debug("original_line>>:$:<", original_line)
+        POGGER.debug("line_to_parse>>:$:<", line_to_parse)
 
-        after_space_index, original_extracted_whitespace = ParserHelper.extract_spaces(
-            adj_original, 0
+        (
+            token_text,
+            split_tab,
+            split_tab_with_block_quote_suffix,
+            extra_whitespace_prefix,
+            new_extracted_whitespace,
+        ) = TabHelper.parse_thematic_break_with_tab(
+            original_line, line_to_parse, extracted_whitespace
         )
-        assert original_extracted_whitespace is not None
+        POGGER.debug("token_text>>:$:<", token_text)
+        POGGER.debug("split_tab>>:$:<", split_tab)
+        POGGER.debug(
+            "split_tab_with_block_quote_suffix>>:$:<", split_tab_with_block_quote_suffix
+        )
+        POGGER.debug("extra_whitespace_prefix>>:$:<", extra_whitespace_prefix)
+        POGGER.debug("new_extracted_whitespace>>:$:<", new_extracted_whitespace)
 
-        extracted_whitespace = original_extracted_whitespace
-        line_to_parse = adj_original[after_space_index:]
-        return line_to_parse, extracted_whitespace, split_tab
+        return (
+            token_text,
+            new_extracted_whitespace,
+            split_tab,
+            split_tab_with_block_quote_suffix,
+            extra_whitespace_prefix,
+        )
 
     @staticmethod
     def parse_setext_headings(
@@ -88,15 +105,22 @@ class SetextLeafBlockProcessor:
             POGGER.debug("line_to_parse=>:$:<", line_to_parse)
             POGGER.debug("original_line=>:$:<", original_line)
             split_tab = False
+            split_tab_with_block_quote_suffix = False
+            extra_whitespace_prefix = None
             if ParserHelper.tab_character in original_line:
                 (
                     line_to_parse,
                     extracted_whitespace,
                     split_tab,
+                    split_tab_with_block_quote_suffix,
+                    extra_whitespace_prefix,
                 ) = SetextLeafBlockProcessor.__parse_setext_headings_with_tab(
-                    original_line, line_to_parse, extracted_whitespace
+                    original_line,
+                    line_to_parse,
+                    extracted_whitespace,
                 )
 
+            assert extracted_whitespace is not None
             SetextLeafBlockProcessor.__prepare_and_create_setext_token(
                 parser_state,
                 position_marker,
@@ -106,6 +130,8 @@ class SetextLeafBlockProcessor:
                 new_tokens,
                 extracted_whitespace,
                 ex_ws_l,
+                split_tab_with_block_quote_suffix,
+                extra_whitespace_prefix,
             )
         else:
             POGGER.debug(
@@ -124,6 +150,8 @@ class SetextLeafBlockProcessor:
         new_tokens: List[MarkdownToken],
         extracted_whitespace: str,
         ex_ws_l: int,
+        split_tab_with_block_quote_suffix: bool,
+        extra_whitespace_prefix: Optional[str],
     ) -> Tuple[int, int, str]:
         _, collected_to_index = ParserHelper.collect_while_character(
             line_to_parse,
@@ -146,7 +174,9 @@ class SetextLeafBlockProcessor:
         if not is_paragraph_continuation and after_whitespace_index == len(
             line_to_parse
         ):
-            if split_tab:
+            old_top_of_stack = parser_state.token_stack[-1]
+
+            if split_tab and split_tab_with_block_quote_suffix:
                 TabHelper.adjust_block_quote_indent_for_tab(parser_state)
             SetextLeafBlockProcessor.__create_setext_token(
                 parser_state,
@@ -156,7 +186,52 @@ class SetextLeafBlockProcessor:
                 extracted_whitespace,
                 extra_whitespace_after_setext,
             )
+            if split_tab and not split_tab_with_block_quote_suffix:
+                SetextLeafBlockProcessor.__prepare_and_create_setext_token_list_adjust(
+                    parser_state,
+                    position_marker,
+                    extracted_whitespace,
+                    extra_whitespace_prefix,
+                    old_top_of_stack,
+                    new_tokens,
+                )
         return collected_to_index, after_whitespace_index, extra_whitespace_after_setext
+
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __prepare_and_create_setext_token_list_adjust(
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        extracted_whitespace: str,
+        extra_whitespace_prefix: Optional[str],
+        old_top_of_stack: StackToken,
+        new_tokens: List[MarkdownToken],
+    ) -> None:
+        POGGER.debug("parser_state.token_stack[-1]>>:$:<", parser_state.token_stack[-1])
+        POGGER.debug("parser_state.token_stack>>:$:<", parser_state.token_stack)
+        POGGER.debug("parser_state.token_document>>:$:<", parser_state.token_document)
+        assert parser_state.token_stack[-1].is_list
+        modified_whitespace = (
+            extra_whitespace_prefix + extracted_whitespace
+            if extra_whitespace_prefix is not None
+            else extracted_whitespace
+        )
+        TabHelper.adjust_block_quote_indent_for_tab(parser_state, modified_whitespace)
+        POGGER.debug("parser_state.token_stack>>:$:<", parser_state.token_stack)
+        POGGER.debug("parser_state.token_document>>:$:<", parser_state.token_document)
+        LeafBlockHelper.correct_for_leaf_block_start_in_list(
+            parser_state,
+            position_marker.index_indent,
+            old_top_of_stack,
+            new_tokens,
+            was_token_already_added_to_stack=False,
+            delay_tab_match=True,
+        )
+        POGGER.debug("parser_state.token_stack>>:$:<", parser_state.token_stack)
+        POGGER.debug("parser_state.token_document>>:$:<", parser_state.token_document)
+        POGGER.debug("new_tokens>>:$:<", new_tokens)
 
     # pylint: enable=too-many-arguments
     @staticmethod

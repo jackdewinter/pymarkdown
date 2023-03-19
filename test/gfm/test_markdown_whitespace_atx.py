@@ -20,6 +20,7 @@ def test_whitespaces_atx_headings_with_spaces_before():
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
 def test_whitespaces_atx_headings_with_too_many_spaces_before():
     """
@@ -29,12 +30,18 @@ def test_whitespaces_atx_headings_with_too_many_spaces_before():
     # Arrange
     source_markdown = """abc
     # abc"""
-    expected_tokens = ['[para(1,1):\n    ]', '[text(1,1):abc\n# abc::\n]', '[end-para:::True]']
+    expected_tokens = [
+        "[para(1,1):\n    ]",
+        "[text(1,1):abc\n# abc::\n]",
+        "[end-para:::True]",
+    ]
     expected_gfm = """<p>abc
 # abc</p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 def test_whitespaces_atx_headings_with_tabs_before():
     """
@@ -358,6 +365,7 @@ def test_whitespaces_atx_headings_with_tabs_before_within_ordered_list_x():
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
 def test_whitespaces_atx_headings_with_spaces_before_within_ordered_list():
     """
@@ -367,7 +375,16 @@ def test_whitespaces_atx_headings_with_spaces_before_within_ordered_list():
     # Arrange
     source_markdown = """1. abc
     # def"""
-    expected_tokens = ['[olist(1,1):.:1:3::   ]', '[para(1,4):]', '[text(1,4):abc:]', '[end-para:::False]', '[atx(2,5):1:0: ]', '[text(2,7):def: ]', '[end-atx::]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   ]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::False]",
+        "[atx(2,5):1:0: ]",
+        "[text(2,7):def: ]",
+        "[end-atx::]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>abc
 <h1>def</h1>
@@ -376,6 +393,7 @@ def test_whitespaces_atx_headings_with_spaces_before_within_ordered_list():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
 
 @pytest.mark.gfm
 def test_whitespaces_atx_headings_with_tabs_before_within_ordered_list_and_single_space():
@@ -650,6 +668,7 @@ def test_whitespaces_atx_headings_with_formfeeds_before_within_list():
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
 def test_whitespaces_atx_headings_with_spaces_before_within_double_block_quotes_with_zero_and_zero_spaces_at_start():
     """
@@ -660,7 +679,21 @@ def test_whitespaces_atx_headings_with_spaces_before_within_double_block_quotes_
     source_markdown = """> abc
 > > def
 # ghi"""
-    expected_tokens = ['[block-quote(1,1)::> ]', '[para(1,3):]', '[text(1,3):abc:]', '[end-para:::True]', '[block-quote(2,1)::> > ]', '[para(2,5):]', '[text(2,5):def:]', '[end-para:::True]', '[end-block-quote:::True]', '[end-block-quote:::True]', '[atx(3,1):1:0:]', '[text(3,3):ghi: ]', '[end-atx::]']
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > ]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[atx(3,1):1:0:]",
+        "[text(3,3):ghi: ]",
+        "[end-atx::]",
+    ]
     expected_gfm = """<blockquote>
 <p>abc</p>
 <blockquote>
@@ -671,6 +704,7 @@ def test_whitespaces_atx_headings_with_spaces_before_within_double_block_quotes_
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
 
 @pytest.mark.gfm
 def test_whitespaces_atx_headings_with_spaces_before_within_double_block_quotes_with_zero_and_one_space_at_start():
@@ -682,7 +716,21 @@ def test_whitespaces_atx_headings_with_spaces_before_within_double_block_quotes_
     source_markdown = """> abc
 > > def
  # ghi"""
-    expected_tokens = ['[block-quote(1,1)::> ]', '[para(1,3):]', '[text(1,3):abc:]', '[end-para:::True]', '[block-quote(2,1)::> > ]', '[para(2,5):]', '[text(2,5):def:]', '[end-para:::True]', '[end-block-quote:::True]', '[end-block-quote:::True]', '[atx(3,2):1:0: ]','[text(3,4):ghi: ]', '[end-atx::]']
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > ]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[atx(3,2):1:0: ]",
+        "[text(3,4):ghi: ]",
+        "[end-atx::]",
+    ]
     expected_gfm = """<blockquote>
 <p>abc</p>
 <blockquote>
@@ -693,6 +741,7 @@ def test_whitespaces_atx_headings_with_spaces_before_within_double_block_quotes_
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
 
 @pytest.mark.gfm
 def test_whitespaces_atx_headings_with_spaces_before_within_double_block_quotes_with_zero_and_two_spaces_at_start():
@@ -704,7 +753,21 @@ def test_whitespaces_atx_headings_with_spaces_before_within_double_block_quotes_
     source_markdown = """> abc
 > > def
   # ghi"""
-    expected_tokens = ['[block-quote(1,1)::> ]', '[para(1,3):]', '[text(1,3):abc:]', '[end-para:::True]', '[block-quote(2,1)::> > ]', '[para(2,5):]', '[text(2,5):def:]', '[end-para:::True]', '[end-block-quote:::True]', '[end-block-quote:::True]', '[atx(3,3):1:0:  ]', '[text(3,5):ghi: ]', '[end-atx::]']
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > ]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[atx(3,3):1:0:  ]",
+        "[text(3,5):ghi: ]",
+        "[end-atx::]",
+    ]
     expected_gfm = """<blockquote>
 <p>abc</p>
 <blockquote>
@@ -715,6 +778,7 @@ def test_whitespaces_atx_headings_with_spaces_before_within_double_block_quotes_
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
 
 @pytest.mark.gfm
 def test_whitespaces_atx_headings_with_spaces_before_within_double_block_quotes_with_zero_and_three_spaces_at_start():
@@ -752,6 +816,7 @@ def test_whitespaces_atx_headings_with_spaces_before_within_double_block_quotes_
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
 def test_whitespaces_atx_headings_with_spaces_before_within_double_block_quotes_with_zero_and_four_spaces_at_start():
     """
@@ -759,6 +824,7 @@ def test_whitespaces_atx_headings_with_spaces_before_within_double_block_quotes_
     """
 
     test_whitespaces_atx_headings_with_spaces_before_within_double_block_quotes()
+
 
 @pytest.mark.gfm
 def test_whitespaces_atx_headings_with_tabs_before_within_block_quotes_x1():
@@ -1108,7 +1174,9 @@ def test_whitespaces_atx_headings_with_tabs_before_within_double_block_quotes_wi
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 ###
+
 
 @pytest.mark.gfm
 def test_whitespaces_atx_headings_with_form_feeds_before():
