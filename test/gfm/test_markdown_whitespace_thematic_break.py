@@ -22,6 +22,27 @@ def test_whitespaces_thematic_breaks_with_spaces_before():
 
 
 @pytest.mark.gfm
+def test_whitespaces_thematic_breaks_with_too_many_spaces_before():
+    """
+    Test case:  Thematic breaks preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """abc
+    ---"""
+    expected_tokens = [
+        "[para(1,1):\n    ]",
+        "[text(1,1):abc\n---::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc
+---</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_whitespaces_thematic_breaks_with_tabs_before():
     """
     Test case:  Thematic breaks preceeded by spaces and tabs.
@@ -309,25 +330,24 @@ def test_whitespaces_thematic_breaks_with_tabs_before_within_unordered_double_li
     # Arrange
     source_markdown = """- abc
   - def
-\t* * *"""
+\t---"""
     expected_tokens = [
         "[ulist(1,1):-::2:]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
         "[ulist(2,3):-::4:  :\t]",
-        "[para(2,5):]",
+        "[setext(3,5):-:3::(2,5)]",
         "[text(2,5):def:]",
-        "[end-para:::False]",
-        "[tbreak(3,5):*::* * *]",
+        "[end-setext::]",
         "[end-ulist:::True]",
         "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>abc
 <ul>
-<li>def
-<hr />
+<li>
+<h2>def</h2>
 </li>
 </ul>
 </li>
@@ -352,6 +372,33 @@ def test_whitespaces_thematic_breaks_with_tabs_before_within_ordered_list_x():
         "[text(1,4):abc:]",
         "[end-para:::False]",
         "[tbreak(2,5):*:\t:* * *]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<hr />
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_thematic_breaks_with_spaces_before_within_ordered_list():
+    """
+    Test case:  Thematic breaks preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+    * * *"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   ]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::False]",
+        "[tbreak(2,5):*: :* * *]",
         "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
@@ -630,6 +677,111 @@ def test_whitespaces_thematic_breaks_with_formfeeds_before_within_list():
 
 
 @pytest.mark.gfm
+def test_whitespaces_thematic_breaks_with_spaces_before_within_double_block_quotes_with_zero_and_zero_spaces_at_start():
+    """
+    Test case:  Thematic breaks preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+* * *"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > ]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[tbreak(3,1):*::* * *]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def</p>
+</blockquote>
+</blockquote>
+<hr />"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_thematic_breaks_with_spaces_before_within_double_block_quotes_with_zero_and_one_space_at_start():
+    """
+    Test case:  Thematic breaks preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+ * * *"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > ]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[tbreak(3,2):*: :* * *]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def</p>
+</blockquote>
+</blockquote>
+<hr />"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_thematic_breaks_with_spaces_before_within_double_block_quotes_with_zero_and_two_spaces_at_start():
+    """
+    Test case:  Thematic breaks preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+  * * *"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > ]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[tbreak(3,3):*:  :* * *]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def</p>
+</blockquote>
+</blockquote>
+<hr />"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_whitespaces_thematic_breaks_with_spaces_before_within_double_block_quotes_with_zero_and_three_spaces_at_start():
     """
     Test case:  Thematic breaks preceeded by spaces and tabs.
@@ -662,6 +814,15 @@ def test_whitespaces_thematic_breaks_with_spaces_before_within_double_block_quot
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_thematic_breaks_with_spaces_before_within_double_block_quotes_with_zero_and_four_spaces_at_start():
+    """
+    Test case:  Thematic breaks preceeded by spaces and tabs.
+    """
+
+    test_whitespaces_thematic_breaks_with_spaces_before_within_double_block_quotes()
 
 
 @pytest.mark.gfm
@@ -1013,39 +1174,6 @@ def test_whitespaces_thematic_breaks_with_tabs_before_within_double_block_quotes
 </blockquote>
 <hr />
 </blockquote>"""
-
-    # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
-
-
-###
-
-
-@pytest.mark.gfm
-def test_whitespaces_thematic_breaks_with_formfeeds_before_within_block_quotes():
-    """
-    Test case:  Thematic breaks preceeded by spaces and tabs.
-    """
-
-    # Arrange
-    source_markdown = """- abc
- \u000C \u000C* * *"""
-    expected_tokens = [
-        "[ulist(1,1):-::2::]",
-        "[para(1,3):\n ]",
-        "[text(1,3):abc\n\u000C \u000C::\n]",
-        "[text(2,5):*:]",
-        "[text(2,6): :]",
-        "[text(2,7):*:]",
-        "[text(2,8): :]",
-        "[text(2,9):*:]",
-        "[end-para:::True]",
-        "[end-ulist:::True]",
-    ]
-    expected_gfm = """<ul>
-<li>abc
-\u000C \u000C* * *</li>
-</ul>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
