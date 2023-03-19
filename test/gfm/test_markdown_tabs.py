@@ -232,7 +232,6 @@ def test_tabs_003():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_tabs_004x():
     """
     Test case 004:  (part a) a continuation paragraph of a list item is indented
@@ -245,17 +244,7 @@ def test_tabs_004x():
 
 \tbar"""  # noqa: E101,W191
     # noqa: E101,W191
-    expected_tokens = [
-        "[ulist(1,3):-::4:  :\n    ]",
-        "[para(1,5):]",
-        "[text(1,5):foo:]",
-        "[end-para:::True]",
-        "[BLANK(2,1):]",
-        "[para(3,5):]",
-        "[text(3,5):bar:]",
-        "[end-para:::True]",
-        "[end-ulist:::True]",
-    ]
+    expected_tokens = ['[ulist(1,3):-::4:  :\n\t]', '[para(1,5):]', '[text(1,5):foo:]', '[end-para:::True]', '[BLANK(2,1):]', '[para(3,5):]', '[text(3,5):bar:]', '[end-para:::True]', '[end-ulist:::True]']
     expected_gfm = """<ul>
 <li>
 <p>foo</p>
@@ -314,17 +303,7 @@ def test_tabs_005x():
 
 \t\tbar"""  # noqa: E101,W191
     # noqa: E101,W191
-    expected_tokens = [
-        "[ulist(1,1):-::2::\n  ]",
-        "[para(1,3):]",
-        "[text(1,3):foo:]",
-        "[end-para:::True]",
-        "[BLANK(2,1):]",
-        "[icode-block(3,7):    :]",
-        "[text(3,7):bar:  ]",
-        "[end-icode-block:::True]",
-        "[end-ulist:::True]",
-    ]
+    expected_tokens = ['[ulist(1,1):-::2::\n  ]', '[para(1,3):]', '[text(1,3):foo:]', '[end-para:::True]', '[BLANK(2,1):]', '[icode-block(3,7):\t:]', '[text(3,7):\tbar:]', '[end-icode-block:::True]', '[end-ulist:::True]']
     expected_gfm = """<ul>
 <li>
 <p>foo</p>
@@ -352,22 +331,7 @@ def test_tabs_005a():
 
 \t\tbar"""  # noqa: E101,W191
     # noqa: E101,W191
-    expected_tokens = [
-        "[ulist(1,1):-::2:]",
-        "[para(1,3):]",
-        "[text(1,3):foo:]",
-        "[end-para:::True]",
-        "[ulist(2,3):-::4:  :\n    ]",
-        "[para(2,5):]",
-        "[text(2,5):bar:]",
-        "[end-para:::True]",
-        "[BLANK(3,1):]",
-        "[icode-block(4,9):    :]",
-        "[text(4,9):bar:]",
-        "[end-icode-block:::True]",
-        "[end-ulist:::True]",
-        "[end-ulist:::True]",
-    ]
+    expected_tokens = ['[ulist(1,1):-::2:]', '[para(1,3):]', '[text(1,3):foo:]', '[end-para:::True]', '[ulist(2,3):-::4:  :\n\t]', '[para(2,5):]', '[text(2,5):bar:]', '[end-para:::True]', '[BLANK(3,1):]', '[icode-block(4,9):\t:]', '[text(4,9):\tbar:]', '[end-icode-block:::True]', '[end-ulist:::True]', '[end-ulist:::True]']
     expected_gfm = """<ul>
 <li>foo
 <ul>
@@ -398,17 +362,7 @@ def test_tabs_005b():
 
 \t\tbar"""  # noqa: E101,W191
     # noqa: E101,W191
-    expected_tokens = [
-        "[olist(1,1):):1:3::\n   ]",
-        "[para(1,4):]",
-        "[text(1,4):foo:]",
-        "[end-para:::True]",
-        "[BLANK(2,1):]",
-        "[icode-block(3,8):    :]",
-        "[text(3,8):bar: ]",
-        "[end-icode-block:::True]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens = ['[olist(1,1):):1:3::\n   ]', '[para(1,4):]', '[text(1,4):foo:]', '[end-para:::True]', '[BLANK(2,1):]', '[icode-block(3,8):\t:]', '[text(3,8):\tbar:]', '[end-icode-block:::True]', '[end-olist:::True]']
     expected_gfm = """<ol>
 <li>
 <p>foo</p>
@@ -637,7 +591,7 @@ def test_tabs_007c():
         "[end-icode-block:::True]",
         "[end-olist:::True]",
     ]
-    expected_gfm = """<ol start="1">
+    expected_gfm = """<ol>
 <li>
 <pre><code>   foo
 </code></pre>
