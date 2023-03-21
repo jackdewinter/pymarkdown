@@ -56,10 +56,10 @@ def test_whitespaces_paragraph_with_tabs_before():
     source_markdown = """ \t abc"""
     expected_tokens = [
         "[icode-block(1,5): \t:]",
-        "[text(1,5): * * *:]",
+        "[text(1,5): abc:]",
         "[end-icode-block:::True]",
     ]
-    expected_gfm = """<pre><code> * * *
+    expected_gfm = """<pre><code> abc
 </code></pre>"""
 
     # Act & Assert
@@ -96,16 +96,8 @@ def test_whitespaces_paragraph_with_form_feeds_before():
 
     # Arrange
     source_markdown = """ \u000C abc"""
-    expected_tokens = [
-        "[para(1,2): \u000C ]",
-        "[text(1,2):*:]",
-        "[text(1,3): :]",
-        "[text(1,4):*:]",
-        "[text(1,5): :]",
-        "[text(1,6):*:]",
-        "[end-para:::True]",
-    ]
-    expected_gfm = """<p>* * *</p>"""
+    expected_tokens = ["[para(1,2): \u000C ]", "[text(1,2):abc:]", "[end-para:::True]"]
+    expected_gfm = """<p>abc</p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -232,7 +224,6 @@ a paragraph</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_paragraph_with_tabs_before_within_unordered_list_x():
     """
     Test case:  Paragraph preceeded by spaces and tabs.
@@ -243,24 +234,21 @@ def test_whitespaces_paragraph_with_tabs_before_within_unordered_list_x():
 \tdef"""
     expected_tokens = [
         "[ulist(1,1):-::2::]",
-        "[para(1,3):]",
-        "[text(1,3):abc:]",
-        "[end-para:::False]",
-        "[tbreak(2,5):*:\t:* * *]",
+        "[para(1,3):\n\t]",
+        "[text(1,3):abc\ndef::\n]",
+        "[end-para:::True]",
         "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>abc
-<hr />
-</li>
+def</li>
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_paragraph_with_tabs_before_within_unordered_list_and_single_space():
     """
     Test case:  Paragraph preceeded by spaces.
@@ -271,20 +259,18 @@ def test_whitespaces_paragraph_with_tabs_before_within_unordered_list_and_single
  \tdef"""
     expected_tokens = [
         "[ulist(1,1):-::2:: ]",
-        "[para(1,3):]",
-        "[text(1,3):abc:]",
-        "[end-para:::False]",
-        "[tbreak(2,5):*:\t:* * *]",
+        "[para(1,3):\n\t]",
+        "[text(1,3):abc\ndef::\n]",
+        "[end-para:::True]",
         "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>abc
-<hr />
-</li>
+def</li>
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
@@ -348,7 +334,6 @@ ghi</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_paragraph_with_tabs_before_within_ordered_list_x():
     """
     Test case:  Paragraph preceeded by spaces.
@@ -359,16 +344,14 @@ def test_whitespaces_paragraph_with_tabs_before_within_ordered_list_x():
 \tdef"""
     expected_tokens = [
         "[olist(1,1):.:1:3::]",
-        "[para(1,4):]",
-        "[text(1,4):abc:]",
-        "[end-para:::False]",
-        "[tbreak(2,5):*:\t:* * *]",
+        "[para(1,4):\n\t]",
+        "[text(1,4):abc\ndef::\n]",
+        "[end-para:::True]",
         "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
 <li>abc
-<hr />
-</li>
+def</li>
 </ol>"""
 
     # Act & Assert
@@ -400,7 +383,6 @@ def</li>
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_paragraph_with_tabs_before_within_ordered_list_and_single_space():
     """
@@ -412,23 +394,20 @@ def test_whitespaces_paragraph_with_tabs_before_within_ordered_list_and_single_s
  \tdef"""
     expected_tokens = [
         "[olist(1,1):.:1:3:: ]",
-        "[para(1,4):]",
-        "[text(1,4):abc:]",
-        "[end-para:::False]",
-        "[tbreak(2,5):*:\t:* * *]",
+        "[para(1,4):\n\t]",
+        "[text(1,4):abc\ndef::\n]",
+        "[end-para:::True]",
         "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
 <li>abc
-<hr />
-</li>
+def</li>
 </ol>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_paragraph_with_tabs_before_within_ordered_list_and_spaces():
     """
@@ -440,16 +419,14 @@ def test_whitespaces_paragraph_with_tabs_before_within_ordered_list_and_spaces()
   \tdef"""
     expected_tokens = [
         "[olist(1,1):.:1:3::  ]",
-        "[para(1,4):]",
-        "[text(1,4):abc:]",
-        "[end-para:::False]",
-        "[tbreak(2,5):*:\t:* * *]",
+        "[para(1,4):\n\t]",
+        "[text(1,4):abc\ndef::\n]",
+        "[end-para:::True]",
         "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
 <li>abc
-<hr />
-</li>
+def</li>
 </ol>"""
 
     # Act & Assert
@@ -526,7 +503,6 @@ ghi</li>
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_paragraph_with_tabs_before_within_ordered_double_list_tab_after_indent():
     """
@@ -538,29 +514,28 @@ def test_whitespaces_paragraph_with_tabs_before_within_ordered_double_list_tab_a
    1. def
    ghi\tjkl\tmno"""
     expected_tokens = [
-        "[olist(1,1):.:1:3::   ]",
+        "[olist(1,1):.:1:3:]",
         "[para(1,4):]",
         "[text(1,4):abc:]",
         "[end-para:::True]",
-        "[olist(2,4):.:1:6:   ]",
-        "[para(2,7):]",
-        "[text(2,7):def:]",
+        "[olist(2,4):.:1:6:   :]",
+        "[para(2,7):\n   ]",
+        "[text(2,7):def\nghi\tjkl\tmno::\n]",
         "[end-para:::True]",
         "[end-olist:::True]",
-        "[tbreak(3,4):*::*\t*\t*]",
         "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
 <li>abc
 <ol>
-<li>def</li>
+<li>def
+ghi\tjkl\tmno</li>
 </ol>
-<hr />
 </li>
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
@@ -1135,7 +1110,7 @@ ghi</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before():
+def test_whitespaces_paragraph_with_just_tabs_before():
     """
     Test case:  paragraph preceeded by tabs.
     """
@@ -1210,7 +1185,7 @@ a\tparagraph</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 ###
@@ -1259,7 +1234,7 @@ def test_whitespaces_paragraph_with_tabs_inside_and_emphasis():
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_form_feeds_before():
+def test_whitespaces_paragraph_with_just_form_feeds_before():
     """
     Test case:  paragraph preceeded by form feeds.
     """

@@ -152,7 +152,11 @@ class LeafBlockProcessorParagraph:
             corrected_tab_text,
             corrected_extracted_whitespace,
         ) = LeafBlockProcessorParagraph.__calculate_corrected_tab_text(
-            parser_state, original_line, text_to_parse, extracted_whitespace
+            parser_state,
+            original_line,
+            text_to_parse,
+            extracted_whitespace,
+            adjusted_index,
         )
         POGGER.debug("corrected_tab_text=:$:", corrected_tab_text)
         POGGER.debug(
@@ -172,15 +176,20 @@ class LeafBlockProcessorParagraph:
         original_line: str,
         text_to_parse: str,
         extracted_whitespace: str,
+        adjusted_index: int,
     ) -> Tuple[str, str]:
         corrected_tab_text = ""
         if ParserHelper.tab_character in original_line:
             (
                 corrected_extracted_whitespace,
                 original_line,
+                checked_whitespace_for_tab,
+                is_block_quote_container,
             ) = LeafBlockProcessorParagraph.__calculate_corrected_tab_text_prefix(
                 parser_state, extracted_whitespace, text_to_parse, original_line
             )
+            POGGER.debug("checked_whitespace_for_tab=:$:", checked_whitespace_for_tab)
+            POGGER.debug("is_block_quote_container=:$:", is_block_quote_container)
 
             corrected_index = -1
             ends_without_modification = original_line.endswith(text_to_parse)
@@ -192,8 +201,17 @@ class LeafBlockProcessorParagraph:
             else:
                 POGGER.debug("original_line=:$:", original_line)
                 POGGER.debug("text_to_parse=:$:", text_to_parse)
+                initial_offset = (
+                    adjusted_index
+                    if checked_whitespace_for_tab and not is_block_quote_container
+                    else 0
+                )
+                POGGER.debug("initial_offset=:$:", initial_offset)
                 adj_text_to_parse, _, _ = TabHelper.find_detabify_string(
-                    original_line, text_to_parse, use_proper_traverse=True
+                    original_line,
+                    text_to_parse,
+                    use_proper_traverse=True,
+                    initial_offset=initial_offset,
                 )
                 POGGER.debug("adj_text_to_parse=:$:", adj_text_to_parse)
                 assert adj_text_to_parse is not None
@@ -210,8 +228,11 @@ class LeafBlockProcessorParagraph:
         extracted_whitespace: str,
         text_to_parse: str,
         original_line: str,
-    ) -> Tuple[str, str]:
+    ) -> Tuple[str, str, bool, bool]:
         POGGER.debug("extracted_whitespace=:$:", extracted_whitespace)
+        split_tab_with_block_quote_suffix = True
+        checked_whitespace_for_tab = False
+        is_block_quote_container = False
         if extracted_whitespace:
             first_non_whitespace_character = text_to_parse[0]
             first_non_whitespace_character_index = original_line.find(
@@ -223,25 +244,43 @@ class LeafBlockProcessorParagraph:
             POGGER.debug(
                 "corrected_extracted_whitespace=:$:", corrected_extracted_whitespace
             )
+            last_container_index = parser_state.find_last_container_on_stack()
+            last_container_token = parser_state.token_stack[last_container_index]
+            is_block_quote_container = last_container_token.is_block_quote
             assert len(corrected_extracted_whitespace) > 0
             (
-                _,
+                corrected_prefix,
                 corrected_suffix,
                 split_tab,
                 split_tab_with_block_quote_suffix,
             ) = TabHelper.match_tabbed_whitespace(
                 extracted_whitespace, corrected_extracted_whitespace
             )
+            checked_whitespace_for_tab = True
+            POGGER.debug("split_tab=:$:", split_tab)
+            POGGER.debug(
+                "split_tab_with_block_quote_suffix=:$:",
+                split_tab_with_block_quote_suffix,
+            )
             POGGER.debug("extracted_whitespace=:$:", extracted_whitespace)
             if split_tab:
-                assert split_tab_with_block_quote_suffix
-                TabHelper.adjust_block_quote_indent_for_tab(parser_state)
+                if split_tab_with_block_quote_suffix:
+                    TabHelper.adjust_block_quote_indent_for_tab(parser_state)
+                else:
+                    TabHelper.adjust_block_quote_indent_for_tab(
+                        parser_state, corrected_prefix + corrected_suffix
+                    )
 
             corrected_extracted_whitespace = corrected_suffix
             original_line = original_line[first_non_whitespace_character_index:]
         else:
             corrected_extracted_whitespace = extracted_whitespace
-        return corrected_extracted_whitespace, original_line
+        return (
+            corrected_extracted_whitespace,
+            original_line,
+            checked_whitespace_for_tab,
+            is_block_quote_container,
+        )
 
     @staticmethod
     def __adjust_paragraph_for_containers(

@@ -417,7 +417,10 @@ class TabHelper:
             "extracted_whitespace=:%s:",
             ParserHelper.make_value_visible(extracted_whitespace),
         )
-        # POGGER.debug("parser_state=:$:", parser_state.token_stack)
+        LOGGER.debug(
+            "parser_state=:%s:",
+            ParserHelper.make_value_visible(parser_state.token_stack),
+        )
         stack_token_index = len(parser_state.token_stack) - 1
         while (
             stack_token_index > 0
@@ -427,7 +430,12 @@ class TabHelper:
             stack_token_index -= 1
         assert stack_token_index != 0
 
-        # POGGER.debug("parser_state=:$:", parser_state.token_stack[stack_token_index])
+        LOGGER.debug(
+            "parser_state=:%s:",
+            ParserHelper.make_value_visible(
+                parser_state.token_stack[stack_token_index]
+            ),
+        )
         if parser_state.token_stack[stack_token_index].is_block_quote:
             block_quote_token = cast(
                 BlockQuoteMarkdownToken,
