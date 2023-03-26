@@ -295,8 +295,8 @@ These affect the collection of rule plugins and whether they are called.
 
 | Key | Command Line | Type | Description |
 | -- | -- | -- |-- |
-| *special* | --enable-rules   | string    | Comma separated list of rules to enable. |
-| *special* | --disable-rules  | string    | Comma separated list of rules to disable. |
+| *special* | --enable-rules,-e   | string    | Comma separated list of rules to enable. |
+| *special* | --disable-rules,-d  | string    | Comma separated list of rules to disable. |
 | plugins.additional_paths | --add-plugin     | string    | Path to a plugin containing a new rule to apply. |
 
 Enabling and disabling of plugins can be accomplished in two ways.  From the

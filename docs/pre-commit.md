@@ -246,3 +246,39 @@ filtering on more than one file.  But because of the
 regular expression **start of string** anchor (`^`) and
 **end of string** anchor (`$`) and no wildcards between
 them, that regular expression can only have one match.
+
+#### An Alternative: Using the Command Line
+
+While not as flexible as Pre-Commit in specifying the files to scan, sometimes
+it is just easier to use the command line to specify what to scan.  A good example
+is the project's own [configuration](../.pre-commit-config.yaml) with the following
+configuration:
+
+```yaml
+repos:
+  - repo: https://github.com/jackdewinter/pymarkdown
+    rev: v0.9.9
+    hooks:
+      - id: pymarkdown
+        pass_filenames: false
+        args:
+          - --config
+          - clean.json
+          - scan
+          - .
+          - ./docs
+```
+
+In this case, there are two directories with Markdown to publish that need scanning
+and a whole lot of other directories that should not be scanned as they contain
+examples of bad Markdown.  Because of this, the configuration explicitly follows
+the `scan` argument with `.` for the base project directory and `./docs` for the
+documents directory.
+
+The effect of this configuration is that only the `.` and `./docs` directory are
+scanned.  However, Pre-Commit automatically appends any eligible file names to the
+end of the list of arguments.  As none of the methods from the previous sections
+are used to limit that list of files, they are all sent.  As that behavior is not
+desired, the `pass_filenames: false` specifier is used.  That specifier instructs
+Pre-Commit to not append any file names to the list of arguments. It essentially
+informs Pre-Commit: "It's okay, we can do it ourselves."
