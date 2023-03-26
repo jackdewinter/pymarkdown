@@ -194,6 +194,37 @@ will be taken from the supplied JSON file.  Unless there is a change
 to the files to be scanned, the PyMarkdown section of the
 `.pre-commit-config.yaml` file will never be changed again.
 
+### Enabling or Disabling Rules
+
+As rules can be enabled or disabled on the command line, rules can also be enabled
+or disabled in the `.pre-commit-config.yaml` file.
+
+```yaml
+repos:
+    - repo: https://github.com/jackdewinter/pymarkdown
+      rev: main
+      hooks:
+          - id: pymarkdown
+            args:
+                - -d
+                - MD041,md013
+                - scan
+```
+
+Note that if presenting the arguments on a single line and there are multiple rules
+that are being enabled or disabled, the commma separated list must be enclosed in
+quotes.  The quote characters allow Pre-Commit to understand that the comma inside
+of the quotes is part of the data, not a character separating the data.
+
+```yaml
+repos:
+    - repo: https://github.com/jackdewinter/pymarkdown
+      rev: main
+      hooks:
+          - id: pymarkdown
+            args: [-d, "MD041,MD013", scan ]
+```
+
 ### Files To Scan
 
 The pre-commit hooks pass in any files in the repository that match
