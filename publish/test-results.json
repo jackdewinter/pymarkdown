@@ -628,10 +628,10 @@
         },
         {
             "name": "test.gfm.test_markdown_whitespace_fenced",
-            "totalTests": 47,
+            "totalTests": 99,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 2,
+            "skippedTests": 25,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -644,23 +644,23 @@
         },
         {
             "name": "test.gfm.test_markdown_whitespace_html",
-            "totalTests": 22,
+            "totalTests": 46,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 8,
             "elapsedTimeInMilliseconds": 0
         },
         {
             "name": "test.gfm.test_markdown_whitespace_indented",
-            "totalTests": 19,
+            "totalTests": 63,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 10,
             "elapsedTimeInMilliseconds": 0
         },
         {
             "name": "test.gfm.test_markdown_whitespace_link_reference_definition",
-            "totalTests": 74,
+            "totalTests": 97,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
