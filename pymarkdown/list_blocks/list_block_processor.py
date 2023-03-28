@@ -527,14 +527,12 @@ class ListBlockProcessor:
             extracted_whitespace,
             leading_space_length,
         )
-
         POGGER.debug(
             "leading_space_length>>$>>requested_list_indent>>$>>is_in_paragraph>>$",
             leading_space_length,
             requested_list_indent,
             parser_state.token_stack[-1].is_paragraph,
         )
-
         used_indent = None
         was_paragraph_continuation = (
             leading_space_length >= requested_list_indent and allow_list_continue
@@ -766,6 +764,7 @@ class ListBlockProcessor:
                 original_line,
             )
 
+        # POGGER.debug(">>line_to_parse>>$>>",line_to_parse)
         return (
             container_level_tokens,
             line_to_parse,
@@ -927,6 +926,8 @@ class ListBlockProcessor:
                         original_line, remaining_indent, removed_whitespace
                     )
                 )
+        POGGER.debug("padded_spaces($)", padded_spaces)
+        POGGER.debug("line_to_parse[start_index:]($)", line_to_parse[start_index:])
         POGGER.debug("removed_whitespace($)", removed_whitespace)
         return (
             f"{padded_spaces}{line_to_parse[start_index:]}",

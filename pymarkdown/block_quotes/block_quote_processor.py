@@ -10,7 +10,10 @@ from pymarkdown.block_quotes.block_quote_non_fenced_helper import (
     BlockQuoteNonFencedHelper,
 )
 from pymarkdown.container_blocks.container_grab_bag import ContainerGrabBag
-from pymarkdown.container_markdown_token import BlockQuoteMarkdownToken
+from pymarkdown.container_markdown_token import (
+    BlockQuoteMarkdownToken,
+    ListStartMarkdownToken,
+)
 from pymarkdown.leaf_blocks.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_logger import ParserLogger
@@ -370,6 +373,22 @@ class BlockQuoteProcessor:
             extracted_whitespace,
             adj_ws=adj_ws,
         )
+        if (
+            really_start
+            and parser_state.token_stack[-1].is_fenced_code_block
+            and parser_state.token_stack[-2].is_list
+        ):
+            start_index = position_marker.index_number
+            POGGER.debug("start_index>>$", start_index)
+            list_token = cast(
+                ListStartMarkdownToken,
+                parser_state.token_stack[-2].matching_markdown_token,
+            )
+            POGGER.debug("list_token>>$", list_token)
+            POGGER.debug("list_token.indent_level>>$", list_token.indent_level)
+            really_start = start_index < list_token.indent_level
+            POGGER.debug("really_start>>$", really_start)
+
         if really_start:
             POGGER.debug(
                 "handle_block_quote_block>>token_stack[depth]>:$:<",

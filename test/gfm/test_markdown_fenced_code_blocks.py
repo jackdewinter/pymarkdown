@@ -1960,3 +1960,324 @@ def
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_extra_09x():
+    """
+    Test case extra 09
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+   ```yaml
+   def:
+      - ghi
+   ```"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   \n   \n   \n   ]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::False]",
+        "[fcode-block(2,4):`:3:yaml:::::]",
+        "[text(3,4):def:\n   - ghi:]",
+        "[end-fcode-block:::3:False]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<pre><code class="language-yaml">def:
+   - ghi
+</code></pre>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_extra_09a():
+    """
+    Test case extra 09
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  ```yaml
+  def:
+     - ghi
+  ```"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  \n  \n  ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::False]",
+        "[fcode-block(2,3):`:3:yaml:::::]",
+        "[text(3,3):def:\n   - ghi:]",
+        "[end-fcode-block:::3:False]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+<pre><code class="language-yaml">def:
+   - ghi
+</code></pre>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_extra_09b():
+    """
+    Test case extra 09
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> ```yaml
+> def:
+>    - ghi
+> ```"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::False]",
+        "[fcode-block(2,3):`:3:yaml:::::]",
+        "[text(3,3):def:\n   - ghi:]",
+        "[end-fcode-block:::3:False]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<pre><code class="language-yaml">def:
+   - ghi
+</code></pre>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_extra_09c():
+    """
+    Test case extra 09
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+   ```yaml
+   def:
+1. ghi
+   ```"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   \n   \n   ]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::False]",
+        "[fcode-block(2,4):`:3:yaml:::::]",
+        "[text(3,4):def::]",
+        "[end-fcode-block::::True]",
+        "[li(4,1):3::1]",
+        "[para(4,4):]",
+        "[text(4,4):ghi:]",
+        "[end-para:::False]",
+        "[fcode-block(5,4):`:3::::::]",
+        "[end-fcode-block::::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<pre><code class="language-yaml">def:
+</code></pre>
+</li>
+<li>ghi
+<pre><code></code></pre>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_extra_09d():
+    """
+    Test case extra 09
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  ```yaml
+  def:
+- ghi
+  ```"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  \n  ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::False]",
+        "[fcode-block(2,3):`:3:yaml:::::]",
+        "[text(3,3):def::]",
+        "[end-fcode-block::::True]",
+        "[li(4,1):2::]",
+        "[para(4,3):]",
+        "[text(4,3):ghi:]",
+        "[end-para:::False]",
+        "[fcode-block(5,3):`:3::::::]",
+        "[end-fcode-block::::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+<pre><code class="language-yaml">def:
+</code></pre>
+</li>
+<li>ghi
+<pre><code></code></pre>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_extra_09e():
+    """
+    Test case extra 09
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+   ```yaml
+   def:
+   1. ghi
+   ```"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   \n   \n   \n   ]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::False]",
+        "[fcode-block(2,4):`:3:yaml:::::]",
+        "[text(3,4):def:\n1. ghi:]",
+        "[end-fcode-block:::3:False]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<pre><code class="language-yaml">def:
+1. ghi
+</code></pre>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_extra_09f():
+    """
+    Test case extra 09
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  ```yaml
+  def:
+  - ghi
+  ```"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  \n  \n  ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::False]",
+        "[fcode-block(2,3):`:3:yaml:::::]",
+        "[text(3,3):def:\n- ghi:]",
+        "[end-fcode-block:::3:False]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+<pre><code class="language-yaml">def:
+- ghi
+</code></pre>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_extra_10x():
+    """
+    Test case extra 10
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+   ```yaml
+   def:
+   > ghi
+   ```"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   \n   \n   \n   ]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::False]",
+        "[fcode-block(2,4):`:3:yaml:::::]",
+        "[text(3,4):def:\n\a>\a&gt;\a ghi:]",
+        "[end-fcode-block:::3:False]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<pre><code class="language-yaml">def:
+&gt; ghi
+</code></pre>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_extra_10a():
+    """
+    Test case extra 10
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  ```yaml
+  def:
+  > ghi
+  ```"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  \n  \n  ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::False]",
+        "[fcode-block(2,3):`:3:yaml:::::]",
+        "[text(3,3):def:\n\a>\a&gt;\a ghi:]",
+        "[end-fcode-block:::3:False]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+<pre><code class="language-yaml">def:
+&gt; ghi
+</code></pre>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)

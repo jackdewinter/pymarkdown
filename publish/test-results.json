@@ -404,7 +404,7 @@
         },
         {
             "name": "test.gfm.test_markdown_fenced_code_blocks",
-            "totalTests": 68,
+            "totalTests": 77,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -420,7 +420,7 @@
         },
         {
             "name": "test.gfm.test_markdown_html_blocks",
-            "totalTests": 76,
+            "totalTests": 85,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1284,7 +1284,7 @@
         },
         {
             "name": "test.rules.test_md031",
-            "totalTests": 22,
+            "totalTests": 23,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,

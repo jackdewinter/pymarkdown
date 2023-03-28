@@ -68,18 +68,18 @@ class ContainerBlockLeafProcessor:
             and parser_state.token_stack[-2].is_block_quote
         )
 
-        # POGGER.debug("ttp>>:$:<", position_marker.text_to_parse)
-        # POGGER.debug("index_number>>:$:<", position_marker.index_number)
-        # POGGER.debug("index_indent>>:$:<", position_marker.index_indent)
+        POGGER.debug("ttp>>:$:<", position_marker.text_to_parse)
+        POGGER.debug("index_number>>:$:<", position_marker.index_number)
+        POGGER.debug("index_indent>>:$:<", position_marker.index_indent)
         newer_position_marker = PositionMarker(
             position_marker.line_number,
             grab_bag.start_index,
             grab_bag.line_to_parse,
             index_indent=calculated_indent,
         )
-        # POGGER.debug("ttp>>:$:<", newer_position_marker.text_to_parse)
-        # POGGER.debug("index_number>>:$:<", newer_position_marker.index_number)
-        # POGGER.debug("index_indent>>:$:<", newer_position_marker.index_indent)
+        POGGER.debug("ttp>>:$:<", newer_position_marker.text_to_parse)
+        POGGER.debug("index_number>>:$:<", newer_position_marker.index_number)
+        POGGER.debug("index_indent>>:$:<", newer_position_marker.index_indent)
         parser_state.mark_for_leaf_processing(grab_bag.container_tokens)
 
         ContainerBlockLeafProcessor.__process_leaf_tokens(
@@ -108,6 +108,8 @@ class ContainerBlockLeafProcessor:
             xposition_marker.text_to_parse,
             index_indent=xposition_marker.index_indent,
         )
+        # POGGER.debug("position_marker.text>>:$:<<", position_marker.text_to_parse)
+        # POGGER.debug("position_marker.index>>:$:<<", position_marker.index_number)
 
         (
             new_index_number,
@@ -140,6 +142,8 @@ class ContainerBlockLeafProcessor:
             position_marker.line_number,
         )
 
+        # POGGER.debug("position_marker.text>>:$:<<", position_marker.text_to_parse)
+        # POGGER.debug("position_marker.index>>:$:<<", position_marker.index_number)
         (
             removed_leading_space,
             actual_removed_leading_space,
@@ -153,6 +157,8 @@ class ContainerBlockLeafProcessor:
             grab_bag,
         )
 
+        # POGGER.debug("position_marker.text>>:$:<<", position_marker.text_to_parse)
+        # POGGER.debug("position_marker.index>>:$:<<", position_marker.index_number)
         if (
             grab_bag.is_leaf_tokens_empty()
             and not grab_bag.do_skip_containers_before_leaf_blocks
@@ -168,6 +174,8 @@ class ContainerBlockLeafProcessor:
                     grab_bag,
                 )
             )
+            # POGGER.debug("position_marker.text>>:$:<<", position_marker.text_to_parse)
+            # POGGER.debug("position_marker.index>>:$:<<", position_marker.index_number)
 
         ContainerBlockLeafProcessor.__parse_line_for_leaf_blocks(
             parser_state,

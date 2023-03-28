@@ -791,3 +791,36 @@ def test_md031_bad_fenced_block_in_list_in_block_quote():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md031_issue_626():
+    """
+    Addressing an issue reported in https://github.com/jackdewinter/pymarkdown/issues/626 .
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md031",
+        "bad_issue_626.md",
+    )
+    supplied_arguments = [
+        "scan",
+        source_path,
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
