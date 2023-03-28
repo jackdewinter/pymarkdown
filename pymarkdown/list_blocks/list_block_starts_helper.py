@@ -6,6 +6,7 @@ import logging
 import string
 from typing import Optional, Tuple, cast
 
+from pymarkdown.container_markdown_token import ListStartMarkdownToken
 from pymarkdown.leaf_blocks.thematic_leaf_block_processor import (
     ThematicLeafBlockProcessor,
 )
@@ -239,13 +240,37 @@ class ListBlockStartsHelper:
             parser_state.token_stack[-2].is_list if is_in_paragraph else False
         )
 
-        is_start = not (
+        is_block_within_list = False
+        if (
+            parser_state.token_stack[-1].is_fenced_code_block
+            or parser_state.token_stack[-1].is_html_block
+        ) and parser_state.token_stack[-2].is_list:
+            POGGER.debug("start_index>>$", start_index)
+            matching_list_token = cast(
+                ListStartMarkdownToken,
+                parser_state.token_stack[-2].matching_markdown_token,
+            )
+            POGGER.debug("matching_list_token>>$", matching_list_token)
+            POGGER.debug(
+                "matching_list_token.indent_level>>$", matching_list_token.indent_level
+            )
+            is_block_within_list = start_index > matching_list_token.indent_level
+            POGGER.debug("is_block_within_list>>$", is_block_within_list)
+
+        is_paragraph_continuation = (
             is_in_paragraph
             and not is_paragraph_in_list
             and (at_end_of_line or is_not_one)
-        ) and (
-            ParserHelper.is_character_at_index_whitespace(line_to_parse, start_index)
-            or ((start_index) == line_to_parse_size)
+        )
+        is_start = (
+            not is_paragraph_continuation
+            and not is_block_within_list
+            and (
+                ParserHelper.is_character_at_index_whitespace(
+                    line_to_parse, start_index
+                )
+                or ((start_index) == line_to_parse_size)
+            )
         )
         return is_start, after_all_whitespace_index
 

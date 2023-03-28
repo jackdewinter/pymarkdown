@@ -2335,3 +2335,325 @@ def test_html_blocks_extra_07():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_html_blocks_extra_08x():
+    """
+    Test case extra 08
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+   <!-- comment
+   def:
+      - ghi
+   -->"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   \n   \n   \n   ]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::False]",
+        "[html-block(2,4)]",
+        "[text(2,4):<!-- comment\ndef:\n   - ghi\n-->:]",
+        "[end-html-block:::False]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<!-- comment
+def:
+   - ghi
+-->
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_html_blocks_extra_08a():
+    """
+    Test case extra 08
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  <!-- comment
+  def:
+     - ghi
+  -->"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  \n  \n  ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::False]",
+        "[html-block(2,3)]",
+        "[text(2,3):<!-- comment\ndef:\n   - ghi\n-->:]",
+        "[end-html-block:::False]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+<!-- comment
+def:
+   - ghi
+-->
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_html_blocks_extra_08b():
+    """
+    Test case extra 08
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> <!-- comment
+> def:
+>    - ghi
+> -->"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::False]",
+        "[html-block(2,3)]",
+        "[text(2,3):<!-- comment\ndef:\n   - ghi\n-->:]",
+        "[end-html-block:::False]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<!-- comment
+def:
+   - ghi
+-->
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_html_blocks_extra_08c():
+    """
+    Test case extra 08
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+   <!-- comment
+   def:
+1. ghi
+   -->"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   \n   \n   ]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::False]",
+        "[html-block(2,4)]",
+        "[text(2,4):<!-- comment\ndef::]",
+        "[end-html-block:::True]",
+        "[li(4,1):3::1]",
+        "[para(4,4):\n]",
+        "[text(4,4):ghi\n--\a>\a&gt;\a::\n]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<!-- comment
+def:
+</li>
+<li>ghi
+--&gt;</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_html_blocks_extra_08d():
+    """
+    Test case extra 08
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  <!-- comment
+  def:
+- ghi
+  -->"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  \n  ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::False]",
+        "[html-block(2,3)]",
+        "[text(2,3):<!-- comment\ndef::]",
+        "[end-html-block:::True]",
+        "[li(4,1):2::]",
+        "[para(4,3):\n]",
+        "[text(4,3):ghi\n--\a>\a&gt;\a::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+<!-- comment
+def:
+</li>
+<li>ghi
+--&gt;</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_html_blocks_extra_08e():
+    """
+    Test case extra 09
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+   <!-- comment
+   def:
+   1. ghi
+   -->"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   \n   \n   \n   ]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::False]",
+        "[html-block(2,4)]",
+        "[text(2,4):<!-- comment\ndef:\n1. ghi\n-->:]",
+        "[end-html-block:::False]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<!-- comment
+def:
+1. ghi
+-->
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_html_blocks_extra_08f():
+    """
+    Test case extra 08
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  <!-- comment
+  def:
+  - ghi
+  -->"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  \n  \n  ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::False]",
+        "[html-block(2,3)]",
+        "[text(2,3):<!-- comment\ndef:\n- ghi\n-->:]",
+        "[end-html-block:::False]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+<!-- comment
+def:
+- ghi
+-->
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_html_blocks_extra_09x():
+    """
+    Test case extra 09
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+   <!-- comment
+   def:
+   > ghi
+   -->"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   \n   \n   \n   ]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::False]",
+        "[html-block(2,4)]",
+        "[text(2,4):<!-- comment\ndef:\n> ghi\n-->:]",
+        "[end-html-block:::False]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<!-- comment
+def:
+> ghi
+-->
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_html_blocks_extra_09a():
+    """
+    Test case extra 09
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  <!-- comment
+  def:
+  > ghi
+  -->"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  \n  \n  ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::False]",
+        "[html-block(2,3)]",
+        "[text(2,3):<!-- comment\ndef:\n> ghi\n-->:]",
+        "[end-html-block:::False]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+<!-- comment
+def:
+> ghi
+-->
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
