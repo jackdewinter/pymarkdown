@@ -559,7 +559,7 @@
             "totalTests": 30,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 8,
+            "skippedTests": 7,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -596,7 +596,7 @@
         },
         {
             "name": "test.gfm.test_markdown_whitespace_atx",
-            "totalTests": 47,
+            "totalTests": 52,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -628,10 +628,10 @@
         },
         {
             "name": "test.gfm.test_markdown_whitespace_fenced",
-            "totalTests": 47,
+            "totalTests": 99,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 2,
+            "skippedTests": 25,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -644,23 +644,23 @@
         },
         {
             "name": "test.gfm.test_markdown_whitespace_html",
-            "totalTests": 22,
+            "totalTests": 46,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 8,
             "elapsedTimeInMilliseconds": 0
         },
         {
             "name": "test.gfm.test_markdown_whitespace_indented",
-            "totalTests": 19,
+            "totalTests": 63,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 10,
             "elapsedTimeInMilliseconds": 0
         },
         {
             "name": "test.gfm.test_markdown_whitespace_link_reference_definition",
-            "totalTests": 74,
+            "totalTests": 97,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -676,7 +676,7 @@
         },
         {
             "name": "test.gfm.test_markdown_whitespace_paragraph",
-            "totalTests": 29,
+            "totalTests": 56,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -684,15 +684,15 @@
         },
         {
             "name": "test.gfm.test_markdown_whitespace_setext",
-            "totalTests": 24,
+            "totalTests": 51,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 1,
+            "skippedTests": 0,
             "elapsedTimeInMilliseconds": 0
         },
         {
             "name": "test.gfm.test_markdown_whitespace_thematic_break",
-            "totalTests": 39,
+            "totalTests": 44,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,

@@ -141,7 +141,7 @@
         },
         "pymarkdown/leaf_blocks/setext_leaf_block_processor.py": {
             "too-few-public-methods": 1,
-            "too-many-arguments": 2
+            "too-many-arguments": 3
         },
         "pymarkdown/leaf_blocks/thematic_leaf_block_processor.py": {},
         "pymarkdown/leaf_markdown_token.py": {
@@ -333,7 +333,7 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 172,
+        "too-many-arguments": 173,
         "too-few-public-methods": 24,
         "too-many-locals": 16,
         "chained-comparison": 1,
