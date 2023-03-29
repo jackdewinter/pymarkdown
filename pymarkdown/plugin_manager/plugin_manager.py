@@ -743,12 +743,12 @@ class PluginManager:
             for next_rule_identifier in enable_rules_from_command_line.lower().split(
                 ","
             ):
-                command_line_enabled_rules.add(next_rule_identifier)
+                command_line_enabled_rules.add(next_rule_identifier.strip())
         if disable_rules_from_command_line:
             for next_rule_identifier in disable_rules_from_command_line.lower().split(
                 ","
             ):
-                command_line_disabled_rules.add(next_rule_identifier)
+                command_line_disabled_rules.add(next_rule_identifier.strip())
 
         for plugin_instance, instance_file_name in self.__loaded_classes:
             self.__register_individual_plugin(

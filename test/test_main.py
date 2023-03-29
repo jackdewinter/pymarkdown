@@ -1964,6 +1964,35 @@ stdin:1:6: MD047: Each file should end with a single newline character. (single-
     )
 
 
+def test_markdown_with_scan_stdin_with_triggers_and_disabled_rules():
+    """
+    Test to make sure
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "-d",
+        "MD022, MD047",
+        "scan-stdin",
+    ]
+
+    supplied_standard_input = "# test"
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments, standard_input_to_use=supplied_standard_input
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
 def test_markdown_with_scan_stdin_with_bad_write():
     """
     Test to make sure
