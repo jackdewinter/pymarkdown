@@ -51,8 +51,15 @@ PROJECT_CLASSIFIERS = [
 
 PACKAGE_MODULES = [
     "pymarkdown",
+    "pymarkdown.block_quotes",
+    "pymarkdown.container_blocks",
     "pymarkdown.extension_manager",
     "pymarkdown.extensions",
+    "pymarkdown.html",
+    "pymarkdown.inline",
+    "pymarkdown.leaf_blocks",
+    "pymarkdown.links",
+    "pymarkdown.list_blocks",
     "pymarkdown.plugin_manager",
     "pymarkdown.plugins",
     "pymarkdown.resources",
