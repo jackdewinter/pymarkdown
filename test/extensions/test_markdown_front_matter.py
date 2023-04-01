@@ -1,6 +1,8 @@
 """
 Tests for the optional front-matter processing
 """
+import os
+from test.markdown_scanner import MarkdownScanner
 from test.utils import act_and_assert
 
 import pytest
@@ -535,9 +537,9 @@ Title: my document
 @pytest.mark.gfm
 def test_front_matter_20():
     """
-    This is an extension of test_front_matter_18. If a blank line is encountered
-    before the end marker, but before a field name and indented by at least 4 spaces,
-    the front matter is no longer valid.
+    This is a made up example for testing.  Due to code in the extension handler,
+    this will throw an exception when the a header `test` with value `assert` is
+    parsed.
     """
 
     # Arrange
@@ -558,3 +560,153 @@ test: assert
         assert (
             str(this_error) == "An unhandled error occurred processing the document."
         ), f"message={this_error}"
+
+
+def test_front_matter_21():
+    """
+    Test to make sure that a properly setup front matter section and enabled
+    extension works as intended.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "pragmas", "extensions_issue_637.md"
+    )
+    supplied_arguments = [
+        "-s",
+        "extensions.front-matter.enabled=$!True",
+        "scan",
+        source_path,
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments, suppress_first_line_heading_rule=False
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_front_matter_21a():
+    """
+    Variance on 21, but with an improperly activated front matter extension.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "pragmas", "extensions_issue_637.md"
+    )
+    supplied_arguments = [
+        "-s",
+        "extensions.front-matter.enabled=true",
+        "scan",
+        source_path,
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        f"{source_path}:1:1: MD041: First line in file should be a top level heading "
+        + "(first-line-heading,first-line-h1)\n"
+        + f"{source_path}:2:1: MD022: Headings should be surrounded by blank lines. "
+        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
+        + f"{source_path}:6:1: MD003: Heading style should be consistent throughout the document. "
+        + "[Expected: setext; Actual: atx] (heading-style,header-style)\n"
+        + f"{source_path}:8:1: MD003: Heading style should be consistent throughout the document. "
+        + "[Expected: setext; Actual: atx] (heading-style,header-style)"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments, suppress_first_line_heading_rule=False
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_front_matter_21b():
+    """
+    Variance on 21, but with an improperly activated front matter extension.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "pragmas", "extensions_issue_637.md"
+    )
+    supplied_arguments = [
+        "--strict-config",
+        "-s",
+        "extensions.front-matter.enabled=true",
+        "scan",
+        source_path,
+    ]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = """Configuration error ValueError encountered while initializing extensions:
+The value for property 'extensions.front-matter.enabled' must be of type 'bool'."""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments, suppress_first_line_heading_rule=False
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_front_matter_21c():
+    """
+    Variance on 21, but with an improperly activated front matter extension.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "pragmas", "extensions_issue_637.md"
+    )
+    supplied_arguments = [
+        "--strict-config",
+        "-s",
+        "extensions.front-matter.enabledd=true",
+        "scan",
+        source_path,
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        f"{source_path}:1:1: MD041: First line in file should be a top level heading "
+        + "(first-line-heading,first-line-h1)\n"
+        + f"{source_path}:2:1: MD022: Headings should be surrounded by blank lines. "
+        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
+        + f"{source_path}:6:1: MD003: Heading style should be consistent throughout the document. "
+        + "[Expected: setext; Actual: atx] (heading-style,header-style)\n"
+        + f"{source_path}:8:1: MD003: Heading style should be consistent throughout the document. "
+        + "[Expected: setext; Actual: atx] (heading-style,header-style)"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments, suppress_first_line_heading_rule=False
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
