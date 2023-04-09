@@ -190,6 +190,39 @@ part of a configuration format that does not provide typing, the
 `ValueError` will usually result in the default value being used for
 that configuration property.
 
+Some examples of this are:
+
+- specify that all ordered lists must begin with the string `0` instead of
+  the string `1`
+
+  ```text
+  pymarkdown --set plugins.md029.style=zero scan test.md
+  ```
+
+  OR
+
+  ```text
+  pymarkdown --set plugins.md029.style=$zero scan test.md
+  ```
+
+  OR
+
+  ```text
+  pymarkdown --set plugins.md029.style=$$zero scan test.md
+  ```
+
+- enabling the extension to interpret front matter (boolean value)
+
+  ```text
+  pymarkdown --set extensions.front-matter.enabled=$!True scan test.md
+  ```
+
+- setting the allowed line length to `10` (integer value)
+
+  ```text
+  pymarkdown -s plugins.md013.heading_line_length=$#10 scan test.md
+  ```
+
 #### Specifying Strict Configuration Mode
 
 During the development of the linter, there were specific times that
