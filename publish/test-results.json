@@ -172,7 +172,7 @@
         },
         {
             "name": "test.extensions.test_markdown_front_matter",
-            "totalTests": 20,
+            "totalTests": 24,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
