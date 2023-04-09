@@ -1411,3 +1411,197 @@ baz
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_inline_links_extra_03x():
+    """
+    Test case extra 03:  from https://github.com/jackdewinter/pymarkdown/issues/634
+    """
+
+    # Arrange
+    source_markdown = """1.  [Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture
+    models](https://scikit-learn.org/stable/modules/mixture.html)"""
+    expected_tokens = [
+        "[olist(1,1):.:1:4::    ]",
+        "[para(1,5):\n]",
+        "[link(1,5):inline:https://scikit-learn.org/stable/modules/mixture.html:::::Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture\nmodels:False::::]",
+        "[text(1,6):Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture\nmodels::\n]",
+        "[end-link::]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li><a href="https://scikit-learn.org/stable/modules/mixture.html">Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture
+models</a></li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_inline_links_extra_03a():
+    """
+    Test case extra 03:  from https://github.com/jackdewinter/pymarkdown/issues/634
+    """
+
+    # Arrange
+    source_markdown = """1.  Reference [Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture
+    models](https://scikit-learn.org/stable/modules/mixture.html)"""
+    expected_tokens = [
+        "[olist(1,1):.:1:4::    ]",
+        "[para(1,5):\n]",
+        "[text(1,5):Reference :]",
+        "[link(1,15):inline:https://scikit-learn.org/stable/modules/mixture.html:::::Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture\nmodels:False::::]",
+        "[text(1,16):Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture\nmodels::\n]",
+        "[end-link::]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>Reference <a href="https://scikit-learn.org/stable/modules/mixture.html">Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture
+models</a></li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_inline_links_extra_03b():
+    """
+    Test case extra 03:  from https://github.com/jackdewinter/pymarkdown/issues/634
+    """
+
+    # Arrange
+    source_markdown = """- [Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture
+    models](https://scikit-learn.org/stable/modules/mixture.html)"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[para(1,3):\n  ]",
+        "[link(1,3):inline:https://scikit-learn.org/stable/modules/mixture.html:::::Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture\nmodels:False::::]",
+        "[text(1,4):Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture\nmodels::\n]",
+        "[end-link::]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li><a href="https://scikit-learn.org/stable/modules/mixture.html">Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture
+models</a></li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_inline_links_extra_03c():
+    """
+    Test case extra 03:  from https://github.com/jackdewinter/pymarkdown/issues/634
+    """
+
+    # Arrange
+    source_markdown = """1.  [Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture
+    models](https://scikit-learn.org/stable/modules/mixture.html)
+2.  [Bishop - Pattern Recognition and Machine Learning,
+    p. 474ff.](http://users.isr.ist.utl.pt/~wurmd/Livros/school/Bishop%20-%20Pattern%20Recognition%20And%20Machine%20Learning%20-%20Springer%20%202006.pdf)"""
+    expected_tokens = [
+        "[olist(1,1):.:1:4::    \n    \n    ]",
+        "[para(1,5):\n]",
+        "[link(1,5):inline:https://scikit-learn.org/stable/modules/mixture.html:::::Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture\nmodels:False::::]",
+        "[text(1,6):Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture\nmodels::\n]",
+        "[end-link::]",
+        "[end-para:::True]",
+        "[li(3,1):4::2]",
+        "[para(3,5):\n]",
+        "[link(3,5):inline:http://users.isr.ist.utl.pt/~wurmd/Livros/school/Bishop%20-%20Pattern%20Recognition%20And%20Machine%20Learning%20-%20Springer%20%202006.pdf:::::Bishop - Pattern Recognition and Machine Learning,\np. 474ff.:False::::]",
+        "[text(3,6):Bishop - Pattern Recognition and Machine Learning,\np. 474ff.::\n]",
+        "[end-link::]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li><a href="https://scikit-learn.org/stable/modules/mixture.html">Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture
+models</a></li>
+<li><a href="http://users.isr.ist.utl.pt/~wurmd/Livros/school/Bishop%20-%20Pattern%20Recognition%20And%20Machine%20Learning%20-%20Springer%20%202006.pdf">Bishop - Pattern Recognition and Machine Learning,
+p. 474ff.</a></li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_inline_links_extra_03d():
+    """
+    Test case extra 03:  from https://github.com/jackdewinter/pymarkdown/issues/634
+    """
+
+    # Arrange
+    source_markdown = """- [Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture
+    models](https://scikit-learn.org/stable/modules/mixture.html)
+- [Bishop - Pattern Recognition and Machine Learning,
+  p. 474ff.](http://users.isr.ist.utl.pt/~wurmd/Livros/school/Bishop%20-%20Pattern%20Recognition%20And%20Machine%20Learning%20-%20Springer%20%202006.pdf)"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  \n  ]",
+        "[para(1,3):\n  ]",
+        "[link(1,3):inline:https://scikit-learn.org/stable/modules/mixture.html:::::Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture\nmodels:False::::]",
+        "[text(1,4):Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture\nmodels::\n]",
+        "[end-link::]",
+        "[end-para:::True]",
+        "[li(3,1):2::]",
+        "[para(3,3):\n]",
+        "[link(3,3):inline:http://users.isr.ist.utl.pt/~wurmd/Livros/school/Bishop%20-%20Pattern%20Recognition%20And%20Machine%20Learning%20-%20Springer%20%202006.pdf:::::Bishop - Pattern Recognition and Machine Learning,\np. 474ff.:False::::]",
+        "[text(3,4):Bishop - Pattern Recognition and Machine Learning,\np. 474ff.::\n]",
+        "[end-link::]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li><a href="https://scikit-learn.org/stable/modules/mixture.html">Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture
+models</a></li>
+<li><a href="http://users.isr.ist.utl.pt/~wurmd/Livros/school/Bishop%20-%20Pattern%20Recognition%20And%20Machine%20Learning%20-%20Springer%20%202006.pdf">Bishop - Pattern Recognition and Machine Learning,
+p. 474ff.</a></li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+
+
+@pytest.mark.gfm
+def test_inline_links_extra_03e():
+    """
+    Test case extra 03:  from https://github.com/jackdewinter/pymarkdown/issues/634
+    """
+
+    # Arrange
+    source_markdown = """- [Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture
+    models](https://scikit-learn.org/stable/modules/mixture.html) ref
+- [Bishop - Pattern Recognition and Machine Learning,
+  p. 474ff.](http://users.isr.ist.utl.pt/~wurmd/Livros/school/Bishop%20-%20Pattern%20Recognition%20And%20Machine%20Learning%20-%20Springer%20%202006.pdf)"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  \n  ]",
+        "[para(1,3):\n  ]",
+        "[link(1,3):inline:https://scikit-learn.org/stable/modules/mixture.html:::::Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture\nmodels:False::::]",
+        "[text(1,4):Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture\nmodels::\n]",
+        "[end-link::]",
+        "[text(2,64): ref:]",
+        "[end-para:::True]",
+        "[li(3,1):2::]",
+        "[para(3,3):\n]",
+        "[link(3,3):inline:http://users.isr.ist.utl.pt/~wurmd/Livros/school/Bishop%20-%20Pattern%20Recognition%20And%20Machine%20Learning%20-%20Springer%20%202006.pdf:::::Bishop - Pattern Recognition and Machine Learning,\np. 474ff.:False::::]",
+        "[text(3,4):Bishop - Pattern Recognition and Machine Learning,\np. 474ff.::\n]",
+        "[end-link::]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li><a href="https://scikit-learn.org/stable/modules/mixture.html">Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture
+models</a> ref</li>
+<li><a href="http://users.isr.ist.utl.pt/~wurmd/Livros/school/Bishop%20-%20Pattern%20Recognition%20And%20Machine%20Learning%20-%20Springer%20%202006.pdf">Bishop - Pattern Recognition and Machine Learning,
+p. 474ff.</a></li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)

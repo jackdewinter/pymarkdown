@@ -588,6 +588,9 @@ class ContainerBlockNonLeafProcessor:
         #     "$>token:$:", i, parser_state.token_stack[i].matching_markdown_token
         # )
         inner_token = parser_state.token_stack[i].matching_markdown_token
+        if inner_token is None:
+            assert parser_state.token_stack[i].was_link_definition_started
+            return True, 0, remaining_whitespace
         assert inner_token is not None
         if inner_token.is_block_quote_start:
             start_bq_index = remaining_whitespace.find(">")

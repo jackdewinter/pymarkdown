@@ -444,7 +444,7 @@
         },
         {
             "name": "test.gfm.test_markdown_inline_links",
-            "totalTests": 60,
+            "totalTests": 66,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,

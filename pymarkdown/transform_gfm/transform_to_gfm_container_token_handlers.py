@@ -107,13 +107,12 @@ class TransformToGfmContainerTokenHandlers:
         transform_state: TransformState,
     ) -> str:
         _ = next_token
-
         transform_state.add_trailing_text, transform_state.add_leading_text = (
             "</li>",
             "<li>",
         )
         token_parts = [output_html]
-        if output_html and output_html[-1] == ">":
+        if output_html and output_html[-1] == ">" and not output_html.endswith("</a>"):
             token_parts.append(ParserHelper.newline_character)
         return "".join(token_parts)
 
