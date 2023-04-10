@@ -30,7 +30,7 @@ mypy = "==1.1.1"
 columnar = "==1.4.1"
 application-properties = "==0.5.2"
 coverage = "==7.2.1"
-sourcery = "==1.0.4"
+sourcery = "==1.1.0"
 
 [requires]
 python_version = "3.8"
