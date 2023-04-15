@@ -1,105 +1,232 @@
 # Advanced Configuration
 
-The information contained in this document provides
-documentation on how to set configuration values for the
-PyMarkdown project as well as what the list of available
-configuration values are.
+The information contained in this document provides documentation on how to set
+configuration values for the PyMarkdown project.
 
 ## Setting Configuration Properties
 
-Outside of the Markdown files themselves, the next most
-important thing is the configuration properties.  These
-configuration properties alter how those Markdown files
-are parsed and how the PyMarkdown interprets the rules
-it applies to the Markdown files.
+Outside of the Markdown files themselves, the next most important concept when
+using this project are the configuration properties.  These configuration properties
+alter how those Markdown files are parsed and how PyMarkdown interprets the rules
+it applies to those Markdown files.
 
 ## Configuration Property Ordering
 
-The configuration for this project follows a consistent theme when
-deciding what configuration applies to a given item.  Specifically,
-the order of precedence for interpreting configuration properties is:
-command line setting, configuration value setting, and
-finally default setting.
+The configuration for this project follows a consistent theme when deciding what
+configuration applies to a given item.  This theme is that the order of precedence
+for interpreting configuration properties goes from the most specific provided configuration
+value to the least specific provided configuration value.  In order, this is:
 
-The special case for this ordering is the disabling
-and the enabling of rules from the command line using the `-d` and
-`---disable-rules` flags along with the `-e` and `--enable-rules`
-flags.  For these special cases, the command line setting is
-further defined to state that disabling a rule takes priority
-over enabling a rule.  While it is highly unlikely that someone
-will specify both actions at the same time, we felt it was
-important to specify the order to eliminate any possible confusion.
+- general command line setting
+- specific command line setting
+- command line configuration file
+- default configuration file
+- default value
 
-### Command Line Settings
+### General Command Line Settings
 
-Command line settings are any setting that is visible from the
-command line using `--help` except for the `--config`/`-c`
-command and the `--set`/`-s` command covered below.  When used,
-these commands offer the final say on what the value of a given
-configuration value is.  In essence, the command line provides
-the final say on how the application behaves.
+General command line settings are any settings visible from the command line
+using the `--help` argument, except for the for the `--config`/`-c` argument and
+the `--set`/`-s` argument covered below. Currently, the list of those arguments
+is:
 
-The list of general command line settings is as follows:
-
+- `-e`/`--enable-rules` and `-d`/`--disable-rules`
 - `--add-plugin`
 - `--strict-config`
 - `--stack-trace`
 - `--log-level {CRITICAL, ERROR, WARNING, INFO, DEBUG}`
 - `--log-file LOG_FILE`
 
-Both the `scan` and the `plugins` commands have modifiers that
-change how they behave.  However, these are modifiers to the
-commands themselves and are only available as a command line
-setting:
+When used, these arguments offer the final say on the value assigned to a given
+configuration property.  In the case where a general command line setting accepts
+only one value, such as `--log-level` and `log-file`, the last entry on the command
+line has precedence.  That is to say that a command line including
+`--log-level INFO --log-level DEBUG` will result in the log level property being
+set to `DEBUG`, as it appears last in the command line.
 
-- `scan`
-  - `-l`/`--list-files`
-  - `-r`/`--recurse`
-- `plugins`
-  - `list`
-    - `--all`
+#### One Exception: Enabling/Disabling Rules From The Command Line
 
-### Configuration File Settings
+The core reasoning for this exception is to allow for clear and definitive user
+control over PyMarkdown's behavior for its most common use: scanning Markdown files
+with rules. As a user, if you decide that a given rule should be disabled or enabled
+regardless of any configuration files, these settings will enforce that decision
+for you.
 
-While the command line is a useful way to set many configuration
-values, most people find a useful collection of settings that
-they want to use and embed those settings within a configuration
-file.  Alternatively, there are times where you may want to
-test a change to that configuration file before committing it
-to the file.  Both methods are covered in this section.
+The one deviation from the previously stated Configuration Property Ordering is
+the disabling and enabling of rules from a command line setting using the `-d` and
+`--disable-rules` arguments and the
+`-e` and `--enable-rules` arguments.  Each of these arguments can be specified multiple
+times, each appearance adding another value to an internal list. Unlike
+the other settings, the precedence of these settings is only determined after all
+other settings for the enabling or disabling of rules have been collected.  At
+that time, any disabled rules from the command line have highest precedence, followed
+by any enabled rules from the command line.  Once that precedence has been resolved,
+the normal rule for precedence takes effect for any enabling or disabling of rules
+through configuration properties.
 
-#### Hierarchical and Flattened Properties
+To provide a concrete example, while a command line of:
 
-When relaying information about a configuration property,
-that property is most often conveyed in a hierarchical
-and flattened format.  For
-example, when referring to the setting of the logging level,
-the property key of `log.level` is used.  This specifies that
-within the hierarchy of `log` is a property called `level`.
-Furthermore, it allows keys like `log.file` to denote that
-both the `log.file` property and the `log.level` are in the
-same hierarchy.
+```bash
+pymarkdown -e Md041 -d Md041 scan .
+```
 
-#### Specifying A Configuration File
+seems unlikely, our team tested this according to the above rules to ensure that
+there is predictable, consistent behavior.  Therefore, we are confident that the
+example line above evaluates the same as if it was written as:
 
-Specified at the command line, the `--config` or `-c` setting
-is followed by the name of a configuration file to load and use
-to set any configuration values.  While there is only support
-for a configuration file with a JSON format for the initial
-release, support for multiple formats is planned for after
-the initial release.
+```bash
+pymarkdown -d Md041 -e Md041 scan .
+```
 
-##### JSON Format
+Furthermore, either of these two settings on their own will override any enabling
+or disabling of the rules provided through any method of setting configuration
+properties detailed below.
 
-For the initial release, the configuration file must be
-specified in a JSON format.  The primary reason that the
-JSON format was selected was due to the provision of
-distinct types of objects that may be specified: strings,
-numbers, booleans, lists, and dictionaries/maps.
+From experience, we find that our most common usage of these settings is to override
+individual rules on a case-by-case basis while cleaning up a batch of rule failures.
+In that scenario, one specific rule is selected, disabling all other rules while the
+failures for that one rule are dealt with. We then remove the disable setting for
+one of the rules, and fix those failures, repeating the process as necessary.
+For small lists of failures, this is overkill, but we have found it to be a very
+efficient way of handling large number of failures. There are probably other good
+uses for these settings, but that is how our development team uses it!
 
-Using the example of the `log.file` property and the
-`log.level` property from above, those can be set
-with this configuration:
+Seeing how users leverage PyMarkdown in their projects, this feature is also used
+if the user only desires to enable or disable one or two rules and is using a script
+or [pre-commit](./pre-commit.md).  From what our users have shared with us, pre-commit
+`.pre-commit-config.yaml` files like this are common:
+
+```yaml
+repos:
+  - repo: https://github.com/jackdewinter/pymarkdown
+    rev: v0.9.9
+    hooks:
+      - id: pymarkdown
+        pass_filenames: false
+        args: [ "-d", "Md041,Md042", "scan", "./docs" ]
+```
+
+In the example above, an often overlooked feature of these two arguments is used:
+both enable and disable rule arguments accept a comma-separated list of rules.
+Using this feature allows for more compressed lists of rule to enable or disable.
+Once again, based on user feedback, once the user's own threshold for "too many
+arguments" is reached, that user will then embed those enable arguments and disable
+arguments into a [Command Line Configuration File](./advanced_configuration.md#command-line-configuration-file).
+
+#### Subcommand Settings
+
+PyMarkdown provides subcommands on the command line to provide directions on how
+the user intends PyMarkdown to help them with their task.  These subcommands may
+have arguments that modify the behavior of the subcommand.  As those arguments are
+specific to a given subcommand, they are only offered as an argument for that subcommand.
+For example, the argument of `--all` on the command line for the `plugin` subcommand:
+
+```bash
+pymarkdown plugins list --all
+```
+
+is modifying the `plugins` subcommand's specific behavior.  As such, it is not
+available as a specific command line settings or a property value that can be
+provided in a configuration file.
+
+### Specific Command Line Setting
+
+After the general command line settings, the specific command line settings have
+the highest precedence.  These settings use the `-s` or `--set` arguments and
+specify a single configuration property.  The specific property is identified using
+a [flattened format](./advanced_configuration.md#flattened-hierarchical-property-names)
+and an optional [configuration type](./advanced_configuration.md#specifying-configuration-property-types)
+for the property value. If no configuration type is provided, the property uses
+a default type of `string`.
+These two concepts work together to provide for a condensed way to specify configuration properties.
+
+For the PyMarkdown development team, these arguments have proven to be useful in
+providing shorthand for setting properties that are isolated and near the top
+of the configuration property precedence list.  Because of the high precedence, those
+settings are less likely to be overridden.  As an example, a common command line that
+we use to display enhanced logging output is:
+
+```bash
+pymarkdown --stack-trace -s log.level=INFO scan examples
+```
+
+This pattern is often a good first step at trying out configuration settings before
+moving those configuration settings into a configuration file.  While it is correct
+that the command line:
+
+```bash
+pymarkdown -s log.stack-trace=$!True --log-level INFO scan examples
+```
+
+is functionally equivalent to the above command line, for some reason the above
+command line just rolls off our fingers better.  Due to the flexible ways that PyMarkdown
+allows configuration to be specified, we can pick the form of the command line that
+works best for us.
+
+### Command Line Configuration File
+
+While the command line is a useful way to set many configuration values, most users
+find a useful collection of settings that they want to use often.  Instead of setting
+each of those settings individually, users often choose to embed those settings
+within a configuration file. This practice allows those configuration values to
+be reused with a minimum of effort.
+
+The `-c` or `--config` argument is used to specify a configuration file that contains
+zero or more configuration settings to apply.  That argument is followed by the
+name of a file that contains those configuration settings in a JSON format. The
+specifics of that format are detailed more thoroughly in the [JSON Format](./advanced_configuration.md#json-format)
+section. As that file format meets PyMarkdown's requirements for clear item typing
+and a hierarchical format, there are no plans to support any other file types for
+the primary configuration file.
+
+### Default Configuration File
+
+As an alternative to a specified configuration file, there are times where there
+is a need to tie a configuration file to a directory hierarchy. To support those
+needs, when PyMarkdown starts up, it looks for a configuration file named
+`.pymarkdown` in the current directory.  If that file is present, PyMarkdown
+tries to load that file as if it was specified with the `-c` or `--config` arguments.
+
+Note that because of precedence, a configuration file specified with the `-c` or
+`--config` arguments will always override the values provided in a `.pymarkdown`
+file.  To be very clear, if a configuration setting is provided in the default
+configuration file and not overridden in a command line configuration file, it
+remains active.  This pattern is very useful in setting general configuration
+settings for the directory structure in the default configuration file, with
+more focused settings being supplied through specific command line settings or
+a command line configuration file.
+
+Care should be taken in the application of the default configuration file.  As
+mentioned above, the current directory is determined when PyMarkdown starts, not
+when a given Markdown file is scanned.  If multiple default configuration files
+are nested within a given directory structure, some manner of scripting will be
+necessary to properly apply the right default configuration file to its corresponding
+directory structure.
+
+### Default Value
+
+At the bottom of the precedence list is the default value for a configuration
+property.  Most internal PyMarkdown calls to get a property value provide a default
+value to use if no value was supplied.  These values are the ultimate fallback
+values, expected to provide the most common usage experience to the user.
+
+For plugins, this allows a handful of plugins to be disabled by default, as their
+usage is either not common or outdated.  For extensions, it allows for extensions
+to be added in such a way that they do not affect current behaviors.
+
+## Further Configuration Property Topics
+
+Here are some other topics that are useful when talking about configuration
+properties.
+
+### JSON Format
+
+The configuration file is specified in a bare JSON format.  The primary reason
+that the JSON format was selected was due to the provision of distinct types of
+objects that may be specified: strings, numbers, booleans, lists, and dictionaries/maps.
+
+Using the example of the `log.file` property and the `log.level` property from
+above, those properties can be set with this configuration:
 
 ```json
 {
@@ -110,16 +237,14 @@ with this configuration:
 }
 ```
 
-By placing that configuration in a file called `pymarkdown.cfg`
-(or any other filename for that matter), that file can then
-be specified to the linter as:
+By placing that configuration in a file called `pymarkdown.cfg` (or any other filename
+for that matter), that file can then be specified to the linter as:
 
 ```sh
 pymarkdown -c pymarkdown.cfg scan examples
 ```
 
-Executing that command, you should see the usual output from
-the command line:
+Executing that command, you should see the usual output from the command line:
 
 ```text
 examples/example-1.md:3:16: MD047: Each file should end with a single newline character. (single-trailing-newline)
@@ -137,23 +262,37 @@ Scanning file 'examples/example-1.md' token-by-token.
 coalesced_results
 ```
 
-#### Specifying A Single Configuration Value
+### Flattened-Hierarchical Property Names
 
-There are times that specifying a single configuration
-value is useful.  For me, those times are usually when I am testing
-the setting of a configuration property or when I just need to set a single
-value while scanning a directory.  That is where the `--set` or
-`-s` command line option helps.
+When relaying information about a configuration property, that information is most
+often conveyed using a hierarchical and flattened format.  For example, when referring
+to the setting of the logging level, the property key of `log.level` is used.  This
+specifies that within the hierarchy of `log` is a property called `level`. Furthermore,
+it allows keys like `log.file` to denote that both the `log.file` property and the `log.level`
+are in the same hierarchy.
 
-For example, when I was testing the configuration for the above log configuration,
-I used the following command line to verify that the settings
-were correct:
+Currently, this property key format is only used by PyMarkdown itself when specifying
+configuration properties from the command line as a
+[command line setting](./advanced_configuration.md#specific-command-line-setting).
+However, it is very useful in communicating values to users due to its condensed
+format.  For example, most rules specify a [prefix](./rules/rule_md001.md#configuration)
+section that creates a proper flattened property name when combined with the
+`value name` in the tables below the prefix section.
 
-```sh
-pymarkdown --stack-trace -s log.level=INFO -s log.file=log.txt scan examples
+Basically, it is more concise to talk about setting the configuration property
+`plugins.heading-increment.enabled` to `True` than it is to talk about:
+
+```json
+{
+    "plugins" : {
+        "heading-increment": {
+          "enabled": true
+        }
+    }
+}
 ```
 
-#### Specifying Configuration Types
+### Specifying Configuration Property Types
 
 To provide a more robust system of configuration, the configuration
 system uses values that are typed as much as possible.  This extra
@@ -161,7 +300,7 @@ level of specification allows more confidence that the value that
 is provided for that property is interpreted properly.  Note that
 if you are using a configuration file format that already provides
 type information, such as the JSON format, this extra information
-may not be required.
+is not required.
 
 The type specification is performed using a prefix for the property value.
 Assuming that the `*` character refers to any character, the following
@@ -184,7 +323,7 @@ that comparison is true.
 
 For the integer translation, if the value `$#1.1` is provided, the
 behavior afterwards depends on how that value is referenced.  In the
-case of the `--set` command line argument, the `ValueError` will be surfaced
+case of the `--set` command line argument, the `ValueError` will surface
 to the command line and the application will stop.  If provided as
 part of a configuration format that does not provide typing, the
 `ValueError` will usually result in the default value being used for
@@ -223,18 +362,16 @@ Some examples of this are:
   pymarkdown -s plugins.md013.heading_line_length=$#10 scan test.md
   ```
 
-#### Specifying Strict Configuration Mode
+### Specifying Strict Configuration Mode
 
-During the development of the linter, there were specific times that
-I wanted to be sure that the configuration values that I specified
-were exactly as I specified them.  As I started doing exploratory
-testing of the PyMarkdown project, I also realized that I am
-enough of a stickler to want to ensure that any configuration
-properties that I assign are correct and that those values are
-not reverting to default values.
+During the development of the linter, there were specific times that we wanted
+to be sure that the configuration values that we specified were exactly as we specified
+them.  As we started doing exploratory testing of the PyMarkdown project, we also
+realized that we are sticklers that want to ensure that any configuration properties
+that we assign are correct and that those values are not reverting to default values.
 
-Specified from the command line using the `--strict-config` flag or
-through the configuration as `mode.strict-config=$!True`, this
+Specified from the command line using the `--strict-config` flag (or
+through the configuration as `mode.strict-config=$!True`), this
 option turns on the strict mode for the configuration system.
 Once enabled, when the application reads values from the configuration,
 it will stop the application if:
@@ -243,9 +380,9 @@ it will stop the application if:
 - a value was provided for the configuration value, but it does not match
   a specified filter for that value
 
-Using the `log.level` example from above, the value is specifically specified
-as being one of the following values: `CRITICAL`, `ERROR`, `WARNING`, `INFO`,
-or `DEBUG`.  There both an integer value of `1` and a string value of
+Using the `log.level` example from above, the value is specifically required
+to be one of the following values: `CRITICAL`, `ERROR`, `WARNING`, `INFO`,
+or `DEBUG`.  Therefore, both an integer value of `1` and a string value of
 `information` would fail for different reasons.  Normally, these would
 cause the configuration system to silently fail and not set the specified
 value. As a result of that, the default value for that configuration
@@ -275,6 +412,51 @@ produces the following output:
 ```text
 Configuration Error: The value for property 'log.level' is not valid: Value 'information' is not a valid log level.
 ```
+
+This feature is more burdensome on the user, but it is provided as an option for
+those users who want to make sure their provided configuration values are used
+properly.
+
+### Handling Multiple Identifiers For The Same Rule
+
+A rule plugin can have two or more identifiers, one id plus
+multiple aliases. If multiple identifiers belonging to a
+single plugin rule are used for separate configuration
+hierarchies, there must be a predictable ordering used
+to resolve which hierarchy is used.  In order, the rule
+plugin's id comes first, followed by each alias in the
+order that they are entered in the plugin rule itself.
+This rule applies to the group of configuration values
+as a group.
+
+For example, suppose there is a configuration file with
+the contents of:
+
+```json
+{
+"plugins" : {
+    "heading-style-h1" : { 
+        "enabled" : true,
+        "style" : "consistent"
+    },
+    "md003" : { 
+        "enabled" : false
+    }
+}
+```
+
+According to the documentation on [Rule md003](/docs/rules/rule_md003.md),
+the id for that rule is `md003` and it has one alias `heading-style-h1`.
+This means that the `plugins.md003` configuration takes
+precedence over the `plugins.heading-style-h1` configuration,
+due to the rules specified above, regardless of its position in
+the configuration file. Also, assuming that
+the `"enabled" : false` configuration value was `"enabled" : true`
+instead, even though the `plugins.heading-style-h1.style`
+configuration value is set, it will not be used.  For that
+configuration value to be used, the `plugins.md003` configuration
+hierarchy must be removed completely as the entire hierarchy
+has precedence, not just individual configuration properties.
 
 ## Available Configuration Values
 
@@ -313,7 +495,7 @@ Generally speaking, this flag enables the application to provide additional info
 on why a critical error occurred.  As the name of the value suggests, the reporting of a
 critical error occurring will include a Python stack trace if this flag is set.  While
 this information will be confusing to the typical user of the application, that information
-is vital to help diagnose the critical error.
+is vital to help diagnose critical errors.
 
 This behavior gets nuanced when there is a need to obtain a stack trace to debug
 an issue with the small amount of Python code that exists before the logging system
@@ -385,44 +567,3 @@ properties located under the hierarchy of `plugins.{id}.`.
 The list of configuration values available for each standard
 plugin rule is given in the `Configuration` section for
 each [standard rule plugin](/docs/rules.md).
-
-#### Handling Multiple Identifiers
-
-A rule plugin can have two or more identifiers, one id plus
-multiple aliases. If multiple identifiers belonging to a
-single plugin rule are used for separate configuration
-hierarchies, there must be a predictable ordering used
-to resolve which hierarchy is used.  In order, the rule
-plugin's id comes first, followed by each alias in the
-order that they are entered in the plugin rule itself.
-This rule applies to the group of configuration values
-as a group.
-
-For example, suppose there is a configuration file with
-the contents of:
-
-```json
-{
-"plugins" : {
-    "heading-style-h1" : { 
-        "enabled" : true,
-        "style" : "consistent"
-    },
-    "md003" : { 
-        "enabled" : false
-    }
-}
-```
-
-According to the documentation on [Rule md003](/docs/rules/rule_md003.md),
-the id for that rule is `md003` and it has one alias `heading-style-h1`.
-This means that the `plugins.md003` configuration takes
-precedence over the `plugins.heading-style-h1` configuration,
-due to the rules specified above, regardless of its position in
-the configuration file. Also, assuming that
-the `"enabled" : false` configuration value was `"enabled" : true`
-instead, even though the `plugins.heading-style-h1.style`
-configuration value is set, it will not be used.  For that
-configuration value to be used, the `plugins.md003` configuration
-hierarchy must be removed completely as the entire hierarchy
-has precedence, not just individual configuration properties.

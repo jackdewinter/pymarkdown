@@ -4,6 +4,7 @@ Module to provide helper methods for tests.
 import difflib
 import json
 import logging
+import os
 import tempfile
 from test.transform_to_markdown import TransformToMarkdown
 
@@ -69,17 +70,32 @@ def act_and_assert(
 # pylint: enable=too-many-arguments
 
 
-def write_temporary_configuration(supplied_configuration):
+def write_temporary_configuration(
+    supplied_configuration, file_name=None, directory=None
+):
     """
     Write the configuration as a temporary file that is kept around.
     """
     try:
-        with tempfile.NamedTemporaryFile("wt", delete=False) as outfile:
-            if isinstance(supplied_configuration, str):
-                outfile.write(supplied_configuration)
-            else:
-                json.dump(supplied_configuration, outfile)
-            return outfile.name
+        if file_name:
+            full_file_name = (
+                os.path.join(directory, file_name) if directory else file_name
+            )
+            with open(full_file_name, "wt", encoding="utf-8") as outfile:
+                if isinstance(supplied_configuration, str):
+                    outfile.write(supplied_configuration)
+                else:
+                    json.dump(supplied_configuration, outfile)
+                return full_file_name
+        else:
+            with tempfile.NamedTemporaryFile(
+                "wt", delete=False, dir=directory
+            ) as outfile:
+                if isinstance(supplied_configuration, str):
+                    outfile.write(supplied_configuration)
+                else:
+                    json.dump(supplied_configuration, outfile)
+                return outfile.name
     except IOError as this_exception:
         raise AssertionError(
             f"Test configuration file was not written ({this_exception})."
