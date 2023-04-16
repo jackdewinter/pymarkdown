@@ -1607,6 +1607,130 @@ def test_markdown_with_good_strict_config_type():
             os.remove(configuration_file)
 
 
+def test_markdown_with_default_configuration_file_with_error():
+    """
+    Test to make sure that a default configuration will be read and have the
+    same errors as if it was specified on the command line.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    default_configuration = {"mode": {"strict-config": True}, "log": {"file": 0}}
+
+    # Note that the default configuration file is determined by the current working
+    # directory, so this test creates a new directory and executes the parser from
+    # within that directory.
+    with tempfile.TemporaryDirectory() as tmp_dir_path:
+        default_configuration_file = None
+        try:
+            default_configuration_file = write_temporary_configuration(
+                default_configuration, file_name=".pymarkdown", directory=tmp_dir_path
+            )
+            supplied_arguments = [
+                "scan",
+                source_path,
+            ]
+
+            expected_return_code = 1
+            expected_output = ""
+            expected_error = "Configuration Error: The value for property 'log.file' must be of type 'str'.\n"
+
+            # Act
+            old_current_working_directory = os.getcwd()
+            try:
+                os.chdir(tmp_dir_path)
+                execute_results = scanner.invoke_main(arguments=supplied_arguments)
+            finally:
+                os.chdir(old_current_working_directory)
+
+            # Assert
+            execute_results.assert_results(
+                expected_output, expected_error, expected_return_code
+            )
+        finally:
+            if default_configuration_file and os.path.exists(
+                default_configuration_file
+            ):
+                os.remove(default_configuration_file)
+
+
+def test_markdown_with_overlapping_configuration_files():
+    """
+    Test to make sure that information from a default configuration file and
+    a specified configuration file give each other the right layering.
+    i.e. specific config file should override default config file
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    xxx = """# This is a document
+
+* a list
+  - a sublist
+  - a very long sublist item
+
+this is a very long line
+"""
+
+    # The `ul-style` item is set by the default configuration and overridden as "asterisk" by the supplied configuration.
+    # The `line-length` item is set by the default configuration as `10` and is not overridden.
+    # This results in a `ul-style` of `asterisk` and a `line-length` of `10`.
+    default_configuration = {
+        "mode": {"strict-config": True},
+        "plugins": {"ul-style": {"style": "dash"}, "line-length": {"line_length": 10}},
+    }
+    supplied_configuration = {
+        "mode": {"strict-config": True},
+        "plugins": {"ul-style": {"style": "asterisk"}},
+    }
+
+    with tempfile.TemporaryDirectory() as tmp_dir_path:
+        configuration_file = None
+        default_configuration_file = None
+        try:
+            configuration_file = write_temporary_configuration(
+                supplied_configuration, directory=tmp_dir_path
+            )
+            default_configuration_file = write_temporary_configuration(
+                default_configuration, file_name=".pymarkdown", directory=tmp_dir_path
+            )
+            supplied_arguments = ["-c", configuration_file, "scan-stdin"]
+
+            expected_return_code = 1
+            expected_output = (
+                "stdin:4:3: MD004: Inconsistent Unordered List Start style "
+                + "[Expected: asterisk; Actual: dash] (ul-style)\n"
+                + "stdin:5:1: MD013: Line length [Expected: 10, Actual: 28] (line-length)\n"
+                + "stdin:7:1: MD013: Line length [Expected: 10, Actual: 24] (line-length)"
+            )
+            expected_error = ""
+
+            # Act
+            old_current_working_directory = os.getcwd()
+            try:
+                os.chdir(tmp_dir_path)
+                execute_results = scanner.invoke_main(
+                    arguments=supplied_arguments, standard_input_to_use=xxx
+                )
+            finally:
+                os.chdir(old_current_working_directory)
+
+            # Assert
+            execute_results.assert_results(
+                expected_output, expected_error, expected_return_code
+            )
+        finally:
+            if default_configuration_file and os.path.exists(
+                default_configuration_file
+            ):
+                os.remove(default_configuration_file)
+            if configuration_file and os.path.exists(configuration_file):
+                os.remove(configuration_file)
+
+
 def test_markdown_with_multiple_errors_reported():
     """
     Test to make sure we properly sort errors from files.

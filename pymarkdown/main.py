@@ -39,6 +39,8 @@ class PyMarkdownLint:
     Class to provide for a simple implementation of a title case algorithm.
     """
 
+    __default_configuration_file = ".pymarkdown"
+
     __normal_scan_subcommand = "scan"
     __stdin_scan_subcommand = "scan-stdin"
 
@@ -286,15 +288,41 @@ class PyMarkdownLint:
             self.__handle_error(formatted_error, this_exception)
         sys.exit(1)
 
-    def __set_initial_state(self, args: argparse.Namespace) -> None:
-        self.__logging.pre_initialize_with_args(args)
+    def __apply_configuration_layers(self, args: argparse.Namespace) -> None:
+        # Look for a ".pymarkdown" file in the current working directory.
+        if os.path.exists(
+            PyMarkdownLint.__default_configuration_file
+        ) and os.path.isfile(PyMarkdownLint.__default_configuration_file):
+            default_configuration_file = os.path.abspath(
+                PyMarkdownLint.__default_configuration_file
+            )
+            LOGGER.debug("Loading configuration file: %s", default_configuration_file)
+            ApplicationPropertiesJsonLoader.load_and_set(
+                self.__properties,
+                default_configuration_file,
+                self.__handle_error,
+                clear_property_map=False,
+            )
+
+        # A configuration file specified on the command line has a higher precedence
+        # than anything except a specific setting applied on the command line.
         if args.configuration_file:
             LOGGER.debug("Loading configuration file: %s", args.configuration_file)
             ApplicationPropertiesJsonLoader.load_and_set(
-                self.__properties, args.configuration_file, self.__handle_error
+                self.__properties,
+                args.configuration_file,
+                self.__handle_error,
+                clear_property_map=False,
             )
+
+        # A specific setting applied on the command line has the highest precedence.
         if args.set_configuration:
             self.__properties.set_manual_property(args.set_configuration)
+
+    def __set_initial_state(self, args: argparse.Namespace) -> None:
+        self.__logging.pre_initialize_with_args(args)
+
+        self.__apply_configuration_layers(args)
 
         if args.strict_configuration or self.__properties.get_boolean_property(
             "mode.strict-config", strict_mode=True
