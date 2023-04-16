@@ -14,7 +14,7 @@ class ClassProperty(property):
     def __get__(self, __obj: Any, owner: Union[type, None] = ...) -> Any:  # type: ignore
         _ = __obj
         fget_x = cast(Callable[..., Any], self.fget)
-        return classmethod(fget_x).__get__(None, owner)()
+        return classmethod(fget_x).__get__(None, owner)()  # type: ignore
 
 
 class ConstantWrapper:

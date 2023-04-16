@@ -21,9 +21,11 @@ from pymarkdown.bad_tokenization_error import BadTokenizationError
 from pymarkdown.extension_manager.extension_manager import ExtensionManager
 from pymarkdown.extensions.pragma_token import PragmaToken
 from pymarkdown.main_presentation import MainPresentation
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.plugin_manager.bad_plugin_error import BadPluginError
 from pymarkdown.plugin_manager.plugin_manager import PluginManager
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.source_providers import FileSourceProvider
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
 
@@ -191,29 +193,7 @@ class PyMarkdownLint:
             assert self.__tokenizer
             actual_tokens = self.__tokenizer.transform_from_provider(source_provider)
 
-            if actual_tokens and actual_tokens[-1].is_pragma:
-                pragma_token = cast(PragmaToken, actual_tokens[-1])
-                self.__plugins.compile_pragmas(
-                    next_file_name, pragma_token.pragma_lines
-                )
-                actual_tokens = actual_tokens[:-1]
-
-            POGGER.info("Scanning file '$' tokens.", next_file_name)
-            for next_token in actual_tokens:
-                POGGER.info("Processing token: $", next_token)
-                self.__plugins.next_token(context, next_token)
-
-            POGGER.info("Scanning file '$' line-by-line.", next_file_name)
-            source_provider = FileSourceProvider(next_file)
-            line_number, next_line = 1, source_provider.get_next_line()
-            while next_line is not None:
-                POGGER.info("Processing line $: $", line_number, next_line)
-                self.__plugins.next_line(context, line_number, next_line)
-                line_number += 1
-                next_line = source_provider.get_next_line()
-
-            POGGER.info("Completed scanning file '$'.", next_file_name)
-            self.__plugins.completed_file(context, line_number)
+            self.__process_file_scan(context, next_file, next_file_name, actual_tokens)
 
             context.report_on_triggered_rules()
             POGGER.info("Ending file '$'.", next_file_name)
@@ -221,6 +201,35 @@ class PyMarkdownLint:
             context.report_on_triggered_rules()
             POGGER.info("Ending file '$' with exception.", next_file_name)
             raise
+
+    def __process_file_scan(
+        self,
+        context: PluginScanContext,
+        next_file: str,
+        next_file_name: str,
+        actual_tokens: List[MarkdownToken],
+    ) -> None:
+        if actual_tokens and actual_tokens[-1].is_pragma:
+            pragma_token = cast(PragmaToken, actual_tokens[-1])
+            self.__plugins.compile_pragmas(next_file_name, pragma_token.pragma_lines)
+            actual_tokens = actual_tokens[:-1]
+
+        POGGER.info("Scanning file '$' tokens.", next_file_name)
+        for next_token in actual_tokens:
+            POGGER.info("Processing token: $", next_token)
+            self.__plugins.next_token(context, next_token)
+
+        POGGER.info("Scanning file '$' line-by-line.", next_file_name)
+        source_provider = FileSourceProvider(next_file)
+        line_number, next_line = 1, source_provider.get_next_line()
+        while next_line is not None:
+            POGGER.info("Processing line $: $", line_number, next_line)
+            self.__plugins.next_line(context, line_number, next_line)
+            line_number += 1
+            next_line = source_provider.get_next_line()
+
+        POGGER.info("Completed scanning file '$'.", next_file_name)
+        self.__plugins.completed_file(context, line_number)
 
     # pylint: disable=broad-exception-caught
     def __apply_configuration_to_plugins(self) -> None:

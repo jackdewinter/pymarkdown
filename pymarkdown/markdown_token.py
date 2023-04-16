@@ -287,7 +287,7 @@ class MarkdownToken:
         """
         Returns whether the current token is an unordered list end element.
         """
-        return bool(
+        return (
             self.token_name
             == MarkdownToken._end_token_prefix
             + MarkdownToken._token_unordered_list_start
@@ -446,7 +446,7 @@ class MarkdownToken:
         """
         Returns whether the current token is an indented code block end element.
         """
-        return bool(
+        return (
             self.token_name
             == MarkdownToken._end_token_prefix
             + MarkdownToken._token_indented_code_block
