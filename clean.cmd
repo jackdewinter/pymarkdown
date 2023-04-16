@@ -114,7 +114,7 @@ if ERRORLEVEL 1 (
 
 echo {Executing pylint static analyzer on Python source code.}
 set TEST_EXECUTION_FAILED=
-pipenv run pylint -j 1 --rcfile=setup.cfg --recursive=y %MY_VERBOSE% %PYTHON_MODULE_NAME%
+pipenv run pylint -j 1 --recursive=y %MY_VERBOSE% %PYTHON_MODULE_NAME%
 if ERRORLEVEL 1 (
 	echo.
 	echo {Executing pylint static analyzer on Python source code failed.}
@@ -140,7 +140,7 @@ if ERRORLEVEL 1 (
 )
 
 echo {Executing pylint static analyzer on test Python code.}
-pipenv run pylint -j 1 --rcfile=setup.cfg --ignore test\resources --recursive=y %MY_VERBOSE% test
+pipenv run pylint -j 1 --ignore test\resources --recursive=y %MY_VERBOSE% test
 if ERRORLEVEL 1 (
 	echo.
 	echo {Executing pylint static analyzer on test Python code failed.}
@@ -164,7 +164,7 @@ if "%ALL_FILES%" == "" (
 	echo {Not executing pylint suppression checker on Python source code. No eligible Python files staged.}
 ) else (
 	echo {Executing pylint suppression checker on Python source code.}
-	pipenv run python ..\pylint_utils\main.py --config setup.cfg -s %ALL_FILES%
+	pipenv run python ..\pylint_utils\main.py -s %ALL_FILES%
 	if ERRORLEVEL 1 (
 		echo.
 		echo {Executing reporting of unused pylint suppressions in modified Python source code failed.}
