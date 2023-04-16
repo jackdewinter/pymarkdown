@@ -8,6 +8,22 @@
 
 ### Changed
 
+- None
+
+### Fixed
+
+- None
+
+## Version 0.9.10 - Date: 2023-04-16
+
+### Added
+
+- [Issue 627](https://github.com/jackdewinter/pymarkdown/issues/627)
+  - Added support for default `.pymarkdown` configuration file
+  - Updated documentation for configuration
+
+### Changed
+
 - [Issue 582](https://github.com/jackdewinter/pymarkdown/issues/582)
   - broke up leaf block processor into more distinct pieces
 - [Issue 589](https://github.com/jackdewinter/pymarkdown/issues/589)
@@ -26,11 +42,35 @@
   - broke up block quote processor
 - [Issue 607](https://github.com/jackdewinter/pymarkdown/issues/607)
   - broke up list block processor
+- [Issue 630](https://github.com/jackdewinter/pymarkdown/issues/630)
+  - ensured that remaining whitespace tests have the standard combinations
+    tested in the previous whitespace tests
 
 ### Fixed
 
-- None
-
+- [Issue 613](https://github.com/jackdewinter/pymarkdown/issues/613)
+  - fixed issues with tabs and thematic breaks
+- [Issue 620](https://github.com/jackdewinter/pymarkdown/issues/620)
+  - fixed issues with tabs and SetExt headings
+- [Issue 622](https://github.com/jackdewinter/pymarkdown/issues/622)
+  - fixed issues with tabs and paragraphs
+- [Issue 625](https://github.com/jackdewinter/pymarkdown/issues/625)
+  - fixed documentation to more clearly specifying the use of a comma-separated
+    list for enabling and disabling rules
+  - small change to list processing logic to strip whitespace between values,
+    allowing for `md001 , md002` to equal `md001,md002`
+- [Issue 626](https://github.com/jackdewinter/pymarkdown/issues/626)
+  - fixed issue where parsing was not considering being in a code block before
+    determining whether or not to start a list
+- [Issue 634](https://github.com/jackdewinter/pymarkdown/issues/634)
+  - fixed and tested various scenarios with lists that contain mostly or all
+    link elements
+- [Issue 637](https://github.com/jackdewinter/pymarkdown/issues/637)
+  - fixed by adding extra examples and scenario tests to verify this is working
+- [Issue 639](https://github.com/jackdewinter/pymarkdown/issues/639)
+  - addressed inter-release issue of not specifying all code directories in
+     the setup script after refactoring
+  
 ## Version 0.9.9 - Date: 2023-02-26
 
 This was a point release.  Issues that were addressed:
