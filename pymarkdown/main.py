@@ -13,6 +13,7 @@ from typing import List, Optional, cast
 from application_properties import (
     ApplicationProperties,
     ApplicationPropertiesJsonLoader,
+    ApplicationPropertiesTomlLoader,
 )
 
 from pymarkdown.application_file_scanner import ApplicationFileScanner
@@ -42,6 +43,8 @@ class PyMarkdownLint:
     """
 
     __default_configuration_file = ".pymarkdown"
+    __pyproject_toml_file = "pyproject.toml"
+    __pyproject_section_header = "tool.pymarkdown"
 
     __normal_scan_subcommand = "scan"
     __stdin_scan_subcommand = "scan-stdin"
@@ -278,9 +281,11 @@ class PyMarkdownLint:
             )
             self.__handle_error(formatted_error, this_exception)
 
-    def __handle_error(self, formatted_error: str, thrown_error: Exception) -> None:
-        show_error = self.__logging.show_stack_trace or not isinstance(
-            thrown_error, ValueError
+    def __handle_error(
+        self, formatted_error: str, thrown_error: Optional[Exception]
+    ) -> None:
+        show_error = self.__logging.show_stack_trace or (
+            thrown_error and not isinstance(thrown_error, ValueError)
         )
         LOGGER.warning(formatted_error, exc_info=show_error)
 
@@ -298,20 +303,30 @@ class PyMarkdownLint:
         sys.exit(1)
 
     def __apply_configuration_layers(self, args: argparse.Namespace) -> None:
+        # Look for a "pyproject.toml" file in the current working directory.
+        project_configuration_file = os.path.abspath(
+            PyMarkdownLint.__pyproject_toml_file
+        )
+        ApplicationPropertiesTomlLoader.load_and_set(
+            self.__properties,
+            project_configuration_file,
+            PyMarkdownLint.__pyproject_section_header,
+            self.__handle_error,
+            clear_property_map=False,
+            check_for_file_presence=True,
+        )
+
         # Look for a ".pymarkdown" file in the current working directory.
-        if os.path.exists(
+        default_configuration_file = os.path.abspath(
             PyMarkdownLint.__default_configuration_file
-        ) and os.path.isfile(PyMarkdownLint.__default_configuration_file):
-            default_configuration_file = os.path.abspath(
-                PyMarkdownLint.__default_configuration_file
-            )
-            LOGGER.debug("Loading configuration file: %s", default_configuration_file)
-            ApplicationPropertiesJsonLoader.load_and_set(
-                self.__properties,
-                default_configuration_file,
-                self.__handle_error,
-                clear_property_map=False,
-            )
+        )
+        ApplicationPropertiesJsonLoader.load_and_set(
+            self.__properties,
+            default_configuration_file,
+            self.__handle_error,
+            clear_property_map=False,
+            check_for_file_presence=True,
+        )
 
         # A configuration file specified on the command line has a higher precedence
         # than anything except a specific setting applied on the command line.
@@ -322,6 +337,7 @@ class PyMarkdownLint:
                 args.configuration_file,
                 self.__handle_error,
                 clear_property_map=False,
+                check_for_file_presence=False,
             )
 
         # A specific setting applied on the command line has the highest precedence.
