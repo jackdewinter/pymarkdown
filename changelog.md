@@ -4,7 +4,8 @@
 
 ### Added
 
-- None
+- [Issue 655](https://github.com/jackdewinter/pymarkdown/issues/655)
+  - Added support for `tool.pymarkdown` section in `pyproject.toml` for current directory
 
 ### Changed
 
