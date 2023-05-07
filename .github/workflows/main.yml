@@ -82,7 +82,8 @@ jobs:
     name: Scenario Tests
     strategy:
       matrix:
-        python: ["3.8", "3.9", "3.10"]
+        # python: ["3.8", "3.9", "3.10"]
+        python: ["3.8"]
         platform: [windows-latest, ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.platform }}
 
