@@ -40,6 +40,8 @@ class PyMarkdownLint:
     """
 
     __default_configuration_file = ".pymarkdown"
+    __pyproject_toml_file = "pyproject.toml"
+    __pyproject_section_header = "tool.pymarkdown"
 
     __normal_scan_subcommand = "scan"
     __stdin_scan_subcommand = "scan-stdin"
