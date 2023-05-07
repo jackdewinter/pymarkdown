@@ -113,7 +113,7 @@ if ERRORLEVEL 1 (
 )
 
 echo {Executing bandit security analyzer on Python code.}
-pipenv run bandit -q -r application_properties
+pipenv run bandit --configfile bandit.yaml -q -r %PYTHON_MODULE_NAME%
 if ERRORLEVEL 1 (
 	echo.
 	echo {Executing security analyzer on Python code failed.}

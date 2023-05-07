@@ -58,7 +58,7 @@ jobs:
 
       - name: Execute Bandit
         run: |
-          pipenv run bandit -q -r ${{ github.workspace }}/${{ env.project-name }}
+          pipenv run bandit --configfile bandit.yaml -q -r ${{ github.workspace }}/${{ env.project-name }}
 
       - name: Execute PyLint on Source
         run: |
