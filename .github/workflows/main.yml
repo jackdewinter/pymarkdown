@@ -168,4 +168,10 @@ jobs:
         with:
           name: my-artifact
           path: ${{github.workspace}}/dist/
-   
+
+      - name: Initiating Integration Tests
+        run: |
+          curl -X POST https://api.github.com/repos/jackdewinter/pymarkdown_test/dispatches \
+          -H 'Accept: application/vnd.github.everest-preview+json' \
+          -u ${{ secrets.INTER_PROJECT_ACCESS_TOKEN }} \
+          --data '{"event_type": "request-integration", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'" }}'           

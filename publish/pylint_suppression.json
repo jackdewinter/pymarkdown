@@ -204,6 +204,7 @@
             "too-many-instance-attributes": 1,
             "too-many-arguments": 2
         },
+        "pymarkdown/my_application_properties.py": {},
         "pymarkdown/parser_helper.py": {
             "too-many-public-methods": 1,
             "too-many-arguments": 1
