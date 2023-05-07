@@ -11,7 +11,7 @@ on:
     - cron: '0 0 * * *'  # daily at midnight
 
 env:
-  project-name: project_markdown
+  project-name: pymarkdown
   default-python-version: 3.8
 
 jobs:
@@ -58,7 +58,7 @@ jobs:
 
       - name: Execute Bandit
         run: |
-          pipenv run bandit -q -r ${{ env.project-name }}
+          pipenv run bandit -q -r ${{ github.workspace }}/${{ env.project-name }}
 
       - name: Execute PyLint on Source
         run: |
