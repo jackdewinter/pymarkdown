@@ -170,6 +170,8 @@ jobs:
           path: ${{github.workspace}}/dist/
 
       - name: Initiating Integration Tests
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
         run: |
           echo "SHA=$GITHUB_SHA"
           echo "$GITHUB_CONTEXT"
