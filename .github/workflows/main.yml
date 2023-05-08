@@ -171,16 +171,18 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: |
-          echo "$GITHUB_CONTEXT"
-          XX=
+          ACTION_SHA=
           if [ "${{ github.event_name }}" == "pull_request" ] ; then
-            XX=${{ github.event.pull_request.head.sha }}
+            ACTION_SHA=${{ github.event.pull_request.head.sha }}
+          elif [ "${{ github.event_name }}" == "push" ] ; then
+            ACTION_SHA=${{ github.event.head_commit.id }}
           else
-            XX=$GITHUB_SHA
+            echo "$GITHUB_CONTEXT"
+            ACTION_SHA=$GITHUB_SHA
           fi
-          echo "SHA=$XX"
+          echo "SHA=$ACTION_SHA"
 
           curl -X POST https://api.github.com/repos/jackdewinter/pymarkdown_test/dispatches \
             -H 'Accept: application/vnd.github.everest-preview+json' \
             -u ${{ secrets.INTER_PROJECT_ACCESS_TOKEN }} \
-            --data '{"event_type": "request-integration", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'", "ref":"$GITHUB_REF", "sha": "$XX" }}'
+            --data '{"event_type": "request-integration", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'", "ref":"$GITHUB_REF", "sha": "$ACTION_SHA" }}'
