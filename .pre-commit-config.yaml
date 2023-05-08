@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/jackdewinter/pymarkdown
-    rev: v0.9.9
+    rev: v0.9.11
     hooks:
       - id: pymarkdown
         pass_filenames: false
@@ -10,3 +10,11 @@ repos:
           - scan
           - .
           - ./docs
+  - repo: local
+    hooks:
+      - id: verify-install-requirements
+        name: Verify Install Requirements Match
+        language: system
+        entry: pipenv run python utils/verify_install_requirements.py
+        pass_filenames: false
+        

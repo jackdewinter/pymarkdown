@@ -7,33 +7,105 @@ on:
   pull_request:
     branches:
       - main
-  schedule:
-    - cron: '0 0 * * *'  # daily at midnight
+
+env:
+  project-name: pymarkdown
+  default-python-version: 3.8
 
 jobs:
-  scenario-tests:
-    strategy:
-      matrix:
-        #python: [3.8, 3.9]
-        python: [3.8]
-        platform: [windows-latest, ubuntu-latest, macos-latest]
-    runs-on: ${{ matrix.platform }}
+
+  lint:
+
+    name: Project Quality Analysis
+    runs-on: ubuntu-latest
+
     steps:
+
       - name: Checkout Repository
         uses: actions/checkout@master
-      - name: Setup Python 3.8
+
+      - name: Setup Python ${{ env.default-python-version }}
         uses: actions/setup-python@v4.5.0
         with:
-          python-version: 3.8
+          python-version: ${{ env.default-python-version }}
+
       - name: Install PipEnv
         run: |
           pip install pipenv==2022.1.8
+
+      - name: Sync With Repository
+        run: |
+          pipenv lock
+          pipenv sync
+          pipenv graph
+
+      - name: Execute Black
+        run: |
+          pipenv run black .
+
+      - name: Execute ISort
+        run: |
+          pipenv run isort .
+
+      - name: Execute Pre-Commit
+        run: |
+          pipenv run pre-commit run --all
+
+      - name: Execute Flake8
+        run: pipenv run flake8 --exclude dist,build
+
+      - name: Execute Bandit
+        run: |
+          pipenv run bandit --configfile bandit.yaml -q -r ${{ github.workspace }}/${{ env.project-name }}
+
+      - name: Execute PyLint on Source
+        run: |
+          pipenv run pylint ${{github.workspace}}/pymarkdown
+          pipenv run pylint ${{github.workspace}}/pymarkdown/extensions
+          pipenv run pylint ${{github.workspace}}/pymarkdown/extension_manager
+          pipenv run pylint ${{github.workspace}}/pymarkdown/plugins
+          pipenv run pylint ${{github.workspace}}/pymarkdown/plugin_manager
+
+      - name: Execute PyLint on Tests
+        run: pipenv run pylint ${{github.workspace}}/test
+
+      - name: Execute MyPy
+        run: pipenv run mypy --strict ${{ env.project-name }} stubs
+
+      - name: Execute PyMarkdown on Current Docs
+        run: pipenv run python ${{github.workspace}}/main.py --config ${{github.workspace}}/clean.json scan ${{github.workspace}} ${{github.workspace}}/docs
+
+  scenario-tests:
+
+    name: Scenario Tests
+    strategy:
+      matrix:
+        # python: ["3.8", "3.9", "3.10"]
+        python: ["3.8"]
+        platform: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@master
+
+      - name: Setup Python ${{ matrix.python }}
+        uses: actions/setup-python@v4.5.0
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install PipEnv
+        run: |
+          pip install pipenv==2022.1.8
+
       - name: Sync With Repository
         run: |
           pipenv lock
           pipenv sync
           pipenv graph
           pipenv uninstall pytest-html
+
       - name: Execute Tests
         run: pipenv run pytest --cov-fail-under=90 --cov --cov-branch
       # - name: Archive coverage artifacts
@@ -49,37 +121,66 @@ jobs:
       #     file: ./report/coverage.xml
       #     name: ${{ matrix.python }} - ${{ matrix.platform }}
       #     fail_ci_if_error: true
-  lint:
-    strategy:
-      matrix:
-        python: [3.8]
-        platform: [ubuntu-latest]
-    runs-on: ${{ matrix.platform }}
+
+  packaging:
+
+    name: Packaging
+    runs-on: ubuntu-latest
+    needs: [ lint, scenario-tests ]
+    # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
     steps:
+
       - name: Checkout Repository
         uses: actions/checkout@master
-      - name: Setup Python 3.8
+
+      - name: Setup Python ${{ env.default-python-version }}
         uses: actions/setup-python@v4.5.0
         with:
-          python-version: 3.8
+          python-version: ${{ env.default-python-version }}
+
       - name: Install PipEnv
         run: |
           pip install pipenv==2022.1.8
+
       - name: Sync With Repository
         run: |
           pipenv lock
           pipenv sync
           pipenv graph
-      - name: Execute Flake8
-        run: pipenv run flake8 --exclude dist,build
-      - name: Execute PyLint on Source
+
+      - name: Pyroma
         run: |
-          pipenv run pylint ${{github.workspace}}/pymarkdown
-          pipenv run pylint ${{github.workspace}}/pymarkdown/extensions
-          pipenv run pylint ${{github.workspace}}/pymarkdown/extension_manager
-          pipenv run pylint ${{github.workspace}}/pymarkdown/plugins
-          pipenv run pylint ${{github.workspace}}/pymarkdown/plugin_manager
-      - name: Execute PyLint on Tests
-        run: pipenv run pylint ${{github.workspace}}/test
-      - name: Execute PyMarkdown on Current Docs
-        run: pipenv run python ${{github.workspace}}/main.py --config ${{github.workspace}}/clean.json scan ${{github.workspace}} ${{github.workspace}}/docs
+          pipenv run pyroma -q -n 10 .
+
+      - name: Setup
+        run: |
+          pipenv run python setup.py sdist bdist_wheel
+
+      - name: Twine
+        run: |
+          pipenv run twine check dist/*    
+
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: my-artifact
+          path: ${{github.workspace}}/dist/
+
+      - name: Initiating Integration Tests
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo "$GITHUB_CONTEXT"
+          XX=
+          if [ "${{ github.event_name }}" == "pull_request" ] ; then
+            XX=${{ github.event.pull_request.head.sha }}
+          else
+            XX=$GITHUB_SHA
+          fi
+          echo "SHA=$XX"
+
+          curl -X POST https://api.github.com/repos/jackdewinter/pymarkdown_test/dispatches \
+            -H 'Accept: application/vnd.github.everest-preview+json' \
+            -u ${{ secrets.INTER_PROJECT_ACCESS_TOKEN }} \
+            --data '{"event_type": "request-integration", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'", "ref":"$GITHUB_REF", "sha": "$XX" }}'
