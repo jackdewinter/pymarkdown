@@ -161,7 +161,7 @@ jobs:
         run: |
           pipenv run twine check dist/*    
 
-      - name: Upload
+      - name: Upload Package
         uses: actions/upload-artifact@v3
         with:
           name: my-artifact
