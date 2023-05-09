@@ -10,11 +10,7 @@ import tempfile
 import traceback
 from typing import List, Optional, cast
 
-from application_properties import (
-    ApplicationProperties,
-    ApplicationPropertiesJsonLoader,
-    ApplicationPropertiesTomlLoader,
-)
+from application_properties import ApplicationProperties
 
 from pymarkdown.application_file_scanner import ApplicationFileScanner
 from pymarkdown.application_logging import ApplicationLogging
@@ -23,6 +19,7 @@ from pymarkdown.extension_manager.extension_manager import ExtensionManager
 from pymarkdown.extensions.pragma_token import PragmaToken
 from pymarkdown.main_presentation import MainPresentation
 from pymarkdown.markdown_token import MarkdownToken
+from pymarkdown.my_application_properties import MyApplicationProperties
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.plugin_manager.bad_plugin_error import BadPluginError
 from pymarkdown.plugin_manager.plugin_manager import PluginManager
@@ -120,30 +117,7 @@ class PyMarkdownLint:
             default=None,
             help="path to a plugin containing a new rule to apply",
         )
-        parser.add_argument(
-            "--config",
-            "-c",
-            dest="configuration_file",
-            action="store",
-            default=None,
-            help="path to the configuration file to use",
-        )
-        parser.add_argument(
-            "--set",
-            "-s",
-            dest="set_configuration",
-            action="append",
-            default=None,
-            help="manually set an individual configuration property",
-            type=ApplicationProperties.verify_manual_property_form,
-        )
-        parser.add_argument(
-            "--strict-config",
-            dest="strict_configuration",
-            action="store_true",
-            default=False,
-            help="throw an error if configuration is bad, instead of assuming default",
-        )
+        MyApplicationProperties.add_default_command_line_arguments(parser)
         ApplicationLogging.add_default_command_line_arguments(parser)
 
         subparsers = parser.add_subparsers(dest="primary_subparser")
@@ -303,46 +277,16 @@ class PyMarkdownLint:
         sys.exit(1)
 
     def __apply_configuration_layers(self, args: argparse.Namespace) -> None:
-        # Look for a "pyproject.toml" file in the current working directory.
-        project_configuration_file = os.path.abspath(
-            PyMarkdownLint.__pyproject_toml_file
+        MyApplicationProperties.process_standard_python_configuration_files(
+            self.__properties, self.__handle_error
         )
-        ApplicationPropertiesTomlLoader.load_and_set(
+
+        MyApplicationProperties.process_project_specific_json_configuration(
+            PyMarkdownLint.__default_configuration_file,
+            args,
             self.__properties,
-            project_configuration_file,
-            PyMarkdownLint.__pyproject_section_header,
             self.__handle_error,
-            clear_property_map=False,
-            check_for_file_presence=True,
         )
-
-        # Look for a ".pymarkdown" file in the current working directory.
-        default_configuration_file = os.path.abspath(
-            PyMarkdownLint.__default_configuration_file
-        )
-        ApplicationPropertiesJsonLoader.load_and_set(
-            self.__properties,
-            default_configuration_file,
-            self.__handle_error,
-            clear_property_map=False,
-            check_for_file_presence=True,
-        )
-
-        # A configuration file specified on the command line has a higher precedence
-        # than anything except a specific setting applied on the command line.
-        if args.configuration_file:
-            LOGGER.debug("Loading configuration file: %s", args.configuration_file)
-            ApplicationPropertiesJsonLoader.load_and_set(
-                self.__properties,
-                args.configuration_file,
-                self.__handle_error,
-                clear_property_map=False,
-                check_for_file_presence=False,
-            )
-
-        # A specific setting applied on the command line has the highest precedence.
-        if args.set_configuration:
-            self.__properties.set_manual_property(args.set_configuration)
 
     def __set_initial_state(self, args: argparse.Namespace) -> None:
         self.__logging.pre_initialize_with_args(args)
