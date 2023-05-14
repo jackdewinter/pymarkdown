@@ -184,6 +184,7 @@ jobs:
 
           echo "SHA=$ACTION_SHA"
           echo "RUN_ID=$ACTION_RUN_ID"
+          echo '{"event_type": "request-integration", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'", "ref":"'"$GITHUB_REF"'", "sha": "'"$ACTION_SHA"'", "run_id" : "'"$RUN_ID"'" }}'
 
           curl -X POST https://api.github.com/repos/jackdewinter/pymarkdown_test/dispatches \
             -H 'Accept: application/vnd.github.everest-preview+json' \
