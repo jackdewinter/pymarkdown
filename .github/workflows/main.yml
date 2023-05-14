@@ -161,7 +161,7 @@ jobs:
         run: |
           pipenv run twine check dist/*    
 
-      - name: Upload
+      - name: Upload Package
         uses: actions/upload-artifact@v3
         with:
           name: my-artifact
@@ -180,9 +180,13 @@ jobs:
             echo "$GITHUB_CONTEXT"
             ACTION_SHA=$GITHUB_SHA
           fi
+          ACTION_RUN_ID=${{ github.run_id }}
+
           echo "SHA=$ACTION_SHA"
+          echo "RUN_ID=$ACTION_RUN_ID"
+          echo '{"event_type": "request-integration", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'", "ref":"'"$GITHUB_REF"'", "sha": "'"$ACTION_SHA"'", "run_id" : "'"$ACTION_RUN_ID"'" }}'
 
           curl -X POST https://api.github.com/repos/jackdewinter/pymarkdown_test/dispatches \
             -H 'Accept: application/vnd.github.everest-preview+json' \
             -u ${{ secrets.INTER_PROJECT_ACCESS_TOKEN }} \
-            --data '{"event_type": "request-integration", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'", "ref":"$GITHUB_REF", "sha": "$ACTION_SHA" }}'
+            --data '{"event_type": "request-integration", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'", "ref":"'"$GITHUB_REF"'", "sha": "'"$ACTION_SHA"'", "run_id" : "'"$ACTION_RUN_ID"'" }}'
