@@ -14,6 +14,12 @@
 
 - None
 
+## Version 0.9.11 - Date: 2023-04-17
+
+### Fixed
+
+- Emergency fix.
+
 ## Version 0.9.10 - Date: 2023-04-16
 
 ### Added
