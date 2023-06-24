@@ -25,6 +25,28 @@
 
 ### Changed
 
+- None
+
+### Fixed
+
+- None
+
+## Version 0.9.11 - Date: 2023-04-17
+
+### Fixed
+
+- Emergency fix.
+
+## Version 0.9.10 - Date: 2023-04-16
+
+### Added
+
+- [Issue 627](https://github.com/jackdewinter/pymarkdown/issues/627)
+  - Added support for default `.pymarkdown` configuration file
+  - Updated documentation for configuration
+
+### Changed
+
 - [Issue 582](https://github.com/jackdewinter/pymarkdown/issues/582)
   - broke up leaf block processor into more distinct pieces
 - [Issue 589](https://github.com/jackdewinter/pymarkdown/issues/589)
