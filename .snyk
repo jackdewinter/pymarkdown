@@ -1,0 +1,8 @@
+version: v1.22.1
+language-settings: 
+  python: "3.8"
+ignore:
+    'CWE-23':
+     - '*':
+        reason: 'Project is a tool, and as such, does not have a home directory.'
+        expires: '2024-01-01T00:00:00.000Z'

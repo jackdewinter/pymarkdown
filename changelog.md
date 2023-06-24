@@ -4,7 +4,24 @@
 
 ### Added
 
+- [Issue 655](https://github.com/jackdewinter/pymarkdown/issues/655)
+  - Added support for `tool.pymarkdown` section in `pyproject.toml` for current directory
+
+### Changed
+
 - None
+
+### Fixed
+
+- None
+
+## Version 0.9.10 - Date: 2023-04-16
+
+### Added
+
+- [Issue 627](https://github.com/jackdewinter/pymarkdown/issues/627)
+  - Added support for default `.pymarkdown` configuration file
+  - Updated documentation for configuration
 
 ### Changed
 

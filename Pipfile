@@ -28,9 +28,9 @@ twine = "==4.0.2"
 typing-extensions = "==4.5.0"
 mypy = "==1.2.0"
 columnar = "==1.4.1"
-application-properties = "==0.6.0"
 coverage = "==7.2.3"
 sourcery = "==1.2.0"
+application-properties = "==0.7.0"
 
 [requires]
 python_version = "3.8"

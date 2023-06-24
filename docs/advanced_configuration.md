@@ -17,10 +17,11 @@ configuration applies to a given item.  This theme is that the order of preceden
 for interpreting configuration properties goes from the most specific provided configuration
 value to the least specific provided configuration value.  In order, this is:
 
-- general command line setting
-- specific command line setting
-- command line configuration file
-- default configuration file
+- general command line settings (`--add-plugin`, `--log-file`, etc.)
+- specific command line setting (`-s log.level=INFO`, etc.)
+- command line configuration file (`--config myconfig.json`)
+- default configuration file (loading default `.pymarkdown` JSON file)
+- alternate project configuration files (`tool.pymarkdown` section of `pyproject.toml` file)
 - default value
 
 ### General Command Line Settings
@@ -179,6 +180,19 @@ section. As that file format meets PyMarkdown's requirements for clear item typi
 and a hierarchical format, there are no plans to support any other file types for
 the primary configuration file.
 
+As an example, the enhanced logging output snippet from the
+[Specific Command Line Setting](#specific-command-line-setting) section can be
+expressed in JSON format as:
+
+```json
+{
+  "log": {
+    "level": "INFO",
+    "stack-trace" : true
+  }
+}
+```
+
 ### Default Configuration File
 
 As an alternative to a specified configuration file, there are times where there
@@ -202,6 +216,31 @@ when a given Markdown file is scanned.  If multiple default configuration files
 are nested within a given directory structure, some manner of scripting will be
 necessary to properly apply the right default configuration file to its corresponding
 directory structure.
+
+### Alternate Project Configuration Files
+
+For anyone that has continued to read this far down in the hierarchy of configuration,
+there is more!  If there is a `pyproject.toml` file in the current directory that
+contains a `tool.pymarkdown` section, those values will be used for configuration.
+The [TOML file format](https://docs.fileformat.com/programming/toml/) is easy to
+use, and is provided as an alternative to the JSON format of the `.pymarkdown`
+configuration file.
+
+Note that any items contained within the section must use a key that is expressed
+using a full
+[flattened format](./advanced_configuration.md#flattened-hierarchical-property-names).
+As TOML files provides typing information for the values, care must be taken to
+associate the right type with the right value.
+
+As an example, the enhanced logging output snippet from the
+[Specific Command Line Setting](#specific-command-line-setting) section can be
+expressed in TOML format as:
+
+```toml
+[tool.pymarkdown]
+log.level = "INFO"
+log.stack-trace = true
+```
 
 ### Default Value
 

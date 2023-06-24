@@ -12,7 +12,6 @@ from pymarkdown.container_markdown_token import (
     UnorderedListStartMarkdownToken,
 )
 from pymarkdown.markdown_token import EndMarkdownToken, MarkdownToken
-# from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
