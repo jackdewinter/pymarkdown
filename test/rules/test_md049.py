@@ -28,7 +28,7 @@ def test_md049_relative_file_invalid():
     ]
 
     expected_return_code = 1
-    expected_output = f"{markdown_path}:1:1: MD049: Local URIs should be valid (validate-refs)"
+    expected_output = f"{markdown_path}:1:1: MD049: Local URIs should be valid [Dangling reference: file does not exist!] (validate-refs)"
     expected_error = ""
 
     # Act
@@ -91,7 +91,7 @@ def test_md049_absolute_file_invalid():
     ]
 
     expected_return_code = 1
-    expected_output = f"{markdown_path}:1:1: MD049: Local URIs should be valid (validate-refs)"
+    expected_output = f"{markdown_path}:1:1: MD049: Local URIs should be valid [Dangling reference: file does not exist!] (validate-refs)"
     expected_error = ""
 
     # Act
