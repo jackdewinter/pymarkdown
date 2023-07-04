@@ -1,1 +1,5 @@
 [valid-file](test.png)
+[valid-file2](test%20image.png)
+[External Url should not match](https://github.com/)
+[Mail Url should not match](mailto:info@example.com)
+[file](file://doesnotexits.txt)

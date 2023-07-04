@@ -1332,7 +1332,7 @@ def test_markdown_with_plugins_list_only():
   md046  code-block-style                        True       True       0.5.0
   md047  single-trailing-newline                 True       True       0.5.0
   md048  code-fence-style                        True       True       0.5.0
-  md049  validate-refs                           False      False      0.0.1
+  md049  validate-refs                           False      False      0.0.2
 
 """
     expected_error = ""
@@ -1410,7 +1410,7 @@ def test_markdown_with_plugins_list_only_all():
   md046  code-block-style                        True       True       0.5.0
   md047  single-trailing-newline                 True       True       0.5.0
   md048  code-fence-style                        True       True       0.5.0
-  md049  validate-refs                           False      False      0.0.1
+  md049  validate-refs                           False      False      0.0.2
   md999  debug-only                              False      False      0.0.0
 
 """
@@ -1445,7 +1445,7 @@ def test_markdown_with_plugins_list_and_filter_by_id_ends_with_nine():
   md019  no-multiple-space-atx  True       True       0.5.0
   md029  ol-prefix              True       True       0.5.0
   md039  no-space-in-links      True       True       0.5.0
-  md049  validate-refs          False      False      0.0.1
+  md049  validate-refs          False      False      0.0.2
 
 """
     expected_error = ""
