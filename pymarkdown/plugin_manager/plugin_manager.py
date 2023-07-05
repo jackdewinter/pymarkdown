@@ -60,6 +60,7 @@ class PluginManager:
         self.__enabled_plugins_for_next_token: List[FoundPlugin] = []
         self.__enabled_plugins_for_next_line: List[FoundPlugin] = []
         self.__enabled_plugins_for_completed_file: List[FoundPlugin] = []
+        self.__enabled_plugins_for_completed_all_files: List[FoundPlugin] = []
         self.__all_ids: Dict[str, FoundPlugin] = {}
 
     # pylint: disable=too-many-arguments
@@ -829,6 +830,8 @@ class PluginManager:
                 self.__enabled_plugins_for_next_line.append(next_plugin)
             if next_plugin.plugin_instance.is_completed_file_implemented_in_plugin:
                 self.__enabled_plugins_for_completed_file.append(next_plugin)
+            if next_plugin.plugin_instance.is_completed_all_files_implemented_in_plugin:
+                self.__enabled_plugins_for_completed_all_files.append(next_plugin)
             if next_plugin.plugin_instance.is_starting_new_file_implemented_in_plugin:
                 self.__enabled_plugins_for_starting_new_file.append(next_plugin)
 
@@ -857,6 +860,20 @@ class PluginManager:
         for next_plugin in self.__enabled_plugins_for_completed_file:
             try:
                 next_plugin.plugin_instance.completed_file(context)
+            except Exception as this_exception:
+                raise BadPluginError(
+                    next_plugin.plugin_id,
+                    inspect.stack()[0].function,
+                    cause=this_exception,
+                ) from this_exception
+
+    def completed_all_files(self) -> None:
+        """
+        Inform any listeners that all files have been completed.
+        """
+        for next_plugin in self.__enabled_plugins_for_completed_all_files:
+            try:
+                next_plugin.plugin_instance.completed_all_files(self.log_scan_failure)
             except Exception as this_exception:
                 raise BadPluginError(
                     next_plugin.plugin_id,

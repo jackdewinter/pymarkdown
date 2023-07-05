@@ -3,7 +3,7 @@ Module to provide structure to scan through a file.
 """
 
 from abc import ABC, abstractmethod
-from typing import Optional, cast
+from typing import Callable, Optional, cast
 
 from application_properties import ApplicationPropertiesFacade
 
@@ -11,6 +11,7 @@ from pymarkdown.leaf_markdown_token import SetextHeadingMarkdownToken
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
+from pymarkdown.plugin_manager.plugin_scan_failure import PluginScanFailure
 
 
 class RulePlugin(ABC):
@@ -26,7 +27,8 @@ class RulePlugin(ABC):
             self.__is_next_line_implemented_in_plugin,
             self.__is_starting_new_file_implemented_in_plugin,
             self.__is_completed_file_implemented_in_plugin,
-        ) = (True, True, True, True)
+            self.__is_completed_all_files_implemented_in_plugin,
+        ) = (True, True, True, True, True)
         self.__plugin_specific_facade: Optional[ApplicationPropertiesFacade] = None
 
     @abstractmethod
@@ -63,6 +65,9 @@ class RulePlugin(ABC):
         self.__is_completed_file_implemented_in_plugin = (
             "completed_file" in self.__class__.__dict__
         )
+        self.__is_completed_all_files_implemented_in_plugin = (
+            "completed_all_files" in self.__class__.__dict__
+        )
 
     @property
     def is_starting_new_file_implemented_in_plugin(self) -> bool:
@@ -91,6 +96,13 @@ class RulePlugin(ABC):
         Return whether the completed_file function is implemented in the plugin.
         """
         return self.__is_completed_file_implemented_in_plugin
+
+    @property
+    def is_completed_all_files_implemented_in_plugin(self) -> bool:
+        """
+        Return whether the completed_file function is implemented in the plugin.
+        """
+        return self.__is_completed_all_files_implemented_in_plugin
 
     def report_next_line_error(
         self,
@@ -160,6 +172,13 @@ class RulePlugin(ABC):
     def completed_file(self, context: PluginScanContext) -> None:  # noqa: B027
         """
         Event that the file being currently scanned is now completed.
+        """
+
+    def completed_all_files(  # noqa: B027
+        self, log_scan_failure: Callable[[PluginScanFailure], None]
+    ) -> None:
+        """
+        Event that all files being currently scanned are now completed.
         """
 
     def next_line(self, context: PluginScanContext, line: str) -> None:  # noqa: B027

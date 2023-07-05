@@ -439,6 +439,7 @@ class PyMarkdownLint:
                 POGGER.info("Processing files with parser.")
                 self.__process_files_to_scan(args, use_standard_in, files_to_scan)
                 POGGER.info("Files have been processed.")
+                self.__plugins.completed_all_files()
         except ValueError as this_exception:
             formatted_error = f"Configuration Error: {this_exception}"
             self.__handle_error(formatted_error, this_exception)
