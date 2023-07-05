@@ -78,12 +78,12 @@ class RuleMd051(RulePlugin):
     def completed_all_files(
         self, log_scan_failure: Callable[[PluginScanFailure], None]
     ) -> None:
-        all_assets = set(
+        all_assets = {
             x
             for x in Path(".").glob(self.__assets_glob)
             if self.__assets_regex.match(str(x))
-        )
-        unused_assets = all_assets - set(Path(x) for x in self.__used_assets)
+        }
+        unused_assets = all_assets - {Path(x) for x in self.__used_assets}
         for unused_asset in unused_assets:
             log_scan_failure(
                 PluginScanFailure(
