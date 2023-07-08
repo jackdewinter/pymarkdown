@@ -200,11 +200,12 @@ def test_api_scan_recursive_for_directory():
     # Arrange
     base_path = os.path.join("docs")
     docs_prefix = "docs" + os.sep
+    extensions_prefix = docs_prefix + "extensions" + os.sep
     rules_prefix = docs_prefix + "rules" + os.sep
     expected_failure_paths = [
         f"{docs_prefix}advanced_configuration.md",
         f"{docs_prefix}advanced_scanning.md",
-        f"{docs_prefix}extensions\\pragmas.md",
+        f"{extensions_prefix}pragmas.md",
         f"{docs_prefix}pre-commit.md",
         f"{rules_prefix}rule_md001.md",
         f"{rules_prefix}rule_md002.md",
