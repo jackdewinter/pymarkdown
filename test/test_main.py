@@ -245,7 +245,7 @@ optional arguments:
     )
 
 
-def test_markdown_with_dash_dash_version():
+def test_markdown_with_version():
     """
     Test to make sure we get help if 'version' is supplied.
     """
@@ -285,7 +285,10 @@ def test_markdown_with_direct_args(caplog):
 
     expected_return_code = 1
     expected_output = ""
-    expected_error = "Provided path 'does-not-exist.md' does not exist."
+    expected_error = """Provided path 'does-not-exist.md' does not exist.
+
+
+No matching files found."""
 
     # Act
     execute_results = scanner.invoke_main(
@@ -303,6 +306,8 @@ def test_markdown_with_direct_args(caplog):
 def test_markdown_without_direct_args(caplog):
     """
     Test to make sure we can specify the arguments normally.
+
+    This function is shadowed by test_api_scan_for_non_existant_file.
     """
 
     # Arrange
@@ -311,7 +316,10 @@ def test_markdown_without_direct_args(caplog):
 
     expected_return_code = 1
     expected_output = ""
-    expected_error = "Provided path 'does-not-exist.md' does not exist."
+    expected_error = """Provided path 'does-not-exist.md' does not exist.
+
+
+No matching files found."""
 
     # Act
     execute_results = scanner.invoke_main(
@@ -408,6 +416,9 @@ def test_markdown_with_dash_x_init():
 def test_markdown_with_multiple_errors_reported():
     """
     Test to make sure we properly sort errors from files.
+
+    Variation on test_md020_bad_single_paragraph_with_whitespace_at_end
+    with no rules disabled.
     """
 
     # Arrange

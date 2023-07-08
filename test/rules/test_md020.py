@@ -1289,6 +1289,8 @@ def test_md020_bad_single_paragraph_with_whitespace_at_end():
     Test to make sure this rule does not trigger with a document that
     contains multiple Atx Closed Headings within a paragraph
     including tabbed whitespace at the end of the heading.
+
+    This function is shadowed by test_api_scan_with_multiple_scan_issues.
     """
 
     # Arrange

@@ -1435,6 +1435,38 @@
             "elapsedTimeInMilliseconds": 0
         },
         {
+            "name": "test.test_api_general",
+            "totalTests": 2,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.test_api_list",
+            "totalTests": 13,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.test_api_logging",
+            "totalTests": 14,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.test_api_scan",
+            "totalTests": 11,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
             "name": "test.test_application_file_scanner",
             "totalTests": 7,
             "failedTests": 0,
@@ -1492,7 +1524,7 @@
         },
         {
             "name": "test.test_main_logger",
-            "totalTests": 12,
+            "totalTests": 15,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,

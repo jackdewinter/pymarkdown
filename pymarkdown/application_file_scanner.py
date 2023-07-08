@@ -7,7 +7,7 @@ import glob
 import logging
 import os
 import sys
-from typing import List, Optional, Set, Tuple
+from typing import Callable, List, Optional, Set, Tuple
 
 LOGGER = logging.getLogger(__name__)
 
@@ -20,6 +20,8 @@ class ApplicationFileScanner:
     @staticmethod
     def determine_files_to_scan_with_args(
         args: argparse.Namespace,
+        handle_output: Callable[[str], None],
+        handle_error: Callable[[str], None],
     ) -> Tuple[List[str], bool]:
         """
         Determine the files to scan based on the arguments provided by the `add_default_command_line_arguments` function.
@@ -29,14 +31,19 @@ class ApplicationFileScanner:
             args.recurse_directories,
             args.alternate_extensions,
             args.list_files,
+            handle_output,
+            handle_error,
         )
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def determine_files_to_scan(
         eligible_paths: List[str],
         recurse_directories: bool,
         eligible_extensions: str,
         only_list_files: bool,
+        handle_output: Callable[[str], None],
+        handle_error: Callable[[str], None],
     ) -> Tuple[List[str], bool]:
         """
         Determine the files to scan, and how to scan for those files.
@@ -49,9 +56,8 @@ class ApplicationFileScanner:
             if "*" in next_path or "?" in next_path:
                 globbed_paths = glob.glob(next_path)
                 if not globbed_paths:
-                    print(
-                        f"Provided glob path '{next_path}' did not match any files.",
-                        file=sys.stderr,
+                    handle_error(
+                        f"Provided glob path '{next_path}' did not match any files."
                     )
                     did_error_scanning_files = True
                     break
@@ -61,12 +67,14 @@ class ApplicationFileScanner:
                         files_to_parse,
                         recurse_directories,
                         split_eligible_extensions,
+                        handle_error,
                     )
             elif not ApplicationFileScanner.__process_next_path(
                 next_path,
                 files_to_parse,
                 recurse_directories,
                 split_eligible_extensions,
+                handle_error,
             ):
                 did_error_scanning_files = True
                 break
@@ -74,9 +82,11 @@ class ApplicationFileScanner:
         sorted_files_to_parse = sorted(files_to_parse)
         LOGGER.info("Number of files found: %d", len(sorted_files_to_parse))
         ApplicationFileScanner.__handle_main_list_files(
-            only_list_files, sorted_files_to_parse
+            only_list_files, sorted_files_to_parse, handle_output, handle_error
         )
         return sorted_files_to_parse, did_error_scanning_files
+
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __process_next_path(
@@ -84,14 +94,12 @@ class ApplicationFileScanner:
         files_to_parse: Set[str],
         recurse_directories: bool,
         eligible_extensions: List[str],
+        handle_error: Callable[[str], None],
     ) -> bool:
         did_find_any = False
         LOGGER.info("Determining files to scan for path '%s'.", next_path)
         if not os.path.exists(next_path):
-            print(
-                f"Provided path '{next_path}' does not exist.",
-                file=sys.stderr,
-            )
+            handle_error(f"Provided path '{next_path}' does not exist.")
             LOGGER.debug("Provided path '%s' does not exist.", next_path)
         elif os.path.isdir(next_path):
             ApplicationFileScanner.__process_next_path_directory(
@@ -115,9 +123,8 @@ class ApplicationFileScanner:
                 "Provided path '%s' is not a valid file. Skipping.",
                 next_path,
             )
-            print(
-                f"Provided file path '{next_path}' is not a valid file. Skipping.",
-                file=sys.stderr,
+            handle_error(
+                f"Provided file path '{next_path}' is not a valid file. Skipping."
             )
         return did_find_any
 
@@ -212,7 +219,7 @@ class ApplicationFileScanner:
                 dest="alternate_extensions",
                 action="store",
                 default=extension_to_look_for,
-                type=ApplicationFileScanner.__is_valid_comma_separated_extension_list,
+                type=ApplicationFileScanner.is_valid_comma_separated_extension_list,
                 help="provide an alternate set of file extensions to scan for",
             )
 
@@ -248,9 +255,9 @@ class ApplicationFileScanner:
         )
 
     @staticmethod
-    def __is_valid_comma_separated_extension_list(argument: str) -> str:
+    def is_valid_comma_separated_extension_list(argument: str) -> str:
         """
-        Function to help argparse limit the valid log levels.
+        Function to help argparse verify whether a comma separated list contains valid extensions.
         """
         split_argument = argument.split(",")
         for next_split in split_argument:
@@ -260,14 +267,17 @@ class ApplicationFileScanner:
 
     @staticmethod
     def __handle_main_list_files(
-        only_list_files: bool, files_to_scan: List[str]
+        only_list_files: bool,
+        files_to_scan: List[str],
+        handle_output: Callable[[str], None],
+        handle_error: Callable[[str], None],
     ) -> None:
         if only_list_files:
             LOGGER.info("Sending list of files that would have been scanned to stdout.")
             exit_code = 0
             if files_to_scan:
-                print("\n".join(files_to_scan))
+                handle_output("\n".join(files_to_scan))
             else:
                 exit_code = 1
-                print("No matching files found.", file=sys.stderr)
+                handle_error("No matching files found.")
             sys.exit(exit_code)

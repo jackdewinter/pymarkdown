@@ -31,32 +31,48 @@ POGGER = ParserLogger(logging.getLogger(__name__))
 
 LOGGER = logging.getLogger(__name__)
 
-# pylint: disable=too-few-public-methods
 
-
+# pylint: disable=too-many-instance-attributes
 class PyMarkdownLint:
     """
     Class to provide for a simple implementation of a title case algorithm.
     """
 
     __default_configuration_file = ".pymarkdown"
-    __pyproject_toml_file = "pyproject.toml"
-    __pyproject_section_header = "tool.pymarkdown"
 
     __normal_scan_subcommand = "scan"
     __stdin_scan_subcommand = "scan-stdin"
 
-    def __init__(self, presentation: Optional[MainPresentation] = None) -> None:
+    def __init__(
+        self,
+        presentation: Optional[MainPresentation] = None,
+        show_stack_trace: bool = False,
+        inherit_logging: bool = False,
+    ) -> None:
         self.__version_number = PyMarkdownLint.__get_semantic_version()
+        self.__show_stack_trace = show_stack_trace
 
         self.__presentation = presentation or MainPresentation()
         self.__properties: ApplicationProperties = ApplicationProperties()
-        self.__logging = ApplicationLogging(
-            self.__properties, default_log_level="CRITICAL"
+        self.__logging = (
+            None
+            if inherit_logging
+            else ApplicationLogging(
+                self.__properties,
+                default_log_level="CRITICAL",
+                show_stack_trace=show_stack_trace,
+            )
         )
         self.__tokenizer: Optional[TokenizedMarkdown] = None
         self.__plugins: PluginManager = PluginManager(self.__presentation)
         self.__extensions: ExtensionManager = ExtensionManager(self.__presentation)
+
+    @property
+    def application_version(self) -> str:
+        """
+        Return the version of the application.
+        """
+        return self.__version_number
 
     @staticmethod
     def __get_semantic_version() -> str:
@@ -118,6 +134,13 @@ class PyMarkdownLint:
             help="path to a plugin containing a new rule to apply",
         )
         MyApplicationProperties.add_default_command_line_arguments(parser)
+        parser.add_argument(
+            "--stack-trace",
+            dest="show_stack_trace",
+            action="store_true",
+            default=False,
+            help="if an error occurs, print out the stack trace for debug purposes",
+        )
         ApplicationLogging.add_default_command_line_arguments(parser)
 
         subparsers = parser.add_subparsers(dest="primary_subparser")
@@ -152,7 +175,7 @@ class PyMarkdownLint:
 
     def __scan_file(
         self, args: argparse.Namespace, next_file: str, next_file_name: str
-    ) -> None:
+    ) -> None:  # sourcery skip: extract-method
         """
         Scan a given file and call the plugin manager for any significant events.
         """
@@ -247,7 +270,7 @@ class PyMarkdownLint:
                 args.enable_rules,
                 args.disable_rules,
                 self.__properties,
-                self.__logging.show_stack_trace,
+                self.__show_stack_trace,
             )
         except BadPluginError as this_exception:
             formatted_error = (
@@ -256,18 +279,23 @@ class PyMarkdownLint:
             self.__handle_error(formatted_error, this_exception)
 
     def __handle_error(
-        self, formatted_error: str, thrown_error: Optional[Exception]
+        self,
+        formatted_error: str,
+        thrown_error: Optional[Exception],
+        exit_on_error: bool = True,
     ) -> None:
-        show_error = self.__logging.show_stack_trace or (
-            thrown_error and not isinstance(thrown_error, ValueError)
-        )
-        LOGGER.warning(formatted_error, exc_info=show_error)
+        LOGGER.warning(formatted_error, exc_info=thrown_error)
 
         stack_trace = (
-            "\n" + traceback.format_exc() if self.__logging.show_stack_trace else ""
+            "\n" + traceback.format_exc()
+            if self.__show_stack_trace
+            and thrown_error
+            and not isinstance(thrown_error, ValueError)
+            else ""
         )
         self.__presentation.print_system_error(f"\n\n{formatted_error}{stack_trace}")
-        sys.exit(1)
+        if exit_on_error:
+            sys.exit(1)
 
     def __handle_scan_error(self, next_file: str, this_exception: Exception) -> None:
         if formatted_error := self.__presentation.format_scan_error(
@@ -276,73 +304,11 @@ class PyMarkdownLint:
             self.__handle_error(formatted_error, this_exception)
         sys.exit(1)
 
-    def __apply_configuration_layers(self, args: argparse.Namespace) -> None:
-        MyApplicationProperties.process_standard_python_configuration_files(
-            self.__properties, self.__handle_error
-        )
+    def __handle_file_scanner_output(self, formatted_output: str) -> None:
+        self.__presentation.print_system_output(formatted_output)
 
-        MyApplicationProperties.process_project_specific_json_configuration(
-            PyMarkdownLint.__default_configuration_file,
-            args,
-            self.__properties,
-            self.__handle_error,
-        )
-
-    def __set_initial_state(self, args: argparse.Namespace) -> None:
-        self.__logging.pre_initialize_with_args(args)
-
-        self.__apply_configuration_layers(args)
-
-        if args.strict_configuration or self.__properties.get_boolean_property(
-            "mode.strict-config", strict_mode=True
-        ):
-            self.__properties.enable_strict_mode()
-
-    def __initialize_plugins(self, args: argparse.Namespace) -> None:
-        try:
-            plugin_dir = os.path.dirname(os.path.realpath(__file__))
-            plugin_dir = os.path.join(plugin_dir, "plugins")
-            self.__initialize_plugin_manager(args, plugin_dir)
-            self.__apply_configuration_to_plugins()
-        except ValueError as this_exception:
-            formatted_error = (
-                f"{type(this_exception).__name__} encountered while initializing plugins:\n"
-                + f"{this_exception}"
-            )
-            self.__handle_error(formatted_error, this_exception)
-
-    # pylint: disable=broad-exception-caught
-    def __initialize_extensions(self, args: argparse.Namespace) -> None:
-        try:
-            self.__extensions.initialize(
-                args,
-                self.__properties,
-            )
-            self.__extensions.apply_configuration()
-
-        except ValueError as this_exception:
-            formatted_error = (
-                f"Configuration error {type(this_exception).__name__} encountered "
-                + f"while initializing extensions:\n{this_exception}"
-            )
-            self.__handle_error(formatted_error, this_exception)
-        except Exception as this_exception:
-            formatted_error = (
-                f"Error {type(this_exception).__name__} encountered while initializing extensions:\n"
-                + f"{this_exception}"
-            )
-            self.__handle_error(formatted_error, this_exception)
-
-    # pylint: enable=broad-exception-caught
-
-    def __handle_plugins_and_extensions(self, args: argparse.Namespace) -> None:
-        self.__initialize_plugins(args)
-        self.__initialize_extensions(args)
-
-        if args.primary_subparser == PluginManager.argparse_subparser_name():
-            sys.exit(self.__plugins.handle_argparse_subparser(args))
-        if args.primary_subparser == ExtensionManager.argparse_subparser_name():
-            sys.exit(self.__extensions.handle_argparse_subparser(args))
+    def __handle_file_scanner_error(self, formatted_error: str) -> None:
+        self.__handle_error(formatted_error, None, exit_on_error=False)
 
     def __scan_specific_file(
         self, args: argparse.Namespace, next_file: str, next_file_name: str
@@ -399,7 +365,14 @@ class PyMarkdownLint:
         args = self.__parse_arguments(direct_args=direct_args)
         self.__set_initial_state(args)
 
-        self.__logging.initialize(args)
+        self.__show_stack_trace = args.show_stack_trace
+        if not self.__show_stack_trace and self.__properties:
+            self.__show_stack_trace = self.__properties.get_boolean_property(
+                "log.stack-trace"
+            )
+
+        if self.__logging:
+            self.__logging.initialize(args)
         ParserLogger.sync_on_next_call()
 
         if direct_args is None:
@@ -407,9 +380,79 @@ class PyMarkdownLint:
         else:
             LOGGER.debug("Using direct arguments: %s", str(direct_args))
 
-        self.__handle_plugins_and_extensions(args)
+        self.__initialize_plugins_and_extensions(args)
         return args
 
+    def __set_initial_state(self, args: argparse.Namespace) -> None:
+        if self.__logging:
+            self.__logging.pre_initialize_with_args(args)
+
+        self.__apply_configuration_layers(args)
+
+        if args.strict_configuration or self.__properties.get_boolean_property(
+            "mode.strict-config", strict_mode=True
+        ):
+            self.__properties.enable_strict_mode()
+
+    def __apply_configuration_layers(self, args: argparse.Namespace) -> None:
+        MyApplicationProperties.process_standard_python_configuration_files(
+            self.__properties, self.__handle_error
+        )
+
+        MyApplicationProperties.process_project_specific_json_configuration(
+            PyMarkdownLint.__default_configuration_file,
+            args,
+            self.__properties,
+            self.__handle_error,
+        )
+
+    def __initialize_plugins_and_extensions(self, args: argparse.Namespace) -> None:
+        self.__initialize_plugins(args)
+        self.__initialize_extensions(args)
+
+        if args.primary_subparser == PluginManager.argparse_subparser_name():
+            sys.exit(self.__plugins.handle_argparse_subparser(args))
+        if args.primary_subparser == ExtensionManager.argparse_subparser_name():
+            sys.exit(self.__extensions.handle_argparse_subparser(args))
+
+    def __initialize_plugins(self, args: argparse.Namespace) -> None:
+        try:
+            plugin_dir = os.path.dirname(os.path.realpath(__file__))
+            plugin_dir = os.path.join(plugin_dir, "plugins")
+            self.__initialize_plugin_manager(args, plugin_dir)
+            self.__apply_configuration_to_plugins()
+        except ValueError as this_exception:
+            formatted_error = (
+                f"{type(this_exception).__name__} encountered while initializing plugins:\n"
+                + f"{this_exception}"
+            )
+            self.__handle_error(formatted_error, this_exception)
+
+    # pylint: disable=broad-exception-caught
+    def __initialize_extensions(self, args: argparse.Namespace) -> None:
+        try:
+            self.__extensions.initialize(
+                args,
+                self.__properties,
+            )
+            self.__extensions.apply_configuration()
+
+        except ValueError as this_exception:
+            formatted_error = (
+                f"Configuration error {type(this_exception).__name__} encountered "
+                + f"while initializing extensions:\n{this_exception}"
+            )
+            self.__handle_error(formatted_error, this_exception)
+        except Exception as this_exception:
+            formatted_error = (
+                f"Error {type(this_exception).__name__} encountered while initializing extensions:\n"
+                + f"{this_exception}"
+            )
+            self.__handle_error(formatted_error, this_exception)
+
+    # pylint: enable=broad-exception-caught
+
+    # pylint: disable=broad-exception-caught
     def main(self, direct_args: Optional[List[str]] = None) -> None:
         """
         Main entrance point.
@@ -429,8 +472,15 @@ class PyMarkdownLint:
                 (
                     files_to_scan,
                     did_error_scanning_files,
-                ) = ApplicationFileScanner.determine_files_to_scan_with_args(args)
+                ) = ApplicationFileScanner.determine_files_to_scan_with_args(
+                    args,
+                    self.__handle_file_scanner_output,
+                    self.__handle_file_scanner_error,
+                )
             if did_error_scanning_files:
+                self.__handle_error(
+                    "No matching files found.", None, exit_on_error=False
+                )
                 total_error_count = 1
             else:
                 POGGER.info("Initializing parser.")
@@ -442,14 +492,24 @@ class PyMarkdownLint:
         except ValueError as this_exception:
             formatted_error = f"Configuration Error: {this_exception}"
             self.__handle_error(formatted_error, this_exception)
+        except Exception as this_exception:
+            formatted_error = (
+                f"Unexpected Error({type(this_exception).__name__}): {this_exception}"
+            )
+            self.__handle_error(formatted_error, this_exception)
         finally:
-            self.__logging.terminate()
+            if self.__logging:
+                self.__logging.terminate()
+            self.__logging = None
 
         if self.__plugins.number_of_scan_failures or total_error_count:
             sys.exit(1)
 
+    # pylint: enable=broad-exception-caught
 
-# pylint: enable=too-few-public-methods
+
+# pylint: enable=too-many-instance-attributes
+
 
 if __name__ == "__main__":
     PyMarkdownLint().main()

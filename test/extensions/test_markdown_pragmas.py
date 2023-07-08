@@ -11,6 +11,8 @@ import pytest
 def test_pragmas_01():
     """
     Test the case where we specify a pragma, but do not specify a command.
+
+    This function is shadowed by test_api_scan_with_pragma_failure.
     """
 
     # Arrange
