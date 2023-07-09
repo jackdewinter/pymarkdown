@@ -133,7 +133,7 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
         assert expected_str == str(
             actual_tokens[element_index]
         ), f"List items {element_index} are not equal.{diff_values}"
-    print("---\nToken lists are equal.\n---")
+    print("---\nLists are equal.\n---")
 
 
 def assert_if_strings_different(expected_string, actual_string):

@@ -66,6 +66,8 @@ main.py scan: error: the following arguments are required: path
 def test_markdown_with_dash_l_on_bad_path():
     """
     Test to make sure we get failure text if '-l' is supplied with a bad path.
+
+    This function is shadowed by test_api_list_for_non_existant_file
     """
 
     # Arrange
@@ -75,6 +77,8 @@ def test_markdown_with_dash_l_on_bad_path():
     expected_return_code = 1
     expected_output = ""
     expected_error = """Provided path 'my-bad-path' does not exist.
+
+
 No matching files found."""
 
     # Act
@@ -91,6 +95,8 @@ No matching files found."""
 def test_markdown_with_dash_l_on_non_md_directory():
     """
     Test to make sure we get failure text if '-l' is supplied with a path containing no md files.
+
+    This function is shadowed by test_api_list_for_directory_without_markdown_files.
     """
 
     # Arrange
@@ -117,6 +123,8 @@ def test_markdown_with_dash_l_on_md_directory():
     """
     Test to make sure we get the path to a single file if '-l' is supplied
     with a path containing a simple md file.
+
+    This function is shadowed by test_api_list_for_directory_with_markdown_files.
     """
 
     # Arrange
@@ -174,6 +182,8 @@ def test_markdown_with_dash_l_on_mixed_directories():
 def test_markdown_with_dash_l_on_non_md_file():
     """
     Test to make sure we get a failure if '-l' is supplied with a file path that isn't a md file.
+
+    This function is shadowed by test_api_scan_for_non_markdown_file.
     """
 
     # Arrange
@@ -184,6 +194,8 @@ def test_markdown_with_dash_l_on_non_md_file():
     expected_return_code = 1
     expected_output = ""
     expected_error = """Provided file path '{source_path}' is not a valid file. Skipping.
+
+
 No matching files found.""".replace(
         "{source_path}", source_path
     )
@@ -248,6 +260,8 @@ def test_markdown_with_dash_l_on_mixed_files():
     expected_return_code = 1
     expected_output = """"""
     expected_error = """Provided file path '{nonexisting_source_path}' is not a valid file. Skipping.
+
+
 No matching files found.""".replace(
         "{nonexisting_source_path}", nonexisting_source_path
     )
@@ -302,6 +316,8 @@ def test_markdown_with_dash_l_on_non_matching_globbed_files():
     """
     Test to make sure we get a failure if '-l' is supplied with a
     globbed file path that works but does not find any matching files.
+
+    This function is shadowed by test_api_scan_for_non_matching_glob.
     """
 
     # Arrange
@@ -311,7 +327,7 @@ def test_markdown_with_dash_l_on_non_matching_globbed_files():
 
     expected_return_code = 1
     expected_output = """"""
-    expected_error = f"Provided glob path '{source_path}' did not match any files.\nNo matching files found."
+    expected_error = f"Provided glob path '{source_path}' did not match any files.\n\n\nNo matching files found."
 
     # Act
     execute_results = scanner.invoke_main(

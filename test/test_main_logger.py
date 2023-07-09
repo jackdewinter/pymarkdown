@@ -6,6 +6,7 @@ import os
 import tempfile
 from test.markdown_scanner import MarkdownScanner
 
+from pymarkdown.application_logging import ApplicationLogging
 from pymarkdown.container_blocks.container_indices import ContainerIndices
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.stack_token import StackToken
@@ -119,7 +120,7 @@ def test_markdown_with_dash_dash_log_level_invalid(caplog):
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE]
                {plugins,extensions,scan,scan-stdin,version} ...
-main.py: error: argument --log-level: invalid __log_level_type value: 'invalid'
+main.py: error: argument --log-level: invalid validate_log_level_type value: 'invalid'
 """
 
     # Act
@@ -152,6 +153,8 @@ def test_markdown_with_dash_dash_log_level_info_with_file():
     """
     Test to make sure we get the right effect if the `--log-level` flag
     is set for info with the results going to a file.
+
+    This function is shadowed in test_api_simple_clean_scan.
     """
 
     # Arrange
@@ -201,6 +204,44 @@ def test_markdown_with_dash_dash_log_level_info_with_file():
     finally:
         if os.path.exists(log_file_name):
             os.remove(log_file_name)
+
+
+def test_markdown_with_dash_dash_log_level_info_with_file_as_directory():
+    """
+    Test to make sure we get the right effect if a directory is specified
+    as the file to log to.
+
+    This is shadowed by
+    test_api_logging_debug_to_file_as_directory
+    """
+
+    # Arrange
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    with tempfile.TemporaryDirectory() as temp_directory:
+        log_file_name = temp_directory
+
+        scanner = MarkdownScanner()
+        supplied_arguments = [
+            "--log-file",
+            log_file_name,
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = ""
+        expected_error = "Unexpected Error(ApplicationLoggingException): Failure initializing logging subsystem."
+
+        # Act
+        ParserLogger.sync_on_next_call()
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
 
 
 def test_markdown_logger_stack_token_normal_output():
@@ -364,3 +405,34 @@ def test_markdown_logger_arg_list_out_of_sync():
 
 
 # pylint: enable=broad-exception-caught
+
+
+def test_markdown_logger_translate_log_level_valid():
+    """
+    Test to make sure that we can translate a valid logging level to its numeric counterpart.
+    """
+
+    # Arrange
+    log_level_as_string = "DEBUG"
+
+    # Act
+    log_level = ApplicationLogging.translate_log_level(log_level_as_string)
+
+    # Assert
+    assert log_level == logging.DEBUG
+
+
+def test_markdown_logger_translate_log_level_invalid():
+    """
+    Test to make sure that we can translate an invalid logging level to NOTSET
+    to indicate it was bad.
+    """
+
+    # Arrange
+    log_level_as_string = "other"
+
+    # Act
+    log_level = ApplicationLogging.translate_log_level(log_level_as_string)
+
+    # Assert
+    assert log_level == logging.NOTSET

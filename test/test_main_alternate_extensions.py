@@ -24,9 +24,7 @@ def test_markdown_with_dash_ae_with_invalid_file_extension():
 
     expected_return_code = 1
     expected_output = ""
-    expected_error = (
-        f"Provided file path '{file_to_scan}' is not a valid file. Skipping."
-    )
+    expected_error = f"Provided file path '{file_to_scan}' is not a valid file. Skipping.\n\n\nNo matching files found."
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -70,7 +68,11 @@ def test_markdown_with_dash_ae_with_valid_file_extension():
 
 def test_markdown_with_dash_ae_with_valid_file_extension_multiple():
     """
-    Test to make sure
+    Test to make sure that a file with a non-md extension but with
+    alternate extensions is accepted as a valid file.
+
+    This function is a shadow of
+    test_api_list_for_non_markdown_file_with_alternate_extensions
     """
 
     # Arrange

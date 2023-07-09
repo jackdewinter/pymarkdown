@@ -2,8 +2,9 @@
     "disables-by-file": {
         "pymarkdown/__init__.py": {},
         "pymarkdown/__main__.py": {},
+        "pymarkdown/api.py": {},
         "pymarkdown/application_file_scanner.py": {
-            "too-many-arguments": 1
+            "too-many-arguments": 2
         },
         "pymarkdown/application_logging.py": {},
         "pymarkdown/bad_tokenization_error.py": {},
@@ -195,8 +196,8 @@
             "too-many-arguments": 3
         },
         "pymarkdown/main.py": {
-            "too-few-public-methods": 1,
-            "broad-exception-caught": 2
+            "too-many-instance-attributes": 1,
+            "broad-exception-caught": 3
         },
         "pymarkdown/main_presentation.py": {},
         "pymarkdown/markdown_token.py": {
@@ -334,14 +335,14 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 173,
-        "too-few-public-methods": 24,
+        "too-many-arguments": 174,
+        "too-few-public-methods": 23,
         "too-many-locals": 16,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 1,
-        "too-many-instance-attributes": 19,
+        "too-many-instance-attributes": 20,
         "too-many-public-methods": 3,
         "protected-access": 2,
-        "broad-exception-caught": 2
+        "broad-exception-caught": 3
     }
 }
