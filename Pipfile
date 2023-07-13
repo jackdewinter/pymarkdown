@@ -4,13 +4,12 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-
-[packages]
 black = "==23.3.0"
 isort = "==5.12.0"
 flake8 = "==6.0.0"
 flake8-bugbear = "==23.3.23"
 flake8-bandit = "==4.1.1"
+mypy = "==1.2.0"
 pre-commit = "==3.2.2"
 project-summarizer = "==0.5.0"
 pylint = "==2.17.2"
@@ -25,12 +24,14 @@ pytest-xdist = "==3.2.1"
 setuptools = "==65.3.0"
 snakeviz = "==2.1.1"
 twine = "==4.0.2"
-typing-extensions = "==4.7.1"
-mypy = "==1.2.0"
-columnar = "==1.4.1"
 coverage = "==7.2.3"
 sourcery = "==1.2.0"
-application-properties = "==0.7.0"
+py = "*"
+
+[packages]
+typing-extensions = ">=4.7.1"
+columnar = ">=1.4.1"
+application-properties = ">=0.7.0"
 
 [requires]
 python_version = "3.8"
