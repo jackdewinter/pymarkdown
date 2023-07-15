@@ -537,6 +537,7 @@ def test_api_config_with_bad_contents_for_pyproject_toml():
 
     # Assert
     assert caught_exception, "Should have thrown an exception."
+    print(os.platform)
     assert (
         caught_exception.reason
         == f"Specified configuration file '{os.path.abspath(configuration_file)}' is not a valid TOML file: Invalid statement (at line 1, column 1)."
