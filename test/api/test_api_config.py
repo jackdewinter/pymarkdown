@@ -458,7 +458,7 @@ def test_api_config_with_bad_contents_for_default_config():
     assert caught_exception, "Should have thrown an exception."
     assert (
         caught_exception.reason
-        == f"Specified configuration file '{configuration_file}' is not a valid JSON file: Expecting value: line 1 column 1 (char 0)."
+        == f"Specified configuration file '{os.path.abspath(configuration_file)}' is not a valid JSON file: Expecting value: line 1 column 1 (char 0)."
     )
 
 
@@ -539,5 +539,5 @@ def test_api_config_with_bad_contents_for_pyproject_toml():
     assert caught_exception, "Should have thrown an exception."
     assert (
         caught_exception.reason
-        == f"Specified configuration file '{configuration_file}' is not a valid TOML file: Invalid statement (at line 1, column 1)."
+        == f"Specified configuration file '{os.path.abspath(configuration_file)}' is not a valid TOML file: Invalid statement (at line 1, column 1)."
     )
