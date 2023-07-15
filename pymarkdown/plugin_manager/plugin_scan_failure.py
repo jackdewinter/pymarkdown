@@ -19,17 +19,6 @@ class PluginScanFailure:
     rule_description: str
     extra_error_information: Optional[str]
 
-    def partial_equals(self, other: "PluginScanFailure") -> bool:
-        """
-        Decide if special fields are the same from both items.
-        """
-        return (
-            self.scan_file == other.scan_file
-            and self.line_number == other.line_number
-            and self.column_number == other.column_number
-            and self.rule_id == other.rule_id
-        )
-
     def __lt__(self, other: "PluginScanFailure") -> bool:
         # This is required to allow for sorting of the failures before display.
 
