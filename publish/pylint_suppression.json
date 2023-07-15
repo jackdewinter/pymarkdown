@@ -2,7 +2,10 @@
     "disables-by-file": {
         "pymarkdown/__init__.py": {},
         "pymarkdown/__main__.py": {},
-        "pymarkdown/api.py": {},
+        "pymarkdown/api.py": {
+            "too-many-instance-attributes": 1,
+            "too-many-public-methods": 1
+        },
         "pymarkdown/application_file_scanner.py": {
             "too-many-arguments": 2
         },
@@ -335,13 +338,13 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
+        "too-many-instance-attributes": 21,
+        "too-many-public-methods": 4,
         "too-many-arguments": 174,
         "too-few-public-methods": 23,
         "too-many-locals": 16,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 1,
-        "too-many-instance-attributes": 20,
-        "too-many-public-methods": 3,
         "protected-access": 2,
         "broad-exception-caught": 3
     }

@@ -172,6 +172,9 @@ def test_markdown_with_dash_e_single_by_id_and_non_json_config_file():
     """
     Test to make sure we get an error if we provide a configuration file that is
     not in a json format.
+
+    This function shadows
+    test_api_config_with_bad_contents
     """
 
     # Arrange
@@ -216,6 +219,9 @@ def test_markdown_with_dash_e_single_by_id_and_non_present_config_file():
     """
     Test to make sure we get an error if we provide a configuration file that is
     not in a json format.
+
+    This function shadows
+    test_api_config_with_bad_path
     """
 
     # Arrange
@@ -255,6 +261,9 @@ def test_markdown_with_dash_e_single_by_id_and_good_select_config():
     Test to make sure we get enable a rule if '-e' is supplied and the id of the
     rule is provided. The test data for MD047 is used as it is a simple file that
     passes normally, it is used as a comparison.
+
+    This function shadows
+    test_api_config_with_config_file_with_good_value
     """
 
     # Arrange
@@ -313,6 +322,9 @@ def test_markdown_with_dash_e_single_by_id_and_bad_select_config():
     Test to make sure we get enable a rule if '-e' is supplied and the id of the
     rule is provided. The test data for MD047 is used as it is a simple file that
     passes normally, it is used as a comparison.
+
+    This function is shadowed by
+    test_api_config_with_config_file_with_bad_value
     """
 
     # Arrange
@@ -540,6 +552,9 @@ def test_markdown_with_default_configuration_file_with_error():
     """
     Test to make sure that a default configuration will be read and have the
     same errors as if it was specified on the command line.
+
+    This function shadows
+    test_api_config_with_bad_contents_for_default_config
     """
 
     # Arrange

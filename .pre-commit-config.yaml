@@ -1,4 +1,11 @@
 repos:
+  - repo: local
+    hooks:
+      - id: generate-docs
+        name: Generate API docs
+        language: system
+        entry: pipenv run python utils/correct_pdoc_issues.py
+        pass_filenames: false
   - repo: https://github.com/jackdewinter/pymarkdown
     rev: v0.9.11
     hooks:
@@ -17,4 +24,3 @@ repos:
         language: system
         entry: pipenv run python utils/verify_install_requirements.py
         pass_filenames: false
-        

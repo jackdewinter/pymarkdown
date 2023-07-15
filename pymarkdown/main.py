@@ -48,11 +48,13 @@ class PyMarkdownLint:
         presentation: Optional[MainPresentation] = None,
         show_stack_trace: bool = False,
         inherit_logging: bool = False,
+        string_to_scan: Optional[str] = None,
     ) -> None:
-        self.__version_number = PyMarkdownLint.__get_semantic_version()
-        self.__show_stack_trace = show_stack_trace
-
         self.__presentation = presentation or MainPresentation()
+        self.__show_stack_trace = show_stack_trace
+        self.__string_to_scan = string_to_scan
+
+        self.__version_number = PyMarkdownLint.__get_semantic_version()
         self.__properties: ApplicationProperties = ApplicationProperties()
         self.__logging = (
             None
@@ -104,20 +106,6 @@ class PyMarkdownLint:
             help="comma separated list of rules to disable",
         )
 
-        parser.add_argument(
-            "-x-scan",
-            dest="x_test_scan_fault",
-            action="store_true",
-            default="",
-            help=argparse.SUPPRESS,
-        )
-        parser.add_argument(
-            "-x-init",
-            dest="x_test_init_fault",
-            action="store_true",
-            default="",
-            help=argparse.SUPPRESS,
-        )
         parser.add_argument(
             "-x-stdin",
             dest="x_test_stdin_fault",
@@ -174,7 +162,7 @@ class PyMarkdownLint:
         return parse_arguments
 
     def __scan_file(
-        self, args: argparse.Namespace, next_file: str, next_file_name: str
+        self, source_provider: FileSourceProvider, next_file_name: str
     ) -> None:  # sourcery skip: extract-method
         """
         Scan a given file and call the plugin manager for any significant events.
@@ -187,13 +175,13 @@ class PyMarkdownLint:
             POGGER.info("Starting file '$'.", next_file_name)
 
             POGGER.info("Scanning file '$' token-by-token.", next_file_name)
-            source_provider = (
-                None if args.x_test_scan_fault else FileSourceProvider(next_file)
-            )
             assert self.__tokenizer
             actual_tokens = self.__tokenizer.transform_from_provider(source_provider)
 
-            self.__process_file_scan(context, next_file, next_file_name, actual_tokens)
+            source_provider.reset_to_start()
+            self.__process_file_scan(
+                context, source_provider, next_file_name, actual_tokens
+            )
 
             context.report_on_triggered_rules()
             POGGER.info("Ending file '$'.", next_file_name)
@@ -205,7 +193,7 @@ class PyMarkdownLint:
     def __process_file_scan(
         self,
         context: PluginScanContext,
-        next_file: str,
+        source_provider: FileSourceProvider,
         next_file_name: str,
         actual_tokens: List[MarkdownToken],
     ) -> None:
@@ -220,7 +208,6 @@ class PyMarkdownLint:
             self.__plugins.next_token(context, next_token)
 
         POGGER.info("Scanning file '$' line-by-line.", next_file_name)
-        source_provider = FileSourceProvider(next_file)
         line_number, next_line = 1, source_provider.get_next_line()
         while next_line is not None:
             POGGER.info("Processing line $: $", line_number, next_line)
@@ -244,10 +231,9 @@ class PyMarkdownLint:
 
     # pylint: enable=broad-exception-caught
 
-    def __initialize_parser(self, args: argparse.Namespace) -> None:
-        resource_path = "fredo" if args.x_test_init_fault else None
+    def __initialize_parser(self) -> None:
         try:
-            self.__tokenizer = TokenizedMarkdown(resource_path)
+            self.__tokenizer = TokenizedMarkdown()
             self.__tokenizer.apply_configuration(self.__properties, self.__extensions)
         except BadTokenizationError as this_exception:
             formatted_error = (
@@ -310,15 +296,47 @@ class PyMarkdownLint:
     def __handle_file_scanner_error(self, formatted_error: str) -> None:
         self.__handle_error(formatted_error, None, exit_on_error=False)
 
-    def __scan_specific_file(
-        self, args: argparse.Namespace, next_file: str, next_file_name: str
-    ) -> None:
+    def __scan_specific_file(self, next_file: str, next_file_name: str) -> None:
         try:
-            self.__scan_file(args, next_file, next_file_name)
+            source_provider = FileSourceProvider(next_file)
+            self.__scan_file(source_provider, next_file_name)
         except BadPluginError as this_exception:
             self.__handle_scan_error(next_file, this_exception)
         except BadTokenizationError as this_exception:
             self.__handle_scan_error(next_file, this_exception)
+
+    def __scan_from_stdin(self, args: argparse.Namespace) -> None:
+        temporary_file = None
+        scan_exception = None
+        scan_id = "stdin" if self.__string_to_scan is None else "in-memory"
+        try:
+            if args.x_test_stdin_fault:
+                raise IOError("made up")
+
+            with tempfile.NamedTemporaryFile("wt", delete=False) as outfile:
+                temporary_file = outfile.name
+
+                if self.__string_to_scan:
+                    outfile.write(self.__string_to_scan)
+                else:
+                    for line in sys.stdin:
+                        outfile.write(line)
+
+            self.__scan_specific_file(temporary_file, scan_id)
+
+        except IOError as this_exception:
+            scan_exception = this_exception
+        finally:
+            if temporary_file and os.path.exists(temporary_file):
+                os.remove(temporary_file)
+
+        if scan_exception:
+            try:
+                raise IOError(
+                    f"Temporary file to capture {scan_id} was not written ({scan_exception})."
+                ) from scan_exception
+            except IOError as this_exception:
+                self.__handle_scan_error(scan_id, this_exception)
 
     def __process_files_to_scan(
         self, args: argparse.Namespace, use_standard_in: bool, files_to_scan: List[str]
@@ -326,38 +344,12 @@ class PyMarkdownLint:
         # sourcery skip: raise-specific-error
         if use_standard_in:
             POGGER.debug("Scanning from: (stdin)")
+            self.__scan_from_stdin(args)
 
-            temporary_file = None
-            scan_exception = None
-            try:
-                if args.x_test_stdin_fault:
-                    raise IOError("made up")
-
-                with tempfile.NamedTemporaryFile("wt", delete=False) as outfile:
-                    temporary_file = outfile.name
-
-                    for line in sys.stdin:
-                        outfile.write(line)
-
-                self.__scan_specific_file(args, temporary_file, "stdin")
-
-            except IOError as this_exception:
-                scan_exception = this_exception
-            finally:
-                if temporary_file and os.path.exists(temporary_file):
-                    os.remove(temporary_file)
-
-            if scan_exception:
-                try:
-                    raise IOError(
-                        f"Temporary file to capture stdin was not written ({scan_exception})."
-                    ) from scan_exception
-                except IOError as this_exception:
-                    self.__handle_scan_error("stdin", this_exception)
         else:
             POGGER.debug("Scanning from: $", files_to_scan)
             for next_file in files_to_scan:
-                self.__scan_specific_file(args, next_file, next_file)
+                self.__scan_specific_file(next_file, next_file)
 
     def __initialize_subsystems(
         self, direct_args: Optional[List[str]]
@@ -484,7 +476,7 @@ class PyMarkdownLint:
                 total_error_count = 1
             else:
                 POGGER.info("Initializing parser.")
-                self.__initialize_parser(args)
+                self.__initialize_parser()
 
                 POGGER.info("Processing files with parser.")
                 self.__process_files_to_scan(args, use_standard_in, files_to_scan)

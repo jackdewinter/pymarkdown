@@ -566,6 +566,9 @@ def test_front_matter_21():
     """
     Test to make sure that a properly setup front matter section and enabled
     extension works as intended.
+
+    This function shadows
+    test_api_config_with_strict_and_good_extension_initialize
     """
 
     # Arrange

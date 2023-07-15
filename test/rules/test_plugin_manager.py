@@ -44,6 +44,9 @@ optional arguments:
 def test_markdown_with_dash_dash_add_plugin_and_bad_path():
     """
     Test to make sure we get an error if '--add-plugin' is supplied with a bad path.
+
+    This function shadows
+    test_api_plugins_add_with_bad_path
     """
 
     # Arrange
@@ -77,6 +80,9 @@ def test_markdown_with_dash_dash_add_plugin_and_bad_path():
 def test_markdown_with_dash_dash_add_plugin_and_single_plugin_file():
     """
     Test to make sure we add a plugin if '--add-plugin' is supplied with a valid plugin.
+
+    This test shadows
+    test_api_plugins_add_with_simple_plugin
     """
 
     # Arrange
@@ -114,6 +120,9 @@ MD998>>completed_file
 def test_markdown_with_dash_dash_add_plugin_and_single_plugin_directory():
     """
     Test to make sure we add a plugin if '--add-plugin' is supplied with a valid plugin directory.
+
+    This function shadows
+    test_api_plugins_add_with_simple_plugins_by_directory
     """
 
     # Arrange
@@ -151,7 +160,10 @@ MD998>>completed_file
 def test_markdown_with_repeated_identifier():
     """
     Test to make sure we report an error if '--add-plugin' is supplied with a plugin that
-        specifies an already present id.
+    specifies an already present id.
+
+    This function shadows
+    test_api_plugins_add_with_repeated_identifier
     """
 
     # Arrange
@@ -360,6 +372,9 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_starting_new_file():
     """
     Test to make sure we get an error logged if a plugin throws an exception
         within the starting_new_file function.
+
+    This function shadows
+    test_api_plugins_add_with_bad_starting_new_file
     """
 
     # Arrange
@@ -626,6 +641,9 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_token():
     """
     Test to make sure we get an error logged if a plugin throws an exception
         within the next_token function.
+
+    This function shadows
+    test_api_plugins_add_with_bad_next_token
     """
 
     # Arrange
@@ -664,6 +682,9 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_token_with_stack_trace
     """
     Test to make sure we get an error logged if a plugin throws an exception
         within the next_token function.
+
+    This function shadows
+    test_api_plugins_add_with_bad_next_token_and_stack_trace
     """
 
     # Arrange
@@ -876,6 +897,9 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_string_detail_from_configur
     """
     Test to make sure we get an error logged if a plugin throws an exception that a string detail is bad.
     Note: this version loads from configuration.
+
+    This function shadows
+    test_api_plugins_add_with_bad_load_due_to_configuration
     """
 
     # Arrange

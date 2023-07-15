@@ -15,6 +15,9 @@ def test_md002_all_samples():
     """
     Test to make sure we get the expected behavior after scanning the files in the
     test/resources/rules/md002 directory.
+
+    This function shadows
+    test_api_plugins_disable_multiple_enable_one
     """
 
     # Arrange

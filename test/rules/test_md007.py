@@ -1120,6 +1120,9 @@ def test_md007_good_list_indentation_by_four():
     """
     Test to make sure this rule does not trigger with a document that has
     each list indented by 4, but configuration to support it.
+
+    This function shadows
+    test_api_config_with_good_integer_property
     """
 
     # Arrange
