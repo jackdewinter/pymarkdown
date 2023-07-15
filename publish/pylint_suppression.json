@@ -345,6 +345,8 @@
         "too-many-locals": 16,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 1,
+        "too-many-instance-attributes": 20,
+        "too-many-public-methods": 3,
         "protected-access": 2,
         "broad-exception-caught": 3
     }
