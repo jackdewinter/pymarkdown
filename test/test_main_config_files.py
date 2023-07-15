@@ -11,6 +11,9 @@ from .utils import write_temporary_configuration
 def test_markdown_with_config_no_config():
     """
     Test to make sure that
+
+    This function shadows
+    test_api_scan_string_test_bad_file_due_to_no_disables
     """
 
     # Arrange
@@ -47,6 +50,9 @@ this is a very long line
 def test_markdown_with_config_general_command_line():
     """
     Test to make sure that
+
+    This test shadows
+    test_api_scan_string_test_good_file_after_disables
     """
 
     # Arrange

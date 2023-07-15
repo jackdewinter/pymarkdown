@@ -31,6 +31,7 @@ columnar = "==1.4.1"
 coverage = "==7.2.3"
 sourcery = "==1.2.0"
 application-properties = "==0.7.0"
+pdoc3 = "==0.10.0"
 
 [requires]
 python_version = "3.8"

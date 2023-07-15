@@ -49,6 +49,9 @@ def test_md004_good_asterisk_single_level():
     Test to make sure this rule does not trigger with a document that
     is only level 1 unordered lists starting with asterisk and the
     configuration is set to asterisk.
+
+    This function shadows
+    test_api_config_with_good_string_property
     """
 
     # Arrange

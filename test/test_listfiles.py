@@ -355,6 +355,8 @@ def test_markdown_with_dash_l_on_directory():
     expected_output = """{source_path}advanced_configuration.md
 {source_path}advanced_plugins.md
 {source_path}advanced_scanning.md
+{source_path}api-usage.md
+{source_path}api.md
 {source_path}developer.md
 {source_path}extensions.md
 {source_path}faq.md
@@ -395,6 +397,8 @@ def test_markdown_with_dash_l_and_dash_r_on_directory():
         """{source_path}advanced_configuration.md
 {source_path}advanced_plugins.md
 {source_path}advanced_scanning.md
+{source_path}api-usage.md
+{source_path}api.md
 {source_path}developer.md
 {source_path}extensions.md
 {extensions_source_path}front-matter.md

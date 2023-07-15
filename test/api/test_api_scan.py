@@ -8,12 +8,12 @@ from test.utils import assert_if_lists_different
 import pytest
 
 from pymarkdown.api import (
-    PragmaError,
     PyMarkdownApi,
     PyMarkdownApiArgumentException,
     PyMarkdownApiNoFilesFoundException,
+    PyMarkdownPragmaError,
+    PyMarkdownScanFailure,
 )
-from pymarkdown.plugin_manager.plugin_scan_failure import PluginScanFailure
 
 
 def test_api_scan_bad_path_to_scan():
@@ -205,6 +205,8 @@ def test_api_scan_recursive_for_directory():
     expected_failure_paths = [
         f"{docs_prefix}advanced_configuration.md",
         f"{docs_prefix}advanced_scanning.md",
+        f"{docs_prefix}api-usage.md",
+        f"{docs_prefix}api.md",
         f"{extensions_prefix}pragmas.md",
         f"{docs_prefix}pre-commit.md",
         f"{rules_prefix}rule_md001.md",
@@ -239,7 +241,13 @@ def test_api_scan_recursive_for_directory():
 
     # Assert
     assert scan_result
-    assert len(scan_result.scan_failures) == 116
+
+    itemized_scan_failures = ""
+    for i in scan_result.scan_failures:
+        itemized_scan_failures = itemized_scan_failures + "\n" + str(i)
+    print(itemized_scan_failures)
+    assert len(scan_result.scan_failures) == 128
+
     scan_failures = []
     for i in scan_result.scan_failures:
         if i.scan_file not in scan_failures:
@@ -273,19 +281,19 @@ def test_api_scan_with_multiple_scan_issues():
     assert scan_result
     assert len(scan_result.scan_failures) == 5
     assert scan_result.scan_failures[0].partial_equals(
-        PluginScanFailure(source_path, 1, 1, "MD022", "", "", None)
+        PyMarkdownScanFailure(source_path, 1, 1, "MD022", "", "", None)
     )
     assert scan_result.scan_failures[1].partial_equals(
-        PluginScanFailure(source_path, 1, 12, "MD010", "", "", None)
+        PyMarkdownScanFailure(source_path, 1, 12, "MD010", "", "", None)
     )
     assert scan_result.scan_failures[2].partial_equals(
-        PluginScanFailure(source_path, 2, 2, "MD022", "", "", None)
+        PyMarkdownScanFailure(source_path, 2, 2, "MD022", "", "", None)
     )
     assert scan_result.scan_failures[3].partial_equals(
-        PluginScanFailure(source_path, 2, 2, "MD023", "", "", None)
+        PyMarkdownScanFailure(source_path, 2, 2, "MD023", "", "", None)
     )
     assert scan_result.scan_failures[4].partial_equals(
-        PluginScanFailure(source_path, 2, 14, "MD010", "", "", None)
+        PyMarkdownScanFailure(source_path, 2, 14, "MD010", "", "", None)
     )
 
     # TODO, same, but disable rules
@@ -317,10 +325,10 @@ def test_api_scan_with_pragma_failure():
     assert scan_result
     assert len(scan_result.scan_failures) == 1
     assert scan_result.scan_failures[0].partial_equals(
-        PluginScanFailure(source_path, 2, 1, "MD019", "", "", None)
+        PyMarkdownScanFailure(source_path, 2, 1, "MD019", "", "", None)
     )
     assert len(scan_result.pragma_errors) == 1
-    assert scan_result.pragma_errors[0] == PragmaError(
+    assert scan_result.pragma_errors[0] == PyMarkdownPragmaError(
         source_path, 1, "Inline configuration specified without command."
     )
 
@@ -352,77 +360,97 @@ def test_api_with_good_pragma():
     assert not scan_result.pragma_errors
 
 
-## Test: test_md003_bad_configuration_style
-##       supplied_arguments = ["--strict-config","--set","plugins.md003.style=fred","scan",
-##       source_path = os.path.join("test", "resources", "rules", "md003") + os.sep
-##       "BadPluginError encountered while configuring plugins:\n"
+def test_api_scan_string_test():
+    """
+    Test to make sure that an empty path to scan is reported as an error.
+    """
 
-## Test: test_markdown_with_dash_x_init
-##       source_path = os.path.join("test", "resources", "rules", "md047", "end_with_blank_line.md")
-##       supplied_arguments = ["-x-init","scan",source_path,]
-##       "...encountered while initializing tokenizer"
+    # Arrange
+    source_string = "bob"
+    source_path = "in-memory"
 
-## Test: test_markdown_with_dash_dash_add_plugin_and_bad_path
-##       source_path = os.path.join("test", "resources", "rules", "md047", "end_with_blank_line.md")
-##       supplied_arguments = ["--add-plugin","MD047","scan",source_path,]
-##       "BadPluginError encountered while loading plugins"
+    # Act
+    scan_result = PyMarkdownApi().scan_string(source_string)
 
-## Test: test_markdown_with_repeated_identifier
-##      source_path = os.path.join(        "test", "resources", "rules", "md047", "end_with_blank_line.md"    )
-##      plugin_path = os.path.join(        "test", "resources", "plugins", "bad", "duplicate_id_debug.py"    )
-##      supplied_arguments = [        "--add-plugin",        plugin_path,        "scan",        source_path,    ]
-##       "...encountered while initializing plugins"
-
-## Test: test_front_matter_21b
-##      source_path = os.path.join(        "test", "resources", "pragmas", "extensions_issue_637.md"    )
-##      supplied_arguments = [        "--strict-config",        "-s",        "extensions.front-matter.enabled=true",        "scan",        source_path,    ]
-##       "...encountered while initializing extensions"
-
-## Test: test_markdown_with_bad_strict_config_type
-##      source_path = os.path.join(        "test", "resources", "rules", "md047", "end_with_blank_line.md"    )
-##      supplied_configuration = {"mode": {"strict-config": 2}}
-##      supplied_arguments = [            "-c",            configuration_file,            "scan",            source_path,        ]
-##       "Configuration Error:..."
-
-## Test: test_markdown_with_dash_e_single_by_id_and_config_causing_next_token_exception
-##      source_path = os.path.join(        "test", "resources", "rules", "md047", "end_with_blank_line.md"    )
-##      supplied_configuration = {"plugins": {"md999": {"test_value": 20}}}
-##      supplied_arguments = [            "-e",            "MD999",            "-c",            configuration_file,            "scan",            source_path,        ]
-##       __handle_scan_error
+    # Assert
+    assert scan_result
+    assert len(scan_result.scan_failures) == 2
+    assert scan_result.scan_failures[0].partial_equals(
+        PyMarkdownScanFailure(source_path, 1, 1, "MD041", "", "", None)
+    )
+    assert scan_result.scan_failures[1].partial_equals(
+        PyMarkdownScanFailure(source_path, 1, 3, "MD047", "", "", None)
+    )
+    assert not scan_result.pragma_errors
 
 
-# __handle_error with
-# __apply_configuration_layers -> MyApplicationProperties.process_standard_python_configuration_files
-# __apply_configuration_layers -> MyApplicationProperties.process_project_specific_json_configuration
+def test_api_scan_string_test_good_file_after_disables():
+    """
+    Test to make sure that an empty path to scan is reported as an error.
+
+    This function shadows
+    test_markdown_with_config_general_command_line
+    """
+
+    # Arrange
+    source_string = """# This is a document
+
+* a list
+  - a sublist
+  - a very long sublist item
+
+this is a very long line
+"""
+
+    # Act
+    scan_result = (
+        PyMarkdownApi().disable_rule_by_identifier("md004").scan_string(source_string)
+    )
+
+    # Assert
+    assert scan_result
+    assert not scan_result.scan_failures
+    assert not scan_result.pragma_errors
+
+
+def test_api_scan_string_test_bad_file_due_to_no_disables():
+    """
+    Test to make sure that an empty path to scan is reported as an error.
+
+    This function shadows
+    test_markdown_with_config_no_config
+    """
+
+    # Arrange
+    source_string = """# This is a document
+
+* a list
+  - a sublist
+  - a very long sublist item
+
+this is a very long line
+"""
+    source_path = "in-memory"
+
+    # Act
+    scan_result = PyMarkdownApi().scan_string(source_string)
+
+    # Assert
+    assert scan_result
+    assert len(scan_result.scan_failures) == 1
+    assert scan_result.scan_failures[0].partial_equals(
+        PyMarkdownScanFailure(source_path, 4, 3, "MD004", "", "", None)
+    )
+    assert not scan_result.pragma_errors
+
 
 # change print_system_error to also accept optional exception?
 # OR
 # move format_error into presentation?
 
-# stdin?
-# direct passing of text?
-# config file
-# enable, disable
-# alt ext: test_markdown_with_dash_ae_with_valid_file_extension_multiple
-# list, rec: test_markdown_with_dash_l_and_dash_r_on_directory
-# list: test_markdown_with_dash_l_on_mixed_files
-
 # print_system_error(
 # plugin_manager, __handle_argparse_subparser_info, __handle_argparse_subparser_list
 # extension_manager, __handle_argparse_subparser_info, __handle_argparse_subparser_list
-# main, __handle_error(
-#  - [x] __apply_configuration_to_plugins
-#  - [x] __initialize_parser
-#  - [x] __initialize_plugin_manager
-#  - [x] __handle_file_scanner_error
-#  - [ ] __handle_scan_error
-#     - [x] __scan_specific_file
-#     - [ ] __process_files_to_scan with stdin
-#  - [x] __initialize_plugins
-#  - [x] __initialize_extensions
-#  - [x] __apply_configuration_layers
-#  - [x] main (no files found)
-#  - [x] main/ValueError
 
 # print_system_out(
 # - [ ] extension_manager, plugin_manager

@@ -4,9 +4,12 @@ Module to provide tests related to the basic parts of the scanner.
 import logging
 import os
 import runpy
+from test.api.test_api_general import PatchFileSourceProvider
 from test.markdown_scanner import MarkdownScanner
+from test.patches.patch_builtin_open import PatchBuiltinOpen
 
 from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.source_providers import FileSourceProvider
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -334,10 +337,9 @@ No matching files found."""
     assert "Using supplied command line arguments." in caplog.text
 
 
-def test_markdown_with_dash_x_scan():
+def test_markdown_with_failure_during_file_scan():
     """
-    Test to make sure we get simulate a test scan exception if the `-x-scan` flag
-    is set.
+    Test to make sure we get simulate a test scan exception.
     """
 
     # Arrange
@@ -346,10 +348,10 @@ def test_markdown_with_dash_x_scan():
         "test", "resources", "rules", "md047", "end_with_blank_line.md"
     )
     supplied_arguments = [
-        "-x-scan",
         "scan",
         source_path,
     ]
+    exception_path = os.path.join("pymarkdown", "resources", "entities.json")
 
     expected_return_code = 1
     expected_output = ""
@@ -360,7 +362,14 @@ An unhandled error occurred processing the document.
     )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    try:
+        _ = FileSourceProvider(exception_path)
+        patch = PatchFileSourceProvider()
+        patch.start()
+
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    finally:
+        patch.stop(print_action_comments=True)
 
     # Assert
     execute_results.assert_results(
@@ -372,6 +381,9 @@ def test_markdown_with_dash_x_init():
     """
     Test to make sure we get simulate a test initialization exception if the
     `-x-init` flag is set.
+
+    This function shadows
+    test_api_tokenizer_init_exception
     """
 
     # Arrange
@@ -379,30 +391,30 @@ def test_markdown_with_dash_x_init():
     source_path = os.path.join(
         "test", "resources", "rules", "md047", "end_with_blank_line.md"
     )
+    exception_path = os.path.join("pymarkdown", "resources", "entities.json")
     supplied_arguments = [
-        "-x-init",
         "scan",
         source_path,
     ]
-    fake_directory = "fredo"
-    fake_file = "entities.json"
-    fake_path = os.path.join(fake_directory, fake_file)
-    abs_fake_path = os.path.abspath(fake_path).replace("\\", "\\\\")
 
     expected_return_code = 1
     expected_output = ""
     expected_error = (
         "BadTokenizationError encountered while initializing tokenizer:\n"
-        + "Named character entity map file '"
-        + fake_path
-        + "' was not loaded "
-        + "([Errno 2] No such file or directory: '"
-        + abs_fake_path
-        + "').\n"
+        + f"Named character entity map file '{os.path.abspath(exception_path)}' was not loaded (blah)."
     )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    try:
+        patch = PatchBuiltinOpen()
+        patch.register_exception_for_file(
+            os.path.abspath(exception_path), "rt", OSError("blah")
+        )
+        patch.start()
+
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    finally:
+        patch.stop(print_action_comments=True)
 
     # Assert
     execute_results.assert_results(
