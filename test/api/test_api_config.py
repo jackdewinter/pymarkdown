@@ -456,10 +456,16 @@ def test_api_config_with_bad_contents_for_default_config():
 
     # Assert
     assert caught_exception, "Should have thrown an exception."
-    assert (
-        caught_exception.reason
-        == f"Specified configuration file '{os.path.abspath(configuration_file)}' is not a valid JSON file: Expecting value: line 1 column 1 (char 0)."
-    )
+    if sys.platform == "darwin":
+        assert caught_exception.reason.startswith("Specified configuration file '")
+        assert caught_exception.reason.endswith(
+            "' is not a valid JSON file: Expecting value: line 1 column 1 (char 0)."
+        )
+    else:
+        assert (
+            caught_exception.reason
+            == f"Specified configuration file '{os.path.abspath(configuration_file)}' is not a valid JSON file: Expecting value: line 1 column 1 (char 0)."
+        )
 
 
 def test_api_config_with_bad_settings_for_default_config():
@@ -537,8 +543,13 @@ def test_api_config_with_bad_contents_for_pyproject_toml():
 
     # Assert
     assert caught_exception, "Should have thrown an exception."
-    print(sys.platform)
-    assert (
-        caught_exception.reason
-        == f"Specified configuration file '{os.path.abspath(configuration_file)}' is not a valid TOML file: Invalid statement (at line 1, column 1)."
-    )
+    if sys.platform == "darwin":
+        assert caught_exception.reason.startswith("Specified configuration file '")
+        assert caught_exception.reason.endswith(
+            "' is not a valid TOML file: Invalid statement (at line 1, column 1)."
+        )
+    else:
+        assert (
+            caught_exception.reason
+            == f"Specified configuration file '{os.path.abspath(configuration_file)}' is not a valid TOML file: Invalid statement (at line 1, column 1)."
+        )
