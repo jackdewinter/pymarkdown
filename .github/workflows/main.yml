@@ -35,8 +35,7 @@ jobs:
 
       - name: Sync With Repository
         run: |
-          pipenv lock
-          pipenv sync
+          pipenv update -d
           pipenv graph
 
       - name: Execute Black
@@ -101,8 +100,7 @@ jobs:
 
       - name: Sync With Repository
         run: |
-          pipenv lock
-          pipenv sync
+          pipenv update -d
           pipenv graph
           pipenv uninstall pytest-html
 
@@ -145,8 +143,7 @@ jobs:
 
       - name: Sync With Repository
         run: |
-          pipenv lock
-          pipenv sync
+          pipenv update -d
           pipenv graph
 
       - name: Pyroma
