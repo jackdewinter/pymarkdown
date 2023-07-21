@@ -11,6 +11,9 @@ import traceback
 from typing import List, Optional, cast
 
 from application_properties import ApplicationProperties
+from application_properties.application_properties_utilities import (
+    ApplicationPropertiesUtilities,
+)
 
 from pymarkdown.application_file_scanner import ApplicationFileScanner
 from pymarkdown.application_logging import ApplicationLogging
@@ -19,7 +22,6 @@ from pymarkdown.extension_manager.extension_manager import ExtensionManager
 from pymarkdown.extensions.pragma_token import PragmaToken
 from pymarkdown.main_presentation import MainPresentation
 from pymarkdown.markdown_token import MarkdownToken
-from pymarkdown.my_application_properties import MyApplicationProperties
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.plugin_manager.bad_plugin_error import BadPluginError
 from pymarkdown.plugin_manager.plugin_manager import PluginManager
@@ -121,7 +123,7 @@ class PyMarkdownLint:
             default=None,
             help="path to a plugin containing a new rule to apply",
         )
-        MyApplicationProperties.add_default_command_line_arguments(parser)
+        ApplicationPropertiesUtilities.add_default_command_line_arguments(parser)
         parser.add_argument(
             "--stack-trace",
             dest="show_stack_trace",
@@ -387,11 +389,11 @@ class PyMarkdownLint:
             self.__properties.enable_strict_mode()
 
     def __apply_configuration_layers(self, args: argparse.Namespace) -> None:
-        MyApplicationProperties.process_standard_python_configuration_files(
+        ApplicationPropertiesUtilities.process_standard_python_configuration_files(
             self.__properties, self.__handle_error
         )
 
-        MyApplicationProperties.process_project_specific_json_configuration(
+        ApplicationPropertiesUtilities.process_project_specific_json_configuration(
             PyMarkdownLint.__default_configuration_file,
             args,
             self.__properties,

@@ -153,7 +153,7 @@ def test_markdown_with_dash_e_single_by_id_and_bad_config_file():
         expected_error = (
             "Specified configuration file '"
             + configuration_file
-            + "' is not valid: Keys strings cannot contain the separator character '.'.\n"
+            + "' is not valid: Key strings cannot contain a whitespace character, a '=' character, or a '.' character.\n"
         )
 
         # Act
