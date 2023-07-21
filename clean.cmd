@@ -22,6 +22,7 @@ rem Look for options on the command line.
 
 set MY_VERBOSE=
 set MY_PUBLISH=
+set RESET_PIPFILE=
 :process_arguments
 if "%1" == "-h" (
     echo Command: %0 [options]
@@ -30,12 +31,15 @@ if "%1" == "-h" (
     echo   Options:
     echo     -h                This message.
 	echo     -v                Display verbose information.
+	echo     -f				   Force reset of pipfile.
 	echo     -p				   Publish project summaries if successful.
     GOTO real_end
 ) else if "%1" == "-v" (
 	set MY_VERBOSE=--verbose
 ) else if "%1" == "-p" (
 	set MY_PUBLISH=1
+) else if "%1" == "-f" (
+	set RESET_PIPFILE=1
 ) else if "%1" == "" (
     goto after_process_arguments
 ) else (
@@ -52,6 +56,86 @@ rem Announce what this script does.
 echo {Analysis of project started.}
 
 rem Cleanly start the main part of the script
+
+rem Check to see if the Pipfile is newer than the Pipfile.lock file.
+if defined RESET_PIPFILE (
+	echo {Forcing a hard reset of the PipEnv environment.}
+	pipenv --venv > %CLEAN_TEMPFILE%
+    if errorlevel 1 (
+		echo   {PipEnv environment was not established.  Reset not required.}
+		set RESET_PIPFILE=1
+		goto reset_pipfile
+    )
+	set TEST_FILE=
+	for /f "tokens=*" %%x in (%CLEAN_TEMPFILE%) do set TEST_FILE=%%x
+
+	if not exist "!TEST_FILE!\S2" (
+		echo {Creating temporary directory !TEST_FILE! for move test.}
+		mkdir "!TEST_FILE!\S2"
+    	if errorlevel 1 (
+			echo bad mkdir
+		)
+	)
+	echo {Executing move test to see if one or more files in directory !TEST_FILE! are locked.}
+	rem echo move /y "!TEST_FILE!\Scripts" "!TEST_FILE!\S2" .. %CLEAN_TEMPFILE%
+	move /y "!TEST_FILE!\Scripts" "!TEST_FILE!\S2" > %CLEAN_TEMPFILE%
+    if errorlevel 1 (
+		type %CLEAN_TEMPFILE%
+		goto directory_locked
+    )
+
+	@REM echo --
+	@REM echo !TEST_FILE!
+	@REM echo --
+	@REM dir "!TEST_FILE!"
+	@REM echo --
+
+	echo {Removing previous PipEnv environment.}
+	echo rmdir /s /q "!TEST_FILE!"
+	rmdir /s /q "!TEST_FILE!"
+    if errorlevel 1 (
+		echo bad rmdir
+    )
+
+	@REM echo --
+	@REM echo !TEST_FILE!
+	@REM echo --
+	if not exist "!TEST_FILE!" (
+		echo {Directory has been removed.}
+	) else (
+		dir "!TEST_FILE!"
+		goto directory_locked
+	)
+
+) else (
+	python utils\find_outdated_piplock_file.py
+	if ERRORLEVEL 2 (
+		echo.
+		echo Analysis of project cannot proceed without a Pipfile.
+		goto error_end
+	)
+	if ERRORLEVEL 1 (
+		echo {'Pipfile' and 'Pipfile.lock' are not in sync with each other.}
+		set RESET_PIPFILE=1
+	)
+)
+goto reset_pipfile
+:directory_locked
+echo   {One or more directories in !TEST_FILE! are locked.}
+echo   {Close any open IDEs or shells in that directory and try again.}
+echo   {If lock persists, try pipenv --rm to try and force the lock to be released.}
+goto error_end
+:reset_pipfile
+if defined RESET_PIPFILE (
+	echo {Syncing python packages with new PipEnv 'Pipfile'.}
+	erase Pipfile.lock
+	pipenv update -d
+	if ERRORLEVEL 1 (
+		echo.
+		echo {Creating and updating new Pipfile.lock file failed.}
+		goto error_end
+	)
+)
 
 echo {Executing black formatter on Python code.}
 pipenv run black %MY_VERBOSE% .

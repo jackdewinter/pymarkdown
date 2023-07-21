@@ -4,8 +4,37 @@
 
 ### Added
 
+- None
+
+### Changed
+
+- None
+
+### Fixed
+
+- None
+
+## Version 0.9.12 - Date: 2023-07-2?
+
+### Added
+
 - [Issue 655](https://github.com/jackdewinter/pymarkdown/issues/655)
   - Added support for `tool.pymarkdown` section in `pyproject.toml` for current directory
+- [Issue 702](https://github.com/jackdewinter/pymarkdown/issues/702)
+  - First version of the PyMarkdown API, so the project can be called from
+    other Python files
+  - Added PyDoc support to generate API docs for new API from build pipeline
+- [Issue 708](https://github.com/jackdewinter/pymarkdown/issues/708)
+  - Split the Pipfile requirements into Dev and Non-Dev requirements
+  - Updated to new version of [application_properties](https://github.com/jackdewinter/application_properties)
+    with same split just added
+- Split up test_main.py into smaller scripts with narrower focus
+- Improved build pipeline
+  - added check to ensure Pipfile and install-requirements remain in sync
+  - added lint stage to pipeline
+  - added packaging stage to ensure we can run our package script
+- Added new [pymarkdown_test](https://github.com/jackdewinter/pymarkdown_test)
+  project with (hopefully) automated kickoff from PyMarkdown
 
 ### Changed
 
