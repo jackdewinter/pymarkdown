@@ -31,7 +31,7 @@ sourcery = "==1.2.0"
 
 [packages]
 columnar = ">=1.4.0"
-application-properties = ">=0.8.0"
+application-properties = ">=0.8.1"
 typing-extensions = ">=4.7.0"
 
 [requires]
