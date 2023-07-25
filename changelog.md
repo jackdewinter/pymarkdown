@@ -14,7 +14,7 @@
 
 - None
 
-## Version 0.9.12 - Date: 2023-07-2?
+## Version 0.9.12 - Date: 2023-07-24
 
 ### Added
 

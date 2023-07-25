@@ -331,6 +331,7 @@
             "too-few-public-methods": 1,
             "too-many-arguments": 1
         },
+        "pymarkdown/transform_markdown/transform_to_markdown.py": {},
         "pymarkdown/transform_state.py": {
             "too-many-instance-attributes": 1
         },
