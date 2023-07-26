@@ -74,7 +74,7 @@ class FrontMatterExtension(ParserExtension):
 
     @staticmethod
     def rehydrate_front_matter(
-        current_token: MarkdownToken, previous_token: MarkdownToken
+        current_token: MarkdownToken, previous_token: Optional[MarkdownToken]
     ) -> str:
         """
         Rehydrate the front matter text from the token.

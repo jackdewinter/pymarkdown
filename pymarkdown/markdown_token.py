@@ -137,12 +137,12 @@ class MarkdownToken:
         """
         return self.__token_class == MarkdownTokenClass.LEAF_BLOCK
 
-    @property
-    def is_inline(self) -> bool:
-        """
-        Returns whether the current token is an inline block element.
-        """
-        return self.__token_class == MarkdownTokenClass.INLINE_BLOCK
+    # @property
+    # def is_inline(self) -> bool:
+    #     """
+    #     Returns whether the current token is an inline block element.
+    #     """
+    #     return self.__token_class == MarkdownTokenClass.INLINE_BLOCK
 
     @property
     def extra_data(self) -> Optional[str]:

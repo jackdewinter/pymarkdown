@@ -63,15 +63,15 @@ class BlankLineMarkdownToken(LeafMarkdownToken):
         position_marker: Optional[PositionMarker],
         column_delta: int = 0,
     ) -> None:
-        if position_marker:
-            line_number, column_number = position_marker.line_number, (
-                position_marker.index_number
-                + position_marker.index_indent
-                + 1
-                - column_delta
-            )
-        else:
-            line_number, column_number = 0, 0
+        assert position_marker
+        line_number, column_number = position_marker.line_number, (
+            position_marker.index_number
+            + position_marker.index_indent
+            + 1
+            - column_delta
+        )
+        # else:
+        #     line_number, column_number = 0, 0
 
         LeafMarkdownToken.__init__(
             self,
@@ -81,6 +81,16 @@ class BlankLineMarkdownToken(LeafMarkdownToken):
             column_number=column_number,
             extracted_whitespace=extracted_whitespace,
         )
+
+    # pylint: disable=protected-access
+    @staticmethod
+    def get_markdown_token_type() -> str:
+        """
+        Get the type of markdown token for rehydration purposes.
+        """
+        return MarkdownToken._token_blank_line
+
+    # pylint: enable=protected-access
 
 
 class ParagraphMarkdownToken(LeafMarkdownToken):
@@ -104,6 +114,16 @@ class ParagraphMarkdownToken(LeafMarkdownToken):
             requires_end_token=True,
         )
         self.__compose_extra_data_field()
+
+    # pylint: disable=protected-access
+    @staticmethod
+    def get_markdown_token_type() -> str:
+        """
+        Get the type of markdown token for rehydration purposes.
+        """
+        return MarkdownToken._token_paragraph
+
+    # pylint: enable=protected-access
 
     @property
     def extracted_whitespace(self) -> str:
@@ -175,6 +195,16 @@ class ThematicBreakMarkdownToken(LeafMarkdownToken):
             extracted_whitespace=extracted_whitespace,
         )
 
+    # pylint: disable=protected-access
+    @staticmethod
+    def get_markdown_token_type() -> str:
+        """
+        Get the type of markdown token for rehydration purposes.
+        """
+        return MarkdownToken._token_thematic_break
+
+    # pylint: enable=protected-access
+
     @property
     def rest_of_line(self) -> str:
         """
@@ -191,15 +221,15 @@ class HtmlBlockMarkdownToken(LeafMarkdownToken):
     def __init__(
         self, position_marker: PositionMarker, extracted_whitespace: str
     ) -> None:
-        if position_marker:
-            line_number, column_number = position_marker.line_number, (
-                position_marker.index_number
-                + position_marker.index_indent
-                + 1
-                - len(extracted_whitespace)
-            )
-        else:
-            line_number, column_number = -1, -1
+        assert position_marker
+        line_number, column_number = position_marker.line_number, (
+            position_marker.index_number
+            + position_marker.index_indent
+            + 1
+            - len(extracted_whitespace)
+        )
+        # else:
+        #     line_number, column_number = -1, -1
 
         LeafMarkdownToken.__init__(
             self,
@@ -210,6 +240,16 @@ class HtmlBlockMarkdownToken(LeafMarkdownToken):
             extracted_whitespace=extracted_whitespace,
             requires_end_token=True,
         )
+
+    # pylint: disable=protected-access
+    @staticmethod
+    def get_markdown_token_type() -> str:
+        """
+        Get the type of markdown token for rehydration purposes.
+        """
+        return MarkdownToken._token_html_block
+
+    # pylint: enable=protected-access
 
 
 # pylint: disable=too-many-instance-attributes
@@ -231,45 +271,45 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
         self.__did_add_definition = did_add_definition
         self.__link_name = link_name
 
-        if link_value:
-            self.__link_destination, self.__link_title = (
-                link_value.inline_link,
-                link_value.inline_title,
-            )
-        else:
-            self.__link_destination, self.__link_title = "", ""
+        assert link_value
+        self.__link_destination, self.__link_title = (
+            link_value.inline_link,
+            link_value.inline_title,
+        )
+        # else:
+        #     self.__link_destination, self.__link_title = "", ""
 
-        if link_debug:
-            (
-                self.__link_name_debug,
-                self.__link_destination_whitespace,
-                self.__link_destination_raw,
-                self.__link_title_whitespace,
-                self.__link_title_raw,
-                self.__end_whitespace,
-            ) = (
-                ""
-                if link_debug.collected_destination == self.__link_name
-                else link_debug.collected_destination,
-                link_debug.line_destination_whitespace,
-                ""
-                if link_debug.inline_raw_link == self.__link_destination
-                else link_debug.inline_raw_link,
-                link_debug.line_title_whitespace,
-                ""
-                if link_debug.inline_raw_title == self.__link_title
-                else link_debug.inline_raw_title,
-                link_debug.end_whitespace,
-            )
-        else:
-            (
-                self.__link_name_debug,
-                self.__link_destination_whitespace,
-                self.__link_destination_raw,
-                self.__link_title_whitespace,
-                self.__link_title_raw,
-                self.__end_whitespace,
-            ) = ("", "", "", "", "", "")
+        assert link_debug
+        (
+            self.__link_name_debug,
+            self.__link_destination_whitespace,
+            self.__link_destination_raw,
+            self.__link_title_whitespace,
+            self.__link_title_raw,
+            self.__end_whitespace,
+        ) = (
+            ""
+            if link_debug.collected_destination == self.__link_name
+            else link_debug.collected_destination,
+            link_debug.line_destination_whitespace,
+            ""
+            if link_debug.inline_raw_link == self.__link_destination
+            else link_debug.inline_raw_link,
+            link_debug.line_title_whitespace,
+            ""
+            if link_debug.inline_raw_title == self.__link_title
+            else link_debug.inline_raw_title,
+            link_debug.end_whitespace,
+        )
+        # else:
+        #     (
+        #         self.__link_name_debug,
+        #         self.__link_destination_whitespace,
+        #         self.__link_destination_raw,
+        #         self.__link_title_whitespace,
+        #         self.__link_title_raw,
+        #         self.__end_whitespace,
+        #     ) = ("", "", "", "", "", "")
 
         extra_data = self.__validate_proper_fields_are_valid(extracted_whitespace)
         LeafMarkdownToken.__init__(
@@ -279,6 +319,16 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
             position_marker=position_marker,
             extracted_whitespace=extracted_whitespace,
         )
+
+    # pylint: disable=protected-access
+    @staticmethod
+    def get_markdown_token_type() -> str:
+        """
+        Get the type of markdown token for rehydration purposes.
+        """
+        return MarkdownToken._token_link_reference_definition
+
+    # pylint: enable=protected-access
 
     def __validate_proper_fields_are_valid(self, extracted_whitespace: str) -> str:
         assert self.__end_whitespace is not None
@@ -408,6 +458,16 @@ class AtxHeadingMarkdownToken(LeafMarkdownToken):
         )
         self.__compose_extra_data_field()
 
+    # pylint: disable=protected-access
+    @staticmethod
+    def get_markdown_token_type() -> str:
+        """
+        Get the type of markdown token for rehydration purposes.
+        """
+        return MarkdownToken._token_atx_heading
+
+    # pylint: enable=protected-access
+
     @property
     def hash_count(self) -> int:
         """
@@ -467,10 +527,9 @@ class SetextHeadingMarkdownToken(LeafMarkdownToken):
 
         if self.__heading_character == "=":
             self.__hash_count = 1
-        elif self.__heading_character == "-":
-            self.__hash_count = 2
         else:
-            self.__hash_count = -1
+            assert self.__heading_character == "-"
+            self.__hash_count = 2
 
         LeafMarkdownToken.__init__(
             self,
@@ -484,6 +543,15 @@ class SetextHeadingMarkdownToken(LeafMarkdownToken):
         self.__compose_extra_data_field()
 
     # pylint: enable=too-many-arguments
+    # pylint: disable=protected-access
+    @staticmethod
+    def get_markdown_token_type() -> str:
+        """
+        Get the type of markdown token for rehydration purposes.
+        """
+        return MarkdownToken._token_setext_heading
+
+    # pylint: enable=protected-access
 
     @property
     def final_whitespace(self) -> str:
@@ -575,6 +643,16 @@ class IndentedCodeBlockMarkdownToken(LeafMarkdownToken):
         )
         self.__compose_extra_data_field()
 
+    # pylint: disable=protected-access
+    @staticmethod
+    def get_markdown_token_type() -> str:
+        """
+        Get the type of markdown token for rehydration purposes.
+        """
+        return MarkdownToken._token_indented_code_block
+
+    # pylint: enable=protected-access
+
     @property
     def indented_whitespace(self) -> str:
         """
@@ -649,6 +727,15 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
         self.__compose_extra_data_field()
 
     # pylint: enable=too-many-arguments
+    # pylint: disable=protected-access
+    @staticmethod
+    def get_markdown_token_type() -> str:
+        """
+        Get the type of markdown token for rehydration purposes.
+        """
+        return MarkdownToken._token_fenced_code_block
+
+    # pylint: enable=protected-access
 
     @property
     def fence_character(self) -> str:

@@ -6,7 +6,6 @@ import json
 import logging
 import os
 import tempfile
-from test.transform_to_markdown import TransformToMarkdown
 
 from application_properties import ApplicationProperties
 
@@ -17,6 +16,7 @@ from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.tab_helper import TabHelper
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
 from pymarkdown.transform_gfm.transform_to_gfm import TransformToGfm
+from pymarkdown.transform_markdown.transform_to_markdown import TransformToMarkdown
 
 # from test.verify_line_and_column_numbers import verify_line_and_column_numbers
 
