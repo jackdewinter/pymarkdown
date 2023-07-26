@@ -41,6 +41,15 @@ class FrontMatterMarkdownToken(LeafMarkdownToken):
         self.__compose_extra_data_field()
 
     # pylint: enable=too-many-arguments
+    # pylint: disable=protected-access
+    @staticmethod
+    def get_markdown_token_type() -> str:
+        """
+        Get the type of markdown token for rehydration purposes.
+        """
+        return MarkdownToken._token_front_matter
+
+    # pylint: enable=protected-access
 
     @property
     def start_boundary_line(self) -> str:

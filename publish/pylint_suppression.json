@@ -54,6 +54,7 @@
         "pymarkdown/container_blocks/parse_block_pass_properties.py": {},
         "pymarkdown/container_markdown_token.py": {
             "too-many-arguments": 4,
+            "protected-access": 4,
             "too-many-instance-attributes": 1
         },
         "pymarkdown/emphasis_helper.py": {
@@ -75,7 +76,8 @@
         "pymarkdown/extensions/extension_one.py": {},
         "pymarkdown/extensions/front_matter_extension.py": {},
         "pymarkdown/extensions/front_matter_markdown_token.py": {
-            "too-many-arguments": 1
+            "too-many-arguments": 1,
+            "protected-access": 1
         },
         "pymarkdown/extensions/markdown_strikethrough.py": {},
         "pymarkdown/extensions/markdown_tables.py": {},
@@ -120,8 +122,8 @@
         },
         "pymarkdown/inline_markdown_token.py": {
             "too-many-arguments": 6,
-            "too-many-instance-attributes": 1,
-            "protected-access": 2
+            "protected-access": 9,
+            "too-many-instance-attributes": 1
         },
         "pymarkdown/leaf_blocks/atx_leaf_block_processor.py": {
             "too-many-arguments": 4
@@ -150,6 +152,7 @@
         "pymarkdown/leaf_blocks/thematic_leaf_block_processor.py": {},
         "pymarkdown/leaf_markdown_token.py": {
             "too-many-arguments": 4,
+            "protected-access": 9,
             "too-many-instance-attributes": 1
         },
         "pymarkdown/links/link_create_helper.py": {
@@ -331,7 +334,11 @@
             "too-few-public-methods": 1,
             "too-many-arguments": 1
         },
-        "pymarkdown/transform_markdown/transform_to_markdown.py": {},
+        "pymarkdown/transform_markdown/transform_to_markdown.py": {
+            "too-many-arguments": 15,
+            "too-many-boolean-expressions": 1,
+            "too-many-locals": 2
+        },
         "pymarkdown/transform_state.py": {
             "too-many-instance-attributes": 1
         },
@@ -340,12 +347,12 @@
     "disables-by-name": {
         "too-many-instance-attributes": 21,
         "too-many-public-methods": 4,
-        "too-many-arguments": 174,
+        "too-many-arguments": 189,
         "too-few-public-methods": 23,
-        "too-many-locals": 16,
+        "too-many-locals": 18,
         "chained-comparison": 1,
-        "too-many-boolean-expressions": 1,
-        "protected-access": 2,
+        "too-many-boolean-expressions": 2,
+        "protected-access": 23,
         "broad-exception-caught": 3
     }
 }

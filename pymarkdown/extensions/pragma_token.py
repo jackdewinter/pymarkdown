@@ -229,6 +229,13 @@ class PragmaToken(MarkdownToken):
             extra_data=serialized_pragmas[1:],
         )
 
+    @staticmethod
+    def get_markdown_token_type() -> str:
+        """
+        Get the type of markdown token for rehydration purposes.
+        """
+        return MarkdownToken._token_pragma
+
     @property
     def pragma_lines(self) -> Dict[int, str]:
         """

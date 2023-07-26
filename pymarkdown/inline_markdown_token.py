@@ -76,6 +76,16 @@ class EmphasisMarkdownToken(InlineMarkdownToken):
             can_force_close=False,
         )
 
+    # pylint: disable=protected-access
+    @staticmethod
+    def get_markdown_token_type() -> str:
+        """
+        Get the type of markdown token for rehydration purposes.
+        """
+        return MarkdownToken._token_inline_emphasis
+
+    # pylint: enable=protected-access
+
     @property
     def emphasis_length(self) -> int:
         """
@@ -106,6 +116,16 @@ class RawHtmlMarkdownToken(InlineMarkdownToken):
             column_number=column_number,
         )
 
+    # pylint: disable=protected-access
+    @staticmethod
+    def get_markdown_token_type() -> str:
+        """
+        Get the type of markdown token for rehydration purposes.
+        """
+        return MarkdownToken._token_inline_raw_html
+
+    # pylint: enable=protected-access
+
     @property
     def raw_tag(self) -> str:
         """
@@ -131,6 +151,16 @@ class EmailAutolinkMarkdownToken(InlineMarkdownToken):
             column_number=column_number,
         )
 
+    # pylint: disable=protected-access
+    @staticmethod
+    def get_markdown_token_type() -> str:
+        """
+        Get the type of markdown token for rehydration purposes.
+        """
+        return MarkdownToken._token_inline_email_autolink
+
+    # pylint: enable=protected-access
+
     @property
     def autolink_text(self) -> str:
         """
@@ -155,6 +185,16 @@ class UriAutolinkMarkdownToken(InlineMarkdownToken):
             line_number=line_number,
             column_number=column_number,
         )
+
+    # pylint: disable=protected-access
+    @staticmethod
+    def get_markdown_token_type() -> str:
+        """
+        Get the type of markdown token for rehydration purposes.
+        """
+        return MarkdownToken._token_inline_uri_autolink
+
+    # pylint: enable=protected-access
 
     @property
     def autolink_text(self) -> str:
@@ -205,6 +245,16 @@ class InlineCodeSpanMarkdownToken(InlineMarkdownToken):
             column_number=column_number,
         )
 
+    # pylint: disable=protected-access
+    @staticmethod
+    def get_markdown_token_type() -> str:
+        """
+        Get the type of markdown token for rehydration purposes.
+        """
+        return MarkdownToken._token_inline_code_span
+
+    # pylint: enable=protected-access
+
     # pylint: enable=too-many-arguments
     @property
     def span_text(self) -> str:
@@ -254,6 +304,16 @@ class HardBreakMarkdownToken(InlineMarkdownToken):
             line_number=line_number,
             column_number=column_number,
         )
+
+    # pylint: disable=protected-access
+    @staticmethod
+    def get_markdown_token_type() -> str:
+        """
+        Get the type of markdown token for rehydration purposes.
+        """
+        return MarkdownToken._token_inline_hard_break
+
+    # pylint: enable=protected-access
 
     @property
     def line_end(self) -> str:
@@ -569,6 +629,15 @@ class TextMarkdownToken(InlineMarkdownToken):
         self.__compose_extra_data_field()
 
     # pylint: enable=too-many-arguments
+    # pylint: disable=protected-access
+    @staticmethod
+    def get_markdown_token_type() -> str:
+        """
+        Get the type of markdown token for rehydration purposes.
+        """
+        return MarkdownToken._token_text
+
+    # pylint: enable=protected-access
 
     def _set_token_text(self, new_text: str) -> None:
         self.__token_text = new_text

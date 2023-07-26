@@ -1,7 +1,6 @@
 """
 Module to provide for the handlers for tokens to allow transformation into HTML.
 """
-import inspect
 import logging
 from typing import Callable, Dict, List, Optional, cast
 
@@ -111,15 +110,15 @@ class TransformToGfmTokenHandlers:
         # That was the old way, and had problems.  The new way is to call a new
         # static method directly.  Both are here until that is completed.
 
-        if "get_markdown_token_type" in token_type.__dict__:
-            token_name = token_type.__dict__["get_markdown_token_type"].__func__()
-        else:
-            token_init_fn = token_type.__dict__["__init__"]
-            init_parameters = {
-                i: "" for i in inspect.getfullargspec(token_init_fn)[0] if i != "self"
-            }
-            handler_instance = token_type(**init_parameters)  # type: ignore
-            token_name = handler_instance.token_name
+        # if "get_markdown_token_type" in token_type.__dict__:
+        token_name = token_type.__dict__["get_markdown_token_type"].__func__()
+        # else:
+        #     token_init_fn = token_type.__dict__["__init__"]
+        #     init_parameters = {
+        #         i: "" for i in inspect.getfullargspec(token_init_fn)[0] if i != "self"
+        #     }
+        #     handler_instance = token_type(**init_parameters)  # type: ignore
+        #     token_name = handler_instance.token_name
 
         assert token_name
         self.__start_token_handlers[token_name] = start_token_handler

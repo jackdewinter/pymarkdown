@@ -68,6 +68,16 @@ class NewListItemMarkdownToken(ContainerMarkdownToken):
             position_marker=position_marker,
         )
 
+    # pylint: disable=protected-access
+    @staticmethod
+    def get_markdown_token_type() -> str:
+        """
+        Get the type of markdown token for rehydration purposes.
+        """
+        return MarkdownToken._token_new_list_item
+
+    # pylint: enable=protected-access
+
     @property
     def extracted_whitespace(self) -> str:
         """
@@ -308,6 +318,15 @@ class OrderedListStartMarkdownToken(ListStartMarkdownToken):
         )
 
     # pylint: enable=too-many-arguments
+    # pylint: disable=protected-access
+    @staticmethod
+    def get_markdown_token_type() -> str:
+        """
+        Get the type of markdown token for rehydration purposes.
+        """
+        return MarkdownToken._token_ordered_list_start
+
+    # pylint: enable=protected-access
 
 
 class UnorderedListStartMarkdownToken(ListStartMarkdownToken):
@@ -338,6 +357,15 @@ class UnorderedListStartMarkdownToken(ListStartMarkdownToken):
         )
 
     # pylint: enable=too-many-arguments
+    # pylint: disable=protected-access
+    @staticmethod
+    def get_markdown_token_type() -> str:
+        """
+        Get the type of markdown token for rehydration purposes.
+        """
+        return MarkdownToken._token_unordered_list_start
+
+    # pylint: enable=protected-access
 
 
 class BlockQuoteMarkdownToken(ContainerMarkdownToken):
@@ -361,6 +389,16 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
             position_marker=position_marker,
         )
         self.__compose_extra_data_field()
+
+    # pylint: disable=protected-access
+    @staticmethod
+    def get_markdown_token_type() -> str:
+        """
+        Get the type of markdown token for rehydration purposes.
+        """
+        return MarkdownToken._token_block_quote
+
+    # pylint: enable=protected-access
 
     @property
     def extracted_whitespace(self) -> str:
