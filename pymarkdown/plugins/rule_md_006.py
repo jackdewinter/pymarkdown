@@ -4,7 +4,6 @@ start at the beginning of the line.
 """
 from typing import List, cast
 
-from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
@@ -13,6 +12,7 @@ from pymarkdown.tokens.container_markdown_token import (
     BlockQuoteMarkdownToken,
     ListStartMarkdownToken,
 )
+from pymarkdown.tokens.markdown_token import MarkdownToken
 
 
 class RuleMd006(RulePlugin):

@@ -9,7 +9,6 @@ from typing import Optional, cast
 from pymarkdown.html.html_raw_helper import HtmlRawHelper
 from pymarkdown.inline.inline_request import InlineRequest
 from pymarkdown.inline.inline_response import InlineResponse
-from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.tokens.inline_markdown_token import (
@@ -17,6 +16,7 @@ from pymarkdown.tokens.inline_markdown_token import (
     RawHtmlMarkdownToken,
     UriAutolinkMarkdownToken,
 )
+from pymarkdown.tokens.markdown_token import MarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

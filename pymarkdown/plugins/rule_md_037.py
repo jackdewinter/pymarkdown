@@ -3,11 +3,11 @@ Module to implement a plugin that looks for spaces within emphasis sections.
 """
 from typing import List, Optional, cast
 
-from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.inline_markdown_token import TextMarkdownToken
+from pymarkdown.tokens.markdown_token import MarkdownToken
 
 
 class RuleMd037(RulePlugin):

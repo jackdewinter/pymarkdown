@@ -7,7 +7,6 @@ from typing import List, cast
 from pymarkdown.inline.inline_handler_helper import InlineHandlerHelper
 from pymarkdown.inline.inline_helper import InlineHelper
 from pymarkdown.inline.inline_text_block_helper import InlineTextBlockHelper
-from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.tokens.container_markdown_token import (
@@ -19,6 +18,7 @@ from pymarkdown.tokens.leaf_markdown_token import (
     AtxHeadingMarkdownToken,
     ParagraphMarkdownToken,
 )
+from pymarkdown.tokens.markdown_token import MarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

@@ -5,7 +5,6 @@ the correct capitalization.
 from typing import List, cast
 
 from pymarkdown.constants import Constants
-from pymarkdown.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
@@ -16,6 +15,7 @@ from pymarkdown.tokens.inline_markdown_token import (
     TextMarkdownToken,
 )
 from pymarkdown.tokens.leaf_markdown_token import LinkReferenceDefinitionMarkdownToken
+from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 
 
 class RuleMd044(RulePlugin):

@@ -5,7 +5,6 @@ are equivalent with each other.
 from enum import Enum
 from typing import Dict, List, Optional, cast
 
-from pymarkdown.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
@@ -15,6 +14,7 @@ from pymarkdown.tokens.container_markdown_token import (
     OrderedListStartMarkdownToken,
     UnorderedListStartMarkdownToken,
 )
+from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 
 
 class OrderedListAlignment(Enum):

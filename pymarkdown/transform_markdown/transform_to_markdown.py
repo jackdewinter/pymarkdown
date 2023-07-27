@@ -11,11 +11,6 @@ from pymarkdown.extensions.front_matter_extension import FrontMatterExtension
 from pymarkdown.extensions.front_matter_markdown_token import FrontMatterMarkdownToken
 from pymarkdown.extensions.pragma_token import PragmaToken
 from pymarkdown.links.link_search_helper import LinkSearchHelper
-from pymarkdown.markdown_token import (
-    EndMarkdownToken,
-    MarkdownToken,
-    MarkdownTokenClass,
-)
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.tab_helper import TabHelper
@@ -50,6 +45,11 @@ from pymarkdown.tokens.leaf_markdown_token import (
     ParagraphMarkdownToken,
     SetextHeadingMarkdownToken,
     ThematicBreakMarkdownToken,
+)
+from pymarkdown.tokens.markdown_token import (
+    EndMarkdownToken,
+    MarkdownToken,
+    MarkdownTokenClass,
 )
 
 POGGER = ParserLogger(logging.getLogger(__name__))

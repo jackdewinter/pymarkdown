@@ -14,13 +14,13 @@ from columnar import columnar
 
 from pymarkdown.extensions.pragma_token import PragmaExtension
 from pymarkdown.main_presentation import MainPresentation
-from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.bad_plugin_error import BadPluginError
 from pymarkdown.plugin_manager.found_plugin import FoundPlugin
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.plugin_scan_failure import PluginScanFailure
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
+from pymarkdown.tokens.markdown_token import MarkdownToken
 
 LOGGER = logging.getLogger(__name__)
 

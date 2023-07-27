@@ -16,11 +16,11 @@ from pymarkdown.extensions.front_matter_markdown_token import FrontMatterMarkdow
 from pymarkdown.leaf_blocks.thematic_leaf_block_processor import (
     ThematicLeafBlockProcessor,
 )
-from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.source_providers import SourceProvider
+from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_state import TransformState
 
 POGGER = ParserLogger(logging.getLogger(__name__))

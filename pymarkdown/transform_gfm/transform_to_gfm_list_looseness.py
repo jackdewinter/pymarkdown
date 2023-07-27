@@ -4,9 +4,9 @@ Module to handle the calculationof list looseness for the GRM transformer.
 import logging
 from typing import List, Tuple, cast
 
-from pymarkdown.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.tokens.container_markdown_token import ListStartMarkdownToken
+from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

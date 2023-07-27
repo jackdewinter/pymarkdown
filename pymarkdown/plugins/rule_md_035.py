@@ -3,11 +3,11 @@ Module to implement a plugin that looks for inconsistent styles for thematic bre
 """
 from typing import cast
 
-from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.leaf_markdown_token import ThematicBreakMarkdownToken
+from pymarkdown.tokens.markdown_token import MarkdownToken
 
 
 class RuleMd035(RulePlugin):

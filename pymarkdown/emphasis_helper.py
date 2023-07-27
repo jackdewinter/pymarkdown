@@ -5,13 +5,13 @@ import logging
 from typing import List, Optional, Tuple, cast
 
 from pymarkdown.constants import Constants
-from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.tokens.inline_markdown_token import (
     EmphasisMarkdownToken,
     SpecialTextMarkdownToken,
 )
+from pymarkdown.tokens.markdown_token import MarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

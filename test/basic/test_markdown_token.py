@@ -1,7 +1,7 @@
 """
 Module to test the StackToken class.
 """
-from pymarkdown.stack_token import StackToken
+from pymarkdown.tokens.stack_token import StackToken
 
 
 def test_stack_token_equal():

@@ -4,9 +4,9 @@ Module to provide for a transformation from markdown tokens to html for GFM.
 import logging
 from typing import List
 
-from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_gfm.transform_to_gfm_token_handlers import (
     TransformToGfmTokenHandlers,
 )

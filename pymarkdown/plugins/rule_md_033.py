@@ -3,7 +3,6 @@ Module to implement a plugin that looks for inline HTML in the files.
 """
 from typing import List, cast
 
-from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
@@ -12,6 +11,7 @@ from pymarkdown.tokens.inline_markdown_token import (
     RawHtmlMarkdownToken,
     TextMarkdownToken,
 )
+from pymarkdown.tokens.markdown_token import MarkdownToken
 
 
 class RuleMd033(RulePlugin):

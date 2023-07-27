@@ -3,7 +3,7 @@ https://github.github.com/gfm/#lists
 """
 import pytest
 
-from pymarkdown.markdown_token import (
+from pymarkdown.tokens.markdown_token import (
     EndMarkdownToken,
     MarkdownToken,
     MarkdownTokenClass,
@@ -38,7 +38,7 @@ def test_gfm_bad_token():
     # Assert
     assert (
         str(captured_exception)
-        == "Markdown token type <class 'pymarkdown.markdown_token.MarkdownToken'> not supported."
+        == "Markdown token type <class 'pymarkdown.tokens.markdown_token.MarkdownToken'> not supported."
     )
 
 

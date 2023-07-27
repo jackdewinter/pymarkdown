@@ -7,7 +7,6 @@ import re
 from typing import Any, Optional, Tuple, cast
 
 from pymarkdown.constants import Constants
-from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
@@ -19,6 +18,7 @@ from pymarkdown.tokens.inline_markdown_token import (
     TextMarkdownToken,
 )
 from pymarkdown.tokens.leaf_markdown_token import ParagraphMarkdownToken
+from pymarkdown.tokens.markdown_token import MarkdownToken
 
 
 class StartOfLineTokenParser:

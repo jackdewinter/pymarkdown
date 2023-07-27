@@ -16,7 +16,6 @@ from pymarkdown.inline.inline_request import InlineRequest
 from pymarkdown.inline.inline_response import InlineResponse
 from pymarkdown.links.link_parse_helper import LinkParseHelper
 from pymarkdown.links.link_search_helper import LinkSearchHelper
-from pymarkdown.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.tokens.container_markdown_token import BlockQuoteMarkdownToken
@@ -26,6 +25,7 @@ from pymarkdown.tokens.inline_markdown_token import (
     SpecialTextMarkdownToken,
 )
 from pymarkdown.tokens.leaf_markdown_token import ParagraphMarkdownToken
+from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

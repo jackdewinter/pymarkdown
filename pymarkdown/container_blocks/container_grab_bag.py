@@ -10,12 +10,12 @@ from pymarkdown.container_blocks.container_indices import ContainerIndices
 from pymarkdown.container_blocks.parse_block_pass_properties import (
     ParseBlockPassProperties,
 )
-from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.parser_state import ParserState
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.requeue_line_info import RequeueLineInfo
-from pymarkdown.stack_token import StackToken
+from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.stack_token import StackToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

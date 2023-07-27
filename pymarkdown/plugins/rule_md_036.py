@@ -5,12 +5,12 @@ like it is being used instead of a heading.
 from enum import Enum
 from typing import Optional, cast
 
-from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.inline_markdown_token import TextMarkdownToken
+from pymarkdown.tokens.markdown_token import MarkdownToken
 
 
 class RuleMd036States(Enum):

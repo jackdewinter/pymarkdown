@@ -5,8 +5,8 @@ Module to allow for a critical error within a plugin to be encapsulated
 
 from typing import Optional
 
-from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.tokens.markdown_token import MarkdownToken
 
 
 class BadPluginError(Exception):

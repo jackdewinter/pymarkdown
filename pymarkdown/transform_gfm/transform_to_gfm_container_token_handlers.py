@@ -4,7 +4,6 @@ Module to provide for the handlers for container tokens to allow transformation 
 import logging
 from typing import Callable, Optional, cast
 
-from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.tokens.container_markdown_token import (
@@ -14,6 +13,7 @@ from pymarkdown.tokens.container_markdown_token import (
     OrderedListStartMarkdownToken,
     UnorderedListStartMarkdownToken,
 )
+from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_gfm.transform_to_gfm_list_looseness import (
     TransformToGfmListLooseness,
 )

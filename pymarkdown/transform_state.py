@@ -4,7 +4,7 @@ Module that contains the state of transformation of TransformToGfm.
 
 from typing import List, Optional
 
-from pymarkdown.markdown_token import MarkdownToken
+from pymarkdown.tokens.markdown_token import MarkdownToken
 
 
 # pylint: disable=too-many-instance-attributes

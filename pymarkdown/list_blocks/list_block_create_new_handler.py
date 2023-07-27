@@ -9,25 +9,25 @@ from pymarkdown.leaf_blocks.leaf_block_processor_paragraph import (
     LeafBlockProcessorParagraph,
 )
 from pymarkdown.list_blocks.list_block_can_close_helper import ListBlockCanCloseHelper
-from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.parser_state import ParserState
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.requeue_line_info import RequeueLineInfo
-from pymarkdown.stack_token import (
-    BlockQuoteStackToken,
-    ListStackToken,
-    OrderedListStackToken,
-    StackToken,
-    UnorderedListStackToken,
-)
 from pymarkdown.tab_helper import TabHelper
 from pymarkdown.tokens.container_markdown_token import (
     ListStartMarkdownToken,
     NewListItemMarkdownToken,
     OrderedListStartMarkdownToken,
     UnorderedListStartMarkdownToken,
+)
+from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.stack_token import (
+    BlockQuoteStackToken,
+    ListStackToken,
+    OrderedListStackToken,
+    StackToken,
+    UnorderedListStackToken,
 )
 
 POGGER = ParserLogger(logging.getLogger(__name__))
