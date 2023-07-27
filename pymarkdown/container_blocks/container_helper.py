@@ -9,10 +9,10 @@ import logging
 from typing import List, cast
 
 from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
-from pymarkdown.container_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.parser_state import ParserState
+from pymarkdown.tokens.container_markdown_token import BlockQuoteMarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

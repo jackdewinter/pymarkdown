@@ -7,18 +7,18 @@ import re
 from typing import Any, Optional, Tuple, cast
 
 from pymarkdown.constants import Constants
-from pymarkdown.inline_markdown_token import (
-    InlineCodeSpanMarkdownToken,
-    LinkStartMarkdownToken,
-    RawHtmlMarkdownToken,
-    TextMarkdownToken,
-)
-from pymarkdown.leaf_markdown_token import ParagraphMarkdownToken
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
+from pymarkdown.tokens.inline_markdown_token import (
+    InlineCodeSpanMarkdownToken,
+    LinkStartMarkdownToken,
+    RawHtmlMarkdownToken,
+    TextMarkdownToken,
+)
+from pymarkdown.tokens.leaf_markdown_token import ParagraphMarkdownToken
 
 
 class StartOfLineTokenParser:

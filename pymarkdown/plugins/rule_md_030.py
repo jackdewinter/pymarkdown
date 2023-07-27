@@ -3,11 +3,11 @@ Module to implement a plugin that ensures consistent spacing after the list mark
 """
 from typing import Dict, List, Optional, cast
 
-from pymarkdown.container_markdown_token import ListStartMarkdownToken
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
+from pymarkdown.tokens.container_markdown_token import ListStartMarkdownToken
 
 
 # pylint: disable=too-many-instance-attributes

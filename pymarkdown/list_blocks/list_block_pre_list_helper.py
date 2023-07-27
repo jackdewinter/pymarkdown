@@ -6,7 +6,6 @@ import logging
 from typing import List, Optional, Tuple, cast
 
 from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
-from pymarkdown.container_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.leaf_blocks.leaf_block_processor_paragraph import (
     LeafBlockProcessorParagraph,
 )
@@ -16,6 +15,7 @@ from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.parser_state import ParserState
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.tab_helper import TabHelper
+from pymarkdown.tokens.container_markdown_token import BlockQuoteMarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

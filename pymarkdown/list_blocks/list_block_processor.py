@@ -7,7 +7,6 @@ from typing import List, Optional, Tuple, cast
 
 from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
 from pymarkdown.container_blocks.container_grab_bag import ContainerGrabBag
-from pymarkdown.container_markdown_token import ListStartMarkdownToken
 from pymarkdown.html.html_helper import HtmlHelper
 from pymarkdown.leaf_blocks.atx_leaf_block_processor import AtxLeafBlockProcessor
 from pymarkdown.leaf_blocks.fenced_leaf_block_processor import FencedLeafBlockProcessor
@@ -31,6 +30,7 @@ from pymarkdown.position_marker import PositionMarker
 from pymarkdown.requeue_line_info import RequeueLineInfo
 from pymarkdown.stack_token import ListStackToken, StackToken
 from pymarkdown.tab_helper import TabHelper
+from pymarkdown.tokens.container_markdown_token import ListStartMarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

@@ -8,10 +8,6 @@ from typing import List, Optional, Tuple, cast
 
 from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
 from pymarkdown.container_blocks.container_grab_bag import ContainerGrabBag
-from pymarkdown.container_markdown_token import (
-    BlockQuoteMarkdownToken,
-    ListStartMarkdownToken,
-)
 from pymarkdown.leaf_blocks.atx_leaf_block_processor import AtxLeafBlockProcessor
 from pymarkdown.leaf_blocks.fenced_leaf_block_processor import FencedLeafBlockProcessor
 from pymarkdown.leaf_blocks.indented_leaf_block_processor import (
@@ -35,6 +31,10 @@ from pymarkdown.parser_state import ParserState
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.stack_token import ListStackToken
 from pymarkdown.tab_helper import TabHelper
+from pymarkdown.tokens.container_markdown_token import (
+    BlockQuoteMarkdownToken,
+    ListStartMarkdownToken,
+)
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

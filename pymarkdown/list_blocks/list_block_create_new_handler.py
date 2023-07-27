@@ -5,12 +5,6 @@ Module to provide for the creation of tokens for the new lists.
 import logging
 from typing import List, Optional, Tuple, cast
 
-from pymarkdown.container_markdown_token import (
-    ListStartMarkdownToken,
-    NewListItemMarkdownToken,
-    OrderedListStartMarkdownToken,
-    UnorderedListStartMarkdownToken,
-)
 from pymarkdown.leaf_blocks.leaf_block_processor_paragraph import (
     LeafBlockProcessorParagraph,
 )
@@ -29,6 +23,12 @@ from pymarkdown.stack_token import (
     UnorderedListStackToken,
 )
 from pymarkdown.tab_helper import TabHelper
+from pymarkdown.tokens.container_markdown_token import (
+    ListStartMarkdownToken,
+    NewListItemMarkdownToken,
+    OrderedListStartMarkdownToken,
+    UnorderedListStartMarkdownToken,
+)
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

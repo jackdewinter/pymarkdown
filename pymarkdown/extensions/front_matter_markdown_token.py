@@ -4,10 +4,10 @@ Module to provide for a leaf element that can be added to markdown parsing strea
 import logging
 from typing import Dict, List, Tuple, cast
 
-from pymarkdown.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.position_marker import PositionMarker
+from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

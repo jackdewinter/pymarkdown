@@ -5,7 +5,6 @@ import logging
 from typing import Callable, Dict, List, Optional, Tuple, cast
 
 from pymarkdown.constants import Constants
-from pymarkdown.container_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.emphasis_helper import EmphasisHelper
 from pymarkdown.inline.inline_autolink_helper import InlineAutoLinkHelper
 from pymarkdown.inline.inline_backslash_helper import InlineBackslashHelper
@@ -15,17 +14,18 @@ from pymarkdown.inline.inline_character_reference_helper import (
 )
 from pymarkdown.inline.inline_request import InlineRequest
 from pymarkdown.inline.inline_response import InlineResponse
-from pymarkdown.inline_markdown_token import (
-    RawHtmlMarkdownToken,
-    ReferenceMarkdownToken,
-    SpecialTextMarkdownToken,
-)
-from pymarkdown.leaf_markdown_token import ParagraphMarkdownToken
 from pymarkdown.links.link_parse_helper import LinkParseHelper
 from pymarkdown.links.link_search_helper import LinkSearchHelper
 from pymarkdown.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.tokens.container_markdown_token import BlockQuoteMarkdownToken
+from pymarkdown.tokens.inline_markdown_token import (
+    RawHtmlMarkdownToken,
+    ReferenceMarkdownToken,
+    SpecialTextMarkdownToken,
+)
+from pymarkdown.tokens.leaf_markdown_token import ParagraphMarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

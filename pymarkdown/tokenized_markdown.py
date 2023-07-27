@@ -15,10 +15,6 @@ from pymarkdown.container_blocks.container_block_processor import (
 from pymarkdown.container_blocks.parse_block_pass_properties import (
     ParseBlockPassProperties,
 )
-from pymarkdown.container_markdown_token import (
-    BlockQuoteMarkdownToken,
-    ListStartMarkdownToken,
-)
 from pymarkdown.extension_manager.extension_manager import ExtensionManager
 from pymarkdown.extensions.front_matter_extension import FrontMatterExtension
 from pymarkdown.extensions.pragma_token import PragmaToken
@@ -31,7 +27,6 @@ from pymarkdown.leaf_blocks.leaf_block_helper import LeafBlockHelper
 from pymarkdown.leaf_blocks.leaf_block_processor_paragraph import (
     LeafBlockProcessorParagraph,
 )
-from pymarkdown.leaf_markdown_token import BlankLineMarkdownToken
 from pymarkdown.links.link_parse_helper import LinkParseHelper
 from pymarkdown.links.link_reference_definition_helper import (
     LinkReferenceDefinitionHelper,
@@ -49,6 +44,11 @@ from pymarkdown.stack_token import (
     ParagraphStackToken,
     StackToken,
 )
+from pymarkdown.tokens.container_markdown_token import (
+    BlockQuoteMarkdownToken,
+    ListStartMarkdownToken,
+)
+from pymarkdown.tokens.leaf_markdown_token import BlankLineMarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

@@ -6,12 +6,12 @@ and the text of the heading, either at the start, end, or both.
 import re
 from typing import Any, Optional, cast
 
-from pymarkdown.inline_markdown_token import TextMarkdownToken
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.plugins.rule_md_018 import StartOfLineTokenParser
+from pymarkdown.tokens.inline_markdown_token import TextMarkdownToken
 
 
 class MyStartOfLineTokenParser(StartOfLineTokenParser):

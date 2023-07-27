@@ -15,10 +15,6 @@ from pymarkdown.container_blocks.container_block_non_leaf_processor import (
     ContainerBlockNonLeafProcessor,
 )
 from pymarkdown.container_blocks.container_grab_bag import ContainerGrabBag
-from pymarkdown.container_markdown_token import (
-    BlockQuoteMarkdownToken,
-    ListStartMarkdownToken,
-)
 from pymarkdown.extensions.pragma_token import PragmaExtension
 from pymarkdown.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
@@ -27,6 +23,10 @@ from pymarkdown.parser_state import ParserState
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.requeue_line_info import RequeueLineInfo
 from pymarkdown.tab_helper import TabHelper
+from pymarkdown.tokens.container_markdown_token import (
+    BlockQuoteMarkdownToken,
+    ListStartMarkdownToken,
+)
 
 if TYPE_CHECKING:  # pragma: no cover
     from pymarkdown.container_blocks.parse_block_pass_properties import (

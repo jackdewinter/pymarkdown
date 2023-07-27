@@ -8,11 +8,11 @@ from typing import List, Optional, Tuple, cast
 
 from typing_extensions import Protocol
 
-from pymarkdown.container_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.requeue_line_info import RequeueLineInfo
 from pymarkdown.stack_token import ListStackToken, StackToken
+from pymarkdown.tokens.container_markdown_token import BlockQuoteMarkdownToken
 
 
 # pylint: disable=too-few-public-methods

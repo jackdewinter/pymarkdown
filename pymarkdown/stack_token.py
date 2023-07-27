@@ -3,22 +3,22 @@ Module to provide for an element that can be added to the stack.
 """
 from typing import Any, List, Optional
 
-from pymarkdown.container_markdown_token import (
+from pymarkdown.markdown_token import EndMarkdownToken, MarkdownToken
+from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.position_marker import PositionMarker
+from pymarkdown.tokens.container_markdown_token import (
     BlockQuoteMarkdownToken,
     ContainerMarkdownToken,
     NewListItemMarkdownToken,
     OrderedListStartMarkdownToken,
     UnorderedListStartMarkdownToken,
 )
-from pymarkdown.leaf_markdown_token import (
+from pymarkdown.tokens.leaf_markdown_token import (
     FencedCodeBlockMarkdownToken,
     HtmlBlockMarkdownToken,
     IndentedCodeBlockMarkdownToken,
     ParagraphMarkdownToken,
 )
-from pymarkdown.markdown_token import EndMarkdownToken, MarkdownToken
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.position_marker import PositionMarker
 
 
 class StackToken:

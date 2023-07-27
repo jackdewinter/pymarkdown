@@ -3,23 +3,23 @@ Module to implement a plugin that looks for excessive spaces after the block quo
 """
 from typing import Dict, List, Optional, cast
 
-from pymarkdown.container_markdown_token import (
+from pymarkdown.markdown_token import EndMarkdownToken, MarkdownToken
+from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
+from pymarkdown.plugin_manager.rule_plugin import RulePlugin
+from pymarkdown.tokens.container_markdown_token import (
     BlockQuoteMarkdownToken,
     ListStartMarkdownToken,
 )
-from pymarkdown.inline_markdown_token import TextMarkdownToken
-from pymarkdown.leaf_markdown_token import (
+from pymarkdown.tokens.inline_markdown_token import TextMarkdownToken
+from pymarkdown.tokens.leaf_markdown_token import (
     BlankLineMarkdownToken,
     FencedCodeBlockMarkdownToken,
     LinkReferenceDefinitionMarkdownToken,
     ParagraphMarkdownToken,
     SetextHeadingMarkdownToken,
 )
-from pymarkdown.markdown_token import EndMarkdownToken, MarkdownToken
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.plugin_manager.plugin_details import PluginDetails
-from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
-from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
 # pylint: disable=too-many-instance-attributes

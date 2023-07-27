@@ -6,7 +6,13 @@ from typing import Callable, List, Optional, Tuple, cast
 
 from pymarkdown.constants import Constants
 from pymarkdown.emphasis_helper import EmphasisHelper
-from pymarkdown.inline_markdown_token import (
+from pymarkdown.links.link_create_helper import LinkCreateHelper
+from pymarkdown.links.link_helper_properties import LinkHelperProperties
+from pymarkdown.links.link_parse_helper import LinkParseHelper
+from pymarkdown.markdown_token import MarkdownToken
+from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.tokens.inline_markdown_token import (
     EmailAutolinkMarkdownToken,
     HardBreakMarkdownToken,
     ImageStartMarkdownToken,
@@ -17,12 +23,6 @@ from pymarkdown.inline_markdown_token import (
     SpecialTextMarkdownToken,
     TextMarkdownToken,
 )
-from pymarkdown.links.link_create_helper import LinkCreateHelper
-from pymarkdown.links.link_helper_properties import LinkHelperProperties
-from pymarkdown.links.link_parse_helper import LinkParseHelper
-from pymarkdown.markdown_token import MarkdownToken
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.parser_logger import ParserLogger
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

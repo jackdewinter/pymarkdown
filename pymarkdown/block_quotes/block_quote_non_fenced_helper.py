@@ -6,10 +6,6 @@ from typing import List, Optional, Tuple, cast
 
 from pymarkdown.block_quotes.block_quote_count_helper import BlockQuoteCountHelper
 from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
-from pymarkdown.container_markdown_token import (
-    BlockQuoteMarkdownToken,
-    ListStartMarkdownToken,
-)
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
@@ -18,6 +14,10 @@ from pymarkdown.position_marker import PositionMarker
 from pymarkdown.requeue_line_info import RequeueLineInfo
 from pymarkdown.stack_token import BlockQuoteStackToken, ListStackToken, StackToken
 from pymarkdown.tab_helper import TabHelper
+from pymarkdown.tokens.container_markdown_token import (
+    BlockQuoteMarkdownToken,
+    ListStartMarkdownToken,
+)
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

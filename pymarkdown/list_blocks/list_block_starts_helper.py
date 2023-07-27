@@ -6,7 +6,6 @@ import logging
 import string
 from typing import Optional, Tuple, cast
 
-from pymarkdown.container_markdown_token import ListStartMarkdownToken
 from pymarkdown.leaf_blocks.thematic_leaf_block_processor import (
     ThematicLeafBlockProcessor,
 )
@@ -15,6 +14,7 @@ from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.parser_state import ParserState
 from pymarkdown.stack_token import ListStackToken
 from pymarkdown.tab_helper import TabHelper
+from pymarkdown.tokens.container_markdown_token import ListStartMarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

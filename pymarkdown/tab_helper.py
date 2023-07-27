@@ -5,12 +5,12 @@ Module to provide helper functions for reintergrating tabs.
 import logging
 from typing import Optional, Tuple, cast
 
-from pymarkdown.container_markdown_token import (
+from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.parser_state import ParserState
+from pymarkdown.tokens.container_markdown_token import (
     BlockQuoteMarkdownToken,
     ListStartMarkdownToken,
 )
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.parser_state import ParserState
 
 LOGGER = logging.getLogger(__name__)
 

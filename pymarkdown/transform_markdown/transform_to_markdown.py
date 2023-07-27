@@ -7,7 +7,19 @@ import logging
 from dataclasses import dataclass
 from typing import Callable, Dict, List, Optional, Tuple, Union, cast
 
-from pymarkdown.container_markdown_token import (
+from pymarkdown.extensions.front_matter_extension import FrontMatterExtension
+from pymarkdown.extensions.front_matter_markdown_token import FrontMatterMarkdownToken
+from pymarkdown.extensions.pragma_token import PragmaToken
+from pymarkdown.links.link_search_helper import LinkSearchHelper
+from pymarkdown.markdown_token import (
+    EndMarkdownToken,
+    MarkdownToken,
+    MarkdownTokenClass,
+)
+from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.tab_helper import TabHelper
+from pymarkdown.tokens.container_markdown_token import (
     BlockQuoteMarkdownToken,
     ContainerMarkdownToken,
     ListStartMarkdownToken,
@@ -15,10 +27,7 @@ from pymarkdown.container_markdown_token import (
     OrderedListStartMarkdownToken,
     UnorderedListStartMarkdownToken,
 )
-from pymarkdown.extensions.front_matter_extension import FrontMatterExtension
-from pymarkdown.extensions.front_matter_markdown_token import FrontMatterMarkdownToken
-from pymarkdown.extensions.pragma_token import PragmaToken
-from pymarkdown.inline_markdown_token import (
+from pymarkdown.tokens.inline_markdown_token import (
     EmailAutolinkMarkdownToken,
     EmphasisMarkdownToken,
     HardBreakMarkdownToken,
@@ -30,7 +39,7 @@ from pymarkdown.inline_markdown_token import (
     TextMarkdownToken,
     UriAutolinkMarkdownToken,
 )
-from pymarkdown.leaf_markdown_token import (
+from pymarkdown.tokens.leaf_markdown_token import (
     AtxHeadingMarkdownToken,
     BlankLineMarkdownToken,
     FencedCodeBlockMarkdownToken,
@@ -42,15 +51,6 @@ from pymarkdown.leaf_markdown_token import (
     SetextHeadingMarkdownToken,
     ThematicBreakMarkdownToken,
 )
-from pymarkdown.links.link_search_helper import LinkSearchHelper
-from pymarkdown.markdown_token import (
-    EndMarkdownToken,
-    MarkdownToken,
-    MarkdownTokenClass,
-)
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.parser_logger import ParserLogger
-from pymarkdown.tab_helper import TabHelper
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

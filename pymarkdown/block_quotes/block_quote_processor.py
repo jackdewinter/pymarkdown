@@ -10,10 +10,6 @@ from pymarkdown.block_quotes.block_quote_non_fenced_helper import (
     BlockQuoteNonFencedHelper,
 )
 from pymarkdown.container_blocks.container_grab_bag import ContainerGrabBag
-from pymarkdown.container_markdown_token import (
-    BlockQuoteMarkdownToken,
-    ListStartMarkdownToken,
-)
 from pymarkdown.leaf_blocks.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_logger import ParserLogger
@@ -25,6 +21,10 @@ from pymarkdown.stack_token import (
     FencedCodeBlockStackToken,
     ListStackToken,
     StackToken,
+)
+from pymarkdown.tokens.container_markdown_token import (
+    BlockQuoteMarkdownToken,
+    ListStartMarkdownToken,
 )
 
 POGGER = ParserLogger(logging.getLogger(__name__))

@@ -4,8 +4,11 @@ Module to provide for the handlers for leaf tokens to allow transformation into 
 import logging
 from typing import Callable, cast
 
-from pymarkdown.inline_markdown_token import TextMarkdownToken
-from pymarkdown.leaf_markdown_token import (
+from pymarkdown.markdown_token import EndMarkdownToken, MarkdownToken
+from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.tokens.inline_markdown_token import TextMarkdownToken
+from pymarkdown.tokens.leaf_markdown_token import (
     AtxHeadingMarkdownToken,
     BlankLineMarkdownToken,
     FencedCodeBlockMarkdownToken,
@@ -16,14 +19,9 @@ from pymarkdown.leaf_markdown_token import (
     SetextHeadingMarkdownToken,
     ThematicBreakMarkdownToken,
 )
-from pymarkdown.markdown_token import EndMarkdownToken, MarkdownToken
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.transform_state import TransformState
 
 POGGER = ParserLogger(logging.getLogger(__name__))
-
-# pylint: disable=too-few-public-methods
 
 
 class TransformToGfmLeafTokenHandlers:
@@ -97,6 +95,9 @@ class TransformToGfmLeafTokenHandlers:
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
+        """
+        Do nothing.
+        """
         _ = (next_token, transform_state)
         return output_html
 
@@ -427,6 +428,3 @@ class TransformToGfmLeafTokenHandlers:
         if transform_state.is_in_html_block:
             output_html = f"{output_html}{ParserHelper.newline_character}"
         return output_html
-
-
-# pylint: enable=too-few-public-methods
