@@ -12,12 +12,12 @@ from pymarkdown.tokens.container_markdown_token import (
     BlockQuoteMarkdownToken,
     ListStartMarkdownToken,
 )
-from pymarkdown.tokens.inline_markdown_token import TextMarkdownToken
 from pymarkdown.tokens.leaf_markdown_token import (
     LinkReferenceDefinitionMarkdownToken,
     ParagraphMarkdownToken,
 )
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 
 
 class RuleMd007(RulePlugin):

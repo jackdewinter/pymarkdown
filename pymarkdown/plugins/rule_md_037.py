@@ -6,8 +6,8 @@ from typing import List, Optional, cast
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
-from pymarkdown.tokens.inline_markdown_token import TextMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 
 
 class RuleMd037(RulePlugin):
@@ -45,7 +45,7 @@ class RuleMd037(RulePlugin):
 
     def __handle_emphasis_text(
         self, context: PluginScanContext, token: MarkdownToken
-    ) -> None:
+    ) -> None:  # sourcery skip: extract-method
         text_token = cast(TextMarkdownToken, token)
         assert self.__start_emphasis_token is not None
         if text_token.token_text == self.__start_emphasis_token.token_text:

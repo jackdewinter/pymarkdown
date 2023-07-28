@@ -13,12 +13,12 @@ from pymarkdown.tokens.container_markdown_token import (
     BlockQuoteMarkdownToken,
     ListStartMarkdownToken,
 )
-from pymarkdown.tokens.inline_markdown_token import TextMarkdownToken
 from pymarkdown.tokens.leaf_markdown_token import (
     AtxHeadingMarkdownToken,
     ParagraphMarkdownToken,
 )
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

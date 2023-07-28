@@ -10,18 +10,18 @@ from pymarkdown.extensions.pragma_token import PragmaToken
 from pymarkdown.inline.inline_helper import InlineHelper
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
-from pymarkdown.tokens.inline_markdown_token import (
-    EmailAutolinkMarkdownToken,
-    EmphasisMarkdownToken,
-    HardBreakMarkdownToken,
-    ImageStartMarkdownToken,
+from pymarkdown.tokens.email_autolink_markdown_token import EmailAutolinkMarkdownToken
+from pymarkdown.tokens.emphasis_markdown_token import EmphasisMarkdownToken
+from pymarkdown.tokens.hard_break_markdown_token import HardBreakMarkdownToken
+from pymarkdown.tokens.image_start_markdown_token import ImageStartMarkdownToken
+from pymarkdown.tokens.inline_code_span_markdown_token import (
     InlineCodeSpanMarkdownToken,
-    LinkStartMarkdownToken,
-    RawHtmlMarkdownToken,
-    TextMarkdownToken,
-    UriAutolinkMarkdownToken,
 )
+from pymarkdown.tokens.link_start_markdown_token import LinkStartMarkdownToken
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
+from pymarkdown.tokens.raw_html_markdown_token import RawHtmlMarkdownToken
+from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
+from pymarkdown.tokens.uri_autolink_markdown_token import UriAutolinkMarkdownToken
 from pymarkdown.transform_gfm.transform_to_gfm_container_token_handlers import (
     TransformToGfmContainerTokenHandlers,
 )

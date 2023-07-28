@@ -22,18 +22,14 @@ from pymarkdown.tokens.container_markdown_token import (
     OrderedListStartMarkdownToken,
     UnorderedListStartMarkdownToken,
 )
-from pymarkdown.tokens.inline_markdown_token import (
-    EmailAutolinkMarkdownToken,
-    EmphasisMarkdownToken,
-    HardBreakMarkdownToken,
-    ImageStartMarkdownToken,
+from pymarkdown.tokens.email_autolink_markdown_token import EmailAutolinkMarkdownToken
+from pymarkdown.tokens.emphasis_markdown_token import EmphasisMarkdownToken
+from pymarkdown.tokens.hard_break_markdown_token import HardBreakMarkdownToken
+from pymarkdown.tokens.image_start_markdown_token import ImageStartMarkdownToken
+from pymarkdown.tokens.inline_code_span_markdown_token import (
     InlineCodeSpanMarkdownToken,
-    InlineMarkdownToken,
-    LinkStartMarkdownToken,
-    RawHtmlMarkdownToken,
-    TextMarkdownToken,
-    UriAutolinkMarkdownToken,
 )
+from pymarkdown.tokens.inline_markdown_token import InlineMarkdownToken
 from pymarkdown.tokens.leaf_markdown_token import (
     AtxHeadingMarkdownToken,
     BlankLineMarkdownToken,
@@ -46,11 +42,15 @@ from pymarkdown.tokens.leaf_markdown_token import (
     SetextHeadingMarkdownToken,
     ThematicBreakMarkdownToken,
 )
+from pymarkdown.tokens.link_start_markdown_token import LinkStartMarkdownToken
 from pymarkdown.tokens.markdown_token import (
     EndMarkdownToken,
     MarkdownToken,
     MarkdownTokenClass,
 )
+from pymarkdown.tokens.raw_html_markdown_token import RawHtmlMarkdownToken
+from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
+from pymarkdown.tokens.uri_autolink_markdown_token import UriAutolinkMarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

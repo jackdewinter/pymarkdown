@@ -11,7 +11,7 @@ from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.tab_helper import TabHelper
 from pymarkdown.tokens.container_markdown_token import BlockQuoteMarkdownToken
-from pymarkdown.tokens.inline_markdown_token import HardBreakMarkdownToken
+from pymarkdown.tokens.hard_break_markdown_token import HardBreakMarkdownToken
 from pymarkdown.tokens.leaf_markdown_token import ParagraphMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 

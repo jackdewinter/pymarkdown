@@ -11,18 +11,18 @@ from pymarkdown.links.link_helper_properties import LinkHelperProperties
 from pymarkdown.links.link_parse_helper import LinkParseHelper
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
-from pymarkdown.tokens.inline_markdown_token import (
-    EmailAutolinkMarkdownToken,
-    HardBreakMarkdownToken,
-    ImageStartMarkdownToken,
+from pymarkdown.tokens.email_autolink_markdown_token import EmailAutolinkMarkdownToken
+from pymarkdown.tokens.hard_break_markdown_token import HardBreakMarkdownToken
+from pymarkdown.tokens.image_start_markdown_token import ImageStartMarkdownToken
+from pymarkdown.tokens.inline_code_span_markdown_token import (
     InlineCodeSpanMarkdownToken,
-    LinkStartMarkdownToken,
-    RawHtmlMarkdownToken,
-    ReferenceMarkdownToken,
-    SpecialTextMarkdownToken,
-    TextMarkdownToken,
 )
+from pymarkdown.tokens.link_start_markdown_token import LinkStartMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.raw_html_markdown_token import RawHtmlMarkdownToken
+from pymarkdown.tokens.reference_markdown_token import ReferenceMarkdownToken
+from pymarkdown.tokens.special_text_markdown_token import SpecialTextMarkdownToken
+from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

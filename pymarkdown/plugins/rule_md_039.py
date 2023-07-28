@@ -6,7 +6,7 @@ from typing import cast
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
-from pymarkdown.tokens.inline_markdown_token import LinkStartMarkdownToken
+from pymarkdown.tokens.link_start_markdown_token import LinkStartMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 
 

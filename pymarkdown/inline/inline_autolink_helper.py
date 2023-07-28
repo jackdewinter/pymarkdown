@@ -11,12 +11,10 @@ from pymarkdown.inline.inline_request import InlineRequest
 from pymarkdown.inline.inline_response import InlineResponse
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
-from pymarkdown.tokens.inline_markdown_token import (
-    EmailAutolinkMarkdownToken,
-    RawHtmlMarkdownToken,
-    UriAutolinkMarkdownToken,
-)
+from pymarkdown.tokens.email_autolink_markdown_token import EmailAutolinkMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.raw_html_markdown_token import RawHtmlMarkdownToken
+from pymarkdown.tokens.uri_autolink_markdown_token import UriAutolinkMarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

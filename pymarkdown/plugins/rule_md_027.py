@@ -11,7 +11,6 @@ from pymarkdown.tokens.container_markdown_token import (
     BlockQuoteMarkdownToken,
     ListStartMarkdownToken,
 )
-from pymarkdown.tokens.inline_markdown_token import TextMarkdownToken
 from pymarkdown.tokens.leaf_markdown_token import (
     BlankLineMarkdownToken,
     FencedCodeBlockMarkdownToken,
@@ -20,6 +19,7 @@ from pymarkdown.tokens.leaf_markdown_token import (
     SetextHeadingMarkdownToken,
 )
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
+from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 
 
 # pylint: disable=too-many-instance-attributes
@@ -443,7 +443,7 @@ class RuleMd027(RulePlugin):
         token: MarkdownToken,
         num_container_tokens: int,
         is_directly_within_block_quote: bool,
-    ) -> None:
+    ) -> None:  # sourcery skip: extract-method
         fenced_token = cast(FencedCodeBlockMarkdownToken, token)
         if fenced_token.extracted_whitespace and is_directly_within_block_quote:
             scoped_block_quote_token = cast(

@@ -9,7 +9,7 @@ from pymarkdown.constants import Constants
 from pymarkdown.inline.inline_request import InlineRequest
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
-from pymarkdown.tokens.inline_markdown_token import RawHtmlMarkdownToken
+from pymarkdown.tokens.raw_html_markdown_token import RawHtmlMarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

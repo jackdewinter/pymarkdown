@@ -299,24 +299,59 @@
             "protected-access": 4,
             "too-many-instance-attributes": 1
         },
+        "pymarkdown/tokens/email_autolink_markdown_token.py": {
+            "protected-access": 1
+        },
+        "pymarkdown/tokens/emphasis_markdown_token.py": {
+            "protected-access": 1
+        },
+        "pymarkdown/tokens/hard_break_markdown_token.py": {
+            "protected-access": 1
+        },
+        "pymarkdown/tokens/image_start_markdown_token.py": {
+            "too-many-arguments": 1,
+            "protected-access": 1
+        },
+        "pymarkdown/tokens/inline_code_span_markdown_token.py": {
+            "too-many-arguments": 1,
+            "protected-access": 1
+        },
         "pymarkdown/tokens/inline_markdown_token.py": {
-            "too-many-arguments": 6,
-            "protected-access": 9,
-            "too-many-instance-attributes": 1
+            "too-many-arguments": 1
         },
         "pymarkdown/tokens/leaf_markdown_token.py": {
             "too-many-arguments": 4,
             "protected-access": 9,
             "too-many-instance-attributes": 1
         },
+        "pymarkdown/tokens/link_start_markdown_token.py": {
+            "protected-access": 1
+        },
         "pymarkdown/tokens/markdown_token.py": {
             "too-many-public-methods": 1,
             "too-many-instance-attributes": 1,
             "too-many-arguments": 2
         },
+        "pymarkdown/tokens/raw_html_markdown_token.py": {
+            "protected-access": 1
+        },
+        "pymarkdown/tokens/reference_markdown_token.py": {
+            "too-many-instance-attributes": 1,
+            "too-many-arguments": 1
+        },
+        "pymarkdown/tokens/special_text_markdown_token.py": {
+            "too-many-arguments": 1
+        },
         "pymarkdown/tokens/stack_token.py": {
             "too-many-arguments": 3,
             "too-many-instance-attributes": 1
+        },
+        "pymarkdown/tokens/text_markdown_token.py": {
+            "too-many-arguments": 1,
+            "protected-access": 1
+        },
+        "pymarkdown/tokens/uri_autolink_markdown_token.py": {
+            "protected-access": 1
         },
         "pymarkdown/transform_gfm/transform_to_gfm.py": {
             "too-few-public-methods": 1

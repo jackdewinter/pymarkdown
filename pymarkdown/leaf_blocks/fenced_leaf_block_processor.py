@@ -14,7 +14,6 @@ from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.parser_state import ParserState
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.tab_helper import TabHelper
-from pymarkdown.tokens.inline_markdown_token import TextMarkdownToken
 from pymarkdown.tokens.leaf_markdown_token import FencedCodeBlockMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.tokens.stack_token import (
@@ -22,6 +21,7 @@ from pymarkdown.tokens.stack_token import (
     ParagraphStackToken,
     StackToken,
 )
+from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
