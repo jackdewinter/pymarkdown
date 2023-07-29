@@ -14,9 +14,9 @@ from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.inline_code_span_markdown_token import (
     InlineCodeSpanMarkdownToken,
 )
-from pymarkdown.tokens.leaf_markdown_token import ParagraphMarkdownToken
 from pymarkdown.tokens.link_start_markdown_token import LinkStartMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
 from pymarkdown.tokens.raw_html_markdown_token import RawHtmlMarkdownToken
 from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 

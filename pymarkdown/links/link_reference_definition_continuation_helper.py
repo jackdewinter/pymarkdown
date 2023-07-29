@@ -14,8 +14,10 @@ from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.parser_state import ParserState
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.tab_helper import TabHelper
-from pymarkdown.tokens.container_markdown_token import BlockQuoteMarkdownToken
-from pymarkdown.tokens.leaf_markdown_token import LinkReferenceDefinitionMarkdownToken
+from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
+from pymarkdown.tokens.link_reference_definition_markdown_token import (
+    LinkReferenceDefinitionMarkdownToken,
+)
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.tokens.stack_token import LinkDefinitionStackToken
 

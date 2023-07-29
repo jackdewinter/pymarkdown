@@ -10,10 +10,10 @@ from pymarkdown.inline.inline_response import InlineResponse
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.tab_helper import TabHelper
-from pymarkdown.tokens.container_markdown_token import BlockQuoteMarkdownToken
+from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.tokens.hard_break_markdown_token import HardBreakMarkdownToken
-from pymarkdown.tokens.leaf_markdown_token import ParagraphMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

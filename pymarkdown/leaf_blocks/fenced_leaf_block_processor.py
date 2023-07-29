@@ -14,7 +14,9 @@ from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.parser_state import ParserState
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.tab_helper import TabHelper
-from pymarkdown.tokens.leaf_markdown_token import FencedCodeBlockMarkdownToken
+from pymarkdown.tokens.fenced_code_block_markdown_token import (
+    FencedCodeBlockMarkdownToken,
+)
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.tokens.stack_token import (
     FencedCodeBlockStackToken,

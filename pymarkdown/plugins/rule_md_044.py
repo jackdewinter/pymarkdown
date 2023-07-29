@@ -12,7 +12,9 @@ from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.inline_code_span_markdown_token import (
     InlineCodeSpanMarkdownToken,
 )
-from pymarkdown.tokens.leaf_markdown_token import LinkReferenceDefinitionMarkdownToken
+from pymarkdown.tokens.link_reference_definition_markdown_token import (
+    LinkReferenceDefinitionMarkdownToken,
+)
 from pymarkdown.tokens.link_start_markdown_token import LinkStartMarkdownToken
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.tokens.text_markdown_token import TextMarkdownToken

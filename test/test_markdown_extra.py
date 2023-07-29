@@ -8,7 +8,7 @@ import pytest
 from pymarkdown.extensions.front_matter_markdown_token import FrontMatterMarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.position_marker import PositionMarker
-from pymarkdown.tokens.container_markdown_token import BlockQuoteMarkdownToken
+from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 
 # pylint: disable=too-many-lines
 

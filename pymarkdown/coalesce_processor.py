@@ -7,11 +7,11 @@ from typing import List, cast
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.tab_helper import TabHelper
-from pymarkdown.tokens.leaf_markdown_token import (
+from pymarkdown.tokens.indented_code_block_markdown_token import (
     IndentedCodeBlockMarkdownToken,
-    ParagraphMarkdownToken,
 )
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
 from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))

@@ -9,8 +9,8 @@ from application_properties import ApplicationPropertiesFacade
 
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
-from pymarkdown.tokens.leaf_markdown_token import SetextHeadingMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.setext_heading_markdown_token import SetextHeadingMarkdownToken
 
 
 class RulePlugin(ABC):

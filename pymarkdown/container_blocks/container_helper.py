@@ -11,7 +11,7 @@ from typing import List, cast
 from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.parser_state import ParserState
-from pymarkdown.tokens.container_markdown_token import BlockQuoteMarkdownToken
+from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))

@@ -7,10 +7,8 @@ from typing import Optional, Tuple, cast
 
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_state import ParserState
-from pymarkdown.tokens.container_markdown_token import (
-    BlockQuoteMarkdownToken,
-    ListStartMarkdownToken,
-)
+from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
+from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
 
 LOGGER = logging.getLogger(__name__)
 

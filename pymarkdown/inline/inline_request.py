@@ -5,8 +5,8 @@ Module to hold the request information to pass on to the handle_* functions.
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-from pymarkdown.tokens.leaf_markdown_token import ParagraphMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
 
 
 # pylint: disable=too-many-instance-attributes

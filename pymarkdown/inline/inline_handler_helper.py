@@ -18,9 +18,9 @@ from pymarkdown.links.link_parse_helper import LinkParseHelper
 from pymarkdown.links.link_search_helper import LinkSearchHelper
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
-from pymarkdown.tokens.container_markdown_token import BlockQuoteMarkdownToken
-from pymarkdown.tokens.leaf_markdown_token import ParagraphMarkdownToken
+from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
+from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
 from pymarkdown.tokens.raw_html_markdown_token import RawHtmlMarkdownToken
 from pymarkdown.tokens.reference_markdown_token import ReferenceMarkdownToken
 from pymarkdown.tokens.special_text_markdown_token import SpecialTextMarkdownToken

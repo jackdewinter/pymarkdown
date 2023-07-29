@@ -7,18 +7,18 @@ from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
-from pymarkdown.tokens.container_markdown_token import (
-    BlockQuoteMarkdownToken,
-    ListStartMarkdownToken,
-)
-from pymarkdown.tokens.leaf_markdown_token import (
-    BlankLineMarkdownToken,
+from pymarkdown.tokens.blank_line_markdown_token import BlankLineMarkdownToken
+from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
+from pymarkdown.tokens.fenced_code_block_markdown_token import (
     FencedCodeBlockMarkdownToken,
-    LinkReferenceDefinitionMarkdownToken,
-    ParagraphMarkdownToken,
-    SetextHeadingMarkdownToken,
 )
+from pymarkdown.tokens.link_reference_definition_markdown_token import (
+    LinkReferenceDefinitionMarkdownToken,
+)
+from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
+from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
+from pymarkdown.tokens.setext_heading_markdown_token import SetextHeadingMarkdownToken
 from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 
 

@@ -7,7 +7,7 @@ from typing import List, cast
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.parser_state import ParserState
-from pymarkdown.tokens.container_markdown_token import ListStartMarkdownToken
+from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.tokens.stack_token import ListStackToken, StackToken
 
