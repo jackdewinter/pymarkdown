@@ -2,8 +2,15 @@
 Module to provide for an encapsulation of the inline code span element.
 """
 
+from typing import Callable, Optional, cast
+
+from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.tokens.inline_markdown_token import InlineMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
+from pymarkdown.transform_markdown.markdown_transform_context import (
+    MarkdownTransformContext,
+)
 
 
 class InlineCodeSpanMarkdownToken(InlineMarkdownToken):
@@ -85,3 +92,98 @@ class InlineCodeSpanMarkdownToken(InlineMarkdownToken):
         Returns the whitespace at the end of the code span.
         """
         return self.__trailing_whitespace
+
+    def register_for_markdown_transform(
+        self,
+        registration_function: Callable[
+            [
+                type,
+                Callable[
+                    [MarkdownTransformContext, MarkdownToken, Optional[MarkdownToken]],
+                    str,
+                ],
+                Optional[
+                    Callable[
+                        [
+                            MarkdownTransformContext,
+                            MarkdownToken,
+                            Optional[MarkdownToken],
+                            Optional[MarkdownToken],
+                        ],
+                        str,
+                    ]
+                ],
+            ],
+            None,
+        ],
+    ) -> None:
+        """
+        Register any rehydration handlers for leaf markdown tokens.
+        """
+        registration_function(
+            InlineCodeSpanMarkdownToken,
+            InlineCodeSpanMarkdownToken.__rehydrate_inline_code_span,
+            None,
+        )
+
+    @staticmethod
+    def __rehydrate_inline_code_span(
+        context: MarkdownTransformContext,
+        current_token: MarkdownToken,
+        previous_token: Optional[MarkdownToken],
+    ) -> str:
+        """
+        Rehydrate the code span data from the token.
+        """
+        _ = previous_token
+
+        if context.block_stack[-1].is_inline_link:
+            return ""
+
+        current_inline_token = cast(InlineCodeSpanMarkdownToken, current_token)
+        span_text = ParserHelper.remove_all_from_text(current_inline_token.span_text)
+        leading_whitespace = ParserHelper.remove_all_from_text(
+            current_inline_token.leading_whitespace
+        )
+        trailing_whitespace = ParserHelper.remove_all_from_text(
+            current_inline_token.trailing_whitespace
+        )
+
+        if context.block_stack[-1].is_paragraph:
+            block_paragraph_token = cast(
+                ParagraphMarkdownToken, context.block_stack[-1]
+            )
+            (
+                leading_whitespace,
+                block_paragraph_token.rehydrate_index,
+            ) = ParserHelper.recombine_string_with_whitespace(
+                leading_whitespace,
+                block_paragraph_token.extracted_whitespace,
+                block_paragraph_token.rehydrate_index,
+            )
+            (
+                span_text,
+                block_paragraph_token.rehydrate_index,
+            ) = ParserHelper.recombine_string_with_whitespace(
+                span_text,
+                block_paragraph_token.extracted_whitespace,
+                block_paragraph_token.rehydrate_index,
+            )
+            (
+                trailing_whitespace,
+                block_paragraph_token.rehydrate_index,
+            ) = ParserHelper.recombine_string_with_whitespace(
+                trailing_whitespace,
+                block_paragraph_token.extracted_whitespace,
+                block_paragraph_token.rehydrate_index,
+            )
+
+        return "".join(
+            [
+                current_inline_token.extracted_start_backticks,
+                leading_whitespace,
+                span_text,
+                trailing_whitespace,
+                current_inline_token.extracted_start_backticks,
+            ]
+        )

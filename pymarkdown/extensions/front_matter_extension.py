@@ -3,7 +3,7 @@ Module to implement the front matter extensions.
 """
 import logging
 import string
-from typing import Dict, List, Optional, Tuple, Union, cast
+from typing import Dict, List, Optional, Tuple, Union
 
 from application_properties import ApplicationPropertiesFacade
 
@@ -71,21 +71,6 @@ class FrontMatterExtension(ParserExtension):
         _ = (next_token, transform_state)
 
         return output_html
-
-    @staticmethod
-    def rehydrate_front_matter(
-        current_token: MarkdownToken, previous_token: Optional[MarkdownToken]
-    ) -> str:
-        """
-        Rehydrate the front matter text from the token.
-        """
-        _ = previous_token
-
-        front_mater_token = cast(FrontMatterMarkdownToken, current_token)
-        front_matter_parts = [front_mater_token.start_boundary_line]
-        front_matter_parts.extend(front_mater_token.collected_lines)
-        front_matter_parts.extend([front_mater_token.end_boundary_line, ""])
-        return ParserHelper.newline_character.join(front_matter_parts)
 
     @staticmethod
     def process_header_if_present(

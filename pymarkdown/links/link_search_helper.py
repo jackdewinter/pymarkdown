@@ -20,11 +20,13 @@ from pymarkdown.tokens.inline_code_span_markdown_token import (
 from pymarkdown.tokens.link_start_markdown_token import LinkStartMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.tokens.raw_html_markdown_token import RawHtmlMarkdownToken
-from pymarkdown.tokens.reference_markdown_token import ReferenceMarkdownToken
 from pymarkdown.tokens.special_text_markdown_token import SpecialTextMarkdownToken
 from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
+
+
+# pylint: disable=too-few-public-methods
 
 
 class LinkSearchHelper:
@@ -562,7 +564,9 @@ class LinkSearchHelper:
         text_raw_parts: List[str],
     ) -> bool:
         link_token = cast(LinkStartMarkdownToken, inline_blocks[collect_index])
-        raw_text = LinkSearchHelper.rehydrate_inline_link_text_from_token(link_token)
+        raw_text = LinkStartMarkdownToken.rehydrate_inline_link_text_from_token(
+            link_token
+        )
         text_raw_parts.append(raw_text)
         return True
 
@@ -575,7 +579,7 @@ class LinkSearchHelper:
     ) -> None:
         image_token = cast(ImageStartMarkdownToken, inline_blocks[collect_index])
         text_raw_parts.append(
-            LinkSearchHelper.rehydrate_inline_image_text_from_token(image_token)
+            ImageStartMarkdownToken.rehydrate_inline_image_text_from_token(image_token)
         )
         text_parts.append(image_token.image_alt_text)
 
@@ -660,83 +664,5 @@ class LinkSearchHelper:
         text_parts.append(text_token.token_text)
         text_raw_parts.append(text_token.token_text)
 
-    @staticmethod
-    def rehydrate_inline_image_text_from_token(
-        image_token: ImageStartMarkdownToken,
-    ) -> str:
-        """
-        Given an image token, rehydrate it's original text from the token.
-        """
-        return f"!{LinkSearchHelper.rehydrate_inline_link_text_from_token(image_token)}"
 
-    @staticmethod
-    def __rehydrate_inline_link_text_from_token_type_inline(
-        link_token: ReferenceMarkdownToken, link_parts: List[str]
-    ) -> None:
-        assert link_token.before_title_whitespace is not None
-        assert link_token.before_link_whitespace is not None
-        link_parts.extend(
-            [
-                "[",
-                ParserHelper.remove_all_from_text(link_token.text_from_blocks),
-                "](",
-                link_token.before_link_whitespace,
-                f"<{link_token.active_link_uri}>"
-                if link_token.did_use_angle_start
-                else link_token.active_link_uri,
-                link_token.before_title_whitespace,
-            ]
-        )
-        if link_token.active_link_title:
-            if link_token.inline_title_bounding_character == "'":
-                title_prefix = "'"
-                title_suffix = "'"
-            elif link_token.inline_title_bounding_character == "(":
-                title_prefix = "("
-                title_suffix = ")"
-            else:
-                title_prefix = '"'
-                title_suffix = '"'
-
-            assert link_token.after_title_whitespace is not None
-            link_parts.extend(
-                [
-                    title_prefix,
-                    link_token.active_link_title,
-                    title_suffix,
-                    link_token.after_title_whitespace,
-                ]
-            )
-        link_parts.append(")")
-
-    @staticmethod
-    def rehydrate_inline_link_text_from_token(
-        link_token: ReferenceMarkdownToken,
-    ) -> str:
-        """
-        Given a link token, rehydrate it's original text from the token.
-        """
-
-        link_parts = []
-        if link_token.label_type == Constants.link_type__shortcut:
-            link_parts.extend(
-                [
-                    "[",
-                    ParserHelper.remove_all_from_text(link_token.text_from_blocks),
-                    "]",
-                ]
-            )
-        elif link_token.label_type == Constants.link_type__full:
-            assert link_token.ex_label is not None
-            link_parts.extend(
-                ["[", link_token.text_from_blocks, "][", link_token.ex_label, "]"]
-            )
-        elif link_token.label_type == Constants.link_type__collapsed:
-            link_parts.extend(["[", link_token.text_from_blocks, "][]"])
-        else:
-            assert link_token.label_type == Constants.link_type__inline
-            LinkSearchHelper.__rehydrate_inline_link_text_from_token_type_inline(
-                link_token, link_parts
-            )
-
-        return "".join(link_parts)
+# pylint: enable=too-few-public-methods

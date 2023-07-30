@@ -2,8 +2,14 @@
 Module to provide for an encapsulation of the inline emphasis element.
 """
 
+from typing import Callable, Optional, cast
+
+from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.tokens.inline_markdown_token import InlineMarkdownToken
-from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
+from pymarkdown.transform_markdown.markdown_transform_context import (
+    MarkdownTransformContext,
+)
 
 
 class EmphasisMarkdownToken(InlineMarkdownToken):
@@ -57,3 +63,82 @@ class EmphasisMarkdownToken(InlineMarkdownToken):
         Returns the character used for the current emphasis text.
         """
         return self.__emphasis_character
+
+    def register_for_markdown_transform(
+        self,
+        registration_function: Callable[
+            [
+                type,
+                Callable[
+                    [MarkdownTransformContext, MarkdownToken, Optional[MarkdownToken]],
+                    str,
+                ],
+                Optional[
+                    Callable[
+                        [
+                            MarkdownTransformContext,
+                            MarkdownToken,
+                            Optional[MarkdownToken],
+                            Optional[MarkdownToken],
+                        ],
+                        str,
+                    ]
+                ],
+            ],
+            None,
+        ],
+    ) -> None:
+        """
+        Register any rehydration handlers for leaf markdown tokens.
+        """
+        registration_function(
+            EmphasisMarkdownToken,
+            EmphasisMarkdownToken.__rehydrate_inline_emphaisis,
+            EmphasisMarkdownToken.__rehydrate_inline_emphaisis_end,
+        )
+
+    @staticmethod
+    def __rehydrate_inline_emphaisis(
+        context: MarkdownTransformContext,
+        current_token: MarkdownToken,
+        previous_token: Optional[MarkdownToken],
+    ) -> str:
+        """
+        Rehydrate the emphasis text from the token.
+        """
+        _ = previous_token
+
+        emphasis_token = cast(EmphasisMarkdownToken, current_token)
+        return (
+            ""
+            if context.block_stack[-1].is_inline_link
+            else ParserHelper.repeat_string(
+                emphasis_token.emphasis_character, emphasis_token.emphasis_length
+            )
+        )
+
+    @staticmethod
+    def __rehydrate_inline_emphaisis_end(
+        context: MarkdownTransformContext,
+        current_token: MarkdownToken,
+        previous_token: Optional[MarkdownToken],
+        next_token: Optional[MarkdownToken],
+    ) -> str:
+        """
+        Rehydrate the emphasis end text from the token.
+        """
+        _ = (previous_token, next_token)
+
+        emphasis_end_token = cast(EndMarkdownToken, current_token)
+        emphasis_token = cast(
+            EmphasisMarkdownToken, emphasis_end_token.start_markdown_token
+        )
+
+        return (
+            ""
+            if context.block_stack[-1].is_inline_link
+            else ParserHelper.repeat_string(
+                emphasis_token.emphasis_character,
+                emphasis_token.emphasis_length,
+            )
+        )

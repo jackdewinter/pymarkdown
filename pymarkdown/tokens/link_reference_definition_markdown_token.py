@@ -3,13 +3,17 @@ Module to provide for an encapsulation of the link reference definition element.
 """
 
 # pylint: disable=too-many-instance-attributes
-from typing import Optional
+from typing import Callable, List, Optional, cast
 
 from pymarkdown.links.link_reference_info import LinkReferenceInfo
 from pymarkdown.links.link_reference_titles import LinkReferenceTitles
+from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.transform_markdown.markdown_transform_context import (
+    MarkdownTransformContext,
+)
 
 
 class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
@@ -30,45 +34,46 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
         self.__did_add_definition = did_add_definition
         self.__link_name = link_name
 
-        assert link_value
-        self.__link_destination, self.__link_title = (
-            link_value.inline_link,
-            link_value.inline_title,
-        )
-        # else:
-        #     self.__link_destination, self.__link_title = "", ""
+        if link_value:
+            self.__link_destination, self.__link_title = (
+                link_value.inline_link,
+                link_value.inline_title,
+            )
+        else:
+            self.__link_destination, self.__link_title = "", ""
 
-        assert link_debug
-        (
-            self.__link_name_debug,
-            self.__link_destination_whitespace,
-            self.__link_destination_raw,
-            self.__link_title_whitespace,
-            self.__link_title_raw,
-            self.__end_whitespace,
-        ) = (
-            ""
-            if link_debug.collected_destination == self.__link_name
-            else link_debug.collected_destination,
-            link_debug.line_destination_whitespace,
-            ""
-            if link_debug.inline_raw_link == self.__link_destination
-            else link_debug.inline_raw_link,
-            link_debug.line_title_whitespace,
-            ""
-            if link_debug.inline_raw_title == self.__link_title
-            else link_debug.inline_raw_title,
-            link_debug.end_whitespace,
-        )
-        # else:
-        #     (
-        #         self.__link_name_debug,
-        #         self.__link_destination_whitespace,
-        #         self.__link_destination_raw,
-        #         self.__link_title_whitespace,
-        #         self.__link_title_raw,
-        #         self.__end_whitespace,
-        #     ) = ("", "", "", "", "", "")
+        if link_debug:
+            (
+                self.__link_name_debug,
+                self.__link_destination_whitespace,
+                self.__link_destination_raw,
+                self.__link_title_whitespace,
+                self.__link_title_raw,
+                self.__end_whitespace,
+            ) = (
+                ""
+                if link_debug.collected_destination == self.__link_name
+                else link_debug.collected_destination,
+                link_debug.line_destination_whitespace,
+                ""
+                if link_debug.inline_raw_link == self.__link_destination
+                else link_debug.inline_raw_link,
+                link_debug.line_title_whitespace,
+                ""
+                if link_debug.inline_raw_title == self.__link_title
+                else link_debug.inline_raw_title,
+                link_debug.end_whitespace,
+            )
+        else:
+            # TODO do this better.
+            (
+                self.__link_name_debug,
+                self.__link_destination_whitespace,
+                self.__link_destination_raw,
+                self.__link_title_whitespace,
+                self.__link_title_raw,
+                self.__end_whitespace,
+            ) = ("", "", "", "", "", "")
 
         extra_data = self.__validate_proper_fields_are_valid(extracted_whitespace)
         LeafMarkdownToken.__init__(
@@ -184,6 +189,77 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
         Returns the whitespace that occurs after the link title.
         """
         return self.__link_title_whitespace
+
+    def register_for_markdown_transform(
+        self,
+        registration_function: Callable[
+            [
+                type,
+                Callable[
+                    [MarkdownTransformContext, MarkdownToken, Optional[MarkdownToken]],
+                    str,
+                ],
+                Optional[
+                    Callable[
+                        [
+                            MarkdownTransformContext,
+                            MarkdownToken,
+                            Optional[MarkdownToken],
+                            Optional[MarkdownToken],
+                        ],
+                        str,
+                    ]
+                ],
+            ],
+            None,
+        ],
+    ) -> None:
+        """
+        Register any rehydration handlers for leaf markdown tokens.
+        """
+        registration_function(
+            LinkReferenceDefinitionMarkdownToken,
+            LinkReferenceDefinitionMarkdownToken.__rehydrate_link_reference_definition,
+            None,
+        )
+
+    @staticmethod
+    def __rehydrate_link_reference_definition(
+        context: MarkdownTransformContext,
+        current_token: MarkdownToken,
+        previous_token: Optional[MarkdownToken],
+    ) -> str:
+        """
+        Rehydrate the link reference definition from the token.
+        """
+        _ = (previous_token, context)
+
+        current_lrd_token = cast(LinkReferenceDefinitionMarkdownToken, current_token)
+        link_title_text = (
+            current_lrd_token.link_title_raw or current_lrd_token.link_title
+        )
+        link_destination_text = (
+            current_lrd_token.link_destination_raw or current_lrd_token.link_destination
+        )
+        assert current_lrd_token.link_destination_whitespace is not None
+        assert link_destination_text is not None
+        assert current_lrd_token.link_title_whitespace is not None
+        assert link_title_text is not None
+        assert current_lrd_token.end_whitespace is not None
+        link_def_parts: List[str] = [
+            current_lrd_token.extracted_whitespace,
+            "[",
+            current_lrd_token.link_name_debug or current_lrd_token.link_name,
+            "]:",
+            current_lrd_token.link_destination_whitespace,
+            link_destination_text,
+            current_lrd_token.link_title_whitespace,
+            link_title_text,
+            current_lrd_token.end_whitespace,
+            ParserHelper.newline_character,
+        ]
+
+        return "".join(link_def_parts)
 
 
 # pylint: enable=too-many-instance-attributes

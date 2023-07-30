@@ -69,6 +69,9 @@
         "pymarkdown/extensions/disallowed_raw_html.py": {},
         "pymarkdown/extensions/extended_autolinks.py": {},
         "pymarkdown/extensions/extension_one.py": {},
+        "pymarkdown/extensions/extension_token_types.py": {
+            "too-few-public-methods": 1
+        },
         "pymarkdown/extensions/front_matter_extension.py": {},
         "pymarkdown/extensions/front_matter_markdown_token.py": {
             "too-many-arguments": 1,
@@ -166,6 +169,7 @@
         "pymarkdown/links/link_reference_titles.py": {},
         "pymarkdown/links/link_reference_tuple.py": {},
         "pymarkdown/links/link_search_helper.py": {
+            "too-few-public-methods": 1,
             "too-many-arguments": 5,
             "too-many-locals": 1
         },
@@ -391,6 +395,7 @@
         "pymarkdown/tokens/thematic_break_markdown_token.py": {
             "protected-access": 1
         },
+        "pymarkdown/tokens/token_types.py": {},
         "pymarkdown/tokens/unordered_list_start_markdown_token.py": {
             "too-many-arguments": 1,
             "protected-access": 1
@@ -412,10 +417,24 @@
             "too-few-public-methods": 1,
             "too-many-arguments": 1
         },
+        "pymarkdown/transform_markdown/markdown_transform_context.py": {},
+        "pymarkdown/transform_markdown/transform_block_quote.py": {},
+        "pymarkdown/transform_markdown/transform_containers.py": {
+            "too-few-public-methods": 1,
+            "too-many-arguments": 4,
+            "too-many-locals": 1,
+            "too-many-boolean-expressions": 1
+        },
+        "pymarkdown/transform_markdown/transform_list_block.py": {
+            "too-many-arguments": 3,
+            "too-many-locals": 1
+        },
+        "pymarkdown/transform_markdown/transform_new_list_item.py": {
+            "too-few-public-methods": 1,
+            "too-many-arguments": 1
+        },
         "pymarkdown/transform_markdown/transform_to_markdown.py": {
-            "too-many-arguments": 15,
-            "too-many-boolean-expressions": 1,
-            "too-many-locals": 2
+            "too-many-arguments": 1
         },
         "pymarkdown/transform_state.py": {
             "too-many-instance-attributes": 1
@@ -425,8 +444,8 @@
     "disables-by-name": {
         "too-many-instance-attributes": 21,
         "too-many-public-methods": 4,
-        "too-many-arguments": 189,
-        "too-few-public-methods": 22,
+        "too-many-arguments": 183,
+        "too-few-public-methods": 26,
         "too-many-locals": 18,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 2,

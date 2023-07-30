@@ -2,11 +2,15 @@
 Module to provide for an encapsulation of the blank line element.
 """
 
-from typing import Optional
+from typing import Callable, Optional, cast
 
+from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.transform_markdown.markdown_transform_context import (
+    MarkdownTransformContext,
+)
 
 
 class BlankLineMarkdownToken(LeafMarkdownToken):
@@ -20,15 +24,16 @@ class BlankLineMarkdownToken(LeafMarkdownToken):
         position_marker: Optional[PositionMarker],
         column_delta: int = 0,
     ) -> None:
-        assert position_marker
-        line_number, column_number = position_marker.line_number, (
-            position_marker.index_number
-            + position_marker.index_indent
-            + 1
-            - column_delta
-        )
-        # else:
-        #     line_number, column_number = 0, 0
+        if position_marker:
+            line_number, column_number = position_marker.line_number, (
+                position_marker.index_number
+                + position_marker.index_indent
+                + 1
+                - column_delta
+            )
+        else:
+            # TODO do this better
+            line_number, column_number = 0, 0
 
         LeafMarkdownToken.__init__(
             self,
@@ -48,3 +53,56 @@ class BlankLineMarkdownToken(LeafMarkdownToken):
         return MarkdownToken._token_blank_line
 
     # pylint: enable=protected-access
+
+    def register_for_markdown_transform(
+        self,
+        registration_function: Callable[
+            [
+                type,
+                Callable[
+                    [MarkdownTransformContext, MarkdownToken, Optional[MarkdownToken]],
+                    str,
+                ],
+                Optional[
+                    Callable[
+                        [
+                            MarkdownTransformContext,
+                            MarkdownToken,
+                            Optional[MarkdownToken],
+                            Optional[MarkdownToken],
+                        ],
+                        str,
+                    ]
+                ],
+            ],
+            None,
+        ],
+    ) -> None:
+        """
+        Register any rehydration handlers for leaf markdown tokens.
+        """
+        registration_function(
+            BlankLineMarkdownToken, BlankLineMarkdownToken.__rehydrate_blank_line, None
+        )
+
+    @staticmethod
+    def __rehydrate_blank_line(
+        context: MarkdownTransformContext,
+        current_token: MarkdownToken,
+        previous_token: Optional[MarkdownToken],
+    ) -> str:
+        """
+        Rehydrate the blank line from the token.
+        """
+        # if (
+        #     self.context.block_stack
+        #     and self.context.block_stack[-1].is_fenced_code_block
+        #     and (previous_token and previous_token.is_text)
+        # ):
+        #     extra_newline_after_text_token = ParserHelper.newline_character
+        # else:
+        _ = previous_token, context
+        extra_newline_after_text_token = ""
+
+        current_blank_token = cast(BlankLineMarkdownToken, current_token)
+        return f"{extra_newline_after_text_token}{current_blank_token.extracted_whitespace}{ParserHelper.newline_character}"

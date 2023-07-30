@@ -19,6 +19,9 @@ from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.plugin_manager.found_plugin import FoundPlugin
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.tokens.markdown_token import MarkdownToken, MarkdownTokenClass
+from pymarkdown.transform_markdown.markdown_transform_context import (
+    MarkdownTransformContext,
+)
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -242,3 +245,36 @@ class PragmaToken(MarkdownToken):
         Returns the pragma lines for the document.
         """
         return self.__pragma_lines
+
+    def register_for_markdown_transform(
+        self,
+        registration_function: Callable[
+            [
+                type,
+                Callable[
+                    [MarkdownTransformContext, MarkdownToken, Optional[MarkdownToken]],
+                    str,
+                ],
+                Optional[
+                    Callable[
+                        [
+                            MarkdownTransformContext,
+                            MarkdownToken,
+                            Optional[MarkdownToken],
+                            Optional[MarkdownToken],
+                        ],
+                        str,
+                    ]
+                ],
+            ],
+            None,
+        ],
+    ) -> None:
+        """
+        Register any rehydration handlers for leaf markdown tokens.
+        """
+
+        # Note, because the Pragma token contains every pragma contained
+        # within the file, this is handled globally in TransformToMarkdown's
+        # __handle_pragma_processing.
+        _ = registration_function

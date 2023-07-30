@@ -2,9 +2,15 @@
 Module to provide for an encapsulation of the paragraph element.
 """
 
+from typing import Callable, Optional, cast
+
+from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
-from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
+from pymarkdown.transform_markdown.markdown_transform_context import (
+    MarkdownTransformContext,
+)
 
 
 class ParagraphMarkdownToken(LeafMarkdownToken):
@@ -83,3 +89,88 @@ class ParagraphMarkdownToken(LeafMarkdownToken):
 
         self.__final_whitespace = whitespace_to_set
         self.__compose_extra_data_field()
+
+    def register_for_markdown_transform(
+        self,
+        registration_function: Callable[
+            [
+                type,
+                Callable[
+                    [MarkdownTransformContext, MarkdownToken, Optional[MarkdownToken]],
+                    str,
+                ],
+                Optional[
+                    Callable[
+                        [
+                            MarkdownTransformContext,
+                            MarkdownToken,
+                            Optional[MarkdownToken],
+                            Optional[MarkdownToken],
+                        ],
+                        str,
+                    ]
+                ],
+            ],
+            None,
+        ],
+    ) -> None:
+        """
+        Register any rehydration handlers for leaf markdown tokens.
+        """
+        registration_function(
+            ParagraphMarkdownToken,
+            ParagraphMarkdownToken.__rehydrate_paragraph,
+            ParagraphMarkdownToken.__rehydrate_paragraph_end,
+        )
+
+    @staticmethod
+    def __rehydrate_paragraph(
+        context: MarkdownTransformContext,
+        current_token: MarkdownToken,
+        previous_token: Optional[MarkdownToken],
+    ) -> str:
+        """
+        Rehydrate the paragraph block from the token.
+        """
+        _ = previous_token
+
+        context.block_stack.append(current_token)
+
+        current_paragraph_token = cast(ParagraphMarkdownToken, current_token)
+        current_paragraph_token.rehydrate_index = 0
+        extracted_whitespace = current_paragraph_token.extracted_whitespace
+        if ParserHelper.newline_character in extracted_whitespace:
+            line_end_index = extracted_whitespace.index(ParserHelper.newline_character)
+            extracted_whitespace = extracted_whitespace[:line_end_index]
+        return ParserHelper.resolve_all_from_text(extracted_whitespace)
+
+    @staticmethod
+    def __rehydrate_paragraph_end(
+        context: MarkdownTransformContext,
+        current_token: MarkdownToken,
+        previous_token: Optional[MarkdownToken],
+        next_token: Optional[MarkdownToken],
+    ) -> str:
+        """
+        Rehydrate the end of the paragraph block from the token.
+        """
+        _ = (previous_token, next_token)
+
+        top_stack_token = cast(ParagraphMarkdownToken, context.block_stack[-1])
+        del context.block_stack[-1]
+
+        current_end_token = cast(EndMarkdownToken, current_token)
+        current_start_token = cast(
+            ParagraphMarkdownToken, current_end_token.start_markdown_token
+        )
+
+        rehydrate_index, expected_rehydrate_index = (
+            current_start_token.rehydrate_index,
+            ParserHelper.count_newlines_in_text(
+                current_start_token.extracted_whitespace
+            ),
+        )
+        assert (
+            rehydrate_index == expected_rehydrate_index
+        ), f"rehydrate_index={rehydrate_index};expected_rehydrate_index={expected_rehydrate_index}"
+        return f"{top_stack_token.final_whitespace}{ParserHelper.newline_character}"

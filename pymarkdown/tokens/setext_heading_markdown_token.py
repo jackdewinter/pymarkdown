@@ -2,10 +2,16 @@
 Module to provide for an encapsulation of the setext heading element.
 """
 
+from typing import Callable, Optional, cast
+
+from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
-from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
+from pymarkdown.transform_markdown.markdown_transform_context import (
+    MarkdownTransformContext,
+)
 
 
 class SetextHeadingMarkdownToken(LeafMarkdownToken):
@@ -38,9 +44,11 @@ class SetextHeadingMarkdownToken(LeafMarkdownToken):
 
         if self.__heading_character == "=":
             self.__hash_count = 1
-        else:
-            assert self.__heading_character == "-"
+        elif self.__heading_character == "-":
             self.__hash_count = 2
+        else:
+            # TODO better way to do this
+            self.__hash_count = -1
 
         LeafMarkdownToken.__init__(
             self,
@@ -132,3 +140,82 @@ class SetextHeadingMarkdownToken(LeafMarkdownToken):
         if self.final_whitespace:
             field_parts.append(self.final_whitespace)
         self._set_extra_data(MarkdownToken.extra_data_separator.join(field_parts))
+
+    def register_for_markdown_transform(
+        self,
+        registration_function: Callable[
+            [
+                type,
+                Callable[
+                    [MarkdownTransformContext, MarkdownToken, Optional[MarkdownToken]],
+                    str,
+                ],
+                Optional[
+                    Callable[
+                        [
+                            MarkdownTransformContext,
+                            MarkdownToken,
+                            Optional[MarkdownToken],
+                            Optional[MarkdownToken],
+                        ],
+                        str,
+                    ]
+                ],
+            ],
+            None,
+        ],
+    ) -> None:
+        """
+        Register any rehydration handlers for leaf markdown tokens.
+        """
+        registration_function(
+            SetextHeadingMarkdownToken,
+            SetextHeadingMarkdownToken.__rehydrate_setext_heading,
+            SetextHeadingMarkdownToken.__rehydrate_setext_heading_end,
+        )
+
+    @staticmethod
+    def __rehydrate_setext_heading(
+        context: MarkdownTransformContext,
+        current_token: MarkdownToken,
+        previous_token: Optional[MarkdownToken],
+    ) -> str:
+        """
+        Rehydrate the setext heading from the token.
+        """
+        _ = previous_token
+
+        context.block_stack.append(current_token)
+        current_setext_token = cast(SetextHeadingMarkdownToken, current_token)
+        return current_setext_token.extracted_whitespace
+
+    @staticmethod
+    def __rehydrate_setext_heading_end(
+        context: MarkdownTransformContext,
+        current_token: MarkdownToken,
+        previous_token: Optional[MarkdownToken],
+        next_token: Optional[MarkdownToken],
+    ) -> str:
+        """
+        Rehydrate the end of the setext heading block from the token.
+        """
+        _ = (previous_token, next_token)
+
+        current_start_token = cast(SetextHeadingMarkdownToken, context.block_stack[-1])
+        current_end_token = cast(EndMarkdownToken, current_token)
+
+        heading_character = current_start_token.heading_character
+        heading_character_count = current_start_token.heading_character_count
+        final_whitespace = current_start_token.final_whitespace
+        del context.block_stack[-1]
+        assert current_end_token.extra_end_data is not None
+        return "".join(
+            [
+                final_whitespace,
+                ParserHelper.newline_character,
+                current_end_token.extracted_whitespace,
+                ParserHelper.repeat_string(heading_character, heading_character_count),
+                current_end_token.extra_end_data,
+                ParserHelper.newline_character,
+            ]
+        )

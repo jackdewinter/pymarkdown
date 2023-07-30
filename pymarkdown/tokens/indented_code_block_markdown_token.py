@@ -2,9 +2,14 @@
 Module to provide for an encapsulation of the indented code block element.
 """
 
+from typing import Callable, Optional
+
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.transform_markdown.markdown_transform_context import (
+    MarkdownTransformContext,
+)
 
 
 class IndentedCodeBlockMarkdownToken(LeafMarkdownToken):
@@ -63,3 +68,65 @@ class IndentedCodeBlockMarkdownToken(LeafMarkdownToken):
             + f"{indented_whitespace}"
         )
         self.__compose_extra_data_field()
+
+    def register_for_markdown_transform(
+        self,
+        registration_function: Callable[
+            [
+                type,
+                Callable[
+                    [MarkdownTransformContext, MarkdownToken, Optional[MarkdownToken]],
+                    str,
+                ],
+                Optional[
+                    Callable[
+                        [
+                            MarkdownTransformContext,
+                            MarkdownToken,
+                            Optional[MarkdownToken],
+                            Optional[MarkdownToken],
+                        ],
+                        str,
+                    ]
+                ],
+            ],
+            None,
+        ],
+    ) -> None:
+        """
+        Register any rehydration handlers for leaf markdown tokens.
+        """
+        registration_function(
+            IndentedCodeBlockMarkdownToken,
+            IndentedCodeBlockMarkdownToken.__rehydrate_indented_code_block,
+            IndentedCodeBlockMarkdownToken.__rehydrate_indented_code_block_end,
+        )
+
+    @staticmethod
+    def __rehydrate_indented_code_block(
+        context: MarkdownTransformContext,
+        current_token: MarkdownToken,
+        previous_token: Optional[MarkdownToken],
+    ) -> str:
+        """
+        Rehydrate the indented code block from the token.
+        """
+        _ = previous_token
+
+        context.block_stack.append(current_token)
+        return ""
+
+    @staticmethod
+    def __rehydrate_indented_code_block_end(
+        context: MarkdownTransformContext,
+        current_token: MarkdownToken,
+        previous_token: Optional[MarkdownToken],
+        next_token: Optional[MarkdownToken],
+    ) -> str:
+        """
+        Rehydrate the end of the indented code block from the token.
+        """
+        _ = (current_token, previous_token, next_token)
+
+        del context.block_stack[-1]
+        return ""

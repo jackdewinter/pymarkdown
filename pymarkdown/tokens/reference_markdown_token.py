@@ -27,42 +27,72 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
         requires_end_token: bool = False,
         can_force_close: bool = True,
     ):
-        assert lhp.inline_link is not None
-        assert lhp.label_type is not None
-        assert lhp.pre_inline_link is not None
-        (
-            self.__label_type,
-            self.__link_uri,
-            self.__link_title,
-            self.__pre_link_uri,
-            self.__pre_link_title,
-            self.__ex_label,
-            self.__text_from_blocks,
-            self.__did_use_angle_start,
-            self.__inline_title_bounding_character,
-            self.__before_link_whitespace,
-            self.__before_title_whitespace,
-            self.__after_title_whitespace,
-        ) = (
-            lhp.label_type,
-            lhp.inline_link,
-            lhp.inline_title,
-            lhp.pre_inline_link,
-            lhp.pre_inline_title,
-            lhp.ex_label,
-            text_from_blocks,
-            lhp.did_use_angle_start,
-            lhp.bounding_character,
-            lhp.before_link_whitespace,
-            lhp.before_title_whitespace,
-            lhp.after_title_whitespace,
-        )
+        if lhp:
+            (
+                self.__label_type,
+                self.__link_uri,
+                self.__link_title,
+                self.__pre_link_uri,
+                self.__pre_link_title,
+                self.__ex_label,
+                self.__text_from_blocks,
+                self.__did_use_angle_start,
+                self.__inline_title_bounding_character,
+                self.__before_link_whitespace,
+                self.__before_title_whitespace,
+                self.__after_title_whitespace,
+            ) = (
+                lhp.label_type,
+                lhp.inline_link,
+                lhp.inline_title,
+                lhp.pre_inline_link,
+                lhp.pre_inline_title,
+                lhp.ex_label,
+                text_from_blocks,
+                lhp.did_use_angle_start,
+                lhp.bounding_character,
+                lhp.before_link_whitespace,
+                lhp.before_title_whitespace,
+                lhp.after_title_whitespace,
+            )
+        else:
+            (
+                self.__label_type,
+                self.__link_uri,
+                self.__link_title,
+                self.__pre_link_uri,
+                self.__pre_link_title,
+                self.__ex_label,
+                self.__text_from_blocks,
+                self.__did_use_angle_start,
+                self.__inline_title_bounding_character,
+                self.__before_link_whitespace,
+                self.__before_title_whitespace,
+                self.__after_title_whitespace,
+            ) = (
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                False,
+                "",
+                "",
+                "",
+                "",
+            )
+
+        assert self.__link_uri is not None
+        assert self.__label_type is not None
+        assert self.__pre_link_uri is not None
 
         if token_name == MarkdownToken._token_inline_image:
             extra_data = f"{extra_data}{MarkdownToken.extra_data_separator}"
 
         # Purposefully split this way to accommodate the extra data
-        part_1, part_2 = self.__build_extra_data(extra_data, lhp.label_type)
+        part_1, part_2 = self.__build_extra_data(extra_data, self.__label_type)
 
         InlineMarkdownToken.__init__(
             self,
@@ -80,6 +110,7 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
         self, extra_data: Optional[str], label_type: str
     ) -> Tuple[str, str]:
         assert self.__link_title is not None
+        assert self.__link_uri is not None
         assert extra_data is not None
         part_1 = MarkdownToken.extra_data_separator.join(
             [label_type, self.__link_uri, self.__link_title, extra_data]
@@ -90,6 +121,7 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
         assert self.__after_title_whitespace is not None
         assert self.__pre_link_title is not None
         assert self.__ex_label is not None
+        assert self.__pre_link_uri is not None
         part_2 = MarkdownToken.extra_data_separator.join(
             [
                 self.__pre_link_uri,
@@ -110,6 +142,7 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
         """
         Returns the type of label that was used.
         """
+        assert self.__label_type is not None
         return self.__label_type
 
     @property
@@ -117,6 +150,7 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
         """
         Returns the URI for the link itself.
         """
+        assert self.__link_uri is not None
         return self.__link_uri
 
     @property
@@ -124,7 +158,9 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
         """
         Returns the active URI for the link, preferring the __pre_link_uri over the __link_uri.
         """
-        return self.__pre_link_uri or self.__link_uri
+        active_link = self.__pre_link_uri or self.__link_uri
+        assert active_link is not None
+        return active_link
 
     @property
     def link_title(self) -> Optional[str]:

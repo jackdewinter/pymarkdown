@@ -2,9 +2,20 @@
 Module to provide for an encapsulation of the image element.
 """
 
+import logging
+from typing import Callable, Optional, cast
+
 from pymarkdown.links.link_helper_properties import LinkHelperProperties
+from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.tokens.link_start_markdown_token import LinkStartMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.tokens.reference_markdown_token import ReferenceMarkdownToken
+from pymarkdown.transform_markdown.markdown_transform_context import (
+    MarkdownTransformContext,
+)
+
+POGGER = ParserLogger(logging.getLogger(__name__))
 
 
 class ImageStartMarkdownToken(ReferenceMarkdownToken):
@@ -21,9 +32,9 @@ class ImageStartMarkdownToken(ReferenceMarkdownToken):
         column_number: int,
         lhp: LinkHelperProperties,
     ) -> None:
-        assert lhp.label_type is not None
-        assert lhp.pre_inline_link is not None
-        assert lhp.inline_link is not None
+        # assert lhp.label_type is not None
+        # assert lhp.pre_inline_link is not None
+        # assert lhp.inline_link is not None
 
         self.__image_alt_text = image_alt_text
         ReferenceMarkdownToken.__init__(
@@ -54,3 +65,74 @@ class ImageStartMarkdownToken(ReferenceMarkdownToken):
         Returns the text extracted from the blocks of the link, after processing.
         """
         return self.__image_alt_text
+
+    def register_for_markdown_transform(
+        self,
+        registration_function: Callable[
+            [
+                type,
+                Callable[
+                    [MarkdownTransformContext, MarkdownToken, Optional[MarkdownToken]],
+                    str,
+                ],
+                Optional[
+                    Callable[
+                        [
+                            MarkdownTransformContext,
+                            MarkdownToken,
+                            Optional[MarkdownToken],
+                            Optional[MarkdownToken],
+                        ],
+                        str,
+                    ]
+                ],
+            ],
+            None,
+        ],
+    ) -> None:
+        """
+        Register any rehydration handlers for leaf markdown tokens.
+        """
+        registration_function(
+            ImageStartMarkdownToken,
+            ImageStartMarkdownToken.__rehydrate_inline_image,
+            None,
+        )
+
+    @staticmethod
+    def __rehydrate_inline_image(
+        context: MarkdownTransformContext,
+        current_token: MarkdownToken,
+        previous_token: Optional[MarkdownToken],
+    ) -> str:
+        """
+        Rehydrate the image text from the token.
+        """
+        _ = previous_token
+
+        if context.block_stack[-1].is_inline_link:
+            return ""
+        inline_current_token = cast(ImageStartMarkdownToken, current_token)
+        POGGER.debug(
+            f">>>>>>>>:{ParserHelper.make_value_visible(inline_current_token)}:<<<<<"
+        )
+        rehydrated_text = (
+            ImageStartMarkdownToken.rehydrate_inline_image_text_from_token(
+                inline_current_token
+            )
+        )
+        POGGER.debug(
+            f">>>>>>>>:{ParserHelper.make_value_visible(rehydrated_text)}:<<<<<"
+        )
+        return LinkStartMarkdownToken.insert_leading_whitespace_at_newlines(
+            context, rehydrated_text
+        )
+
+    @staticmethod
+    def rehydrate_inline_image_text_from_token(
+        image_token: "ImageStartMarkdownToken",
+    ) -> str:
+        """
+        Given an image token, rehydrate it's original text from the token.
+        """
+        return f"!{LinkStartMarkdownToken.rehydrate_inline_link_text_from_token(image_token)}"

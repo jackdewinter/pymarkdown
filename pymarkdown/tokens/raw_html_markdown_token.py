@@ -2,8 +2,19 @@
 Module to provide for an encapsulation of the inline raw html element.
 """
 
+import logging
+from typing import Callable, Optional, cast
+
+from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.tokens.inline_markdown_token import InlineMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
+from pymarkdown.transform_markdown.markdown_transform_context import (
+    MarkdownTransformContext,
+)
+
+POGGER = ParserLogger(logging.getLogger(__name__))
 
 
 class RawHtmlMarkdownToken(InlineMarkdownToken):
@@ -37,3 +48,68 @@ class RawHtmlMarkdownToken(InlineMarkdownToken):
         Returns the text that is the raw html tag.
         """
         return self.__raw_tag
+
+    def register_for_markdown_transform(
+        self,
+        registration_function: Callable[
+            [
+                type,
+                Callable[
+                    [MarkdownTransformContext, MarkdownToken, Optional[MarkdownToken]],
+                    str,
+                ],
+                Optional[
+                    Callable[
+                        [
+                            MarkdownTransformContext,
+                            MarkdownToken,
+                            Optional[MarkdownToken],
+                            Optional[MarkdownToken],
+                        ],
+                        str,
+                    ]
+                ],
+            ],
+            None,
+        ],
+    ) -> None:
+        """
+        Register any rehydration handlers for leaf markdown tokens.
+        """
+        registration_function(
+            RawHtmlMarkdownToken,
+            RawHtmlMarkdownToken.__rehydrate_inline_raw_html,
+            None,
+        )
+
+    @staticmethod
+    def __rehydrate_inline_raw_html(
+        context: MarkdownTransformContext,
+        current_token: MarkdownToken,
+        previous_token: Optional[MarkdownToken],
+    ) -> str:
+        """
+        Rehydrate the email raw html from the token.
+        """
+        _ = previous_token
+
+        if context.block_stack[-1].is_inline_link:
+            return ""
+
+        current_raw_token = cast(RawHtmlMarkdownToken, current_token)
+        raw_text = ParserHelper.remove_all_from_text(current_raw_token.raw_tag)
+
+        if context.block_stack[-1].is_paragraph:
+            block_paragraph_token = cast(
+                ParagraphMarkdownToken, context.block_stack[-1]
+            )
+            POGGER.debug(
+                f"raw_html>>before>>{ParserHelper.make_value_visible(raw_text)}"
+            )
+            block_paragraph_token.rehydrate_index += (
+                ParserHelper.count_newlines_in_text(raw_text)
+            )
+            POGGER.debug(
+                f"raw_html>>after>>{ParserHelper.make_value_visible(raw_text)}"
+            )
+        return f"<{raw_text}>"

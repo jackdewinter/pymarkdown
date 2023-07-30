@@ -2,9 +2,15 @@
 Module to provide for an encapsulation of the atx heading element.
 """
 
+from typing import Callable, Optional, cast
+
+from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
-from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
+from pymarkdown.transform_markdown.markdown_transform_context import (
+    MarkdownTransformContext,
+)
 
 
 class AtxHeadingMarkdownToken(LeafMarkdownToken):
@@ -71,4 +77,84 @@ class AtxHeadingMarkdownToken(LeafMarkdownToken):
                     self.extracted_whitespace,
                 ]
             )
+        )
+
+    def register_for_markdown_transform(
+        self,
+        registration_function: Callable[
+            [
+                type,
+                Callable[
+                    [MarkdownTransformContext, MarkdownToken, Optional[MarkdownToken]],
+                    str,
+                ],
+                Optional[
+                    Callable[
+                        [
+                            MarkdownTransformContext,
+                            MarkdownToken,
+                            Optional[MarkdownToken],
+                            Optional[MarkdownToken],
+                        ],
+                        str,
+                    ]
+                ],
+            ],
+            None,
+        ],
+    ) -> None:
+        """
+        Register any rehydration handlers for leaf markdown tokens.
+        """
+        registration_function(
+            AtxHeadingMarkdownToken,
+            AtxHeadingMarkdownToken.__rehydrate_atx_heading,
+            AtxHeadingMarkdownToken.__rehydrate_atx_heading_end,
+        )
+
+    @staticmethod
+    def __rehydrate_atx_heading(
+        context: MarkdownTransformContext,
+        current_token: MarkdownToken,
+        previous_token: Optional[MarkdownToken],
+    ) -> str:
+        """
+        Rehydrate the atx heading block from the token.
+        """
+        _ = previous_token
+
+        context.block_stack.append(current_token)
+        current_start_token = cast(AtxHeadingMarkdownToken, current_token)
+        return f'{current_start_token.extracted_whitespace}{ParserHelper.repeat_string("#", current_start_token.hash_count)}'
+
+    @staticmethod
+    def __rehydrate_atx_heading_end(
+        context: MarkdownTransformContext,
+        current_token: MarkdownToken,
+        previous_token: Optional[MarkdownToken],
+        next_token: Optional[MarkdownToken],
+    ) -> str:
+        """
+        Rehydrate the end of the atx heading block from the token.
+        """
+        _ = (previous_token, next_token)
+
+        current_end_token = cast(EndMarkdownToken, current_token)
+        current_start_token = cast(
+            AtxHeadingMarkdownToken, current_end_token.start_markdown_token
+        )
+
+        del context.block_stack[-1]
+        assert current_end_token.extra_end_data is not None
+        return "".join(
+            [
+                current_end_token.extra_end_data,
+                ParserHelper.repeat_string(
+                    "#", current_start_token.remove_trailing_count
+                )
+                if current_start_token.remove_trailing_count
+                else "",
+                current_end_token.extracted_whitespace,
+                ParserHelper.newline_character,
+            ]
         )

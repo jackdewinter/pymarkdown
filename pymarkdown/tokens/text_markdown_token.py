@@ -3,14 +3,21 @@ Module to provide for an encapsulation of the text element.
 """
 
 import logging
-from typing import Optional, Tuple, cast
+from typing import Callable, List, Optional, Tuple, cast
 
 from pymarkdown.constants import Constants
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.position_marker import PositionMarker
+from pymarkdown.tokens.indented_code_block_markdown_token import (
+    IndentedCodeBlockMarkdownToken,
+)
 from pymarkdown.tokens.inline_markdown_token import InlineMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
+from pymarkdown.transform_markdown.markdown_transform_context import (
+    MarkdownTransformContext,
+)
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -253,3 +260,227 @@ class TextMarkdownToken(InlineMarkdownToken):
                 + f"{ParserHelper.newline_character}{whitespace_to_append}"
             )
         return removed_whitespace, prefix_whitespace
+
+    def register_for_markdown_transform(
+        self,
+        registration_function: Callable[
+            [
+                type,
+                Callable[
+                    [MarkdownTransformContext, MarkdownToken, Optional[MarkdownToken]],
+                    str,
+                ],
+                Optional[
+                    Callable[
+                        [
+                            MarkdownTransformContext,
+                            MarkdownToken,
+                            Optional[MarkdownToken],
+                            Optional[MarkdownToken],
+                        ],
+                        str,
+                    ]
+                ],
+            ],
+            None,
+        ],
+    ) -> None:
+        """
+        Register any rehydration handlers for leaf markdown tokens.
+        """
+        registration_function(
+            TextMarkdownToken,
+            TextMarkdownToken.__rehydrate_text,
+            None,
+        )
+
+    @staticmethod
+    def __rehydrate_text(
+        context: MarkdownTransformContext,
+        current_token: MarkdownToken,
+        previous_token: Optional[MarkdownToken],
+    ) -> str:
+        """
+        Rehydrate the text from the token.
+        """
+        _ = previous_token
+
+        if (
+            context.block_stack[-1].is_inline_link
+            or context.block_stack[-1].is_inline_image
+        ):
+            return ""
+
+        prefix_text = ""
+        current_text_token = cast(TextMarkdownToken, current_token)
+        POGGER.debug(
+            f">>rehydrate_text>>:{ParserHelper.make_value_visible(current_text_token.token_text)}:<<"
+        )
+        # main_text = ParserHelper.resolve_noops_from_text(current_text_token.token_text)
+        main_text = ParserHelper.remove_all_from_text(
+            current_text_token.token_text, include_noops=True
+        )
+
+        POGGER.debug(f"<<rehydrate_text>>{ParserHelper.make_value_visible(main_text)}")
+
+        POGGER.debug(
+            f">>leading_whitespace>>:{ParserHelper.make_value_visible(current_text_token.extracted_whitespace)}:<<"
+        )
+        leading_whitespace = ParserHelper.remove_all_from_text(
+            current_text_token.extracted_whitespace
+        )
+        POGGER.debug(
+            f"<<leading_whitespace>>:{ParserHelper.make_value_visible(leading_whitespace)}:<<"
+        )
+
+        extra_line = ""
+        assert context.block_stack
+        if context.block_stack[-1].is_indented_code_block:
+            code_block_token = cast(
+                IndentedCodeBlockMarkdownToken, context.block_stack[-1]
+            )
+            (
+                main_text,
+                prefix_text,
+                leading_whitespace,
+            ) = TextMarkdownToken.__reconstitute_indented_text(
+                main_text,
+                code_block_token.extracted_whitespace,
+                code_block_token.indented_whitespace,
+                leading_whitespace,
+            )
+        elif context.block_stack[-1].is_html_block:
+            extra_line = ParserHelper.newline_character
+        elif context.block_stack[-1].is_paragraph:
+            main_text = TextMarkdownToken.__reconstitute_paragraph_text(
+                context, main_text, current_text_token
+            )
+        elif context.block_stack[-1].is_setext_heading:
+            main_text = TextMarkdownToken.__reconstitute_setext_text(
+                main_text, current_text_token
+            )
+
+        POGGER.debug(
+            f"<<prefix_text>>{ParserHelper.make_value_visible(prefix_text)}"
+            + f"<<leading_whitespace>>{ParserHelper.make_value_visible(leading_whitespace)}"
+            + f"<<main_text>>{ParserHelper.make_value_visible(main_text)}<<"
+        )
+        return "".join([prefix_text, leading_whitespace, main_text, extra_line])
+
+    @staticmethod
+    def __reconstitute_paragraph_text(
+        context: MarkdownTransformContext,
+        main_text: str,
+        current_token: "TextMarkdownToken",
+    ) -> str:
+        """
+        For a paragraph block, figure out the text that got us here.
+        """
+        if ParserHelper.newline_character in main_text:
+            owner_paragraph_token = cast(
+                ParagraphMarkdownToken, context.block_stack[-1]
+            )
+            (
+                main_text,
+                owner_paragraph_token.rehydrate_index,
+            ) = ParserHelper.recombine_string_with_whitespace(
+                main_text,
+                owner_paragraph_token.extracted_whitespace,
+                owner_paragraph_token.rehydrate_index,
+            )
+            assert current_token.end_whitespace
+            main_text, _ = ParserHelper.recombine_string_with_whitespace(
+                main_text,
+                current_token.end_whitespace,
+                start_text_index=0,
+                post_increment_index=True,
+                add_whitespace_after=True,
+            )
+        return main_text
+
+    @staticmethod
+    def __reconstitute_indented_text(
+        main_text: str,
+        prefix_text: str,
+        indented_whitespace: str,
+        leading_whitespace: str,
+    ) -> Tuple[str, str, str]:
+        """
+        For an indented code block, figure out the text that got us here.
+        """
+        recombined_text, _ = ParserHelper.recombine_string_with_whitespace(
+            main_text,
+            f"{prefix_text}{leading_whitespace}{indented_whitespace}",
+            start_text_index=0,
+            post_increment_index=True,
+        )
+        return f"{recombined_text}{ParserHelper.newline_character}", "", ""
+
+    @staticmethod
+    def __reconstitute_setext_text_item(
+        text_part_index: int,
+        text_part_value: str,
+        rejoined_token_text: List[str],
+        split_parent_whitespace_text: List[str],
+    ) -> None:
+        ws_prefix_text = ""
+        ws_suffix_text = ""
+        if split_parent_whitespace_text[text_part_index]:
+            split_setext_text = split_parent_whitespace_text[text_part_index].split(
+                ParserHelper.whitespace_split_character
+            )
+            split_setext_text_size = len(split_setext_text)
+            if split_setext_text_size == 1:
+                assert text_part_index == 0
+                ws_suffix_text = split_setext_text[0]
+                # if text_part_index == 0:
+                #     ws_suffix_text = split_setext_text[0]
+                # else:
+                #     ws_prefix_text = split_setext_text[0]
+            else:
+                assert split_setext_text_size == 2
+                ws_prefix_text = split_setext_text[0]
+                ws_suffix_text = split_setext_text[1]
+
+        rejoined_token_text.append(
+            "".join([ws_prefix_text, text_part_value, ws_suffix_text])
+        )
+
+    @staticmethod
+    def __reconstitute_setext_text(
+        main_text: str, current_token: "TextMarkdownToken"
+    ) -> str:
+        """
+        For a setext heading block, figure out the text that got us here.
+
+        Because of the unique formatting of the setext data, the recombine_string_with_whitespace
+        function cannot be used for this.
+        """
+
+        if ParserHelper.newline_character in main_text:
+            split_token_text = main_text.split(ParserHelper.newline_character)
+            assert current_token.end_whitespace is not None
+            split_parent_whitespace_text = current_token.end_whitespace.split(
+                ParserHelper.newline_character
+            )
+
+            rejoined_token_text: List[str] = []
+            for text_part_index, text_part_value in enumerate(split_token_text):
+                TextMarkdownToken.__reconstitute_setext_text_item(
+                    text_part_index,
+                    text_part_value,
+                    rejoined_token_text,
+                    split_parent_whitespace_text,
+                )
+
+            main_text = ParserHelper.newline_character.join(rejoined_token_text)
+        else:
+            POGGER.debug(f"main_text>>{ParserHelper.make_value_visible(main_text)}")
+            POGGER.debug(
+                f"current_token>>{ParserHelper.make_value_visible(current_token)}"
+            )
+            if current_token.end_whitespace and current_token.end_whitespace.endswith(
+                ParserHelper.whitespace_split_character
+            ):
+                main_text = f"{current_token.end_whitespace[:-1]}{main_text}"
+        return main_text

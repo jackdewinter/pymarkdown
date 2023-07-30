@@ -2,9 +2,15 @@
 Module to provide for an encapsulation of the fenced code block element.
 """
 
+from typing import Callable, Optional, cast
+
+from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
-from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
+from pymarkdown.transform_markdown.markdown_transform_context import (
+    MarkdownTransformContext,
+)
 
 
 class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
@@ -129,4 +135,116 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
                     self.__extracted_whitespace_before_info_string,
                 ]
             )
+        )
+
+    def register_for_markdown_transform(
+        self,
+        registration_function: Callable[
+            [
+                type,
+                Callable[
+                    [MarkdownTransformContext, MarkdownToken, Optional[MarkdownToken]],
+                    str,
+                ],
+                Optional[
+                    Callable[
+                        [
+                            MarkdownTransformContext,
+                            MarkdownToken,
+                            Optional[MarkdownToken],
+                            Optional[MarkdownToken],
+                        ],
+                        str,
+                    ]
+                ],
+            ],
+            None,
+        ],
+    ) -> None:
+        """
+        Register any rehydration handlers for leaf markdown tokens.
+        """
+        registration_function(
+            FencedCodeBlockMarkdownToken,
+            FencedCodeBlockMarkdownToken.__rehydrate_fenced_code_block,
+            FencedCodeBlockMarkdownToken.__rehydrate_fenced_code_block_end,
+        )
+
+    @staticmethod
+    def __rehydrate_fenced_code_block(
+        context: MarkdownTransformContext,
+        current_token: MarkdownToken,
+        previous_token: Optional[MarkdownToken],
+    ) -> str:
+        """
+        Rehydrate the fenced code block from the token.
+        """
+        _ = previous_token
+
+        context.block_stack.append(current_token)
+        current_fenced_token = cast(FencedCodeBlockMarkdownToken, current_token)
+
+        code_block_start_parts = [
+            current_fenced_token.extracted_whitespace,
+            ParserHelper.repeat_string(
+                current_fenced_token.fence_character, current_fenced_token.fence_count
+            ),
+            current_fenced_token.extracted_whitespace_before_info_string,
+            current_fenced_token.pre_extracted_text
+            or current_fenced_token.extracted_text,
+            current_fenced_token.pre_text_after_extracted_text
+            or current_fenced_token.text_after_extracted_text,
+            ParserHelper.newline_character,
+        ]
+
+        return "".join(code_block_start_parts)
+
+    @staticmethod
+    def __rehydrate_fenced_code_block_end(
+        context: MarkdownTransformContext,
+        current_token: MarkdownToken,
+        previous_token: Optional[MarkdownToken],
+        next_token: Optional[MarkdownToken],
+    ) -> str:  # sourcery skip: extract-method
+        """
+        Rehydrate the end of the fenced code block from the token.
+        """
+        del context.block_stack[-1]
+
+        current_end_token = cast(EndMarkdownToken, current_token)
+        if not current_end_token.was_forced:
+            # We need to do this as the ending fence may be longer than the opening fence.
+            assert current_token.extra_data is not None
+            split_extra_data = current_token.extra_data.split(":")
+            assert len(split_extra_data) >= 3
+            extra_end_space = split_extra_data[1]
+            fence_count = int(split_extra_data[2])
+
+            current_start_token = cast(
+                FencedCodeBlockMarkdownToken, current_end_token.start_markdown_token
+            )
+
+            fence_parts = [
+                ""
+                if previous_token is not None
+                and (
+                    previous_token.is_blank_line or previous_token.is_fenced_code_block
+                )
+                else ParserHelper.newline_character,
+                current_end_token.extracted_whitespace,
+                ParserHelper.repeat_string(
+                    current_start_token.fence_character, fence_count
+                ),
+                extra_end_space,
+                ParserHelper.newline_character,
+            ]
+
+            return "".join(fence_parts)
+
+        assert previous_token is not None
+        is_previous_code_block = previous_token.is_fenced_code_block
+        return (
+            ParserHelper.newline_character
+            if next_token is not None and not is_previous_code_block
+            else ""
         )

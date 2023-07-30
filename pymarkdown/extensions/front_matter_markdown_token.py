@@ -2,12 +2,16 @@
 Module to provide for a leaf element that can be added to markdown parsing stream that handles front matter.
 """
 import logging
-from typing import Dict, List, Tuple, cast
+from typing import Callable, Dict, List, Optional, Tuple, cast
 
+from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.transform_markdown.markdown_transform_context import (
+    MarkdownTransformContext,
+)
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -108,3 +112,53 @@ class FrontMatterMarkdownToken(LeafMarkdownToken):
         Calculate the amount of whitespace for the token.
         """
         return 0, False
+
+    def register_for_markdown_transform(
+        self,
+        registration_function: Callable[
+            [
+                type,
+                Callable[
+                    [MarkdownTransformContext, MarkdownToken, Optional[MarkdownToken]],
+                    str,
+                ],
+                Optional[
+                    Callable[
+                        [
+                            MarkdownTransformContext,
+                            MarkdownToken,
+                            Optional[MarkdownToken],
+                            Optional[MarkdownToken],
+                        ],
+                        str,
+                    ]
+                ],
+            ],
+            None,
+        ],
+    ) -> None:
+        """
+        Register any rehydration handlers for leaf markdown tokens.
+        """
+        registration_function(
+            FrontMatterMarkdownToken,
+            FrontMatterMarkdownToken.__rehydrate_front_matter,
+            None,
+        )
+
+    @staticmethod
+    def __rehydrate_front_matter(
+        context: MarkdownTransformContext,
+        current_token: MarkdownToken,
+        previous_token: Optional[MarkdownToken],
+    ) -> str:
+        """
+        Rehydrate the front matter text from the token.
+        """
+        _ = previous_token, context
+
+        front_mater_token = cast(FrontMatterMarkdownToken, current_token)
+        front_matter_parts = [front_mater_token.start_boundary_line]
+        front_matter_parts.extend(front_mater_token.collected_lines)
+        front_matter_parts.extend([front_mater_token.end_boundary_line, ""])
+        return ParserHelper.newline_character.join(front_matter_parts)

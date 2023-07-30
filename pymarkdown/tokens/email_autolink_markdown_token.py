@@ -2,8 +2,13 @@
 Module to provide for an encapsulation of the inline email autolink element.
 """
 
+from typing import Callable, Optional, cast
+
 from pymarkdown.tokens.inline_markdown_token import InlineMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.transform_markdown.markdown_transform_context import (
+    MarkdownTransformContext,
+)
 
 
 class EmailAutolinkMarkdownToken(InlineMarkdownToken):
@@ -39,3 +44,54 @@ class EmailAutolinkMarkdownToken(InlineMarkdownToken):
         Returns the text that is the autolink.
         """
         return self.__autolink_text
+
+    def register_for_markdown_transform(
+        self,
+        registration_function: Callable[
+            [
+                type,
+                Callable[
+                    [MarkdownTransformContext, MarkdownToken, Optional[MarkdownToken]],
+                    str,
+                ],
+                Optional[
+                    Callable[
+                        [
+                            MarkdownTransformContext,
+                            MarkdownToken,
+                            Optional[MarkdownToken],
+                            Optional[MarkdownToken],
+                        ],
+                        str,
+                    ]
+                ],
+            ],
+            None,
+        ],
+    ) -> None:
+        """
+        Register any rehydration handlers for leaf markdown tokens.
+        """
+        registration_function(
+            EmailAutolinkMarkdownToken,
+            EmailAutolinkMarkdownToken.__rehydrate_inline_email_autolink,
+            None,
+        )
+
+    @staticmethod
+    def __rehydrate_inline_email_autolink(
+        context: MarkdownTransformContext,
+        current_token: MarkdownToken,
+        previous_token: Optional[MarkdownToken],
+    ) -> str:
+        """
+        Rehydrate the email autolink from the token.
+        """
+        _ = previous_token
+
+        current_email_token = cast(EmailAutolinkMarkdownToken, current_token)
+        return (
+            ""
+            if context.block_stack[-1].is_inline_link
+            else f"<{current_email_token.autolink_text}>"
+        )
