@@ -3,12 +3,12 @@ Module to implement a plugin that looks for trailing punctuation in headings.
 """
 from typing import Optional, cast
 
-from pymarkdown.inline_markdown_token import TextMarkdownToken
-from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
+from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 
 
 class RuleMd026(RulePlugin):

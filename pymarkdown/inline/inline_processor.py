@@ -4,21 +4,17 @@ Inline processing
 import logging
 from typing import List, cast
 
-from pymarkdown.container_markdown_token import (
-    BlockQuoteMarkdownToken,
-    ListStartMarkdownToken,
-)
 from pymarkdown.inline.inline_handler_helper import InlineHandlerHelper
 from pymarkdown.inline.inline_helper import InlineHelper
 from pymarkdown.inline.inline_text_block_helper import InlineTextBlockHelper
-from pymarkdown.inline_markdown_token import TextMarkdownToken
-from pymarkdown.leaf_markdown_token import (
-    AtxHeadingMarkdownToken,
-    ParagraphMarkdownToken,
-)
-from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.tokens.atx_heading_markdown_token import AtxHeadingMarkdownToken
+from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
+from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
+from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
+from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

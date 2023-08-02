@@ -7,18 +7,18 @@ import re
 from typing import Any, Optional, Tuple, cast
 
 from pymarkdown.constants import Constants
-from pymarkdown.inline_markdown_token import (
-    InlineCodeSpanMarkdownToken,
-    LinkStartMarkdownToken,
-    RawHtmlMarkdownToken,
-    TextMarkdownToken,
-)
-from pymarkdown.leaf_markdown_token import ParagraphMarkdownToken
-from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
+from pymarkdown.tokens.inline_code_span_markdown_token import (
+    InlineCodeSpanMarkdownToken,
+)
+from pymarkdown.tokens.link_start_markdown_token import LinkStartMarkdownToken
+from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
+from pymarkdown.tokens.raw_html_markdown_token import RawHtmlMarkdownToken
+from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 
 
 class StartOfLineTokenParser:
@@ -89,7 +89,7 @@ class StartOfLineTokenParser:
 
     def __next_token_paragraph_non_text_inline_image(
         self, token: MarkdownToken
-    ) -> None:
+    ) -> None:  # sourcery skip: extract-method
         link_token = cast(LinkStartMarkdownToken, token)
         self.__paragraph_index += link_token.text_from_blocks.count(
             ParserHelper.newline_character

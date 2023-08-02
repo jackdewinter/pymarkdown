@@ -3,12 +3,13 @@ Module to implement a plugin that looks for inline HTML in the files.
 """
 from typing import List, cast
 
-from pymarkdown.inline_markdown_token import RawHtmlMarkdownToken, TextMarkdownToken
-from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
+from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.raw_html_markdown_token import RawHtmlMarkdownToken
+from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 
 
 class RuleMd033(RulePlugin):
@@ -68,6 +69,7 @@ class RuleMd033(RulePlugin):
     def __look_for_html_start(
         self, context: PluginScanContext, token: MarkdownToken, tag_text: str
     ) -> None:
+        # sourcery skip: extract-method, inline-immediately-returned-variable
         full_tag_text = tag_text.lower()
         if tag_text.startswith("/"):
             return

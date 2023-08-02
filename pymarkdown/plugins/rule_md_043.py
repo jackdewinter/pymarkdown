@@ -3,13 +3,13 @@ Module to implement a plugin that ensures that a mandates set of headers are pre
 """
 from typing import List, Optional, Tuple, Union, cast
 
-from pymarkdown.inline_markdown_token import TextMarkdownToken
-from pymarkdown.leaf_markdown_token import AtxHeadingMarkdownToken
-from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
+from pymarkdown.tokens.atx_heading_markdown_token import AtxHeadingMarkdownToken
+from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 
 
 class RuleMd043(RulePlugin):

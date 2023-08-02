@@ -4,11 +4,13 @@ style used for Unordered List elements.
 """
 from typing import Dict, cast
 
-from pymarkdown.container_markdown_token import UnorderedListStartMarkdownToken
-from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
+from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.unordered_list_start_markdown_token import (
+    UnorderedListStartMarkdownToken,
+)
 
 
 class RuleMd004(RulePlugin):

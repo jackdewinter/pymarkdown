@@ -5,17 +5,19 @@ the correct capitalization.
 from typing import List, cast
 
 from pymarkdown.constants import Constants
-from pymarkdown.inline_markdown_token import (
-    InlineCodeSpanMarkdownToken,
-    LinkStartMarkdownToken,
-    TextMarkdownToken,
-)
-from pymarkdown.leaf_markdown_token import LinkReferenceDefinitionMarkdownToken
-from pymarkdown.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
+from pymarkdown.tokens.inline_code_span_markdown_token import (
+    InlineCodeSpanMarkdownToken,
+)
+from pymarkdown.tokens.link_reference_definition_markdown_token import (
+    LinkReferenceDefinitionMarkdownToken,
+)
+from pymarkdown.tokens.link_start_markdown_token import LinkStartMarkdownToken
+from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
+from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 
 
 class RuleMd044(RulePlugin):
@@ -256,7 +258,7 @@ class RuleMd044(RulePlugin):
 
     def __handle_inline_image(
         self, context: PluginScanContext, token: MarkdownToken
-    ) -> None:
+    ) -> None:  # sourcery skip: extract-method
         link_token = cast(LinkStartMarkdownToken, token)
         same_line_offset = -2
         self.__search_for_matches(

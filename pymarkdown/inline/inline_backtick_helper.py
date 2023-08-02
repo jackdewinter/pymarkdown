@@ -7,9 +7,11 @@ from typing import List, Optional, Tuple
 from pymarkdown.inline.inline_helper import InlineHelper
 from pymarkdown.inline.inline_request import InlineRequest
 from pymarkdown.inline.inline_response import InlineResponse
-from pymarkdown.inline_markdown_token import InlineCodeSpanMarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.tokens.inline_code_span_markdown_token import (
+    InlineCodeSpanMarkdownToken,
+)
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

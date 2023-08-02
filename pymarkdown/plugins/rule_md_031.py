@@ -3,12 +3,12 @@ Module to implement a plugin that ensures that blank lines surround fenced block
 """
 from typing import List, Optional, cast
 
-from pymarkdown.inline_markdown_token import TextMarkdownToken
-from pymarkdown.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
+from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
+from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 
 
 class RuleMd031(RulePlugin):
@@ -72,7 +72,7 @@ class RuleMd031(RulePlugin):
 
     def __handle_end_fenced_code_block(
         self, context: PluginScanContext, token: MarkdownToken
-    ) -> None:
+    ) -> None:  # sourcery skip: extract-method
         can_trigger = True
         if (
             self.__container_token_stack

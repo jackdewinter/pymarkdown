@@ -8,14 +8,14 @@ from typing import List, Optional, Tuple
 from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
 from pymarkdown.container_blocks.container_helper import ContainerHelper
 from pymarkdown.leaf_blocks.leaf_block_helper import LeafBlockHelper
-from pymarkdown.leaf_markdown_token import ThematicBreakMarkdownToken
-from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.parser_state import ParserState
 from pymarkdown.position_marker import PositionMarker
-from pymarkdown.stack_token import ParagraphStackToken, StackToken
 from pymarkdown.tab_helper import TabHelper
+from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.stack_token import ParagraphStackToken, StackToken
+from pymarkdown.tokens.thematic_break_markdown_token import ThematicBreakMarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

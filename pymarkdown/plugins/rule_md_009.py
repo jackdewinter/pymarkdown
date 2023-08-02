@@ -3,12 +3,12 @@ Module to implement a plugin that looks for trailing spaces in the files.
 """
 from typing import List, Optional, cast
 
-from pymarkdown.container_markdown_token import ContainerMarkdownToken
-from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
+from pymarkdown.tokens.container_markdown_token import ContainerMarkdownToken
+from pymarkdown.tokens.markdown_token import MarkdownToken
 
 
 # pylint: disable=too-many-instance-attributes

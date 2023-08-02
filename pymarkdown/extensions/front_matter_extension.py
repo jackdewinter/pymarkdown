@@ -3,7 +3,7 @@ Module to implement the front matter extensions.
 """
 import logging
 import string
-from typing import Dict, List, Optional, Tuple, Union, cast
+from typing import Dict, List, Optional, Tuple, Union
 
 from application_properties import ApplicationPropertiesFacade
 
@@ -16,12 +16,11 @@ from pymarkdown.extensions.front_matter_markdown_token import FrontMatterMarkdow
 from pymarkdown.leaf_blocks.thematic_leaf_block_processor import (
     ThematicLeafBlockProcessor,
 )
-from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.source_providers import SourceProvider
-from pymarkdown.transform_state import TransformState
+from pymarkdown.tokens.markdown_token import MarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -59,33 +58,6 @@ class FrontMatterExtension(ParserExtension):
         Apply any configuration required by the extension.
         """
         _ = extension_specific_facade
-
-    @staticmethod
-    def handle_front_matter_token(
-        output_html: str, next_token: MarkdownToken, transform_state: TransformState
-    ) -> str:
-        """
-        Handle the front matter token.  Note that it does not contribute anything
-        at all to the HTML output.
-        """
-        _ = (next_token, transform_state)
-
-        return output_html
-
-    @staticmethod
-    def rehydrate_front_matter(
-        current_token: MarkdownToken, previous_token: Optional[MarkdownToken]
-    ) -> str:
-        """
-        Rehydrate the front matter text from the token.
-        """
-        _ = previous_token
-
-        front_mater_token = cast(FrontMatterMarkdownToken, current_token)
-        front_matter_parts = [front_mater_token.start_boundary_line]
-        front_matter_parts.extend(front_mater_token.collected_lines)
-        front_matter_parts.extend([front_mater_token.end_boundary_line, ""])
-        return ParserHelper.newline_character.join(front_matter_parts)
 
     @staticmethod
     def process_header_if_present(

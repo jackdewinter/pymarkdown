@@ -6,17 +6,15 @@ from typing import List, Optional, Tuple, cast
 
 from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
 from pymarkdown.leaf_blocks.leaf_block_helper import LeafBlockHelper
-from pymarkdown.leaf_markdown_token import (
-    ParagraphMarkdownToken,
-    SetextHeadingMarkdownToken,
-)
-from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.parser_state import ParserState
 from pymarkdown.position_marker import PositionMarker
-from pymarkdown.stack_token import ListStackToken, StackToken
 from pymarkdown.tab_helper import TabHelper
+from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
+from pymarkdown.tokens.setext_heading_markdown_token import SetextHeadingMarkdownToken
+from pymarkdown.tokens.stack_token import ListStackToken, StackToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

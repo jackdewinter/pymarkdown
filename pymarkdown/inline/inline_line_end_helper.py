@@ -4,16 +4,16 @@ Module to help with the parsing of inline elements at the end of the line.
 import logging
 from typing import List, Optional, Tuple, cast
 
-from pymarkdown.container_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.inline.inline_backslash_helper import InlineBackslashHelper
 from pymarkdown.inline.inline_request import InlineRequest
 from pymarkdown.inline.inline_response import InlineResponse
-from pymarkdown.inline_markdown_token import HardBreakMarkdownToken
-from pymarkdown.leaf_markdown_token import ParagraphMarkdownToken
-from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.tab_helper import TabHelper
+from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
+from pymarkdown.tokens.hard_break_markdown_token import HardBreakMarkdownToken
+from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

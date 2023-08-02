@@ -10,13 +10,13 @@ from pymarkdown.block_quotes.block_quote_count_helper import BlockQuoteCountHelp
 from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
 from pymarkdown.container_blocks.container_grab_bag import ContainerGrabBag
 from pymarkdown.container_blocks.container_indices import ContainerIndices
-from pymarkdown.container_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.list_blocks.list_block_starts_helper import ListBlockStartsHelper
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.parser_state import ParserState
 from pymarkdown.position_marker import PositionMarker
-from pymarkdown.stack_token import ListStackToken
+from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
+from pymarkdown.tokens.stack_token import ListStackToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

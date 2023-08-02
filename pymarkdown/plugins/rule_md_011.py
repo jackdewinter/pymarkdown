@@ -5,10 +5,10 @@ it appear like the author got the inline link syntax reversed.
 import re
 from typing import List
 
-from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
+from pymarkdown.tokens.markdown_token import MarkdownToken
 
 
 class RuleMd011(RulePlugin):

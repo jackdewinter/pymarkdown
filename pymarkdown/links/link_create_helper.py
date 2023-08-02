@@ -5,18 +5,18 @@ import logging
 from typing import Callable, List, Optional, Tuple, cast
 
 from pymarkdown.inline.inline_helper import InlineHelper
-from pymarkdown.inline_markdown_token import (
-    EmailAutolinkMarkdownToken,
-    ImageStartMarkdownToken,
-    InlineCodeSpanMarkdownToken,
-    LinkStartMarkdownToken,
-    RawHtmlMarkdownToken,
-    TextMarkdownToken,
-)
 from pymarkdown.links.link_helper_properties import LinkHelperProperties
-from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.tokens.email_autolink_markdown_token import EmailAutolinkMarkdownToken
+from pymarkdown.tokens.image_start_markdown_token import ImageStartMarkdownToken
+from pymarkdown.tokens.inline_code_span_markdown_token import (
+    InlineCodeSpanMarkdownToken,
+)
+from pymarkdown.tokens.link_start_markdown_token import LinkStartMarkdownToken
+from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.raw_html_markdown_token import RawHtmlMarkdownToken
+from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
