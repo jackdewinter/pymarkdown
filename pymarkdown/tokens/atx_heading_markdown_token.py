@@ -8,9 +8,11 @@ from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
+from pymarkdown.tokens.setext_heading_markdown_token import SetextHeadingMarkdownToken
 from pymarkdown.transform_markdown.markdown_transform_context import (
     MarkdownTransformContext,
 )
+from pymarkdown.transform_state import TransformState
 
 
 class AtxHeadingMarkdownToken(LeafMarkdownToken):
@@ -155,6 +157,71 @@ class AtxHeadingMarkdownToken(LeafMarkdownToken):
                 if current_start_token.remove_trailing_count
                 else "",
                 current_end_token.extracted_whitespace,
+                ParserHelper.newline_character,
+            ]
+        )
+
+    @staticmethod
+    def register_for_html_transform(
+        register_handlers: Callable[
+            [
+                type,
+                Callable[[str, MarkdownToken, TransformState], str],
+                Optional[Callable[[str, MarkdownToken, TransformState], str]],
+            ],
+            None,
+        ]
+    ) -> None:
+        """
+        Register any functions required to generate HTML from the tokens.
+        """
+        register_handlers(
+            AtxHeadingMarkdownToken,
+            AtxHeadingMarkdownToken.__handle_start_atx_heading_token,
+            AtxHeadingMarkdownToken.__handle_end_atx_heading_token,
+        )
+
+    @staticmethod
+    def __handle_start_atx_heading_token(
+        output_html: str,
+        next_token: MarkdownToken,
+        transform_state: TransformState,
+    ) -> str:
+        atx_token = cast(AtxHeadingMarkdownToken, next_token)
+        previous_token = transform_state.actual_tokens[
+            transform_state.actual_token_index - 1
+        ]
+
+        token_parts = [output_html]
+        if (output_html.endswith("</ol>") or output_html.endswith("</ul>")) or (
+            previous_token.is_paragraph_end and not transform_state.is_in_loose_list
+        ):
+            token_parts.append(ParserHelper.newline_character)
+        token_parts.extend(["<h", str(atx_token.hash_count), ">"])
+        return "".join(token_parts)
+
+    @staticmethod
+    def __handle_end_atx_heading_token(
+        output_html: str,
+        next_token: MarkdownToken,
+        transform_state: TransformState,
+    ) -> str:
+        _ = next_token
+
+        fenced_token_index = transform_state.actual_token_index - 1
+        while not transform_state.actual_tokens[fenced_token_index].is_atx_heading:
+            fenced_token_index -= 1
+        fenced_token = cast(
+            SetextHeadingMarkdownToken,
+            transform_state.actual_tokens[fenced_token_index],
+        )
+
+        return "".join(
+            [
+                output_html,
+                "</h",
+                str(fenced_token.hash_count),
+                ">",
                 ParserHelper.newline_character,
             ]
         )

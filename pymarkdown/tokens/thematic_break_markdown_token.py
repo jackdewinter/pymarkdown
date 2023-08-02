@@ -11,6 +11,7 @@ from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_markdown.markdown_transform_context import (
     MarkdownTransformContext,
 )
+from pymarkdown.transform_state import TransformState
 
 
 class ThematicBreakMarkdownToken(LeafMarkdownToken):
@@ -106,3 +107,37 @@ class ThematicBreakMarkdownToken(LeafMarkdownToken):
                 ParserHelper.newline_character,
             ]
         )
+
+    @staticmethod
+    def register_for_html_transform(
+        register_handlers: Callable[
+            [
+                type,
+                Callable[[str, MarkdownToken, TransformState], str],
+                Optional[Callable[[str, MarkdownToken, TransformState], str]],
+            ],
+            None,
+        ]
+    ) -> None:
+        """
+        Register any functions required to generate HTML from the tokens.
+        """
+        register_handlers(
+            ThematicBreakMarkdownToken,
+            ThematicBreakMarkdownToken.__handle_thematic_break_token,
+            None,
+        )
+
+    @staticmethod
+    def __handle_thematic_break_token(
+        output_html: str,
+        next_token: MarkdownToken,
+        transform_state: TransformState,
+    ) -> str:
+        _ = (next_token, transform_state)
+
+        token_parts = [output_html]
+        if output_html and output_html[-1] != ParserHelper.newline_character:
+            token_parts.append(ParserHelper.newline_character)
+        token_parts.extend(["<hr />", ParserHelper.newline_character])
+        return "".join(token_parts)

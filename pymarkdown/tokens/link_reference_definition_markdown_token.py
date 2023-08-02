@@ -14,6 +14,7 @@ from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_markdown.markdown_transform_context import (
     MarkdownTransformContext,
 )
+from pymarkdown.transform_state import TransformState
 
 
 class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
@@ -260,6 +261,36 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
         ]
 
         return "".join(link_def_parts)
+
+    @staticmethod
+    def register_for_html_transform(
+        register_handlers: Callable[
+            [
+                type,
+                Callable[[str, MarkdownToken, TransformState], str],
+                Optional[Callable[[str, MarkdownToken, TransformState], str]],
+            ],
+            None,
+        ]
+    ) -> None:
+        """
+        Register any functions required to generate HTML from the tokens.
+        """
+        register_handlers(
+            LinkReferenceDefinitionMarkdownToken,
+            LinkReferenceDefinitionMarkdownToken.__handle_link_reference_definition_token,
+            None,
+        )
+
+    @staticmethod
+    def __handle_link_reference_definition_token(
+        output_html: str,
+        next_token: MarkdownToken,
+        transform_state: TransformState,
+    ) -> str:
+        _ = (transform_state, next_token)
+
+        return output_html
 
 
 # pylint: enable=too-many-instance-attributes

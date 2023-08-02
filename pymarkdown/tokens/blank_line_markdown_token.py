@@ -11,6 +11,7 @@ from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_markdown.markdown_transform_context import (
     MarkdownTransformContext,
 )
+from pymarkdown.transform_state import TransformState
 
 
 class BlankLineMarkdownToken(LeafMarkdownToken):
@@ -106,3 +107,35 @@ class BlankLineMarkdownToken(LeafMarkdownToken):
 
         current_blank_token = cast(BlankLineMarkdownToken, current_token)
         return f"{extra_newline_after_text_token}{current_blank_token.extracted_whitespace}{ParserHelper.newline_character}"
+
+    @staticmethod
+    def register_for_html_transform(
+        register_handlers: Callable[
+            [
+                type,
+                Callable[[str, MarkdownToken, TransformState], str],
+                Optional[Callable[[str, MarkdownToken, TransformState], str]],
+            ],
+            None,
+        ]
+    ) -> None:
+        """
+        Register any functions required to generate HTML from the tokens.
+        """
+        register_handlers(
+            BlankLineMarkdownToken,
+            BlankLineMarkdownToken.__handle_blank_line_token,
+            None,
+        )
+
+    @staticmethod
+    def __handle_blank_line_token(
+        output_html: str,
+        next_token: MarkdownToken,
+        transform_state: TransformState,
+    ) -> str:
+        _ = next_token
+
+        if transform_state.is_in_html_block:
+            output_html = f"{output_html}{ParserHelper.newline_character}"
+        return output_html

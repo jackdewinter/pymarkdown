@@ -21,7 +21,6 @@ from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.source_providers import SourceProvider
 from pymarkdown.tokens.markdown_token import MarkdownToken
-from pymarkdown.transform_state import TransformState
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -59,18 +58,6 @@ class FrontMatterExtension(ParserExtension):
         Apply any configuration required by the extension.
         """
         _ = extension_specific_facade
-
-    @staticmethod
-    def handle_front_matter_token(
-        output_html: str, next_token: MarkdownToken, transform_state: TransformState
-    ) -> str:
-        """
-        Handle the front matter token.  Note that it does not contribute anything
-        at all to the HTML output.
-        """
-        _ = (next_token, transform_state)
-
-        return output_html
 
     @staticmethod
     def process_header_if_present(

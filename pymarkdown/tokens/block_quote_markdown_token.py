@@ -3,13 +3,17 @@ Module to provide for an encapsulation of the block quote element.
 """
 
 import logging
-from typing import Dict, Optional
+from typing import Callable, Dict, Optional
 
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.tokens.container_markdown_token import ContainerMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.transform_gfm.transform_to_gfm_list_looseness import (
+    TransformToGfmListLooseness,
+)
+from pymarkdown.transform_state import TransformState
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -164,3 +168,58 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
             leading_text = tabbed_leading
 
         return leading_text
+
+    @staticmethod
+    def register_for_html_transform(
+        register_handlers: Callable[
+            [
+                type,
+                Callable[[str, MarkdownToken, TransformState], str],
+                Optional[Callable[[str, MarkdownToken, TransformState], str]],
+            ],
+            None,
+        ]
+    ) -> None:
+        """
+        Register any functions required to generate HTML from the tokens.
+        """
+        register_handlers(
+            BlockQuoteMarkdownToken,
+            BlockQuoteMarkdownToken.__handle_start_block_quote_token,
+            BlockQuoteMarkdownToken.__handle_end_block_quote_token,
+        )
+
+    @staticmethod
+    def __handle_start_block_quote_token(
+        output_html: str,
+        next_token: MarkdownToken,
+        transform_state: TransformState,
+    ) -> str:
+        _ = next_token
+
+        token_parts = [output_html]
+        if output_html and output_html[-1] != ParserHelper.newline_character:
+            token_parts.append(ParserHelper.newline_character)
+        transform_state.is_in_loose_list = True
+        token_parts.extend(["<blockquote>", ParserHelper.newline_character])
+        return "".join(token_parts)
+
+    @staticmethod
+    def __handle_end_block_quote_token(
+        output_html: str,
+        next_token: MarkdownToken,
+        transform_state: TransformState,
+    ) -> str:
+        _ = next_token
+
+        token_parts = [output_html]
+        if output_html[-1] != ParserHelper.newline_character:
+            token_parts.append(ParserHelper.newline_character)
+        transform_state.is_in_loose_list = (
+            TransformToGfmListLooseness.reset_list_looseness(
+                transform_state.actual_tokens,
+                transform_state.actual_token_index,
+            )
+        )
+        token_parts.extend(["</blockquote>", ParserHelper.newline_character])
+        return "".join(token_parts)

@@ -2,15 +2,21 @@
 Module to provide for an encapsulation of the fenced code block element.
 """
 
+import logging
 from typing import Callable, Optional, cast
 
 from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
+from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 from pymarkdown.transform_markdown.markdown_transform_context import (
     MarkdownTransformContext,
 )
+from pymarkdown.transform_state import TransformState
+
+POGGER = ParserLogger(logging.getLogger(__name__))
 
 
 class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
@@ -248,3 +254,107 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
             if next_token is not None and not is_previous_code_block
             else ""
         )
+
+    @staticmethod
+    def register_for_html_transform(
+        register_handlers: Callable[
+            [
+                type,
+                Callable[[str, MarkdownToken, TransformState], str],
+                Optional[Callable[[str, MarkdownToken, TransformState], str]],
+            ],
+            None,
+        ]
+    ) -> None:
+        """
+        Register any functions required to generate HTML from the tokens.
+        """
+        register_handlers(
+            FencedCodeBlockMarkdownToken,
+            FencedCodeBlockMarkdownToken.__handle_start_fenced_code_block_token,
+            FencedCodeBlockMarkdownToken.__handle_end_fenced_code_block_token,
+        )
+
+    @classmethod
+    def __handle_start_fenced_code_block_token(
+        cls,
+        output_html: str,
+        next_token: MarkdownToken,
+        transform_state: TransformState,
+    ) -> str:
+        start_fence_token = cast(FencedCodeBlockMarkdownToken, next_token)
+        token_parts = [output_html]
+        if (output_html.endswith("</ol>") or output_html.endswith("</ul>")) or (
+            output_html and output_html[-1] != ParserHelper.newline_character
+        ):
+            token_parts.append(ParserHelper.newline_character)
+        transform_state.is_in_code_block, transform_state.is_in_fenced_code_block = (
+            True,
+            True,
+        )
+        token_parts.append("<pre><code")
+        if start_fence_token.extracted_text:
+            token_parts.extend(
+                [' class="language-', start_fence_token.extracted_text, '"']
+            )
+        token_parts.append(">")
+        return "".join(token_parts)
+
+    @classmethod
+    def __handle_end_fenced_code_block_token(
+        cls,
+        output_html: str,
+        next_token: MarkdownToken,
+        transform_state: TransformState,
+    ) -> str:
+        end_token = cast(EndMarkdownToken, next_token)
+        fenced_token_index = transform_state.actual_token_index - 1
+        while not transform_state.actual_tokens[
+            fenced_token_index
+        ].is_fenced_code_block:
+            fenced_token_index -= 1
+        fenced_token = cast(
+            FencedCodeBlockMarkdownToken,
+            transform_state.actual_tokens[fenced_token_index],
+        )
+
+        inner_tag_parts = ["<code"]
+        if fenced_token.extracted_text:
+            inner_tag_parts.extend(
+                [
+                    ' class="language-',
+                    fenced_token.extracted_text,
+                    '"',
+                ]
+            )
+        inner_tag_parts.append(">")
+        inner_tag = "".join(inner_tag_parts)
+
+        POGGER.debug(f"inner_tag>>:{inner_tag}:<<")
+        POGGER.debug(f"output_html>>:{output_html}:<<")
+        POGGER.debug(
+            f"last_token>>:{transform_state.actual_tokens[transform_state.actual_token_index - 1]}:<<"
+        )
+
+        token_parts = [output_html]
+        if (
+            not output_html.endswith(inner_tag)
+            and output_html[-1] != ParserHelper.newline_character
+        ):
+            token_parts.append(ParserHelper.newline_character)
+            POGGER.debug("#1")
+        elif (
+            output_html[-1] == ParserHelper.newline_character
+            and transform_state.last_token
+            and transform_state.last_token.is_text
+        ):
+            POGGER.debug("#2:$", transform_state.last_token)
+            text_token = cast(TextMarkdownToken, transform_state.last_token)
+            if not (end_token.was_forced and text_token.token_text.endswith("\n\x03")):
+                token_parts.append(ParserHelper.newline_character)
+        transform_state.is_in_code_block, transform_state.is_in_fenced_code_block = (
+            False,
+            False,
+        )
+        token_parts.extend(["</code></pre>", ParserHelper.newline_character])
+        return "".join(token_parts)

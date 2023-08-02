@@ -12,6 +12,7 @@ from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_markdown.markdown_transform_context import (
     MarkdownTransformContext,
 )
+from pymarkdown.transform_state import TransformState
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -162,3 +163,35 @@ class FrontMatterMarkdownToken(LeafMarkdownToken):
         front_matter_parts.extend(front_mater_token.collected_lines)
         front_matter_parts.extend([front_mater_token.end_boundary_line, ""])
         return ParserHelper.newline_character.join(front_matter_parts)
+
+    @staticmethod
+    def register_for_html_transform(
+        register_handlers: Callable[
+            [
+                type,
+                Callable[[str, MarkdownToken, TransformState], str],
+                Optional[Callable[[str, MarkdownToken, TransformState], str]],
+            ],
+            None,
+        ]
+    ) -> None:
+        """
+        Register any functions required to generate HTML from the tokens.
+        """
+        register_handlers(
+            FrontMatterMarkdownToken,
+            FrontMatterMarkdownToken.__handle_front_matter_token,
+            None,
+        )
+
+    @staticmethod
+    def __handle_front_matter_token(
+        output_html: str, next_token: MarkdownToken, transform_state: TransformState
+    ) -> str:
+        """
+        Handle the front matter token.  Note that it does not contribute anything
+        at all to the HTML output.
+        """
+        _ = (next_token, transform_state)
+
+        return output_html

@@ -14,6 +14,7 @@ from pymarkdown.tokens.reference_markdown_token import ReferenceMarkdownToken
 from pymarkdown.transform_markdown.markdown_transform_context import (
     MarkdownTransformContext,
 )
+from pymarkdown.transform_state import TransformState
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -136,3 +137,48 @@ class ImageStartMarkdownToken(ReferenceMarkdownToken):
         Given an image token, rehydrate it's original text from the token.
         """
         return f"!{LinkStartMarkdownToken.rehydrate_inline_link_text_from_token(image_token)}"
+
+    @staticmethod
+    def register_for_html_transform(
+        register_handlers: Callable[
+            [
+                type,
+                Callable[[str, MarkdownToken, TransformState], str],
+                Optional[Callable[[str, MarkdownToken, TransformState], str]],
+            ],
+            None,
+        ]
+    ) -> None:
+        """
+        Register any functions required to generate HTML from the tokens.
+        """
+        register_handlers(
+            ImageStartMarkdownToken, ImageStartMarkdownToken.__handle_image_token, None
+        )
+
+    @classmethod
+    def __handle_image_token(
+        cls,
+        output_html: str,
+        next_token: MarkdownToken,
+        transform_state: TransformState,
+    ) -> str:
+        _ = transform_state
+
+        image_token = cast(ImageStartMarkdownToken, next_token)
+        return "".join(
+            [
+                output_html,
+                '<img src="',
+                image_token.link_uri,
+                '" alt="',
+                image_token.image_alt_text,
+                '" ',
+                (
+                    f'title="{image_token.link_title}" '
+                    if image_token.link_title
+                    else ""
+                ),
+                "/>",
+            ]
+        )

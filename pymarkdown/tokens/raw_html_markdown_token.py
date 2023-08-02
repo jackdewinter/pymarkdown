@@ -13,6 +13,7 @@ from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
 from pymarkdown.transform_markdown.markdown_transform_context import (
     MarkdownTransformContext,
 )
+from pymarkdown.transform_state import TransformState
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -113,3 +114,39 @@ class RawHtmlMarkdownToken(InlineMarkdownToken):
                 f"raw_html>>after>>{ParserHelper.make_value_visible(raw_text)}"
             )
         return f"<{raw_text}>"
+
+    @staticmethod
+    def register_for_html_transform(
+        register_handlers: Callable[
+            [
+                type,
+                Callable[[str, MarkdownToken, TransformState], str],
+                Optional[Callable[[str, MarkdownToken, TransformState], str]],
+            ],
+            None,
+        ]
+    ) -> None:
+        """
+        Register any functions required to generate HTML from the tokens.
+        """
+        register_handlers(
+            RawHtmlMarkdownToken, RawHtmlMarkdownToken.__handle_raw_html_token, None
+        )
+
+    @staticmethod
+    def __handle_raw_html_token(
+        output_html: str,
+        next_token: MarkdownToken,
+        transform_state: TransformState,
+    ) -> str:
+        _ = transform_state
+
+        raw_html_token = cast(RawHtmlMarkdownToken, next_token)
+        return "".join(
+            [
+                output_html,
+                "<",
+                ParserHelper.resolve_all_from_text(raw_html_token.raw_tag),
+                ">",
+            ]
+        )

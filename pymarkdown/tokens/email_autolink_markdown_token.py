@@ -9,6 +9,7 @@ from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_markdown.markdown_transform_context import (
     MarkdownTransformContext,
 )
+from pymarkdown.transform_state import TransformState
 
 
 class EmailAutolinkMarkdownToken(InlineMarkdownToken):
@@ -94,4 +95,45 @@ class EmailAutolinkMarkdownToken(InlineMarkdownToken):
             ""
             if context.block_stack[-1].is_inline_link
             else f"<{current_email_token.autolink_text}>"
+        )
+
+    @staticmethod
+    def register_for_html_transform(
+        register_handlers: Callable[
+            [
+                type,
+                Callable[[str, MarkdownToken, TransformState], str],
+                Optional[Callable[[str, MarkdownToken, TransformState], str]],
+            ],
+            None,
+        ]
+    ) -> None:
+        """
+        Register any functions required to generate HTML from the tokens.
+        """
+        register_handlers(
+            EmailAutolinkMarkdownToken,
+            EmailAutolinkMarkdownToken.__handle_email_autolink_token,
+            None,
+        )
+
+    @classmethod
+    def __handle_email_autolink_token(
+        cls,
+        output_html: str,
+        next_token: MarkdownToken,
+        transform_state: TransformState,
+    ) -> str:
+        _ = transform_state
+
+        email_token = cast(EmailAutolinkMarkdownToken, next_token)
+        return "".join(
+            [
+                output_html,
+                '<a href="mailto:',
+                email_token.autolink_text,
+                '">',
+                email_token.autolink_text,
+                "</a>",
+            ]
         )

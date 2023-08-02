@@ -9,10 +9,6 @@ from pymarkdown.tokens.markdown_token import (
     MarkdownTokenClass,
 )
 from pymarkdown.transform_gfm.transform_to_gfm import TransformToGfm
-from pymarkdown.transform_gfm.transform_to_gfm_leaf_token_handlers import (
-    TransformToGfmLeafTokenHandlers,
-)
-from pymarkdown.transform_state import TransformState
 
 
 @pytest.mark.gfm
@@ -64,22 +60,3 @@ def test_gfm_bad_end_token():
 
     # Assert
     assert str(captured_exception) == "Markdown token end type bad not supported."
-
-
-def test_transform_to_gfm_leaf_token_handlers_null():
-    """
-    Test to
-    """
-
-    # Arrange
-    output_html = "<html>"
-
-    # Act
-    transformed_html = TransformToGfmLeafTokenHandlers.null(
-        output_html,
-        MarkdownToken("bob", MarkdownTokenClass.SPECIAL),
-        TransformState([]),
-    )
-
-    # Assert
-    assert transformed_html == output_html

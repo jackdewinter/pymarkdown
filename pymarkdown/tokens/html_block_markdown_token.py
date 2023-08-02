@@ -2,14 +2,20 @@
 Module to provide for an encapsulation of the html block element.
 """
 
+import logging
 from typing import Callable, Optional
 
+from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_markdown.markdown_transform_context import (
     MarkdownTransformContext,
 )
+from pymarkdown.transform_state import TransformState
+
+POGGER = ParserLogger(logging.getLogger(__name__))
 
 
 class HtmlBlockMarkdownToken(LeafMarkdownToken):
@@ -112,3 +118,65 @@ class HtmlBlockMarkdownToken(LeafMarkdownToken):
 
         del context.block_stack[-1]
         return ""
+
+    @staticmethod
+    def register_for_html_transform(
+        register_handlers: Callable[
+            [
+                type,
+                Callable[[str, MarkdownToken, TransformState], str],
+                Optional[Callable[[str, MarkdownToken, TransformState], str]],
+            ],
+            None,
+        ]
+    ) -> None:
+        """
+        Register any functions required to generate HTML from the tokens.
+        """
+        register_handlers(
+            HtmlBlockMarkdownToken,
+            HtmlBlockMarkdownToken.__handle_start_html_block_token,
+            HtmlBlockMarkdownToken.__handle_end_html_block_token,
+        )
+
+    @staticmethod
+    def __handle_start_html_block_token(
+        output_html: str,
+        next_token: MarkdownToken,
+        transform_state: TransformState,
+    ) -> str:
+        _ = next_token
+
+        transform_state.is_in_html_block = True
+        token_parts = []
+        if (
+            not output_html
+            and transform_state.transform_stack
+            and transform_state.transform_stack[-1].endswith("<li>")
+        ):
+            token_parts.append(ParserHelper.newline_character)
+        else:
+            previous_token = transform_state.actual_tokens[
+                transform_state.actual_token_index - 1
+            ]
+            POGGER.debug(">previous_token>$>", previous_token)
+            token_parts.append(output_html)
+            if (
+                not previous_token.is_list_end
+                and previous_token.is_paragraph_end
+                and not transform_state.is_in_loose_list
+                or previous_token.is_list_end
+            ):
+                token_parts.append(ParserHelper.newline_character)
+        return "".join(token_parts)
+
+    @staticmethod
+    def __handle_end_html_block_token(
+        output_html: str,
+        next_token: MarkdownToken,
+        transform_state: TransformState,
+    ) -> str:
+        _ = next_token
+
+        transform_state.is_in_html_block = False
+        return output_html

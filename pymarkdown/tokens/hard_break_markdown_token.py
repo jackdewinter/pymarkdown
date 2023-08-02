@@ -11,6 +11,7 @@ from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
 from pymarkdown.transform_markdown.markdown_transform_context import (
     MarkdownTransformContext,
 )
+from pymarkdown.transform_state import TransformState
 
 
 class HardBreakMarkdownToken(InlineMarkdownToken):
@@ -110,3 +111,33 @@ class HardBreakMarkdownToken(InlineMarkdownToken):
             )
 
         return "" if context.block_stack[-1].is_inline_link else leading_whitespace
+
+    @staticmethod
+    def register_for_html_transform(
+        register_handlers: Callable[
+            [
+                type,
+                Callable[[str, MarkdownToken, TransformState], str],
+                Optional[Callable[[str, MarkdownToken, TransformState], str]],
+            ],
+            None,
+        ]
+    ) -> None:
+        """
+        Register any functions required to generate HTML from the tokens.
+        """
+        register_handlers(
+            HardBreakMarkdownToken,
+            HardBreakMarkdownToken.__handle_hard_break_token,
+            None,
+        )
+
+    @staticmethod
+    def __handle_hard_break_token(
+        output_html: str,
+        next_token: MarkdownToken,
+        transform_state: TransformState,
+    ) -> str:
+        _ = (next_token, transform_state)
+
+        return "".join([output_html, "<br />", ParserHelper.newline_character])

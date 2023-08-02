@@ -11,6 +11,7 @@ from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.transform_markdown.markdown_transform_context import (
     MarkdownTransformContext,
 )
+from pymarkdown.transform_state import TransformState
 
 
 class ParagraphMarkdownToken(LeafMarkdownToken):
@@ -174,3 +175,51 @@ class ParagraphMarkdownToken(LeafMarkdownToken):
             rehydrate_index == expected_rehydrate_index
         ), f"rehydrate_index={rehydrate_index};expected_rehydrate_index={expected_rehydrate_index}"
         return f"{top_stack_token.final_whitespace}{ParserHelper.newline_character}"
+
+    @staticmethod
+    def register_for_html_transform(
+        register_handlers: Callable[
+            [
+                type,
+                Callable[[str, MarkdownToken, TransformState], str],
+                Optional[Callable[[str, MarkdownToken, TransformState], str]],
+            ],
+            None,
+        ]
+    ) -> None:
+        """
+        Register any functions required to generate HTML from the tokens.
+        """
+        register_handlers(
+            ParagraphMarkdownToken,
+            ParagraphMarkdownToken.__handle_start_paragraph_token,
+            ParagraphMarkdownToken.__handle_end_paragraph_token,
+        )
+
+    @staticmethod
+    def __handle_start_paragraph_token(
+        output_html: str,
+        next_token: MarkdownToken,
+        transform_state: TransformState,
+    ) -> str:
+        _ = next_token
+        token_parts = [output_html]
+        if output_html and output_html[-1] != ParserHelper.newline_character:
+            token_parts.append(ParserHelper.newline_character)
+        if transform_state.is_in_loose_list:
+            token_parts.append("<p>")
+        return "".join(token_parts)
+
+    @staticmethod
+    def __handle_end_paragraph_token(
+        output_html: str,
+        next_token: MarkdownToken,
+        transform_state: TransformState,
+    ) -> str:
+        _ = next_token
+
+        return (
+            f"{output_html}</p>{ParserHelper.newline_character}"
+            if transform_state.is_in_loose_list
+            else output_html
+        )

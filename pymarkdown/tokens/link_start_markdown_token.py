@@ -15,6 +15,7 @@ from pymarkdown.tokens.reference_markdown_token import ReferenceMarkdownToken
 from pymarkdown.transform_markdown.markdown_transform_context import (
     MarkdownTransformContext,
 )
+from pymarkdown.transform_state import TransformState
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -233,3 +234,52 @@ class LinkStartMarkdownToken(ReferenceMarkdownToken):
                     post_increment_index=False,
                 )
         return text_to_modify
+
+    @staticmethod
+    def register_for_html_transform(
+        register_handlers: Callable[
+            [
+                type,
+                Callable[[str, MarkdownToken, TransformState], str],
+                Optional[Callable[[str, MarkdownToken, TransformState], str]],
+            ],
+            None,
+        ]
+    ) -> None:
+        """
+        Register any functions required to generate HTML from the tokens.
+        """
+        register_handlers(
+            LinkStartMarkdownToken,
+            LinkStartMarkdownToken.__handle_start_link_token,
+            LinkStartMarkdownToken.__handle_end_link_token,
+        )
+
+    @staticmethod
+    def __handle_start_link_token(
+        output_html: str,
+        next_token: MarkdownToken,
+        transform_state: TransformState,
+    ) -> str:
+        _ = transform_state
+
+        link_token = cast(LinkStartMarkdownToken, next_token)
+        return "".join(
+            [
+                output_html,
+                '<a href="',
+                link_token.link_uri,
+                f'" title="{link_token.link_title}' if link_token.link_title else "",
+                '">',
+            ]
+        )
+
+    @staticmethod
+    def __handle_end_link_token(
+        output_html: str,
+        next_token: MarkdownToken,
+        transform_state: TransformState,
+    ) -> str:
+        _ = (next_token, transform_state)
+
+        return f"{output_html}</a>"

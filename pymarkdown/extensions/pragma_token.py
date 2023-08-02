@@ -22,6 +22,7 @@ from pymarkdown.tokens.markdown_token import MarkdownToken, MarkdownTokenClass
 from pymarkdown.transform_markdown.markdown_transform_context import (
     MarkdownTransformContext,
 )
+from pymarkdown.transform_state import TransformState
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -278,3 +279,33 @@ class PragmaToken(MarkdownToken):
         # within the file, this is handled globally in TransformToMarkdown's
         # __handle_pragma_processing.
         _ = registration_function
+
+    @staticmethod
+    def register_for_html_transform(
+        register_handlers: Callable[
+            [
+                type,
+                Callable[[str, MarkdownToken, TransformState], str],
+                Optional[Callable[[str, MarkdownToken, TransformState], str]],
+            ],
+            None,
+        ]
+    ) -> None:
+        """
+        Register any functions required to generate HTML from the tokens.
+        """
+        register_handlers(
+            PragmaToken,
+            PragmaToken.__handle_pragma_token,
+            None,
+        )
+
+    @staticmethod
+    def __handle_pragma_token(
+        output_html: str,
+        next_token: MarkdownToken,
+        transform_state: TransformState,
+    ) -> str:
+        _ = (transform_state, next_token)
+
+        return output_html

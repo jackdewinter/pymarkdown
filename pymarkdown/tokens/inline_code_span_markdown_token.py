@@ -11,6 +11,7 @@ from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
 from pymarkdown.transform_markdown.markdown_transform_context import (
     MarkdownTransformContext,
 )
+from pymarkdown.transform_state import TransformState
 
 
 class InlineCodeSpanMarkdownToken(InlineMarkdownToken):
@@ -185,5 +186,43 @@ class InlineCodeSpanMarkdownToken(InlineMarkdownToken):
                 span_text,
                 trailing_whitespace,
                 current_inline_token.extracted_start_backticks,
+            ]
+        )
+
+    @staticmethod
+    def register_for_html_transform(
+        register_handlers: Callable[
+            [
+                type,
+                Callable[[str, MarkdownToken, TransformState], str],
+                Optional[Callable[[str, MarkdownToken, TransformState], str]],
+            ],
+            None,
+        ]
+    ) -> None:
+        """
+        Register any functions required to generate HTML from the tokens.
+        """
+        register_handlers(
+            InlineCodeSpanMarkdownToken,
+            InlineCodeSpanMarkdownToken.__handle_inline_code_span_token,
+            None,
+        )
+
+    @staticmethod
+    def __handle_inline_code_span_token(
+        output_html: str,
+        next_token: MarkdownToken,
+        transform_state: TransformState,
+    ) -> str:
+        _ = transform_state
+
+        code_span_token = cast(InlineCodeSpanMarkdownToken, next_token)
+        return "".join(
+            [
+                output_html,
+                "<code>",
+                ParserHelper.resolve_all_from_text(code_span_token.span_text),
+                "</code>",
             ]
         )

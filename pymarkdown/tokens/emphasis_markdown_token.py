@@ -10,6 +10,7 @@ from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.transform_markdown.markdown_transform_context import (
     MarkdownTransformContext,
 )
+from pymarkdown.transform_state import TransformState
 
 
 class EmphasisMarkdownToken(InlineMarkdownToken):
@@ -141,4 +142,55 @@ class EmphasisMarkdownToken(InlineMarkdownToken):
                 emphasis_token.emphasis_character,
                 emphasis_token.emphasis_length,
             )
+        )
+
+    @staticmethod
+    def register_for_html_transform(
+        register_handlers: Callable[
+            [
+                type,
+                Callable[[str, MarkdownToken, TransformState], str],
+                Optional[Callable[[str, MarkdownToken, TransformState], str]],
+            ],
+            None,
+        ]
+    ) -> None:
+        """
+        Register any functions required to generate HTML from the tokens.
+        """
+        register_handlers(
+            EmphasisMarkdownToken,
+            EmphasisMarkdownToken.__handle_start_emphasis_token,
+            EmphasisMarkdownToken.__handle_end_emphasis_token,
+        )
+
+    @staticmethod
+    def __handle_start_emphasis_token(
+        output_html: str,
+        next_token: MarkdownToken,
+        transform_state: TransformState,
+    ) -> str:
+        _ = transform_state
+
+        emphasis_token = cast(EmphasisMarkdownToken, next_token)
+        return "".join(
+            [output_html, "<em>" if emphasis_token.emphasis_length == 1 else "<strong>"]
+        )
+
+    @staticmethod
+    def __handle_end_emphasis_token(
+        output_html: str,
+        next_token: MarkdownToken,
+        transform_state: TransformState,
+    ) -> str:
+        _ = transform_state
+
+        end_token = cast(EndMarkdownToken, next_token)
+        emphasis_token = cast(EmphasisMarkdownToken, end_token.start_markdown_token)
+
+        return "".join(
+            [
+                output_html,
+                "</em>" if emphasis_token.emphasis_length == 1 else "</strong>",
+            ]
         )

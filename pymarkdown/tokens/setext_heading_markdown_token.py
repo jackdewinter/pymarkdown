@@ -12,6 +12,7 @@ from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
 from pymarkdown.transform_markdown.markdown_transform_context import (
     MarkdownTransformContext,
 )
+from pymarkdown.transform_state import TransformState
 
 
 class SetextHeadingMarkdownToken(LeafMarkdownToken):
@@ -219,3 +220,66 @@ class SetextHeadingMarkdownToken(LeafMarkdownToken):
                 ParserHelper.newline_character,
             ]
         )
+
+    @staticmethod
+    def register_for_html_transform(
+        register_handlers: Callable[
+            [
+                type,
+                Callable[[str, MarkdownToken, TransformState], str],
+                Optional[Callable[[str, MarkdownToken, TransformState], str]],
+            ],
+            None,
+        ]
+    ) -> None:
+        """
+        Register any functions required to generate HTML from the tokens.
+        """
+        register_handlers(
+            SetextHeadingMarkdownToken,
+            SetextHeadingMarkdownToken.__handle_start_setext_heading_token,
+            SetextHeadingMarkdownToken.__handle_end_setext_heading_token,
+        )
+
+    @staticmethod
+    def __handle_start_setext_heading_token(
+        output_html: str,
+        next_token: MarkdownToken,
+        transform_state: TransformState,
+    ) -> str:
+        _ = transform_state
+        setext_token = cast(SetextHeadingMarkdownToken, next_token)
+
+        token_parts = [output_html]
+        if output_html.endswith("</ol>") or output_html.endswith("</ul>"):
+            token_parts.append(ParserHelper.newline_character)
+        token_parts.extend(
+            ["<h", "1" if setext_token.heading_character == "=" else "2", ">"]
+        )
+        transform_state.is_in_setext_block = True
+        return "".join(token_parts)
+
+    @staticmethod
+    def __handle_end_setext_heading_token(
+        output_html: str,
+        next_token: MarkdownToken,
+        transform_state: TransformState,
+    ) -> str:
+        _ = next_token
+
+        fenced_token_index = transform_state.actual_token_index - 1
+        while not transform_state.actual_tokens[fenced_token_index].is_setext_heading:
+            fenced_token_index -= 1
+        fenced_token = cast(
+            SetextHeadingMarkdownToken,
+            transform_state.actual_tokens[fenced_token_index],
+        )
+        token_parts = [
+            output_html,
+            "</h",
+            "1" if fenced_token.heading_character == "=" else "2",
+            ">",
+            ParserHelper.newline_character,
+        ]
+        transform_state.is_in_setext_block = False
+        return "".join(token_parts)

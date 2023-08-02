@@ -2,11 +2,15 @@
 Module to provide for an encapsulation of the ordered list start element.
 """
 
-from typing import Optional
+from typing import Callable, Optional
 
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
+from pymarkdown.tokens.list_start_markdown_token_helper import (
+    ListStartMarkdownTokenHelper,
+)
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.transform_state import TransformState
 
 
 class OrderedListStartMarkdownToken(ListStartMarkdownToken):
@@ -47,3 +51,23 @@ class OrderedListStartMarkdownToken(ListStartMarkdownToken):
         return MarkdownToken._token_ordered_list_start
 
     # pylint: enable=protected-access
+
+    @staticmethod
+    def register_for_html_transform(
+        register_handlers: Callable[
+            [
+                type,
+                Callable[[str, MarkdownToken, TransformState], str],
+                Optional[Callable[[str, MarkdownToken, TransformState], str]],
+            ],
+            None,
+        ]
+    ) -> None:
+        """
+        Register any functions required to generate HTML from the tokens.
+        """
+        register_handlers(
+            OrderedListStartMarkdownToken,
+            ListStartMarkdownTokenHelper.handle_start_list_token,
+            ListStartMarkdownTokenHelper.handle_end_list_token,
+        )

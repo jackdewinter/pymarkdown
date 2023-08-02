@@ -2,9 +2,13 @@
 Module to provide for an encapsulation of the new list item element.
 """
 
+from typing import Callable, Optional
+
+from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.tokens.container_markdown_token import ContainerMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.transform_state import TransformState
 
 
 class NewListItemMarkdownToken(ContainerMarkdownToken):
@@ -64,3 +68,39 @@ class NewListItemMarkdownToken(ContainerMarkdownToken):
         Returns the content used to start this list element.
         """
         return self.__list_start_content
+
+    @staticmethod
+    def register_for_html_transform(
+        register_handlers: Callable[
+            [
+                type,
+                Callable[[str, MarkdownToken, TransformState], str],
+                Optional[Callable[[str, MarkdownToken, TransformState], str]],
+            ],
+            None,
+        ]
+    ) -> None:
+        """
+        Register any functions required to generate HTML from the tokens.
+        """
+        register_handlers(
+            NewListItemMarkdownToken,
+            NewListItemMarkdownToken.__handle_new_list_item_token,
+            None,
+        )
+
+    @staticmethod
+    def __handle_new_list_item_token(
+        output_html: str,
+        next_token: MarkdownToken,
+        transform_state: TransformState,
+    ) -> str:
+        _ = next_token
+        transform_state.add_trailing_text, transform_state.add_leading_text = (
+            "</li>",
+            "<li>",
+        )
+        token_parts = [output_html]
+        if output_html and output_html[-1] == ">" and not output_html.endswith("</a>"):
+            token_parts.append(ParserHelper.newline_character)
+        return "".join(token_parts)
