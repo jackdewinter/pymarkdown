@@ -5,7 +5,7 @@ import timeit
 
 import pytest
 
-from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.general.parser_helper import ParserHelper
 
 
 def xtest_block_quotes_extra_perf1():

@@ -8,9 +8,9 @@ from typing import Callable, Dict, List, Optional, Tuple, cast
 
 from pymarkdown.extensions.extension_token_types import ExtensionTokenTypes
 from pymarkdown.extensions.pragma_token import PragmaToken
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.parser_logger import ParserLogger
-from pymarkdown.tab_helper import TabHelper
+from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.general.parser_logger import ParserLogger
+from pymarkdown.general.tab_helper import TabHelper
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.tokens.container_markdown_token import ContainerMarkdownToken
 from pymarkdown.tokens.inline_markdown_token import InlineMarkdownToken

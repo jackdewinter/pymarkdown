@@ -9,7 +9,7 @@ import sys
 import traceback
 from abc import ABC, abstractmethod
 
-from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.general.parser_helper import ParserHelper
 
 LOGGER = logging.getLogger(__name__)
 

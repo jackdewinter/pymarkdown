@@ -5,7 +5,7 @@ functionality for logging parsing information.
 import logging
 from typing import Any, List, cast
 
-from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.general.parser_helper import ParserHelper
 
 
 class ParserLoggerException(Exception):

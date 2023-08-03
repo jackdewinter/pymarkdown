@@ -1,7 +1,7 @@
 """
 Tests for the collect_backwards_while_one_of_characters function.
 """
-from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.general.parser_helper import ParserHelper
 
 
 def test_empty_string_with_good_index():

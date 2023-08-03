@@ -6,8 +6,8 @@ the text of the heading.
 import re
 from typing import Any, Optional, Tuple, cast
 
-from pymarkdown.constants import Constants
-from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.general.constants import Constants
+from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin

@@ -9,7 +9,7 @@ from test.patches.patch_builtin_open import PatchBuiltinOpen
 from typing import Any
 
 from pymarkdown.api import PyMarkdownApi, PyMarkdownApiException
-from pymarkdown.source_providers import FileSourceProvider
+from pymarkdown.general.source_providers import FileSourceProvider
 
 
 def get_semantic_version():
@@ -102,7 +102,9 @@ class PatchFileSourceProvider(PatchBase):
     """
 
     def __init__(self) -> None:
-        super().__init__("pymarkdown.source_providers.FileSourceProvider.get_next_line")
+        super().__init__(
+            "pymarkdown.general.source_providers.FileSourceProvider.get_next_line"
+        )
 
     def start(self, log_action: bool = True) -> None:
         """

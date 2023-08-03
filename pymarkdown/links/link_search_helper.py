@@ -4,13 +4,13 @@ Module to provide for the ability to search the text for a link.
 import logging
 from typing import Callable, List, Optional, Tuple, cast
 
-from pymarkdown.constants import Constants
-from pymarkdown.emphasis_helper import EmphasisHelper
+from pymarkdown.general.constants import Constants
+from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.general.parser_logger import ParserLogger
+from pymarkdown.inline.emphasis_helper import EmphasisHelper
 from pymarkdown.links.link_create_helper import LinkCreateHelper
 from pymarkdown.links.link_helper_properties import LinkHelperProperties
 from pymarkdown.links.link_parse_helper import LinkParseHelper
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.tokens.email_autolink_markdown_token import EmailAutolinkMarkdownToken
 from pymarkdown.tokens.hard_break_markdown_token import HardBreakMarkdownToken
 from pymarkdown.tokens.image_start_markdown_token import ImageStartMarkdownToken

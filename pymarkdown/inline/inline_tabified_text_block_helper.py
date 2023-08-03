@@ -5,10 +5,10 @@ Module to help with the parsing of tabbified text inline elements.
 import logging
 from typing import Optional
 
+from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.general.parser_logger import ParserLogger
+from pymarkdown.general.tab_helper import TabHelper
 from pymarkdown.inline.inline_helper import InlineHelper
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.parser_logger import ParserLogger
-from pymarkdown.tab_helper import TabHelper
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

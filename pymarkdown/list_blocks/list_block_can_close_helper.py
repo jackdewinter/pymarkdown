@@ -5,8 +5,8 @@ Module to calculate whether to close a list when starting a new list.
 import logging
 from typing import List, Tuple, cast
 
-from pymarkdown.parser_logger import ParserLogger
-from pymarkdown.parser_state import ParserState
+from pymarkdown.general.parser_logger import ParserLogger
+from pymarkdown.general.parser_state import ParserState
 from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.tokens.stack_token import ListStackToken, StackToken

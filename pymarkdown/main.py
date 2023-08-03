@@ -17,16 +17,16 @@ from application_properties.application_properties_utilities import (
 
 from pymarkdown.application_file_scanner import ApplicationFileScanner
 from pymarkdown.application_logging import ApplicationLogging
-from pymarkdown.bad_tokenization_error import BadTokenizationError
 from pymarkdown.extension_manager.extension_manager import ExtensionManager
 from pymarkdown.extensions.pragma_token import PragmaToken
-from pymarkdown.main_presentation import MainPresentation
-from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.general.bad_tokenization_error import BadTokenizationError
+from pymarkdown.general.main_presentation import MainPresentation
+from pymarkdown.general.parser_logger import ParserLogger
+from pymarkdown.general.source_providers import FileSourceProvider
+from pymarkdown.general.tokenized_markdown import TokenizedMarkdown
 from pymarkdown.plugin_manager.bad_plugin_error import BadPluginError
 from pymarkdown.plugin_manager.plugin_manager import PluginManager
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
-from pymarkdown.source_providers import FileSourceProvider
-from pymarkdown.tokenized_markdown import TokenizedMarkdown
 from pymarkdown.tokens.markdown_token import MarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))

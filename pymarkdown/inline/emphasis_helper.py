@@ -4,9 +4,9 @@ Emphasis helper
 import logging
 from typing import List, Optional, Tuple, cast
 
-from pymarkdown.constants import Constants
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.general.constants import Constants
+from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.tokens.emphasis_markdown_token import EmphasisMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.tokens.special_text_markdown_token import SpecialTextMarkdownToken

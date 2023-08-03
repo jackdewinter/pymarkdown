@@ -7,7 +7,7 @@ from test.utils import act_and_assert
 
 import pytest
 
-from pymarkdown.bad_tokenization_error import BadTokenizationError
+from pymarkdown.general.bad_tokenization_error import BadTokenizationError
 
 config_map = {"extensions": {"front-matter": {"enabled": True}}}
 

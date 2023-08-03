@@ -8,8 +8,8 @@ from typing import Any, List, Optional
 
 from pymarkdown.application_file_scanner import ApplicationFileScanner
 from pymarkdown.application_logging import ApplicationLogging
+from pymarkdown.general.main_presentation import MainPresentation
 from pymarkdown.main import PyMarkdownLint
-from pymarkdown.main_presentation import MainPresentation
 from pymarkdown.plugin_manager.plugin_scan_failure import PluginScanFailure
 
 

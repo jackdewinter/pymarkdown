@@ -7,11 +7,11 @@ import os
 import string
 from typing import Dict, Optional, Tuple
 
-from pymarkdown.bad_tokenization_error import BadTokenizationError
+from pymarkdown.general.bad_tokenization_error import BadTokenizationError
+from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.inline.inline_request import InlineRequest
 from pymarkdown.inline.inline_response import InlineResponse
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.parser_logger import ParserLogger
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

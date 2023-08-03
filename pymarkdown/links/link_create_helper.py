@@ -4,10 +4,10 @@ Module to provide for the creation of a new link.
 import logging
 from typing import Callable, List, Optional, Tuple, cast
 
+from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.inline.inline_helper import InlineHelper
 from pymarkdown.links.link_helper_properties import LinkHelperProperties
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.tokens.email_autolink_markdown_token import EmailAutolinkMarkdownToken
 from pymarkdown.tokens.image_start_markdown_token import ImageStartMarkdownToken
 from pymarkdown.tokens.inline_code_span_markdown_token import (

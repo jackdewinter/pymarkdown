@@ -1,7 +1,7 @@
 """
 Tests for the calculate_length function
 """
-from pymarkdown.tab_helper import TabHelper
+from pymarkdown.general.tab_helper import TabHelper
 
 
 def test_calculate_length_empty_string():

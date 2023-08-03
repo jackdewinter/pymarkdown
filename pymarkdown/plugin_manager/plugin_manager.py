@@ -13,8 +13,8 @@ from application_properties import ApplicationProperties, ApplicationPropertiesF
 from columnar import columnar
 
 from pymarkdown.extensions.pragma_token import PragmaExtension
-from pymarkdown.main_presentation import MainPresentation
-from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.general.main_presentation import MainPresentation
+from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.bad_plugin_error import BadPluginError
 from pymarkdown.plugin_manager.found_plugin import FoundPlugin
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext

@@ -4,11 +4,11 @@ Module to provide for an encapsulation of the new list item element.
 
 from typing import Callable, Optional
 
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.position_marker import PositionMarker
+from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.tokens.container_markdown_token import ContainerMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
-from pymarkdown.transform_state import TransformState
+from pymarkdown.transform_gfm.transform_state import TransformState
 
 
 class NewListItemMarkdownToken(ContainerMarkdownToken):

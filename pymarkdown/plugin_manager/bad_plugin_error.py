@@ -5,7 +5,7 @@ Module to allow for a critical error within a plugin to be encapsulated
 
 from typing import Optional
 
-from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.tokens.markdown_token import MarkdownToken
 
 

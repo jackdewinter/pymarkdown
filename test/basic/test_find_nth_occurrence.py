@@ -1,7 +1,7 @@
 """
 Tests for the find_nth_occurrence function.
 """
-from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.general.parser_helper import ParserHelper
 
 
 def test_find_nth_simple_positive():

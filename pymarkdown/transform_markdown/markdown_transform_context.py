@@ -1,7 +1,7 @@
 import logging
 from typing import List
 
-from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.tokens.markdown_token import MarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))

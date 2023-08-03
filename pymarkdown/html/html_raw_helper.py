@@ -5,10 +5,10 @@ import logging
 import string
 from typing import Optional, Tuple
 
-from pymarkdown.constants import Constants
+from pymarkdown.general.constants import Constants
+from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.inline.inline_request import InlineRequest
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.tokens.raw_html_markdown_token import RawHtmlMarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))

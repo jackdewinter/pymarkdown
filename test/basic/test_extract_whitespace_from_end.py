@@ -1,7 +1,7 @@
 """
 Tests for the extract_whitespace_from_end function.
 """
-from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.general.parser_helper import ParserHelper
 
 
 def test_empty_string():

@@ -3,7 +3,10 @@ Module to provide tests for source providers.
 """
 import os
 
-from pymarkdown.source_providers import FileSourceProvider, InMemorySourceProvider
+from pymarkdown.general.source_providers import (
+    FileSourceProvider,
+    InMemorySourceProvider,
+)
 
 
 def __verify_line(expected_line, actual_line):

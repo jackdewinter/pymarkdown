@@ -10,7 +10,6 @@
             "too-many-arguments": 2
         },
         "pymarkdown/application_logging.py": {},
-        "pymarkdown/bad_tokenization_error.py": {},
         "pymarkdown/block_quotes/block_quote_count_helper.py": {
             "too-many-arguments": 7
         },
@@ -23,10 +22,9 @@
         "pymarkdown/block_quotes/block_quote_processor.py": {
             "too-many-arguments": 4
         },
-        "pymarkdown/coalesce_processor.py": {
+        "pymarkdown/coalesce/coalesce_processor.py": {
             "too-few-public-methods": 1
         },
-        "pymarkdown/constants.py": {},
         "pymarkdown/container_blocks/container_block_leaf_processor.py": {
             "too-few-public-methods": 1,
             "too-many-arguments": 5,
@@ -52,10 +50,6 @@
         },
         "pymarkdown/container_blocks/container_indices.py": {},
         "pymarkdown/container_blocks/parse_block_pass_properties.py": {},
-        "pymarkdown/emphasis_helper.py": {
-            "too-few-public-methods": 1,
-            "too-many-arguments": 1
-        },
         "pymarkdown/extension_manager/__init__.py": {},
         "pymarkdown/extension_manager/extension_impl.py": {
             "too-many-instance-attributes": 1
@@ -83,10 +77,34 @@
             "too-many-arguments": 2
         },
         "pymarkdown/extensions/task_list_items.py": {},
+        "pymarkdown/general/bad_tokenization_error.py": {},
+        "pymarkdown/general/constants.py": {},
+        "pymarkdown/general/main_presentation.py": {},
+        "pymarkdown/general/parser_helper.py": {
+            "too-many-public-methods": 1,
+            "too-many-arguments": 1
+        },
+        "pymarkdown/general/parser_logger.py": {},
+        "pymarkdown/general/parser_state.py": {
+            "too-few-public-methods": 2,
+            "too-many-arguments": 1,
+            "too-many-instance-attributes": 1
+        },
+        "pymarkdown/general/position_marker.py": {},
+        "pymarkdown/general/requeue_line_info.py": {},
+        "pymarkdown/general/source_providers.py": {},
+        "pymarkdown/general/tab_helper.py": {},
+        "pymarkdown/general/tokenized_markdown.py": {
+            "too-many-arguments": 5
+        },
         "pymarkdown/html/html_helper.py": {
             "too-many-arguments": 1
         },
         "pymarkdown/html/html_raw_helper.py": {},
+        "pymarkdown/inline/emphasis_helper.py": {
+            "too-few-public-methods": 1,
+            "too-many-arguments": 1
+        },
         "pymarkdown/inline/inline_autolink_helper.py": {},
         "pymarkdown/inline/inline_backslash_helper.py": {},
         "pymarkdown/inline/inline_backtick_helper.py": {},
@@ -194,17 +212,6 @@
             "too-many-instance-attributes": 1,
             "broad-exception-caught": 3
         },
-        "pymarkdown/main_presentation.py": {},
-        "pymarkdown/parser_helper.py": {
-            "too-many-public-methods": 1,
-            "too-many-arguments": 1
-        },
-        "pymarkdown/parser_logger.py": {},
-        "pymarkdown/parser_state.py": {
-            "too-few-public-methods": 2,
-            "too-many-arguments": 1,
-            "too-many-instance-attributes": 1
-        },
         "pymarkdown/plugin_manager/__init__.py": {},
         "pymarkdown/plugin_manager/bad_plugin_error.py": {
             "too-many-arguments": 1
@@ -291,13 +298,6 @@
         "pymarkdown/plugins/rule_md_046.py": {},
         "pymarkdown/plugins/rule_md_047.py": {},
         "pymarkdown/plugins/rule_md_048.py": {},
-        "pymarkdown/position_marker.py": {},
-        "pymarkdown/requeue_line_info.py": {},
-        "pymarkdown/source_providers.py": {},
-        "pymarkdown/tab_helper.py": {},
-        "pymarkdown/tokenized_markdown.py": {
-            "too-many-arguments": 5
-        },
         "pymarkdown/tokens/atx_heading_markdown_token.py": {
             "protected-access": 1
         },
@@ -404,6 +404,9 @@
         "pymarkdown/tokens/uri_autolink_markdown_token.py": {
             "protected-access": 1
         },
+        "pymarkdown/transform_gfm/transform_state.py": {
+            "too-many-instance-attributes": 1
+        },
         "pymarkdown/transform_gfm/transform_to_gfm.py": {
             "too-few-public-methods": 1
         },
@@ -432,9 +435,6 @@
         },
         "pymarkdown/transform_markdown/transform_to_markdown.py": {
             "too-many-arguments": 1
-        },
-        "pymarkdown/transform_state.py": {
-            "too-many-instance-attributes": 1
         },
         "pymarkdown/version.py": {}
     },
