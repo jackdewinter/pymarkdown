@@ -3,7 +3,7 @@ Module to provide for a leaf element that can be added to markdown parsing strea
 """
 from typing import Optional
 
-from pymarkdown.position_marker import PositionMarker
+from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.tokens.markdown_token import MarkdownToken, MarkdownTokenClass
 
 

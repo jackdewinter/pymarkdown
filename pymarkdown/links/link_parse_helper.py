@@ -6,14 +6,14 @@ import urllib
 import urllib.parse
 from typing import Dict, List, Optional, Tuple
 
-from pymarkdown.constants import Constants
+from pymarkdown.general.constants import Constants
+from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.inline.inline_backslash_helper import InlineBackslashHelper
 from pymarkdown.inline.inline_helper import InlineHelper
 from pymarkdown.inline.inline_request import InlineRequest
 from pymarkdown.links.link_helper_properties import LinkHelperProperties
 from pymarkdown.links.link_reference_titles import LinkReferenceTitles
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.parser_logger import ParserLogger
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

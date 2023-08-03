@@ -5,15 +5,15 @@ Module to provide for an encapsulation of the block quote element.
 import logging
 from typing import Callable, Dict, Optional
 
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.parser_logger import ParserLogger
-from pymarkdown.position_marker import PositionMarker
+from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.general.parser_logger import ParserLogger
+from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.tokens.container_markdown_token import ContainerMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.transform_gfm.transform_state import TransformState
 from pymarkdown.transform_gfm.transform_to_gfm_list_looseness import (
     TransformToGfmListLooseness,
 )
-from pymarkdown.transform_state import TransformState
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

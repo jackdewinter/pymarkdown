@@ -4,13 +4,13 @@ Module to provide for an encapsulation of the unordered list start element.
 
 from typing import Callable, Optional
 
-from pymarkdown.position_marker import PositionMarker
+from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
 from pymarkdown.tokens.list_start_markdown_token_helper import (
     ListStartMarkdownTokenHelper,
 )
 from pymarkdown.tokens.markdown_token import MarkdownToken
-from pymarkdown.transform_state import TransformState
+from pymarkdown.transform_gfm.transform_state import TransformState
 
 
 class UnorderedListStartMarkdownToken(ListStartMarkdownToken):

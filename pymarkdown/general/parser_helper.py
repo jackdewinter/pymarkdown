@@ -5,7 +5,7 @@ Module to provide helper functions for parsing.
 import logging
 from typing import Any, List, Optional, Tuple
 
-from pymarkdown.constants import Constants
+from pymarkdown.general.constants import Constants
 
 LOGGER = logging.getLogger(__name__)
 

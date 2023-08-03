@@ -23,8 +23,8 @@ from pymarkdown.extensions.markdown_strikethrough import MarkdownStrikeThroughEx
 from pymarkdown.extensions.markdown_tables import MarkdownTablesExtension
 from pymarkdown.extensions.pragma_token import PragmaExtension
 from pymarkdown.extensions.task_list_items import MarkdownTaskListItemsExtension
-from pymarkdown.main_presentation import MainPresentation
-from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.general.main_presentation import MainPresentation
+from pymarkdown.general.parser_helper import ParserHelper
 
 LOGGER = logging.getLogger(__name__)
 

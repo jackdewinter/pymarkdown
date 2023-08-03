@@ -4,15 +4,15 @@ Module to provide for an encapsulation of the setext heading element.
 
 from typing import Callable, Optional, cast
 
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.position_marker import PositionMarker
+from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
+from pymarkdown.transform_gfm.transform_state import TransformState
 from pymarkdown.transform_markdown.markdown_transform_context import (
     MarkdownTransformContext,
 )
-from pymarkdown.transform_state import TransformState
 
 
 class SetextHeadingMarkdownToken(LeafMarkdownToken):

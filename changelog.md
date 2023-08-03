@@ -8,7 +8,11 @@
 
 ### Changed
 
-- None
+- [Issue 723](https://github.com/jackdewinter/pymarkdown/issues/723)
+  - Moved test version of transform to markdown into application directory
+- [Issue 728](https://github.com/jackdewinter/pymarkdown/issues/728)
+  - Moved code from transform modules (html and markdown) into token classes
+  - Refactored modules to put them in more consistent directories
 
 ### Fixed
 

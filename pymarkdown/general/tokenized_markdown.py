@@ -7,8 +7,7 @@ from typing import List, Optional, Tuple, cast
 
 from application_properties import ApplicationProperties
 
-from pymarkdown.bad_tokenization_error import BadTokenizationError
-from pymarkdown.coalesce_processor import CoalesceProcessor
+from pymarkdown.coalesce.coalesce_processor import CoalesceProcessor
 from pymarkdown.container_blocks.container_block_processor import (
     ContainerBlockProcessor,
 )
@@ -18,6 +17,13 @@ from pymarkdown.container_blocks.parse_block_pass_properties import (
 from pymarkdown.extension_manager.extension_manager import ExtensionManager
 from pymarkdown.extensions.front_matter_extension import FrontMatterExtension
 from pymarkdown.extensions.pragma_token import PragmaToken
+from pymarkdown.general.bad_tokenization_error import BadTokenizationError
+from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.general.parser_logger import ParserLogger
+from pymarkdown.general.parser_state import ParserState
+from pymarkdown.general.position_marker import PositionMarker
+from pymarkdown.general.requeue_line_info import RequeueLineInfo
+from pymarkdown.general.source_providers import InMemorySourceProvider, SourceProvider
 from pymarkdown.html.html_helper import HtmlHelper
 from pymarkdown.inline.inline_character_reference_helper import (
     InlineCharacterReferenceHelper,
@@ -31,12 +37,6 @@ from pymarkdown.links.link_parse_helper import LinkParseHelper
 from pymarkdown.links.link_reference_definition_helper import (
     LinkReferenceDefinitionHelper,
 )
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.parser_logger import ParserLogger
-from pymarkdown.parser_state import ParserState
-from pymarkdown.position_marker import PositionMarker
-from pymarkdown.requeue_line_info import RequeueLineInfo
-from pymarkdown.source_providers import InMemorySourceProvider, SourceProvider
 from pymarkdown.tokens.blank_line_markdown_token import BlankLineMarkdownToken
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
@@ -67,7 +67,8 @@ class TokenizedMarkdown:
         self.__source_provider: Optional[SourceProvider] = None
 
         if not resource_path:
-            resource_path = os.path.join(os.path.split(__file__)[0], "resources")
+            resource_path = os.path.join(os.path.split(__file__)[0], "..", "resources")
+            resource_path = os.path.abspath(resource_path)
         InlineCharacterReferenceHelper.initialize(resource_path)
 
     def apply_configuration(

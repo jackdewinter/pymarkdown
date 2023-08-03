@@ -4,11 +4,11 @@ Inline processing
 import logging
 from typing import List, cast
 
+from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.inline.inline_handler_helper import InlineHandlerHelper
 from pymarkdown.inline.inline_helper import InlineHelper
 from pymarkdown.inline.inline_text_block_helper import InlineTextBlockHelper
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.tokens.atx_heading_markdown_token import AtxHeadingMarkdownToken
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken

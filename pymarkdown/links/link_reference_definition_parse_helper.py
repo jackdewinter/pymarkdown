@@ -4,15 +4,15 @@ Module to helper with the parsing of link reference definitions.
 import logging
 from typing import Optional, Tuple
 
+from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.general.parser_logger import ParserLogger
+from pymarkdown.general.parser_state import ParserState
+from pymarkdown.general.tab_helper import TabHelper
 from pymarkdown.inline.inline_backslash_helper import InlineBackslashHelper
 from pymarkdown.links.link_parse_helper import LinkParseHelper
 from pymarkdown.links.link_reference_info import LinkReferenceInfo
 from pymarkdown.links.link_reference_titles import LinkReferenceTitles
 from pymarkdown.links.link_reference_tuple import LinkReferenceDefinitionTuple
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.parser_logger import ParserLogger
-from pymarkdown.parser_state import ParserState
-from pymarkdown.tab_helper import TabHelper
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

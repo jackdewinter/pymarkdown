@@ -3,7 +3,7 @@ Module to implement a plugin that ensures that blank lines surround fenced block
 """
 from typing import List, Optional, cast
 
-from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin

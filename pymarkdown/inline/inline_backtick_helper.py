@@ -4,11 +4,11 @@ Module to help with the parsing of bkactick inline elements.
 import logging
 from typing import List, Optional, Tuple
 
+from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.inline.inline_helper import InlineHelper
 from pymarkdown.inline.inline_request import InlineRequest
 from pymarkdown.inline.inline_response import InlineResponse
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.tokens.inline_code_span_markdown_token import (
     InlineCodeSpanMarkdownToken,
 )

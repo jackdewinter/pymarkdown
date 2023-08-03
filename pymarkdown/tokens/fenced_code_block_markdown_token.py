@@ -5,16 +5,16 @@ Module to provide for an encapsulation of the fenced code block element.
 import logging
 from typing import Callable, Optional, cast
 
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.parser_logger import ParserLogger
-from pymarkdown.position_marker import PositionMarker
+from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.general.parser_logger import ParserLogger
+from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
+from pymarkdown.transform_gfm.transform_state import TransformState
 from pymarkdown.transform_markdown.markdown_transform_context import (
     MarkdownTransformContext,
 )
-from pymarkdown.transform_state import TransformState
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

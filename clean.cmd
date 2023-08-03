@@ -245,8 +245,12 @@ for /f "tokens=*" %%x in (%CLEAN_TEMPFILE%) do (
 	set TEST_FILE=%%x
 	if /i [!TEST_FILE:~-3!]==[.py] (
 		if EXIST !TEST_FILE! (
-			echo {Adding !TEST_FILE! to pylint suppression list.}
-			set ALL_FILES=!ALL_FILES! !TEST_FILE!
+			if "!TEST_FILE!" == "test/pytest_execute.py" (
+				echo {Skipping !TEST_FILE!...}
+			) else (
+				echo {Adding !TEST_FILE! to pylint suppression list.}
+				set ALL_FILES=!ALL_FILES! !TEST_FILE!
+			)
 		) else (
 			echo {Skipping scan of !TEST_FILE! as it no longer exists.}
 		)

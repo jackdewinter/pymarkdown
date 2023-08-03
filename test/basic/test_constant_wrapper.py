@@ -1,7 +1,7 @@
 """
 Tests for the calculate_length function
 """
-from pymarkdown.constants import ConstantWrapper
+from pymarkdown.general.constants import ConstantWrapper
 
 
 def test_values_are_equal():

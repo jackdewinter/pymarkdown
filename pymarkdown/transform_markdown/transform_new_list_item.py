@@ -4,8 +4,8 @@ Module to provide transformations for a new list item.
 import logging
 from typing import Optional, cast
 
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken

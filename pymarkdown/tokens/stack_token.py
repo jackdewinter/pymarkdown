@@ -3,8 +3,8 @@ Module to provide for an element that can be added to the stack.
 """
 from typing import Any, List, Optional
 
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.position_marker import PositionMarker
+from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.tokens.container_markdown_token import ContainerMarkdownToken
 from pymarkdown.tokens.fenced_code_block_markdown_token import (

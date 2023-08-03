@@ -4,11 +4,11 @@ Module to provide processing for indented leaf blocks.
 import logging
 from typing import List, Optional, Tuple, cast
 
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.parser_logger import ParserLogger
-from pymarkdown.parser_state import ParserState
-from pymarkdown.position_marker import PositionMarker
-from pymarkdown.tab_helper import TabHelper
+from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.general.parser_logger import ParserLogger
+from pymarkdown.general.parser_state import ParserState
+from pymarkdown.general.position_marker import PositionMarker
+from pymarkdown.general.tab_helper import TabHelper
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.tokens.indented_code_block_markdown_token import (
     IndentedCodeBlockMarkdownToken,

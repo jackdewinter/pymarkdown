@@ -1,7 +1,7 @@
 """
 Tests for the various is_character* functions.
 """
-from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.general.parser_helper import ParserHelper
 
 
 def test_is_character_at_index_whitespace_with_empty_string():

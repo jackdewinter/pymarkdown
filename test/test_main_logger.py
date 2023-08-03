@@ -8,7 +8,7 @@ from test.markdown_scanner import MarkdownScanner
 
 from pymarkdown.application_logging import ApplicationLogging
 from pymarkdown.container_blocks.container_indices import ContainerIndices
-from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.tokens.stack_token import StackToken
 
 from .utils import write_temporary_configuration

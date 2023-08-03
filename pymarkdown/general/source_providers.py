@@ -5,7 +5,7 @@ Module to provide a tokenization of a markdown-encoded string.
 from abc import ABC, abstractmethod
 from typing import List, Optional
 
-from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.general.parser_helper import ParserHelper
 
 
 class SourceProvider(ABC):

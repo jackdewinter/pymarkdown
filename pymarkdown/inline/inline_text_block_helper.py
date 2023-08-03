@@ -4,7 +4,9 @@ Module to help with the parsing of text inline elements.
 import logging
 from typing import List, Optional, Tuple, cast
 
-from pymarkdown.emphasis_helper import EmphasisHelper
+from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.general.parser_logger import ParserLogger
+from pymarkdown.inline.emphasis_helper import EmphasisHelper
 from pymarkdown.inline.inline_handler_helper import InlineHandlerHelper
 from pymarkdown.inline.inline_helper import InlineHelper
 from pymarkdown.inline.inline_line_end_helper import InlineLineEndHelper
@@ -13,8 +15,6 @@ from pymarkdown.inline.inline_response import InlineResponse
 from pymarkdown.inline.inline_tabified_text_block_helper import (
     InlineTabifiedTextBlockHelper,
 )
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken

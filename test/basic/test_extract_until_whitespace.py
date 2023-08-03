@@ -1,7 +1,7 @@
 """
 Tests for the extract_until_whitespace function.
 """
-from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.general.parser_helper import ParserHelper
 
 
 def test_empty_string_with_good_index():

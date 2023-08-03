@@ -4,16 +4,16 @@ Module to helper with determining whether to continue with the link reference de
 import logging
 from typing import List, Optional, Tuple, cast
 
+from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.general.parser_logger import ParserLogger
+from pymarkdown.general.parser_state import ParserState
+from pymarkdown.general.position_marker import PositionMarker
+from pymarkdown.general.tab_helper import TabHelper
 from pymarkdown.links.link_parse_helper import LinkParseHelper
 from pymarkdown.links.link_reference_definition_parse_helper import (
     LinkReferenceDefinitionParseHelper,
 )
 from pymarkdown.links.link_reference_tuple import LinkReferenceDefinitionTuple
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.parser_logger import ParserLogger
-from pymarkdown.parser_state import ParserState
-from pymarkdown.position_marker import PositionMarker
-from pymarkdown.tab_helper import TabHelper
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.tokens.link_reference_definition_markdown_token import (
     LinkReferenceDefinitionMarkdownToken,

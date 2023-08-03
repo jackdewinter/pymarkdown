@@ -7,11 +7,11 @@ from typing import List, Optional, Tuple, cast
 
 from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
 from pymarkdown.container_blocks.container_helper import ContainerHelper
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.parser_logger import ParserLogger
-from pymarkdown.parser_state import ParserState
-from pymarkdown.position_marker import PositionMarker
-from pymarkdown.tab_helper import TabHelper
+from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.general.parser_logger import ParserLogger
+from pymarkdown.general.parser_state import ParserState
+from pymarkdown.general.position_marker import PositionMarker
+from pymarkdown.general.tab_helper import TabHelper
 from pymarkdown.tokens.html_block_markdown_token import HtmlBlockMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.tokens.stack_token import (

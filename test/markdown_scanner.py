@@ -6,7 +6,7 @@ import sys
 from test.pytest_execute import InProcessExecution
 from typing import Optional
 
-from pymarkdown.main_presentation import MainPresentation
+from pymarkdown.general.main_presentation import MainPresentation
 from pymarkdown.plugin_manager.plugin_scan_failure import PluginScanFailure
 
 # https://docs.pytest.org/en/latest/goodpractices.html#tests-outside-application-code

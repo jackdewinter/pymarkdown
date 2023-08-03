@@ -5,16 +5,16 @@ Module to provide for an encapsulation of the link reference definition element.
 # pylint: disable=too-many-instance-attributes
 from typing import Callable, List, Optional, cast
 
+from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.links.link_reference_info import LinkReferenceInfo
 from pymarkdown.links.link_reference_titles import LinkReferenceTitles
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.position_marker import PositionMarker
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.transform_gfm.transform_state import TransformState
 from pymarkdown.transform_markdown.markdown_transform_context import (
     MarkdownTransformContext,
 )
-from pymarkdown.transform_state import TransformState
 
 
 class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):

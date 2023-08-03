@@ -6,10 +6,10 @@ import logging
 from typing import Callable, Dict, List, Optional, cast
 
 from pymarkdown.extensions.extension_token_types import ExtensionTokenTypes
-from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.tokens.token_types import TokenTypes
-from pymarkdown.transform_state import TransformState
+from pymarkdown.transform_gfm.transform_state import TransformState
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

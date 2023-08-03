@@ -4,10 +4,10 @@ Module to help with the parsing of inline elements.
 import logging
 from typing import Dict, List, Optional, Tuple
 
+from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.inline.inline_backslash_helper import InlineBackslashHelper
 from pymarkdown.inline.inline_request import InlineRequest
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.parser_logger import ParserLogger
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

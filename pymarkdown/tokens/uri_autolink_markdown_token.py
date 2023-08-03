@@ -7,10 +7,10 @@ from typing import Callable, Optional, cast
 from pymarkdown.inline.inline_helper import InlineHelper
 from pymarkdown.tokens.inline_markdown_token import InlineMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.transform_gfm.transform_state import TransformState
 from pymarkdown.transform_markdown.markdown_transform_context import (
     MarkdownTransformContext,
 )
-from pymarkdown.transform_state import TransformState
 
 
 class UriAutolinkMarkdownToken(InlineMarkdownToken):

@@ -8,8 +8,8 @@ from test.api.test_api_general import PatchFileSourceProvider
 from test.markdown_scanner import MarkdownScanner
 from test.patches.patch_builtin_open import PatchBuiltinOpen
 
-from pymarkdown.parser_logger import ParserLogger
-from pymarkdown.source_providers import FileSourceProvider
+from pymarkdown.general.parser_logger import ParserLogger
+from pymarkdown.general.source_providers import FileSourceProvider
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

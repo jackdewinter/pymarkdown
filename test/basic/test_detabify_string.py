@@ -2,7 +2,7 @@
 Tests for the detabisty_string functions.
 """
 
-from pymarkdown.tab_helper import TabHelper
+from pymarkdown.general.tab_helper import TabHelper
 
 
 def test_detabify_string_simple_case():

@@ -14,15 +14,15 @@ from pymarkdown.extension_manager.extension_manager_constants import (
     ExtensionManagerConstants,
 )
 from pymarkdown.extension_manager.parser_extension import ParserExtension
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.general.parser_logger import ParserLogger
+from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.plugin_manager.found_plugin import FoundPlugin
-from pymarkdown.position_marker import PositionMarker
 from pymarkdown.tokens.markdown_token import MarkdownToken, MarkdownTokenClass
+from pymarkdown.transform_gfm.transform_state import TransformState
 from pymarkdown.transform_markdown.markdown_transform_context import (
     MarkdownTransformContext,
 )
-from pymarkdown.transform_state import TransformState
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

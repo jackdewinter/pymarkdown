@@ -4,8 +4,8 @@ Module to provide for a container element that can be added to markdown parsing 
 import logging
 from typing import Optional
 
-from pymarkdown.parser_logger import ParserLogger
-from pymarkdown.position_marker import PositionMarker
+from pymarkdown.general.parser_logger import ParserLogger
+from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.tokens.markdown_token import MarkdownToken, MarkdownTokenClass
 
 POGGER = ParserLogger(logging.getLogger(__name__))

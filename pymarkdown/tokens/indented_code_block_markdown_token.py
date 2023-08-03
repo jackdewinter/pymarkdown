@@ -4,13 +4,13 @@ Module to provide for an encapsulation of the indented code block element.
 
 from typing import Callable, Optional
 
-from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.transform_gfm.transform_state import TransformState
 from pymarkdown.transform_markdown.markdown_transform_context import (
     MarkdownTransformContext,
 )
-from pymarkdown.transform_state import TransformState
 
 
 class IndentedCodeBlockMarkdownToken(LeafMarkdownToken):

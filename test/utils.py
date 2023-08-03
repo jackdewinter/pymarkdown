@@ -10,11 +10,11 @@ import tempfile
 from application_properties import ApplicationProperties
 
 from pymarkdown.extension_manager.extension_manager import ExtensionManager
-from pymarkdown.main_presentation import MainPresentation
-from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.parser_logger import ParserLogger
-from pymarkdown.tab_helper import TabHelper
-from pymarkdown.tokenized_markdown import TokenizedMarkdown
+from pymarkdown.general.main_presentation import MainPresentation
+from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.general.parser_logger import ParserLogger
+from pymarkdown.general.tab_helper import TabHelper
+from pymarkdown.general.tokenized_markdown import TokenizedMarkdown
 from pymarkdown.transform_gfm.transform_to_gfm import TransformToGfm
 from pymarkdown.transform_markdown.transform_to_markdown import TransformToMarkdown
 
