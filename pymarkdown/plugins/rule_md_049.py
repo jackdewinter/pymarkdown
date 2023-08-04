@@ -25,8 +25,6 @@ class RuleMd049(RulePlugin):
     Class to implement a plugin that looks for link and images elements that have an invalid uri.
     """
 
-    EXTERNAL_LINK_REGEX: Pattern[str] = re.compile("^(.+):.*$")
-
     def __init__(self) -> None:
         super().__init__()
         self.heading_processor = HeadingProcessor()
@@ -74,8 +72,8 @@ class RuleMd049(RulePlugin):
             # Not a reference so nothing to do here
             return
 
-        link_uri, link_anchor = self._extract_link_uri(token)
-        if self.EXTERNAL_LINK_REGEX.match(link_uri):
+        link_scheme, link_uri, link_anchor = self._extract_link_uri(token)
+        if link_scheme != "file":
             # External link so nothing to do here
             return
 
@@ -131,18 +129,18 @@ class RuleMd049(RulePlugin):
         if not link_uri:
             path = context.scan_file
         elif link_uri.startswith("/"):
-            path = link_uri[1:]
+            path = urllib.parse.unquote(link_uri[1:])
         else:
-            path = os.path.join(os.path.dirname(context.scan_file), link_uri)
+            path = os.path.join(
+                os.path.dirname(context.scan_file), urllib.parse.unquote(link_uri)
+            )
         return os.path.realpath(path)
 
     @staticmethod
-    def _extract_link_uri(token: MarkdownToken) -> Tuple[str, Optional[str]]:
+    def _extract_link_uri(token: MarkdownToken) -> Tuple[str, str, Optional[str]]:
         ref_token = cast(ReferenceMarkdownToken, token)
-        link_uri_split = ref_token.link_uri.split("#", 1)
-        if len(link_uri_split) == 2:
-            return link_uri_split[0], link_uri_split[1]
-        return link_uri_split[0], None
+        parsed_uri = urllib.parse.urlparse(ref_token.link_uri, "file")
+        return parsed_uri.scheme, parsed_uri.path, parsed_uri.fragment
 
 
 class HeadingProcessor:
