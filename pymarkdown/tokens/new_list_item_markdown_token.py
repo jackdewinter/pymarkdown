@@ -14,7 +14,7 @@ from pymarkdown.transform_markdown.markdown_transform_context import (
 
 class NewListItemMarkdownToken(ContainerMarkdownToken):
     """
-    Class to provide for an encapsulation of the new list item element.
+    Class to provide for an encapsulation of the new list item element..
     """
 
     def __init__(
