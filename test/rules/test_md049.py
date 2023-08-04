@@ -2,10 +2,9 @@
 Module to provide tests related to the MD049 rule.
 """
 import os
+from test.markdown_scanner import MarkdownScanner
 
 import pytest
-
-from test.markdown_scanner import MarkdownScanner
 
 
 @pytest.mark.rules

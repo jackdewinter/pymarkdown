@@ -25,7 +25,7 @@ class RuleMd049(RulePlugin):
     Class to implement a plugin that looks for link and images elements that have an invalid uri.
     """
 
-    EXTERNAL_LINK_REGEX = re.compile("^(.+):.*$")
+    EXTERNAL_LINK_REGEX: Pattern[str] = re.compile("^(.+):.*$")
 
     def __init__(self) -> None:
         super().__init__()
@@ -42,9 +42,7 @@ class RuleMd049(RulePlugin):
 
         self.heading_processor.completed_file(scan_file)
         current_file_headings = self.heading_processor.get_headings(scan_file)
-        triggers = self.anchor_validator.complete_file(
-            scan_file, current_file_headings
-        )
+        triggers = self.anchor_validator.complete_file(scan_file, current_file_headings)
         for trigger_params in triggers:
             context.add_triggered_rule(*trigger_params)
 
@@ -151,6 +149,7 @@ class HeadingProcessor:
     """
     Processor to handle found headings
     """
+
     def __init__(self) -> None:
         super().__init__()
         self.__start_token: Optional[MarkdownToken] = None
@@ -189,17 +188,20 @@ class HeadingProcessor:
         return self.__headings_map.get(filename, [])
 
 
-KEBAB2REGEX_REGEX = re.compile(r"([^A-Za-z0-9]+)")
+HTML_TAGS_REGEX: Pattern[str] = re.compile(r"\<[^>]*\>")
+ANCHOR_REGEX: Pattern[str] = re.compile(r"([^A-Za-z0-9]+)")
 
 
-def anchor2regex(anchor: str) -> Pattern[str]:
+def compare_anchor(anchor: str, headline: str) -> bool:
     """
     Converts a kebab-case anchor into a regex.
     """
-    return re.compile(
-        KEBAB2REGEX_REGEX.sub(r".*", urllib.parse.unquote_plus(anchor)),
+    anchor_re = re.compile(
+        ANCHOR_REGEX.sub(r".*", urllib.parse.unquote_plus(anchor)),
         re.ASCII | re.IGNORECASE,
     )
+    cleaned_headline = ANCHOR_REGEX.sub(r"", HTML_TAGS_REGEX.sub(r"", headline))
+    return bool(anchor_re.match(cleaned_headline))
 
 
 class AnchorValidator:
@@ -250,8 +252,9 @@ class AnchorValidator:
             return
         if headings:
             # Case A: we already processed the referenced file and know the headlines
-            link_regex = anchor2regex(link_anchor)
-            if not [heading for heading in headings if link_regex.match(heading)]:
+            if not [
+                heading for heading in headings if compare_anchor(link_anchor, heading)
+            ]:
                 # Report invalid heading reference
                 self.__report_error(context, token, NOT_A_VALID_HEADING)
         else:
@@ -272,7 +275,8 @@ class AnchorValidator:
         """
         anchors = self.get_anchor_map(scan_file)
         for link_anchor in anchors.keys():
-            link_regex = anchor2regex(link_anchor)
-            if not [heading for heading in headings if link_regex.match(heading)]:
+            if not [
+                heading for heading in headings if compare_anchor(link_anchor, heading)
+            ]:
                 for trigger_params in anchors[link_anchor]:
                     yield trigger_params

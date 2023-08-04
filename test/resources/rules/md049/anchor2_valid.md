@@ -4,6 +4,6 @@
 
 [local anchor](#headline-22)
 
-## Headline 22
+## Headline [22](#headline-2)
 
 Text
