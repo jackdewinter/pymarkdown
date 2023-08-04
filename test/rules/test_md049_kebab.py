@@ -82,6 +82,20 @@ def test_slash_in_heading():
     assert result
 
 
+def test_inlinecode_in_heading():
+    """
+    Test to verify that CamelCase is converted into kebab-case
+    """
+    # Arrange
+    text = "TB-IMG-Activity `/DTBOM/00_CHSETB `:  Assign a table to Change Set"
+    # Act
+    result = compare_anchor(
+        "tb-img-activity-dtbom00_chsetb---assign-a-table-to-change-set", text
+    )
+    # Assert
+    assert result
+
+
 def test_some_mixed_string():
     """
     Test to verify that CamelCase is converted into kebab-case

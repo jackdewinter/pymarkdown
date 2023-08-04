@@ -6,7 +6,11 @@ import re
 import urllib.parse
 from typing import Callable, Dict, Generator, List, Optional, Pattern, Tuple, cast
 
-from pymarkdown.inline_markdown_token import ReferenceMarkdownToken, TextMarkdownToken
+from pymarkdown.inline_markdown_token import (
+    InlineCodeSpanMarkdownToken,
+    ReferenceMarkdownToken,
+    TextMarkdownToken,
+)
 from pymarkdown.leaf_markdown_token import SetextHeadingMarkdownToken
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
@@ -78,7 +82,6 @@ class RuleMd049(RulePlugin):
             return
 
         filesystem_path = self._resolve_to_filesystem_path(context, link_uri)
-
         # Check that referenced file exists
         if os.path.exists(filesystem_path):
             headings = self.heading_processor.get_headings(filesystem_path)
@@ -169,6 +172,9 @@ class HeadingProcessor:
         elif self.__start_token and token.is_text:
             text_token = cast(TextMarkdownToken, token)
             self.__heading_text += text_token.token_text
+        elif self.__start_token and token.is_inline_code_span:
+            inline_code_token = cast(InlineCodeSpanMarkdownToken, token)
+            self.__heading_text += inline_code_token.span_text
 
     def completed_file(self, filename: str) -> None:
         """
