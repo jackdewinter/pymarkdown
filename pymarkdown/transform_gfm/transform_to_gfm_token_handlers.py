@@ -3,13 +3,17 @@ Module to provide for the handlers for tokens to allow transformation into HTML.
 """
 import inspect
 import logging
-from typing import Callable, Dict, List, Optional, cast
+from typing import Dict, List, Optional, cast
 
 from pymarkdown.extensions.extension_token_types import ExtensionTokenTypes
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.tokens.token_types import TokenTypes
 from pymarkdown.transform_gfm.transform_state import TransformState
+from pymarkdown.transform_markdown.markdown_transform_context import (
+    EndHtmlTokenTransformProtocol,
+    StartHtmlTokenTransformProtocol,
+)
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -23,12 +27,8 @@ class TransformToGfmTokenHandlers:
     """
 
     def __init__(self) -> None:
-        self.__start_token_handlers: Dict[
-            str, Callable[[str, MarkdownToken, TransformState], str]
-        ] = {}
-        self.__end_token_handlers: Dict[
-            str, Callable[[str, MarkdownToken, TransformState], str]
-        ] = {}
+        self.__start_token_handlers: Dict[str, StartHtmlTokenTransformProtocol] = {}
+        self.__end_token_handlers: Dict[str, EndHtmlTokenTransformProtocol] = {}
 
         ert = TokenTypes.get_inline_token_types()
         ert.extend(TokenTypes.get_leaf_token_types())
@@ -46,10 +46,8 @@ class TransformToGfmTokenHandlers:
     def __register_handlers(
         self,
         token_type: type,
-        start_token_handler: Callable[[str, MarkdownToken, TransformState], str],
-        end_token_handler: Optional[
-            Callable[[str, MarkdownToken, TransformState], str]
-        ] = None,
+        start_token_handler: StartHtmlTokenTransformProtocol,
+        end_token_handler: Optional[EndHtmlTokenTransformProtocol] = None,
     ) -> None:
         """
         Register the handlers necessary to deal with token's start and end.

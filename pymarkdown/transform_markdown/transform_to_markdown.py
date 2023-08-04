@@ -4,7 +4,7 @@ Module to provide for a transformation from tokens to a markdown document.
 import collections
 import inspect
 import logging
-from typing import Callable, Dict, List, Optional, Tuple, cast
+from typing import Dict, List, Optional, Tuple, cast
 
 from pymarkdown.extensions.extension_token_types import ExtensionTokenTypes
 from pymarkdown.extensions.pragma_token import PragmaToken
@@ -29,7 +29,11 @@ from pymarkdown.tokens.unordered_list_start_markdown_token import (
     UnorderedListStartMarkdownToken,
 )
 from pymarkdown.transform_markdown.markdown_transform_context import (
+    EndMarkdownContainerTokenTransformProtocol,
+    EndMarkdownTokenTransformProtocol,
     MarkdownTransformContext,
+    StartMarkdownContainerTokenTransformProtocol,
+    StartMarkdownTokenTransformProtocol,
 )
 from pymarkdown.transform_markdown.transform_block_quote import TransformBlockQuote
 from pymarkdown.transform_markdown.transform_containers import (
@@ -57,40 +61,19 @@ class TransformToMarkdown:
 
         self.start_container_token_handlers: Dict[
             str,
-            Callable[
-                [
-                    MarkdownTransformContext,
-                    MarkdownToken,
-                    Optional[MarkdownToken],
-                    Optional[MarkdownToken],
-                    str,
-                ],
-                str,
-            ],
+            StartMarkdownContainerTokenTransformProtocol,
         ] = {}
         self.end_container_token_handlers: Dict[
             str,
-            Callable[
-                [MarkdownTransformContext, MarkdownToken, List[MarkdownToken], int], str
-            ],
+            EndMarkdownContainerTokenTransformProtocol,
         ] = {}
         self.start_token_handlers: Dict[
             str,
-            Callable[
-                [MarkdownTransformContext, MarkdownToken, Optional[MarkdownToken]], str
-            ],
+            StartMarkdownTokenTransformProtocol,
         ] = {}
         self.end_token_handlers: Dict[
             str,
-            Callable[
-                [
-                    MarkdownTransformContext,
-                    MarkdownToken,
-                    Optional[MarkdownToken],
-                    Optional[MarkdownToken],
-                ],
-                str,
-            ],
+            EndMarkdownTokenTransformProtocol,
         ] = {}
 
         self.register_container_handlers(
@@ -153,20 +136,8 @@ class TransformToMarkdown:
     def register_handlers(
         self,
         token_type: type,
-        start_token_handler: Callable[
-            [MarkdownTransformContext, MarkdownToken, Optional[MarkdownToken]], str
-        ],
-        end_token_handler: Optional[
-            Callable[
-                [
-                    MarkdownTransformContext,
-                    MarkdownToken,
-                    Optional[MarkdownToken],
-                    Optional[MarkdownToken],
-                ],
-                str,
-            ]
-        ] = None,
+        start_token_handler: StartMarkdownTokenTransformProtocol,
+        end_token_handler: Optional[EndMarkdownTokenTransformProtocol] = None,
     ) -> None:
         """
         Register the handlers necessary to deal with token's start and end.
@@ -185,21 +156,8 @@ class TransformToMarkdown:
     def register_container_handlers(
         self,
         token_type: type,
-        start_token_handler: Callable[
-            [
-                MarkdownTransformContext,
-                MarkdownToken,
-                Optional[MarkdownToken],
-                Optional[MarkdownToken],
-                str,
-            ],
-            str,
-        ],
-        end_token_handler: Optional[
-            Callable[
-                [MarkdownTransformContext, MarkdownToken, List[MarkdownToken], int], str
-            ]
-        ] = None,
+        start_token_handler: StartMarkdownContainerTokenTransformProtocol,
+        end_token_handler: Optional[EndMarkdownContainerTokenTransformProtocol] = None,
     ) -> None:
         """
         Register the handlers necessary to deal with token's start and end.
@@ -379,23 +337,16 @@ class TransformToMarkdown:
         elif current_token.is_end_token:
             current_end_token = cast(EndMarkdownToken, current_token)
             if current_end_token.type_name in self.end_token_handlers:
-                end_handler_fn: Callable[
-                    [
-                        MarkdownTransformContext,
-                        MarkdownToken,
-                        Optional[MarkdownToken],
-                        Optional[MarkdownToken],
-                    ],
-                    str,
-                ] = self.end_token_handlers[current_end_token.type_name]
+                end_handler_fn: EndMarkdownTokenTransformProtocol = (
+                    self.end_token_handlers[current_end_token.type_name]
+                )
                 new_data = end_handler_fn(
                     self.context, current_end_token, previous_token, next_token
                 )
             elif current_end_token.type_name in self.end_container_token_handlers:
-                end_container_handler_fn: Callable[
-                    [MarkdownTransformContext, MarkdownToken, List[MarkdownToken], int],
-                    str,
-                ] = self.end_container_token_handlers[current_end_token.type_name]
+                end_container_handler_fn: EndMarkdownContainerTokenTransformProtocol = (
+                    self.end_container_token_handlers[current_end_token.type_name]
+                )
                 new_data = end_container_handler_fn(
                     self.context, current_end_token, actual_tokens, token_index
                 )

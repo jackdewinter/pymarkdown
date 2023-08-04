@@ -2,13 +2,15 @@
 Module to provide for an encapsulation of the inline email autolink element.
 """
 
-from typing import Callable, Optional, cast
+from typing import Optional, cast
 
 from pymarkdown.tokens.inline_markdown_token import InlineMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_gfm.transform_state import TransformState
 from pymarkdown.transform_markdown.markdown_transform_context import (
     MarkdownTransformContext,
+    RegisterHtmlTransformHandlersProtocol,
+    RegisterMarkdownTransformHandlersProtocol,
 )
 
 
@@ -47,28 +49,7 @@ class EmailAutolinkMarkdownToken(InlineMarkdownToken):
         return self.__autolink_text
 
     def register_for_markdown_transform(
-        self,
-        registration_function: Callable[
-            [
-                type,
-                Callable[
-                    [MarkdownTransformContext, MarkdownToken, Optional[MarkdownToken]],
-                    str,
-                ],
-                Optional[
-                    Callable[
-                        [
-                            MarkdownTransformContext,
-                            MarkdownToken,
-                            Optional[MarkdownToken],
-                            Optional[MarkdownToken],
-                        ],
-                        str,
-                    ]
-                ],
-            ],
-            None,
-        ],
+        self, registration_function: RegisterMarkdownTransformHandlersProtocol
     ) -> None:
         """
         Register any rehydration handlers for leaf markdown tokens.
@@ -99,14 +80,7 @@ class EmailAutolinkMarkdownToken(InlineMarkdownToken):
 
     @staticmethod
     def register_for_html_transform(
-        register_handlers: Callable[
-            [
-                type,
-                Callable[[str, MarkdownToken, TransformState], str],
-                Optional[Callable[[str, MarkdownToken, TransformState], str]],
-            ],
-            None,
-        ]
+        register_handlers: RegisterHtmlTransformHandlersProtocol,
     ) -> None:
         """
         Register any functions required to generate HTML from the tokens.

@@ -2,7 +2,7 @@
 Module to provide for an encapsulation of the atx heading element.
 """
 
-from typing import Callable, Optional, cast
+from typing import Optional, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.position_marker import PositionMarker
@@ -12,6 +12,8 @@ from pymarkdown.tokens.setext_heading_markdown_token import SetextHeadingMarkdow
 from pymarkdown.transform_gfm.transform_state import TransformState
 from pymarkdown.transform_markdown.markdown_transform_context import (
     MarkdownTransformContext,
+    RegisterHtmlTransformHandlersProtocol,
+    RegisterMarkdownTransformHandlersProtocol,
 )
 
 
@@ -82,28 +84,7 @@ class AtxHeadingMarkdownToken(LeafMarkdownToken):
         )
 
     def register_for_markdown_transform(
-        self,
-        registration_function: Callable[
-            [
-                type,
-                Callable[
-                    [MarkdownTransformContext, MarkdownToken, Optional[MarkdownToken]],
-                    str,
-                ],
-                Optional[
-                    Callable[
-                        [
-                            MarkdownTransformContext,
-                            MarkdownToken,
-                            Optional[MarkdownToken],
-                            Optional[MarkdownToken],
-                        ],
-                        str,
-                    ]
-                ],
-            ],
-            None,
-        ],
+        self, registration_function: RegisterMarkdownTransformHandlersProtocol
     ) -> None:
         """
         Register any rehydration handlers for leaf markdown tokens.
@@ -163,14 +144,7 @@ class AtxHeadingMarkdownToken(LeafMarkdownToken):
 
     @staticmethod
     def register_for_html_transform(
-        register_handlers: Callable[
-            [
-                type,
-                Callable[[str, MarkdownToken, TransformState], str],
-                Optional[Callable[[str, MarkdownToken, TransformState], str]],
-            ],
-            None,
-        ]
+        register_handlers: RegisterHtmlTransformHandlersProtocol,
     ) -> None:
         """
         Register any functions required to generate HTML from the tokens.

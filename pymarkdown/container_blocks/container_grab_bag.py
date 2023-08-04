@@ -1,9 +1,10 @@
 """
 Class to provide a "grab bag" for commonly used properties for the Container Block Processor.
 """
-# pylint: disable=too-many-instance-attributes
 import logging
-from typing import Any, Callable, List, Optional, Tuple
+from typing import Any, List, Optional, Tuple
+
+from typing_extensions import Protocol
 
 from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
 from pymarkdown.container_blocks.container_indices import ContainerIndices
@@ -20,6 +21,41 @@ from pymarkdown.tokens.stack_token import StackToken
 POGGER = ParserLogger(logging.getLogger(__name__))
 
 
+# pylint: disable=too-few-public-methods
+class ParseForContainerBlocksProtocol(Protocol):
+    """
+    Protocol to do further parsing for container blocks.
+    """
+
+    # pylint: disable=too-many-arguments
+    def __call__(
+        self,
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        ignore_link_definition_start: bool,
+        parser_properties: ParseBlockPassProperties,
+        container_start_bq_count: int,
+        container_depth: int,
+        adjusted_block_index: Optional[int],
+        initial_block_quote_count: Optional[int],
+        original_line: Optional[str],
+    ) -> Tuple[
+        List[MarkdownToken],
+        Optional[str],
+        Optional[int],
+        Optional[RequeueLineInfo],
+        bool,
+        bool,
+    ]:
+        ...  # pragma: no cover
+
+    # pylint: enable=too-many-arguments
+
+
+# pylint: enable=too-few-public-methods
+
+
+# pylint: disable=too-many-instance-attributes
 # pylint: disable=too-many-public-methods
 class ContainerGrabBag:
     """
@@ -38,27 +74,7 @@ class ContainerGrabBag:
         parser_properties: ParseBlockPassProperties,
         ignore_link_definition_start: bool,
         original_line: str,
-        recurse_fn: Callable[
-            [
-                ParserState,
-                PositionMarker,
-                bool,
-                ParseBlockPassProperties,
-                int,
-                int,
-                Optional[int],
-                Optional[int],
-                Optional[str],
-            ],
-            Tuple[
-                List[MarkdownToken],
-                Optional[str],
-                Optional[int],
-                Optional[RequeueLineInfo],
-                bool,
-                bool,
-            ],
-        ],
+        recurse_fn: ParseForContainerBlocksProtocol,
     ) -> None:
         # Functions
         self.__recurse_fn = recurse_fn
@@ -692,27 +708,7 @@ class ContainerGrabBag:
 
     def get_recurse_fn(
         self,
-    ) -> Callable[
-        [
-            ParserState,
-            PositionMarker,
-            bool,
-            ParseBlockPassProperties,
-            int,
-            int,
-            Optional[int],
-            Optional[int],
-            Optional[str],
-        ],
-        Tuple[
-            List[MarkdownToken],
-            Optional[str],
-            Optional[int],
-            Optional[RequeueLineInfo],
-            bool,
-            bool,
-        ],
-    ]:
+    ) -> ParseForContainerBlocksProtocol:
         """
         xxx
         """

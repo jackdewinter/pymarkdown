@@ -2,7 +2,7 @@
 Module to provide for a leaf element that can be added to markdown parsing stream that handles front matter.
 """
 import logging
-from typing import Callable, Dict, List, Optional, Tuple, cast
+from typing import Dict, List, Optional, Tuple, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
@@ -12,6 +12,8 @@ from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_gfm.transform_state import TransformState
 from pymarkdown.transform_markdown.markdown_transform_context import (
     MarkdownTransformContext,
+    RegisterHtmlTransformHandlersProtocol,
+    RegisterMarkdownTransformHandlersProtocol,
 )
 
 POGGER = ParserLogger(logging.getLogger(__name__))
@@ -116,27 +118,7 @@ class FrontMatterMarkdownToken(LeafMarkdownToken):
 
     def register_for_markdown_transform(
         self,
-        registration_function: Callable[
-            [
-                type,
-                Callable[
-                    [MarkdownTransformContext, MarkdownToken, Optional[MarkdownToken]],
-                    str,
-                ],
-                Optional[
-                    Callable[
-                        [
-                            MarkdownTransformContext,
-                            MarkdownToken,
-                            Optional[MarkdownToken],
-                            Optional[MarkdownToken],
-                        ],
-                        str,
-                    ]
-                ],
-            ],
-            None,
-        ],
+        registration_function: RegisterMarkdownTransformHandlersProtocol,
     ) -> None:
         """
         Register any rehydration handlers for leaf markdown tokens.
@@ -166,14 +148,7 @@ class FrontMatterMarkdownToken(LeafMarkdownToken):
 
     @staticmethod
     def register_for_html_transform(
-        register_handlers: Callable[
-            [
-                type,
-                Callable[[str, MarkdownToken, TransformState], str],
-                Optional[Callable[[str, MarkdownToken, TransformState], str]],
-            ],
-            None,
-        ]
+        register_handlers: RegisterHtmlTransformHandlersProtocol,
     ) -> None:
         """
         Register any functions required to generate HTML from the tokens.

@@ -3,7 +3,7 @@ Module to provide for an encapsulation of the link element.
 """
 
 import logging
-from typing import Callable, List, Optional, cast
+from typing import List, Optional, cast
 
 from pymarkdown.general.constants import Constants
 from pymarkdown.general.parser_helper import ParserHelper
@@ -15,6 +15,8 @@ from pymarkdown.tokens.reference_markdown_token import ReferenceMarkdownToken
 from pymarkdown.transform_gfm.transform_state import TransformState
 from pymarkdown.transform_markdown.markdown_transform_context import (
     MarkdownTransformContext,
+    RegisterHtmlTransformHandlersProtocol,
+    RegisterMarkdownTransformHandlersProtocol,
 )
 
 POGGER = ParserLogger(logging.getLogger(__name__))
@@ -58,28 +60,7 @@ class LinkStartMarkdownToken(ReferenceMarkdownToken):
     # pylint: enable=protected-access
 
     def register_for_markdown_transform(
-        self,
-        registration_function: Callable[
-            [
-                type,
-                Callable[
-                    [MarkdownTransformContext, MarkdownToken, Optional[MarkdownToken]],
-                    str,
-                ],
-                Optional[
-                    Callable[
-                        [
-                            MarkdownTransformContext,
-                            MarkdownToken,
-                            Optional[MarkdownToken],
-                            Optional[MarkdownToken],
-                        ],
-                        str,
-                    ]
-                ],
-            ],
-            None,
-        ],
+        self, registration_function: RegisterMarkdownTransformHandlersProtocol
     ) -> None:
         """
         Register any rehydration handlers for leaf markdown tokens.
@@ -237,14 +218,7 @@ class LinkStartMarkdownToken(ReferenceMarkdownToken):
 
     @staticmethod
     def register_for_html_transform(
-        register_handlers: Callable[
-            [
-                type,
-                Callable[[str, MarkdownToken, TransformState], str],
-                Optional[Callable[[str, MarkdownToken, TransformState], str]],
-            ],
-            None,
-        ]
+        register_handlers: RegisterHtmlTransformHandlersProtocol,
     ) -> None:
         """
         Register any functions required to generate HTML from the tokens.

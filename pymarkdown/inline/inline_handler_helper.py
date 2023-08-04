@@ -2,7 +2,9 @@
 Module to orchestrate the handling of the different inline elements.
 """
 import logging
-from typing import Callable, Dict, List, Optional, Tuple, cast
+from typing import Dict, List, Optional, Tuple, cast
+
+from typing_extensions import Protocol
 
 from pymarkdown.general.constants import Constants
 from pymarkdown.general.parser_helper import ParserHelper
@@ -25,7 +27,25 @@ from pymarkdown.tokens.raw_html_markdown_token import RawHtmlMarkdownToken
 from pymarkdown.tokens.reference_markdown_token import ReferenceMarkdownToken
 from pymarkdown.tokens.special_text_markdown_token import SpecialTextMarkdownToken
 
+# pylint: disable=too-many-lines
+
 POGGER = ParserLogger(logging.getLogger(__name__))
+
+
+# pylint: disable=too-few-public-methods
+class InlineHandlerProtocol(Protocol):
+    """
+    Protocol to handle the various inline sequences.
+    """
+
+    def __call__(
+        self,
+        inline_request: InlineRequest,
+    ) -> InlineResponse:
+        ...  # pragma: no cover
+
+
+# pylint: enable=too-few-public-methods
 
 
 class InlineHandlerHelper:
@@ -36,12 +56,8 @@ class InlineHandlerHelper:
     valid_inline_text_block_sequence_starts = ""
     __valid_inline_simple_text_block_sequence_starts = ""
 
-    __inline_character_handlers: Dict[
-        str, Callable[[InlineRequest], InlineResponse]
-    ] = {}
-    __inline_simple_character_handlers: Dict[
-        str, Callable[[InlineRequest], InlineResponse]
-    ] = {}
+    __inline_character_handlers: Dict[str, InlineHandlerProtocol] = {}
+    __inline_simple_character_handlers: Dict[str, InlineHandlerProtocol] = {}
 
     __inline_processing_needed = (
         f"{EmphasisHelper.inline_emphasis}{LinkParseHelper.link_label_start}"
@@ -119,13 +135,13 @@ class InlineHandlerHelper:
     @staticmethod
     def __get_handler(
         inline_character: str,
-    ) -> Callable[[InlineRequest], InlineResponse]:
+    ) -> InlineHandlerProtocol:
         return InlineHandlerHelper.__inline_character_handlers[inline_character]
 
     @staticmethod
     def register_handlers(
         inline_character: str,
-        start_token_handler: Callable[[InlineRequest], InlineResponse],
+        start_token_handler: InlineHandlerProtocol,
         is_simple_handler: bool = False,
     ) -> None:
         """
