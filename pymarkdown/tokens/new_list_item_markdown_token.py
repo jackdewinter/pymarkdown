@@ -2,8 +2,6 @@
 Module to provide for an encapsulation of the new list item element.
 """
 
-from typing import Callable, Optional
-
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.tokens.container_markdown_token import ContainerMarkdownToken
