@@ -2,13 +2,16 @@
 Module to provide for the ability to search the text for a link.
 """
 import logging
-from typing import Callable, List, Optional, Tuple, cast
+from typing import List, Optional, Tuple, cast
 
 from pymarkdown.general.constants import Constants
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.inline.emphasis_helper import EmphasisHelper
-from pymarkdown.links.link_create_helper import LinkCreateHelper
+from pymarkdown.links.link_create_helper import (
+    LinkCreateHelper,
+    ProcessSimpleInlineProtocol,
+)
 from pymarkdown.links.link_helper_properties import LinkHelperProperties
 from pymarkdown.links.link_parse_helper import LinkParseHelper
 from pymarkdown.tokens.email_autolink_markdown_token import EmailAutolinkMarkdownToken
@@ -47,7 +50,7 @@ class LinkSearchHelper:
         remaining_line: str,
         tabified_remaining_line: Optional[str],
         current_string_unresolved: str,
-        xx_fn: Callable[[str], str],
+        process_inlines_fn: ProcessSimpleInlineProtocol,
         tabified_text: Optional[str],
     ) -> Tuple[int, bool, Optional[MarkdownToken], bool]:
         """
@@ -97,7 +100,7 @@ class LinkSearchHelper:
                     remaining_line,
                     tabified_remaining_line,
                     current_string_unresolved,
-                    xx_fn,
+                    process_inlines_fn,
                     updated_index,
                     tabified_text,
                 )
@@ -132,7 +135,7 @@ class LinkSearchHelper:
         remaining_line: str,
         tabified_remaining_line: Optional[str],
         current_string_unresolved: str,
-        xx_fn: Callable[[str], str],
+        process_inlines_fn: ProcessSimpleInlineProtocol,
         updated_index: int,
         tabified_text: Optional[str],
     ) -> Tuple[bool, bool, int, Optional[MarkdownToken], bool, Optional[str]]:
@@ -167,7 +170,7 @@ class LinkSearchHelper:
                     remaining_line,
                     tabified_remaining_line,
                     current_string_unresolved,
-                    xx_fn,
+                    process_inlines_fn,
                     tabified_text,
                 )
                 if updated_index != -1:
@@ -281,7 +284,7 @@ class LinkSearchHelper:
         remaining_line: str,
         tabified_remaining_line: Optional[str],
         current_string_unresolved: str,
-        xx_fn: Callable[[str], str],
+        process_inlines_fn: ProcessSimpleInlineProtocol,
         tabified_text: Optional[str],
     ) -> Tuple[int, Optional[MarkdownToken], bool]:
         """
@@ -326,7 +329,7 @@ class LinkSearchHelper:
                 ind,
                 remaining_line,
                 current_string_unresolved,
-                xx_fn,
+                process_inlines_fn,
                 lhp,
                 update_index,
             )

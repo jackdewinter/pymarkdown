@@ -2,7 +2,9 @@
 Module to provide for the creation of a new link.
 """
 import logging
-from typing import Callable, List, Optional, Tuple, cast
+from typing import List, Optional, Tuple, cast
+
+from typing_extensions import Protocol
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
@@ -20,9 +22,24 @@ from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
+
 # pylint: disable=too-few-public-methods
+class ProcessSimpleInlineProtocol(Protocol):
+    """
+    Protocol to allow for simple processing of inline elements.
+    """
+
+    def __call__(
+        self,
+        source_text: str,
+    ) -> str:
+        ...  # pragma: no cover
 
 
+# pylint: enable=too-few-public-methods
+
+
+# pylint: disable=too-few-public-methods
 class LinkCreateHelper:
     """
     Class to provide for the creation of a new link.
@@ -41,7 +58,7 @@ class LinkCreateHelper:
         ind: int,
         remaining_line: str,
         current_string_unresolved: str,
-        xx_fn: Callable[[str], str],
+        process_inlines_fn: ProcessSimpleInlineProtocol,
         lhp: LinkHelperProperties,
         update_index: int,
     ) -> Tuple[int, Optional[MarkdownToken], bool]:
@@ -98,7 +115,7 @@ class LinkCreateHelper:
                 ind,
                 remaining_line,
                 text_from_blocks_raw,
-                xx_fn,
+                process_inlines_fn,
                 line_number,
                 column_number,
                 current_string_unresolved,
@@ -135,7 +152,7 @@ class LinkCreateHelper:
         ind: int,
         remaining_line: str,
         text_from_blocks_raw: str,
-        xx_fn: Callable[[str], str],
+        process_inlines_fn: ProcessSimpleInlineProtocol,
         line_number: int,
         column_number: int,
         current_string_unresolved: str,
@@ -149,7 +166,7 @@ class LinkCreateHelper:
             image_alt_text,
             text_from_blocks_raw,
         ) = LinkCreateHelper.__consume_text_for_image_alt_text(
-            inline_blocks, ind, remaining_line, text_from_blocks_raw, xx_fn
+            inline_blocks, ind, remaining_line, text_from_blocks_raw, process_inlines_fn
         )
         POGGER.debug("\n>>__consume_text_for_image_alt_text>>$>>", image_alt_text)
 
@@ -174,7 +191,7 @@ class LinkCreateHelper:
         ind: int,
         remaining_line: str,
         text_from_blocks_raw: str,
-        xx_fn: Callable[[str], str],
+        process_inlines_fn: ProcessSimpleInlineProtocol,
     ) -> Tuple[str, str]:
         """
         Consume text from the inline blocks to use as part of the image's alt text.
@@ -201,7 +218,7 @@ class LinkCreateHelper:
             POGGER.debug(">>after>>$>>", image_alt_text)
         else:
             POGGER.debug(">>composing>>$>>", text_from_blocks_raw)
-            image_alt_text = xx_fn(text_from_blocks_raw)
+            image_alt_text = process_inlines_fn(text_from_blocks_raw)
             image_alt_text = ParserHelper.resolve_all_from_text(image_alt_text)
             image_alt_text = InlineHelper.append_text(
                 "", image_alt_text, add_text_signature=False

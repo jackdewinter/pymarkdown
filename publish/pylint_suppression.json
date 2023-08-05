@@ -7,6 +7,7 @@
             "too-many-public-methods": 1
         },
         "pymarkdown/application_file_scanner.py": {
+            "too-few-public-methods": 1,
             "too-many-arguments": 2
         },
         "pymarkdown/application_logging.py": {},
@@ -41,9 +42,10 @@
             "too-many-arguments": 1
         },
         "pymarkdown/container_blocks/container_grab_bag.py": {
+            "too-few-public-methods": 1,
+            "too-many-arguments": 2,
             "too-many-instance-attributes": 1,
-            "too-many-public-methods": 1,
-            "too-many-arguments": 1
+            "too-many-public-methods": 1
         },
         "pymarkdown/container_blocks/container_helper.py": {
             "too-few-public-methods": 1
@@ -74,6 +76,7 @@
         "pymarkdown/extensions/markdown_strikethrough.py": {},
         "pymarkdown/extensions/markdown_tables.py": {},
         "pymarkdown/extensions/pragma_token.py": {
+            "too-few-public-methods": 1,
             "too-many-arguments": 2
         },
         "pymarkdown/extensions/task_list_items.py": {},
@@ -110,6 +113,7 @@
         "pymarkdown/inline/inline_backtick_helper.py": {},
         "pymarkdown/inline/inline_character_reference_helper.py": {},
         "pymarkdown/inline/inline_handler_helper.py": {
+            "too-few-public-methods": 1,
             "too-many-arguments": 9,
             "too-many-locals": 1
         },
@@ -162,7 +166,7 @@
         },
         "pymarkdown/leaf_blocks/thematic_leaf_block_processor.py": {},
         "pymarkdown/links/link_create_helper.py": {
-            "too-few-public-methods": 1,
+            "too-few-public-methods": 2,
             "too-many-arguments": 3
         },
         "pymarkdown/links/link_helper_properties.py": {
@@ -417,7 +421,10 @@
             "too-few-public-methods": 1,
             "too-many-arguments": 1
         },
-        "pymarkdown/transform_markdown/markdown_transform_context.py": {},
+        "pymarkdown/transform_markdown/markdown_transform_context.py": {
+            "too-few-public-methods": 9,
+            "too-many-arguments": 1
+        },
         "pymarkdown/transform_markdown/transform_block_quote.py": {},
         "pymarkdown/transform_markdown/transform_containers.py": {
             "too-few-public-methods": 1,
@@ -441,8 +448,8 @@
     "disables-by-name": {
         "too-many-instance-attributes": 21,
         "too-many-public-methods": 4,
-        "too-many-arguments": 183,
-        "too-few-public-methods": 25,
+        "too-few-public-methods": 39,
+        "too-many-arguments": 185,
         "too-many-locals": 18,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 2,

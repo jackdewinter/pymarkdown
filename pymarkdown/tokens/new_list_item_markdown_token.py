@@ -2,18 +2,19 @@
 Module to provide for an encapsulation of the new list item element.
 """
 
-from typing import Callable, Optional
-
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.tokens.container_markdown_token import ContainerMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_gfm.transform_state import TransformState
+from pymarkdown.transform_markdown.markdown_transform_context import (
+    RegisterHtmlTransformHandlersProtocol,
+)
 
 
 class NewListItemMarkdownToken(ContainerMarkdownToken):
     """
-    Class to provide for an encapsulation of the new list item element.
+    Class to provide for an encapsulation of the new list item element..
     """
 
     def __init__(
@@ -71,14 +72,7 @@ class NewListItemMarkdownToken(ContainerMarkdownToken):
 
     @staticmethod
     def register_for_html_transform(
-        register_handlers: Callable[
-            [
-                type,
-                Callable[[str, MarkdownToken, TransformState], str],
-                Optional[Callable[[str, MarkdownToken, TransformState], str]],
-            ],
-            None,
-        ]
+        register_handlers: RegisterHtmlTransformHandlersProtocol,
     ) -> None:
         """
         Register any functions required to generate HTML from the tokens.

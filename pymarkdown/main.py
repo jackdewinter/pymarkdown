@@ -15,7 +15,10 @@ from application_properties.application_properties_utilities import (
     ApplicationPropertiesUtilities,
 )
 
-from pymarkdown.application_file_scanner import ApplicationFileScanner
+from pymarkdown.application_file_scanner import (
+    ApplicationFileScanner,
+    ApplicationFileScannerOutputProtocol,
+)
 from pymarkdown.application_logging import ApplicationLogging
 from pymarkdown.extension_manager.extension_manager import ExtensionManager
 from pymarkdown.extensions.pragma_token import PragmaToken
@@ -468,8 +471,14 @@ class PyMarkdownLint:
                     did_error_scanning_files,
                 ) = ApplicationFileScanner.determine_files_to_scan_with_args(
                     args,
-                    self.__handle_file_scanner_output,
-                    self.__handle_file_scanner_error,
+                    cast(
+                        ApplicationFileScannerOutputProtocol,
+                        self.__handle_file_scanner_output,
+                    ),
+                    cast(
+                        ApplicationFileScannerOutputProtocol,
+                        self.__handle_file_scanner_error,
+                    ),
                 )
             if did_error_scanning_files:
                 self.__handle_error(

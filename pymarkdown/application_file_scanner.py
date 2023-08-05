@@ -7,9 +7,27 @@ import glob
 import logging
 import os
 import sys
-from typing import Callable, List, Optional, Set, Tuple
+from typing import List, Optional, Set, Tuple
+
+from typing_extensions import Protocol
 
 LOGGER = logging.getLogger(__name__)
+
+
+# pylint: disable=too-few-public-methods
+class ApplicationFileScannerOutputProtocol(Protocol):
+    """
+    Protocol to provide for redirection of output (standard or error).
+    """
+
+    def __call__(
+        self,
+        output_string: str,
+    ) -> None:
+        ...  # pragma: no cover
+
+
+# pylint: enable=too-few-public-methods
 
 
 class ApplicationFileScanner:
@@ -20,8 +38,8 @@ class ApplicationFileScanner:
     @staticmethod
     def determine_files_to_scan_with_args(
         args: argparse.Namespace,
-        handle_output: Callable[[str], None],
-        handle_error: Callable[[str], None],
+        handle_output: ApplicationFileScannerOutputProtocol,
+        handle_error: ApplicationFileScannerOutputProtocol,
     ) -> Tuple[List[str], bool]:
         """
         Determine the files to scan based on the arguments provided by the `add_default_command_line_arguments` function.
@@ -42,8 +60,8 @@ class ApplicationFileScanner:
         recurse_directories: bool,
         eligible_extensions: str,
         only_list_files: bool,
-        handle_output: Callable[[str], None],
-        handle_error: Callable[[str], None],
+        handle_output: ApplicationFileScannerOutputProtocol,
+        handle_error: ApplicationFileScannerOutputProtocol,
     ) -> Tuple[List[str], bool]:
         """
         Determine the files to scan, and how to scan for those files.
@@ -94,7 +112,7 @@ class ApplicationFileScanner:
         files_to_parse: Set[str],
         recurse_directories: bool,
         eligible_extensions: List[str],
-        handle_error: Callable[[str], None],
+        handle_error: ApplicationFileScannerOutputProtocol,
     ) -> bool:
         did_find_any = False
         LOGGER.info("Determining files to scan for path '%s'.", next_path)
@@ -269,8 +287,8 @@ class ApplicationFileScanner:
     def __handle_main_list_files(
         only_list_files: bool,
         files_to_scan: List[str],
-        handle_output: Callable[[str], None],
-        handle_error: Callable[[str], None],
+        handle_output: ApplicationFileScannerOutputProtocol,
+        handle_error: ApplicationFileScannerOutputProtocol,
     ) -> None:
         if only_list_files:
             LOGGER.info("Sending list of files that would have been scanned to stdout.")
