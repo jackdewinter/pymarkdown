@@ -23,30 +23,29 @@ broken references.
 
 ## How it works
 
-This rule validates all references in the scanned Markdown files checking the existence of the referenced image or
-heading.
+This rule validates all references in the scanned Markdown files, checking the existence of the referenced image or heading.
 
 ### Local Images and Files
 
-When the linter classifies a token as an image the rule uses `os.path.exists` to check if that file exists in
-the filesystem. If it does *not* exist it reports a linter error for that dangling reference.
+When the linter classifies a token as an image, the rule uses `os.path.exists` to check if that file exists in
+the filesystem. If it does *not* exist, it reports a linter error for that dangling reference.
 
 ### Anchors and Headings
 
-This validation is a bit more involved, because it requires knowledge of all headings in all Markdown documents. But
-a linter only scans each file once. This means, the rule might be validating a reference to a file that has not been
-scanned and, therefore, its headings aren't known, yet. To work around this limitation, anchors are stored in a global
-map grouping them by file. When an anchor (link to a heading) is validated, the rule checks to see if the file exists.
-If the file exists and the global map has already been process and contains anchors for that file, all headings are 
-compared to the anchor link in question using the kebab case rule for anchors. If none of the headings match the anchor,
-an error is reported.
+Validating anchors is a bit more complex, as it requires knowledge of all headings in all Markdown documents. 
+However, the linter scans each file only once. This means the rule might validate a reference to a file that hasn't
+been scanned yet, and its headings are not known. 
 
-If the map does not contain any headings for the referenced file, the anchor link is stored in a global map of anchor
-links grouped by referenced file. When the linter eventually scans the referenced file, all headings are processed as
-before and now all stored anchors links for this file are validated.
+To address this, anchors are stored in a global map grouped by file. 
+When an anchor (link to a heading) is validated, the rule checks if the file exists and is a Markdown file.
+There are two possible cases:
 
-When all markdown files have been scanned, all anchor links have been either validated or reported as errors. Either at
-the moment of their initial scanning, or at the moment when their referenced file + heading was scanned.
+1. If the headings of the file have already been processed, the rule compares the anchor with all headings of
+the referenced file using kebab case comparison. If none of the headings match the anchor, an error is reported.
+
+2. If the map does not contain headings for the referenced file, the anchor link is stored in a separate list.
+When the linter scans the referenced file later, all headings are processed as before and compared with the stored 
+anchors. Like before, if an anchor in the list does not match a heading, an error will be reported.
 
 ## Examples
 
