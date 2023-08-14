@@ -30,7 +30,8 @@ existence of the referenced image or heading.
 
 When the linter classifies a token as an image, the rule uses `os.path.exists`
 to check if that file exists in the filesystem. If it does *not* exist, it
-reports a linter error for that dangling reference.
+reports a linter error for that dangling reference. Base for all paths is the
+current working directory of the pymarkdown process.
 
 ### Anchors and Headings
 
