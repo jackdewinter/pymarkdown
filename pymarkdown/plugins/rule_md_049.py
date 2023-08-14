@@ -21,6 +21,8 @@ from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 NOT_A_VALID_HEADING = "Wrong reference: # anchor not a valid heading"
 
+DUPLICATE_HEADING = "Multiple headings found"
+
 FILE_DOES_NOT_EXIST = "Dangling reference: file does not exist!"
 
 TriggeredRuleParams = Tuple[str, int, int, str, str, str, Optional[str]]
@@ -263,11 +265,19 @@ class AnchorValidator:
             return
         if headings:
             # Case A: we already processed the referenced file and know the headlines
-            if not [
-                heading for heading in headings if compare_anchor(link_anchor, heading)
-            ]:
+            headings_count = len(
+                [
+                    heading
+                    for heading in headings
+                    if compare_anchor(link_anchor, heading)
+                ]
+            )
+            if headings_count == 0:
                 # Report invalid heading reference
                 self.__report_error(context, token, NOT_A_VALID_HEADING)
+            elif headings_count > 1:
+                # Report invalid heading reference
+                self.__report_error(context, token, DUPLICATE_HEADING)
         else:
             # Case B: we did not process the referenced file and need to store this reference check until we
             #         finished the referenced file.
@@ -286,8 +296,16 @@ class AnchorValidator:
         """
         anchors = self.get_anchor_map(scan_file)
         for link_anchor in anchors.keys():
-            if not [
-                heading for heading in headings if compare_anchor(link_anchor, heading)
-            ]:
+            headings_count = len(
+                [
+                    heading
+                    for heading in headings
+                    if compare_anchor(link_anchor, heading)
+                ]
+            )
+            if headings_count == 0:
                 for trigger_params in anchors[link_anchor]:
                     yield trigger_params
+            elif headings_count > 1:
+                for trigger_params in anchors[link_anchor]:
+                    yield (*trigger_params[:-1], DUPLICATE_HEADING)

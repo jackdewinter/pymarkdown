@@ -7,3 +7,10 @@
 ## Headline 12
 
 Text
+
+[duplicate](#headline-4)
+
+## Headline 4
+
+<!--- pyml disable-next-line no-duplicate-heading -->
+### Headline 4
