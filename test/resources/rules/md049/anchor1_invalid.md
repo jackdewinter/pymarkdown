@@ -6,4 +6,15 @@
 
 ## Headline 12
 
+<!--- pyml disable-next-line no-duplicate-heading -->
+### Headline 12
+
 Text
+
+* [duplicate1](#headline-12)
+* [duplicate2](#headline-4)
+
+## Headline 4
+
+<!--- pyml disable-next-line no-duplicate-heading -->
+### Headline 4

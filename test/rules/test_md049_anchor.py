@@ -97,9 +97,12 @@ def test_md049_invalid_anchors():
     # Assert
     expected_return_code = 1
     expected_output = f"""{path1}:5:1: MD049: Local URIs should be valid [Wrong reference: # anchor not a valid heading] (validate-refs)
+{path1}:14:3: MD049: Local URIs should be valid [Multiple headings found] (validate-refs)
+{path1}:15:3: MD049: Local URIs should be valid [Multiple headings found] (validate-refs)
 {path2}:3:1: MD049: Local URIs should be valid [Wrong reference: # anchor not a valid heading] (validate-refs)
 {path1}:3:1: MD049: Local URIs should be valid [Wrong reference: # anchor not a valid heading] (validate-refs)
-{path2}:5:1: MD049: Local URIs should be valid [Wrong reference: # anchor not a valid heading] (validate-refs)
+{path2}:5:1: MD049: Local URIs should be valid [Multiple headings found] (validate-refs)
+{path2}:7:1: MD049: Local URIs should be valid [Wrong reference: # anchor not a valid heading] (validate-refs)
 """
     expected_error = ""
 
