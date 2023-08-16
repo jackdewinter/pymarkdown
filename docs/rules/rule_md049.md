@@ -124,6 +124,7 @@ the `docs.md`. The heading in `docs.md` after kebab case conversion is
 | `plugins.md049.`         |
 | `plugins.validate-refs.` |
 
-| Value Name    | Type      | Default  | Description                         |
-|---------------|-----------|----------|-------------------------------------|
-| `enabled`     | `boolean` | `False`  | Whether the plugin rule is enabled. |
+| Value Name | Type      | Default | Description                                             |
+|------------|-----------|---------|---------------------------------------------------------|
+| `enabled`  | `boolean` | `False` | Whether the plugin rule is enabled.                     |
+| `regex`    | `string`  |         | Regex to exclude (whitlist) some links from validation. |

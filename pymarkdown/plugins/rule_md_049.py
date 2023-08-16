@@ -39,6 +39,16 @@ class RuleMd049(RulePlugin):
         self.anchor_validator = AnchorValidator(
             self.report_next_token_error, self._create_triggered_rule_params
         )
+        self.__whitelist_regex: Optional[Pattern[str]] = None
+
+    def initialize_from_config(self) -> None:
+        """
+        Event to allow the plugin to load configuration information.
+        """
+        regex_string = self.plugin_configuration.get_string_property(
+            "regex", default_value=""
+        )
+        self.__whitelist_regex = re.compile(regex_string) if regex_string else None
 
     def completed_file(self, context: PluginScanContext) -> None:
         """
@@ -79,8 +89,13 @@ class RuleMd049(RulePlugin):
         if not token.is_inline_image and not token.is_inline_link:
             # Not a reference so nothing to do here
             return
+        uri = self._extract_link_uri(token)
 
-        link_scheme, link_uri, link_anchor = self._extract_link_uri(token)
+        if self.__whitelist_regex and self.__whitelist_regex.match(uri):
+            return
+
+        link_scheme, link_uri, link_anchor = self._split_link_uri(uri)
+
         if link_scheme != "":
             # External link so nothing to do here
             return
@@ -144,9 +159,13 @@ class RuleMd049(RulePlugin):
         return os.path.realpath(path)
 
     @staticmethod
-    def _extract_link_uri(token: MarkdownToken) -> Tuple[str, str, Optional[str]]:
+    def _extract_link_uri(token: MarkdownToken) -> str:
         ref_token = cast(ReferenceMarkdownToken, token)
-        parsed_uri = urllib.parse.urlparse(ref_token.link_uri)
+        return ref_token.link_uri
+
+    @staticmethod
+    def _split_link_uri(link_uri: str) -> Tuple[str, str, Optional[str]]:
+        parsed_uri = urllib.parse.urlparse(link_uri)
         return parsed_uri.scheme, parsed_uri.path, parsed_uri.fragment
 
 
