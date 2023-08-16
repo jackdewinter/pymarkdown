@@ -24,25 +24,35 @@ identifying and flagging any invalid or broken references.
 ## How it works
 
 This rule validates all references in the scanned Markdown files, checking the
-existence of the referenced image or heading.
+existence of the referenced asset/image or heading.
 
-### Local Images and Files
+### Local Images and asset files
 
-When the linter classifies a token as an image, the rule uses `os.path.exists`
-to check if that file exists in the filesystem. If it does *not* exist, it
-reports a linter error for that dangling reference. Base for all paths is the
-current working directory of the pymarkdown process.
+When the linter classifies a token as an image or a linked asset with a relative
+URL, the rule uses `os.path.exists` to check if that file exists in the
+filesystem. It uses the current working directory of the pymarkdown process as
+its base path and concatenates the URL of the referenced file. If it does *not*
+exist, it reports a linter error for that dangling reference.
+Therefore, linked images and assets *don't* need to be in a special `asset`
+folder.
+
+You can whitelist (exclude) URLs by regex. See [Configuration](#configuration).
+
+For example, to not check any URLs containing `Sandbox`, just set
+
+```ini
+plugins.validate-refs.regex=".*\/Sandbox/.*"
+```
 
 ### Anchors and Headings
 
-Validating anchors is a bit more complex, as it requires knowledge of all
-headings in all Markdown documents. However, the linter scans each file only
-once. This means the rule might validate a reference to a file that hasn't
-been scanned yet, and its headings are not known.
+This plugin also supports the validation of anchors to markdown headings.
+The heading could be in the same markdown file or in another markdown file that
+is scanned in the same pymarkdown run.
 
-To address this, anchors are stored in a global map grouped by file.
-When an anchor (link to a heading) is validated, the rule checks if the file
-exists and is a Markdown file.
+To scan each file only once, all anchors are stored in a global map grouped by
+filename. When an anchor (link to a heading) is validated, the rule checks if
+the file exists and is a Markdown file.
 
 There are two possible cases:
 
@@ -84,8 +94,9 @@ Here are the basic config options.
 ```
 
 In this case the `readme.md` file has an anchor link to a heading `config` in
-the `docs.md`, but that heading is actually `Configuration`. This fails because
-`config` is not `configuration`.
+the `docs.md`, but that heading is actually `Configuration`.
+Therefore this rule will produce an error to caputre this, because
+`#config` does not match the heading `configuration`.
 
 ### Correct Scenarios
 
@@ -117,6 +128,18 @@ In this case the `readme.md` file has an anchor link `basic-configuration` in
 the `docs.md`. The heading in `docs.md` after kebab case conversion is
 `basic-configuration`, which matches the anchor link.
 
+It is also possible to lint to local headings.
+
+```Markdown
+# Documentation
+
+* [Chapter 1](#chapter-1)
+
+## Chapter 1
+
+Some text ...
+```
+
 ## Configuration
 
 | Prefixes                 |
@@ -124,6 +147,7 @@ the `docs.md`. The heading in `docs.md` after kebab case conversion is
 | `plugins.md049.`         |
 | `plugins.validate-refs.` |
 
-| Value Name    | Type      | Default  | Description                         |
-|---------------|-----------|----------|-------------------------------------|
-| `enabled`     | `boolean` | `False`  | Whether the plugin rule is enabled. |
+| Value Name | Type      | Default | Description                                             |
+|------------|-----------|---------|---------------------------------------------------------|
+| `enabled`  | `boolean` | `False` | Whether the plugin rule is enabled.                     |
+| `regex`    | `string`  |         | Regex to exclude (whitlist) some links from validation. |
