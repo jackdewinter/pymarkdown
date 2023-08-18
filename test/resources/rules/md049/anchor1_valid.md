@@ -73,3 +73,27 @@ Text
 ## TB-TX  `ZTB10_CC02`- Multiple changes of PEMs  
 
 ## TB-TX `ZTB20_ZPZT`: Create and  Change  ZP/ZT-BOMs
+
+## Overview
+
+[#overview](#overview)
+
+> Das kleine #overview ist in meinen Augen schon korrekt, nach dem # ist immer
+> alles in klein! Sehe ich also anders als Markus
+
+## Auflöseprofile
+
+[#aufl%C3%B6seprofile](#aufl%C3%B6seprofile) den Link gibt GIT vor und
+funktioniert, wird aber als Fehler erkannt
+
+> Sonderzeichen sollen tatsächlich funktionieren, eventuell/am besten sogar in
+> beiden Formen (denn das ist ja nur URI encoding)
+
+[#auflöseprofile](#auflöseprofile) hat bislang funktioniert und wurde nicht
+erkannt, wird aber in der neuen Version als Fehler erkannt
+
+## Object key and object version identifier (/DTBOM/SAP_OBJ_KEY & /DTBOM/SAP_OBJ_VRS)
+
+[The SAP object key](#object-key-and-object-version-identifier-dtbomsap_obj_key--dtbomsap_obj_vrs)
+das hat bislang funktioniert und wurde nicht erkannt, wird aber in der neuen
+Version als Fehler erkannt

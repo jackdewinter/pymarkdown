@@ -11,7 +11,7 @@ def test_german_umlaut():
     # Arrange
     text = "Äp\u2764fel  \xA1 knödel \xA0 sind \xA0 lecker \u2764"
     # Act
-    result = compare_anchor("äpfel---knödel---sind---lecker-", text)
+    result = compare_anchor("%C3%A4pfel---kn%C3%B6del---sind---lecker-", text)
     # Assert
     assert result
 

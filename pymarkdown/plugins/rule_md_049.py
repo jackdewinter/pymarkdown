@@ -194,7 +194,9 @@ class HeadingProcessor:
             self.__start_token = None
         elif self.__start_token and token.is_text:
             text_token = cast(TextMarkdownToken, token)
-            self.__heading_text += text_token.token_text
+            self.__heading_text += html.unescape(
+                ParserHelper.resolve_all_from_text(text_token.token_text)
+            )
         elif self.__start_token and token.is_inline_code_span:
             inline_code_token = cast(InlineCodeSpanMarkdownToken, token)
             # Restore inline code element to create correct github link_fragment
@@ -233,6 +235,7 @@ def compare_anchor(anchor: str, headline: str) -> bool:
     # cleaned = SPACE_REGEX.sub('-', cleaned)
     cleaned = SPECIAL_SPACE_REGEX.sub("-", cleaned)
     cleaned = SPECIAL_CHAR_REGEX.sub("", cleaned)
+    cleaned = urllib.parse.quote(cleaned)
     return cleaned == anchor
 
 
