@@ -2,7 +2,7 @@
 Module to provide a tokenization of a markdown-encoded string.
 """
 
-from abc import ABC, abstractmethod
+from abc import ABC, abstractmethod, abstractproperty
 from typing import List, Optional
 
 from pymarkdown.general.parser_helper import ParserHelper
@@ -14,7 +14,7 @@ class SourceProvider(ABC):
     information about the input source.
     """
 
-    @abstractmethod
+    @abstractproperty
     def is_at_end_of_file(self) -> bool:
         """
         Whether the provider has reached the end of the input.
@@ -37,6 +37,7 @@ class InMemorySourceProvider(SourceProvider):
             ParserHelper.newline_character, 1
         )
 
+    @property
     def is_at_end_of_file(self) -> bool:
         """
         Whether the provider has reached the end of the input.
@@ -48,7 +49,7 @@ class InMemorySourceProvider(SourceProvider):
         Get the next line from the source provider.
         """
         token_to_use = None
-        if not self.is_at_end_of_file():
+        if not self.is_at_end_of_file:
             token_to_use = self.__next_line_tuple[0]
             if len(self.__next_line_tuple) == 2:
                 self.__next_line_tuple = self.__next_line_tuple[1].split(
@@ -76,9 +77,15 @@ class FileSourceProvider(SourceProvider):
                 next_line = next_line[:-1]
             self.__read_lines.append(next_line)
 
+        self.__did_final_line_end_with_newline = did_line_end_in_newline
         if did_line_end_in_newline:
             self.__read_lines.append("")
 
+    @property
+    def did_final_line_end_with_newline(self) -> bool:
+        return self.__did_final_line_end_with_newline
+
+    @property
     def is_at_end_of_file(self) -> bool:
         """
         Whether the provider has reached the end of the input.
@@ -90,7 +97,7 @@ class FileSourceProvider(SourceProvider):
         Get the next line from the source provider.
         """
         token_to_use = None
-        if not self.is_at_end_of_file():
+        if not self.is_at_end_of_file:
             token_to_use = self.__read_lines[self.__read_index]
             self.__read_index += 1
         return token_to_use

@@ -2,9 +2,11 @@
 Module to provide for an element that can be added to markdown parsing stream.
 """
 from enum import Enum
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from pymarkdown.general.position_marker import PositionMarker
+from pymarkdown.plugin_manager.bad_plugin_fix_error import BadPluginFixError
+from pymarkdown.plugin_manager.plugin_modify_context import PluginModifyContext
 
 
 class MarkdownTokenClass(Enum):
@@ -575,6 +577,31 @@ class MarkdownToken:
         Returns whether the current token is an image element.
         """
         return self.token_name == MarkdownToken._token_inline_image
+
+    def modify_token(
+        self,
+        context: PluginModifyContext,
+        field_name: str,
+        field_value: Union[str, int],
+    ) -> bool:
+        """
+        Within a given context, modify an existing token.
+        """
+        # By design, tokens can only be modified in fix mode during the token pass.
+        if not context.in_fix_mode:
+            raise BadPluginFixError(
+                f"Token '{self.__token_name}' can only be modified in fix mode."
+            )
+        if context.is_during_line_pass:
+            raise BadPluginFixError(
+                f"Token '{self.__token_name}' can only be modified during the token pass in fix mode."
+            )
+
+        return self._modify_token(field_name, field_value)
+
+    def _modify_token(self, field_name: str, field_value: Union[str, int]) -> bool:
+        _ = field_name, field_value
+        return False
 
     def generate_close_markdown_token_from_markdown_token(
         self,

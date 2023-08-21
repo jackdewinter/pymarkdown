@@ -1,11 +1,12 @@
 """
-Module to implement a sample plugin that has a bad next_line function.
+Module to implement a sample plugin that has a bad next_line function the reports
+a scan error during fix mode.
 """
 from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 
 
-class BadNextLine(RulePlugin):
+class BadNextLineFix(RulePlugin):
     """
     Class to implement a sample plugin that has a bad starting_new_file function.
     """
@@ -23,8 +24,9 @@ class BadNextLine(RulePlugin):
             plugin_supports_fix=True,
         )
 
-    def next_line(self, context, line):
+    def next_line(self, context, line) -> None:
         """
         Event that a new line is being processed.
         """
-        raise Exception("bad next_line")
+        if context.in_fix_mode:
+            self.report_next_line_error(context, 0, -1)

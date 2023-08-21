@@ -214,12 +214,16 @@
         },
         "pymarkdown/main.py": {
             "too-many-instance-attributes": 1,
+            "too-many-arguments": 2,
             "broad-exception-caught": 3
         },
         "pymarkdown/plugin_manager/__init__.py": {},
         "pymarkdown/plugin_manager/bad_plugin_error.py": {
             "too-many-arguments": 1
         },
+        "pymarkdown/plugin_manager/bad_plugin_fix_error.py": {},
+        "pymarkdown/plugin_manager/fix_line_record.py": {},
+        "pymarkdown/plugin_manager/fix_token_record.py": {},
         "pymarkdown/plugin_manager/found_plugin.py": {
             "too-many-instance-attributes": 1
         },
@@ -228,14 +232,18 @@
         },
         "pymarkdown/plugin_manager/plugin_manager.py": {
             "too-many-instance-attributes": 1,
-            "too-many-arguments": 2
+            "too-many-arguments": 3
+        },
+        "pymarkdown/plugin_manager/plugin_modify_context.py": {
+            "deprecated-decorator": 2
         },
         "pymarkdown/plugin_manager/plugin_scan_context.py": {
-            "too-many-arguments": 1
+            "too-many-instance-attributes": 1,
+            "too-many-arguments": 3
         },
         "pymarkdown/plugin_manager/plugin_scan_failure.py": {},
         "pymarkdown/plugin_manager/rule_plugin.py": {
-            "too-many-arguments": 1
+            "too-many-arguments": 2
         },
         "pymarkdown/plugins/__init__.py": {},
         "pymarkdown/plugins/plugin_one.py": {},
@@ -446,14 +454,15 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-instance-attributes": 21,
+        "too-many-instance-attributes": 22,
         "too-many-public-methods": 4,
         "too-few-public-methods": 39,
-        "too-many-arguments": 185,
+        "too-many-arguments": 191,
         "too-many-locals": 18,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 2,
         "protected-access": 23,
-        "broad-exception-caught": 3
+        "broad-exception-caught": 3,
+        "deprecated-decorator": 2
     }
 }

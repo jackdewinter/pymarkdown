@@ -25,13 +25,24 @@ class MainPresentation:
         print(error_string, file=sys.stderr)
 
     def format_scan_error(
-        self, next_file: str, this_exception: Exception
+        self,
+        next_file: str,
+        this_exception: Exception,
+        show_extended_information: bool = False,
     ) -> Optional[str]:
         """
         Format a scan error for display.  Returning a value of None means that
         the function has handled any required output.
         """
-        return f"{type(this_exception).__name__} encountered while scanning '{next_file}':\n{this_exception}"
+        formatted_error = f"{type(this_exception).__name__} encountered while scanning '{next_file}':\n{this_exception}"
+        if show_extended_information:
+            current_cause = this_exception.__cause__
+            while current_cause:
+                formatted_error += (
+                    f"\nCaused by: {type(current_cause).__name__}:\n   {current_cause}"
+                )
+                current_cause = current_cause.__cause__
+        return formatted_error
 
     def print_pragma_failure(
         self, scan_file: str, line_number: int, pragma_error: str
@@ -49,3 +60,9 @@ class MainPresentation:
             f"{scan_failure.scan_file}:{scan_failure.line_number}:{scan_failure.column_number}: "
             + f"{scan_failure.rule_id}: {scan_failure.rule_description}{scan_failure.extra_error_information} ({scan_failure.rule_name})"
         )
+
+    def print_fix_message(self, file_fixed: str) -> None:
+        """
+        Print a message indicating that a given file has been fixed.
+        """
+        self.print_system_output(f"Fixed: {file_fixed}")

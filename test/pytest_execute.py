@@ -93,6 +93,13 @@ class InProcessResult:
         """
         return self.__std_out
 
+    @property
+    def std_err(self):
+        """
+        Standard error collected during execution.
+        """
+        return self.__std_err
+
     # pylint: disable=too-many-arguments
     def assert_results(
         self,

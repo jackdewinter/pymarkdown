@@ -568,14 +568,19 @@ class _ApiPresentation(MainPresentation):
         """
         self.pse.append(error_string)
 
-    def format_scan_error(
-        self, next_file: str, this_exception: Exception
-    ) -> Optional[str]:
-        """
-        Format a scan error for display.  Returning a value of None means that
-        the function has handled any required output.
-        """
-        return f"{type(this_exception).__name__} encountered while scanning '{next_file}':\n{this_exception}"
+    # def format_scan_error(
+    #     self,
+    #     next_file: str,
+    #     this_exception: Exception,
+    #     show_extended_information: bool = False,
+    # ) -> Optional[str]:
+    #     """
+    #     Format a scan error for display.  Returning a value of None means that
+    #     the function has handled any required output.
+    #     """
+    #     return super().format_scan_error(
+    #         next_file, this_exception, show_extended_information
+    #     )
 
     def print_pragma_failure(
         self, scan_file: str, line_number: int, pragma_error: str

@@ -2,7 +2,9 @@
 Module to provide for an encapsulation of the atx heading element.
 """
 
-from typing import Optional, cast
+from typing import Optional, Union, cast
+
+from typing_extensions import override
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.position_marker import PositionMarker
@@ -54,6 +56,18 @@ class AtxHeadingMarkdownToken(LeafMarkdownToken):
         return MarkdownToken._token_atx_heading
 
     # pylint: enable=protected-access
+
+    @override
+    def _modify_token(self, field_name: str, field_value: Union[str, int]) -> bool:
+        if (
+            field_name == "hash_count"
+            and isinstance(field_value, int)
+            and 1 <= field_value <= 6
+        ):
+            self.__hash_count = field_value
+            self.__compose_extra_data_field()
+            return True
+        return False
 
     @property
     def hash_count(self) -> int:

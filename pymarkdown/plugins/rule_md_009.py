@@ -4,7 +4,7 @@ Module to implement a plugin that looks for trailing spaces in the files.
 from typing import List, Optional, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
-from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_details import PluginDetails, PluginDetailsV2
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.container_markdown_token import ContainerMarkdownToken
@@ -33,15 +33,15 @@ class RuleMd009(RulePlugin):
         """
         Get the details for the plugin.
         """
-        return PluginDetails(
+        return PluginDetailsV2(
             plugin_name="no-trailing-spaces",
             plugin_id="MD009",
             plugin_enabled_by_default=True,
             plugin_description="Trailing spaces",
             plugin_version="0.5.0",
-            plugin_interface_version=1,
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md009.md",
             plugin_configuration="br_spaces,list_item_empty_lines,strict",
+            plugin_supports_fix=True,
         )
 
     @classmethod
@@ -149,9 +149,16 @@ class RuleMd009(RulePlugin):
         if extracted_whitespace_length != self.__break_spaces or (
             self.__strict_mode and not is_list_empty_line
         ):
-            self.__report_error(
-                context, extracted_whitespace_length, first_non_whitespace_index
-            )
+            if context.in_fix_mode:
+                if extracted_whitespace_length < self.__break_spaces:
+                    line = line[:first_non_whitespace_index]
+                else:
+                    line = line[: first_non_whitespace_index + self.__break_spaces]
+                context.set_current_fix_line(line)
+            else:
+                self.__report_error(
+                    context, extracted_whitespace_length, first_non_whitespace_index
+                )
 
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """

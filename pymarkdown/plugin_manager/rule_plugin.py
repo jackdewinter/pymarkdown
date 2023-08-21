@@ -3,11 +3,11 @@ Module to provide structure to scan through a file.
 """
 
 from abc import ABC, abstractmethod
-from typing import Optional, cast
+from typing import Optional, Union, cast
 
 from application_properties import ApplicationPropertiesFacade
 
-from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_details import PluginDetails, PluginDetailsV2
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.tokens.setext_heading_markdown_token import SetextHeadingMarkdownToken
@@ -92,6 +92,24 @@ class RulePlugin(ABC):
         """
         return self.__is_completed_file_implemented_in_plugin
 
+    # pylint: disable=too-many-arguments
+    def register_fix_token_request(
+        self,
+        context: PluginScanContext,
+        token: MarkdownToken,
+        plugin_action: str,
+        field_name: str,
+        field_value: Union[str, int],
+    ) -> None:
+        """
+        Register a request to fix a token.
+        """
+        context.register_fix_token_request(
+            token, self.get_details().plugin_id, plugin_action, field_name, field_value
+        )
+
+    # pylint: enable=too-many-arguments
+
     def report_next_line_error(
         self,
         context: PluginScanContext,
@@ -102,14 +120,20 @@ class RulePlugin(ABC):
         """
         Report an error with the current line being processed.
         """
+        does_support_fix = False
+        plugin_details = self.get_details()
+        if isinstance(plugin_details, PluginDetailsV2):
+            does_support_fix = plugin_details.plugin_supports_fix
+
         context.add_triggered_rule(
             context.scan_file,
             context.line_number + line_number_delta,
             column_number,
-            self.get_details().plugin_id,
-            self.get_details().plugin_name,
-            self.get_details().plugin_description,
+            plugin_details.plugin_id,
+            plugin_details.plugin_name,
+            plugin_details.plugin_description,
             extra_error_information,
+            does_support_fix,
         )
 
     # pylint: disable=too-many-arguments
@@ -133,16 +157,23 @@ class RulePlugin(ABC):
             line_number = token.line_number
             column_number = token.column_number
 
+        does_support_fix = False
+        plugin_details = self.get_details()
+        # if isinstance(xx, PluginDetailsV2):
+        #     xy = cast(PluginDetailsV2, xx)
+        #     does_support_fix = xy.plugin_supports_fix
+
         context.add_triggered_rule(
             context.scan_file,
             line_number + line_number_delta,
             column_number + column_number_delta
             if column_number_delta >= 0
             else -column_number_delta,
-            self.get_details().plugin_id,
-            self.get_details().plugin_name,
-            self.get_details().plugin_description,
+            plugin_details.plugin_id,
+            plugin_details.plugin_name,
+            plugin_details.plugin_description,
             extra_error_information,
+            does_support_fix,
         )
 
     # pylint: enable=too-many-arguments

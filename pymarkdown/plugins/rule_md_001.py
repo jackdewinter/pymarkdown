@@ -5,7 +5,7 @@ level at a time (going up).
 from typing import cast
 
 from pymarkdown.extensions.front_matter_markdown_token import FrontMatterMarkdownToken
-from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_details import PluginDetails, PluginDetailsV2
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.markdown_token import MarkdownToken
@@ -27,15 +27,15 @@ class RuleMd001(RulePlugin):
         """
         Get the details for the plugin.
         """
-        return PluginDetails(
+        return PluginDetailsV2(
             plugin_name="heading-increment,header-increment",
             plugin_id="MD001",
             plugin_enabled_by_default=True,
             plugin_description="Heading levels should only increment by one level at a time.",
             plugin_version="0.5.0",
-            plugin_interface_version=1,
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md001.md",
             plugin_configuration="front_matter_title",
+            plugin_supports_fix=True,
         )
 
     def initialize_from_config(self) -> None:
@@ -66,8 +66,14 @@ class RuleMd001(RulePlugin):
             if self.__last_heading_count and (hash_count > self.__last_heading_count):
                 delta = hash_count - self.__last_heading_count
                 if delta > 1:
-                    extra_data = f"Expected: h{self.__last_heading_count + 1}; Actual: h{hash_count}"
-                    self.report_next_token_error(
-                        context, token, extra_error_information=extra_data
-                    )
+                    if context.in_fix_mode:
+                        hash_count = self.__last_heading_count + 1
+                        self.register_fix_token_request(
+                            context, token, "next_token", "hash_count", hash_count
+                        )
+                    else:
+                        extra_data = f"Expected: h{self.__last_heading_count + 1}; Actual: h{hash_count}"
+                        self.report_next_token_error(
+                            context, token, extra_error_information=extra_data
+                        )
             self.__last_heading_count = hash_count
