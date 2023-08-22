@@ -779,6 +779,12 @@ class PluginManager:
                 properties,
             )
 
+        # Non-windows system may report these in weird orders, so sort them to have
+        # a predictable order.
+        self.__enabled_plugins = sorted(
+            self.__enabled_plugins, reverse=False, key=lambda plugin: plugin.plugin_id
+        )
+
     @property
     def all_plugin_ids(self) -> List[str]:
         """
