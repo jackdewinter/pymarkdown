@@ -3,6 +3,7 @@ Module to provide tests related to the MD001 rule.
 """
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.utils import assert_file_is_as_expected, copy_to_temp_file
 
 import pytest
 
@@ -242,6 +243,53 @@ def test_md001_bad_improper_atx_heading_incrementing():
 
 
 @pytest.mark.rules
+def test_md001_bad_improper_atx_heading_incrementing_fix():
+    """
+    Test to make sure the rule does trigger with a document with
+    only Atx Headings, that when they increase, only increase by 2.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "improper_atx_heading_incrementing.md"
+    ) as temp_source_path:
+        original_file_contents = """# Heading 1
+
+### Heading 3
+
+We skipped out a 2nd level heading in this document
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "-x-fix",
+            # "-x-fix-debug",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+        expected_file_contents = """# Heading 1
+
+## Heading 3
+
+We skipped out a 2nd level heading in this document
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md001_bad_improper_setext_heading_incrementing():
     """
     Test to make sure the rule does trigger with a document with
@@ -273,6 +321,57 @@ def test_md001_bad_improper_setext_heading_incrementing():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md001_bad_improper_setext_heading_incrementing_fix():
+    """
+    Test to make sure the rule does trigger with a document with
+    only SetExt Headings (and Atx Headings after level 2), that when they
+    increase, only increase by 2.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "improper_setext_heading_incrementing.md"
+    ) as temp_source_path:
+        original_file_contents = """Heading 2
+---------
+
+#### Heading 4
+
+We skipped out a heading level in this document
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+        supplied_arguments = [
+            "--disable-rules",
+            "MD003",
+            "-x-fix",
+            # "-x-fix-debug",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+        expected_file_contents = """Heading 2
+---------
+
+### Heading 4
+
+We skipped out a heading level in this document
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -336,6 +435,61 @@ def test_md001_front_matter_with_title():
 
 
 @pytest.mark.rules
+def test_md001_front_matter_with_title_fix():
+    """
+    Test to make sure the rule does trigger with a document with
+    a front-matter element with a title and the front matter extension
+    enabled, and a following Atx Heading of level 3.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "front_matter_with_title.md"
+    ) as temp_source_path:
+        original_file_contents = """---
+title: field
+---
+
+### Heading 3
+
+We skipped out a 2nd level heading in this document, which should only
+kick in if there is a title field in the front matter.
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+        supplied_arguments = [
+            "--set",
+            "extensions.front-matter.enabled=$!True",
+            "-x-fix",
+            # "-x-fix-debug",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+        expected_file_contents = """---
+title: field
+---
+
+## Heading 3
+
+We skipped out a 2nd level heading in this document, which should only
+kick in if there is a title field in the front matter.
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md001_front_matter_with_alternate_title():
     """
     Variation of test_md001_front_matter_with_title using configuration
@@ -364,3 +518,59 @@ def test_md001_front_matter_with_alternate_title():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md001_front_matter_with_alternate_title_fix():
+    """
+    Variation of test_md001_front_matter_with_title using configuration
+    to specify an alternate title.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "front_matter_with_alternate_title.md"
+    ) as temp_source_path:
+        original_file_contents = """---
+Subject: field
+---
+
+### Heading 3
+
+We skipped out a 2nd level heading in this document, which should only
+kick in if there is a title field in the front matter.
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+        supplied_arguments = [
+            "--set",
+            "extensions.front-matter.enabled=$!True",
+            "--set",
+            "plugins.md001.front_matter_title=Subject",
+            "-x-fix",
+            # "-x-fix-debug",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+        expected_file_contents = """---
+Subject: field
+---
+
+## Heading 3
+
+We skipped out a 2nd level heading in this document, which should only
+kick in if there is a title field in the front matter.
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)

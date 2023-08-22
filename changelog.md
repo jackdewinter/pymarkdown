@@ -4,7 +4,8 @@
 
 ### Added
 
-- None
+- [Issue 618](https://github.com/jackdewinter/pymarkdown/issues/618)
+  - Alpha pass at fix mode
 
 ### Changed
 

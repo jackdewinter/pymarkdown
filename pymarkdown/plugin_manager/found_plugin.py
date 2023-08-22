@@ -28,6 +28,7 @@ class FoundPlugin:
     plugin_file_name: str
     plugin_url: Optional[str]
     plugin_configuration: Optional[str]
+    plugin_supports_fix: bool
     plugin_identifiers: List[str]
 
 

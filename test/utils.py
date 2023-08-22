@@ -5,7 +5,9 @@ import difflib
 import json
 import logging
 import os
+import shutil
 import tempfile
+from contextlib import contextmanager
 
 from application_properties import ApplicationProperties
 
@@ -70,6 +72,26 @@ def act_and_assert(
 # pylint: enable=too-many-arguments
 
 
+def copy_to_temporary_file(source_path: str) -> str:
+    """
+    Copy an existing markdown file to a temporary markdown file,
+    to allow fo fixing the file without destroying the original.
+    """
+    with tempfile.NamedTemporaryFile("wt", delete=False, suffix=".md") as outfile:
+        temporary_file = outfile.name
+
+        shutil.copyfile(source_path, temporary_file)
+        return os.path.abspath(temporary_file)
+
+
+def read_contents_of_text_file(source_path: str) -> str:
+    """
+    Read the entire contents of the specified file into the variable.
+    """
+    with open(source_path, "rt", encoding="utf-8") as source_file:
+        return source_file.read()
+
+
 def write_temporary_configuration(
     supplied_configuration, file_name=None, directory=None
 ):
@@ -100,6 +122,25 @@ def write_temporary_configuration(
         raise AssertionError(
             f"Test configuration file was not written ({this_exception})."
         ) from this_exception
+
+
+def assert_file_is_as_expected(source_path: str, expected_file_contents: str) -> None:
+    """
+    Assert that the file contents match the expected contents.
+    """
+    actual_file_contents = read_contents_of_text_file(source_path)
+
+    if expected_file_contents != actual_file_contents:
+        print("Expected:" + expected_file_contents.replace("\n", "\\n") + ":")
+        print("  Actual:" + actual_file_contents.replace("\n", "\\n") + ":")
+        expected_file_lines = expected_file_contents.splitlines(keepends=True)
+        # print("Expected:" + str(ex) + ":")
+        actual_file_lines = actual_file_contents.splitlines(keepends=True)
+        # print("  Actual:" + str(ac) + ":")
+        diff = difflib.ndiff(expected_file_lines, actual_file_lines)
+        diff_values = "-\n-".join(list(diff))
+        print("-" + diff_values + "-")
+        raise AssertionError()
 
 
 def assert_if_lists_different(expected_tokens, actual_tokens):
@@ -224,3 +265,17 @@ def __verify_markdown_roundtrip(
         (detabified_source_markdown is not None)
         and (detabified_source_markdown == markdown_from_tokens)
     ), f"Markdown strings are not equal.{diff_values}"
+
+
+@contextmanager
+def copy_to_temp_file(file_to_copy):
+    """
+    Context manager to copy a file to a temporary file, returning the name of the temporary file.
+    """
+    temp_source_path = None
+    try:
+        temp_source_path = copy_to_temporary_file(file_to_copy)
+        yield temp_source_path
+    finally:
+        if temp_source_path:
+            os.remove(temp_source_path)

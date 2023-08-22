@@ -22,6 +22,8 @@ rem Look for options on the command line.
 
 set MY_VERBOSE=
 set MY_PUBLISH=
+set MY_MYPY=
+set MY_SOURCERY=1
 set RESET_PIPFILE=
 :process_arguments
 if "%1" == "-h" (
@@ -33,13 +35,19 @@ if "%1" == "-h" (
 	echo     -v                Display verbose information.
 	echo     -f				   Force reset of pipfile.
 	echo     -p				   Publish project summaries if successful.
+	echo     -m				   Only run mypy checks and exit.
+	echo     -ns			   Run all checks except for sourcery.
     GOTO real_end
 ) else if "%1" == "-v" (
 	set MY_VERBOSE=--verbose
 ) else if "%1" == "-p" (
 	set MY_PUBLISH=1
+) else if "%1" == "-m" (
+	set MY_MYPY=1
 ) else if "%1" == "-f" (
 	set RESET_PIPFILE=1
+) else if "%1" == "-ns" (
+	set MY_SOURCERY=
 ) else if "%1" == "" (
     goto after_process_arguments
 ) else (
@@ -137,6 +145,10 @@ if defined RESET_PIPFILE (
 	)
 )
 
+if defined MY_MYPY (
+	goto executeMyPy
+)
+
 echo {Executing black formatter on Python code.}
 pipenv run black %MY_VERBOSE% .
 if ERRORLEVEL 1 (
@@ -154,14 +166,29 @@ if ERRORLEVEL 1 (
 )
 
 echo {Executing pre-commit hooks on Python code.}
-pipenv run pre-commit run --all
+set PRE_COMMIT_FLAGS=
+if defined MY_PUBLISH (
+	set PRE_COMMIT_FLAGS=--all
+)
+pipenv run pre-commit run !PRE_COMMIT_FLAGS!
 if ERRORLEVEL 1 (
 	echo.
 	echo {Executing pre-commit hooks on Python code failed.}
 	goto error_end
 )
 
-if "%SOURCERY_USER_KEY%" == "" (
+if defined MY_SOURCERY (
+	if "%SOURCERY_USER_KEY%" == "" (
+		if exist "..\sourcery.bat" (
+			echo {Sourcery user key not define, but sourcery.bat script detected. Executing.}
+			call "..\sourcery.bat"
+		)
+	)
+)
+
+if not defined MY_SOURCERY (
+	echo {Skipping Sourcery static analyzer by request.}
+) else if "%SOURCERY_USER_KEY%" == "" (
 	echo {Sourcery user key not defined.  Skipping Sourcery static analyzer.}
 ) else (
 	echo {Executing Sourcery static analyzer on Python code.}
@@ -213,6 +240,7 @@ if ERRORLEVEL 1 (
 	goto error_end
 )
 
+:executeMyPy
 echo {Executing mypy static analyzer on Python source code.}
 pipenv run mypy --strict %PYTHON_MODULE_NAME% stubs
 if ERRORLEVEL 1 (
@@ -222,6 +250,9 @@ if ERRORLEVEL 1 (
 )
 rem pipenv run stubgen --output stubs -p columnar
 rem pipenv run stubgen --output stubs -p wcwidth
+if defined MY_MYPY (
+	goto good_end
+)
 
 echo {Executing pylint utils analyzer on Python source code to verify suppressions and document them.}
 pipenv run python ..\pylint_utils\main.py --config setup.cfg --recurse -r publish\pylint_suppression.json %PYTHON_MODULE_NAME%
@@ -288,6 +319,7 @@ if defined MY_PUBLISH (
 
 rem Cleanly exit the script
 
+:good_end
 echo.
 set PC_EXIT_CODE=0
 echo {Analysis of project succeeded.}

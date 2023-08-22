@@ -6,6 +6,8 @@ import sys
 from test.pytest_execute import InProcessExecution
 from typing import Optional
 
+from typing_extensions import override
+
 from pymarkdown.general.main_presentation import MainPresentation
 from pymarkdown.plugin_manager.plugin_scan_failure import PluginScanFailure
 
@@ -37,14 +39,21 @@ class AlternateMainPresentation(MainPresentation):
         print("[pse[" + error_string + "]]", file=sys.stderr)
 
     def format_scan_error(
-        self, next_file: str, this_exception: Exception
+        self,
+        next_file: str,
+        this_exception: Exception,
+        show_extended_information: bool = False,
     ) -> Optional[str]:
         """
         Format a scan error for display.  Returning a value of None means that
         the function has handled any required output.
         """
         scan_error = (
-            "[fse[" + super().format_scan_error(next_file, this_exception) + "]]"
+            "[fse["
+            + super().format_scan_error(
+                next_file, this_exception, show_extended_information
+            )
+            + "]]"
         )
         self.print_system_error(scan_error)
 
@@ -86,6 +95,7 @@ class MarkdownScanner(InProcessExecution):
         assert os.path.isdir(resource_directory)
         self.resource_directory = resource_directory
 
+    @override
     def execute_main(self, direct_arguments=None):
         if self.__use_main:
             main()
@@ -99,5 +109,6 @@ class MarkdownScanner(InProcessExecution):
                 direct_args=direct_arguments
             )
 
+    @override
     def get_main_name(self):
         return self.__entry_point

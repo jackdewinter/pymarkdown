@@ -147,6 +147,14 @@
             "elapsedTimeInMilliseconds": 0
         },
         {
+            "name": "test.basic.test_extra_markdown_token",
+            "totalTests": 4,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
             "name": "test.basic.test_extract_any_whitespace",
             "totalTests": 9,
             "failedTests": 0,
@@ -197,14 +205,6 @@
         {
             "name": "test.basic.test_is_character_at_index",
             "totalTests": 43,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.basic.test_markdown_token",
-            "totalTests": 4,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1100,7 +1100,7 @@
         },
         {
             "name": "test.rules.test_md001",
-            "totalTests": 11,
+            "totalTests": 15,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1156,7 +1156,23 @@
         },
         {
             "name": "test.rules.test_md009",
-            "totalTests": 21,
+            "totalTests": 20,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.rules.test_md009_config",
+            "totalTests": 4,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.rules.test_md009_good",
+            "totalTests": 14,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1164,7 +1180,7 @@
         },
         {
             "name": "test.rules.test_md010",
-            "totalTests": 3,
+            "totalTests": 5,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1468,7 +1484,7 @@
         },
         {
             "name": "test.rules.test_md047",
-            "totalTests": 4,
+            "totalTests": 9,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1484,7 +1500,7 @@
         },
         {
             "name": "test.rules.test_plugin_manager",
-            "totalTests": 43,
+            "totalTests": 53,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1581,6 +1597,30 @@
         {
             "name": "test.test_transform_markdown",
             "totalTests": 2,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.tokens.test_atx_heading_markdown_token",
+            "totalTests": 5,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.tokens.test_markdown_token",
+            "totalTests": 3,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.tokens.test_plugin_scan_context",
+            "totalTests": 3,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
