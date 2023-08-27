@@ -480,7 +480,6 @@ def test_md006_good_indentation_nested():
     supplied_arguments = [
         "--enable-rules",
         "MD006",
-        "--stack-trace",
         "scan",
         source_path,
     ]
@@ -554,7 +553,6 @@ def test_md006_issue_478():
         "MD006",
         "--disable-rules",
         "md004,MD007",
-        "--stack-trace",
         "scan",
         source_path,
     ]

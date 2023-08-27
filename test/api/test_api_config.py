@@ -166,6 +166,7 @@ MD999>>token:[para(3,1):]
 MD999>>token:[text(3,1):The line after this line should be blank.:]
 MD999>>token:[end-para:::True]
 MD999>>token:[BLANK(4,1):]
+MD999>>token:[end-of-stream(5,0)]
 MD999>>next_line:# This is a test
 MD999>>next_line:
 MD999>>next_line:The line after this line should be blank.
@@ -226,6 +227,7 @@ MD999>>token:[para(3,1):]
 MD999>>token:[text(3,1):The line after this line should be blank.:]
 MD999>>token:[end-para:::True]
 MD999>>token:[BLANK(4,1):]
+MD999>>token:[end-of-stream(5,0)]
 MD999>>next_line:# This is a test
 MD999>>next_line:
 MD999>>next_line:The line after this line should be blank.

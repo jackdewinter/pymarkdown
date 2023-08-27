@@ -4,7 +4,6 @@ Module to provide tests related to the basic parts of the scanner.
 import logging
 import os
 import runpy
-from test.api.test_api_general import PatchFileSourceProvider
 from test.markdown_scanner import MarkdownScanner
 from test.patches.patch_builtin_open import PatchBuiltinOpen
 
@@ -351,20 +350,25 @@ def test_markdown_with_failure_during_file_scan():
         "scan",
         source_path,
     ]
-    exception_path = os.path.join("pymarkdown", "resources", "entities.json")
+    exception_path = os.path.abspath(
+        os.path.join("pymarkdown", "resources", "entities.json")
+    )
 
     expected_return_code = 1
     expected_output = ""
-    expected_error = """BadTokenizationError encountered while scanning '{source_path}':
-An unhandled error occurred processing the document.
+    expected_error = """
+    
+BadTokenizationError encountered while initializing tokenizer:
+Named character entity map file '{source_path}' was not loaded (bob).
 """.replace(
-        "{source_path}", source_path
+        "{source_path}", exception_path
     )
 
     # Act
     try:
         _ = FileSourceProvider(exception_path)
-        patch = PatchFileSourceProvider()
+        patch = PatchBuiltinOpen()
+        patch.register_exception_for_file(exception_path, "rt", IOError("bob"))
         patch.start()
 
         execute_results = scanner.invoke_main(arguments=supplied_arguments)

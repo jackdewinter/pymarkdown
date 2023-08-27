@@ -280,7 +280,6 @@ def test_md030_bad_spacing_ul_single():
         "test", "resources", "rules", "md030", "bad_spacing_ul_single.md"
     )
     supplied_arguments = [
-        "--stack-trace",
         "scan",
         source_path,
     ]
@@ -328,7 +327,6 @@ def test_md030_bad_spacing_ul_single_config_1_2():
         "--set",
         "plugins.md030.ul_multi=$#2",
         "--strict-config",
-        "--stack-trace",
         "scan",
         source_path,
     ]
@@ -376,7 +374,6 @@ def test_md030_bad_spacing_ul_single_config_2_1():
         "--set",
         "plugins.md030.ul_multi=$#1",
         "--strict-config",
-        "--stack-trace",
         "scan",
         source_path,
     ]
@@ -522,7 +519,6 @@ def test_md030_bad_spacing_ul_double():
     supplied_arguments = [
         "--disable-rules",
         "md007",
-        "--stack-trace",
         "scan",
         source_path,
     ]
@@ -570,7 +566,6 @@ def test_md030_bad_spacing_ul_double_config_1_2():
         "plugins.md030.ul_single=$#1",
         "--set",
         "plugins.md030.ul_multi=$#2",
-        "--stack-trace",
         "scan",
         source_path,
     ]
@@ -615,7 +610,6 @@ def test_md030_bad_spacing_ul_double_config_2_1():
         "plugins.md030.ul_single=$#2",
         "--set",
         "plugins.md030.ul_multi=$#1",
-        "--stack-trace",
         "scan",
         source_path,
     ]

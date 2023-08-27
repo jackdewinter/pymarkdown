@@ -1012,7 +1012,6 @@ def test_md027_bad_block_quote_link_multiple_extra():
         "test", "resources", "rules", "md027", "bad_block_quote_link_multiple_extra.md"
     )
     supplied_arguments = [
-        "--stack-trace",
         "scan",
         source_path,
     ]

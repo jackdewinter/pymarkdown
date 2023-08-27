@@ -56,7 +56,7 @@ def test_md047_good_end_with_blank_line():
     source_path = os.path.join(
         "test", "resources", "rules", "md047", "end_with_blank_line.md"
     )
-    supplied_arguments = ["--stack-trace", "scan", source_path]
+    supplied_arguments = ["scan", source_path]
 
     expected_return_code = 0
     expected_output = ""
@@ -83,7 +83,7 @@ def test_md047_good_end_with_blank_line_fix():
     with copy_to_temp_file(
         os.path.join("test", "resources", "rules", "md047", "end_with_blank_line.md")
     ) as temp_source_path:
-        supplied_arguments = ["--stack-trace", "-x-fix", "scan", temp_source_path]
+        supplied_arguments = ["-x-fix", "scan", temp_source_path]
 
         expected_return_code = 0
         expected_output = ""

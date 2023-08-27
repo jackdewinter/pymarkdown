@@ -13,6 +13,7 @@ from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.tab_helper import TabHelper
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.tokens.container_markdown_token import ContainerMarkdownToken
+from pymarkdown.tokens.end_of_stream_token import SpecialMarkdownToken
 from pymarkdown.tokens.inline_markdown_token import InlineMarkdownToken
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.tokens.markdown_token import (
@@ -97,6 +98,7 @@ class TransformToMarkdown:
 
         ert = TokenTypes.get_inline_token_types()
         ert.extend(TokenTypes.get_leaf_token_types())
+        ert.extend(TokenTypes.get_special_token_types())
         ert.extend(ExtensionTokenTypes.get_token_types())
         for token_type in ert:
             token_init_fn = token_type.__dict__["__init__"]
@@ -117,17 +119,20 @@ class TransformToMarkdown:
             ContainerMarkdownToken,
             LeafMarkdownToken,
             InlineMarkdownToken,
+            SpecialMarkdownToken,
         ]:
-            new_xx = current_token_type.__bases__
-            assert len(new_xx) == 1
-            current_token_type = new_xx[0]
+            new_bases = list(current_token_type.__bases__)
+            assert len(new_bases) == 1
+            current_token_type = new_bases[0]
         if current_token_type == ContainerMarkdownToken:
             token_class = MarkdownTokenClass.CONTAINER_BLOCK
         elif current_token_type == LeafMarkdownToken:
             token_class = MarkdownTokenClass.LEAF_BLOCK
-        else:
-            assert current_token_type == InlineMarkdownToken
+        elif current_token_type == InlineMarkdownToken:
             token_class = MarkdownTokenClass.INLINE_BLOCK
+        else:
+            assert current_token_type == SpecialMarkdownToken
+            token_class = MarkdownTokenClass.SPECIAL
 
         assert token_name is not None
         assert token_class is not None
@@ -147,6 +152,7 @@ class TransformToMarkdown:
         assert type_class in [
             MarkdownTokenClass.LEAF_BLOCK,
             MarkdownTokenClass.INLINE_BLOCK,
+            MarkdownTokenClass.SPECIAL,
         ]
 
         self.start_token_handlers[type_name] = start_token_handler

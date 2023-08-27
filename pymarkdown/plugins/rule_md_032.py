@@ -51,6 +51,7 @@ class RuleMd032(RulePlugin):
                 not token.is_blank_line
                 and not token.is_new_list_item
                 and not token.is_list_end
+                and not token.is_end_of_stream
             ):
                 self.report_next_token_error(context, token, line_number_delta=-1)
             self.__end_list_end_token = None

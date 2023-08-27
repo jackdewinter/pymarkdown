@@ -279,7 +279,6 @@ def test_md030_bad_spacing_ol_single():
         "test", "resources", "rules", "md030", "bad_spacing_ol_single.md"
     )
     supplied_arguments = [
-        "--stack-trace",
         "scan",
         source_path,
     ]
@@ -326,7 +325,6 @@ def test_md030_bad_spacing_ol_single_config_1_2():
         "--set",
         "plugins.md030.ol_multi=$#2",
         "--strict-config",
-        "--stack-trace",
         "scan",
         source_path,
     ]
@@ -373,7 +371,6 @@ def test_md030_bad_spacing_ol_single_config_2_1():
         "--set",
         "plugins.md030.ol_multi=$#1",
         "--strict-config",
-        "--stack-trace",
         "scan",
         source_path,
     ]
@@ -517,7 +514,6 @@ def test_md030_bad_spacing_ol_double():
         "test", "resources", "rules", "md030", "bad_spacing_ol_double.md"
     )
     supplied_arguments = [
-        "--stack-trace",
         "scan",
         source_path,
     ]
@@ -563,7 +559,6 @@ def test_md030_bad_spacing_ol_double_config_1_2():
         "plugins.md030.ol_single=$#1",
         "--set",
         "plugins.md030.ol_multi=$#2",
-        "--stack-trace",
         "scan",
         source_path,
     ]
@@ -606,7 +601,6 @@ def test_md030_bad_spacing_ol_double_config_2_1():
         "plugins.md030.ol_single=$#2",
         "--set",
         "plugins.md030.ol_multi=$#1",
-        "--stack-trace",
         "scan",
         source_path,
     ]

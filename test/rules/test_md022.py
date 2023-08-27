@@ -1860,7 +1860,6 @@ def test_md022_link_reference_definition_before_header():
         "link_reference_definition_before_header.md",
     )
     supplied_arguments = [
-        "--stack-trace",
         "scan",
         source_path,
     ]
@@ -1894,7 +1893,6 @@ def test_md022_link_reference_definition_around_header():
         "bad_link_reference_definition_around_header.md",
     )
     supplied_arguments = [
-        "--stack-trace",
         "--disable-rules",
         "md012",
         "scan",
@@ -1932,7 +1930,6 @@ def test_md022_fenced_block_before_header():
         "test", "resources", "rules", "md022", "fenced_block_before_header.md"
     )
     supplied_arguments = [
-        "--stack-trace",
         "scan",
         source_path,
     ]

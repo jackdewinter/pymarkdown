@@ -32,6 +32,7 @@ def act_and_assert(
     config_map=None,
     disable_consistency_checks=False,
     allow_alternate_markdown=False,
+    do_add_end_of_stream_token=False,
 ):
     """
     Act and assert on the expected behavior of parsing the source_markdown.
@@ -52,7 +53,11 @@ def act_and_assert(
     transformer = TransformToGfm()
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=show_debug)
+    actual_tokens = tokenizer.transform(
+        source_markdown,
+        show_debug=show_debug,
+        do_add_end_of_stream_token=do_add_end_of_stream_token,
+    )
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -131,8 +136,16 @@ def assert_file_is_as_expected(source_path: str, expected_file_contents: str) ->
     actual_file_contents = read_contents_of_text_file(source_path)
 
     if expected_file_contents != actual_file_contents:
-        print("Expected:" + expected_file_contents.replace("\n", "\\n") + ":")
-        print("  Actual:" + actual_file_contents.replace("\n", "\\n") + ":")
+        print(
+            "Expected:"
+            + expected_file_contents.replace("\n", "\\n").replace("\t", "\\t")
+            + ":"
+        )
+        print(
+            "  Actual:"
+            + actual_file_contents.replace("\n", "\\n").replace("\t", "\\t")
+            + ":"
+        )
         expected_file_lines = expected_file_contents.splitlines(keepends=True)
         # print("Expected:" + str(ex) + ":")
         actual_file_lines = actual_file_contents.splitlines(keepends=True)

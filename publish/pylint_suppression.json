@@ -328,6 +328,7 @@
         "pymarkdown/tokens/emphasis_markdown_token.py": {
             "protected-access": 1
         },
+        "pymarkdown/tokens/end_of_stream_token.py": {},
         "pymarkdown/tokens/fenced_code_block_markdown_token.py": {
             "too-many-arguments": 1,
             "protected-access": 1

@@ -950,7 +950,6 @@ def test_md043_good_good_simple_headings_1_star_3_star_3():
         "--set",
         "plugins.md043.headings=# Heading 1,*,### Heading 3,*,### Heading 3",
         "--strict-config",
-        "--stack-trace",
         "scan",
         source_path,
     ]
@@ -988,7 +987,6 @@ def test_md043_bad_good_many_level_two_1_star_3_star_3():
         "--set",
         "plugins.md043.headings=# Heading 1,*,### Heading 3,*,### Heading 3",
         "--strict-config",
-        "--stack-trace",
         "scan",
         source_path,
     ]
@@ -1030,7 +1028,6 @@ def test_md043_good_good_many_level_two_1_star_2_star_2_star_3():
         "--set",
         "plugins.md043.headings=# Heading 1,*,## Heading 2,*,## Heading 2,*,### Heading 3",
         "--strict-config",
-        "--stack-trace",
         "scan",
         source_path,
     ]
@@ -1068,7 +1065,6 @@ def test_md043_bad_good_many_level_two_1_star_2_star_2_star_3():
         "--set",
         "plugins.md043.headings=# Heading 1,*,### Heading 3,*,### Heading 3,*,### Heading 3",
         "--strict-config",
-        "--stack-trace",
         "scan",
         source_path,
     ]
@@ -1110,7 +1106,6 @@ def test_md043_good_good_simple_headings_two_1_star_3_2_star_3():
         "--set",
         "plugins.md043.headings=# Heading 1,*,### Heading 3,## Heading 2,*,### Heading 3",
         "--strict-config",
-        "--stack-trace",
         "scan",
         source_path,
     ]
@@ -1148,7 +1143,6 @@ def test_md043_bad_good_many_level_two_1_star_3_2_star_3():
         "--set",
         "plugins.md043.headings=# Heading 1,*,### Heading 3,## Heading 2,*,### Heading 3",
         "--strict-config",
-        "--stack-trace",
         "scan",
         source_path,
     ]

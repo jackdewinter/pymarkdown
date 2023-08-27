@@ -70,12 +70,12 @@ class RuleMd022(RulePlugin):
         self.__start_heading_token = None
         self.__did_heading_end = False
 
-    def completed_file(self, context: PluginScanContext) -> None:
-        """
-        Event that the file being currently scanned is now completed.
-        """
-        if (self.__blank_line_count != -1) and self.__blank_line_count >= 0:
-            self.perform_close_check(context, None)
+    # def completed_file(self, context: PluginScanContext) -> None:
+    #     """
+    #     Event that the file being currently scanned is now completed.
+    #     """
+    #     if (self.__blank_line_count != -1) and self.__blank_line_count >= 0:
+    #         self.perform_close_check(context, None)
 
     def __next_token_heading_start(self, token: MarkdownToken) -> None:
         # print(">>token.is_setext_heading or token.is_atx_heading>>")

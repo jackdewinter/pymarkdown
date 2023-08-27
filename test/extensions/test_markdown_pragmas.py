@@ -21,7 +21,6 @@ def test_pragmas_01():
         "test", "resources", "pragmas", "atx_heading_with_multiple_spaces_no_command.md"
     )
     supplied_arguments = [
-        "--stack-trace",
         "scan",
         source_path,
     ]
@@ -174,8 +173,6 @@ def test_pragmas_05():
         "atx_heading_with_multiple_spaces_disable_line_by_id.md",
     )
     supplied_arguments = [
-        # "--stack-trace",
-        # "--log-level", "DEBUG",
         "scan",
         source_path,
     ]

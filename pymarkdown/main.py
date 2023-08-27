@@ -209,7 +209,9 @@ class PyMarkdownLint:
 
             POGGER.info("Scanning file '$' token-by-token.", next_file_name)
             assert self.__tokenizer
-            actual_tokens = self.__tokenizer.transform_from_provider(source_provider)
+            actual_tokens = self.__tokenizer.transform_from_provider(
+                source_provider, do_add_end_of_stream_token=True
+            )
 
             source_provider.reset_to_start()
             self.__process_file_scan(
@@ -303,7 +305,9 @@ class PyMarkdownLint:
         POGGER.info("Scanning file to fix '$' token-by-token.", next_file_name)
         assert self.__tokenizer
         source_provider = FileSourceProvider(next_file)
-        actual_tokens = self.__tokenizer.transform_from_provider(source_provider)
+        actual_tokens = self.__tokenizer.transform_from_provider(
+            source_provider, do_add_end_of_stream_token=True
+        )
 
         fix_token_map: Dict[MarkdownToken, List[FixTokenRecord]] = {}
         context = self.__plugins.starting_new_file(
@@ -429,7 +433,9 @@ class PyMarkdownLint:
             POGGER.info("Scanning file '$' for line-by-line fixes.", next_file_two)
             source_provider = FileSourceProvider(next_file_two)
             assert self.__tokenizer is not None
-            actual_tokens = self.__tokenizer.transform_from_provider(source_provider)
+            actual_tokens = self.__tokenizer.transform_from_provider(
+                source_provider, do_add_end_of_stream_token=True
+            )
 
         # As the lines are processed, a new temporary line file is written to. If either
         # tokens were fixed or lines were fixed, the file contents of the file
@@ -587,8 +593,8 @@ class PyMarkdownLint:
             self.__scan_file(source_provider, next_file_name)
         except BadPluginError as this_exception:
             self.__handle_scan_error(next_file, this_exception)
-        except BadTokenizationError as this_exception:
-            self.__handle_scan_error(next_file, this_exception)
+        # except BadTokenizationError as this_exception:
+        #     self.__handle_scan_error(next_file, this_exception)
 
     def __scan_from_stdin(self, args: argparse.Namespace) -> None:
         temporary_file = None

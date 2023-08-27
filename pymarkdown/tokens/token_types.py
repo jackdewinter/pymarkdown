@@ -10,6 +10,7 @@ from pymarkdown.tokens.blank_line_markdown_token import BlankLineMarkdownToken
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.tokens.email_autolink_markdown_token import EmailAutolinkMarkdownToken
 from pymarkdown.tokens.emphasis_markdown_token import EmphasisMarkdownToken
+from pymarkdown.tokens.end_of_stream_token import EndOfStreamToken
 from pymarkdown.tokens.fenced_code_block_markdown_token import (
     FencedCodeBlockMarkdownToken,
 )
@@ -46,6 +47,10 @@ class TokenTypes:
     Class to contain lists of the available token types.
     """
 
+    __SPECIAL_TOKEN_TYPES: List[type] = [
+        EndOfStreamToken,
+    ]
+
     __INLINE_TOKEN_TYPES: List[type] = [
         EmphasisMarkdownToken,
         UriAutolinkMarkdownToken,
@@ -75,6 +80,13 @@ class TokenTypes:
         UnorderedListStartMarkdownToken,
         OrderedListStartMarkdownToken,
     ]
+
+    @staticmethod
+    def get_special_token_types() -> List[type]:
+        """
+        Get a list of all available inline token types.
+        """
+        return TokenTypes.__SPECIAL_TOKEN_TYPES[:]
 
     @staticmethod
     def get_inline_token_types() -> List[type]:
