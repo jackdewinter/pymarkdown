@@ -8,13 +8,16 @@ from test.utils import (
     copy_to_temp_file,
     read_contents_of_text_file,
 )
+from typing import Dict
 
 import pytest
 
 from pymarkdown.general.tab_helper import TabHelper
 
 
-def __generate_expected_contents(temp_source_path: str) -> str:
+def generate_expected_contents(
+    temp_source_path: str, allowed_after_indent_map: Dict[int, int] = None
+) -> str:
     """
     Given the source file, make any required changes to the file outside of the
     plugin.
@@ -22,8 +25,17 @@ def __generate_expected_contents(temp_source_path: str) -> str:
     existing_file_contents = read_contents_of_text_file(temp_source_path)
     # print("---\n" + existing_file_contents.replace("\n", "\\n").replace("\t", "\\t") + "\n---")
     new_lines = []
-    for next_line in existing_file_contents.splitlines(keepends=True):
-        new_lines.append(TabHelper.detabify_string(next_line))
+    split_lines = existing_file_contents.splitlines(keepends=True)
+    for next_line_index, next_line in enumerate(split_lines):
+        if allowed_after_indent_map and next_line_index + 1 in allowed_after_indent_map:
+            modify_after_index = allowed_after_indent_map[next_line_index + 1]
+            altered_line = (
+                TabHelper.detabify_string(next_line[:modify_after_index])
+                + next_line[modify_after_index:]
+            )
+        else:
+            altered_line = TabHelper.detabify_string(next_line)
+        new_lines.append(altered_line)
     expected_file_contents = "".join(new_lines)
     # print("---\n" + expected_file_contents.replace("\n", "\\n").replace("\t", "\\t") + "\n---")
     return expected_file_contents
@@ -120,14 +132,14 @@ def test_md010_bad_simple_text_with_tab():
         + "Hard tabs [Column: 11] (no-hard-tabs)\n"
         + f"{source_path}:3:11: MD010: "
         + "Hard tabs [Column: 11] (no-hard-tabs)\n"
-        + f"{source_path}:3:21: MD010: "
-        + "Hard tabs [Column: 21] (no-hard-tabs)\n"
+        + f"{source_path}:3:22: MD010: "
+        + "Hard tabs [Column: 22] (no-hard-tabs)\n"
         + f"{source_path}:4:2: MD010: "
         + "Hard tabs [Column: 2] (no-hard-tabs)\n"
-        + f"{source_path}:4:5: MD010: "
-        + "Hard tabs [Column: 5] (no-hard-tabs)\n"
-        + f"{source_path}:4:9: MD010: "
-        + "Hard tabs [Column: 9] (no-hard-tabs)"
+        + f"{source_path}:4:7: MD010: "
+        + "Hard tabs [Column: 7] (no-hard-tabs)\n"
+        + f"{source_path}:4:12: MD010: "
+        + "Hard tabs [Column: 12] (no-hard-tabs)"
     )
     expected_error = ""
 
@@ -163,7 +175,7 @@ def test_md010_bad_simple_text_with_tab_fix():
         expected_return_code = 3
         expected_output = f"Fixed: {temp_source_path}"
         expected_error = ""
-        expected_file_contents = __generate_expected_contents(temp_source_path)
+        expected_file_contents = generate_expected_contents(temp_source_path)
 
         # Act
         execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -230,7 +242,156 @@ Fixed: {path}""".replace(
             "{path}", temp_source_path
         )
         expected_error = ""
-        expected_file_contents = __generate_expected_contents(temp_source_path)
+        expected_file_contents = generate_expected_contents(temp_source_path)
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
+def test_md010_bad_simple_text_with_tabs_in_code_block_with_end_line():
+    """
+    Test to make sure this rule fires when the code block end is followed
+    by a blank line, or any other token.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md010",
+        "bad_simple_text_with_tabs_in_code_block.md",
+    )
+    supplied_arguments = [
+        "scan",
+        source_path,
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md010_bad_simple_text_with_tabs_in_code_block_no_end_line():
+    """
+    Test to make sure this rule fires when the code block end token is
+    the "last" token (except for the end of stream token).
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md010",
+        "bad_simple_text_with_tabs_in_code_block_no_end_line.md",
+    )
+    supplied_arguments = [
+        "-d",
+        "MD041,MD047",
+        "scan",
+        source_path,
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md010_bad_simple_text_with_tabs_in_code_block_turned_off():
+    """
+    Test to make sure this rule fires for a tab within a code block,
+    when the code blocks setting is turned off.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md010",
+        "bad_simple_text_with_tabs_in_code_block.md",
+    )
+    supplied_arguments = [
+        "--set",
+        "plugins.md010.code_blocks=$!false",
+        "--strict-config",
+        "scan",
+        source_path,
+    ]
+
+    expected_return_code = 1
+    expected_output = f"{source_path}:4:5: MD010: Hard tabs [Column: 5] (no-hard-tabs)"
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md010_bad_simple_text_with_tabs_in_code_block_turned_off_and_fix():
+    """
+    Test to make sure this rule fires for a tab within a code block,
+    when the code blocks setting is turned off.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        os.path.join(
+            "test",
+            "resources",
+            "rules",
+            "md010",
+            "bad_simple_text_with_tabs_in_code_block.md",
+        )
+    ) as temp_source_path:
+        supplied_arguments = [
+            "--set",
+            "plugins.md010.code_blocks=$!false",
+            "--strict-config",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+        expected_file_contents = generate_expected_contents(temp_source_path)
 
         # Act
         execute_results = scanner.invoke_main(arguments=supplied_arguments)

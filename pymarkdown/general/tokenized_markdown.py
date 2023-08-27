@@ -39,6 +39,7 @@ from pymarkdown.links.link_reference_definition_helper import (
 )
 from pymarkdown.tokens.blank_line_markdown_token import BlankLineMarkdownToken
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
+from pymarkdown.tokens.end_of_stream_token import EndOfStreamToken
 from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.tokens.stack_token import (
@@ -83,16 +84,21 @@ class TokenizedMarkdown:
         self.__parse_properties = ParseBlockPassProperties(extension_manager)
 
     def transform_from_provider(
-        self, source_provider: Optional[SourceProvider]
+        self,
+        source_provider: Optional[SourceProvider],
+        do_add_end_of_stream_token: bool = False,
     ) -> List[MarkdownToken]:
         """
         Transform the data from the source provider into a Markdown token stream.
         """
         self.__source_provider = source_provider
-        return self.__transform()
+        return self.__transform(do_add_end_of_stream_token)
 
     def transform(
-        self, your_text_string: str, show_debug: bool = False
+        self,
+        your_text_string: str,
+        show_debug: bool = False,
+        do_add_end_of_stream_token: bool = False,
     ) -> List[MarkdownToken]:
         """
         Transform a text string in a Markdown format into a Markdown token stream.
@@ -103,9 +109,9 @@ class TokenizedMarkdown:
         logging.getLogger().setLevel(logging.DEBUG if show_debug else logging.WARNING)
         ParserLogger.sync_on_next_call()
         self.__source_provider = InMemorySourceProvider(your_text_string)
-        return self.__transform()
+        return self.__transform(do_add_end_of_stream_token)
 
-    def __transform(self) -> List[MarkdownToken]:
+    def __transform(self, do_add_end_of_stream_token: bool) -> List[MarkdownToken]:
         """
         Transform a markdown-encoded string into an array of tokens.
         """
@@ -117,7 +123,7 @@ class TokenizedMarkdown:
             LinkParseHelper.initialize()
 
             POGGER.debug("\n\n>>>>>>>parse_blocks_pass>>>>>>")
-            first_pass_results = self.__parse_blocks_pass()
+            first_pass_results = self.__parse_blocks_pass(do_add_end_of_stream_token)
 
             POGGER.debug("\n\n>>>>>>>coalesce_text_blocks>>>>>>")
             coalesced_results = CoalesceProcessor.coalesce_text_blocks(
@@ -134,7 +140,9 @@ class TokenizedMarkdown:
                 "An unhandled error occurred processing the document."
             ) from this_exception
 
-    def __parse_blocks_pass(self) -> List[MarkdownToken]:
+    def __parse_blocks_pass(
+        self, do_add_end_of_stream_token: bool
+    ) -> List[MarkdownToken]:
         """
         The first pass at the tokens is to deal with blocks.
         """
@@ -186,6 +194,9 @@ class TokenizedMarkdown:
         except AssertionError as this_exception:
             error_message = f"A project assertion failed on line {line_number} of the current document."
             raise BadTokenizationError(error_message) from this_exception
+
+        if do_add_end_of_stream_token:
+            self.__tokenized_document.append(EndOfStreamToken(line_number))
 
         if self.__parse_properties.pragma_lines:
             self.__tokenized_document.append(

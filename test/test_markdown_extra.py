@@ -4231,6 +4231,186 @@ def test_extra_029h():
 
 
 @pytest.mark.gfm
+def test_extra_030xx():
+    """
+    TBD - from test_md010_bad_xxx
+    """
+
+    # Arrange
+    source_markdown = """1. ```text\tdef
+   this contains\ta tab
+   ```
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   \n   \n]",
+        "[fcode-block(1,4):`:3:text::\tdef:::]",
+        "[text(2,4):this contains\ta tab:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(4,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<pre><code class="language-text">this contains\ta tab
+</code></pre>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_030xa():
+    """
+    TBD - from test_md010_bad_xxx
+    """
+
+    # Arrange
+    source_markdown = """+ ```text\tdef
+  this contains\ta tab
+  ```
+"""
+    expected_tokens = [
+        "[ulist(1,1):+::2::  \n  \n]",
+        "[fcode-block(1,3):`:3:text::\tdef:::]",
+        "[text(2,3):this contains\ta tab:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<pre><code class="language-text">this contains\ta tab
+</code></pre>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_030ax():
+    """
+    TBD - from test_md010_bad_xxx
+    """
+
+    # Arrange
+    source_markdown = """1.  ```text\tdef
+    this contains\ta tab
+    ```
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:4::    \n    \n]",
+        "[fcode-block(1,5):`:3:text::\tdef:::]",
+        "[text(2,5):this contains\ta tab:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(4,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<pre><code class="language-text">this contains\ta tab
+</code></pre>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_030aa():
+    """
+    TBD - from test_md010_bad_xxx
+    """
+
+    # Arrange
+    source_markdown = """+   ```text\tdef
+    this contains\ta tab
+    ```
+"""
+    expected_tokens = [
+        "[ulist(1,1):+::4::    \n    \n]",
+        "[fcode-block(1,5):`:3:text::\tdef:::]",
+        "[text(2,5):this contains\ta tab:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<pre><code class="language-text">this contains\ta tab
+</code></pre>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_030bx():
+    """
+    TBD - from test_md010_bad_xxx
+    """
+
+    # Arrange
+    source_markdown = """1.  ```text\tdef
+\tthis contains\ta tab
+\t```
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:4::\t\n\t\n]",
+        "[fcode-block(1,5):`:3:text::\tdef:::]",
+        "[text(2,2):this contains\ta tab:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(4,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<pre><code class="language-text">this contains\ta tab
+</code></pre>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_030ba():
+    """
+    TBD - from test_md010_bad_xxx
+    """
+
+    # Arrange
+    source_markdown = """+   ```text\tdef
+\tthis contains\ta tab
+\t```
+"""
+    expected_tokens = [
+        "[ulist(1,1):+::4::\t\n\t\n]",
+        "[fcode-block(1,5):`:3:text::\tdef:::]",
+        "[text(2,2):this contains\ta tab:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<pre><code class="language-text">this contains\ta tab
+</code></pre>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_extra_999():
     """
     Temporary test to keep coverage up while consistency checks disabled.

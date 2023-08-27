@@ -400,7 +400,6 @@ def test_md033_bad_html_heading():
         "test", "resources", "rules", "md033", "bad_html_heading.md"
     )
     supplied_arguments = [
-        "--stack-trace",
         "scan",
         source_path,
     ]

@@ -824,3 +824,41 @@ def test_md031_issue_626():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md031_in_block_quotes_fall_off_after_fenced_open():
+    """
+    Test to make sure this rule
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "rules",
+        "md031",
+        "bad_block_quote_fall_off_after_fenced_open.md",
+    )
+    supplied_arguments = [
+        "-d",
+        "md010,md041,md040",
+        "scan",
+        source_path,
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        f"{source_path}:3:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)\n"
+        + f"{source_path}:5:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )

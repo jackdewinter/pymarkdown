@@ -30,6 +30,7 @@ class MarkdownToken:
 
     _end_token_prefix = "end-"
     _token_pragma = "pragma"
+    _token_end_of_stream = "end-of-stream"
 
     _token_paragraph = "para"
     _token_blank_line = "BLANK"
@@ -224,6 +225,13 @@ class MarkdownToken:
             or self.is_paragraph
         )
         # or tables
+
+    @property
+    def is_end_of_stream(self) -> bool:
+        """
+        Returns whether the current token is the end of stream element.
+        """
+        return self.token_name == MarkdownToken._token_end_of_stream
 
     @property
     def is_pragma(self) -> bool:

@@ -33,6 +33,7 @@ class TransformToGfmTokenHandlers:
         ert = TokenTypes.get_inline_token_types()
         ert.extend(TokenTypes.get_leaf_token_types())
         ert.extend(TokenTypes.get_container_token_types())
+        ert.extend(TokenTypes.get_special_token_types())
         ert.extend(ExtensionTokenTypes.get_token_types())
 
         for token_type in ert:

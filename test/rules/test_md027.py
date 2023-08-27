@@ -1075,7 +1075,6 @@ def test_md027_bad_block_quote_misindented_unordered_list_first():
         "bad_block_quote_misindented_unordered_list_first.md",
     )
     supplied_arguments = [
-        "--stack-trace",
         "--disable-rules",
         "md005,md007",
         "scan",
@@ -1470,7 +1469,6 @@ def test_md027_bad_block_quote_unordered_list_block_quote_text_first():
         "bad_block_quote_unordered_list_block_quote_text_first.md",
     )
     supplied_arguments = [
-        "--stack-trace",
         "--disable-rules",
         "md007",
         "scan",
@@ -2296,7 +2294,6 @@ def test_md027_good_block_quote_with_trailing_empty_line():
         "good_block_quote_with_trailing_empty_line.md",
     )
     supplied_arguments = [
-        "--stack-trace",
         "scan",
         source_path,
     ]
@@ -2325,7 +2322,6 @@ def test_md027_issue_189():
     scanner = MarkdownScanner()
     source_path = os.path.join("test", "resources", "rules", "md027", "issue-189.md")
     supplied_arguments = [
-        "--stack-trace",
         "--disable-rules",
         "md003,md013,md022",
         "scan",
@@ -2358,7 +2354,6 @@ def test_md027_issue_189_mini():
         "test", "resources", "rules", "md027", "issue-189-mini.md"
     )
     supplied_arguments = [
-        "--stack-trace",
         "scan",
         source_path,
     ]

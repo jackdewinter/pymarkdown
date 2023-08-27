@@ -46,7 +46,6 @@ def test_markdown_with_dash_ae_with_valid_file_extension():
         "test", "resources", "double-line-with-blank-and-trailing.txt"
     )
     supplied_arguments = [
-        "--stack-trace",
         "scan",
         "-ae",
         ".txt",
@@ -79,7 +78,6 @@ def test_markdown_with_dash_ae_with_valid_file_extension_multiple():
     scanner = MarkdownScanner()
     file_to_scan = "test/resources/double-line-with-blank-and-trailing.txt"
     supplied_arguments = [
-        "--stack-trace",
         "scan",
         "-ae",
         ".txt,.md",
@@ -110,7 +108,6 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_no_period():
         "test", "resources", "double-line-with-blank-and-trailing.txt"
     )
     supplied_arguments = [
-        "--stack-trace",
         "scan",
         "-ae",
         "md",
@@ -142,7 +139,6 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_no_alphanum():
         "test", "resources", "double-line-with-blank-and-trailing.txt"
     )
     supplied_arguments = [
-        "--stack-trace",
         "scan",
         "-ae",
         ".*",
@@ -174,7 +170,6 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_only_period():
         "test", "resources", "double-line-with-blank-and-trailing.txt"
     )
     supplied_arguments = [
-        "--stack-trace",
         "scan",
         "-ae",
         ".",
@@ -206,7 +201,6 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_semicolon_as_sep():
         "test", "resources", "double-line-with-blank-and-trailing.txt"
     )
     supplied_arguments = [
-        "--stack-trace",
         "scan",
         "-ae",
         ".md;.txt",
@@ -238,7 +232,6 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_empty():
         "test", "resources", "double-line-with-blank-and-trailing.txt"
     )
     supplied_arguments = [
-        "--stack-trace",
         "scan",
         "-ae",
         "",

@@ -327,6 +327,7 @@ class TabHelper:
         abc: bool = False,
         use_proper_traverse: bool = False,
         reconstruct_prefix: Optional[str] = None,
+        was_indented: bool = False,
     ) -> Tuple[str, int, bool]:
         """
         Find the correct tabified string to represent the line, allowing
@@ -351,42 +352,34 @@ class TabHelper:
         LOGGER.debug(">>adj_original>:%s:<", adj_original)
         LOGGER.debug(">>adj_original_index>:%d:<", adj_original_index)
         LOGGER.debug(">>adj_traverse_original_index>:%d:<", adj_traverse_original_index)
-        split_tab = adj_original is None
-        LOGGER.debug("split_tab>:%s:<", str(split_tab))
-        if split_tab:
-            LOGGER.debug(
-                ">>reconstructed_line>:%s:<",
-                ParserHelper.make_whitespace_visible(
-                    reconstructed_line.replace("\t", "\\t")
-                ),
-            )
-            # Need to split this tab between two areas.
-            if not reconstruct_prefix:
-                reconstruct_prefix = " "
-            reconstructed_line = f"{reconstruct_prefix}{reconstructed_line}"
-            LOGGER.debug(
-                ">>reconstructed_line>:%s:<",
-                ParserHelper.make_whitespace_visible(
-                    reconstructed_line.replace("\t", "\\t")
-                ),
-            )
+
+        # This is a weird case.
+        if adj_original is None and was_indented and original_line[0] == "\t":
+            original_line_minus_leading_tab = original_line[1:]
             (
                 adj_original,
                 adj_original_index,
                 adj_traverse_original_index,
             ) = TabHelper.find_detabify_string(
-                original_line,
+                original_line_minus_leading_tab,
                 reconstructed_line,
                 use_proper_traverse=use_proper_traverse,
             )
-            LOGGER.debug(">>adj_original>:%s:<", adj_original)
-            LOGGER.debug(">>adj_original_index>:%d:<", adj_original_index)
-            LOGGER.debug(
-                ">>adj_traverse_original_index>:%d:<", adj_traverse_original_index
+            was_indented = False
+        split_tab = adj_original is None
+        LOGGER.debug("split_tab>:%s:<", str(split_tab))
+        if split_tab:
+            (
+                adj_original,
+                adj_original_index,
+                adj_traverse_original_index,
+            ) = TabHelper.find_tabified_string_split(
+                reconstructed_line,
+                reconstruct_prefix,
+                original_line,
+                use_proper_traverse,
+                abc,
             )
-            if abc:
-                adj_original_index += 1
-                LOGGER.debug(">>adj_original_index>:%d:<", adj_original_index)
         assert adj_original is not None
         return_index = (
             adj_traverse_original_index if use_proper_traverse else adj_original_index
@@ -402,6 +395,47 @@ class TabHelper:
             return_index,
             split_tab,
         )
+
+    @staticmethod
+    def find_tabified_string_split(
+        reconstructed_line: str,
+        reconstruct_prefix: Optional[str],
+        original_line: str,
+        use_proper_traverse: bool,
+        abc: bool,
+    ) -> Tuple[Optional[str], int, int]:
+        LOGGER.debug(
+            ">>reconstructed_line>:%s:<",
+            ParserHelper.make_whitespace_visible(
+                reconstructed_line.replace("\t", "\\t")
+            ),
+        )
+        # Need to split this tab between two areas.
+        if not reconstruct_prefix:
+            reconstruct_prefix = " "
+        reconstructed_line = f"{reconstruct_prefix}{reconstructed_line}"
+        LOGGER.debug(
+            ">>reconstructed_line>:%s:<",
+            ParserHelper.make_whitespace_visible(
+                reconstructed_line.replace("\t", "\\t")
+            ),
+        )
+        (
+            adj_original,
+            adj_original_index,
+            adj_traverse_original_index,
+        ) = TabHelper.find_detabify_string(
+            original_line,
+            reconstructed_line,
+            use_proper_traverse=use_proper_traverse,
+        )
+        LOGGER.debug(">>adj_original>:%s:<", adj_original)
+        LOGGER.debug(">>adj_original_index>:%d:<", adj_original_index)
+        LOGGER.debug(">>adj_traverse_original_index>:%d:<", adj_traverse_original_index)
+        if abc:
+            adj_original_index += 1
+            LOGGER.debug(">>adj_original_index>:%d:<", adj_original_index)
+        return adj_original, adj_original_index, adj_traverse_original_index
 
     @staticmethod
     def adjust_block_quote_indent_for_tab(

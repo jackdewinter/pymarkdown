@@ -903,11 +903,7 @@ class FencedLeafBlockProcessor:
             FencedCodeBlockStackToken, parser_state.token_stack[-1]
         )
         whitespace_start_count = fenced_stack_token.whitespace_start_count
-        was_indented = False
-        if not parser_state.token_stack[-2].is_document:
-            last_container_token = parser_state.token_stack[-2]
-            assert last_container_token.is_block_quote
-            was_indented = True
+        was_indented = not parser_state.token_stack[-2].is_document
 
         resolved_leaf_token_whitespace = ParserHelper.remove_all_from_text(
             leaf_token_whitespace
@@ -930,7 +926,7 @@ class FencedLeafBlockProcessor:
                 adj_original_index,
                 split_tab,
             ) = TabHelper.find_tabified_string(
-                original_line, reconstructed_line, abc=True
+                original_line, reconstructed_line, abc=True, was_indented=was_indented
             )
 
         (

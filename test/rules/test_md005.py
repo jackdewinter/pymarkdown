@@ -707,7 +707,6 @@ def test_md005_bad_ordered_list_double_level_weirder():
         "bad_ordered_list_double_level_weirder.md",
     )
     supplied_arguments = [
-        "--stack-trace",
         "--disable-rules",
         "md029",
         "scan",
@@ -1071,7 +1070,6 @@ def test_md005_bad_ordered_list_single_level_right_then_left():
     supplied_arguments = [
         "--disable-rules",
         "md029",
-        "--stack-trace",
         "scan",
         source_path,
     ]

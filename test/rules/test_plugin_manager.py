@@ -1801,13 +1801,13 @@ def test_markdown_normal_token_error():
         supplied_arguments = [
             "--add-plugin",
             plugin_path,
-            "--stack-trace",
             "scan",
             temp_source_path,
         ]
 
         expected_return_code = 1
         expected_output = """{path}:0:0: MDE044: Plugin that triggers on end_tokens. (bad-end-tokens)
+{path}:0:0: MDE044: Plugin that triggers on end_tokens. (bad-end-tokens)
 {path}:0:0: MDE044: Plugin that triggers on end_tokens. (bad-end-tokens)""".replace(
             "{path}", temp_source_path
         )
@@ -1841,7 +1841,6 @@ def test_markdown_normal_token_error_not_reported_with_fix():
         supplied_arguments = [
             "--add-plugin",
             plugin_path,
-            "--stack-trace",
             "-x-fix",
             "scan",
             temp_source_path,
@@ -2075,7 +2074,9 @@ We skipped out a 2nd level heading in this document
         execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
-        assert execute_results.std_err.getvalue() == expected_error
+        assert execute_results.std_err.getvalue() == expected_error, (
+            "Error results were: " + execute_results.std_err.getvalue()
+        )
         assert (
             execute_results.return_code == expected_return_code
         ), f"Actual error code ({execute_results.return_code}) and expected error code ({expected_return_code}) differ."
