@@ -80,6 +80,9 @@
             "too-many-arguments": 2
         },
         "pymarkdown/extensions/task_list_items.py": {},
+        "pymarkdown/file_scan_helper.py": {
+            "too-many-arguments": 3
+        },
         "pymarkdown/general/bad_tokenization_error.py": {},
         "pymarkdown/general/constants.py": {},
         "pymarkdown/general/main_presentation.py": {},
@@ -214,7 +217,6 @@
         },
         "pymarkdown/main.py": {
             "too-many-instance-attributes": 1,
-            "too-many-arguments": 2,
             "broad-exception-caught": 3
         },
         "pymarkdown/plugin_manager/__init__.py": {},
@@ -458,7 +460,7 @@
         "too-many-instance-attributes": 22,
         "too-many-public-methods": 4,
         "too-few-public-methods": 39,
-        "too-many-arguments": 191,
+        "too-many-arguments": 192,
         "too-many-locals": 18,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 2,
