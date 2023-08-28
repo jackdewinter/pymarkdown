@@ -17,6 +17,8 @@
   - Refactored modules to put them in more consistent directories
 - [Issue 737](https://github.com/jackdewinter/pymarkdown/issues/737)
   - Added code to not fire on fenced code blocks
+- [Issue 746](https://github.com/jackdewinter/pymarkdown/issues/746)
+  - Moved scanning related code from main.py to new file module
 
 ### Fixed
 
