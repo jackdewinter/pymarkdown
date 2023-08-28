@@ -2,6 +2,8 @@
 
 ## Unversioned - In Main, Not Released
 
+- Start of "fix" mode
+
 ### Added
 
 - [Issue 618](https://github.com/jackdewinter/pymarkdown/issues/618)
