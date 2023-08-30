@@ -3,12 +3,16 @@
 ## Unversioned - In Main, Not Released
 
 - Start of "fix" mode
+- added yaml support for `.pymarkdown.yml` and `.pymarkdown.yaml`
+- added yaml support for `--config` command line
 
 ### Added
 
 - [Issue 618](https://github.com/jackdewinter/pymarkdown/issues/618)
   - Alpha pass at fix mode
   - Rules md001, md009, md010, and md047 support fix mode, but not documented
+- [Issue 691](https://github.com/jackdewinter/pymarkdown/issues/691)
+  - Allow YAML for configuration files
 
 ### Changed
 
@@ -18,7 +22,7 @@
   - Moved code from transform modules (html and markdown) into token classes
   - Refactored modules to put them in more consistent directories
 - [Issue 737](https://github.com/jackdewinter/pymarkdown/issues/737)
-  - Added code to not fire on fenced code blocks
+  - Rule MD010: Added code to not fire on fenced code blocks
 - [Issue 746](https://github.com/jackdewinter/pymarkdown/issues/746)
   - Moved scanning related code from main.py to new file module
 

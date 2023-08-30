@@ -14,6 +14,7 @@ from application_properties.application_properties_utilities import (
     ApplicationPropertiesUtilities,
 )
 
+from pymarkdown.application_configuration_helper import ApplicationConfigurationHelper
 from pymarkdown.application_file_scanner import (
     ApplicationFileScanner,
     ApplicationFileScannerOutputProtocol,
@@ -38,8 +39,6 @@ class PyMarkdownLint:
     """
     Class to provide for a simple implementation of a title case algorithm.
     """
-
-    __default_configuration_file = ".pymarkdown"
 
     def __init__(
         self,
@@ -195,24 +194,14 @@ class PyMarkdownLint:
         if self.__logging:
             self.__logging.pre_initialize_with_args(args)
 
-        self.__apply_configuration_layers(args)
+        ApplicationConfigurationHelper.apply_configuration_layers(
+            args, self.__properties, self.__handle_error
+        )
 
         if args.strict_configuration or self.__properties.get_boolean_property(
             "mode.strict-config", strict_mode=True
         ):
             self.__properties.enable_strict_mode()
-
-    def __apply_configuration_layers(self, args: argparse.Namespace) -> None:
-        ApplicationPropertiesUtilities.process_standard_python_configuration_files(
-            self.__properties, self.__handle_error
-        )
-
-        ApplicationPropertiesUtilities.process_project_specific_json_configuration(
-            PyMarkdownLint.__default_configuration_file,
-            args,
-            self.__properties,
-            self.__handle_error,
-        )
 
     def __initialize_plugins_and_extensions(self, args: argparse.Namespace) -> None:
         self.__initialize_plugins(args)
@@ -338,7 +327,7 @@ class PyMarkdownLint:
         use_standard_in: bool,
         files_to_scan: List[str],
         did_error_scanning_files: bool,
-    ) -> Tuple[int, bool]:
+    ) -> Tuple[int, bool]:  # sourcery skip: extract-method
         total_error_count = 0
         did_fix_any_files = False
         if did_error_scanning_files:

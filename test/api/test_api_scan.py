@@ -213,12 +213,8 @@ def test_api_scan_recursive_for_directory():
         f"{rules_prefix}rule_md002.md",
         f"{rules_prefix}rule_md003.md",
         f"{rules_prefix}rule_md004.md",
-        f"{rules_prefix}rule_md007.md",
         f"{rules_prefix}rule_md009.md",
-        f"{rules_prefix}rule_md010.md",
-        f"{rules_prefix}rule_md012.md",
         f"{rules_prefix}rule_md013.md",
-        f"{rules_prefix}rule_md022.md",
         f"{rules_prefix}rule_md024.md",
         f"{rules_prefix}rule_md025.md",
         f"{rules_prefix}rule_md026.md",
@@ -226,8 +222,6 @@ def test_api_scan_recursive_for_directory():
         f"{rules_prefix}rule_md030.md",
         f"{rules_prefix}rule_md031.md",
         f"{rules_prefix}rule_md033.md",
-        f"{rules_prefix}rule_md034.md",
-        f"{rules_prefix}rule_md035.md",
         f"{rules_prefix}rule_md036.md",
         f"{rules_prefix}rule_md041.md",
         f"{rules_prefix}rule_md043.md",
@@ -237,7 +231,11 @@ def test_api_scan_recursive_for_directory():
     ]
 
     # Act
-    scan_result = PyMarkdownApi().scan_path(base_path, recurse_if_directory=True)
+    scan_result = (
+        PyMarkdownApi()
+        .set_integer_property("plugins.md013.line_length", 100)
+        .scan_path(base_path, recurse_if_directory=True)
+    )
 
     # Assert
     assert scan_result
@@ -246,7 +244,7 @@ def test_api_scan_recursive_for_directory():
     for i in scan_result.scan_failures:
         itemized_scan_failures = itemized_scan_failures + "\n" + str(i)
     print(itemized_scan_failures)
-    assert len(scan_result.scan_failures) == 128
+    assert len(scan_result.scan_failures) == 53
 
     scan_failures = []
     for i in scan_result.scan_failures:

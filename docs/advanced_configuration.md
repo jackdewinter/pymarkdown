@@ -19,8 +19,8 @@ value to the least specific provided configuration value.  In order, this is:
 
 - general command line settings (`--add-plugin`, `--log-file`, etc.)
 - specific command line setting (`-s log.level=INFO`, etc.)
-- command line configuration file (`--config myconfig.json`)
-- default configuration file (loading default `.pymarkdown` JSON file)
+- command line configuration file (`--config myconfig` JSON or YAML file)
+- default configuration file (default `.pymarkdown` JSON file or `.pymarkdown.yml` YAML file)
 - alternate project configuration files (`tool.pymarkdown` section of `pyproject.toml` file)
 - default value
 
@@ -176,9 +176,9 @@ The `-c` or `--config` argument is used to specify a configuration file that con
 zero or more configuration settings to apply.  That argument is followed by the
 name of a file that contains those configuration settings in a JSON format. The
 specifics of that format are detailed more thoroughly in the [JSON Format](./advanced_configuration.md#json-format)
-section. As that file format meets PyMarkdown's requirements for clear item typing
-and a hierarchical format, there are no plans to support any other file types for
-the primary configuration file.
+section.  As an alternative, this file may be presented in YAML format, which
+is detailed more thoroughly in the [YAML Format](./advanced_configuration.md#yaml-format)
+section.
 
 As an example, the enhanced logging output snippet from the
 [Specific Command Line Setting](#specific-command-line-setting) section can be
@@ -193,13 +193,23 @@ expressed in JSON format as:
 }
 ```
 
-### Default Configuration File
+and in a YAML format as:
+
+```yaml
+log:
+  level: "INFO"
+  stack-trace: true
+```
+
+### Default Configuration Files
 
 As an alternative to a specified configuration file, there are times where there
 is a need to tie a configuration file to a directory hierarchy. To support those
 needs, when PyMarkdown starts up, it looks for a configuration file named
 `.pymarkdown` in the current directory.  If that file is present, PyMarkdown
-tries to load that file as if it was specified with the `-c` or `--config` arguments.
+tries to load that file as if it was a JSON file specified with the `-c` or `--config` arguments.
+If a YAML file is intended as a default configuration file, the file name should
+be `.pymarkdown.yml` or `.pymarkdown.yaml` instead.
 
 Note that because of precedence, a configuration file specified with the `-c` or
 `--config` arguments will always override the values provided in a `.pymarkdown`
@@ -216,6 +226,20 @@ when a given Markdown file is scanned.  If multiple default configuration files
 are nested within a given directory structure, some manner of scripting will be
 necessary to properly apply the right default configuration file to its corresponding
 directory structure.
+
+#### Why The Difference Between Default and Specific Configuration Files
+
+One thing that might appear to be odd are the difference in the handling of the
+`.pymarkdown` default file (JSON) and the `.pymarkdown.yml` default file (YAML) from
+the configuration files specified on the command line with the `-c` or `--config`
+arguments.
+
+This topic is covered more thoroughly in the section on the
+[YAML Format](./advanced_configuration.md#yaml-format), but it boils down to
+preciseness over user-friendlyness.  It is the project's team decision that
+JSON is a more precise format with which to specify configuration, versus the
+YAML format which is less precise.  If you wish to know more about this topic,
+please consult the YAML section below.
 
 ### Alternate Project Configuration Files
 
@@ -300,6 +324,51 @@ Scanning file 'examples/example-1.md'.
 Scanning file 'examples/example-1.md' token-by-token.
 coalesced_results
 ```
+
+### YAML Format
+
+As an alternative, the configuration file may be specified in a YAML format.  While
+the preciseness of the JSON format is useful, we believe that there is merit in the
+observations that sometimes that preciseness is cumbersome.  Therefore, the YAML
+format was selected as it still retains elements of that preciseness while being
+more user friendly.
+
+An example of this user-friendlyness is a restating of the last section's JSON
+configuration into the matching YAML:
+
+```yaml
+log:
+  file: "log.txt"
+  level: "INFO"
+```
+
+While it is possible to reduce that YAML configuration to the following:
+
+```yaml
+log:
+  file: log.txt
+  level: INFO
+```
+
+it is advised that you do not do that.  One of the reasons that our team did not choose
+YAML as the file type of configuration is because of this one example:
+
+```yaml
+some-thing: 1
+```
+
+Whereas in JSON this would obviousless be a number, there is some ambiguity around
+whether this is the number `1` or the string `1`.  At the very least, it took our team
+at least five minutes to state that the answer is a `FixedNum` of `1` is the answer.
+In this case, a string of `1` requires either `'1'` or `"1"` to be interpretted as a
+string.
+
+Because of this perceived ambiguity, it was our team's decision to use a more precise
+but more verbose JSON format as the main format, but also provide a less precise but
+more user-friendly YAML format as an alternative.  While we still believe that the
+JSON format is a better choice for preciseness, we also realize that YAML is more
+user-friendly and easier to write for end-users.  As such, we provide both formats
+and allow the user to make their own decision about which one to use.
 
 ### Flattened-Hierarchical Property Names
 
