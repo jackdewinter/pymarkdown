@@ -71,8 +71,9 @@ def test_api_config_with_bad_path():
 
     # Assert
     assert caught_exception, "Should have thrown an exception."
-    assert caught_exception.reason.startswith(
-        "Specified configuration file 'not-exists' was not loaded:"
+    assert (
+        caught_exception.reason
+        == "Specified configuration file `not-exists` does not exist."
     )
 
 
@@ -111,7 +112,7 @@ def test_api_config_with_bad_contents():
     assert caught_exception, "Should have thrown an exception."
     assert (
         caught_exception.reason
-        == f"Specified configuration file '{configuration_file}' is not a valid JSON file: Expecting value: line 1 column 1 (char 0)."
+        == f"Specified configuration file '{configuration_file}' was not parseable as a JSON file or a YAML file."
     )
 
 

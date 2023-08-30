@@ -199,11 +199,7 @@ def test_markdown_with_dash_e_single_by_id_and_non_json_config_file():
 
         expected_return_code = 1
         expected_output = ""
-        expected_error = (
-            "Specified configuration file '"
-            + configuration_file
-            + "' is not a valid JSON file: Expecting value: line 1 column 1 (char 0).\n"
-        )
+        expected_error = f"Specified configuration file '{configuration_file}' was not parseable as a JSON file or a YAML file."
 
         # Act
         execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -244,10 +240,9 @@ def test_markdown_with_dash_e_single_by_id_and_non_present_config_file():
 
     expected_return_code = 1
     expected_output = ""
-    expected_error = (
-        "Specified configuration file 'not-exists' was not loaded: "
-        + "[Errno 2] No such file or directory: 'not-exists'.\n"
-    )
+    expected_error = """
+
+Specified configuration file `not-exists` does not exist."""
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)

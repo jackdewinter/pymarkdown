@@ -28,6 +28,7 @@ setuptools = "==68.1.2"
 snakeviz = "==2.2.0"
 sourcery = "==1.8.0"
 twine = "==4.0.2"
+types-pyyaml = "*"
 
 [packages]
 columnar = ">=1.4.0"

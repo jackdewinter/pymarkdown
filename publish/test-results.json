@@ -1572,7 +1572,7 @@
         },
         {
             "name": "test.test_main_config_files",
-            "totalTests": 8,
+            "totalTests": 14,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
