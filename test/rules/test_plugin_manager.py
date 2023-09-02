@@ -52,6 +52,8 @@ def test_markdown_with_dash_dash_add_plugin_and_bad_path():
 
     This function shadows
     test_api_plugins_add_with_bad_path
+    and
+    test_markdown_return_code_default_system_error.
     """
 
     # Arrange

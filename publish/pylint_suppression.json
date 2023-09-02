@@ -315,6 +315,7 @@
         "pymarkdown/plugins/rule_md_046.py": {},
         "pymarkdown/plugins/rule_md_047.py": {},
         "pymarkdown/plugins/rule_md_048.py": {},
+        "pymarkdown/return_code_helper.py": {},
         "pymarkdown/tokens/atx_heading_markdown_token.py": {
             "protected-access": 1
         },

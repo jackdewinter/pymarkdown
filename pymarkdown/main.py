@@ -5,7 +5,6 @@ import argparse
 import logging
 import os
 import runpy
-import sys
 import traceback
 from typing import List, Optional, Tuple, cast
 
@@ -28,6 +27,7 @@ from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.tokenized_markdown import TokenizedMarkdown
 from pymarkdown.plugin_manager.bad_plugin_error import BadPluginError
 from pymarkdown.plugin_manager.plugin_manager import PluginManager
+from pymarkdown.return_code_helper import ApplicationResult, ReturnCodeHelper
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -86,6 +86,8 @@ class PyMarkdownLint:
     def __initialize_subsystems(
         self, direct_args: Optional[List[str]]
     ) -> argparse.Namespace:
+        ReturnCodeHelper.reset()
+
         args = self.__parse_arguments(direct_args=direct_args)
         self.__set_initial_state(args)
 
@@ -172,6 +174,7 @@ class PyMarkdownLint:
             help="if an error occurs, print out the stack trace for debug purposes",
         )
         ApplicationLogging.add_default_command_line_arguments(parser)
+        ReturnCodeHelper.add_command_line_arguments(parser)
 
         subparsers = parser.add_subparsers(dest="primary_subparser")
         PluginManager.add_argparse_subparser(subparsers)
@@ -184,10 +187,10 @@ class PyMarkdownLint:
 
         if not parse_arguments.primary_subparser:
             parser.print_help()
-            sys.exit(2)
+            ReturnCodeHelper.exit_application(ApplicationResult.COMMAND_LINE_ERROR)
         elif parse_arguments.primary_subparser == "version":
             print(f"{self.__version_number}")
-            sys.exit(0)
+            ReturnCodeHelper.exit_application(ApplicationResult.SUCCESS)
         return parse_arguments
 
     def __set_initial_state(self, args: argparse.Namespace) -> None:
@@ -198,19 +201,22 @@ class PyMarkdownLint:
             args, self.__properties, self.__handle_error
         )
 
-        if args.strict_configuration or self.__properties.get_boolean_property(
-            "mode.strict-config", strict_mode=True
-        ):
-            self.__properties.enable_strict_mode()
+        ReturnCodeHelper.set_initial_state(args, self.__properties)
+
+        LOGGER.info("Configuration loaded and applied.  Initial state setup completed.")
 
     def __initialize_plugins_and_extensions(self, args: argparse.Namespace) -> None:
         self.__initialize_plugins(args)
         self.__initialize_extensions(args)
 
         if args.primary_subparser == PluginManager.argparse_subparser_name():
-            sys.exit(self.__plugins.handle_argparse_subparser(args))
+            ReturnCodeHelper.exit_application(
+                self.__plugins.handle_argparse_subparser(args)
+            )
         if args.primary_subparser == ExtensionManager.argparse_subparser_name():
-            sys.exit(self.__extensions.handle_argparse_subparser(args))
+            ReturnCodeHelper.exit_application(
+                self.__extensions.handle_argparse_subparser(args)
+            )
 
     def __initialize_plugins(self, args: argparse.Namespace) -> None:
         try:
@@ -313,7 +319,7 @@ class PyMarkdownLint:
         )
         self.__presentation.print_system_error(f"\n\n{formatted_error}{stack_trace}")
         if exit_on_error:
-            sys.exit(1)
+            ReturnCodeHelper.exit_application(ApplicationResult.SYSTEM_ERROR)
 
     def __handle_file_scanner_output(self, formatted_output: str) -> None:
         self.__presentation.print_system_output(formatted_output)
@@ -327,12 +333,12 @@ class PyMarkdownLint:
         use_standard_in: bool,
         files_to_scan: List[str],
         did_error_scanning_files: bool,
-    ) -> Tuple[int, bool]:  # sourcery skip: extract-method
-        total_error_count = 0
+    ) -> ApplicationResult:  # sourcery skip: extract-method
+        scan_result = ApplicationResult.SUCCESS
         did_fix_any_files = False
         if did_error_scanning_files:
             self.__handle_error("No matching files found.", None, exit_on_error=False)
-            total_error_count = 1
+            scan_result = ApplicationResult.NO_FILES_TO_SCAN
         else:
             POGGER.info("Initializing parser.")
             self.__initialize_parser()
@@ -349,14 +355,20 @@ class PyMarkdownLint:
             did_fix_any_files = fsh.process_files_to_scan(
                 args, use_standard_in, files_to_scan, self.__string_to_scan
             )
+            if did_fix_any_files:
+                scan_result = ApplicationResult.FIXED_AT_LEAST_ONE_FILE
+            elif self.__plugins.number_of_scan_failures:
+                scan_result = ApplicationResult.SCAN_TRIGGERED_AT_LEAST_ONCE
             POGGER.info("Files have been processed.")
-        return total_error_count, did_fix_any_files
+
+        return scan_result
 
     def __find_files_to_scan(
         self, args: argparse.Namespace
-    ) -> Tuple[bool, List[str], bool]:
+    ) -> Tuple[bool, List[str], bool, bool]:
         files_to_scan: List[str] = []
         did_error_scanning_files = False
+        did_only_list_files = False
 
         use_standard_in = FileScanHelper.is_scan_stdin_specified(args)
         if not use_standard_in:
@@ -364,6 +376,7 @@ class PyMarkdownLint:
             (
                 files_to_scan,
                 did_error_scanning_files,
+                did_only_list_files,
             ) = ApplicationFileScanner.determine_files_to_scan_with_args(
                 args,
                 cast(
@@ -375,15 +388,19 @@ class PyMarkdownLint:
                     self.__handle_file_scanner_error,
                 ),
             )
-        return use_standard_in, files_to_scan, did_error_scanning_files
+        return (
+            use_standard_in,
+            files_to_scan,
+            did_error_scanning_files,
+            did_only_list_files,
+        )
 
     # pylint: disable=broad-exception-caught
     def main(self, direct_args: Optional[List[str]] = None) -> None:
         """
         Main entrance point.
         """
-        total_error_count = 0
-        did_fix_any_files = False
+        scan_result = ApplicationResult.SUCCESS
         try:
             args = self.__initialize_subsystems(direct_args)
 
@@ -391,10 +408,16 @@ class PyMarkdownLint:
                 use_standard_in,
                 files_to_scan,
                 did_error_scanning_files,
+                did_only_list_files,
             ) = self.__find_files_to_scan(args)
-            total_error_count, did_fix_any_files = self.__scan_files_if_no_errors(
-                args, use_standard_in, files_to_scan, did_error_scanning_files
-            )
+            if did_only_list_files:
+                if not files_to_scan:
+                    scan_result = ApplicationResult.NO_FILES_TO_SCAN
+                ReturnCodeHelper.exit_application(scan_result)
+            else:
+                scan_result = self.__scan_files_if_no_errors(
+                    args, use_standard_in, files_to_scan, did_error_scanning_files
+                )
         except ValueError as this_exception:
             formatted_error = f"Configuration Error: {this_exception}"
             self.__handle_error(formatted_error, this_exception)
@@ -408,10 +431,7 @@ class PyMarkdownLint:
                 self.__logging.terminate()
             self.__logging = None
 
-        if self.__plugins.number_of_scan_failures or total_error_count:
-            sys.exit(1)
-        if did_fix_any_files:
-            sys.exit(3)
+        ReturnCodeHelper.exit_application(scan_result)
 
     # pylint: enable=broad-exception-caught
 

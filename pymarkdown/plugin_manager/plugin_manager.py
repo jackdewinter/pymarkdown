@@ -24,6 +24,7 @@ from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.plugin_scan_failure import PluginScanFailure
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
+from pymarkdown.return_code_helper import ApplicationResult
 from pymarkdown.tokens.markdown_token import MarkdownToken
 
 LOGGER = logging.getLogger(__name__)
@@ -207,7 +208,9 @@ class PluginManager:
         if next_plugin.plugin_version != "0.0.0" or args.show_all:
             self.__show_row_if_matches(list_re, next_plugin_id, next_plugin, show_rows)
 
-    def __handle_argparse_subparser_list(self, args: argparse.Namespace) -> int:
+    def __handle_argparse_subparser_list(
+        self, args: argparse.Namespace
+    ) -> ApplicationResult:
         list_re = None
         if args.list_filter:
             list_re = re.compile(
@@ -228,11 +231,11 @@ class PluginManager:
                 "version",
             ]
             self.__print_columnar_data(headers, show_rows)
-            return 0
+            return ApplicationResult.SUCCESS
         self.__presentation.print_system_error(
             f"No plugin rule identifiers matches the pattern '{args.list_filter}'."
         )
-        return 1
+        return ApplicationResult.NO_FILES_TO_SCAN
 
     def __show_row_if_matches(
         self,
@@ -270,7 +273,9 @@ class PluginManager:
             ParserHelper.newline_character.join(new_rows)
         )
 
-    def __handle_argparse_subparser_info(self, args: argparse.Namespace) -> int:
+    def __handle_argparse_subparser_info(
+        self, args: argparse.Namespace
+    ) -> ApplicationResult:
         matching_plugins: List[FoundPlugin] = list(
             filter(
                 lambda x: args.info_filter in x.plugin_identifiers,
@@ -281,7 +286,7 @@ class PluginManager:
             self.__presentation.print_system_error(
                 f"Unable to find a plugin with an id or name of '{args.info_filter}'."
             )
-            return 1
+            return ApplicationResult.NO_FILES_TO_SCAN
 
         found_plugin = matching_plugins[0]
         show_rows = [
@@ -298,24 +303,20 @@ class PluginManager:
 
         headers = ["Item", "Description"]
         self.__print_columnar_data(headers, show_rows)
-        return 0
+        return ApplicationResult.SUCCESS
 
-    def handle_argparse_subparser(self, args: argparse.Namespace) -> int:
+    def handle_argparse_subparser(self, args: argparse.Namespace) -> ApplicationResult:
         """
         Handle the parsing for this subparser.
         """
-        return_code, subparser_value = 0, getattr(
-            args, PluginManager.__root_subparser_name
-        )
+        subparser_value = getattr(args, PluginManager.__root_subparser_name)
         if subparser_value == "list":
-            return_code = self.__handle_argparse_subparser_list(args)
-        elif subparser_value == "info":
-            return_code = self.__handle_argparse_subparser_info(args)
-        else:
-            assert PluginManager.__argparse_subparser
-            PluginManager.__argparse_subparser.print_help()
-            sys.exit(2)
-        return return_code
+            return self.__handle_argparse_subparser_list(args)
+        if subparser_value == "info":
+            return self.__handle_argparse_subparser_info(args)
+        assert PluginManager.__argparse_subparser
+        PluginManager.__argparse_subparser.print_help()
+        return ApplicationResult.COMMAND_LINE_ERROR
 
     def log_scan_failure(self, scan_failure: PluginScanFailure) -> None:
         """

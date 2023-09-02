@@ -4,7 +4,6 @@ Module to provide classes to deal with extensions.
 import argparse
 import logging
 import re
-import sys
 from typing import Dict, List, Optional, Tuple
 
 from application_properties import ApplicationProperties, ApplicationPropertiesFacade
@@ -25,6 +24,7 @@ from pymarkdown.extensions.pragma_token import PragmaExtension
 from pymarkdown.extensions.task_list_items import MarkdownTaskListItemsExtension
 from pymarkdown.general.main_presentation import MainPresentation
 from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.return_code_helper import ApplicationResult
 
 LOGGER = logging.getLogger(__name__)
 
@@ -138,24 +138,22 @@ class ExtensionManager:
         """
         return "extensions"
 
-    def handle_argparse_subparser(self, args: argparse.Namespace) -> int:
+    def handle_argparse_subparser(self, args: argparse.Namespace) -> ApplicationResult:
         """
         Handle the parsing for this subparser.
         """
-        return_code, subparser_value = 0, getattr(
-            args, ExtensionManager.__root_subparser_name
-        )
+        subparser_value = getattr(args, ExtensionManager.__root_subparser_name)
         if subparser_value == "list":
-            return_code = self.__handle_argparse_subparser_list(args)
-        elif subparser_value == "info":
-            return_code = self.__handle_argparse_subparser_info(args)
-        else:
-            assert ExtensionManager.__argparse_subparser
-            ExtensionManager.__argparse_subparser.print_help()
-            sys.exit(2)
-        return return_code
+            return self.__handle_argparse_subparser_list(args)
+        if subparser_value == "info":
+            return self.__handle_argparse_subparser_info(args)
+        assert ExtensionManager.__argparse_subparser
+        ExtensionManager.__argparse_subparser.print_help()
+        return ApplicationResult.COMMAND_LINE_ERROR
 
-    def __handle_argparse_subparser_list(self, args: argparse.Namespace) -> int:
+    def __handle_argparse_subparser_list(
+        self, args: argparse.Namespace
+    ) -> ApplicationResult:
         list_re = None
         if args.list_filter:
             list_re = re.compile(
@@ -198,18 +196,20 @@ class ExtensionManager:
                 "version",
             ]
             self.__print_column_output(headers, show_rows)
-            return 0
+            return ApplicationResult.SUCCESS
         self.__presentation.print_system_error(
             f"No extension identifier matches the pattern '{args.list_filter}'."
         )
-        return 1
+        return ApplicationResult.NO_FILES_TO_SCAN
 
-    def __handle_argparse_subparser_info(self, args: argparse.Namespace) -> int:
+    def __handle_argparse_subparser_info(
+        self, args: argparse.Namespace
+    ) -> ApplicationResult:
         if args.info_filter not in self.__extension_details:
             self.__presentation.print_system_error(
                 f"Unable to find an extension with an id of '{args.info_filter}'."
             )
-            return 1
+            return ApplicationResult.NO_FILES_TO_SCAN
 
         found_extension = self.__extension_details[args.info_filter]
         show_rows: List[List[str]] = [
@@ -221,7 +221,7 @@ class ExtensionManager:
 
         headers = ["Item", "Description"]
         self.__print_column_output(headers, show_rows)
-        return 0
+        return ApplicationResult.SUCCESS
 
     def __print_column_output(
         self, headers: List[str], show_rows: List[List[str]]

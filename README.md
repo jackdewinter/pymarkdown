@@ -10,8 +10,8 @@
 
 PyMarkdown is primarily a Markdown Linter.  To ensure that the Markdown
 [linting](https://en.wikipedia.org/wiki/Lint_%28software%29)
-is accomplished successfully, the rules engine that powers the linter
-uses a Markdown parser that is both
+is accomplished successfully, the rules engine that powers the linter uses a Markdown
+parser that is both
 [GitHub Flavored Markdown](https://github.github.com/gfm/)
 compliant and
 [CommonMark](https://spec.commonmark.org/)
@@ -59,11 +59,10 @@ please let us know.
 
 ## GitHub Pre Commit Hooks
 
-If you intend to use the PyMarkdown project as a linter for your
-GitHub Pre-Commit hooks, then refer to [this document](/docs/pre-commit.md)
-on how to set that up.  Once setup, you can continue reading at the
-[How To Use section](#how-to-use) for more information on the options
-available for use in your Pre-Commit Hooks.
+If you intend to use the PyMarkdown project as a linter for your GitHub Pre-Commit
+hooks, then refer to [this document](/docs/pre-commit.md) on how to set that up.
+Once configured, you can continue reading at the [How To Use section](#how-to-use)
+for more information on the options available for use in your Pre-Commit Hooks.
 
 ## Requirements
 
@@ -85,9 +84,8 @@ Full help support is available by entering
 pymarkdown --help
 ```
 
-on the command line and pressing enter.  For an individual command,
-help is available by following the command or commands with `--help`
-as follows:
+on the command line and pressing enter.  For an individual command, help is
+available by following the command or commands with `--help` as follows:
 
 ```shell
 pymarkdown scan --help
@@ -95,10 +93,10 @@ pymarkdown scan --help
 
 ### Prerequisites
 
-Various sections of this document benefit from having concrete examples
-to illustrate how things work. For the following sections,
-this documentation will assume that there is a file called `example-1.md`
-in a directory called `examples` that has the following content:
+Various sections of this document benefit from having concrete examples to
+illustrate how things work. For the following sections, this documentation
+will assume that there is a file called `example-1.md` in a directory called
+`examples` that has the following content:
 
 ```Markdown
 ## This is an example
@@ -117,24 +115,23 @@ Just an example.
 ```
 
 If you prefer concrete files, these files are checked into the
-[examples directory](https://github.com/jackdewinter/pymarkdown/tree/main/examples) of the GitHub project.
+[examples directory](https://github.com/jackdewinter/pymarkdown/tree/main/examples)
+of the GitHub project.
 
 ### API Support
 
 While the vast majority of people using this application will use it
 through the command line, there is an auto-generated [API document](./docs/api.md)
-and [another document](./docs/api-usage.md) on how to use the API.  This support
-is very new, but introduced with lots of testing. If there are usability issues
-or something you feel is missing, please contact us.
+and [a companion document](./docs/api-usage.md) on how to use the API.  This
+support is very new, but introduced with lots of testing. If there are usability
+issues or something you feel is missing, please contact us.
 
 ### Basic Scanning
 
-The PyMarkdown linter is executed by calling the project from the
-command line and
-specifying one or more files and directories to scan for Markdown `.md`
-files.  The set of files and/or directories must be prefaced with the
-`scan` keyword to denote that scanning is required. For the examples
-directory, both this form:
+The PyMarkdown linter is executed by calling the project from the command line
+and specifying one or more files and directories to scan for Markdown `.md` files.
+The set of files and/or directories must be prefaced with the `scan` keyword to
+denote that scanning is required. For the examples directory, both this form:
 
 ```shell
 pymarkdown scan examples
@@ -146,15 +143,14 @@ and this form:
 pymarkdown scan examples/example-1.md examples/example-2.md
 ```
 
-can be used to scan both files in the directory.  The only difference
-between the two invocations is that the first example will scan every
-Markdown `.md` file in the `examples` directory, while the second
-invocation will only scan the two specified files.  For clarity purposes,
-if the command line specifies the same file multiple times, that file
-name will only be added to the list of files to scan once.
+can be used to scan both files in the directory.  The only difference between the
+two invocations is that the first example will scan every Markdown `.md` file in
+the `examples` directory, while the second invocation will only scan the two specified
+files.  For clarity purposes, if the command line specifies the same file multiple
+times, that file name will only be added to the list of files to scan once.
 
-If everything is working properly, both of the above scans will
-produce the following output:
+If everything is working properly, both of the above scans will produce the following
+output:
 
 ```text
 examples/example-1.md:3:16: MD047: Each file should end with a single newline character. (single-trailing-newline)
@@ -162,28 +158,24 @@ examples/example-1.md:3:16: MD047: Each file should end with a single newline ch
 
 ### Rules
 
-The PyMarkdown project includes 13 out-of-the-box [rules](/docs/rules.md),
-with another 29 rules to be added before the
-1.0.0 release.  These rules are implemented using a simple plugin
-system that is documented in the [developer documentation](/docs/developer.md).
-It is these rules that allow the PyMarkdown project to scan
-the various Markdown files, looking for bad patterns over that set of
-Markdown documents.
+The PyMarkdown project includes 42 out-of-the-box [rules](/docs/rules.md). These
+rules are implemented using a simple plugin system that is documented in the
+[developer documentation](/docs/developer.md).  It is these rules that allow the
+PyMarkdown project to scan the various Markdown files, looking for bad patterns
+over that set of Markdown documents.
 
-Because of the way that the rules are provided, sometimes we
-refer to the rules as `rules` and sometimes as `rule plugins`.  A `rule`
-is a specific set of conditions that trigger the reporting of a violation
-when those conditions occur.  A `rule plugin` is the Python class
-and Python file in which the `rule` is supplied to the PyMarkdown application.
-Our goal is to try to not use these phrases interchangeably, but we are only
-human.  If we do mess up and use the wrong phase, we do apologize.
+Because of the way that the rules are provided, sometimes we refer to the rules
+as `rules` and sometimes as `rule plugins`.  A `rule` is a specific set of conditions
+that trigger the reporting of a violation when those conditions occur.  A
+`rule plugin` is the Python class and Python file in which the `rule` is supplied
+to the PyMarkdown application.  Our goal is to try to not use these phrases interchangeably,
+but we are only human.  If we do mess up and use the wrong phase, we do apologize.
 
 Note that the initial set of rules are modelled after the 42 rules provided by
-David Anson's [Markdown Lint](https://github.com/markdownlint/markdownlint)
-project.  This decision was made
-to give Markdown authors that use his project in their IDEs (such as
-the MarkdownLint plugin for VSCode that I use), a good grounding
-in what they can consistently check for.
+David Anson's [Markdown Lint](https://github.com/markdownlint/markdownlint) project.
+This decision was made to give Markdown authors that use his project in their IDEs
+(such as the MarkdownLint plugin for VSCode that I use), a good grounding in what
+they can consistently check for.
 
 ### Rule Violation Format
 
@@ -203,22 +195,20 @@ The format of the output for any rules that are triggered is as follows:
 - `description` - Human readable description of the rule.
 - `aliases` - One or more aliases used to reference the rule.
 
-For the rule violation that was reported at the start of this section,
-the first step in diagnosing
-that violation is to look at the file `/examples/example-1.md` at the end of
-line 3, which is column 16.  Rule [md047](/docs/rules/rule_md047.md) specifies
-that every file should end with a single newline character, which is
-what is reported in the violation's description.  Additionally, it reports that this
-rule can also be identified by the more human readable alias of
+For the rule violation that was reported at the start of this section, the first
+step in diagnosing that violation is to look at the file `/examples/example-1.md`
+at the end of line 3, which is column 16.  Rule [md047](/docs/rules/rule_md047.md)
+specifies that every file should end with a single newline character, which is
+what is reported in the violation's description.  Additionally, it reports that
+this rule can also be identified by the more human readable alias of
 `single-trailing-newline`.
 
 ### Basic Configuration
 
-The most frequently used part of the configuration system is the
-part that enables and disables specific rules while scanning the
-Markdown files.  For example, if you do not like rule md047 which
-states that each file must end with a single newline, you can
-disable that rule by specifying:
+The most frequently used part of the configuration system is the part that enables
+and disables specific rules while scanning the Markdown files.  For example, if
+you do not like rule md047 which states that each file must end with a single newline,
+you can disable that rule by specifying:
 
 ```shell
 pymarkdown -d md047 scan /examples
@@ -230,17 +220,14 @@ or:
 pymarkdown --disable-rules md047 scan /examples
 ```
 
-The effect of disabling the rule should be evidenced by
-the scan no longer reporting any violations of rule md047
-against the Markdown file `example-1.md`.
+The effect of disabling the rule should be evidenced by the scan no longer reporting
+any violations of rule md047 against the Markdown file `example-1.md`.
 
-Alternatively, rules can also be enabled.  As the modelled
-base rules for this project are based off those rules for David
-Anson's project, rule md002 is disable by default in both
-projects.  Specifically, rule md002 is disabled by default
-as rule md041 provides a better implementation of that rule
-that takes front-matter into account.  Until that rule is
-implemented, you can enable rule md002 by specifying either:
+Alternatively, rules can also be enabled.  As the modelled base rules for this
+project are based off those rules for David Anson's project, rule md002 is disabled
+by default in both projects.  Specifically, rule md002 is disabled by default as
+rule md041 provides a better implementation of that rule that takes front-matter
+into account.  If you prefer rule md002, you can enable it by specifying either:
 
 ```shell
 pymarkdown -e md002 scan /examples
@@ -252,9 +239,8 @@ or
 pymarkdown --enable-rules md002 scan /examples
 ```
 
-The effect of enabling the rule is evidenced by
-the scan reporting a violation of Rule md002 against
-Markdown file `example-1.md`:
+The effect of enabling the rule is evidenced by the scan reporting a violation of
+Rule md002 against Markdown file `example-1.md`:
 
 ```text
 examples/example-1.md:1:1: MD002: First heading of the document should be a top level heading.
@@ -274,7 +260,12 @@ extension, and configuration information.
 ### Advanced Scanning
 
 For more advanced scanning options, please consult the document
-on [Advanced Scanning](/docs/advanced_scanning.md).
+on [Advanced Scanning](/docs/advanced_scanning.md).  This document includes information
+on:
+
+- [Command Line Globbing Support](/docs/advanced_scanning.md#glob-support)
+- [Recursing Directories](/docs/advanced_scanning.md#recursing-directories)
+- [Pragmas to Disable Rules Inline](/docs/advanced_scanning.md#pragmas)
 
 ### Advanced Configuration
 
@@ -282,9 +273,10 @@ For more advanced configuration options, please consult the document
 on [Advanced Configuration](/docs/advanced_configuration.md).  This
 document includes information on:
 
-- [Command Line Settings](/docs/advanced_configuration.md#command-line-settings)
-- [Configuration File Settings](/docs/advanced_configuration.md#configuration-file-settings)
+- [Command Line Settings](/docs/advanced_configuration.md#general-command-line-settings)
+- [Configuration File Settings](/docs/advanced_configuration.md#command-line-configuration-file)
 - [Available Configuration Values](/docs/advanced_configuration.md#available-configuration-values)
+- [Return Code Behavior](/docs/advanced_configuration.md#changing-the-application-return-code-behavior)
 
 ### Advanced Rule Plugins
 

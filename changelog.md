@@ -23,6 +23,8 @@
   - Refactored modules to put them in more consistent directories
 - [Issue 737](https://github.com/jackdewinter/pymarkdown/issues/737)
   - Rule MD010: Added code to not fire on fenced code blocks
+- [Issue 744](https://github.com/jackdewinter/pymarkdown/issues/744)
+  - Added ability to change return code profile
 - [Issue 746](https://github.com/jackdewinter/pymarkdown/issues/746)
   - Moved scanning related code from main.py to new file module
 
