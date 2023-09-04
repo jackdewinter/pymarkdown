@@ -14,11 +14,14 @@ class SourceProvider(ABC):
     information about the input source.
     """
 
+    # pylint: disable=deprecated-decorator
     @abstractproperty
     def is_at_end_of_file(self) -> bool:
         """
         Whether the provider has reached the end of the input.
         """
+
+    # pylint: enable=deprecated-decorator
 
     @abstractmethod
     def get_next_line(self) -> Optional[str]:
@@ -83,6 +86,9 @@ class FileSourceProvider(SourceProvider):
 
     @property
     def did_final_line_end_with_newline(self) -> bool:
+        """
+        Indicate whether the final line of the file ended with a newline.
+        """
         return self.__did_final_line_end_with_newline
 
     @property
