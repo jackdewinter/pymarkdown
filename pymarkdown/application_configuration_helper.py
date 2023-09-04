@@ -51,6 +51,11 @@ class ApplicationConfigurationHelper:
             handle_error,
         )
 
+        if args.strict_configuration or properties.get_boolean_property(
+            "mode.strict-config", strict_mode=True
+        ):
+            properties.enable_strict_mode()
+
     @staticmethod
     def __process_project_specific_json_configuration(
         args: argparse.Namespace,

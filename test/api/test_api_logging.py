@@ -301,7 +301,7 @@ def test_api_logging_stack_trace_with_no_exception(caplog):
 
     # Arrange
     source_path = "my-bad-path"
-    expected_log_levels = ["DEBUG"]
+    expected_log_levels = ["DEBUG", "INFO"]
 
     # Act
     try:

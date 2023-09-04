@@ -2,9 +2,47 @@
 
 ## Unversioned - In Main, Not Released
 
-- Start of "fix" mode
-- added yaml support for `.pymarkdown.yml` and `.pymarkdown.yaml`
-- added yaml support for `--config` command line
+### Added
+
+- None
+
+### Changed
+
+- None
+
+### Fixed
+
+- None
+
+## Version 0.9.13 - Date: 2023-09-03
+
+This release had some new features, but the most interesting one of all is
+the start of the work on the `fix mode` that has been requested.  It is invoke
+by invoking the scan engine with `-x-fix scan` instead of `scan`.  It is still
+in the early stages, but you can experiment with it and rules md001, md009, md010,
+and md047 for which fix mode has been implemented.  Note that all the documentation
+will not reflect fix mode until it is further along, but try it out if you would
+like!
+
+In addition, because of requests, the following two features and one bug fix
+have been addressed:
+
+- YAML support
+  - YAML support is provided for default configuration using the `.pymarkdown.yml`
+    and `.pymarkdown.yaml` file
+    - note that the `.pymarkdown` file is checked first, and if present, YAML
+      default files will not be loaded
+  - YAML support is provided for the command line `--config` argument
+    - if the specified file does not parse as JSON, PyMarkdown will attempt to
+      parse it as YAML
+- Return Code Schemes
+  - the `--return-code-scheme` argument accepts either `default` or `minimal`
+  - `default` is the normaly return codes for PyMarkdown
+  - `minimal` returns a code of 0 even if no files were found or if there were
+    any rules triggered
+- Rule MD010
+  - The rule was not dealing with tabs in code-blocks properly
+  - Fixed so that any line that contains a code-block does not trigger the rule
 
 ### Added
 
@@ -23,6 +61,8 @@
   - Refactored modules to put them in more consistent directories
 - [Issue 737](https://github.com/jackdewinter/pymarkdown/issues/737)
   - Rule MD010: Added code to not fire on fenced code blocks
+- [Issue 744](https://github.com/jackdewinter/pymarkdown/issues/744)
+  - Added ability to change return code profile
 - [Issue 746](https://github.com/jackdewinter/pymarkdown/issues/746)
   - Moved scanning related code from main.py to new file module
 

@@ -1595,6 +1595,14 @@
             "elapsedTimeInMilliseconds": 0
         },
         {
+            "name": "test.test_main_return_codes",
+            "totalTests": 13,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
             "name": "test.test_main_stdin",
             "totalTests": 4,
             "failedTests": 0,

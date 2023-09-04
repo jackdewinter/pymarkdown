@@ -27,7 +27,7 @@ def test_markdown_with_no_parameters():
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
-               [--log-file LOG_FILE]
+               [--log-file LOG_FILE] [--return-code-scheme {default,minimal}]
                {plugins,extensions,scan,scan-stdin,version} ...
 
 Lint any found Markdown files.
@@ -59,7 +59,9 @@ optional arguments:
   --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
                         minimum level required to log messages
   --log-file LOG_FILE   destination file for log messages
-"""
+  --return-code-scheme {default,minimal}
+                        scheme to choose for selecting the application return
+                        code"""
     expected_error = ""
 
     # Act
@@ -87,6 +89,7 @@ def test_markdown_with_no_parameters_through_module():
                    [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
                    [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                    [--log-file LOG_FILE]
+                   [--return-code-scheme {default,minimal}]
                    {plugins,extensions,scan,scan-stdin,version} ...
 
 Lint any found Markdown files.
@@ -118,7 +121,9 @@ optional arguments:
   --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
                         minimum level required to log messages
   --log-file LOG_FILE   destination file for log messages
-"""
+  --return-code-scheme {default,minimal}
+                        scheme to choose for selecting the application return
+                        code"""
     expected_error = ""
 
     # Act
@@ -145,7 +150,7 @@ def test_markdown_with_no_parameters_through_main():
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
-               [--log-file LOG_FILE]
+               [--log-file LOG_FILE] [--return-code-scheme {default,minimal}]
                {plugins,extensions,scan,scan-stdin,version} ...
 
 Lint any found Markdown files.
@@ -177,7 +182,9 @@ optional arguments:
   --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
                         minimum level required to log messages
   --log-file LOG_FILE   destination file for log messages
-"""
+  --return-code-scheme {default,minimal}
+                        scheme to choose for selecting the application return
+                        code"""
     expected_error = ""
 
     # Act
@@ -203,7 +210,7 @@ def test_markdown_with_dash_h():
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
-               [--log-file LOG_FILE]
+               [--log-file LOG_FILE] [--return-code-scheme {default,minimal}]
                {plugins,extensions,scan,scan-stdin,version} ...
 
 Lint any found Markdown files.
@@ -235,7 +242,9 @@ optional arguments:
   --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
                         minimum level required to log messages
   --log-file LOG_FILE   destination file for log messages
-"""
+  --return-code-scheme {default,minimal}
+                        scheme to choose for selecting the application return
+                        code"""
     expected_error = ""
 
     # Act
@@ -250,6 +259,9 @@ optional arguments:
 def test_markdown_with_version():
     """
     Test to make sure we get help if 'version' is supplied.
+
+    This function is shadowed by
+    test_markdown_return_code_default_success.
     """
 
     # Arrange
@@ -279,6 +291,9 @@ def test_markdown_with_version():
 def test_markdown_with_direct_args(caplog):
     """
     Test to make sure we can specify the arguments directly.
+
+    This function is shadowed by
+    test_markdown_return_code_default_no_files_to_scan.
     """
 
     # Arrange

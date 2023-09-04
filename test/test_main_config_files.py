@@ -374,7 +374,7 @@ def test_markdown_with_config_default_json_beats_default_yaml():
 def test_markdown_with_config_bad_json_and_yaml_configuration_file():
     """
     Test to make sure that we error out properly with a file that is
-    not JSON and is not YAML.
+    not JSON and is not YAML.xxx
     """
 
     # Arrange

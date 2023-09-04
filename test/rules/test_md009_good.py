@@ -279,6 +279,9 @@ def test_md009_good_unordered_list_item_empty_lines_with_config_strict():
     Test to make sure this rule does trigger with a document that
     has trailing spaces at the end of a blank line within a list item,
     but with strict configuration enabled.
+
+    This function is shadowed by
+    test_markdown_return_code_default_scan_triggered_at_least_once.
     """
 
     # Arrange
@@ -317,6 +320,9 @@ def test_md009_good_unordered_list_item_empty_lines_with_config_strict_fix():
     Test to make sure this rule does trigger with a document that
     has trailing spaces at the end of a blank line within a list item,
     but with strict configuration enabled.
+
+    This function is shadowed by
+    test_markdown_return_code_default_fixed_at_least_one_file.
     """
 
     # Arrange

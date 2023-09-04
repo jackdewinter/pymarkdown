@@ -23,6 +23,7 @@ from pymarkdown.plugin_manager.fix_line_record import FixLineRecord
 from pymarkdown.plugin_manager.fix_token_record import FixTokenRecord
 from pymarkdown.plugin_manager.plugin_manager import PluginManager
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
+from pymarkdown.return_code_helper import ApplicationResult, ReturnCodeHelper
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_markdown.transform_to_markdown import TransformToMarkdown
 
@@ -206,8 +207,6 @@ class FileScanHelper:
             self.__handle_scan_error(next_file, this_exception)
         except BadPluginFixError as this_exception:
             self.__handle_scan_error(next_file, this_exception)
-        # except BadTokenizationError as this_exception:
-        #     self.__handle_scan_error(next_file, this_exception)
         return did_fix_file
 
     def __handle_scan_error(self, next_file: str, this_exception: Exception) -> None:
@@ -215,7 +214,11 @@ class FileScanHelper:
             next_file, this_exception, self.__show_stack_trace
         ):
             self.__handle_error(formatted_error, this_exception)
-        sys.exit(1)
+
+        # If the `format_scan_error` call above returned None, it meant that
+        # it handled any required output.  However, the application still needs
+        # to terminate to respect that the error was called.
+        ReturnCodeHelper.exit_application(ApplicationResult.SYSTEM_ERROR)
 
     def __process_file_fix(
         self, next_file: str, next_file_name: str, fix_debug: bool, fix_file_debug: bool
