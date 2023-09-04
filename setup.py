@@ -52,9 +52,11 @@ PROJECT_CLASSIFIERS = [
 PACKAGE_MODULES = [
     "pymarkdown",
     "pymarkdown.block_quotes",
+    "pymarkdown.coalesce",
     "pymarkdown.container_blocks",
     "pymarkdown.extension_manager",
     "pymarkdown.extensions",
+    "pymarkdown.general",
     "pymarkdown.html",
     "pymarkdown.inline",
     "pymarkdown.leaf_blocks",
@@ -63,6 +65,9 @@ PACKAGE_MODULES = [
     "pymarkdown.plugin_manager",
     "pymarkdown.plugins",
     "pymarkdown.resources",
+    "pymarkdown.tokens",
+    "pymarkdown.transform_gfm",
+    "pymarkdown.transform_markdown",
 ]
 
 setup(

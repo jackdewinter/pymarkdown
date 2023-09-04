@@ -86,6 +86,7 @@
         "pymarkdown/file_scan_helper.py": {
             "too-many-arguments": 3
         },
+        "pymarkdown/general/__init__.py": {},
         "pymarkdown/general/bad_tokenization_error.py": {},
         "pymarkdown/general/constants.py": {},
         "pymarkdown/general/main_presentation.py": {},
@@ -101,8 +102,12 @@
         },
         "pymarkdown/general/position_marker.py": {},
         "pymarkdown/general/requeue_line_info.py": {},
-        "pymarkdown/general/source_providers.py": {},
-        "pymarkdown/general/tab_helper.py": {},
+        "pymarkdown/general/source_providers.py": {
+            "deprecated-decorator": 1
+        },
+        "pymarkdown/general/tab_helper.py": {
+            "too-many-arguments": 1
+        },
         "pymarkdown/general/tokenized_markdown.py": {
             "too-many-arguments": 5
         },
@@ -464,12 +469,12 @@
         "too-many-instance-attributes": 22,
         "too-many-public-methods": 4,
         "too-few-public-methods": 40,
-        "too-many-arguments": 192,
+        "too-many-arguments": 193,
         "too-many-locals": 18,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 2,
         "protected-access": 23,
-        "broad-exception-caught": 3,
-        "deprecated-decorator": 2
+        "deprecated-decorator": 3,
+        "broad-exception-caught": 3
     }
 }

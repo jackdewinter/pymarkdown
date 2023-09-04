@@ -320,6 +320,7 @@ class TabHelper:
             >= length_limit
         )
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def find_tabified_string(
         original_line: str,
@@ -396,6 +397,8 @@ class TabHelper:
             split_tab,
         )
 
+    # pylint: enable=too-many-arguments
+
     @staticmethod
     def find_tabified_string_split(
         reconstructed_line: str,
@@ -404,6 +407,9 @@ class TabHelper:
         use_proper_traverse: bool,
         abc: bool,
     ) -> Tuple[Optional[str], int, int]:
+        """
+        Find a tabified string within a split.
+        """
         LOGGER.debug(
             ">>reconstructed_line>:%s:<",
             ParserHelper.make_whitespace_visible(
