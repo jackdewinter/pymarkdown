@@ -1,7 +1,10 @@
 """
 Extra tests.
 """
-from test.utils import act_and_assert
+import os
+import tempfile
+from test.markdown_scanner import MarkdownScanner
+from test.utils import act_and_assert, write_temporary_configuration
 
 import pytest
 
@@ -4408,6 +4411,66 @@ def test_extra_030ba():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_031x():
+    """
+    TBD - from test_md010_bad_xxx
+
+    test_markdown_with_config_json_configuration_file
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    stdin_to_use = """This is an example of running `dig @8.8.8.8 MX +noall +ans oisix.com`:
+
+```text
+oisix.com.\t\t300\tIN\tMX\t10 mail01.oisix.com.
+oisix.com.\t\t300\tIN\tMX\t100 mail02.oisix.com.
+oisix.com.\t\t300\tIN\tMX\t150 mx.idc.jp.
+oisix.com.\t\t300\tIN\tMX\t160 mx2.idc.jp.
+oisix.com.\t\t300\tIN\tMX\t250 mx3.idc.jp.
+```
+"""
+    specified_configuration = """{
+    "plugins" : {
+        "no-hard-tabs": {
+            "enabled": true,
+            "code_blocks": false
+        }
+    }
+}
+"""
+
+    with tempfile.TemporaryDirectory() as tmp_dir_path:
+        configuration_file = None
+        try:
+            configuration_file = write_temporary_configuration(
+                specified_configuration, file_name="myconfig", directory=tmp_dir_path
+            )
+            supplied_arguments = [
+                "-c",
+                configuration_file,
+                "scan-stdin",
+            ]
+
+            expected_return_code = 0
+            expected_output = ""
+            expected_error = ""
+
+            # Act
+            execute_results = scanner.invoke_main(
+                arguments=supplied_arguments, standard_input_to_use=stdin_to_use
+            )
+        finally:
+            if configuration_file and os.path.exists(configuration_file):
+                os.remove(configuration_file)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
 
 
 @pytest.mark.gfm

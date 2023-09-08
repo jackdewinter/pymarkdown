@@ -75,7 +75,8 @@ def test_md010_in_bad_block_quote_fall_off_after_fenced_open_and_text():
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:10: MD010: Hard tabs [Column: 10] (no-hard-tabs)"
+        f"{source_path}:3:10: MD010: Hard tabs [Column: 10] (no-hard-tabs)\n"
+        + f"{source_path}:4:26: MD010: Hard tabs [Column: 26] (no-hard-tabs)"
     )
     expected_error = ""
 
@@ -114,7 +115,8 @@ def test_md010_in_bad_block_quote_fall_off_after_fenced_open_and_text_and_close(
 
     expected_return_code = 1
     expected_output = (
-        f"{source_path}:3:10: MD010: Hard tabs [Column: 10] (no-hard-tabs)"
+        f"{source_path}:3:10: MD010: Hard tabs [Column: 10] (no-hard-tabs)\n"
+        + f"{source_path}:4:26: MD010: Hard tabs [Column: 26] (no-hard-tabs)"
     )
     expected_error = ""
 
@@ -158,7 +160,7 @@ def test_md010_in_bad_block_quote_fall_off_after_fenced_open_and_text_and_close_
         expected_output = f"Fixed: {temp_source_path}"
         expected_error = ""
         allowed_after_indent_map = {}
-        allowed_after_indent_map[4] = 0
+        # allowed_after_indent_map[4] = 0
         expected_file_contents = generate_expected_contents(
             temp_source_path, allowed_after_indent_map
         )
