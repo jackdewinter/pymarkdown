@@ -23,7 +23,7 @@ class RuleMd010(RulePlugin):
         self.__leaf_tokens: List[MarkdownToken] = []
         self.__line_index = -1
         self.__leaf_token_index = -1
-        self.__allow_in_code_blocks: bool = False
+        self.__check_in_code_blocks: bool = False
         self.__last_fenced_code_end_token: Optional[EndMarkdownToken] = None
 
     def get_details(self) -> PluginDetails:
@@ -45,7 +45,7 @@ class RuleMd010(RulePlugin):
         """
         Event to allow the plugin to load configuration information.
         """
-        self.__allow_in_code_blocks = self.plugin_configuration.get_boolean_property(
+        self.__check_in_code_blocks = self.plugin_configuration.get_boolean_property(
             "code_blocks",
             default_value=True,
         )
@@ -121,9 +121,9 @@ class RuleMd010(RulePlugin):
                 self.__is_line_inside_of_fenced_code_block()
             )
             can_trigger = (
-                self.__allow_in_code_blocks and not is_inside_of_fenced_code_block
+                not self.__check_in_code_blocks and not is_inside_of_fenced_code_block
             )
-            do_process = not self.__allow_in_code_blocks or can_trigger
+            do_process = self.__check_in_code_blocks or can_trigger
             # if not do_process and not xx:
             #     ff = 0
             #     fj = []

@@ -275,8 +275,8 @@ def test_md010_bad_simple_text_with_tabs_in_code_block_with_end_line():
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
+    expected_return_code = 1
+    expected_output = f"{source_path}:4:5: MD010: Hard tabs [Column: 5] (no-hard-tabs)"
     expected_error = ""
 
     # Act
@@ -311,8 +311,8 @@ def test_md010_bad_simple_text_with_tabs_in_code_block_no_end_line():
         source_path,
     ]
 
-    expected_return_code = 0
-    expected_output = ""
+    expected_return_code = 1
+    expected_output = f"{source_path}:4:5: MD010: Hard tabs [Column: 5] (no-hard-tabs)"
     expected_error = ""
 
     # Act
@@ -348,8 +348,8 @@ def test_md010_bad_simple_text_with_tabs_in_code_block_turned_off():
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = f"{source_path}:4:5: MD010: Hard tabs [Column: 5] (no-hard-tabs)"
+    expected_return_code = 0
+    expected_output = ""
     expected_error = ""
 
     # Act
@@ -388,10 +388,14 @@ def test_md010_bad_simple_text_with_tabs_in_code_block_turned_off_and_fix():
             temp_source_path,
         ]
 
-        expected_return_code = 3
-        expected_output = f"Fixed: {temp_source_path}"
+        expected_return_code = 0
+        expected_output = ""
         expected_error = ""
-        expected_file_contents = generate_expected_contents(temp_source_path)
+        allowed_after_indent_map = {}
+        allowed_after_indent_map[4] = 0
+        expected_file_contents = generate_expected_contents(
+            temp_source_path, allowed_after_indent_map
+        )
 
         # Act
         execute_results = scanner.invoke_main(arguments=supplied_arguments)
