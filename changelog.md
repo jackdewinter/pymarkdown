@@ -14,6 +14,19 @@
 
 - None
 
+## Version 0.9.13.4 - Date: 2023-09-09
+
+Note: noted there were some issues with the pymarkdown_test project and
+giving false positives.  Will be looking into that for the next release.
+
+### Fixed
+
+- [Issue 755](https://github.com/jackdewinter/pymarkdown/pull/755)
+  - fixed issue where new directories were not captured due to false positive
+- [Issue 759](https://github.com/jackdewinter/pymarkdown/pull/759)
+  - `code_blocks` property for MD010 was inverted
+  - will check for others like this as more fix mode work is done
+
 ## Version 0.9.13 - Date: 2023-09-03
 
 This release had some new features, but the most interesting one of all is
