@@ -325,9 +325,8 @@ class AnchorValidator:
                     if compare_anchor(link_anchor, heading)
                 ]
             )
-            if headings_count == 0:
-                for trigger_params in anchors[link_anchor]:
+            for trigger_params in anchors[link_anchor]:
+                if headings_count == 0:
                     yield trigger_params
-            elif headings_count > 1:
-                for trigger_params in anchors[link_anchor]:
+                elif headings_count > 1:
                     yield (*trigger_params[:-1], DUPLICATE_HEADING)
