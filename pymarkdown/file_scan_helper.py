@@ -88,6 +88,7 @@ class FileScanHelper:
                         did_fix_any_file = True
                 else:
                     self.__scan_specific_file(next_file, next_file)
+            self.__plugins.completed_all_files()
         return did_fix_any_file
 
     def __scan_from_stdin(

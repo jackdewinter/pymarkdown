@@ -11,6 +11,9 @@
         },
         "no-duplicate-heading": {
             "enabled": false
+        },
+        "unused-assets": {
+            "enabled": false
         }
     }
 }
