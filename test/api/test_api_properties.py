@@ -3,6 +3,7 @@ Module for specifying configuration properties through the API.
 """
 
 import os
+from test.utils import assert_that_exception_is_raised
 
 from pymarkdown.api import (
     PyMarkdownApi,
@@ -18,25 +19,20 @@ def test_api_properties_set_property_with_empty_property_name():
     """
 
     # Arrange
-    source_path = ""
     property_name = ""
     property_value = "something"
 
-    # Act
-    caught_exception = None
-    try:
-        _ = (
-            PyMarkdownApi()
-            .set_property(property_name, property_value)
-            .scan_path(source_path)
-        )
-    except PyMarkdownApiArgumentException as this_exception:
-        caught_exception = this_exception
+    expected_output = "Parameter named 'property_name' cannot be empty."
 
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
+    # Act & Assert
+    caught_exception = assert_that_exception_is_raised(
+        PyMarkdownApiArgumentException,
+        expected_output,
+        PyMarkdownApi().set_property,
+        property_name,
+        property_value,
+    )
     assert caught_exception.argument_name == "property_name"
-    assert caught_exception.reason == "Parameter named 'property_name' cannot be empty."
 
 
 def test_api_properties_set_boolean_property_with_empty_property_name():
@@ -45,25 +41,20 @@ def test_api_properties_set_boolean_property_with_empty_property_name():
     """
 
     # Arrange
-    source_path = ""
     property_name = ""
     property_value = True
 
-    # Act
-    caught_exception = None
-    try:
-        _ = (
-            PyMarkdownApi()
-            .set_property(property_name, property_value)
-            .scan_path(source_path)
-        )
-    except PyMarkdownApiArgumentException as this_exception:
-        caught_exception = this_exception
+    expected_output = "Parameter named 'property_name' cannot be empty."
 
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
+    # Act & Assert
+    caught_exception = assert_that_exception_is_raised(
+        PyMarkdownApiArgumentException,
+        expected_output,
+        PyMarkdownApi().set_property,
+        property_name,
+        property_value,
+    )
     assert caught_exception.argument_name == "property_name"
-    assert caught_exception.reason == "Parameter named 'property_name' cannot be empty."
 
 
 def test_api_properties_set_boolean_property_with_non_boolean_value():
@@ -72,28 +63,20 @@ def test_api_properties_set_boolean_property_with_non_boolean_value():
     """
 
     # Arrange
-    source_path = ""
     property_name = "something"
     property_value = "something"
 
-    # Act
-    caught_exception = None
-    try:
-        _ = (
-            PyMarkdownApi()
-            .set_boolean_property(property_name, property_value)
-            .scan_path(source_path)
-        )
-    except PyMarkdownApiArgumentException as this_exception:
-        caught_exception = this_exception
+    expected_output = "The property value 'property_value' was not passed as a boolean."
 
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert caught_exception.argument_name == "property_value"
-    assert (
-        caught_exception.reason
-        == "The property value 'property_value' was not passed as a boolean."
+    # Act & Assert
+    caught_exception = assert_that_exception_is_raised(
+        PyMarkdownApiArgumentException,
+        expected_output,
+        PyMarkdownApi().set_boolean_property,
+        property_name,
+        property_value,
     )
+    assert caught_exception.argument_name == "property_value"
 
 
 def test_api_properties_set_integer_property_with_empty_property_name():
@@ -102,25 +85,20 @@ def test_api_properties_set_integer_property_with_empty_property_name():
     """
 
     # Arrange
-    source_path = ""
     property_name = ""
     property_value = 1
 
-    # Act
-    caught_exception = None
-    try:
-        _ = (
-            PyMarkdownApi()
-            .set_integer_property(property_name, property_value)
-            .scan_path(source_path)
-        )
-    except PyMarkdownApiArgumentException as this_exception:
-        caught_exception = this_exception
+    expected_output = "Parameter named 'property_name' cannot be empty."
 
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
+    # Act & Assert
+    caught_exception = assert_that_exception_is_raised(
+        PyMarkdownApiArgumentException,
+        expected_output,
+        PyMarkdownApi().set_integer_property,
+        property_name,
+        property_value,
+    )
     assert caught_exception.argument_name == "property_name"
-    assert caught_exception.reason == "Parameter named 'property_name' cannot be empty."
 
 
 def test_api_properties_set_integer_property_with_non_integer_value():
@@ -129,28 +107,22 @@ def test_api_properties_set_integer_property_with_non_integer_value():
     """
 
     # Arrange
-    source_path = ""
     property_name = "something"
     property_value = "something"
 
-    # Act
-    caught_exception = None
-    try:
-        _ = (
-            PyMarkdownApi()
-            .set_integer_property(property_name, property_value)
-            .scan_path(source_path)
-        )
-    except PyMarkdownApiArgumentException as this_exception:
-        caught_exception = this_exception
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert caught_exception.argument_name == "property_value"
-    assert (
-        caught_exception.reason
-        == "The property value 'property_value' was not passed as an integer."
+    expected_output = (
+        "The property value 'property_value' was not passed as an integer."
     )
+
+    # Act & Assert
+    caught_exception = assert_that_exception_is_raised(
+        PyMarkdownApiArgumentException,
+        expected_output,
+        PyMarkdownApi().set_integer_property,
+        property_name,
+        property_value,
+    )
+    assert caught_exception.argument_name == "property_value"
 
 
 def test_api_properties_set_string_property_with_empty_property_name():
@@ -159,25 +131,20 @@ def test_api_properties_set_string_property_with_empty_property_name():
     """
 
     # Arrange
-    source_path = ""
     property_name = ""
     property_value = 1
 
-    # Act
-    caught_exception = None
-    try:
-        _ = (
-            PyMarkdownApi()
-            .set_string_property(property_name, property_value)
-            .scan_path(source_path)
-        )
-    except PyMarkdownApiArgumentException as this_exception:
-        caught_exception = this_exception
+    expected_output = "Parameter named 'property_name' cannot be empty."
 
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
+    # Act & Assert
+    caught_exception = assert_that_exception_is_raised(
+        PyMarkdownApiArgumentException,
+        expected_output,
+        PyMarkdownApi().set_string_property,
+        property_name,
+        property_value,
+    )
     assert caught_exception.argument_name == "property_name"
-    assert caught_exception.reason == "Parameter named 'property_name' cannot be empty."
 
 
 def test_api_properties_set_string_property_with_non_string_value():
@@ -186,28 +153,20 @@ def test_api_properties_set_string_property_with_non_string_value():
     """
 
     # Arrange
-    source_path = ""
     property_name = "something"
     property_value = 1
 
-    # Act
-    caught_exception = None
-    try:
-        _ = (
-            PyMarkdownApi()
-            .set_string_property(property_name, property_value)
-            .scan_path(source_path)
-        )
-    except PyMarkdownApiArgumentException as this_exception:
-        caught_exception = this_exception
+    expected_output = "The property value 'property_value' was not passed as a string."
 
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert caught_exception.argument_name == "property_value"
-    assert (
-        caught_exception.reason
-        == "The property value 'property_value' was not passed as a string."
+    # Act & Assert
+    caught_exception = assert_that_exception_is_raised(
+        PyMarkdownApiArgumentException,
+        expected_output,
+        PyMarkdownApi().set_string_property,
+        property_name,
+        property_value,
     )
+    assert caught_exception.argument_name == "property_value"
 
 
 def test_api_properties_with_strict_and_bad_extension_initialize():
@@ -227,24 +186,18 @@ def test_api_properties_with_strict_and_bad_extension_initialize():
     property_name = "extensions.front-matter.enabled"
     property_value = "true"
 
-    # Act
-    caught_exception = None
-    try:
-        _ = (
-            PyMarkdownApi()
-            .enable_strict_configuration()
-            .set_property(property_name, property_value)
-            .scan_path(source_path)
-        )
-    except PyMarkdownApiException as this_exception:
-        caught_exception = this_exception
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert (
-        caught_exception.reason
-        == """Configuration error ValueError encountered while initializing extensions:
+    expected_output = """Configuration error ValueError encountered while initializing extensions:
 The value for property 'extensions.front-matter.enabled' must be of type 'bool'."""
+
+    # Act & Assert
+    assert_that_exception_is_raised(
+        PyMarkdownApiException,
+        expected_output,
+        PyMarkdownApi()
+        .enable_strict_configuration()
+        .set_property(property_name, property_value)
+        .scan_path,
+        source_path,
     )
 
 
@@ -337,25 +290,19 @@ def test_api_properties_with_good_integer_property_but_exception():
     property_name = "extensions.front-matter.enabled"
     property_value = 10
 
-    # Act
-    caught_exception = None
-    try:
-        _ = (
-            PyMarkdownApi()
-            .enable_strict_configuration()
-            .set_integer_property(property_name, property_value)
-            .enable_rule_by_identifier("MD002")
-            .scan_path(source_path)
-        )
-    except PyMarkdownApiException as this_exception:
-        caught_exception = this_exception
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert (
-        caught_exception.reason
-        == """Configuration error ValueError encountered while initializing extensions:
+    expected_output = """Configuration error ValueError encountered while initializing extensions:
 The value for property 'extensions.front-matter.enabled' must be of type 'bool'."""
+
+    # Act & Assert
+    assert_that_exception_is_raised(
+        PyMarkdownApiException,
+        expected_output,
+        PyMarkdownApi()
+        .enable_strict_configuration()
+        .set_integer_property(property_name, property_value)
+        .enable_rule_by_identifier("MD002")
+        .scan_path,
+        source_path,
     )
 
 

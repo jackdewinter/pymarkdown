@@ -1,10 +1,8 @@
 """
 Extra tests.
 """
-import os
-import tempfile
 from test.markdown_scanner import MarkdownScanner
-from test.utils import act_and_assert, write_temporary_configuration
+from test.utils import act_and_assert, create_temporary_configuration_file
 
 import pytest
 
@@ -4443,29 +4441,23 @@ oisix.com.\t\t300\tIN\tMX\t250 mx3.idc.jp.
 }
 """
 
-    with tempfile.TemporaryDirectory() as tmp_dir_path:
-        configuration_file = None
-        try:
-            configuration_file = write_temporary_configuration(
-                specified_configuration, file_name="myconfig", directory=tmp_dir_path
-            )
-            supplied_arguments = [
-                "-c",
-                configuration_file,
-                "scan-stdin",
-            ]
+    with create_temporary_configuration_file(
+        specified_configuration, file_name="myconfig"
+    ) as configuration_file:
+        supplied_arguments = [
+            "-c",
+            configuration_file,
+            "scan-stdin",
+        ]
 
-            expected_return_code = 0
-            expected_output = ""
-            expected_error = ""
+        expected_return_code = 0
+        expected_output = ""
+        expected_error = ""
 
-            # Act
-            execute_results = scanner.invoke_main(
-                arguments=supplied_arguments, standard_input_to_use=stdin_to_use
-            )
-        finally:
-            if configuration_file and os.path.exists(configuration_file):
-                os.remove(configuration_file)
+        # Act
+        execute_results = scanner.invoke_main(
+            arguments=supplied_arguments, standard_input_to_use=stdin_to_use
+        )
 
     # Assert
     execute_results.assert_results(

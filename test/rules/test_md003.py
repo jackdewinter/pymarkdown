@@ -3,7 +3,7 @@ Module to provide tests related to the MD003 rule.
 """
 import os
 from test.markdown_scanner import MarkdownScanner
-from test.utils import write_temporary_configuration
+from test.utils import create_temporary_configuration_file
 
 import pytest
 
@@ -184,9 +184,9 @@ def test_md003_bad_consistent_headings_setext_with_atx_and_allow_config():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"allow-setext-update": True}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -206,9 +206,6 @@ def test_md003_bad_consistent_headings_setext_with_atx_and_allow_config():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 @pytest.mark.rules
@@ -224,9 +221,9 @@ def test_md003_bad_consistent_headings_setext_with_level_2_atx_and_allow_config(
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"allow-setext-update": True}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -250,9 +247,6 @@ def test_md003_bad_consistent_headings_setext_with_level_2_atx_and_allow_config(
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 @pytest.mark.rules
@@ -268,9 +262,9 @@ def test_md003_bad_consistent_headings_setext_with_level_3_then_level_2_atx_and_
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"allow-setext-update": True}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -294,9 +288,6 @@ def test_md003_bad_consistent_headings_setext_with_level_3_then_level_2_atx_and_
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 CONSISTENT_SETEXT_WITH_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
@@ -386,9 +377,9 @@ def test_md003_good_atx_headings_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "atx"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -407,9 +398,6 @@ def test_md003_good_atx_headings_atx():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 @pytest.mark.rules
@@ -421,9 +409,9 @@ def test_md003_good_atx_headings_atxx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "not-valid"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -442,9 +430,6 @@ def test_md003_good_atx_headings_atxx():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 ATX_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
@@ -467,9 +452,9 @@ def test_md003_bad_atx_headings_atx_closed():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "atx"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -488,9 +473,6 @@ def test_md003_bad_atx_headings_atx_closed():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 ATX_SETEXT_HEADINGS_SAMPLE_OUTPUT = (
@@ -513,9 +495,9 @@ def test_md003_bad_atx_headings_setext():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "atx"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -534,9 +516,6 @@ def test_md003_bad_atx_headings_setext():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 ATX_SETEXT_WITH_ATX_HEADINGS_SAMPLE_OUTPUT = (
@@ -559,9 +538,9 @@ def test_md003_bad_atx_headings_setext_with_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "atx"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -580,9 +559,6 @@ def test_md003_bad_atx_headings_setext_with_atx():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 ATX_SETEXT_WITH_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
@@ -608,9 +584,9 @@ def test_md003_bad_atx_headings_setext_with_atx_closed():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "atx"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -629,9 +605,6 @@ def test_md003_bad_atx_headings_setext_with_atx_closed():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 @pytest.mark.rules
@@ -644,9 +617,9 @@ def test_md003_atx_all_samples():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "atx"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -683,9 +656,6 @@ def test_md003_atx_all_samples():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 ATXCLOSED_ATX_HEADINGS_SAMPLE_OUTPUT = (
@@ -708,9 +678,9 @@ def test_md003_bad_atxclosed_headings_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "atx_closed"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -729,9 +699,6 @@ def test_md003_bad_atxclosed_headings_atx():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 ATXCLOSED_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = ""
@@ -747,9 +714,9 @@ def test_md003_good_atxclosed_headings_atx_closed():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "atx_closed"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -768,9 +735,6 @@ def test_md003_good_atxclosed_headings_atx_closed():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 ATXCLOSED_SETEXT_HEADINGS_SAMPLE_OUTPUT = (
@@ -793,9 +757,9 @@ def test_md003_bad_atxclosed_headings_setext():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "atx_closed"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -814,9 +778,6 @@ def test_md003_bad_atxclosed_headings_setext():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 ATXCLOSED_SETEXT_WITH_ATX_HEADINGS_SAMPLE_OUTPUT = (
@@ -842,9 +803,9 @@ def test_md003_bad_atxclosed_headings_setext_with_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "atx_closed"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -863,9 +824,6 @@ def test_md003_bad_atxclosed_headings_setext_with_atx():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 ATXCLOSED_SETEXT_WITH_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
@@ -888,9 +846,9 @@ def test_md003_bad_atxclosed_headings_setext_with_atx_closed():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "atx_closed"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -909,9 +867,6 @@ def test_md003_bad_atxclosed_headings_setext_with_atx_closed():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 @pytest.mark.rules
@@ -924,9 +879,9 @@ def test_md003_atxclosed_all_samples():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "atx_closed"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -972,9 +927,6 @@ def test_md003_atxclosed_all_samples():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 SETEXT_ATX_HEADINGS_SAMPLE_OUTPUT = (
@@ -997,9 +949,9 @@ def test_md003_bad_setext_headings_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -1018,9 +970,6 @@ def test_md003_bad_setext_headings_atx():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 SETEXT_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
@@ -1043,9 +992,9 @@ def test_md003_bad_setext_headings_atx_closed():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -1064,9 +1013,6 @@ def test_md003_bad_setext_headings_atx_closed():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 SETEXT_SETEXT_HEADINGS_SAMPLE_OUTPUT = ""
@@ -1082,9 +1028,9 @@ def test_md003_good_setext_headings_setext():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -1103,9 +1049,6 @@ def test_md003_good_setext_headings_setext():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 SETEXT_SETEXT_WITH_ATX_HEADINGS_SAMPLE_OUTPUT = (
@@ -1125,9 +1068,9 @@ def test_md003_bad_setext_headings_setext_with_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -1146,9 +1089,6 @@ def test_md003_bad_setext_headings_setext_with_atx():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 SETEXT_SETEXT_WITH_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
@@ -1168,9 +1108,9 @@ def test_md003_bad_setext_headings_setext_with_atx_closed():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -1189,9 +1129,6 @@ def test_md003_bad_setext_headings_setext_with_atx_closed():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 @pytest.mark.rules
@@ -1204,9 +1141,9 @@ def test_md003_setext_all_samples():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -1240,9 +1177,6 @@ def test_md003_setext_all_samples():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 SETEXT_WITH_ATX_ATX_HEADINGS_SAMPLE_OUTPUT = (
@@ -1265,9 +1199,9 @@ def test_md003_bad_setext_with_atx_headings_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -1293,9 +1227,6 @@ def test_md003_bad_setext_with_atx_headings_atx():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 SETEXT_WITH_ATX_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
@@ -1318,9 +1249,9 @@ def test_md003_bad_setext_with_atx_headings_atx_closed():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -1346,9 +1277,6 @@ def test_md003_bad_setext_with_atx_headings_atx_closed():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 SETEXT_WITH_ATX_SETEXT_HEADINGS_SAMPLE_OUTPUT = ""
@@ -1364,9 +1292,9 @@ def test_md003_good_setext_with_atx_headings_setext():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -1385,9 +1313,6 @@ def test_md003_good_setext_with_atx_headings_setext():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 SETEXT_WITH_ATX_SETEXT_WITH_ATX_HEADINGS_SAMPLE_OUTPUT = ""
@@ -1403,9 +1328,9 @@ def test_md003_good_setext_with_atx_headings_setext_with_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -1424,9 +1349,6 @@ def test_md003_good_setext_with_atx_headings_setext_with_atx():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 SETEXT_WITH_ATX_SETEXT_WITH_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
@@ -1446,9 +1368,9 @@ def test_md003_bad_setext_with_atx_headings_setext_with_atx_closed():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -1467,9 +1389,6 @@ def test_md003_bad_setext_with_atx_headings_setext_with_atx_closed():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 @pytest.mark.rules
@@ -1482,9 +1401,9 @@ def test_md003_setext_with_atx_all_samples():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -1525,9 +1444,6 @@ def test_md003_setext_with_atx_all_samples():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 SETEXT_WITH_ATX_CLOSED_ATX_HEADINGS_SAMPLE_OUTPUT = (
@@ -1550,9 +1466,9 @@ def test_md003_bad_setext_with_atx_closed_headings_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx_closed"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -1571,9 +1487,6 @@ def test_md003_bad_setext_with_atx_closed_headings_atx():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 SETEXT_WITH_ATX_CLOSED_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
@@ -1596,9 +1509,9 @@ def test_md003_bad_setext_with_atx_closed_headings_atx_closed():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx_closed"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -1617,9 +1530,6 @@ def test_md003_bad_setext_with_atx_closed_headings_atx_closed():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 SETEXT_WITH_ATX_CLOSED_SETEXT_HEADINGS_SAMPLE_OUTPUT = ""
@@ -1635,9 +1545,9 @@ def test_md003_good_setext_with_atx_closed_headings_setext():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx_closed"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -1656,9 +1566,6 @@ def test_md003_good_setext_with_atx_closed_headings_setext():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 SETEXT_WITH_ATX_CLOSED_SETEXT_WITH_ATX_HEADINGS_SAMPLE_OUTPUT = (
@@ -1678,9 +1585,9 @@ def test_md003_bad_setext_with_atx_closed_headings_setext_with_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx_closed"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -1699,9 +1606,6 @@ def test_md003_bad_setext_with_atx_closed_headings_setext_with_atx():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 SETEXT_WITH_ATX_CLOSED_SETEXT_WITH_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = ""
@@ -1717,9 +1621,9 @@ def test_md003_good_setext_with_atx_closed_headings_setext_with_atx_closed():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx_closed"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -1740,9 +1644,6 @@ def test_md003_good_setext_with_atx_closed_headings_setext_with_atx_closed():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 @pytest.mark.rules
@@ -1755,9 +1656,9 @@ def test_md003_setext_with_atx_closed_all_samples():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx_closed"}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -1791,6 +1692,3 @@ def test_md003_setext_with_atx_closed_all_samples():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)

@@ -2,19 +2,9 @@
 Module to provide tests for the application file scanner module.
 """
 import argparse
-import difflib
+from test.utils import assert_that_exception_is_raised, compare_expected_to_actual
 
 from pymarkdown.application_file_scanner import ApplicationFileScanner
-
-
-def compare_expected_to_actual(expected_text, actual_text, xx_title="Text"):
-    """
-    Compare the expected text to the actual text.
-    """
-    if actual_text.strip() != expected_text.strip():
-        diff = difflib.ndiff(expected_text.splitlines(), actual_text.splitlines())
-        diff_values = "\n".join(list(diff))
-        raise AssertionError(f"{xx_title} not as expected:\n{diff_values}")
 
 
 def test_application_file_scanner_args_no_changes():
@@ -56,17 +46,14 @@ def test_application_file_scanner_args_bad_extension():
     expected_output = "Extension '*.md' is not a valid extension: Extension '*.md' must start with a period."
     parser = argparse.ArgumentParser(description="Lint any found files.", prog="pytest")
 
-    # Act
-    found_exception = None
-    try:
-        ApplicationFileScanner.add_default_command_line_arguments(parser, "*.md")
-        raise AssertionError()
-    except argparse.ArgumentTypeError as ex:
-        found_exception = ex
-
-    # Assert
-    assert found_exception
-    compare_expected_to_actual(expected_output, str(found_exception))
+    # Act & Assert
+    assert_that_exception_is_raised(
+        argparse.ArgumentTypeError,
+        expected_output,
+        ApplicationFileScanner.add_default_command_line_arguments,
+        parser,
+        "*.md",
+    )
 
 
 def test_application_file_scanner_args_with_file_type_name():

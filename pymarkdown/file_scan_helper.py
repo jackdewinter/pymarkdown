@@ -131,8 +131,6 @@ class FileScanHelper:
             self.__scan_file(source_provider, next_file_name)
         except BadPluginError as this_exception:
             self.__handle_scan_error(next_file, this_exception)
-        # except BadTokenizationError as this_exception:
-        #     self.__handle_scan_error(next_file, this_exception)
 
     def __scan_file(
         self, source_provider: FileSourceProvider, next_file_name: str
@@ -203,9 +201,7 @@ class FileScanHelper:
             except Exception:
                 POGGER.info("Ending file to fix '$' with exception.", next_file_name)
                 raise
-        except BadPluginError as this_exception:
-            self.__handle_scan_error(next_file, this_exception)
-        except BadPluginFixError as this_exception:
+        except (BadPluginError, BadPluginFixError) as this_exception:
             self.__handle_scan_error(next_file, this_exception)
         return did_fix_file
 

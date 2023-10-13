@@ -2,6 +2,7 @@
 Module to patch the "builtin.open" function.
 """
 import unittest.mock
+from contextlib import contextmanager
 from test.patches.patch_base import PatchBase
 from typing import Any, Dict, Tuple
 
@@ -97,3 +98,19 @@ class PatchBuiltinOpen(PatchBase):
         finally:
             self.start(log_action=False)
         # pylint: enable=unspecified-encoding
+
+
+@contextmanager
+def path_builtin_open_with_exception(
+    exception_path, file_mode, exception_to_throw, print_action_comments=False
+):
+    """
+    Patch the builtin.open function, registering an exception to be thrown.
+    """
+    patch = PatchBuiltinOpen()
+    patch.register_exception_for_file(exception_path, file_mode, exception_to_throw)
+    patch.start()
+    try:
+        yield
+    finally:
+        patch.stop(print_action_comments=print_action_comments)

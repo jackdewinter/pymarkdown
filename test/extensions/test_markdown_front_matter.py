@@ -3,7 +3,7 @@ Tests for the optional front-matter processing
 """
 import os
 from test.markdown_scanner import MarkdownScanner
-from test.utils import act_and_assert
+from test.utils import act_and_assert, assert_that_exception_is_raised
 
 import pytest
 
@@ -78,13 +78,14 @@ def test_front_matter_03():
     # Arrange
     source_markdown = """---
 Title: my document
+Date: 2023-May-02
 ---
 ---
 """
     expected_tokens = [
-        "[front-matter(1,1):---:---:['Title: my document']:{'title': 'my document'}]",
-        "[tbreak(4,1):-::---]",
-        "[BLANK(5,1):]",
+        "[front-matter(1,1):---:---:['Title: my document', 'Date: 2023-May-02']:{'Title': 'my document', 'date': '2023-May-02'}]",
+        "[tbreak(5,1):-::---]",
+        "[BLANK(6,1):]",
     ]
     expected_gfm = """<hr />"""
 
@@ -550,16 +551,18 @@ test: assert
     expected_tokens = []
     expected_gfm = ""
 
+    expected_output = "An unhandled error occurred processing the document."
+
     # Act & Assert
-    try:
-        act_and_assert(
-            source_markdown, expected_gfm, expected_tokens, config_map=config_map
-        )
-        raise AssertionError("An exception should have been thrown before this point.")
-    except BadTokenizationError as this_error:
-        assert (
-            str(this_error) == "An unhandled error occurred processing the document."
-        ), f"message={this_error}"
+    assert_that_exception_is_raised(
+        BadTokenizationError,
+        expected_output,
+        act_and_assert,
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=config_map,
+    )
 
 
 def test_front_matter_21():

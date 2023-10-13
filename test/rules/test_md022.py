@@ -3,7 +3,7 @@ Module to provide tests related to the MD022 rule.
 """
 import os
 from test.markdown_scanner import MarkdownScanner
-from test.utils import write_temporary_configuration
+from test.utils import create_temporary_configuration_file
 
 import pytest
 
@@ -1256,9 +1256,9 @@ def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_above():
         "test", "resources", "rules", "md022", "proper_line_spacing_atx.md"
     )
     supplied_configuration = {"plugins": {"md022": {"lines_above": 2}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -1281,9 +1281,6 @@ def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_above():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 @pytest.mark.rules
@@ -1300,9 +1297,9 @@ def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_above():
         "test", "resources", "rules", "md022", "double_line_spacing_above_atx.md"
     )
     supplied_configuration = {"plugins": {"md022": {"lines_above": 2}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "--disable-rules",
             "md012",
@@ -1323,9 +1320,6 @@ def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_above():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 @pytest.mark.rules
@@ -1342,9 +1336,9 @@ def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_below():
         "test", "resources", "rules", "md022", "proper_line_spacing_atx.md"
     )
     supplied_configuration = {"plugins": {"md022": {"lines_below": 2}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -1370,9 +1364,6 @@ def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_below():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 @pytest.mark.rules
@@ -1389,9 +1380,9 @@ def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_below():
         "test", "resources", "rules", "md022", "double_line_spacing_below_atx.md"
     )
     supplied_configuration = {"plugins": {"md022": {"lines_below": 2}}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "--disable-rules",
             "md012",
@@ -1412,9 +1403,6 @@ def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_below():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 @pytest.mark.rules
@@ -1437,9 +1425,9 @@ def test_md022_good_double_line_spacing_above_and_below_atx_with_alternate_lines
     supplied_configuration = {
         "plugins": {"md022": {"lines_below": 2, "lines_above": 2}}
     }
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "--disable-rules",
             "md012",
@@ -1460,9 +1448,6 @@ def test_md022_good_double_line_spacing_above_and_below_atx_with_alternate_lines
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 @pytest.mark.rules
@@ -1514,9 +1499,9 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing():
     supplied_configuration = {
         "plugins": {"md022": {"lines_below": 2, "lines_above": 2}}
     }
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "--disable-rules",
             "MD003,md025",
@@ -1559,9 +1544,6 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 @pytest.mark.rules
@@ -1581,9 +1563,9 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_conf
     supplied_configuration = {
         "plugins": {"md022": {"lines_below": -2, "lines_above": 2}}
     }
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "--disable-rules",
             "MD003,md025",
@@ -1614,9 +1596,6 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_conf
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 @pytest.mark.rules
@@ -1633,9 +1612,9 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_conf
     supplied_configuration = {
         "plugins": {"md022": {"lines_below": -2, "lines_above": 2}}
     }
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "--strict-config",
             "--disable-rules",
@@ -1660,9 +1639,6 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_conf
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 @pytest.mark.rules

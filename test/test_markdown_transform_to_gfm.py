@@ -1,7 +1,7 @@
 """
 https://github.github.com/gfm/#lists
 """
-from test.utils import act_and_assert
+from test.utils import act_and_assert, assert_that_exception_is_raised
 
 import pytest
 
@@ -25,18 +25,11 @@ def test_gfm_bad_token():
         MarkdownToken("bad", MarkdownTokenClass.INLINE_BLOCK),
     ]
 
-    # Act
-    captured_exception = None
-    try:
-        transformer.transform(tokens_to_test)
-        raise AssertionError("should have failed")
-    except AssertionError as this_exception:
-        captured_exception = this_exception
+    expected_output = "Markdown token type <class 'pymarkdown.tokens.markdown_token.MarkdownToken'> not supported."
 
-    # Assert
-    assert (
-        str(captured_exception)
-        == "Markdown token type <class 'pymarkdown.tokens.markdown_token.MarkdownToken'> not supported."
+    # Act & Assert
+    assert_that_exception_is_raised(
+        AssertionError, expected_output, transformer.transform, tokens_to_test
     )
 
 
@@ -51,17 +44,12 @@ def test_gfm_bad_end_token():
     tokens_to_test = [
         EndMarkdownToken("bad", "", None, "hi", False),
     ]
+    expected_output = "Markdown token end type bad not supported."
 
-    # Act
-    captured_exception = None
-    try:
-        transformer.transform(tokens_to_test)
-        raise AssertionError("should have failed")
-    except AssertionError as this_exception:
-        captured_exception = this_exception
-
-    # Assert
-    assert str(captured_exception) == "Markdown token end type bad not supported."
+    # Act & Assert
+    assert_that_exception_is_raised(
+        AssertionError, expected_output, transformer.transform, tokens_to_test
+    )
 
 
 @pytest.mark.gfm
