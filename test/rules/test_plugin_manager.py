@@ -6,8 +6,8 @@ from test.markdown_scanner import MarkdownScanner
 from test.utils import (
     assert_file_is_as_expected,
     copy_to_temp_file,
+    create_temporary_configuration_file,
     read_contents_of_text_file,
-    write_temporary_configuration,
 )
 
 # pylint: disable=too-many-lines
@@ -963,9 +963,9 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_string_detail_from_configur
         "test", "resources", "plugins", "bad", "bad_string_detail_is_int.py"
     )
     supplied_configuration = {"plugins": {"additional_paths": plugin_path}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
         supplied_arguments = [
             "-c",
             configuration_file,
@@ -986,9 +986,6 @@ Plugin class 'BadStringDetailIsInt' returned an improperly typed value for field
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
 
 def test_markdown_with_dash_dash_add_plugin_with_empty_string_detail():

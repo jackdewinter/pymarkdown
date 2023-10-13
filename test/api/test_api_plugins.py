@@ -2,10 +2,13 @@
 Module for adding and configuring plugins through the API.
 """
 
-import io
 import os
-import sys
-from test.utils import write_temporary_configuration
+from test.utils import (
+    assert_that_exception_is_raised,
+    assert_that_exception_is_raised2,
+    capture_stdout,
+    create_temporary_configuration_file,
+)
 
 from pymarkdown.api import (
     PyMarkdownApi,
@@ -21,22 +24,18 @@ def test_api_plugins_add_with_empty_path():
     """
 
     # Arrange
-    source_path = ""
     plugin_path = ""
+    expected_output = "Parameter named 'path_to_plugin' cannot be empty."
 
-    # Act
-    caught_exception = None
-    try:
-        _ = PyMarkdownApi().add_plugin_path(plugin_path).scan_path(source_path)
-    except PyMarkdownApiArgumentException as this_exception:
-        caught_exception = this_exception
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert caught_exception.argument_name == "path_to_plugin"
-    assert (
-        caught_exception.reason == "Parameter named 'path_to_plugin' cannot be empty."
+    # Act & Assert
+    caught_exception = assert_that_exception_is_raised(
+        PyMarkdownApiArgumentException,
+        expected_output,
+        PyMarkdownApi().add_plugin_path,
+        plugin_path,
     )
+
+    assert caught_exception.argument_name == "path_to_plugin"
 
 
 def test_api_plugins_enable_with_empty_id():
@@ -45,26 +44,18 @@ def test_api_plugins_enable_with_empty_id():
     """
 
     # Arrange
-    source_path = ""
     enable_identifier = ""
+    expected_output = "Parameter named 'rule_identifier' cannot be empty."
 
-    # Act
-    caught_exception = None
-    try:
-        _ = (
-            PyMarkdownApi()
-            .enable_rule_by_identifier(enable_identifier)
-            .scan_path(source_path)
-        )
-    except PyMarkdownApiArgumentException as this_exception:
-        caught_exception = this_exception
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert caught_exception.argument_name == "rule_identifier"
-    assert (
-        caught_exception.reason == "Parameter named 'rule_identifier' cannot be empty."
+    # Act & Assert
+    caught_exception = assert_that_exception_is_raised(
+        PyMarkdownApiArgumentException,
+        expected_output,
+        PyMarkdownApi().enable_rule_by_identifier,
+        enable_identifier,
     )
+
+    assert caught_exception.argument_name == "rule_identifier"
 
 
 def test_api_plugins_disable_with_empty_id():
@@ -73,26 +64,18 @@ def test_api_plugins_disable_with_empty_id():
     """
 
     # Arrange
-    source_path = ""
     enable_identifier = ""
+    expected_output = "Parameter named 'rule_identifier' cannot be empty."
 
-    # Act
-    caught_exception = None
-    try:
-        _ = (
-            PyMarkdownApi()
-            .disable_rule_by_identifier(enable_identifier)
-            .scan_path(source_path)
-        )
-    except PyMarkdownApiArgumentException as this_exception:
-        caught_exception = this_exception
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert caught_exception.argument_name == "rule_identifier"
-    assert (
-        caught_exception.reason == "Parameter named 'rule_identifier' cannot be empty."
+    # Act & Assert
+    caught_exception = assert_that_exception_is_raised(
+        PyMarkdownApiArgumentException,
+        expected_output,
+        PyMarkdownApi().disable_rule_by_identifier,
+        enable_identifier,
     )
+
+    assert caught_exception.argument_name == "rule_identifier"
 
 
 def test_api_plugins_add_with_bad_path():
@@ -106,19 +89,14 @@ def test_api_plugins_add_with_bad_path():
     # Arrange
     source_path = "*.md"
     plugin_path = "MD047"
+    expected_output = "BadPluginError encountered while loading plugins:\nPlugin path 'MD047' does not exist."
 
-    # Act
-    caught_exception = None
-    try:
-        _ = PyMarkdownApi().add_plugin_path(plugin_path).scan_path(source_path)
-    except PyMarkdownApiException as this_exception:
-        caught_exception = this_exception
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert (
-        caught_exception.reason
-        == "BadPluginError encountered while loading plugins:\nPlugin path 'MD047' does not exist."
+    # Act & Assert
+    assert_that_exception_is_raised(
+        PyMarkdownApiException,
+        expected_output,
+        PyMarkdownApi().add_plugin_path(plugin_path).scan_path,
+        source_path,
     )
 
 
@@ -139,15 +117,10 @@ def test_api_plugins_add_with_simple_plugin():
     plugin_path = "test/resources/plugins/plugin_two.py"
 
     # Act
-    std_output = io.StringIO()
-    old_output = sys.stdout
-    try:
-        sys.stdout = std_output
+    with capture_stdout() as std_output:
         scan_result = (
             PyMarkdownApi().add_plugin_path(plugin_path).scan_path(source_path)
         )
-    finally:
-        sys.stdout = old_output
 
     # Assert
     assert scan_result
@@ -184,15 +157,10 @@ def test_api_plugins_add_with_simple_plugins_by_directory():
     plugin_path = "test/resources/plugins/"
 
     # Act
-    std_output = io.StringIO()
-    old_output = sys.stdout
-    try:
-        sys.stdout = std_output
+    with capture_stdout() as std_output:
         scan_result = (
             PyMarkdownApi().add_plugin_path(plugin_path).scan_path(source_path)
         )
-    finally:
-        sys.stdout = old_output
 
     # Assert
     assert scan_result
@@ -224,19 +192,14 @@ def test_api_plugins_add_with_repeated_identifier():
     plugin_path = os.path.join(
         "test", "resources", "plugins", "bad", "duplicate_id_debug.py"
     )
+    expected_output = "ValueError encountered while initializing plugins:\nUnable to register plugin 'duplicate_id_debug.py' with id 'md999' as plugin 'plugin_one.py' is already registered with that id."
 
-    # Act
-    caught_exception = None
-    try:
-        _ = PyMarkdownApi().add_plugin_path(plugin_path).scan_path(source_path)
-    except PyMarkdownApiException as this_exception:
-        caught_exception = this_exception
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert (
-        caught_exception.reason
-        == "ValueError encountered while initializing plugins:\nUnable to register plugin 'duplicate_id_debug.py' with id 'md999' as plugin 'plugin_one.py' is already registered with that id."
+    # Act & Assert
+    assert_that_exception_is_raised(
+        PyMarkdownApiException,
+        expected_output,
+        PyMarkdownApi().add_plugin_path(plugin_path).scan_path,
+        source_path,
     )
 
 
@@ -255,19 +218,14 @@ def test_api_plugins_add_with_bad_starting_new_file():
     plugin_path = os.path.join(
         "test", "resources", "plugins", "bad", "bad_starting_new_file.py"
     )
+    expected_output = f"BadPluginError encountered while scanning '{source_path}':\nPlugin id 'MDE001' had a critical failure during the 'starting_new_file' action."
 
-    # Act
-    caught_exception = None
-    try:
-        _ = PyMarkdownApi().add_plugin_path(plugin_path).scan_path(source_path)
-    except PyMarkdownApiException as this_exception:
-        caught_exception = this_exception
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert (
-        caught_exception.reason
-        == f"BadPluginError encountered while scanning '{source_path}':\nPlugin id 'MDE001' had a critical failure during the 'starting_new_file' action."
+    # Act & Assert
+    assert_that_exception_is_raised(
+        PyMarkdownApiException,
+        expected_output,
+        PyMarkdownApi().add_plugin_path(plugin_path).scan_path,
+        source_path,
     )
 
 
@@ -287,18 +245,14 @@ def test_api_plugins_add_with_bad_next_token():
         "test", "resources", "plugins", "bad", "bad_next_token.py"
     )
 
-    # Act
-    caught_exception = None
-    try:
-        _ = PyMarkdownApi().add_plugin_path(plugin_path).scan_path(source_path)
-    except PyMarkdownApiException as this_exception:
-        caught_exception = this_exception
+    expected_output = f"BadPluginError encountered while scanning '{source_path}':\n(1,1): Plugin id 'MDE003' had a critical failure during the 'next_token' action."
 
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert (
-        caught_exception.reason
-        == f"BadPluginError encountered while scanning '{source_path}':\n(1,1): Plugin id 'MDE003' had a critical failure during the 'next_token' action."
+    # Act & Assert
+    assert_that_exception_is_raised(
+        PyMarkdownApiException,
+        expected_output,
+        PyMarkdownApi().add_plugin_path(plugin_path).scan_path,
+        source_path,
     )
 
 
@@ -319,31 +273,18 @@ def test_api_plugins_add_with_bad_next_token_and_stack_trace():
         "test", "resources", "plugins", "bad", "bad_next_token.py"
     )
 
-    # Act
-    caught_exception = None
-    try:
-        _ = (
-            PyMarkdownApi()
-            .enable_stack_trace()
-            .add_plugin_path(plugin_path)
-            .scan_path(source_path)
-        )
-    except PyMarkdownApiException as this_exception:
-        caught_exception = this_exception
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert caught_exception.reason.startswith(
-        """BadPluginError encountered while scanning '{path}':
+    expected_output = """BadPluginError encountered while scanning '{path}':
 (1,1): Plugin id 'MDE003' had a critical failure during the 'next_token' action.""".replace(
-            "{path}", source_path
-        )
+        "{path}", source_path
     )
 
-
-# Actual Token: [atx(1,1):1:0:]
-# Traceback (most recent call last):
-#  File"""
+    # Act & Assert
+    assert_that_exception_is_raised2(
+        PyMarkdownApiException,
+        expected_output,
+        PyMarkdownApi().enable_stack_trace().add_plugin_path(plugin_path).scan_path,
+        source_path,
+    )
 
 
 def test_api_plugins_add_with_bad_load_due_to_configuration():
@@ -362,26 +303,19 @@ def test_api_plugins_add_with_bad_load_due_to_configuration():
         "test", "resources", "plugins", "bad", "bad_string_detail_is_int.py"
     )
     supplied_configuration = {"plugins": {"additional_paths": plugin_path}}
-
-    # Act
-    caught_exception = None
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
-        _ = (
-            PyMarkdownApi()
-            .configuration_file_path(configuration_file)
-            .scan_path(source_path)
-        )
-    except PyMarkdownApiException as this_exception:
-        caught_exception = this_exception
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert caught_exception.reason == (
-        """BadPluginError encountered while loading plugins:
+    expected_output = """BadPluginError encountered while loading plugins:
 Plugin class 'BadStringDetailIsInt' returned an improperly typed value for field name 'plugin_description'."""
-    )
+
+    # Act & Assert
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
+        assert_that_exception_is_raised(
+            PyMarkdownApiException,
+            expected_output,
+            PyMarkdownApi().configuration_file_path(configuration_file).scan_path,
+            source_path,
+        )
 
 
 def test_api_plugins_disable_multiple_enable_one():

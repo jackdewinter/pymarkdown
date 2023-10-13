@@ -7,7 +7,7 @@ from test.markdown_scanner import MarkdownScanner
 
 import yaml
 
-from .utils import write_temporary_configuration
+from .utils import create_temporary_configuration_file, temporary_change_to_directory
 
 __TEST_DOCUMENT = """# This is a document
 
@@ -132,11 +132,9 @@ def test_markdown_with_config_json_configuration_file():
     }
 
     with tempfile.TemporaryDirectory() as tmp_dir_path:
-        configuration_file = None
-        try:
-            configuration_file = write_temporary_configuration(
-                specified_configuration, file_name="myconfig", directory=tmp_dir_path
-            )
+        with create_temporary_configuration_file(
+            specified_configuration, file_name="myconfig", directory=tmp_dir_path
+        ) as configuration_file:
             supplied_arguments = [
                 "-c",
                 configuration_file,
@@ -151,9 +149,6 @@ def test_markdown_with_config_json_configuration_file():
             execute_results = scanner.invoke_main(
                 arguments=supplied_arguments, standard_input_to_use=stdin_to_use
             )
-        finally:
-            if configuration_file and os.path.exists(configuration_file):
-                os.remove(configuration_file)
 
     # Assert
     execute_results.assert_results(
@@ -175,13 +170,11 @@ def test_markdown_with_config_yaml_configuration_file():
     }
 
     with tempfile.TemporaryDirectory() as tmp_dir_path:
-        configuration_file = None
-        try:
-            configuration_file = write_temporary_configuration(
-                yaml.dump(specified_configuration),
-                file_name="myconfig",
-                directory=tmp_dir_path,
-            )
+        with create_temporary_configuration_file(
+            yaml.dump(specified_configuration),
+            file_name="myconfig",
+            directory=tmp_dir_path,
+        ) as configuration_file:
             supplied_arguments = [
                 "--stack-trace",
                 "-c",
@@ -197,9 +190,6 @@ def test_markdown_with_config_yaml_configuration_file():
             execute_results = scanner.invoke_main(
                 arguments=supplied_arguments, standard_input_to_use=stdin_to_use
             )
-        finally:
-            if configuration_file and os.path.exists(configuration_file):
-                os.remove(configuration_file)
 
     # Assert
     execute_results.assert_results(
@@ -221,13 +211,11 @@ def test_markdown_with_config_default_yaml():
     }
 
     with tempfile.TemporaryDirectory() as tmp_dir_path:
-        default_yaml_configuration_file = None
-        try:
-            default_yaml_configuration_file = write_temporary_configuration(
-                yaml.dump(specified_yaml_configuration),
-                file_name=".pymarkdown.yaml",
-                directory=tmp_dir_path,
-            )
+        with create_temporary_configuration_file(
+            yaml.dump(specified_yaml_configuration),
+            file_name=".pymarkdown.yaml",
+            directory=tmp_dir_path,
+        ):
             supplied_arguments = [
                 "scan-stdin",
             ]
@@ -237,19 +225,10 @@ def test_markdown_with_config_default_yaml():
             expected_error = ""
 
             # Act
-            old_current_working_directory = os.getcwd()
-            try:
-                os.chdir(tmp_dir_path)
+            with temporary_change_to_directory(tmp_dir_path):
                 execute_results = scanner.invoke_main(
                     arguments=supplied_arguments, standard_input_to_use=stdin_to_use
                 )
-            finally:
-                os.chdir(old_current_working_directory)
-        finally:
-            if default_yaml_configuration_file and os.path.exists(
-                default_yaml_configuration_file
-            ):
-                os.remove(default_yaml_configuration_file)
 
     # Assert
     execute_results.assert_results(
@@ -271,13 +250,11 @@ def test_markdown_with_config_default_yml():
     }
 
     with tempfile.TemporaryDirectory() as tmp_dir_path:
-        default_yaml_configuration_file = None
-        try:
-            default_yaml_configuration_file = write_temporary_configuration(
-                yaml.dump(specified_yaml_configuration),
-                file_name=".pymarkdown.yml",
-                directory=tmp_dir_path,
-            )
+        with create_temporary_configuration_file(
+            yaml.dump(specified_yaml_configuration),
+            file_name=".pymarkdown.yaml",
+            directory=tmp_dir_path,
+        ):
             supplied_arguments = [
                 "scan-stdin",
             ]
@@ -287,19 +264,10 @@ def test_markdown_with_config_default_yml():
             expected_error = ""
 
             # Act
-            old_current_working_directory = os.getcwd()
-            try:
-                os.chdir(tmp_dir_path)
+            with temporary_change_to_directory(tmp_dir_path):
                 execute_results = scanner.invoke_main(
                     arguments=supplied_arguments, standard_input_to_use=stdin_to_use
                 )
-            finally:
-                os.chdir(old_current_working_directory)
-        finally:
-            if default_yaml_configuration_file and os.path.exists(
-                default_yaml_configuration_file
-            ):
-                os.remove(default_yaml_configuration_file)
 
     # Assert
     execute_results.assert_results(
@@ -325,45 +293,29 @@ def test_markdown_with_config_default_json_beats_default_yaml():
     }
 
     with tempfile.TemporaryDirectory() as tmp_dir_path:
-        default_json_configuration_file = None
-        default_yaml_configuration_file = None
-        try:
-            default_json_configuration_file = write_temporary_configuration(
-                specified_json_configuration,
-                file_name=".pymarkdown",
-                directory=tmp_dir_path,
-            )
-            default_yaml_configuration_file = write_temporary_configuration(
+        with create_temporary_configuration_file(
+            specified_json_configuration,
+            file_name=".pymarkdown",
+            directory=tmp_dir_path,
+        ):
+            with create_temporary_configuration_file(
                 yaml.dump(specified_yaml_configuration),
                 file_name=".pymarkdown.yaml",
                 directory=tmp_dir_path,
-            )
-            supplied_arguments = [
-                "scan-stdin",
-            ]
-
-            expected_return_code = 0
-            expected_output = ""
-            expected_error = ""
-
-            # Act
-            old_current_working_directory = os.getcwd()
-            try:
-                os.chdir(tmp_dir_path)
-                execute_results = scanner.invoke_main(
-                    arguments=supplied_arguments, standard_input_to_use=stdin_to_use
-                )
-            finally:
-                os.chdir(old_current_working_directory)
-        finally:
-            if default_yaml_configuration_file and os.path.exists(
-                default_yaml_configuration_file
             ):
-                os.remove(default_yaml_configuration_file)
-            if default_json_configuration_file and os.path.exists(
-                default_json_configuration_file
-            ):
-                os.remove(default_json_configuration_file)
+                supplied_arguments = [
+                    "scan-stdin",
+                ]
+
+                expected_return_code = 0
+                expected_output = ""
+                expected_error = ""
+
+                # Act
+                with temporary_change_to_directory(tmp_dir_path):
+                    execute_results = scanner.invoke_main(
+                        arguments=supplied_arguments, standard_input_to_use=stdin_to_use
+                    )
 
     # Assert
     execute_results.assert_results(
@@ -384,11 +336,9 @@ def test_markdown_with_config_bad_json_and_yaml_configuration_file():
 bye
 """
     with tempfile.TemporaryDirectory() as tmp_dir_path:
-        configuration_file = None
-        try:
-            configuration_file = write_temporary_configuration(
-                specified_configuration, file_name="myconfig", directory=tmp_dir_path
-            )
+        with create_temporary_configuration_file(
+            specified_configuration, file_name="myconfig", directory=tmp_dir_path
+        ) as configuration_file:
             supplied_arguments = [
                 "--stack-trace",
                 "-c",
@@ -404,9 +354,6 @@ bye
             execute_results = scanner.invoke_main(
                 arguments=supplied_arguments, standard_input_to_use=stdin_to_use
             )
-        finally:
-            if configuration_file and os.path.exists(configuration_file):
-                os.remove(configuration_file)
 
     # Assert
     execute_results.assert_results(
@@ -430,11 +377,9 @@ def test_markdown_with_config_specific_command_line_and_configuration_file():
     }
 
     with tempfile.TemporaryDirectory() as tmp_dir_path:
-        configuration_file = None
-        try:
-            configuration_file = write_temporary_configuration(
-                specified_configuration, file_name="myconfig", directory=tmp_dir_path
-            )
+        with create_temporary_configuration_file(
+            specified_configuration, file_name="myconfig", directory=tmp_dir_path
+        ) as configuration_file:
             supplied_arguments = [
                 "--strict-config",
                 "-s",
@@ -452,9 +397,6 @@ def test_markdown_with_config_specific_command_line_and_configuration_file():
             execute_results = scanner.invoke_main(
                 arguments=supplied_arguments, standard_input_to_use=stdin_to_use
             )
-        finally:
-            if configuration_file and os.path.exists(configuration_file):
-                os.remove(configuration_file)
 
     # Assert
     execute_results.assert_results(
@@ -481,42 +423,28 @@ def test_markdown_with_config_configuration_file_and_default_configuration_file(
     }
 
     with tempfile.TemporaryDirectory() as tmp_dir_path:
-        configuration_file = None
-        default_configuration_file = None
-        try:
-            configuration_file = write_temporary_configuration(
-                specified_configuration, file_name="myconfig", directory=tmp_dir_path
-            )
-            default_configuration_file = write_temporary_configuration(
+        with create_temporary_configuration_file(
+            specified_configuration, file_name="myconfig", directory=tmp_dir_path
+        ) as configuration_file:
+            with create_temporary_configuration_file(
                 default_configuration, file_name=".pymarkdown", directory=tmp_dir_path
-            )
-            supplied_arguments = [
-                "--strict-config",
-                "-c",
-                configuration_file,
-                "scan-stdin",
-            ]
-
-            expected_return_code = 0
-            expected_output = ""
-            expected_error = ""
-
-            # Act
-            old_current_working_directory = os.getcwd()
-            try:
-                os.chdir(tmp_dir_path)
-                execute_results = scanner.invoke_main(
-                    arguments=supplied_arguments, standard_input_to_use=stdin_to_use
-                )
-            finally:
-                os.chdir(old_current_working_directory)
-        finally:
-            if configuration_file and os.path.exists(configuration_file):
-                os.remove(configuration_file)
-            if default_configuration_file and os.path.exists(
-                default_configuration_file
             ):
-                os.remove(default_configuration_file)
+                supplied_arguments = [
+                    "--strict-config",
+                    "-c",
+                    configuration_file,
+                    "scan-stdin",
+                ]
+
+                expected_return_code = 0
+                expected_output = ""
+                expected_error = ""
+
+                # Act
+                with temporary_change_to_directory(tmp_dir_path):
+                    execute_results = scanner.invoke_main(
+                        arguments=supplied_arguments, standard_input_to_use=stdin_to_use
+                    )
 
     # Assert
     execute_results.assert_results(
@@ -543,44 +471,28 @@ plugins.md004.enabled = true
 """
 
     with tempfile.TemporaryDirectory() as tmp_dir_path:
-        default_configuration_file = None
-        alternate_configuration_file = None
-        try:
-            default_configuration_file = write_temporary_configuration(
-                default_configuration, file_name=".pymarkdown", directory=tmp_dir_path
-            )
-            alternate_configuration_file = write_temporary_configuration(
+        with create_temporary_configuration_file(
+            default_configuration, file_name=".pymarkdown", directory=tmp_dir_path
+        ):
+            with create_temporary_configuration_file(
                 alternate_configuration,
                 file_name="pyproject.toml",
                 directory=tmp_dir_path,
-            )
-            supplied_arguments = [
-                "--strict-config",
-                "scan-stdin",
-            ]
-
-            expected_return_code = 0
-            expected_output = ""
-            expected_error = ""
-
-            # Act
-            old_current_working_directory = os.getcwd()
-            try:
-                os.chdir(tmp_dir_path)
-                execute_results = scanner.invoke_main(
-                    arguments=supplied_arguments, standard_input_to_use=stdin_to_use
-                )
-            finally:
-                os.chdir(old_current_working_directory)
-        finally:
-            if default_configuration_file and os.path.exists(
-                default_configuration_file
             ):
-                os.remove(default_configuration_file)
-            if alternate_configuration_file and os.path.exists(
-                alternate_configuration_file
-            ):
-                os.remove(alternate_configuration_file)
+                supplied_arguments = [
+                    "--strict-config",
+                    "scan-stdin",
+                ]
+
+                expected_return_code = 0
+                expected_output = ""
+                expected_error = ""
+
+                # Act
+                with temporary_change_to_directory(tmp_dir_path):
+                    execute_results = scanner.invoke_main(
+                        arguments=supplied_arguments, standard_input_to_use=stdin_to_use
+                    )
 
     # Assert
     execute_results.assert_results(
@@ -603,13 +515,9 @@ plugins.md004.enabled = false
 """
 
     with tempfile.TemporaryDirectory() as tmp_dir_path:
-        alternate_configuration_file = None
-        try:
-            alternate_configuration_file = write_temporary_configuration(
-                alternate_configuration,
-                file_name="pyproject.toml",
-                directory=tmp_dir_path,
-            )
+        with create_temporary_configuration_file(
+            alternate_configuration, file_name="pyproject.toml", directory=tmp_dir_path
+        ):
             supplied_arguments = [
                 "--strict-config",
                 "scan-stdin",
@@ -620,19 +528,10 @@ plugins.md004.enabled = false
             expected_error = ""
 
             # Act
-            old_current_working_directory = os.getcwd()
-            try:
-                os.chdir(tmp_dir_path)
+            with temporary_change_to_directory(tmp_dir_path):
                 execute_results = scanner.invoke_main(
                     arguments=supplied_arguments, standard_input_to_use=stdin_to_use
                 )
-            finally:
-                os.chdir(old_current_working_directory)
-        finally:
-            if alternate_configuration_file and os.path.exists(
-                alternate_configuration_file
-            ):
-                os.remove(alternate_configuration_file)
 
     # Assert
     execute_results.assert_results(
@@ -661,13 +560,9 @@ a.c = "3"
     # directory, so this test creates a new directory and executes the parser from
     # within that directory.
     with tempfile.TemporaryDirectory() as tmp_dir_path:
-        default_configuration_file = None
-        try:
-            default_configuration_file = write_temporary_configuration(
-                default_configuration,
-                file_name="pyproject.toml",
-                directory=tmp_dir_path,
-            )
+        with create_temporary_configuration_file(
+            default_configuration, file_name="pyproject.toml", directory=tmp_dir_path
+        ):
             supplied_arguments = [
                 "--strict-config",
                 "scan",
@@ -679,19 +574,10 @@ a.c = "3"
             expected_error = "Configuration Error: The value for property 'log.file' must be of type 'str'.\n"
 
             # Act
-            old_current_working_directory = os.getcwd()
-            try:
-                os.chdir(tmp_dir_path)
+            with temporary_change_to_directory(tmp_dir_path):
                 execute_results = scanner.invoke_main(arguments=supplied_arguments)
-            finally:
-                os.chdir(old_current_working_directory)
 
             # Assert
             execute_results.assert_results(
                 expected_output, expected_error, expected_return_code
             )
-        finally:
-            if default_configuration_file and os.path.exists(
-                default_configuration_file
-            ):
-                os.remove(default_configuration_file)

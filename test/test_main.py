@@ -5,10 +5,9 @@ import logging
 import os
 import runpy
 from test.markdown_scanner import MarkdownScanner
-from test.patches.patch_builtin_open import PatchBuiltinOpen
+from test.patches.patch_builtin_open import path_builtin_open_with_exception
 
 from pymarkdown.general.parser_logger import ParserLogger
-from pymarkdown.general.source_providers import FileSourceProvider
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -380,15 +379,8 @@ Named character entity map file '{source_path}' was not loaded (bob).
     )
 
     # Act
-    try:
-        _ = FileSourceProvider(exception_path)
-        patch = PatchBuiltinOpen()
-        patch.register_exception_for_file(exception_path, "rt", IOError("bob"))
-        patch.start()
-
+    with path_builtin_open_with_exception(exception_path, "rt", IOError("bob"), True):
         execute_results = scanner.invoke_main(arguments=supplied_arguments)
-    finally:
-        patch.stop(print_action_comments=True)
 
     # Assert
     execute_results.assert_results(
@@ -424,16 +416,10 @@ def test_markdown_with_dash_x_init():
     )
 
     # Act
-    try:
-        patch = PatchBuiltinOpen()
-        patch.register_exception_for_file(
-            os.path.abspath(exception_path), "rt", OSError("blah")
-        )
-        patch.start()
-
+    with path_builtin_open_with_exception(
+        os.path.abspath(exception_path), "rt", OSError("blah")
+    ):
         execute_results = scanner.invoke_main(arguments=supplied_arguments)
-    finally:
-        patch.stop(print_action_comments=True)
 
     # Assert
     execute_results.assert_results(

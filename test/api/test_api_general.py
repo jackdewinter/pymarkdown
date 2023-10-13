@@ -5,11 +5,11 @@ Module for directly using PyMarkdown's general api.
 import os
 import runpy
 from test.patches.patch_base import PatchBase
-from test.patches.patch_builtin_open import PatchBuiltinOpen
+from test.patches.patch_builtin_open import path_builtin_open_with_exception
+from test.utils import assert_that_exception_is_raised
 from typing import Any
 
 from pymarkdown.api import PyMarkdownApi, PyMarkdownApiException
-from pymarkdown.general.source_providers import FileSourceProvider
 
 
 def get_semantic_version():
@@ -70,29 +70,21 @@ def test_api_tokenizer_init_exception():
     exception_path = os.path.join("pymarkdown", "resources", "entities.json")
 
     # Act
-    caught_exception = None
-    try:
-        patch = PatchBuiltinOpen()
-        patch.register_exception_for_file(
-            os.path.abspath(exception_path), "rt", OSError("blah")
-        )
-        patch.start()
-
-        _ = PyMarkdownApi().scan_path(source_path)
-    except PyMarkdownApiException as this_exception:
-        caught_exception = this_exception
-    finally:
-        patch.stop(print_action_comments=True)
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert (
-        caught_exception.reason
-        == """BadTokenizationError encountered while initializing tokenizer:
+    with path_builtin_open_with_exception(
+        os.path.abspath(exception_path), "rt", OSError("blah")
+    ):
+        expected_output = """BadTokenizationError encountered while initializing tokenizer:
 Named character entity map file '{path}' was not loaded (blah).""".replace(
             "{path}", os.path.abspath(exception_path)
         )
-    )
+
+        # Act & Assert
+        assert_that_exception_is_raised(
+            PyMarkdownApiException,
+            expected_output,
+            PyMarkdownApi().scan_path,
+            source_path,
+        )
 
 
 class PatchFileSourceProvider(PatchBase):
@@ -147,25 +139,16 @@ def test_api_tokenizer_failure_during_file_scan():
     )
 
     # Act
-    caught_exception = None
-    try:
-        _ = FileSourceProvider(exception_path)
-        patch = PatchBuiltinOpen()
-        patch.register_exception_for_file(exception_path, "rt", IOError("bob"))
-        patch.start()
-
-        _ = PyMarkdownApi().scan_path(source_path)
-    except PyMarkdownApiException as this_exception:
-        caught_exception = this_exception
-    finally:
-        patch.stop(print_action_comments=True)
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert (
-        caught_exception.reason
-        == """BadTokenizationError encountered while initializing tokenizer:
+    with path_builtin_open_with_exception(exception_path, "rt", IOError("bob"), True):
+        expected_output = """BadTokenizationError encountered while initializing tokenizer:
 Named character entity map file '{path}' was not loaded (bob).""".replace(
             "{path}", exception_path
         )
-    )
+
+        # Act & Assert
+        assert_that_exception_is_raised(
+            PyMarkdownApiException,
+            expected_output,
+            PyMarkdownApi().scan_path,
+            source_path,
+        )

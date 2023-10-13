@@ -2,11 +2,15 @@
 Module for specifying a configuration file through the API.
 """
 
-import io
 import os
 import sys
 import tempfile
-from test.utils import write_temporary_configuration
+from test.utils import (
+    assert_that_exception_is_raised,
+    capture_stdout,
+    create_temporary_configuration_file,
+    temporary_change_to_directory,
+)
 
 from pymarkdown.api import (
     PyMarkdownApi,
@@ -21,27 +25,18 @@ def test_api_config_with_empty_path():
     """
 
     # Arrange
-    source_path = ""
     configuration_path = ""
+    expected_output = "Parameter named 'path_to_config_file' cannot be empty."
 
-    # Act
-    caught_exception = None
-    try:
-        _ = (
-            PyMarkdownApi()
-            .configuration_file_path(configuration_path)
-            .scan_path(source_path)
-        )
-    except PyMarkdownApiArgumentException as this_exception:
-        caught_exception = this_exception
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert caught_exception.argument_name == "path_to_config_file"
-    assert (
-        caught_exception.reason
-        == "Parameter named 'path_to_config_file' cannot be empty."
+    # Act & Assert
+    caught_exception = assert_that_exception_is_raised(
+        PyMarkdownApiArgumentException,
+        expected_output,
+        PyMarkdownApi().configuration_file_path,
+        configuration_path,
     )
+
+    assert caught_exception.argument_name == "path_to_config_file"
 
 
 def test_api_config_with_bad_path():
@@ -58,22 +53,14 @@ def test_api_config_with_bad_path():
     )
     configuration_file = "not-exists"
 
-    # Act
-    caught_exception = None
-    try:
-        _ = (
-            PyMarkdownApi()
-            .configuration_file_path(configuration_file)
-            .scan_path(source_path)
-        )
-    except PyMarkdownApiException as this_exception:
-        caught_exception = this_exception
+    expected_output = "Specified configuration file `not-exists` does not exist."
 
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert (
-        caught_exception.reason
-        == "Specified configuration file `not-exists` does not exist."
+    # Act & Assert
+    assert_that_exception_is_raised(
+        PyMarkdownApiException,
+        expected_output,
+        PyMarkdownApi().configuration_file_path(configuration_file).scan_path,
+        source_path,
     )
 
 
@@ -90,30 +77,18 @@ def test_api_config_with_bad_contents():
         "test", "resources", "rules", "md047", "end_with_blank_line.md"
     )
     supplied_configuration = "not a json file"
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
+        expected_output = f"Specified configuration file '{configuration_file}' was not parseable as a JSON file or a YAML file."
 
-        # Act
-        caught_exception = None
-        try:
-            _ = (
-                PyMarkdownApi()
-                .configuration_file_path(configuration_file)
-                .scan_path(source_path)
-            )
-        except PyMarkdownApiException as this_exception:
-            caught_exception = this_exception
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert (
-        caught_exception.reason
-        == f"Specified configuration file '{configuration_file}' was not parseable as a JSON file or a YAML file."
-    )
+        # Act & Assert
+        assert_that_exception_is_raised(
+            PyMarkdownApiException,
+            expected_output,
+            PyMarkdownApi().configuration_file_path(configuration_file).scan_path,
+            source_path,
+        )
 
 
 def test_api_config_with_config_file_with_good_value():
@@ -130,24 +105,17 @@ def test_api_config_with_config_file_with_good_value():
         "test", "resources", "rules", "md047", "end_with_blank_line.md"
     )
     supplied_configuration = {"plugins": {"md999": {"other_test_value": 2}}}
-    configuration_file = None
-    std_output = io.StringIO()
-    old_output = sys.stdout
-    try:
-        sys.stdout = std_output
-        configuration_file = write_temporary_configuration(supplied_configuration)
-
-        # Act
-        scan_result = (
-            PyMarkdownApi()
-            .enable_rule_by_identifier("MD999")
-            .configuration_file_path(configuration_file)
-            .scan_path(source_path)
-        )
-    finally:
-        sys.stdout = old_output
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
+        with capture_stdout() as std_output:
+            # Act
+            scan_result = (
+                PyMarkdownApi()
+                .enable_rule_by_identifier("MD999")
+                .configuration_file_path(configuration_file)
+                .scan_path(source_path)
+            )
 
     # Assert
     assert scan_result
@@ -191,24 +159,17 @@ def test_api_config_with_config_file_with_bad_value():
         "test", "resources", "rules", "md047", "end_with_blank_line.md"
     )
     supplied_configuration = {"plugins": {"md999": {"other_test_value": 9}}}
-    configuration_file = None
-    std_output = io.StringIO()
-    old_output = sys.stdout
-    try:
-        sys.stdout = std_output
-        configuration_file = write_temporary_configuration(supplied_configuration)
-
-        # Act
-        scan_result = (
-            PyMarkdownApi()
-            .enable_rule_by_identifier("MD999")
-            .configuration_file_path(configuration_file)
-            .scan_path(source_path)
-        )
-    finally:
-        sys.stdout = old_output
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
+        with capture_stdout() as std_output:
+            # Act
+            scan_result = (
+                PyMarkdownApi()
+                .enable_rule_by_identifier("MD999")
+                .configuration_file_path(configuration_file)
+                .scan_path(source_path)
+            )
 
     # Assert
     assert scan_result
@@ -252,29 +213,20 @@ def test_api_config_with_good_strict_and_bad_config():
     )
     supplied_configuration = {"mode": {"strict-config": True}, "log": {"file": 0}}
     configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
-
-        # Act
-        caught_exception = None
-        try:
-            _ = (
-                PyMarkdownApi()
-                .configuration_file_path(configuration_file)
-                .scan_path(source_path)
-            )
-        except PyMarkdownApiException as this_exception:
-            caught_exception = this_exception
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert (
-        caught_exception.reason
-        == "Configuration Error: The value for property 'log.file' must be of type 'str'."
+    expected_output = (
+        "Configuration Error: The value for property 'log.file' must be of type 'str'."
     )
+
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
+        # Act & Assert
+        assert_that_exception_is_raised(
+            PyMarkdownApiException,
+            expected_output,
+            PyMarkdownApi().configuration_file_path(configuration_file).scan_path,
+            source_path,
+        )
 
 
 def test_api_config_with_bad_strict_and_bad_config():
@@ -290,30 +242,18 @@ def test_api_config_with_bad_strict_and_bad_config():
         "test", "resources", "rules", "md047", "end_with_blank_line.md"
     )
     supplied_configuration = {"mode": {"strict-config": 2}}
-    configuration_file = None
-    try:
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    expected_output = "Configuration Error: The value for property 'mode.strict-config' must be of type 'bool'."
 
-        # Act
-        caught_exception = None
-        try:
-            _ = (
-                PyMarkdownApi()
-                .configuration_file_path(configuration_file)
-                .scan_path(source_path)
-            )
-        except PyMarkdownApiException as this_exception:
-            caught_exception = this_exception
-    finally:
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert (
-        caught_exception.reason
-        == "Configuration Error: The value for property 'mode.strict-config' must be of type 'bool'."
-    )
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
+        # Act & Assert
+        assert_that_exception_is_raised(
+            PyMarkdownApiException,
+            expected_output,
+            PyMarkdownApi().configuration_file_path(configuration_file).scan_path,
+            source_path,
+        )
 
 
 def test_api_config_with_exception_during_confiuguration():
@@ -329,31 +269,26 @@ def test_api_config_with_exception_during_confiuguration():
         "test", "resources", "rules", "md047", "end_with_blank_line.md"
     )
     supplied_configuration = {"plugins": {"md999": {"test_value": 10}}}
-    configuration_file = None
-    std_output = io.StringIO()
-    old_output = sys.stdout
-    try:
-        sys.stdout = std_output
-        configuration_file = write_temporary_configuration(supplied_configuration)
 
-        # Act
-        caught_exception = None
-        try:
-            _ = (
+    expected_output = """BadPluginError encountered while configuring plugins:
+Plugin id 'MD999' had a critical failure during the 'apply_configuration' action."""
+
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
+        with capture_stdout() as std_output:
+            # Act
+            caught_exception = assert_that_exception_is_raised(
+                PyMarkdownApiException,
+                expected_output,
                 PyMarkdownApi()
                 .enable_rule_by_identifier("MD999")
                 .configuration_file_path(configuration_file)
-                .scan_path(source_path)
+                .scan_path,
+                source_path,
             )
-        except PyMarkdownApiException as this_exception:
-            caught_exception = this_exception
-    finally:
-        sys.stdout = old_output
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
     # Assert
-    assert caught_exception, "Should have thrown an exception."
     assert (
         caught_exception.reason
         == """BadPluginError encountered while configuring plugins:
@@ -381,38 +316,27 @@ def test_api_config_with_exception_during_scanning():
         "test", "resources", "rules", "md047", "end_with_blank_line.md"
     )
     supplied_configuration = {"plugins": {"md999": {"test_value": 20}}}
-    configuration_file = None
-    std_output = io.StringIO()
-    old_output = sys.stdout
-    try:
-        sys.stdout = std_output
-        configuration_file = write_temporary_configuration(supplied_configuration)
+    expected_output = """BadPluginError encountered while scanning '{path}':
+(1,1): Plugin id 'MD999' had a critical failure during the 'next_token' action.""".replace(
+        "{path}", source_path
+    )
 
-        # Act
-        caught_exception = None
-        try:
-            _ = (
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
+        with capture_stdout() as std_output:
+            # Act
+            assert_that_exception_is_raised(
+                PyMarkdownApiException,
+                expected_output,
                 PyMarkdownApi()
                 .enable_rule_by_identifier("MD999")
                 .configuration_file_path(configuration_file)
-                .scan_path(source_path)
+                .scan_path,
+                source_path,
             )
-        except PyMarkdownApiException as this_exception:
-            caught_exception = this_exception
-    finally:
-        sys.stdout = old_output
-        if configuration_file and os.path.exists(configuration_file):
-            os.remove(configuration_file)
 
     # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert (
-        caught_exception.reason
-        == """BadPluginError encountered while scanning '{path}':
-(1,1): Plugin id 'MD999' had a critical failure during the 'next_token' action.""".replace(
-            "{path}", source_path
-        )
-    )
     assert (
         std_output.getvalue()
         == """MD999>>init_from_config
@@ -441,21 +365,16 @@ def test_api_config_with_bad_contents_for_default_config():
     # directory, so this test creates a new directory and executes the parser from
     # within that directory.
     with tempfile.TemporaryDirectory() as tmp_dir_path:
-        configuration_file = write_temporary_configuration(
+        with create_temporary_configuration_file(
             supplied_configuration, file_name=".pymarkdown", directory=tmp_dir_path
-        )
-
-        # Act
-        caught_exception = None
-        try:
-            old_current_working_directory = os.getcwd()
+        ) as configuration_file:
+            # Act
+            caught_exception = None
             try:
-                os.chdir(tmp_dir_path)
-                _ = PyMarkdownApi().scan_path(source_path)
-            finally:
-                os.chdir(old_current_working_directory)
-        except PyMarkdownApiException as this_exception:
-            caught_exception = this_exception
+                with temporary_change_to_directory(tmp_dir_path):
+                    _ = PyMarkdownApi().scan_path(source_path)
+            except PyMarkdownApiException as this_exception:
+                caught_exception = this_exception
 
     # Assert
     assert caught_exception, "Should have thrown an exception."
@@ -485,32 +404,25 @@ def test_api_config_with_bad_settings_for_default_config():
     )
     supplied_configuration = {"mode": {"strict-config": True}, "log": {"file": 0}}
 
+    expected_output = (
+        "Configuration Error: The value for property 'log.file' must be of type 'str'."
+    )
+
     # Note that the default configuration file is determined by the current working
     # directory, so this test creates a new directory and executes the parser from
     # within that directory.
     with tempfile.TemporaryDirectory() as tmp_dir_path:
-        write_temporary_configuration(
+        with create_temporary_configuration_file(
             supplied_configuration, file_name=".pymarkdown", directory=tmp_dir_path
-        )
-
-        # Act
-        caught_exception = None
-        try:
-            old_current_working_directory = os.getcwd()
-            try:
-                os.chdir(tmp_dir_path)
-                _ = PyMarkdownApi().scan_path(source_path)
-            finally:
-                os.chdir(old_current_working_directory)
-        except PyMarkdownApiException as this_exception:
-            caught_exception = this_exception
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert (
-        caught_exception.reason
-        == "Configuration Error: The value for property 'log.file' must be of type 'str'."
-    )
+        ):
+            # Act & Assert
+            with temporary_change_to_directory(tmp_dir_path):
+                assert_that_exception_is_raised(
+                    PyMarkdownApiException,
+                    expected_output,
+                    PyMarkdownApi().scan_path,
+                    source_path,
+                )
 
 
 def test_api_config_with_bad_contents_for_pyproject_toml():
@@ -528,21 +440,16 @@ def test_api_config_with_bad_contents_for_pyproject_toml():
     # directory, so this test creates a new directory and executes the parser from
     # within that directory.
     with tempfile.TemporaryDirectory() as tmp_dir_path:
-        configuration_file = write_temporary_configuration(
+        with create_temporary_configuration_file(
             supplied_configuration, file_name="pyproject.toml", directory=tmp_dir_path
-        )
-
-        # Act
-        caught_exception = None
-        try:
-            old_current_working_directory = os.getcwd()
+        ) as configuration_file:
+            # Act
+            caught_exception = None
             try:
-                os.chdir(tmp_dir_path)
-                _ = PyMarkdownApi().scan_path(source_path)
-            finally:
-                os.chdir(old_current_working_directory)
-        except PyMarkdownApiException as this_exception:
-            caught_exception = this_exception
+                with temporary_change_to_directory(tmp_dir_path):
+                    _ = PyMarkdownApi().scan_path(source_path)
+            except PyMarkdownApiException as this_exception:
+                caught_exception = this_exception
 
     # Assert
     assert caught_exception, "Should have thrown an exception."

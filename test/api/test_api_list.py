@@ -4,7 +4,7 @@ Module for directly using PyMarkdown's list api.
 
 
 import os
-from test.utils import assert_if_lists_different
+from test.utils import assert_if_lists_different, assert_that_exception_is_raised
 
 from pymarkdown.api import (
     PyMarkdownApi,
@@ -20,18 +20,16 @@ def test_api_list_bad_path_to_scan():
 
     # Arrange
     source_path = ""
+    expected_output = "Parameter named 'path_to_scan' cannot be empty."
 
-    # Act
-    caught_exception = None
-    try:
-        _ = PyMarkdownApi().list_path(source_path)
-    except PyMarkdownApiArgumentException as this_exception:
-        caught_exception = this_exception
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
+    # Act & Assert
+    caught_exception = assert_that_exception_is_raised(
+        PyMarkdownApiArgumentException,
+        expected_output,
+        PyMarkdownApi().list_path,
+        source_path,
+    )
     assert caught_exception.argument_name == "path_to_scan"
-    assert caught_exception.reason == "Parameter named 'path_to_scan' cannot be empty."
 
 
 def test_api_list_bad_alternate_extensions():
@@ -42,23 +40,17 @@ def test_api_list_bad_alternate_extensions():
     # Arrange
     source_path = "something"
     alternate_extensions = "not-a-valid-extension"
+    expected_output = "Parameter named 'alternate_extensions' is not a valid comma-separated list of extensions."
 
-    # Act
-    caught_exception = None
-    try:
-        _ = PyMarkdownApi().list_path(
-            source_path, alternate_extensions=alternate_extensions
-        )
-    except PyMarkdownApiArgumentException as this_exception:
-        caught_exception = this_exception
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert caught_exception.argument_name == "alternate_extensions"
-    assert (
-        caught_exception.reason
-        == "Parameter named 'alternate_extensions' is not a valid comma-separated list of extensions."
+    # Act & Assert
+    caught_exception = assert_that_exception_is_raised(
+        PyMarkdownApiArgumentException,
+        expected_output,
+        PyMarkdownApi().list_path,
+        source_path,
+        alternate_extensions=alternate_extensions,
     )
+    assert caught_exception.argument_name == "alternate_extensions"
 
 
 def test_api_list_single_file():
@@ -92,17 +84,15 @@ def test_api_list_for_non_existant_file():
 
     # Arrange
     source_path = "my-bad-path"
+    expected_output = f"Provided path '{source_path}' does not exist."
 
-    # Act
-    caught_exception = None
-    try:
-        _ = PyMarkdownApi().list_path(source_path)
-    except PyMarkdownApiNoFilesFoundException as this_exception:
-        caught_exception = this_exception
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert caught_exception.reason == f"Provided path '{source_path}' does not exist."
+    # Act & Assert
+    assert_that_exception_is_raised(
+        PyMarkdownApiNoFilesFoundException,
+        expected_output,
+        PyMarkdownApi().list_path,
+        source_path,
+    )
 
 
 def test_api_list_for_directory_without_markdown_files():
@@ -116,17 +106,15 @@ def test_api_list_for_directory_without_markdown_files():
 
     # Arrange
     source_path = os.path.join("test", "resources", "only-text")
+    expected_output = ""
 
-    # Act
-    caught_exception = None
-    try:
-        _ = PyMarkdownApi().list_path(source_path)
-    except PyMarkdownApiNoFilesFoundException as this_exception:
-        caught_exception = this_exception
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert caught_exception.reason == ""  # TODO not sure if this is good
+    # Act & Assert
+    assert_that_exception_is_raised(
+        PyMarkdownApiNoFilesFoundException,
+        expected_output,
+        PyMarkdownApi().list_path,
+        source_path,
+    )
 
 
 def test_api_list_for_directory_with_markdown_files():
@@ -160,19 +148,14 @@ def test_api_list_for_non_matching_glob():
 
     # Arrange
     source_path = os.path.join("test", "resources", "rules", "md001", "z*.md")
+    expected_output = f"Provided glob path '{source_path}' did not match any files."
 
-    # Act
-    caught_exception = None
-    try:
-        _ = PyMarkdownApi().list_path(source_path)
-    except PyMarkdownApiNoFilesFoundException as this_exception:
-        caught_exception = this_exception
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert (
-        caught_exception.reason
-        == f"Provided glob path '{source_path}' did not match any files."
+    # Act & Assert
+    assert_that_exception_is_raised(
+        PyMarkdownApiNoFilesFoundException,
+        expected_output,
+        PyMarkdownApi().list_path,
+        source_path,
     )
 
 
@@ -188,19 +171,16 @@ def test_api_list_for_non_markdown_file():
 
     # Arrange
     source_path = os.path.join("test", "resources", "only-text", "simple_text_file.txt")
+    expected_output = (
+        f"Provided file path '{source_path}' is not a valid file. Skipping."
+    )
 
-    # Act
-    caught_exception = None
-    try:
-        _ = PyMarkdownApi().list_path(source_path)
-    except PyMarkdownApiNoFilesFoundException as this_exception:
-        caught_exception = this_exception
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert (
-        caught_exception.reason
-        == f"Provided file path '{source_path}' is not a valid file. Skipping."
+    # Act & Assert
+    assert_that_exception_is_raised(
+        PyMarkdownApiNoFilesFoundException,
+        expected_output,
+        PyMarkdownApi().list_path,
+        source_path,
     )
 
 

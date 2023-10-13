@@ -5,11 +5,16 @@ Most of these functions use the test_api_list_single_file function
 and the test_api_list_for_non_existant_file function test data to test logging.
 """
 
-import io
 import logging
 import os
 import tempfile
-from test.utils import assert_if_lists_different
+from test.utils import (
+    assert_if_lists_different,
+    assert_that_exception_is_raised,
+    assert_that_exception_is_raised2,
+    capture_logging_changes_with_new_handler,
+    create_temporary_file_for_reuse,
+)
 
 from pymarkdown.api import (
     PyMarkdownApi,
@@ -27,25 +32,16 @@ def test_api_logging_bad_value():
     """
 
     # Arrange
-    source_path = os.path.join(
-        "test", "resources", "rules", "md047", "end_with_blank_line.md"
-    )
     test_value = "Critical"
-
-    # Act
-    caught_exception = None
-    try:
-        _ = PyMarkdownApi().log(test_value).list_path(source_path)
-    except PyMarkdownApiArgumentException as this_exception:
-        caught_exception = this_exception
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert caught_exception.argument_name == "log_level"
-    assert (
-        caught_exception.reason
-        == "Parameter 'log_level' must be one of CRITICAL,ERROR,WARNING,INFO,DEBUG"
+    expected_output = (
+        "Parameter 'log_level' must be one of CRITICAL,ERROR,WARNING,INFO,DEBUG"
     )
+
+    # Act & Assert
+    caught_exception = assert_that_exception_is_raised(
+        PyMarkdownApiArgumentException, expected_output, PyMarkdownApi().log, test_value
+    )
+    assert caught_exception.argument_name == "log_level"
 
 
 def test_api_logging_single_file(caplog):
@@ -77,17 +73,15 @@ def test_api_logging_debug(caplog):
     source_path = "my-bad-path"
     expected_log_levels = ["DEBUG", "INFO", "WARNING"]
 
-    # Act
-    caught_exception = None
-    try:
-        _ = PyMarkdownApi().log_debug_and_above().list_path(source_path)
-    except PyMarkdownApiNoFilesFoundException as this_exception:
-        caught_exception = this_exception
+    expected_output = f"Provided path '{source_path}' does not exist."
 
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert caught_exception.reason == f"Provided path '{source_path}' does not exist."
-
+    # Act & Assert
+    assert_that_exception_is_raised(
+        PyMarkdownApiNoFilesFoundException,
+        expected_output,
+        PyMarkdownApi().log_debug_and_above().list_path,
+        source_path,
+    )
     __ensure_log_levels_in_caplog_text(caplog.text, expected_log_levels)
 
 
@@ -100,32 +94,18 @@ def test_api_logging_debug_to_file():
     # Arrange
     source_path = "my-bad-path"
     expected_log_levels = ["DEBUG", "INFO", "WARNING"]
-    try:
-        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-            log_path = temp_file.name
 
-        # Act
-        caught_exception = None
-        try:
-            _ = (
-                PyMarkdownApi()
-                .log_debug_and_above()
-                .log_to_file(log_path)
-                .list_path(source_path)
-            )
-        except PyMarkdownApiNoFilesFoundException as this_exception:
-            caught_exception = this_exception
+    expected_output = f"Provided path '{source_path}' does not exist."
 
-        # Assert
-        assert caught_exception, "Should have thrown an exception."
-        assert (
-            caught_exception.reason == f"Provided path '{source_path}' does not exist."
+    with create_temporary_file_for_reuse() as log_path:
+        # Act & Assert
+        assert_that_exception_is_raised(
+            PyMarkdownApiNoFilesFoundException,
+            expected_output,
+            PyMarkdownApi().log_debug_and_above().log_to_file(log_path).list_path,
+            source_path,
         )
-
         __ensure_log_levels_in_log_file(log_path, expected_log_levels)
-    finally:
-        if os.path.exists(log_path):
-            os.remove(log_path)
 
 
 def test_api_logging_debug_to_file_as_directory():
@@ -142,23 +122,14 @@ def test_api_logging_debug_to_file_as_directory():
     with tempfile.TemporaryDirectory() as temp_directory:
         log_path = temp_directory
 
-        # Act
-        caught_exception = None
-        try:
-            _ = (
-                PyMarkdownApi()
-                .log_debug_and_above()
-                .log_to_file(log_path)
-                .list_path(source_path)
-            )
-        except PyMarkdownApiException as this_exception:
-            caught_exception = this_exception
+        expected_output = "Unexpected Error(ApplicationLoggingException): Failure initializing logging subsystem."
 
-        # Assert
-        assert caught_exception, "Should have thrown an exception."
-        assert (
-            caught_exception.reason
-            == "Unexpected Error(ApplicationLoggingException): Failure initializing logging subsystem."
+        # Act & Assert
+        assert_that_exception_is_raised(
+            PyMarkdownApiException,
+            expected_output,
+            PyMarkdownApi().log_debug_and_above().log_to_file(log_path).list_path,
+            source_path,
         )
 
 
@@ -170,26 +141,21 @@ def test_api_logging_debug_to_file_as_directory_and_stack_trace():
 
     # Arrange
     source_path = "my-bad-path"
+    expected_output = "Unexpected Error(ApplicationLoggingException): Failure initializing logging subsystem.\nTraceback (most recent call last):"
+
     with tempfile.TemporaryDirectory() as temp_directory:
         log_path = temp_directory
 
-        # Act
-        caught_exception = None
-        try:
-            _ = (
-                PyMarkdownApi()
-                .log_debug_and_above()
-                .enable_stack_trace()
-                .log_to_file(log_path)
-                .list_path(source_path)
-            )
-        except PyMarkdownApiException as this_exception:
-            caught_exception = this_exception
-
-        # Assert
-        assert caught_exception, "Should have thrown an exception."
-        assert caught_exception.reason.startswith(
-            "Unexpected Error(ApplicationLoggingException): Failure initializing logging subsystem.\nTraceback (most recent call last):"
+        # Act & Assert
+        assert_that_exception_is_raised2(
+            PyMarkdownApiException,
+            expected_output,
+            PyMarkdownApi()
+            .log_debug_and_above()
+            .enable_stack_trace()
+            .log_to_file(log_path)
+            .list_path,
+            source_path,
         )
 
 
@@ -202,18 +168,15 @@ def test_api_logging_info(caplog):
     # Arrange
     source_path = "my-bad-path"
     expected_log_levels = ["INFO", "WARNING"]
+    expected_output = f"Provided path '{source_path}' does not exist."
 
-    # Act
-    caught_exception = None
-    try:
-        _ = PyMarkdownApi().log_info_and_above().list_path(source_path)
-    except PyMarkdownApiNoFilesFoundException as this_exception:
-        caught_exception = this_exception
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert caught_exception.reason == f"Provided path '{source_path}' does not exist."
-
+    # Act & Assert
+    assert_that_exception_is_raised(
+        PyMarkdownApiNoFilesFoundException,
+        expected_output,
+        PyMarkdownApi().log_info_and_above().list_path,
+        source_path,
+    )
     __ensure_log_levels_in_caplog_text(caplog.text, expected_log_levels)
 
 
@@ -226,18 +189,15 @@ def test_api_logging_warning(caplog):
     # Arrange
     source_path = "my-bad-path"
     expected_log_levels = ["WARNING"]
+    expected_output = f"Provided path '{source_path}' does not exist."
 
-    # Act
-    caught_exception = None
-    try:
-        _ = PyMarkdownApi().log_warning_and_above().list_path(source_path)
-    except PyMarkdownApiNoFilesFoundException as this_exception:
-        caught_exception = this_exception
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert caught_exception.reason == f"Provided path '{source_path}' does not exist."
-
+    # Act & Assert
+    assert_that_exception_is_raised(
+        PyMarkdownApiNoFilesFoundException,
+        expected_output,
+        PyMarkdownApi().log_warning_and_above().list_path,
+        source_path,
+    )
     __ensure_log_levels_in_caplog_text(caplog.text, expected_log_levels)
 
 
@@ -252,18 +212,15 @@ def test_api_logging_error(caplog):
     # Arrange
     source_path = "my-bad-path"
     expected_log_levels = []
+    expected_output = f"Provided path '{source_path}' does not exist."
 
-    # Act
-    caught_exception = None
-    try:
-        _ = PyMarkdownApi().log_error_and_above().list_path(source_path)
-    except PyMarkdownApiNoFilesFoundException as this_exception:
-        caught_exception = this_exception
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert caught_exception.reason == f"Provided path '{source_path}' does not exist."
-
+    # Act & Assert
+    assert_that_exception_is_raised(
+        PyMarkdownApiNoFilesFoundException,
+        expected_output,
+        PyMarkdownApi().log_error_and_above().list_path,
+        source_path,
+    )
     __ensure_log_levels_in_caplog_text(caplog.text, expected_log_levels)
 
 
@@ -279,17 +236,15 @@ def test_api_logging_critical(caplog):
     source_path = "my-bad-path"
     expected_log_levels = []
 
-    # Act
-    caught_exception = None
-    try:
-        _ = PyMarkdownApi().log_critical_and_above().list_path(source_path)
-    except PyMarkdownApiNoFilesFoundException as this_exception:
-        caught_exception = this_exception
+    expected_output = f"Provided path '{source_path}' does not exist."
 
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert caught_exception.reason == f"Provided path '{source_path}' does not exist."
-
+    # Act & Assert
+    assert_that_exception_is_raised(
+        PyMarkdownApiNoFilesFoundException,
+        expected_output,
+        PyMarkdownApi().log_critical_and_above().list_path,
+        source_path,
+    )
     __ensure_log_levels_in_caplog_text(caplog.text, expected_log_levels)
 
 
@@ -354,10 +309,7 @@ def test_api_logging_inheriting_logging(caplog):
     expected_log_levels = ["DEBUG", "INFO", "WARNING"]
 
     # Act
-    old_log_level = logging.getLogger().level
-    log_output = io.StringIO()
-    new_handler = logging.StreamHandler(log_output)
-    try:
+    with capture_logging_changes_with_new_handler() as (new_handler, log_output):
         formatter = logging.Formatter("%(levelname)s %(asctime)s %(message)s")
         new_handler.setFormatter(formatter)
         logging.getLogger().addHandler(new_handler)
@@ -365,19 +317,16 @@ def test_api_logging_inheriting_logging(caplog):
             ApplicationLogging.translate_log_level(ApplicationLogging.log_level_debug)
         )
 
-        caught_exception = None
-        try:
-            _ = PyMarkdownApi(inherit_logging=True).list_path(source_path)
-        except PyMarkdownApiNoFilesFoundException as this_exception:
-            caught_exception = this_exception
-    finally:
-        logging.getLogger().setLevel(old_log_level)
-        new_handler.close()
+        expected_output = f"Provided path '{source_path}' does not exist."
+
+        assert_that_exception_is_raised(
+            PyMarkdownApiNoFilesFoundException,
+            expected_output,
+            PyMarkdownApi(inherit_logging=True).list_path,
+            source_path,
+        )
 
     # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert caught_exception.reason == f"Provided path '{source_path}' does not exist."
-
     __ensure_log_levels_in_caplog_text(log_output.getvalue(), expected_log_levels)
     __ensure_log_levels_in_caplog_text(caplog.text, expected_log_levels)
 
@@ -389,24 +338,15 @@ def test_api_logging_inheriting_logging_and_set_log_level():
     """
 
     # Arrange
-    source_path = "my-bad-path"
+    expected_output = (
+        "Set log level functions are not supported in log-inheritance mode."
+    )
 
-    # Act
-    caught_exception = None
-    try:
-        _ = (
-            PyMarkdownApi(inherit_logging=True)
-            .log_debug_and_above()
-            .list_path(source_path)
-        )
-    except PyMarkdownApiNotSupportedException as this_exception:
-        caught_exception = this_exception
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert (
-        caught_exception.reason
-        == "Set log level functions are not supported in log-inheritance mode."
+    # Act & Assert
+    assert_that_exception_is_raised(
+        PyMarkdownApiNotSupportedException,
+        expected_output,
+        PyMarkdownApi(inherit_logging=True).log_debug_and_above,
     )
 
 
@@ -417,24 +357,14 @@ def test_api_logging_inheriting_logging_and_set_log_file():
     """
 
     # Arrange
-    source_path = "my-bad-path"
+    expected_output = "Set log file function is not supported in log-inheritance mode."
 
-    # Act
-    caught_exception = None
-    try:
-        _ = (
-            PyMarkdownApi(inherit_logging=True)
-            .log_to_file("bob")
-            .list_path(source_path)
-        )
-    except PyMarkdownApiNotSupportedException as this_exception:
-        caught_exception = this_exception
-
-    # Assert
-    assert caught_exception, "Should have thrown an exception."
-    assert (
-        caught_exception.reason
-        == "Set log file function is not supported in log-inheritance mode."
+    # Act & Assert
+    assert_that_exception_is_raised(
+        PyMarkdownApiNotSupportedException,
+        expected_output,
+        PyMarkdownApi(inherit_logging=True).log_to_file,
+        "bob",
     )
 
 
