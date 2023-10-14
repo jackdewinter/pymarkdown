@@ -71,7 +71,9 @@
         "pymarkdown/extensions/extension_token_types.py": {
             "too-few-public-methods": 1
         },
-        "pymarkdown/extensions/front_matter_extension.py": {},
+        "pymarkdown/extensions/front_matter_extension.py": {
+            "too-many-arguments": 1
+        },
         "pymarkdown/extensions/front_matter_markdown_token.py": {
             "too-many-arguments": 1,
             "protected-access": 1
@@ -469,7 +471,7 @@
         "too-many-instance-attributes": 22,
         "too-many-public-methods": 4,
         "too-few-public-methods": 40,
-        "too-many-arguments": 193,
+        "too-many-arguments": 194,
         "too-many-locals": 18,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 2,

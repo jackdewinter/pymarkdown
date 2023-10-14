@@ -2,10 +2,11 @@
 Module to implement the front matter extensions.
 """
 import logging
-import string
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Any, List, Optional, Tuple, Union
 
+import yaml
 from application_properties import ApplicationPropertiesFacade
+from yaml import SafeLoader
 
 from pymarkdown.extension_manager.extension_impl import ExtensionDetails
 from pymarkdown.extension_manager.extension_manager_constants import (
@@ -13,7 +14,6 @@ from pymarkdown.extension_manager.extension_manager_constants import (
 )
 from pymarkdown.extension_manager.parser_extension import ParserExtension
 from pymarkdown.extensions.front_matter_markdown_token import FrontMatterMarkdownToken
-from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.general.source_providers import SourceProvider
@@ -29,6 +29,9 @@ class FrontMatterExtension(ParserExtension):
     """
     Extension to implement the front matter extensions.
     """
+
+    def __init__(self) -> None:
+        self.__allow_blank_lines = False
 
     def get_identifier(self) -> str:
         """
@@ -57,10 +60,13 @@ class FrontMatterExtension(ParserExtension):
         """
         Apply any configuration required by the extension.
         """
-        _ = extension_specific_facade
+        self.__allow_blank_lines = extension_specific_facade.get_boolean_property(
+            "allow_blank_lines", default_value=False
+        )
 
-    @staticmethod
+    # pylint: disable=too-many-arguments
     def process_header_if_present(
+        self,
         first_line_in_document: str,
         line_number: int,
         requeue: List[str],
@@ -85,9 +91,7 @@ class FrontMatterExtension(ParserExtension):
                 new_token,
                 line_number,
                 requeue_lines,
-            ) = FrontMatterExtension.__handle_document_front_matter(
-                next_line, source_provider
-            )
+            ) = self.__handle_document_front_matter(next_line, source_provider)
             if new_token:
                 tokenized_document.append(new_token)
             else:
@@ -99,9 +103,10 @@ class FrontMatterExtension(ParserExtension):
             POGGER.debug("requeue>>$", requeue)
         return next_line, line_number, requeue
 
-    @staticmethod
+    # pylint: enable=too-many-arguments
+
     def __handle_document_front_matter(
-        token_to_use: str, source_provider: SourceProvider
+        self, token_to_use: str, source_provider: SourceProvider
     ) -> Tuple[
         Optional[str], Optional[FrontMatterMarkdownToken], int, Optional[List[str]]
     ]:
@@ -125,8 +130,10 @@ class FrontMatterExtension(ParserExtension):
                     bool(start_char) and clean_starting_line == next_line.rstrip()
                 )
                 repeat_again = not have_closing
-            else:
-                repeat_again = next_line is not None
+            elif not self.__allow_blank_lines:
+                repeat_again = False
+                assert next_line is not None
+                collected_lines.append(next_line)
             if repeat_again:
                 assert next_line is not None
                 collected_lines.append(next_line)
@@ -139,9 +146,9 @@ class FrontMatterExtension(ParserExtension):
             return None, None, 1, collected_lines
 
         POGGER.info("Metadata prefix collected. Verifying validity.")
-        matter_map = FrontMatterExtension.__is_front_matter_valid(collected_lines)
+        matter_map = FrontMatterExtension.__validate_yaml(collected_lines)
         POGGER.debug("ret=$s,type=$s", matter_map, type(matter_map))
-        if isinstance(matter_map, str):
+        if matter_map is None or isinstance(matter_map, str):
             POGGER.info("Metadata validation failed: $", matter_map)
             collected_lines.insert(0, starting_line)
             collected_lines.append(starting_line)
@@ -161,51 +168,29 @@ class FrontMatterExtension(ParserExtension):
         )
 
     @staticmethod
-    def __is_front_matter_valid(
-        collected_lines: List[str],
-    ) -> Union[Dict[str, str], str]:
-        ascii_letters_and_digits = f"{string.ascii_letters}{string.digits}_-"
+    def __validate_yaml(collected_lines: List[str]) -> Union[Any, str]:
+        loaded_document = None
+        try:
+            # print(collected_lines)
+            joined_lines = "\n".join(collected_lines)
+            loaded_document = yaml.load(joined_lines, SafeLoader)
+            did_load_as_yaml = not isinstance(loaded_document, str)
+        except yaml.MarkedYAMLError:
+            did_load_as_yaml = False
 
-        current_title = ""
-        current_value = ""
-        value_map: Dict[str, str] = {}
+        # This is specifically to trigger test_front_matter_20.
+        assert not (
+            loaded_document
+            and did_load_as_yaml
+            and "test" in loaded_document
+            and loaded_document["test"] == "assert"
+        )
 
-        for next_line in collected_lines:
-            POGGER.debug("Next fm:>$s<", next_line)
-            next_index, _ = ParserHelper.extract_spaces(next_line, 0)
-            assert next_index is not None
-            if next_index >= 4:
-                POGGER.debug("Indented line established.")
-                if not current_title:
-                    return "Continuation line encountered before a keyword line."
-                current_value += f"\n{next_line.strip()}"
-                POGGER.debug("current_value>$<", current_value)
-            else:
-                if not next_line.strip():
-                    return "Blank line encountered before end of metadata."
+        if did_load_as_yaml:
+            did_load_as_yaml = loaded_document is not None
 
-                POGGER.debug("Non-indented line established.")
-                if current_title:
-                    POGGER.debug("Adding '$' as '$'.", current_title, current_value)
-                    value_map[current_title] = current_value
-
-                (
-                    next_index,
-                    collected_title,
-                ) = ParserHelper.collect_while_one_of_characters(
-                    next_line, next_index, ascii_letters_and_digits
-                )
-                assert next_index is not None
-                assert collected_title is not None
-                current_title = collected_title
-                if next_index < len(next_line) and next_line[next_index] == ":":
-                    current_value = next_line[next_index + 1 :].strip()
-                else:
-                    return "Newline did not start with `keyword:`."
-        if current_title:
-            POGGER.debug("Adding final '$' as '$'.", current_title, current_value)
-            value_map[current_title.lower()] = current_value
-
-            # This is specifically to trigger test_front_matter_20.
-            assert current_title != "test" or current_value != "assert"
-        return value_map or "No valid metadata header lines were found."
+        return (
+            loaded_document
+            if did_load_as_yaml
+            else "Front matter was not parseable as valid YAML."
+        )

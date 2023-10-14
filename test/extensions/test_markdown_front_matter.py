@@ -1,6 +1,7 @@
 """
 Tests for the optional front-matter processing
 """
+import copy
 import os
 from test.markdown_scanner import MarkdownScanner
 from test.utils import act_and_assert, assert_that_exception_is_raised
@@ -83,7 +84,7 @@ Date: 2023-May-02
 ---
 """
     expected_tokens = [
-        "[front-matter(1,1):---:---:['Title: my document', 'Date: 2023-May-02']:{'Title': 'my document', 'date': '2023-May-02'}]",
+        "[front-matter(1,1):---:---:['Title: my document', 'Date: 2023-May-02']:{'Title': 'my document', 'Date': '2023-May-02'}]",
         "[tbreak(5,1):-::---]",
         "[BLANK(6,1):]",
     ]
@@ -158,7 +159,7 @@ test:
 ---
 """
     expected_tokens = [
-        "[front-matter(1,1):---:---:['test:']:{'test': ''}]",
+        "[front-matter(1,1):---:---:['test:']:{'test': None}]",
         "[BLANK(4,1):]",
     ]
     expected_gfm = """"""
@@ -194,7 +195,7 @@ test: abc
 
 
 @pytest.mark.gfm
-def test_front_matter_08():
+def test_front_matter_08x():
     """
     There must be an opening and closing boundary for it to be eligible as front matter.
     In normal mode, a multiline field value is indicated by a second line that is indented
@@ -208,8 +209,35 @@ test: abc
 ---
 """
     expected_tokens = [
-        "[front-matter(1,1):---:---:['test: abc', '    def']:{'test': 'abc\\ndef'}]",
+        "[front-matter(1,1):---:---:['test: abc', '    def']:{'test': 'abc def'}]",
         "[BLANK(5,1):]",
+    ]
+    expected_gfm = """"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=config_map
+    )
+
+
+@pytest.mark.gfm
+def test_front_matter_08a():
+    """
+    There must be an opening and closing boundary for it to be eligible as front matter.
+    In normal mode, a multiline field value is indicated by a second line that is indented
+    by at least 4 characters.
+    """
+
+    # Arrange
+    source_markdown = """---
+test: |
+    abc
+    def
+---
+"""
+    expected_tokens = [
+        "[front-matter(1,1):---:---:['test: |', '    abc', '    def']:{'test': 'abc\\ndef'}]",
+        "[BLANK(6,1):]",
     ]
     expected_gfm = """"""
 
@@ -222,8 +250,7 @@ test: abc
 @pytest.mark.gfm
 def test_front_matter_09():
     """
-    If a field name does not start a new line or there isn't 4+ spaces at the start,
-    the entire header is abandoned.
+    Various parts of the second line can be considered a continuation of the first line.
     """
 
     # Arrange
@@ -233,15 +260,10 @@ test: abc
 ---
 """
     expected_tokens = [
-        "[tbreak(1,1):-::---]",
-        "[setext(4,1):-:3::(2,1)]",
-        "[text(2,1):test: abc\ndef::\n   \x02]",
-        "[end-setext::]",
+        "[front-matter(1,1):---:---:['test: abc', '   def']:{'test': 'abc def'}]",
         "[BLANK(5,1):]",
     ]
-    expected_gfm = """<hr />
-<h2>test: abc
-def</h2>"""
+    expected_gfm = """"""
 
     # Act & Assert
     act_and_assert(
@@ -250,19 +272,48 @@ def</h2>"""
 
 
 @pytest.mark.gfm
-def test_front_matter_10():
+def test_front_matter_10x():
     """
-    A field name can be indented as many as 3 characters, as long as it ends with a ':'.
+    A field name cannot be indented.
     """
 
     # Arrange
     source_markdown = """---
 test: abc
-   def:
+ def:
 ---
 """
     expected_tokens = [
-        "[front-matter(1,1):---:---:['test: abc', '   def:']:{'test': 'abc', 'def': ''}]",
+        "[tbreak(1,1):-::---]",
+        "[setext(4,1):-:3::(2,1)]",
+        "[text(2,1):test: abc\ndef:::\n \x02]",
+        "[end-setext::]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<hr />
+<h2>test: abc
+def:</h2>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=config_map
+    )
+
+
+@pytest.mark.gfm
+def test_front_matter_10a():
+    """
+    A field name cannot be indented.
+    """
+
+    # Arrange
+    source_markdown = """---
+test: abc
+def:
+---
+"""
+    expected_tokens = [
+        "[front-matter(1,1):---:---:['test: abc', 'def:']:{'test': 'abc', 'def': None}]",
         "[BLANK(5,1):]",
     ]
     expected_gfm = """"""
@@ -369,7 +420,7 @@ Title: my document
         "\a", " "
     )
     expected_tokens = [
-        "[front-matter(1,1):---  :---:['Title: my document']:{'title': 'my document'}]",
+        "[front-matter(1,1):---  :---:['Title: my document']:{'Title': 'my document'}]",
         "[BLANK(4,1):]",
     ]
     expected_gfm = """"""
@@ -394,7 +445,7 @@ Title: my document
         "\a", " "
     )
     expected_tokens = [
-        "[front-matter(1,1):---:---  :['Title: my document']:{'title': 'my document'}]",
+        "[front-matter(1,1):---:---  :['Title: my document']:{'Title': 'my document'}]",
         "[BLANK(4,1):]",
     ]
     expected_gfm = """"""
@@ -435,7 +486,7 @@ Title: my document
 
 
 @pytest.mark.gfm
-def test_front_matter_17():
+def test_front_matter_17_no_blanks():
     """
     This is an extension of test_front_matter_13. If a blank line is encountered
     before the end marker, but after a field name, the entire header is still thrown out.
@@ -470,7 +521,37 @@ Title: my document
 
 
 @pytest.mark.gfm
-def test_front_matter_18():
+def test_front_matter_17_blanks():
+    """
+    This is an extension of test_front_matter_13. If a blank line is encountered
+    before the end marker, but after a field name, the entire header is still thrown out.
+    """
+
+    # Arrange
+    new_config_map = copy.deepcopy(config_map)
+    new_config_map["extensions"]["front-matter"]["allow_blank_lines"] = True
+
+    source_markdown = """---
+Title: my document
+
+---
+---
+"""
+    expected_tokens = [
+        "[front-matter(1,1):---:---:['Title: my document', '']:{'Title': 'my document'}]",
+        "[tbreak(5,1):-::---]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<hr />"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=new_config_map
+    )
+
+
+@pytest.mark.gfm
+def test_front_matter_18_no_blanks():
     """
     This is an extension of test_front_matter_13/17. If a blank line is encountered
     before the end marker, but after a field name and indented by at least 4 spaces,
@@ -487,11 +568,19 @@ Title: my document
         "/a", " "
     )
     expected_tokens = [
-        "[front-matter(1,1):---:---:['Title: my document', '    ']:{'title': 'my document\\n'}]",
+        "[tbreak(1,1):-::---]",
+        "[para(2,1):]",
+        "[text(2,1):Title: my document:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):    ]",
+        "[tbreak(4,1):-::---]",
         "[tbreak(5,1):-::---]",
         "[BLANK(6,1):]",
     ]
-    expected_gfm = """<hr />"""
+    expected_gfm = """<hr />
+<p>Title: my document</p>
+<hr />
+<hr />"""
 
     # Act & Assert
     act_and_assert(
@@ -500,7 +589,40 @@ Title: my document
 
 
 @pytest.mark.gfm
-def test_front_matter_19():
+def test_front_matter_18_blanks():
+    """
+    This is an extension of test_front_matter_13/17. If a blank line is encountered
+    before the end marker, but after a field name and indented by at least 4 spaces,
+    the front matter is still valid.
+    """
+
+    # Arrange
+    new_config_map = copy.deepcopy(config_map)
+    new_config_map["extensions"]["front-matter"]["allow_blank_lines"] = True
+
+    source_markdown = """---
+Title: my document
+/a/a/a/a
+---
+---
+""".replace(
+        "/a", " "
+    )
+    expected_tokens = [
+        "[front-matter(1,1):---:---:['Title: my document', '    ']:{'Title': 'my document'}]",
+        "[tbreak(5,1):-::---]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<hr />"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=new_config_map
+    )
+
+
+@pytest.mark.gfm
+def test_front_matter_19_no_blanks():
     """
     This is an extension of test_front_matter_18. If a blank line is encountered
     before the end marker, but before a field name and indented by at least 4 spaces,
@@ -536,6 +658,39 @@ Title: my document
 
 
 @pytest.mark.gfm
+def test_front_matter_19_blanks():
+    """
+    This is an extension of test_front_matter_18. If a blank line is encountered
+    before the end marker, but before a field name and indented by at least 4 spaces,
+    the front matter is no longer valid.
+    """
+
+    # Arrange
+    new_config_map = copy.deepcopy(config_map)
+    new_config_map["extensions"]["front-matter"]["allow_blank_lines"] = True
+
+    source_markdown = """---
+/a/a/a/a
+Title: my document
+---
+---
+""".replace(
+        "/a", " "
+    )
+    expected_tokens = [
+        "[front-matter(1,1):---:---:['    ', 'Title: my document']:{'Title': 'my document'}]",
+        "[tbreak(5,1):-::---]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<hr />"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=new_config_map
+    )
+
+
+@pytest.mark.gfm
 def test_front_matter_20():
     """
     This is a made up example for testing.  Due to code in the extension handler,
@@ -565,7 +720,7 @@ test: assert
     )
 
 
-def test_front_matter_21():
+def test_front_matter_21x():
     """
     Test to make sure that a properly setup front matter section and enabled
     extension works as intended.

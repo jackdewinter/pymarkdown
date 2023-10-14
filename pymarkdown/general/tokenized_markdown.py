@@ -66,6 +66,7 @@ class TokenizedMarkdown:
         self.__token_stack: List[StackToken] = []
         self.__parse_properties: Optional[ParseBlockPassProperties] = None
         self.__source_provider: Optional[SourceProvider] = None
+        self.__extension_manager: Optional[ExtensionManager] = None
 
         if not resource_path:
             resource_path = os.path.join(os.path.split(__file__)[0], "..", "resources")
@@ -81,6 +82,7 @@ class TokenizedMarkdown:
         Apply any configuration map.
         """
         _ = application_properties
+        self.__extension_manager = extension_manager
         self.__parse_properties = ParseBlockPassProperties(extension_manager)
 
     def transform_from_provider(
@@ -948,11 +950,16 @@ class TokenizedMarkdown:
             first_line_in_document is not None
             and self.__parse_properties.is_front_matter_enabled
         ):
+            assert self.__extension_manager is not None
+            raw_extension = self.__extension_manager.get_extension_instance(
+                FrontMatterExtension().get_identifier()
+            )
+            front_matter_extension = cast(FrontMatterExtension, raw_extension)
             (
                 first_line_in_document,
                 line_number,
                 requeue,
-            ) = FrontMatterExtension.process_header_if_present(
+            ) = front_matter_extension.process_header_if_present(
                 first_line_in_document,
                 line_number,
                 requeue,

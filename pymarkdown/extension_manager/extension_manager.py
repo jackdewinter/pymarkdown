@@ -117,6 +117,12 @@ class ExtensionManager:
             PragmaExtension().get_identifier() in self.__enabled_extensions
         )
 
+    def get_extension_instance(self, extension_id: str) -> ParserExtension:
+        """
+        Get instances of the extension objects.
+        """
+        return self.__extension_objects[extension_id]
+
     @property
     def is_front_matter_enabled(self) -> bool:
         """
