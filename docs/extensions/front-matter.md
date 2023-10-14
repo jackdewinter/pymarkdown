@@ -7,6 +7,17 @@
 | Configuration Item | `extensions.front-matter.enabled` |
 | Default Value | `False` |
 
+## Configuration
+
+| Prefixes |
+| --- |
+| `extensions.front-matter.` |
+
+| Value Name | Type | Default | Description |
+| -- | -- | -- | -- |
+| `enabled` | `boolean` | `False` | Whether the extension is enabled. |
+| `allow_blank_lines` | `string` | `False` | Whether blank lines are allowed within the front-matter block. |
+
 ## Summary
 
 This extension allows for the parsing of Markdown "front matter" at
@@ -75,63 +86,37 @@ for the Front Matter Block Data.  In both cases, at least one field must
 be parsed according to the Front Matter Data Format for the data to be
 considered valid.
 
-#### Normal Format
+#### Previous Format
 
-This format is mostly compatible with the
+This previous format was mostly compatible with the
 [Python Markdown](https://python-markdown.github.io/extensions/meta_data/)
-metadata format, except as mentioned in the next paragraph.
-A valid field name line starts with a field comprised of one or more characters
-in the regular expression group `([a-z][A-Z][0-9]_-)+` followed by the
-colon character ':'.  Optionally, any character data may follow the colon
-character up to the end of the line and is called the field value.
+metadata format, except for a couple of small issues.  The problems with
+that format were that they were specified for Python Markdown, with little
+room for change.  That was the more complete of two specifications, the
+other being the [Jekyll specification](https://jekyllrb.com/docs/front-matter/)
+which was lean on specifics.
 
-A continuation line is any line that follows a field name line or another
-continuation line that starts with 4 or more whitespace characters.  As
-the name suggests, the data in a continuation line is the
-continuation of the data presented in the last field name.  The data that
-is appended to the field value is the newline character followed by any
-data following the leading whitespace.  The interpretation of that data
-as a single value or as a set of separated values is totally dependent
-on the needs of the function requesting the field value.
-
-Any blank lines in the Front Matter Block invalidate the entire front
-matter block.  The only exception to that is if the blank line starts
-with 4 or more whitespace characters, in which case it is interpreted
-as a continuation line, as documented in the last paragraph.
-
-#### Changes from Python Markdown
-
-The two major changes from the Python Markdown format concerns validation
-and blank lines.
-
-##### Invalid Front Matter Data Format
-
-As the documentation is sparse at best, there is no mention of how to
-handle invalid cases, such as a line that begins with an invalid keyword.
-When the Front Matter Data Format is shown to be invalid, the Front Matter
-Block is discarded, and the parser then parses those same lines as
-straight Markdown.
-
-The supported cases of invalidating the Front Matter Block Data for
-this data format are:
-
-- "Continuation line encountered before a keyword line."
-- "Blank line encountered before end of metadata."
-- "Newline did not start with `keyword:`."
-
-##### New Lines
-
-The second change is the support for newlines.  In the Python Markdown
-documentation, any blank line will terminate the Front Matter Block Data at
-that point.  Instead of that approach, we decided that to be more
-predictable, except for a continuation blank line (see above), any
-blank line will invalidate the entire Front Matter Block Data format.
-If that happens, the process outlined in the previous section for
-an invalidate Front Matter Block Data Format takes effect.
+To be more compatible with how other parsers seem to use front-matter in the
+field, we decided to keep things simple, forgoing the old format for a simple
+YAML format.
 
 #### YAML format
 
-TBD
+Being the predominant format, we decided that it was best to let the Python YAML
+package any issues with the validity of the YAML information contained within
+the document.  To that extent, a start boundary of `---` and an end boundary
+of `---` are now required to delimit the front-matter from the rest of the
+document.  In addition, if the `allow_blank_lines` configuration is set to its
+default of `False`, a blank line will also terminate the front-matter.  If that
+configuration is set to `True`, any blank lines are preserved and are passed
+on to the PyYAML processor.
+
+Once the lines in the front-matter have been determined, they are passed to
+the [PyYAML](https://pypi.org/project/PyYAML/) processor in safe mode.  It is
+left up to that package to determine whether the YAML is valid, including the
+presence of any blank lines allowed when the `allow_blank_lines` setting is `True`.
+If the YAML is valid, it is returned as a dictionary for parsing. Otherwisem the
+lines are fed back to the normal processor and are interpretted as normal lines.
 
 ### Common Fields
 
@@ -139,7 +124,7 @@ TBD
 
 Many document processors prefer to have the subject or title (depending
 on the document processor) specified in the front matter using either
-the `subject` or `title` field name.  This allows the processor to
+the `Subject` or `Title` field name.  This allows the processor to
 easily use that metadata field value, not only for the top-level header
 of the document, but for things such as the name of the generated HTML
 document and other generated elements.

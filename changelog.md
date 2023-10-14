@@ -2,17 +2,24 @@
 
 ## Unversioned - In Main, Not Released
 
+- front matter now interpretted differently as strict YAML, no lower on header names
+
 ### Added
 
 - None
 
 ### Changed
 
-- None
+- [Issue 750](https://github.com/jackdewinter/pymarkdown/issues/750)
+  - started work on making the tests more compact and efficient
 
 ### Fixed
 
-- None
+- [Issue 774](https://github.com/jackdewinter/pymarkdown/issues/774)
+  - was following "weird" rules, changed to allow for standard YAML parser to
+    determine validity
+  - changed rule `md001` to look for case sensitive front-matter key name instead
+    of case sensitive per switch to full YAML processing
 
 ## Version 0.9.13.4 - Date: 2023-09-09
 
