@@ -298,7 +298,7 @@ To see an example of such a failure, change the contents of `sample.md` to the
 following text and rescan the file:
 
 ```MArkdown
-<!--- pyml disable-next-line-->
+<!--- pyml disable-next-line invalid-->
 This is a title
 
 ```

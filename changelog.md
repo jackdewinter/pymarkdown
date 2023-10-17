@@ -3,10 +3,12 @@
 ## Unversioned - In Main, Not Released
 
 - front matter now interpretted differently as strict YAML, no lower on header names
+- did research on various ways to write tests, will be implementing changes going forward
+- added new pragma command
 
 ### Added
 
-- None
+- [Issue 776](https://github.com/jackdewinter/pymarkdown/issues/776)
 
 ### Changed
 
