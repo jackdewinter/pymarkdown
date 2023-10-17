@@ -2,13 +2,26 @@
 
 ## Unversioned - In Main, Not Released
 
-- front matter now interpretted differently as strict YAML, no lower on header names
-- did research on various ways to write tests, will be implementing changes going forward
-- added new pragma command
+This release is mostly to incorporate a number of small fixes and additions.
+Behind the scenes, we spent a while looking at the roadmap and trying to figure
+out the best path going forward.  Part of that was experimenting with different
+forms of testing, to see how applicable they would be to this project.  That
+work will be starting soon and be incremental.  It also pointed out a need for
+better documentation, which will also be incremental going forward.
+
+That experimentation lead to a couple of changes.
+
+- Front matter is now interpretted as strict YAML, and not as some mashup of rules.
+  This was decided on as it easier to explain and document.  This may cause some
+  existing front-matter settings to not work as expected, especially validation
+  of the front-matter itself and case-sensitivity on front-matter key fields.
+- Added a new pragma command `disable-num-lines` to handle disabling rules for
+  a given count of lines.
 
 ### Added
 
 - [Issue 776](https://github.com/jackdewinter/pymarkdown/issues/776)
+  - implement `disable-num-lines` pragma command
 
 ### Changed
 
