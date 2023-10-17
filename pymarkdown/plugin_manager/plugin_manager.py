@@ -61,6 +61,7 @@ class PluginManager:
         self.__presentation = presentation
 
         self.__document_pragmas: Dict[int, Set[str]] = {}
+        self.__document_pragma_ranges: List[Tuple[int, int, Set[str]]]
 
         self.__registered_plugins: List[FoundPlugin] = []
         self.__enabled_plugins: List[FoundPlugin] = []
@@ -323,14 +324,19 @@ class PluginManager:
         Log the scan failure in the appropriate format.
         """
 
+        rule_id = scan_failure.rule_id.lower()
         if (
             self.__document_pragmas
             and scan_failure.line_number in self.__document_pragmas
         ):
             id_set = self.__document_pragmas[scan_failure.line_number]
-            rule_id = scan_failure.rule_id.lower()
             if rule_id in id_set:
                 return
+
+        if self.__document_pragma_ranges:
+            for i, j, k in self.__document_pragma_ranges:
+                if i <= scan_failure.line_number <= j and rule_id in k:
+                    return
 
         extra_info = (
             f" [{scan_failure.extra_error_information}]"
@@ -372,6 +378,7 @@ class PluginManager:
                 pragma_lines,
                 self.__all_ids,
                 self.__document_pragmas,
+                self.__document_pragma_ranges,
                 self.log_pragma_failure,
             )
 
@@ -870,6 +877,7 @@ class PluginManager:
         Inform any listeners that a new current file has been started.
         """
         self.__document_pragmas = {}
+        self.__document_pragma_ranges = []
         for next_plugin in self.__enabled_plugins_for_starting_new_file:
             try:
                 next_plugin.plugin_instance.starting_new_file()

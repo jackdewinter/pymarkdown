@@ -82,7 +82,8 @@
         "pymarkdown/extensions/markdown_tables.py": {},
         "pymarkdown/extensions/pragma_token.py": {
             "too-few-public-methods": 1,
-            "too-many-arguments": 2
+            "too-many-arguments": 4,
+            "too-many-locals": 1
         },
         "pymarkdown/extensions/task_list_items.py": {},
         "pymarkdown/file_scan_helper.py": {
@@ -471,8 +472,8 @@
         "too-many-instance-attributes": 22,
         "too-many-public-methods": 4,
         "too-few-public-methods": 40,
-        "too-many-arguments": 194,
-        "too-many-locals": 18,
+        "too-many-arguments": 196,
+        "too-many-locals": 19,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 2,
         "protected-access": 23,

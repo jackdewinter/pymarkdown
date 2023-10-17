@@ -2,7 +2,7 @@
 Module to provide for linter instructions that can be embedded within the document.
 """
 import logging
-from typing import Dict, Optional, Set
+from typing import Dict, List, Optional, Set, Tuple
 
 from application_properties import ApplicationPropertiesFacade
 from typing_extensions import Protocol
@@ -133,6 +133,7 @@ class PragmaExtension(ParserExtension):
         pragma_lines: Dict[int, str],
         all_ids: Dict[str, FoundPlugin],
         document_pragmas: Dict[int, Set[str]],
+        document_pragma_ranges: List[Tuple[int, int, Set[str]]],
         log_pragma_failure: LogPragmaFailureProtocol,
     ) -> None:
         """
@@ -172,6 +173,17 @@ class PragmaExtension(ParserExtension):
                 scan_file,
                 actual_line_number,
                 document_pragmas,
+                all_ids,
+                command,
+            )
+        elif command == "disable-num-lines":
+            PragmaExtension.__handle_disable_num_lines(
+                command_data,
+                after_command_index,
+                log_pragma_failure,
+                scan_file,
+                actual_line_number,
+                document_pragma_ranges,
                 all_ids,
                 command,
             )
@@ -220,6 +232,118 @@ class PragmaExtension(ParserExtension):
             document_pragmas[actual_line_number + 1] = processed_ids
 
     # pylint: enable=too-many-arguments
+    # pylint: disable=too-many-arguments
+
+    @staticmethod
+    def __handle_disable_num_lines_parse(
+        command_data: str,
+        after_command_index: int,
+        log_pragma_failure: LogPragmaFailureProtocol,
+        scan_file: str,
+        actual_line_number: int,
+        command: str,
+    ) -> Tuple[bool, int, Optional[int]]:
+        after_space_index, _ = ParserHelper.extract_spaces(
+            command_data, after_command_index
+        )
+        assert after_space_index is not None
+        if after_space_index == len(command_data):
+            log_pragma_failure(
+                scan_file,
+                actual_line_number,
+                f"Inline configuration command '{command}' was not followed by a count and a list of plugin ids to temporarily disable.",
+            )
+            return False, -1, None
+        after_num_index, extracted_number = ParserHelper.extract_until_spaces(
+            command_data, after_space_index
+        )
+
+        assert extracted_number is not None
+        try:
+            count_value = int(extracted_number)
+        except ValueError:
+            count_value = -1
+        if count_value < 1:
+            log_pragma_failure(
+                scan_file,
+                actual_line_number,
+                f"Inline configuration command '{command}' specified a count '{extracted_number}' that is not a valid positive integer.",
+            )
+            return False, -1, None
+
+        assert after_num_index is not None
+        after_number_index, _ = ParserHelper.extract_spaces(
+            command_data, after_num_index
+        )
+        if after_number_index == len(command_data):
+            log_pragma_failure(
+                scan_file,
+                actual_line_number,
+                f"Inline configuration command '{command}' and its count were not followed by a list of plugin ids to temporarily disable.",
+            )
+            return False, -1, None
+        assert after_number_index is not None
+        return True, after_number_index, count_value
+
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments, too-many-locals
+    @staticmethod
+    def __handle_disable_num_lines(
+        command_data: str,
+        after_command_index: int,
+        log_pragma_failure: LogPragmaFailureProtocol,
+        scan_file: str,
+        actual_line_number: int,
+        document_pragma_ranges: List[Tuple[int, int, Set[str]]],
+        all_ids: Dict[str, FoundPlugin],
+        command: str,
+    ) -> None:
+        (
+            is_ok,
+            after_number_index,
+            count_value,
+        ) = PragmaExtension.__handle_disable_num_lines_parse(
+            command_data,
+            after_command_index,
+            log_pragma_failure,
+            scan_file,
+            actual_line_number,
+            command,
+        )
+        if not is_ok:
+            return
+
+        ids_to_disable = command_data[after_number_index:].split(",")
+        processed_ids = set()
+        for next_id in ids_to_disable:
+            next_id = next_id.strip().lower()
+            if not next_id:
+                log_pragma_failure(
+                    scan_file,
+                    actual_line_number,
+                    f"Inline configuration command '{command}' specified a plugin with a blank id.",
+                )
+            elif next_id in all_ids:
+                normalized_id = all_ids[next_id].plugin_id
+                processed_ids.add(normalized_id)
+            else:
+                log_pragma_failure(
+                    scan_file,
+                    actual_line_number,
+                    f"Inline configuration command '{command}' unable to find a plugin with the id '{next_id}'.",
+                )
+
+        if processed_ids:
+            assert count_value is not None
+            pragma_tuple = (
+                actual_line_number + 1,
+                actual_line_number + count_value,
+                processed_ids,
+            )
+            document_pragma_ranges.append(pragma_tuple)
+
+    # pylint: enable=too-many-arguments, too-many-locals
 
 
 class PragmaToken(MarkdownToken):

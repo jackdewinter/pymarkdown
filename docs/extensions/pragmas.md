@@ -125,7 +125,8 @@ Inline configuration command 'bad-command' not understood.
 
 #### Available Commands
 
-The only command that is currently in place in the `disable-next-line` command.
+The only two commands currently in place are the `disable-next-line` command
+and the `disable-num-lines` command.
 
 Note that due to the reasons mentioned
 [in this section](https://github.com/jackdewinter/pymarkdown/blob/main/docs/advanced_scanning.md#pragmas),
@@ -137,19 +138,55 @@ any other reason than to keep the system simple and performant.
 
 After one or more whitespace characters, a comma-separated
 list of identifiers specifies the rules to disable only for the line
-directly following the line containing the pragma. If any element in the
-list is blank, the error that is output will look like:
+directly following the line containing the pragma.
 
-```text
-file.md:1:1: INLINE: Inline configuration command 'disable-next-line' specified a plugin with a blank id.
-```
+Errors will be issued if:
 
-If any of the specified identifiers are not valid plugin rule identifiers,
-the error that is output will look like:
+- a rule identifier (id or name) is not provided
+- the rule identifier is not a valid or name
 
-```text
-file.md:1:1: INLINE: Inline configuration command 'disable-next-line' unable to find a plugin with the id 'not-valid'.
-```
+Therefore, a proper command to suppress rule id `md031` on the next line
+is `disable-next-line md031` or `disable-next-line blanks-around-fences`.
+
+##### Disable-num-lines Command
+
+After one or more whitespace characters, a positive integer is followed by
+one or more whitespace characters and then a comma-separated
+list of identifiers.  The integer specifies the count of lines that the disable
+command will span and the list of identifiers specify the rules to disable.
+In essence, this is a multiline form of the `disable-next-line` command.
+If there are any issues parsing the command's parameters, they will be reporting
+in the same manner as the errors for the `disable-next-line` command.
+
+Errors will be issued if:
+
+- a count was not specified, and therefore, one or more rule identifiers were
+  not specified
+- a count was not specified as a positive integer
+- one or more rule identifiers (id or name) were not provided
+- the rule identifier is not a valid or name
+
+Therefore, a proper command to suppress rule id `md031` on the next three lines
+is `disable-num-lines 3 md031` or `disable-num-lines 3 blanks-around-fences`.
+
+###### Why Was This Introduced?
+
+Making this small change involved a lot of discussion and experimentation.
+On one side, providing a `disable` command and an `enable` command might have
+been more useful, but had a lot of simplicity issues.  What does the logic
+look like if `disable` is called more than once?  Same question, but for
+`enable`?  Is there a way to apply `disable` to everything?  We felt that
+there were just too many questions.
+
+On the other side, having a `disable` command that spans an explicit number of
+lines provides the same functionality with only one complicated question.
+What happens if we `disable` for 100 lines on the last line of the document?
+The answer to that disable question has a simple answer.  The command will
+record a range from that line to the 100th line following it, just like with
+any other range.  Because it is on the last line of the document, it will
+have no effect, but it will still record the range.
+
+From that point of view, it was just an easy choice.
 
 #### Removal Of The Pragma Statement From the Markdown Token Stream
 
