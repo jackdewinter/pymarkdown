@@ -9,7 +9,7 @@ forms of testing, to see how applicable they would be to this project.  That
 work will be starting soon and be incremental.  It also pointed out a need for
 better documentation, which will also be incremental going forward.
 
-That experimentation lead to a couple of changes.
+That experimentation lead to a couple of changes:
 
 - Front matter is now interpretted as strict YAML, and not as some mashup of rules.
   This was decided on as it easier to explain and document.  This may cause some
