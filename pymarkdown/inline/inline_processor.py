@@ -4,6 +4,9 @@ Inline processing
 import logging
 from typing import List, cast
 
+from pymarkdown.container_blocks.parse_block_pass_properties import (
+    ParseBlockPassProperties,
+)
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.inline.inline_handler_helper import InlineHandlerHelper
@@ -32,7 +35,10 @@ class InlineProcessor:
         InlineHandlerHelper.initialize()
 
     @staticmethod
-    def parse_inline(coalesced_results: List[MarkdownToken]) -> List[MarkdownToken]:
+    def parse_inline(
+        coalesced_results: List[MarkdownToken],
+        parse_properties: ParseBlockPassProperties,
+    ) -> List[MarkdownToken]:
         """
         Parse and resolve any inline elements.
         """
@@ -62,7 +68,11 @@ class InlineProcessor:
 
         for coalesce_index in range(1, len(coalesced_results)):
             InlineProcessor.__process_next_coalesce_item(
-                coalesced_results, coalesce_index, coalesced_list, coalesced_stack
+                coalesced_results,
+                coalesce_index,
+                coalesced_list,
+                coalesced_stack,
+                parse_properties,
             )
         return coalesced_list
 
@@ -101,6 +111,7 @@ class InlineProcessor:
         coalesce_index: int,
         coalesced_list: List[MarkdownToken],
         coalesced_stack: List[MarkdownToken],
+        parse_properties: ParseBlockPassProperties,
     ) -> None:
         POGGER.info("coalesced_results:$<", coalesced_list[-1])
         POGGER.info("coalesced_stack:$<", coalesced_stack)
@@ -122,15 +133,23 @@ class InlineProcessor:
                 )
             elif coalesced_list[-1].is_setext_heading:
                 processed_tokens = InlineProcessor.__parse_setext_heading(
-                    coalesced_results, coalesce_index, coalesced_stack
+                    coalesced_results, coalesce_index, coalesced_stack, parse_properties
                 )
             elif coalesced_list[-1].is_atx_heading:
                 processed_tokens = InlineProcessor.__parse_atx_heading(
-                    coalesced_results, coalesce_index, coalesced_stack, coalesced_list
+                    coalesced_results,
+                    coalesce_index,
+                    coalesced_stack,
+                    coalesced_list,
+                    parse_properties,
                 )
             else:
                 processed_tokens = InlineProcessor.__parse_paragraph(
-                    coalesced_list, coalesced_results, coalesce_index, coalesced_stack
+                    coalesced_list,
+                    coalesced_results,
+                    coalesce_index,
+                    coalesced_stack,
+                    parse_properties,
                 )
             coalesced_list.extend(processed_tokens)
         else:
@@ -146,6 +165,7 @@ class InlineProcessor:
         coalesced_results: List[MarkdownToken],
         coalesce_index: int,
         coalesced_stack: List[MarkdownToken],
+        parse_properties: ParseBlockPassProperties,
     ) -> List[MarkdownToken]:
         assert coalesced_list[-1].is_paragraph
         paragraph_token = cast(ParagraphMarkdownToken, coalesced_list[-1])
@@ -174,6 +194,7 @@ class InlineProcessor:
             column_number=text_token.column_number,
             para_owner=paragraph_token,
             tabified_text=text_token.tabified_text,
+            parse_properties=parse_properties,
         )
 
     @staticmethod
@@ -182,6 +203,7 @@ class InlineProcessor:
         coalesce_index: int,
         coalesced_stack: List[MarkdownToken],
         coalesced_list: List[MarkdownToken],
+        parse_properties: ParseBlockPassProperties,
     ) -> List[MarkdownToken]:
         assert coalesced_results[coalesce_index].is_text
         text_token = cast(TextMarkdownToken, coalesced_results[coalesce_index])
@@ -207,6 +229,7 @@ class InlineProcessor:
             + len(text_token.extracted_whitespace)
             + atx_token.hash_count,
             tabified_text=text_token.tabified_text,
+            parse_properties=parse_properties,
         )
 
     @staticmethod
@@ -214,6 +237,7 @@ class InlineProcessor:
         coalesced_results: List[MarkdownToken],
         coalesce_index: int,
         coalesced_stack: List[MarkdownToken],
+        parse_properties: ParseBlockPassProperties,
     ) -> List[MarkdownToken]:
         assert coalesced_results[coalesce_index].is_text
         text_token = cast(TextMarkdownToken, coalesced_results[coalesce_index])
@@ -227,6 +251,7 @@ class InlineProcessor:
             line_number=text_token.line_number,
             column_number=text_token.column_number,
             tabified_text=text_token.tabified_text,
+            parse_properties=parse_properties,
         )
         POGGER.debug(
             "processed_tokens>>$",

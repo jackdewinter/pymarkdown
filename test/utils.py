@@ -48,6 +48,9 @@ def act_and_assert(
     test_properties = ApplicationProperties()
     if config_map:
         test_properties.load_from_dict(config_map)
+        if test_properties.get_boolean_property("mode.strict-config", strict_mode=True):
+            test_properties.enable_strict_mode()
+
     extension_manager = ExtensionManager(MainPresentation())
     extension_manager.initialize(None, test_properties)
     extension_manager.apply_configuration()

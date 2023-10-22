@@ -311,6 +311,7 @@ def test_api_list_recursive_for_directory():
         "api.md",
         "developer.md",
         "extensions.md",
+        "{extensions}disallowed-raw_html.md",
         "{extensions}front-matter.md",
         "{extensions}pragmas.md",
         "faq.md",

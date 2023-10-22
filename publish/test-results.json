@@ -219,6 +219,14 @@
             "elapsedTimeInMilliseconds": 0
         },
         {
+            "name": "test.extensions.test_disallowed_html",
+            "totalTests": 40,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
             "name": "test.extensions.test_extension_manager",
             "totalTests": 15,
             "failedTests": 0,
@@ -335,7 +343,7 @@
             "totalTests": 1,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 1,
+            "skippedTests": 0,
             "elapsedTimeInMilliseconds": 0
         },
         {

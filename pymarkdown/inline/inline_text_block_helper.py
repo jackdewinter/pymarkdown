@@ -4,6 +4,9 @@ Module to help with the parsing of text inline elements.
 import logging
 from typing import List, Optional, Tuple, cast
 
+from pymarkdown.container_blocks.parse_block_pass_properties import (
+    ParseBlockPassProperties,
+)
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.inline.emphasis_helper import EmphasisHelper
@@ -31,6 +34,26 @@ class InlineTextBlockHelper:
     Class to help with the parsing of text inline elements.
     """
 
+    @staticmethod
+    def __xx(
+        source_text: str,
+        whitespace_to_recombine: Optional[str],
+        is_para: bool,
+        is_setext: bool,
+        para_space: Optional[str],
+    ) -> Tuple[str, Optional[List[str]]]:
+        if whitespace_to_recombine:
+            source_text, _ = ParserHelper.recombine_string_with_whitespace(
+                source_text, whitespace_to_recombine
+            )
+
+        fold_space: Optional[List[str]] = None
+        if is_para or is_setext:
+            assert para_space is not None
+            fold_space = para_space.split(ParserHelper.newline_character)
+
+        return source_text, fold_space
+
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod  # noqa: C901
     def process_inline_text_block(  # noqa: C901
@@ -45,6 +68,7 @@ class InlineTextBlockHelper:
         column_number: int = 0,
         para_owner: Optional[ParagraphMarkdownToken] = None,
         tabified_text: Optional[str] = None,
+        parse_properties: Optional[ParseBlockPassProperties] = None,
     ) -> List[MarkdownToken]:
         """
         Process a text block for any inline items.
@@ -62,15 +86,10 @@ class InlineTextBlockHelper:
         start_index: Optional[int] = 0
         inline_blocks: List[MarkdownToken] = []
         end_string: Optional[str] = ""
-        fold_space: Optional[List[str]] = None
 
-        if whitespace_to_recombine:
-            source_text, _ = ParserHelper.recombine_string_with_whitespace(
-                source_text, whitespace_to_recombine
-            )
-        if is_para or is_setext:
-            assert para_space is not None
-            fold_space = para_space.split(ParserHelper.newline_character)
+        source_text, fold_space = InlineTextBlockHelper.__xx(
+            source_text, whitespace_to_recombine, is_para, is_setext, para_space
+        )
 
         assert start_index is not None
         next_index = ParserHelper.index_any_of(
@@ -79,6 +98,7 @@ class InlineTextBlockHelper:
             start_index,
         )
         newlines_encountered = 0
+        assert parse_properties is not None
         while next_index != -1:
             old_next_index = next_index
             assert start_index is not None
@@ -114,6 +134,7 @@ class InlineTextBlockHelper:
                 fold_space,
                 tabified_text,
                 newlines_encountered,
+                parse_properties,
             )
             if source_text[old_next_index] == "\n":
                 newlines_encountered += 1
@@ -156,6 +177,7 @@ class InlineTextBlockHelper:
         fold_space: Optional[List[str]],
         tabified_text: Optional[str],
         newlines_encountered: int,
+        parse_properties: ParseBlockPassProperties,
     ) -> Tuple[
         int,
         int,
@@ -187,6 +209,7 @@ class InlineTextBlockHelper:
             line_number,
             column_number,
             para_owner,
+            parse_properties,
         )
 
         (
@@ -301,7 +324,7 @@ class InlineTextBlockHelper:
 
     # pylint: enable=too-many-arguments, too-many-locals
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments,too-many-locals
     @staticmethod
     def __handle_next_inline_character_setup(
         source_text: str,
@@ -314,6 +337,7 @@ class InlineTextBlockHelper:
         line_number: int,
         column_number: int,
         para_owner: Optional[ParagraphMarkdownToken],
+        parse_properties: ParseBlockPassProperties,
     ) -> Tuple[bool, str, int, Optional[MarkdownToken], Optional[str], InlineRequest]:
         (
             remaining_line,
@@ -347,6 +371,7 @@ class InlineTextBlockHelper:
             column_number,
             para_owner,
             tabified_text,
+            parse_properties,
         )
         return (
             False,
@@ -357,7 +382,7 @@ class InlineTextBlockHelper:
             inline_request,
         )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments,too-many-locals
 
     # pylint: disable=too-many-arguments
     @staticmethod

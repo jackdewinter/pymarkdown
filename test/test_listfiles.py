@@ -404,6 +404,7 @@ def test_markdown_with_dash_l_and_dash_r_on_directory():
 {source_path}api.md
 {source_path}developer.md
 {source_path}extensions.md
+{extensions_source_path}disallowed-raw_html.md
 {extensions_source_path}front-matter.md
 {extensions_source_path}pragmas.md
 {source_path}faq.md

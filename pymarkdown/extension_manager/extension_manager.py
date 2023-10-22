@@ -29,6 +29,7 @@ from pymarkdown.return_code_helper import ApplicationResult
 LOGGER = logging.getLogger(__name__)
 
 
+# pylint: disable=too-many-instance-attributes
 class ExtensionManager:
     """
     Manager object to take care of loading and accessing extension modules.
@@ -53,6 +54,7 @@ class ExtensionManager:
         self.__properties: Optional[ApplicationProperties] = None
         self.__is_front_matter_enabled: bool = False
         self.__is_linter_pragmas_enabled: bool = False
+        self.__is_disallow_raw_html_enabled: bool = False
 
     def initialize(
         self,
@@ -109,12 +111,15 @@ class ExtensionManager:
 
                 next_extension_object = self.__extension_objects[next_extension_id]
                 next_extension_object.apply_configuration(extension_specific_facade)
-
         self.__is_front_matter_enabled = (
             FrontMatterExtension().get_identifier() in self.__enabled_extensions
         )
         self.__is_linter_pragmas_enabled = (
             PragmaExtension().get_identifier() in self.__enabled_extensions
+        )
+        self.__is_disallow_raw_html_enabled = (
+            MarkdownDisallowRawHtmlExtension().get_identifier()
+            in self.__enabled_extensions
         )
 
     def get_extension_instance(self, extension_id: str) -> ParserExtension:
@@ -136,6 +141,13 @@ class ExtensionManager:
         Check to see if linter-pragmas support is enabled.
         """
         return self.__is_linter_pragmas_enabled
+
+    @property
+    def is_disallow_raw_html_enabled(self) -> bool:
+        """
+        Check to see if disallow_raw_html support is enabled.
+        """
+        return self.__is_disallow_raw_html_enabled
 
     @staticmethod
     def argparse_subparser_name() -> str:
@@ -335,3 +347,6 @@ class ExtensionManager:
             if new_value is None
             else new_value
         ), extension_specific_facade
+
+
+# pylint: enable=too-many-instance-attributes

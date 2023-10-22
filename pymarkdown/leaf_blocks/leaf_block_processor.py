@@ -57,6 +57,7 @@ class LeafBlockProcessor:
                 start_index,
                 extracted_whitespace,
                 parser_state.token_stack,
+                parser_state.parse_properties,
             )
             is_leaf_block_start = bool(is_html_block_start)
             POGGER.debug(
