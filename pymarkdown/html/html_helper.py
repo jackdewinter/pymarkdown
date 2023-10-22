@@ -7,6 +7,9 @@ from typing import List, Optional, Tuple, cast
 
 from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
 from pymarkdown.container_blocks.container_helper import ContainerHelper
+from pymarkdown.container_blocks.parse_block_pass_properties import (
+    ParseBlockPassProperties,
+)
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.parser_state import ParserState
@@ -459,7 +462,10 @@ class HtmlHelper:
 
     @staticmethod
     def __determine_html_block_type(
-        token_stack: List[StackToken], line_to_parse: str, start_index: int
+        token_stack: List[StackToken],
+        line_to_parse: str,
+        start_index: int,
+        parse_properties: ParseBlockPassProperties,
     ) -> Tuple[Optional[str], Optional[str]]:
         """
         Determine the type of the html block that we are starting.
@@ -494,6 +500,16 @@ class HtmlHelper:
         if html_block_type == HtmlHelper.html_block_7 and token_stack[-1].is_paragraph:
             POGGER.debug("html_block_type 7 cannot interrupt a paragraph")
             return None, None
+        if (
+            parse_properties.is_disallow_raw_html_enabled
+            and remaining_html_tag
+            and parse_properties.disallow_raw_html
+            and parse_properties.disallow_raw_html.is_html_tag_disallowed(
+                remaining_html_tag
+            )
+        ):
+            POGGER.debug("Tag name '%s' is disallowed.", remaining_html_tag)
+            return None, None
         return html_block_type, remaining_html_tag
 
     @staticmethod
@@ -502,6 +518,7 @@ class HtmlHelper:
         start_index: int,
         extracted_whitespace: Optional[str],
         token_stack: List[StackToken],
+        parse_properties: ParseBlockPassProperties,
     ) -> Tuple[Optional[str], Optional[str]]:
         """
         Determine if the current sequence of characters would start a html block element.
@@ -519,9 +536,7 @@ class HtmlHelper:
                 html_block_type,
                 remaining_html_tag,
             ) = HtmlHelper.__determine_html_block_type(
-                token_stack,
-                line_to_parse,
-                start_index,
+                token_stack, line_to_parse, start_index, parse_properties
             )
         else:
             html_block_type, remaining_html_tag = None, None
@@ -544,6 +559,7 @@ class HtmlHelper:
             position_marker.index_number,
             extracted_whitespace,
             parser_state.token_stack,
+            parser_state.parse_properties,
         )
         did_adjust_block_quote = False
         POGGER.debug("did_adjust_block_quote=$", did_adjust_block_quote)
@@ -660,6 +676,64 @@ class HtmlHelper:
         assert tabified_whitespace is not None
         return tabified_whitespace, tabified_text
 
+    @staticmethod
+    def __handle_disallow(parser_state: ParserState, token_text: str) -> str:
+        cleaned_up_text_parts: List[str] = []
+        new_index, new_index_text = ParserHelper.collect_until_character(
+            token_text, 0, HtmlHelper.__html_block_start_character
+        )
+        assert new_index is not None
+        x_index: int = new_index
+        assert new_index_text is not None
+        while x_index < len(token_text):
+            assert new_index_text is not None
+            cleaned_up_text_parts.append(new_index_text)
+            assert new_index is not None
+            (
+                after_text_index,
+                collected_text,
+            ) = ParserHelper.collect_until_one_of_characters(
+                token_text, new_index + 1, " /<>"
+            )
+            assert after_text_index is not None
+            assert collected_text is not None
+            if (
+                after_text_index + 1 < len(token_text)
+                and token_text[after_text_index] == "<"
+            ):
+                cleaned_up_text_parts.append(f"<{collected_text}")
+                assert after_text_index is not None
+                new_index, new_index_text = ParserHelper.collect_until_character(
+                    token_text,
+                    after_text_index,
+                    HtmlHelper.__html_block_start_character,
+                )
+                continue
+            assert parser_state.parse_properties is not None
+            assert parser_state.parse_properties.disallow_raw_html is not None
+            tag_start = (
+                ParserHelper.create_replacement_markers(
+                    HtmlHelper.__html_block_start_character, "&lt;"
+                )
+                if parser_state.parse_properties.disallow_raw_html.is_html_tag_disallowed(
+                    collected_text
+                )
+                else HtmlHelper.__html_block_start_character
+            )
+            cleaned_up_text_parts.append(tag_start + collected_text)
+            assert after_text_index is not None
+            new_index, new_index_text = ParserHelper.collect_until_character(
+                token_text,
+                after_text_index,
+                HtmlHelper.__html_block_start_character,
+            )
+            assert new_index is not None
+            x_index = new_index
+            assert new_index_text is not None
+        assert new_index_text is not None
+        cleaned_up_text_parts.append(new_index_text)
+        return "".join(cleaned_up_text_parts)
+
     # pylint: disable=too-many-arguments
     @staticmethod
     def check_normal_html_block_end(
@@ -677,9 +751,9 @@ class HtmlHelper:
         """
 
         token_text = line_to_parse[start_index:]
-        POGGER.debug("extracted_whitespace=:$:", extracted_whitespace)
-        POGGER.debug("token_text=:$:", token_text)
-        POGGER.debug("original_line=:$:", original_line)
+        # POGGER.debug("extracted_whitespace=:$:", extracted_whitespace)
+        # POGGER.debug("token_text=:$:", token_text)
+        # POGGER.debug("original_line=:$:", original_line)
         if ParserHelper.tab_character in original_line:
             (
                 extracted_whitespace,
@@ -691,6 +765,9 @@ class HtmlHelper:
                 token_text,
                 did_adjust_block_quote,
             )
+
+        if parser_state.parse_properties.is_disallow_raw_html_enabled:
+            token_text = HtmlHelper.__handle_disallow(parser_state, token_text)
 
         new_tokens: List[MarkdownToken] = [
             TextMarkdownToken(

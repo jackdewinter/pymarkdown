@@ -3,13 +3,14 @@ Module to provide helper functions for parsing the raw html inline blocks.
 """
 import logging
 import string
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Union
 
 from pymarkdown.general.constants import Constants
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.inline.inline_request import InlineRequest
 from pymarkdown.tokens.raw_html_markdown_token import RawHtmlMarkdownToken
+from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -64,7 +65,7 @@ class HtmlRawHelper:
         line_number: int,
         column_number: int,
         inline_request: InlineRequest,
-    ) -> Tuple[Optional[RawHtmlMarkdownToken], int]:
+    ) -> Tuple[Optional[Union[RawHtmlMarkdownToken, TextMarkdownToken]], int]:
         """
         Given an open HTML tag character (<), try the various possibilities for
         types of tag, and determine if any of them parse validly.
@@ -73,6 +74,7 @@ class HtmlRawHelper:
         valid_raw_html, remaining_line_parse_index = HtmlRawHelper.__parse_raw_open_tag(
             remaining_line
         )
+        was_open = valid_raw_html is not None
         if not valid_raw_html:
             valid_raw_html = HtmlRawHelper.__parse_raw_close_tag(only_between_angles)
         if not valid_raw_html:
@@ -118,10 +120,29 @@ class HtmlRawHelper:
                 inline_request.para_owner.rehydrate_index,
                 add_replace_marker_if_empty=True,
             )
-        return (
-            RawHtmlMarkdownToken(valid_raw_html, line_number, column_number),
-            remaining_line_parse_index,
-        )
+        token_to_use: Optional[Union[TextMarkdownToken, RawHtmlMarkdownToken]] = None
+        assert inline_request.parse_properties is not None
+        if was_open and inline_request.parse_properties.is_disallow_raw_html_enabled:
+            _, tag_name = ParserHelper.collect_until_one_of_characters(
+                valid_raw_html, 0, " /"
+            )
+            assert tag_name is not None
+            assert inline_request.parse_properties.disallow_raw_html is not None
+            if inline_request.parse_properties.disallow_raw_html.is_html_tag_disallowed(
+                tag_name
+            ):
+                replacement_text = ParserHelper.create_replacement_markers("<", "&lt;")
+                token_to_use = TextMarkdownToken(
+                    f"{replacement_text}{valid_raw_html}>",
+                    "",
+                    line_number=line_number,
+                    column_number=column_number,
+                )
+        if token_to_use is None:
+            token_to_use = RawHtmlMarkdownToken(
+                valid_raw_html, line_number, column_number
+            )
+        return (token_to_use, remaining_line_parse_index)
 
     @staticmethod
     def __parse_raw_open_tag(text_to_parse: str) -> Tuple[Optional[str], int]:

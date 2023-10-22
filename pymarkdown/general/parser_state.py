@@ -8,6 +8,9 @@ from typing import List, Optional, Tuple, cast
 
 from typing_extensions import Protocol
 
+from pymarkdown.container_blocks.parse_block_pass_properties import (
+    ParseBlockPassProperties,
+)
 from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.general.requeue_line_info import RequeueLineInfo
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
@@ -67,12 +70,14 @@ class ParserState:
     Class to provide for an encapsulation of the high level state of the parser.
     """
 
+    # pylint: disable=too-many-arguments
     def __init__(
         self,
         token_stack: List[StackToken],
         token_document: List[MarkdownToken],
         close_open_blocks_fn: CloseOpenBlocksProtocol,
         handle_blank_line_fn: HandleBlankLineProtocol,
+        parse_properties: ParseBlockPassProperties,
     ) -> None:
         (
             self.__token_stack,
@@ -94,6 +99,9 @@ class ParserState:
         self.nested_list_start: Optional[ListStackToken] = None
         self.copy_of_token_stack: List[StackToken] = []
         self.block_copy: List[Optional[MarkdownToken]] = []
+        self.parse_properties = parse_properties
+
+    # pylint: enable=too-many-arguments
 
     @property
     def token_stack(self) -> List[StackToken]:

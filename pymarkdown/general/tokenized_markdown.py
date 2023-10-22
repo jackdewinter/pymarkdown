@@ -133,7 +133,10 @@ class TokenizedMarkdown:
             )
 
             POGGER.debug("\n\n>>>>>>>parse_inline>>>>>>")
-            final_pass_results = InlineProcessor.parse_inline(coalesced_results)
+            assert self.__parse_properties is not None
+            final_pass_results = InlineProcessor.parse_inline(
+                coalesced_results, self.__parse_properties
+            )
 
             POGGER.debug("\n\n>>>>>>>final_pass_results>>>>>>")
             return final_pass_results
@@ -222,11 +225,13 @@ class TokenizedMarkdown:
         POGGER.debug("line_number>>$", line_number)
         POGGER.debug("---")
 
+        assert self.__parse_properties is not None
         parser_state = ParserState(
             self.__token_stack,
             self.__tokenized_document,
             TokenizedMarkdown.__close_open_blocks,
             self.__handle_blank_line,
+            self.__parse_properties,
         )
         keep_on_going = True
         if did_start_close:
