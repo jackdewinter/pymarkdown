@@ -35,6 +35,9 @@ That experimentation lead to a couple of changes:
     determine validity
   - changed rule `md001` to look for case sensitive front-matter key name instead
     of case sensitive per switch to full YAML processing
+- [Issue 791](https://github.com/jackdewinter/pymarkdown/issues/791)
+  - html blocks inside of 2+ levels of block quote was asserting
+  - slight change to surrounding code to deal with less than case
 
 ## Version 0.9.13.4 - Date: 2023-09-09
 

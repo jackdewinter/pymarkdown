@@ -79,6 +79,7 @@ class BlockQuoteCountHelper:
             start_index -= 1
         else:
             osi, oltp, current_count = start_index, line_to_parse[:], 1
+            POGGER.debug("cbqs1-current_count--$--", current_count)
             start_index += 1
 
             POGGER.debug(
@@ -116,9 +117,11 @@ class BlockQuoteCountHelper:
                     avoid_block_starts,
                     last_block_quote_index,
                 )
+                POGGER.debug("cbqs2-current_count--$--", current_count)
                 if not continue_processing:
                     break
                 current_count += 1
+                POGGER.debug("cbqs3-current_count--$--", current_count)
                 start_index += 1
                 last_block_quote_index = start_index
 
@@ -168,7 +171,7 @@ class BlockQuoteCountHelper:
             stack_count,
             is_top_of_stack_is_html_block,
         )
-        if is_top_of_stack_is_html_block:
+        if is_top_of_stack_is_html_block and current_count >= stack_count:
             if current_count == stack_count:
                 POGGER.debug(
                     "block quote levels don't increase during html block, ignoring"
