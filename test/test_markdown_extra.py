@@ -4466,6 +4466,47 @@ oisix.com.\t\t300\tIN\tMX\t250 mx3.idc.jp.
 
 
 @pytest.mark.gfm
+def test_extra_032():
+    """
+    TBD - from test_md010_bad_xxx
+
+    test_markdown_with_config_json_configuration_file
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    stdin_to_use = """> > <html>
+> >   <script>
+> >     <!-- some script stuff -->
+> >   </script>
+> > </html>
+"""
+
+    supplied_arguments = [
+        # "--log-level",
+        # "DEBUG",
+        "--stack-trace",
+        "-d",
+        "md033,md041",
+        "scan-stdin",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments, standard_input_to_use=stdin_to_use
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.gfm
 def test_extra_999():
     """
     Temporary test to keep coverage up while consistency checks disabled.
