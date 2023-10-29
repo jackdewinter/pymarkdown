@@ -40,7 +40,7 @@ That experimentation lead to a couple of changes:
   - slight change to surrounding code to deal with less than case
 - [Issue 793](https://github.com/jackdewinter/pymarkdown/issues/793)
   - list block end with no paragraphs was causing an assert with MD027
-  - double checked assert, is not needed
+  - double checked assert, is not needed and was just preventative
 
 ## Version 0.9.13.4 - Date: 2023-09-09
 
