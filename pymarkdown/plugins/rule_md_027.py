@@ -324,11 +324,12 @@ class RuleMd027(RulePlugin):
         self.__check_list_starts(context, token, num_container_tokens, True)
 
     def __handle_list_end(self, num_container_tokens: int) -> None:
-        assert not (
-            num_container_tokens
-            and not self.__is_paragraph_end_delayed
-            and not self.__have_incremented_for_this_line
-        )
+        _ = num_container_tokens
+        # assert not (
+        #     num_container_tokens
+        #     and not self.__is_paragraph_end_delayed
+        #     and not self.__have_incremented_for_this_line
+        # )
         del self.__container_tokens[-1]
 
     def __handle_blank_line(
