@@ -92,6 +92,8 @@ def test_md033_bad_html_block_present():
         "test", "resources", "rules", "md033", "bad_html_block_present.md"
     )
     supplied_arguments = [
+        "-d",
+        "PML100,MD041",
         "scan",
         source_path,
     ]
@@ -135,6 +137,8 @@ def test_md033_bad_html_block_present_with_configuration():
         "test", "resources", "rules", "md033", "bad_html_block_present.md"
     )
     supplied_arguments = [
+        "-d",
+        "PML100,MD041",
         "--set",
         "plugins.md033.allowed_elements=",
         "scan",
@@ -188,6 +192,8 @@ def test_md033_bad_html_block_present_with_other_configuration():
         "test", "resources", "rules", "md033", "bad_html_block_present.md"
     )
     supplied_arguments = [
+        "-d",
+        "PML100,MD041",
         "--set",
         "plugins.md033.allowed_elements=robert,p,!A",
         "scan",

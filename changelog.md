@@ -22,6 +22,9 @@ That experimentation lead to a couple of changes:
 
 - [Issue 776](https://github.com/jackdewinter/pymarkdown/issues/776)
   - implement `disable-num-lines` pragma command
+- [Issue 786](https://github.com/jackdewinter/pymarkdown/issues/786)
+  - added extension to disallow html, per GFM
+  - added rule PML100 which detected the same thing, but does not fix
 
 ### Changed
 
