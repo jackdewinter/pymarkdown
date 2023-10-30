@@ -1539,6 +1539,14 @@
             "elapsedTimeInMilliseconds": 0
         },
         {
+            "name": "test.rules.test_pml100",
+            "totalTests": 59,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
             "name": "test.test_application_file_scanner",
             "totalTests": 7,
             "failedTests": 0,
@@ -1620,7 +1628,7 @@
         },
         {
             "name": "test.test_markdown_extra",
-            "totalTests": 105,
+            "totalTests": 108,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 7,

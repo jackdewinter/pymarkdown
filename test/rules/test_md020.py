@@ -584,7 +584,7 @@ def test_md020_good_with_html_blocks():
     )
     supplied_arguments = [
         "--disable-rules",
-        "md033",
+        "md033,PML100",
         "scan",
         source_path,
     ]
