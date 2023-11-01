@@ -64,6 +64,7 @@ PACKAGE_MODULES = [
     "pymarkdown.list_blocks",
     "pymarkdown.plugin_manager",
     "pymarkdown.plugins",
+    "pymarkdown.plugins.utils",
     "pymarkdown.resources",
     "pymarkdown.tokens",
     "pymarkdown.transform_gfm",
