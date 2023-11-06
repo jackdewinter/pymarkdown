@@ -512,6 +512,7 @@ class HtmlHelper:
             return None, None
         return html_block_type, remaining_html_tag
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def is_html_block(
         line_to_parse: str,
@@ -519,6 +520,7 @@ class HtmlHelper:
         extracted_whitespace: Optional[str],
         token_stack: List[StackToken],
         parse_properties: ParseBlockPassProperties,
+        skip_whitespace_check: bool = False,
     ) -> Tuple[Optional[str], Optional[str]]:
         """
         Determine if the current sequence of characters would start a html block element.
@@ -526,7 +528,8 @@ class HtmlHelper:
 
         assert extracted_whitespace is not None
         if (
-            TabHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
+            skip_whitespace_check
+            or TabHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
         ) and ParserHelper.is_character_at_index(
             line_to_parse,
             start_index,
@@ -541,6 +544,8 @@ class HtmlHelper:
         else:
             html_block_type, remaining_html_tag = None, None
         return html_block_type, remaining_html_tag
+
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def parse_html_block(

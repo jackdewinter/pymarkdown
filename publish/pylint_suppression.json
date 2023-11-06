@@ -117,7 +117,7 @@
             "too-many-arguments": 5
         },
         "pymarkdown/html/html_helper.py": {
-            "too-many-arguments": 1
+            "too-many-arguments": 2
         },
         "pymarkdown/html/html_raw_helper.py": {},
         "pymarkdown/inline/emphasis_helper.py": {
@@ -476,7 +476,7 @@
         "too-many-instance-attributes": 23,
         "too-many-public-methods": 4,
         "too-few-public-methods": 40,
-        "too-many-arguments": 197,
+        "too-many-arguments": 198,
         "too-many-locals": 20,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 2,

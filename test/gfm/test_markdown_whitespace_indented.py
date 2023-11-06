@@ -252,7 +252,6 @@ indented block</p>
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_indented_code_with_spaces_before_within_double_block_quotes_with_blank_line():
     """
@@ -281,12 +280,13 @@ def test_whitespaces_indented_code_with_spaces_before_within_double_block_quotes
     ]
     expected_gfm = """<blockquote>
 <p>abc</p>
+</blockquote>
 <blockquote>
-<p>def</p>
+<blockquote>
+<p>def
+indented block</p>
 </blockquote>
-</blockquote>
-<pre><code>  indented block
-</code></pre>"""
+</blockquote>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)

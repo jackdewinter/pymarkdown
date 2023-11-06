@@ -9,9 +9,9 @@ config_map = {"extensions": {"markdown-disallow-raw-html": {"enabled": True}}}
 
 
 @pytest.mark.gfm
-def test_disallowed_raw_html_extension_653():
+def test_disallowed_raw_html_extension_657():
     """
-    Test case 653:  All other HTML tags are left untouched.
+    Test case 657:  All other HTML tags are left untouched.
     """
 
     # Arrange
