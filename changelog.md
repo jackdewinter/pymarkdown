@@ -2,6 +2,14 @@
 
 ## Unversioned - In Main, Not Released
 
+### Added
+
+### Changed
+
+### Fixed
+
+## Version 0.9.14 - Date: 2023-10-31
+
 This release is mostly to incorporate a number of small fixes and additions.
 Behind the scenes, we spent a while looking at the roadmap and trying to figure
 out the best path going forward.  Part of that was experimenting with different

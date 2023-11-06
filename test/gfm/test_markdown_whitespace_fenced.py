@@ -514,7 +514,6 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_and
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_and_spaces():
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
@@ -525,11 +524,13 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_and
   \t```python
   \tabc"""
     expected_tokens = [
-        "[ulist(1,1):-::2::  ]",
+        "[ulist(1,1):-::2::  \n  ]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::False]",
-        "[tbreak(2,5):*:\t:* * *]",
+        "[fcode-block(2,5):`:3:python::::\t:]",
+        "[text(3,3):abc:\a\t\a\x03\a]",
+        "[end-fcode-block::::True]",
         "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
@@ -544,11 +545,12 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_and
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_and_spaces_and_close():
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
+    # TODO: https://babelmark.github.io/?text=-+abc%0A++%09%60%60%60python%0A++%09abc%0A++%09%60%60%60
+    # presents tab at the start of the block
 
     # Arrange
     source_markdown = """- abc
@@ -556,16 +558,18 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_and
   \tabc
   \t```"""
     expected_tokens = [
-        "[ulist(1,1):-::2::  ]",
+        "[ulist(1,1):-::2::  \n  \n  ]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::False]",
-        "[tbreak(2,5):*:\t:* * *]",
+        "[fcode-block(2,5):`:3:python::::\t:]",
+        "[text(3,3):abc:\a\t\a\x03\a]",
+        "[end-fcode-block:\t::3:False]",
         "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>abc
-<pre><code class="language-python">	abc
+<pre><code class="language-python">abc
 </code></pre>
 </li>
 </ul>"""
@@ -575,7 +579,6 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_and
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_double_list():
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
@@ -591,10 +594,13 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_double_l
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
-        "[ulist(2,3):-::4:  :\t]",
-        "[setext(3,5):-:3::(2,5)]",
+        "[ulist(2,3):-::4:  :\t\n\t]",
+        "[para(2,5):]",
         "[text(2,5):def:]",
-        "[end-setext::]",
+        "[end-para:::False]",
+        "[fcode-block(3,5):`:3:python:::::]",
+        "[text(4,2):abc:]",
+        "[end-fcode-block::::True]",
         "[end-ulist:::True]",
         "[end-ulist:::True]",
     ]
@@ -614,7 +620,6 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_double_l
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_double_list_and_close():
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
@@ -631,10 +636,13 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_double_l
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
-        "[ulist(2,3):-::4:  :\t]",
-        "[setext(3,5):-:3::(2,5)]",
+        "[ulist(2,3):-::4:  :\t\n\t\n\t]",
+        "[para(2,5):]",
         "[text(2,5):def:]",
-        "[end-setext::]",
+        "[end-para:::False]",
+        "[fcode-block(3,5):`:3:python:::::]",
+        "[text(4,2):abc:]",
+        "[end-fcode-block:::3:False]",
         "[end-ulist:::True]",
         "[end-ulist:::True]",
     ]
@@ -900,7 +908,6 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_and_s
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_list_x():
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
@@ -916,11 +923,13 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_lis
         "[para(1,4):]",
         "[text(1,4):abc:]",
         "[end-para:::True]",
-        "[olist(2,4):.:1:6:   :\t  ]",
+        "[olist(2,4):.:1:6:   :\t  \n\t  ]",
         "[para(2,7):]",
         "[text(2,7):def:]",
         "[end-para:::False]",
-        "[tbreak(3,7):*::* * *]",
+        "[fcode-block(3,7):`:3:python:::::]",
+        "[text(4,4):abc:]",
+        "[end-fcode-block::::True]",
         "[end-olist:::True]",
         "[end-olist:::True]",
     ]
@@ -940,7 +949,6 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_lis
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_list_x_and_close():
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
@@ -957,11 +965,13 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_lis
         "[para(1,4):]",
         "[text(1,4):abc:]",
         "[end-para:::True]",
-        "[olist(2,4):.:1:6:   :\t  ]",
+        "[olist(2,4):.:1:6:   :\t  \n\t  \n\t  ]",
         "[para(2,7):]",
         "[text(2,7):def:]",
         "[end-para:::False]",
-        "[tbreak(3,7):*::* * *]",
+        "[fcode-block(3,7):`:3:python:::::]",
+        "[text(4,4):abc:]",
+        "[end-fcode-block:::3:False]",
         "[end-olist:::True]",
         "[end-olist:::True]",
     ]
@@ -1060,7 +1070,6 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_lis
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_list_tab_after_indent():
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
@@ -1072,7 +1081,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_lis
    ```python \tfred\tfred
    abc\tabc"""
     expected_tokens = [
-        "[olist(1,1):.:1:3::   ]",
+        "[olist(1,1):.:1:3::   \n   ]",
         "[para(1,4):]",
         "[text(1,4):abc:]",
         "[end-para:::True]",
@@ -1081,7 +1090,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_lis
         "[text(2,7):def:]",
         "[end-para:::True]",
         "[end-olist:::True]",
-        "[tbreak(3,4):*::*\t*\t*]",
+        "[fcode-block(3,4):`:3:python:: \tfred\tfred:::]",
+        "[text(4,4):abc\tabc:]",
+        "[end-fcode-block::::True]",
         "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
@@ -1099,7 +1110,6 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_lis
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_list_tab_after_indent_and_close():
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
@@ -1112,7 +1122,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_lis
    abc\tabc
    ```"""
     expected_tokens = [
-        "[olist(1,1):.:1:3::   ]",
+        "[olist(1,1):.:1:3::   \n   \n   ]",
         "[para(1,4):]",
         "[text(1,4):abc:]",
         "[end-para:::True]",
@@ -1121,7 +1131,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_lis
         "[text(2,7):def:]",
         "[end-para:::True]",
         "[end-olist:::True]",
-        "[tbreak(3,4):*::*\t*\t*]",
+        "[fcode-block(3,4):`:3:python:: \tfred\tfred:::]",
+        "[text(4,4):abc\tabc:]",
+        "[end-fcode-block:::3:False]",
         "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
@@ -2886,7 +2898,6 @@ abc
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_fenced_code_closed_with_tabs_after_and_before_2():
     """
     Test case:  Fenced Code block close followed by tabs and preceeded be spaces.

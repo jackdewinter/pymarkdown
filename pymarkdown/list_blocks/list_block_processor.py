@@ -650,6 +650,7 @@ class ListBlockProcessor:
             extracted_whitespace,
             parser_state.token_stack,
             parser_state.parse_properties,
+            skip_whitespace_check=True,
         )
         POGGER.debug("is_html_start>>$", is_html_start)
         return (
