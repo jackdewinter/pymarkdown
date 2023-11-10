@@ -8,6 +8,9 @@
 
 ### Fixed
 
+- [Issue 842](https://github.com/jackdewinter/pymarkdown/issues/842)
+  - fixed problem with HTML and lists and split tabs causing assertions
+
 ## Version 0.9.14 - Date: 2023-10-31
 
 This release is mostly to incorporate a number of small fixes and additions.
