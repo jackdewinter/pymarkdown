@@ -708,10 +708,10 @@
         },
         {
             "name": "test.gfm.test_markdown_whitespace_html",
-            "totalTests": 46,
+            "totalTests": 71,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 7,
+            "skippedTests": 17,
             "elapsedTimeInMilliseconds": 0
         },
         {

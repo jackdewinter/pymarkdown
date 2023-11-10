@@ -548,13 +548,122 @@ class HtmlHelper:
     # pylint: enable=too-many-arguments
 
     @staticmethod
+    def __handle_split_tab(
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        original_line: str,
+        orignal_line_end_prefix_index: int,
+    ) -> Tuple[Optional[str], Optional[int]]:
+        stack_token_index = len(parser_state.token_stack) - 1
+        alternate_list_leading_space = None
+        removed_chars_at_start: Optional[int] = None
+        # while (
+        #     stack_token_index > 0
+        #     and not parser_state.token_stack[
+        #         stack_token_index
+        #     ].is_block_quote
+        #     and not parser_state.token_stack[stack_token_index].is_list
+        # ):
+        #     stack_token_index -= 1
+        assert stack_token_index > 0
+        if parser_state.token_stack[stack_token_index].is_list:
+            orignal_line_prefix = original_line[:orignal_line_end_prefix_index]
+            stop_index = -1
+            if len(orignal_line_prefix) == 1:
+                assert orignal_line_prefix == ParserHelper.tab_character
+                sdddd = TabHelper.detabify_string(orignal_line_prefix)
+                assert len(sdddd) > position_marker.index_indent
+                stop_index = 1
+            else:
+                end_index = 1
+                keep_going = True
+                while keep_going:
+                    assert end_index < len(orignal_line_prefix) + 1
+                    sample_slice = TabHelper.detabify_string(
+                        orignal_line_prefix[:end_index]
+                    )
+                    if len(sample_slice) > position_marker.index_indent:
+                        stop_index = end_index
+                        keep_going = False
+                    end_index += 1
+
+            assert stop_index != -1
+            original_prefix = original_line[: stop_index - 1]
+            if stack_token_index <= 1:
+                alternate_list_leading_space = original_prefix
+            removed_chars_at_start = len(original_prefix)
+        return alternate_list_leading_space, removed_chars_at_start
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __found_html_block(
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        new_tokens: List[MarkdownToken],
+        original_line: str,
+        extracted_whitespace: Optional[str],
+        block_quote_data: BlockQuoteData,
+        html_block_type: str,
+    ) -> Tuple[List[MarkdownToken], bool, Optional[int]]:
+        split_tab = False
+        alternate_list_leading_space: Optional[str] = None
+        removed_chars_at_start: Optional[int] = None
+        if ParserHelper.tab_character in original_line:
+            token_text = position_marker.text_to_parse[position_marker.index_number :]
+            # POGGER.debug("token_text=:$:", token_text)
+            (
+                _,
+                split_tab,
+                _,  # split_tab_with_block_quote_suffix,
+                _,  # tabified_prefix,
+                _,  # tabified_suffix,
+                orignal_line_end_prefix_index,
+            ) = TabHelper.parse_thematic_break_with_tab(
+                original_line, token_text, extracted_whitespace
+            )
+            # POGGER.debug("split_tab=:$:", split_tab)
+            if split_tab:
+                (
+                    alternate_list_leading_space,
+                    removed_chars_at_start,
+                ) = HtmlHelper.__handle_split_tab(
+                    parser_state,
+                    position_marker,
+                    original_line,
+                    orignal_line_end_prefix_index,
+                )
+
+        # POGGER.debug("did_adjust_block_quote=$", did_adjust_block_quote)
+        # POGGER.debug("split_tab=$", split_tab)
+        old_split_tab = split_tab
+        did_adjust_block_quote = False
+        if split_tab := ContainerHelper.reduce_containers_if_required(
+            parser_state, block_quote_data, new_tokens, split_tab
+        ):
+            TabHelper.adjust_block_quote_indent_for_tab(
+                parser_state, extracted_whitespace, alternate_list_leading_space
+            )
+            did_adjust_block_quote = True
+            POGGER.debug("did_adjust_block_quote=$", did_adjust_block_quote)
+        POGGER.debug("split_tab=$", split_tab)
+        did_adjust_block_quote = split_tab != old_split_tab or did_adjust_block_quote
+
+        assert extracted_whitespace is not None
+        new_token = HtmlBlockMarkdownToken(position_marker, extracted_whitespace)
+        new_tokens.append(new_token)
+        parser_state.token_stack.append(HtmlBlockStackToken(html_block_type, new_token))
+        return new_tokens, did_adjust_block_quote, removed_chars_at_start
+
+    # pylint: enable=too-many-arguments
+
+    @staticmethod
     def parse_html_block(
         parser_state: ParserState,
         position_marker: PositionMarker,
         extracted_whitespace: Optional[str],
         block_quote_data: BlockQuoteData,
         original_line: str,
-    ) -> Tuple[List[MarkdownToken], bool]:
+    ) -> Tuple[List[MarkdownToken], bool, Optional[int]]:
         """
         Determine if we have the criteria that we need to start an HTML block.
         """
@@ -566,6 +675,7 @@ class HtmlHelper:
             parser_state.token_stack,
             parser_state.parse_properties,
         )
+        removed_chars_at_start = None
         did_adjust_block_quote = False
         POGGER.debug("did_adjust_block_quote=$", did_adjust_block_quote)
         if html_block_type:
@@ -574,53 +684,26 @@ class HtmlHelper:
                 only_these_blocks=[ParagraphStackToken],
             )
             POGGER.debug("new_tokens=$", new_tokens)
+            POGGER.debug("original_line=:$:", original_line)
+            POGGER.debug("extracted_whitespace=:$:", extracted_whitespace)
 
-            split_tab = False
-            if ParserHelper.tab_character in original_line:
-                token_text = position_marker.text_to_parse[
-                    position_marker.index_number :
-                ]
-                # POGGER.debug("original_line=:$:", original_line)
-                # POGGER.debug("token_text=:$:", token_text)
-                # POGGER.debug("extracted_whitespace=:$:", extracted_whitespace)
-                (
-                    _,
-                    split_tab,
-                    split_tab_with_block_quote_suffix,
-                    _,
-                    _,
-                ) = TabHelper.parse_thematic_break_with_tab(
-                    original_line, token_text, extracted_whitespace
-                )
-                # POGGER.debug("split_tab=:$:", split_tab)
-                if split_tab:
-                    assert split_tab_with_block_quote_suffix
-
-            # POGGER.debug("did_adjust_block_quote=$", did_adjust_block_quote)
-            # POGGER.debug("split_tab=$", split_tab)
-            old_split_tab = split_tab
-            did_adjust_block_quote = False
-            if split_tab := ContainerHelper.reduce_containers_if_required(
-                parser_state, block_quote_data, new_tokens, split_tab
-            ):
-                TabHelper.adjust_block_quote_indent_for_tab(parser_state)
-                did_adjust_block_quote = True
-                POGGER.debug("did_adjust_block_quote=$", did_adjust_block_quote)
-            POGGER.debug("split_tab=$", split_tab)
-            did_adjust_block_quote = (
-                split_tab != old_split_tab or did_adjust_block_quote
-            )
-
-            assert extracted_whitespace is not None
-            new_token = HtmlBlockMarkdownToken(position_marker, extracted_whitespace)
-            new_tokens.append(new_token)
-            parser_state.token_stack.append(
-                HtmlBlockStackToken(html_block_type, new_token)
+            (
+                new_tokens,
+                did_adjust_block_quote,
+                removed_chars_at_start,
+            ) = HtmlHelper.__found_html_block(
+                parser_state,
+                position_marker,
+                new_tokens,
+                original_line,
+                extracted_whitespace,
+                block_quote_data,
+                html_block_type,
             )
         else:
             new_tokens = []
         POGGER.debug("did_adjust_block_quote=$", did_adjust_block_quote)
-        return new_tokens, did_adjust_block_quote
+        return new_tokens, did_adjust_block_quote, removed_chars_at_start
 
     @staticmethod
     def check_blank_html_block_end(parser_state: ParserState) -> List[MarkdownToken]:
@@ -654,22 +737,40 @@ class HtmlHelper:
         did_adjust_block_quote: bool,
     ) -> Tuple[str, str]:
         POGGER.debug("did_adjust_block_quote>:$:<", did_adjust_block_quote)
+        POGGER.debug("original_line>:$:<", original_line)
+        POGGER.debug("token_text>:$:<", token_text)
+        POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
         (
             tabified_text,
             split_tab,
             split_tab_with_block_quote_suffix,
             _,
             tabified_whitespace,
+            _,
         ) = TabHelper.parse_thematic_break_with_tab(
             original_line, token_text, extracted_whitespace
         )
 
         POGGER.debug("tabified_text>:$:<", tabified_text)
-        POGGER.debug("tabified_whitespace>:$:<", tabified_whitespace)
         POGGER.debug("split_tab>:$:<", split_tab)
+        POGGER.debug(
+            "split_tab_with_block_quote_suffix>:$:<", split_tab_with_block_quote_suffix
+        )
+        POGGER.debug("tabified_whitespace>:$:<", tabified_whitespace)
 
-        if split_tab:
-            assert split_tab_with_block_quote_suffix
+        stack_token_index = len(parser_state.token_stack) - 1
+        while (
+            stack_token_index > 0
+            and not parser_state.token_stack[stack_token_index].is_block_quote
+            and not parser_state.token_stack[stack_token_index].is_list
+        ):
+            stack_token_index -= 1
+
+        if (
+            split_tab
+            and stack_token_index != 0
+            and parser_state.token_stack[stack_token_index].is_block_quote
+        ):
             POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
             assert tabified_whitespace is not None
             tabified_whitespace = ParserHelper.create_replacement_markers(
