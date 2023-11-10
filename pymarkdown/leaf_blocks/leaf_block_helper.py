@@ -2,7 +2,7 @@
 Module to provide helpers for the processing of leaf blocks.
 """
 import logging
-from typing import List, cast
+from typing import List, Optional, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
@@ -28,6 +28,7 @@ class LeafBlockHelper:
         html_tokens: List[MarkdownToken],
         was_token_already_added_to_stack: bool = True,
         delay_tab_match: bool = False,
+        alt_removed_chars_at_start: Optional[int] = None,
     ) -> None:
         """
         Check to see that if a paragraph has been closed within a list and
@@ -70,7 +71,11 @@ class LeafBlockHelper:
         del html_tokens[-1]
 
         LeafBlockHelper.__handle_leaf_start(
-            parser_state, removed_chars_at_start, html_tokens, delay_tab_match
+            parser_state,
+            removed_chars_at_start,
+            html_tokens,
+            delay_tab_match,
+            alt_removed_chars_at_start,
         )
 
         if was_token_already_added_to_stack:
@@ -93,6 +98,7 @@ class LeafBlockHelper:
         removed_chars_at_start: int,
         html_tokens: List[MarkdownToken],
         delay_tab_match: bool,
+        alt_removed_chars_at_start: Optional[int],
     ) -> None:
         POGGER.debug(
             ">>correct_for_leaf_block_start_in_list>>stack>>$>>",
@@ -143,9 +149,12 @@ class LeafBlockHelper:
                 if delay_tab_match:
                     used_indent = ""
                 else:
-                    used_indent = ParserHelper.repeat_string(
-                        " ", removed_chars_at_start
+                    indent_count = (
+                        alt_removed_chars_at_start
+                        if alt_removed_chars_at_start is not None
+                        else removed_chars_at_start
                     )
+                    used_indent = ParserHelper.repeat_string(" ", indent_count)
                 assert list_stack_token.matching_markdown_token is not None
                 list_markdown_token = cast(
                     ListStartMarkdownToken, list_stack_token.matching_markdown_token

@@ -113,7 +113,11 @@ class LeafBlockProcessor:
         if not outer_processed and not parser_state.token_stack[-1].is_html_block:
             POGGER.debug(">>html started?>>")
             old_top_of_stack = parser_state.token_stack[-1]
-            html_tokens, did_adjust_block_quote = HtmlHelper.parse_html_block(
+            (
+                html_tokens,
+                did_adjust_block_quote,
+                alt_removed_chars_at_start,
+            ) = HtmlHelper.parse_html_block(
                 parser_state,
                 position_marker,
                 leaf_token_whitespace,
@@ -127,6 +131,7 @@ class LeafBlockProcessor:
                     position_marker.index_indent,
                     old_top_of_stack,
                     html_tokens,
+                    alt_removed_chars_at_start=alt_removed_chars_at_start,
                 )
             new_tokens.extend(html_tokens)
         if parser_state.token_stack[-1].is_html_block:

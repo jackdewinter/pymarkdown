@@ -43,6 +43,7 @@ class SetextLeafBlockProcessor:
             split_tab_with_block_quote_suffix,
             extra_whitespace_prefix,
             new_extracted_whitespace,
+            _,
         ) = TabHelper.parse_thematic_break_with_tab(
             original_line, line_to_parse, extracted_whitespace
         )

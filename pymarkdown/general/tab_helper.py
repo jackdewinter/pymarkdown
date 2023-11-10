@@ -21,7 +21,7 @@ class TabHelper:
     @staticmethod
     def parse_thematic_break_with_tab(
         original_line: str, token_text: str, extracted_whitespace: Optional[str]
-    ) -> Tuple[str, bool, bool, Optional[str], Optional[str]]:
+    ) -> Tuple[str, bool, bool, Optional[str], Optional[str], int]:
         """
         Generic type of algorithm to deal with tabs, in this case, used by thematic breaks
         and HTML blocks.
@@ -92,6 +92,7 @@ class TabHelper:
             split_tab_with_block_quote_suffix,
             tabified_prefix,
             tabified_suffix,
+            tabified_token_text_index,
         )
 
     @staticmethod
@@ -445,7 +446,9 @@ class TabHelper:
 
     @staticmethod
     def adjust_block_quote_indent_for_tab(
-        parser_state: ParserState, extracted_whitespace: Optional[str] = None
+        parser_state: ParserState,
+        extracted_whitespace: Optional[str] = None,
+        alternate_list_leading_space: Optional[str] = None,
     ) -> Optional[str]:
         """
         Adjust the last block quote for a tab.
@@ -541,7 +544,11 @@ class TabHelper:
             LOGGER.debug("extracted_whitespace=:%s:", extracted_whitespace)
             LOGGER.debug("tab_index=:%d:", tab_index)
             assert tab_index < len(last_list_leading_space)
-            last_list_leading_space = extracted_whitespace[:tab_index]
+            last_list_leading_space = (
+                extracted_whitespace[:tab_index]
+                if alternate_list_leading_space is None
+                else alternate_list_leading_space
+            )
             extracted_whitespace = extracted_whitespace[tab_index:]
             LOGGER.debug("last_list_leading_space=:%s:", last_list_leading_space)
             LOGGER.debug("extracted_whitespace=:%s:", extracted_whitespace)
