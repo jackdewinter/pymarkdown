@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "f380caa89f738856dc17c34ac4fa4969df908ac30784880021fbb0966b541488"
+            "sha256": "b66cf0118c18f8b94e5cb60624a0d8fe3ceb01e63a6d3525d0a7f9ec137b58e7"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -522,6 +522,14 @@
             "markers": "python_version >= '3.8'",
             "version": "==3.3.0"
         },
+        "jinja2": {
+            "hashes": [
+                "sha256:31351a702a408a9e7595a8fc6150fc3f43bb6bf7e319770cbc0db9df9437e852",
+                "sha256:6088930bfe239f0e6710546ab9c19c9ef35e29792895fed6e6e31a023a182a61"
+            ],
+            "markers": "python_version >= '3.7'",
+            "version": "==3.1.2"
+        },
         "keyring": {
             "hashes": [
                 "sha256:4901caaf597bfd3bbd78c9a0c7c4c29fcd8310dab2cffefe749e916b6527acd6",
@@ -856,6 +864,7 @@
                 "sha256:d989d136982de4e3b29dabcc838ad581c64e8ed52c11fbe86ddebd9da0818cd5"
             ],
             "index": "pypi",
+            "markers": "python_version >= '3.7'",
             "version": "==7.4.3"
         },
         "pytest-console-scripts": {
@@ -876,11 +885,12 @@
         },
         "pytest-html": {
             "hashes": [
-                "sha256:3ee1cf319c913d19fe53aeb0bc400e7b0bc2dbeb477553733db1dad12eb75ee3",
-                "sha256:b7f82f123936a3f4d2950bc993c2c1ca09ce262c9ae12f9ac763a2401380b455"
+                "sha256:70a01e8ae5800f4a074b56a4cb1025c8f4f9b038bba5fe31e3c98eb996686f07",
+                "sha256:c8152cea03bd4e9bee6d525573b67bbc6622967b72b9628dda0ea3e2a0b5dd71"
             ],
             "index": "pypi",
-            "version": "==3.1.1"
+            "markers": "python_version >= '3.8'",
+            "version": "==4.1.1"
         },
         "pytest-metadata": {
             "hashes": [
@@ -1056,7 +1066,7 @@
                 "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc",
                 "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"
             ],
-            "markers": "python_version >= '3.7'",
+            "markers": "python_version < '3.11'",
             "version": "==2.0.1"
         },
         "tomlkit": {
