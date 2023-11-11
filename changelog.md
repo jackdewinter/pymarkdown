@@ -10,6 +10,11 @@
 
 - [Issue 842](https://github.com/jackdewinter/pymarkdown/issues/842)
   - fixed problem with HTML and lists and split tabs causing assertions
+  - spawned other issues to fix less serious issues
+- [Issue 852](https://github.com/jackdewinter/pymarkdown/issues/852)
+  - fixed bad tokenization. previous fix was improper, causing strings to
+    be improperly indexed into to fix spacing issue
+  - spawned other issues to fix less serious issues
 
 ## Version 0.9.14 - Date: 2023-10-31
 
