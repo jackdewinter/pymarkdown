@@ -385,9 +385,8 @@ class BlockQuoteNonFencedHelper:
                 text_removed_by_container,
             )
             last_line_index = adj_leading_spaces.rfind("\n")
-            assert last_line_index == -1
-            # if last_line_index != -1:
-            #     adj_leading_spaces = adj_leading_spaces[last_line_index + 1 :]
+            if last_line_index != -1:
+                adj_leading_spaces = adj_leading_spaces[last_line_index + 1 :]
 
             delta = len(text_removed_by_container) - len(
                 adj_leading_spaces + adjusted_removed_text

@@ -717,7 +717,6 @@ def test_whitespaces_block_quotes_with_formfeeds():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_block_quotes_with_xtabs():
     """
     Test case:  Block quotes preceeded by spaces and tabs.
@@ -731,7 +730,7 @@ def test_whitespaces_block_quotes_with_xtabs():
         "[para(1,4):]",
         "[text(1,4):block quote:]",
         "[end-para:::True]",
-        "[block-quote(2,5):: >  > ]",
+        '[block-quote(2,5):: >  > :{0: " >\\t> "}]',
         "[para(2,7):]",
         "[text(2,7):another block quote:]",
         "[end-para:::True]",
@@ -765,7 +764,7 @@ def test_whitespaces_block_quotes_with_tabs_x2():
         "[para(1,4):]",
         "[text(1,4):block quote:]",
         "[end-para:::True]",
-        "[block-quote(2,5):: >  > \n >  > ]",
+        '[block-quote(2,5):: >  > \n >  > :{0: " >\\t> ", 1: " >\\t> "}]',
         "[para(2,7):\n]",
         "[text(2,7):another block quote\nsame block quote::\n]",
         "[end-para:::True]",

@@ -8,6 +8,10 @@
 
 ### Fixed
 
+- [Issue 841](https://github.com/jackdewinter/pymarkdown/issues/841)
+  - fixed issue with assert
+  - had commented out branch because no cases were found, finally found one
+  - spawned other issues to fix less serious issues
 - [Issue 842](https://github.com/jackdewinter/pymarkdown/issues/842)
   - fixed problem with HTML and lists and split tabs causing assertions
   - spawned other issues to fix less serious issues
