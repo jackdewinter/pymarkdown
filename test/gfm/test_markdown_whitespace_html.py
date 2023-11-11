@@ -1312,15 +1312,18 @@ def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_lis
 > \t   <!-- comment"""
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> ]",
-        "[olist(1,3):.:1:5:]",
+        "[olist(1,3):.:1:5::     ]",
         "[para(1,6):]",
         "[text(1,6):abc:]",
         "[end-para:::True]",
         "[olist(2,6):.:1:8:   :     ]",
-        "[para(2,9):\n]",
-        "[text(2,9):def\n- comment::\n]",
-        "[end-para:::True]",
+        "[para(2,9):]",
+        "[text(2,9):def:]",
+        "[end-para:::False]",
         "[end-olist:::True]",
+        "[html-block(3,6)]",
+        "[text(3,8):<!-- comment:  ]",
+        "[end-html-block:::True]",
         "[end-olist:::True]",
         "[end-block-quote:::True]",
     ]
@@ -1384,7 +1387,6 @@ def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_lis
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_list_two_before_zero_after():
     """
     Test case:  Html blocks preceeded by spaces and tabs.
@@ -1407,7 +1409,7 @@ def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_lis
         "[end-olist:::True]",
         "[end-olist:::True]",
         "[html-block(3,3)]",
-        "[text(3,3):<!-- comment:]",
+        "[text(3,5):<!-- comment: \t]",
         "[end-html-block:::True]",
         "[end-block-quote:::True]",
     ]
@@ -1527,15 +1529,18 @@ def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_lis
 >  \t   <!-- comment"""
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> ]",
-        "[olist(1,3):.:1:5:]",
+        "[olist(1,3):.:1:5::     ]",
         "[para(1,6):]",
         "[text(1,6):abc:]",
         "[end-para:::True]",
         "[olist(2,6):.:1:8:   :     ]",
-        "[para(2,9):\n]",
-        "[text(2,9):def\n- comment::\n]",
-        "[end-para:::True]",
+        "[para(2,9):]",
+        "[text(2,9):def:]",
+        "[end-para:::False]",
         "[end-olist:::True]",
+        "[html-block(3,6)]",
+        "[text(3,8):<!-- comment:  ]",
+        "[end-html-block:::True]",
         "[end-olist:::True]",
         "[end-block-quote:::True]",
     ]

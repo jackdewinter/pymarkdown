@@ -633,11 +633,12 @@ class ContainerBlockLeafProcessor:
             new_index_indent = xposition_marker.index_indent
 
         indent_adjust = 0
-        if actual_removed_leading_space and new_index_indent == len(
-            actual_removed_leading_space
-        ):
-            indent_adjust += new_index_indent
-            new_index_indent = 0
+        # if actual_removed_leading_space and new_index_indent == len(
+        #     actual_removed_leading_space
+        # ):
+        #     # indent_adjust += new_index_indent
+        #     # new_index_indent = 0
+        #     pass
 
         return PositionMarker(
             xposition_marker.line_number,
@@ -751,6 +752,8 @@ class ContainerBlockLeafProcessor:
             new_index_indent = len(parser_state.original_line_to_parse) - len(
                 new_text_to_parse
             )
+            # if False and grab_bag.text_removed_by_container and ">" in grab_bag.text_removed_by_container:
+            #     new_index_indent -= xposition_marker.index_indent
 
             POGGER.debug("new_text_to_parse>>:$:<", new_text_to_parse)
             POGGER.debug("new_index_indent>>:$:<", new_index_indent)
