@@ -143,7 +143,7 @@ def test_whitespaces_fenced_code_open_with_spaces_before_within_list():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
@@ -392,7 +392,6 @@ def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quo
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_x():
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
@@ -403,13 +402,12 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_x()
 \t```python
 \tabc"""
     expected_tokens = [
-        "[ulist(1,1):-::2::]",
-        "[para(1,3):]",
-        "[text(1,3):abc:]",
-        "[end-para:::False]",
-        "[tbreak(2,5):*:\t:* * *]",
-        "[end-ulist:::True]",
-    ]
+        '[ulist(1,1):-::2::\n]',
+        '[para(1,3):]', '[text(1,3):abc:]', '[end-para:::False]',
+        '[fcode-block(2,5):`:3:python::::\t:]',
+        '[text(3,1):abc:\a\t\a\x03\a]',
+        '[end-fcode-block::::True]',
+        '[end-ulist:::True]']
     expected_gfm = """<ul>
 <li>abc
 <pre><code class="language-python">abc
@@ -418,11 +416,10 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_x()
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_x_and_close():
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
@@ -433,14 +430,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_x_a
 \t```python
 \tabc
 \t```"""
-    expected_tokens = [
-        "[ulist(1,1):-::2::]",
-        "[para(1,3):]",
-        "[text(1,3):abc:]",
-        "[end-para:::False]",
-        "[tbreak(2,5):*:\t:* * *]",
-        "[end-ulist:::True]",
-    ]
+    expected_tokens = ['[ulist(1,1):-::2::\n\n]', '[para(1,3):]', '[text(1,3):abc:]', '[end-para:::False]', '[fcode-block(2,5):`:3:python::::\t:]', '[text(3,1):abc:\a\t\a\x03\a]', '[end-fcode-block:\t::3:False]', '[end-ulist:::True]']
     expected_gfm = """<ul>
 <li>abc
 <pre><code class="language-python">abc
@@ -453,8 +443,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_x_a
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_and_single_space():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_and_single_space_x():
     """
     Test case:  Fenced Code blocks preceeded by spaces.
     """
@@ -463,14 +452,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_and
     source_markdown = """- abc
  \t```python
  \tabc"""
-    expected_tokens = [
-        "[ulist(1,1):-::2:: ]",
-        "[para(1,3):]",
-        "[text(1,3):abc:]",
-        "[end-para:::False]",
-        "[tbreak(2,5):*:\t:* * *]",
-        "[end-ulist:::True]",
-    ]
+    expected_tokens = ['[ulist(1,1):-::2:: \n]', '[para(1,3):]', '[text(1,3):abc:]', '[end-para:::False]', '[fcode-block(2,5):`:3:python::::\t:]', '[text(3,1):abc:\a \t\a\x03\a]', '[end-fcode-block::::True]', '[end-ulist:::True]']
     expected_gfm = """<ul>
 <li>abc
 <pre><code class="language-python">abc
@@ -483,7 +465,6 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_and
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_and_single_space_and_close():
     """
     Test case:  Fenced Code blocks preceeded by spaces.
@@ -494,14 +475,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_and
  \t```python
  \tabc
  \t```"""
-    expected_tokens = [
-        "[ulist(1,1):-::2:: ]",
-        "[para(1,3):]",
-        "[text(1,3):abc:]",
-        "[end-para:::False]",
-        "[tbreak(2,5):*:\t:* * *]",
-        "[end-ulist:::True]",
-    ]
+    expected_tokens = ['[ulist(1,1):-::2:: \n\n]', '[para(1,3):]', '[text(1,3):abc:]', '[end-para:::False]', '[fcode-block(2,5):`:3:python::::\t:]', '[text(3,1):abc:\a \t\a\x03\a]', '[end-fcode-block: \t::3:False]', '[end-ulist:::True]']
     expected_gfm = """<ul>
 <li>abc
 <pre><code class="language-python">abc
@@ -662,7 +636,6 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_double_l
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_x():
     """
     Test case:  Fenced Code blocks preceeded by spaces.
@@ -672,14 +645,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_x():
     source_markdown = """1. abc
 \t```python
 \tabc"""
-    expected_tokens = [
-        "[olist(1,1):.:1:3::]",
-        "[para(1,4):]",
-        "[text(1,4):abc:]",
-        "[end-para:::False]",
-        "[tbreak(2,5):*:\t:* * *]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens = ['[olist(1,1):.:1:3::\n]', '[para(1,4):]', '[text(1,4):abc:]', '[end-para:::False]', 
+                       '[fcode-block(2,5):`:3:python::::\t:]', '[text(3,1):abc:\a\t\a\x03\a]', '[end-fcode-block::::True]',
+                         '[end-olist:::True]']
     expected_gfm = """<ol>
 <li>abc
 <pre><code class="language-python">abc
@@ -692,7 +660,6 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_x():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_x_and_close():
     """
     Test case:  Fenced Code blocks preceeded by spaces.
@@ -703,14 +670,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_x_and
 \t```python
 \tabc
 \t```"""
-    expected_tokens = [
-        "[olist(1,1):.:1:3::]",
-        "[para(1,4):]",
-        "[text(1,4):abc:]",
-        "[end-para:::False]",
-        "[tbreak(2,5):*:\t:* * *]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens = ['[olist(1,1):.:1:3::\n\n]', '[para(1,4):]', '[text(1,4):abc:]', '[end-para:::False]', '[fcode-block(2,5):`:3:python::::\t:]', '[text(3,1):abc:\a\t\a\x03\a]', '[end-fcode-block:\t::3:False]', '[end-olist:::True]']
     expected_gfm = """<ol>
 <li>abc
 <pre><code class="language-python">abc
@@ -786,8 +746,7 @@ def test_whitespaces_fenced_code_open_with_spaces_before_within_ordered_list_and
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_and_single_space():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_and_single_space_x():
     """
     Test case:  Fenced Code blocks preceeded by spaces.
     """
@@ -796,14 +755,8 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_and_s
     source_markdown = """1. abc
  \t```python
  \tabc"""
-    expected_tokens = [
-        "[olist(1,1):.:1:3:: ]",
-        "[para(1,4):]",
-        "[text(1,4):abc:]",
-        "[end-para:::False]",
-        "[tbreak(2,5):*:\t:* * *]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens = ['[olist(1,1):.:1:3:: \n]', '[para(1,4):]', '[text(1,4):abc:]', '[end-para:::False]', 
+                       '[fcode-block(2,5):`:3:python::::\t:]', '[text(3,1):abc:\a \t\a\x03\a]', '[end-fcode-block::::True]', '[end-olist:::True]']
     expected_gfm = """<ol>
 <li>abc
 <pre><code class="language-python">abc
@@ -816,7 +769,6 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_and_s
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_and_single_space_and_close():
     """
     Test case:  Fenced Code blocks preceeded by spaces.
@@ -827,14 +779,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_and_s
  \t```python
  \tabc
  \t```"""
-    expected_tokens = [
-        "[olist(1,1):.:1:3:: ]",
-        "[para(1,4):]",
-        "[text(1,4):abc:]",
-        "[end-para:::False]",
-        "[tbreak(2,5):*:\t:* * *]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens = ['[olist(1,1):.:1:3:: \n\n]', '[para(1,4):]', '[text(1,4):abc:]', '[end-para:::False]', '[fcode-block(2,5):`:3:python::::\t:]', '[text(3,1):abc:\a \t\a\x03\a]', '[end-fcode-block: \t::3:False]', '[end-olist:::True]']
     expected_gfm = """<ol>
 <li>abc
 <pre><code class="language-python">abc
@@ -847,8 +792,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_and_s
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_and_spaces():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_and_spaces_x():
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -857,14 +801,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_and_s
     source_markdown = """1. abc
   \t```python
   \tabc"""
-    expected_tokens = [
-        "[olist(1,1):.:1:3::  ]",
-        "[para(1,4):]",
-        "[text(1,4):abc:]",
-        "[end-para:::False]",
-        "[tbreak(2,5):*:\t:* * *]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens = ['[olist(1,1):.:1:3::  \n]', '[para(1,4):]', '[text(1,4):abc:]', '[end-para:::False]', '[fcode-block(2,5):`:3:python::::\t:]', '[text(3,1):abc:\a  \t\a\x03\a]', '[end-fcode-block::::True]', '[end-olist:::True]']
     expected_gfm = """<ol>
 <li>abc
 <pre><code class="language-python">abc
@@ -877,7 +814,6 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_and_s
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_and_spaces_and_close():
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
@@ -888,14 +824,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_and_s
   \t```python
   \tabc
   \t```"""
-    expected_tokens = [
-        "[olist(1,1):.:1:3::  ]",
-        "[para(1,4):]",
-        "[text(1,4):abc:]",
-        "[end-para:::False]",
-        "[tbreak(2,5):*:\t:* * *]",
-        "[end-olist:::True]",
-    ]
+    expected_tokens = ['[olist(1,1):.:1:3::  \n\n]', '[para(1,4):]', '[text(1,4):abc:]', '[end-para:::False]', '[fcode-block(2,5):`:3:python::::\t:]', '[text(3,1):abc:\a  \t\a\x03\a]', '[end-fcode-block:  \t::3:False]', '[end-olist:::True]']
     expected_gfm = """<ol>
 <li>abc
 <pre><code class="language-python">abc
@@ -2398,6 +2327,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 
 
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_varying_indent_1():
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
@@ -2408,13 +2338,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 >\tdef _xyz():
 >\t\tpass
 >\t```"""
-    expected_tokens = [
-        "[block-quote(1,1)::>\n>\n>\n>]",
-        "[fcode-block(1,5):`:3:python::::\t:]",
-        "[text(2,2):def _xyz():\n\a\t\t\a\t\apass:\a\t\a\x03\a]",
-        "[end-fcode-block:\t::3:False]",
-        "[end-block-quote:::True]",
-    ]
+    expected_tokens = ['[block-quote(1,1)::>\n>\n> \n>]', '[fcode-block(1,5):`:3:python::::\t:]', '[text(2,2):def _xyz():\n\a\t\a\x03\a\a\t\a   \apass:\a\t\a\x03\a]', '[end-fcode-block:\t::3:False]', '[end-block-quote:::True]']
     expected_gfm = """<blockquote>
 <pre><code class="language-python">def _xyz():
 \tpass
@@ -2426,6 +2350,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 
 
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_varying_indent_2():
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
@@ -2436,13 +2361,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 >\tdef _xyz():
 >\t\t  pass
 >\t```"""
-    expected_tokens = [
-        "[block-quote(1,1)::>\n>\n>\n>]",
-        "[fcode-block(1,5):`:3:python::::\t:]",
-        "[text(2,2):def _xyz():\n\a\t\t  \a\t  \apass:\a\t\a\x03\a]",
-        "[end-fcode-block:\t::3:False]",
-        "[end-block-quote:::True]",
-    ]
+    expected_tokens = ['[block-quote(1,1)::>\n>\n> \n>]', '[fcode-block(1,5):`:3:python::::\t:]', '[text(2,2):def _xyz():\n\a\t\a\x03\a\a\t\a   \a  pass:\a\t\a\x03\a]', '[end-fcode-block:\t::3:False]', '[end-block-quote:::True]']
     expected_gfm = """<blockquote>
 <pre><code class="language-python">def _xyz():
 \t  pass
