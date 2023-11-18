@@ -449,6 +449,7 @@ class TabHelper:
         parser_state: ParserState,
         extracted_whitespace: Optional[str] = None,
         alternate_list_leading_space: Optional[str] = None,
+        xyz:bool = False
     ) -> Optional[str]:
         """
         Adjust the last block quote for a tab.
@@ -543,7 +544,11 @@ class TabHelper:
             tab_index = extracted_whitespace.find("\t")
             LOGGER.debug("extracted_whitespace=:%s:", extracted_whitespace)
             LOGGER.debug("tab_index=:%d:", tab_index)
-            assert tab_index < len(last_list_leading_space)
+            abc = len(last_list_leading_space)
+            if xyz:
+                assert tab_index < abc or (abc == 0) # and tab_index == 0)
+            else:
+                assert tab_index < abc
             last_list_leading_space = (
                 extracted_whitespace[:tab_index]
                 if alternate_list_leading_space is None

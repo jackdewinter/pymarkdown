@@ -355,7 +355,7 @@ class FencedLeafBlockProcessor:
         ):
             POGGER.debug("pfcb->start")
 
-            old_top_of_stack, new_tokens = FencedLeafBlockProcessor.__add_fenced_tokens(
+            old_top_of_stack, new_tokens, my_cp = FencedLeafBlockProcessor.__add_fenced_tokens(
                 parser_state,
                 position_marker,
                 non_whitespace_index,
@@ -373,11 +373,16 @@ class FencedLeafBlockProcessor:
                 parser_state.token_stack[-1].matching_markdown_token,
             )
 
+            fg = None
+            if my_cp is not None:
+                fg = len(my_cp)
+
             LeafBlockHelper.correct_for_leaf_block_start_in_list(
                 parser_state,
                 position_marker.index_indent,
                 old_top_of_stack,
                 new_tokens,
+                alt_removed_chars_at_start=fg
             )
         return new_tokens
 
@@ -517,7 +522,8 @@ class FencedLeafBlockProcessor:
             corrected_prefix_length,
             extracted_text,
             text_after_extracted_text,
-            my_ws
+            my_ws,
+            my_cp
         ) = FencedLeafBlockProcessor.__add_fenced_tokens_prepare(
             position_marker,
             original_line,
@@ -540,7 +546,8 @@ class FencedLeafBlockProcessor:
             line_to_parse,
             split_tab,
             block_quote_data,
-            my_ws
+            my_ws,
+            my_cp
         )
 
     @staticmethod
@@ -556,7 +563,7 @@ class FencedLeafBlockProcessor:
         if split_tab := ContainerHelper.reduce_containers_if_required(
             parser_state, block_quote_data, new_tokens, split_tab
         ):
-            TabHelper.adjust_block_quote_indent_for_tab(parser_state, extracted_whitespace=my_ws)
+            TabHelper.adjust_block_quote_indent_for_tab(parser_state, extracted_whitespace=my_ws, xyz=True)
             whitespace_count_delta = -1
         else:
             whitespace_count_delta = 0
@@ -572,7 +579,7 @@ class FencedLeafBlockProcessor:
         collected_count: int,
         extracted_whitespace: Optional[str],
         after_fence_index: int,
-    ) -> Tuple[str, int, Optional[str], Optional[str], bool, int, str, str, Optional[str]]:
+    ) -> Tuple[str, int, Optional[str], Optional[str], bool, int, str, str, Optional[str], Optional[str]]:
         (
             line_to_parse,
             non_whitespace_index,
@@ -580,7 +587,8 @@ class FencedLeafBlockProcessor:
             extracted_whitespace,
             split_tab,
             corrected_prefix_length,
-            my_ws
+            my_ws,
+            my_cp
         ) = FencedLeafBlockProcessor.__add_fenced_tokens_with_tab(
             position_marker,
             original_line,
@@ -615,7 +623,8 @@ class FencedLeafBlockProcessor:
             corrected_prefix_length,
             extracted_text,
             line_to_parse[after_extracted_text_index:],
-            my_ws
+            my_ws,
+            my_cp
         )
 
     # pylint: enable=too-many-arguments
@@ -633,8 +642,9 @@ class FencedLeafBlockProcessor:
         line_to_parse: str,
         split_tab: bool,
         block_quote_data: BlockQuoteData,
-        my_ws:Optional[str]
-    ) -> Tuple[StackToken, List[MarkdownToken]]:
+        my_ws:Optional[str],
+        my_cp:Optional[str]
+    ) -> Tuple[StackToken, List[MarkdownToken], Optional[str]]:
         (
             old_top_of_stack,
             new_tokens,
@@ -690,7 +700,7 @@ class FencedLeafBlockProcessor:
                 matching_markdown_token=new_token,
             )
         )
-        return old_top_of_stack, new_tokens
+        return old_top_of_stack, new_tokens, my_cp
 
     # pylint: enable=too-many-arguments, too-many-locals
 
@@ -704,11 +714,12 @@ class FencedLeafBlockProcessor:
         collected_count: int,
         extracted_whitespace: Optional[str],
         after_fence_index: int,
-    ) -> Tuple[str, int, Optional[str], Optional[str], bool, int, Optional[str]]:
+    ) -> Tuple[str, int, Optional[str], Optional[str], bool, int, Optional[str], Optional[str]]:
         split_tab = False
         corrected_prefix_length = 0
         line_to_parse = position_marker.text_to_parse
         my_ws:Optional[str] = None
+        my_cp:Optional[str] = None
         if ParserHelper.tab_character in original_line:
             (
                 fence_string,
@@ -716,7 +727,8 @@ class FencedLeafBlockProcessor:
                 split_tab,
                 extracted_whitespace,
                 corrected_prefix_length,
-                my_ws
+                my_ws,
+                my_cp
             ) = FencedLeafBlockProcessor.__add_fenced_tokens_with_tab_calc(
                 original_line,
                 line_to_parse,
@@ -750,7 +762,7 @@ class FencedLeafBlockProcessor:
             extracted_whitespace,
             split_tab,
             corrected_prefix_length,
-            my_ws
+            my_ws,my_cp
         )
 
     # pylint: enable=too-many-arguments
@@ -764,11 +776,12 @@ class FencedLeafBlockProcessor:
         collected_count: int,
         after_fence_index: int,
         extracted_whitespace: Optional[str],
-    ) -> Tuple[str, str, bool, Optional[str], int, Optional[str]]:
+    ) -> Tuple[str, str, bool, Optional[str], int, Optional[str], Optional[str]]:
         fence_string = line_to_parse[new_index - collected_count : new_index]
         split_tab = False
         corrected_prefix_length = 0
         my_ws:Optional[str] = None
+        my_cp:Optional[str] = None
 
         adj_original_line, _, _ = TabHelper.find_detabify_string(
             original_line, line_to_parse, use_proper_traverse=True
@@ -800,13 +813,15 @@ class FencedLeafBlockProcessor:
             if split_tab:
                 split_tab_with_block_quote_suffix = None
                 my_ws =corrected_prefix+corrected_suffix
+                my_cp = corrected_prefix
         return (
             fence_string,
             adj_original_line,
             split_tab,
             extracted_whitespace,
             corrected_prefix_length,
-            my_ws
+            my_ws,
+            my_cp
         )
 
     # pylint: enable=too-many-arguments
