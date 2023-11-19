@@ -8,6 +8,15 @@
 
 ### Fixed
 
+- [Issue 835](https://github.com/jackdewinter/pymarkdown/issues/835)
+  - a double block quote follwed by a fenced block in a single block quote
+    was not properly closing
+- [Issue 836](https://github.com/jackdewinter/pymarkdown/issues/836)
+  - these cases were hitting split tab cases within processing for fenced code
+    blocks
+- [Issue 837](https://github.com/jackdewinter/pymarkdown/issues/836)
+  - these cases were split tab cases where the text to compare to its detabified
+    forms was incorrect, resulting in a failed match
 - [Issue 841](https://github.com/jackdewinter/pymarkdown/issues/841)
   - fixed issue with assert
   - had commented out branch because no cases were found, finally found one
@@ -15,6 +24,9 @@
 - [Issue 842](https://github.com/jackdewinter/pymarkdown/issues/842)
   - fixed problem with HTML and lists and split tabs causing assertions
   - spawned other issues to fix less serious issues
+- [Issue 843](https://github.com/jackdewinter/pymarkdown/issues/843)
+  - whitespace check not being suspended for one check caused the html block
+    not to be closed
 - [Issue 852](https://github.com/jackdewinter/pymarkdown/issues/852)
   - fixed bad tokenization. previous fix was improper, causing strings to
     be improperly indexed into to fix spacing issue

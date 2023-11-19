@@ -27,6 +27,8 @@ from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
+# pylint: disable=too-many-lines
+
 
 class FencedLeafBlockProcessor:
     """
@@ -165,6 +167,32 @@ class FencedLeafBlockProcessor:
 
     # pylint: enable=too-many-arguments
 
+    @staticmethod
+    def __check_for_fenced_end_with_split_tab(
+        parser_state: ParserState, position_marker: PositionMarker, original_line: str
+    ) -> Tuple[bool, str]:
+        reconstructed_line = position_marker.text_to_parse
+        was_indented = not parser_state.token_stack[-2].is_document
+        indent_prefix: Optional[str] = " " * position_marker.index_indent
+        is_bq_start = False
+        if original_line.startswith(">"):
+            is_bq_start = True
+            indent_prefix = None
+        (
+            _,
+            adj_original_index,
+            split_tab,
+        ) = TabHelper.find_tabified_string(
+            original_line,
+            reconstructed_line,
+            abc=is_bq_start,
+            was_indented=was_indented,
+            reconstruct_prefix=indent_prefix,
+        )
+        split_tab_whitespace = original_line[:adj_original_index]
+
+        return split_tab, split_tab_whitespace
+
     # pylint: disable=too-many-arguments
     @staticmethod
     def __check_for_fenced_end(
@@ -206,21 +234,12 @@ class FencedLeafBlockProcessor:
                 extracted_whitespace,
             )
             if split_tab:
-                reconstructed_line = position_marker.text_to_parse
-                was_indented = not parser_state.token_stack[-2].is_document
-                pp = " " * position_marker.index_indent
-                my_abc = False
-                if original_line.startswith(">"):
-                    my_abc = True
-                    pp = None
                 (
-                    adj_original,
-                    adj_original_index,
                     split_tab,
-                ) = TabHelper.find_tabified_string(
-                    original_line, reconstructed_line, abc=my_abc, was_indented=was_indented, reconstruct_prefix=pp
+                    split_tab_whitespace,
+                ) = FencedLeafBlockProcessor.__check_for_fenced_end_with_split_tab(
+                    parser_state, position_marker, original_line
                 )
-                my_ws = original_line[:adj_original_index]
 
         after_fence_and_spaces_index, extracted_spaces = ParserHelper.extract_spaces(
             position_marker.text_to_parse, after_fence_index
@@ -244,10 +263,10 @@ class FencedLeafBlockProcessor:
             and after_fence_and_spaces_index >= len(position_marker.text_to_parse)
             and only_spaces_after_fence
         ):
-            was_indented = not parser_state.token_stack[-2].is_document
             if split_tab:
-                # my_ws = None
-                TabHelper.adjust_block_quote_indent_for_tab(parser_state, my_ws)
+                TabHelper.adjust_block_quote_indent_for_tab(
+                    parser_state, split_tab_whitespace
+                )
 
             assert extracted_whitespace is not None
             assert extracted_spaces is not None
@@ -263,6 +282,7 @@ class FencedLeafBlockProcessor:
 
     # pylint: enable=too-many-arguments
 
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __check_for_fenced_end_with_tab(
         parser_state: ParserState,
@@ -296,14 +316,15 @@ class FencedLeafBlockProcessor:
         assert extracted_whitespace is not None
 
         was_indented = not parser_state.token_stack[-2].is_document
-        pp = " " * position_marker.index_indent
-        my_abc = False
+        indent_prefix: Optional[str] = " " * position_marker.index_indent
         if original_line.startswith(">"):
-            my_abc = True
-            pp = None
+            indent_prefix = None
 
         _, adj_original_index, split_tab = TabHelper.find_tabified_string(
-            original_line, extracted_whitespace + adj_end, was_indented = was_indented, reconstruct_prefix=pp
+            original_line,
+            extracted_whitespace + adj_end,
+            was_indented=was_indented,
+            reconstruct_prefix=indent_prefix,
         )
 
         _, new_extracted_whitespace = ParserHelper.extract_spaces(
@@ -316,6 +337,8 @@ class FencedLeafBlockProcessor:
             new_extracted_whitespace,
             split_tab,
         )
+
+    # pylint: enable=too-many-arguments, too-many-locals
 
     @staticmethod
     def __calculate_fenced_vars(
@@ -355,7 +378,11 @@ class FencedLeafBlockProcessor:
         ):
             POGGER.debug("pfcb->start")
 
-            old_top_of_stack, new_tokens, my_cp = FencedLeafBlockProcessor.__add_fenced_tokens(
+            (
+                old_top_of_stack,
+                new_tokens,
+                adjusted_corrected_prefix,
+            ) = FencedLeafBlockProcessor.__add_fenced_tokens(
                 parser_state,
                 position_marker,
                 non_whitespace_index,
@@ -373,16 +400,16 @@ class FencedLeafBlockProcessor:
                 parser_state.token_stack[-1].matching_markdown_token,
             )
 
-            fg = None
-            if my_cp is not None:
-                fg = len(my_cp)
+            removed_char_length = None
+            if adjusted_corrected_prefix is not None:
+                removed_char_length = len(adjusted_corrected_prefix)
 
             LeafBlockHelper.correct_for_leaf_block_start_in_list(
                 parser_state,
                 position_marker.index_indent,
                 old_top_of_stack,
                 new_tokens,
-                alt_removed_chars_at_start=fg
+                alt_removed_chars_at_start=removed_char_length,
             )
         return new_tokens
 
@@ -500,7 +527,7 @@ class FencedLeafBlockProcessor:
         )
         return removed_whitespace, whitespace_padding
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __add_fenced_tokens(
         parser_state: ParserState,
@@ -512,7 +539,7 @@ class FencedLeafBlockProcessor:
         new_index: int,
         block_quote_data: BlockQuoteData,
         after_fence_index: int,
-    ) -> Tuple[StackToken, List[MarkdownToken]]:
+    ) -> Tuple[StackToken, List[MarkdownToken], Optional[str]]:
         (
             line_to_parse,
             non_whitespace_index,
@@ -522,8 +549,8 @@ class FencedLeafBlockProcessor:
             corrected_prefix_length,
             extracted_text,
             text_after_extracted_text,
-            my_ws,
-            my_cp
+            split_tab_whitespace,
+            adjusted_corrected_prefix,
         ) = FencedLeafBlockProcessor.__add_fenced_tokens_prepare(
             position_marker,
             original_line,
@@ -546,13 +573,18 @@ class FencedLeafBlockProcessor:
             line_to_parse,
             split_tab,
             block_quote_data,
-            my_ws,
-            my_cp
+            split_tab_whitespace,
+            adjusted_corrected_prefix,
         )
+
+    # pylint: enable=too-many-arguments, too-many-locals
 
     @staticmethod
     def __add_fenced_tokens_calc(
-        parser_state: ParserState, split_tab: bool, block_quote_data: BlockQuoteData, my_ws:Optional[str]
+        parser_state: ParserState,
+        split_tab: bool,
+        block_quote_data: BlockQuoteData,
+        split_tab_whitespace: Optional[str],
     ) -> Tuple[StackToken, List[MarkdownToken], int]:
         old_top_of_stack = parser_state.token_stack[-1]
         new_tokens, _ = parser_state.close_open_blocks_fn(
@@ -563,13 +595,18 @@ class FencedLeafBlockProcessor:
         if split_tab := ContainerHelper.reduce_containers_if_required(
             parser_state, block_quote_data, new_tokens, split_tab
         ):
-            TabHelper.adjust_block_quote_indent_for_tab(parser_state, extracted_whitespace=my_ws, xyz=True)
+            TabHelper.adjust_block_quote_indent_for_tab(
+                parser_state,
+                extracted_whitespace=split_tab_whitespace,
+                fenced_switch_enabled=True,
+            )
             whitespace_count_delta = -1
         else:
             whitespace_count_delta = 0
 
         return old_top_of_stack, new_tokens, whitespace_count_delta
 
+    # pylint: disable=too-many-locals, too-many-arguments
     @staticmethod
     def __add_fenced_tokens_prepare(
         position_marker: PositionMarker,
@@ -579,7 +616,18 @@ class FencedLeafBlockProcessor:
         collected_count: int,
         extracted_whitespace: Optional[str],
         after_fence_index: int,
-    ) -> Tuple[str, int, Optional[str], Optional[str], bool, int, str, str, Optional[str], Optional[str]]:
+    ) -> Tuple[
+        str,
+        int,
+        Optional[str],
+        Optional[str],
+        bool,
+        int,
+        str,
+        str,
+        Optional[str],
+        Optional[str],
+    ]:
         (
             line_to_parse,
             non_whitespace_index,
@@ -587,8 +635,8 @@ class FencedLeafBlockProcessor:
             extracted_whitespace,
             split_tab,
             corrected_prefix_length,
-            my_ws,
-            my_cp
+            split_tab_whitespace,
+            adjusted_corrected_prefix,
         ) = FencedLeafBlockProcessor.__add_fenced_tokens_with_tab(
             position_marker,
             original_line,
@@ -623,11 +671,12 @@ class FencedLeafBlockProcessor:
             corrected_prefix_length,
             extracted_text,
             line_to_parse[after_extracted_text_index:],
-            my_ws,
-            my_cp
+            split_tab_whitespace,
+            adjusted_corrected_prefix,
         )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-locals, too-many-arguments
+
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __add_fenced_tokens_create(
@@ -642,15 +691,15 @@ class FencedLeafBlockProcessor:
         line_to_parse: str,
         split_tab: bool,
         block_quote_data: BlockQuoteData,
-        my_ws:Optional[str],
-        my_cp:Optional[str]
+        split_tab_whitespace: Optional[str],
+        adjusted_corrected_prefix: Optional[str],
     ) -> Tuple[StackToken, List[MarkdownToken], Optional[str]]:
         (
             old_top_of_stack,
             new_tokens,
             whitespace_start_count,
         ) = FencedLeafBlockProcessor.__add_fenced_tokens_calc(
-            parser_state, split_tab, block_quote_data, my_ws
+            parser_state, split_tab, block_quote_data, split_tab_whitespace
         )
 
         pre_extracted_text, pre_text_after_extracted_text = (
@@ -684,9 +733,9 @@ class FencedLeafBlockProcessor:
         )
         new_tokens.append(new_token)
         assert extracted_whitespace is not None
-        if my_ws is not None:
+        if split_tab_whitespace is not None:
             whitespace_start_count += TabHelper.calculate_length(
-                my_ws, 0
+                split_tab_whitespace, 0
             )
         else:
             whitespace_start_count += TabHelper.calculate_length(
@@ -700,11 +749,11 @@ class FencedLeafBlockProcessor:
                 matching_markdown_token=new_token,
             )
         )
-        return old_top_of_stack, new_tokens, my_cp
+        return old_top_of_stack, new_tokens, adjusted_corrected_prefix
 
     # pylint: enable=too-many-arguments, too-many-locals
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __add_fenced_tokens_with_tab(
         position_marker: PositionMarker,
@@ -714,12 +763,14 @@ class FencedLeafBlockProcessor:
         collected_count: int,
         extracted_whitespace: Optional[str],
         after_fence_index: int,
-    ) -> Tuple[str, int, Optional[str], Optional[str], bool, int, Optional[str], Optional[str]]:
+    ) -> Tuple[
+        str, int, Optional[str], Optional[str], bool, int, Optional[str], Optional[str]
+    ]:
         split_tab = False
         corrected_prefix_length = 0
         line_to_parse = position_marker.text_to_parse
-        my_ws:Optional[str] = None
-        my_cp:Optional[str] = None
+        split_tab_whitespace: Optional[str] = None
+        adjusted_corrected_prefix: Optional[str] = None
         if ParserHelper.tab_character in original_line:
             (
                 fence_string,
@@ -727,8 +778,8 @@ class FencedLeafBlockProcessor:
                 split_tab,
                 extracted_whitespace,
                 corrected_prefix_length,
-                my_ws,
-                my_cp
+                split_tab_whitespace,
+                adjusted_corrected_prefix,
             ) = FencedLeafBlockProcessor.__add_fenced_tokens_with_tab_calc(
                 original_line,
                 line_to_parse,
@@ -762,12 +813,13 @@ class FencedLeafBlockProcessor:
             extracted_whitespace,
             split_tab,
             corrected_prefix_length,
-            my_ws,my_cp
+            split_tab_whitespace,
+            adjusted_corrected_prefix,
         )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __add_fenced_tokens_with_tab_calc(
         original_line: str,
@@ -780,8 +832,8 @@ class FencedLeafBlockProcessor:
         fence_string = line_to_parse[new_index - collected_count : new_index]
         split_tab = False
         corrected_prefix_length = 0
-        my_ws:Optional[str] = None
-        my_cp:Optional[str] = None
+        split_tab_whitespace: Optional[str] = None
+        adjusted_corrected_prefix: Optional[str] = None
 
         adj_original_line, _, _ = TabHelper.find_detabify_string(
             original_line, line_to_parse, use_proper_traverse=True
@@ -806,25 +858,24 @@ class FencedLeafBlockProcessor:
                 corrected_prefix,
                 corrected_suffix,
                 split_tab,
-                split_tab_with_block_quote_suffix,
+                _,
             ) = TabHelper.match_tabbed_whitespace(extracted_whitespace, prefix)
             extracted_whitespace = corrected_suffix
             corrected_prefix_length = len(corrected_prefix)
             if split_tab:
-                split_tab_with_block_quote_suffix = None
-                my_ws =corrected_prefix+corrected_suffix
-                my_cp = corrected_prefix
+                split_tab_whitespace = corrected_prefix + corrected_suffix
+                adjusted_corrected_prefix = corrected_prefix
         return (
             fence_string,
             adj_original_line,
             split_tab,
             extracted_whitespace,
             corrected_prefix_length,
-            my_ws,
-            my_cp
+            split_tab_whitespace,
+            adjusted_corrected_prefix,
         )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
 
     @staticmethod
     def __add_fenced_tokens_with_tab_calc_prefix(
@@ -883,7 +934,11 @@ class FencedLeafBlockProcessor:
                     leaf_token_whitespace,
                     token_text,
                 ) = FencedLeafBlockProcessor.__handle_fenced_code_block_with_tab(
-                    parser_state, position_marker, original_line, leaf_token_whitespace, token_text
+                    parser_state,
+                    position_marker,
+                    original_line,
+                    leaf_token_whitespace,
+                    token_text,
                 )
             new_tokens.append(
                 TextMarkdownToken(
@@ -953,6 +1008,60 @@ class FencedLeafBlockProcessor:
         return new_extracted_whitespace
 
     @staticmethod
+    def __handle_fenced_code_block_with_tab_starts_tab(
+        original_line: str, reconstructed_line: str, resolved_leaf_token_whitespace: str
+    ) -> Tuple[str, int, bool, bool]:
+        adj_original = reconstructed_line
+        adj_original_index = original_line.find(reconstructed_line)
+        assert adj_original_index != -1
+        split_tab = False
+        assert original_line.endswith(reconstructed_line)
+        original_line_prefix = original_line[: -len(reconstructed_line)]
+        split_tab = original_line_prefix.endswith(">")
+        reconstructed_line_has_tab = split_tab
+
+        resolved_leaf_token_whitespace = TabHelper.detabify_string(
+            resolved_leaf_token_whitespace, adj_original_index
+        )
+        return adj_original, adj_original_index, split_tab, reconstructed_line_has_tab
+
+    @staticmethod
+    def __handle_fenced_code_block_with_tab_not_starts_tab(
+        original_line: str,
+        reconstructed_line: str,
+        position_marker: PositionMarker,
+        was_indented: bool,
+    ) -> Tuple[str, int, bool, Optional[str]]:
+        if original_line.startswith(">"):
+            is_bq_start = True
+            indent_prefix = None
+        else:
+            indent_prefix = " " * position_marker.index_indent
+            is_bq_start = False
+        (
+            adj_original,
+            adj_original_index,
+            split_tab,
+        ) = TabHelper.find_tabified_string(
+            original_line,
+            reconstructed_line,
+            abc=is_bq_start,
+            was_indented=was_indented,
+            reconstruct_prefix=indent_prefix,
+        )
+        split_tab_whitespace: Optional[str] = None
+        if split_tab:
+            split_tab_whitespace = original_line[:adj_original_index]
+            if not is_bq_start:
+                adj_original_index += position_marker.index_indent
+        return (
+            adj_original,
+            adj_original_index,
+            split_tab,
+            split_tab_whitespace,
+        )
+
+    @staticmethod
     def __handle_fenced_code_block_with_tab(
         parser_state: ParserState,
         position_marker: PositionMarker,
@@ -971,38 +1080,25 @@ class FencedLeafBlockProcessor:
         )
         reconstructed_line = resolved_leaf_token_whitespace + token_text
         reconstructed_line_has_tab = True
-        my_ws : Optional[str] = None
-        is_x = reconstructed_line[0] == "\t"
-        if is_x:
-            adj_original = reconstructed_line
-            adj_original_index = original_line.find(reconstructed_line)
-            assert adj_original_index != -1
-            split_tab = False
-            assert original_line.endswith(reconstructed_line)
-            x = original_line[:-len(reconstructed_line)]
-            split_tab = x.endswith(">")
-            reconstructed_line_has_tab = split_tab
-
-            resolved_leaf_token_whitespace = TabHelper.detabify_string(
-                resolved_leaf_token_whitespace, adj_original_index
-            )
-        else:
-            pp = " " * position_marker.index_indent
-            my_abc = False
-            if original_line.startswith(">"):
-                my_abc = True
-                pp = None
+        split_tab_whitespace: Optional[str] = None
+        if reconstructed_line[0] == "\t":
             (
                 adj_original,
                 adj_original_index,
                 split_tab,
-            ) = TabHelper.find_tabified_string(
-                original_line, reconstructed_line, abc=my_abc, was_indented=was_indented, reconstruct_prefix=pp
+                reconstructed_line_has_tab,
+            ) = FencedLeafBlockProcessor.__handle_fenced_code_block_with_tab_starts_tab(
+                original_line, reconstructed_line, resolved_leaf_token_whitespace
             )
-            if split_tab:
-                my_ws = original_line[:adj_original_index]
-                if not my_abc:
-                    adj_original_index += position_marker.index_indent
+        else:
+            (
+                adj_original,
+                adj_original_index,
+                split_tab,
+                split_tab_whitespace,
+            ) = FencedLeafBlockProcessor.__handle_fenced_code_block_with_tab_not_starts_tab(
+                original_line, reconstructed_line, position_marker, was_indented
+            )
 
         (
             leaf_token_whitespace,
@@ -1012,12 +1108,11 @@ class FencedLeafBlockProcessor:
             leaf_token_whitespace,
             adj_original,
             adj_original_index,
-            resolved_leaf_token_whitespace,
             whitespace_start_count,
             was_indented,
             reconstructed_line_has_tab,
             split_tab,
-            my_ws
+            split_tab_whitespace,
         )
         return leaf_token_whitespace, token_text
 
@@ -1028,12 +1123,11 @@ class FencedLeafBlockProcessor:
         leaf_token_whitespace: str,
         adj_original: str,
         adj_original_index: int,
-        resolved_leaf_token_whitespace: str,
         whitespace_start_count: int,
         was_indented: bool,
         reconstructed_line_has_tab: bool,
         split_tab: bool,
-        my_ws:Optional[str]
+        split_tab_whitespace: Optional[str],
     ) -> Tuple[str, str]:
         space_end_index, extracted_whitespace = ParserHelper.extract_spaces(
             adj_original, 0
@@ -1041,10 +1135,10 @@ class FencedLeafBlockProcessor:
         assert extracted_whitespace is not None
         assert space_end_index != -1
 
-        detabified_extracted_whitespace = TabHelper.detabify_string(
-            extracted_whitespace, adj_original_index
-        )
-        #assert detabified_extracted_whitespace == resolved_leaf_token_whitespace
+        # detabified_extracted_whitespace = TabHelper.detabify_string(
+        #     extracted_whitespace, adj_original_index
+        # )
+        # assert detabified_extracted_whitespace == resolved_leaf_token_whitespace
 
         new_extracted_whitespace = extracted_whitespace
         if new_extracted_whitespace and whitespace_start_count:
@@ -1060,7 +1154,9 @@ class FencedLeafBlockProcessor:
             leaf_token_whitespace = new_extracted_whitespace
         token_text = adj_original[space_end_index:]
         if split_tab:
-            TabHelper.adjust_block_quote_indent_for_tab(parser_state, my_ws)
+            TabHelper.adjust_block_quote_indent_for_tab(
+                parser_state, split_tab_whitespace
+            )
 
         return leaf_token_whitespace, token_text
 

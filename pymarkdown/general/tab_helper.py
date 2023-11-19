@@ -445,11 +445,118 @@ class TabHelper:
         return adj_original, adj_original_index, adj_traverse_original_index
 
     @staticmethod
+    def __adjust_block_quote_indent_for_tab_block_quote(
+        parser_state: ParserState, stack_token_index: int
+    ) -> None:
+        block_quote_token = cast(
+            BlockQuoteMarkdownToken,
+            parser_state.token_stack[stack_token_index].matching_markdown_token,
+        )
+        # POGGER.debug(
+        #     "parser_state=:$:",
+        #     block_quote_token,
+        # )
+        block_quote_leading_spaces = block_quote_token.bleading_spaces
+        assert block_quote_leading_spaces is not None
+        # POGGER.debug("block_quote_leading_spaces=:$:", block_quote_leading_spaces)
+        block_quote_leading_spaces_index = block_quote_leading_spaces.rfind("\n")
+        last_block_quote_leading_space = block_quote_leading_spaces[
+            block_quote_leading_spaces_index + 1 :
+        ]
+        # POGGER.debug(
+        #     "last_block_quote_leading_space=:$:", last_block_quote_leading_space
+        # )
+        assert last_block_quote_leading_space.endswith(" ")
+        last_block_quote_leading_space = last_block_quote_leading_space[:-1]
+        # POGGER.debug(
+        #     "last_block_quote_leading_space=:$:", last_block_quote_leading_space
+        # )
+        # POGGER.debug(
+        #     "parser_state=:$:",
+        #     block_quote_token,
+        # )
+        block_quote_token.remove_last_bleading_space()
+        # POGGER.debug(
+        #     "parser_state=:$:",
+        #     block_quote_token,
+        # )
+        block_quote_token.add_bleading_spaces(last_block_quote_leading_space)
+        # POGGER.debug(
+        #     "parser_state=:$:",
+        #     block_quote_token,
+        # )
+
+    @staticmethod
+    def __adjust_block_quote_indent_for_tab_list(
+        parser_state: ParserState,
+        stack_token_index: int,
+        extracted_whitespace: Optional[str],
+        fenced_switch_enabled: bool,
+        alternate_list_leading_space: Optional[str],
+    ) -> Optional[str]:
+        assert extracted_whitespace is not None
+
+        list_start_token = cast(
+            ListStartMarkdownToken,
+            parser_state.token_stack[stack_token_index].matching_markdown_token,
+        )
+        LOGGER.debug(
+            "list_start_token=:%s:",
+            ParserHelper.make_value_visible(list_start_token),
+        )
+        list_leading_spaces = list_start_token.leading_spaces
+        assert list_leading_spaces is not None
+        LOGGER.debug(
+            "list_leading_spaces=:%s:",
+            ParserHelper.make_value_visible(list_leading_spaces),
+        )
+        list_leading_spaces_index = list_leading_spaces.rfind("\n")
+        last_list_leading_space = list_leading_spaces[list_leading_spaces_index + 1 :]
+        LOGGER.debug(
+            "last_list_leading_space=:%s:",
+            ParserHelper.make_value_visible(last_list_leading_space),
+        )
+        tab_index = extracted_whitespace.find("\t")
+        LOGGER.debug("extracted_whitespace=:%s:", extracted_whitespace)
+        LOGGER.debug("tab_index=:%d:", tab_index)
+        last_list_leading_space_length = len(last_list_leading_space)
+        if fenced_switch_enabled:
+            assert tab_index < last_list_leading_space_length or (
+                last_list_leading_space_length == 0
+            )  # and tab_index == 0)
+        else:
+            assert tab_index < last_list_leading_space_length
+        last_list_leading_space = (
+            extracted_whitespace[:tab_index]
+            if alternate_list_leading_space is None
+            else alternate_list_leading_space
+        )
+        extracted_whitespace = extracted_whitespace[tab_index:]
+        LOGGER.debug("last_list_leading_space=:%s:", last_list_leading_space)
+        LOGGER.debug("extracted_whitespace=:%s:", extracted_whitespace)
+
+        LOGGER.debug(
+            "list_start_token=:%s:",
+            ParserHelper.make_value_visible(list_start_token),
+        )
+        list_start_token.remove_last_leading_space()
+        LOGGER.debug(
+            "list_start_token=:%s:",
+            ParserHelper.make_value_visible(list_start_token),
+        )
+        list_start_token.add_leading_spaces(last_list_leading_space)
+        LOGGER.debug(
+            "list_start_token=:%s:",
+            ParserHelper.make_value_visible(list_start_token),
+        )
+        return extracted_whitespace
+
+    @staticmethod
     def adjust_block_quote_indent_for_tab(
         parser_state: ParserState,
         extracted_whitespace: Optional[str] = None,
         alternate_list_leading_space: Optional[str] = None,
-        xyz:bool = False
+        fenced_switch_enabled: bool = False,
     ) -> Optional[str]:
         """
         Adjust the last block quote for a tab.
@@ -479,98 +586,16 @@ class TabHelper:
             ),
         )
         if parser_state.token_stack[stack_token_index].is_block_quote:
-            block_quote_token = cast(
-                BlockQuoteMarkdownToken,
-                parser_state.token_stack[stack_token_index].matching_markdown_token,
+            TabHelper.__adjust_block_quote_indent_for_tab_block_quote(
+                parser_state, stack_token_index
             )
-            # POGGER.debug(
-            #     "parser_state=:$:",
-            #     block_quote_token,
-            # )
-            block_quote_leading_spaces = block_quote_token.bleading_spaces
-            assert block_quote_leading_spaces is not None
-            # POGGER.debug("block_quote_leading_spaces=:$:", block_quote_leading_spaces)
-            block_quote_leading_spaces_index = block_quote_leading_spaces.rfind("\n")
-            last_block_quote_leading_space = block_quote_leading_spaces[
-                block_quote_leading_spaces_index + 1 :
-            ]
-            # POGGER.debug(
-            #     "last_block_quote_leading_space=:$:", last_block_quote_leading_space
-            # )
-            assert last_block_quote_leading_space.endswith(" ")
-            last_block_quote_leading_space = last_block_quote_leading_space[:-1]
-            # POGGER.debug(
-            #     "last_block_quote_leading_space=:$:", last_block_quote_leading_space
-            # )
-            # POGGER.debug(
-            #     "parser_state=:$:",
-            #     block_quote_token,
-            # )
-            block_quote_token.remove_last_bleading_space()
-            # POGGER.debug(
-            #     "parser_state=:$:",
-            #     block_quote_token,
-            # )
-            block_quote_token.add_bleading_spaces(last_block_quote_leading_space)
-            # POGGER.debug(
-            #     "parser_state=:$:",
-            #     block_quote_token,
-            # )
         else:
-            assert extracted_whitespace is not None
-
-            list_start_token = cast(
-                ListStartMarkdownToken,
-                parser_state.token_stack[stack_token_index].matching_markdown_token,
-            )
-            LOGGER.debug(
-                "list_start_token=:%s:",
-                ParserHelper.make_value_visible(list_start_token),
-            )
-            list_leading_spaces = list_start_token.leading_spaces
-            assert list_leading_spaces is not None
-            LOGGER.debug(
-                "list_leading_spaces=:%s:",
-                ParserHelper.make_value_visible(list_leading_spaces),
-            )
-            list_leading_spaces_index = list_leading_spaces.rfind("\n")
-            last_list_leading_space = list_leading_spaces[
-                list_leading_spaces_index + 1 :
-            ]
-            LOGGER.debug(
-                "last_list_leading_space=:%s:",
-                ParserHelper.make_value_visible(last_list_leading_space),
-            )
-            tab_index = extracted_whitespace.find("\t")
-            LOGGER.debug("extracted_whitespace=:%s:", extracted_whitespace)
-            LOGGER.debug("tab_index=:%d:", tab_index)
-            abc = len(last_list_leading_space)
-            if xyz:
-                assert tab_index < abc or (abc == 0) # and tab_index == 0)
-            else:
-                assert tab_index < abc
-            last_list_leading_space = (
-                extracted_whitespace[:tab_index]
-                if alternate_list_leading_space is None
-                else alternate_list_leading_space
-            )
-            extracted_whitespace = extracted_whitespace[tab_index:]
-            LOGGER.debug("last_list_leading_space=:%s:", last_list_leading_space)
-            LOGGER.debug("extracted_whitespace=:%s:", extracted_whitespace)
-
-            LOGGER.debug(
-                "list_start_token=:%s:",
-                ParserHelper.make_value_visible(list_start_token),
-            )
-            list_start_token.remove_last_leading_space()
-            LOGGER.debug(
-                "list_start_token=:%s:",
-                ParserHelper.make_value_visible(list_start_token),
-            )
-            list_start_token.add_leading_spaces(last_list_leading_space)
-            LOGGER.debug(
-                "list_start_token=:%s:",
-                ParserHelper.make_value_visible(list_start_token),
+            extracted_whitespace = TabHelper.__adjust_block_quote_indent_for_tab_list(
+                parser_state,
+                stack_token_index,
+                extracted_whitespace,
+                fenced_switch_enabled,
+                alternate_list_leading_space,
             )
         return extracted_whitespace
 
