@@ -770,7 +770,7 @@ def test_whitespaces_html_with_tabs_before_within_ordered_double_list_one_space(
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -808,7 +808,7 @@ def test_whitespaces_html_with_tabs_before_within_ordered_double_list_one_before
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -847,7 +847,7 @@ def test_whitespaces_html_with_tabs_before_within_ordered_double_list_one_before
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -885,7 +885,7 @@ def test_whitespaces_html_with_tabs_before_within_ordered_double_list_two_before
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -924,7 +924,7 @@ def test_whitespaces_html_with_tabs_before_within_ordered_double_list_two_before
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -962,7 +962,7 @@ def test_whitespaces_html_with_tabs_before_within_ordered_double_list_three_befo
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1001,7 +1001,7 @@ def test_whitespaces_html_with_tabs_before_within_ordered_double_list_three_befo
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1041,7 +1041,7 @@ def test_whitespaces_html_with_tabs_before_within_ordered_double_list_four_befor
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1081,7 +1081,7 @@ def test_whitespaces_html_with_tabs_before_within_ordered_double_list_five_befor
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1120,7 +1120,7 @@ def test_whitespaces_html_with_tabs_before_within_ordered_double_list_six_before
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1165,7 +1165,7 @@ def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_lis
     )
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1210,7 +1210,7 @@ def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_lis
     )
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1253,7 +1253,7 @@ def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_lis
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1296,7 +1296,7 @@ def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_lis
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1339,7 +1339,7 @@ def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_lis
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1383,7 +1383,7 @@ def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_lis
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1427,7 +1427,7 @@ def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_lis
     )
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1470,7 +1470,7 @@ def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_lis
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1513,7 +1513,7 @@ def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_lis
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1556,7 +1556,7 @@ def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_lis
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1600,7 +1600,7 @@ def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_lis
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1638,7 +1638,7 @@ def test_whitespaces_html_with_tabs_before_within_ordered_double_list_only_space
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1676,7 +1676,7 @@ def test_whitespaces_html_with_tabs_before_within_ordered_double_list_only_space
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm

@@ -23,6 +23,7 @@ class MarkdownChangeRecord:
     item_a: bool
     item_b: int
     item_c: MarkdownToken
+    item_d: Optional[EndMarkdownToken]
 
 
 # pylint: disable=too-few-public-methods
@@ -78,7 +79,7 @@ class TransformContainers:
             container_records.clear()
         container_stack.append(current_token)
         record_item = MarkdownChangeRecord(
-            True, transformed_data_length_before_add, current_token
+            True, transformed_data_length_before_add, current_token, None
         )
         container_records.append(record_item)
         # POGGER.debug("START:" + ParserHelper.make_value_visible(current_token))
@@ -94,7 +95,9 @@ class TransformContainers:
         actual_tokens: List[MarkdownToken],
     ) -> str:
         current_end_token = cast(EndMarkdownToken, current_token)
-        # POGGER.debug("END:" + ParserHelper.make_value_visible(current_token.start_markdown_token))
+        POGGER.debug(
+            f"END:{ParserHelper.make_value_visible(current_end_token.start_markdown_token)}"
+        )
         while container_stack[-1].is_new_list_item:
             del container_stack[-1]
         assert str(container_stack[-1]) == str(
@@ -109,10 +112,11 @@ class TransformContainers:
             False,
             len(transformed_data),
             current_end_token.start_markdown_token,
+            current_end_token,
         )
         container_records.append(record_item)
-        # POGGER.debug(">>" + ParserHelper.make_value_visible(container_stack))
-        # POGGER.debug(">>" + ParserHelper.make_value_visible(container_records))
+        POGGER.debug(f">>{ParserHelper.make_value_visible(container_stack)}")
+        POGGER.debug(f">>{ParserHelper.make_value_visible(container_records)}")
 
         if not container_stack:
             record_item = container_records[0]
@@ -206,6 +210,7 @@ class TransformContainers:
                 last_container_token_index,
                 applied_leading_spaces_to_start_of_container_line,
                 container_line,
+                was_abrupt_block_quote_end,
             ) = TransformContainers.__apply_primary_transformation(
                 did_move_ahead,
                 token_stack,
@@ -235,6 +240,7 @@ class TransformContainers:
                 did_move_ahead,
                 current_changed_record,
                 last_container_token_index,
+                was_abrupt_block_quote_end,
             )
 
             transformed_parts.append(container_line)
@@ -355,6 +361,7 @@ class TransformContainers:
         old_record_index += 1
         return old_record_index, did_move_ahead, current_changed_record
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __adjust_state_for_element(
         token_stack: List[MarkdownToken],
@@ -362,7 +369,10 @@ class TransformContainers:
         did_move_ahead: bool,
         current_changed_record: Optional[MarkdownChangeRecord],
         last_container_token_index: int,
+        was_abrupt_block_quote_end: bool,
     ) -> None:
+        if was_abrupt_block_quote_end:
+            return
         POGGER.debug(f" -->{ParserHelper.make_value_visible(token_stack)}")
         POGGER.debug(f" -->{ParserHelper.make_value_visible(container_token_indices)}")
         did_change_to_list_token = (
@@ -379,6 +389,8 @@ class TransformContainers:
             del container_token_indices[-1]
         POGGER.debug(f" -->{ParserHelper.make_value_visible(token_stack)}")
         POGGER.debug(f" -->{ParserHelper.make_value_visible(container_token_indices)}")
+
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __adjust_for_block_quote(
@@ -639,7 +651,7 @@ class TransformContainers:
         current_changed_record: Optional[MarkdownChangeRecord],
         container_line: str,
         actual_tokens: List[MarkdownToken],
-    ) -> Tuple[int, bool, str]:
+    ) -> Tuple[int, bool, str, bool]:
         POGGER.debug(
             f" -->did_move_ahead>{ParserHelper.make_value_visible(did_move_ahead)}"
         )
@@ -655,11 +667,28 @@ class TransformContainers:
             )
         )
 
+        was_abrupt_block_quote_end = bool(
+            current_changed_record
+            and current_changed_record.item_d is not None
+            and current_changed_record.item_d.is_block_quote_end
+        )
+        if was_abrupt_block_quote_end:
+            assert current_changed_record is not None
+            assert current_changed_record.item_d is not None
+            was_abrupt_block_quote_end = bool(
+                current_changed_record.item_d.was_forced
+                and current_changed_record.item_d.extra_end_data == "> "
+            )
+
         applied_leading_spaces_to_start_of_container_line = (
-            not did_move_ahead
-            or current_changed_record is None
-            or not current_changed_record.item_a
-        ) and not is_list_start_after_two_block_starts
+            (
+                not did_move_ahead
+                or current_changed_record is None
+                or not current_changed_record.item_a
+            )
+            and not is_list_start_after_two_block_starts
+            and not was_abrupt_block_quote_end
+        )
 
         last_container_token_index = container_token_indices[-1]
         if applied_leading_spaces_to_start_of_container_line:
@@ -670,6 +699,7 @@ class TransformContainers:
             last_container_token_index,
             applied_leading_spaces_to_start_of_container_line,
             container_line,
+            was_abrupt_block_quote_end,
         )
 
     # pylint: enable=too-many-arguments
