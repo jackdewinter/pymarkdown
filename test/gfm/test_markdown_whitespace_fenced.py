@@ -2327,7 +2327,6 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_varying_indent_1():
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
@@ -2338,7 +2337,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 >\tdef _xyz():
 >\t\tpass
 >\t```"""
-    expected_tokens = ['[block-quote(1,1)::>\n>\n> \n>]', '[fcode-block(1,5):`:3:python::::\t:]', '[text(2,2):def _xyz():\n\a\t\a\x03\a\a\t\a   \apass:\a\t\a\x03\a]', '[end-fcode-block:\t::3:False]', '[end-block-quote:::True]']
+    expected_tokens = ['[block-quote(1,1)::>\n>\n>\n>]', '[fcode-block(1,5):`:3:python::::\t:]', '[text(2,2):def _xyz():\n\a\t\t\a\t\apass:\a\t\a\x03\a]', '[end-fcode-block:\t::3:False]', '[end-block-quote:::True]']
     expected_gfm = """<blockquote>
 <pre><code class="language-python">def _xyz():
 \tpass
@@ -2350,7 +2349,6 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_varying_indent_2():
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
@@ -2361,7 +2359,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 >\tdef _xyz():
 >\t\t  pass
 >\t```"""
-    expected_tokens = ['[block-quote(1,1)::>\n>\n> \n>]', '[fcode-block(1,5):`:3:python::::\t:]', '[text(2,2):def _xyz():\n\a\t\a\x03\a\a\t\a   \a  pass:\a\t\a\x03\a]', '[end-fcode-block:\t::3:False]', '[end-block-quote:::True]']
+    expected_tokens = ['[block-quote(1,1)::>\n>\n>\n>]', '[fcode-block(1,5):`:3:python::::\t:]', '[text(2,2):def _xyz():\n\a\t\t  \a\t  \apass:\a\t\a\x03\a]', '[end-fcode-block:\t::3:False]', '[end-block-quote:::True]']
     expected_gfm = """<blockquote>
 <pre><code class="language-python">def _xyz():
 \t  pass
@@ -2371,6 +2369,26 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+@pytest.mark.gfm
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_varying_indent_3():
+    """
+    Test case:  Fenced Code block preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> \t```python
+> \tdef _xyz():
+> \t\t  pass
+> \t```"""
+    expected_tokens = ['[block-quote(1,1)::> \n> \n> \n> ]', '[fcode-block(1,5):`:3:python::::\t:]', '[text(2,3):def _xyz():\n\a\t\t  \a\t  \apass:\a\t\a\x03\a]', '[end-fcode-block:\t::3:False]', '[end-block-quote:::True]']
+    expected_gfm = """<blockquote>
+<pre><code class="language-python">def _xyz():
+\t  pass
+</code></pre>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 @pytest.mark.gfm
 def test_whitespaces_fenced_code_open_with_tabs_before_within_double_block_quote():

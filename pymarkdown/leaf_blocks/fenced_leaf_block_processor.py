@@ -972,12 +972,16 @@ class FencedLeafBlockProcessor:
         reconstructed_line = resolved_leaf_token_whitespace + token_text
         reconstructed_line_has_tab = True
         my_ws : Optional[str] = None
-        if reconstructed_line[0] == "\t":
-            reconstructed_line_has_tab = False
+        is_x = reconstructed_line[0] == "\t"
+        if is_x:
             adj_original = reconstructed_line
             adj_original_index = original_line.find(reconstructed_line)
             assert adj_original_index != -1
             split_tab = False
+            assert original_line.endswith(reconstructed_line)
+            x = original_line[:-len(reconstructed_line)]
+            split_tab = x.endswith(">")
+            reconstructed_line_has_tab = split_tab
 
             resolved_leaf_token_whitespace = TabHelper.detabify_string(
                 resolved_leaf_token_whitespace, adj_original_index
