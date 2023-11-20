@@ -326,7 +326,6 @@ def test_whitespaces_html_with_tabs_before_within_unordered_list_and_spaces():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_html_with_tabs_before_within_blockquote_and_unordered_list_minus_space():
     """
     Test case:  HTML block followed by spaces and tabs.
@@ -336,8 +335,8 @@ def test_whitespaces_html_with_tabs_before_within_blockquote_and_unordered_list_
     source_markdown = """> - abc
 >\t<!-- comment"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):-::4::  ]",
+        "[block-quote(1,1)::> \n>]",
+        "[ulist(1,3):-::4::\t]",
         "[para(1,5):]",
         "[text(1,5):abc:]",
         "[end-para:::False]",
@@ -360,7 +359,6 @@ def test_whitespaces_html_with_tabs_before_within_blockquote_and_unordered_list_
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_html_with_tabs_before_within_blockquote_and_unordered_list_no_spaces():
     """
     Test case:  HTML block followed by spaces and tabs.
@@ -371,7 +369,7 @@ def test_whitespaces_html_with_tabs_before_within_blockquote_and_unordered_list_
 > \t<!-- comment"""
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):-::4::  ]",
+        "[ulist(1,3):-::4::\t]",
         "[para(1,5):]",
         "[text(1,5):abc:]",
         "[end-para:::False]",
@@ -390,11 +388,10 @@ def test_whitespaces_html_with_tabs_before_within_blockquote_and_unordered_list_
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_html_with_tabs_before_within_blockquote_and_unordered_list_one_space():
     """
     Test case:  HTML block followed by spaces and tabs.
@@ -405,7 +402,7 @@ def test_whitespaces_html_with_tabs_before_within_blockquote_and_unordered_list_
 >  \t<!-- comment"""
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):-::4::  ]",
+        "[ulist(1,3):-::4:: \t]",
         "[para(1,5):]",
         "[text(1,5):abc:]",
         "[end-para:::False]",
