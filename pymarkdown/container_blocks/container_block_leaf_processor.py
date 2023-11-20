@@ -36,6 +36,7 @@ from pymarkdown.tokens.stack_token import ListStackToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
+# pylint: disable=too-many-lines
 # pylint: disable=too-few-public-methods
 
 
@@ -417,6 +418,94 @@ class ContainerBlockLeafProcessor:
             POGGER.debug("not adjust_for_inner_list_container")
 
     @staticmethod
+    def __adjust_for_list_container_after_block_quote_special_special(
+        parser_state: ParserState,
+        adj_original: str,
+        bq_index: int,
+        grab_bag: ContainerGrabBag,
+    ) -> Tuple[str, str]:
+        assert grab_bag.text_removed_by_container is not None
+        removed_text_length = len(grab_bag.text_removed_by_container)
+        if (
+            adj_original[removed_text_length - 1] == "\t"
+            and adj_original[removed_text_length - 2] == ">"
+        ):
+            orig_prefix = adj_original[removed_text_length - 1 :]
+            orig_suffix = adj_original[: removed_text_length - 1]
+            xx_block_quote_token = cast(
+                BlockQuoteMarkdownToken,
+                parser_state.token_stack[bq_index].matching_markdown_token,
+            )
+            last_leading_space = xx_block_quote_token.remove_last_bleading_space()
+            assert last_leading_space[0] == "\n"
+            last_leading_space = last_leading_space[1:]
+            xx_block_quote_token.add_bleading_spaces(">")
+        else:
+            orig_prefix = adj_original[removed_text_length:]
+            orig_suffix = adj_original[:removed_text_length]
+        (
+            non_space_index,
+            ex_ws,
+        ) = ParserHelper.extract_spaces(orig_prefix, 0)
+        assert ex_ws is not None
+        original_up_to_non_space = orig_prefix[:non_space_index]
+        redone_original = orig_suffix + original_up_to_non_space
+        detabified_redone_original = TabHelper.detabify_string(redone_original)
+
+        return detabified_redone_original, ex_ws
+
+    @staticmethod
+    def __adjust_for_list_container_after_block_quote_special(
+        parser_state: ParserState,
+        xposition_marker: PositionMarker,
+        extracted_leaf_whitespace: str,
+        grab_bag: ContainerGrabBag,
+    ) -> str:
+        if (
+            "\t" not in grab_bag.original_line
+            or grab_bag.text_removed_by_container != "> "
+        ):
+            return extracted_leaf_whitespace
+
+        bq_index = parser_state.find_last_block_quote_on_stack()
+        list_index = parser_state.find_last_list_block_on_stack()
+
+        current_list_indent = -1
+        assert list_index > bq_index
+        xx_list_token = cast(
+            ListStartMarkdownToken,
+            parser_state.token_stack[list_index].matching_markdown_token,
+        )
+        current_list_indent = xx_list_token.indent_level
+
+        reconstructed_line = (
+            grab_bag.text_removed_by_container + xposition_marker.text_to_parse
+        )
+        (
+            adj_original,
+            _,
+            _,
+        ) = TabHelper.find_tabified_string(
+            grab_bag.original_line,
+            reconstructed_line,
+            abc=False,
+            was_indented=True,
+            reconstruct_prefix=None,
+        )
+        (
+            detabified_redone_original,
+            ex_ws,
+        ) = ContainerBlockLeafProcessor.__adjust_for_list_container_after_block_quote_special_special(
+            parser_state, adj_original, bq_index, grab_bag
+        )
+        if (
+            current_list_indent != -1
+            and len(detabified_redone_original) >= current_list_indent
+        ):
+            return ex_ws
+        return extracted_leaf_whitespace
+
+    @staticmethod
     def __adjust_for_list_container_after_block_quote(
         parser_state: ParserState,
         xposition_marker: PositionMarker,
@@ -444,7 +533,11 @@ class ContainerBlockLeafProcessor:
                 extracted_leaf_whitespace = extracted_leaf_whitespace[
                     :calc_indent_level
                 ]
-            list_token.add_leading_spaces(extracted_leaf_whitespace)
+
+            new_ex = ContainerBlockLeafProcessor.__adjust_for_list_container_after_block_quote_special(
+                parser_state, xposition_marker, extracted_leaf_whitespace, grab_bag
+            )
+            list_token.add_leading_spaces(new_ex)
             actual_removed_leading_space = extracted_leaf_whitespace
 
             if not grab_bag.container_depth and not xposition_marker.index_indent:
