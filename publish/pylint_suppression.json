@@ -168,7 +168,7 @@
             "too-many-arguments": 4
         },
         "pymarkdown/leaf_blocks/leaf_block_helper.py": {
-            "too-many-arguments": 1
+            "too-many-arguments": 3
         },
         "pymarkdown/leaf_blocks/leaf_block_processor.py": {
             "too-many-arguments": 1
@@ -476,7 +476,7 @@
         "too-many-instance-attributes": 23,
         "too-many-public-methods": 4,
         "too-few-public-methods": 40,
-        "too-many-arguments": 202,
+        "too-many-arguments": 204,
         "too-many-locals": 25,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 2,

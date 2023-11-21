@@ -1121,7 +1121,6 @@ def test_whitespaces_html_with_tabs_before_within_ordered_double_list_six_before
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_list_zero_before_zero_after():
     """
     Test case:  Html blocks preceeded by spaces and tabs.
@@ -1132,19 +1131,19 @@ def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_lis
 >    1. def
 >\t<!-- comment"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n> \n> ]",
+        "[block-quote(1,1)::> \n> \n>]",
         "[olist(1,3):.:1:5:]",
         "[para(1,6):]",
         "[text(1,6):abc:]",
         "[end-para:::True]",
-        "[olist(2,6):.:1:8:   :  ]",
+        "[olist(2,6):.:1:8:   : ]",
         "[para(2,9):]",
         "[text(2,9):def:]",
         "[end-para:::False]",
         "[end-olist:::True]",
         "[end-olist:::True]",
         "[html-block(3,3)]",
-        "[text(3,3):<!-- comment:]",
+        "[text(3,5):<!-- comment:\a\t\a  \a]",
         "[end-html-block:::True]",
         "[end-block-quote:::True]",
     ]
@@ -1156,17 +1155,57 @@ def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_lis
 </ol>
 </li>
 </ol>
-\a<!-- comment
-</blockquote>""".replace(
-        "\a", "\t"
-    )
+  <!-- comment
+</blockquote>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
+def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_list_zero_before_double_zero_after():
+    """
+    Test case:  Html blocks preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> 1. abc
+>    1. def
+>\t\t<!-- comment"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n>]",
+        "[olist(1,3):.:1:5:]",
+        "[para(1,6):]",
+        "[text(1,6):abc:]",
+        "[end-para:::True]",
+        "[olist(2,6):.:1:8:   :\t\t]",
+        "[para(2,9):]",
+        "[text(2,9):def:]",
+        "[end-para:::False]",
+        "[html-block(3,9)]",
+        "[text(3,9):<!-- comment:]",
+        "[end-html-block:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>abc
+<ol>
+<li>def
+<!-- comment
+</li>
+</ol>
+</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_list_one_before_zero_after():
     """
     Test case:  Html blocks preceeded by spaces and tabs.
@@ -1189,7 +1228,7 @@ def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_lis
         "[end-olist:::True]",
         "[end-olist:::True]",
         "[html-block(3,3)]",
-        "[text(3,3):<!-- comment:]",
+        "[text(3,5):<!-- comment:\t]",
         "[end-html-block:::True]",
         "[end-block-quote:::True]",
     ]
@@ -1254,8 +1293,7 @@ def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_lis
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_list_one_before_two_after():
+def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_list_one_before_two_after_x():
     """
     Test case:  Html blocks preceeded by spaces and tabs.
     """
@@ -1266,7 +1304,7 @@ def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_lis
 > \t  <!-- comment"""
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> ]",
-        "[olist(1,3):.:1:5::     ]",
+        "[olist(1,3):.:1:5::\t ]",
         "[para(1,6):]",
         "[text(1,6):abc:]",
         "[end-para:::True]",
@@ -1287,7 +1325,49 @@ def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_lis
 <ol>
 <li>def</li>
 </ol>
-<!-- comment
+ <!-- comment
+</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_list_one_before_two_after_y():
+    """
+    Test case:  Html blocks preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> 1. abc
+>    1. def
+>     <!-- comment"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> ]",
+        "[olist(1,3):.:1:5::   ]",
+        "[para(1,6):]",
+        "[text(1,6):abc:]",
+        "[end-para:::True]",
+        "[olist(2,6):.:1:8:   :    ]",
+        "[para(2,9):]",
+        "[text(2,9):def:]",
+        "[end-para:::False]",
+        "[end-olist:::True]",
+        "[html-block(3,6)]",
+        "[text(3,7):<!-- comment: ]",
+        "[end-html-block:::True]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>abc
+<ol>
+<li>def</li>
+</ol>
+ <!-- comment
 </li>
 </ol>
 </blockquote>"""
