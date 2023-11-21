@@ -132,6 +132,8 @@ class LeafBlockProcessor:
                     old_top_of_stack,
                     html_tokens,
                     alt_removed_chars_at_start=alt_removed_chars_at_start,
+                    is_html=True,
+                    original_line=grab_bag.original_line,
                 )
             new_tokens.extend(html_tokens)
         if parser_state.token_stack[-1].is_html_block:

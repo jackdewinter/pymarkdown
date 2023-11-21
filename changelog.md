@@ -27,6 +27,9 @@
 - [Issue 843](https://github.com/jackdewinter/pymarkdown/issues/843)
   - whitespace check not being suspended for one check caused the html block
     not to be closed
+- [Issue 848](https://github.com/jackdewinter/pymarkdown/issues/848)
+  - indent spacing within containers causing tab to not be changed back
+    properly
 - [Issue 852](https://github.com/jackdewinter/pymarkdown/issues/852)
   - fixed bad tokenization. previous fix was improper, causing strings to
     be improperly indexed into to fix spacing issue
