@@ -30,6 +30,10 @@
 - [Issue 848](https://github.com/jackdewinter/pymarkdown/issues/848)
   - indent spacing within containers causing tab to not be changed back
     properly
+- [Issue 850](https://github.com/jackdewinter/pymarkdown/issues/850)
+  - some of the lines we adding whitespace for both the bq indent (already taken
+    care of) and the list, resulting in too many spaces
+  - tab support added to those cases
 - [Issue 852](https://github.com/jackdewinter/pymarkdown/issues/852)
   - fixed bad tokenization. previous fix was improper, causing strings to
     be improperly indexed into to fix spacing issue
