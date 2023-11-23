@@ -3259,7 +3259,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_nl_block_skip_nl_ordered_no_bq1_drop_ordered_x():
     """
     Verify that a nesting of block quote, block quote, ordered list works
@@ -3278,7 +3277,7 @@ def test_nested_three_block_nl_block_skip_nl_ordered_no_bq1_drop_ordered_x():
         "[BLANK(2,4):]",
         "[end-block-quote:::True]",
         "[olist(3,5):.:1:7::  ]",
-        "[para(3,8):\n  ]",
+        "[para(3,8):\n]",
         "[text(3,8):list\nitem::\n]",
         "[end-para:::True]",
         "[end-olist:::True]",
@@ -3298,7 +3297,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_nl_block_skip_nl_ordered_no_bq1_drop_ordered_block():
     """
     Verify that a nesting of block quote, block quote, ordered list works
@@ -3317,7 +3315,7 @@ def test_nested_three_block_nl_block_skip_nl_ordered_no_bq1_drop_ordered_block()
         "[BLANK(2,4):]",
         "[end-block-quote:::True]",
         "[olist(3,5):.:1:7::  ]",
-        "[para(3,8):\n  ]",
+        "[para(3,8):\n]",
         "[text(3,8):list\nitem::\n]",
         "[end-para:::True]",
         "[end-olist:::True]",
@@ -3413,7 +3411,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_nl_block_skip_nl_ordered_no_bq2_drop_ordered_x():
     """
     Verify that a nesting of block quote, block quote, ordered list works
@@ -3432,7 +3429,7 @@ def test_nested_three_block_nl_block_skip_nl_ordered_no_bq2_drop_ordered_x():
         "[BLANK(2,4):]",
         "[end-block-quote:::True]",
         "[olist(3,5):.:1:7:  :  ]",
-        "[para(3,8):\n  ]",
+        "[para(3,8):\n]",
         "[text(3,8):list\nitem::\n]",
         "[end-para:::True]",
         "[end-olist:::True]",
@@ -3913,7 +3910,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq1_drop_ordered_x():
     """
     Verify that a nesting of block quote, block quote, ordered list works
@@ -3936,7 +3932,7 @@ def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq1_drop_order
         "[end-para:::True]",
         "[end-block-quote:::True]",
         "[olist(3,5):.:1:7::  ]",
-        "[para(3,8):\n  ]",
+        "[para(3,8):\n]",
         "[text(3,8):list\nitem::\n]",
         "[end-para:::True]",
         "[end-olist:::True]",
@@ -4090,7 +4086,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq2_drop_ordered_x():
     """
     Verify that a nesting of block quote, block quote, ordered list works
@@ -4113,7 +4108,7 @@ def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq2_drop_order
         "[end-para:::True]",
         "[end-block-quote:::True]",
         "[olist(3,5):.:1:7:  :  ]",
-        "[para(3,8):\n  ]",
+        "[para(3,8):\n]",
         "[text(3,8):list\nitem::\n]",
         "[end-para:::True]",
         "[end-olist:::True]",
@@ -4131,7 +4126,37 @@ item</li>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq2_drop_ordered_zzz():
+    """
+    Verify that a nesting of block quote, block quote, ordered list works
+    properly.
+    """
+
+    # Arrange
+    source_markdown = """>   1. list
+>   item"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> ]",
+        "[olist(1,5):.:1:7:  :  ]",
+        "[para(1,8):\n]",
+        "[text(1,8):list\nitem::\n]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>list
+item</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
