@@ -461,12 +461,6 @@ class ContainerBlockLeafProcessor:
         extracted_leaf_whitespace: str,
         grab_bag: ContainerGrabBag,
     ) -> str:
-        if (
-            "\t" not in grab_bag.original_line
-            or grab_bag.text_removed_by_container != "> "
-        ):
-            return extracted_leaf_whitespace
-
         bq_index = parser_state.find_last_block_quote_on_stack()
         list_index = parser_state.find_last_list_block_on_stack()
 
@@ -478,6 +472,7 @@ class ContainerBlockLeafProcessor:
         )
         current_list_indent = xx_list_token.indent_level
 
+        assert grab_bag.text_removed_by_container is not None
         reconstructed_line = (
             grab_bag.text_removed_by_container + xposition_marker.text_to_parse
         )
@@ -504,6 +499,44 @@ class ContainerBlockLeafProcessor:
         ):
             return ex_ws
         return extracted_leaf_whitespace
+
+    @staticmethod
+    def __adjust_for_list_container_after_block_quote_kludge(
+        parser_state: ParserState,
+        xposition_marker: PositionMarker,
+        calc_indent_level: int,
+        extracted_leaf_whitespace: str,
+        grab_bag: ContainerGrabBag,
+    ) -> Tuple[str, str, Optional[str]]:
+        removed_leading_space = None
+        if not (
+            "\t" not in grab_bag.original_line
+            or grab_bag.text_removed_by_container != "> "
+        ):
+            new_ex = ContainerBlockLeafProcessor.__adjust_for_list_container_after_block_quote_special(
+                parser_state, xposition_marker, extracted_leaf_whitespace, grab_bag
+            )
+        else:
+            new_ex = extracted_leaf_whitespace
+            if (
+                grab_bag.text_removed_by_container
+                and grab_bag.adj_line_to_parse
+                and grab_bag.original_line
+                and grab_bag.text_removed_by_container == "> "
+            ):
+                recon_line = (
+                    grab_bag.text_removed_by_container + grab_bag.adj_line_to_parse
+                )
+                if (
+                    recon_line == grab_bag.original_line
+                    and extracted_leaf_whitespace
+                    and len(extracted_leaf_whitespace) < calc_indent_level
+                ):
+                    extracted_leaf_whitespace = extracted_leaf_whitespace[
+                        len(grab_bag.text_removed_by_container) :
+                    ]
+                    removed_leading_space = grab_bag.text_removed_by_container
+        return new_ex, extracted_leaf_whitespace, removed_leading_space
 
     @staticmethod
     def __adjust_for_list_container_after_block_quote(
@@ -534,9 +567,18 @@ class ContainerBlockLeafProcessor:
                     :calc_indent_level
                 ]
 
-            new_ex = ContainerBlockLeafProcessor.__adjust_for_list_container_after_block_quote_special(
-                parser_state, xposition_marker, extracted_leaf_whitespace, grab_bag
+            (
+                new_ex,
+                extracted_leaf_whitespace,
+                removed_leading_space,
+            ) = ContainerBlockLeafProcessor.__adjust_for_list_container_after_block_quote_kludge(
+                parser_state,
+                xposition_marker,
+                calc_indent_level,
+                extracted_leaf_whitespace,
+                grab_bag,
             )
+
             list_token.add_leading_spaces(new_ex)
             actual_removed_leading_space = extracted_leaf_whitespace
 
