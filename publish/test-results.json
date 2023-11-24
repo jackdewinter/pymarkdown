@@ -324,10 +324,10 @@
         },
         {
             "name": "test.gfm.test_markdown_block_quotes",
-            "totalTests": 94,
+            "totalTests": 95,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 2,
+            "skippedTests": 0,
             "elapsedTimeInMilliseconds": 0
         },
         {

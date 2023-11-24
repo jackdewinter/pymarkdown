@@ -1991,7 +1991,6 @@ comments
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_block_quotes_229jx():
     """
     Test case 229j:  variation of 229 with different spacing
@@ -2028,7 +2027,6 @@ comments
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_block_quotes_229ja():
     """
     Test case 229ja:  variation of 229j with different spacing
@@ -2066,6 +2064,42 @@ comments
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_block_quotes_229jb():
+    """
+    Test case 229ja:  variation of 229j with different spacing
+    """
+
+    # Arrange
+    source_markdown = """> > <script>
+> > comments
+> </script>
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[block-quote(1,3)::> > \n> > ]",
+        "[html-block(1,5)]",
+        "[text(1,5):<script>\ncomments:]",
+        "[end-html-block:::True]",
+        "[end-block-quote:::True]",
+        "[html-block(3,3)]",
+        "[text(3,3):</script>:]",
+        "[end-html-block:::False]",
+        "[end-block-quote:::False]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<blockquote>
+<script>
+comments
+</blockquote>
+</script>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm

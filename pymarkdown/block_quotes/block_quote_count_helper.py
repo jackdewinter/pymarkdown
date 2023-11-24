@@ -291,7 +291,7 @@ class BlockQuoteCountHelper:
         original_start_index: int,
         container_start_bq_count: int,
         extracted_whitespace: Optional[str],
-    ) -> Tuple[Optional[str], int]:
+    ) -> Tuple[Optional[str], int, BlockQuoteData]:
         POGGER.debug("container_level_tokens>>$", container_level_tokens)
         assert extracted_whitespace is not None
         stack_count = block_quote_data.stack_count
@@ -339,7 +339,7 @@ class BlockQuoteCountHelper:
             block_quote_data,
         )
         if not skip:
-            BlockQuoteCountHelper.decrease_stack_to_level(
+            block_quote_data = BlockQuoteCountHelper.decrease_stack_to_level(
                 parser_state,
                 block_quote_data.current_count,
                 stack_count,
@@ -350,7 +350,7 @@ class BlockQuoteCountHelper:
             container_level_tokens,
         )
 
-        return extracted_whitespace, original_start_index
+        return extracted_whitespace, original_start_index, block_quote_data
 
     # pylint: enable=too-many-arguments
 
@@ -540,7 +540,13 @@ class BlockQuoteCountHelper:
         position_marker: PositionMarker,
         original_start_index: int,
         container_start_bq_count: int,
-    ) -> Tuple[List[MarkdownToken], Optional[RequeueLineInfo], Optional[int], bool]:
+    ) -> Tuple[
+        List[MarkdownToken],
+        Optional[RequeueLineInfo],
+        Optional[int],
+        bool,
+        BlockQuoteData,
+    ]:
         """
         Ensure that the block quote stack is at the proper level on the stack.
         """
@@ -579,7 +585,7 @@ class BlockQuoteCountHelper:
                 requeue_reset=True,
             )
             if requeue_line_info:
-                return [], requeue_line_info, None, False
+                return [], requeue_line_info, None, False, block_quote_data
 
             POGGER.debug("esal>>__calculate_stack_hard_limit(delta)")
             (
@@ -607,6 +613,7 @@ class BlockQuoteCountHelper:
             (
                 extracted_whitespace,
                 original_start_index,
+                block_quote_data,
             ) = BlockQuoteCountHelper.__increase_stack(
                 parser_state,
                 container_level_tokens,
@@ -632,6 +639,7 @@ class BlockQuoteCountHelper:
             None,
             extra_consumed_whitespace,
             force_list_continuation,
+            block_quote_data,
         )
 
     # pylint: enable=too-many-arguments
