@@ -17,6 +17,8 @@
 - [Issue 837](https://github.com/jackdewinter/pymarkdown/issues/836)
   - these cases were split tab cases where the text to compare to its detabified
     forms was incorrect, resulting in a failed match
+- [Issue 840](https://github.com/jackdewinter/pymarkdown/issues/840)
+  - was not properly looking up in tabbed map when rendering
 - [Issue 841](https://github.com/jackdewinter/pymarkdown/issues/841)
   - fixed issue with assert
   - had commented out branch because no cases were found, finally found one

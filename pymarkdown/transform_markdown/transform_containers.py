@@ -712,12 +712,17 @@ class TransformContainers:
         container_line: str,
     ) -> str:
         POGGER.debug(f" container->{ParserHelper.make_value_visible(token_stack[-1])}")
+        tabbed_leading_space: Optional[str] = None
         if token_stack[-1].is_block_quote_start:
             prev_block_token = cast(BlockQuoteMarkdownToken, token_stack[-1])
             assert prev_block_token.bleading_spaces is not None
             split_leading_spaces = prev_block_token.bleading_spaces.split(
                 ParserHelper.newline_character
             )
+            if last_container_token_index in prev_block_token.tabbed_bleading_spaces:
+                tabbed_leading_space = prev_block_token.tabbed_bleading_spaces[
+                    last_container_token_index
+                ]
         else:
             prev_list_token = cast(ListStartMarkdownToken, token_stack[-1])
             assert prev_list_token.leading_spaces is not None
@@ -731,9 +736,12 @@ class TransformContainers:
                 + ParserHelper.make_value_visible(container_line)
                 + ":<"
             )
-            container_line = (
-                split_leading_spaces[last_container_token_index] + container_line
-            )
+            if tabbed_leading_space:
+                container_line = tabbed_leading_space + container_line
+            else:
+                container_line = (
+                    split_leading_spaces[last_container_token_index] + container_line
+                )
             POGGER.debug(
                 " -->container_line>:"
                 + ParserHelper.make_value_visible(container_line)
