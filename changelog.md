@@ -8,6 +8,10 @@
 
 ### Fixed
 
+- [Issue 829](https://github.com/jackdewinter/pymarkdown/issues/829)
+  - fixed issue with BlockQuoteData instance not being passed back
+    properly.  as a result, one closing of a block quote was not noticed
+    by another closing further down the line
 - [Issue 832](https://github.com/jackdewinter/pymarkdown/issues/832)
   - partially fixed by other work, partial issue with the HTML output showing
     spaces instead of tabs, could be slightly different versions of commonmark
