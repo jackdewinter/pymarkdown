@@ -111,7 +111,7 @@
             "deprecated-decorator": 1
         },
         "pymarkdown/general/tab_helper.py": {
-            "too-many-arguments": 1
+            "too-many-arguments": 2
         },
         "pymarkdown/general/tokenized_markdown.py": {
             "too-many-arguments": 5
@@ -476,7 +476,7 @@
         "too-many-instance-attributes": 23,
         "too-many-public-methods": 4,
         "too-few-public-methods": 40,
-        "too-many-arguments": 204,
+        "too-many-arguments": 205,
         "too-many-locals": 25,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 2,

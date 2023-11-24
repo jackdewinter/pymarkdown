@@ -1002,7 +1002,6 @@ def test_whitespaces_html_with_tabs_before_within_ordered_double_list_three_befo
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_html_with_tabs_before_within_ordered_double_list_four_before():
     """
     Test case:  Html blocks preceeded by spaces and tabs.
@@ -1017,7 +1016,7 @@ def test_whitespaces_html_with_tabs_before_within_ordered_double_list_four_befor
         "[para(1,4):]",
         "[text(1,4):abc:]",
         "[end-para:::True]",
-        "[olist(2,4):.:1:6:   : ]",
+        "[olist(2,4):.:1:6:   :    ]",
         "[para(2,7):]",
         "[text(2,7):def:]",
         "[end-para:::False]",
@@ -1042,7 +1041,6 @@ def test_whitespaces_html_with_tabs_before_within_ordered_double_list_four_befor
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_html_with_tabs_before_within_ordered_double_list_five_before():
     """
     Test case:  Html blocks preceeded by spaces and tabs.
@@ -1057,7 +1055,7 @@ def test_whitespaces_html_with_tabs_before_within_ordered_double_list_five_befor
         "[para(1,4):]",
         "[text(1,4):abc:]",
         "[end-para:::True]",
-        "[olist(2,4):.:1:6:   : ]",
+        "[olist(2,4):.:1:6:   :     ]",
         "[para(2,7):]",
         "[text(2,7):def:]",
         "[end-para:::False]",
@@ -1078,7 +1076,7 @@ def test_whitespaces_html_with_tabs_before_within_ordered_double_list_five_befor
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
