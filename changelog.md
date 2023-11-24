@@ -48,6 +48,8 @@
   - in cases where a list is within a block quote, and the next line is a paragraph
     continuation that fails the requirements for a "normal" list continuation, this
     fix was required.
+- [Issue 857](https://github.com/jackdewinter/pymarkdown/issues/857)
+  - fixed along with Issue 840, just filed separately
 
 ## Version 0.9.14 - Date: 2023-10-31
 

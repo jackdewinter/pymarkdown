@@ -783,7 +783,6 @@ def test_whitespaces_block_quotes_with_xtabs():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_block_quotes_with_tabs_x2():
     """
     Test case:  Block quotes preceeded by spaces and tabs.
