@@ -386,7 +386,6 @@ bbb</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_paragraph_blocks_196f():
     """
     Test case 196a:  variation of 196, but with tabs instead of spaces, and in a list
@@ -406,9 +405,9 @@ def test_paragraph_blocks_196f():
         "[para(2,5):]",
         "[text(2,5):def:]",
         "[end-para:::True]",
-        "[ulist(3,5):-::6:    :      ]",
-        "[para(3,7):\n:                   ]",
-        "[text(3,7):aaa\nbbb::                   \n]",
+        "[ulist(3,5):-::6:    :\t  :\t]",
+        "[para(3,7):\n:\t\t\t\t\t]",
+        "[text(3,7):aaa\nbbb::\t\t\t\t\t\n]",
         "[end-para:::True]",
         "[end-ulist:::True]",
         "[end-ulist:::True]",
@@ -419,22 +418,19 @@ def test_paragraph_blocks_196f():
 <ul>
 <li>def
 <ul>
-<li>aaa\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a
+<li>aaa\t\t\t\t\t
 bbb</li>
 </ul>
 </li>
 </ul>
 </li>
-</ul>""".replace(
-        "\a", " "
-    )
+</ul>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_paragraph_blocks_196g():
     """
     Test case 196a:  variation of 196, but with tabs instead of spaces, and in a list
@@ -454,9 +450,9 @@ def test_paragraph_blocks_196g():
         "[para(2,5):]",
         "[text(2,5):def:]",
         "[end-para:::True]",
-        "[ulist(3,6):-::7:     :       ]",
-        "[para(3,8):\n:                  ]",
-        "[text(3,8):aaa\nbbb::                  \n]",
+        "[ulist(3,6):-::7:     :\t   :\t ]",
+        "[para(3,8):\n:\t\t\t\t\t]",
+        "[text(3,8):aaa\nbbb::\t\t\t\t\t\n]",
         "[end-para:::True]",
         "[end-ulist:::True]",
         "[end-ulist:::True]",
@@ -467,15 +463,13 @@ def test_paragraph_blocks_196g():
 <ul>
 <li>def
 <ul>
-<li>aaa\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a
+<li>aaa\t\t\t\t\t
 bbb</li>
 </ul>
 </li>
 </ul>
 </li>
-</ul>""".replace(
-        "\a", " "
-    )
+</ul>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)

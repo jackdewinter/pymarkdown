@@ -8,6 +8,10 @@
 
 ### Fixed
 
+- [Issue 832](https://github.com/jackdewinter/pymarkdown/issues/832)
+  - partially fixed by other work, partial issue with the HTML output showing
+    spaces instead of tabs, could be slightly different versions of commonmark
+    tests
 - [Issue 835](https://github.com/jackdewinter/pymarkdown/issues/835)
   - a double block quote follwed by a fenced block in a single block quote
     was not properly closing
