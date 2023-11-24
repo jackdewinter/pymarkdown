@@ -70,6 +70,7 @@ class BlockQuoteNonFencedHelper:
             requeue_line_info,
             extra_consumed_whitespace,
             force_list_continuation,
+            block_quote_data,
         ) = BlockQuoteCountHelper.ensure_stack_at_level(
             parser_state,
             block_quote_data,
