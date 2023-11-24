@@ -30,6 +30,8 @@
 - [Issue 848](https://github.com/jackdewinter/pymarkdown/issues/848)
   - indent spacing within containers causing tab to not be changed back
     properly
+- [Issue 849](https://github.com/jackdewinter/pymarkdown/issues/849)
+  - in cases with double lists, split tab can sometimes get missed
 - [Issue 850](https://github.com/jackdewinter/pymarkdown/issues/850)
   - some of the lines we adding whitespace for both the bq indent (already taken
     care of) and the list, resulting in too many spaces

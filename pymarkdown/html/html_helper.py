@@ -641,7 +641,10 @@ class HtmlHelper:
             parser_state, block_quote_data, new_tokens, split_tab
         ):
             TabHelper.adjust_block_quote_indent_for_tab(
-                parser_state, extracted_whitespace, alternate_list_leading_space
+                parser_state,
+                extracted_whitespace,
+                alternate_list_leading_space,
+                original_line=original_line,
             )
             did_adjust_block_quote = True
             POGGER.debug("did_adjust_block_quote=$", did_adjust_block_quote)

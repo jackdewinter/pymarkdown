@@ -487,12 +487,63 @@ class TabHelper:
         # )
 
     @staticmethod
+    def __adjust_block_quote_indent_for_tab_list_kludge(
+        original_line: str, extracted_whitespace: str, last_list_leading_space: str
+    ) -> str:
+        orig_end_ws_index, _ = ParserHelper.extract_ascii_whitespace(original_line, 0)
+        orig_after_ws = original_line[orig_end_ws_index:]
+        recon_line = last_list_leading_space + extracted_whitespace[:-1] + orig_after_ws
+
+        reconstructed_line, _, _ = TabHelper.find_tabified_string_split(
+            recon_line, "", original_line, True, False
+        )
+        assert reconstructed_line is not None
+        text_to_use_count = 1
+        keep_going = text_to_use_count < len(reconstructed_line)
+        while keep_going:
+            detabbified_line = TabHelper.detabify_string(
+                reconstructed_line[:text_to_use_count]
+            )
+            keep_going = text_to_use_count < len(reconstructed_line) and len(
+                detabbified_line
+            ) < len(last_list_leading_space)
+            if keep_going:
+                text_to_use_count += 1
+        assert reconstructed_line[text_to_use_count - 1] == "\t"
+        return reconstructed_line[: text_to_use_count - 1]
+
+    @staticmethod
+    def __adjust_block_quote_indent_for_tab_list_normal(
+        last_list_leading_space: str,
+        fenced_switch_enabled: bool,
+        tab_index: int,
+        alternate_list_leading_space: Optional[str],
+        extracted_whitespace: str,
+    ) -> Tuple[str, str]:
+        last_list_leading_space_length = len(last_list_leading_space)
+        if fenced_switch_enabled:
+            assert tab_index < last_list_leading_space_length or (
+                last_list_leading_space_length == 0
+            )  # and tab_index == 0)
+        else:
+            assert tab_index < last_list_leading_space_length
+        last_list_leading_space = (
+            extracted_whitespace[:tab_index]
+            if alternate_list_leading_space is None
+            else alternate_list_leading_space
+        )
+        extracted_whitespace = extracted_whitespace[tab_index:]
+        return last_list_leading_space, extracted_whitespace
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
     def __adjust_block_quote_indent_for_tab_list(
         parser_state: ParserState,
         stack_token_index: int,
         extracted_whitespace: Optional[str],
         fenced_switch_enabled: bool,
         alternate_list_leading_space: Optional[str],
+        original_line: Optional[str] = None,
     ) -> Optional[str]:
         assert extracted_whitespace is not None
 
@@ -519,19 +570,30 @@ class TabHelper:
         tab_index = extracted_whitespace.find("\t")
         LOGGER.debug("extracted_whitespace=:%s:", extracted_whitespace)
         LOGGER.debug("tab_index=:%d:", tab_index)
-        last_list_leading_space_length = len(last_list_leading_space)
-        if fenced_switch_enabled:
-            assert tab_index < last_list_leading_space_length or (
-                last_list_leading_space_length == 0
-            )  # and tab_index == 0)
+
+        if (
+            tab_index == -1
+            and extracted_whitespace
+            and last_list_leading_space
+            and last_list_leading_space != extracted_whitespace
+            and original_line is not None
+        ):
+            last_list_leading_space = (
+                TabHelper.__adjust_block_quote_indent_for_tab_list_kludge(
+                    original_line, extracted_whitespace, last_list_leading_space
+                )
+            )
         else:
-            assert tab_index < last_list_leading_space_length
-        last_list_leading_space = (
-            extracted_whitespace[:tab_index]
-            if alternate_list_leading_space is None
-            else alternate_list_leading_space
-        )
-        extracted_whitespace = extracted_whitespace[tab_index:]
+            (
+                last_list_leading_space,
+                extracted_whitespace,
+            ) = TabHelper.__adjust_block_quote_indent_for_tab_list_normal(
+                last_list_leading_space,
+                fenced_switch_enabled,
+                tab_index,
+                alternate_list_leading_space,
+                extracted_whitespace,
+            )
         LOGGER.debug("last_list_leading_space=:%s:", last_list_leading_space)
         LOGGER.debug("extracted_whitespace=:%s:", extracted_whitespace)
 
@@ -551,12 +613,15 @@ class TabHelper:
         )
         return extracted_whitespace
 
+    # pylint: enable=too-many-arguments
+
     @staticmethod
     def adjust_block_quote_indent_for_tab(
         parser_state: ParserState,
         extracted_whitespace: Optional[str] = None,
         alternate_list_leading_space: Optional[str] = None,
         fenced_switch_enabled: bool = False,
+        original_line: Optional[str] = None,
     ) -> Optional[str]:
         """
         Adjust the last block quote for a tab.
@@ -596,6 +661,7 @@ class TabHelper:
                 extracted_whitespace,
                 fenced_switch_enabled,
                 alternate_list_leading_space,
+                original_line,
             )
         return extracted_whitespace
 
