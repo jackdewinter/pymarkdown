@@ -13,6 +13,7 @@ from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.tokens.indented_code_block_markdown_token import (
     IndentedCodeBlockMarkdownToken,
 )
+from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.tokens.stack_token import IndentedCodeBlockStackToken, ListStackToken
 from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
@@ -28,7 +29,7 @@ class IndentedLeafBlockProcessor:
     Class to provide processing for indented leaf blocks.
     """
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def parse_indented_code_block(
         parser_state: ParserState,
@@ -36,7 +37,6 @@ class IndentedLeafBlockProcessor:
         extracted_whitespace: Optional[str],
         removed_chars_at_start: Optional[int],
         last_block_quote_index: int,
-        last_list_start_index: int,
         original_line: str,
     ) -> List[MarkdownToken]:
         """
@@ -72,12 +72,12 @@ class IndentedLeafBlockProcessor:
                 position_marker.index_number :
             ]
 
-            # POGGER.debug("last_block_quote_index>:$:<", last_block_quote_index)
-            is_in_block_quote = last_block_quote_index > 0
+            last_block_stack_index = parser_state.find_last_block_quote_on_stack()
+            is_in_block_quote = last_block_stack_index > 0
             POGGER.debug("is_in_block_quote>:$:<", is_in_block_quote)
 
-            # POGGER.debug("last_list_start_index>:$:<", last_list_start_index)
-            is_in_list = last_list_start_index > 0
+            last_list_stack_index = parser_state.find_last_list_block_on_stack()
+            is_in_list = last_list_stack_index > 0
             POGGER.debug("is_in_list>:$:<", is_in_list)
 
             tabified_extracted_space: Optional[str] = None
@@ -98,7 +98,8 @@ class IndentedLeafBlockProcessor:
                     is_in_list,
                     is_in_block_quote,
                     original_line,
-                    last_block_quote_index,
+                    last_block_stack_index,
+                    last_list_stack_index,
                 )
 
             IndentedLeafBlockProcessor.__process_indented_code_block(
@@ -120,7 +121,99 @@ class IndentedLeafBlockProcessor:
             )
         return new_tokens
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
+
+    @staticmethod
+    def __parse_indented_code_block_with_tab_list_list(
+        parser_state: ParserState, original_line: str, last_list_index: int
+    ) -> Tuple[ListStartMarkdownToken, str, int]:
+        last_list_token = cast(
+            ListStartMarkdownToken,
+            parser_state.token_stack[last_list_index].matching_markdown_token,
+        )
+        last_list_lead_spaces = last_list_token.leading_spaces
+        assert last_list_lead_spaces is not None
+        POGGER.debug("last_list_lead_spaces>:$:<", last_list_lead_spaces)
+        POGGER.debug("original_line>:$:<", original_line)
+        lead_space_last_line_index = last_list_lead_spaces.rfind("\n")
+        if lead_space_last_line_index != -1:
+            last_list_lead_spaces = last_list_lead_spaces[
+                lead_space_last_line_index + 1 :
+            ]
+            POGGER.debug("last_block_quote_lead_spaces>:$:<", last_list_lead_spaces)
+
+        lead_space_len = len(last_list_lead_spaces)
+        POGGER.debug("lead_space_len>:$:<", lead_space_len)
+        return last_list_token, last_list_lead_spaces, lead_space_len
+
+    # pylint: disable=too-many-locals
+    @staticmethod
+    def __parse_indented_code_block_with_tab_list(
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        original_line: str,
+        last_list_index: int,
+    ) -> Tuple[Optional[str], Optional[str], Optional[str], bool]:
+        (
+            last_list_token,
+            last_list_lead_spaces,
+            lead_space_len,
+        ) = IndentedLeafBlockProcessor.__parse_indented_code_block_with_tab_list_list(
+            parser_state, original_line, last_list_index
+        )
+
+        _, ex_space = ParserHelper.extract_spaces(position_marker.text_to_parse, 0)
+        # POGGER.debug("after_space_index>:$:<", after_space_index)
+        # POGGER.debug("ex_space>:$:<", ex_space)
+        assert ex_space is not None
+        assert len(ex_space) >= 4
+        was_indented = not parser_state.token_stack[-2].is_document
+        fex_space, fex_space_index, split_tab = TabHelper.find_tabified_string(
+            original_line,
+            position_marker.text_to_parse,
+            use_proper_traverse=True,
+            reconstruct_prefix=last_list_lead_spaces,
+            was_indented=was_indented,
+        )
+
+        indent_used = 0
+        extra_index = 0
+        if split_tab:
+            extra_index = lead_space_len
+            while (
+                indent_used < len(last_list_lead_spaces)
+                and fex_space[indent_used] != "\t"
+            ):
+                indent_used += 1
+        else:
+            detab_fex_space = TabHelper.detabify_string(fex_space, fex_space_index)
+            assert detab_fex_space == position_marker.text_to_parse
+
+        keep_going = True
+        search_index = 1
+        while keep_going:
+            ex_part = fex_space[indent_used : indent_used + search_index]
+            detabbed_ex_part = TabHelper.detabify_string(
+                ex_part, fex_space_index + extra_index
+            )
+            keep_going = (
+                len(detabbed_ex_part) < len(fex_space) and len(detabbed_ex_part) < 4
+            )
+            if keep_going:
+                search_index += 1
+        xx_extracted_space = ex_part
+        xx_left_over = fex_space[indent_used + search_index :]
+        assert original_line.endswith(fex_space)
+        xx_dd = (
+            original_line[:indent_used]
+            if split_tab
+            else original_line[: -(len(fex_space))]
+        )
+        last_list_token.remove_last_leading_space()
+        last_list_token.add_leading_spaces(xx_dd)
+        return None, xx_extracted_space, xx_left_over, False
+
+    # pylint: enable=too-many-locals
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -131,6 +224,7 @@ class IndentedLeafBlockProcessor:
         is_in_block_quote: bool,
         original_line: str,
         last_block_quote_index: int,
+        last_list_index: int,
     ) -> Tuple[Optional[str], Optional[str], Optional[str], bool]:
         if not is_in_list and not is_in_block_quote:
             next_character = position_marker.text_to_parse[position_marker.index_number]
@@ -144,8 +238,12 @@ class IndentedLeafBlockProcessor:
             )
 
         # Note not handling lists yet
-        assert is_in_block_quote
+        # assert is_in_block_quote
 
+        if last_list_index > last_block_quote_index:
+            return IndentedLeafBlockProcessor.__parse_indented_code_block_with_tab_list(
+                parser_state, position_marker, original_line, last_list_index
+            )
         (
             last_block_quote_lead_spaces,
             adj_lead_space_len,
