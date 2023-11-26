@@ -732,7 +732,6 @@ def test_whitespaces_html_with_tabs_before_within_ordered_double_list_tab_after_
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_html_with_tabs_before_within_ordered_double_list_one_space():
     """
     Test case:  Html blocks preceeded by spaces and tabs.
