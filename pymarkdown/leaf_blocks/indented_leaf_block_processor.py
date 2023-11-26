@@ -146,6 +146,27 @@ class IndentedLeafBlockProcessor:
         POGGER.debug("lead_space_len>:$:<", lead_space_len)
         return last_list_token, last_list_lead_spaces, lead_space_len
 
+    @staticmethod
+    def __find_string(
+        fex_space: str, fex_space_index: int, lead_space_len: int
+    ) -> Tuple[Optional[str], int]:
+        keep_going = True
+        search_index = 1
+        ex_part = None
+        while keep_going:
+            ex_part = fex_space[:search_index]
+            # TODO see if this is a pattern
+            # __adjust_block_quote_indent_for_tab_list_kludge
+            # search_for_tabbed_prefix
+            detabbed_ex_part = TabHelper.detabify_string(ex_part, fex_space_index)
+            keep_going = (
+                len(detabbed_ex_part) < len(fex_space)
+                and len(detabbed_ex_part) < lead_space_len
+            )
+            if keep_going:
+                search_index += 1
+        return ex_part, search_index
+
     # pylint: disable=too-many-locals
     @staticmethod
     def __parse_indented_code_block_with_tab_list(
@@ -171,7 +192,7 @@ class IndentedLeafBlockProcessor:
         fex_space, fex_space_index, split_tab = TabHelper.find_tabified_string(
             original_line,
             position_marker.text_to_parse,
-            use_proper_traverse=True,
+            use_proper_traverse=False,
             reconstruct_prefix=last_list_lead_spaces,
             was_indented=was_indented,
         )
@@ -180,15 +201,12 @@ class IndentedLeafBlockProcessor:
         extra_index = 0
         if split_tab:
             extra_index = lead_space_len
-            while (
-                indent_used < len(last_list_lead_spaces)
-                and fex_space[indent_used] != "\t"
-            ):
-                indent_used += 1
-        else:
-            detab_fex_space = TabHelper.detabify_string(fex_space, fex_space_index)
-            assert detab_fex_space == position_marker.text_to_parse
+            ex_part, search_index = IndentedLeafBlockProcessor.__find_string(
+                fex_space, fex_space_index, lead_space_len
+            )
+            indent_used = search_index - 1
 
+        # TODO __find_string?
         keep_going = True
         search_index = 1
         while keep_going:
