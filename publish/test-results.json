@@ -719,7 +719,7 @@
             "totalTests": 63,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 2,
+            "skippedTests": 0,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -740,10 +740,10 @@
         },
         {
             "name": "test.gfm.test_markdown_whitespace_paragraph",
-            "totalTests": 56,
+            "totalTests": 58,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 1,
             "elapsedTimeInMilliseconds": 0
         },
         {

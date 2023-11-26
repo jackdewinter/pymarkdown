@@ -334,6 +334,41 @@ ghi</li>
 
 
 @pytest.mark.gfm
+def test_whitespaces_paragraph_with_tabs_before_within_unordered_double_list_double_tabs():
+    """
+    Test case:  TBD
+    """
+
+    # Arrange
+    source_markdown = """+ abc
+  + def
+\t\tghi"""
+    expected_tokens = [
+        "[ulist(1,1):+::2:]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[ulist(2,3):+::4:  :\t]",
+        "[para(2,5):\n\t]",
+        "[text(2,5):def\nghi::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+<ul>
+<li>def
+ghi</li>
+</ul>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
 def test_whitespaces_paragraph_with_tabs_before_within_ordered_list_x():
     """
     Test case:  Paragraph preceeded by spaces.
@@ -466,6 +501,43 @@ ghi</li>
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_whitespaces_paragraph_with_tabs_before_within_ordered_double_list_double_tabs():
+    """
+    Test case:  This was intended to be an indented block, but is not due to a
+    paragraph continutation
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+   1. def
+\t\t  ghi"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[olist(2,4):.:1:6:   :]",
+        "[para(2,7):\n\t  ]",
+        "[text(2,7):def\nghi::\n]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<ol>
+<li>def
+ghi</li>
+</ol>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
