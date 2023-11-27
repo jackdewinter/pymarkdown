@@ -26,7 +26,7 @@ class ListStartMarkdownTokenHelper:
         )
         if list_token.is_ordered_list_start:
             token_parts = ["<ol"]
-            if list_token.list_start_content != "1":
+            if int(list_token.list_start_content) != 1:
                 token_parts.extend(
                     [' start="', str(int(list_token.list_start_content)), '"']
                 )

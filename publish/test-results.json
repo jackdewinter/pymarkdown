@@ -620,10 +620,10 @@
         },
         {
             "name": "test.gfm.test_markdown_tabs",
-            "totalTests": 30,
+            "totalTests": 34,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 7,
+            "skippedTests": 3,
             "elapsedTimeInMilliseconds": 0
         },
         {
