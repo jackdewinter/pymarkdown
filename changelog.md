@@ -16,6 +16,8 @@
   - partially fixed by other work, partial issue with the HTML output showing
     spaces instead of tabs, could be slightly different versions of commonmark
     tests
+- [Issue 834](https://github.com/jackdewinter/pymarkdown/issues/834)
+  - issues were tabs that were split on the same line as a list start
 - [Issue 835](https://github.com/jackdewinter/pymarkdown/issues/835)
   - a double block quote follwed by a fenced block in a single block quote
     was not properly closing
@@ -25,6 +27,9 @@
 - [Issue 837](https://github.com/jackdewinter/pymarkdown/issues/836)
   - these cases were split tab cases where the text to compare to its detabified
     forms was incorrect, resulting in a failed match
+- [Issue 838](https://github.com/jackdewinter/pymarkdown/issues/838)
+  - extra tab was showing up in double list scenarios where indented block
+    start was split over the last list and the indented block
 - [Issue 839](https://github.com/jackdewinter/pymarkdown/issues/839)
   - handling of split tabs within lists was not added at all, causing an assert
     to fire

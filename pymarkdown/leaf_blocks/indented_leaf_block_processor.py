@@ -126,25 +126,45 @@ class IndentedLeafBlockProcessor:
     @staticmethod
     def __parse_indented_code_block_with_tab_list_list(
         parser_state: ParserState, original_line: str, last_list_index: int
-    ) -> Tuple[ListStartMarkdownToken, str, int]:
+    ) -> Tuple[ListStartMarkdownToken, str, int, bool, int]:
         last_list_token = cast(
             ListStartMarkdownToken,
             parser_state.token_stack[last_list_index].matching_markdown_token,
         )
         last_list_lead_spaces = last_list_token.leading_spaces
-        assert last_list_lead_spaces is not None
-        POGGER.debug("last_list_lead_spaces>:$:<", last_list_lead_spaces)
-        POGGER.debug("original_line>:$:<", original_line)
-        lead_space_last_line_index = last_list_lead_spaces.rfind("\n")
-        if lead_space_last_line_index != -1:
-            last_list_lead_spaces = last_list_lead_spaces[
-                lead_space_last_line_index + 1 :
-            ]
-            POGGER.debug("last_block_quote_lead_spaces>:$:<", last_list_lead_spaces)
+        is_list_start_line = False
+        list_tabbed_adjust = -1
+        if last_list_lead_spaces is not None:
+            POGGER.debug("last_list_lead_spaces>:$:<", last_list_lead_spaces)
+            POGGER.debug("original_line>:$:<", original_line)
+            lead_space_last_line_index = last_list_lead_spaces.rfind("\n")
+            if lead_space_last_line_index != -1:
+                last_list_lead_spaces = last_list_lead_spaces[
+                    lead_space_last_line_index + 1 :
+                ]
+                POGGER.debug("last_block_quote_lead_spaces>:$:<", last_list_lead_spaces)
+        else:
+            is_list_start_line = True
+            list_tabbed_adjust = last_list_token.tabbed_adjust
+            if last_list_token.is_ordered_list_start:
+                last_list_lead_spaces = (
+                    last_list_token.list_start_content
+                    + last_list_token.list_start_sequence
+                )
+            else:
+                last_list_lead_spaces = last_list_token.list_start_sequence
+            xx_delta = last_list_token.indent_level - len(last_list_lead_spaces)
+            last_list_lead_spaces += " " * xx_delta
 
         lead_space_len = len(last_list_lead_spaces)
         POGGER.debug("lead_space_len>:$:<", lead_space_len)
-        return last_list_token, last_list_lead_spaces, lead_space_len
+        return (
+            last_list_token,
+            last_list_lead_spaces,
+            lead_space_len,
+            is_list_start_line,
+            list_tabbed_adjust,
+        )
 
     @staticmethod
     def __find_string(
@@ -167,6 +187,27 @@ class IndentedLeafBlockProcessor:
                 search_index += 1
         return ex_part, search_index
 
+    @staticmethod
+    def __find_string2(
+        fex_space: str, fex_space_index: int, extra_index: int, indent_used: int
+    ) -> Tuple[int, Optional[str], Optional[str]]:
+        # TODO __find_string?
+        keep_going = True
+        search_index = 1
+        ex_part: Optional[str] = None
+        detabbed_ex_part: Optional[str] = None
+        while keep_going:
+            ex_part = fex_space[indent_used : indent_used + search_index]
+            detabbed_ex_part = TabHelper.detabify_string(
+                ex_part, fex_space_index + extra_index
+            )
+            keep_going = (
+                len(detabbed_ex_part) < len(fex_space) and len(detabbed_ex_part) < 4
+            )
+            if keep_going:
+                search_index += 1
+        return search_index, ex_part, detabbed_ex_part
+
     # pylint: disable=too-many-locals
     @staticmethod
     def __parse_indented_code_block_with_tab_list(
@@ -179,6 +220,8 @@ class IndentedLeafBlockProcessor:
             last_list_token,
             last_list_lead_spaces,
             lead_space_len,
+            is_list_start_line,
+            list_tabbed_adjust,
         ) = IndentedLeafBlockProcessor.__parse_indented_code_block_with_tab_list_list(
             parser_state, original_line, last_list_index
         )
@@ -206,29 +249,42 @@ class IndentedLeafBlockProcessor:
             )
             indent_used = search_index - 1
 
-        # TODO __find_string?
-        keep_going = True
-        search_index = 1
-        while keep_going:
-            ex_part = fex_space[indent_used : indent_used + search_index]
-            detabbed_ex_part = TabHelper.detabify_string(
-                ex_part, fex_space_index + extra_index
-            )
-            keep_going = (
-                len(detabbed_ex_part) < len(fex_space) and len(detabbed_ex_part) < 4
-            )
-            if keep_going:
-                search_index += 1
-        xx_extracted_space = ex_part
-        xx_left_over = fex_space[indent_used + search_index :]
-        assert original_line.endswith(fex_space)
-        xx_dd = (
-            original_line[:indent_used]
-            if split_tab
-            else original_line[: -(len(fex_space))]
+        (
+            search_index,
+            ex_part,
+            detabbed_ex_part,
+        ) = IndentedLeafBlockProcessor.__find_string2(
+            fex_space, fex_space_index, extra_index, indent_used
         )
-        last_list_token.remove_last_leading_space()
-        last_list_token.add_leading_spaces(xx_dd)
+
+        xx_left_over = ""
+        if is_list_start_line:
+            assert detabbed_ex_part is not None
+            delta = len(detabbed_ex_part) - 4
+            xx_left_over = " " * delta
+            if delta != 0:
+                xx_left_over = ParserHelper.create_replacement_markers(
+                    ParserHelper.replace_noop_character, xx_left_over
+                )
+            if (
+                ex_part
+                and ex_part[0] == "\t"
+                and list_tabbed_adjust >= 0
+                and delta != 0
+            ):
+                ex_part = ex_part[1:]
+
+        xx_extracted_space = ex_part
+        xx_left_over += fex_space[indent_used + search_index :]
+        assert original_line.endswith(fex_space)
+        if not is_list_start_line:
+            xx_dd = (
+                original_line[:indent_used]
+                if split_tab
+                else original_line[: -(len(fex_space))]
+            )
+            last_list_token.remove_last_leading_space()
+            last_list_token.add_leading_spaces(xx_dd)
         return None, xx_extracted_space, xx_left_over, False
 
     # pylint: enable=too-many-locals

@@ -540,8 +540,7 @@ def test_tabs_006d():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_tabs_007x():
+def test_tabs_007xx():
     """
     Test case 007:  none
     """
@@ -549,9 +548,9 @@ def test_tabs_007x():
     # Arrange
     source_markdown = """-\t\tfoo"""
     expected_tokens = [
-        "[ulist(1,1):-::2:]",
-        "[icode-block(1,7):    :]",
-        "[text(1,7):foo:  ]",
+        "[ulist(1,1):-::2::::2]",
+        "[icode-block(1,7):\t:]",
+        "[text(1,7):\a\x03\a  \afoo:]",
         "[end-icode-block:::True]",
         "[end-ulist:::True]",
     ]
@@ -567,8 +566,33 @@ def test_tabs_007x():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_tabs_007a():
+def test_tabs_007xa():
+    """
+    Test case 007:  none
+    """
+
+    # Arrange
+    source_markdown = """- \t\tfoo"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[icode-block(1,7):\t\t:]",
+        "[text(1,7):\a\x03\a  \afoo:]",
+        "[end-icode-block:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<pre><code>  foo
+</code></pre>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_tabs_007ax():
     """
     Test case 007a:  variation on 007 with ordered list
     """
@@ -576,9 +600,9 @@ def test_tabs_007a():
     # Arrange
     source_markdown = """1)\t\tfoo"""
     expected_tokens = [
-        "[olist(1,1):):1:3:]",
-        "[icode-block(1,8):    :]",
-        "[text(1,8):foo: ]",
+        "[olist(1,1):):1:3::::1]",
+        "[icode-block(1,8):\t:]",
+        "[text(1,8):\a\x03\a \afoo:]",
         "[end-icode-block:::True]",
         "[end-olist:::True]",
     ]
@@ -594,8 +618,33 @@ def test_tabs_007a():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_tabs_007b():
+def test_tabs_007aa():
+    """
+    Test case 007a:  variation on 007 with ordered list
+    """
+
+    # Arrange
+    source_markdown = """1) \t\tfoo"""
+    expected_tokens = [
+        "[olist(1,1):):1:3:]",
+        "[icode-block(1,8):\t\t:]",
+        "[text(1,8):\a\x03\a \afoo:]",
+        "[end-icode-block:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<pre><code> foo
+</code></pre>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_tabs_007bx():
     """
     Test case 007b:  variation on 007 with ordered list
     """
@@ -603,13 +652,13 @@ def test_tabs_007b():
     # Arrange
     source_markdown = """01)\t\tfoo"""
     expected_tokens = [
-        "[olist(1,1):):01:4:]",
-        "[icode-block(1,9):    :]",
+        "[olist(1,1):):01:4::::0]",
+        "[icode-block(1,9):\t:]",
         "[text(1,9):foo:]",
         "[end-icode-block:::True]",
         "[end-olist:::True]",
     ]
-    expected_gfm = """<ol start="1">
+    expected_gfm = """<ol>
 <li>
 <pre><code>foo
 </code></pre>
@@ -621,8 +670,33 @@ def test_tabs_007b():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_tabs_007c():
+def test_tabs_007ba():
+    """
+    Test case 007b:  variation on 007 with ordered list
+    """
+
+    # Arrange
+    source_markdown = """01) \t\tfoo"""
+    expected_tokens = [
+        "[olist(1,1):):01:4:]",
+        "[icode-block(1,9):\t:]",
+        "[text(1,9):\tfoo:]",
+        "[end-icode-block:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<pre><code>\tfoo
+</code></pre>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_tabs_007cx():
     """
     Test case 007c:  variation on 007 with ordered list
     """
@@ -630,9 +704,35 @@ def test_tabs_007c():
     # Arrange
     source_markdown = """001)\t\tfoo"""
     expected_tokens = [
+        "[olist(1,1):):001:5::::3]",
+        "[icode-block(1,10):\t:]",
+        "[text(1,10):\a\x03\a   \afoo:]",
+        "[end-icode-block:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<pre><code>   foo
+</code></pre>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_tabs_007ca():
+    """
+    Test case 007c:  variation on 007 with ordered list
+    """
+
+    # Arrange
+    source_markdown = """001) \t\tfoo"""
+    expected_tokens = [
         "[olist(1,1):):001:5:]",
-        "[icode-block(1,10):    :]",
-        "[text(1,10):foo:   ]",
+        "[icode-block(1,10):\t\t:]",
+        "[text(1,10):\a\x03\a   \afoo:]",
         "[end-icode-block:::True]",
         "[end-olist:::True]",
     ]
