@@ -16,6 +16,8 @@
   - partially fixed by other work, partial issue with the HTML output showing
     spaces instead of tabs, could be slightly different versions of commonmark
     tests
+- [Issue 833](https://github.com/jackdewinter/pymarkdown/issues/833)
+  - not handling the split tab properly in these cases
 - [Issue 834](https://github.com/jackdewinter/pymarkdown/issues/834)
   - issues were tabs that were split on the same line as a list start
 - [Issue 835](https://github.com/jackdewinter/pymarkdown/issues/835)
