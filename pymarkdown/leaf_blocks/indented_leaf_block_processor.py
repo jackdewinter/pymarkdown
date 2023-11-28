@@ -208,6 +208,45 @@ class IndentedLeafBlockProcessor:
                 search_index += 1
         return search_index, ex_part, detabbed_ex_part
 
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __parse_indented_code_block_with_tab_list_calc(
+        detabbed_ex_part: Optional[str],
+        is_list_start_line: bool,
+        ex_part: Optional[str],
+        list_tabbed_adjust: int,
+        fex_space: str,
+        indent_used: int,
+        search_index: int,
+    ) -> Tuple[str, Optional[str], Optional[str]]:
+        xx_left_over = ""
+        assert ex_part is not None
+        assert detabbed_ex_part is not None
+        delta = len(detabbed_ex_part) - 4
+        if is_list_start_line:
+            xx_left_over = " " * delta
+            if delta != 0:
+                xx_left_over = ParserHelper.create_replacement_markers(
+                    ParserHelper.replace_noop_character, xx_left_over
+                )
+            if (
+                ex_part
+                and ex_part[0] == "\t"
+                and list_tabbed_adjust >= 0
+                and delta != 0
+            ):
+                ex_part = ex_part[1:]
+        elif ex_part[-1] == "\t" and delta != 0:
+            xx_left_over = " " * delta
+            xx_left_over = ParserHelper.create_replacement_markers(
+                ParserHelper.replace_noop_character, xx_left_over
+            )
+        xx_extracted_space = ex_part
+        xx_left_over += fex_space[indent_used + search_index :]
+        return xx_left_over, ex_part, xx_extracted_space
+
+    # pylint: enable=too-many-arguments
+
     # pylint: disable=too-many-locals
     @staticmethod
     def __parse_indented_code_block_with_tab_list(
@@ -239,6 +278,7 @@ class IndentedLeafBlockProcessor:
             reconstruct_prefix=last_list_lead_spaces,
             was_indented=was_indented,
         )
+        assert original_line.endswith(fex_space)
 
         indent_used = 0
         extra_index = 0
@@ -257,26 +297,20 @@ class IndentedLeafBlockProcessor:
             fex_space, fex_space_index, extra_index, indent_used
         )
 
-        xx_left_over = ""
-        if is_list_start_line:
-            assert detabbed_ex_part is not None
-            delta = len(detabbed_ex_part) - 4
-            xx_left_over = " " * delta
-            if delta != 0:
-                xx_left_over = ParserHelper.create_replacement_markers(
-                    ParserHelper.replace_noop_character, xx_left_over
-                )
-            if (
-                ex_part
-                and ex_part[0] == "\t"
-                and list_tabbed_adjust >= 0
-                and delta != 0
-            ):
-                ex_part = ex_part[1:]
+        (
+            xx_left_over,
+            ex_part,
+            xx_extracted_space,
+        ) = IndentedLeafBlockProcessor.__parse_indented_code_block_with_tab_list_calc(
+            detabbed_ex_part,
+            is_list_start_line,
+            ex_part,
+            list_tabbed_adjust,
+            fex_space,
+            indent_used,
+            search_index,
+        )
 
-        xx_extracted_space = ex_part
-        xx_left_over += fex_space[indent_used + search_index :]
-        assert original_line.endswith(fex_space)
         if not is_list_start_line:
             xx_dd = (
                 original_line[:indent_used]

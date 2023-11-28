@@ -165,7 +165,7 @@
         },
         "pymarkdown/leaf_blocks/indented_leaf_block_processor.py": {
             "too-few-public-methods": 1,
-            "too-many-arguments": 4,
+            "too-many-arguments": 5,
             "too-many-locals": 2
         },
         "pymarkdown/leaf_blocks/leaf_block_helper.py": {
@@ -477,7 +477,7 @@
         "too-many-instance-attributes": 23,
         "too-many-public-methods": 4,
         "too-few-public-methods": 40,
-        "too-many-arguments": 205,
+        "too-many-arguments": 206,
         "too-many-locals": 27,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 2,

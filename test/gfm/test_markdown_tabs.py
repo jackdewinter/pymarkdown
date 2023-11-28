@@ -300,7 +300,6 @@ def test_tabs_004a():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_tabs_005x():
     """
     Test case 005:  (part b) a continuation paragraph of a list item is indented
@@ -314,13 +313,13 @@ def test_tabs_005x():
 \t\tbar"""  # noqa: E101,W191
     # noqa: E101,W191
     expected_tokens = [
-        "[ulist(1,1):-::2::\n  ]",
+        "[ulist(1,1):-::2::\n]",
         "[para(1,3):]",
         "[text(1,3):foo:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
-        "[icode-block(3,7):\t:]",
-        "[text(3,7):\tbar:]",
+        "[icode-block(3,7):\t\t:]",
+        "[text(3,7):\a\x03\a  \abar:]",
         "[end-icode-block:::True]",
         "[end-ulist:::True]",
     ]
@@ -337,7 +336,6 @@ def test_tabs_005x():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_tabs_005a():
     """
     Test case 005:  (part b) a continuation paragraph of a list item is indented
@@ -362,7 +360,7 @@ def test_tabs_005a():
         "[end-para:::True]",
         "[BLANK(3,1):]",
         "[icode-block(4,9):\t:]",
-        "[text(4,9):\tbar:]",
+        "[text(4,9):bar:]",
         "[end-icode-block:::True]",
         "[end-ulist:::True]",
         "[end-ulist:::True]",
@@ -384,7 +382,6 @@ def test_tabs_005a():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_tabs_005b():
     """
     Test case 005:  (part b) a continuation paragraph of a list item is indented
@@ -398,13 +395,13 @@ def test_tabs_005b():
 \t\tbar"""  # noqa: E101,W191
     # noqa: E101,W191
     expected_tokens = [
-        "[olist(1,1):):1:3::\n   ]",
+        "[olist(1,1):):1:3::\n]",
         "[para(1,4):]",
         "[text(1,4):foo:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
-        "[icode-block(3,8):\t:]",
-        "[text(3,8):\tbar:]",
+        "[icode-block(3,8):\t\t:]",
+        "[text(3,8):\a\x03\a \abar:]",
         "[end-icode-block:::True]",
         "[end-olist:::True]",
     ]
