@@ -56,7 +56,6 @@ class TransformListBlock:
                 context,
                 current_list_token,
                 previous_token,
-                next_token,
                 extracted_whitespace,
             )
             POGGER.debug(f">>extracted_whitespace>>{extracted_whitespace}<<")
@@ -173,7 +172,6 @@ class TransformListBlock:
         context: MarkdownTransformContext,
         current_token: Union[ListStartMarkdownToken, NewListItemMarkdownToken],
         previous_token: MarkdownToken,
-        next_token: MarkdownToken,
         extracted_whitespace: str,
     ) -> Tuple[int, str, bool, Optional[str], bool, bool]:
         """
@@ -235,7 +233,6 @@ class TransformListBlock:
                 deeper_containing_block_quote_token,
                 extracted_whitespace,
                 previous_token,
-                next_token,
             )
 
         POGGER.debug(f"xx>>previous_indent:{previous_indent}:")
@@ -387,7 +384,6 @@ class TransformListBlock:
 
         return True, previous_indent
 
-    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __rehydrate_list_start_contained_in_list(
         current_token: Union[ListStartMarkdownToken, NewListItemMarkdownToken],
@@ -395,7 +391,6 @@ class TransformListBlock:
         deeper_containing_block_quote_token: Optional[BlockQuoteMarkdownToken],
         extracted_whitespace: str,
         previous_token: MarkdownToken,
-        next_token: MarkdownToken,
     ) -> Tuple[int, str, str, bool, bool]:
         # POGGER.debug(
         #     f"adj->containing_list_token>>:{ParserHelper.make_value_visible(containing_list_token)}:<<"
@@ -418,7 +413,6 @@ class TransformListBlock:
         )
 
         list_start_content_length = 0
-        add_extracted_whitespace_at_end = False
         # POGGER.debug(
         #     f"previous_token-->{ParserHelper.make_value_visible(previous_token)}"
         # )
@@ -438,7 +432,6 @@ class TransformListBlock:
                     if new_list_token.is_ordered_list_start
                     else 0
                 )
-                add_extracted_whitespace_at_end = not next_token.is_block_quote_start
 
         post_adjust_whitespace = TransformListBlock.__calculate_post_adjust_whitespace(
             starting_whitespace,
@@ -446,7 +439,6 @@ class TransformListBlock:
             block_quote_leading_space_length,
             list_leading_space_length,
             list_start_content_length,
-            add_extracted_whitespace_at_end,
             current_token,
         )
 
@@ -464,8 +456,6 @@ class TransformListBlock:
             did_container_start_midline,
             had_weird_block_quote_in_list,
         )
-
-    # pylint: enable=too-many-arguments, too-many-locals
 
     @staticmethod
     def __look_for_last_block_token(
@@ -558,7 +548,6 @@ class TransformListBlock:
         block_quote_leading_space_length: int,
         list_leading_space_length: int,
         list_start_content_length: int,
-        add_extracted_whitespace_at_end: bool,
         current_token: Union[ListStartMarkdownToken, NewListItemMarkdownToken],
     ) -> str:
         POGGER.debug(f"adj->starting_whitespace>>:{starting_whitespace}:<<")
@@ -571,18 +560,18 @@ class TransformListBlock:
         POGGER.debug(f"adj->list_leading_space_length>>:{list_leading_space_length}:<<")
         POGGER.debug(f"list_start_content_length:{list_start_content_length}:<<")
 
-        pad_to_length = (
-            containing_list_token.indent_level
-            - block_quote_leading_space_length
-            - list_leading_space_length
-            - list_start_content_length
-        )
+        if current_token.is_new_list_item:
+            pad_to_length = current_token.column_number - 1
+        else:
+            pad_to_length = (
+                containing_list_token.indent_level
+                - block_quote_leading_space_length
+                - list_leading_space_length
+                - list_start_content_length
+            )
         POGGER.debug(f"pad_to_length:{pad_to_length}:<<")
         POGGER.debug(f"adj->starting_whitespace>>:{starting_whitespace}:<<")
         post_adjust_whitespace = starting_whitespace.ljust(pad_to_length, " ")
-        POGGER.debug(f"adj->post_adjust_whitespace>>:{post_adjust_whitespace}:<<")
-        if add_extracted_whitespace_at_end:
-            post_adjust_whitespace += current_token.extracted_whitespace
         POGGER.debug(f"adj->post_adjust_whitespace>>:{post_adjust_whitespace}:<<")
         return post_adjust_whitespace
 

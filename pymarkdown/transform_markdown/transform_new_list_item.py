@@ -70,7 +70,6 @@ class TransformNewListItem:
             context,
             current_list_token,
             previous_token,
-            next_token,
             extracted_whitespace,
         )
         # else:

@@ -8,6 +8,9 @@
 
 ### Fixed
 
+- [Issue 828](https://github.com/jackdewinter/pymarkdown/issues/828)
+  - list new items within block quotes were not always rendering properly
+    in Markdown, required changes to markdown regen
 - [Issue 829](https://github.com/jackdewinter/pymarkdown/issues/829)
   - fixed issue with BlockQuoteData instance not being passed back
     properly.  as a result, one closing of a block quote was not noticed

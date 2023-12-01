@@ -2571,7 +2571,6 @@ def test_extra_024a():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_025xx():
     """
     TBD
@@ -2666,7 +2665,6 @@ that</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_025ax():
     """
     TBD
@@ -2851,7 +2849,6 @@ that</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_025cxx():
     """
     TBD
@@ -2899,7 +2896,6 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_025cxb():
     """
     TBD
@@ -3068,7 +3064,6 @@ def test_extra_025cxe():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_025cxf():
     """
     TBD
@@ -3112,7 +3107,6 @@ is</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_025cxg():
     """
     TBD
@@ -3156,7 +3150,6 @@ is</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_025cxz():
     """
     Verify that a nesting of block quote, ordered list, block quote, with
@@ -3194,7 +3187,7 @@ def test_extra_025cxz():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
