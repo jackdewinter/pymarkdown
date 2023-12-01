@@ -175,7 +175,8 @@
             "too-many-arguments": 1
         },
         "pymarkdown/leaf_blocks/leaf_block_processor_paragraph.py": {
-            "too-many-arguments": 1
+            "too-many-arguments": 1,
+            "too-many-locals": 1
         },
         "pymarkdown/leaf_blocks/setext_leaf_block_processor.py": {
             "too-few-public-methods": 1,
@@ -477,7 +478,7 @@
         "too-many-public-methods": 4,
         "too-few-public-methods": 40,
         "too-many-arguments": 205,
-        "too-many-locals": 26,
+        "too-many-locals": 27,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 2,
         "protected-access": 23,

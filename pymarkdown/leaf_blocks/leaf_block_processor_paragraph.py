@@ -220,6 +220,7 @@ class LeafBlockProcessorParagraph:
             corrected_extracted_whitespace = extracted_whitespace
         return corrected_tab_text, corrected_extracted_whitespace
 
+    # pylint: disable=too-many-locals
     @staticmethod
     def __calculate_corrected_tab_text_prefix(
         parser_state: ParserState,
@@ -265,8 +266,16 @@ class LeafBlockProcessorParagraph:
                 if split_tab_with_block_quote_suffix:
                     TabHelper.adjust_block_quote_indent_for_tab(parser_state)
                 else:
+                    alternate_leading_space = (
+                        corrected_prefix
+                        if corrected_prefix and "\t" in corrected_prefix
+                        else None
+                    )
                     TabHelper.adjust_block_quote_indent_for_tab(
-                        parser_state, corrected_prefix + corrected_suffix
+                        parser_state,
+                        corrected_prefix + corrected_suffix,
+                        original_line=original_line,
+                        alternate_list_leading_space=alternate_leading_space,
                     )
 
             corrected_extracted_whitespace = corrected_suffix
@@ -279,6 +288,8 @@ class LeafBlockProcessorParagraph:
             checked_whitespace_for_tab,
             is_block_quote_container,
         )
+
+    # pylint: enable=too-many-locals
 
     @staticmethod
     def __adjust_paragraph_for_containers(

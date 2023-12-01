@@ -245,7 +245,7 @@ def</li>
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -270,7 +270,7 @@ def</li>
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -365,7 +365,7 @@ ghi</li>
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -504,7 +504,6 @@ ghi</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_whitespaces_paragraph_with_tabs_before_within_ordered_double_list_double_tabs():
     """
     Test case:  This was intended to be an indented block, but is not due to a
@@ -520,7 +519,7 @@ def test_whitespaces_paragraph_with_tabs_before_within_ordered_double_list_doubl
         "[para(1,4):]",
         "[text(1,4):abc:]",
         "[end-para:::True]",
-        "[olist(2,4):.:1:6:   :]",
+        "[olist(2,4):.:1:6:   :\t]",
         "[para(2,7):\n\t  ]",
         "[text(2,7):def\nghi::\n]",
         "[end-para:::True]",
@@ -607,7 +606,7 @@ ghi\tjkl\tmno</li>
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1257,7 +1256,7 @@ a\tparagraph</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 ###

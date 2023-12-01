@@ -4,7 +4,11 @@
 
 ### Added
 
+- None
+
 ### Changed
+
+- None
 
 ### Fixed
 
@@ -71,6 +75,9 @@
     fix was required.
 - [Issue 857](https://github.com/jackdewinter/pymarkdown/issues/857)
   - fixed along with Issue 840, just filed separately
+- [Issue 878](https://github.com/jackdewinter/pymarkdown/issues/878)
+  - a doubly indented list with a new paragraph continuation line starting
+    with multiple tabs was not capturing the first tab properly in the list
 
 ## Version 0.9.14 - Date: 2023-10-31
 

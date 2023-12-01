@@ -388,7 +388,7 @@ def test_whitespaces_html_with_tabs_before_within_blockquote_and_unordered_list_
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1075,7 +1075,7 @@ def test_whitespaces_html_with_tabs_before_within_ordered_double_list_five_befor
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
