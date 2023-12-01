@@ -27,7 +27,7 @@ def test_transform_with_debug_on():
     expected_gfm = """<ul>\n<li>`one</li>\n<li>two`</li>\n</ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 def test_transform_with_debug_off():
@@ -52,4 +52,4 @@ def test_transform_with_debug_off():
     expected_gfm = """<ul>\n<li>`one</li>\n<li>two`</li>\n</ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

@@ -1048,7 +1048,7 @@ def test_whitespaces_indented_code_with_tabs_before_within_ordered_double_list_t
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
