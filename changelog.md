@@ -2,6 +2,18 @@
 
 ## Unversioned - In Main, Not Released
 
+This release is mainly to fix issues related to technical debt. The PyMarkdown
+project takes Markdown and generates a token stream to represent that Markdown.
+To verify that the tokens are correct, HTML output is generated and matched
+against reference implementations of the specification.  If those pass, the tests
+then try to recreate the Markdown from the information in the tokens. So, to pass
+a single test, the Markdown must generate tokens without any assertions, generate
+the correct HTML, and be able to recreate the Markdown that it parsed.
+
+The issues fixed include some issues that fixed assertions, caused improperly
+formed HTML, and caused improperly formed Markdown. The majority of these issue
+involved tab characters and containers.
+
 ### Added
 
 - None
@@ -12,6 +24,9 @@
 
 ### Fixed
 
+- [Issue 731](https://github.com/jackdewinter/pymarkdown/issues/731)
+  - see issue for details.  fixed issues with unorder-bq-ordered that
+    need more examination in the future
 - [Issue 828](https://github.com/jackdewinter/pymarkdown/issues/828)
   - list new items within block quotes were not always rendering properly
     in Markdown, required changes to markdown regen

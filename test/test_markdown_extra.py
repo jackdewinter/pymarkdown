@@ -4572,6 +4572,81 @@ def test_extra_033a():
 
 
 @pytest.mark.gfm
+@pytest.mark.skip
+def test_extra_034d():
+    """
+    TBD - from https://github.com/jackdewinter/pymarkdown/issues/731
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    stdin_to_use = """- Test List
+  > 1) Test1
+  > 2) Test2
+
+```text
+block
+```
+"""
+
+    supplied_arguments = [
+        "scan-stdin",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments, standard_input_to_use=stdin_to_use
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_extra_034e():
+    """
+    TBD - from https://github.com/jackdewinter/pymarkdown/issues/731
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    stdin_to_use = """# Headline 1
+
+- Test List
+
+  > 1) Test1
+  > 2) Test2
+
+  <!-- this is html-->
+"""
+
+    supplied_arguments = [
+        "scan-stdin",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments, standard_input_to_use=stdin_to_use
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.gfm
 def test_extra_999():
     """
     Temporary test to keep coverage up while consistency checks disabled.

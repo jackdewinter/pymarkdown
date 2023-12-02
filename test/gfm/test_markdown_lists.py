@@ -279,6 +279,86 @@ def test_list_items_281e():
 
 
 @pytest.mark.gfm
+def test_list_items_281f():
+    """
+    Test case 281f:  variation on 281 with blank line
+    """
+
+    # Arrange
+    source_markdown = """- foo
+
+  * bar
+  * boffo"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::]",
+        "[para(1,3):]",
+        "[text(1,3):foo:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[ulist(3,3):*::4:  ]",
+        "[para(3,5):]",
+        "[text(3,5):bar:]",
+        "[end-para:::True]",
+        "[li(4,3):4:  :]",
+        "[para(4,5):]",
+        "[text(4,5):boffo:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>foo</p>
+<ul>
+<li>bar</li>
+<li>boffo</li>
+</ul>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_list_items_281g():
+    """
+    Test case 281g:  variation on 281 with blank line
+    """
+
+    # Arrange
+    source_markdown = """- foo
+
+  > bar
+  > boffo"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::\n\n]",
+        "[para(1,3):]",
+        "[text(1,3):foo:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[block-quote(3,3):  :  > \n  > ]",
+        "[para(3,5):\n]",
+        "[text(3,5):bar\nboffo::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>foo</p>
+<blockquote>
+<p>bar
+boffo</p>
+</blockquote>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
 def test_list_items_282():
     """
     Test case 282:  (part 2) Changing the bullet or ordered list delimiter starts a new list:

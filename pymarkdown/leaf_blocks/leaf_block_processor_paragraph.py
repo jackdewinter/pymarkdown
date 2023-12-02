@@ -12,7 +12,7 @@ from pymarkdown.general.parser_state import ParserState
 from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.general.tab_helper import TabHelper
 from pymarkdown.tokens.blank_line_markdown_token import BlankLineMarkdownToken
-from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
 from pymarkdown.tokens.stack_token import (
     BlockQuoteStackToken,
@@ -352,6 +352,55 @@ class LeafBlockProcessorParagraph:
         )
 
     @staticmethod
+    def __handle_paragraph_prep_block_reduce(
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        extracted_whitespace: Optional[str],
+    ) -> List[MarkdownToken]:
+        # TODO cyclic?
+
+        new_tokens, _ = parser_state.close_open_blocks_fn(
+            parser_state,
+            only_these_blocks=[BlockQuoteStackToken],
+            include_block_quotes=True,
+        )
+        if len(new_tokens) != 0:
+            assert (
+                extracted_whitespace is not None
+                and parser_state.token_stack[-1].is_list
+            )
+            search_index = len(parser_state.token_stack)
+            leading_space_length = (
+                len(extracted_whitespace) + position_marker.index_indent
+            )
+            did_once = False
+            while parser_state.token_stack[search_index - 1].is_list:
+                list_token = cast(
+                    ListStackToken, parser_state.token_stack[search_index - 1]
+                )
+                if list_token.indent_level <= leading_space_length:
+                    break
+                search_index -= 1
+                did_once = True
+            if did_once:
+                # POGGER.debug("lsl $", parser_state.token_stack[search_index])
+                end_token = cast(EndMarkdownToken, new_tokens[-1])
+                end_token.set_extra_end_data(None)
+
+                (
+                    container_level_tokens,
+                    _,
+                ) = parser_state.close_open_blocks_fn(
+                    parser_state,
+                    until_this_index=search_index,
+                    include_lists=True,
+                    caller_can_handle_requeue=False,
+                    requeue_reset=True,
+                )
+                new_tokens.extend(container_level_tokens)
+        return new_tokens
+
+    @staticmethod
     def __handle_paragraph_prep(
         parser_state: ParserState,
         block_quote_data: BlockQuoteData,
@@ -382,10 +431,10 @@ class LeafBlockProcessorParagraph:
                 parser_state, until_this_index=last_list_index
             )
         elif block_quote_data.stack_count != 0 and block_quote_data.current_count == 0:
-            new_tokens, _ = parser_state.close_open_blocks_fn(
-                parser_state,
-                only_these_blocks=[BlockQuoteStackToken],
-                include_block_quotes=True,
+            new_tokens = (
+                LeafBlockProcessorParagraph.__handle_paragraph_prep_block_reduce(
+                    parser_state, position_marker, extracted_whitespace
+                )
             )
         else:
             new_tokens = []

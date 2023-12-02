@@ -540,7 +540,7 @@
         },
         {
             "name": "test.gfm.test_markdown_lists",
-            "totalTests": 68,
+            "totalTests": 70,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -932,10 +932,10 @@
         },
         {
             "name": "test.nested_three.test_markdown_nested_three_unordered_block_ordered",
-            "totalTests": 32,
+            "totalTests": 42,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 5,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -1628,10 +1628,10 @@
         },
         {
             "name": "test.test_markdown_extra",
-            "totalTests": 108,
+            "totalTests": 110,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 2,
             "elapsedTimeInMilliseconds": 0
         },
         {
