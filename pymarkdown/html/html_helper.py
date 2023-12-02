@@ -638,7 +638,7 @@ class HtmlHelper:
         old_split_tab = split_tab
         did_adjust_block_quote = False
         if split_tab := ContainerHelper.reduce_containers_if_required(
-            parser_state, block_quote_data, new_tokens, split_tab
+            parser_state, block_quote_data, new_tokens, split_tab, extracted_whitespace
         ):
             TabHelper.adjust_block_quote_indent_for_tab(
                 parser_state,

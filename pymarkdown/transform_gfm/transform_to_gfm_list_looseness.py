@@ -91,6 +91,7 @@ class TransformToGfmListLooseness:
             stack_count = TransformToGfmListLooseness.__handle_block_quote_start(
                 stack_count
             )
+            check_me = True
         elif current_token.is_block_quote_end:
             POGGER.debug("cll>>end block quote>>$", current_token)
             stack_count = TransformToGfmListLooseness.__handle_block_quote_end(

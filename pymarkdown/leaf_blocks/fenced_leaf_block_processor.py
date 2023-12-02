@@ -585,6 +585,7 @@ class FencedLeafBlockProcessor:
         split_tab: bool,
         block_quote_data: BlockQuoteData,
         split_tab_whitespace: Optional[str],
+        extracted_whitespace: Optional[str],
     ) -> Tuple[StackToken, List[MarkdownToken], int]:
         old_top_of_stack = parser_state.token_stack[-1]
         new_tokens, _ = parser_state.close_open_blocks_fn(
@@ -593,7 +594,7 @@ class FencedLeafBlockProcessor:
         )
 
         if split_tab := ContainerHelper.reduce_containers_if_required(
-            parser_state, block_quote_data, new_tokens, split_tab
+            parser_state, block_quote_data, new_tokens, split_tab, extracted_whitespace
         ):
             TabHelper.adjust_block_quote_indent_for_tab(
                 parser_state,
@@ -699,7 +700,11 @@ class FencedLeafBlockProcessor:
             new_tokens,
             whitespace_start_count,
         ) = FencedLeafBlockProcessor.__add_fenced_tokens_calc(
-            parser_state, split_tab, block_quote_data, split_tab_whitespace
+            parser_state,
+            split_tab,
+            block_quote_data,
+            split_tab_whitespace,
+            extracted_whitespace,
         )
 
         pre_extracted_text, pre_text_after_extracted_text = (

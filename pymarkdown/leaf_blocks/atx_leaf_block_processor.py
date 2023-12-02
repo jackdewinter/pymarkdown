@@ -407,7 +407,7 @@ class AtxLeafBlockProcessor:
         new_tokens, _ = parser_state.close_open_blocks_fn(parser_state)
         POGGER.debug("new_tokens>:$:<", new_tokens)
         if ContainerHelper.reduce_containers_if_required(
-            parser_state, block_quote_data, new_tokens, split_tab
+            parser_state, block_quote_data, new_tokens, split_tab, extracted_whitespace
         ):
             POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
             extracted_whitespace = TabHelper.adjust_block_quote_indent_for_tab(
