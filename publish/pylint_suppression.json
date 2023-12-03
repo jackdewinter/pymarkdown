@@ -31,7 +31,7 @@
         },
         "pymarkdown/container_blocks/container_block_leaf_processor.py": {
             "too-few-public-methods": 1,
-            "too-many-arguments": 5,
+            "too-many-arguments": 6,
             "chained-comparison": 1,
             "too-many-boolean-expressions": 1
         },
@@ -51,7 +51,8 @@
             "too-many-public-methods": 1
         },
         "pymarkdown/container_blocks/container_helper.py": {
-            "too-few-public-methods": 1
+            "too-few-public-methods": 1,
+            "too-many-arguments": 2
         },
         "pymarkdown/container_blocks/container_indices.py": {},
         "pymarkdown/container_blocks/parse_block_pass_properties.py": {},
@@ -117,7 +118,8 @@
             "too-many-arguments": 5
         },
         "pymarkdown/html/html_helper.py": {
-            "too-many-arguments": 3
+            "too-many-arguments": 4,
+            "too-many-locals": 1
         },
         "pymarkdown/html/html_raw_helper.py": {},
         "pymarkdown/inline/emphasis_helper.py": {
@@ -157,10 +159,11 @@
             "too-many-locals": 5
         },
         "pymarkdown/leaf_blocks/atx_leaf_block_processor.py": {
-            "too-many-arguments": 4
+            "too-many-arguments": 5,
+            "too-many-locals": 2
         },
         "pymarkdown/leaf_blocks/fenced_leaf_block_processor.py": {
-            "too-many-arguments": 11,
+            "too-many-arguments": 12,
             "too-many-locals": 6
         },
         "pymarkdown/leaf_blocks/indented_leaf_block_processor.py": {
@@ -477,8 +480,8 @@
         "too-many-instance-attributes": 23,
         "too-many-public-methods": 4,
         "too-few-public-methods": 40,
-        "too-many-arguments": 205,
-        "too-many-locals": 27,
+        "too-many-arguments": 211,
+        "too-many-locals": 30,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 2,
         "protected-access": 23,

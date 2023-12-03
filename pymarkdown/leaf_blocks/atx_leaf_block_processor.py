@@ -5,6 +5,7 @@ import logging
 from typing import List, Optional, Tuple, cast
 
 from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
+from pymarkdown.container_blocks.container_grab_bag import ContainerGrabBag
 from pymarkdown.container_blocks.container_helper import ContainerHelper
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
@@ -75,6 +76,7 @@ class AtxLeafBlockProcessor:
                 )
         return False, None, None, None
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def parse_atx_headings(
         parser_state: ParserState,
@@ -82,6 +84,7 @@ class AtxLeafBlockProcessor:
         extracted_whitespace: Optional[str],
         block_quote_data: BlockQuoteData,
         original_line: str,
+        grab_bag: ContainerGrabBag,
     ) -> List[MarkdownToken]:
         """
         Handle the parsing of an atx heading.
@@ -113,9 +116,12 @@ class AtxLeafBlockProcessor:
             block_quote_data,
             extracted_whitespace_at_start,
             extracted_whitespace,
+            grab_bag,
         )
 
-    # pylint: disable=too-many-arguments
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __parse_atx_heading_found(
         parser_state: ParserState,
@@ -126,6 +132,7 @@ class AtxLeafBlockProcessor:
         block_quote_data: BlockQuoteData,
         extracted_whitespace_at_start: Optional[str],
         extracted_whitespace: Optional[str],
+        grab_bag: ContainerGrabBag,
     ) -> List[MarkdownToken]:
         assert extracted_whitespace_at_start is not None
         POGGER.debug(
@@ -151,6 +158,7 @@ class AtxLeafBlockProcessor:
             extracted_whitespace,
             hash_count,
             block_quote_data,
+            grab_bag,
         )
         assert hash_count is not None
         assert extracted_whitespace is not None
@@ -181,8 +189,10 @@ class AtxLeafBlockProcessor:
         )
         return new_tokens
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
+
     # pylint: disable=too-many-arguments
+
     @staticmethod
     def __parse_atx_heading_add_tokens(
         parser_state: ParserState,
@@ -349,7 +359,7 @@ class AtxLeafBlockProcessor:
 
     # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __prepare_for_create_atx_heading(
         parser_state: ParserState,
@@ -360,6 +370,7 @@ class AtxLeafBlockProcessor:
         extracted_whitespace: Optional[str],
         hash_count: Optional[int],
         block_quote_data: BlockQuoteData,
+        grab_bag: ContainerGrabBag,
     ) -> Tuple[
         StackToken, str, int, str, str, List[MarkdownToken], str, Optional[str], bool
     ]:
@@ -407,7 +418,13 @@ class AtxLeafBlockProcessor:
         new_tokens, _ = parser_state.close_open_blocks_fn(parser_state)
         POGGER.debug("new_tokens>:$:<", new_tokens)
         if ContainerHelper.reduce_containers_if_required(
-            parser_state, block_quote_data, new_tokens, split_tab, extracted_whitespace
+            parser_state,
+            position_marker,
+            block_quote_data,
+            new_tokens,
+            split_tab,
+            extracted_whitespace,
+            grab_bag,
         ):
             POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
             extracted_whitespace = TabHelper.adjust_block_quote_indent_for_tab(
@@ -436,7 +453,8 @@ class AtxLeafBlockProcessor:
             ParserHelper.tab_character in original_line and eligble_for_tab_match_delay,
         )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
+
     @staticmethod
     def __determine_eligble_for_tab_match_delay(
         parser_state: ParserState,

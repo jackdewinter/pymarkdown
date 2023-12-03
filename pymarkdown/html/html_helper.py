@@ -6,6 +6,7 @@ import string
 from typing import List, Optional, Tuple, cast
 
 from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
+from pymarkdown.container_blocks.container_grab_bag import ContainerGrabBag
 from pymarkdown.container_blocks.container_helper import ContainerHelper
 from pymarkdown.container_blocks.parse_block_pass_properties import (
     ParseBlockPassProperties,
@@ -594,7 +595,7 @@ class HtmlHelper:
             removed_chars_at_start = len(original_prefix)
         return alternate_list_leading_space, removed_chars_at_start
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __found_html_block(
         parser_state: ParserState,
@@ -604,6 +605,7 @@ class HtmlHelper:
         extracted_whitespace: Optional[str],
         block_quote_data: BlockQuoteData,
         html_block_type: str,
+        grab_bag: ContainerGrabBag,
     ) -> Tuple[List[MarkdownToken], bool, Optional[int]]:
         split_tab = False
         alternate_list_leading_space: Optional[str] = None
@@ -638,7 +640,13 @@ class HtmlHelper:
         old_split_tab = split_tab
         did_adjust_block_quote = False
         if split_tab := ContainerHelper.reduce_containers_if_required(
-            parser_state, block_quote_data, new_tokens, split_tab, extracted_whitespace
+            parser_state,
+            position_marker,
+            block_quote_data,
+            new_tokens,
+            split_tab,
+            extracted_whitespace,
+            grab_bag,
         ):
             TabHelper.adjust_block_quote_indent_for_tab(
                 parser_state,
@@ -657,8 +665,9 @@ class HtmlHelper:
         parser_state.token_stack.append(HtmlBlockStackToken(html_block_type, new_token))
         return new_tokens, did_adjust_block_quote, removed_chars_at_start
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def parse_html_block(
         parser_state: ParserState,
@@ -666,6 +675,7 @@ class HtmlHelper:
         extracted_whitespace: Optional[str],
         block_quote_data: BlockQuoteData,
         original_line: str,
+        grab_bag: ContainerGrabBag,
     ) -> Tuple[List[MarkdownToken], bool, Optional[int]]:
         """
         Determine if we have the criteria that we need to start an HTML block.
@@ -702,11 +712,14 @@ class HtmlHelper:
                 extracted_whitespace,
                 block_quote_data,
                 html_block_type,
+                grab_bag,
             )
         else:
             new_tokens = []
         POGGER.debug("did_adjust_block_quote=$", did_adjust_block_quote)
         return new_tokens, did_adjust_block_quote, removed_chars_at_start
+
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def check_blank_html_block_end(parser_state: ParserState) -> List[MarkdownToken]:

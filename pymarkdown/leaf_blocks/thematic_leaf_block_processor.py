@@ -6,6 +6,7 @@ import logging
 from typing import List, Optional, Tuple
 
 from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
+from pymarkdown.container_blocks.container_grab_bag import ContainerGrabBag
 from pymarkdown.container_blocks.container_helper import ContainerHelper
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
@@ -90,6 +91,7 @@ class ThematicLeafBlockProcessor:
         extracted_whitespace: Optional[str],
         block_quote_data: BlockQuoteData,
         original_line: str,
+        grab_bag: ContainerGrabBag,
     ) -> List[MarkdownToken]:
         """
         Handle the parsing of a thematic break.
@@ -154,6 +156,7 @@ class ThematicLeafBlockProcessor:
                 block_quote_data,
                 split_tab,
                 split_tab_with_block_quote_suffix,
+                grab_bag,
             )
 
             new_tokens.append(
@@ -183,6 +186,7 @@ class ThematicLeafBlockProcessor:
         block_quote_data: BlockQuoteData,
         split_tab: bool,
         split_tab_with_block_quote_suffix: bool,
+        grab_bag: ContainerGrabBag,
     ) -> None:
         if split_tab and not split_tab_with_block_quote_suffix:
             assert extracted_whitespace is not None
@@ -197,7 +201,13 @@ class ThematicLeafBlockProcessor:
                 token_text,
             )
         elif split_tab := ContainerHelper.reduce_containers_if_required(
-            parser_state, block_quote_data, new_tokens, split_tab, extracted_whitespace
+            parser_state,
+            position_marker,
+            block_quote_data,
+            new_tokens,
+            split_tab,
+            extracted_whitespace,
+            grab_bag,
         ):
             TabHelper.adjust_block_quote_indent_for_tab(parser_state)
 

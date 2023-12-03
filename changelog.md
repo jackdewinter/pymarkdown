@@ -93,6 +93,10 @@ involved tab characters and containers.
 - [Issue 878](https://github.com/jackdewinter/pymarkdown/issues/878)
   - a doubly indented list with a new paragraph continuation line starting
     with multiple tabs was not capturing the first tab properly in the list
+- [Issue 888](https://github.com/jackdewinter/pymarkdown/issues/888)
+  - during fixing of 731, found some outside cases which were throwing asserts
+    as they were outside of normal paths
+  - mostly dealt with proper spacing with block quotes nested within lists.
 
 ## Version 0.9.14 - Date: 2023-10-31
 
