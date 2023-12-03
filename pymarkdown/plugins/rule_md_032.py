@@ -42,6 +42,28 @@ class RuleMd032(RulePlugin):
         self.__container_token_stack = []
         self.__end_list_end_token = None
 
+    def __next_token_list_start(
+        self, context: PluginScanContext, token: MarkdownToken
+    ) -> None:
+        if (
+            self.__last_non_end_token
+            and not self.__last_non_end_token.is_blank_line
+            and not (
+                self.__container_token_stack
+                and (
+                    self.__container_token_stack[-1].is_list_start
+                    or (
+                        self.__container_token_stack[-1].is_block_quote_start
+                        and self.__container_token_stack[-1].line_number
+                        == token.line_number
+                    )
+                )
+            )
+        ):
+            self.report_next_token_error(context, token)
+
+        self.__container_token_stack.append(token)
+
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
@@ -61,17 +83,7 @@ class RuleMd032(RulePlugin):
         elif token.is_block_quote_end:
             del self.__container_token_stack[-1]
         elif token.is_list_start:
-            if (
-                self.__last_non_end_token
-                and not (
-                    self.__container_token_stack
-                    and self.__container_token_stack[-1].is_list_start
-                )
-                and not self.__last_non_end_token.is_blank_line
-            ):
-                self.report_next_token_error(context, token)
-
-            self.__container_token_stack.append(token)
+            self.__next_token_list_start(context, token)
         elif token.is_list_end:
             assert self.__last_non_end_token is not None
             if not self.__last_non_end_token.is_blank_line:
