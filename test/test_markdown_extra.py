@@ -4572,7 +4572,6 @@ def test_extra_033a():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_034d():
     """
     TBD - from https://github.com/jackdewinter/pymarkdown/issues/731
@@ -4609,7 +4608,6 @@ block
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_034e():
     """
     TBD - from https://github.com/jackdewinter/pymarkdown/issues/731
