@@ -97,6 +97,8 @@ involved tab characters and containers.
   - during fixing of 731, found some outside cases which were throwing asserts
     as they were outside of normal paths
   - mostly dealt with proper spacing with block quotes nested within lists.
+- [Issue 889](https://github.com/jackdewinter/pymarkdown/issues/889)
+  - cleaned up issue with MD032 firing with nested blocks.
 
 ## Version 0.9.14 - Date: 2023-10-31
 
