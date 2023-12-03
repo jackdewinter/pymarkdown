@@ -5,6 +5,7 @@ import logging
 from typing import List, Optional, Tuple, cast
 
 from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
+from pymarkdown.container_blocks.container_grab_bag import ContainerGrabBag
 from pymarkdown.container_blocks.container_helper import ContainerHelper
 from pymarkdown.general.constants import Constants
 from pymarkdown.general.parser_helper import ParserHelper
@@ -100,6 +101,7 @@ class FencedLeafBlockProcessor:
         original_line: str,
         detabified_original_start_index: int,
         block_quote_data: BlockQuoteData,
+        grab_bag: ContainerGrabBag,
     ) -> Tuple[List[MarkdownToken], Optional[str]]:
         """
         Handle the parsing of a fenced code block
@@ -152,6 +154,7 @@ class FencedLeafBlockProcessor:
                     new_index,
                     block_quote_data,
                     after_fence_index,
+                    grab_bag,
                 )
         elif parser_state.token_stack[-1].is_fenced_code_block:
             POGGER.debug("parse_fenced_code_block:already in")
@@ -367,6 +370,7 @@ class FencedLeafBlockProcessor:
         new_index: int,
         block_quote_data: BlockQuoteData,
         after_fence_index: int,
+        grab_bag: ContainerGrabBag,
     ) -> List[MarkdownToken]:
         POGGER.debug("pfcb->check")
         new_tokens: List[MarkdownToken] = []
@@ -392,6 +396,7 @@ class FencedLeafBlockProcessor:
                 new_index,
                 block_quote_data,
                 after_fence_index,
+                grab_bag,
             )
 
             POGGER.debug("StackToken-->$<<", parser_state.token_stack[-1])
@@ -539,6 +544,7 @@ class FencedLeafBlockProcessor:
         new_index: int,
         block_quote_data: BlockQuoteData,
         after_fence_index: int,
+        grab_bag: ContainerGrabBag,
     ) -> Tuple[StackToken, List[MarkdownToken], Optional[str]]:
         (
             line_to_parse,
@@ -575,17 +581,21 @@ class FencedLeafBlockProcessor:
             block_quote_data,
             split_tab_whitespace,
             adjusted_corrected_prefix,
+            grab_bag,
         )
 
     # pylint: enable=too-many-arguments, too-many-locals
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __add_fenced_tokens_calc(
         parser_state: ParserState,
+        position_marker: PositionMarker,
         split_tab: bool,
         block_quote_data: BlockQuoteData,
         split_tab_whitespace: Optional[str],
         extracted_whitespace: Optional[str],
+        grab_bag: ContainerGrabBag,
     ) -> Tuple[StackToken, List[MarkdownToken], int]:
         old_top_of_stack = parser_state.token_stack[-1]
         new_tokens, _ = parser_state.close_open_blocks_fn(
@@ -594,7 +604,13 @@ class FencedLeafBlockProcessor:
         )
 
         if split_tab := ContainerHelper.reduce_containers_if_required(
-            parser_state, block_quote_data, new_tokens, split_tab, extracted_whitespace
+            parser_state,
+            position_marker,
+            block_quote_data,
+            new_tokens,
+            split_tab,
+            extracted_whitespace,
+            grab_bag,
         ):
             TabHelper.adjust_block_quote_indent_for_tab(
                 parser_state,
@@ -606,6 +622,8 @@ class FencedLeafBlockProcessor:
             whitespace_count_delta = 0
 
         return old_top_of_stack, new_tokens, whitespace_count_delta
+
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-locals, too-many-arguments
     @staticmethod
@@ -694,6 +712,7 @@ class FencedLeafBlockProcessor:
         block_quote_data: BlockQuoteData,
         split_tab_whitespace: Optional[str],
         adjusted_corrected_prefix: Optional[str],
+        grab_bag: ContainerGrabBag,
     ) -> Tuple[StackToken, List[MarkdownToken], Optional[str]]:
         (
             old_top_of_stack,
@@ -701,10 +720,12 @@ class FencedLeafBlockProcessor:
             whitespace_start_count,
         ) = FencedLeafBlockProcessor.__add_fenced_tokens_calc(
             parser_state,
+            position_marker,
             split_tab,
             block_quote_data,
             split_tab_whitespace,
             extracted_whitespace,
+            grab_bag,
         )
 
         pre_extracted_text, pre_text_after_extracted_text = (
@@ -905,6 +926,7 @@ class FencedLeafBlockProcessor:
         original_line: str,
         detabified_original_start_index: int,
         block_quote_data: BlockQuoteData,
+        grab_bag: ContainerGrabBag,
     ) -> bool:
         """
         Take care of the processing for fenced code blocks.
@@ -924,6 +946,7 @@ class FencedLeafBlockProcessor:
             original_line,
             detabified_original_start_index,
             block_quote_data,
+            grab_bag,
         )
         POGGER.debug(">>leaf_token_whitespace>:$:<", leaf_token_whitespace)
         if fenced_tokens:

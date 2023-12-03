@@ -2,7 +2,7 @@
 Module to handle the calculationof list looseness for the GRM transformer.
 """
 import logging
-from typing import List, Tuple, cast
+from typing import List, Optional, Tuple, cast
 
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
@@ -94,8 +94,12 @@ class TransformToGfmListLooseness:
             check_me = True
         elif current_token.is_block_quote_end:
             POGGER.debug("cll>>end block quote>>$", current_token)
-            stack_count = TransformToGfmListLooseness.__handle_block_quote_end(
-                stack_count
+            (
+                stop_me,
+                is_loose,
+                stack_count,
+            ) = TransformToGfmListLooseness.__handle_block_quote_end(
+                stack_count, actual_tokens, current_token_index, stop_me, is_loose
             )
         elif current_token.is_list_end:
             POGGER.debug("cll>>end list>>$", current_token)
@@ -181,9 +185,70 @@ class TransformToGfmListLooseness:
         return stack_count + 1
 
     @staticmethod
-    def __handle_block_quote_end(stack_count: int) -> int:
+    def __handle_block_quote_end_calc(
+        actual_tokens: List[MarkdownToken], search_index: int, current_token_index: int
+    ) -> Tuple[bool, bool]:
+        stop_me = TransformToGfmListLooseness.__is_token_loose(
+            actual_tokens, search_index + 1, True
+        )
+        if stop_me:
+            blank_token = actual_tokens[search_index]
+            search_index = current_token_index
+            next_token = actual_tokens[search_index]
+            while search_index >= 0 and not next_token.is_block_quote_start:
+                search_index -= 1
+                next_token = actual_tokens[search_index]
+            block_quote_spaces_count = len(next_token.bleading_spaces.split("\n"))  # type: ignore
+            end_block_quote_line = next_token.line_number + block_quote_spaces_count
+            stop_me = not blank_token.line_number < end_block_quote_line
+
+        is_loose = stop_me
+        if stop_me:
+            POGGER.debug("!!!LOOSE-look back at end!!!")
+        return is_loose, stop_me
+
+    @staticmethod
+    def __handle_block_quote_end(
+        stack_count: int,
+        actual_tokens: List[MarkdownToken],
+        current_token_index: int,
+        stop_me: bool,
+        is_loose: bool,
+    ) -> Tuple[bool, bool, int]:
         POGGER.debug(">>block--end>>$", stack_count)
-        return stack_count - 1
+        old_stack_count = stack_count
+        stack_count -= 1
+        if old_stack_count and not stack_count:
+            search_index = current_token_index - 1
+            found_end_token: Optional[MarkdownToken] = actual_tokens[search_index]
+            while found_end_token is not None:
+                found_end_token = None
+                next_token = actual_tokens[search_index]
+                if next_token.is_end_token:
+                    next_end_token = cast(EndMarkdownToken, next_token)
+                    if (
+                        next_end_token.start_markdown_token.is_block_quote_start
+                        or next_end_token.start_markdown_token.is_list_start
+                    ):
+                        found_end_token = next_end_token
+                        search_index -= 1
+
+            new_index = current_token_index + 1
+            keep_checking = (
+                new_index < len(actual_tokens) and actual_tokens[new_index].is_end_token
+            )
+            if keep_checking:
+                end_token = cast(EndMarkdownToken, actual_tokens[new_index])
+                keep_checking = end_token.start_markdown_token.is_list_start
+
+            if not keep_checking:
+                (
+                    is_loose,
+                    stop_me,
+                ) = TransformToGfmListLooseness.__handle_block_quote_end_calc(
+                    actual_tokens, search_index, current_token_index
+                )
+        return stop_me, is_loose, stack_count
 
     @staticmethod
     def __handle_blank_line(
@@ -225,7 +290,7 @@ class TransformToGfmListLooseness:
 
     @staticmethod
     def __is_token_loose(
-        actual_tokens: List[MarkdownToken], current_token_index: int
+        actual_tokens: List[MarkdownToken], current_token_index: int, xx: bool = False
     ) -> bool:
         """
         Check to see if this token inspires looseness.
@@ -244,6 +309,8 @@ class TransformToGfmListLooseness:
                 or actual_tokens[check_index - 1].is_list_start
             ):
                 POGGER.debug("!!!Starting Blank!!!")
+            elif actual_tokens[check_index - 1].is_block_quote_start and xx:
+                POGGER.debug("!!!Starting BQ Blank!!!")
             else:
                 POGGER.debug("!!!LOOSE!!!")
                 return True

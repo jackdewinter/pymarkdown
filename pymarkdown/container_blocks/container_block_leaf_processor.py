@@ -228,6 +228,7 @@ class ContainerBlockLeafProcessor:
                     leaf_token_whitespace,
                     grab_bag.block_quote_data,
                     grab_bag.original_line,
+                    grab_bag,
                 )
                 or IndentedLeafBlockProcessor.parse_indented_code_block(
                     parser_state,
@@ -250,6 +251,7 @@ class ContainerBlockLeafProcessor:
                     leaf_token_whitespace,
                     grab_bag.block_quote_data,
                     grab_bag.original_line,
+                    grab_bag,
                 )
                 or LeafBlockProcessorParagraph.parse_paragraph(
                     parser_state,
@@ -305,6 +307,7 @@ class ContainerBlockLeafProcessor:
             grab_bag.original_line,
             detabified_original_start_index,
             grab_bag.block_quote_data,
+            grab_bag,
         )
 
         ignore_lrd_start = (
@@ -900,6 +903,50 @@ class ContainerBlockLeafProcessor:
 
     # pylint: disable=too-many-arguments
     @staticmethod
+    def __calculate_current_indent_level_loop_kludge(
+        parser_state: ParserState,
+        total_ws: int,
+        current_indent_level: int,
+        last_list_index: int,
+        current_stack_index: int,
+        text_removed_by_container: Optional[str],
+        non_last_block_index: int,
+        last_block_index: int,
+        line_number: int,
+    ) -> Tuple[bool, int, Optional[int], int]:
+        # TODO THIS IS A KLUDGE
+        #
+        # As soon as we go past here, if we are going to get rid of the
+        keep_processing = True
+        new_indent_level = None
+        if (
+            last_list_index > 0
+            and text_removed_by_container is None
+            and len(parser_state.token_stack) - 1 == current_stack_index
+        ):
+            keep_processing = total_ws != current_indent_level
+
+        if keep_processing:
+            last_list_index = 0
+            (
+                new_indent_level,
+                non_last_block_index,
+            ) = ContainerBlockLeafProcessor.__calculate_current_indent_level_block_quote(
+                parser_state,
+                current_stack_index,
+                non_last_block_index,
+                last_block_index,
+                line_number,
+                current_indent_level,
+                text_removed_by_container,
+            )
+            keep_processing = new_indent_level is not None
+        return keep_processing, last_list_index, new_indent_level, non_last_block_index
+
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
     def __calculate_current_indent_level_loop(
         parser_state: ParserState,
         last_block_index: int,
@@ -918,20 +965,22 @@ class ContainerBlockLeafProcessor:
         continue_in_loop = True
         keep_processing = True
         if parser_state.token_stack[current_stack_index].is_block_quote:
-            last_list_index = 0
             (
+                keep_processing,
+                last_list_index,
                 new_indent_level,
                 non_last_block_index,
-            ) = ContainerBlockLeafProcessor.__calculate_current_indent_level_block_quote(
+            ) = ContainerBlockLeafProcessor.__calculate_current_indent_level_loop_kludge(
                 parser_state,
+                total_ws,
+                current_indent_level,
+                last_list_index,
                 current_stack_index,
+                text_removed_by_container,
                 non_last_block_index,
                 last_block_index,
                 line_number,
-                current_indent_level,
-                text_removed_by_container,
             )
-            keep_processing = new_indent_level is not None
             if keep_processing:
                 proposed_indent_level = new_indent_level
         elif parser_state.token_stack[current_stack_index].is_list:

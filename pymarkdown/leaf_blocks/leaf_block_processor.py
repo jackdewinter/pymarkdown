@@ -123,6 +123,7 @@ class LeafBlockProcessor:
                 leaf_token_whitespace,
                 grab_bag.block_quote_data,
                 grab_bag.original_line,
+                grab_bag,
             )
             if html_tokens:
                 POGGER.debug(">>html started>>")
