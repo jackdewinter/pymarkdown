@@ -759,6 +759,13 @@ class ContainerGrabBag:
         """
         return self.__container_level_tokens
 
+    @property
+    def leaf_tokens(self) -> List[MarkdownToken]:
+        """
+        Xxx
+        """
+        return self.__leaf_tokens
+
 
 # pylint: enable=too-many-public-methods
 # pylint: enable=too-many-instance-attributes

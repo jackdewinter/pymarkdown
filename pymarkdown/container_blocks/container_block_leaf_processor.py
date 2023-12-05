@@ -31,7 +31,7 @@ from pymarkdown.links.link_reference_definition_helper import (
 )
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
-from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.tokens.stack_token import ListStackToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
@@ -134,7 +134,9 @@ class ContainerBlockLeafProcessor:
 
         orig_text_removed_by_container = grab_bag.text_removed_by_container
 
-        ContainerBlockLeafProcessor.__adjust_for_inner_list_container(
+        adjust_token: Optional[
+            ListStartMarkdownToken
+        ] = ContainerBlockLeafProcessor.__adjust_for_inner_list_container(
             parser_state,
             last_block_index,
             last_list_index,
@@ -181,6 +183,15 @@ class ContainerBlockLeafProcessor:
             position_marker,
             grab_bag,
         )
+
+        if (
+            adjust_token is not None
+            and grab_bag.leaf_tokens
+            and grab_bag.leaf_tokens[0].is_end_token
+        ):
+            end_token = cast(EndMarkdownToken, grab_bag.leaf_tokens[0])
+            if end_token.start_markdown_token.is_block_quote_start:
+                adjust_token.remove_last_leading_space()
 
         ContainerBlockLeafProcessor.__post_leaf_block_adjustment(
             parser_state,
@@ -401,7 +412,7 @@ class ContainerBlockLeafProcessor:
         last_block_index: int,
         last_list_index: int,
         current_line_number: int,
-    ) -> None:
+    ) -> Optional[ListStartMarkdownToken]:
         POGGER.debug("??? adjust_for_inner_list_container")
         if last_block_index > 0 and 0 < last_list_index < last_block_index:
             POGGER.debug("yes adjust_for_inner_list_container")
@@ -416,8 +427,10 @@ class ContainerBlockLeafProcessor:
                     "plt-a>>last_block_token>>$",
                     list_token,
                 )
+                return list_token
         else:
             POGGER.debug("not adjust_for_inner_list_container")
+        return None
 
     @staticmethod
     def __adjust_for_list_container_after_block_quote_special_special(
