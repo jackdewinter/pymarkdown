@@ -805,7 +805,7 @@ def test_nested_three_unordered_max_unordered_max_block_max_no_bq1_with_li3():
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_max_unordered_max_block_max_empty_no_bq1():
+def test_nested_three_unordered_max_unordered_max_block_max_empty_no_bq1_x():
     """
     Verify that a nesting of unordered list, unordered list, block quote, with
     the maximum number of spaces allowed, works properly, and no text on the
@@ -817,7 +817,7 @@ def test_nested_three_unordered_max_unordered_max_block_max_empty_no_bq1():
                item"""
     expected_tokens = [
         "[ulist(1,4):+::8:   ]",
-        "[ulist(1,9):+::13:        :             \n]",
+        "[ulist(1,9):+::13:        :             ]",
         "[block-quote(1,14):             :             >]",
         "[BLANK(1,15):]",
         "[end-block-quote:::False]",

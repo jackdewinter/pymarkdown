@@ -817,7 +817,7 @@ def test_nested_three_ordered_max_unordered_max_block_max_empty_no_bq1():
                 item"""
     expected_tokens = [
         "[olist(1,4):.:1:9:   ]",
-        "[ulist(1,10):+::14:         :              \n]",
+        "[ulist(1,10):+::14:         :              ]",
         "[block-quote(1,15):              :              >]",
         "[BLANK(1,16):]",
         "[end-block-quote:::False]",

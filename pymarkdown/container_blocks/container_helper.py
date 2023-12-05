@@ -124,7 +124,12 @@ class ContainerHelper:
         POGGER.debug("extra_end_data>>:$:<", first_new_token.extra_end_data)
         assert first_new_token.extra_end_data is None
 
-        if did_reduce_list or was_list_ended:
+        was_paragraph_closed = False
+        if new_tokens and new_tokens[0].is_end_token:
+            end_token = cast(EndMarkdownToken, new_tokens[0])
+            was_paragraph_closed = end_token.start_markdown_token.is_paragraph
+
+        if did_reduce_list or was_list_ended or not was_paragraph_closed:
             first_new_token.set_extra_end_data(None)
         else:
             first_new_token.set_extra_end_data(last_newline_part)
