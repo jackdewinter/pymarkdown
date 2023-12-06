@@ -2,6 +2,20 @@
 
 ## Unversioned - In Main, Not Released
 
+### Added
+
+- None
+
+### Changed
+
+- None
+
+### Fixed
+
+- None
+
+## Version 0.9.15 - Date: 2023-12-05
+
 This release is mainly to fix issues related to technical debt. The PyMarkdown
 project takes Markdown and generates a token stream to represent that Markdown.
 To verify that the tokens are correct, HTML output is generated and matched
