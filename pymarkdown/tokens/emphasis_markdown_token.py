@@ -147,8 +147,13 @@ class EmphasisMarkdownToken(InlineMarkdownToken):
         _ = transform_state
 
         emphasis_token = cast(EmphasisMarkdownToken, next_token)
+        if emphasis_token.emphasis_character == "~":
+            return f"{output_html}<del>"
         return "".join(
-            [output_html, "<em>" if emphasis_token.emphasis_length == 1 else "<strong>"]
+            [
+                output_html,
+                "<em>" if emphasis_token.emphasis_length == 1 else "<strong>",
+            ]
         )
 
     @staticmethod
@@ -162,6 +167,8 @@ class EmphasisMarkdownToken(InlineMarkdownToken):
         end_token = cast(EndMarkdownToken, next_token)
         emphasis_token = cast(EmphasisMarkdownToken, end_token.start_markdown_token)
 
+        if emphasis_token.emphasis_character == "~":
+            return f"{output_html}</del>"
         return "".join(
             [
                 output_html,

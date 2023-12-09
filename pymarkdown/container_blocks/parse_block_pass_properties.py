@@ -15,6 +15,11 @@ class ParseBlockPassProperties:
     """
 
     def __init__(self, extension_manager: "ExtensionManager") -> None:
+        """
+        Note: is_strike_through_enabled is not included in this list as it exclusively
+              effects the inline processing which does not require these properties
+        """
+
         (
             self.__front_matter_enabled,
             self.__pragmas_enabled,

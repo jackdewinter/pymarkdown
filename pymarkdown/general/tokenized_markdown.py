@@ -121,7 +121,8 @@ class TokenizedMarkdown:
             self.__tokenized_document = []
             self.__token_stack = []
 
-            InlineProcessor.initialize()
+            assert self.__extension_manager is not None
+            InlineProcessor.initialize(self.__extension_manager)
             LinkParseHelper.initialize()
 
             POGGER.debug("\n\n>>>>>>>parse_blocks_pass>>>>>>")

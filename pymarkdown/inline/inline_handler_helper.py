@@ -9,6 +9,7 @@ from typing_extensions import Protocol
 from pymarkdown.container_blocks.parse_block_pass_properties import (
     ParseBlockPassProperties,
 )
+from pymarkdown.extension_manager.extension_manager import ExtensionManager
 from pymarkdown.extensions.task_list_items import TaskListToken
 from pymarkdown.general.constants import Constants
 from pymarkdown.general.parser_helper import ParserHelper
@@ -65,16 +66,21 @@ class InlineHandlerHelper:
     __inline_character_handlers: Dict[str, InlineHandlerProtocol] = {}
     __inline_simple_character_handlers: Dict[str, InlineHandlerProtocol] = {}
 
-    __inline_processing_needed = (
-        f"{EmphasisHelper.inline_emphasis}{LinkParseHelper.link_label_start}"
-        + f"{LinkParseHelper.link_label_end}"
-    )
+    __inline_processing_needed = ""
 
     @staticmethod
-    def initialize() -> None:
+    def initialize(extension_manager: ExtensionManager) -> None:
         """
         Initialize the inline processor subsystem.
         """
+        EmphasisHelper.initialize(extension_manager)
+        InlineHandlerHelper.__inline_processing_needed = (
+            f"{LinkParseHelper.link_label_start}{LinkParseHelper.link_label_end}"
+        )
+        InlineHandlerHelper.__inline_processing_needed += (
+            EmphasisHelper.get_inline_emphasis()
+        )
+
         InlineHandlerHelper.__inline_character_handlers = {}
         InlineHandlerHelper.__inline_simple_character_handlers = {}
         InlineHandlerHelper.valid_inline_text_block_sequence_starts = (
@@ -405,7 +411,7 @@ class InlineHandlerHelper:
                     0,
                 )
 
-            if special_sequence in EmphasisHelper.inline_emphasis:
+            if special_sequence in EmphasisHelper.get_inline_emphasis():
                 return InlineHandlerHelper.__handle_inline_special_character_emphasis(
                     source_text,
                     next_index,

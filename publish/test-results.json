@@ -604,7 +604,7 @@
         },
         {
             "name": "test.gfm.test_markdown_strikethrough_extension",
-            "totalTests": 2,
+            "totalTests": 6,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
