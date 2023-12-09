@@ -54,12 +54,16 @@ def test_markdown_with_extensions_list_only():
 
     expected_return_code = 0
     expected_output = """
-  ID              NAME                        ENABLED    ENABLED    VERSION
-                                              (DEFAULT)  (CURRENT)
+  ID                     NAME                   ENABLED    ENABLED    VERSION
+                                                (DEFAULT)  (CURRENT)
 
-  front-matter    Front Matter Metadata       False      False      0.5.0
-  linter-pragmas  Pragma Linter Instructions  True       True       0.5.0
-
+  front-matter           Front Matter Metadata  False      False      0.5.0
+  linter-pragmas         Pragma Linter Instruc  True       True       0.5.0
+                         tions
+  markdown-disallow-raw  Markdown Disallow Raw  False      False      0.5.0
+  -html                   HTML
+  markdown-task-list-it  Markdown Task List It  False      False      0.5.0
+  ems                    ems
 """
     expected_error = ""
 
@@ -91,14 +95,14 @@ def test_markdown_with_extensions_list_only_all():
   front-matter           Front Matter Metadata  False      False      0.5.0
   linter-pragmas         Pragma Linter Instruc  True       True       0.5.0
                          tions
-  markdown-disallow-raw  Markdown Disallow Raw  False      False      0.0.0
+  markdown-disallow-raw  Markdown Disallow Raw  False      False      0.5.0
   -html                   HTML
   markdown-extended-aut  Markdown Extended Aut  False      False      0.0.0
   olinks                 olinks
   markdown-strikethroug  Markdown Strikethroug  False      False      0.0.0
   h                      h
   markdown-tables        Markdown Tables        False      False      0.0.0
-  markdown-task-list-it  Markdown Task List It  False      False      0.0.0
+  markdown-task-list-it  Markdown Task List It  False      False      0.5.0
   ems                    ems
 """
     expected_error = ""

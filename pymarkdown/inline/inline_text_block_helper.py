@@ -68,7 +68,7 @@ class InlineTextBlockHelper:
         column_number: int = 0,
         para_owner: Optional[ParagraphMarkdownToken] = None,
         tabified_text: Optional[str] = None,
-        parse_properties: Optional[ParseBlockPassProperties] = None,
+        parser_properties: Optional[ParseBlockPassProperties] = None,
     ) -> List[MarkdownToken]:
         """
         Process a text block for any inline items.
@@ -98,7 +98,7 @@ class InlineTextBlockHelper:
             start_index,
         )
         newlines_encountered = 0
-        assert parse_properties is not None
+        assert parser_properties is not None
         while next_index != -1:
             old_next_index = next_index
             assert start_index is not None
@@ -115,6 +115,7 @@ class InlineTextBlockHelper:
                 start_index,
                 next_index,
             ) = InlineTextBlockHelper.__handle_next_inline_character(
+                parser_properties,
                 source_text,
                 start_index,
                 next_index,
@@ -134,7 +135,6 @@ class InlineTextBlockHelper:
                 fold_space,
                 tabified_text,
                 newlines_encountered,
-                parse_properties,
             )
             if source_text[old_next_index] == "\n":
                 newlines_encountered += 1
@@ -158,6 +158,7 @@ class InlineTextBlockHelper:
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __handle_next_inline_character(
+        parser_properties: ParseBlockPassProperties,
         source_text: str,
         start_index: int,
         next_index: int,
@@ -177,7 +178,6 @@ class InlineTextBlockHelper:
         fold_space: Optional[List[str]],
         tabified_text: Optional[str],
         newlines_encountered: int,
-        parse_properties: ParseBlockPassProperties,
     ) -> Tuple[
         int,
         int,
@@ -209,7 +209,8 @@ class InlineTextBlockHelper:
             line_number,
             column_number,
             para_owner,
-            parse_properties,
+            parser_properties,
+            coalesced_stack,
         )
 
         (
@@ -225,6 +226,7 @@ class InlineTextBlockHelper:
             was_new_line,
             tabified_remaining_line,
         ) = InlineTextBlockHelper.__handle_next_special_character(
+            parser_properties,
             source_text,
             next_index,
             inline_request,
@@ -338,6 +340,7 @@ class InlineTextBlockHelper:
         column_number: int,
         para_owner: Optional[ParagraphMarkdownToken],
         parse_properties: ParseBlockPassProperties,
+        coalesced_stack: List[MarkdownToken],
     ) -> Tuple[bool, str, int, Optional[MarkdownToken], Optional[str], InlineRequest]:
         (
             remaining_line,
@@ -360,6 +363,8 @@ class InlineTextBlockHelper:
                 )
             )
 
+        last_container_token = coalesced_stack[-1] if coalesced_stack else None
+
         inline_request = InlineRequest(
             source_text,
             next_index,
@@ -372,6 +377,7 @@ class InlineTextBlockHelper:
             para_owner,
             tabified_text,
             parse_properties,
+            last_container_token,
         )
         return (
             False,
@@ -451,6 +457,7 @@ class InlineTextBlockHelper:
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __handle_next_special_character(
+        parser_properties: ParseBlockPassProperties,
         source_text: str,
         next_index: int,
         inline_request: InlineRequest,
@@ -489,6 +496,7 @@ class InlineTextBlockHelper:
                 was_column_number_reset,
                 did_line_number_change,
             ) = InlineHandlerHelper.process_inline_handled_character(
+                parser_properties,
                 source_text,
                 next_index,
                 inline_request,

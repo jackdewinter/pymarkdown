@@ -30,6 +30,7 @@ class MarkdownToken:
 
     _end_token_prefix = "end-"
     _token_pragma = "pragma"
+    _token_task_list = "task-list"
     _token_end_of_stream = "end-of-stream"
 
     _token_paragraph = "para"

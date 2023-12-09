@@ -3,6 +3,9 @@ Module to help with the parsing of backslash inline elements.
 """
 import logging
 
+from pymarkdown.container_blocks.parse_block_pass_properties import (
+    ParseBlockPassProperties,
+)
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.inline.inline_character_reference_helper import (
@@ -26,7 +29,9 @@ class InlineBackslashHelper:
 
     @staticmethod
     def handle_inline_backslash(
-        inline_request: InlineRequest, add_text_signature: bool = True
+        parser_properties: ParseBlockPassProperties,
+        inline_request: InlineRequest,
+        add_text_signature: bool = True,
     ) -> InlineResponse:
         """
         Handle the inline case of having a backslash.
@@ -74,7 +79,9 @@ class InlineBackslashHelper:
         return inline_response
 
     @staticmethod
-    def handle_backslashes(source_text: str) -> str:
+    def handle_backslashes(
+        parser_properties: ParseBlockPassProperties, source_text: str
+    ) -> str:
         """
         Handle the processing of backslashes for anything other than the text
         blocks, which have additional needs for parsing.
@@ -94,7 +101,7 @@ class InlineBackslashHelper:
             POGGER.debug("handle_backslashes>>$>>", current_char)
             if current_char == InlineBackslashHelper.backslash_character:
                 inline_response = InlineBackslashHelper.handle_inline_backslash(
-                    inline_request, add_text_signature=False
+                    parser_properties, inline_request, add_text_signature=False
                 )
             else:
                 assert (
@@ -103,7 +110,7 @@ class InlineBackslashHelper:
                 )
                 inline_response = (
                     InlineCharacterReferenceHelper.handle_character_reference(
-                        inline_request
+                        parser_properties, inline_request
                     )
                 )
             new_string, new_index = (

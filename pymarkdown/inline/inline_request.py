@@ -30,6 +30,7 @@ class InlineRequest:
     para_owner: Optional[ParagraphMarkdownToken] = None
     tabified_text: Optional[str] = None
     parse_properties: Optional[ParseBlockPassProperties] = None
+    last_container_token: Optional[MarkdownToken] = None
 
 
 # pylint: enable=too-many-instance-attributes

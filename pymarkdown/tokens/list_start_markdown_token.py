@@ -113,8 +113,16 @@ class ListStartMarkdownToken(ContainerMarkdownToken):
         """
         return self.__leading_spaces
 
+    def reset_last_list_item(self) -> None:
+        """
+        Reset the last new list token seens for this list.
+        """
+        self.__last_new_list_token = None
+
     def adjust_for_new_list_item(
-        self, new_list_item_token: NewListItemMarkdownToken
+        self,
+        new_list_item_token: NewListItemMarkdownToken,
+        skip_adjustment: bool = False,
     ) -> None:
         """
         Adjust this token for a new list item (uses copy to keep track).
@@ -123,10 +131,11 @@ class ListStartMarkdownToken(ContainerMarkdownToken):
 
         self.__last_new_list_token = new_list_item_token
 
-        self.__indent_level, self.__extracted_whitespace = (
-            new_list_item_token.indent_level,
-            new_list_item_token.extracted_whitespace,
-        )
+        if not skip_adjustment:
+            self.__indent_level, self.__extracted_whitespace = (
+                new_list_item_token.indent_level,
+                new_list_item_token.extracted_whitespace,
+            )
 
     def __compose_extra_data_field(self) -> None:
         """

@@ -6,6 +6,9 @@ import urllib
 import urllib.parse
 from typing import Dict, List, Optional, Tuple
 
+from pymarkdown.container_blocks.parse_block_pass_properties import (
+    ParseBlockPassProperties,
+)
 from pymarkdown.general.constants import Constants
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
@@ -137,6 +140,7 @@ class LinkParseHelper:
 
     @staticmethod
     def __try_to_find_link_match(
+        parser_properties: ParseBlockPassProperties,
         new_index: int,
         source_text: str,
         text_from_blocks: str,
@@ -181,7 +185,7 @@ class LinkParseHelper:
                 update_index,
                 tried_full_reference_form,
             ) = LinkParseHelper.__try_to_find_link_match_try_full(
-                text_to_scan, after_open_index
+                parser_properties, text_to_scan, after_open_index
             )
 
         if tabified_text and update_index != -1:
@@ -211,7 +215,9 @@ class LinkParseHelper:
 
     @staticmethod
     def __try_to_find_link_match_try_full(
-        text_to_scan: str, after_open_index: int
+        parser_properties: ParseBlockPassProperties,
+        text_to_scan: str,
+        after_open_index: int,
     ) -> Tuple[Optional[str], str, str, str, int, bool]:
         POGGER.debug("full reference?")
         POGGER.debug(">>did_extract>>$>", text_to_scan[after_open_index:])
@@ -220,7 +226,10 @@ class LinkParseHelper:
             after_label_index,
             ex_label,
         ) = LinkParseHelper.extract_link_label(
-            text_to_scan, after_open_index, include_reference_colon=False
+            parser_properties,
+            text_to_scan,
+            after_open_index,
+            include_reference_colon=False,
         )
         POGGER.debug(
             ">>did_extract>>$>after_label_index>$>ex_label>$>",
@@ -311,7 +320,7 @@ class LinkParseHelper:
 
     @staticmethod
     def __parse_link_title(
-        source_text: str, new_index: int
+        parser_properties: ParseBlockPassProperties, source_text: str, new_index: int
     ) -> Tuple[Optional[str], Optional[str], int, str]:
         """
         Parse an inline link's link title.
@@ -327,20 +336,29 @@ class LinkParseHelper:
         ):
             bounding_character = LinkParseHelper.__link_title_single
             newer_index, ex_title = InlineHelper.extract_bounded_string(
-                source_text, newer_index + 1, LinkParseHelper.__link_title_single, None
+                parser_properties,
+                source_text,
+                newer_index + 1,
+                LinkParseHelper.__link_title_single,
+                None,
             )
         elif ParserHelper.is_character_at_index(
             source_text, newer_index, LinkParseHelper.__link_title_double
         ):
             bounding_character = LinkParseHelper.__link_title_double
             newer_index, ex_title = InlineHelper.extract_bounded_string(
-                source_text, newer_index + 1, LinkParseHelper.__link_title_double, None
+                parser_properties,
+                source_text,
+                newer_index + 1,
+                LinkParseHelper.__link_title_double,
+                None,
             )
         elif ParserHelper.is_character_at_index(
             source_text, newer_index, LinkParseHelper.__link_title_parenthesis_open
         ):
             bounding_character = LinkParseHelper.__link_title_parenthesis_open
             newer_index, ex_title = InlineHelper.extract_bounded_string(
+                parser_properties,
                 source_text,
                 newer_index + 1,
                 LinkParseHelper.__link_title_parenthesis_close,
@@ -357,7 +375,7 @@ class LinkParseHelper:
         if ex_title is not None:
             ex_title = InlineHelper.append_text(
                 "",
-                InlineBackslashHelper.handle_backslashes(ex_title),
+                InlineBackslashHelper.handle_backslashes(parser_properties, ex_title),
                 add_text_signature=False,
             )
         POGGER.debug("parse_link_title>>pre>>$>>", pre_ex_title)
@@ -368,7 +386,10 @@ class LinkParseHelper:
 
     @staticmethod
     def extract_link_title(
-        line_to_parse: str, new_index: Optional[int], is_blank_line: bool
+        parser_properties: ParseBlockPassProperties,
+        line_to_parse: str,
+        new_index: Optional[int],
+        is_blank_line: bool,
     ) -> Tuple[
         bool, Optional[int], Optional[str], Optional[str], Optional[str], Optional[str]
     ]:
@@ -395,7 +416,9 @@ class LinkParseHelper:
                 pre_inline_title,
                 new_index,
                 _,
-            ) = LinkParseHelper.__parse_link_title(line_to_parse, new_index)
+            ) = LinkParseHelper.__parse_link_title(
+                parser_properties, line_to_parse, new_index
+            )
             if new_index == -1 or inline_title is None:
                 return False, new_index, None, None, None, None
         else:
@@ -454,7 +477,7 @@ class LinkParseHelper:
 
     @staticmethod
     def __parse_link_destination(
-        source_text: str, new_index: int
+        parser_properties: ParseBlockPassProperties, source_text: str, new_index: int
     ) -> Tuple[Optional[str], Optional[str], int, Optional[str], Optional[bool]]:
         """
         Parse an inline link's link destination.
@@ -473,7 +496,7 @@ class LinkParseHelper:
                 source_text[new_index:],
             )
             new_index, ex_link = LinkParseHelper.__parse_angle_link_destination(
-                source_text, new_index
+                parser_properties, source_text, new_index
             )
             POGGER.debug(
                 ">parse_angle_link_destination>new_index>$>ex_link>$>",
@@ -487,7 +510,7 @@ class LinkParseHelper:
                 source_text[new_index:],
             )
             newer_index, ex_link = LinkParseHelper.__parse_non_angle_link_destination(
-                source_text, new_index
+                parser_properties, source_text, new_index
             )
             assert newer_index is not None
             new_index = newer_index
@@ -509,7 +532,9 @@ class LinkParseHelper:
 
         pre_handle_link = ex_link
         if new_index != -1 and ex_link:
-            ex_link = InlineBackslashHelper.handle_backslashes(ex_link)
+            ex_link = InlineBackslashHelper.handle_backslashes(
+                parser_properties, ex_link
+            )
         POGGER.debug(
             "urllib.parse.quote>>ex_link>>$>>",
             ex_link,
@@ -531,7 +556,7 @@ class LinkParseHelper:
 
     @staticmethod
     def __parse_non_angle_link_destination(
-        source_text: str, new_index: int
+        parser_properties: ParseBlockPassProperties, source_text: str, new_index: int
     ) -> Tuple[Optional[int], Optional[str]]:
         """
         Parse a link destination that is not included in angle brackets.
@@ -562,7 +587,7 @@ class LinkParseHelper:
                 old_new_index = newer_index
                 inline_request = InlineRequest(source_text, newer_index)
                 inline_response = InlineBackslashHelper.handle_inline_backslash(
-                    inline_request
+                    parser_properties, inline_request
                 )
                 newer_index = inline_response.new_index
                 destination_parts.append(source_text[old_new_index:newer_index])
@@ -591,7 +616,7 @@ class LinkParseHelper:
 
     @staticmethod
     def __parse_angle_link_destination(
-        source_text: str, new_index: int
+        parser_properties: ParseBlockPassProperties, source_text: str, new_index: int
     ) -> Tuple[int, str]:
         """
         Parse a link destination that is included in angle brackets.
@@ -618,7 +643,7 @@ class LinkParseHelper:
             old_new_index = newer_index
             inline_request = InlineRequest(source_text, newer_index)
             inline_response = InlineBackslashHelper.handle_inline_backslash(
-                inline_request
+                parser_properties, inline_request
             )
             newer_index = inline_response.new_index
             destination_parts.append(source_text[old_new_index:newer_index])
@@ -633,7 +658,10 @@ class LinkParseHelper:
 
     @staticmethod
     def __parse_inline_link_properties(
-        source_text: str, new_index: int, lhp: LinkHelperProperties
+        parser_properties: ParseBlockPassProperties,
+        source_text: str,
+        new_index: int,
+        lhp: LinkHelperProperties,
     ) -> int:
         lhp.inline_title = ""
         lhp.pre_inline_title = ""
@@ -649,7 +677,9 @@ class LinkParseHelper:
             newer_index,
             _,
             temp_bool,
-        ) = LinkParseHelper.__parse_link_destination(source_text, new_index)
+        ) = LinkParseHelper.__parse_link_destination(
+            parser_properties, source_text, new_index
+        )
         lhp.did_use_angle_start = temp_bool
         POGGER.debug(
             ">>link destination>>$>>$>>",
@@ -678,7 +708,9 @@ class LinkParseHelper:
                     lhp.pre_inline_title,
                     newer_index,
                     lhp.bounding_character,
-                ) = LinkParseHelper.__parse_link_title(source_text, newer_index)
+                ) = LinkParseHelper.__parse_link_title(
+                    parser_properties, source_text, newer_index
+                )
         if newer_index != -1:
             (
                 newer_index,
@@ -689,7 +721,10 @@ class LinkParseHelper:
 
     @staticmethod
     def extract_link_label(
-        line_to_parse: str, new_index: int, include_reference_colon: bool = True
+        parser_properties: ParseBlockPassProperties,
+        line_to_parse: str,
+        new_index: int,
+        include_reference_colon: bool = True,
     ) -> Tuple[bool, int, Optional[str]]:
         """
         Extract the link reference definition's link label.
@@ -709,7 +744,7 @@ class LinkParseHelper:
             ):
                 old_new_index = new_index
                 inline_response = InlineBackslashHelper.handle_inline_backslash(
-                    InlineRequest(line_to_parse, new_index)
+                    parser_properties, InlineRequest(line_to_parse, new_index)
                 )
                 assert inline_response.new_index is not None
                 new_index = inline_response.new_index
@@ -748,7 +783,10 @@ class LinkParseHelper:
 
     @staticmethod
     def extract_link_destination(
-        line_to_parse: str, start_index: int, is_blank_line: bool
+        parser_properties: ParseBlockPassProperties,
+        line_to_parse: str,
+        start_index: int,
+        is_blank_line: bool,
     ) -> Tuple[
         bool, Optional[int], Optional[str], Optional[str], Optional[str], Optional[str]
     ]:
@@ -778,7 +816,7 @@ class LinkParseHelper:
             inline_raw_link,
             _,
         ) = LinkParseHelper.__parse_link_destination(
-            line_to_parse, after_whitespace_index
+            parser_properties, line_to_parse, after_whitespace_index
         )
         if after_whitespace_index == -1:
             return False, -1, None, None, None, None
@@ -793,6 +831,7 @@ class LinkParseHelper:
 
     @staticmethod
     def __process_inline_link_body(
+        parser_properties: ParseBlockPassProperties,
         source_text: str,
         new_index: int,
         tabified_text: Optional[str],
@@ -831,7 +870,7 @@ class LinkParseHelper:
             text_to_scan, newer_index, LinkParseHelper.__link_format_inline_end
         ):
             newer_index = LinkParseHelper.__parse_inline_link_properties(
-                text_to_scan, newer_index, lhp
+                parser_properties, text_to_scan, newer_index, lhp
             )
         else:
             (
@@ -893,6 +932,7 @@ class LinkParseHelper:
 
     @staticmethod
     def look_for_link_formats(
+        parser_properties: ParseBlockPassProperties,
         source_text: str,
         new_index: int,
         text_from_blocks: str,
@@ -922,7 +962,7 @@ class LinkParseHelper:
         ):
             POGGER.debug("inline reference? >>$>>", new_index)
             update_index = LinkParseHelper.__process_inline_link_body(
-                source_text, new_index, tabified_text, lhp
+                parser_properties, source_text, new_index, tabified_text, lhp
             )
             lhp.label_type = Constants.link_type__inline
         elif ParserHelper.is_character_at_index(
@@ -936,7 +976,11 @@ class LinkParseHelper:
                 lhp.inline_title,
                 lhp.ex_label,
             ) = LinkParseHelper.__try_to_find_link_match(
-                new_index, source_text, text_from_blocks, tabified_text
+                parser_properties,
+                new_index,
+                source_text,
+                text_from_blocks,
+                tabified_text,
             )
         POGGER.debug("__look_for_link_formats>>update_index>>$>>", update_index)
         return (

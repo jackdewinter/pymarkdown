@@ -4,6 +4,9 @@ Module to provide for the ability to search the text for a link.
 import logging
 from typing import List, Optional, Tuple, cast
 
+from pymarkdown.container_blocks.parse_block_pass_properties import (
+    ParseBlockPassProperties,
+)
 from pymarkdown.general.constants import Constants
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
@@ -41,9 +44,10 @@ class LinkSearchHelper:
     image_start_sequence = "!["
     __valid_link_starts = [__link_start_sequence, image_start_sequence]
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def look_for_link_or_image(
+        parser_properties: ParseBlockPassProperties,
         inline_blocks: List[MarkdownToken],
         source_text: str,
         next_index: int,
@@ -93,6 +97,7 @@ class LinkSearchHelper:
                     consume_rest_of_line,
                     valid_special_start_text,
                 ) = LinkSearchHelper.__find_link(
+                    parser_properties,
                     inline_blocks,
                     search_index,
                     source_text,
@@ -109,6 +114,31 @@ class LinkSearchHelper:
                 POGGER.debug("  not link")
             search_index -= 1
 
+        return LinkSearchHelper.__look_for_link_or_image_end(
+            inline_blocks,
+            is_valid,
+            consume_rest_of_line,
+            valid_special_start_text,
+            search_index,
+            next_index,
+            updated_index,
+            token_to_append,
+        )
+
+    # pylint: enable=too-many-arguments, too-many-locals
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __look_for_link_or_image_end(
+        inline_blocks: List[MarkdownToken],
+        is_valid: bool,
+        consume_rest_of_line: bool,
+        valid_special_start_text: Optional[str],
+        search_index: int,
+        next_index: int,
+        updated_index: int,
+        token_to_append: Optional[MarkdownToken],
+    ) -> Tuple[int, bool, Optional[MarkdownToken], bool]:
         POGGER.debug(
             ">>look_for_link_or_image>>$<<is_valid<<$<<$<<",
             inline_blocks,
@@ -128,6 +158,7 @@ class LinkSearchHelper:
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __find_link(
+        parser_properties: ParseBlockPassProperties,
         inline_blocks: List[MarkdownToken],
         search_index: int,
         source_text: str,
@@ -162,6 +193,7 @@ class LinkSearchHelper:
                     token_to_append,
                     consume_rest_of_line,
                 ) = LinkSearchHelper.__handle_link_types(
+                    parser_properties,
                     inline_blocks,
                     search_index,
                     source_text,
@@ -276,6 +308,7 @@ class LinkSearchHelper:
     # pylint: disable=too-many-arguments
     @staticmethod
     def __handle_link_types(
+        parser_properties: ParseBlockPassProperties,
         inline_blocks: List[MarkdownToken],
         ind: int,
         source_text: str,
@@ -297,6 +330,7 @@ class LinkSearchHelper:
             text_from_blocks_raw,
             lhp,
         ) = LinkSearchHelper.__excavate_link(
+            parser_properties,
             inline_blocks,
             ind,
             source_text,
@@ -322,6 +356,7 @@ class LinkSearchHelper:
             assert lhp.before_link_whitespace is not None
             assert lhp.label_type is not None
             return LinkCreateHelper.create_link_token(
+                parser_properties,
                 start_text,
                 text_from_blocks,
                 text_from_blocks_raw,
@@ -340,6 +375,7 @@ class LinkSearchHelper:
     # pylint: disable=too-many-arguments
     @staticmethod
     def __excavate_link(
+        parser_properties: ParseBlockPassProperties,
         inline_blocks: List[MarkdownToken],
         ind: int,
         source_text: str,
@@ -389,7 +425,7 @@ class LinkSearchHelper:
             tried_full_reference_form,
             lhp,
         ) = LinkParseHelper.look_for_link_formats(
-            source_text, new_index, text_from_blocks, tabified_text
+            parser_properties, source_text, new_index, text_from_blocks, tabified_text
         )
 
         # u != -1 - inline valid

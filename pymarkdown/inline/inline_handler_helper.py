@@ -6,6 +6,10 @@ from typing import Dict, List, Optional, Tuple, cast
 
 from typing_extensions import Protocol
 
+from pymarkdown.container_blocks.parse_block_pass_properties import (
+    ParseBlockPassProperties,
+)
+from pymarkdown.extensions.task_list_items import TaskListToken
 from pymarkdown.general.constants import Constants
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
@@ -21,6 +25,7 @@ from pymarkdown.inline.inline_response import InlineResponse
 from pymarkdown.links.link_parse_helper import LinkParseHelper
 from pymarkdown.links.link_search_helper import LinkSearchHelper
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
+from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
 from pymarkdown.tokens.raw_html_markdown_token import RawHtmlMarkdownToken
@@ -40,6 +45,7 @@ class InlineHandlerProtocol(Protocol):
 
     def __call__(
         self,
+        parser_properties: ParseBlockPassProperties,
         inline_request: InlineRequest,
     ) -> InlineResponse:
         ...  # pragma: no cover
@@ -111,8 +117,11 @@ class InlineHandlerHelper:
 
     @staticmethod
     def __handle_inline_control_character(
+        parser_properties: ParseBlockPassProperties,
         inline_request: InlineRequest,
     ) -> InlineResponse:
+        _ = parser_properties
+
         inline_response = InlineResponse()
         (
             inline_response.new_index,
@@ -160,7 +169,9 @@ class InlineHandlerHelper:
             )
 
     @staticmethod
-    def process_simple_inline_fn(source_text: str) -> str:
+    def process_simple_inline_fn(
+        parser_properties: ParseBlockPassProperties, source_text: str
+    ) -> str:
         """
         Handle a simple processing of inline text for simple replacements.
         """
@@ -182,7 +193,7 @@ class InlineHandlerHelper:
                     source_text[next_index]
                 ]
                 assert proc_fn is not None
-                inline_response = proc_fn(inline_request)
+                inline_response = proc_fn(parser_properties, inline_request)
                 assert inline_response.new_string is not None
                 processed_parts.append(inline_response.new_string)
                 assert inline_response.new_index is not None
@@ -201,9 +212,11 @@ class InlineHandlerHelper:
 
     @staticmethod
     def __handle_inline_special_single_character(
+        parser_properties: ParseBlockPassProperties,
         inline_request: InlineRequest,
     ) -> InlineResponse:
         return InlineHandlerHelper.__handle_inline_special(
+            parser_properties,
             inline_request.source_text,
             inline_request.next_index,
             inline_request.inline_blocks,
@@ -215,11 +228,13 @@ class InlineHandlerHelper:
             inline_request.column_number,
             inline_request.para_owner,
             inline_request.tabified_text,
+            inline_request.last_container_token,
         )
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __handle_inline_special(
+        parser_properties: ParseBlockPassProperties,
         source_text: str,
         next_index: int,
         inline_blocks: List[MarkdownToken],
@@ -231,6 +246,7 @@ class InlineHandlerHelper:
         column_number: Optional[int],
         para_owner: Optional[ParagraphMarkdownToken],
         tabified_text: Optional[str],
+        last_container_token: Optional[MarkdownToken],
     ) -> InlineResponse:
         """
         Handle the collection of special inline characters for later processing.
@@ -258,6 +274,7 @@ class InlineHandlerHelper:
             inline_response.consume_rest_of_line,
             inline_response.delta_line_number,
         ) = InlineHandlerHelper.__handle_inline_special_character(
+            parser_properties,
             special_length,
             inline_blocks,
             remaining_line,
@@ -268,6 +285,7 @@ class InlineHandlerHelper:
             para_owner,
             len(remaining_line),
             tabified_text,
+            last_container_token,
         )
         if not inline_response.new_tokens:
             assert line_number is not None
@@ -288,11 +306,58 @@ class InlineHandlerHelper:
         POGGER.debug(">>repeat_count>>$<<", inline_response.delta_column_number)
         return inline_response
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
 
     # pylint: disable=too-many-arguments
     @staticmethod
+    def __handle_inline_special_character_task_list(
+        parser_properties: ParseBlockPassProperties,
+        para_owner: Optional[ParagraphMarkdownToken],
+        special_sequence: str,
+        next_index: int,
+        source_text: str,
+        last_container_token: Optional[MarkdownToken],
+    ) -> Tuple[int, Optional[MarkdownToken]]:
+        repeat_count = 0
+        new_token = None
+        if para_owner is None or not parser_properties.is_task_lists_enabled:
+            return repeat_count, new_token
+        if not (last_container_token and last_container_token.is_list_start):
+            return repeat_count, new_token
+        if last_container_token.line_number != para_owner.line_number:
+            last_list_token = cast(ListStartMarkdownToken, last_container_token)
+            if (
+                last_list_token.last_new_list_token is None
+                or last_list_token.last_new_list_token.line_number
+                != para_owner.line_number
+            ):
+                return repeat_count, new_token
+
+        if special_sequence == "[" and next_index == 0 and len(source_text) >= 4:
+            is_valid_check_character = source_text[1] in [" ", "X", "x"]
+            is_valid_close_character = source_text[2] == "]"
+            is_followed_by_whitespace = ParserHelper.is_character_at_index_whitespace(
+                source_text, 3
+            )
+            if (
+                is_valid_check_character
+                and is_valid_close_character
+                and is_followed_by_whitespace
+            ):
+                repeat_count = 3
+                new_token = TaskListToken(
+                    source_text[1],
+                    line_number=para_owner.line_number,
+                    column_number=para_owner.column_number,
+                )
+        return repeat_count, new_token
+
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments, too-many-locals
+    @staticmethod
     def __handle_inline_special_character(
+        parser_properties: ParseBlockPassProperties,
         special_length: int,
         inline_blocks: List[MarkdownToken],
         remaining_line: str,
@@ -303,6 +368,7 @@ class InlineHandlerHelper:
         para_owner: Optional[ParagraphMarkdownToken],
         remaining_line_size: int,
         tabified_text: Optional[str],
+        last_container_token: Optional[MarkdownToken],
     ) -> Tuple[
         str,
         int,
@@ -314,14 +380,40 @@ class InlineHandlerHelper:
         int,
     ]:
         special_sequence = source_text[next_index : next_index + special_length]
-        if special_length == 1 and special_sequence in EmphasisHelper.inline_emphasis:
-            return InlineHandlerHelper.__handle_inline_special_character_emphasis(
-                source_text,
-                next_index,
+        if special_length == 1:
+            (
+                repeat_count,
+                new_token,
+            ) = InlineHandlerHelper.__handle_inline_special_character_task_list(
+                parser_properties,
+                para_owner,
                 special_sequence,
+                next_index,
+                source_text,
+                last_container_token,
             )
+            new_index = next_index + repeat_count
+            if new_token is not None:
+                return (
+                    source_text[next_index:new_index],
+                    repeat_count,
+                    new_index,
+                    (None, None),
+                    True,
+                    [new_token],
+                    False,
+                    0,
+                )
+
+            if special_sequence in EmphasisHelper.inline_emphasis:
+                return InlineHandlerHelper.__handle_inline_special_character_emphasis(
+                    source_text,
+                    next_index,
+                    special_sequence,
+                )
         if special_sequence[0] == LinkParseHelper.link_label_end:
             return InlineHandlerHelper.__handle_inline_special_character_label_end(
+                parser_properties,
                 special_length,
                 special_sequence,
                 inline_blocks,
@@ -345,11 +437,12 @@ class InlineHandlerHelper:
             0,
         )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
 
     # pylint: disable=too-many-arguments
     @staticmethod
     def __handle_inline_special_character_label_end(
+        parser_properties: ParseBlockPassProperties,
         special_length: int,
         special_sequence: str,
         inline_blocks: List[MarkdownToken],
@@ -377,6 +470,7 @@ class InlineHandlerHelper:
             special_sequence,
         )
         return InlineHandlerHelper.__handle_link_label_end(
+            parser_properties,
             inline_blocks,
             remaining_line,
             tabified_remaining_line,
@@ -428,6 +522,7 @@ class InlineHandlerHelper:
 
     @staticmethod
     def __handle_inline_image_link_start_character(
+        parser_properties: ParseBlockPassProperties,
         inline_request: InlineRequest,
     ) -> InlineResponse:
         if ParserHelper.are_characters_at_index(
@@ -436,6 +531,7 @@ class InlineHandlerHelper:
             LinkSearchHelper.image_start_sequence,
         ):
             inline_response = InlineHandlerHelper.__handle_inline_special(
+                parser_properties,
                 inline_request.source_text,
                 inline_request.next_index,
                 inline_request.inline_blocks,
@@ -447,6 +543,7 @@ class InlineHandlerHelper:
                 inline_request.column_number,
                 inline_request.para_owner,
                 inline_request.tabified_text,
+                None,
             )
             assert not inline_response.consume_rest_of_line
         else:
@@ -465,6 +562,7 @@ class InlineHandlerHelper:
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __handle_link_label_end(
+        parser_properties: ParseBlockPassProperties,
         inline_blocks: List[MarkdownToken],
         remaining_line: str,
         tabified_remaining_line: Optional[str],
@@ -527,6 +625,7 @@ class InlineHandlerHelper:
             new_token,
             consume_rest_of_line,
         ) = LinkSearchHelper.look_for_link_or_image(
+            parser_properties,
             inline_blocks,
             source_text,
             next_index,
@@ -626,6 +725,7 @@ class InlineHandlerHelper:
     # pylint: disable=too-many-arguments
     @staticmethod
     def process_inline_handled_character(
+        parser_properties: ParseBlockPassProperties,
         source_text: str,
         next_index: int,
         inline_request: InlineRequest,
@@ -639,7 +739,7 @@ class InlineHandlerHelper:
 
         proc_fn = InlineHandlerHelper.__get_handler(source_text[next_index])
         assert proc_fn is not None
-        inline_response = proc_fn(inline_request)
+        inline_response = proc_fn(parser_properties, inline_request)
 
         line_number += inline_response.delta_line_number
         did_line_number_change = bool(inline_response.delta_line_number)

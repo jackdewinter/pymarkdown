@@ -16,6 +16,7 @@ from pymarkdown.tokens.atx_heading_markdown_token import AtxHeadingMarkdownToken
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.new_list_item_markdown_token import NewListItemMarkdownToken
 from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
 from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 
@@ -84,17 +85,29 @@ class InlineProcessor:
     ) -> None:
         current_token = coalesced_results[coalesce_index]
         POGGER.debug("STACK?:$", current_token)
-        if current_token.is_container and not current_token.is_new_list_item:
-            POGGER.debug("STACK:$", coalesced_stack)
-            coalesced_stack.append(current_token)
-            POGGER.debug("STACK-ADD:$", current_token)
-            POGGER.debug("STACK:$", coalesced_stack)
-            if current_token.is_block_quote_start:
-                block_quote_token = cast(BlockQuoteMarkdownToken, current_token)
-                block_quote_token.leading_text_index = 0
-                POGGER.info("-->last->block->$", block_quote_token.leading_text_index)
+        if current_token.is_container:
+            if current_token.is_new_list_item:
+                assert coalesced_stack[-1].is_list_start
+                list_token = cast(ListStartMarkdownToken, coalesced_stack[-1])
+                new_item_token = cast(NewListItemMarkdownToken, current_token)
+                list_token.adjust_for_new_list_item(
+                    new_item_token, skip_adjustment=True
+                )
             else:
-                POGGER.info("-->not bq-")
+                POGGER.debug("STACK:$", coalesced_stack)
+                coalesced_stack.append(current_token)
+                POGGER.debug("STACK-ADD:$", current_token)
+                POGGER.debug("STACK:$", coalesced_stack)
+                if current_token.is_block_quote_start:
+                    block_quote_token = cast(BlockQuoteMarkdownToken, current_token)
+                    block_quote_token.leading_text_index = 0
+                    POGGER.info(
+                        "-->last->block->$", block_quote_token.leading_text_index
+                    )
+                else:
+                    list_token = cast(ListStartMarkdownToken, current_token)
+                    assert list_token.last_new_list_token is None
+                    POGGER.info("-->not bq-")
 
         elif current_token.is_list_end or current_token.is_block_quote_end:
             POGGER.debug("STACK:$", coalesced_stack)
@@ -194,7 +207,7 @@ class InlineProcessor:
             column_number=text_token.column_number,
             para_owner=paragraph_token,
             tabified_text=text_token.tabified_text,
-            parse_properties=parse_properties,
+            parser_properties=parse_properties,
         )
 
     @staticmethod
@@ -229,7 +242,7 @@ class InlineProcessor:
             + len(text_token.extracted_whitespace)
             + atx_token.hash_count,
             tabified_text=text_token.tabified_text,
-            parse_properties=parse_properties,
+            parser_properties=parse_properties,
         )
 
     @staticmethod
@@ -251,7 +264,7 @@ class InlineProcessor:
             line_number=text_token.line_number,
             column_number=text_token.column_number,
             tabified_text=text_token.tabified_text,
-            parse_properties=parse_properties,
+            parser_properties=parse_properties,
         )
         POGGER.debug(
             "processed_tokens>>$",
