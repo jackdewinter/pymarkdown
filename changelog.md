@@ -4,12 +4,15 @@
 
 ### Added
 
+- [Issue 803](https://github.com/jackdewinter/pymarkdown/issues/803)
+  - Extension: Strikethrough
 - [Issue 805](https://github.com/jackdewinter/pymarkdown/issues/805)
-  - Task List Items
+  - Extension: Task List Items
 
 ### Changed
 
-- None
+- [Issue 901](https://github.com/jackdewinter/pymarkdown/issues/901)
+  - noticed cases where `len(x)` was being used instead of `x` or `not x`
 
 ### Fixed
 

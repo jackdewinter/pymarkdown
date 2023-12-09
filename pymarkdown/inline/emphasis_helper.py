@@ -4,6 +4,7 @@ Emphasis helper
 import logging
 from typing import List, Optional, Tuple, cast
 
+from pymarkdown.extension_manager.extension_manager import ExtensionManager
 from pymarkdown.general.constants import Constants
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
@@ -14,7 +15,6 @@ from pymarkdown.tokens.special_text_markdown_token import SpecialTextMarkdownTok
 POGGER = ParserLogger(logging.getLogger(__name__))
 
 
-# pylint: disable=too-few-public-methods
 class EmphasisHelper:
     """
     Class to helper with the parsing of emphasis for inline elements.
@@ -22,7 +22,26 @@ class EmphasisHelper:
 
     __simple_emphasis = "*"
     __complex_emphasis = "_"
-    inline_emphasis = f"{__simple_emphasis}{__complex_emphasis}"
+    __inline_emphasis = ""
+    __strikethrough_emphasis = "~"
+
+    @staticmethod
+    def initialize(extension_manager: ExtensionManager) -> None:
+        """
+        Initialize this subsystem.
+        """
+        EmphasisHelper.__inline_emphasis = (
+            f"{EmphasisHelper.__simple_emphasis}{EmphasisHelper.__complex_emphasis}"
+        )
+        if extension_manager.is_strike_through_enabled:
+            EmphasisHelper.__inline_emphasis += EmphasisHelper.__strikethrough_emphasis
+
+    @staticmethod
+    def get_inline_emphasis() -> str:
+        """
+        Get the current string with all inline emphasis characters.
+        """
+        return EmphasisHelper.__inline_emphasis
 
     @staticmethod
     def __create_delimiter_stack(
@@ -101,7 +120,7 @@ class EmphasisHelper:
         continue_processing = False
         if not special_token.is_active:
             POGGER.debug("not active")
-        elif special_token.token_text[0] not in EmphasisHelper.inline_emphasis:
+        elif special_token.token_text[0] not in EmphasisHelper.get_inline_emphasis():
             POGGER.debug("not emphasis")
         elif not EmphasisHelper.__is_potential_closer(special_token):
             POGGER.debug("not closer")
@@ -397,11 +416,17 @@ class EmphasisHelper:
         Determine if the current token is a potential closer.
         """
 
-        assert current_token.token_text[0] in EmphasisHelper.inline_emphasis
+        assert current_token.token_text[0] in EmphasisHelper.get_inline_emphasis()
 
         # Rule 3 and 7
         if current_token.token_text[0] == EmphasisHelper.__simple_emphasis:
             is_closer = EmphasisHelper.__is_right_flanking_delimiter_run(current_token)
+        elif current_token.token_text[0] == EmphasisHelper.__strikethrough_emphasis:
+            is_closer = False
+            if len(current_token.token_text) < 3:
+                is_closer = EmphasisHelper.__is_right_flanking_delimiter_run(
+                    current_token
+                )
         # Rule 4 and 8
         else:
             assert current_token.token_text[0] == EmphasisHelper.__complex_emphasis
@@ -424,12 +449,18 @@ class EmphasisHelper:
         Determine if the current token is a potential opener.
         """
 
-        assert current_token.token_text[0] in EmphasisHelper.inline_emphasis
+        assert current_token.token_text[0] in EmphasisHelper.get_inline_emphasis()
 
         # Rule 1
         if current_token.token_text[0] == EmphasisHelper.__simple_emphasis:
             is_opener = EmphasisHelper.__is_left_flanking_delimiter_run(current_token)
             # POGGER.debug("is_opener (simple)=$", is_opener)
+        elif current_token.token_text[0] == EmphasisHelper.__strikethrough_emphasis:
+            is_opener = False
+            if len(current_token.token_text) < 3:
+                is_opener = EmphasisHelper.__is_left_flanking_delimiter_run(
+                    current_token
+                )
         else:
             assert current_token.token_text[0] == EmphasisHelper.__complex_emphasis
             is_opener = EmphasisHelper.__is_left_flanking_delimiter_run(current_token)
@@ -495,6 +526,3 @@ class EmphasisHelper:
                         )
 
         return is_valid_opener
-
-
-# pylint: enable=too-few-public-methods

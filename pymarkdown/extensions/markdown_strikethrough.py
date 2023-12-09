@@ -31,7 +31,7 @@ class MarkdownStrikeThroughExtension(ParserExtension):
             extension_name="Markdown Strikethrough",
             extension_description="Allows parsing of Markdown strikethrough.",
             extension_enabled_by_default=False,
-            extension_version=ExtensionManagerConstants.EXTENSION_VERSION_NOT_IMPLEMENTED,
+            extension_version="0.5.0",
             extension_interface_version=ExtensionManagerConstants.EXTENSION_INTERFACE_VERSION_BASIC,
             extension_url="https://github.github.com/gfm/#strikethrough-extension-",
             extension_configuration=None,

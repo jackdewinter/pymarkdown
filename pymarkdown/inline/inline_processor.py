@@ -7,6 +7,7 @@ from typing import List, cast
 from pymarkdown.container_blocks.parse_block_pass_properties import (
     ParseBlockPassProperties,
 )
+from pymarkdown.extension_manager.extension_manager import ExtensionManager
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.inline.inline_handler_helper import InlineHandlerHelper
@@ -29,11 +30,11 @@ class InlineProcessor:
     """
 
     @staticmethod
-    def initialize() -> None:
+    def initialize(extension_manager: ExtensionManager) -> None:
         """
         Initialize the inline processor subsystem.
         """
-        InlineHandlerHelper.initialize()
+        InlineHandlerHelper.initialize(extension_manager)
 
     @staticmethod
     def parse_inline(

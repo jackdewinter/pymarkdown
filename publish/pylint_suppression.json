@@ -125,7 +125,6 @@
         },
         "pymarkdown/html/html_raw_helper.py": {},
         "pymarkdown/inline/emphasis_helper.py": {
-            "too-few-public-methods": 1,
             "too-many-arguments": 1
         },
         "pymarkdown/inline/inline_autolink_helper.py": {},
@@ -481,7 +480,7 @@
     "disables-by-name": {
         "too-many-instance-attributes": 23,
         "too-many-public-methods": 4,
-        "too-few-public-methods": 40,
+        "too-few-public-methods": 39,
         "too-many-arguments": 214,
         "too-many-locals": 33,
         "chained-comparison": 1,

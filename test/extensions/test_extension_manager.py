@@ -62,6 +62,8 @@ def test_markdown_with_extensions_list_only():
                          tions
   markdown-disallow-raw  Markdown Disallow Raw  False      False      0.5.0
   -html                   HTML
+  markdown-strikethroug  Markdown Strikethroug  False      False      0.5.0
+  h                      h
   markdown-task-list-it  Markdown Task List It  False      False      0.5.0
   ems                    ems
 """
@@ -99,7 +101,7 @@ def test_markdown_with_extensions_list_only_all():
   -html                   HTML
   markdown-extended-aut  Markdown Extended Aut  False      False      0.0.0
   olinks                 olinks
-  markdown-strikethroug  Markdown Strikethroug  False      False      0.0.0
+  markdown-strikethroug  Markdown Strikethroug  False      False      0.5.0
   h                      h
   markdown-tables        Markdown Tables        False      False      0.0.0
   markdown-task-list-it  Markdown Task List It  False      False      0.5.0
