@@ -55,6 +55,7 @@ class ExtensionManager:
         self.__is_front_matter_enabled: bool = False
         self.__is_linter_pragmas_enabled: bool = False
         self.__is_disallow_raw_html_enabled: bool = False
+        self.__is_task_list_items_enabled: bool = False
 
     def initialize(
         self,
@@ -121,6 +122,10 @@ class ExtensionManager:
             MarkdownDisallowRawHtmlExtension().get_identifier()
             in self.__enabled_extensions
         )
+        self.__is_task_list_items_enabled = (
+            MarkdownTaskListItemsExtension().get_identifier()
+            in self.__enabled_extensions
+        )
 
     def get_extension_instance(self, extension_id: str) -> ParserExtension:
         """
@@ -148,6 +153,13 @@ class ExtensionManager:
         Check to see if disallow_raw_html support is enabled.
         """
         return self.__is_disallow_raw_html_enabled
+
+    @property
+    def is_task_list_items_enabled(self) -> bool:
+        """
+        Check to see if task list items support is enabled.
+        """
+        return self.__is_task_list_items_enabled
 
     @staticmethod
     def argparse_subparser_name() -> str:

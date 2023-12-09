@@ -16,6 +16,7 @@ from pymarkdown.tokens.container_markdown_token import ContainerMarkdownToken
 from pymarkdown.tokens.end_of_stream_token import SpecialMarkdownToken
 from pymarkdown.tokens.inline_markdown_token import InlineMarkdownToken
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
+from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
 from pymarkdown.tokens.markdown_token import (
     EndMarkdownToken,
     MarkdownToken,
@@ -190,6 +191,10 @@ class TransformToMarkdown:
         POGGER.debug("---\nTransformToMarkdown\n---")
 
         for token_index, current_token in enumerate(actual_tokens):
+            if current_token.is_list_start:
+                list_token = cast(ListStartMarkdownToken, current_token)
+                list_token.reset_last_list_item()
+
             next_token = (
                 actual_tokens[token_index + 1]
                 if token_index < len(actual_tokens) - 1

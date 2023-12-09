@@ -4,6 +4,9 @@ Module to help with the parsing of inline elements.
 import logging
 from typing import Dict, List, Optional, Tuple
 
+from pymarkdown.container_blocks.parse_block_pass_properties import (
+    ParseBlockPassProperties,
+)
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.inline.inline_backslash_helper import InlineBackslashHelper
@@ -26,6 +29,7 @@ class InlineHelper:
 
     @staticmethod
     def extract_bounded_string(
+        parser_properties: ParseBlockPassProperties,
         source_text: str,
         new_index: int,
         close_character: str,
@@ -64,6 +68,7 @@ class InlineHelper:
                 next_index,
                 nesting_level,
             ) = InlineHelper.__handle_next_extract_bounded_string_item(
+                parser_properties,
                 source_text,
                 next_index,
                 extracted_parts,
@@ -98,6 +103,7 @@ class InlineHelper:
     # pylint: disable=too-many-arguments
     @staticmethod
     def __handle_next_extract_bounded_string_item(
+        parser_properties: ParseBlockPassProperties,
         source_text: str,
         next_index: int,
         extracted_parts: List[str],
@@ -114,7 +120,7 @@ class InlineHelper:
 
             inline_request = InlineRequest(source_text, next_index)
             inline_response = InlineBackslashHelper.handle_inline_backslash(
-                inline_request
+                parser_properties, inline_request
             )
             assert inline_response.new_index is not None
             next_index = inline_response.new_index

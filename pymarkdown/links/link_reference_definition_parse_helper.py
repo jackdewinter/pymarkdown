@@ -49,7 +49,9 @@ class LinkReferenceDefinitionParseHelper:
             keep_going,
             new_index,
             collected_destination,
-        ) = LinkParseHelper.extract_link_label(line_to_parse, start_index + 1)
+        ) = LinkParseHelper.extract_link_label(
+            parser_state.parse_properties, line_to_parse, start_index + 1
+        )
         assert is_blank_line is not None
         if keep_going:
             (
@@ -60,7 +62,7 @@ class LinkReferenceDefinitionParseHelper:
                 line_destination_whitespace,
                 inline_raw_link,
             ) = LinkParseHelper.extract_link_destination(
-                line_to_parse, new_index, is_blank_line
+                parser_state.parse_properties, line_to_parse, new_index, is_blank_line
             )
         else:
             inline_link = None
@@ -73,7 +75,7 @@ class LinkReferenceDefinitionParseHelper:
                 line_title_whitespace,
                 inline_raw_title,
             ) = LinkParseHelper.extract_link_title(
-                line_to_parse, new_index, is_blank_line
+                parser_state.parse_properties, line_to_parse, new_index, is_blank_line
             )
         else:
             inline_title = ""

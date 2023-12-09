@@ -6,6 +6,9 @@ import re
 import string
 from typing import Optional, Tuple, Union, cast
 
+from pymarkdown.container_blocks.parse_block_pass_properties import (
+    ParseBlockPassProperties,
+)
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.html.html_raw_helper import HtmlRawHelper
@@ -62,7 +65,9 @@ class InlineAutoLinkHelper:
         return new_token, between_brackets, closing_angle_index
 
     @staticmethod
-    def handle_angle_brackets(inline_request: InlineRequest) -> InlineResponse:
+    def handle_angle_brackets(
+        parser_properties: ParseBlockPassProperties, inline_request: InlineRequest
+    ) -> InlineResponse:
         """
         Given an open angle bracket, determine which of the three possibilities it is.
         """

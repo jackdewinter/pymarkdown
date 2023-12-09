@@ -37,7 +37,7 @@ class MarkdownDisallowRawHtmlExtension(ParserExtension):
             extension_name="Markdown Disallow Raw HTML",
             extension_description="Disallows parsing of any raw HTML.",
             extension_enabled_by_default=False,
-            extension_version=ExtensionManagerConstants.EXTENSION_VERSION_NOT_IMPLEMENTED,
+            extension_version="0.5.0",
             extension_interface_version=ExtensionManagerConstants.EXTENSION_INTERFACE_VERSION_BASIC,
             extension_url="https://github.github.com/gfm/#disallowed-raw-html-extension-",
             extension_configuration=None,

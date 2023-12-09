@@ -88,7 +88,9 @@
             "too-many-arguments": 4,
             "too-many-locals": 1
         },
-        "pymarkdown/extensions/task_list_items.py": {},
+        "pymarkdown/extensions/task_list_items.py": {
+            "protected-access": 1
+        },
         "pymarkdown/file_scan_helper.py": {
             "too-many-arguments": 3
         },
@@ -132,8 +134,8 @@
         "pymarkdown/inline/inline_character_reference_helper.py": {},
         "pymarkdown/inline/inline_handler_helper.py": {
             "too-few-public-methods": 1,
-            "too-many-arguments": 9,
-            "too-many-locals": 1
+            "too-many-arguments": 10,
+            "too-many-locals": 3
         },
         "pymarkdown/inline/inline_helper.py": {
             "too-many-arguments": 2
@@ -188,7 +190,7 @@
         "pymarkdown/leaf_blocks/thematic_leaf_block_processor.py": {},
         "pymarkdown/links/link_create_helper.py": {
             "too-few-public-methods": 2,
-            "too-many-arguments": 3
+            "too-many-arguments": 4
         },
         "pymarkdown/links/link_helper_properties.py": {
             "too-many-instance-attributes": 1
@@ -213,8 +215,8 @@
         "pymarkdown/links/link_reference_tuple.py": {},
         "pymarkdown/links/link_search_helper.py": {
             "too-few-public-methods": 1,
-            "too-many-arguments": 5,
-            "too-many-locals": 1
+            "too-many-arguments": 6,
+            "too-many-locals": 2
         },
         "pymarkdown/list_blocks/list_block_can_close_helper.py": {},
         "pymarkdown/list_blocks/list_block_create_new_handler.py": {
@@ -480,11 +482,11 @@
         "too-many-instance-attributes": 23,
         "too-many-public-methods": 4,
         "too-few-public-methods": 40,
-        "too-many-arguments": 211,
-        "too-many-locals": 30,
+        "too-many-arguments": 214,
+        "too-many-locals": 33,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 2,
-        "protected-access": 23,
+        "protected-access": 24,
         "deprecated-decorator": 3,
         "broad-exception-caught": 3
     }

@@ -6,6 +6,9 @@ from typing import List, Optional, Tuple, cast
 
 from typing_extensions import Protocol
 
+from pymarkdown.container_blocks.parse_block_pass_properties import (
+    ParseBlockPassProperties,
+)
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.inline.inline_helper import InlineHelper
@@ -31,6 +34,7 @@ class ProcessSimpleInlineProtocol(Protocol):
 
     def __call__(
         self,
+        parser_properties: ParseBlockPassProperties,
         source_text: str,
     ) -> str:
         ...  # pragma: no cover
@@ -51,6 +55,7 @@ class LinkCreateHelper:
     # pylint: disable=too-many-arguments
     @staticmethod
     def create_link_token(
+        parser_properties: ParseBlockPassProperties,
         start_text: str,
         text_from_blocks: str,
         text_from_blocks_raw: str,
@@ -110,6 +115,7 @@ class LinkCreateHelper:
                 consume_rest_of_line,
                 text_from_blocks_raw,
             ) = LinkCreateHelper.__add_image_token(
+                parser_properties,
                 start_text,
                 inline_blocks,
                 ind,
@@ -147,6 +153,7 @@ class LinkCreateHelper:
     # pylint: disable=too-many-arguments
     @staticmethod
     def __add_image_token(
+        parser_properties: ParseBlockPassProperties,
         start_text: str,
         inline_blocks: List[MarkdownToken],
         ind: int,
@@ -166,7 +173,12 @@ class LinkCreateHelper:
             image_alt_text,
             text_from_blocks_raw,
         ) = LinkCreateHelper.__consume_text_for_image_alt_text(
-            inline_blocks, ind, remaining_line, text_from_blocks_raw, process_inlines_fn
+            parser_properties,
+            inline_blocks,
+            ind,
+            remaining_line,
+            text_from_blocks_raw,
+            process_inlines_fn,
         )
         POGGER.debug("\n>>__consume_text_for_image_alt_text>>$>>", image_alt_text)
 
@@ -185,8 +197,10 @@ class LinkCreateHelper:
 
     # pylint: enable=too-many-arguments
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __consume_text_for_image_alt_text(
+        parser_properties: ParseBlockPassProperties,
         inline_blocks: List[MarkdownToken],
         ind: int,
         remaining_line: str,
@@ -218,7 +232,7 @@ class LinkCreateHelper:
             POGGER.debug(">>after>>$>>", image_alt_text)
         else:
             POGGER.debug(">>composing>>$>>", text_from_blocks_raw)
-            image_alt_text = process_inlines_fn(text_from_blocks_raw)
+            image_alt_text = process_inlines_fn(parser_properties, text_from_blocks_raw)
             image_alt_text = ParserHelper.resolve_all_from_text(image_alt_text)
             image_alt_text = InlineHelper.append_text(
                 "", image_alt_text, add_text_signature=False
@@ -228,6 +242,8 @@ class LinkCreateHelper:
         POGGER.debug(">>image_alt_text>>$>>", image_alt_text)
         POGGER.debug(">>text_from_blocks_raw>>$>>", text_from_blocks_raw)
         return image_alt_text, text_from_blocks_raw
+
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __handle_next_alt_text_special_text(

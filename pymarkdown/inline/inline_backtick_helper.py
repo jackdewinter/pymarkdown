@@ -4,6 +4,9 @@ Module to help with the parsing of bkactick inline elements.
 import logging
 from typing import List, Optional, Tuple
 
+from pymarkdown.container_blocks.parse_block_pass_properties import (
+    ParseBlockPassProperties,
+)
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.inline.inline_helper import InlineHelper
@@ -24,7 +27,9 @@ class InlineBacktickHelper:
     code_span_bounds = "`"
 
     @staticmethod
-    def handle_inline_backtick(inline_request: InlineRequest) -> InlineResponse:
+    def handle_inline_backtick(
+        parser_properties: ParseBlockPassProperties, inline_request: InlineRequest
+    ) -> InlineResponse:
         """
         Handle the inline case of backticks for code spans.
         """

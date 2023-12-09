@@ -734,9 +734,11 @@ class FencedLeafBlockProcessor:
         )
 
         assert extracted_text is not None
-        extracted_text = InlineBackslashHelper.handle_backslashes(extracted_text)
+        extracted_text = InlineBackslashHelper.handle_backslashes(
+            parser_state.parse_properties, extracted_text
+        )
         text_after_extracted_text = InlineBackslashHelper.handle_backslashes(
-            text_after_extracted_text
+            parser_state.parse_properties, text_after_extracted_text
         )
 
         if pre_extracted_text == extracted_text:

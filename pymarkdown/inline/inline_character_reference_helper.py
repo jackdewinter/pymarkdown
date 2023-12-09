@@ -7,6 +7,9 @@ import os
 import string
 from typing import Dict, Optional, Tuple
 
+from pymarkdown.container_blocks.parse_block_pass_properties import (
+    ParseBlockPassProperties,
+)
 from pymarkdown.general.bad_tokenization_error import BadTokenizationError
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
@@ -46,7 +49,9 @@ class InlineCharacterReferenceHelper:
         )
 
     @staticmethod
-    def handle_character_reference(inline_request: InlineRequest) -> InlineResponse:
+    def handle_character_reference(
+        parser_properties: ParseBlockPassProperties, inline_request: InlineRequest
+    ) -> InlineResponse:
         """
         Handle a generic character reference.
         """
