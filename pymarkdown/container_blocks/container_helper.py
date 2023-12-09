@@ -91,10 +91,7 @@ class ContainerHelper:
             parser_state, position_marker, extracted_whitespace, x_tokens
         )
         was_list_ended = False
-        if (
-            len(grab_bag.container_tokens)
-            and grab_bag.container_tokens[-1].is_end_token
-        ):
+        if grab_bag.container_tokens and grab_bag.container_tokens[-1].is_end_token:
             end_token = cast(EndMarkdownToken, grab_bag.container_tokens[-1])
             was_list_ended = end_token.start_markdown_token.is_list_start
 

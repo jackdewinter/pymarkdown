@@ -66,7 +66,7 @@ class RulePml100(RulePlugin):
             tag_config_name = "plugins.disallowed-html.change_tag_names"
             for next_tag_part in modify_tag_names.split(","):
                 next_tag_part = next_tag_part.strip()
-                if len(next_tag_part) == 0:
+                if not next_tag_part:
                     raise ValueError(
                         f"Configuration item '{tag_config_name}' contains at least one empty string."
                     )

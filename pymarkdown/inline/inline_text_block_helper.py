@@ -436,7 +436,7 @@ class InlineTextBlockHelper:
             current_string = InlineHelper.append_text(current_string, text_to_append)
             POGGER.debug("current_string>:$:<", current_string)
 
-        have_processed_once = len(inline_blocks) != 0 or start_index != 0
+        have_processed_once = inline_blocks or start_index != 0
         if current_string or not have_processed_once:
             InlineTextBlockHelper.__complete_inline_block_processing_build_token(
                 current_string,
