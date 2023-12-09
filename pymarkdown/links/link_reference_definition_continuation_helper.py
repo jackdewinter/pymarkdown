@@ -399,7 +399,7 @@ class LinkReferenceDefinitionContinuationHelper:
         POGGER.debug(
             "block_quote_token.leading_spaces>:$:<", block_quote_token.bleading_spaces
         )
-        is_first = len(block_quote_token.bleading_spaces) == 0
+        is_first = not block_quote_token.bleading_spaces
         for prefix_to_add in leading_spaces:
             if split_tabs_list[0]:
                 prefix_to_add = prefix_to_add[:-1]

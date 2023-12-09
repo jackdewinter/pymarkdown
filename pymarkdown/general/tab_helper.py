@@ -61,7 +61,7 @@ class TabHelper:
 
         split_tab = False
         split_tab_with_block_quote_suffix = False
-        if len(tabified_leading_spaces) > 0:
+        if tabified_leading_spaces:
             assert extracted_whitespace is not None
             (
                 tabified_prefix,

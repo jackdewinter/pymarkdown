@@ -632,7 +632,7 @@ class TextMarkdownToken(InlineMarkdownToken):
         current_line += found_prefix
 
         # POGGER.debug("currernt_line>:$:<", current_line)
-        assert len(current_line)
+        assert current_line
         processed_lines.append(current_line)
 
         arrays_to_combine.append(processed_lines)

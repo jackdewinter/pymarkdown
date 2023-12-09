@@ -718,7 +718,7 @@ class ContainerGrabBag:
         """
         xxx
         """
-        return len(self.__leaf_tokens) == 0
+        return not self.__leaf_tokens
 
     def extend_leaf_tokens(self, tokens_to_append: List[MarkdownToken]) -> None:
         """

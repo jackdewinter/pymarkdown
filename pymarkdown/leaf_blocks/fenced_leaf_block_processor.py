@@ -1025,11 +1025,7 @@ class FencedLeafBlockProcessor:
 
         POGGER.debug("new_extracted_whitespace>:$:<", new_extracted_whitespace)
         POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
-        replacement_string = (
-            ParserHelper.replace_noop_character
-            if len(after_count) == 0
-            else after_count
-        )
+        replacement_string = after_count or ParserHelper.replace_noop_character
 
         new_extracted_whitespace = ParserHelper.create_replacement_markers(
             extracted_whitespace, replacement_string

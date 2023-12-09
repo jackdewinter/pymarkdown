@@ -246,7 +246,7 @@ class LeafBlockProcessorParagraph:
             last_container_index = parser_state.find_last_container_on_stack()
             last_container_token = parser_state.token_stack[last_container_index]
             is_block_quote_container = last_container_token.is_block_quote
-            assert len(corrected_extracted_whitespace) > 0
+            assert corrected_extracted_whitespace
             (
                 corrected_prefix,
                 corrected_suffix,
@@ -364,7 +364,7 @@ class LeafBlockProcessorParagraph:
             only_these_blocks=[BlockQuoteStackToken],
             include_block_quotes=True,
         )
-        if len(new_tokens) != 0:
+        if new_tokens:
             assert (
                 extracted_whitespace is not None
                 and parser_state.token_stack[-1].is_list
