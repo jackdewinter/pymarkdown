@@ -8,7 +8,7 @@
 
 ## Deprecation
 
-This rule has been deprecated in favor of [Rule md041](https://github.com/jackdewinter/pymarkdown/blob/main/docs/rule_md041.md).
+This rule has been deprecated in favor of [Rule md041](https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md041.md).
 
 ## Summary
 

@@ -4,7 +4,8 @@
 
 ### Added
 
-- None
+- [Issue 805](https://github.com/jackdewinter/pymarkdown/issues/805)
+  - Task List Items
 
 ### Changed
 
