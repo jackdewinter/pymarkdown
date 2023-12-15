@@ -107,7 +107,7 @@ jobs:
       - name: Execute Tests
         run: pipenv run pytest --cov-fail-under=90 --cov --cov-branch
       # - name: Archive coverage artifacts
-      #   uses: actions/upload-artifact@v3
+      #   uses: actions/upload-artifact@v4
       #   with:
       #     name: ${{ matrix.platform }} Coverage
       #     path: |
@@ -159,7 +159,7 @@ jobs:
           pipenv run twine check dist/*    
 
       - name: Upload Package
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: my-artifact
           path: ${{github.workspace}}/dist/
