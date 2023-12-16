@@ -4,6 +4,8 @@
 
 ### Added
 
+- [Issue 802](https://github.com/jackdewinter/pymarkdown/issues/802)
+  - Extension: Extended Autolinks
 - [Issue 803](https://github.com/jackdewinter/pymarkdown/issues/803)
   - Extension: Strikethrough
 - [Issue 805](https://github.com/jackdewinter/pymarkdown/issues/805)

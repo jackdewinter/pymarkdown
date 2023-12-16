@@ -57,6 +57,7 @@ class ExtensionManager:
         self.__is_disallow_raw_html_enabled: bool = False
         self.__is_task_list_items_enabled: bool = False
         self.__is_strike_through_enabled: bool = False
+        self.__is_extended_autolinks_enabled: bool = False
 
     def initialize(
         self,
@@ -131,6 +132,10 @@ class ExtensionManager:
             MarkdownStrikeThroughExtension().get_identifier()
             in self.__enabled_extensions
         )
+        self.__is_extended_autolinks_enabled = (
+            MarkdownExtendedAutolinksExtension().get_identifier()
+            in self.__enabled_extensions
+        )
 
     def get_extension_instance(self, extension_id: str) -> ParserExtension:
         """
@@ -172,6 +177,13 @@ class ExtensionManager:
         Check to see if strike through support is enabled.
         """
         return self.__is_strike_through_enabled
+
+    @property
+    def is_extended_autolinks_enabled(self) -> bool:
+        """
+        Check to see if extended autolinks support is enabled.
+        """
+        return self.__is_extended_autolinks_enabled
 
     @staticmethod
     def argparse_subparser_name() -> str:

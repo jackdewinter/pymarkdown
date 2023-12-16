@@ -10,6 +10,7 @@ from pymarkdown.container_blocks.parse_block_pass_properties import (
     ParseBlockPassProperties,
 )
 from pymarkdown.extension_manager.extension_manager import ExtensionManager
+from pymarkdown.extensions.extended_autolinks import MarkdownExtendedAutolinksExtension
 from pymarkdown.extensions.task_list_items import TaskListToken
 from pymarkdown.general.constants import Constants
 from pymarkdown.general.parser_helper import ParserHelper
@@ -119,6 +120,27 @@ class InlineHandlerHelper:
         for i in ParserHelper.valid_characters_to_escape():
             InlineHandlerHelper.register_handlers(
                 i, InlineHandlerHelper.__handle_inline_control_character
+            )
+        if extension_manager.is_extended_autolinks_enabled:
+            InlineHandlerHelper.register_handlers(
+                "h",
+                MarkdownExtendedAutolinksExtension.handle_http_autolink,
+            )
+            InlineHandlerHelper.register_handlers(
+                "w",
+                MarkdownExtendedAutolinksExtension.handle_www_autolink,
+            )
+            InlineHandlerHelper.register_handlers(
+                "@",
+                MarkdownExtendedAutolinksExtension.handle_email_autolink,
+            )
+            InlineHandlerHelper.register_handlers(
+                "x",
+                MarkdownExtendedAutolinksExtension.handle_email_autolink,
+            )
+            InlineHandlerHelper.register_handlers(
+                "m",
+                MarkdownExtendedAutolinksExtension.handle_email_autolink,
             )
 
     @staticmethod

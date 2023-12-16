@@ -69,7 +69,9 @@
         "pymarkdown/extension_manager/parser_extension.py": {},
         "pymarkdown/extensions/__init__.py": {},
         "pymarkdown/extensions/disallowed_raw_html.py": {},
-        "pymarkdown/extensions/extended_autolinks.py": {},
+        "pymarkdown/extensions/extended_autolinks.py": {
+            "too-many-arguments": 1
+        },
         "pymarkdown/extensions/extension_one.py": {},
         "pymarkdown/extensions/extension_token_types.py": {
             "too-few-public-methods": 1
@@ -439,6 +441,7 @@
             "protected-access": 1
         },
         "pymarkdown/tokens/uri_autolink_markdown_token.py": {
+            "too-many-arguments": 1,
             "protected-access": 1
         },
         "pymarkdown/transform_gfm/transform_state.py": {
@@ -481,7 +484,7 @@
         "too-many-instance-attributes": 23,
         "too-many-public-methods": 4,
         "too-few-public-methods": 39,
-        "too-many-arguments": 214,
+        "too-many-arguments": 216,
         "too-many-locals": 33,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 2,

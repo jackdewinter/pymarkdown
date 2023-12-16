@@ -22,6 +22,7 @@ class InlineResponse:
     original_string: Optional[str] = None
     delta_line_number: int = 0
     delta_column_number: int = 0
+    reduce_remaining_line_by: int = 0
 
 
 # pylint: enable=too-many-instance-attributes
