@@ -26,7 +26,7 @@ from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 POGGER = ParserLogger(logging.getLogger(__name__))
 
 
-# pylint: disable=too-few-public-methods
+# pylint: disable=too-few-public-methods, too-many-lines
 
 
 class InlineTextBlockHelper:
@@ -211,6 +211,7 @@ class InlineTextBlockHelper:
             para_owner,
             parser_properties,
             coalesced_stack,
+            current_string,
         )
 
         (
@@ -223,6 +224,7 @@ class InlineTextBlockHelper:
             remaining_line,
             end_string,
             current_string,
+            current_string_unresolved,
             was_new_line,
             tabified_remaining_line,
         ) = InlineTextBlockHelper.__handle_next_special_character(
@@ -237,6 +239,7 @@ class InlineTextBlockHelper:
             remaining_line,
             end_string,
             current_string,
+            current_string_unresolved,
             inline_blocks,
             is_setext,
             whitespace_to_recombine,
@@ -341,6 +344,7 @@ class InlineTextBlockHelper:
         para_owner: Optional[ParagraphMarkdownToken],
         parse_properties: ParseBlockPassProperties,
         coalesced_stack: List[MarkdownToken],
+        current_string: str,
     ) -> Tuple[bool, str, int, Optional[MarkdownToken], Optional[str], InlineRequest]:
         (
             remaining_line,
@@ -371,6 +375,7 @@ class InlineTextBlockHelper:
             inline_blocks,
             remaining_line,
             tabified_remaining_line,
+            current_string,
             current_string_unresolved,
             line_number,
             column_number,
@@ -454,6 +459,77 @@ class InlineTextBlockHelper:
 
     # pylint: enable=too-many-arguments
 
+    @staticmethod
+    def __handle_next_special_character_remaining_reduce(
+        inline_request: InlineRequest, left_to_consume: int
+    ) -> None:
+        inline_block_index = len(inline_request.inline_blocks) - 1
+        stop_block_token = None
+        while (
+            stop_block_token is None
+            and inline_block_index >= 0
+            and (
+                inline_request.inline_blocks[inline_block_index].is_text
+                or inline_request.inline_blocks[inline_block_index].is_special_text
+            )
+            and left_to_consume > 0
+        ):
+            current_block_token = cast(
+                TextMarkdownToken,
+                inline_request.inline_blocks[inline_block_index],
+            )
+            token_text_len = len(current_block_token.token_text)
+            if left_to_consume <= token_text_len:
+                stop_block_token = current_block_token
+            else:
+                left_to_consume -= token_text_len
+                inline_block_index -= 1
+        assert inline_block_index >= 0
+        assert stop_block_token is not None
+        if len(stop_block_token.token_text) > left_to_consume:
+            left_text = stop_block_token.token_text[:-left_to_consume]
+            new_token = TextMarkdownToken(
+                left_text,
+                stop_block_token.extracted_whitespace,
+                stop_block_token.end_whitespace,
+                tabified_text=stop_block_token.tabified_text,
+                line_number=stop_block_token.line_number,
+                column_number=stop_block_token.column_number,
+            )
+            inline_request.inline_blocks.insert(inline_block_index, new_token)
+            inline_block_index += 1
+        while len(inline_request.inline_blocks) > inline_block_index:
+            del inline_request.inline_blocks[inline_block_index]
+
+    @staticmethod
+    def __handle_next_special_character_remaining(
+        inline_request: InlineRequest,
+        inline_response: InlineResponse,
+        remaining_line: str,
+        current_string: str,
+        current_string_unresolved: str,
+    ) -> Tuple[str, str, str]:
+        left_to_consume = inline_response.reduce_remaining_line_by
+        if left_to_consume <= len(remaining_line):
+            remaining_line = remaining_line[: -inline_response.reduce_remaining_line_by]
+        else:
+            left_to_consume -= len(remaining_line)
+            remaining_line = ""
+            if left_to_consume <= len(current_string):
+                assert current_string_unresolved.endswith(
+                    current_string[-left_to_consume:]
+                )
+                current_string = current_string[:-left_to_consume]
+                current_string_unresolved = current_string_unresolved[:-left_to_consume]
+            else:
+                left_to_consume -= len(current_string)
+                current_string = ""
+                current_string_unresolved = ""
+                InlineTextBlockHelper.__handle_next_special_character_remaining_reduce(
+                    inline_request, left_to_consume
+                )
+        return remaining_line, current_string, current_string_unresolved
+
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __handle_next_special_character(
@@ -468,6 +544,7 @@ class InlineTextBlockHelper:
         remaining_line: str,
         end_string: Optional[str],
         current_string: str,
+        current_string_unresolved: str,
         inline_blocks: List[MarkdownToken],
         is_setext: bool,
         whitespace_to_recombine: Optional[str],
@@ -483,6 +560,7 @@ class InlineTextBlockHelper:
         Optional[str],
         str,
         Optional[str],
+        str,
         str,
         bool,
         Optional[str],
@@ -504,6 +582,18 @@ class InlineTextBlockHelper:
                 column_number,
                 coalesced_stack,
             )
+            if inline_response.reduce_remaining_line_by:
+                (
+                    remaining_line,
+                    current_string,
+                    current_string_unresolved,
+                ) = InlineTextBlockHelper.__handle_next_special_character_remaining(
+                    inline_request,
+                    inline_response,
+                    remaining_line,
+                    current_string,
+                    current_string_unresolved,
+                )
         else:
             was_column_number_reset, did_line_number_change = False, False
             (
@@ -541,6 +631,7 @@ class InlineTextBlockHelper:
             remaining_line,
             end_string,
             current_string,
+            current_string_unresolved,
             was_new_line,
             tabified_remaining_line,
         )

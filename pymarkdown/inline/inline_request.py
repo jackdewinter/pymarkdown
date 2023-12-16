@@ -24,6 +24,7 @@ class InlineRequest:
     inline_blocks: List[MarkdownToken] = field(default_factory=list)
     remaining_line: Optional[str] = None
     tabified_remaining_line: Optional[str] = None
+    current_string: Optional[str] = None
     current_string_unresolved: Optional[str] = None
     line_number: Optional[int] = None
     column_number: Optional[int] = None

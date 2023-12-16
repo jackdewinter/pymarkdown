@@ -28,17 +28,29 @@ class UriAutolinkMarkdownToken(InlineMarkdownToken):
 
     __raw_html_percent_escape_ascii_chars = '"%[\\]^`{}|'
 
+    # pylint: disable=too-many-arguments
     def __init__(
-        self, autolink_text: str, line_number: int, column_number: int
+        self,
+        autolink_text: str,
+        line_number: int,
+        column_number: int,
+        add_http_prefix: bool = False,
+        add_angle_brackets: bool = True,
     ) -> None:
         self.__autolink_text = autolink_text
+        self.__add_http_prefix = add_http_prefix
+        self.__add_angle_brackets = add_angle_brackets
         InlineMarkdownToken.__init__(
             self,
             MarkdownToken._token_inline_uri_autolink,
-            self.__autolink_text,
+            f"1:{self.__autolink_text}"
+            if self.__add_http_prefix
+            else self.__autolink_text,
             line_number=line_number,
             column_number=column_number,
         )
+
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=protected-access
     @staticmethod
@@ -56,6 +68,20 @@ class UriAutolinkMarkdownToken(InlineMarkdownToken):
         Returns the text that is the autolink.
         """
         return self.__autolink_text
+
+    @property
+    def add_http_prefix(self) -> bool:
+        """
+        Returns the whether a http prefix needs to be appended.
+        """
+        return self.__add_http_prefix
+
+    @property
+    def add_angle_brackets(self) -> bool:
+        """
+        Returns the whether rendered markdown needs to add angle brackets.
+        """
+        return self.__add_angle_brackets
 
     def register_for_markdown_transform(
         self, registration_function: RegisterMarkdownTransformHandlersProtocol
@@ -81,10 +107,15 @@ class UriAutolinkMarkdownToken(InlineMarkdownToken):
         _ = previous_token
 
         current_uri_token = cast(UriAutolinkMarkdownToken, current_token)
+        if current_uri_token.add_http_prefix:
+            return f"{current_uri_token.autolink_text}"
+        prefix_char, suffix_char = (
+            ("<", ">") if current_uri_token.add_angle_brackets else ("", "")
+        )
         return (
             ""
             if context.block_stack[-1].is_inline_link
-            else f"<{current_uri_token.autolink_text}>"
+            else f"{prefix_char}{current_uri_token.autolink_text}{suffix_char}"
         )
 
     @staticmethod
@@ -135,6 +166,7 @@ class UriAutolinkMarkdownToken(InlineMarkdownToken):
             [
                 output_html,
                 '<a href="',
+                "http://" if autolink_token.add_http_prefix else "",
                 "".join(tag_text_parts),
                 '">',
                 InlineHelper.append_text(

@@ -284,10 +284,10 @@
         },
         {
             "name": "test.gfm.test_markdown_autolinks_extension",
-            "totalTests": 11,
+            "totalTests": 55,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 11,
+            "skippedTests": 0,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -604,7 +604,7 @@
         },
         {
             "name": "test.gfm.test_markdown_strikethrough_extension",
-            "totalTests": 6,
+            "totalTests": 7,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,

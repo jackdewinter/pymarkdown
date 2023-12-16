@@ -146,3 +146,27 @@ def test_strikethrough_493_a():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+def test_strikethrough_493_b():
+    """
+    Test case 492:  varient, allowing end to have less, still not valid
+    """
+
+    # Arrange
+    source_markdown = """This will ~~~not~~ strike."""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):This will :]",
+        "[text(1,11):~~~:]",
+        "[text(1,14):not:]",
+        "[text(1,17):~~:]",
+        "[text(1,19): strike.:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>This will ~~~not~~ strike.</p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=config_map
+    )

@@ -20,9 +20,14 @@ class EmailAutolinkMarkdownToken(InlineMarkdownToken):
     """
 
     def __init__(
-        self, autolink_text: str, line_number: int, column_number: int
+        self,
+        autolink_text: str,
+        line_number: int,
+        column_number: int,
+        add_angle_brackets: bool = True,
     ) -> None:
         self.__autolink_text = autolink_text
+        self.__add_angle_brackets = add_angle_brackets
         InlineMarkdownToken.__init__(
             self,
             MarkdownToken._token_inline_email_autolink,
@@ -48,6 +53,13 @@ class EmailAutolinkMarkdownToken(InlineMarkdownToken):
         """
         return self.__autolink_text
 
+    @property
+    def add_angle_brackets(self) -> bool:
+        """
+        Returns whether to add angle brackets.
+        """
+        return self.__add_angle_brackets
+
     def register_for_markdown_transform(
         self, registration_function: RegisterMarkdownTransformHandlersProtocol
     ) -> None:
@@ -72,10 +84,15 @@ class EmailAutolinkMarkdownToken(InlineMarkdownToken):
         _ = previous_token
 
         current_email_token = cast(EmailAutolinkMarkdownToken, current_token)
+        prefix_char = "<"
+        suffix_char = ">"
+        if not current_email_token.add_angle_brackets:
+            prefix_char = ""
+            suffix_char = ""
         return (
             ""
             if context.block_stack[-1].is_inline_link
-            else f"<{current_email_token.autolink_text}>"
+            else f"{prefix_char}{current_email_token.autolink_text}{suffix_char}"
         )
 
     @staticmethod
