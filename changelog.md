@@ -2,6 +2,9 @@
 
 ## Unversioned - In Main, Not Released
 
+This release is going to focus on getting the feature list complete
+for a version 1.0 release in early 2024.
+
 ### Added
 
 - [Issue 802](https://github.com/jackdewinter/pymarkdown/issues/802)
