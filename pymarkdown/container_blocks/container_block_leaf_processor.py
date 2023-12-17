@@ -31,7 +31,7 @@ from pymarkdown.links.link_reference_definition_helper import (
 )
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
-from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
+from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.tokens.stack_token import ListStackToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
@@ -188,11 +188,8 @@ class ContainerBlockLeafProcessor:
             adjust_token is not None
             and grab_bag.leaf_tokens
             and grab_bag.leaf_tokens[0].is_end_token
-        ):
-            end_token = cast(EndMarkdownToken, grab_bag.leaf_tokens[0])
-            if end_token.start_markdown_token.is_block_quote_start:
-                adjust_token.remove_last_leading_space()
-
+        ) and grab_bag.leaf_tokens[0].is_block_quote_end:
+            adjust_token.remove_last_leading_space()
         ContainerBlockLeafProcessor.__post_leaf_block_adjustment(
             parser_state,
             orig_text_removed_by_container,

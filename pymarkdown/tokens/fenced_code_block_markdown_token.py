@@ -281,7 +281,6 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
-        end_token = cast(EndMarkdownToken, next_token)
         fenced_token_index = transform_state.actual_token_index - 1
         while not transform_state.actual_tokens[
             fenced_token_index
@@ -324,6 +323,7 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
         ):
             POGGER.debug("#2:$", transform_state.last_token)
             text_token = cast(TextMarkdownToken, transform_state.last_token)
+            end_token = cast(EndMarkdownToken, next_token)
             if not (end_token.was_forced and text_token.token_text.endswith("\n\x03")):
                 token_parts.append(ParserHelper.newline_character)
         transform_state.is_in_code_block, transform_state.is_in_fenced_code_block = (

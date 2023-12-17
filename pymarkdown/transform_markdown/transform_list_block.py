@@ -420,18 +420,17 @@ class TransformListBlock:
         #     f"current_token-->{ParserHelper.make_value_visible(current_token)}"
         # )
         # POGGER.debug(f"next_token-->{ParserHelper.make_value_visible(next_token)}")
-        if current_token.is_new_list_item and previous_token.is_end_token:
-            previous_end_token = cast(EndMarkdownToken, previous_token)
-            # POGGER.debug(
-            #     f"previous_token.start_markdown_token-->{ParserHelper.make_value_visible(previous_end_token.start_markdown_token)}"
-            # )
-            if previous_end_token.start_markdown_token.is_block_quote_start:
-                new_list_token = cast(NewListItemMarkdownToken, containing_list_token)
-                list_start_content_length = (
-                    len(new_list_token.list_start_content)
-                    if new_list_token.is_ordered_list_start
-                    else 0
-                )
+        if (
+            current_token.is_new_list_item
+            and previous_token.is_end_token
+            and previous_token.is_block_quote_end
+        ):
+            new_list_token = cast(NewListItemMarkdownToken, containing_list_token)
+            list_start_content_length = (
+                len(new_list_token.list_start_content)
+                if new_list_token.is_ordered_list_start
+                else 0
+            )
 
         post_adjust_whitespace = TransformListBlock.__calculate_post_adjust_whitespace(
             starting_whitespace,
