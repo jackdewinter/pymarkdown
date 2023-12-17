@@ -13,6 +13,8 @@ for a version 1.0 release in early 2
   - Extension: Strikethrough
 - [Issue 805](https://github.com/jackdewinter/pymarkdown/issues/805)
   - Extension: Task List Items
+- [Issue 823](https://github.com/jackdewinter/pymarkdown/issues/823)
+  - Rule MD039 - Added fix options
 - [Issue 825](https://github.com/jackdewinter/pymarkdown/issues/825)
   - Rule MD048 - Added fix options
 
