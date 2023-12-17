@@ -156,7 +156,6 @@ class ContainerHelper:
         POGGER.debug("block_quote_data.stack_count>>:$:<", block_quote_data.stack_count)
         POGGER.debug("new_tokens>>:$:<", new_tokens)
         POGGER.debug("split_tab>>:$:<", split_tab)
-        # assert block_quote_data.current_count != 0 or block_quote_data.stack_count <= 0
         POGGER.debug("parser_state.token_stack[-1]>>:$:<", parser_state.token_stack[-1])
 
         # TODO While? needs to take lists into account as well

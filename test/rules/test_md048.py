@@ -3,6 +3,7 @@ Module to provide tests related to the MD048 rule.
 """
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.utils import assert_file_is_as_expected, copy_to_temp_file
 
 import pytest
 
@@ -179,6 +180,65 @@ def test_md048_bad_fenced_backticks_and_tildes_with_consistent():
     )
 
 
+source_path = os.path.join("test", "resources", "rules", "md048") + os.sep
+
+
+@pytest.mark.rules
+def test_md048_bad_fenced_backticks_and_tildes_with_consistent_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains fenced code blocks with tildes and backticks and consistent configuration.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_fenced_backticks_and_tildes.md"
+    ) as temp_source_path:
+        original_file_contents = """```Python
+def test():
+    print("test")
+```
+
+~~~Python
+def test():
+    print("test")
+~~~
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--set",
+            "plugins.md048.style=consistent",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+        expected_file_contents = """```Python
+def test():
+    print("test")
+```
+
+```Python
+def test():
+    print("test")
+```
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
 @pytest.mark.rules
 def test_md048_good_fenced_backticks_with_backticks():
     """
@@ -287,6 +347,62 @@ def test_md048_bad_fenced_backticks_and_tildes_with_backticks():
 
 
 @pytest.mark.rules
+def test_md048_bad_fenced_backticks_and_tildes_with_backticks_fix():
+    """
+    Test to make sure this rule does not trigger with a document that
+    contains fenced code blocks with backticks and tildes and backtick configuration.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_fenced_backticks_and_tildes.md"
+    ) as temp_source_path:
+        original_file_contents = """```Python
+def test():
+    print("test")
+```
+
+~~~Python
+def test():
+    print("test")
+~~~
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--set",
+            "plugins.md048.style=backtick",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+        expected_file_contents = """```Python
+def test():
+    print("test")
+```
+
+```Python
+def test():
+    print("test")
+```
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md048_good_fenced_tildes_with_tilde():
     """
     Test to make sure this rule does not trigger with a document that
@@ -391,3 +507,59 @@ def test_md048_bad_fenced_backticks_and_tildes_with_indented():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md048_bad_fenced_backticks_and_tildes_with_indented_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains fenced code blocks with backticks and tildes and tilde configuration.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_fenced_backticks_and_tildes.md"
+    ) as temp_source_path:
+        original_file_contents = """```Python
+def test():
+    print("test")
+```
+
+~~~Python
+def test():
+    print("test")
+~~~
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--set",
+            "plugins.md048.style=tilde",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+        expected_file_contents = """~~~Python
+def test():
+    print("test")
+~~~
+
+~~~Python
+def test():
+    print("test")
+~~~
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
