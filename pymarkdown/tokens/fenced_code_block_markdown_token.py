@@ -3,7 +3,9 @@ Module to provide for an encapsulation of the fenced code block element.
 """
 
 import logging
-from typing import Optional, cast
+from typing import Optional, Union, cast
+
+from typing_extensions import override
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
@@ -332,3 +334,15 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
         )
         token_parts.extend(["</code></pre>", ParserHelper.newline_character])
         return "".join(token_parts)
+
+    @override
+    def _modify_token(self, field_name: str, field_value: Union[str, int]) -> bool:
+        if (
+            field_name == "fence_character"
+            and isinstance(field_value, str)
+            and field_value in ["~", "`"]
+        ):
+            self.__fence_character = field_value
+            self.__compose_extra_data_field()
+            return True
+        return False

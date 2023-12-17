@@ -5,9 +5,13 @@
 | `md048` |
 | `code-fence-style` |
 
+| Autofix Available |
+| --- |
+| Yes |
+
 ## Summary
 
-Images should have alternate text (alt text).
+Code fence style should be consistent throughout the document.
 
 ## Reasoning
 
