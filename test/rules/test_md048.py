@@ -7,6 +7,8 @@ from test.utils import assert_file_is_as_expected, copy_to_temp_file
 
 import pytest
 
+source_path = os.path.join("test", "resources", "rules", "md048") + os.sep
+
 
 @pytest.mark.rules
 def test_md048_bad_configuration_style():
@@ -178,9 +180,6 @@ def test_md048_bad_fenced_backticks_and_tildes_with_consistent():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
-
-
-source_path = os.path.join("test", "resources", "rules", "md048") + os.sep
 
 
 @pytest.mark.rules

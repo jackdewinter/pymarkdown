@@ -1452,7 +1452,7 @@
         },
         {
             "name": "test.rules.test_md039",
-            "totalTests": 20,
+            "totalTests": 32,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1677,6 +1677,14 @@
         {
             "name": "test.tokens.test_plugin_scan_context",
             "totalTests": 3,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.tokens.test_reference_markdown_token",
+            "totalTests": 1,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,

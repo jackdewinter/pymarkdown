@@ -6,7 +6,7 @@ from typing import List, cast
 
 from pymarkdown.general.constants import Constants
 from pymarkdown.general.parser_helper import ParserHelper
-from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.inline_code_span_markdown_token import (
@@ -32,19 +32,19 @@ class RuleMd044(RulePlugin):
         self.__check_in_code_blocks: bool = False
         self.__is_in_code_block: bool = False
 
-    def get_details(self) -> PluginDetails:
+    def get_details(self) -> PluginDetailsV2:
         """
         Get the details for the plugin.
         """
-        return PluginDetails(
+        return PluginDetailsV2(
             plugin_name="proper-names",
             plugin_id="MD044",
             plugin_enabled_by_default=True,
             plugin_description="Proper names should have the correct capitalization",
             plugin_version="0.5.0",
-            plugin_interface_version=1,
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md044.md",
             plugin_configuration="names,code_blocks",
+            plugin_supports_fix=False,
         )
 
     def starting_new_file(self) -> None:
@@ -322,6 +322,22 @@ class RuleMd044(RulePlugin):
             same_line_offset,
         )
 
+    def __handle_inline_code_span(
+        self, context: PluginScanContext, token: MarkdownToken
+    ) -> None:
+        code_span_token = cast(InlineCodeSpanMarkdownToken, token)
+        same_line_offset = len(code_span_token.extracted_start_backticks) + len(
+            code_span_token.leading_whitespace
+        )
+        self.__search_for_matches(
+            code_span_token.span_text, context, token, same_line_offset
+        )
+
+    def __handle_text(self, context: PluginScanContext, token: MarkdownToken) -> None:
+        text_token = cast(TextMarkdownToken, token)
+        if not self.__is_in_code_block or self.__check_in_code_blocks:
+            self.__search_for_matches(text_token.token_text, context, token)
+
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
@@ -329,17 +345,9 @@ class RuleMd044(RulePlugin):
         if not self.__proper_name_list:
             return
         if token.is_text:
-            text_token = cast(TextMarkdownToken, token)
-            if not self.__is_in_code_block or self.__check_in_code_blocks:
-                self.__search_for_matches(text_token.token_text, context, token)
+            self.__handle_text(context, token)
         elif token.is_inline_code_span:
-            code_span_token = cast(InlineCodeSpanMarkdownToken, token)
-            same_line_offset = len(code_span_token.extracted_start_backticks) + len(
-                code_span_token.leading_whitespace
-            )
-            self.__search_for_matches(
-                code_span_token.span_text, context, token, same_line_offset
-            )
+            self.__handle_inline_code_span(context, token)
         elif token.is_inline_link_end:
             self.__handle_inline_link_end(context, token)
         elif token.is_inline_image:

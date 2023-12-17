@@ -5,6 +5,10 @@
 | `md039` |
 | `no-space-in-links` |
 
+| Autofix Available |
+| --- |
+| Yes |
+
 ## Summary
 
 Spaces inside link text.

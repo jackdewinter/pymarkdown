@@ -3,7 +3,9 @@ Base class for images and links.
 """
 
 # pylint: disable=too-many-instance-attributes
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Union
+
+from typing_extensions import override
 
 from pymarkdown.links.link_helper_properties import LinkHelperProperties
 from pymarkdown.tokens.inline_markdown_token import InlineMarkdownToken
@@ -27,6 +29,7 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
         requires_end_token: bool = False,
         can_force_close: bool = True,
     ):
+        self.simple_extra_data = extra_data
         if lhp:
             (
                 self.__label_type,
@@ -88,11 +91,7 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
         assert self.__label_type is not None
         assert self.__pre_link_uri is not None
 
-        if token_name == MarkdownToken._token_inline_image:
-            extra_data = f"{extra_data}{MarkdownToken.extra_data_separator}"
-
-        # Purposefully split this way to accommodate the extra data
-        part_1, part_2 = self.__build_extra_data(extra_data, self.__label_type)
+        part_1, part_2 = self.__compose_extra_data_field(token_name)
 
         InlineMarkdownToken.__init__(
             self,
@@ -224,6 +223,32 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
         Returns the whitespace extracted after the title.
         """
         return self.__after_title_whitespace
+
+    # pylint: disable=protected-access
+    def __compose_extra_data_field(self, token_name: str) -> Tuple[str, str]:
+        """
+        Compose the object's self.extra_data field from the local object's variables.
+        """
+        extra_data = self.simple_extra_data
+        if token_name == MarkdownToken._token_inline_image:
+            extra_data = f"{extra_data}{MarkdownToken.extra_data_separator}"
+
+        # Purposefully split this way to accommodate the extra data
+        assert self.__label_type is not None
+        part_1, part_2 = self.__build_extra_data(extra_data, self.__label_type)
+        self._set_extra_data(f"{part_1}{part_2}")
+        return part_1, part_2
+
+    # pylint: enable=protected-access
+
+    @override
+    def _modify_token(self, field_name: str, field_value: Union[str, int]) -> bool:
+        if field_name == "text_from_blocks" and isinstance(field_value, str):
+            self.__text_from_blocks = field_value
+            self.__compose_extra_data_field(self.token_name)
+
+            return True
+        return False
 
 
 # pylint: enable=too-many-instance-attributes
