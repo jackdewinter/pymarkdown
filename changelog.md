@@ -14,7 +14,7 @@ for a version 1.0 release in early 2
 - [Issue 805](https://github.com/jackdewinter/pymarkdown/issues/805)
   - Extension: Task List Items
 - [Issue 825](https://github.com/jackdewinter/pymarkdown/issues/825)
-  - Rule: MD048 - Added fix options
+  - Rule MD048 - Added fix options
 
 ### Changed
 
