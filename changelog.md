@@ -3,7 +3,7 @@
 ## Unversioned - In Main, Not Released
 
 This release is going to focus on getting the feature list complete
-for a version 1.0 release in early 2024.
+for a version 1.0 release in early 2
 
 ### Added
 
@@ -18,6 +18,8 @@ for a version 1.0 release in early 2024.
 
 - [Issue 901](https://github.com/jackdewinter/pymarkdown/issues/901)
   - noticed cases where `len(x)` was being used instead of `x` or `not x`
+- [Issue 913](https://github.com/jackdewinter/pymarkdown/issues/913)
+  - making proper use of is_xxx_end function from MarkdownToken class
 
 ### Fixed
 

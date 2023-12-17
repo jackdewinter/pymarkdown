@@ -224,23 +224,16 @@ class TransformToGfmListLooseness:
             while found_end_token is not None:
                 found_end_token = None
                 next_token = actual_tokens[search_index]
-                if next_token.is_end_token:
-                    next_end_token = cast(EndMarkdownToken, next_token)
-                    if (
-                        next_end_token.start_markdown_token.is_block_quote_start
-                        or next_end_token.start_markdown_token.is_list_start
-                    ):
-                        found_end_token = next_end_token
-                        search_index -= 1
+                if next_token.is_end_token and (
+                    next_token.is_block_quote_end or next_token.is_list_end
+                ):
+                    found_end_token = next_token
+                    search_index -= 1
 
             new_index = current_token_index + 1
             keep_checking = (
                 new_index < len(actual_tokens) and actual_tokens[new_index].is_end_token
-            )
-            if keep_checking:
-                end_token = cast(EndMarkdownToken, actual_tokens[new_index])
-                keep_checking = end_token.start_markdown_token.is_list_start
-
+            ) and actual_tokens[new_index].is_list_end
             if not keep_checking:
                 (
                     is_loose,

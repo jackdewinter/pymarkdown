@@ -260,23 +260,24 @@ class RuleMd027(RulePlugin):
             # This is one of those cases.
             list_token = cast(ListStartMarkdownToken, token)
             whitespace_to_use = list_token.extracted_whitespace
-            if self.__last_token and self.__last_token.is_end_token:
+            if (
+                self.__last_token
+                and self.__last_token.is_end_token
+                and self.__last_token.is_block_quote_end
+            ):
                 end_token = cast(EndMarkdownToken, self.__last_token)
-                if end_token.start_markdown_token.is_block_quote_start:
-                    block_quote_token = cast(
-                        BlockQuoteMarkdownToken, end_token.start_markdown_token
-                    )
-                    # if self.__debug_on:
-                    #     print(f"self.__last_token.start_markdown_token>:{ParserHelper.make_value_visible(\
-                    #       self.__last_token.start_markdown_token)}:")
-                    #     print("BOOM")
-                    assert block_quote_token.bleading_spaces is not None
-                    split_line_length = block_quote_token.bleading_spaces.split("\n")[
-                        -1
-                    ]
-                    # if self.__debug_on:
-                    #     print(f"BOOM:{split_line_length}:")
-                    whitespace_to_use = whitespace_to_use[len(split_line_length) :]
+                block_quote_token = cast(
+                    BlockQuoteMarkdownToken, end_token.start_markdown_token
+                )
+                # if self.__debug_on:
+                #     print(f"self.__last_token.start_markdown_token>:{ParserHelper.make_value_visible(\
+                #       self.__last_token.start_markdown_token)}:")
+                #     print("BOOM")
+                assert block_quote_token.bleading_spaces is not None
+                split_line_length = block_quote_token.bleading_spaces.split("\n")[-1]
+                # if self.__debug_on:
+                #     print(f"BOOM:{split_line_length}:")
+                whitespace_to_use = whitespace_to_use[len(split_line_length) :]
 
             if is_start_properly_scoped and whitespace_to_use:
                 column_number_delta = -(token.column_number - len(whitespace_to_use))

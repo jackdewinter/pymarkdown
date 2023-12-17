@@ -92,8 +92,7 @@ class ContainerHelper:
         )
         was_list_ended = False
         if grab_bag.container_tokens and grab_bag.container_tokens[-1].is_end_token:
-            end_token = cast(EndMarkdownToken, grab_bag.container_tokens[-1])
-            was_list_ended = end_token.start_markdown_token.is_list_start
+            was_list_ended = grab_bag.container_tokens[-1].is_list_end
 
         matching_start_token = cast(
             BlockQuoteMarkdownToken, first_new_token.start_markdown_token
@@ -123,8 +122,7 @@ class ContainerHelper:
 
         was_paragraph_closed = False
         if new_tokens and new_tokens[0].is_end_token:
-            end_token = cast(EndMarkdownToken, new_tokens[0])
-            was_paragraph_closed = end_token.start_markdown_token.is_paragraph
+            was_paragraph_closed = new_tokens[0].is_paragraph_end
 
         if did_reduce_list or was_list_ended or not was_paragraph_closed:
             first_new_token.set_extra_end_data(None)
@@ -176,36 +174,6 @@ class ContainerHelper:
                 grab_bag,
             )
 
-        # if did_close_bq and extracted_whitespace is not None and parser_state.token_stack[-1].is_list:
-        #     search_index = len(parser_state.token_stack)
-        #     leading_space_length = len(extracted_whitespace)
-        #     did_once = False
-        #     while parser_state.token_stack[search_index - 1].is_list:
-        #         list_token = cast(
-        #             ListStackToken, parser_state.token_stack[search_index - 1]
-        #         )
-        #         if list_token.indent_level <= leading_space_length:
-        #             break
-        #         search_index -= 1
-        #         did_once = True
-
-        #     POGGER.debug("lsl $", parser_state.token_stack[search_index])
-
-        #     if did_once:
-        #         ff = cast(EndMarkdownToken, new_tokens[-1])
-        #         ff.set_extra_end_data(None)
-
-        #         (
-        #             container_level_tokens,
-        #             _,
-        #         ) = parser_state.close_open_blocks_fn(
-        #             parser_state,
-        #             until_this_index=search_index,
-        #             include_lists=True,
-        #             caller_can_handle_requeue=False,
-        #             requeue_reset=True,
-        #         )
-        #         new_tokens.extend(container_level_tokens)
         return split_tab
 
     # pylint: enable=too-many-arguments
