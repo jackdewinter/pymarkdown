@@ -5,6 +5,10 @@
 | `md037` |
 | `no-space-in-emphasis` |
 
+| Autofix Available |
+| --- |
+| Yes |
+
 ## Summary
 
 Spaces inside emphasis markers.
@@ -66,3 +70,7 @@ and emphasis sequences.  Therefore, text such as `this * is not * emphasis`
 raised triggered on both the first and the second emphasis characters.
 This rule looks for scenarios where there are a matched pair of emphasis
 characters, instead of just looking for those individual characters.
+
+## Fix Description
+
+Within the block of emphasized text, any leading and trailing whitespace is removed.

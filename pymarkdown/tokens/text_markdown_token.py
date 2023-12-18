@@ -3,7 +3,9 @@ Module to provide for an encapsulation of the text element.
 """
 
 import logging
-from typing import List, Optional, Tuple, cast
+from typing import List, Optional, Tuple, Union, cast
+
+from typing_extensions import override
 
 from pymarkdown.general.constants import Constants
 from pymarkdown.general.parser_helper import ParserHelper
@@ -113,6 +115,15 @@ class TextMarkdownToken(InlineMarkdownToken):
             line_number=self.line_number,
             column_number=self.column_number,
         )
+
+    @override
+    def _modify_token(self, field_name: str, field_value: Union[str, int]) -> bool:
+        if field_name == "token_text" and isinstance(field_value, str):
+            self.__token_text = field_value
+            self.__compose_extra_data_field()
+
+            return True
+        return False
 
     def __compose_extra_data_field(self) -> None:
         """
