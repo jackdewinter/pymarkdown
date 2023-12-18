@@ -1,7 +1,7 @@
 """
 Module to implement a plugin that looks for spaces within emphasis sections.
 """
-from typing import List, Optional, cast
+from typing import List, Optional, Tuple, cast
 
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
@@ -43,6 +43,53 @@ class RuleMd037(RulePlugin):
         self.__start_emphasis_token = None
         self.__emphasis_token_list = []
 
+    # pylint: disable=too-many-arguments
+    def __fix(
+        self,
+        context: PluginScanContext,
+        start_token: Optional[TextMarkdownToken],
+        end_token: Optional[TextMarkdownToken],
+        did_first_start_with_space: bool,
+        did_last_end_with_space: bool,
+    ) -> None:
+        if start_token == end_token:
+            assert start_token is not None
+            adjusted_token_text = start_token.token_text
+            if did_first_start_with_space:
+                adjusted_token_text = adjusted_token_text.lstrip()
+            if did_last_end_with_space:
+                adjusted_token_text = adjusted_token_text.rstrip()
+            self.register_fix_token_request(
+                context,
+                start_token,
+                "next_token",
+                "token_text",
+                adjusted_token_text,
+            )
+        else:
+            if did_first_start_with_space:
+                assert start_token is not None
+                adjusted_token_text = start_token.token_text.lstrip()
+                self.register_fix_token_request(
+                    context,
+                    start_token,
+                    "next_token",
+                    "token_text",
+                    adjusted_token_text,
+                )
+            if did_last_end_with_space:
+                assert end_token is not None
+                adjusted_token_text = end_token.token_text.rstrip()
+                self.register_fix_token_request(
+                    context,
+                    end_token,
+                    "next_token",
+                    "token_text",
+                    adjusted_token_text,
+                )
+
+    # pylint: enable=too-many-arguments
+
     def __handle_emphasis_text(
         self, context: PluginScanContext, token: MarkdownToken
     ) -> None:  # sourcery skip: extract-method
@@ -50,22 +97,40 @@ class RuleMd037(RulePlugin):
         assert self.__start_emphasis_token is not None
         if text_token.token_text == self.__start_emphasis_token.token_text:
             assert self.__emphasis_token_list
-            did_first_start_with_space = self.__handle_emphasis_text_space_check(0)
-            did_last_end_with_space = self.__handle_emphasis_text_space_check(-1)
+            (
+                start_token,
+                did_first_start_with_space,
+            ) = self.__handle_emphasis_text_space_check(0)
+            (
+                end_token,
+                did_last_end_with_space,
+            ) = self.__handle_emphasis_text_space_check(-1)
             if did_first_start_with_space or did_last_end_with_space:
                 assert self.__start_emphasis_token is not None
-                self.report_next_token_error(context, self.__start_emphasis_token)
+                if context.in_fix_mode:
+                    self.__fix(
+                        context,
+                        start_token,
+                        end_token,
+                        did_first_start_with_space,
+                        did_last_end_with_space,
+                    )
+                else:
+                    self.report_next_token_error(context, self.__start_emphasis_token)
 
             self.__start_emphasis_token = None
             self.__emphasis_token_list = []
         else:
             self.__emphasis_token_list.append(token)
 
-    def __handle_emphasis_text_space_check(self, token_text_index: int) -> bool:
+    def __handle_emphasis_text_space_check(
+        self, token_text_index: int
+    ) -> Tuple[Optional[TextMarkdownToken], bool]:
         first_capture_token = self.__emphasis_token_list[token_text_index]
-        assert first_capture_token.is_text
+        if not first_capture_token.is_text:
+            return None, False
         other_text_token = cast(TextMarkdownToken, first_capture_token)
-        return other_text_token.token_text[token_text_index] == " "
+        return other_text_token, other_text_token.token_text[token_text_index] == " "
 
     def __handle_start_emphasis(
         self, context: PluginScanContext, token: MarkdownToken
