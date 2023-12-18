@@ -5,6 +5,10 @@
 | `md038` |
 | `no-space-in-code` |
 
+| Autofix Available |
+| --- |
+| Yes [*](#fix-description) |
+
 ## Summary
 
 Spaces inside code span elements.
@@ -82,3 +86,10 @@ this is a `` `valid `` code span
 
 This rule is largely inspired by the MarkdownLint rule
 [MD038](https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md#md038---spaces-inside-code-span-elements).
+
+## Fix Description
+
+Generally, a single space character will be removed from both the start of the
+code span text and from the end of the code span text.  The one exception to that
+rule is if the character following (or proceeding) the space character is the ` ` `
+character.

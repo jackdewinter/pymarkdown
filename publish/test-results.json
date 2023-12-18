@@ -1444,7 +1444,7 @@
         },
         {
             "name": "test.rules.test_md038",
-            "totalTests": 8,
+            "totalTests": 12,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1660,6 +1660,14 @@
         },
         {
             "name": "test.tokens.test_fenced_code_block_markdown_token",
+            "totalTests": 1,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.tokens.test_inline_code_span_markdown_token",
             "totalTests": 1,
             "failedTests": 0,
             "errorTests": 0,
