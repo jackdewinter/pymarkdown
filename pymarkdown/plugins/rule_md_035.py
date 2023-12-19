@@ -3,7 +3,7 @@ Module to implement a plugin that looks for inconsistent styles for thematic bre
 """
 from typing import cast
 
-from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.markdown_token import MarkdownToken
@@ -22,19 +22,19 @@ class RuleMd035(RulePlugin):
         self.__rule_style: str = ""
         self.__actual_style: str = ""
 
-    def get_details(self) -> PluginDetails:
+    def get_details(self) -> PluginDetailsV2:
         """
         Get the details for the plugin.
         """
-        return PluginDetails(
+        return PluginDetailsV2(
             plugin_name="hr-style",
             plugin_id="MD035",
             plugin_enabled_by_default=True,
             plugin_description="Horizontal rule style",
             plugin_version="0.5.0",
-            plugin_interface_version=1,
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md035.md",
             plugin_configuration="style",
+            plugin_supports_fix=True,
         )
 
     @classmethod
@@ -47,14 +47,21 @@ class RuleMd035(RulePlugin):
             )
         is_valid = bool(found_value)
         if is_valid:
+            valid_character = None
             for next_character in found_value:
                 if next_character not in " _-*":
                     is_valid = False
                     break
+                if next_character != " ":
+                    if valid_character is None:
+                        valid_character = next_character
+                    elif next_character != valid_character:
+                        is_valid = False
+                        break
         if not is_valid:
             raise ValueError(
                 f"Allowable values are: {RuleMd035.__consistent_style}, "
-                + "'---', '***', or any other horizontal rule text."
+                + "'---', '***', `___`, or any other horizontal rule text."
             )
 
     def initialize_from_config(self) -> None:
@@ -84,9 +91,25 @@ class RuleMd035(RulePlugin):
             break_token = cast(ThematicBreakMarkdownToken, token)
             if self.__actual_style:
                 if self.__actual_style != break_token.rest_of_line:
-                    extra_data = f"Expected: {self.__actual_style}, Actual: {break_token.rest_of_line}"
-                    self.report_next_token_error(
-                        context, token, extra_error_information=extra_data
-                    )
+                    if context.in_fix_mode:
+                        self.register_fix_token_request(
+                            context,
+                            token,
+                            "next_token",
+                            "start_character",
+                            self.__actual_style[0],
+                        )
+                        self.register_fix_token_request(
+                            context,
+                            token,
+                            "next_token",
+                            "rest_of_line",
+                            self.__actual_style,
+                        )
+                    else:
+                        extra_data = f"Expected: {self.__actual_style}, Actual: {break_token.rest_of_line}"
+                        self.report_next_token_error(
+                            context, token, extra_error_information=extra_data
+                        )
             else:
                 self.__actual_style = break_token.rest_of_line
