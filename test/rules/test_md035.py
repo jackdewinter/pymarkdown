@@ -3,8 +3,11 @@ Module to provide tests related to the MD035 rule.
 """
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.utils import assert_file_is_as_expected, copy_to_temp_file
 
 import pytest
+
+source_path = os.path.join("test", "resources", "rules", "md035") + os.sep
 
 
 @pytest.mark.rules
@@ -103,7 +106,7 @@ def test_md035_bad_configuration_style_empty():
     expected_output = ""
     expected_error = (
         "BadPluginError encountered while configuring plugins:\n"
-        + "The value for property 'plugins.md035.style' is not valid: Allowable values are: consistent, '---', '***', or any other horizontal rule text."
+        + "The value for property 'plugins.md035.style' is not valid: Allowable values are: consistent, '---', '***', `___`, or any other horizontal rule text."
     )
 
     # Act
@@ -175,7 +178,44 @@ def test_md035_bad_configuration_style_bad_character():
     expected_output = ""
     expected_error = (
         "BadPluginError encountered while configuring plugins:\n"
-        + "The value for property 'plugins.md035.style' is not valid: Allowable values are: consistent, '---', '***', or any other horizontal rule text."
+        + "The value for property 'plugins.md035.style' is not valid: Allowable values are: consistent, '---', '***', `___`, or any other horizontal rule text."
+    )
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md035_bad_configuration_style_mixed_characters():
+    """
+    Test to verify that a configuration error is thrown when supplying the
+    style value with string specifying valid thematic break characters that
+    are not the same as each other.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md035", "good_consistent_dash.md"
+    )
+    supplied_arguments = [
+        "--set",
+        "plugins.md035.style=*-*-*-*",
+        "--strict-config",
+        "scan",
+        source_path,
+    ]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = (
+        "BadPluginError encountered while configuring plugins:\n"
+        + "The value for property 'plugins.md035.style' is not valid: Allowable values are: consistent, '---', '***', `___`, or any other horizontal rule text."
     )
 
     # Act
@@ -285,6 +325,51 @@ def test_md035_bad_consistent_dash():
 
 
 @pytest.mark.rules
+def test_md035_bad_consistent_dash_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains thematic breaks that are not consistent dashes with consistent.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(source_path + "bad_consistent_dash.md") as temp_source_path:
+        original_file_contents = """---
+
+this is one section
+
+- - -
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """---
+
+this is one section
+
+---
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md035_bad_consistent_dash_with_leading_spaces():
     """
     Test to make sure this rule does trigger with a document that
@@ -320,6 +405,53 @@ def test_md035_bad_consistent_dash_with_leading_spaces():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md035_bad_consistent_dash_with_leading_spaces_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains thematic breaks that are not consistent dashes with consistent.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_consistent_dash_with_leading_spaces.md"
+    ) as temp_source_path:
+        original_file_contents = """---
+
+this is one section
+
+ - - -
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """---
+
+this is one section
+
+ ---
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -392,6 +524,51 @@ def test_md035_bad_dash_marker():
 
 
 @pytest.mark.rules
+def test_md035_bad_dash_marker_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains thematic breaks that are not consistent dashes with consistent.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(source_path + "bad_consistent_dash.md") as temp_source_path:
+        original_file_contents = """---
+
+this is one section
+
+- - -
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """---
+
+this is one section
+
+---
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md035_good_consistent_asterisk():
     """
     Test to make sure this rule does not trigger with a document that
@@ -453,6 +630,53 @@ def test_md035_bad_consistent_asterisk():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md035_bad_consistent_asterisk_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains thematic breaks that are not consistent dashes with consistent.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_consistent_asterisk.md"
+    ) as temp_source_path:
+        original_file_contents = """***
+
+this is one section
+
+* * *
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """***
+
+this is one section
+
+***
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -525,6 +749,53 @@ def test_md035_bad_asterisk_marker():
 
 
 @pytest.mark.rules
+def test_md035_bad_asterisk_marker_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains thematic breaks that are not consistent dashes with consistent.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_consistent_asterisk.md"
+    ) as temp_source_path:
+        original_file_contents = """***
+
+this is one section
+
+* * *
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """***
+
+this is one section
+
+***
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md035_good_consistent_underscore():
     """
     Test to make sure this rule does not trigger with a document that
@@ -586,6 +857,53 @@ def test_md035_bad_consistent_underscore():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md035_bad_consistent_underscore_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains thematic breaks that are not consistent dashes with consistent.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_consistent_underscore.md"
+    ) as temp_source_path:
+        original_file_contents = """___
+
+this is one section
+
+______
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """___
+
+this is one section
+
+___
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -655,3 +973,50 @@ def test_md035_bad_underscore_marker():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md035_bad_underscore_marker_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains thematic breaks that are not consistent dashes with consistent.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_consistent_underscore.md"
+    ) as temp_source_path:
+        original_file_contents = """___
+
+this is one section
+
+______
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """___
+
+this is one section
+
+___
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)

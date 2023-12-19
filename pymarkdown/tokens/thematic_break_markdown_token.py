@@ -2,7 +2,9 @@
 Module to provide for an encapsulation of the thematic break element.
 """
 
-from typing import Optional, cast
+from typing import Optional, Union, cast
+
+from typing_extensions import override
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.position_marker import PositionMarker
@@ -29,13 +31,13 @@ class ThematicBreakMarkdownToken(LeafMarkdownToken):
         position_marker: PositionMarker,
     ) -> None:
         assert extracted_whitespace is not None
+        self.__start_character = start_character
+        self.__extracted_whitespace = extracted_whitespace
         self.__rest_of_line = rest_of_line
         LeafMarkdownToken.__init__(
             self,
             MarkdownToken._token_thematic_break,
-            MarkdownToken.extra_data_separator.join(
-                [start_character, extracted_whitespace, self.__rest_of_line]
-            ),
+            self.__compose_extra_data_field(),
             position_marker=position_marker,
             extracted_whitespace=extracted_whitespace,
         )
@@ -56,6 +58,28 @@ class ThematicBreakMarkdownToken(LeafMarkdownToken):
         Returns any whitespace that was extracted before the processing of this element occurred.
         """
         return self.__rest_of_line
+
+    def __compose_extra_data_field(self) -> str:
+        """
+        Compose the object's self.extra_data field from the local object's variables.
+        """
+        x = MarkdownToken.extra_data_separator.join(
+            [self.__start_character, self.__extracted_whitespace, self.__rest_of_line]
+        )
+        self._set_extra_data(x)
+        return x
+
+    @override
+    def _modify_token(self, field_name: str, field_value: Union[str, int]) -> bool:
+        if field_name == "start_character" and isinstance(field_value, str):
+            self.__start_character = field_value
+            self.__compose_extra_data_field()
+            return True
+        if field_name == "rest_of_line" and isinstance(field_value, str):
+            self.__rest_of_line = field_value
+            self.__compose_extra_data_field()
+            return True
+        return False
 
     def register_for_markdown_transform(
         self, registration_function: RegisterMarkdownTransformHandlersProtocol

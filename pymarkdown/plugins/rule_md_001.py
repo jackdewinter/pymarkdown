@@ -5,7 +5,7 @@ level at a time (going up).
 from typing import cast
 
 from pymarkdown.extensions.front_matter_markdown_token import FrontMatterMarkdownToken
-from pymarkdown.plugin_manager.plugin_details import PluginDetails, PluginDetailsV2
+from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.markdown_token import MarkdownToken
@@ -23,7 +23,7 @@ class RuleMd001(RulePlugin):
         self.__last_heading_count: int = 0
         self.__front_matter_title: str = ""
 
-    def get_details(self) -> PluginDetails:
+    def get_details(self) -> PluginDetailsV2:
         """
         Get the details for the plugin.
         """

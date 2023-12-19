@@ -1420,7 +1420,7 @@
         },
         {
             "name": "test.rules.test_md035",
-            "totalTests": 19,
+            "totalTests": 27,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1700,6 +1700,14 @@
         },
         {
             "name": "test.tokens.test_text_markdown_token",
+            "totalTests": 1,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.tokens.test_thematic_break_markdown_token",
             "totalTests": 1,
             "failedTests": 0,
             "errorTests": 0,
