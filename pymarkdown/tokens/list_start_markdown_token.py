@@ -4,7 +4,9 @@ Module to provide for an encapsulation of a generic list start element.
 
 # pylint: disable=too-many-instance-attributes
 import logging
-from typing import Optional
+from typing import Optional, Union
+
+from typing_extensions import override
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
@@ -208,6 +210,14 @@ class ListStartMarkdownToken(ContainerMarkdownToken):
         """
         self.__extracted_whitespace = new_whitespace
         self.__compose_extra_data_field()
+
+    @override
+    def _modify_token(self, field_name: str, field_value: Union[str, int]) -> bool:
+        if field_name == "list_start_content" and isinstance(field_value, str):
+            self.__list_start_content = field_value
+            self.__compose_extra_data_field()
+            return True
+        return False
 
 
 # pylint: enable=too-many-instance-attributes

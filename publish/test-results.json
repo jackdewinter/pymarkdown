@@ -1364,7 +1364,7 @@
         },
         {
             "name": "test.rules.test_md029",
-            "totalTests": 30,
+            "totalTests": 55,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1675,8 +1675,24 @@
             "elapsedTimeInMilliseconds": 0
         },
         {
+            "name": "test.tokens.test_list_start_markdown_token",
+            "totalTests": 1,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
             "name": "test.tokens.test_markdown_token",
             "totalTests": 3,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.tokens.test_new_list_item_markdown_token",
+            "totalTests": 1,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,

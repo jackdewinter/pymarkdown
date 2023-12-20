@@ -2,6 +2,10 @@
 Module to provide for an encapsulation of the new list item element.
 """
 
+from typing import Union
+
+from typing_extensions import override
+
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.tokens.container_markdown_token import ContainerMarkdownToken
@@ -33,9 +37,7 @@ class NewListItemMarkdownToken(ContainerMarkdownToken):
         ContainerMarkdownToken.__init__(
             self,
             MarkdownToken._token_new_list_item,
-            MarkdownToken.extra_data_separator.join(
-                [str(indent_level), extracted_whitespace, list_start_content]
-            ),
+            self.__compose_extra_data_field(),
             position_marker=position_marker,
         )
 
@@ -69,6 +71,29 @@ class NewListItemMarkdownToken(ContainerMarkdownToken):
         Returns the content used to start this list element.
         """
         return self.__list_start_content
+
+    @override
+    def _modify_token(self, field_name: str, field_value: Union[str, int]) -> bool:
+        if field_name == "list_start_content" and isinstance(field_value, str):
+            self.__list_start_content = field_value
+            self.__compose_extra_data_field()
+            return True
+        return False
+
+    def __compose_extra_data_field(self) -> str:
+        """
+        Compose the object's self.extra_data field from the local object's variables.
+        """
+
+        new_field = MarkdownToken.extra_data_separator.join(
+            [
+                str(self.__indent_level),
+                self.__extracted_whitespace,
+                self.__list_start_content,
+            ]
+        )
+        self._set_extra_data(new_field)
+        return new_field
 
     @staticmethod
     def register_for_html_transform(
