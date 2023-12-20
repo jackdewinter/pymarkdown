@@ -4,7 +4,7 @@ consistent numeric prefaces.
 """
 from typing import List, Optional, Tuple, cast
 
-from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
@@ -35,19 +35,19 @@ class RuleMd029(RulePlugin):
         self.__list_stack: List[MarkdownToken] = []
         self.__ordered_list_stack: List[Tuple[Optional[str], Optional[int]]] = []
 
-    def get_details(self) -> PluginDetails:
+    def get_details(self) -> PluginDetailsV2:
         """
         Get the details for the plugin.
         """
-        return PluginDetails(
+        return PluginDetailsV2(
             plugin_name="ol-prefix",
             plugin_id="MD029",
             plugin_enabled_by_default=True,
             plugin_description="Ordered list item prefix",
             plugin_version="0.5.0",
-            plugin_interface_version=1,
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md029.md",
             plugin_configuration="style",
+            plugin_supports_fix=True,
         )
 
     @classmethod
@@ -72,6 +72,25 @@ class RuleMd029(RulePlugin):
         self.__list_stack = []
         self.__ordered_list_stack = []
 
+    def __calculate_match_info(
+        self, list_style: str, initial: bool, last_known_number: Optional[int]
+    ) -> Tuple[str, int]:
+        if list_style == RuleMd029.__ordered_style:
+            style = "1/2/3"
+            if initial:
+                expected_number = 1
+            else:
+                assert last_known_number is not None
+                expected_number = last_known_number + 1
+        elif list_style == RuleMd029.__one_style:
+            style = "1/1/1"
+            expected_number = 1
+        else:
+            assert list_style == RuleMd029.__zero_style
+            style = "0/0/0"
+            expected_number = 0
+        return style, expected_number
+
     def __match_first_item(
         self, context: PluginScanContext, token: MarkdownToken
     ) -> Tuple[Optional[str], Optional[int]]:
@@ -91,19 +110,25 @@ class RuleMd029(RulePlugin):
             is_valid = last_known_number == 0
         # print(f"list_style={list_style},last_known_number={last_known_number},is_valid={is_valid}")
         if not is_valid:
-            if list_style == RuleMd029.__ordered_style:
-                style = "1/2/3"
-            elif list_style == RuleMd029.__one_style:
-                style = "1/1/1"
-            else:
-                assert list_style == RuleMd029.__zero_style
-                style = "0/0/0"
-            expected_number = 0 if list_style == RuleMd029.__zero_style else 1
-            extra_error_information = f"Expected: {expected_number}; Actual: {last_known_number}; Style: {style}"
-            self.report_next_token_error(
-                context, token, extra_error_information=extra_error_information
+            assert list_style is not None
+            style, expected_number = self.__calculate_match_info(
+                list_style, True, last_known_number
             )
-            list_style, last_known_number = (None, None)
+            extra_error_information = f"Expected: {expected_number}; Actual: {last_known_number}; Style: {style}"
+            if context.in_fix_mode:
+                self.register_fix_token_request(
+                    context,
+                    token,
+                    "next_token",
+                    "list_start_content",
+                    str(expected_number),
+                )
+                last_known_number = expected_number
+            else:
+                self.report_next_token_error(
+                    context, token, extra_error_information=extra_error_information
+                )
+                list_style, last_known_number = (None, None)
         return list_style, last_known_number
 
     def __match_non_first_items(
@@ -134,24 +159,26 @@ class RuleMd029(RulePlugin):
                 assert last_known_number is not None
                 is_valid = new_number == last_known_number + 1
             if not is_valid:
-                if list_style == RuleMd029.__ordered_style:
-                    style = "1/2/3"
-                    assert last_known_number is not None
-                    expected_number = last_known_number + 1
-                elif list_style == RuleMd029.__one_style:
-                    style = "1/1/1"
-                    expected_number = 1
-                else:
-                    assert list_style == RuleMd029.__zero_style
-                    style = "0/0/0"
-                    expected_number = 0
+                style, expected_number = self.__calculate_match_info(
+                    list_style, False, last_known_number
+                )
                 extra_error_information = (
                     f"Expected: {expected_number}; Actual: {new_number}; Style: {style}"
                 )
-                self.report_next_token_error(
-                    context, token, extra_error_information=extra_error_information
-                )
-                list_style, new_number = (None, None)
+                if context.in_fix_mode:
+                    self.register_fix_token_request(
+                        context,
+                        token,
+                        "next_token",
+                        "list_start_content",
+                        str(expected_number),
+                    )
+                    new_number = expected_number
+                else:
+                    self.report_next_token_error(
+                        context, token, extra_error_information=extra_error_information
+                    )
+                    list_style, new_number = (None, None)
             last_known_number = new_number
         return list_style, last_known_number
 

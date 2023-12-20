@@ -294,6 +294,10 @@ class FileScanHelper:
 
             # Due to context required to process the line requirements, we need go
             # through all the tokens first, before processing the lines.
+            #
+            # Basically, to allow any of the rules to build context applicable to
+            # the line being scanned, we rescan the tokens to present an updated
+            # picture of the tokens.
             for next_token in actual_tokens:
                 POGGER.info("Processing token: $", next_token)
                 self.__plugins.next_token(context, next_token)
