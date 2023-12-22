@@ -5,6 +5,10 @@
 | `md021` |
 | `no-multiple-space-closed-atx` |
 
+| Autofix Available |
+| --- |
+| Yes |
+
 ## Summary
 
 Multiple spaces are present inside hash characters on Atx Closed Heading.
@@ -83,3 +87,8 @@ this rule was developed to ignore any leading spaces.  The rationale is
 that if leading spaces before Atx Heading elements are not desired, there
 should only be one rule's configuration that needs to be set to
 enforce that.
+
+## Fix Description
+
+Any instances of 1+ space characters within a closed AtxHeading are replaced with
+a single space character.
