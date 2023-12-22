@@ -754,4 +754,7 @@ class EndMarkdownToken(MarkdownToken):
             self.__extracted_whitespace = field_value
             self.__compose_data_field()
             return True
+        if field_name == "extra_end_data" and isinstance(field_value, str):
+            self.__extra_end_data = field_value
+            return True
         return False

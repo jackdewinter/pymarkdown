@@ -128,6 +128,10 @@ class TextMarkdownToken(InlineMarkdownToken):
             self.__compose_extra_data_field()
 
             return True
+        if field_name == "extracted_whitespace" and isinstance(field_value, str):
+            self.__extracted_whitespace = field_value
+            self.__compose_extra_data_field()
+            return True
         return False
 
     def __compose_extra_data_field(self) -> None:
