@@ -1,7 +1,9 @@
 """
 Module to provide for a leaf element that can be added to markdown parsing stream.
 """
-from typing import Optional
+from typing import Optional, Union
+
+from typing_extensions import override
 
 from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.tokens.markdown_token import MarkdownToken, MarkdownTokenClass
@@ -47,3 +49,10 @@ class LeafMarkdownToken(MarkdownToken):
         Returns any whitespace that was extracted before the processing of this element occurred.
         """
         return self.__extracted_whitespace
+
+    @override
+    def _modify_token(self, field_name: str, field_value: Union[str, int]) -> bool:
+        if field_name == "extracted_whitespace" and isinstance(field_value, str):
+            self.__extracted_whitespace = field_value
+            return True
+        return False

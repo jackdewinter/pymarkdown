@@ -5,7 +5,7 @@ beginning of the line.
 from typing import Optional, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
-from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.atx_heading_markdown_token import AtxHeadingMarkdownToken
@@ -26,18 +26,18 @@ class RuleMd023(RulePlugin):
         self.__any_leading_whitespace_detected = False
         self.__seen_first_line_of_setext = False
 
-    def get_details(self) -> PluginDetails:
+    def get_details(self) -> PluginDetailsV2:
         """
         Get the details for the plugin.
         """
-        return PluginDetails(
+        return PluginDetailsV2(
             plugin_name="heading-start-left, header-start-left",
             plugin_id="MD023",
             plugin_enabled_by_default=True,
             plugin_description="Headings must start at the beginning of the line.",
             plugin_version="0.5.0",
-            plugin_interface_version=1,
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md023.md",
+            plugin_supports_fix=True,
         )
 
     def starting_new_file(self) -> None:
@@ -52,11 +52,30 @@ class RuleMd023(RulePlugin):
         self, context: PluginScanContext, token: AtxHeadingMarkdownToken
     ) -> None:
         if token.extracted_whitespace:
-            self.report_next_token_error(context, token)
+            if context.in_fix_mode:
+                self.register_fix_token_request(
+                    context,
+                    token,
+                    "next_token",
+                    "extracted_whitespace",
+                    "",
+                )
+            else:
+                self.report_next_token_error(context, token)
 
-    def __handle_setext_heading(self, token: SetextHeadingMarkdownToken) -> None:
+    def __handle_setext_heading(
+        self, context: PluginScanContext, token: SetextHeadingMarkdownToken
+    ) -> None:
         self.__setext_start_token = token
         self.__any_leading_whitespace_detected = bool(token.extracted_whitespace)
+        if self.__any_leading_whitespace_detected and context.in_fix_mode:
+            self.register_fix_token_request(
+                context,
+                token,
+                "next_token",
+                "extracted_whitespace",
+                "",
+            )
         self.__seen_first_line_of_setext = False
 
     def __handle_setext_heading_end(
@@ -64,30 +83,64 @@ class RuleMd023(RulePlugin):
     ) -> None:
         if token.extracted_whitespace:
             self.__any_leading_whitespace_detected = True
+            if context.in_fix_mode:
+                self.register_fix_token_request(
+                    context,
+                    token,
+                    "next_token",
+                    "extracted_whitespace",
+                    "",
+                )
 
         if self.__any_leading_whitespace_detected:
             assert self.__setext_start_token is not None
             self.report_next_token_error(context, self.__setext_start_token)
         self.__setext_start_token = None
 
-    def __handle_text(self, token: TextMarkdownToken) -> None:
+    def __handle_text(
+        self, context: PluginScanContext, token: TextMarkdownToken
+    ) -> None:
         if (
-            self.__setext_start_token
-            and not self.__any_leading_whitespace_detected
-            and token.end_whitespace
+            not self.__setext_start_token
+            or self.__any_leading_whitespace_detected
+            and not context.in_fix_mode
+            or not token.end_whitespace
         ):
-            split_end_whitespace = token.end_whitespace.split(
-                ParserHelper.newline_character
-            )
-            for next_split in split_end_whitespace:
-                if self.__seen_first_line_of_setext:
-                    split_next_split = next_split.split(
-                        ParserHelper.whitespace_split_character
+            return
+        split_end_whitespace = token.end_whitespace.split(
+            ParserHelper.newline_character
+        )
+        new_parts = []
+        for next_split in split_end_whitespace:
+            if self.__seen_first_line_of_setext:
+                split_next_split = next_split.split(
+                    ParserHelper.whitespace_split_character
+                )
+                if len(split_next_split) == 2 and split_next_split[0]:
+                    self.__any_leading_whitespace_detected = True
+                    new_parts.append(
+                        ParserHelper.whitespace_split_character + split_next_split[1]
                     )
-                    if len(split_next_split) == 2 and split_next_split[0]:
-                        self.__any_leading_whitespace_detected = True
+                elif next_split:
+                    new_parts.append(
+                        ParserHelper.whitespace_split_character + next_split
+                    )
                 else:
-                    self.__seen_first_line_of_setext = True
+                    new_parts.append(next_split)
+            else:
+                self.__seen_first_line_of_setext = True
+                new_parts.append(next_split)
+
+        if context.in_fix_mode:
+            new_parts_combined = "\n".join(new_parts)
+            if new_parts_combined != token.end_whitespace:
+                self.register_fix_token_request(
+                    context,
+                    token,
+                    "next_token",
+                    "end_whitespace",
+                    new_parts_combined,
+                )
 
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
@@ -98,10 +151,10 @@ class RuleMd023(RulePlugin):
             self.__handle_atx_heading(context, atx_token)
         elif token.is_setext_heading:
             setext_token = cast(SetextHeadingMarkdownToken, token)
-            self.__handle_setext_heading(setext_token)
+            self.__handle_setext_heading(context, setext_token)
         elif token.is_text:
             text_token = cast(TextMarkdownToken, token)
-            self.__handle_text(text_token)
+            self.__handle_text(context, text_token)
         elif token.is_setext_heading_end:
             end_token = cast(EndMarkdownToken, token)
             self.__handle_setext_heading_end(context, end_token)

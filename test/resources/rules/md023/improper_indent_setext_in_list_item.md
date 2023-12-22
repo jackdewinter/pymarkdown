@@ -5,7 +5,7 @@
 
 - Some more text
 
-- Another Heading 2 - md023 does trigger due to second line
+- Another Heading 2 - md023 triggers
      -----------------
 
 - more text
@@ -15,9 +15,9 @@
 
 - more text
 
-- A Very
-   Very
-  Very
+- A Very1
+   Very2
+  Very3
    Long Heading  - md023 does trigger due to second and fourth lines
   -----------------
 

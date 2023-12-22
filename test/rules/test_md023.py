@@ -3,8 +3,15 @@ Module to provide tests related to the MD023 rule.
 """
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.utils import (
+    assert_file_is_as_expected,
+    copy_to_temp_file,
+    create_temporary_configuration_file,
+)
 
 import pytest
+
+source_path = os.path.join("test", "resources", "rules", "md023") + os.sep
 
 
 @pytest.mark.rules
@@ -107,6 +114,51 @@ def test_md023_bad_improper_indent_atx():
 
 
 @pytest.mark.rules
+def test_md023_bad_improper_indent_atx_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains an Atx heading that does not start at the very left.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(source_path + "improper_indent_atx.md") as temp_source_path:
+        original_file_contents = """Some text
+
+  ## Heading 2
+
+Some more text
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """Some text
+
+## Heading 2
+
+Some more text
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md023_good_proper_indent_atx_in_list_item():
     """
     Test to make sure this rule does not trigger with a document that
@@ -173,6 +225,55 @@ def test_md023_bad_improper_indent_atx_in_list_item():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md023_bad_improper_indent_atx_in_list_item_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains an Atx heading that does not start at the very left.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "improper_indent_atx_in_list_item.md"
+    ) as temp_source_path:
+        original_file_contents = """1. Some text
+
+1.  ## Heading 2
+     ## Heading 2.1
+
+1. Some more text
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """1. Some text
+
+1.  ## Heading 2
+    ## Heading 2.1
+
+1. Some more text
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -245,6 +346,53 @@ def test_md023_bad_improper_indent_atx_in_block_quote():
 
 
 @pytest.mark.rules
+def test_md023_bad_improper_indent_atx_in_block_quote_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains an Atx heading that does not start at the very left.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "improper_indent_atx_in_block_quote.md"
+    ) as temp_source_path:
+        original_file_contents = """> Some text
+>
+>  ## Heading 2
+>
+> Some more text
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """> Some text
+>
+> ## Heading 2
+>
+> Some more text
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md023_bad_improper_indent_setext_x():
     """
     Test to make sure this rule does trigger with a document that
@@ -287,6 +435,87 @@ def test_md023_bad_improper_indent_setext_x():
 
 
 @pytest.mark.rules
+def test_md023_bad_improper_indent_setext_x_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains an Atx heading that does not start at the very left.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "improper_indent_setext.md"
+    ) as temp_source_path:
+        original_file_contents = """Some text
+
+  Heading 2
+  ---------
+
+Some more text
+
+Another Heading 2
+  -----------------
+
+more text
+
+  Yet Another Heading 2
+-----------------
+
+more text
+
+A Very
+  Very
+Very
+  Long Heading
+-----------------
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """Some text
+
+Heading 2
+---------
+
+Some more text
+
+Another Heading 2
+-----------------
+
+more text
+
+Yet Another Heading 2
+-----------------
+
+more text
+
+A Very
+Very
+Very
+Long Heading
+-----------------
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md023_bad_improper_indent_setext_in_block_quote():
     """
     Test to make sure this rule does trigger with a document that
@@ -307,7 +536,7 @@ def test_md023_bad_improper_indent_setext_in_block_quote():
         "--enable-rules",
         "MD023",
         "--disable-rules",
-        "MD027,md022",
+        "MD027,md022,md009",
         "scan",
         source_path,
     ]
@@ -332,6 +561,136 @@ def test_md023_bad_improper_indent_setext_in_block_quote():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md023_bad_improper_indent_setext_in_block_quote_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains an Atx heading that does not start at the very left.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "improper_indent_setext_in_block_quote.md"
+    ) as temp_source_path:
+        original_file_contents = """> Some text
+>
+>   Heading 2
+>   ---------
+>
+> Some more text
+>
+> Another Heading 2
+>   -----------------
+>
+> more text
+>
+>  Yet Another Heading 2
+> -----------------
+>
+> more text
+>
+>   A Very 
+>   Very1 
+> Very2 
+>   Long Heading
+> -----------------
+>
+> Normal Heading
+> ---------
+>
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            # "--stack-trace",
+            "-d",
+            "md009",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """> Some text
+>
+> Heading 2
+> ---------
+>
+> Some more text
+>
+> Another Heading 2
+> -----------------
+>
+> more text
+>
+> Yet Another Heading 2
+> -----------------
+>
+> more text
+>
+> A Very 
+> Very1 
+> Very2 
+> Long Heading
+> -----------------
+>
+> Normal Heading
+> ---------
+>
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
+def test_md023_good_proper_indent_setext_in_block_quote_no_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains an Atx heading that does not start at the very left.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    original_file_contents = """> A Very 
+> Long Heading
+> -----------------
+"""
+    with create_temporary_configuration_file(
+        original_file_contents, file_name_suffix=".md"
+    ) as temp_source_path:
+        supplied_arguments = [
+            # "--stack-trace",
+            "-d",
+            "md009",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 0
+        expected_output = ""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
 
 
 @pytest.mark.rules
@@ -375,7 +734,97 @@ def test_md023_bad_improper_indent_setext_in_list_item():
 
 
 @pytest.mark.rules
-def test_md023_bad_improper_indented_atx_after_emphasis():
+def test_md023_bad_improper_indent_setext_in_list_item_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains an Atx heading that does not start at the very left.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "improper_indent_setext_in_list_item.md"
+    ) as temp_source_path:
+        original_file_contents = """- Some text
+
+-   Heading 2 - md030 warns of too many spaces, md023 does not trigger
+    ---------
+
+- Some more text
+
+- Another Heading 2 - md023 triggers
+     -----------------
+
+- more text
+
+-  Yet Another Heading 2 - md030 warns of too many spaces, md023 does not trigger
+  -----------------
+
+- more text
+
+- A Very1
+   Very2
+  Very3
+   Long Heading  - md023 does trigger due to second and fourth lines
+  -----------------
+
+- Normal Heading
+  ---------
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            # "--stack-trace",
+            "-d",
+            "md009",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """- Some text
+
+-   Heading 2 - md030 warns of too many spaces, md023 does not trigger
+    ---------
+
+- Some more text
+
+- Another Heading 2 - md023 triggers
+  -----------------
+
+- more text
+
+-  Yet Another Heading 2 - md030 warns of too many spaces, md023 does not trigger
+  -----------------
+
+- more text
+
+- A Very1
+  Very2
+  Very3
+  Long Heading  - md023 does trigger due to second and fourth lines
+  -----------------
+
+- Normal Heading
+  ---------
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
+def test_md023_good_proper_indented_atx_after_emphasis():
     """
     Test to make sure this rule does not trigger with a document that
     contains a "SetExt heading" that is encapsulated in emphasis.

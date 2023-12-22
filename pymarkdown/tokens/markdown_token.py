@@ -4,6 +4,8 @@ Module to provide for an element that can be added to markdown parsing stream.
 from enum import Enum
 from typing import List, Optional, Union
 
+from typing_extensions import override
+
 from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.plugin_manager.bad_plugin_fix_error import BadPluginFixError
 from pymarkdown.plugin_manager.plugin_modify_context import PluginModifyContext
@@ -745,3 +747,11 @@ class EndMarkdownToken(MarkdownToken):
             field_parts.append(str(self.was_forced))
 
         self._set_extra_data(MarkdownToken.extra_data_separator.join(field_parts))
+
+    @override
+    def _modify_token(self, field_name: str, field_value: Union[str, int]) -> bool:
+        if field_name == "extracted_whitespace" and isinstance(field_value, str):
+            self.__extracted_whitespace = field_value
+            self.__compose_data_field()
+            return True
+        return False
