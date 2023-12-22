@@ -67,7 +67,9 @@ class AtxHeadingMarkdownToken(LeafMarkdownToken):
             self.__hash_count = field_value
             self.__compose_extra_data_field()
             return True
-        return False
+
+        # Handle extracted_whitespace
+        return super()._modify_token(field_name, field_value)
 
     @property
     def hash_count(self) -> int:

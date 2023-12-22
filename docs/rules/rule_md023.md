@@ -6,6 +6,10 @@
 | `heading-start-left` |
 | `header-start-left` |
 
+| Autofix Available |
+| --- |
+| Yes |
+
 ## Summary
 
 Headings must start at the beginning of the line.
@@ -105,3 +109,8 @@ text.  To make this more general and to avoid having multiple
 failures being reported for a single SetExt Heading element,
 the reported position was moved to the start of the boundary
 line of the SetExt Heading element.
+
+## Fix Description
+
+Any leading spaces at the start of an Atx Heading element or within any part of
+a SetExt Heading element are removed.

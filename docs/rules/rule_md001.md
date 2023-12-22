@@ -6,6 +6,10 @@
 | `heading-increment` |
 | `header-increment` |
 
+| Autofix Available |
+| --- |
+| Yes |
+
 ## Summary
 
 Heading levels should only increment by one level at a time.
@@ -113,3 +117,7 @@ original rule specified a regular expression used to look for the
 specific element within a raw front-matter element.  By default, this
 was `"^\s*"?title"?\s*[:=]"`.  To support simplicity, this rule
 simply looks for the value of the front-matter key `title` by default.
+
+## Fix Description
+
+The heading count (number of `#` characters) is adjusted to match what is expected.

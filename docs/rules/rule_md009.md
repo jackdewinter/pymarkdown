@@ -5,6 +5,10 @@
 | `md009` |
 | `no-trailing-spaces` |
 
+| Autofix Available |
+| --- |
+| Yes |
+
 ## Summary
 
 Trailing spaces.
@@ -110,3 +114,8 @@ when using the `list_item_empty_lines` configuration value to decide
 if that List Item Empty Line triggered the rule.  That algorithm has
 been changed in this rule to instead use the number of spaces
 required to satisfy the indentation requirements of the List element.
+
+## Fix Description
+
+When fixed, the specified line with either have 0 whitespace characters at the end
+of the line or `br_spaces` whitespace characters.

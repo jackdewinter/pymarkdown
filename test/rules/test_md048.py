@@ -182,6 +182,9 @@ def test_md048_bad_fenced_backticks_and_tildes_with_consistent():
     )
 
 
+source_path = os.path.join("test", "resources", "rules", "md048") + os.sep
+
+
 @pytest.mark.rules
 def test_md048_bad_fenced_backticks_and_tildes_with_consistent_fix():
     """

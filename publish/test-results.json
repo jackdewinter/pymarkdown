@@ -1292,7 +1292,7 @@
         },
         {
             "name": "test.rules.test_md023",
-            "totalTests": 16,
+            "totalTests": 23,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1653,6 +1653,14 @@
         {
             "name": "test.tokens.test_atx_heading_markdown_token",
             "totalTests": 5,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.tokens.test_end_token",
+            "totalTests": 1,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,

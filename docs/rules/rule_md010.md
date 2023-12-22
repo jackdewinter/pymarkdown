@@ -5,6 +5,10 @@
 | `md010` |
 | `no-hard-tabs` |
 
+| Autofix Available |
+| --- |
+| Yes |
+
 ## Summary
 
 Hard tabs.
@@ -60,3 +64,11 @@ characters:
 
 This rule is largely inspired by the MarkdownLint rule
 [MD010](https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md#md010---hard-tabs).
+
+## Fix Description
+
+Except for within code blocks, any tab characters will be replacted with the appropriate
+count of space characters.  Note that tab characters within Markdown documents are
+treated as [Tab Stops](https://github.github.com/gfm/#tabs) and not blindly replaced
+with 4 space characters for each tab character.  For more clarity, please read the
+specification at the above link.
