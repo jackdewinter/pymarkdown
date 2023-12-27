@@ -4,7 +4,7 @@ style used for Unordered List elements.
 """
 from typing import Dict, cast
 
-from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.markdown_token import MarkdownToken
@@ -39,20 +39,20 @@ class RuleMd004(RulePlugin):
         self.__actual_style_type: Dict[int, str] = {}
         self.__current_list_level = 0
 
-    def get_details(self) -> PluginDetails:
+    def get_details(self) -> PluginDetailsV2:
         """
         Get the details for the plugin.
         """
-        return PluginDetails(
+        return PluginDetailsV2(
             # bullet, ul
             plugin_name="ul-style",
             plugin_id="MD004",
             plugin_enabled_by_default=True,
             plugin_description="Inconsistent Unordered List Start style",
             plugin_version="0.5.0",
-            plugin_interface_version=1,
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md004.md",
             plugin_configuration="style",
+            plugin_supports_fix=True,
         )
 
     @classmethod
@@ -91,6 +91,32 @@ class RuleMd004(RulePlugin):
         assert token.list_start_sequence == "-"
         return RuleMd004.__dash_style
 
+    def __next_token_triggered(
+        self, context: PluginScanContext, token: MarkdownToken, this_start_style: str
+    ) -> None:
+        if context.in_fix_mode:
+            if (
+                self.__actual_style_type[self.__current_list_level]
+                == RuleMd004.__plus_style
+            ):
+                new_start_sequence = "+"
+            elif (
+                self.__actual_style_type[self.__current_list_level]
+                == RuleMd004.__dash_style
+            ):
+                new_start_sequence = "-"
+            else:
+                new_start_sequence = "*"
+            self.register_fix_token_request(
+                context, token, "next_token", "list_start_sequence", new_start_sequence
+            )
+        else:
+            extra_data = (
+                f"Expected: {self.__actual_style_type[self.__current_list_level]}; "
+                + f"Actual: {this_start_style}"
+            )
+            self.report_next_token_error(context, token, extra_data)
+
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
@@ -112,11 +138,7 @@ class RuleMd004(RulePlugin):
 
             this_start_style = self.__get_sequence_type(list_token)
             if self.__actual_style_type[self.__current_list_level] != this_start_style:
-                extra_data = (
-                    f"Expected: {self.__actual_style_type[self.__current_list_level]}; "
-                    + f"Actual: {this_start_style}"
-                )
-                self.report_next_token_error(context, token, extra_data)
+                self.__next_token_triggered(context, token, this_start_style)
             self.__current_list_level += 1
         elif token.is_unordered_list_end:
             self.__current_list_level -= 1

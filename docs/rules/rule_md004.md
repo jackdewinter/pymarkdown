@@ -5,6 +5,10 @@
 | `md004` |
 | `ul-style` |
 
+| Autofix Available |
+| --- |
+| Yes |
+
 ## Summary
 
 Inconsistent Unordered List Start style.
@@ -106,3 +110,11 @@ Valid heading styles:
 
 This rule is largely inspired by the MarkdownLint rule
 [MD004](https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md#md004---unordered-List-style).
+
+## Fix Description
+
+If the `style` configuration value is set to `consistent`, then the first unordered
+list start character encountered will be used for the rest of the document. This
+also applies to the `sublist` value, but on a list depth basis.  Once the style
+has been determined, it will be replaced if not already used for any unordered
+list start.

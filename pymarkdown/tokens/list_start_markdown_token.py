@@ -217,6 +217,10 @@ class ListStartMarkdownToken(ContainerMarkdownToken):
             self.__list_start_content = field_value
             self.__compose_extra_data_field()
             return True
+        if field_name == "list_start_sequence" and isinstance(field_value, str):
+            self.__list_start_sequence = field_value
+            self.__compose_extra_data_field()
+            return True
         if field_name == "extracted_whitespace" and isinstance(field_value, str):
             self.__extracted_whitespace = field_value
             self.__compose_extra_data_field()
