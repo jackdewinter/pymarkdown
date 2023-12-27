@@ -38,6 +38,8 @@ for a version 1.0 release in early 2024.
 
 ### Changed
 
+- [Issue 812](https://github.com/jackdewinter/pymarkdown/issues/812)
+  - Rule MD014 - Changed documentation to describe why not autofix
 - [Issue 901](https://github.com/jackdewinter/pymarkdown/issues/901)
   - noticed cases where `len(x)` was being used instead of `x` or `not x`
 - [Issue 913](https://github.com/jackdewinter/pymarkdown/issues/913)
