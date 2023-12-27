@@ -13,6 +13,8 @@ for a version 1.0 release in early 2024.
   - Extension: Strikethrough
 - [Issue 805](https://github.com/jackdewinter/pymarkdown/issues/805)
   - Extension: Task List Items
+- [Issue 808](https://github.com/jackdewinter/pymarkdown/issues/808)
+  - Rule MD004 - Added fix options
 - [Issue 809](https://github.com/jackdewinter/pymarkdown/issues/809)
   - Rule MD007 - Added fix options
 - [Issie 813](https://github.com/jackdewinter/pymarkdown/issues/813)
