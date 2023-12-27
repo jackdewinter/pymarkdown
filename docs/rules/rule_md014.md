@@ -5,6 +5,10 @@
 | `md014` |
 | `commands-show-output` |
 
+| Autofix Available |
+| --- |
+| No |
+
 ## Summary
 
 Dollar signs used before commands without showing output.
@@ -91,3 +95,30 @@ The only difference is that when this rule is triggered, it is triggered for
 every line in the code block, instead of just the first line in the code block.
 Because this rule only triggers if every line starts with a dollar sign
 character (`$`), it made more sense to only fire this rule once.
+
+## Fix Description
+
+The reason for not being able to auto-fix this rule is context.  A developer can
+be reasonably be expected to look at this sample:
+
+````Markdown
+```shell
+$ ls /my/dir
+$ cat /my/dir/file
+```
+````
+
+and this sample:
+
+````Markdown
+```shell
+$ ls /my/dir
+$ my_file
+$ cat /my/dir/file
+```
+````
+
+and make a reasonable guess that the output for both samples are from Linux systems
+and that the second line of the second sample should not start with a `$` character.
+While the algorithm for detecting when to trigger this rule is clear, a similar
+algorithm to fix instances of this rule lacks the context to be clear.

@@ -5,7 +5,7 @@ look right.
 from typing import cast
 
 from pymarkdown.general.parser_helper import ParserHelper
-from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.markdown_token import MarkdownToken
@@ -22,18 +22,18 @@ class RuleMd014(RulePlugin):
         super().__init__()
         self.__in_code_block = False
 
-    def get_details(self) -> PluginDetails:
+    def get_details(self) -> PluginDetailsV2:
         """
         Get the details for the plugin.
         """
-        return PluginDetails(
+        return PluginDetailsV2(
             plugin_name="commands-show-output",
             plugin_id="MD014",
             plugin_enabled_by_default=True,
             plugin_description="Dollar signs used before commands without showing output",
             plugin_version="0.5.0",
-            plugin_interface_version=1,
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md014.md",
+            plugin_supports_fix=False,
         )
 
     def starting_new_file(self) -> None:
