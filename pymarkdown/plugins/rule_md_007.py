@@ -5,7 +5,7 @@ start at predictable positions.
 from typing import Tuple, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
-from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.plugins.utils.container_token_manager import ContainerTokenManager
@@ -26,19 +26,19 @@ class RuleMd007(RulePlugin):
         self.__start_indented = False
         self.__container_manager = ContainerTokenManager()
 
-    def get_details(self) -> PluginDetails:
+    def get_details(self) -> PluginDetailsV2:
         """
         Get the details for the plugin.
         """
-        return PluginDetails(
+        return PluginDetailsV2(
             plugin_name="ul-indent",
             plugin_id="MD007",
             plugin_enabled_by_default=True,
             plugin_description="Unordered list indentation",
             plugin_version="0.5.0",
-            plugin_interface_version=1,
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md007.md",
             plugin_configuration="indent,start_indented",
+            plugin_supports_fix=True,
         )
 
     @classmethod
@@ -157,6 +157,34 @@ class RuleMd007(RulePlugin):
                 stack_index -= 1
         return container_base_column, block_quote_base, list_depth
 
+    def __check_apply_fix(
+        self,
+        context: PluginScanContext,
+        token: MarkdownToken,
+        adjusted_column_number: int,
+        calculated_column_number: int,
+    ) -> None:
+        list_token = cast(ListStartMarkdownToken, token)
+        column_delta = adjusted_column_number - calculated_column_number
+        whitespace_length = len(list_token.extracted_whitespace)
+        assert whitespace_length >= column_delta
+        adjusted_whitespace = list_token.extracted_whitespace[:-column_delta]
+        self.register_fix_token_request(
+            context,
+            token,
+            "next_token",
+            "extracted_whitespace",
+            adjusted_whitespace,
+        )
+        if token.is_new_list_item:
+            self.register_fix_token_request(
+                context,
+                token,
+                "next_token",
+                "indent_level",
+                list_token.indent_level - column_delta,
+            )
+
     def __check(self, context: PluginScanContext, token: MarkdownToken) -> None:
         # print(f"{token}".replace(ParserHelper.newline_character, "\\n"))
         # print(f"{self.__container_token_stack}".replace(ParserHelper.newline_character, "\\n"))
@@ -183,16 +211,21 @@ class RuleMd007(RulePlugin):
         calculated_column_number = list_depth * self.__indent_basis
         # print(f"adjusted_column_number={adjusted_column_number}, calculated_column_number=" + \
         #   f"{calculated_column_number},block_quote_base={block_quote_base}")
-        if adjusted_column_number != calculated_column_number:
-            # print(f"container_base_column={container_base_column}")
-            if block_quote_base:
-                container_base_column -= block_quote_base
-            elif container_base_column:
-                container_base_column += 1
-            extra_error_information = (
-                f"Expected: {calculated_column_number+container_base_column}, "
-                + f"Actual={adjusted_column_number+container_base_column}"
-            )
-            self.report_next_token_error(
-                context, token, extra_error_information=extra_error_information
-            )
+        if adjusted_column_number > calculated_column_number:
+            if context.in_fix_mode:
+                self.__check_apply_fix(
+                    context, token, adjusted_column_number, calculated_column_number
+                )
+            else:
+                # print(f"container_base_column={container_base_column}")
+                if block_quote_base:
+                    container_base_column -= block_quote_base
+                elif container_base_column:
+                    container_base_column += 1
+                extra_error_information = (
+                    f"Expected: {calculated_column_number+container_base_column}, "
+                    + f"Actual={adjusted_column_number+container_base_column}"
+                )
+                self.report_next_token_error(
+                    context, token, extra_error_information=extra_error_information
+                )
