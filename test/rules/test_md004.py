@@ -3,8 +3,11 @@ Module to provide tests related to the MD004 rule.
 """
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.utils import assert_file_is_as_expected, copy_to_temp_file
 
 import pytest
+
+source_path = os.path.join("test", "resources", "rules", "md004") + os.sep
 
 
 @pytest.mark.rules
@@ -148,6 +151,52 @@ def test_md004_bad_asterisk_dash_single_level():
 
 
 @pytest.mark.rules
+def test_md004_bad_asterisk_dash_single_level_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    is only level 1 unordered lists starting with dash and the
+    configuration is also set to asterisk.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "good_list_dash_single_level.md"
+    ) as temp_source_path:
+        original_file_contents = """- first
+- second
+- third
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--set",
+            "plugins.md004.style=asterisk",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """* first
+* second
+* third
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md004_bad_asterisk_plus_single_level():
     """
     Test to make sure this rule does trigger with a document that
@@ -182,6 +231,52 @@ def test_md004_bad_asterisk_plus_single_level():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md004_bad_asterisk_plus_single_level_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    is only level 1 unordered lists starting with dash and the
+    configuration is also set to asterisk.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "good_list_plus_single_level.md"
+    ) as temp_source_path:
+        original_file_contents = """+ first
++ second
++ third
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--set",
+            "plugins.md004.style=asterisk",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """* first
+* second
+* third
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -286,6 +381,52 @@ def test_md004_bad_dash_asterisk_single_level():
 
 
 @pytest.mark.rules
+def test_md004_bad_dash_asterisk_single_level_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    is only level 1 unordered lists starting with dash and the
+    configuration is also set to asterisk.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "good_list_asterisk_single_level.md"
+    ) as temp_source_path:
+        original_file_contents = """* first
+* second
+* third
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--set",
+            "plugins.md004.style=dash",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """- first
+- second
+- third
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md004_bad_dash_plus_single_level():
     """
     Test to make sure this rule does trigger with a document that
@@ -320,6 +461,52 @@ def test_md004_bad_dash_plus_single_level():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md004_bad_dash_plus_single_level_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    is only level 1 unordered lists starting with dash and the
+    configuration is also set to asterisk.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "good_list_plus_single_level.md"
+    ) as temp_source_path:
+        original_file_contents = """+ first
++ second
++ third
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--set",
+            "plugins.md004.style=dash",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """- first
+- second
+- third
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -424,6 +611,52 @@ def test_md004_bad_plus_asterisk_single_level():
 
 
 @pytest.mark.rules
+def test_md004_good_plus_single_level_consistent_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    is only level 1 unordered lists starting with dash and the
+    configuration is also set to asterisk.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "good_list_asterisk_single_level.md"
+    ) as temp_source_path:
+        original_file_contents = """* first
+* second
+* third
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--set",
+            "plugins.md004.style=plus",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """+ first
++ second
++ third
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md004_bad_plus_dash_single_level():
     """
     Test to make sure this rule does trigger with a document that
@@ -458,6 +691,52 @@ def test_md004_bad_plus_dash_single_level():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md004_bad_plus_dash_single_level_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    is only level 1 unordered lists starting with dash and the
+    configuration is also set to asterisk.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "good_list_dash_single_level.md"
+    ) as temp_source_path:
+        original_file_contents = """- first
+- second
+- third
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--set",
+            "plugins.md004.style=plus",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """+ first
++ second
++ third
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -497,6 +776,50 @@ def test_md004_bad_single_level_consistent():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md004_bad_single_level_consistent_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    is only level 1 unordered lists starting with dash and the
+    configuration is also set to asterisk.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_list_different_single_level.md"
+    ) as temp_source_path:
+        original_file_contents = """* first
++ second
+- third
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """* first
+* second
+* third
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -599,6 +922,70 @@ def test_md004_bad_multi_level_sublevel_complex():
 
 
 @pytest.mark.rules
+def test_md004_bad_multi_level_sublevel_complex_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    is only level 1 unordered lists starting with dash and the
+    configuration is also set to asterisk.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_multi_level_complex.md"
+    ) as temp_source_path:
+        original_file_contents = """+ first
+  1. second
+     - third
++ first
+  1. second
+     + third
+       1. fourth
+          * fifth
+     + third
+       1. fourth
+          * fifth
+     + third
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--set",
+            "plugins.md004.style=sublist",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """+ first
+  1. second
+     - third
++ first
+  1. second
+     - third
+       1. fourth
+          * fifth
+     - third
+       1. fourth
+          * fifth
+     - third
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md004_bad_multi_level_sublevel_complex_asterisk():
     """
     Test to make sure this rule does trigger with a document that contains
@@ -642,6 +1029,70 @@ def test_md004_bad_multi_level_sublevel_complex_asterisk():
 
 
 @pytest.mark.rules
+def test_md004_bad_multi_level_sublevel_complex_asterisk_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    is only level 1 unordered lists starting with dash and the
+    configuration is also set to asterisk.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_multi_level_complex.md"
+    ) as temp_source_path:
+        original_file_contents = """+ first
+  1. second
+     - third
++ first
+  1. second
+     + third
+       1. fourth
+          * fifth
+     + third
+       1. fourth
+          * fifth
+     + third
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--set",
+            "plugins.md004.style=asterisk",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """* first
+  1. second
+     * third
+* first
+  1. second
+     * third
+       1. fourth
+          * fifth
+     * third
+       1. fourth
+          * fifth
+     * third
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md004_bad_dual_lists_with_separator():
     """
     Test to make sure this rule does trigger with a document that contains
@@ -676,3 +1127,57 @@ def test_md004_bad_dual_lists_with_separator():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md004_bad_dual_lists_with_separator_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    is only level 1 unordered lists starting with dash and the
+    configuration is also set to asterisk.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_dual_lists_with_separator.md"
+    ) as temp_source_path:
+        original_file_contents = """+ item 1
+  - item 1a
+
+this is a separator
+
+* item 2
+  - item 2a
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--set",
+            "plugins.md004.style=sublist",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """+ item 1
+  - item 1a
+
+this is a separator
+
++ item 2
+  - item 2a
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
