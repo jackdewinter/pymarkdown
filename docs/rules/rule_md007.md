@@ -5,6 +5,10 @@
 | `md007` |
 | `ul-indent` |
 
+| Autofix Available |
+| --- |
+| Yes |
+
 ## Summary
 
 Unordered list indentation.
@@ -115,3 +119,37 @@ on the following sample:
     + sublist
        + sublist
 ```
+
+## Fix Description
+
+Any unordered list item elements and their new list item elements are examined
+to make sure that they start with a multiple of the specified `indent`.  If an
+unordered list is started within a block quote or ordered list item, the base indent
+within that element is calculated.  If not in either of those two elements, the
+base indent is `0`.  The number of containing unordered list item elements or list
+depth is calculated.
+
+A simple calculation is made to determine the ideal ident: the base indent plus
+the `indent` value multiplied by the list depth minus `1`.  If that value
+differs from the actual indent, the list item start element or the new list item
+element is adjusted to start at that calculated location.
+
+Therefore, for the above example:
+
+```Markdown
+1. ordered indent
+    * unordered indent
+```
+
+the base indent is `3` and the list depth is `1`. Therefore `3 + (1-1)*2` equals
+`3`, adjusting the unordered list start to have an indent of 3:
+
+```Markdown
+1. ordered indent
+   * unordered indent
+```
+
+The same calculation happens for a new list item for that list, arriving at the same
+list depth, and therefore the same calculated indent.  For any nested lists, the
+list depth is increased accordingly, resulting in indents of `5`, `7`, `9`, and
+so on.

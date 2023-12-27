@@ -3,7 +3,7 @@
 ## Unversioned - In Main, Not Released
 
 This release is going to focus on getting the feature list complete
-for a version 1.0 release in early 2
+for a version 1.0 release in early 2024.
 
 ### Added
 
@@ -13,6 +13,8 @@ for a version 1.0 release in early 2
   - Extension: Strikethrough
 - [Issue 805](https://github.com/jackdewinter/pymarkdown/issues/805)
   - Extension: Task List Items
+- [Issue 809](https://github.com/jackdewinter/pymarkdown/issues/809)
+  - Rule MD007 - Added fix options
 - [Issie 813](https://github.com/jackdewinter/pymarkdown/issues/813)
   - Rule MD019 - Added fix options
 - [Issue 814](https://github.com/jackdewinter/pymarkdown/issues/814)

@@ -3,10 +3,13 @@ Module to provide tests related to the MD007 rule.
 """
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.utils import assert_file_is_as_expected, copy_to_temp_file
 
 import pytest
 
 # pylint: disable=too-many-lines
+
+source_path = os.path.join("test", "resources", "rules", "md007") + os.sep
 
 
 @pytest.mark.rules
@@ -182,6 +185,51 @@ def test_md007_bad_list_indentation_level_0():
 
 
 @pytest.mark.rules
+def test_md007_bad_list_indentation_level_0_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    has the extra spaces after the level 1 list item.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_list_indentation_level_0.md"
+    ) as temp_source_path:
+        original_file_contents = """This is a test
+
+ * this is level 1
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md023",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """This is a test
+
+* this is level 1
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md007_bad_list_indentation_level_1():
     """
     Test to make sure this rule does trigger with a document that
@@ -216,6 +264,53 @@ def test_md007_bad_list_indentation_level_1():
 
 
 @pytest.mark.rules
+def test_md007_bad_list_indentation_level_1_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    has the extra spaces after the level 1 list item.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_list_indentation_level_1.md"
+    ) as temp_source_path:
+        original_file_contents = """This is a test
+
+* this is level 1
+   * this is level 2
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md023",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """This is a test
+
+* this is level 1
+  * this is level 2
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md007_bad_list_indentation_level_2():
     """
     Test to make sure this rule does trigger with a document that
@@ -247,6 +342,55 @@ def test_md007_bad_list_indentation_level_2():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md007_bad_list_indentation_level_2_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    has the extra spaces after the level 1 list item.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_list_indentation_level_2.md"
+    ) as temp_source_path:
+        original_file_contents = """This is a test
+
+* this is level 1
+  * this is level 2
+     * this is level 3
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md023",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """This is a test
+
+* this is level 1
+  * this is level 2
+    * this is level 3
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -382,6 +526,49 @@ def test_md007_bad_unordered_list_in_ordered_list():
 
 
 @pytest.mark.rules
+def test_md007_bad_unordered_list_in_ordered_list_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    has the extra spaces after the level 1 list item.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_unordered_list_in_ordered_list.md"
+    ) as temp_source_path:
+        original_file_contents = """1.  ordered list
+     + sublist
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md023",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """1.  ordered list
+    + sublist
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md007_bad_level_1_unordered_list_in_ordered_list():
     """
     Test to make sure this rule does trigger with a document that has
@@ -420,6 +607,51 @@ def test_md007_bad_level_1_unordered_list_in_ordered_list():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md007_bad_level_1_unordered_list_in_ordered_list_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    has the extra spaces after the level 1 list item.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_level_1_unordered_list_in_ordered_list.md"
+    ) as temp_source_path:
+        original_file_contents = """1.  ordered list
+    + sublist
+       + sublist
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md023",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """1.  ordered list
+    + sublist
+      + sublist
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -497,6 +729,51 @@ def test_md007_bad_unordered_list_in_double_ordered_list():
 
 
 @pytest.mark.rules
+def test_md007_bad_unordered_list_in_double_ordered_list_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    has the extra spaces after the level 1 list item.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_unordered_list_in_double_ordered_list.md"
+    ) as temp_source_path:
+        original_file_contents = """1. ordered list
+   1. inner ordered list
+       + sublist
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md023",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """1. ordered list
+   1. inner ordered list
+      + sublist
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md007_good_unordered_ordered_unordere_ordered_unordered():
     """
     Test to make sure this rule does not trigger with a document that has
@@ -569,6 +846,55 @@ def test_md007_bad_unordered_bad_ordered_unordered_ordered_unordered():
 
 
 @pytest.mark.rules
+def test_md007_bad_unordered_bad_ordered_unordered_ordered_unordered_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    has the extra spaces after the level 1 list item.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_unordered_bad_ordered_unordered_ordered_unordered.md"
+    ) as temp_source_path:
+        original_file_contents = """ + level 1
+   1. level 2
+      + level 3
+        1. level 4
+           + level 5
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md023",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """+ level 1
+   1. level 2
+      + level 3
+        1. level 4
+           + level 5
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md007_bad_unordered_ordered_unordered_bad_ordered_unordered():
     """
     Test to make sure this rule does trigger with a document that has
@@ -607,6 +933,55 @@ def test_md007_bad_unordered_ordered_unordered_bad_ordered_unordered():
 
 
 @pytest.mark.rules
+def test_md007_bad_unordered_ordered_unordered_bad_ordered_unordered_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    has the extra spaces after the level 1 list item.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_unordered_ordered_unordered_bad_ordered_unordered.md"
+    ) as temp_source_path:
+        original_file_contents = """+ level 1
+  1. level 2
+      + level 3
+        1. level 4
+           + level 5
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md023",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """+ level 1
+  1. level 2
+     + level 3
+        1. level 4
+           + level 5
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md007_bad_unordered_ordered_unordered_ordered_unordered_bad():
     """
     Test to make sure this rule does trigger with a document that has
@@ -642,6 +1017,55 @@ def test_md007_bad_unordered_ordered_unordered_ordered_unordered_bad():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md007_bad_unordered_ordered_unordered_ordered_unordered_bad_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    has the extra spaces after the level 1 list item.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_unordered_ordered_unordered_ordered_unordered_bad.md"
+    ) as temp_source_path:
+        original_file_contents = """+ level 1
+  1. level 2
+     + level 3
+       1. level 4
+           + level 5
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md023",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """+ level 1
+  1. level 2
+     + level 3
+       1. level 4
+          + level 5
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -691,6 +1115,55 @@ def test_md007_bad_list_indentation_in_block_quote_level_0():
 
 
 @pytest.mark.rules
+def test_md007_bad_list_indentation_in_block_quote_level_0_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    has the extra spaces after the level 1 list item.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_list_indentation_in_block_quote_level_0.md"
+    ) as temp_source_path:
+        original_file_contents = """This is a test
+
+>  * this is level 1
+>    * this is level 2
+>      * this is level 3
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md023",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """This is a test
+
+>  * this is level 1
+>    * this is level 2
+>      * this is level 3
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md007_bad_list_in_block_quote_after_text():
     """
     Test to make sure this rule does trigger with a document that has
@@ -722,6 +1195,53 @@ def test_md007_bad_list_in_block_quote_after_text():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md007_bad_list_in_block_quote_after_text_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    has the extra spaces after the level 1 list item.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_list_in_block_quote_after_text.md"
+    ) as temp_source_path:
+        original_file_contents = """> This is some text
+>
+> * this is level 1
+>    * this is level 2
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md023",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """> This is some text
+>
+> * this is level 1
+>   * this is level 2
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -763,6 +1283,53 @@ def test_md007_bad_list_in_block_quote_after_atx_heading():
 
 
 @pytest.mark.rules
+def test_md007_bad_list_in_block_quote_after_atx_heading_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    has the extra spaces after the level 1 list item.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_list_in_block_quote_after_atx_heading.md"
+    ) as temp_source_path:
+        original_file_contents = """> # This is some text
+>
+> * this is level 1
+>    * this is level 2
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md023",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """> # This is some text
+>
+> * this is level 1
+>   * this is level 2
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md007_bad_list_in_block_quote_after_thematic_break():
     """
     Test to make sure this rule does trigger with a document that has
@@ -798,6 +1365,57 @@ def test_md007_bad_list_in_block_quote_after_thematic_break():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md007_bad_list_in_block_quote_after_thematic_break_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    has the extra spaces after the level 1 list item.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_list_in_block_quote_after_thematic_break.md"
+    ) as temp_source_path:
+        original_file_contents = """> This is some text
+>
+> --------
+>
+> * this is level 1
+>    * this is level 2
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md023",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """> This is some text
+>
+> --------
+>
+> * this is level 1
+>   * this is level 2
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -839,6 +1457,55 @@ def test_md007_bad_list_in_block_quote_after_setext_heading():
 
 
 @pytest.mark.rules
+def test_md007_bad_list_in_block_quote_after_setext_heading_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    has the extra spaces after the level 1 list item.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_list_in_block_quote_after_setext_heading.md"
+    ) as temp_source_path:
+        original_file_contents = """> This is some text
+> ---------
+>
+> * this is level 1
+>    * this is level 2
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md023",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """> This is some text
+> ---------
+>
+> * this is level 1
+>   * this is level 2
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md007_bad_list_in_block_quote_after_html_block():
     """
     Test to make sure this rule does trigger with a document that has
@@ -874,6 +1541,57 @@ def test_md007_bad_list_in_block_quote_after_html_block():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md007_bad_list_in_block_quote_after_html_block_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    has the extra spaces after the level 1 list item.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_list_in_block_quote_after_html_block.md"
+    ) as temp_source_path:
+        original_file_contents = """> <!--
+> This is a comment
+> -->
+>
+> * this is level 1
+>    * this is level 2
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md023",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """> <!--
+> This is a comment
+> -->
+>
+> * this is level 1
+>   * this is level 2
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -915,6 +1633,57 @@ def test_md007_bad_list_in_block_quote_after_fenced_block():
 
 
 @pytest.mark.rules
+def test_md007_bad_list_in_block_quote_after_fenced_block_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    has the extra spaces after the level 1 list item.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_list_in_block_quote_after_fenced_block.md"
+    ) as temp_source_path:
+        original_file_contents = """> ```fenced
+> This is a comment
+> ```
+>
+> * this is level 1
+>    * this is level 2
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md023",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """> ```fenced
+> This is a comment
+> ```
+>
+> * this is level 1
+>   * this is level 2
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md007_bad_list_in_block_quote_after_indented_block():
     """
     Test to make sure this rule does trigger with a document that has
@@ -950,6 +1719,53 @@ def test_md007_bad_list_in_block_quote_after_indented_block():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md007_bad_list_in_block_quote_after_indented_block_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    has the extra spaces after the level 1 list item.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_list_in_block_quote_after_indented_block.md"
+    ) as temp_source_path:
+        original_file_contents = """>     This is a comment
+>
+> * this is level 1
+>    * this is level 2
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md023",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """>     This is a comment
+>
+> * this is level 1
+>   * this is level 2
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -991,6 +1807,53 @@ def test_md007_bad_list_in_block_quote_after_link_reference_definition():
 
 
 @pytest.mark.rules
+def test_md007_bad_list_in_block_quote_after_link_reference_definition_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    has the extra spaces after the level 1 list item.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_list_in_block_quote_after_link_reference_definition.md"
+    ) as temp_source_path:
+        original_file_contents = """> [link]: /url
+>
+> * this is level 1
+>    * this is level 2
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md023",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """> [link]: /url
+>
+> * this is level 1
+>   * this is level 2
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md007_bad_list_in_block_quote_after_other_list():
     """
     Test to make sure this rule does trigger with a document that has
@@ -1026,6 +1889,53 @@ def test_md007_bad_list_in_block_quote_after_other_list():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md007_bad_list_in_block_quote_after_other_list_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    has the extra spaces after the level 1 list item.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_list_in_block_quote_after_other_list.md"
+    ) as temp_source_path:
+        original_file_contents = """> 1. This is another list.
+>
+> * this is level 1
+>    * this is level 2
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md023",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """> 1. This is another list.
+>
+> * this is level 1
+>   * this is level 2
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -1113,6 +2023,68 @@ def test_md007_bad_unordered_list_elements():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md007_bad_unordered_list_elements_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    has the extra spaces after the level 1 list item.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_unordered_list_elements.md"
+    ) as temp_source_path:
+        original_file_contents = """This is a test
+
+ * this is level 1
+ * this is also level 1
+   * this is level 2
+   * this is also level 2
+      * this is level 3
+   * this is also level 2
+    * this is also level 2
+    * this is also level 2
+* this is also level 1
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--stack-trace",
+            "--disable-rules",
+            "md023",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """This is a test
+
+* this is level 1
+* this is also level 1
+  * this is level 2
+  * this is also level 2
+    * this is level 3
+  * this is also level 2
+  * this is also level 2
+  * this is also level 2
+* this is also level 1
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -1209,3 +2181,54 @@ def test_md007_issue_301():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md007_issue_301_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    has the extra spaces after the level 1 list item.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(source_path + "issue-301.md") as temp_source_path:
+        original_file_contents = """# Demo markdown
+
+- Item
+    - Sub item
+
+1. Ordered item
+    - Sub unordered item
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md023",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """# Demo markdown
+
+- Item
+  - Sub item
+
+1. Ordered item
+   - Sub unordered item
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
