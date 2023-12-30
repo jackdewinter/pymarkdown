@@ -46,6 +46,13 @@ for a version 1.0 release in early 2024.
   - noticed cases where `len(x)` was being used instead of `x` or `not x`
 - [Issue 913](https://github.com/jackdewinter/pymarkdown/issues/913)
   - making proper use of is_xxx_end function from MarkdownToken class
+- [Issue 934](https://github.com/jackdewinter/pymarkdown/issues/934)
+  - fix mode scans multiple times, with each scan producing lots of logs if
+    on DEBUG
+  - first fix was to allow a new command line option to suppress logs on any
+    scan in fix mode past the first one
+  - other fix was to make a clearer message when two rules trigger on the
+    same field of the same token
 
 ### Fixed
 

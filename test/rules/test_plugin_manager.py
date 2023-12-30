@@ -2168,7 +2168,7 @@ We skipped out a 2nd level heading in this document
         expected_return_code = 1
         expected_output = ""
         expected_error = """BadPluginFixError encountered while scanning '{path}':
-More than one plugin has requested a fix for the same field of the same token.""".replace(
+Multiple plugins (MDE003 and MD001) have requested a fix for the same field of the same token.""".replace(
             "{path}", temp_source_path
         )
 

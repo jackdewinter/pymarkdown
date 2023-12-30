@@ -4,12 +4,13 @@ for the application.
 """
 
 import argparse
+import copy
 import logging
 import os
 import shutil
 import sys
 import tempfile
-from typing import Callable, Dict, List, Optional, Tuple, cast
+from typing import Callable, Dict, List, Optional, Tuple, Union, cast
 
 from pymarkdown.application_file_scanner import ApplicationFileScanner
 from pymarkdown.extensions.pragma_token import PragmaToken
@@ -83,6 +84,7 @@ class FileScanHelper:
                         next_file,
                         args.x_fix_debug,
                         args.x_fix_file_debug,
+                        args.x_fix_no_rescan_log,
                     ):
                         self.__presentation.print_fix_message(next_file)
                         did_fix_any_file = True
@@ -182,11 +184,19 @@ class FileScanHelper:
             POGGER.info("Processing token: $", next_token)
             self.__plugins.next_token(context, next_token)
 
+        POGGER.info("Completed scanning tokens in file '$'.", next_file_name)
+
         POGGER.info("Scanning file '$' line-by-line.", next_file_name)
         self.__process_lines_in_file(source_provider, context, next_file_name)
 
+    # pylint: disable=too-many-arguments
     def __fix_specific_file(
-        self, next_file: str, next_file_name: str, fix_debug: bool, fix_file_debug: bool
+        self,
+        next_file: str,
+        next_file_name: str,
+        fix_debug: bool,
+        fix_file_debug: bool,
+        fix_nolog_rescan: bool,
     ) -> bool:
         did_fix_file = False
         try:
@@ -194,7 +204,11 @@ class FileScanHelper:
                 POGGER.info("Starting file to fix '$'.", next_file_name)
 
                 did_fix_file = self.__process_file_fix(
-                    next_file, next_file_name, fix_debug, fix_file_debug
+                    next_file,
+                    next_file_name,
+                    fix_debug,
+                    fix_file_debug,
+                    fix_nolog_rescan,
                 )
 
                 POGGER.info("Ending file to fix '$'.", next_file_name)
@@ -204,6 +218,8 @@ class FileScanHelper:
         except (BadPluginError, BadPluginFixError) as this_exception:
             self.__handle_scan_error(next_file, this_exception)
         return did_fix_file
+
+    # pylint: enable=too-many-arguments
 
     def __handle_scan_error(self, next_file: str, this_exception: Exception) -> None:
         if formatted_error := self.__presentation.format_scan_error(
@@ -216,8 +232,49 @@ class FileScanHelper:
         # to terminate to respect that the error was called.
         ReturnCodeHelper.exit_application(ApplicationResult.SYSTEM_ERROR)
 
+    def __process_file_fix_rescan(
+        self, fix_debug: bool, fix_nolog_rescan: bool, next_file_two: str
+    ) -> List[MarkdownToken]:
+        if fix_debug:
+            print(f"scan: {next_file_two}")
+        POGGER.info("Rescanning file '$' before line-by-line fixes.", next_file_two)
+        source_provider = FileSourceProvider(next_file_two)
+        assert self.__tokenizer is not None
+
+        if fix_nolog_rescan:
+            saved_log_level = logging.WARNING
+            if POGGER.is_enabled_for(logging.DEBUG):
+                saved_log_level = logging.DEBUG
+            elif POGGER.is_enabled_for(logging.INFO):
+                saved_log_level = logging.INFO
+            logging.getLogger().setLevel(logging.WARNING)
+            ParserLogger.sync_on_next_call()
+            logging.getLogger().warning(
+                "Setting logging level to WARN during rescan upon request."
+            )
+
+        try:
+            actual_tokens = self.__tokenizer.transform_from_provider(
+                source_provider, do_add_end_of_stream_token=True
+            )
+        finally:
+            if fix_nolog_rescan:
+                saved_log_level_name = logging.getLevelName(saved_log_level)
+                logging.getLogger().warning(
+                    "Restoring log level to %s.", saved_log_level_name
+                )
+                logging.getLogger().setLevel(saved_log_level)
+                ParserLogger.sync_on_next_call()
+        return actual_tokens
+
+    # pylint: disable=too-many-arguments
     def __process_file_fix(
-        self, next_file: str, next_file_name: str, fix_debug: bool, fix_file_debug: bool
+        self,
+        next_file: str,
+        next_file_name: str,
+        fix_debug: bool,
+        fix_file_debug: bool,
+        fix_nolog_rescan: bool,
     ) -> bool:
         # TODO add more protections around fixing i.e. IOError handling
 
@@ -235,13 +292,8 @@ class FileScanHelper:
                 "Scanning for token fixes did not change file.  Reusing tokens for line-by-line fixes."
             )
         else:
-            if fix_debug:
-                print(f"scan: {next_file_two}")
-            POGGER.info("Scanning file '$' for line-by-line fixes.", next_file_two)
-            source_provider = FileSourceProvider(next_file_two)
-            assert self.__tokenizer is not None
-            actual_tokens = self.__tokenizer.transform_from_provider(
-                source_provider, do_add_end_of_stream_token=True
+            actual_tokens = self.__process_file_fix_rescan(
+                fix_debug, fix_nolog_rescan, next_file_two
             )
 
         # As the lines are processed, a new temporary line file is written to. If either
@@ -271,6 +323,8 @@ class FileScanHelper:
             os.remove(next_file_two)
         return did_anything_get_fixed
 
+    # pylint: enable=too-many-arguments
+
     # pylint: disable=too-many-arguments
     def __process_file_fix_lines(
         self,
@@ -284,7 +338,7 @@ class FileScanHelper:
         with tempfile.NamedTemporaryFile() as temp_output:
             temporary_file_name = temp_output.name
         with open(temporary_file_name, "wt", encoding="utf-8") as source_file:
-            POGGER.info("Scanning file '$' for line-by-line fixes.", next_file_name)
+            POGGER.info("Scanning before line-by-line fixes.")
             context = self.__plugins.starting_new_file(
                 next_file_name,
                 fix_mode=True,
@@ -299,9 +353,10 @@ class FileScanHelper:
             # the line being scanned, we rescan the tokens to present an updated
             # picture of the tokens.
             for next_token in actual_tokens:
-                POGGER.info("Processing token: $", next_token)
+                POGGER.info("Processing tokens: $", next_token)
                 self.__plugins.next_token(context, next_token)
 
+            POGGER.info("Completed token scanning.")
             self.__process_lines_in_file(source_provider, context, next_file_name)
             this_file_fix_line_records = context.fix_line_records
             if this_file_fix_line_records and fix_debug:
@@ -412,23 +467,43 @@ class FileScanHelper:
         _ = actual_tokens
 
         # TODO Simple scan for now, in future, want to check and allow 2 names that set to the same value.
-        fix_map = {}
+        fix_map: Dict[str, Tuple[Union[str, int], str]] = {}
         for next_fix_record in requested_fixes:
             map_key = str(next_fix_record.token_to_fix) + str(
                 next_fix_record.field_name
             )
             if map_key in fix_map:
-                raise BadPluginFixError(
-                    "More than one plugin has requested a fix for the same field of the same token."
+                recorded_value = next_fix_record.field_value
+                fix_value = fix_map[map_key]
+
+                current_plugin_id = next_fix_record.plugin_id.upper()
+                previous_plugin_id = fix_value[1].upper()
+
+                POGGER.info(
+                    "Previous plugin ($) wants to set field $ to '$'",
+                    previous_plugin_id,
+                    next_fix_record.field_name,
+                    recorded_value,
                 )
-            fix_map[map_key] = next_fix_record.field_value
+                POGGER.info(
+                    "Current plugin ($) wants to set field $ to '$'",
+                    current_plugin_id,
+                    next_fix_record.field_name,
+                    fix_value[0],
+                )
+
+                raise BadPluginFixError(
+                    f"Multiple plugins ({current_plugin_id} and {previous_plugin_id}) have requested a fix for the same field of the same token."
+                )
+            fix_map[map_key] = (next_fix_record.field_value, next_fix_record.plugin_id)
 
         for next_fix_record in requested_fixes:
+            before_instance = copy.deepcopy(token_instance)
             if not token_instance.modify_token(
                 context, next_fix_record.field_name, next_fix_record.field_value
             ):
                 POGGER.debug(
-                    "Token fix for plugin %s in action %s on field %s failed.",
+                    "Token $ fix for plugin $ in action $ on field $ failed.",
                     next_fix_record.plugin_id,
                     next_fix_record.plugin_action,
                     next_fix_record.field_name,
@@ -436,6 +511,15 @@ class FileScanHelper:
                 raise BadPluginFixError(
                     formatted_message=f"Plugin id '{next_fix_record.plugin_id.upper()}'s '{next_fix_record.plugin_action}' action requested a token adjustment to field '{next_fix_record.field_name}' that failed."
                 )
+            POGGER.debug(
+                "Token fix for plugin $ in action $ on field $ succeeded.",
+                next_fix_record.plugin_id,
+                next_fix_record.plugin_action,
+                next_fix_record.field_name,
+            )
+            POGGER.debug(
+                "Token before <$> and after <$>.", before_instance, token_instance
+            )
 
     def __process_lines_in_file(
         self,
@@ -456,7 +540,7 @@ class FileScanHelper:
             line_number += 1
             next_line = source_provider.get_next_line()
 
-        POGGER.info("Completed scanning file '$'.", next_file_name)
+        POGGER.info("Completed scanning lines in file '$'.", next_file_name)
         self.__plugins.completed_file(context, line_number)
 
     @staticmethod
