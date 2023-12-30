@@ -35,6 +35,8 @@ for a version 1.0 release in early 2024.
   - Rule MD039 - Added fix options
 - [Issue 825](https://github.com/jackdewinter/pymarkdown/issues/825)
   - Rule MD048 - Added fix options
+- [Issue 931](https://github.com/jackdewinter/pymarkdown/issues/931)
+  - Rule MD005 - Added fix options
 
 ### Changed
 
