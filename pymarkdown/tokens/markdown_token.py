@@ -611,7 +611,9 @@ class MarkdownToken:
         return self._modify_token(field_name, field_value)
 
     def _modify_token(self, field_name: str, field_value: Union[str, int]) -> bool:
-        _ = field_name, field_value
+        if field_name == "column_number" and isinstance(field_value, int):
+            self.__column_number = field_value
+            return True
         return False
 
     def generate_close_markdown_token_from_markdown_token(

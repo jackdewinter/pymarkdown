@@ -5,6 +5,10 @@
 | `md005` |
 | `list-indent` |
 
+| Autofix Available |
+| --- |
+| Yes |
+
 ## Summary
 
 Inconsistent indentation for list items at the same level.
@@ -133,3 +137,12 @@ of the specific list that is was examining.  As such, it was possible to
 have a list containing sublists that mixed left aligned lists with right
 aligned lists.  This rule resets its notion of the proper alignment for
 Ordered Lists when the base List element is closed.
+
+## Fix Description
+
+When list starts are encountered, they are collected until the list ends.  Once
+that occurs, the rule determins whether any ordered list starts are eligible to
+be considered as a right aligned Ordered List.
+
+If not a right aligned Ordered List, all new list item elements in that list are
+aligned to start at the same location as that base list.  
