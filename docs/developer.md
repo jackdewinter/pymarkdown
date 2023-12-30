@@ -137,3 +137,26 @@ next_line
 report_next_line_error
 
 completed_file
+
+possible -> MD005, Md007
+possible -> MD019/MD021, MD023
+
+Md001 Atx/SetExt hash_count
+MD004 UnorderedListStartMarkdownToken list_start_sequence
+Md005 NewListItemMarkdownToken indent_level, extracted_whitespace
+      UnorderedListStartMarkdownToken indent_level, extracted_whitespace, column_number
+      OrderedListStartMarkdownToken indent_level, extracted_whitespace, column_number
+MD007 NewListItemMarkdownToken indent_level, extracted_whitespace
+      UnorderedListStartMarkdownToken indent_level, extracted_whitespace
+MD009 line -> no trailing spaces
+MD010 line -> detabify
+MD019 AtxHeadingMarkdownToken extracted_whitespace
+MD021 AtxHeadingMarkdownToken extracted_whitespace, extra_end_data
+MD023 AtxHeadingMarkdownToken extracted_whitespace
+MD029 OrderedListStartMarkdownToken list_start_content
+MD035 ThematicBreakMarkdownToken start_character,rest_of_line
+MD037 TextMarkdownToken (within emphasis) token_text
+MD038 InlineCodeSpanMarkdownToken span_text
+MD039 LinkStartMarkdownToken text_from_blocks
+MD047 line -> adds newline to end
+MD048 FencedCodeBlockMarkdownToken fence_character

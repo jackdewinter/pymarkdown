@@ -94,7 +94,7 @@
             "protected-access": 1
         },
         "pymarkdown/file_scan_helper.py": {
-            "too-many-arguments": 3
+            "too-many-arguments": 5
         },
         "pymarkdown/general/__init__.py": {},
         "pymarkdown/general/bad_tokenization_error.py": {},
@@ -274,7 +274,10 @@
         "pymarkdown/plugins/rule_md_002.py": {},
         "pymarkdown/plugins/rule_md_003.py": {},
         "pymarkdown/plugins/rule_md_004.py": {},
-        "pymarkdown/plugins/rule_md_005.py": {},
+        "pymarkdown/plugins/rule_md_005.py": {
+            "too-many-instance-attributes": 1,
+            "protected-access": 1
+        },
         "pymarkdown/plugins/rule_md_006.py": {},
         "pymarkdown/plugins/rule_md_007.py": {},
         "pymarkdown/plugins/rule_md_009.py": {
@@ -484,14 +487,14 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-instance-attributes": 23,
+        "too-many-instance-attributes": 24,
         "too-many-public-methods": 4,
         "too-few-public-methods": 39,
-        "too-many-arguments": 217,
+        "too-many-arguments": 219,
         "too-many-locals": 33,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 2,
-        "protected-access": 25,
+        "protected-access": 26,
         "deprecated-decorator": 3,
         "broad-exception-caught": 3
     }
