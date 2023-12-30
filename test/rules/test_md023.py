@@ -605,7 +605,6 @@ def test_md023_bad_improper_indent_setext_in_block_quote_fix():
         assert_file_is_as_expected(temp_source_path, original_file_contents)
 
         supplied_arguments = [
-            # "--stack-trace",
             "-d",
             "md009",
             "-x-fix",
@@ -672,7 +671,6 @@ def test_md023_good_proper_indent_setext_in_block_quote_no_fix():
         original_file_contents, file_name_suffix=".md"
     ) as temp_source_path:
         supplied_arguments = [
-            # "--stack-trace",
             "-d",
             "md009",
             "-x-fix",
@@ -774,9 +772,11 @@ def test_md023_bad_improper_indent_setext_in_list_item_fix():
         assert_file_is_as_expected(temp_source_path, original_file_contents)
 
         supplied_arguments = [
-            # "--stack-trace",
+            # "--log-level",
+            # "DEBUG",
+            # "-x-fix-no-rescan-log",
             "-d",
-            "md009",
+            "md009,md005",
             "-x-fix",
             "scan",
             temp_source_path,

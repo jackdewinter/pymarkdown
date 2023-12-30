@@ -2052,9 +2052,8 @@ def test_md007_bad_unordered_list_elements_fix():
         assert_file_is_as_expected(temp_source_path, original_file_contents)
 
         supplied_arguments = [
-            "--stack-trace",
             "--disable-rules",
-            "md023",
+            "md023,md005",
             "-x-fix",
             "scan",
             temp_source_path,
