@@ -4550,7 +4550,6 @@ def test_extra_033a():
     supplied_arguments = [
         # "--log-level",
         # "DEBUG",
-        "--stack-trace",
         "-d",
         "md033,md041",
         "scan-stdin",

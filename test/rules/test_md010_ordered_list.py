@@ -357,7 +357,6 @@ def test_md010_bad_ordered_list_fall_off_after_fenced_open_and_text_and_close_wi
         "bad_ordered_list_fall_off_after_fenced_open_and_text_and_close_with_extra_tab_indent.md",
     )
     supplied_arguments = [
-        "--stack-trace",
         "-d",
         "md030,md041",
         "scan",
@@ -403,7 +402,6 @@ def test_md010_bad_ordered_list_fall_off_after_fenced_open_and_text_and_close_wi
         )
     ) as temp_source_path:
         supplied_arguments = [
-            "--stack-trace",
             "-d",
             "md030,md041",
             "-x-fix",

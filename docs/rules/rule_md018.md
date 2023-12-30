@@ -5,6 +5,10 @@
 | `md018` |
 | `no-missing-space-atx` |
 
+| Autofix Available |
+| --- |
+| No |
+
 ## Summary
 
 No space present after the hash character on a possible Atx Heading.
@@ -141,3 +145,21 @@ that change to the trigger conditions was arrived at after significant
 deliberation.  It was decided that the "logical distance" to go from
 text within a Paragraph element to text within an Atx Heading element
 was too far once inline elements were included.
+
+## Fix Description
+
+The reason for not being able to auto-fix this rule is context.  As stated above,
+the rule looks for:
+
+> No space present after the hash character on a possible Atx Heading.
+
+As there is only a possibilty that the Markdown:
+
+```Markdown
+#Heading 1
+```
+
+represents a heading, there is a lack of context surrounding the implied meaning
+of that block of text.  It is better for this rule to trigger and have the author
+of the document clarify the context than to assume that the above text will always
+indicate a heading.

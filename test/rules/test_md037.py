@@ -805,7 +805,6 @@ def test_md037_bad_surrounding_emphasis_link_before_fix():
         original_file_contents, file_name_suffix=".md"
     ) as temp_source_path:
         supplied_arguments = [
-            "--stack-trace",
             "-x-fix",
             "scan",
             temp_source_path,

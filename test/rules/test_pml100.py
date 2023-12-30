@@ -594,7 +594,6 @@ def test_pml100(test: Pml100Test) -> None:
     scanner = MarkdownScanner()
 
     supplied_arguments = [
-        "--stack-trace",
         "--disable",
         "md005,md030,md032,md041,md047",
         "--set",

@@ -5,6 +5,10 @@
 | `md042` |
 | `no-empty-links` |
 
+| Autofix Available |
+| --- |
+| No |
+
 ## Summary
 
 Fenced code blocks should have a language specified.
@@ -90,3 +94,9 @@ and an image:
 ```
 
 is the `!` character, it made sense for the implementation to respect both elements.
+
+## Fix Description
+
+The reason for not being able to auto-fix this rule is context.  Without context
+provided by the author, adding the proper link destination to the link is almost
+impossible.

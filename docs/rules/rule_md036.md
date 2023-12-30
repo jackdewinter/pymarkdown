@@ -6,6 +6,10 @@
 | `no-emphasis-as-heading` |
 | `no-emphasis-as-header` |
 
+| Autofix Available |
+| --- |
+| No |
+
 ## Summary
 
 Emphasis possibly used instead of a heading element.
@@ -79,3 +83,13 @@ and
 ### Differences From MarkdownLint Rule
 
 The original rule did not work inside of Block Quote elements or List elements.
+
+## Fix Description
+
+The reason for not being able to auto-fix this rule is certainty.  The summary for
+this rule specifically states:
+
+> Emphasis possibly used instead of a heading element.
+
+As this rule simply advises that it found cases that only appear to be headings
+that are created with emphasis, it does not attempt to fix them.

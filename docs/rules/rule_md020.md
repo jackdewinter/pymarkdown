@@ -5,6 +5,10 @@
 | `md020` |
 | `no-missing-space-closed-atx` |
 
+| Autofix Available |
+| --- |
+| No |
+
 ## Summary
 
 No space present inside of the hashes on a possible Atx Closed Heading.
@@ -86,3 +90,21 @@ the original rule did not trigger in Block Quote elements or
 List elements, but did fire within SetExt Heading elements.  These
 changes were also made in this rule to keep it consistent with
 Rule md018.
+
+## Fix Description
+
+The reason for not being able to auto-fix this rule is context.  As stated above,
+the rule looks for:
+
+> No space present inside of the hashes on a possible Atx Closed Heading.
+
+As there is only a possibilty that the Markdown:
+
+```Markdown
+#Heading 1#
+```
+
+represents a heading, there is a lack of context surrounding the implied meaning
+of that block of text.  It is better for this rule to trigger and have the author
+of the document clarify the context than to assume that the above text will always
+indicate a heading.

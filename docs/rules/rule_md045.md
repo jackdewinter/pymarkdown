@@ -5,6 +5,10 @@
 | `md045` |
 | `no-alt-text` |
 
+| Autofix Available |
+| --- |
+| No |
+
 ## Summary
 
 Images should have alternate text (alt text).
@@ -63,3 +67,11 @@ at least one non-whitespace character:
 
 This rule is largely inspired by the MarkdownLint rule
 [MD045](https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md#md045---images-should-have-alternate-text-alt-text).
+
+## Fix Description
+
+The reason for not being able to auto-fix this rule is context.  While it is easy
+to detect that no alternate text has been provided for an image, the summation of
+the indented content of the link exceeds the scope of the project's context.
+Basically, any generated context would require scanning the destination link and
+providing a summary of that image that was relevant to the current document.
