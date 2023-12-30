@@ -5,6 +5,10 @@
 | `md026` |
 | `no-trailing-punctuation` |
 
+| Autofix Available |
+| --- |
+| No |
+
 ## Summary
 
 Trailing punctuation present in heading text.
@@ -75,3 +79,11 @@ and
 
 The main difference met was that the original rule did not manage
 anything to do with multiple line SetExt Heading elements.
+
+## Fix Description
+
+The reason for not being able to auto-fix this rule is context.  While our team
+considered simply removing any offending punctuation, the author of the document
+put it there for a reason.  Without understanding the intended context of that punctuation
+and the proper classification of that punctuation, designing an algorithm that
+properly handles the punctuation is not currently possible.

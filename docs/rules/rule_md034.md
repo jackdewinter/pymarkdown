@@ -5,6 +5,10 @@
 | `md034` |
 | `no-bare-urls` |
 
+| Autofix Available |
+| --- |
+| No* |
+
 ## Summary
 
 Bare URL used.
@@ -27,7 +31,7 @@ this rule only strives to address the most mainstream cases.
 ### Failure Scenarios
 
 This rule triggers if any one of the strings `http:`, `https:`, `ftp:`, or
-`ftps:` is encountered in the text and is followed by the string `\\` and at
+`ftps:` is encountered in the text and is followed by the string `//` and at
 least one non-whitespace character:
 
 ```Markdown
@@ -108,3 +112,17 @@ The second difference is in this documentation.  The original rule's documentati
 focused mostly on what would not trigger the rule.  In this description of the rule,
 effort has been made to clearly specify when this rule triggers, and simplify the
 description of when this rule will not trigger.
+
+## Fix Description
+
+This rule can often be disabled in favor of enabling the
+[Extended Autolink](../extensions/extended_autolinks.md) extension.  While that
+extension does not provide support for the `ftp` and `ftps` schemes, it does support
+both the `http` and `https` schemes.  With the use of FTP services to store data
+being on the decline, our team decided not to created a fix for this rule, as the
+extension provides a solid alternative that addresses the issue.
+
+However, even if we assume that the extension is not enabled, there is still a question
+of context.  While we have the link destination for a link, there is not enough
+context to determine what the link's label should contain.  As with the fix option
+on other rules, the author is the best entity to determine the link label's context.

@@ -5,6 +5,10 @@
 | `md047` |
 | `single-trailing-newline` |
 
+| Autofix Available |
+| --- |
+| Yes |
+
 ## Summary
 
 Each file should end with a single newline character.
@@ -85,3 +89,8 @@ This rule is largely inspired by the MarkdownLint rule
 [MD047](https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md047---files-should-end-with-a-single-newline-character).
 and various blogs and answers such as
 [this answer](https://unix.stackexchange.com/questions/18743/whats-the-point-in-adding-a-new-line-to-the-end-of-a-file).
+
+## Fix Description
+
+If the document does not end with a blank line, a blank line is added to the
+end of the document.

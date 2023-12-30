@@ -5,6 +5,10 @@
 | `md028` |
 | `no-blanks-blockquote` |
 
+| Autofix Available |
+| --- |
+| No |
+
 ## Summary
 
 Blank line inside blockquote.
@@ -93,3 +97,19 @@ This is its own paragraph.
 
 This rule is largely inspired by the MarkdownLint rule
 [MD028](https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md#md028---blank-line-inside-blockquote).
+
+## Fix Description
+
+The reason for not being able to auto-fix this rule is clarity.  Given the Markdown
+example from above:
+
+````Markdown
+> This is one section of a block quote
+This looks like its own paragraph but is really part of the above block quote.
+
+> This is the other section.
+````
+
+it is unclear if the second line that starts with `This looks like` is part of
+the block quote or if it is in its own paragraph following the block quote. As the
+context of that line is not clear, any fix to that line would also be unclear.
