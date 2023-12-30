@@ -1047,9 +1047,6 @@ def test_md005_bad_ordered_list_double_level_weirdx_fix():
         assert_file_is_as_expected(temp_source_path, original_file_contents)
 
         supplied_arguments = [
-            "--log-level",
-            "DEBUG",
-            "-x-fix-no-rescan-log",
             "--disable-rules",
             "md007,md029",
             "-x-fix",
