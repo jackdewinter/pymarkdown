@@ -12,6 +12,7 @@ from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.tokens.stack_token import StackToken
 
 from .utils import (
+    assert_file_is_as_expected,
     create_temporary_configuration_file,
     create_temporary_file_for_reuse,
     read_contents_of_text_file,
@@ -428,3 +429,181 @@ def test_markdown_logger_translate_log_level_invalid():
 
     # Assert
     assert log_level == logging.NOTSET
+
+
+def test_markdown_fix_with_no_rescan_log_debug(caplog):
+    """
+    Test that is a mirror of test_md005_bad_unordered_list_single_level_fix with
+    slight changes to test logging.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    original_file_contents = """* Item 1
+ * Item 2
+"""
+    with create_temporary_configuration_file(
+        original_file_contents, file_name_suffix=".md"
+    ) as temp_source_path:
+        supplied_arguments = [
+            "--disable-rules",
+            "md007,md029",
+            "--log-level",
+            "DEBUG",
+            "-x-fix-no-rescan-log",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """* Item 1
+* Item 2
+"""
+
+        # Act
+        ParserLogger.sync_on_next_call()
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+        # Info messages
+        assert "Number of files found: " in caplog.text
+        assert (
+            f"Determining files to scan for path '{temp_source_path}'." in caplog.text
+        )
+
+        # Debug messages
+        assert (
+            f"Provided path '{temp_source_path}' is a valid file. Adding."
+            in caplog.text
+        )
+
+        # Warning messages
+        assert (
+            "Setting logging level to WARN during rescan upon request." in caplog.text
+        )
+        assert "Restoring log level to DEBUG." in caplog.text
+
+
+def test_markdown_fix_with_no_rescan_log_info(caplog):
+    """
+    Test that is a mirror of test_md005_bad_unordered_list_single_level_fix with
+    slight changes to test logging.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    original_file_contents = """* Item 1
+ * Item 2
+"""
+    with create_temporary_configuration_file(
+        original_file_contents, file_name_suffix=".md"
+    ) as temp_source_path:
+        supplied_arguments = [
+            "--disable-rules",
+            "md007,md029",
+            "--log-level",
+            "INFO",
+            "-x-fix-no-rescan-log",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """* Item 1
+* Item 2
+"""
+
+        # Act
+        ParserLogger.sync_on_next_call()
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+        # Info messages
+        assert "Number of files found: " in caplog.text
+        assert (
+            f"Determining files to scan for path '{temp_source_path}'." in caplog.text
+        )
+
+        # Debug messages
+        # assert f"Provided path '{temp_source_path}' is a valid file. Adding." in caplog.text
+
+        # Warning messages
+        assert (
+            "Setting logging level to WARN during rescan upon request." in caplog.text
+        )
+        assert "Restoring log level to INFO." in caplog.text
+
+
+def test_markdown_fix_with_no_rescan_log_warn(caplog):
+    """
+    Test that is a mirror of test_md005_bad_unordered_list_single_level_fix with
+    slight changes to test logging.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    original_file_contents = """* Item 1
+ * Item 2
+"""
+    with create_temporary_configuration_file(
+        original_file_contents, file_name_suffix=".md"
+    ) as temp_source_path:
+        supplied_arguments = [
+            "--disable-rules",
+            "md007,md029",
+            "--log-level",
+            "WARNING",
+            "-x-fix-no-rescan-log",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """* Item 1
+* Item 2
+"""
+
+        # Act
+        ParserLogger.sync_on_next_call()
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+        # Info messages
+        # assert "Number of files found: " in caplog.text
+        # assert f"Determining files to scan for path '{temp_source_path}'." in caplog.text
+
+        # Debug messages
+        # assert f"Provided path '{temp_source_path}' is a valid file. Adding." in caplog.text
+
+        # Warning messages
+        assert (
+            "Setting logging level to WARN during rescan upon request." in caplog.text
+        )
+        assert "Restoring log level to WARNING." in caplog.text
