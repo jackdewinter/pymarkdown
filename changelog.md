@@ -53,6 +53,8 @@ for a version 1.0 release in early 2024.
     scan in fix mode past the first one
   - other fix was to make a clearer message when two rules trigger on the
     same field of the same token
+- [Issue 936](https://github.com/jackdewinter/pymarkdown/issues/936)
+  - change documentation for rules that will not have a fix
 
 ### Fixed
 
