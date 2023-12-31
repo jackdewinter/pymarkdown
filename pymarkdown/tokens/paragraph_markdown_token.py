@@ -2,7 +2,9 @@
 Module to provide for an encapsulation of the paragraph element.
 """
 
-from typing import Optional, cast
+from typing import Optional, Union, cast
+
+from typing_extensions import override
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.position_marker import PositionMarker
@@ -197,3 +199,11 @@ class ParagraphMarkdownToken(LeafMarkdownToken):
             if transform_state.is_in_loose_list
             else output_html
         )
+
+    @override
+    def _modify_token(self, field_name: str, field_value: Union[str, int]) -> bool:
+        if field_name == "extracted_whitespace" and isinstance(field_value, str):
+            self.__extracted_whitespace = field_value
+            self.__compose_extra_data_field()
+            return True
+        return False

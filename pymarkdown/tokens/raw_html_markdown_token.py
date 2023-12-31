@@ -3,7 +3,9 @@ Module to provide for an encapsulation of the inline raw html element.
 """
 
 import logging
-from typing import Optional, cast
+from typing import Optional, Union, cast
+
+from typing_extensions import override
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
@@ -124,3 +126,11 @@ class RawHtmlMarkdownToken(InlineMarkdownToken):
                 ">",
             ]
         )
+
+    @override
+    def _modify_token(self, field_name: str, field_value: Union[str, int]) -> bool:
+        if field_name == "raw_tag" and isinstance(field_value, str):
+            self.__raw_tag = field_value
+            self._set_extra_data(field_value)
+            return True
+        return False

@@ -3,7 +3,9 @@ Module to provide for an encapsulation of the link reference definition element.
 """
 
 # pylint: disable=too-many-instance-attributes
-from typing import List, Optional, cast
+from typing import List, Optional, Union, cast
+
+from typing_extensions import override
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.position_marker import PositionMarker
@@ -192,6 +194,24 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
         Returns the whitespace that occurs after the link title.
         """
         return self.__link_title_whitespace
+
+    @override
+    def _modify_token(self, field_name: str, field_value: Union[str, int]) -> bool:
+        if field_name == "link_destination_whitespace" and isinstance(field_value, str):
+            self.__link_destination_whitespace = field_value
+            extra_data = self.__validate_proper_fields_are_valid(
+                self.extracted_whitespace
+            )
+            super()._set_extra_data(extra_data)
+            return True
+        if field_name == "link_title_whitespace" and isinstance(field_value, str):
+            self.__link_title_whitespace = field_value
+            extra_data = self.__validate_proper_fields_are_valid(
+                self.extracted_whitespace
+            )
+            super()._set_extra_data(extra_data)
+            return True
+        return super()._modify_token(field_name, field_value)
 
     def register_for_markdown_transform(
         self, registration_function: RegisterMarkdownTransformHandlersProtocol

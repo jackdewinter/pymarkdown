@@ -305,7 +305,7 @@
         "pymarkdown/plugins/rule_md_026.py": {},
         "pymarkdown/plugins/rule_md_027.py": {
             "too-many-instance-attributes": 1,
-            "too-many-arguments": 3
+            "too-many-arguments": 4
         },
         "pymarkdown/plugins/rule_md_028.py": {},
         "pymarkdown/plugins/rule_md_029.py": {},
@@ -340,6 +340,7 @@
         "pymarkdown/plugins/rule_md_048.py": {},
         "pymarkdown/plugins/rule_pml_100.py": {},
         "pymarkdown/plugins/utils/container_token_manager.py": {},
+        "pymarkdown/plugins/utils/list_tracker.py": {},
         "pymarkdown/return_code_helper.py": {},
         "pymarkdown/tokens/atx_heading_markdown_token.py": {
             "protected-access": 1
@@ -490,7 +491,7 @@
         "too-many-instance-attributes": 24,
         "too-many-public-methods": 4,
         "too-few-public-methods": 39,
-        "too-many-arguments": 219,
+        "too-many-arguments": 220,
         "too-many-locals": 33,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 2,

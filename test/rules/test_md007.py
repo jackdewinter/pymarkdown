@@ -1136,7 +1136,7 @@ def test_md007_bad_list_indentation_in_block_quote_level_0_fix():
 
         supplied_arguments = [
             "--disable-rules",
-            "md023",
+            "md027",
             "-x-fix",
             "scan",
             temp_source_path,

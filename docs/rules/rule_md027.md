@@ -5,6 +5,10 @@
 | `md027` |
 | `no-multiple-space-blockquote` |
 
+| Autofix Available |
+| --- |
+| Yes |
+
 ## Summary
 
 Multiple spaces after blockquote symbol.
@@ -153,3 +157,28 @@ Finally, the original rule does not trigger on the final line or
 heading line for a SetExt Heading element or on the Thematic Break
 element.  This implementation triggers on extra spaces present in
 either element.
+
+## Fix Description
+
+After a block quote character and an optional space character, any spaces that
+are not used for a list container are removed. Therefore, this example
+
+```Markdown
+>  # This is a header
+```
+
+and this example:
+
+```Markdown
+>  - This is a list item
+```
+
+will have number of spaces at the start of the line reduced by 1.  However, this
+example:
+
+```Markdown
+> - This is a list item
+>   and still the same item
+```
+
+will not reduced the spaces, as they are used to maintain the list.
