@@ -5,6 +5,10 @@
 | `md006` |
 | `ul-start-left` |
 
+| Autofix Available |
+| --- |
+| Yes |
+
 ## Summary
 
 Consider starting bulleted lists at the beginning of the line.
@@ -91,3 +95,9 @@ This rule is largely inspired by the MarkdownLint rule
 It is not clear how this rule, which is disabled by default, differs from
 Rule Md007.  To make sure this rule is well-rounded, it has been changed
 to work with nested list blocks and block quotes.
+
+## Fix Description
+
+The containers will be altered so that they start at the beginning of "the line".
+As that definition was not clearly understood [Rule MD007](./rule_md007.md) was
+created to more clearly handle the issue.

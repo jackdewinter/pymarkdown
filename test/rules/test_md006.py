@@ -3,8 +3,11 @@ Module to provide tests related to the MD006 rule.
 """
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.utils import assert_file_is_as_expected, copy_to_temp_file
 
 import pytest
+
+source_path = os.path.join("test", "resources", "rules", "md006") + os.sep
 
 
 @pytest.mark.rules
@@ -111,7 +114,50 @@ def test_md006_bad_indentation_x():
 
 
 @pytest.mark.rules
-def test_md006_bad_indentation_unordered():
+def test_md006_bad_indentation_x_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    is only level 1 lists with a single space of indentation.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(source_path + "bad_indentation.md") as temp_source_path:
+        original_file_contents = """ * First Item
+ * Second Item
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--enable-rules",
+            "MD006",
+            "--disable-rules",
+            "MD007",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """* First Item
+* Second Item
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
+def test_md006_good_indentation_unordered():
     """
     Test to make sure this rule does trigger with a document that
     is only level 1 lists with a single space of indentation.
@@ -186,7 +232,52 @@ def test_md006_bad_indentation_in_block_quote():
 
 
 @pytest.mark.rules
-def test_md006_good_ignore_bad_second_level():
+def test_md006_bad_indentation_in_block_quote_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    is only level 1 lists with a single space of indentation.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_indentation_in_block_quote.md"
+    ) as temp_source_path:
+        original_file_contents = """>  * First Item
+>  * Second Item
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--enable-rules",
+            "MD006",
+            "--disable-rules",
+            "MD007,md027",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """> * First Item
+> * Second Item
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
+def test_md006_bad_ignore_bad_second_level():
     """
     Test to make sure this rule does not trigger with a document that
     is nested lists with level 1 lists properly indented.
@@ -222,6 +313,57 @@ def test_md006_good_ignore_bad_second_level():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md006_bad_ignore_bad_second_level_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    is only level 1 lists with a single space of indentation.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "good_ignore_bad_second_level.md"
+    ) as temp_source_path:
+        original_file_contents = """* First Item
+  * First-First
+   * First-Second
+    * First-Third
+* Second Item
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--enable-rules",
+            "MD006",
+            "--disable-rules",
+            "MD005,Md007",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """* First Item
+  * First-First
+  * First-Second
+  * First-Third
+* Second Item
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -431,6 +573,51 @@ def test_md006_bad_indentation_ordered_in_unordered():
 
 
 @pytest.mark.rules
+def test_md006_bad_indentation_ordered_in_unordered_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    is only level 1 lists with a single space of indentation.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_indentation_ordered_in_unordered.md"
+    ) as temp_source_path:
+        original_file_contents = """ * First Item
+   1. Second Item
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--enable-rules",
+            "MD006",
+            "--disable-rules",
+            "MD007",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """* First Item
+   1. Second Item
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md006_bad_indentation_unordered_in_ordered():
     """
     TBD
@@ -464,6 +651,51 @@ def test_md006_bad_indentation_unordered_in_ordered():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md006_bad_indentation_unordered_in_ordered_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    is only level 1 lists with a single space of indentation.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_indentation_unordered_in_ordered.md"
+    ) as temp_source_path:
+        original_file_contents = """ 1. First Item
+     - Second Item
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--enable-rules",
+            "MD006",
+            "--disable-rules",
+            "MD007",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """ 1. First Item
+    - Second Item
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -537,6 +769,59 @@ def test_md006_bad_indentation_nested():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md006_bad_indentation_nested_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    is only level 1 lists with a single space of indentation.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_indentation_nested.md"
+    ) as temp_source_path:
+        original_file_contents = """- top level 1
+   - First Item
+   - Second Item
+- top level 2
+   - First Item
+   - Second Item
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--enable-rules",
+            "MD006",
+            "--disable-rules",
+            "MD007",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """- top level 1
+  - First Item
+  - Second Item
+- top level 2
+  - First Item
+  - Second Item
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
