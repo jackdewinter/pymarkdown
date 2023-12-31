@@ -141,12 +141,15 @@ completed_file
 possible -> MD005, Md007
 possible -> MD019/MD021, MD023
 possible -> md027 19/21/23/05/07 when blanks inside of list
+         -> mod027 and most others
 
 Md001 Atx/SetExt hash_count
 MD004 UnorderedListStartMarkdownToken list_start_sequence
 Md005 NewListItemMarkdownToken indent_level, extracted_whitespace
       UnorderedListStartMarkdownToken indent_level, extracted_whitespace, column_number, leading_spaces
       OrderedListStartMarkdownToken indent_level, extracted_whitespace, column_number, leading_spaces
+MD006(d) NewListItemMarkdownToken indent_level, extracted_whitespace
+      UnorderedListStartMarkdownToken indent_level, extracted_whitespace
 MD007 NewListItemMarkdownToken indent_level, extracted_whitespace
       UnorderedListStartMarkdownToken indent_level, extracted_whitespace
 MD009 line -> no trailing spaces
@@ -175,5 +178,4 @@ MD027   BlankLineMarkdownToken extracted_whitespace
       UnorderedListStartMarkdownToken indent_level, extracted_whitespace, column_number, leading_spaces
       OrderedListStartMarkdownToken indent_level, extracted_whitespace, column_number, leading_spaces
 
-md006
 md030
