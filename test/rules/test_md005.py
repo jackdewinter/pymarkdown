@@ -99,7 +99,6 @@ def test_md005_bad_unordered_list_single_level_fix():
         assert_file_is_as_expected(temp_source_path, original_file_contents)
 
         supplied_arguments = [
-            "--stack-trace",
             "--disable-rules",
             "md007,md029",
             "-x-fix",
@@ -1339,7 +1338,6 @@ def test_md005_bad_ordered_list_double_level_left_fix():
         assert_file_is_as_expected(temp_source_path, original_file_contents)
 
         supplied_arguments = [
-            # "--stack-trace",
             "--disable-rules",
             "md007,md029",
             "-x-fix",
@@ -1887,7 +1885,6 @@ def test_md005_bad_ordered_left_unordered_fix():
         original_file_contents, file_name_suffix=".md"
     ) as temp_source_path:
         supplied_arguments = [
-            "--stack-trace",
             "--disable-rules",
             "md007,md029",
             "-x-fix",
@@ -2222,7 +2219,6 @@ def test_md005_bad_unordered_lt_with_text_fix():
         original_file_contents, file_name_suffix=".md"
     ) as temp_source_path:
         supplied_arguments = [
-            "--stack-trace",
             "--disable-rules",
             "md007,md029",
             "-x-fix",
@@ -2271,7 +2267,6 @@ def test_md005_bad_unordered_lt_with_double_text_fix():
         original_file_contents, file_name_suffix=".md"
     ) as temp_source_path:
         supplied_arguments = [
-            "--stack-trace",
             "--disable-rules",
             "md007,md029",
             "-x-fix",
@@ -2540,7 +2535,6 @@ def test_md005_bad_ordered_lt_with_text_fix():
         original_file_contents, file_name_suffix=".md"
     ) as temp_source_path:
         supplied_arguments = [
-            "--stack-trace",
             "--disable-rules",
             "md007,md029",
             "-x-fix",
@@ -2589,7 +2583,6 @@ def test_md005_bad_ordered_lt_with_double_text_fix():
         original_file_contents, file_name_suffix=".md"
     ) as temp_source_path:
         supplied_arguments = [
-            "--stack-trace",
             "--disable-rules",
             "md007,md029",
             "-x-fix",
@@ -2640,7 +2633,6 @@ def test_md005_bad_ordered_lt_with_double_text_with_raw_html_fix():
         original_file_contents, file_name_suffix=".md"
     ) as temp_source_path:
         supplied_arguments = [
-            "--stack-trace",
             "--disable-rules",
             "md007,md029",
             "-x-fix",
@@ -2697,7 +2689,6 @@ def test_md005_bad_ordered_lt_with_text_nested_fix():
         original_file_contents, file_name_suffix=".md"
     ) as temp_source_path:
         supplied_arguments = [
-            "--stack-trace",
             "--disable-rules",
             "md007,md029",
             "-x-fix",

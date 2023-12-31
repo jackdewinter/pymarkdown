@@ -79,7 +79,7 @@ class ThematicBreakMarkdownToken(LeafMarkdownToken):
             self.__rest_of_line = field_value
             self.__compose_extra_data_field()
             return True
-        return False
+        return super()._modify_token(field_name, field_value)
 
     def register_for_markdown_transform(
         self, registration_function: RegisterMarkdownTransformHandlersProtocol

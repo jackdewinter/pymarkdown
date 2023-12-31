@@ -2181,7 +2181,7 @@ Multiple plugins (MDE003 and MD001) have requested a fix for the same field of t
         )
 
 
-def test_markdown_plugins_wanting_to_fix_unknown_token():
+def test_markdown_plugins_wanting_to_fix_unknown_token_stack_trace():
     """
     Test to make sure the rule does trigger with a document with
     only Atx Headings, that when they increase, only increase by 2.
@@ -2203,10 +2203,10 @@ def test_markdown_plugins_wanting_to_fix_unknown_token():
         )
     ) as temp_source_path:
         supplied_arguments = [
+            "--stack-trace",
             "--add-plugin",
             plugin_path,
             "-x-fix",
-            "--stack-trace",
             "scan",
             temp_source_path,
         ]

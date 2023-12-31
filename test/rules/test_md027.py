@@ -3,10 +3,13 @@ Module to provide tests related to the MD027 rule.
 """
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.utils import assert_file_is_as_expected, copy_to_temp_file
 
 import pytest
 
 # pylint: disable=too-many-lines
+
+source_path = os.path.join("test", "resources", "rules", "md027") + os.sep
 
 
 @pytest.mark.rules
@@ -106,6 +109,47 @@ def test_md027_bad_block_quote_empty_too_many_spaces():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md027_bad_block_quote_empty_too_many_spaces_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with more than 1 space after it.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_block_quote_empty_too_many_spaces.md"
+    ) as temp_source_path:
+        original_file_contents = """>\a\a
+""".replace(
+            "\a", " "
+        )
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """>
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -237,6 +281,47 @@ def test_md027_bad_block_quote_indent():
 
 
 @pytest.mark.rules
+def test_md027_bad_block_quote_indent_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with more than 1 space after it.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_block_quote_indent.md"
+    ) as temp_source_path:
+        original_file_contents = """>  this is text
+>  within a block quote
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """> this is text
+> within a block quote
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md027_bad_block_quote_indent_plus_one():
     """
     Test to make sure this rule does trigger with a document that
@@ -270,6 +355,47 @@ def test_md027_bad_block_quote_indent_plus_one():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md027_bad_block_quote_indent_plus_one_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with more than 1 space after it.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_block_quote_indent_plus_one.md"
+    ) as temp_source_path:
+        original_file_contents = """ >  this is text
+ >  within a block quote
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """ > this is text
+ > within a block quote
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -311,6 +437,47 @@ def test_md027_bad_block_quote_only_one_properly_indented():
 
 
 @pytest.mark.rules
+def test_md027_bad_block_quote_only_one_properly_indented_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with more than 1 space after it.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_block_quote_only_one_properly_indented.md"
+    ) as temp_source_path:
+        original_file_contents = """> this is text
+>  within a block quote
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """> this is text
+> within a block quote
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md027_bad_block_quote_only_one_properly_indented_plus_one():
     """
     Test to make sure this rule does trigger with a document that
@@ -346,6 +513,47 @@ def test_md027_bad_block_quote_only_one_properly_indented_plus_one():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md027_bad_block_quote_only_one_properly_indented_plus_one_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with more than 1 space after it.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_block_quote_only_one_properly_indented_plus_one.md"
+    ) as temp_source_path:
+        original_file_contents = """ > this is text
+ >  within a block quote
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """ > this is text
+ > within a block quote
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -452,6 +660,51 @@ def test_md027_bad_block_quote_indent_with_blank_two_spaces():
 
 
 @pytest.mark.rules
+def test_md027_bad_block_quote_indent_with_blank_two_spaces_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with more than 1 space after it.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_block_quote_indent_with_blank_two_spaces.md"
+    ) as temp_source_path:
+        original_file_contents = """> this is text
+>\a\a
+> within a block quote
+""".replace(
+            "\a", " "
+        )
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """> this is text
+>
+> within a block quote
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md027_bad_block_quote_indent_with_blank_two_spaces_plus_one():
     """
     Test to make sure this rule does trigger with a document that
@@ -490,6 +743,51 @@ def test_md027_bad_block_quote_indent_with_blank_two_spaces_plus_one():
 
 
 @pytest.mark.rules
+def test_md027_bad_block_quote_indent_with_blank_two_spaces_plus_one_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with more than 1 space after it.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_block_quote_indent_with_blank_two_spaces_plus_one.md"
+    ) as temp_source_path:
+        original_file_contents = """ > this is text
+ >\a\a
+ > within a block quote
+""".replace(
+            "\a", " "
+        )
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """ > this is text
+ >
+ > within a block quote
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md027_bad_block_quote_indent_with_blank_two_spaces_misaligned():
     """
     Test to make sure this rule does trigger with a document that
@@ -525,6 +823,51 @@ def test_md027_bad_block_quote_indent_with_blank_two_spaces_misaligned():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md027_bad_block_quote_indent_with_blank_two_spaces_misaligned_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with more than 1 space after it.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_block_quote_indent_with_blank_two_spaces_misaligned.md"
+    ) as temp_source_path:
+        original_file_contents = """ > this is text
+ >\a\a
+> within a block quote
+""".replace(
+            "\a", " "
+        )
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """ > this is text
+ >
+> within a block quote
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -599,6 +942,51 @@ def test_md027_bad_two_block_quotes_space_top():
 
 
 @pytest.mark.rules
+def test_md027_bad_two_block_quotes_space_top_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with more than 1 space after it.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_two_block_quotes_space_top.md"
+    ) as temp_source_path:
+        original_file_contents = """>  this is text
+
+> within a block quote
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md028",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """> this is text
+
+> within a block quote
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md027_bad_two_block_quotes_space_bottom():
     """
     Test to make sure this rule does trigger with a document that
@@ -634,6 +1022,51 @@ def test_md027_bad_two_block_quotes_space_bottom():
 
 
 @pytest.mark.rules
+def test_md027_bad_two_block_quotes_space_bottom_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with more than 1 space after it.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_two_block_quotes_space_bottom.md"
+    ) as temp_source_path:
+        original_file_contents = """> this is text
+
+>  within a block quote
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md028",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """> this is text
+
+> within a block quote
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md027_bad_misalligned_double_quote():
     """
     Test to make sure this rule does trigger with a document that
@@ -665,6 +1098,47 @@ def test_md027_bad_misalligned_double_quote():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md027_bad_misalligned_double_quote_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with more than 1 space after it.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_misalligned_double_quote.md"
+    ) as temp_source_path:
+        original_file_contents = """> > this is text
+>>  within a block quote
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """> > this is text
+>> within a block quote
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -734,6 +1208,49 @@ def test_md027_bad_misindented_quote_within_list():
 
 
 @pytest.mark.rules
+def test_md027_bad_misindented_quote_within_list_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with more than 1 space after it.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_misindented_quote_within_list.md"
+    ) as temp_source_path:
+        original_file_contents = """- > this is a quote
+>   this is the second line
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md032",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """- > this is a quote
+> this is the second line
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md027_bad_misalligned_quote_within_list():
     """
     Test to make sure this rule does trigger with a document that
@@ -766,6 +1283,49 @@ def test_md027_bad_misalligned_quote_within_list():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md027_bad_misalligned_quote_within_list_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with more than 1 space after it.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_misalligned_quote_within_list.md"
+    ) as temp_source_path:
+        original_file_contents = """- > this is a quote
+  >  this is the second line
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md032",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """- > this is a quote
+  > this is the second line
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -901,7 +1461,7 @@ def test_md027_good_block_quote_list_block_quote():
 
 
 @pytest.mark.rules
-def test_md027_bad_multiple_blanks_in_block_quote():
+def test_md027_good_multiple_blanks_in_block_quote():
     """
     Block quote with two paragraphs and multiple blanks between them.
     """
@@ -1098,6 +1658,51 @@ def test_md027_bad_block_quote_misindented_unordered_list_first():
 
 
 @pytest.mark.rules
+def test_md027_bad_block_quote_misindented_unordered_list_first_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with more than 1 space after it.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_block_quote_misindented_unordered_list_first.md"
+    ) as temp_source_path:
+        original_file_contents = """>  + list
+>    this
+> + that
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md005,md007",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """> + list
+>   this
+> + that
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md027_bad_block_quote_misindented_ordered_list_first():
     """
     Block quote with a misaligned multiline ordered list and a properly
@@ -1134,6 +1739,51 @@ def test_md027_bad_block_quote_misindented_ordered_list_first():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md027_bad_block_quote_misindented_ordered_list_first_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with more than 1 space after it.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_block_quote_misindented_ordered_list_first.md"
+    ) as temp_source_path:
+        original_file_contents = """>  1. list
+>     this
+> 1. that
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md005,md007",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """> 1. list
+>    this
+> 1. that
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -1176,6 +1826,51 @@ def test_md027_bad_block_quote_misindented_unordered_list_last():
 
 
 @pytest.mark.rules
+def test_md027_bad_block_quote_misindented_unordered_list_last_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with more than 1 space after it.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_block_quote_misindented_unordered_list_last.md"
+    ) as temp_source_path:
+        original_file_contents = """> + list
+>   this
+>  + that
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md005,md007",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """> + list
+>   this
+> + that
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md027_bad_block_quote_misindented_ordered_list_last():
     """
     Block quote with an aligned multiline ordered list and a misaligned
@@ -1212,6 +1907,52 @@ def test_md027_bad_block_quote_misindented_ordered_list_last():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md027_bad_block_quote_misindented_ordered_list_last_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with more than 1 space after it.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_block_quote_misindented_ordered_list_last.md"
+    ) as temp_source_path:
+        original_file_contents = """> 1. list
+>    this
+>  1. that
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--stack-trace",
+            "--disable-rules",
+            "md005,md007",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """> 1. list
+>    this
+> 1. that
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -1492,6 +2233,55 @@ def test_md027_bad_block_quote_unordered_list_block_quote_text_first():
 
 
 @pytest.mark.rules
+def test_md027_bad_block_quote_unordered_list_block_quote_text_first_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with more than 1 space after it.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_block_quote_unordered_list_block_quote_text_first.md"
+    ) as temp_source_path:
+        original_file_contents = """> + list
+>   this
+>   >  good
+>   > item
+> + that
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md007",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """> + list
+>   this
+>   > good
+>   > item
+> + that
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md027_bad_block_quote_unordered_list_block_quote_text_last():
     """
     Block quote with an aligned multiline list and an aligned block
@@ -1528,6 +2318,55 @@ def test_md027_bad_block_quote_unordered_list_block_quote_text_last():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md027_bad_block_quote_unordered_list_block_quote_text_last_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with more than 1 space after it.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_block_quote_unordered_list_block_quote_text_last.md"
+    ) as temp_source_path:
+        original_file_contents = """> + list
+>   this
+>   > good
+>   >  item
+> + that
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md007",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """> + list
+>   this
+>   > good
+>   > item
+> + that
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -1774,7 +2613,7 @@ def test_md027_good_block_quote_ordered_list_indented_code_block():
 
 
 @pytest.mark.rules
-def test_md027_bad_block_quote_ordered_list_indented_code_block_first():
+def test_md027_good_block_quote_ordered_list_indented_code_block_first():
     """
     Block quote with an aligned multiline list followed by an indented code block
     with the first line added an extra space.
@@ -1808,7 +2647,7 @@ def test_md027_bad_block_quote_ordered_list_indented_code_block_first():
 
 
 @pytest.mark.rules
-def test_md027_bad_block_quote_ordered_list_indented_code_block_last():
+def test_md027_good_block_quote_ordered_list_indented_code_block_last():
     """
     Block quote with an aligned multiline list followed by an indented code block
     with the last line added an extra space.
@@ -2132,7 +2971,7 @@ def test_md027_good_block_quote_ordered_list_lrd():
 
 
 @pytest.mark.rules
-def test_md027_bad_list_in_block_quote_after_other_list():
+def test_md027_good_list_in_block_quote_after_other_list():
     """
     TBD
     """
@@ -2206,7 +3045,57 @@ def test_md027_bad_list_indentation_in_block_quote_level_0():
 
 
 @pytest.mark.rules
-def test_md027_bad_block_quote_unordered_list_text_first():
+def test_md027_bad_list_indentation_in_block_quote_level_0_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with more than 1 space after it.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "test_md007_bad_list_indentation_in_block_quote_level_0.md"
+    ) as temp_source_path:
+        original_file_contents = """This is a test
+
+>  * this is level 1
+>    * this is level 2
+>      * this is level 3
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--stack-trace",
+            "--disable-rules",
+            "md007",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """This is a test
+
+> * this is level 1
+>    * this is level 2
+>      * this is level 3
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
+def test_md027_good_block_quote_unordered_list_text_first():
     """
     Block quote with an aligned multiline list including multiline text with
     a misaligned first line.
@@ -2242,7 +3131,7 @@ def test_md027_bad_block_quote_unordered_list_text_first():
 
 
 @pytest.mark.rules
-def test_md027_bad_block_quote_unordered_list_text_last():
+def test_md027_good_block_quote_unordered_list_text_last():
     """
     Block quote with an aligned multiline list including multiline text with
     a misaligned second line.
