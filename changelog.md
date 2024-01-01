@@ -66,6 +66,13 @@ for a version 1.0 release in early 2024.
 
 - None
 
+### Completed
+
+- [Issue 827](https://github.com/jackdewinter/pymarkdown/issues/827)
+  - researched annotated each rule
+  - rules "in queue" have no annotation yet, ones that have fixes have docs
+    updated, ones that are not eligible have reason why
+
 ## Version 0.9.15 - Date: 2023-12-05
 
 This release is mainly to fix issues related to technical debt. The PyMarkdown
