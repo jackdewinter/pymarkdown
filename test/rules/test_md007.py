@@ -544,7 +544,7 @@ def test_md007_bad_unordered_list_in_ordered_list_fix():
 
         supplied_arguments = [
             "--disable-rules",
-            "md023",
+            "md023,md030",
             "-x-fix",
             "scan",
             temp_source_path,
@@ -629,7 +629,7 @@ def test_md007_bad_level_1_unordered_list_in_ordered_list_fix():
 
         supplied_arguments = [
             "--disable-rules",
-            "md023",
+            "md023,md030",
             "-x-fix",
             "scan",
             temp_source_path,

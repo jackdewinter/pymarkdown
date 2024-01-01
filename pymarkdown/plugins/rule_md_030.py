@@ -6,8 +6,9 @@ from typing import Dict, List, Optional, cast
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
+from pymarkdown.plugins.utils.list_tracker import ListTracker
 from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
-from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 
 
 # pylint: disable=too-many-instance-attributes
@@ -18,7 +19,6 @@ class RuleMd030(RulePlugin):
 
     def __init__(self) -> None:
         super().__init__()
-        # self.__debug = False
         self.__ul_single: int = -1
         self.__ul_multi: int = -1
         self.__ol_single: int = -1
@@ -27,6 +27,8 @@ class RuleMd030(RulePlugin):
         self.__list_tokens: List[List[MarkdownToken]] = []
         self.__current_list_parent: Optional[MarkdownToken] = None
         self.__paragraph_count_map: Dict[str, int] = {}
+        # self.__debug = False
+        self.__frank = ListTracker()
 
     def get_details(self) -> PluginDetails:
         """
@@ -81,6 +83,7 @@ class RuleMd030(RulePlugin):
         self.__list_tokens = []
         self.__current_list_parent = None
         self.__paragraph_count_map = {}
+        self.__frank.starting_new_file()
 
     def __handle_list_end(self, context: PluginScanContext) -> None:
         for list_token in self.__list_tokens[-1]:
@@ -136,9 +139,78 @@ class RuleMd030(RulePlugin):
                 extra_error_information = (
                     f"Expected: {required_spaces}; Actual: {delta}"
                 )
-                self.report_next_token_error(
-                    context, list_token, extra_error_information=extra_error_information
+                self.__report_or_fix(
+                    context,
+                    list_start_token,
+                    extra_error_information,
+                    delta - required_spaces,
                 )
+
+    def __report_or_fix(
+        self,
+        context: PluginScanContext,
+        token: ListStartMarkdownToken,
+        extra_error_information: str,
+        adjust_amount: int,
+    ) -> None:
+        if context.in_fix_mode:
+            self.register_fix_token_request(
+                context,
+                token,
+                "next_token",
+                "indent_level",
+                token.indent_level - adjust_amount,
+            )
+            self.__frank.register(token, adjust_amount)
+        else:
+            self.report_next_token_error(
+                context, token, extra_error_information=extra_error_information
+            )
+
+    def __next_token_list_start(self, token: MarkdownToken) -> None:
+        self.__list_stack.append(token)
+        self.__list_tokens.append([])
+        self.__list_tokens[-1].append(token)
+        self.__current_list_parent = token
+        self.__frank.list_start(token)
+
+    def __next_token_list_end(
+        self, context: PluginScanContext, token: MarkdownToken
+    ) -> None:
+        self.__frank.list_end()
+        self.__handle_list_end(context)
+        if registration_map := self.__frank.get_registrations():
+            end_token = cast(EndMarkdownToken, token)
+            list_token = cast(ListStartMarkdownToken, end_token.start_markdown_token)
+            if list_token.leading_spaces:
+                split_leading_spaces = list_token.leading_spaces.split("\n")
+                for registered_token, adj in registration_map.items():
+                    start, stop = self.__frank.get_start_stop(registered_token)
+                    for next_index in range(start, stop):
+                        split_leading_spaces[next_index] = (
+                            split_leading_spaces[next_index][:-adj]
+                            if adj > 0
+                            else split_leading_spaces[next_index] + (" " * -adj)
+                        )
+                rebuilt_leading_spaces = "\n".join(split_leading_spaces)
+                if rebuilt_leading_spaces != list_token.leading_spaces:
+                    self.register_fix_token_request(
+                        context,
+                        list_token,
+                        "next_token",
+                        "leading_spaces",
+                        rebuilt_leading_spaces,
+                    )
+
+        self.__frank.list_end_cleanup()
+        del self.__list_stack[-1]
+        del self.__list_tokens[-1]
+        self.__current_list_parent = None
+        if self.__list_tokens:
+            # if self.__debug:
+            #     print("__list_stack-->" + str(self.__list_stack))
+            #     print("__list_tokens-->" + str(self.__list_tokens))
+            self.__current_list_parent = self.__list_tokens[-1][-1]
 
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
@@ -149,23 +221,13 @@ class RuleMd030(RulePlugin):
         #     print("parent-->" + str(self.__current_list_parent))
         #     print("paragraph_count_map-->" + str(self.__paragraph_count_map))
         if token.is_list_start:
-            self.__list_stack.append(token)
-            self.__list_tokens.append([])
-            self.__list_tokens[-1].append(token)
-            self.__current_list_parent = token
+            self.__next_token_list_start(token)
         elif token.is_list_end:
-            self.__handle_list_end(context)
-            del self.__list_stack[-1]
-            del self.__list_tokens[-1]
-            self.__current_list_parent = None
-            if self.__list_tokens:
-                # if self.__debug:
-                #     print("__list_stack-->" + str(self.__list_stack))
-                #     print("__list_tokens-->" + str(self.__list_tokens))
-                self.__current_list_parent = self.__list_tokens[-1][-1]
+            self.__next_token_list_end(context, token)
         elif token.is_new_list_item:
             self.__list_tokens[-1].append(token)
             self.__current_list_parent = token
+            self.__frank.new_list_item(token)
         elif token.is_paragraph and self.__current_list_parent:
             new_count = (
                 self.__paragraph_count_map[str(self.__current_list_parent)]
@@ -175,6 +237,8 @@ class RuleMd030(RulePlugin):
             self.__paragraph_count_map[str(self.__current_list_parent)] = new_count + 1
         # if self.__debug:
         #     print("parent-->" + str(self.__current_list_parent))
+
+        self.__frank.next_token(token)
 
 
 # pylint: enable=too-many-instance-attributes

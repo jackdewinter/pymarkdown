@@ -1372,7 +1372,7 @@
         },
         {
             "name": "test.rules.test_md030_ordered",
-            "totalTests": 22,
+            "totalTests": 34,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1380,7 +1380,7 @@
         },
         {
             "name": "test.rules.test_md030_unordered",
-            "totalTests": 22,
+            "totalTests": 33,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,

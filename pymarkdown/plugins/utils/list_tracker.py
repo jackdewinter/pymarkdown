@@ -24,6 +24,8 @@ class ListTracker:
         self.__list_adjustments: Dict[int, Dict[MarkdownToken, int]] = {}
         self.__current_list_tokens: Dict[int, MarkdownToken] = {}
 
+        self.__was_last_blank_line: bool = False
+
     def starting_new_file(self) -> None:
         """
         Called from the `starting_new_file` function of the rule.
@@ -34,12 +36,24 @@ class ListTracker:
         self.__list_end_indices = {}
         self.__list_adjustments = {}
         self.__current_list_tokens = {}
+        self.__was_last_blank_line = False
 
     def next_token(self, token: MarkdownToken) -> None:
         """
         Called from the `next_token` function of the rule.
         """
-        if list_stack_length := len(self.__list_stack):
+
+        # Weird calculation.  A blank line terminates the previous line and is
+        # blank line on its own... EXCEPT if it is not followed by an inline.
+        list_stack_length = len(self.__list_stack)
+        if self.__was_last_blank_line and not token.is_end_token:
+            if not token.is_container and list_stack_length:
+                self.__line_count[list_stack_length] += 1
+            self.__was_last_blank_line = False
+        if token.is_blank_line:
+            self.__was_last_blank_line = True
+
+        if list_stack_length:
             self.__line_count[list_stack_length] += self.__count_newlines_in_token(
                 token
             )
@@ -130,7 +144,9 @@ class ListTracker:
 
     def __count_newlines_in_token(self, current_token: MarkdownToken) -> int:
         newlines_in_text_token = 0
-        if current_token.is_text:
+        if current_token.is_blank_line:
+            newlines_in_text_token = 1
+        elif current_token.is_text:
             text_token = cast(TextMarkdownToken, current_token)
             newlines_in_text_token = ParserHelper.count_newlines_in_text(
                 text_token.token_text

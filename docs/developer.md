@@ -178,4 +178,4 @@ MD027   BlankLineMarkdownToken extracted_whitespace
       UnorderedListStartMarkdownToken indent_level, extracted_whitespace, column_number, leading_spaces
       OrderedListStartMarkdownToken indent_level, extracted_whitespace, column_number, leading_spaces
 
-md030
+md030 spaces after list markers, def = 1
