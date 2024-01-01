@@ -249,6 +249,10 @@ def test_md023_bad_improper_indent_atx_in_list_item_fix():
         assert_file_is_as_expected(temp_source_path, original_file_contents)
 
         supplied_arguments = [
+            "--disable-rules",
+            "MD022,md030",
+            "--enable-rules",
+            "MD023",
             "-x-fix",
             "scan",
             temp_source_path,
@@ -782,8 +786,10 @@ def test_md023_bad_improper_indent_setext_in_list_item_fix():
             # "--log-level",
             # "DEBUG",
             # "-x-fix-no-rescan-log",
-            "-d",
-            "md009,md005",
+            "--enable-rules",
+            "MD023",
+            "--disable-rules",
+            "MD005,md030,md032",
             "-x-fix",
             "scan",
             temp_source_path,

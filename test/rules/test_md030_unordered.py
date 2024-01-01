@@ -3,10 +3,13 @@ Module to provide tests related to the MD030 rule.
 """
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.utils import assert_file_is_as_expected, copy_to_temp_file
 
 import pytest
 
 # pylint: disable=too-many-lines
+
+source_path = os.path.join("test", "resources", "rules", "md030") + os.sep
 
 
 @pytest.mark.rules
@@ -308,6 +311,50 @@ def test_md030_bad_spacing_ul_single():
 
 
 @pytest.mark.rules
+def test_md030_bad_spacing_ul_single_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains unordered lists with a single space after the marker,
+    and configuration that applies.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_spacing_ul_single.md"
+    ) as temp_source_path:
+        original_file_contents = """*  First
+*  Second
+*  Third
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """* First
+* Second
+* Third
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md030_bad_spacing_ul_single_config_1_2():
     """
     Test to make sure this rule does trigger with a document that
@@ -352,6 +399,55 @@ def test_md030_bad_spacing_ul_single_config_1_2():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md030_bad_spacing_ul_single_config_1_2_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains unordered lists with a single space after the marker,
+    and configuration that applies.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_spacing_ul_single.md"
+    ) as temp_source_path:
+        original_file_contents = """*  First
+*  Second
+*  Third
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--set",
+            "plugins.md030.ul_single=$#1",
+            "--set",
+            "plugins.md030.ul_multi=$#2",
+            "--strict-config",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """* First
+* Second
+* Third
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -462,6 +558,59 @@ def test_md030_good_spacing_ul_double_config_1_2():
 
 
 @pytest.mark.rules
+def test_md030_good_spacing_ul_double_config_1_2_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains unordered lists with a single space after the marker,
+    and configuration that applies.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "good_spacing_ul_double.md"
+    ) as temp_source_path:
+        original_file_contents = """* First
+* Second - 1
+
+  Second - 2
+* Third
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--set",
+            "plugins.md030.ul_single=$#1",
+            "--set",
+            "plugins.md030.ul_multi=$#2",
+            "--strict-config",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """* First
+*  Second - 1
+
+   Second - 2
+* Third
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md030_good_spacing_ul_double_config_2_1():
     """
     Test to make sure this rule does trigger with a document that
@@ -505,6 +654,59 @@ def test_md030_good_spacing_ul_double_config_2_1():
 
 
 @pytest.mark.rules
+def test_md030_good_spacing_ul_double_config_2_1_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains unordered lists with a single space after the marker,
+    and configuration that applies.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "good_spacing_ul_double.md"
+    ) as temp_source_path:
+        original_file_contents = """* First
+* Second - 1
+
+  Second - 2
+* Third
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--set",
+            "plugins.md030.ul_single=$#2",
+            "--set",
+            "plugins.md030.ul_multi=$#1",
+            "--strict-config",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """*  First
+* Second - 1
+
+  Second - 2
+*  Third
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md030_bad_spacing_ul_double():
     """
     Test to make sure this rule does trigger with a document that
@@ -544,6 +746,56 @@ def test_md030_bad_spacing_ul_double():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md030_bad_spacing_ul_double_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains unordered lists with a single space after the marker,
+    and configuration that applies.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_spacing_ul_double.md"
+    ) as temp_source_path:
+        original_file_contents = """*  First
+*  Second - 1
+
+   Second - 2
+*  Third
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md007",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """* First
+* Second - 1
+
+  Second - 2
+* Third
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -591,6 +843,60 @@ def test_md030_bad_spacing_ul_double_config_1_2():
 
 
 @pytest.mark.rules
+def test_md030_bad_spacing_ul_double_config_1_2_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains unordered lists with a single space after the marker,
+    and configuration that applies.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_spacing_ul_double.md"
+    ) as temp_source_path:
+        original_file_contents = """*  First
+*  Second - 1
+
+   Second - 2
+*  Third
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md007",
+            "--set",
+            "plugins.md030.ul_single=$#1",
+            "--set",
+            "plugins.md030.ul_multi=$#2",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """* First
+*  Second - 1
+
+   Second - 2
+* Third
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md030_bad_spacing_ul_double_config_2_1():
     """
     Test to make sure this rule does trigger with a document that
@@ -629,6 +935,60 @@ def test_md030_bad_spacing_ul_double_config_2_1():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md030_bad_spacing_ul_double_config_2_1_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains unordered lists with a single space after the marker,
+    and configuration that applies.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_spacing_ul_double.md"
+    ) as temp_source_path:
+        original_file_contents = """*  First
+*  Second - 1
+
+   Second - 2
+*  Third
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md007",
+            "--set",
+            "plugins.md030.ul_single=$#2",
+            "--set",
+            "plugins.md030.ul_multi=$#1",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """*  First
+* Second - 1
+
+  Second - 2
+*  Third
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 @pytest.mark.rules
@@ -706,6 +1066,52 @@ def test_md030_bad_spacing_ul_single_nested():
 
 
 @pytest.mark.rules
+def test_md030_bad_spacing_ul_single_nested_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains unordered lists with a single space after the marker,
+    and configuration that applies.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_spacing_ul_single_nested.md"
+    ) as temp_source_path:
+        original_file_contents = """*  First
+   *  Second
+*  Third
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md007",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """* First
+   * Second
+* Third
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md030_good_spacing_ul_single_nested_double():
     """
     Test to make sure this rule does not trigger with a document that
@@ -780,6 +1186,63 @@ def test_md030_good_spacing_ul_single_nested_double_2_1():
 
 
 @pytest.mark.rules
+def test_md030_good_spacing_ul_single_nested_double_2_1_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains unordered lists with a single space after the marker,
+    and configuration that applies.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "good_spacing_ul_single_nested_double.md"
+    ) as temp_source_path:
+        original_file_contents = """* First
+  first paragraph
+
+  * Second
+
+  second paragraph
+* Third
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--set",
+            "plugins.md030.ul_single=$#2",
+            "--set",
+            "plugins.md030.ul_multi=$#1",
+            "--strict-config",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """* First
+  first paragraph
+
+  *  Second
+
+  second paragraph
+*  Third
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md030_bad_spacing_ul_single_nested_double():
     """
     Test to make sure this rule does trigger with a document that
@@ -823,6 +1286,56 @@ def test_md030_bad_spacing_ul_single_nested_double():
 
 
 @pytest.mark.rules
+def test_md030_bad_spacing_ul_single_nested_double_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains unordered lists with a single space after the marker,
+    and configuration that applies.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_spacing_ul_single_nested_double.md"
+    ) as temp_source_path:
+        original_file_contents = """*  First
+   *  Second
+
+   second paragraph
+*  Third
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--disable-rules",
+            "md007",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """* First
+   * Second
+
+  second paragraph
+* Third
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+@pytest.mark.rules
 def test_md030_bad_spacing_ul_single_nested_double_2_1():
     """
     Test to make sure this rule does trigger with a document that
@@ -862,3 +1375,58 @@ def test_md030_bad_spacing_ul_single_nested_double_2_1():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md030_bad_spacing_ul_single_nested_double_2_1_fix():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains unordered lists with a single space after the marker,
+    and configuration that applies.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    with copy_to_temp_file(
+        source_path + "bad_spacing_ul_single_nested_double.md"
+    ) as temp_source_path:
+        original_file_contents = """*  First
+   *  Second
+
+   second paragraph
+*  Third
+"""
+        assert_file_is_as_expected(temp_source_path, original_file_contents)
+
+        supplied_arguments = [
+            "--set",
+            "plugins.md030.ul_single=$#2",
+            "--set",
+            "plugins.md030.ul_multi=$#1",
+            "--strict-config",
+            "--disable-rules",
+            "md007",
+            "-x-fix",
+            "scan",
+            temp_source_path,
+        ]
+
+        expected_return_code = 3
+        expected_output = f"Fixed: {temp_source_path}"
+        expected_error = ""
+
+        expected_file_contents = """* First
+   *  Second
+
+  second paragraph
+*  Third
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
