@@ -2,11 +2,12 @@
 Module to provide tests related to the MD004 rule.
 """
 import os
-from test.markdown_scanner import MarkdownScanner
 from test.rules.utils import (
+    execute_configuration_test,
     execute_fix_test,
     execute_scan_test,
     id_test_plug_rule_fn,
+    pluginConfigErrorTest,
     pluginRuleTest,
 )
 
@@ -21,41 +22,15 @@ set_style_sublist = "plugins.md004.style=sublist"
 
 plugin_disable_md032 = "md032"
 
-
-@pytest.mark.rules
-def test_md004_bad_configuration_style():
-    """
-    Test to verify that a configuration error is thrown when supplying the
-    style value with a string that is not in the list of acceptable values.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md004", "good_list_asterisk_single_level.md"
-    )
-    supplied_arguments = [
-        "--set",
-        "plugins.md004.style=bad",
-        "--strict-config",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = (
-        "BadPluginError encountered while configuring plugins:\n"
-        + "The value for property 'plugins.md004.style' is not valid: Allowable values: ['consistent', 'asterisk', 'plus', 'dash', 'sublist']"
-    )
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+configTests = [
+    pluginConfigErrorTest(
+        "invalid_style",
+        use_strict_config=True,
+        set_args=["plugins.md004.style=bad"],
+        expected_error="""BadPluginError encountered while configuring plugins:
+The value for property 'plugins.md004.style' is not valid: Allowable values: ['consistent', 'asterisk', 'plus', 'dash', 'sublist']""",
+    ),
+]
 
 
 scanTests = [
@@ -322,3 +297,11 @@ def test_md004_fix(test: pluginRuleTest) -> None:
     Execute a parameterized fix test for plugin md001.
     """
     execute_fix_test(test)
+
+
+@pytest.mark.parametrize("test", configTests, ids=id_test_plug_rule_fn)
+def test_md004_config(test: pluginRuleTest) -> None:
+    """
+    Execute a parameterized fix test for plugin md001.
+    """
+    execute_configuration_test(test, f"{source_path}good_list_asterisk_single_level.md")

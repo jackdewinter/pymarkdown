@@ -11,6 +11,18 @@ from typing import Any, List, Optional
 
 
 @dataclass
+class pluginConfigErrorTest:
+    """
+    Class to represent the testing needs of a plugin rule.
+    """
+
+    name: str
+    use_strict_config: bool
+    set_args: List[str]
+    expected_error: str
+
+
+@dataclass
 class pluginRuleTest:
     """
     Class to represent the testing needs of a plugin rule.
@@ -21,19 +33,24 @@ class pluginRuleTest:
     source_file_contents: Optional[str] = None
     set_args: Optional[List[str]] = None
     use_strict_config: bool = False
+    use_fix_debug: bool = False
     disable_rules: str = ""
     enable_rules: str = ""
     scan_expected_return_code: int = 0
     scan_expected_output: str = ""
     scan_expected_error: str = ""
+    fix_expected_return_code: int = 3
     fix_expected_file_contents: str = ""
+    fix_expected_output: Optional[str] = None
+    fix_expected_error: str = ""
+    add_plugin_path: str = ""
 
 
 def id_test_plug_rule_fn(val: Any) -> str:
     """
     Id functions to allow for parameterization to be used more meaningfully.
     """
-    if isinstance(val, pluginRuleTest):
+    if isinstance(val, (pluginRuleTest, pluginConfigErrorTest)):
         return val.name
     raise AssertionError()
 
@@ -53,6 +70,8 @@ def build_arguments(test: pluginRuleTest, is_fix: bool):
             )
 
         supplied_arguments = []
+        if test.add_plugin_path:
+            supplied_arguments.extend(("--add-plugin", test.add_plugin_path))
         if test.use_strict_config:
             supplied_arguments.append("--strict-config")
         if test.set_args:
@@ -64,6 +83,8 @@ def build_arguments(test: pluginRuleTest, is_fix: bool):
             supplied_arguments.extend(("--disable-rules", test.disable_rules))
 
         if is_fix:
+            if test.use_fix_debug:
+                supplied_arguments.append("-x-fix-debug"),
             supplied_arguments.extend(("-x-fix", "scan", temp_source_path))
         else:
             supplied_arguments.extend(("scan", temp_source_path))
@@ -95,9 +116,19 @@ def execute_scan_test(test: pluginRuleTest):
 def execute_fix_test(test: pluginRuleTest):
     scanner = MarkdownScanner()
     with build_arguments(test, True) as (temp_source_path, supplied_arguments):
-        expected_return_code = 3
-        expected_output = f"Fixed: {temp_source_path}"
-        expected_error = ""
+        expected_return_code = test.fix_expected_return_code
+        if test.fix_expected_output is not None:
+            expected_output = test.fix_expected_output.replace(
+                "{temp_source_path}", temp_source_path
+            )
+        else:
+            expected_output = f"Fixed: {temp_source_path}"
+        if test.fix_expected_error:
+            expected_error = test.fix_expected_error.replace(
+                "{temp_source_path}", temp_source_path
+            )
+        else:
+            expected_error = ""
         expected_file_contents = test.fix_expected_file_contents
 
         # Act
@@ -108,3 +139,29 @@ def execute_fix_test(test: pluginRuleTest):
             expected_output, expected_error, expected_return_code
         )
         assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+def execute_configuration_test(test: pluginConfigErrorTest, file_to_use: str):
+    scanner = MarkdownScanner()
+
+    temp_source_path = copy_to_temporary_file(file_to_use)
+    supplied_arguments = []
+    if test.use_strict_config:
+        supplied_arguments.append("--strict-config")
+    if test.set_args:
+        for next_set_arg in test.set_args:
+            supplied_arguments.extend(("--set", next_set_arg))
+
+    supplied_arguments.extend(("scan", temp_source_path))
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = test.expected_error
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )

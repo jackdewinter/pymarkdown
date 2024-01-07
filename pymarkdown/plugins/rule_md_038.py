@@ -58,13 +58,12 @@ class RuleMd038(RulePlugin):
                     adjusted_span_text = adjusted_span_text[1:]
                 if has_trailing:
                     adjusted_span_text = adjusted_span_text[:-1]
-                if len(adjusted_span_text):
-                    self.register_fix_token_request(
-                        context,
-                        token,
-                        "next_token",
-                        "span_text",
-                        adjusted_span_text,
-                    )
+                self.register_fix_token_request(
+                    context,
+                    token,
+                    "next_token",
+                    "span_text",
+                    adjusted_span_text,
+                )
             else:
                 self.report_next_token_error(context, token)

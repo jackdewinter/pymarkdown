@@ -2,11 +2,12 @@
 Module to provide tests related to the MD001 rule.
 """
 import os
-from test.markdown_scanner import MarkdownScanner
 from test.rules.utils import (
+    execute_configuration_test,
     execute_fix_test,
     execute_scan_test,
     id_test_plug_rule_fn,
+    pluginConfigErrorTest,
     pluginRuleTest,
 )
 
@@ -15,119 +16,31 @@ import pytest
 source_path = os.path.join("test", "resources", "rules", "md001") + os.sep
 
 extension_enable_front_matter = "extensions.front-matter.enabled=$!True"
+plug_set_front_matter_title_to_subject = "plugins.md001.front_matter_title=Subject"
+
+extension_set_invalid_enable_front_matter_as_string = (
+    "extensions.front-matter.enabled=True"
+)
+plugin_set_invalid_front_matter_title = "plugins.md001.front_matter_title=$#1"
 
 plugin_disable_md003 = "md003"
 
-
-@pytest.mark.rules
-def test_md001_all_samples():
-    """
-    Test to make sure we get the expected behavior after scanning all the files in the
-    test/resources/rules/md001 directory.  Note that with three front-matter files in
-    this directory and no config to enable that extension, Md022 will report bad
-    heading formats.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    supplied_arguments = [
-        "--disable-rules",
-        plugin_disable_md003,
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 1
-    expected_output = (
-        f"{source_path}front_matter_with_alternate_title.md:2:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{source_path}front_matter_with_no_title.md:2:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{source_path}front_matter_with_title.md:2:1: "
-        + "MD022: Headings should be surrounded by blank lines. "
-        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
-        + f"{source_path}improper_atx_heading_incrementing.md:3:1: "
-        + "MD001: Heading levels should only increment by one level at a time. "
-        + "[Expected: h2; Actual: h3] (heading-increment,header-increment)\n"
-        + f"{source_path}improper_setext_heading_incrementing.md:4:1: "
-        + "MD001: Heading levels should only increment by one level at a time. "
-        + "[Expected: h3; Actual: h4] (heading-increment,header-increment)\n"
-    )
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md001_bad_configuration_enabled():
-    """
-    Test to verify that enabling front matter with text "True" fails.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    supplied_arguments = [
-        "--strict-config",
-        "--set",
-        "extensions.front-matter.enabled=True",
-        "scan",
-        f"{source_path}front_matter_with_title.md",
-    ]
-
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = """Configuration error ValueError encountered while initializing extensions:
-The value for property 'extensions.front-matter.enabled' must be of type 'bool'."""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md001_bad_configuration_front_matter_title():
-    """
-    Test to verify that enabling front matter title with number "1" fails.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    supplied_arguments = [
-        "--strict-config",
-        "--set",
-        extension_enable_front_matter,
-        "--set",
-        "plugins.md001.front_matter_title=$#1",
-        "scan",
-        f"{source_path}proper_atx_heading_incrementing.md",
-    ]
-
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = (
-        "BadPluginError encountered while configuring plugins:\n"
-        + "The value for property 'plugins.md001.front_matter_title' must be of type 'str'."
-    )
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+configTests = [
+    pluginConfigErrorTest(
+        "enable_front_matter_with_string",
+        use_strict_config=True,
+        set_args=[extension_set_invalid_enable_front_matter_as_string],
+        expected_error="""Configuration error ValueError encountered while initializing extensions:
+The value for property 'extensions.front-matter.enabled' must be of type 'bool'.""",
+    ),
+    pluginConfigErrorTest(
+        "plugin_set_invalid_front_matter_title",
+        use_strict_config=True,
+        set_args=[extension_enable_front_matter, plugin_set_invalid_front_matter_title],
+        expected_error="""BadPluginError encountered while configuring plugins:
+The value for property 'plugins.md001.front_matter_title' must be of type 'str'.""",
+    ),
+]
 
 
 scanTests = [
@@ -219,7 +132,7 @@ kick in if there is a title field in the front matter.
         source_file_name=f"{source_path}front_matter_with_alternate_title.md",
         set_args=[
             extension_enable_front_matter,
-            "plugins.md001.front_matter_title=Subject",
+            plug_set_front_matter_title_to_subject,
         ],
         source_file_contents="""---
 Subject: field
@@ -263,3 +176,11 @@ def test_md001_fix(test: pluginRuleTest) -> None:
     Execute a parameterized fix test for plugin md001.
     """
     execute_fix_test(test)
+
+
+@pytest.mark.parametrize("test", configTests, ids=id_test_plug_rule_fn)
+def test_md001_config(test: pluginRuleTest) -> None:
+    """
+    Execute a parameterized fix test for plugin md001.
+    """
+    execute_configuration_test(test, f"{source_path}front_matter_with_title.md")

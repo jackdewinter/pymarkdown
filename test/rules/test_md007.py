@@ -2,11 +2,12 @@
 Module to provide tests related to the MD007 rule.
 """
 import os
-from test.markdown_scanner import MarkdownScanner
 from test.rules.utils import (
+    execute_configuration_test,
     execute_fix_test,
     execute_scan_test,
     id_test_plug_rule_fn,
+    pluginConfigErrorTest,
     pluginRuleTest,
 )
 
@@ -22,112 +23,29 @@ plugin_disable_md027 = "md027"
 plugin_disable_md030 = "md030"
 
 
-@pytest.mark.rules
-def test_md007_bad_configuration_indent():
-    """
-    Test to verify that a configuration error is thrown when supplying the
-    indent value with a string that is not an integer.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md007", "good_list_indentation.md"
-    )
-    supplied_arguments = [
-        "--set",
-        "plugins.md007.indent=bad",
-        "--strict-config",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = (
-        "BadPluginError encountered while configuring plugins:\n"
-        + "The value for property 'plugins.md007.indent' must be of type 'int'."
-    )
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md007_bad_configuration_start_indented():
-    """
-    Test to verify that a configuration error is thrown when supplying the
-    start_indented value with a value that is not a boolean.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md007", "good_list_indentation.md"
-    )
-    supplied_arguments = [
-        "--set",
-        "plugins.md007.start_indented=bad",
-        "--strict-config",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = (
-        "BadPluginError encountered while configuring plugins:\n"
-        + "The value for property 'plugins.md007.start_indented' must be of type 'bool'."
-    )
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md007_bad_configuration_indent_bad():
-    """
-    Test to verify that a configuration error is thrown when supplying the
-    indent value with a string that is not a valid integer.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md007", "good_list_indentation.md"
-    )
-    supplied_arguments = [
-        "--set",
-        "plugins.md007.indent=$#5",
-        "--strict-config",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = (
-        "BadPluginError encountered while configuring plugins:\n"
-        + "The value for property 'plugins.md007.indent' is not valid: Allowable values are between 2 and 4."
-    )
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+configTests = [
+    pluginConfigErrorTest(
+        "invalid_indent",
+        use_strict_config=True,
+        set_args=["plugins.md007.indent=bad"],
+        expected_error="""BadPluginError encountered while configuring plugins:
+The value for property 'plugins.md007.indent' must be of type 'int'.""",
+    ),
+    pluginConfigErrorTest(
+        "invalid_start_indented",
+        use_strict_config=True,
+        set_args=["plugins.md007.start_indented=bad"],
+        expected_error="""BadPluginError encountered while configuring plugins:
+The value for property 'plugins.md007.start_indented' must be of type 'bool'.""",
+    ),
+    pluginConfigErrorTest(
+        "invalid_indent_range",
+        use_strict_config=True,
+        set_args=["plugins.md007.indent=$#5"],
+        expected_error="""BadPluginError encountered while configuring plugins:
+The value for property 'plugins.md007.indent' is not valid: Allowable values are between 2 and 4.""",
+    ),
+]
 
 
 scanTests = [
@@ -596,3 +514,11 @@ def test_md007_fix(test: pluginRuleTest) -> None:
     Execute a parameterized fix test for plugin md001.
     """
     execute_fix_test(test)
+
+
+@pytest.mark.parametrize("test", configTests, ids=id_test_plug_rule_fn)
+def test_md007_config(test: pluginRuleTest) -> None:
+    """
+    Execute a parameterized fix test for plugin md001.
+    """
+    execute_configuration_test(test, f"{source_path}good_list_indentation.md")
