@@ -2,459 +2,115 @@
 Module to provide tests related to the MD023 rule.
 """
 import os
-from test.markdown_scanner import MarkdownScanner
-from test.utils import (
-    assert_file_is_as_expected,
-    copy_to_temp_file,
-    create_temporary_configuration_file,
+from test.rules.utils import (
+    execute_fix_test,
+    execute_scan_test,
+    id_test_plug_rule_fn,
+    pluginRuleTest,
 )
 
 import pytest
 
 source_path = os.path.join("test", "resources", "rules", "md023") + os.sep
 
+plugin_enable_this_rule = "MD023"
 
-@pytest.mark.rules
-def test_md023_good_proper_indent_atx():
-    """
-    Test to make sure this rule does not trigger with a document that
-    contains an Atx heading that starts at the very left.
-    """
+plugin_disable_md005_md030_md032 = "MD005,md030,md032"
+plugin_disable_md009 = "md009"
+plugin_disable_md009_md027 = "md009,md027"
+plugin_disable_md009_md022_md027 = "md009,md022,MD027"
+plugin_disable_md022_md030 = "MD022,md030"
+plugin_disable_md027 = "MD027"
 
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md023", "proper_indent_atx.md"
-    )
-    supplied_arguments = [
-        "--enable-rules",
-        "MD023",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md023_good_proper_indent_setext():
-    """
-    Test to make sure this rule does not trigger with a document that
-    contains a SetExt heading that starts at the very left.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md023", "proper_indent_setext.md"
-    )
-    supplied_arguments = [
-        "--enable-rules",
-        "MD023",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md023_bad_improper_indent_atx():
-    """
-    Test to make sure this rule does trigger with a document that
-    contains an Atx heading that does not start at the very left.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md023", "improper_indent_atx.md"
-    )
-    supplied_arguments = [
-        "--enable-rules",
-        "MD023",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 1
-    expected_output = (
-        f"{source_path}:3:3: "
-        + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)\n"
-    )
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md023_bad_improper_indent_atx_fix():
-    """
-    Test to make sure this rule does trigger with a document that
-    contains an Atx heading that does not start at the very left.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    with copy_to_temp_file(source_path + "improper_indent_atx.md") as temp_source_path:
-        original_file_contents = """Some text
+scanTests = [
+    pluginRuleTest(
+        "good_proper_indent_atx",
+        source_file_name=f"{source_path}proper_indent_atx.md",
+        enable_rules=plugin_enable_this_rule,
+    ),
+    pluginRuleTest(
+        "good_proper_indent_setext",
+        source_file_name=f"{source_path}proper_indent_setext.md",
+        enable_rules=plugin_enable_this_rule,
+    ),
+    pluginRuleTest(
+        "bad_improper_indent_atx",
+        source_file_name=f"{source_path}improper_indent_atx.md",
+        enable_rules=plugin_enable_this_rule,
+        source_file_contents="""Some text
 
   ## Heading 2
 
 Some more text
-"""
-        assert_file_is_as_expected(temp_source_path, original_file_contents)
-
-        supplied_arguments = [
-            "-x-fix",
-            "scan",
-            temp_source_path,
-        ]
-
-        expected_return_code = 3
-        expected_output = f"Fixed: {temp_source_path}"
-        expected_error = ""
-
-        expected_file_contents = """Some text
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)""",
+        fix_expected_file_contents="""Some text
 
 ## Heading 2
 
 Some more text
-"""
-
-        # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-        # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
-        assert_file_is_as_expected(temp_source_path, expected_file_contents)
-
-
-@pytest.mark.rules
-def test_md023_good_proper_indent_atx_in_list_item():
-    """
-    Test to make sure this rule does not trigger with a document that
-    contains an Atx heading that does start at the very left within a list item.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md023", "proper_indent_atx_in_list_item.md"
-    )
-    supplied_arguments = [
-        "--enable-rules",
-        "MD023",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md023_bad_improper_indent_atx_in_list_item():
-    """
-    Test to make sure this rule does trigger with a document that
-    contains an Atx heading that does not start at the very left in a list item.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md023", "improper_indent_atx_in_list_item.md"
-    )
-    supplied_arguments = [
-        "--disable-rules",
-        "MD022,md030",
-        "--enable-rules",
-        "MD023",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 1
-    expected_output = (
-        f"{source_path}:4:6: "
-        + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)"
-    )
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md023_bad_improper_indent_atx_in_list_item_fix():
-    """
-    Test to make sure this rule does trigger with a document that
-    contains an Atx heading that does not start at the very left.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    with copy_to_temp_file(
-        source_path + "improper_indent_atx_in_list_item.md"
-    ) as temp_source_path:
-        original_file_contents = """1. Some text
+""",
+    ),
+    pluginRuleTest(
+        "good_proper_indent_atx_in_list_item",
+        source_file_name=f"{source_path}proper_indent_atx_in_list_item.md",
+        enable_rules=plugin_enable_this_rule,
+    ),
+    pluginRuleTest(
+        "bad_improper_indent_atx_in_list_item",
+        source_file_name=f"{source_path}improper_indent_atx_in_list_item.md",
+        disable_rules=plugin_disable_md022_md030,
+        enable_rules=plugin_enable_this_rule,
+        source_file_contents="""1. Some text
 
 1.  ## Heading 2
      ## Heading 2.1
 
 1. Some more text
-"""
-        assert_file_is_as_expected(temp_source_path, original_file_contents)
-
-        supplied_arguments = [
-            "--disable-rules",
-            "MD022,md030",
-            "--enable-rules",
-            "MD023",
-            "-x-fix",
-            "scan",
-            temp_source_path,
-        ]
-
-        expected_return_code = 3
-        expected_output = f"Fixed: {temp_source_path}"
-        expected_error = ""
-
-        expected_file_contents = """1. Some text
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:6: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""1. Some text
 
 1.  ## Heading 2
     ## Heading 2.1
 
 1. Some more text
-"""
-
-        # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-        # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
-        assert_file_is_as_expected(temp_source_path, expected_file_contents)
-
-
-@pytest.mark.rules
-def test_md023_good_proper_indent_atx_in_block_quote():
-    """
-    Test to make sure this rule does not trigger with a document that
-    contains an Atx heading that does start at the very left within a block quote.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md023", "proper_indent_atx_in_block_quote.md"
-    )
-    supplied_arguments = [
-        "--enable-rules",
-        "MD023",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md023_bad_improper_indent_atx_in_block_quote():
-    """
-    Test to make sure this rule does trigger with a document that
-    contains an Atx heading that does not start at the very left in a block quote.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md023", "improper_indent_atx_in_block_quote.md"
-    )
-    supplied_arguments = [
-        "--disable-rules",
-        "MD027",
-        "--enable-rules",
-        "MD023",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 1
-    expected_output = (
-        f"{source_path}:3:4: "
-        + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)"
-    )
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md023_bad_improper_indent_atx_in_block_quote_fix():
-    """
-    Test to make sure this rule does trigger with a document that
-    contains an Atx heading that does not start at the very left.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    with copy_to_temp_file(
-        source_path + "improper_indent_atx_in_block_quote.md"
-    ) as temp_source_path:
-        original_file_contents = """> Some text
+""",
+    ),
+    pluginRuleTest(
+        "good_proper_indent_atx_in_block_quote",
+        source_file_name=f"{source_path}proper_indent_atx_in_block_quote.md",
+        enable_rules=plugin_enable_this_rule,
+    ),
+    pluginRuleTest(
+        "bad_improper_indent_atx_in_block_quote",
+        source_file_name=f"{source_path}improper_indent_atx_in_block_quote.md",
+        disable_rules=plugin_disable_md027,
+        enable_rules=plugin_enable_this_rule,
+        source_file_contents="""> Some text
 >
 >  ## Heading 2
 >
 > Some more text
-"""
-        assert_file_is_as_expected(temp_source_path, original_file_contents)
-
-        supplied_arguments = [
-            "--disable-rules",
-            "MD027",
-            "--enable-rules",
-            "MD023",
-            "-x-fix",
-            "scan",
-            temp_source_path,
-        ]
-
-        expected_return_code = 3
-        expected_output = f"Fixed: {temp_source_path}"
-        expected_error = ""
-
-        expected_file_contents = """> Some text
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:4: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""> Some text
 >
 > ## Heading 2
 >
 > Some more text
-"""
-
-        # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-        # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
-        assert_file_is_as_expected(temp_source_path, expected_file_contents)
-
-
-@pytest.mark.rules
-def test_md023_bad_improper_indent_setext_x():
-    """
-    Test to make sure this rule does trigger with a document that
-    contains a SetExt heading that any part of it does not start at
-    the very left.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md023", "improper_indent_setext.md"
-    )
-    supplied_arguments = [
-        "--enable-rules",
-        "MD023",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 1
-    expected_output = (
-        f"{source_path}:4:3: "
-        + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)\n"
-        + f"{source_path}:9:3: "
-        + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)\n"
-        + f"{source_path}:14:1: "
-        + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)\n"
-        + f"{source_path}:22:1: "
-        + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)\n"
-    )
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md023_bad_improper_indent_setext_x_fix():
-    """
-    Test to make sure this rule does trigger with a document that
-    contains an Atx heading that does not start at the very left.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    with copy_to_temp_file(
-        source_path + "improper_indent_setext.md"
-    ) as temp_source_path:
-        original_file_contents = """Some text
+""",
+    ),
+    pluginRuleTest(
+        "bad_improper_indent_setext_x",
+        source_file_name=f"{source_path}improper_indent_setext.md",
+        enable_rules=plugin_enable_this_rule,
+        source_file_contents="""Some text
 
   Heading 2
   ---------
@@ -476,20 +132,14 @@ A Very
 Very
   Long Heading
 -----------------
-"""
-        assert_file_is_as_expected(temp_source_path, original_file_contents)
-
-        supplied_arguments = [
-            "-x-fix",
-            "scan",
-            temp_source_path,
-        ]
-
-        expected_return_code = 3
-        expected_output = f"Fixed: {temp_source_path}"
-        expected_error = ""
-
-        expected_file_contents = """Some text
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+{temp_source_path}:9:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+{temp_source_path}:14:1: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+{temp_source_path}:22:1: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""Some text
 
 Heading 2
 ---------
@@ -511,79 +161,14 @@ Very
 Very
 Long Heading
 -----------------
-"""
-
-        # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-        # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
-        assert_file_is_as_expected(temp_source_path, expected_file_contents)
-
-
-@pytest.mark.rules
-def test_md023_bad_improper_indent_setext_in_block_quote():
-    """
-    Test to make sure this rule does trigger with a document that
-    contains a SetExt heading that any part of it does not start at
-    the very left in a block quote.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md023",
-        "improper_indent_setext_in_block_quote.md",
-    )
-    supplied_arguments = [
-        "--enable-rules",
-        "MD023",
-        "--disable-rules",
-        "MD027,md022,md009",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 1
-    expected_output = (
-        f"{source_path}:4:5: "
-        + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)\n"
-        + f"{source_path}:9:5: "
-        + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)\n"
-        + f"{source_path}:14:3: "
-        + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)\n"
-        + f"{source_path}:22:3: "
-        + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)\n"
-    )
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md023_bad_improper_indent_setext_in_block_quote_fix():
-    """
-    Test to make sure this rule does trigger with a document that
-    contains an Atx heading that does not start at the very left.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    with copy_to_temp_file(
-        source_path + "improper_indent_setext_in_block_quote.md"
-    ) as temp_source_path:
-        original_file_contents = """> Some text
+""",
+    ),
+    pluginRuleTest(
+        "bad_improper_indent_setext_in_block_quote",
+        source_file_name=f"{source_path}improper_indent_setext_in_block_quote.md",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules=plugin_disable_md009_md022_md027,
+        source_file_contents="""> Some text
 >
 >   Heading 2
 >   ---------
@@ -609,22 +194,14 @@ def test_md023_bad_improper_indent_setext_in_block_quote_fix():
 > Normal Heading
 > ---------
 >
-"""
-        assert_file_is_as_expected(temp_source_path, original_file_contents)
-
-        supplied_arguments = [
-            "-d",
-            "md009,md027",
-            "-x-fix",
-            "scan",
-            temp_source_path,
-        ]
-
-        expected_return_code = 3
-        expected_output = f"Fixed: {temp_source_path}"
-        expected_error = ""
-
-        expected_file_contents = """> Some text
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+{temp_source_path}:9:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+{temp_source_path}:14:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+{temp_source_path}:22:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""> Some text
 >
 > Heading 2
 > ---------
@@ -650,111 +227,25 @@ def test_md023_bad_improper_indent_setext_in_block_quote_fix():
 > Normal Heading
 > ---------
 >
-"""
-
-        # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-        # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
-        assert_file_is_as_expected(temp_source_path, expected_file_contents)
-
-
-@pytest.mark.rules
-def test_md023_good_proper_indent_setext_in_block_quote_no_fix():
-    """
-    Test to make sure this rule does trigger with a document that
-    contains an Atx heading that does not start at the very left.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    original_file_contents = """> A Very\a
+""",
+    ),
+    pluginRuleTest(
+        "good_proper_indent_setext_in_block_quote",
+        source_file_contents="""> A Very\a
 > Long Heading
 > -----------------
 """.replace(
-        "\a", " "
-    )
-    with create_temporary_configuration_file(
-        original_file_contents, file_name_suffix=".md"
-    ) as temp_source_path:
-        supplied_arguments = [
-            "--stack-trace",
-            "-d",
-            "md009",
-            "-x-fix",
-            "scan",
-            temp_source_path,
-        ]
-
-        expected_return_code = 0
-        expected_output = ""
-        expected_error = ""
-
-        # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-        # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
-
-
-@pytest.mark.rules
-def test_md023_bad_improper_indent_setext_in_list_item():
-    """
-    Test to make sure this rule does trigger with a document that
-    contains a SetExt heading that any part of it does not start at
-    the very left in a list item.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md023", "improper_indent_setext_in_list_item.md"
-    )
-    supplied_arguments = [
-        "--enable-rules",
-        "MD023",
-        "--disable-rules",
-        "MD005,md030,md032",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 1
-    expected_output = (
-        f"{source_path}:9:6: "
-        + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)\n"
-        + f"{source_path}:22:3: "
-        + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)\n"
-    )
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md023_bad_improper_indent_setext_in_list_item_fix():
-    """
-    Test to make sure this rule does trigger with a document that
-    contains an Atx heading that does not start at the very left.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    with copy_to_temp_file(
-        source_path + "improper_indent_setext_in_list_item.md"
-    ) as temp_source_path:
-        original_file_contents = """- Some text
+            "\a", " "
+        ),
+        enable_rules=plugin_enable_this_rule,
+        disable_rules=plugin_disable_md009_md027,
+    ),
+    pluginRuleTest(
+        "bad_improper_indent_setext_in_list_item",
+        source_file_name=f"{source_path}improper_indent_setext_in_list_item.md",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules=plugin_disable_md005_md030_md032,
+        source_file_contents="""- Some text
 
 -   Heading 2 - md030 warns of too many spaces, md023 does not trigger
     ---------
@@ -779,27 +270,12 @@ def test_md023_bad_improper_indent_setext_in_list_item_fix():
 
 - Normal Heading
   ---------
-"""
-        assert_file_is_as_expected(temp_source_path, original_file_contents)
-
-        supplied_arguments = [
-            # "--log-level",
-            # "DEBUG",
-            # "-x-fix-no-rescan-log",
-            "--enable-rules",
-            "MD023",
-            "--disable-rules",
-            "MD005,md030,md032",
-            "-x-fix",
-            "scan",
-            temp_source_path,
-        ]
-
-        expected_return_code = 3
-        expected_output = f"Fixed: {temp_source_path}"
-        expected_error = ""
-
-        expected_file_contents = """- Some text
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:9:6: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+{temp_source_path}:22:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""- Some text
 
 -   Heading 2 - md030 warns of too many spaces, md023 does not trigger
     ---------
@@ -824,219 +300,62 @@ def test_md023_bad_improper_indent_setext_in_list_item_fix():
 
 - Normal Heading
   ---------
-"""
+""",
+    ),
+    pluginRuleTest(
+        "good_proper_indented_atx_after_emphasis",
+        source_file_name=f"{source_path}improper_indented_atx_after_emphasis.md",
+        enable_rules=plugin_enable_this_rule,
+    ),
+    pluginRuleTest(
+        "good_proper_indent_setext_trailing_x",
+        source_file_name=f"{source_path}proper_indent_setext_trailing.md",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules=plugin_disable_md009,
+    ),
+    pluginRuleTest(
+        "proper_indent_setext_trailing_first",
+        source_file_name=f"{source_path}proper_indent_setext_trailing_first.md",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules=plugin_disable_md009,
+    ),
+    pluginRuleTest(
+        "proper_indent_setext_trailing_second",
+        source_file_name=f"{source_path}proper_indent_setext_trailing_second.md",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules=plugin_disable_md009,
+    ),
+    pluginRuleTest(
+        "proper_indent_setext_trailing_third",
+        source_file_name=f"{source_path}proper_indent_setext_trailing_third.md",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules=plugin_disable_md009,
+    ),
+    pluginRuleTest(
+        "proper_indent_setext_larger_trailing_middle",
+        source_file_name=f"{source_path}proper_indent_setext_larger_trailing_middle.md",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules=plugin_disable_md009,
+    ),
+]
 
-        # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-        # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
-        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+fixTests = []
+for i in scanTests:
+    if i.fix_expected_file_contents:
+        fixTests.append(i)
 
 
-@pytest.mark.rules
-def test_md023_good_proper_indented_atx_after_emphasis():
+@pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
+def test_md023_scan(test: pluginRuleTest) -> None:
     """
-    Test to make sure this rule does not trigger with a document that
-    contains a "SetExt heading" that is encapsulated in emphasis.
+    Execute a parameterized scan test for plugin md001.
     """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md023", "improper_indented_atx_after_emphasis.md"
-    )
-    supplied_arguments = [
-        "--enable-rules",
-        "MD023",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_scan_test(test)
 
 
-@pytest.mark.rules
-def test_md023_proper_indent_setext_trailing_x():
+@pytest.mark.parametrize("test", fixTests, ids=id_test_plug_rule_fn)
+def test_md023_fix(test: pluginRuleTest) -> None:
     """
-    Test to make sure this rule does not trigger with a document that
-    contains a SetExt heading that ends with spaces.
+    Execute a parameterized fix test for plugin md001.
     """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md023", "proper_indent_setext_trailing.md"
-    )
-    supplied_arguments = [
-        "--disable-rules",
-        "MD009",
-        "--enable-rules",
-        "MD023",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md023_proper_indent_setext_trailing_first():
-    """
-    Test to make sure this rule does not trigger with a document that
-    contains a SetExt heading that ends with spaces on the first line.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md023", "proper_indent_setext_trailing_first.md"
-    )
-    supplied_arguments = [
-        "--enable-rules",
-        "MD023",
-        "--disable-rules",
-        "MD009",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md023_proper_indent_setext_trailing_second():
-    """
-    Test to make sure this rule does not trigger with a document that
-    contains a SetExt heading that ends with spaces on the second line.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md023", "proper_indent_setext_trailing_second.md"
-    )
-    supplied_arguments = [
-        "--enable-rules",
-        "MD023",
-        "--disable-rules",
-        "MD009",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md023_proper_indent_setext_trailing_third():
-    """
-    Test to make sure this rule does not trigger with a document that
-    contains a SetExt heading that ends with spaces on the third line.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md023", "proper_indent_setext_trailing_third.md"
-    )
-    supplied_arguments = [
-        "--enable-rules",
-        "MD023",
-        "--disable-rules",
-        "MD009",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md023_proper_indent_setext_larger_trailing_middle():
-    """
-    Test to make sure this rule does not trigger with a document that
-    contains a SetExt heading that ends with spaces in the middle.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md023",
-        "proper_indent_setext_larger_trailing_middle.md",
-    )
-    supplied_arguments = [
-        "--enable-rules",
-        "MD023",
-        "--disable-rules",
-        "MD009",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_fix_test(test)

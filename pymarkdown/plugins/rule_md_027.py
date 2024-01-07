@@ -168,10 +168,10 @@ class RuleMd027(RulePlugin):
             else:
                 whitespace_parts.append(next_line[split_character_index + 1 :])
         recombined_whitespace = "\n".join(whitespace_parts)
-        if recombined_whitespace != text_token.end_whitespace:
-            self.register_fix_token_request(
-                context, token, "next_token", "end_whitespace", recombined_whitespace
-            )
+        assert recombined_whitespace != text_token.end_whitespace
+        self.register_fix_token_request(
+            context, token, "next_token", "end_whitespace", recombined_whitespace
+        )
 
     def __report_issue_new_list_item(
         self, context: PluginScanContext, token: MarkdownToken
@@ -908,7 +908,7 @@ class RuleMd027(RulePlugin):
         found_index = next_line.find(ParserHelper.whitespace_split_character)
         if found_index != -1:
             next_line = next_line[:found_index]
-        if next_line:
+        if next_line and found_index != -1:
             assert scoped_block_quote_token.bleading_spaces is not None
             split_leading_spaces = scoped_block_quote_token.bleading_spaces.split(
                 ParserHelper.newline_character

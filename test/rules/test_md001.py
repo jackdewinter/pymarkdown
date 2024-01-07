@@ -155,12 +155,7 @@ scanTests = [
 We skipped out a 2nd level heading in this document
 """,
         scan_expected_return_code=1,
-        scan_expected_output=(
-            f"{source_path}improper_atx_heading_incrementing.md:3:1: "
-            + "MD001: Heading levels should only increment by one level at a time. "
-            + "[Expected: h2; Actual: h3] (heading-increment,header-increment)\n"
-        ),
-        fix_expected_return_code=1,
+        scan_expected_output="{temp_source_path}:3:1: MD001: Heading levels should only increment by one level at a time. [Expected: h2; Actual: h3] (heading-increment,header-increment)\n",
         fix_expected_file_contents="""# Heading 1
 
 ## Heading 3
@@ -180,12 +175,7 @@ We skipped out a 2nd level heading in this document
 We skipped out a heading level in this document
 """,
         scan_expected_return_code=1,
-        scan_expected_output=(
-            f"{source_path}improper_setext_heading_incrementing.md:4:1: "
-            + "MD001: Heading levels should only increment by one level at a time. "
-            + "[Expected: h3; Actual: h4] (heading-increment,header-increment)\n"
-        ),
-        fix_expected_return_code=1,
+        scan_expected_output="{temp_source_path}:4:1: MD001: Heading levels should only increment by one level at a time. [Expected: h3; Actual: h4] (heading-increment,header-increment)\n",
         fix_expected_file_contents="""Heading 2
 ---------
 
@@ -213,8 +203,7 @@ We skipped out a 2nd level heading in this document, which should only
 kick in if there is a title field in the front matter.
 """,
         scan_expected_return_code=1,
-        scan_expected_output=f"{source_path}front_matter_with_title.md:5:1: MD001: Heading levels should only increment by one level at a time. [Expected: h2; Actual: h3] (heading-increment,header-increment)\n",
-        fix_expected_return_code=1,
+        scan_expected_output="{temp_source_path}:5:1: MD001: Heading levels should only increment by one level at a time. [Expected: h2; Actual: h3] (heading-increment,header-increment)\n",
         fix_expected_file_contents="""---
 title: field
 ---
@@ -242,8 +231,7 @@ We skipped out a 2nd level heading in this document, which should only
 kick in if there is a title field in the front matter.
 """,
         scan_expected_return_code=1,
-        scan_expected_output=f"{source_path}front_matter_with_alternate_title.md:5:1: MD001: Heading levels should only increment by one level at a time. [Expected: h2; Actual: h3] (heading-increment,header-increment)\n",
-        fix_expected_return_code=1,
+        scan_expected_output="{temp_source_path}:5:1: MD001: Heading levels should only increment by one level at a time. [Expected: h2; Actual: h3] (heading-increment,header-increment)\n",
         fix_expected_file_contents="""---
 Subject: field
 ---
