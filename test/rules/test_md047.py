@@ -55,7 +55,6 @@ The line after this line is blank, but contains two spaces.
     pluginRuleTest(
         "bad_end_with_no_blank_line_fix_and_debug",
         source_file_name=f"{source_path}end_with_no_blank_line.md",
-        disable_rules="md009",
         use_fix_debug=True,
         source_file_contents="""# This is a test
 
@@ -67,12 +66,15 @@ The line after this line should be blank.""",
 
 The line after this line should be blank.
 """,
-        fix_expected_output="""md010-before:# This is a test:
+        fix_expected_output="""md009-before:# This is a test:
+md010-before:# This is a test:
 md047-before:# This is a test:
 nl-ltw:# This is a test\\n:
+md009-before::
 md010-before::
 md047-before::
 nl-ltw:\\n:
+md009-before:The line after this line should be blank.:
 md010-before:The line after this line should be blank.:
 md047-before:The line after this line should be blank.:
 was_newline_added_at_end_of_file=False
@@ -121,7 +123,7 @@ def test_md047_scan(test: pluginRuleTest) -> None:
     """
     Execute a parameterized scan test for plugin md001.
     """
-    execute_scan_test(test)
+    execute_scan_test(test, "md047")
 
 
 @pytest.mark.parametrize("test", fixTests, ids=id_test_plug_rule_fn)

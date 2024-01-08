@@ -15,8 +15,7 @@ import pytest
 
 source_path = os.path.join("test", "resources", "rules", "md021") + os.sep
 
-plugin_disable_md010 = "md010"
-plugin_disable_md023 = "md023"
+__plugin_disable_md010 = "md010"
 
 scanTests = [
     pluginRuleTest(
@@ -76,7 +75,6 @@ scanTests = [
     pluginRuleTest(
         "bad_multiple_spacing_with_indent",
         source_file_name=f"{source_path}multiple_spacing_left.md",
-        disable_rules=plugin_disable_md023,
         source_file_contents="""#  Heading 1 #
 
 ##  Heading 2 ##
@@ -93,7 +91,7 @@ scanTests = [
     pluginRuleTest(
         "bad_single_space_single_tab_before",
         source_file_name=f"{source_path}single_space_single_tab_before.md",
-        disable_rules=plugin_disable_md010,
+        disable_rules=__plugin_disable_md010,
         source_file_contents="""# \tHeading 1 #
 
 ## \tHeading 2 ##
@@ -110,7 +108,7 @@ scanTests = [
     pluginRuleTest(
         "bad_single_space_single_tab_after",
         source_file_name=f"{source_path}single_space_single_tab_after.md",
-        disable_rules=plugin_disable_md010,
+        disable_rules=__plugin_disable_md010,
         source_file_contents="""# Heading 1\t #
 
 ## Heading 2\t ##
@@ -137,7 +135,7 @@ def test_md021_scan(test: pluginRuleTest) -> None:
     """
     Execute a parameterized scan test for plugin md001.
     """
-    execute_scan_test(test)
+    execute_scan_test(test, "md021")
 
 
 @pytest.mark.parametrize("test", fixTests, ids=id_test_plug_rule_fn)

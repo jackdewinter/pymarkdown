@@ -15,12 +15,11 @@ source_path = os.path.join("test", "resources", "rules", "md023") + os.sep
 
 plugin_enable_this_rule = "MD023"
 
-plugin_disable_md005_md030_md032 = "MD005,md030,md032"
-plugin_disable_md009 = "md009"
-plugin_disable_md009_md027 = "md009,md027"
-plugin_disable_md009_md022_md027 = "md009,md022,MD027"
-plugin_disable_md022_md030 = "MD022,md030"
-plugin_disable_md027 = "MD027"
+__plugin_disable_md005_md030_md032 = "MD005,md030,md032"
+__plugin_disable_md009 = "md009"
+__plugin_disable_md009_md022_md027 = "md009,md022,MD027"
+__plugin_disable_md022_md030 = "MD022,md030"
+__plugin_disable_md027 = "MD027"
 
 scanTests = [
     pluginRuleTest(
@@ -60,7 +59,7 @@ Some more text
     pluginRuleTest(
         "bad_improper_indent_atx_in_list_item",
         source_file_name=f"{source_path}improper_indent_atx_in_list_item.md",
-        disable_rules=plugin_disable_md022_md030,
+        disable_rules=__plugin_disable_md022_md030,
         enable_rules=plugin_enable_this_rule,
         source_file_contents="""1. Some text
 
@@ -88,7 +87,7 @@ Some more text
     pluginRuleTest(
         "bad_improper_indent_atx_in_block_quote",
         source_file_name=f"{source_path}improper_indent_atx_in_block_quote.md",
-        disable_rules=plugin_disable_md027,
+        disable_rules=__plugin_disable_md027,
         enable_rules=plugin_enable_this_rule,
         source_file_contents="""> Some text
 >
@@ -167,7 +166,7 @@ Long Heading
         "bad_improper_indent_setext_in_block_quote",
         source_file_name=f"{source_path}improper_indent_setext_in_block_quote.md",
         enable_rules=plugin_enable_this_rule,
-        disable_rules=plugin_disable_md009_md022_md027,
+        disable_rules=__plugin_disable_md009_md022_md027,
         source_file_contents="""> Some text
 >
 >   Heading 2
@@ -238,13 +237,13 @@ Long Heading
             "\a", " "
         ),
         enable_rules=plugin_enable_this_rule,
-        disable_rules=plugin_disable_md009_md027,
+        disable_rules=__plugin_disable_md009,
     ),
     pluginRuleTest(
         "bad_improper_indent_setext_in_list_item",
         source_file_name=f"{source_path}improper_indent_setext_in_list_item.md",
         enable_rules=plugin_enable_this_rule,
-        disable_rules=plugin_disable_md005_md030_md032,
+        disable_rules=__plugin_disable_md005_md030_md032,
         source_file_contents="""- Some text
 
 -   Heading 2 - md030 warns of too many spaces, md023 does not trigger
@@ -311,31 +310,31 @@ Long Heading
         "good_proper_indent_setext_trailing_x",
         source_file_name=f"{source_path}proper_indent_setext_trailing.md",
         enable_rules=plugin_enable_this_rule,
-        disable_rules=plugin_disable_md009,
+        disable_rules=__plugin_disable_md009,
     ),
     pluginRuleTest(
         "proper_indent_setext_trailing_first",
         source_file_name=f"{source_path}proper_indent_setext_trailing_first.md",
         enable_rules=plugin_enable_this_rule,
-        disable_rules=plugin_disable_md009,
+        disable_rules=__plugin_disable_md009,
     ),
     pluginRuleTest(
         "proper_indent_setext_trailing_second",
         source_file_name=f"{source_path}proper_indent_setext_trailing_second.md",
         enable_rules=plugin_enable_this_rule,
-        disable_rules=plugin_disable_md009,
+        disable_rules=__plugin_disable_md009,
     ),
     pluginRuleTest(
         "proper_indent_setext_trailing_third",
         source_file_name=f"{source_path}proper_indent_setext_trailing_third.md",
         enable_rules=plugin_enable_this_rule,
-        disable_rules=plugin_disable_md009,
+        disable_rules=__plugin_disable_md009,
     ),
     pluginRuleTest(
         "proper_indent_setext_larger_trailing_middle",
         source_file_name=f"{source_path}proper_indent_setext_larger_trailing_middle.md",
         enable_rules=plugin_enable_this_rule,
-        disable_rules=plugin_disable_md009,
+        disable_rules=__plugin_disable_md009,
     ),
 ]
 
@@ -350,7 +349,7 @@ def test_md023_scan(test: pluginRuleTest) -> None:
     """
     Execute a parameterized scan test for plugin md001.
     """
-    execute_scan_test(test)
+    execute_scan_test(test, "md023")
 
 
 @pytest.mark.parametrize("test", fixTests, ids=id_test_plug_rule_fn)

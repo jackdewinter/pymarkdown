@@ -13,22 +13,22 @@ import pytest
 
 source_path = os.path.join("test", "resources", "rules", "md027") + os.sep
 
-plugin_disable_md009_md023 = "md009,md023"
-plugin_disable_md022 = "md022"
-plugin_disable_md022_md023 = "md022,md023"
-plugin_disable_md023 = "md023"
-plugin_disable_md031 = "md031"
+__plugin_disable_md009 = "md009"
+__plugin_disable_md022 = "md022"
+__plugin_disable_md022_md023 = "md022,md023"
+__plugin_disable_md023 = "md023"
+__plugin_disable_md031 = "md031"
 
 scanTests = [
     pluginRuleTest(
         "good_block_quote_atx_heading",
         source_file_name=f"{source_path}good_block_quote_atx_heading.md",
-        disable_rules=plugin_disable_md022,
+        disable_rules=__plugin_disable_md022,
     ),
     pluginRuleTest(
         "bad_block_quote_atx_heading",
         source_file_name=f"{source_path}bad_block_quote_atx_heading.md",
-        disable_rules=plugin_disable_md022_md023,
+        disable_rules=__plugin_disable_md022_md023,
         source_file_contents="""> this is text
 >  # New Heading
 """,
@@ -46,7 +46,7 @@ scanTests = [
     pluginRuleTest(
         "bad_block_quote_setext_heading_first_line",
         source_file_name=f"{source_path}bad_block_quote_setext_heading_first_line.md",
-        disable_rules=plugin_disable_md023,
+        disable_rules=__plugin_disable_md023,
         source_file_contents="""> this is text
 >
 >  a setext heading
@@ -64,7 +64,7 @@ scanTests = [
     pluginRuleTest(
         "bad_block_quote_setext_heading_second_line",
         source_file_name=f"{source_path}bad_block_quote_setext_heading_second_line.md",
-        disable_rules=plugin_disable_md023,
+        disable_rules=__plugin_disable_md023,
         source_file_contents="""> this is text
 >
 > a setext heading
@@ -86,7 +86,7 @@ scanTests = [
     pluginRuleTest(
         "bad_block_quote_setext_heading_multiples_first",
         source_file_name=f"{source_path}bad_block_quote_setext_heading_multiples_first.md",
-        disable_rules=plugin_disable_md023,
+        disable_rules=__plugin_disable_md023,
         source_file_contents="""> this is text
 >
 >  a setext heading
@@ -108,7 +108,7 @@ scanTests = [
     pluginRuleTest(
         "bad_block_quote_setext_heading_multiples_middle",
         source_file_name=f"{source_path}bad_block_quote_setext_heading_multiples_middle.md",
-        disable_rules=plugin_disable_md023,
+        disable_rules=__plugin_disable_md023,
         source_file_contents="""> this is text
 >
 > a setext heading
@@ -129,7 +129,7 @@ scanTests = [
     ),
     pluginRuleTest(
         "good_block_quote_setext_heading_multiples_middle___X",
-        disable_rules=plugin_disable_md009_md023,
+        disable_rules=__plugin_disable_md009,
         source_file_contents="""> this is text
 >
 > a setext heading\a
@@ -143,7 +143,7 @@ scanTests = [
     pluginRuleTest(
         "bad_block_quote_setext_heading_multiples_last",
         source_file_name=f"{source_path}bad_block_quote_setext_heading_multiples_last.md",
-        disable_rules=plugin_disable_md023,
+        disable_rules=__plugin_disable_md023,
         source_file_contents="""> this is text
 >
 > a setext heading
@@ -164,7 +164,7 @@ scanTests = [
     ),
     pluginRuleTest(
         "bad_block_quote_setext_heading_multiples_last_x",
-        disable_rules=plugin_disable_md023,
+        disable_rules=__plugin_disable_md023,
         source_file_contents="""> this is text
 >
 > a setext heading
@@ -224,17 +224,17 @@ scanTests = [
     pluginRuleTest(
         "good_block_quote_fenced",
         source_file_name=f"{source_path}good_block_quote_fenced.md",
-        disable_rules=plugin_disable_md031,
+        disable_rules=__plugin_disable_md031,
     ),
     pluginRuleTest(
         "good_block_quote_fenced_middle",
         source_file_name=f"{source_path}good_block_quote_fenced_middle.md",
-        disable_rules=plugin_disable_md031,
+        disable_rules=__plugin_disable_md031,
     ),
     pluginRuleTest(
         "bad_block_quote_fenced_first",
         source_file_name=f"{source_path}bad_block_quote_fenced_first.md",
-        disable_rules=plugin_disable_md031,
+        disable_rules=__plugin_disable_md031,
         source_file_contents="""> this is text
 >  ```code
 > this is a fenced block
@@ -254,7 +254,7 @@ scanTests = [
     pluginRuleTest(
         "bad_block_quote_fenced_last",
         source_file_name=f"{source_path}bad_block_quote_fenced_last.md",
-        disable_rules=plugin_disable_md031,
+        disable_rules=__plugin_disable_md031,
         source_file_contents="""> this is text
 > ```code
 > this is a fenced block
@@ -274,7 +274,6 @@ scanTests = [
     pluginRuleTest(
         "good_block_quote_indented",
         source_file_name=f"{source_path}good_block_quote_indented.md",
-        disable_rules=plugin_disable_md031,
     ),
     pluginRuleTest(
         "good_block_quote_indented_first",
@@ -447,7 +446,7 @@ def test_md027_scan(test: pluginRuleTest) -> None:
     """
     Execute a parameterized scan test for plugin md001.
     """
-    execute_scan_test(test)
+    execute_scan_test(test, "md027")
 
 
 @pytest.mark.parametrize("test", fixTests, ids=id_test_plug_rule_fn)

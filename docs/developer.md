@@ -138,6 +138,15 @@ report_next_line_error
 
 completed_file
 
+MD001 & MD003 - safe
+MD004 & md032 - safe
+MD005 & md007
+        md027
+        md029
+        md030 - safe
+        md033 - safe
+
+
 possible -> MD005, Md007
 possible -> MD019/MD021, MD023
 possible -> md027 19/21/23/05/07 when blanks inside of list

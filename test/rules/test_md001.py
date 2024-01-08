@@ -23,7 +23,7 @@ extension_set_invalid_enable_front_matter_as_string = (
 )
 plugin_set_invalid_front_matter_title = "plugins.md001.front_matter_title=$#1"
 
-plugin_disable_md003 = "md003"
+__plugin_disable_md003 = "md003"
 
 configTests = [
     pluginConfigErrorTest(
@@ -56,7 +56,7 @@ scanTests = [
     pluginRuleTest(
         "good_proper_setext_heading_incrementing",
         source_file_name=f"{source_path}proper_setext_heading_incrementing.md",
-        disable_rules=plugin_disable_md003,
+        disable_rules=__plugin_disable_md003,
     ),
     pluginRuleTest(
         "bad_improper_atx_heading_incrementing",
@@ -79,7 +79,7 @@ We skipped out a 2nd level heading in this document
     pluginRuleTest(
         "bad_improper_setext_heading_incrementing",
         source_file_name=f"{source_path}improper_setext_heading_incrementing.md",
-        disable_rules=plugin_disable_md003,
+        disable_rules=__plugin_disable_md003,
         source_file_contents="""Heading 2
 ---------
 
@@ -167,7 +167,7 @@ def test_md001_scan(test: pluginRuleTest) -> None:
     """
     Execute a parameterized scan test for plugin md001.
     """
-    execute_scan_test(test)
+    execute_scan_test(test, "md001")
 
 
 @pytest.mark.parametrize("test", fixTests, ids=id_test_plug_rule_fn)

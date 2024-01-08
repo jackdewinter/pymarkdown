@@ -15,8 +15,8 @@ import pytest
 
 source_path = os.path.join("test", "resources", "rules", "md009") + os.sep
 
-plugin_disable_md012 = "md012"
-plugin_disable_md033 = "md033"
+__plugin_disable_md012 = "md012"
+__plugin_disable_md033 = "md033"
 
 configTests = [
     pluginConfigErrorTest(
@@ -247,7 +247,7 @@ on more than one line
     pluginRuleTest(
         "bad_html_block_with_extra",
         source_file_name=f"{source_path}bad_html_block_with_extra.md",
-        disable_rules=plugin_disable_md033,
+        disable_rules=__plugin_disable_md033,
         source_file_contents="""<!--
 this\a
 is\a
@@ -306,7 +306,7 @@ block
     pluginRuleTest(
         "bad_blank_lines_with_extra",
         source_file_name=f"{source_path}bad_blank_lines_with_extra.md",
-        disable_rules=plugin_disable_md012,
+        disable_rules=__plugin_disable_md012,
         source_file_contents="""\a
 \a\a
 \a\a\a
@@ -336,7 +336,7 @@ def test_md009_scan(test: pluginRuleTest) -> None:
     """
     Execute a parameterized scan test for plugin md001.
     """
-    execute_scan_test(test)
+    execute_scan_test(test, "md009")
 
 
 @pytest.mark.parametrize("test", fixTests, ids=id_test_plug_rule_fn)

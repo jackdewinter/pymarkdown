@@ -566,7 +566,7 @@ def test_md029_scan(test: pluginRuleTest) -> None:
     """
     Execute a parameterized scan test for plugin md001.
     """
-    execute_scan_test(test)
+    execute_scan_test(test, "md029")
 
 
 @pytest.mark.parametrize("test", fixTests, ids=id_test_plug_rule_fn)

@@ -20,7 +20,7 @@ set_style_dash = "plugins.md004.style=dash"
 set_style_plus = "plugins.md004.style=plus"
 set_style_sublist = "plugins.md004.style=sublist"
 
-plugin_disable_md032 = "md032"
+__plugin_disable_md032 = "md032"
 
 configTests = [
     pluginConfigErrorTest(
@@ -158,7 +158,7 @@ scanTests = [
         "bad_single_level_consistent",
         source_file_name=f"{source_path}bad_list_different_single_level.md",
         set_args=[],
-        disable_rules=plugin_disable_md032,
+        disable_rules=__plugin_disable_md032,
         source_file_contents="""* first
 + second
 - third
@@ -288,7 +288,7 @@ def test_md004_scan(test: pluginRuleTest) -> None:
     """
     Execute a parameterized scan test for plugin md001.
     """
-    execute_scan_test(test)
+    execute_scan_test(test, "md004")
 
 
 @pytest.mark.parametrize("test", fixTests, ids=id_test_plug_rule_fn)

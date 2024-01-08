@@ -13,11 +13,12 @@ import pytest
 
 source_path = os.path.join("test", "resources", "rules", "md005") + os.sep
 
-plugin_disable_md029 = "md029"
-plugin_disable_md007_md027_md029 = "md007,md027,md029"
-plugin_disable_md007_md029 = "md007,md029"
-plugin_disable_md007_md029_md033 = "md007,md029,md033"
-plugin_disable_md029_md030 = "md029,md030"
+__plugin_disable_md007 = "md007"
+__plugin_disable_md007_md027 = "md007,md027"
+__plugin_disable_md007_md029 = "md007,md029"
+__plugin_disable_md029 = "md029"
+__plugin_disable_md029_md030 = "md029,md030"
+__plugin_disable_md033 = "md033"
 
 scanTests = [
     pluginRuleTest(
@@ -27,7 +28,7 @@ scanTests = [
     pluginRuleTest(
         "bad_unordered_list_single_level",
         source_file_name=f"{source_path}bad_unordered_list_single_level.md",
-        disable_rules=plugin_disable_md007_md029,
+        disable_rules=__plugin_disable_md007,
         source_file_contents="""* Item 1
  * Item 2
 """,
@@ -44,7 +45,7 @@ scanTests = [
     pluginRuleTest(
         "bad_unordered_list_double_level_bad_first",
         source_file_name=f"{source_path}bad_unordered_list_double_level_bad_first.md",
-        disable_rules=plugin_disable_md007_md029,
+        disable_rules=__plugin_disable_md007,
         source_file_contents="""* Item 1
   * Item 1a
   * Item 1b
@@ -69,7 +70,7 @@ scanTests = [
     pluginRuleTest(
         "bad_unordered_list_double_level_bad_second",
         source_file_name=f"{source_path}bad_unordered_list_double_level_bad_second.md",
-        disable_rules=plugin_disable_md007_md029,
+        disable_rules=__plugin_disable_md007,
         source_file_contents="""* Item 1
   * Item 1a
   * Item 1b
@@ -90,12 +91,12 @@ scanTests = [
     pluginRuleTest(
         "good_unordered_list_separate_lists",
         source_file_name=f"{source_path}good_unordered_list_separate_lists.md",
-        disable_rules=plugin_disable_md007_md029,
+        disable_rules=__plugin_disable_md007,
     ),
     pluginRuleTest(
         "bad_unordered_list_single_level_twice",
         source_file_name=f"{source_path}bad_unordered_list_single_level_twice.md",
-        disable_rules=plugin_disable_md007_md029,
+        disable_rules=__plugin_disable_md007,
         source_file_contents="""* Item 1
  * Item 2
  * Item 2
@@ -129,12 +130,12 @@ scanTests = [
     pluginRuleTest(
         "good_ordered_list_single_level_widths",
         source_file_name=f"{source_path}good_ordered_list_single_level_widths.md",
-        disable_rules=plugin_disable_md029,
+        disable_rules=__plugin_disable_md029,
     ),
     pluginRuleTest(
         "bad_ordered_list_single_level_widths",
         source_file_name=f"{source_path}bad_ordered_list_single_level_widths.md",
-        disable_rules=plugin_disable_md029,
+        disable_rules=__plugin_disable_md029,
         source_file_contents="""1. Item 1
  100. Item 3
 """,
@@ -147,12 +148,12 @@ scanTests = [
     pluginRuleTest(
         "good_ordered_list_single_level_widths_right",
         source_file_name=f"{source_path}good_ordered_list_single_level_widths_right.md",
-        disable_rules=plugin_disable_md029,
+        disable_rules=__plugin_disable_md029,
     ),
     pluginRuleTest(
         "bad_ordered_list_single_level_widths_right",
         source_file_name=f"{source_path}bad_ordered_list_single_level_widths_right.md",
-        disable_rules=plugin_disable_md029,
+        disable_rules=__plugin_disable_md029,
         source_file_contents="""   1. Item 1
 10. Item 2
 """,
@@ -165,32 +166,32 @@ scanTests = [
     pluginRuleTest(
         "good_ordered_list_single_level_short_widths_right",
         source_file_name=f"{source_path}good_ordered_list_single_level_short_widths_right.md",
-        disable_rules=plugin_disable_md029,
+        disable_rules=__plugin_disable_md029,
     ),
     pluginRuleTest(
         "good_ordered_list_separate_single_level_short_widths_right",
         source_file_name=f"{source_path}good_ordered_list_seperate_single_level_short_widths_right.md",
-        disable_rules=plugin_disable_md029,
+        disable_rules=__plugin_disable_md029,
     ),
     pluginRuleTest(
         "good_ordered_list_separate_single_level_short_widths",
         source_file_name=f"{source_path}good_ordered_list_seperate_single_level_short_widths.md",
-        disable_rules=plugin_disable_md029_md030,
+        disable_rules=__plugin_disable_md029_md030,
     ),
     pluginRuleTest(
         "good_ordered_list_double_level",
         source_file_name=f"{source_path}good_ordered_list_double_level.md",
-        disable_rules=plugin_disable_md029,
+        disable_rules=__plugin_disable_md029,
     ),
     pluginRuleTest(
         "good_ordered_list_double_level_right",
         source_file_name=f"{source_path}good_ordered_list_double_level_right.md",
-        disable_rules=plugin_disable_md029,
+        disable_rules=__plugin_disable_md029,
     ),
     pluginRuleTest(
         "bad_ordered_list_double_level_weirdx",
         source_file_name=f"{source_path}bad_ordered_list_double_level_weird.md",
-        disable_rules=plugin_disable_md029,
+        disable_rules=__plugin_disable_md029,
         source_file_contents="""1. Item 1
    1. Item 1a
     100. Item 1b
@@ -205,7 +206,7 @@ scanTests = [
     pluginRuleTest(
         "bad_ordered_list_double_level_weirder",
         source_file_name=f"{source_path}bad_ordered_list_double_level_weirder.md",
-        disable_rules=plugin_disable_md029,
+        disable_rules=__plugin_disable_md029,
         source_file_contents="""1. Item 1
    1. Item 1a
   100. Item 1b
@@ -224,7 +225,7 @@ scanTests = [
     pluginRuleTest(
         "bad_unordered_list_double_level_in_block_quote_first",
         source_file_name=f"{source_path}bad_unordered_list_double_level_in_block_quote_first.md",
-        disable_rules=plugin_disable_md007_md027_md029,
+        disable_rules=__plugin_disable_md007_md027,
         source_file_contents="""> * Item 1
 >    * Item 1a
 >    * Item 1b
@@ -245,7 +246,7 @@ scanTests = [
     pluginRuleTest(
         "bad_unordered_list_double_level_in_block_quote_second",
         source_file_name=f"{source_path}bad_unordered_list_double_level_in_block_quote_second.md",
-        disable_rules=plugin_disable_md007_md027_md029,
+        disable_rules=__plugin_disable_md007,
         source_file_contents="""> * Item 1
 >   * Item 1a
 >   * Item 1b
@@ -267,7 +268,7 @@ scanTests = [
     pluginRuleTest(
         "bad_ordered_list_double_level_left",
         source_file_name=f"{source_path}bad_ordered_list_double_level_left.md",
-        disable_rules=plugin_disable_md007_md029,
+        disable_rules=__plugin_disable_md029,
         source_file_contents="""1. Item 1
    1. Item 1a
    10. Item 1b
@@ -291,7 +292,7 @@ scanTests = [
     pluginRuleTest(
         "bad_ordered_list_double_level_right_x",
         source_file_name=f"{source_path}bad_ordered_list_double_level_right.md",
-        disable_rules=plugin_disable_md007_md029,
+        disable_rules=__plugin_disable_md029,
         source_file_contents="""1. Item 1
     1. Item 1a
    10. Item 1b
@@ -315,7 +316,7 @@ scanTests = [
     pluginRuleTest(
         "bad_ordered_list_double_level_left_then_right",
         source_file_name=f"{source_path}bad_ordered_list_double_level_left_then_right.md",
-        disable_rules=plugin_disable_md007_md029,
+        disable_rules=__plugin_disable_md029,
         source_file_contents="""1. Item 1
    1. Item 1a
    10. Item 1b
@@ -336,7 +337,7 @@ scanTests = [
     pluginRuleTest(
         "bad_ordered_list_double_level_right_then_left",
         source_file_name=f"{source_path}bad_ordered_list_double_level_right_then_left.md",
-        disable_rules=plugin_disable_md007_md029,
+        disable_rules=__plugin_disable_md029,
         source_file_contents="""1. Item 1
     1. Item 1a
    10. Item 1b
@@ -357,7 +358,7 @@ scanTests = [
     pluginRuleTest(
         "bad_ordered_list_single_level_left_then_right",
         source_file_name=f"{source_path}bad_ordered_list_single_level_left_then_right.md",
-        disable_rules=plugin_disable_md007_md029,
+        disable_rules=__plugin_disable_md029,
         source_file_contents="""1. Item 1
 10. Item 2
  2. Item 3
@@ -372,7 +373,7 @@ scanTests = [
     pluginRuleTest(
         "bad_ordered_list_single_level_right_then_left",
         source_file_name=f"{source_path}bad_ordered_list_single_level_right_then_left.md",
-        disable_rules=plugin_disable_md007_md029,
+        disable_rules=__plugin_disable_md029,
         source_file_contents=""" 1. Item 1
 10. Item 2
 2. Item 3
@@ -386,7 +387,7 @@ scanTests = [
     ),
     pluginRuleTest(
         "bad_ordered_left_unordered_x",
-        disable_rules=plugin_disable_md007_md029,
+        disable_rules=__plugin_disable_md007_md029,
         source_file_contents="""1. Item 1
    + Item 1a
    + Item 1b
@@ -409,7 +410,7 @@ scanTests = [
     ),
     pluginRuleTest(
         "bad_ordered_right_unordered_x",
-        disable_rules=plugin_disable_md007_md029,
+        disable_rules=__plugin_disable_md007_md029,
         source_file_contents=""" 1. Item 1
     + Item 1a
     + Item 1b
@@ -431,7 +432,7 @@ scanTests = [
     ),
     pluginRuleTest(
         "bad_unordered_ordered_left_x",
-        disable_rules=plugin_disable_md007_md029,
+        disable_rules=__plugin_disable_md007_md029,
         source_file_contents="""+ Item 1
    1. Item 1a
    10. Item 1b
@@ -454,7 +455,7 @@ scanTests = [
     ),
     pluginRuleTest(
         "bad_unordered_ordered_right_x",
-        disable_rules=plugin_disable_md007_md029,
+        disable_rules=__plugin_disable_md007_md029,
         source_file_contents="""+ Item 1
    1. Item 1a
    10. Item 1b
@@ -477,7 +478,7 @@ scanTests = [
     ),
     pluginRuleTest(
         "bad_unordered_lt_with_text_fix",
-        disable_rules=plugin_disable_md007_md029,
+        disable_rules=__plugin_disable_md007,
         source_file_contents="""+ Item 1
   more Item 1
  + Item 2
@@ -493,7 +494,7 @@ scanTests = [
     ),
     pluginRuleTest(
         "bad_unordered_lt_with_double_text_fix",
-        disable_rules=plugin_disable_md007_md029,
+        disable_rules=__plugin_disable_md007,
         source_file_contents="""+ Item 1
   more Item 1
  + Item 2
@@ -514,7 +515,7 @@ scanTests = [
     ),
     pluginRuleTest(
         "bad_unordered_lt_with_text_nested_fix",
-        disable_rules=plugin_disable_md007_md029,
+        disable_rules=__plugin_disable_md007,
         source_file_contents="""+ Item 1
   more Item 1
    + Item 1a
@@ -548,7 +549,7 @@ scanTests = [
     ),
     pluginRuleTest(
         "test_md005_bad_unordered_gt_with_text_fix",
-        disable_rules=plugin_disable_md007_md029,
+        disable_rules=__plugin_disable_md007,
         source_file_contents="""  + Item 1
     more Item 1
  + Item 2
@@ -564,7 +565,7 @@ scanTests = [
     ),
     pluginRuleTest(
         "bad_unordered_gt_with_double_text_fix",
-        disable_rules=plugin_disable_md007_md029,
+        disable_rules=__plugin_disable_md007,
         source_file_contents="""  + Item 1
     more Item 1
  + Item 2
@@ -585,7 +586,7 @@ scanTests = [
     ),
     pluginRuleTest(
         "bad_unordered_gt_with_text_nested_fix",
-        disable_rules=plugin_disable_md007_md029,
+        disable_rules=__plugin_disable_md007,
         source_file_contents="""+ Item 1
   more Item 1
     + Item 1a
@@ -619,7 +620,6 @@ scanTests = [
     ),
     pluginRuleTest(
         "bad_ordered_lt_with_text_fix",
-        disable_rules=plugin_disable_md007_md029,
         source_file_contents="""1. Item 1
    more Item 1
  1. Item 2
@@ -635,7 +635,6 @@ scanTests = [
     ),
     pluginRuleTest(
         "bad_ordered_lt_with_double_text_fix",
-        disable_rules=plugin_disable_md007_md029,
         source_file_contents="""1. Item 1
    more Item 1
  2. Item 2
@@ -656,7 +655,7 @@ scanTests = [
     ),
     pluginRuleTest(
         "bad_ordered_lt_with_double_text_with_raw_html_fix",
-        disable_rules=plugin_disable_md007_md029_md033,
+        disable_rules=__plugin_disable_md033,
         source_file_contents="""1. Item 1
    more Item 1
  2. Item 2 <b2
@@ -677,7 +676,6 @@ scanTests = [
     ),
     pluginRuleTest(
         "bad_ordered_lt_with_text_nested_fix",
-        disable_rules=plugin_disable_md007_md029,
         source_file_contents="""1. Item 1
    more Item 1
     1. Item 1a
@@ -711,7 +709,6 @@ scanTests = [
     ),
     pluginRuleTest(
         "bad_ordered_gt_with_text_fix",
-        disable_rules=plugin_disable_md007_md029,
         source_file_contents="""  1. Item 1
      more Item 1
  2. Item 2
@@ -727,7 +724,7 @@ scanTests = [
     ),
     pluginRuleTest(
         "bad_ordered_gt_with_double_text_fix",
-        disable_rules=plugin_disable_md007_md029,
+        disable_rules=__plugin_disable_md029,
         source_file_contents="""  1. Item 1
      more Item 1
  2. Item 2
@@ -748,7 +745,6 @@ scanTests = [
     ),
     pluginRuleTest(
         "bad_ordered_gt_with_text_nested_fix",
-        disable_rules=plugin_disable_md007_md029,
         source_file_contents="""1. Item 1
    more Item 1
      1. Item 1a
@@ -793,7 +789,7 @@ def test_md005_scan(test: pluginRuleTest) -> None:
     """
     Execute a parameterized scan test for plugin md001.
     """
-    execute_scan_test(test)
+    execute_scan_test(test, "md005")
 
 
 @pytest.mark.parametrize("test", fixTests, ids=id_test_plug_rule_fn)

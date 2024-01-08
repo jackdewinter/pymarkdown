@@ -15,10 +15,10 @@ source_path = os.path.join("test", "resources", "rules", "md006") + os.sep
 
 plugin_enable_this_rule = "MD006"
 
-plugin_disable_md007 = "MD007"
-plugin_disable_md004_md007 = "md004,MD007"
-plugin_disable_md005_md007 = "md005,MD007"
-plugin_disable_md007_md027 = "MD007,md027"
+__plugin_disable_md004 = "md004"
+__plugin_disable_md007 = "MD007"
+__plugin_disable_md005_md007 = "md005,MD007"
+__plugin_disable_md007_md027 = "MD007,md027"
 
 scanTests = [
     pluginRuleTest(
@@ -35,7 +35,7 @@ scanTests = [
         "bad_indentation_x",
         source_file_name=f"{source_path}bad_indentation.md",
         enable_rules=plugin_enable_this_rule,
-        disable_rules=plugin_disable_md007,
+        disable_rules=__plugin_disable_md007,
         source_file_contents=""" * First Item
  * Second Item
 """,
@@ -57,7 +57,7 @@ scanTests = [
         "bad_indentation_in_block_quote",
         source_file_name=f"{source_path}bad_indentation_in_block_quote.md",
         enable_rules=plugin_enable_this_rule,
-        disable_rules=plugin_disable_md007_md027,
+        disable_rules=__plugin_disable_md007_md027,
         source_file_contents=""">  * First Item
 >  * Second Item
 """,
@@ -74,7 +74,7 @@ scanTests = [
         "bad_ignore_bad_second_level",
         source_file_name=f"{source_path}good_ignore_bad_second_level.md",
         enable_rules=plugin_enable_this_rule,
-        disable_rules=plugin_disable_md005_md007,
+        disable_rules=__plugin_disable_md005_md007,
         source_file_contents="""* First Item
   * First-First
    * First-Second
@@ -122,7 +122,7 @@ scanTests = [
         "bad_indentation_ordered_in_unordered",
         source_file_name=f"{source_path}bad_indentation_ordered_in_unordered.md",
         enable_rules=plugin_enable_this_rule,
-        disable_rules=plugin_disable_md005_md007,
+        disable_rules=__plugin_disable_md007,
         source_file_contents=""" * First Item
    1. Second Item
 """,
@@ -136,7 +136,7 @@ scanTests = [
         "bad_indentation_unordered_in_ordered",
         source_file_name=f"{source_path}bad_indentation_unordered_in_ordered.md",
         enable_rules=plugin_enable_this_rule,
-        disable_rules=plugin_disable_md005_md007,
+        disable_rules=__plugin_disable_md007,
         source_file_contents=""" 1. First Item
      - Second Item
 """,
@@ -155,7 +155,7 @@ scanTests = [
         "bad_indentation_nested",
         source_file_name=f"{source_path}bad_indentation_nested.md",
         enable_rules=plugin_enable_this_rule,
-        disable_rules=plugin_disable_md005_md007,
+        disable_rules=__plugin_disable_md007,
         source_file_contents="""- top level 1
    - First Item
    - Second Item
@@ -182,7 +182,7 @@ scanTests = [
         "issue_478",
         source_file_name=f"{source_path}issue_478.md",
         enable_rules=plugin_enable_this_rule,
-        disable_rules=plugin_disable_md004_md007,
+        disable_rules=__plugin_disable_md004,
     ),
 ]
 
@@ -197,7 +197,7 @@ def test_md006_scan(test: pluginRuleTest) -> None:
     """
     Execute a parameterized scan test for plugin md001.
     """
-    execute_scan_test(test)
+    execute_scan_test(test, "md006")
 
 
 @pytest.mark.parametrize("test", fixTests, ids=id_test_plug_rule_fn)

@@ -17,10 +17,9 @@ import pytest
 
 source_path = os.path.join("test", "resources", "rules", "md007") + os.sep
 
-plugin_disable_md005_md027 = "md005,md027"
-plugin_disable_md023 = "MD023"
-plugin_disable_md027 = "md027"
-plugin_disable_md030 = "md030"
+__plugin_disable_md005 = "md005"
+__plugin_disable_md027 = "md027"
+__plugin_disable_md030 = "md030"
 
 
 configTests = [
@@ -70,7 +69,6 @@ scanTests = [
     pluginRuleTest(
         "bad_list_indentation_level_1",
         source_file_name=f"{source_path}bad_list_indentation_level_1.md",
-        disable_rules=plugin_disable_md023,
         source_file_contents="""This is a test
 
 * this is level 1
@@ -87,7 +85,6 @@ scanTests = [
     pluginRuleTest(
         "bad_list_indentation_level_2",
         source_file_name=f"{source_path}bad_list_indentation_level_2.md",
-        disable_rules=plugin_disable_md023,
         source_file_contents="""This is a test
 
 * this is level 1
@@ -114,12 +111,12 @@ scanTests = [
     pluginRuleTest(
         "good_unordered_list_in_ordered_list",
         source_file_name=f"{source_path}good_unordered_list_in_ordered_list.md",
-        disable_rules=plugin_disable_md030,
+        disable_rules=__plugin_disable_md030,
     ),
     pluginRuleTest(
         "bad_unordered_list_in_ordered_list",
         source_file_name=f"{source_path}bad_unordered_list_in_ordered_list.md",
-        disable_rules=plugin_disable_md030,
+        disable_rules=__plugin_disable_md030,
         source_file_contents="""1.  ordered list
      + sublist
 """,
@@ -132,7 +129,7 @@ scanTests = [
     pluginRuleTest(
         "bad_level_1_unordered_list_in_ordered_list",
         source_file_name=f"{source_path}bad_level_1_unordered_list_in_ordered_list.md",
-        disable_rules=plugin_disable_md030,
+        disable_rules=__plugin_disable_md030,
         source_file_contents="""1.  ordered list
     + sublist
        + sublist
@@ -151,7 +148,6 @@ scanTests = [
     pluginRuleTest(
         "bad_unordered_list_in_double_ordered_list",
         source_file_name=f"{source_path}bad_unordered_list_in_double_ordered_list.md",
-        disable_rules=plugin_disable_md030,
         source_file_contents="""1. ordered list
    1. inner ordered list
        + sublist
@@ -170,7 +166,6 @@ scanTests = [
     pluginRuleTest(
         "bad_unordered_bad_ordered_unordered_ordered_unordered",
         source_file_name=f"{source_path}bad_unordered_bad_ordered_unordered_ordered_unordered.md",
-        disable_rules=plugin_disable_md030,
         source_file_contents=""" + level 1
    1. level 2
       + level 3
@@ -189,7 +184,6 @@ scanTests = [
     pluginRuleTest(
         "bad_unordered_ordered_unordered_bad_ordered_unordered",
         source_file_name=f"{source_path}bad_unordered_ordered_unordered_bad_ordered_unordered.md",
-        disable_rules=plugin_disable_md030,
         source_file_contents="""+ level 1
   1. level 2
       + level 3
@@ -208,7 +202,6 @@ scanTests = [
     pluginRuleTest(
         "bad_unordered_ordered_unordered_ordered_unordered_bad",
         source_file_name=f"{source_path}bad_unordered_ordered_unordered_ordered_unordered_bad.md",
-        disable_rules=plugin_disable_md030,
         source_file_contents="""+ level 1
   1. level 2
      + level 3
@@ -227,7 +220,7 @@ scanTests = [
     pluginRuleTest(
         "bad_list_indentation_in_block_quote_level_0",
         source_file_name=f"{source_path}bad_list_indentation_in_block_quote_level_0.md",
-        disable_rules=plugin_disable_md027,
+        disable_rules=__plugin_disable_md027,
         source_file_contents="""This is a test
 
 >  * this is level 1
@@ -250,7 +243,6 @@ scanTests = [
     pluginRuleTest(
         "bad_list_in_block_quote_after_text",
         source_file_name=f"{source_path}bad_list_in_block_quote_after_text.md",
-        disable_rules=plugin_disable_md027,
         source_file_contents="""> This is some text
 >
 > * this is level 1
@@ -269,7 +261,6 @@ scanTests = [
     pluginRuleTest(
         "bad_list_in_block_quote_after_atx_heading",
         source_file_name=f"{source_path}bad_list_in_block_quote_after_atx_heading.md",
-        disable_rules=plugin_disable_md027,
         source_file_contents="""> # This is some text
 >
 > * this is level 1
@@ -286,7 +277,6 @@ scanTests = [
     pluginRuleTest(
         "bad_list_in_block_quote_after_thematic_break",
         source_file_name=f"{source_path}bad_list_in_block_quote_after_thematic_break.md",
-        disable_rules=plugin_disable_md027,
         source_file_contents="""> This is some text
 >
 > --------
@@ -307,7 +297,6 @@ scanTests = [
     pluginRuleTest(
         "bad_list_in_block_quote_after_setext_heading",
         source_file_name=f"{source_path}bad_list_in_block_quote_after_setext_heading.md",
-        disable_rules=plugin_disable_md027,
         source_file_contents="""> This is some text
 > ---------
 >
@@ -326,7 +315,6 @@ scanTests = [
     pluginRuleTest(
         "bad_list_in_block_quote_after_html_block",
         source_file_name=f"{source_path}bad_list_in_block_quote_after_html_block.md",
-        disable_rules=plugin_disable_md027,
         source_file_contents="""> <!--
 > This is a comment
 > -->
@@ -347,7 +335,6 @@ scanTests = [
     pluginRuleTest(
         "bad_list_in_block_quote_after_fenced_block",
         source_file_name=f"{source_path}bad_list_in_block_quote_after_fenced_block.md",
-        disable_rules=plugin_disable_md027,
         source_file_contents="""> ```fenced
 > This is a comment
 > ```
@@ -368,7 +355,6 @@ scanTests = [
     pluginRuleTest(
         "bad_list_in_block_quote_after_indented_block",
         source_file_name=f"{source_path}bad_list_in_block_quote_after_indented_block.md",
-        disable_rules=plugin_disable_md027,
         source_file_contents=""">     This is a comment
 >
 > * this is level 1
@@ -385,7 +371,6 @@ scanTests = [
     pluginRuleTest(
         "bad_list_in_block_quote_after_link_reference_definition",
         source_file_name=f"{source_path}bad_list_in_block_quote_after_link_reference_definition.md",
-        disable_rules=plugin_disable_md027,
         source_file_contents="""> [link]: /url
 >
 > * this is level 1
@@ -402,7 +387,6 @@ scanTests = [
     pluginRuleTest(
         "bad_list_in_block_quote_after_other_list",
         source_file_name=f"{source_path}bad_list_in_block_quote_after_other_list.md",
-        disable_rules=plugin_disable_md027,
         source_file_contents="""> 1. This is another list.
 >
 > * this is level 1
@@ -423,7 +407,7 @@ scanTests = [
     pluginRuleTest(
         "bad_unordered_list_elements",
         source_file_name=f"{source_path}bad_unordered_list_elements.md",
-        disable_rules=plugin_disable_md005_md027,
+        disable_rules=__plugin_disable_md005,
         source_file_contents="""This is a test
 
  * this is level 1
@@ -472,7 +456,6 @@ scanTests = [
     pluginRuleTest(
         "issue_301",
         source_file_name=f"{source_path}issue-301.md",
-        disable_rules=plugin_disable_md005_md027,
         set_args=["plugins.md007.indent=$#4"],
         source_file_contents="""# Demo markdown
 
@@ -505,7 +488,7 @@ def test_md007_scan(test: pluginRuleTest) -> None:
     """
     Execute a parameterized scan test for plugin md001.
     """
-    execute_scan_test(test)
+    execute_scan_test(test, "md007")
 
 
 @pytest.mark.parametrize("test", fixTests, ids=id_test_plug_rule_fn)

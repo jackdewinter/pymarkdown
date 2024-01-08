@@ -15,6 +15,9 @@ import pytest
 
 source_path = os.path.join("test", "resources", "rules", "md010") + os.sep
 
+__plugin_disable_md030 = "md030"
+__plugin_disable_md031_md040 = "md031,md040"
+__plugin_disable_md047 = "MD047"
 
 configTests = [
     pluginConfigErrorTest(
@@ -57,7 +60,6 @@ a   bb  ccc ddd
     pluginRuleTest(
         "bad_simple_text_with_tab_fix_and_debug",
         source_file_name=f"{source_path}bad_simple_text_with_tab.md",
-        disable_rules="md009",
         use_fix_debug=True,
         source_file_contents="""before-tab\tafter-tab
 before-tab\tafter-tab
@@ -77,22 +79,27 @@ before-tab  after-tab
 before-tab  after-tab   after-another
 a   bb  ccc ddd
 """,
-        fix_expected_output="""md010-before:before-tab\\tafter-tab:
-md010-after :before-tab  after-tab:
-md047-before:before-tab  after-tab:
-nl-ltw:before-tab  after-tab\\n:
+        fix_expected_output="""md009-before:before-tab\\tafter-tab:
 md010-before:before-tab\\tafter-tab:
 md010-after :before-tab  after-tab:
 md047-before:before-tab  after-tab:
 nl-ltw:before-tab  after-tab\\n:
+md009-before:before-tab\\tafter-tab:
+md010-before:before-tab\\tafter-tab:
+md010-after :before-tab  after-tab:
+md047-before:before-tab  after-tab:
+nl-ltw:before-tab  after-tab\\n:
+md009-before:before-tab\\tafter-tab\\tafter-another:
 md010-before:before-tab\\tafter-tab\\tafter-another:
 md010-after :before-tab  after-tab   after-another:
 md047-before:before-tab  after-tab   after-another:
 nl-ltw:before-tab  after-tab   after-another\\n:
+md009-before:a\\tbb\\tccc\\tddd:
 md010-before:a\\tbb\\tccc\\tddd:
 md010-after :a   bb  ccc ddd:
 md047-before:a   bb  ccc ddd:
 nl-ltw:a   bb  ccc ddd\\n:
+md009-before::
 md010-before::
 md047-before::
 was_newline_added_at_end_of_file=True
@@ -128,7 +135,7 @@ code    block
     pluginRuleTest(
         "bad_simple_text_with_tabs_in_code_block_no_end_line",
         source_file_name=f"{source_path}bad_simple_text_with_tabs_in_code_block_no_end_line.md",
-        disable_rules="MD041,MD047",
+        disable_rules=__plugin_disable_md047,
         source_file_contents="""This is a code block
 
 ```text
@@ -158,7 +165,7 @@ code	block
     pluginRuleTest(
         "bad_in_block_quotes_fall_off_after_fenced_open",
         source_file_name=f"{source_path}bad_block_quote_fall_off_after_fenced_open.md",
-        disable_rules="md031,md041,md040",
+        disable_rules=__plugin_disable_md031_md040,
         source_file_contents="""> this is text
 >
 > ```text	abc
@@ -179,7 +186,7 @@ code	block
     pluginRuleTest(
         "bad_in_bad_block_quote_fall_off_after_fenced_open_and_text",
         source_file_name=f"{source_path}bad_block_quote_fall_off_after_fenced_open_and_text.md",
-        disable_rules="md031,md041,md040",
+        disable_rules=__plugin_disable_md031_md040,
         source_file_contents="""> this is text
 >
 > ```text	abc
@@ -220,7 +227,7 @@ code	block
     pluginRuleTest(
         "bad_unordered_list_fall_off_after_fenced_open",
         source_file_name=f"{source_path}bad_unordered_list_fall_off_after_fenced_open.md",
-        disable_rules="md031,md040,md041",
+        disable_rules=__plugin_disable_md031_md040,
         source_file_contents="""+ this is text
 
   ```text	def
@@ -241,7 +248,7 @@ code	block
     pluginRuleTest(
         "bad_unordered_list_fall_off_after_fenced_open_and_text",
         source_file_name=f"{source_path}bad_unordered_list_fall_off_after_fenced_open_and_text.md",
-        disable_rules="md031,md040,md041",
+        disable_rules=__plugin_disable_md031_md040,
         source_file_contents="""+ this is text
 
   ```text	def
@@ -262,7 +269,6 @@ code	block
     pluginRuleTest(
         "bad_unordered_list_fall_off_after_fenced_open_and_text_and_close",
         source_file_name=f"{source_path}bad_unordered_list_fall_off_after_fenced_open_and_text_and_close.md",
-        disable_rules="md031,md040,md041",
         source_file_contents="""- this is text
 
   ```text	def
@@ -283,7 +289,6 @@ code	block
     pluginRuleTest(
         "bad_unordered_list_fall_off_after_fenced_open_and_text_and_close_with_code_blocks_off",
         source_file_name=f"{source_path}bad_unordered_list_fall_off_after_fenced_open_and_text_and_close.md",
-        disable_rules="md031,md040,md041",
         set_args=["plugins.md010.code_blocks=$!false"],
         use_strict_config=True,
         source_file_contents="""- this is text
@@ -305,7 +310,7 @@ code	block
     pluginRuleTest(
         "bad_unordered_list_fall_off_after_fenced_open_and_text_and_close_with_extra_space_indent",
         source_file_name=f"{source_path}bad_unordered_list_fall_off_after_fenced_open_and_text_and_close_with_extra_space_indent.md",
-        disable_rules="md030,md041",
+        disable_rules=__plugin_disable_md030,
         source_file_contents="""-   this is text
 
     ```text	def
@@ -326,7 +331,7 @@ code	block
     pluginRuleTest(
         "bad_unordered_list_fall_off_after_fenced_open_and_text_and_close_with_extra_tab_indent",
         source_file_name=f"{source_path}bad_unordered_list_fall_off_after_fenced_open_and_text_and_close_with_extra_tab_indent.md",
-        disable_rules="md030,md041",
+        disable_rules=__plugin_disable_md030,
         source_file_contents="""-\tthis is text
 
 \t```text\tdef
@@ -351,7 +356,7 @@ code	block
     pluginRuleTest(
         "bad_ordered_list_fall_off_after_fenced_open",
         source_file_name=f"{source_path}bad_ordered_list_fall_off_after_fenced_open.md",
-        disable_rules="md031,md040,md041",
+        disable_rules=__plugin_disable_md031_md040,
         source_file_contents="""1. this is text
 
    ```text	def
@@ -372,7 +377,7 @@ code	block
     pluginRuleTest(
         "bad_ordered_list_fall_off_after_fenced_open_and_text",
         source_file_name=f"{source_path}bad_ordered_list_fall_off_after_fenced_open_and_text.md",
-        disable_rules="md031,md040,md041",
+        disable_rules=__plugin_disable_md031_md040,
         source_file_contents="""1. this is text
 
    ```text	def
@@ -393,7 +398,6 @@ code	block
     pluginRuleTest(
         "bad_ordered_list_fall_off_after_fenced_open_and_text_and_close",
         source_file_name=f"{source_path}bad_ordered_list_fall_off_after_fenced_open_and_text_and_close.md",
-        disable_rules="md031,md040,md041",
         source_file_contents="""1. this is text
 
    ```text	def
@@ -414,7 +418,6 @@ code	block
     pluginRuleTest(
         "bad_ordered_list_fall_off_after_fenced_open_and_text_and_close_with_code_blocks_off",
         source_file_name=f"{source_path}bad_ordered_list_fall_off_after_fenced_open_and_text_and_close.md",
-        disable_rules="md031,md040,md041",
         use_strict_config=True,
         set_args=["plugins.md010.code_blocks=$!false"],
         source_file_contents="""1. this is text
@@ -436,7 +439,7 @@ code	block
     pluginRuleTest(
         "bad_ordered_list_fall_off_after_fenced_open_and_text_and_close_with_extra_space_indent",
         source_file_name=f"{source_path}bad_ordered_list_fall_off_after_fenced_open_and_text_and_close_with_extra_space_indent.md",
-        disable_rules="md030,md031,md040,md041",
+        disable_rules=__plugin_disable_md030,
         source_file_contents="""1.  this is text
 
     ```text	def
@@ -457,7 +460,7 @@ code	block
     pluginRuleTest(
         "bad_ordered_list_fall_off_after_fenced_open_and_text_and_close_with_extra_tab_indent",
         source_file_name=f"{source_path}bad_ordered_list_fall_off_after_fenced_open_and_text_and_close_with_extra_tab_indent.md",
-        disable_rules="md030,md031,md040,md041",
+        disable_rules=__plugin_disable_md030,
         source_file_contents="""1.\tthis is text
 
 \t```text\tdef
@@ -491,7 +494,7 @@ def test_md010_scan(test: pluginRuleTest) -> None:
     """
     Execute a parameterized scan test for plugin md001.
     """
-    execute_scan_test(test)
+    execute_scan_test(test, "md010")
 
 
 @pytest.mark.parametrize("test", fixTests, ids=id_test_plug_rule_fn)
