@@ -3,7 +3,7 @@ Module to implement a plugin that ensures consistent spacing after the list mark
 """
 from typing import Dict, List, Optional, cast
 
-from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.plugins.utils.list_tracker import ListTracker
@@ -30,19 +30,19 @@ class RuleMd030(RulePlugin):
         # self.__debug = False
         self.__frank = ListTracker()
 
-    def get_details(self) -> PluginDetails:
+    def get_details(self) -> PluginDetailsV2:
         """
         Get the details for the plugin.
         """
-        return PluginDetails(
+        return PluginDetailsV2(
             plugin_name="list-marker-space",
             plugin_id="MD030",
             plugin_enabled_by_default=True,
             plugin_description="Spaces after list markers",
             plugin_version="0.5.0",
-            plugin_interface_version=1,
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md030.md",
             plugin_configuration="ul_single,ol_single,ul_multi,ol_multi",
+            plugin_supports_fix=True,
         )
 
     @classmethod

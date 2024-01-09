@@ -1080,6 +1080,8 @@ class PluginManager:
         Inform any listeners of a new token that has been processed.
         """
         for next_plugin in self.__enabled_plugins_for_next_token:
+            if context.in_fix_mode and not next_plugin.plugin_supports_fix:
+                continue
             try:
                 next_plugin.plugin_instance.next_token(context, token)
             except Exception as this_exception:

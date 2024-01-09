@@ -56,6 +56,18 @@ def id_test_plug_rule_fn(val: Any) -> str:
     raise AssertionError()
 
 
+def build_fix_and_clash_lists(scanTests: List[pluginRuleTest]):
+    fixTests: List[pluginRuleTest] = []
+    clashTests: List[pluginRuleTest] = []
+    for i in scanTests:
+        if i.fix_expected_file_contents:
+            fixTests.append(i)
+    for i in fixTests:
+        if i.disable_rules:
+            clashTests.append(i)
+    return fixTests, clashTests
+
+
 @contextmanager
 def build_arguments(
     test: pluginRuleTest, is_fix: bool, skip_disabled_rules: bool = False
@@ -166,6 +178,10 @@ def execute_fix_test(test: pluginRuleTest):
             expected_output, expected_error, expected_return_code
         )
         assert_file_is_as_expected(temp_source_path, expected_file_contents)
+
+
+def execute_clash_test(test: pluginRuleTest):
+    pass
 
 
 def execute_configuration_test(test: pluginConfigErrorTest, file_to_use: str):

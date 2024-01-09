@@ -3,6 +3,8 @@ Module to provide tests related to the MD005 rule.
 """
 import os
 from test.rules.utils import (
+    build_fix_and_clash_lists,
+    execute_clash_test,
     execute_fix_test,
     execute_scan_test,
     id_test_plug_rule_fn,
@@ -777,11 +779,7 @@ scanTests = [
 """,
     ),
 ]
-
-fixTests = []
-for i in scanTests:
-    if i.fix_expected_file_contents:
-        fixTests.append(i)
+fixTests, clashTests = build_fix_and_clash_lists(scanTests)
 
 
 @pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
@@ -798,6 +796,14 @@ def test_md005_fix(test: pluginRuleTest) -> None:
     Execute a parameterized fix test for plugin md001.
     """
     execute_fix_test(test)
+
+
+@pytest.mark.parametrize("test", clashTests, ids=id_test_plug_rule_fn)
+def test_md005_clash(test: pluginRuleTest) -> None:
+    """
+    Execute a parameterized fix test for plugin md001.
+    """
+    execute_clash_test(test)
 
 
 @pytest.mark.rules

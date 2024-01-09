@@ -138,14 +138,53 @@ report_next_line_error
 
 completed_file
 
-MD001 & MD003 - safe
-MD004 & md032 - safe
+MD001 & md003 - safe
+MD004 & md006 - from below
+      & md032 - safe
 MD005 & md007
+        md023 - from below
         md027
         md029
-        md030 - safe
+        md030
         md033 - safe
-
+MD006 & md004 - up
+        md007
+        md027
+Md007 & md005  - up
+        md027
+        md030
+md009 & md012 - safe
+        md023 - from below
+        md027 - from below
+        md033 - safe
+MD010 & md019 - from below
+      & md021 - from below
+      & md030
+      & md031 - safe
+      & md040 - safe
+      & md047
+MD019 & md010 - up
+      & md023
+MD021 & md010 - up
+MD023 & md005 - up
+      & md009 - up
+      & md022 - safe
+      & md027
+      & md030
+      & md032 - safe
+MD027 & md003 - safe
+      & md005
+      & md007
+      & md009 - up
+      & md012 - safe
+      & md013 - safe
+      & md022 - safe
+      & md023
+      & md028 - safe
+      & md030
+      & md031 - safe
+      & md032 - safe
+MD030 & md007
 
 possible -> MD005, Md007
 possible -> MD019/MD021, MD023
@@ -167,6 +206,7 @@ MD019 AtxHeadingMarkdownToken extracted_whitespace
 MD021 AtxHeadingMarkdownToken extracted_whitespace, extra_end_data
 MD023 AtxHeadingMarkdownToken extracted_whitespace
 MD029 OrderedListStartMarkdownToken list_start_content
+md030 spaces after list markers, def = 1
 MD035 ThematicBreakMarkdownToken start_character,rest_of_line
 MD037 TextMarkdownToken (within emphasis) token_text
 MD038 InlineCodeSpanMarkdownToken span_text
@@ -186,5 +226,3 @@ MD027   BlankLineMarkdownToken extracted_whitespace
        NewListItemMarkdownToken indent_level, extracted_whitespace
       UnorderedListStartMarkdownToken indent_level, extracted_whitespace, column_number, leading_spaces
       OrderedListStartMarkdownToken indent_level, extracted_whitespace, column_number, leading_spaces
-
-md030 spaces after list markers, def = 1
