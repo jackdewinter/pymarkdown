@@ -10,7 +10,7 @@ import os
 import shutil
 import sys
 import tempfile
-from typing import Callable, Dict, List, Optional, Tuple, Union, cast
+from typing import Callable, Dict, List, Optional, Set, Tuple, Union, cast
 
 from pymarkdown.application_file_scanner import ApplicationFileScanner
 from pymarkdown.extensions.pragma_token import PragmaToken
@@ -22,6 +22,7 @@ from pymarkdown.plugin_manager.bad_plugin_error import BadPluginError
 from pymarkdown.plugin_manager.bad_plugin_fix_error import BadPluginFixError
 from pymarkdown.plugin_manager.fix_line_record import FixLineRecord
 from pymarkdown.plugin_manager.fix_token_record import FixTokenRecord
+from pymarkdown.plugin_manager.found_plugin import FoundPlugin
 from pymarkdown.plugin_manager.plugin_manager import PluginManager
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.return_code_helper import ApplicationResult, ReturnCodeHelper
@@ -142,9 +143,7 @@ class FileScanHelper:
         """
 
         POGGER.info("Scanning file '$'.", next_file_name)
-        context = self.__plugins.starting_new_file(
-            next_file_name, False, None, fix_token_map=None
-        )
+        context = self.__plugins.starting_new_file(next_file_name)
 
         try:
             POGGER.info("Starting file '$'.", next_file_name)
@@ -267,20 +266,25 @@ class FileScanHelper:
                 ParserLogger.sync_on_next_call()
         return actual_tokens
 
-    # pylint: disable=too-many-arguments
-    def __process_file_fix(
+    # pylint: disable=too-many-arguments, too-many-locals
+    def __process_file_fix_pass(
         self,
         next_file: str,
         next_file_name: str,
         fix_debug: bool,
         fix_file_debug: bool,
         fix_nolog_rescan: bool,
-    ) -> bool:
-        # TODO add more protections around fixing i.e. IOError handling
-
+        fix_list: List[str],
+        collect_list: List[str],
+    ) -> Tuple[bool, Set[str], Set[str]]:
         # Scan the provided file for any token fixes.
-        next_file_two, actual_tokens, fix_token_map = self.__process_file_fix_tokens(
-            next_file, next_file_name, fix_debug, fix_file_debug
+        (
+            next_file_two,
+            actual_tokens,
+            fix_token_map,
+            collected_token_triggers,
+        ) = self.__process_file_fix_tokens(
+            next_file, next_file_name, fix_debug, fix_file_debug, fix_list, collect_list
         )
         did_any_tokens_get_fixed = bool(fix_token_map)
 
@@ -302,8 +306,15 @@ class FileScanHelper:
         (
             this_file_fix_line_records,
             temporary_line_file_name,
+            collected_line_triggers,
         ) = self.__process_file_fix_lines(
-            next_file_two, next_file_name, actual_tokens, fix_debug, fix_file_debug
+            next_file_two,
+            next_file_name,
+            actual_tokens,
+            fix_debug,
+            fix_file_debug,
+            fix_list,
+            collect_list,
         )
 
         # If anything was fixed, copy the temporary file on top of the original file
@@ -321,11 +332,127 @@ class FileScanHelper:
             if fix_debug and fix_file_debug:
                 print(f"Remove:{next_file_two}")
             os.remove(next_file_two)
+
+        return did_anything_get_fixed, collected_token_triggers, collected_line_triggers
+
+    # pylint: enable=too-many-arguments, too-many-locals
+
+    # pylint: disable=too-many-arguments, too-many-locals
+    def __process_file_fix_next_level(
+        self,
+        plugins_by_fix_level: Dict[int, List[str]],
+        minimum_fix_level: int,
+        fixes_by_id: Dict[str, FoundPlugin],
+        next_file: str,
+        next_file_name: str,
+        fix_debug: bool,
+        fix_file_debug: bool,
+        fix_nolog_rescan: bool,
+    ) -> Tuple[bool, bool, int]:
+        keep_processing = False
+        collect_list = []
+        for fix_level, level_list in plugins_by_fix_level.items():
+            if fix_level == minimum_fix_level:
+                fix_list = level_list[:]
+            elif fix_level > minimum_fix_level:
+                collect_list.extend(level_list)
+
+        (
+            did_anything_get_fixed_this_time,
+            collected_token_triggers,
+            collected_line_triggers,
+        ) = self.__process_file_fix_pass(
+            next_file,
+            next_file_name,
+            fix_debug,
+            fix_file_debug,
+            fix_nolog_rescan,
+            fix_list,
+            collect_list,
+        )
+
+        trigger_set = collected_token_triggers | collected_line_triggers
+        new_minimum_fix_level: Optional[int] = None
+        for next_triggered_plugin_id in trigger_set:
+            triggered_plugin_fix_level = fixes_by_id[
+                next_triggered_plugin_id
+            ].plugin_fix_level
+            assert triggered_plugin_fix_level > minimum_fix_level
+            if new_minimum_fix_level is None:
+                new_minimum_fix_level = triggered_plugin_fix_level
+            else:
+                new_minimum_fix_level = min(
+                    new_minimum_fix_level, triggered_plugin_fix_level
+                )
+        if new_minimum_fix_level is not None:
+            keep_processing = True
+            minimum_fix_level = new_minimum_fix_level
+
+        return keep_processing, did_anything_get_fixed_this_time, minimum_fix_level
+
+    # pylint: enable=too-many-arguments, too-many-locals
+
+    # pylint: disable=too-many-arguments, too-many-locals
+    def __process_file_fix(
+        self,
+        next_file: str,
+        next_file_name: str,
+        fix_debug: bool,
+        fix_file_debug: bool,
+        fix_nolog_rescan: bool,
+    ) -> bool:
+        enabled_plugins_with_fixes = filter(
+            lambda x: x.plugin_supports_fix, self.__plugins.enabled_plugins
+        )
+        fixes_by_id: Dict[str, FoundPlugin] = {
+            i.plugin_id.lower(): i for i in enabled_plugins_with_fixes
+        }
+
+        enabled_plugins_with_fixes = filter(
+            lambda x: x.plugin_supports_fix, self.__plugins.enabled_plugins
+        )
+        fix_plugins_with_levels = [
+            (i.plugin_id, i.plugin_fix_level) for i in enabled_plugins_with_fixes
+        ]
+
+        plugins_by_fix_level: Dict[int, List[str]] = {}
+        for next_pair in fix_plugins_with_levels:
+            pair_plugin_id = next_pair[0]
+            pair_fix_level = next_pair[1]
+            if pair_fix_level in plugins_by_fix_level:
+                level_list = plugins_by_fix_level[pair_fix_level]
+            else:
+                level_list = []
+                plugins_by_fix_level[pair_fix_level] = level_list
+            level_list.append(pair_plugin_id)
+        minimum_fix_level = min(plugins_by_fix_level.keys())
+        did_anything_get_fixed = False
+        keep_processing = True
+
+        while keep_processing:
+            (
+                keep_processing,
+                did_anything_get_fixed_this_time,
+                minimum_fix_level,
+            ) = self.__process_file_fix_next_level(
+                plugins_by_fix_level,
+                minimum_fix_level,
+                fixes_by_id,
+                next_file,
+                next_file_name,
+                fix_debug,
+                fix_file_debug,
+                fix_nolog_rescan,
+            )
+            did_anything_get_fixed = (
+                did_anything_get_fixed or did_anything_get_fixed_this_time
+            )
+
         return did_anything_get_fixed
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     def __process_file_fix_lines(
         self,
         next_file: str,
@@ -333,18 +460,28 @@ class FileScanHelper:
         actual_tokens: List[MarkdownToken],
         fix_debug: bool,
         fix_file_debug: bool,
-    ) -> Tuple[List[FixLineRecord], str]:
+        fix_list: List[str],
+        collect_list: List[str],
+    ) -> Tuple[List[FixLineRecord], str, Set[str]]:
         source_provider = FileSourceProvider(next_file)
         with tempfile.NamedTemporaryFile() as temp_output:
             temporary_file_name = temp_output.name
         with open(temporary_file_name, "wt", encoding="utf-8") as source_file:
             POGGER.info("Scanning before line-by-line fixes.")
-            context = self.__plugins.starting_new_file(
+            fix_context = self.__plugins.starting_new_file(
                 next_file_name,
                 fix_mode=True,
                 temp_output=source_file,
                 fix_token_map=None,
             )
+            report_context = self.__plugins.starting_new_file(
+                next_file_name, constraint_id_list=collect_list
+            )
+            context_map: Dict[str, PluginScanContext] = {
+                i: fix_context for i in fix_list
+            }
+            for i in collect_list:
+                context_map[i] = report_context
 
             # Due to context required to process the line requirements, we need go
             # through all the tokens first, before processing the lines.
@@ -354,23 +491,38 @@ class FileScanHelper:
             # picture of the tokens.
             for next_token in actual_tokens:
                 POGGER.info("Processing tokens: $", next_token)
-                self.__plugins.next_token(context, next_token)
+                self.__plugins.next_token(fix_context, next_token, context_map)
 
             POGGER.info("Completed token scanning.")
-            self.__process_lines_in_file(source_provider, context, next_file_name)
-            this_file_fix_line_records = context.fix_line_records
+            self.__process_lines_in_file(
+                source_provider, fix_context, next_file_name, context_map
+            )
+            this_file_fix_line_records = fix_context.fix_line_records
             if this_file_fix_line_records and fix_debug:
-                for next_record in context.fix_line_records:
+                for next_record in fix_context.fix_line_records:
                     print(next_record)
 
         self.__print_file_in_debug_mode(fix_debug, fix_file_debug, temporary_file_name)
-        return this_file_fix_line_records, temporary_file_name
+        return (
+            this_file_fix_line_records,
+            temporary_file_name,
+            report_context.get_triggered_rules(),
+        )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
 
+    # pylint: disable=too-many-arguments
     def __process_file_fix_tokens(
-        self, next_file: str, next_file_name: str, fix_debug: bool, fix_file_debug: bool
-    ) -> Tuple[str, List[MarkdownToken], Dict[MarkdownToken, List[FixTokenRecord]]]:
+        self,
+        next_file: str,
+        next_file_name: str,
+        fix_debug: bool,
+        fix_file_debug: bool,
+        fix_list: List[str],
+        collect_list: List[str],
+    ) -> Tuple[
+        str, List[MarkdownToken], Dict[MarkdownToken, List[FixTokenRecord]], Set[str]
+    ]:
         self.__print_file_in_debug_mode(fix_debug, fix_file_debug, next_file)
 
         POGGER.info("Scanning file to fix '$' token-by-token.", next_file_name)
@@ -381,30 +533,49 @@ class FileScanHelper:
         )
 
         fix_token_map: Dict[MarkdownToken, List[FixTokenRecord]] = {}
-        context = self.__plugins.starting_new_file(
-            next_file_name, fix_mode=True, temp_output=None, fix_token_map=fix_token_map
+        fix_context = self.__plugins.starting_new_file(
+            next_file_name,
+            fix_mode=True,
+            temp_output=None,
+            fix_token_map=fix_token_map,
+            constraint_id_list=fix_list,
         )
+        report_context = self.__plugins.starting_new_file(
+            next_file_name, constraint_id_list=collect_list
+        )
+
+        context_map = {i: fix_context for i in fix_list}
+        for i in collect_list:
+            context_map[i] = report_context
+
         for next_token in actual_tokens:
             POGGER.info("Processing token: $", next_token)
-            self.__plugins.next_token(context, next_token)
+            self.__plugins.next_token(fix_context, next_token, context_map)
 
         POGGER.info("Completed scanning file '$' for fixes.", next_file_name)
-        self.__plugins.completed_file(context, -1)
+        self.__plugins.completed_file(fix_context, -1, context_map)
 
-        if context.get_fix_token_map():
+        if fix_context.get_fix_token_map():
             (
                 next_file,
                 actual_tokens,
                 fix_token_map,
             ) = self.__process_file_fix_tokens_apply_fixes(
-                context,
+                fix_context,
                 next_file,
                 actual_tokens,
                 fix_token_map,
                 fix_debug,
                 fix_file_debug,
             )
-        return next_file, actual_tokens, fix_token_map
+        return (
+            next_file,
+            actual_tokens,
+            fix_token_map,
+            report_context.get_triggered_rules(),
+        )
+
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     def __process_file_fix_tokens_apply_fixes(
@@ -526,6 +697,7 @@ class FileScanHelper:
         source_provider: FileSourceProvider,
         context: PluginScanContext,
         next_file_name: str,
+        context_map: Optional[Dict[str, PluginScanContext]] = None,
     ) -> None:
         line_number, next_line = 1, source_provider.get_next_line()
         while next_line is not None:
@@ -536,12 +708,13 @@ class FileScanHelper:
                 next_line,
                 source_provider.is_at_end_of_file,
                 source_provider.did_final_line_end_with_newline,
+                context_map,
             )
             line_number += 1
             next_line = source_provider.get_next_line()
 
         POGGER.info("Completed scanning lines in file '$'.", next_file_name)
-        self.__plugins.completed_file(context, line_number)
+        self.__plugins.completed_file(context, line_number, context_map)
 
     @staticmethod
     def is_scan_stdin_specified(args: argparse.Namespace) -> bool:

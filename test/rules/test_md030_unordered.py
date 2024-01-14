@@ -287,6 +287,35 @@ scanTests = [
 """,
     ),
     pluginRuleTest(
+        "good_spacing_ul_single_nested_double_2_1_xx",
+        use_strict_config=True,
+        set_args=["plugins.md030.ul_single=$#2", "plugins.md030.ul_multi=$#1"],
+        source_file_contents="""* First
+  first paragraph
+
+  * Second
+
+  second paragraph
+* Third
+
+another paragraph
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:3: MD030: Spaces after list markers [Expected: 2; Actual: 1] (list-marker-space)
+{temp_source_path}:7:1: MD030: Spaces after list markers [Expected: 2; Actual: 1] (list-marker-space)
+""",
+        fix_expected_file_contents="""* First
+  first paragraph
+
+  *  Second
+
+  second paragraph
+*  Third
+
+another paragraph
+""",
+    ),
+    pluginRuleTest(
         "bad_spacing_ul_single_nested_double",
         source_file_name=f"{source_path}bad_spacing_ul_single_nested_double.md",
         disable_rules=__plugin_disable_md007,

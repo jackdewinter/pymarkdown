@@ -85,6 +85,19 @@ scanTests = [
 ## Heading 2
 """,
     ),
+    pluginRuleTest(
+        "xxx",
+        source_file_contents="""#  Heading 1
+
+a line of text""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)
+{temp_source_path}:3:14: MD047: Each file should end with a single newline character. (single-trailing-newline)""",
+        fix_expected_file_contents="""# Heading 1
+
+a line of text
+""",
+    ),
 ]
 
 fixTests = []

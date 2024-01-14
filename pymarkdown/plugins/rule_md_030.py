@@ -174,33 +174,46 @@ class RuleMd030(RulePlugin):
         self.__current_list_parent = token
         self.__frank.list_start(token)
 
+    def __next_token_list_end_registrations(
+        self,
+        context: PluginScanContext,
+        token: MarkdownToken,
+        registration_map: Dict[MarkdownToken, int],
+    ) -> None:
+        end_token = cast(EndMarkdownToken, token)
+        list_token = cast(ListStartMarkdownToken, end_token.start_markdown_token)
+        if list_token.leading_spaces:
+            split_leading_spaces = list_token.leading_spaces.split("\n")
+            for registered_token, adj in registration_map.items():
+                start, stop = self.__frank.get_start_stop(registered_token)
+                for next_index in range(start, stop):
+                    if (
+                        next_index == len(split_leading_spaces) - 1
+                        or not split_leading_spaces[next_index]
+                    ):
+                        continue
+                    split_leading_spaces[next_index] = (
+                        split_leading_spaces[next_index][:-adj]
+                        if adj > 0
+                        else split_leading_spaces[next_index] + (" " * -adj)
+                    )
+            rebuilt_leading_spaces = "\n".join(split_leading_spaces)
+            if rebuilt_leading_spaces != list_token.leading_spaces:
+                self.register_fix_token_request(
+                    context,
+                    list_token,
+                    "next_token",
+                    "leading_spaces",
+                    rebuilt_leading_spaces,
+                )
+
     def __next_token_list_end(
         self, context: PluginScanContext, token: MarkdownToken
     ) -> None:
         self.__frank.list_end()
         self.__handle_list_end(context)
         if registration_map := self.__frank.get_registrations():
-            end_token = cast(EndMarkdownToken, token)
-            list_token = cast(ListStartMarkdownToken, end_token.start_markdown_token)
-            if list_token.leading_spaces:
-                split_leading_spaces = list_token.leading_spaces.split("\n")
-                for registered_token, adj in registration_map.items():
-                    start, stop = self.__frank.get_start_stop(registered_token)
-                    for next_index in range(start, stop):
-                        split_leading_spaces[next_index] = (
-                            split_leading_spaces[next_index][:-adj]
-                            if adj > 0
-                            else split_leading_spaces[next_index] + (" " * -adj)
-                        )
-                rebuilt_leading_spaces = "\n".join(split_leading_spaces)
-                if rebuilt_leading_spaces != list_token.leading_spaces:
-                    self.register_fix_token_request(
-                        context,
-                        list_token,
-                        "next_token",
-                        "leading_spaces",
-                        rebuilt_leading_spaces,
-                    )
+            self.__next_token_list_end_registrations(context, token, registration_map)
 
         self.__frank.list_end_cleanup()
         del self.__list_stack[-1]

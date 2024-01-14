@@ -40,7 +40,8 @@ scanTests = [
     pluginRuleTest(
         "good_block_quote_empty_just_blank",
         source_file_name=f"{source_path}good_block_quote_empty_just_blank.md",
-        disable_rules=__plugin_disable_md009,
+        source_file_contents=""">
+""",
     ),
     pluginRuleTest(
         "bad_block_quote_empty_too_many_spaces",
@@ -53,6 +54,62 @@ scanTests = [
         scan_expected_output="""{temp_source_path}:1:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
 """,
         fix_expected_file_contents=""">
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_empty_one_too_many_spaces",
+        source_file_contents=""">\a
+""".replace(
+            "\a", " "
+        ),
+        disable_rules=__plugin_disable_md009,
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:2: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+""",
+        fix_expected_file_contents=""">
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_multiple_empty_one_too_many_spaces",
+        source_file_contents=""">\a
+> abc
+>\a
+> def
+""".replace(
+            "\a", " "
+        ),
+        disable_rules=__plugin_disable_md009,
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:2: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+{temp_source_path}:3:2: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+""",
+        fix_expected_file_contents=""">
+> abc
+>
+> def
+""",
+    ),
+    pluginRuleTest(
+        "bad_block_quote_multiple_empty_one_too_many_spaces_xx",
+        source_file_contents=""">\a
+> abc
+>\a
+> def
+>\a
+""".replace(
+            "\a", " "
+        ),
+        disable_rules=__plugin_disable_md009,
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:2: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+{temp_source_path}:3:2: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+{temp_source_path}:5:2: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+""",
+        fix_expected_file_contents=""">
+> abc
+>
+> def
+>
 """,
     ),
     pluginRuleTest(
@@ -129,7 +186,6 @@ scanTests = [
     pluginRuleTest(
         "good_block_quote_indent_with_blank_space",
         source_file_name=f"{source_path}good_block_quote_indent_with_blank_space.md",
-        disable_rules=__plugin_disable_md009,
     ),
     pluginRuleTest(
         "bad_block_quote_indent_with_blank_two_spaces",
@@ -509,6 +565,7 @@ scanTests = [
     pluginRuleTest(
         "good_block_quote_ordered_list_lrd",
         source_file_name=f"{source_path}good_block_quote_ordered_list_lrd.md",
+        use_debug=True,
     ),
     pluginRuleTest(
         "good_list_in_block_quote_after_other_list",

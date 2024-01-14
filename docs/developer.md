@@ -139,17 +139,17 @@ report_next_line_error
 completed_file
 
 MD001 & md003 - safe
-MD004 & md006 - from below
-      & md032 - safe
+MD004 & md006 - from below    (disabled by default)
+      & md032 - safe          04-list start char, 32-blank lines
 MD005 & md007
         md023 - from below
         md027
         md029
         md030
         md033 - safe
-MD006 & md004 - up
-        md007
-        md027
+MD006 & md004 - up            (disabled by default)
+        md007                 (disabled by default)
+        md027                 (disabled by default)
 Md007 & md005  - up
         md027
         md030
@@ -184,7 +184,13 @@ MD027 & md003 - safe
       & md030
       & md031 - safe
       & md032 - safe
-MD030 & md007
+MD029 - none
+MD030 & md007 - up
+MD035 - none
+MD037 - none
+MD039 - none
+MD047 - none
+MD048 - none
 
 possible -> MD005, Md007
 possible -> MD019/MD021, MD023

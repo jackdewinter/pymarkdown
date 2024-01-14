@@ -33,6 +33,7 @@ class pluginRuleTest:
     source_file_name: Optional[str] = None
     source_file_contents: Optional[str] = None
     set_args: Optional[List[str]] = None
+    use_debug: bool = False
     use_strict_config: bool = False
     use_fix_debug: bool = False
     disable_rules: str = ""
@@ -85,6 +86,8 @@ def build_arguments(
             )
 
         supplied_arguments = []
+        if test.use_debug:
+            supplied_arguments.append("--stack-trace")
         if test.add_plugin_path:
             supplied_arguments.extend(("--add-plugin", test.add_plugin_path))
         if test.use_strict_config:
@@ -178,10 +181,6 @@ def execute_fix_test(test: pluginRuleTest):
             expected_output, expected_error, expected_return_code
         )
         assert_file_is_as_expected(temp_source_path, expected_file_contents)
-
-
-def execute_clash_test(test: pluginRuleTest):
-    pass
 
 
 def execute_configuration_test(test: pluginConfigErrorTest, file_to_use: str):

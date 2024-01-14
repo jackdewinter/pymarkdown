@@ -225,7 +225,7 @@ def test_md020_bad_missing_start_spacing_in_block_quotes():
     )
     supplied_arguments = [
         "--disable-rules",
-        "md009",
+        "md009,md027",
         "scan",
         source_path,
     ]
@@ -483,7 +483,7 @@ def test_md020_bad_missing_both_spacing_in_block_quotes():
     )
     supplied_arguments = [
         "--disable-rules",
-        "md009",
+        "md009,md027",
         "scan",
         source_path,
     ]

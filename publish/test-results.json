@@ -1140,7 +1140,7 @@
         },
         {
             "name": "test.rules.test_md005",
-            "totalTests": 106,
+            "totalTests": 80,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 2,
@@ -1220,7 +1220,7 @@
         },
         {
             "name": "test.rules.test_md019",
-            "totalTests": 9,
+            "totalTests": 11,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1284,7 +1284,7 @@
         },
         {
             "name": "test.rules.test_md027",
-            "totalTests": 88,
+            "totalTests": 94,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1340,7 +1340,7 @@
         },
         {
             "name": "test.rules.test_md030_unordered",
-            "totalTests": 34,
+            "totalTests": 36,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1613,6 +1613,14 @@
         {
             "name": "test.tokens.test_atx_heading_markdown_token",
             "totalTests": 5,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.tokens.test_block_quote_markdown_token",
+            "totalTests": 1,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,

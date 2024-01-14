@@ -36,6 +36,7 @@ class BadFixTokenUnsupported(RulePlugin):
             plugin_description="Plugin that.",
             plugin_version="0.0.0",
             plugin_supports_fix=True,
+            plugin_fix_level=0,
         )
 
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
