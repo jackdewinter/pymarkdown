@@ -16,6 +16,7 @@ import pytest
 source_path = os.path.join("test", "resources", "rules", "md009") + os.sep
 
 __plugin_disable_md012 = "md012"
+__plugin_disable_md023 = "md023"
 __plugin_disable_md033 = "md033"
 
 configTests = [
@@ -320,6 +321,47 @@ block
         fix_expected_file_contents="""
 \a\a
 \a\a
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "mix_md009_md023",
+        source_file_contents="""  ## Heading 2\a\a\a
+
+Some more text
+""".replace(
+            "\a", " "
+        ),
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+{temp_source_path}:1:15: MD009: Trailing spaces [Expected: 0 or 2; Actual: 3] (no-trailing-spaces)
+""",
+        fix_expected_file_contents="""## Heading 2\a\a
+
+Some more text
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "mix_md009_md027",
+        disable_rules=__plugin_disable_md023,
+        source_file_contents=""">  # Header 1\a
+>
+>  ## Header 2\a\a\a
+""".replace(
+            "\a", " "
+        ),
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+{temp_source_path}:1:14: MD009: Trailing spaces [Expected: 0 or 2; Actual: 1] (no-trailing-spaces)
+{temp_source_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+{temp_source_path}:3:15: MD009: Trailing spaces [Expected: 0 or 2; Actual: 3] (no-trailing-spaces)
+""",
+        fix_expected_file_contents="""> # Header 1
+>
+> ## Header 2\a\a
 """.replace(
             "\a", " "
         ),

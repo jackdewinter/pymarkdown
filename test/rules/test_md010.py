@@ -15,6 +15,7 @@ import pytest
 
 source_path = os.path.join("test", "resources", "rules", "md010") + os.sep
 
+__plugin_disable_md022 = "md022"
 __plugin_disable_md030 = "md030"
 __plugin_disable_md031_md040 = "md031,md040"
 __plugin_disable_md047 = "MD047"
@@ -480,6 +481,67 @@ code	block
     ```text def
     this contains   a tab
     ```
+""",
+    ),
+    pluginRuleTest(
+        "mix_md010_md019",
+        source_file_contents="""#  Heading 1
+
+a line of text\twith\ttabs
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)
+{temp_source_path}:3:15: MD010: Hard tabs [Column: 15] (no-hard-tabs)
+{temp_source_path}:3:21: MD010: Hard tabs [Column: 21] (no-hard-tabs)
+""",
+        fix_expected_file_contents="""# Heading 1
+
+a line of text  with    tabs
+""",
+    ),
+    pluginRuleTest(
+        "mix_md010_md021",
+        source_file_contents="""#  Heading\t1  #
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:1: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)
+{temp_source_path}:1:11: MD010: Hard tabs [Column: 11] (no-hard-tabs)
+""",
+        fix_expected_file_contents="""# Heading  1 #
+""",
+    ),
+    pluginRuleTest(
+        "mix_md010_md030",
+        source_file_contents="""*  # list item\t1
+*  ## list\titem 2
+
+   paragraph
+*  ## list\titem 3
+""",
+        disable_rules=__plugin_disable_md022,
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:1: MD030: Spaces after list markers [Expected: 1; Actual: 2] (list-marker-space)
+{temp_source_path}:1:15: MD010: Hard tabs [Column: 15] (no-hard-tabs)
+{temp_source_path}:2:1: MD030: Spaces after list markers [Expected: 1; Actual: 2] (list-marker-space)
+{temp_source_path}:2:11: MD010: Hard tabs [Column: 11] (no-hard-tabs)
+{temp_source_path}:5:1: MD030: Spaces after list markers [Expected: 1; Actual: 2] (list-marker-space)
+{temp_source_path}:5:11: MD010: Hard tabs [Column: 11] (no-hard-tabs)
+""",
+        fix_expected_file_contents="""* # list item  1
+* ## list  item 2
+
+  paragraph
+* ## list  item 3
+""",
+    ),
+    pluginRuleTest(
+        "mix_md010_md047",
+        source_file_contents="""item\t1""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:5: MD010: Hard tabs [Column: 5] (no-hard-tabs)
+{temp_source_path}:1:6: MD047: Each file should end with a single newline character. (single-trailing-newline)
+""",
+        fix_expected_file_contents="""item    1
 """,
     ),
 ]

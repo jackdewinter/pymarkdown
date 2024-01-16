@@ -86,7 +86,34 @@ scanTests = [
 """,
     ),
     pluginRuleTest(
-        "xxx",
+        "mix_md019_md010",
+        source_file_contents="""#  Heading 1
+
+a line of text\twith\ttabs
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)
+{temp_source_path}:3:15: MD010: Hard tabs [Column: 15] (no-hard-tabs)
+{temp_source_path}:3:21: MD010: Hard tabs [Column: 21] (no-hard-tabs)
+""",
+        fix_expected_file_contents="""# Heading 1
+
+a line of text  with    tabs
+""",
+    ),
+    pluginRuleTest(
+        "mix_md019_md023",
+        source_file_contents="""  #  Heading 1
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:3: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)
+{temp_source_path}:1:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""# Heading 1
+""",
+    ),
+    pluginRuleTest(
+        "mix_md019_md047",
         source_file_contents="""#  Heading 1
 
 a line of text""",

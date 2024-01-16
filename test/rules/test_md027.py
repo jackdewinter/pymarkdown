@@ -26,6 +26,7 @@ __plugin_disable_md009_md028 = "md009,md028"
 __plugin_disable_md012 = "md012"
 __plugin_disable_md022 = "MD022"
 __plugin_disable_md022_md023 = "md022,md023"
+__plugin_disable_md023 = "md023"
 __plugin_disable_md028 = "md028"
 __plugin_disable_md031 = "md031"
 __plugin_disable_md031_md032 = "md031,md032"
@@ -613,6 +614,93 @@ scanTests = [
     pluginRuleTest(
         "issue_189_mini",
         source_file_name=f"{source_path}issue-189-mini.md",
+    ),
+    pluginRuleTest(
+        "mix_md027_md007",
+        source_file_contents=""">  + first
+>     + second
+>       + third
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+{temp_source_path}:1:4: MD007: Unordered list indentation [Expected: 0, Actual=1] (ul-indent)
+{temp_source_path}:2:7: MD007: Unordered list indentation [Expected: 2, Actual=4] (ul-indent)
+{temp_source_path}:3:9: MD007: Unordered list indentation [Expected: 4, Actual=6] (ul-indent)
+""",
+        fix_expected_file_contents="""> + first
+>    + second
+>       + third
+""",
+    ),
+    pluginRuleTest(
+        "mix_md027_md009",
+        disable_rules=__plugin_disable_md023,
+        source_file_contents=""">  # Header 1\a
+>
+>  ## Header 2\a\a\a
+""".replace(
+            "\a", " "
+        ),
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+{temp_source_path}:1:14: MD009: Trailing spaces [Expected: 0 or 2; Actual: 1] (no-trailing-spaces)
+{temp_source_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+{temp_source_path}:3:15: MD009: Trailing spaces [Expected: 0 or 2; Actual: 3] (no-trailing-spaces)
+""",
+        fix_expected_file_contents="""> # Header 1
+>
+> ## Header 2\a\a
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "mix_md027_md023",
+        source_file_contents=""">  # Heading 1
+>
+>  ## Heading 2
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+{temp_source_path}:1:4: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+{temp_source_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+{temp_source_path}:3:4: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""> # Heading 1
+>
+> ## Heading 2
+""",
+    ),
+    pluginRuleTest(
+        "mix_md027_md030",
+        source_file_contents=""">  *  Heading 1
+>  *  Heading 2
+""",
+        disable_rules=__plugin_disable_md007,
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+{temp_source_path}:1:4: MD030: Spaces after list markers [Expected: 1; Actual: 2] (list-marker-space)
+{temp_source_path}:2:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+{temp_source_path}:2:4: MD030: Spaces after list markers [Expected: 1; Actual: 2] (list-marker-space)
+""",
+        fix_expected_file_contents="""> * Heading 1
+> * Heading 2
+""",
+    ),
+    pluginRuleTest(
+        "mix_md027_md005",
+        source_file_contents=""">  * Heading 1
+>   * Heading 2
+""",
+        disable_rules=__plugin_disable_md007,
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+{temp_source_path}:2:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+{temp_source_path}:2:5: MD005: Inconsistent indentation for list items at the same level [Expected: 3; Actual: 4] (list-indent)
+""",
+        fix_expected_file_contents="""> * Heading 1
+> * Heading 2
+""",
     ),
 ]
 fixTests = []

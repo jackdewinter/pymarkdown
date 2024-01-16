@@ -111,6 +111,29 @@ The line after this line is blank, but contains two spaces.
         fix_expected_error="""BadPluginError encountered while scanning '{temp_source_path}':
 Plugin id 'MDE003' had a critical failure during the 'completed_file' action.""",
     ),
+    pluginRuleTest(
+        "mix_md047_md010",
+        source_file_contents="""item\t1""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:5: MD010: Hard tabs [Column: 5] (no-hard-tabs)
+{temp_source_path}:1:6: MD047: Each file should end with a single newline character. (single-trailing-newline)
+""",
+        fix_expected_file_contents="""item    1
+""",
+    ),
+    pluginRuleTest(
+        "mix_md047_md019",
+        source_file_contents="""#  Heading 1
+
+a line of text""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)
+{temp_source_path}:3:14: MD047: Each file should end with a single newline character. (single-trailing-newline)""",
+        fix_expected_file_contents="""# Heading 1
+
+a line of text
+""",
+    ),
 ]
 fixTests = []
 for i in scanTests:

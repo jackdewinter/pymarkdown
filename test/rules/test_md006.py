@@ -184,6 +184,33 @@ scanTests = [
         enable_rules=plugin_enable_this_rule,
         disable_rules=__plugin_disable_md004,
     ),
+    pluginRuleTest(
+        "mix_md006_md004",
+        is_mix_test=True,
+        enable_rules="MD006",
+        disable_rules="MD007",
+        source_file_contents=""" + first
+   * second
+     - third
+ * first
+   - second
+     + third
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:2: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)
+{temp_source_path}:2:4: MD004: Inconsistent Unordered List Start style [Expected: plus; Actual: asterisk] (ul-style)
+{temp_source_path}:3:6: MD004: Inconsistent Unordered List Start style [Expected: plus; Actual: dash] (ul-style)
+{temp_source_path}:4:2: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)
+{temp_source_path}:5:4: MD004: Inconsistent Unordered List Start style [Expected: plus; Actual: dash] (ul-style)
+""",
+        fix_expected_file_contents="""+ first
+   + second
+     + third
++ first
+   + second
+     + third
+""",
+    ),
 ]
 
 fixTests = []

@@ -122,6 +122,17 @@ scanTests = [
 ## Heading 2 ##
 """,
     ),
+    pluginRuleTest(
+        "mix_md021_md010",
+        source_file_contents="""#  Heading\t1  #
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:1: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)
+{temp_source_path}:1:11: MD010: Hard tabs [Column: 11] (no-hard-tabs)
+""",
+        fix_expected_file_contents="""# Heading  1 #
+""",
+    ),
 ]
 
 fixTests = []

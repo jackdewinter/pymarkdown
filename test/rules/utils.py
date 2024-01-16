@@ -46,6 +46,7 @@ class pluginRuleTest:
     fix_expected_output: Optional[str] = None
     fix_expected_error: str = ""
     add_plugin_path: str = ""
+    is_mix_test: bool = True
 
 
 def id_test_plug_rule_fn(val: Any) -> str:
@@ -129,7 +130,7 @@ def execute_scan_test(test: pluginRuleTest, host_rule_id: str):
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-    if test.disable_rules:
+    if test.disable_rules and not test.is_mix_test:
         with build_arguments(test, False, skip_disabled_rules=True) as (
             temp_source_path,
             supplied_arguments,

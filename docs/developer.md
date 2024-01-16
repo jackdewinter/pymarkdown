@@ -138,59 +138,72 @@ report_next_line_error
 
 completed_file
 
-MD001 & md003 - safe
-MD004 & md006 - from below    (disabled by default)
-      & md032 - safe          04-list start char, 32-blank lines
-MD005 & md007
-        md023 - from below
-        md027
-        md029
-        md030
-        md033 - safe
-MD006 & md004 - up            (disabled by default)
-        md007                 (disabled by default)
-        md027                 (disabled by default)
-Md007 & md005  - up
-        md027
-        md030
-md009 & md012 - safe
-        md023 - from below
-        md027 - from below
-        md033 - safe
-MD010 & md019 - from below
-      & md021 - from below
-      & md030
+## Fix Conflict Checks
+
+MD001 & md003 - Md003 is not fixable
+MD004 & md006 - `mix_md004_md006` - duplicate of inverse - disabled by default
+      & md007 - `mix_md004_md007` - check
+      & md032 - `mix_md004_md032` - future
+MD005 & md007 `mix_md005_md007`
+      & md023 - from below
+      & md027 - `mix_md005_md007`
+      & md029 - `mix_md005_md029`
+      & md030 - `mix_md005_md030`
+      & md033 - safe
+MD007 & md004 - `mix_md007_md004`
+      & md005 - `mix_md007_md005`
+      & md027 - `mix_md007_md027`
+      & md030 - `mix_md007_md030`
+md009 & md012 - future
+      & md023 - `mix_md009_md023` - check -> 009, 0027, 023
+      & md027 - `mix_md009_md027` - duplicate of inverse
+      & md033 - future
+MD010 & md019 - `mix_md010_md019` - duplicate of inverse
+      & md021 - `mix_md010_md021` - duplicate of inverse
+      & md022 - safe
+      & md030 - `mix_md010_md030`
       & md031 - safe
       & md040 - safe
-      & md047
-MD019 & md010 - up
-      & md023
-MD021 & md010 - up
+      & md047 - `mix_md010_md047`
+MD019 & md010 - `mix_md019_md010` - duplicate of inverse
+      & md023 - `mix_md019_md023` - check
+      & md047 - `mix_md019_md047` - double check, not required
+MD021 & md010 - `mix_md021_md010` - check
 MD023 & md005 - up
-      & md009 - up
+      & md009 - `mix_md023_md009` - duplicate of inverse
+      & md019 - `mix_md023_md019` - duplicate of inverse
       & md022 - safe
-      & md027
-      & md030
+      & md027 - `mix_md023_md027`
+      & md030 - `mix_md023_md030`
       & md032 - safe
 MD027 & md003 - safe
-      & md005
-      & md007
-      & md009 - up
+      & md005 - `mix_md027_md005`
+      & md007 - `mix_md027_md007` - check
+      & md009 - `mix_md027_md009`
       & md012 - safe
       & md013 - safe
       & md022 - safe
-      & md023
+      & md023 - `mix_md027_md023`
       & md028 - safe
-      & md030
+      & md030 - `mix_md027_md030`
       & md031 - safe
       & md032 - safe
-MD029 - none
-MD030 & md007 - up
+MD029 & md030 - `mix_md029_md005`
+MD030 & md005 - `mix_md030_md005`
+      & md007 - `mix_md030_md007` - check
+      & md010 - `mix_md030_md010`
+      & md027 - `mix_md030_md027`
+      & md030 - `mix_md030_md023`
 MD035 - none
 MD037 - none
 MD039 - none
-MD047 - none
+MD047 & md010 - `mix_md047_md010` - double check
+      & md019 - `mix_md047_md019` - double check
 MD048 - none
+
+MD006 & md004 - `mix_md006_md004` up            (disabled by default)
+        md007                 (disabled by default)
+        md027                 (disabled by default)
 
 possible -> MD005, Md007
 possible -> MD019/MD021, MD023

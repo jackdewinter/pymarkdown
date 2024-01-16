@@ -20,6 +20,9 @@ set_style_dash = "plugins.md004.style=dash"
 set_style_plus = "plugins.md004.style=plus"
 set_style_sublist = "plugins.md004.style=sublist"
 
+__plugin_enable_md006 = "MD006"
+
+__plugin_disable_md007 = "MD007"
 __plugin_disable_md032 = "md032"
 
 configTests = [
@@ -274,6 +277,87 @@ this is a separator
 
 + item 2
   - item 2a
+""",
+    ),
+    pluginRuleTest(
+        "mix_md004_md006",
+        is_mix_test=True,
+        use_debug=True,
+        enable_rules=__plugin_enable_md006,
+        disable_rules=__plugin_disable_md007,
+        source_file_contents=""" + first
+   * second
+     - third
+ * first
+   - second
+     + third
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:2: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)
+{temp_source_path}:2:4: MD004: Inconsistent Unordered List Start style [Expected: plus; Actual: asterisk] (ul-style)
+{temp_source_path}:3:6: MD004: Inconsistent Unordered List Start style [Expected: plus; Actual: dash] (ul-style)
+{temp_source_path}:4:2: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)
+{temp_source_path}:5:4: MD004: Inconsistent Unordered List Start style [Expected: plus; Actual: dash] (ul-style)
+""",
+        fix_expected_file_contents="""+ first
+   + second
+     + third
++ first
+   + second
+     + third
+""",
+    ),
+    pluginRuleTest(
+        "mix_md004_md007",
+        source_file_contents=""" + first
+   * second
+     - third
+ * first
+   - second
+     + third
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:2: MD007: Unordered list indentation [Expected: 0, Actual=1] (ul-indent)
+{temp_source_path}:2:4: MD004: Inconsistent Unordered List Start style [Expected: plus; Actual: asterisk] (ul-style)
+{temp_source_path}:2:4: MD007: Unordered list indentation [Expected: 2, Actual=3] (ul-indent)
+{temp_source_path}:3:6: MD004: Inconsistent Unordered List Start style [Expected: plus; Actual: dash] (ul-style)
+{temp_source_path}:3:6: MD007: Unordered list indentation [Expected: 4, Actual=5] (ul-indent)
+{temp_source_path}:4:2: MD007: Unordered list indentation [Expected: 0, Actual=1] (ul-indent)
+{temp_source_path}:5:4: MD004: Inconsistent Unordered List Start style [Expected: plus; Actual: dash] (ul-style)
+{temp_source_path}:5:4: MD007: Unordered list indentation [Expected: 2, Actual=3] (ul-indent)
+{temp_source_path}:6:6: MD007: Unordered list indentation [Expected: 4, Actual=5] (ul-indent)
+""",
+        fix_expected_file_contents="""+ first
+   + second
+     + third
++ first
+   + second
+     + third
+""",
+    ),
+    pluginRuleTest(
+        "mix_md004_md032",
+        source_file_contents="""+ first
+  * second
+    - third
+* first
+  - second
+    + third
+-----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:2:3: MD004: Inconsistent Unordered List Start style [Expected: plus; Actual: asterisk] (ul-style)
+{temp_source_path}:3:5: MD004: Inconsistent Unordered List Start style [Expected: plus; Actual: dash] (ul-style)
+{temp_source_path}:5:3: MD004: Inconsistent Unordered List Start style [Expected: plus; Actual: dash] (ul-style)
+{temp_source_path}:6:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
+""",
+        fix_expected_file_contents="""+ first
+  + second
+    + third
++ first
+  + second
+    + third
+-----
 """,
     ),
 ]

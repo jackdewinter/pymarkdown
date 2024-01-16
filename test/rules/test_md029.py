@@ -17,6 +17,7 @@ import pytest
 
 source_path = os.path.join("test", "resources", "rules", "md029") + os.sep
 
+__plugin_disable_md007 = "md007"
 
 configTests = [
     pluginConfigErrorTest(
@@ -553,6 +554,26 @@ text to break up lists
         source_file_name=f"{source_path}good_zero_list.md",
         use_strict_config=True,
         set_args=["plugins.md029.style=zero"],
+    ),
+    pluginRuleTest(
+        "mix_md005_md029",
+        source_file_contents="""1. Heading 1
+ 9. Heading 2
+    1. Heading 2
+     9. Heading 2
+""",
+        disable_rules=__plugin_disable_md007,
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:2:2: MD005: Inconsistent indentation for list items at the same level [Expected: 0; Actual: 1] (list-indent)
+{temp_source_path}:2:2: MD029: Ordered list item prefix [Expected: 2; Actual: 9; Style: 1/2/3] (ol-prefix)
+{temp_source_path}:4:6: MD005: Inconsistent indentation for list items at the same level [Expected: 4; Actual: 5] (list-indent)
+{temp_source_path}:4:6: MD029: Ordered list item prefix [Expected: 2; Actual: 9; Style: 1/2/3] (ol-prefix)
+""",
+        fix_expected_file_contents="""1. Heading 1
+2. Heading 2
+    1. Heading 2
+    2. Heading 2
+""",
     ),
 ]
 fixTests = []

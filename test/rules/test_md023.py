@@ -336,6 +336,76 @@ Long Heading
         enable_rules=plugin_enable_this_rule,
         disable_rules=__plugin_disable_md009,
     ),
+    pluginRuleTest(
+        "mix_md023_md009",
+        source_file_contents="""  ## Heading 2\a\a\a
+
+Some more text
+""".replace(
+            "\a", " "
+        ),
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+{temp_source_path}:1:15: MD009: Trailing spaces [Expected: 0 or 2; Actual: 3] (no-trailing-spaces)
+""",
+        fix_expected_file_contents="""## Heading 2\a\a
+
+Some more text
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "mix_md023_md019",
+        source_file_contents="""  #  Heading 1
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:3: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)
+{temp_source_path}:1:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""# Heading 1
+""",
+    ),
+    pluginRuleTest(
+        "mix_md023_md030",
+        source_file_contents=""" *  # Heading 1
+
+    *  ## Heading 2
+
+       *  ### Heading 3
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:2: MD007: Unordered list indentation [Expected: 0, Actual=1] (ul-indent)
+{temp_source_path}:1:2: MD030: Spaces after list markers [Expected: 1; Actual: 2] (list-marker-space)
+{temp_source_path}:3:5: MD007: Unordered list indentation [Expected: 2, Actual=4] (ul-indent)
+{temp_source_path}:3:5: MD030: Spaces after list markers [Expected: 1; Actual: 2] (list-marker-space)
+{temp_source_path}:5:8: MD007: Unordered list indentation [Expected: 4, Actual=7] (ul-indent)
+{temp_source_path}:5:8: MD030: Spaces after list markers [Expected: 1; Actual: 2] (list-marker-space)
+""",
+        fix_expected_file_contents="""* # Heading 1
+
+   * ## Heading 2
+
+      * ### Heading 3
+""",
+    ),
+    pluginRuleTest(
+        "mix_md023_md027",
+        source_file_contents=""">  # Heading 1
+>
+>  ## Heading 2
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+{temp_source_path}:1:4: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+{temp_source_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+{temp_source_path}:3:4: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""> # Heading 1
+>
+> ## Heading 2
+""",
+    ),
 ]
 
 fixTests = []

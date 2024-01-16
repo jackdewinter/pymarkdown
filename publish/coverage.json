@@ -3,11 +3,11 @@
     "reportSource": "pytest",
     "branchLevel": {
         "totalMeasured": 4761,
-        "totalCovered": 4760
+        "totalCovered": 4761
     },
     "lineLevel": {
         "totalMeasured": 19275,
-        "totalCovered": 19274
+        "totalCovered": 19275
     }
 }
 
