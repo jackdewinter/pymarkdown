@@ -43,9 +43,9 @@ The PyMarkdown project has the following advantages:
 - Extensible
   - The parser for the project adheres to the GFM specification and most of
     the rules for the parser leverage the tokens produced by that parser. The
-    [rules](/docs/rules.md) themselves are plugins, so they are extensible by default.
+    [rules](https://github.com/jackdewinter/pymarkdown/docs/rules.md) themselves are plugins, so they are extensible by default.
     The parser itself will be extended as needed to provide for other Markdown
-    [extensions](/docs/extensions.md) as needed.
+    [extensions](https://github.com/jackdewinter/pymarkdown/docs/extensions.md) as needed.
 - Versatile
   - The PyMarkdown linter can be executed from a script on the command line,
     from within another Python program, or using the popular Git Pre-Commit hooks.
@@ -60,7 +60,7 @@ please let us know.
 ## GitHub Pre Commit Hooks
 
 If you intend to use the PyMarkdown project as a linter for your GitHub Pre-Commit
-hooks, then refer to [this document](/docs/pre-commit.md) on how to set that up.
+hooks, then refer to [this document](https://github.com/jackdewinter/pymarkdown/docs/pre-commit.md) on how to set that up.
 Once configured, you can continue reading at the [How To Use section](#how-to-use)
 for more information on the options available for use in your Pre-Commit Hooks.
 
@@ -121,8 +121,9 @@ of the GitHub project.
 ### API Support
 
 While the vast majority of people using this application will use it
-through the command line, there is an auto-generated [API document](./docs/api.md)
-and [a companion document](./docs/api-usage.md) on how to use the API.  This
+through the command line, there is an auto-generated [API document](https://github.com/jackdewinter/pymarkdown/docs/api.md)
+and [a companion document](https://github.com/jackdewinter/pymarkdown/docs/api-usage.md)
+on how to use the API.  This
 support is very new, but introduced with lots of testing. If there are usability
 issues or something you feel is missing, please contact us.
 
@@ -158,9 +159,9 @@ examples/example-1.md:3:16: MD047: Each file should end with a single newline ch
 
 ### Rules
 
-The PyMarkdown project includes 42 out-of-the-box [rules](/docs/rules.md). These
+The PyMarkdown project includes 42 out-of-the-box [rules](https://github.com/jackdewinter/pymarkdown/docs/rules.md). These
 rules are implemented using a simple plugin system that is documented in the
-[developer documentation](/docs/developer.md).  It is these rules that allow the
+[developer documentation](https://github.com/jackdewinter/pymarkdown/docs/developer.md).  It is these rules that allow the
 PyMarkdown project to scan the various Markdown files, looking for bad patterns
 over that set of Markdown documents.
 
@@ -197,7 +198,7 @@ The format of the output for any rules that are triggered is as follows:
 
 For the rule violation that was reported at the start of this section, the first
 step in diagnosing that violation is to look at the file `/examples/example-1.md`
-at the end of line 3, which is column 16.  Rule [md047](/docs/rules/rule_md047.md)
+at the end of line 3, which is column 16.  Rule [md047](https://github.com/jackdewinter/pymarkdown/docs/rules/rule_md047.md)
 specifies that every file should end with a single newline character, which is
 what is reported in the violation's description.  Additionally, it reports that
 this rule can also be identified by the more human readable alias of
@@ -253,43 +254,43 @@ examples/example-1.md:3:16: MD047: Each file should end with a single newline ch
 
 Extensions are any features that are implemented in addition to the base
 [GitHub Flavored Markdown](https://github.github.com/gfm/) specification.
-These extensions are documented in the [extensions](/docs/extensions.md)
+These extensions are documented in the [extensions](https://github.com/jackdewinter/pymarkdown/docs/extensions.md)
 document, including information about how they perform, details on the
 extension, and configuration information.
 
 ### Advanced Scanning
 
 For more advanced scanning options, please consult the document
-on [Advanced Scanning](/docs/advanced_scanning.md).  This document includes information
+on [Advanced Scanning](https://github.com/jackdewinter/pymarkdown/docs/advanced_scanning.md).  This document includes information
 on:
 
-- [Command Line Globbing Support](/docs/advanced_scanning.md#glob-support)
-- [Recursing Directories](/docs/advanced_scanning.md#recursing-directories)
-- [Pragmas to Disable Rules Inline](/docs/advanced_scanning.md#pragmas)
+- [Command Line Globbing Support](https://github.com/jackdewinter/pymarkdown/docs/advanced_scanning.md#glob-support)
+- [Recursing Directories](https://github.com/jackdewinter/pymarkdown/docs/advanced_scanning.md#recursing-directories)
+- [Pragmas to Disable Rules Inline](https://github.com/jackdewinter/pymarkdown/docs/advanced_scanning.md#pragmas)
 
 ### Advanced Configuration
 
 For more advanced configuration options, please consult the document
-on [Advanced Configuration](/docs/advanced_configuration.md).  This
+on [Advanced Configuration](https://github.com/jackdewinter/pymarkdown/docs/advanced_configuration.md).  This
 document includes information on:
 
-- [Command Line Settings](/docs/advanced_configuration.md#general-command-line-settings)
-- [Configuration File Settings](/docs/advanced_configuration.md#command-line-configuration-file)
-- [Available Configuration Values](/docs/advanced_configuration.md#available-configuration-values)
-- [Return Code Behavior](/docs/advanced_configuration.md#changing-the-application-return-code-behavior)
+- [Command Line Settings](https://github.com/jackdewinter/pymarkdown/docs/advanced_configuration.md#general-command-line-settings)
+- [Configuration File Settings](https://github.com/jackdewinter/pymarkdown/docs/advanced_configuration.md#command-line-configuration-file)
+- [Available Configuration Values](https://github.com/jackdewinter/pymarkdown/docs/advanced_configuration.md#available-configuration-values)
+- [Return Code Behavior](https://github.com/jackdewinter/pymarkdown/docs/advanced_configuration.md#changing-the-application-return-code-behavior)
 
 ### Advanced Rule Plugins
 
 For more information of how to query information on the rule plugins
 that are currently loaded, please consult the document on
-[Advanced Rule Plugins](/docs/advanced_plugins.md).
+[Advanced Rule Plugins](https://github.com/jackdewinter/pymarkdown/docs/advanced_plugins.md).
 
 ## Open Issues and Future Plans
 
 During the development phase of this project, it was more useful to have
 an actual list of issues to track and prioritize, rather than relying on
 GitHub to do all the work. This is the location of the prioritized
-[Issues List](/issues.md).
+[Issues List](https://github.com/jackdewinter/pymarkdown/issues.md).
 
 If you find any issues, please report them using the standard GitHub
 issues process.  When our team looks at your issue and triages
@@ -299,12 +300,13 @@ on, what is up next, and what our plans are for further development.
 
 ## When Did Things Change?
 
-The changelog for this project is maintained [at this location](/changelog.md).
+The changelog for this project is maintained [at this location](https://github.com/jackdewinter/pymarkdown/changelog.md).
 
 ## Still Have Questions?
 
 If you still have questions, please consult our
-[Frequently Asked Questions](/docs/faq.md) document.
+[Frequently Asked Questions](https://github.com/jackdewinter/pymarkdown/docs/faq.md)
+document.
 
 ## Contact Information
 
@@ -324,11 +326,11 @@ substantial manner, please contact me at `jack.de.winter` at `outlook.com`.
 ## Instructions For Contributing
 
 Developer notes on various topics are kept in the the
-[Developer Notes](/docs/developer.md) document.
+[Developer Notes](https://github.com/jackdewinter/pymarkdown/docs/developer.md) document.
 
 If you attempting to contribute something to this project,
 please follow the steps outlined in the
-[CONTRIBUTING.md](/CONTRIBUTING.md)
+[CONTRIBUTING.md](https://github.com/jackdewinter/pymarkdown/CONTRIBUTING.md)
 file.
 
 ## Acknowledgements
