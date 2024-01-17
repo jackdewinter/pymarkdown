@@ -29,6 +29,7 @@ class FoundPlugin:
     plugin_url: Optional[str]
     plugin_configuration: Optional[str]
     plugin_supports_fix: bool
+    plugin_fix_level: int
     plugin_identifiers: List[str]
 
 

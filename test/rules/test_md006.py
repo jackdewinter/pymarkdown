@@ -2,854 +2,234 @@
 Module to provide tests related to the MD006 rule.
 """
 import os
-from test.markdown_scanner import MarkdownScanner
-from test.utils import assert_file_is_as_expected, copy_to_temp_file
+from test.rules.utils import (
+    execute_fix_test,
+    execute_scan_test,
+    id_test_plug_rule_fn,
+    pluginRuleTest,
+)
 
 import pytest
 
 source_path = os.path.join("test", "resources", "rules", "md006") + os.sep
 
+plugin_enable_this_rule = "MD006"
 
-@pytest.mark.rules
-def test_md006_good_indentation():
-    """
-    Test to make sure this rule does not trigger with a document that
-    is only level 1 lists with no indentation.
-    """
+__plugin_disable_md004 = "md004"
+__plugin_disable_md007 = "MD007"
+__plugin_disable_md005_md007 = "md005,MD007"
+__plugin_disable_md007_md027 = "MD007,md027"
 
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md006", "good_indentation.md"
-    )
-    supplied_arguments = [
-        "--enable-rules",
-        "MD006",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md006_good_indentation_in_block_quote():
-    """
-    Test to make sure this rule does not trigger with a document that
-    is only level 1 lists with no indentation, in a block quote.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md006", "good_indentation_in_block_quote.md"
-    )
-    supplied_arguments = [
-        "--enable-rules",
-        "MD006",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md006_bad_indentation_x():
-    """
-    Test to make sure this rule does trigger with a document that
-    is only level 1 lists with a single space of indentation.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md006", "bad_indentation.md"
-    )
-    supplied_arguments = [
-        "--enable-rules",
-        "MD006",
-        "--disable-rules",
-        "MD007",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 1
-    expected_output = (
-        f"{source_path}:1:2: MD006: "
-        + "Consider starting bulleted lists at the beginning of the line (ul-start-left)\n"
-        + f"{source_path}:2:2: MD006: "
-        + "Consider starting bulleted lists at the beginning of the line (ul-start-left)"
-    )
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md006_bad_indentation_x_fix():
-    """
-    Test to make sure this rule does trigger with a document that
-    is only level 1 lists with a single space of indentation.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    with copy_to_temp_file(source_path + "bad_indentation.md") as temp_source_path:
-        original_file_contents = """ * First Item
+scanTests = [
+    pluginRuleTest(
+        "good_indentation",
+        source_file_name=f"{source_path}good_indentation.md",
+        enable_rules=plugin_enable_this_rule,
+    ),
+    pluginRuleTest(
+        "good_indentation_in_block_quote",
+        source_file_name=f"{source_path}good_indentation_in_block_quote.md",
+        enable_rules=plugin_enable_this_rule,
+    ),
+    pluginRuleTest(
+        "bad_indentation_x",
+        source_file_name=f"{source_path}bad_indentation.md",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules=__plugin_disable_md007,
+        source_file_contents=""" * First Item
  * Second Item
-"""
-        assert_file_is_as_expected(temp_source_path, original_file_contents)
-
-        supplied_arguments = [
-            "--enable-rules",
-            "MD006",
-            "--disable-rules",
-            "MD007",
-            "-x-fix",
-            "scan",
-            temp_source_path,
-        ]
-
-        expected_return_code = 3
-        expected_output = f"Fixed: {temp_source_path}"
-        expected_error = ""
-
-        expected_file_contents = """* First Item
+""",
+        scan_expected_return_code=1,
+        scan_expected_output=(
+            "{temp_source_path}:1:2: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)\n"
+            + "{temp_source_path}:2:2: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)"
+        ),
+        fix_expected_file_contents="""* First Item
 * Second Item
-"""
-
-        # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-        # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
-        assert_file_is_as_expected(temp_source_path, expected_file_contents)
-
-
-@pytest.mark.rules
-def test_md006_good_indentation_unordered():
-    """
-    Test to make sure this rule does trigger with a document that
-    is only level 1 lists with a single space of indentation.
-
-    Note that this rule only applied to unordered lists, so this
-    should not generated any errors.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md006", "bad_indentation_unordered.md"
-    )
-    supplied_arguments = [
-        "--enable-rules",
-        "MD006",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md006_bad_indentation_in_block_quote():
-    """
-    Test to make sure this rule does trigger with a document that
-    is only level 1 lists with a single space of indentation, all
-    in a block quote.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md006", "bad_indentation_in_block_quote.md"
-    )
-    supplied_arguments = [
-        "--enable-rules",
-        "MD006",
-        "--disable-rules",
-        "MD007,md027",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 1
-    expected_output = (
-        f"{source_path}:1:4: MD006: "
-        + "Consider starting bulleted lists at the beginning of the line (ul-start-left)\n"
-        + f"{source_path}:2:4: MD006: "
-        + "Consider starting bulleted lists at the beginning of the line (ul-start-left)"
-    )
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md006_bad_indentation_in_block_quote_fix():
-    """
-    Test to make sure this rule does trigger with a document that
-    is only level 1 lists with a single space of indentation.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    with copy_to_temp_file(
-        source_path + "bad_indentation_in_block_quote.md"
-    ) as temp_source_path:
-        original_file_contents = """>  * First Item
+""",
+    ),
+    pluginRuleTest(
+        "good_indentation_unordered",
+        source_file_name=f"{source_path}bad_indentation_unordered.md",
+        enable_rules=plugin_enable_this_rule,
+    ),
+    pluginRuleTest(
+        "bad_indentation_in_block_quote",
+        source_file_name=f"{source_path}bad_indentation_in_block_quote.md",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules=__plugin_disable_md007_md027,
+        source_file_contents=""">  * First Item
 >  * Second Item
-"""
-        assert_file_is_as_expected(temp_source_path, original_file_contents)
-
-        supplied_arguments = [
-            "--enable-rules",
-            "MD006",
-            "--disable-rules",
-            "MD007,md027",
-            "-x-fix",
-            "scan",
-            temp_source_path,
-        ]
-
-        expected_return_code = 3
-        expected_output = f"Fixed: {temp_source_path}"
-        expected_error = ""
-
-        expected_file_contents = """> * First Item
+""",
+        scan_expected_return_code=1,
+        scan_expected_output=(
+            "{temp_source_path}:1:4: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)\n"
+            + "{temp_source_path}:2:4: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)"
+        ),
+        fix_expected_file_contents="""> * First Item
 > * Second Item
-"""
-
-        # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-        # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
-        assert_file_is_as_expected(temp_source_path, expected_file_contents)
-
-
-@pytest.mark.rules
-def test_md006_bad_ignore_bad_second_level():
-    """
-    Test to make sure this rule does not trigger with a document that
-    is nested lists with level 1 lists properly indented.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md006", "good_ignore_bad_second_level.md"
-    )
-    supplied_arguments = [
-        "--enable-rules",
-        "MD006",
-        "--disable-rules",
-        "MD005,Md007",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 1
-    expected_output = (
-        f"{source_path}:3:4: "
-        + "MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)\n"
-        + f"{source_path}:4:5: "
-        + "MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)"
-    )
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md006_bad_ignore_bad_second_level_fix():
-    """
-    Test to make sure this rule does trigger with a document that
-    is only level 1 lists with a single space of indentation.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    with copy_to_temp_file(
-        source_path + "good_ignore_bad_second_level.md"
-    ) as temp_source_path:
-        original_file_contents = """* First Item
+""",
+    ),
+    pluginRuleTest(
+        "bad_ignore_bad_second_level",
+        source_file_name=f"{source_path}good_ignore_bad_second_level.md",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules=__plugin_disable_md005_md007,
+        source_file_contents="""* First Item
   * First-First
    * First-Second
     * First-Third
 * Second Item
-"""
-        assert_file_is_as_expected(temp_source_path, original_file_contents)
-
-        supplied_arguments = [
-            "--enable-rules",
-            "MD006",
-            "--disable-rules",
-            "MD005,Md007",
-            "-x-fix",
-            "scan",
-            temp_source_path,
-        ]
-
-        expected_return_code = 3
-        expected_output = f"Fixed: {temp_source_path}"
-        expected_error = ""
-
-        expected_file_contents = """* First Item
+""",
+        scan_expected_return_code=1,
+        scan_expected_output=(
+            "{temp_source_path}:3:4: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)\n"
+            + "{temp_source_path}:4:5: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)"
+        ),
+        fix_expected_file_contents="""* First Item
   * First-First
   * First-Second
   * First-Third
 * Second Item
-"""
-
-        # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-        # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
-        assert_file_is_as_expected(temp_source_path, expected_file_contents)
-
-
-@pytest.mark.rules
-def test_md006_good_not_ordered():
-    """
-    Test to make sure this rule does not trigger with a document that
-    is ordered lists.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md006", "good_not_ordered.md"
-    )
-    supplied_arguments = [
-        "--enable-rules",
-        "MD006",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md006_good_items_with_multiple_lines():
-    """
-    Test to make sure this rule does not trigger with a document that
-    is contains list items with multiple lines.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md006", "good_items_with_multiple_lines.md"
-    )
-    supplied_arguments = [
-        "--enable-rules",
-        "MD006",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md006_good_items_with_multiple_lines_in_block_quote():
-    """
-    Test to make sure this rule does not trigger with a document that
-    is contains list items with multiple lines, in a block quote.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md006",
-        "good_items_with_multiple_lines_in_block_quote.md",
-    )
-    supplied_arguments = [
-        "--enable-rules",
-        "MD006",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md006_good_indentation_ordered_in_unordered():
-    """
-    TBD
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md006",
-        "good_indentation_ordered_in_unordered.md",
-    )
-    supplied_arguments = [
-        "--enable-rules",
-        "MD006",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md006_good_indentation_unordered_in_ordered():
-    """
-    TBD
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test",
-        "resources",
-        "rules",
-        "md006",
-        "good_indentation_unordered_in_ordered.md",
-    )
-    supplied_arguments = [
-        "--enable-rules",
-        "MD006",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md006_bad_indentation_ordered_in_unordered():
-    """
-    TBD
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md006", "bad_indentation_ordered_in_unordered.md"
-    )
-    supplied_arguments = [
-        "--disable-rules",
-        "MD007",
-        "--enable-rules",
-        "MD006",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 1
-    expected_output = (
-        f"{source_path}:1:2: "
-        + "MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)"
-    )
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md006_bad_indentation_ordered_in_unordered_fix():
-    """
-    Test to make sure this rule does trigger with a document that
-    is only level 1 lists with a single space of indentation.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    with copy_to_temp_file(
-        source_path + "bad_indentation_ordered_in_unordered.md"
-    ) as temp_source_path:
-        original_file_contents = """ * First Item
+""",
+    ),
+    pluginRuleTest(
+        "good_not_ordered",
+        source_file_name=f"{source_path}good_not_ordered.md",
+        enable_rules=plugin_enable_this_rule,
+    ),
+    pluginRuleTest(
+        "good_items_with_multiple_lines",
+        source_file_name=f"{source_path}good_items_with_multiple_lines.md",
+        enable_rules=plugin_enable_this_rule,
+    ),
+    pluginRuleTest(
+        "good_items_with_multiple_lines_in_block_quote",
+        source_file_name=f"{source_path}good_items_with_multiple_lines_in_block_quote.md",
+        enable_rules=plugin_enable_this_rule,
+    ),
+    pluginRuleTest(
+        "good_indentation_ordered_in_unordered",
+        source_file_name=f"{source_path}good_indentation_ordered_in_unordered.md",
+        enable_rules=plugin_enable_this_rule,
+    ),
+    pluginRuleTest(
+        "good_indentation_unordered_in_ordered",
+        source_file_name=f"{source_path}good_indentation_unordered_in_ordered.md",
+        enable_rules=plugin_enable_this_rule,
+    ),
+    pluginRuleTest(
+        "bad_indentation_ordered_in_unordered",
+        source_file_name=f"{source_path}bad_indentation_ordered_in_unordered.md",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules=__plugin_disable_md007,
+        source_file_contents=""" * First Item
    1. Second Item
-"""
-        assert_file_is_as_expected(temp_source_path, original_file_contents)
-
-        supplied_arguments = [
-            "--enable-rules",
-            "MD006",
-            "--disable-rules",
-            "MD007",
-            "-x-fix",
-            "scan",
-            temp_source_path,
-        ]
-
-        expected_return_code = 3
-        expected_output = f"Fixed: {temp_source_path}"
-        expected_error = ""
-
-        expected_file_contents = """* First Item
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="{temp_source_path}:1:2: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)",
+        fix_expected_file_contents="""* First Item
    1. Second Item
-"""
-
-        # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-        # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
-        assert_file_is_as_expected(temp_source_path, expected_file_contents)
-
-
-@pytest.mark.rules
-def test_md006_bad_indentation_unordered_in_ordered():
-    """
-    TBD
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md006", "bad_indentation_unordered_in_ordered.md"
-    )
-    supplied_arguments = [
-        "--disable-rules",
-        "MD007",
-        "--enable-rules",
-        "MD006",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 1
-    expected_output = (
-        f"{source_path}:2:6: "
-        + "MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)"
-    )
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md006_bad_indentation_unordered_in_ordered_fix():
-    """
-    Test to make sure this rule does trigger with a document that
-    is only level 1 lists with a single space of indentation.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    with copy_to_temp_file(
-        source_path + "bad_indentation_unordered_in_ordered.md"
-    ) as temp_source_path:
-        original_file_contents = """ 1. First Item
+""",
+    ),
+    pluginRuleTest(
+        "bad_indentation_unordered_in_ordered",
+        source_file_name=f"{source_path}bad_indentation_unordered_in_ordered.md",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules=__plugin_disable_md007,
+        source_file_contents=""" 1. First Item
      - Second Item
-"""
-        assert_file_is_as_expected(temp_source_path, original_file_contents)
-
-        supplied_arguments = [
-            "--enable-rules",
-            "MD006",
-            "--disable-rules",
-            "MD007",
-            "-x-fix",
-            "scan",
-            temp_source_path,
-        ]
-
-        expected_return_code = 3
-        expected_output = f"Fixed: {temp_source_path}"
-        expected_error = ""
-
-        expected_file_contents = """ 1. First Item
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="{temp_source_path}:2:6: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)",
+        fix_expected_file_contents=""" 1. First Item
     - Second Item
-"""
-
-        # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-        # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
-        assert_file_is_as_expected(temp_source_path, expected_file_contents)
-
-
-@pytest.mark.rules
-def test_md006_good_indentation_nested():
-    """
-    TBD
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md006", "good_indentation_nested.md"
-    )
-    supplied_arguments = [
-        "--enable-rules",
-        "MD006",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md006_bad_indentation_nested():
-    """
-    TBD
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md006", "bad_indentation_nested.md"
-    )
-    supplied_arguments = [
-        "--disable-rules",
-        "MD007",
-        "--enable-rules",
-        "MD006",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 1
-    expected_output = (
-        f"{source_path}:2:4: "
-        + "MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)\n"
-        + f"{source_path}:3:4: "
-        + "MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)\n"
-        + f"{source_path}:5:4: "
-        + "MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)\n"
-        + f"{source_path}:6:4: "
-        + "MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)"
-    )
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md006_bad_indentation_nested_fix():
-    """
-    Test to make sure this rule does trigger with a document that
-    is only level 1 lists with a single space of indentation.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    with copy_to_temp_file(
-        source_path + "bad_indentation_nested.md"
-    ) as temp_source_path:
-        original_file_contents = """- top level 1
+""",
+    ),
+    pluginRuleTest(
+        "good_indentation_nested",
+        source_file_name=f"{source_path}good_indentation_nested.md",
+        enable_rules=plugin_enable_this_rule,
+    ),
+    pluginRuleTest(
+        "bad_indentation_nested",
+        source_file_name=f"{source_path}bad_indentation_nested.md",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules=__plugin_disable_md007,
+        source_file_contents="""- top level 1
    - First Item
    - Second Item
 - top level 2
    - First Item
    - Second Item
-"""
-        assert_file_is_as_expected(temp_source_path, original_file_contents)
-
-        supplied_arguments = [
-            "--enable-rules",
-            "MD006",
-            "--disable-rules",
-            "MD007",
-            "-x-fix",
-            "scan",
-            temp_source_path,
-        ]
-
-        expected_return_code = 3
-        expected_output = f"Fixed: {temp_source_path}"
-        expected_error = ""
-
-        expected_file_contents = """- top level 1
+""",
+        scan_expected_return_code=1,
+        scan_expected_output=(
+            "{temp_source_path}:2:4: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)\n"
+            + "{temp_source_path}:3:4: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)\n"
+            + "{temp_source_path}:5:4: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)\n"
+            + "{temp_source_path}:6:4: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)"
+        ),
+        fix_expected_file_contents="""- top level 1
   - First Item
   - Second Item
 - top level 2
   - First Item
   - Second Item
-"""
+""",
+    ),
+    pluginRuleTest(
+        "issue_478",
+        source_file_name=f"{source_path}issue_478.md",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules=__plugin_disable_md004,
+    ),
+    pluginRuleTest(
+        "mix_md006_md004",
+        is_mix_test=True,
+        enable_rules="MD006",
+        disable_rules="MD007",
+        source_file_contents=""" + first
+   * second
+     - third
+ * first
+   - second
+     + third
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:2: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)
+{temp_source_path}:2:4: MD004: Inconsistent Unordered List Start style [Expected: plus; Actual: asterisk] (ul-style)
+{temp_source_path}:3:6: MD004: Inconsistent Unordered List Start style [Expected: plus; Actual: dash] (ul-style)
+{temp_source_path}:4:2: MD006: Consider starting bulleted lists at the beginning of the line (ul-start-left)
+{temp_source_path}:5:4: MD004: Inconsistent Unordered List Start style [Expected: plus; Actual: dash] (ul-style)
+""",
+        fix_expected_file_contents="""+ first
+   + second
+     + third
++ first
+   + second
+     + third
+""",
+    ),
+]
 
-        # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-        # Assert
-        execute_results.assert_results(
-            expected_output, expected_error, expected_return_code
-        )
-        assert_file_is_as_expected(temp_source_path, expected_file_contents)
+fixTests = []
+for i in scanTests:
+    if i.fix_expected_file_contents:
+        fixTests.append(i)
 
 
-@pytest.mark.rules
-def test_md006_issue_478():
+@pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
+def test_md006_scan(test: pluginRuleTest) -> None:
     """
-    TBD
+    Execute a parameterized scan test for plugin md001.
     """
+    execute_scan_test(test, "md006")
 
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join("test", "resources", "rules", "md006", "issue_478.md")
-    supplied_arguments = [
-        "--enable-rules",
-        "MD006",
-        "--disable-rules",
-        "md004,MD007",
-        "scan",
-        source_path,
-    ]
 
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+@pytest.mark.parametrize("test", fixTests, ids=id_test_plug_rule_fn)
+def test_md006_fix(test: pluginRuleTest) -> None:
+    """
+    Execute a parameterized fix test for plugin md001.
+    """
+    execute_fix_test(test)

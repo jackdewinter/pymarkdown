@@ -39,6 +39,7 @@ class RuleMd010(RulePlugin):
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md010.md",
             plugin_configuration="code_blocks",
             plugin_supports_fix=True,
+            plugin_fix_level=0,
         )
 
     def initialize_from_config(self) -> None:

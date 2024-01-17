@@ -15,6 +15,8 @@ Trailing spaces.
 
 ## Reasoning
 
+### Simplicity
+
 The primary reason for enabling this rule is simplicity.  Two spaces at
 the end of a line within a paragraph produces a Hard Line Break element.
 Other than that, there is no other reason for trailing spaces on any line

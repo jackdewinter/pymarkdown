@@ -100,6 +100,7 @@ class RuleMd005(RulePlugin):
             plugin_version="0.5.0",
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md005.md",
             plugin_supports_fix=True,
+            plugin_fix_level=2,
         )
 
     def starting_new_file(self) -> None:

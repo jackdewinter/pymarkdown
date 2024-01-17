@@ -27,6 +27,7 @@ class RuleMd047(RulePlugin):
             plugin_version="0.5.0",
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md047.md",
             plugin_supports_fix=True,
+            plugin_fix_level=0,
         )
 
     def starting_new_file(self) -> None:

@@ -5,6 +5,10 @@
 | `md030` |
 | `list-marker-space` |
 
+| Autofix Available |
+| --- |
+| Yes |
+
 ## Summary
 
 Spaces after list markers.
@@ -81,3 +85,9 @@ to trigger this rule:
 
 This rule is largely inspired by the MarkdownLint rule
 [MD030](https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md#md030---spaces-after-list-markers).
+
+## Fix Description
+
+When fixed, the number of spaces between a list start and the following text are
+set to the configured spacing.  By default, this means ordered and unordered list
+start sequences will be set to have 1 space before the text.

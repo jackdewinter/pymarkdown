@@ -3,7 +3,9 @@
 ## Unversioned - In Main, Not Released
 
 This release is going to focus on getting the feature list complete
-for a version 1.0 release in early 2024.
+for a version 1.0 release in early 2024.  To a large extent, this
+involves adding the "fix" feature for some rules, and double checking
+the output of many of the existing rules, looking for missing issues.
 
 ### Added
 
@@ -46,8 +48,12 @@ for a version 1.0 release in early 2024.
 
 ### Changed
 
+- [Issue 806](https://github.com/jackdewinter/pymarkdown/issues/806)
+  - Documentation updated to denote fixes.
 - [Issue 812](https://github.com/jackdewinter/pymarkdown/issues/812)
   - Rule MD014 - Changed documentation to describe why not autofix
+- [Issue 827](https://github.com/jackdewinter/pymarkdown/issues/827)
+  - Finished research on which rules are fixable and sorted.
 - [Issue 901](https://github.com/jackdewinter/pymarkdown/issues/901)
   - noticed cases where `len(x)` was being used instead of `x` or `not x`
 - [Issue 913](https://github.com/jackdewinter/pymarkdown/issues/913)
@@ -65,6 +71,13 @@ for a version 1.0 release in early 2024.
 ### Fixed
 
 - None
+
+### Completed
+
+- [Issue 827](https://github.com/jackdewinter/pymarkdown/issues/827)
+  - researched annotated each rule
+  - rules "in queue" have no annotation yet, ones that have fixes have docs
+    updated, ones that are not eligible have reason why
 
 ## Version 0.9.15 - Date: 2023-12-05
 

@@ -24,6 +24,7 @@ class BadUpdateLastLine(RulePlugin):
             plugin_description="Plugin that has always adds a newline.",
             plugin_version="0.0.0",
             plugin_supports_fix=True,
+            plugin_fix_level=0,
         )
 
     def completed_file(self, context: PluginScanContext) -> None:

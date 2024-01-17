@@ -3,7 +3,9 @@ Module to provide for an encapsulation of the block quote element.
 """
 
 import logging
-from typing import Dict, Optional
+from typing import Dict, Optional, Union
+
+from typing_extensions import override
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
@@ -219,3 +221,11 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
         )
         token_parts.extend(["</blockquote>", ParserHelper.newline_character])
         return "".join(token_parts)
+
+    @override
+    def _modify_token(self, field_name: str, field_value: Union[str, int]) -> bool:
+        if field_name == "bleading_spaces" and isinstance(field_value, str):
+            self.__leading_spaces = field_value
+            self.__compose_extra_data_field()
+            return True
+        return super()._modify_token(field_name, field_value)

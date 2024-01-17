@@ -1108,7 +1108,7 @@
         },
         {
             "name": "test.rules.test_md001",
-            "totalTests": 15,
+            "totalTests": 14,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1132,7 +1132,7 @@
         },
         {
             "name": "test.rules.test_md004",
-            "totalTests": 29,
+            "totalTests": 35,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1140,7 +1140,7 @@
         },
         {
             "name": "test.rules.test_md005",
-            "totalTests": 65,
+            "totalTests": 88,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 2,
@@ -1148,7 +1148,7 @@
         },
         {
             "name": "test.rules.test_md006",
-            "totalTests": 22,
+            "totalTests": 24,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1156,7 +1156,7 @@
         },
         {
             "name": "test.rules.test_md007",
-            "totalTests": 54,
+            "totalTests": 62,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1164,23 +1164,7 @@
         },
         {
             "name": "test.rules.test_md009",
-            "totalTests": 20,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.rules.test_md009_config",
-            "totalTests": 4,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.rules.test_md009_good",
-            "totalTests": 14,
+            "totalTests": 36,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1188,31 +1172,7 @@
         },
         {
             "name": "test.rules.test_md010",
-            "totalTests": 9,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.rules.test_md010_block_quote",
-            "totalTests": 4,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.rules.test_md010_ordered_list",
-            "totalTests": 10,
-            "failedTests": 0,
-            "errorTests": 0,
-            "skippedTests": 0,
-            "elapsedTimeInMilliseconds": 0
-        },
-        {
-            "name": "test.rules.test_md010_unordered_list",
-            "totalTests": 10,
+            "totalTests": 49,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1260,7 +1220,7 @@
         },
         {
             "name": "test.rules.test_md019",
-            "totalTests": 9,
+            "totalTests": 15,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1276,7 +1236,7 @@
         },
         {
             "name": "test.rules.test_md021",
-            "totalTests": 11,
+            "totalTests": 16,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1292,7 +1252,7 @@
         },
         {
             "name": "test.rules.test_md023",
-            "totalTests": 23,
+            "totalTests": 31,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1324,7 +1284,7 @@
         },
         {
             "name": "test.rules.test_md027",
-            "totalTests": 88,
+            "totalTests": 104,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1332,7 +1292,7 @@
         },
         {
             "name": "test.rules.test_md027_inline",
-            "totalTests": 44,
+            "totalTests": 47,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1340,7 +1300,7 @@
         },
         {
             "name": "test.rules.test_md027_leaf",
-            "totalTests": 48,
+            "totalTests": 49,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1364,7 +1324,7 @@
         },
         {
             "name": "test.rules.test_md029",
-            "totalTests": 55,
+            "totalTests": 66,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1380,7 +1340,7 @@
         },
         {
             "name": "test.rules.test_md030_unordered",
-            "totalTests": 33,
+            "totalTests": 46,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1420,7 +1380,7 @@
         },
         {
             "name": "test.rules.test_md035",
-            "totalTests": 27,
+            "totalTests": 28,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1436,7 +1396,7 @@
         },
         {
             "name": "test.rules.test_md037",
-            "totalTests": 21,
+            "totalTests": 23,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1516,7 +1476,7 @@
         },
         {
             "name": "test.rules.test_md047",
-            "totalTests": 9,
+            "totalTests": 13,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1524,7 +1484,7 @@
         },
         {
             "name": "test.rules.test_md048",
-            "totalTests": 14,
+            "totalTests": 16,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1653,6 +1613,14 @@
         {
             "name": "test.tokens.test_atx_heading_markdown_token",
             "totalTests": 5,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.tokens.test_block_quote_markdown_token",
+            "totalTests": 1,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
