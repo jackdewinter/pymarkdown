@@ -70,7 +70,8 @@ the output of many of the existing rules, looking for missing issues.
 
 ### Fixed
 
-- None
+- [Issue 929](https://github.com/jackdewinter/pymarkdown/issues/929)
+  - Improper links in README.md when viewed at PyPi.org.
 
 ### Completed
 
