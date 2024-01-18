@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "c0068f1f2e11d6ed76425b46a6e2d8cb6f7a6efa44a55b7531227e07956b40a5"
+            "sha256": "e9c91e66d3976675a2fe54ae4550b6517bd101dbd06668f7c9c64c85573250da"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -436,6 +436,7 @@
                 "sha256:ffdfce58ea94c6580c77888a86506937f9a1a227dfcd15f245d694ae20a6b6e5"
             ],
             "index": "pypi",
+            "markers": "python_full_version >= '3.8.1'",
             "version": "==6.1.0"
         },
         "flake8-bandit": {
@@ -448,11 +449,12 @@
         },
         "flake8-bugbear": {
             "hashes": [
-                "sha256:32b2903e22331ae04885dae25756a32a8c666c85142e933f43512a70f342052a",
-                "sha256:83324bad4d90fee4bf64dd69c61aff94debf8073fbd807c8b6a36eec7a2f0719"
+                "sha256:46cc840ddaed26507cd0ada530d1526418b717ee76c9b5dfdbd238b5eab34139",
+                "sha256:bcb388a4f3b516258749b1e690ee394c082eff742f44595e3754cf5c7781c2c7"
             ],
             "index": "pypi",
-            "version": "==23.12.2"
+            "markers": "python_full_version >= '3.8.1'",
+            "version": "==24.1.17"
         },
         "gitdb": {
             "hashes": [
