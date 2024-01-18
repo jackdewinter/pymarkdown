@@ -5,6 +5,10 @@
 | `md040` |
 | `fenced-code-language` |
 
+| Autofix Available |
+| --- |
+| No |
+
 ## Summary
 
 Fenced code blocks should have a language specified.
@@ -58,3 +62,9 @@ def func(arg1, arg2):
 
 This rule is largely inspired by the MarkdownLint rule
 [MD040](https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md#md040---fenced-code-blocks-should-have-a-language-specified).
+
+## Fix Description
+
+The reason for not being able to auto-fix this rule is context.  While a guess can
+be made as to the type of content within a fenced code block, it typically requires
+the author's context to properly classify the content.

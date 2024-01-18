@@ -34,3 +34,4 @@ class PluginDetailsV2(PluginDetails):
 
     plugin_supports_fix: bool = False
     plugin_interface_version: int = 2
+    plugin_fix_level: int = 1

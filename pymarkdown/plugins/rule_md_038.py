@@ -27,7 +27,6 @@ class RuleMd038(RulePlugin):
             plugin_enabled_by_default=True,
             plugin_description="Spaces inside code span elements",
             plugin_version="0.5.0",
-            plugin_interface_version=1,
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md038.md",
             plugin_supports_fix=True,
         )
@@ -58,13 +57,12 @@ class RuleMd038(RulePlugin):
                     adjusted_span_text = adjusted_span_text[1:]
                 if has_trailing:
                     adjusted_span_text = adjusted_span_text[:-1]
-                if len(adjusted_span_text):
-                    self.register_fix_token_request(
-                        context,
-                        token,
-                        "next_token",
-                        "span_text",
-                        adjusted_span_text,
-                    )
+                self.register_fix_token_request(
+                    context,
+                    token,
+                    "next_token",
+                    "span_text",
+                    adjusted_span_text,
+                )
             else:
                 self.report_next_token_error(context, token)

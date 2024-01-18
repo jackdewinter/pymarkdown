@@ -94,7 +94,8 @@
             "protected-access": 1
         },
         "pymarkdown/file_scan_helper.py": {
-            "too-many-arguments": 3
+            "too-many-arguments": 8,
+            "too-many-locals": 4
         },
         "pymarkdown/general/__init__.py": {},
         "pymarkdown/general/bad_tokenization_error.py": {},
@@ -255,7 +256,8 @@
         },
         "pymarkdown/plugin_manager/plugin_manager.py": {
             "too-many-instance-attributes": 1,
-            "too-many-arguments": 3
+            "too-many-arguments": 4,
+            "too-many-locals": 1
         },
         "pymarkdown/plugin_manager/plugin_modify_context.py": {
             "deprecated-decorator": 2
@@ -274,7 +276,10 @@
         "pymarkdown/plugins/rule_md_002.py": {},
         "pymarkdown/plugins/rule_md_003.py": {},
         "pymarkdown/plugins/rule_md_004.py": {},
-        "pymarkdown/plugins/rule_md_005.py": {},
+        "pymarkdown/plugins/rule_md_005.py": {
+            "too-many-instance-attributes": 1,
+            "protected-access": 1
+        },
         "pymarkdown/plugins/rule_md_006.py": {},
         "pymarkdown/plugins/rule_md_007.py": {},
         "pymarkdown/plugins/rule_md_009.py": {
@@ -302,7 +307,7 @@
         "pymarkdown/plugins/rule_md_026.py": {},
         "pymarkdown/plugins/rule_md_027.py": {
             "too-many-instance-attributes": 1,
-            "too-many-arguments": 3
+            "too-many-arguments": 6
         },
         "pymarkdown/plugins/rule_md_028.py": {},
         "pymarkdown/plugins/rule_md_029.py": {},
@@ -337,6 +342,7 @@
         "pymarkdown/plugins/rule_md_048.py": {},
         "pymarkdown/plugins/rule_pml_100.py": {},
         "pymarkdown/plugins/utils/container_token_manager.py": {},
+        "pymarkdown/plugins/utils/list_tracker.py": {},
         "pymarkdown/return_code_helper.py": {},
         "pymarkdown/tokens/atx_heading_markdown_token.py": {
             "protected-access": 1
@@ -484,14 +490,14 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-instance-attributes": 23,
+        "too-many-instance-attributes": 24,
         "too-many-public-methods": 4,
         "too-few-public-methods": 39,
-        "too-many-arguments": 217,
-        "too-many-locals": 33,
+        "too-many-arguments": 226,
+        "too-many-locals": 38,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 2,
-        "protected-access": 25,
+        "protected-access": 26,
         "deprecated-decorator": 3,
         "broad-exception-caught": 3
     }

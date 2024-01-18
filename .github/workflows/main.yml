@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Python ${{ env.default-python-version }}
-        uses: actions/setup-python@v4.7.1
+        uses: actions/setup-python@v5.0.0
         with:
           python-version: ${{ env.default-python-version }}
 
@@ -90,7 +90,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Python ${{ matrix.python }}
-        uses: actions/setup-python@v4.7.1
+        uses: actions/setup-python@v5.0.0
         with:
           python-version: ${{ matrix.python }}
 
@@ -107,7 +107,7 @@ jobs:
       - name: Execute Tests
         run: pipenv run pytest --cov-fail-under=90 --cov --cov-branch
       # - name: Archive coverage artifacts
-      #   uses: actions/upload-artifact@v3
+      #   uses: actions/upload-artifact@v4
       #   with:
       #     name: ${{ matrix.platform }} Coverage
       #     path: |
@@ -133,7 +133,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Python ${{ env.default-python-version }}
-        uses: actions/setup-python@v4.7.1
+        uses: actions/setup-python@v5.0.0
         with:
           python-version: ${{ env.default-python-version }}
 
@@ -159,7 +159,7 @@ jobs:
           pipenv run twine check dist/*    
 
       - name: Upload Package
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: my-artifact
           path: ${{github.workspace}}/dist/

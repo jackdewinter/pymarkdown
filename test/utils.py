@@ -127,7 +127,7 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
     print(f"parsed_tokens  : {ParserHelper.make_value_visible(actual_tokens)}")
     assert len(expected_tokens) == len(
         actual_tokens
-    ), f"List lengths are not the same: ({len(expected_tokens)}) vs ({len(actual_tokens)})"
+    ), f"List lengths are not the same: ({len(expected_tokens)}:{expected_tokens}) vs ({len(actual_tokens)}:{actual_tokens})"
     print("---")
 
     for element_index, next_expected_token in enumerate(expected_tokens):

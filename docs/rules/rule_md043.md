@@ -6,6 +6,10 @@
 | `required-headings` |
 | `required-headers` |
 
+| Autofix Available |
+| --- |
+| No |
+
 ## Summary
 
 Required heading structure.
@@ -110,3 +114,11 @@ rows may occur.
 
 This rule is largely inspired by the MarkdownLint rule
 [MD043](https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md#md043---required-heading-structure).
+
+## Fix Description
+
+The reason for not being able to auto-fix this rule is combinatorial explosion.
+While algorithms for the simpler configurations (such as `## Header,## Footer`)
+can easily be created, the combinations of applicable headings explode when the
+`*` character is used are vast in number.  With such a large number of possible
+headings, determining the "proper" algorithm quickly becomes problematic.

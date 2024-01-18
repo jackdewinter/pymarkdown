@@ -42,6 +42,7 @@ class RuleMd009(RulePlugin):
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md009.md",
             plugin_configuration="br_spaces,list_item_empty_lines,strict",
             plugin_supports_fix=True,
+            plugin_fix_level=0,
         )
 
     @classmethod

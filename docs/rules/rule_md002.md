@@ -6,6 +6,10 @@
 | `first-heading-h1` |
 | `first-header-h1` |
 
+| Autofix Available |
+| --- |
+| No |
+
 ## Deprecation
 
 This rule has been deprecated in favor of [Rule md041](https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md041.md).
@@ -85,3 +89,8 @@ This rule is largely inspired by the MarkdownLint rule
 [MD002](https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md002---first-heading-should-be-a-top-level-heading),
 which is in turn inspired by
 [this article](https://cirosantilli.com/markdown-style-guide/#top-level-header).
+
+## Fix Description
+
+The reason for not being able to auto-fix this rule is deprecation in favor of
+rule [Rule MD041](https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md041.md)

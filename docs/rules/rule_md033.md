@@ -5,6 +5,10 @@
 | `md033` |
 | `no-inline-html` |
 
+| Autofix Available |
+| --- |
+| No* |
+
 ## Summary
 
 Inline HTML.
@@ -140,3 +144,25 @@ for common HTML tags to not trigger this rule by default.
 To provide better support for the "image as a heading" scenario, the
 `allow_first_image_element` configuration value was added to specifically
 allow that scenario to not trigger this rule.
+
+## Fix Description
+
+The reason for not being able to auto-fix this rule is duplication.  There are
+two primary use cases for this rule:
+
+1. Preventing any HTML from being present in the document.
+1. Preventing specific raw HTML elements from being present in the document.
+
+For addressing the first use case, the [Disallow HTML](../extensions/disallowed-raw_html.md)
+extension is available.  When enabled, this extension protects against any HTML
+elements that change the context of nested elements from being used.  This protection
+occurs by replacing the `<` character with the `&lt;` sequence.
+
+In the second use case, users want to scan for specific HTML tags to prevent their
+use outright.  In most secnarios, those users want to be able to report the error
+nformation back to their product users, giving them a chance to correct the text
+before resubmitting the text.
+
+As the first case is addressed by the Disallow HTML extension and the majority of
+use is addressed by the product user in the second case, there is not a current
+compelling argument to provide a fix for this rule.

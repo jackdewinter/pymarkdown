@@ -3,7 +3,9 @@
 ## Unversioned - In Main, Not Released
 
 This release is going to focus on getting the feature list complete
-for a version 1.0 release in early 2
+for a version 1.0 release in early 2024.  To a large extent, this
+involves adding the "fix" feature for some rules, and double checking
+the output of many of the existing rules, looking for missing issues.
 
 ### Added
 
@@ -13,6 +15,10 @@ for a version 1.0 release in early 2
   - Extension: Strikethrough
 - [Issue 805](https://github.com/jackdewinter/pymarkdown/issues/805)
   - Extension: Task List Items
+- [Issue 808](https://github.com/jackdewinter/pymarkdown/issues/808)
+  - Rule MD004 - Added fix options
+- [Issue 809](https://github.com/jackdewinter/pymarkdown/issues/809)
+  - Rule MD007 - Added fix options
 - [Issie 813](https://github.com/jackdewinter/pymarkdown/issues/813)
   - Rule MD019 - Added fix options
 - [Issue 814](https://github.com/jackdewinter/pymarkdown/issues/814)
@@ -31,17 +37,48 @@ for a version 1.0 release in early 2
   - Rule MD039 - Added fix options
 - [Issue 825](https://github.com/jackdewinter/pymarkdown/issues/825)
   - Rule MD048 - Added fix options
+- [Issue 931](https://github.com/jackdewinter/pymarkdown/issues/931)
+  - Rule MD005 - Added fix options
+- [Issue 938](https://github.com/jackdewinter/pymarkdown/issues/938)
+  - Rule MD027 - Added fix options
+- [Issue 940](https://github.com/jackdewinter/pymarkdown/issues/940)
+  - Rule MD006 (disabled) - Added fix options
+- [Issue 941](https://github.com/jackdewinter/pymarkdown/issues/941)
+  - Rule MD030 - Added fix options
 
 ### Changed
 
+- [Issue 806](https://github.com/jackdewinter/pymarkdown/issues/806)
+  - Documentation updated to denote fixes.
+- [Issue 812](https://github.com/jackdewinter/pymarkdown/issues/812)
+  - Rule MD014 - Changed documentation to describe why not autofix
+- [Issue 827](https://github.com/jackdewinter/pymarkdown/issues/827)
+  - Finished research on which rules are fixable and sorted.
 - [Issue 901](https://github.com/jackdewinter/pymarkdown/issues/901)
   - noticed cases where `len(x)` was being used instead of `x` or `not x`
 - [Issue 913](https://github.com/jackdewinter/pymarkdown/issues/913)
   - making proper use of is_xxx_end function from MarkdownToken class
+- [Issue 934](https://github.com/jackdewinter/pymarkdown/issues/934)
+  - fix mode scans multiple times, with each scan producing lots of logs if
+    on DEBUG
+  - first fix was to allow a new command line option to suppress logs on any
+    scan in fix mode past the first one
+  - other fix was to make a clearer message when two rules trigger on the
+    same field of the same token
+- [Issue 936](https://github.com/jackdewinter/pymarkdown/issues/936)
+  - change documentation for rules that will not have a fix
 
 ### Fixed
 
-- None
+- [Issue 929](https://github.com/jackdewinter/pymarkdown/issues/929)
+  - Improper links in README.md when viewed at PyPi.org.
+
+### Completed
+
+- [Issue 827](https://github.com/jackdewinter/pymarkdown/issues/827)
+  - researched annotated each rule
+  - rules "in queue" have no annotation yet, ones that have fixes have docs
+    updated, ones that are not eligible have reason why
 
 ## Version 0.9.15 - Date: 2023-12-05
 

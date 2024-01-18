@@ -6,6 +6,10 @@
 | `no-duplicate-heading` |
 | `no-duplicate-header` |
 
+| Autofix Available |
+| --- |
+| No |
+
 ## Summary
 
 Multiple headings cannot contain the same content.
@@ -107,3 +111,13 @@ both occurences of the heading text `Features` occurs in a level
 
 This rule is largely inspired by the MarkdownLint rule
 [MD024](https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md024---multiple-headings-with-the-same-content).
+
+## Fix Description
+
+The reason for not being able to auto-fix this rule is context. Using any of the
+above trigger examples, it is simple to determine when this rule should be triggered.
+It would be relatively easy to devise an algorithm that would perform some action
+(such as append an increasing number to the end of the heading text) to make each
+heading unique.  While that would fix the triggering of the rule, it would deprive
+the author of the chance to change any triggered headings to text that was unique
+and made sense within the scope of the document.

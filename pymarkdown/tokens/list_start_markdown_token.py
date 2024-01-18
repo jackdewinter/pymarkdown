@@ -217,7 +217,23 @@ class ListStartMarkdownToken(ContainerMarkdownToken):
             self.__list_start_content = field_value
             self.__compose_extra_data_field()
             return True
-        return False
+        if field_name == "list_start_sequence" and isinstance(field_value, str):
+            self.__list_start_sequence = field_value
+            self.__compose_extra_data_field()
+            return True
+        if field_name == "extracted_whitespace" and isinstance(field_value, str):
+            self.__extracted_whitespace = field_value
+            self.__compose_extra_data_field()
+            return True
+        if field_name == "indent_level" and isinstance(field_value, int):
+            self.__indent_level = field_value
+            self.__compose_extra_data_field()
+            return True
+        if field_name == "leading_spaces" and isinstance(field_value, str):
+            self.__leading_spaces = field_value
+            self.__compose_extra_data_field()
+            return True
+        return super()._modify_token(field_name, field_value)
 
 
 # pylint: enable=too-many-instance-attributes

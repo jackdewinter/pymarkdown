@@ -157,6 +157,13 @@ class PyMarkdownLint:
             default="",
             help=argparse.SUPPRESS,
         )
+        parser.add_argument(
+            "-x-fix-no-rescan-log",
+            dest="x_fix_no_rescan_log",
+            action="store_true",
+            default="",
+            help=argparse.SUPPRESS,
+        )
 
         parser.add_argument(
             "--add-plugin",

@@ -5,7 +5,7 @@ start at the beginning of the line.
 from typing import List, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
-from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
@@ -23,18 +23,18 @@ class RuleMd006(RulePlugin):
         super().__init__()
         self.__token_stack: List[MarkdownToken] = []
 
-    def get_details(self) -> PluginDetails:
+    def get_details(self) -> PluginDetailsV2:
         """
         Get the details for the plugin.
         """
-        return PluginDetails(
+        return PluginDetailsV2(
             plugin_name="ul-start-left",
             plugin_id="MD006",
             plugin_enabled_by_default=False,
             plugin_description="Consider starting bulleted lists at the beginning of the line",
             plugin_version="0.5.0",
-            plugin_interface_version=1,
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md006.md",
+            plugin_supports_fix=True,
         )
 
     def starting_new_file(self) -> None:
@@ -70,12 +70,46 @@ class RuleMd006(RulePlugin):
             self.__token_stack.append(token)
             if token.is_unordered_list_start:
                 expected_indent = self.__calculate_expected_indent()
-                if token.column_number != (1 + expected_indent):
-                    self.report_next_token_error(context, token)
+                if delta := (1 + expected_indent) - token.column_number:
+                    self.__report_or_fix(context, token, delta)
         elif token.is_list_end or token.is_block_quote_end:
             del self.__token_stack[-1]
         elif token.is_new_list_item:
             if self.__token_stack[-1].is_unordered_list_start:
                 expected_indent = self.__calculate_expected_indent()
-                if token.column_number != (1 + expected_indent):
-                    self.report_next_token_error(context, token)
+                if delta := (1 + expected_indent) - token.column_number:
+                    self.__report_or_fix(context, token, delta)
+
+    def __report_or_fix(
+        self, context: PluginScanContext, token: MarkdownToken, adjust_amount: int
+    ) -> None:
+        if context.in_fix_mode:
+            list_start_token = cast(ListStartMarkdownToken, token)
+            self.register_fix_token_request(
+                context,
+                token,
+                "next_token",
+                "indent_level",
+                list_start_token.indent_level + adjust_amount,
+            )
+            if not token.is_new_list_item:
+                self.register_fix_token_request(
+                    context, token, "next_token", "extracted_whitespace", ""
+                )
+                self.register_fix_token_request(
+                    context,
+                    token,
+                    "next_token",
+                    "column_number",
+                    list_start_token.column_number + adjust_amount,
+                )
+            else:
+                self.register_fix_token_request(
+                    context,
+                    token,
+                    "next_token",
+                    "extracted_whitespace",
+                    list_start_token.extracted_whitespace[:adjust_amount],
+                )
+        else:
+            self.report_next_token_error(context, token)

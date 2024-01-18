@@ -4,7 +4,7 @@ Module to provide context when reporting any errors.
 from __future__ import annotations
 
 from io import TextIOWrapper
-from typing import TYPE_CHECKING, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Dict, List, Optional, Set, Union
 
 from typing_extensions import override
 
@@ -187,6 +187,12 @@ class PluginScanContext(PluginModifyContext):
         for next_entry in reported_and_sorted:
             self.owning_manager.log_scan_failure(next_entry)
         self.__reported.clear()
+
+    def get_triggered_rules(self) -> Set[str]:
+        """
+        Get information on any rules that were triggered.
+        """
+        return {next_entry.rule_id.lower() for next_entry in self.__reported}
 
 
 # pylint: enable=too-many-instance-attributes

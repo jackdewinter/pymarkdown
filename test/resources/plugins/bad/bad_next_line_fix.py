@@ -28,5 +28,4 @@ class BadNextLineFix(RulePlugin):
         """
         Event that a new line is being processed.
         """
-        if context.in_fix_mode:
-            self.report_next_line_error(context, 0, -1)
+        self.report_next_line_error(context, 0, -1)

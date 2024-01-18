@@ -4476,7 +4476,7 @@ def test_extra_032():
     supplied_arguments = [
         # "--log-level",
         # "DEBUG",
-        "--stack-trace",
+        # "--stack-trace",
         "-d",
         "md033,md041",
         "scan-stdin",
@@ -4513,7 +4513,6 @@ def test_extra_033x():
     supplied_arguments = [
         # "--log-level",
         # "DEBUG",
-        "--stack-trace",
         "-d",
         "md033,md041",
         "scan-stdin",
@@ -4550,7 +4549,6 @@ def test_extra_033a():
     supplied_arguments = [
         # "--log-level",
         # "DEBUG",
-        "--stack-trace",
         "-d",
         "md033,md041",
         "scan-stdin",
