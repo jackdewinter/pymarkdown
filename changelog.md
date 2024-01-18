@@ -72,6 +72,8 @@ the output of many of the existing rules, looking for missing issues.
 
 - [Issue 929](https://github.com/jackdewinter/pymarkdown/issues/929)
   - Improper links in README.md when viewed at PyPi.org.
+- [Issue 930](https://github.com/jackdewinter/pymarkdown/issues/930)
+  - Fixed issue of missing `py.typed` file.
 
 ### Completed
 
