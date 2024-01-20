@@ -14,6 +14,7 @@ from typing import Callable, Dict, List, Optional, Set, Tuple, Union, cast
 
 from pymarkdown.application_file_scanner import ApplicationFileScanner
 from pymarkdown.extensions.pragma_token import PragmaToken
+from pymarkdown.general.bad_tokenization_error import BadTokenizationError
 from pymarkdown.general.main_presentation import MainPresentation
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.source_providers import FileSourceProvider
@@ -48,7 +49,7 @@ class FileScanHelper:
         plugins: PluginManager,
         presentation: MainPresentation,
         show_stack_trace: bool,
-        handle_error: Callable[[str, Exception], None],
+        handle_error: Callable[[str, Optional[Exception], bool, str], None],
     ):
         self.__tokenizer = tokenizer
         self.__plugins = plugins
@@ -69,8 +70,11 @@ class FileScanHelper:
         Process the specified files to scan, or the string to scan.
         """
 
+        self.__continue_on_error = args.continue_on_error
+
         # sourcery skip: raise-specific-error
         did_fix_any_file = False
+        did_fail_any_file = False
         if use_standard_in:
             POGGER.debug("Scanning from: (stdin)")
             self.__scan_from_stdin(args, string_to_scan)
@@ -80,18 +84,20 @@ class FileScanHelper:
             POGGER.debug("Scanning from: $", files_to_scan)
             for next_file in files_to_scan:
                 if args.x_fix:
-                    if self.__fix_specific_file(
+                    did_fix_file, did_succeed = self.__fix_specific_file(
                         next_file,
                         next_file,
                         args.x_fix_debug,
                         args.x_fix_file_debug,
-                        args.x_fix_no_rescan_log,
-                    ):
+                        args.x_fix_no_rescan_log)
+                    if did_fix_file:
                         self.__presentation.print_fix_message(next_file)
                         did_fix_any_file = True
                 else:
-                    self.__scan_specific_file(next_file, next_file)
-        return did_fix_any_file
+                    did_succeed = self.__scan_specific_file(next_file, next_file)
+                if not did_succeed:
+                    did_fail_any_file = True
+        return did_fix_any_file, did_fail_any_file
 
     def __scan_from_stdin(
         self, args: argparse.Namespace, string_to_scan: Optional[str]
@@ -128,12 +134,18 @@ class FileScanHelper:
             except IOError as this_exception:
                 self.__handle_scan_error(scan_id, this_exception)
 
-    def __scan_specific_file(self, next_file: str, next_file_name: str) -> None:
+    def __scan_specific_file(self, next_file: str, next_file_name: str) -> bool:
         try:
             source_provider = FileSourceProvider(next_file)
             self.__scan_file(source_provider, next_file_name)
+            return True
         except BadPluginError as this_exception:
-            self.__handle_scan_error(next_file, this_exception)
+            self.__handle_scan_error(next_file, this_exception, allow_shortcut=True)
+        except BadTokenizationError as this_exception:
+            if not self.__continue_on_error:
+                raise
+            self.__handle_scan_error(next_file, this_exception, allow_shortcut=True)
+        return False
 
     def __scan_file(
         self, source_provider: FileSourceProvider, next_file_name: str
@@ -198,6 +210,7 @@ class FileScanHelper:
         fix_nolog_rescan: bool,
     ) -> bool:
         did_fix_file = False
+        did_succeed = False
         try:
             try:
                 POGGER.info("Starting file to fix '$'.", next_file_name)
@@ -211,25 +224,46 @@ class FileScanHelper:
                 )
 
                 POGGER.info("Ending file to fix '$'.", next_file_name)
+                did_succeed = True
             except Exception:
                 POGGER.info("Ending file to fix '$' with exception.", next_file_name)
                 raise
         except (BadPluginError, BadPluginFixError) as this_exception:
-            self.__handle_scan_error(next_file, this_exception)
-        return did_fix_file
+            self.__handle_scan_error(next_file, this_exception, allow_shortcut=True)
+        except BadTokenizationError as this_exception:
+            if not self.__continue_on_error:
+                raise
+            self.__handle_scan_error(next_file, this_exception, allow_shortcut=True)
+        return did_fix_file, did_succeed
 
     # pylint: enable=too-many-arguments
 
-    def __handle_scan_error(self, next_file: str, this_exception: Exception) -> None:
+    def __handle_scan_error(self, next_file: str, this_exception: Exception, allow_shortcut:bool = False) -> None:
+
+        if not self.__continue_on_error:
+            allow_shortcut =False
+
+        if allow_shortcut:
+            show_extended_information = False
+            print_prefix = ""
+        else:
+            show_extended_information = self.__show_stack_trace
+            print_prefix = "\n\n"
+
         if formatted_error := self.__presentation.format_scan_error(
-            next_file, this_exception, self.__show_stack_trace
+            next_file, this_exception, show_extended_information, allow_shortcut
         ):
-            self.__handle_error(formatted_error, this_exception)
+            self.__handle_error(formatted_error, this_exception,not allow_shortcut, print_prefix)
 
         # If the `format_scan_error` call above returned None, it meant that
         # it handled any required output.  However, the application still needs
         # to terminate to respect that the error was called.
-        ReturnCodeHelper.exit_application(ApplicationResult.SYSTEM_ERROR)
+        #
+        # update: the allow_shortcut variable allows for a shorter error to be
+        #   logged to allow processing to continue.  When that happens, the
+        #   application is not exitted. 
+        if not allow_shortcut:
+            ReturnCodeHelper.exit_application(ApplicationResult.SYSTEM_ERROR)
 
     def __process_file_fix_rescan(
         self, fix_debug: bool, fix_nolog_rescan: bool, next_file_two: str

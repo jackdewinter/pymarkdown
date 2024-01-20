@@ -29,19 +29,23 @@ class MainPresentation:
         next_file: str,
         this_exception: Exception,
         show_extended_information: bool = False,
+        allow_shortcut:bool = False
     ) -> Optional[str]:
         """
         Format a scan error for display.  Returning a value of None means that
         the function has handled any required output.
         """
-        formatted_error = f"{type(this_exception).__name__} encountered while scanning '{next_file}':\n{this_exception}"
-        if show_extended_information:
-            current_cause = this_exception.__cause__
-            while current_cause:
-                formatted_error += (
-                    f"\nCaused by: {type(current_cause).__name__}:\n   {current_cause}"
-                )
-                current_cause = current_cause.__cause__
+        if allow_shortcut:
+            formatted_error = f"{next_file}:0:0: {this_exception}"
+        else:
+            formatted_error = f"{type(this_exception).__name__} encountered while scanning '{next_file}':\n{this_exception}"
+            if show_extended_information:
+                current_cause = this_exception.__cause__
+                while current_cause:
+                    formatted_error += (
+                        f"\nCaused by: {type(current_cause).__name__}:\n   {current_cause}"
+                    )
+                    current_cause = current_cause.__cause__
         return formatted_error
 
     def print_pragma_failure(

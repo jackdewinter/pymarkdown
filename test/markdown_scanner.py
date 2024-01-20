@@ -43,6 +43,7 @@ class AlternateMainPresentation(MainPresentation):
         next_file: str,
         this_exception: Exception,
         show_extended_information: bool = False,
+        allow_shortcut:bool = False
     ) -> Optional[str]:
         """
         Format a scan error for display.  Returning a value of None means that

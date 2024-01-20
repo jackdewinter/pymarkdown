@@ -21,6 +21,7 @@ def test_markdown_return_code_command_line_bad():
     expected_error = """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
+               [--continue-on-error]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE] [--return-code-scheme {default,minimal}]
                {plugins,extensions,scan,scan-stdin,version} ...

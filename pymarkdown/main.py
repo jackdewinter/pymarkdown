@@ -180,6 +180,13 @@ class PyMarkdownLint:
             default=False,
             help="if an error occurs, print out the stack trace for debug purposes",
         )
+        parser.add_argument(
+            "--continue-on-error",
+            dest="continue_on_error",
+            action="store_true",
+            default=False,
+            help="if a tokenization or plugin error occurs, allow processing to continue",
+        )
         ApplicationLogging.add_default_command_line_arguments(parser)
         ReturnCodeHelper.add_command_line_arguments(parser)
 
@@ -314,6 +321,7 @@ class PyMarkdownLint:
         formatted_error: str,
         thrown_error: Optional[Exception],
         exit_on_error: bool = True,
+        print_prefix:str = "\n\n"
     ) -> None:
         LOGGER.warning(formatted_error, exc_info=thrown_error)
 
@@ -324,7 +332,7 @@ class PyMarkdownLint:
             and not isinstance(thrown_error, ValueError)
             else ""
         )
-        self.__presentation.print_system_error(f"\n\n{formatted_error}{stack_trace}")
+        self.__presentation.print_system_error(f"{print_prefix}{formatted_error}{stack_trace}")
         if exit_on_error:
             ReturnCodeHelper.exit_application(ApplicationResult.SYSTEM_ERROR)
 
@@ -359,10 +367,12 @@ class PyMarkdownLint:
                 self.__show_stack_trace,
                 self.__handle_error,
             )
-            did_fix_any_files = fsh.process_files_to_scan(
+            did_fix_any_files, did_fail_any_file = fsh.process_files_to_scan(
                 args, use_standard_in, files_to_scan, self.__string_to_scan
             )
-            if did_fix_any_files:
+            if did_fail_any_file:
+                scan_result = ApplicationResult.SYSTEM_ERROR
+            elif did_fix_any_files:
                 scan_result = ApplicationResult.FIXED_AT_LEAST_ONE_FILE
             elif self.__plugins.number_of_scan_failures:
                 scan_result = ApplicationResult.SCAN_TRIGGERED_AT_LEAST_ONCE
