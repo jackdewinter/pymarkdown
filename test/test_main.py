@@ -28,15 +28,16 @@ def test_markdown_with_no_parameters():
                [--continue-on-error]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE] [--return-code-scheme {default,minimal}]
-               {plugins,extensions,scan,scan-stdin,version} ...
+               {extensions,fix,plugins,scan,scan-stdin,version} ...
 
 Lint any found Markdown files.
 
 positional arguments:
-  {plugins,extensions,scan,scan-stdin,version}
-    plugins             plugin commands
+  {extensions,fix,plugins,scan,scan-stdin,version}
     extensions          extension commands
-    scan                scan the Markdown files in the specified paths
+    fix                 fix the Markdown files in any specified paths
+    plugins             plugin commands
+    scan                scan the Markdown files in any specified paths
     scan-stdin          scan the standard input as a Markdown file
     version             version of the application
 
@@ -93,15 +94,16 @@ def test_markdown_with_no_parameters_through_module():
                    [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                    [--log-file LOG_FILE]
                    [--return-code-scheme {default,minimal}]
-                   {plugins,extensions,scan,scan-stdin,version} ...
+                   {extensions,fix,plugins,scan,scan-stdin,version} ...
 
 Lint any found Markdown files.
 
 positional arguments:
-  {plugins,extensions,scan,scan-stdin,version}
-    plugins             plugin commands
+  {extensions,fix,plugins,scan,scan-stdin,version}
     extensions          extension commands
-    scan                scan the Markdown files in the specified paths
+    fix                 fix the Markdown files in any specified paths
+    plugins             plugin commands
+    scan                scan the Markdown files in any specified paths
     scan-stdin          scan the standard input as a Markdown file
     version             version of the application
 
@@ -157,15 +159,16 @@ def test_markdown_with_no_parameters_through_main():
                [--continue-on-error]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE] [--return-code-scheme {default,minimal}]
-               {plugins,extensions,scan,scan-stdin,version} ...
+               {extensions,fix,plugins,scan,scan-stdin,version} ...
 
 Lint any found Markdown files.
 
 positional arguments:
-  {plugins,extensions,scan,scan-stdin,version}
-    plugins             plugin commands
+  {extensions,fix,plugins,scan,scan-stdin,version}
     extensions          extension commands
-    scan                scan the Markdown files in the specified paths
+    fix                 fix the Markdown files in any specified paths
+    plugins             plugin commands
+    scan                scan the Markdown files in any specified paths
     scan-stdin          scan the standard input as a Markdown file
     version             version of the application
 
@@ -220,15 +223,16 @@ def test_markdown_with_dash_h():
                [--continue-on-error]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE] [--return-code-scheme {default,minimal}]
-               {plugins,extensions,scan,scan-stdin,version} ...
+               {extensions,fix,plugins,scan,scan-stdin,version} ...
 
 Lint any found Markdown files.
 
 positional arguments:
-  {plugins,extensions,scan,scan-stdin,version}
-    plugins             plugin commands
+  {extensions,fix,plugins,scan,scan-stdin,version}
     extensions          extension commands
-    scan                scan the Markdown files in the specified paths
+    fix                 fix the Markdown files in any specified paths
+    plugins             plugin commands
+    scan                scan the Markdown files in any specified paths
     scan-stdin          scan the standard input as a Markdown file
     version             version of the application
 

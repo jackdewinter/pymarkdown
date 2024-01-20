@@ -24,7 +24,7 @@ def test_markdown_return_code_command_line_bad():
                [--continue-on-error]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE] [--return-code-scheme {default,minimal}]
-               {plugins,extensions,scan,scan-stdin,version} ...
+               {extensions,fix,plugins,scan,scan-stdin,version} ...
 main.py: error: argument --return-code-scheme: invalid __validate_return_code_scheme value: 'invalid'"""
 
     # Act
@@ -158,8 +158,7 @@ def test_markdown_return_code_default_fixed_at_least_one_file():
             "--set",
             "plugins.md009.strict=$!True",
             "--strict-config",
-            "-x-fix",
-            "scan",
+            "fix",
             temp_source_path,
         ]
 
@@ -377,10 +376,9 @@ def test_markdown_return_code_minimal_fixed_at_least_one_file():
             "--set",
             "plugins.md009.strict=$!True",
             "--strict-config",
-            "-x-fix",
             "--return-code-scheme",
             "minimal",
-            "scan",
+            "fix",
             temp_source_path,
         ]
 

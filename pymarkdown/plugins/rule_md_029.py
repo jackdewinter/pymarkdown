@@ -44,7 +44,7 @@ class RuleMd029(RulePlugin):
             plugin_id="MD029",
             plugin_enabled_by_default=True,
             plugin_description="Ordered list item prefix",
-            plugin_version="0.5.0",
+            plugin_version="0.5.1",
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md029.md",
             plugin_configuration="style",
             plugin_supports_fix=True,

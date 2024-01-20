@@ -104,7 +104,7 @@ def build_arguments(
         if is_fix:
             if test.use_fix_debug:
                 supplied_arguments.append("-x-fix-debug")
-            supplied_arguments.extend(("-x-fix", "scan", temp_source_path))
+            supplied_arguments.extend(("fix", temp_source_path))
         else:
             supplied_arguments.extend(("scan", temp_source_path))
 

@@ -216,7 +216,7 @@ class ApplicationFileScanner:
                 dest="list_files",
                 action="store_true",
                 default=False,
-                help=f"list the eligible {specific_file_type_name}files and exit",
+                help=f"list any eligible {specific_file_type_name}files found on the specified paths and exit",
             )
 
         if show_recurse_directories:
@@ -226,7 +226,7 @@ class ApplicationFileScanner:
                 dest="recurse_directories",
                 action="store_true",
                 default=False,
-                help="recursively scan directories for files",
+                help="recursively traverse any found directories for matching files",
             )
 
         if show_alternate_extensions:
@@ -237,7 +237,7 @@ class ApplicationFileScanner:
                 action="store",
                 default=extension_to_look_for,
                 type=ApplicationFileScanner.is_valid_comma_separated_extension_list,
-                help="provide an alternate set of file extensions to scan for",
+                help="provide an alternate set of file extensions to match against",
             )
 
         parser_to_add_to.add_argument(
@@ -246,7 +246,7 @@ class ApplicationFileScanner:
             type=str,
             nargs="+",
             default=None,
-            help=f"one or more paths to scan for eligible {specific_file_type_name}files",
+            help=f"one or more paths to examine for eligible {specific_file_type_name}files",
         )
 
     # pylint: enable=too-many-arguments

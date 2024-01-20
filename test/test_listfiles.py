@@ -18,15 +18,18 @@ def test_markdown_with_dash_h():
     expected_output = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS] path [path ...]
 
 positional arguments:
-  path                  one or more paths to scan for eligible Markdown files
+  path                  one or more paths to examine for eligible Markdown
+                        files
 
 optional arguments:
   -h, --help            show this help message and exit
-  -l, --list-files      list the eligible Markdown files and exit
-  -r, --recurse         recursively scan directories for files
+  -l, --list-files      list any eligible Markdown files found on the
+                        specified paths and exit
+  -r, --recurse         recursively traverse any found directories for
+                        matching files
   -ae ALTERNATE_EXTENSIONS, --alternate-extensions ALTERNATE_EXTENSIONS
-                        provide an alternate set of file extensions to scan
-                        for
+                        provide an alternate set of file extensions to match
+                        against
 """
     expected_error = ""
 

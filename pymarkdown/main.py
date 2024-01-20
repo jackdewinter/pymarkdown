@@ -136,13 +136,13 @@ class PyMarkdownLint:
             default="",
             help=argparse.SUPPRESS,
         )
-        parser.add_argument(
-            "-x-fix",
-            dest="x_fix",
-            action="store_true",
-            default="",
-            help=argparse.SUPPRESS,
-        )
+        # parser.add_argument(
+        #     "-x-fix",
+        #     dest="x_fix",
+        #     action="store_true",
+        #     default="",
+        #     help=argparse.SUPPRESS,
+        # )
         parser.add_argument(
             "-x-fix-debug",
             dest="x_fix_debug",
@@ -191,9 +191,10 @@ class PyMarkdownLint:
         ReturnCodeHelper.add_command_line_arguments(parser)
 
         subparsers = parser.add_subparsers(dest="primary_subparser")
-        PluginManager.add_argparse_subparser(subparsers)
         ExtensionManager.add_argparse_subparser(subparsers)
-        FileScanHelper.add_argparse_subparser(subparsers)
+        FileScanHelper.add_argparse_subparser(subparsers, True)
+        PluginManager.add_argparse_subparser(subparsers)
+        FileScanHelper.add_argparse_subparser(subparsers, False)
 
         subparsers.add_parser("version", help="version of the application")
 

@@ -39,7 +39,7 @@ class RuleMd030(RulePlugin):
             plugin_id="MD030",
             plugin_enabled_by_default=True,
             plugin_description="Spaces after list markers",
-            plugin_version="0.5.0",
+            plugin_version="0.5.1",
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md030.md",
             plugin_configuration="ul_single,ol_single,ul_multi,ol_multi",
             plugin_supports_fix=True,
