@@ -25,7 +25,7 @@ Some other notable additions/changes are:
 - [Issue 618](https://github.com/jackdewinter/pymarkdown/issues/618)
   - Ability to tell PyMarkdown to fix issues
   - Not every plugin supports fix, see `pymarkdown plugins list` for
-    the current list of plugins and "fix" status
+    the current list of plugins and fix status
 - [Issue 802](https://github.com/jackdewinter/pymarkdown/issues/802)
   - Extension: Extended Autolinks
 - [Issue 803](https://github.com/jackdewinter/pymarkdown/issues/803)
