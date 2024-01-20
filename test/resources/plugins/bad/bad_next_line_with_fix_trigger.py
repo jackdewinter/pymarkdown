@@ -21,7 +21,7 @@ class BadNextLineWithFixTrigger(RulePlugin):
             plugin_description="Plugin that has a bad next_line function.",
             plugin_version="0.0.0",
             plugin_fix_level=0,
-            plugin_supports_fix=True
+            plugin_supports_fix=True,
         )
 
     def next_line(self, context, line):

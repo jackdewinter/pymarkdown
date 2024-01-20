@@ -56,6 +56,7 @@ class FileScanHelper:
         self.__presentation = presentation
         self.__show_stack_trace = show_stack_trace
         self.__handle_error = handle_error
+        self.__continue_on_error = False
 
     # pylint: enable=too-many-arguments
 
@@ -65,7 +66,7 @@ class FileScanHelper:
         use_standard_in: bool,
         files_to_scan: List[str],
         string_to_scan: Optional[str],
-    ) -> bool:
+    ) -> Tuple[bool, bool]:
         """
         Process the specified files to scan, or the string to scan.
         """
@@ -89,7 +90,8 @@ class FileScanHelper:
                         next_file,
                         args.x_fix_debug,
                         args.x_fix_file_debug,
-                        args.x_fix_no_rescan_log)
+                        args.x_fix_no_rescan_log,
+                    )
                     if did_fix_file:
                         self.__presentation.print_fix_message(next_file)
                         did_fix_any_file = True
@@ -208,7 +210,7 @@ class FileScanHelper:
         fix_debug: bool,
         fix_file_debug: bool,
         fix_nolog_rescan: bool,
-    ) -> bool:
+    ) -> Tuple[bool, bool]:
         did_fix_file = False
         did_succeed = False
         try:
@@ -238,10 +240,11 @@ class FileScanHelper:
 
     # pylint: enable=too-many-arguments
 
-    def __handle_scan_error(self, next_file: str, this_exception: Exception, allow_shortcut:bool = False) -> None:
-
+    def __handle_scan_error(
+        self, next_file: str, this_exception: Exception, allow_shortcut: bool = False
+    ) -> None:
         if not self.__continue_on_error:
-            allow_shortcut =False
+            allow_shortcut = False
 
         if allow_shortcut:
             show_extended_information = False
@@ -253,7 +256,9 @@ class FileScanHelper:
         if formatted_error := self.__presentation.format_scan_error(
             next_file, this_exception, show_extended_information, allow_shortcut
         ):
-            self.__handle_error(formatted_error, this_exception,not allow_shortcut, print_prefix)
+            self.__handle_error(
+                formatted_error, this_exception, not allow_shortcut, print_prefix
+            )
 
         # If the `format_scan_error` call above returned None, it meant that
         # it handled any required output.  However, the application still needs
@@ -261,7 +266,7 @@ class FileScanHelper:
         #
         # update: the allow_shortcut variable allows for a shorter error to be
         #   logged to allow processing to continue.  When that happens, the
-        #   application is not exitted. 
+        #   application is not exitted.
         if not allow_shortcut:
             ReturnCodeHelper.exit_application(ApplicationResult.SYSTEM_ERROR)
 

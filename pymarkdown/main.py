@@ -321,7 +321,7 @@ class PyMarkdownLint:
         formatted_error: str,
         thrown_error: Optional[Exception],
         exit_on_error: bool = True,
-        print_prefix:str = "\n\n"
+        print_prefix: str = "\n\n",
     ) -> None:
         LOGGER.warning(formatted_error, exc_info=thrown_error)
 
@@ -332,7 +332,9 @@ class PyMarkdownLint:
             and not isinstance(thrown_error, ValueError)
             else ""
         )
-        self.__presentation.print_system_error(f"{print_prefix}{formatted_error}{stack_trace}")
+        self.__presentation.print_system_error(
+            f"{print_prefix}{formatted_error}{stack_trace}"
+        )
         if exit_on_error:
             ReturnCodeHelper.exit_application(ApplicationResult.SYSTEM_ERROR)
 

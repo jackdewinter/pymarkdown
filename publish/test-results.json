@@ -1515,6 +1515,14 @@
             "elapsedTimeInMilliseconds": 0
         },
         {
+            "name": "test.test_exception_handling",
+            "totalTests": 9,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
             "name": "test.test_listfiles",
             "totalTests": 13,
             "failedTests": 0,

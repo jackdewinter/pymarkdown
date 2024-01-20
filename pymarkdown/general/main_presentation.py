@@ -29,7 +29,7 @@ class MainPresentation:
         next_file: str,
         this_exception: Exception,
         show_extended_information: bool = False,
-        allow_shortcut:bool = False
+        allow_shortcut: bool = False,
     ) -> Optional[str]:
         """
         Format a scan error for display.  Returning a value of None means that
@@ -42,9 +42,7 @@ class MainPresentation:
             if show_extended_information:
                 current_cause = this_exception.__cause__
                 while current_cause:
-                    formatted_error += (
-                        f"\nCaused by: {type(current_cause).__name__}:\n   {current_cause}"
-                    )
+                    formatted_error += f"\nCaused by: {type(current_cause).__name__}:\n   {current_cause}"
                     current_cause = current_cause.__cause__
         return formatted_error
 
