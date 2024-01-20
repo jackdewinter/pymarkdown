@@ -45,6 +45,9 @@ the output of many of the existing rules, looking for missing issues.
   - Rule MD006 (disabled) - Added fix options
 - [Issue 941](https://github.com/jackdewinter/pymarkdown/issues/941)
   - Rule MD030 - Added fix options
+- [Issue 946](https://github.com/jackdewinter/pymarkdown/issues/946)
+  - Added `--continue-on-error` command line flag to "ignore" errors
+    and to keep on processing.
 
 ### Changed
 
@@ -72,6 +75,8 @@ the output of many of the existing rules, looking for missing issues.
 
 - [Issue 929](https://github.com/jackdewinter/pymarkdown/issues/929)
   - Improper links in README.md when viewed at PyPi.org.
+- [Issue 930](https://github.com/jackdewinter/pymarkdown/issues/930)
+  - Fixed issue of missing `py.typed` file.
 
 ### Completed
 

@@ -268,7 +268,11 @@ def copy_to_temp_file(file_to_copy):
 
 
 def write_temporary_configuration(
-    supplied_configuration, file_name=None, directory=None, file_name_suffix=None
+    supplied_configuration,
+    file_name=None,
+    directory=None,
+    file_name_prefix=None,
+    file_name_suffix=None,
 ):
     """
     Write the configuration as a temporary file that is kept around.
@@ -286,7 +290,11 @@ def write_temporary_configuration(
                 return full_file_name
         else:
             with tempfile.NamedTemporaryFile(
-                "wt", delete=False, dir=directory, suffix=file_name_suffix
+                "wt",
+                delete=False,
+                dir=directory,
+                suffix=file_name_suffix,
+                prefix=file_name_prefix,
             ) as outfile:
                 if isinstance(supplied_configuration, str):
                     outfile.write(supplied_configuration)
@@ -301,7 +309,11 @@ def write_temporary_configuration(
 
 @contextmanager
 def create_temporary_configuration_file(
-    supplied_configuration, file_name=None, directory=None, file_name_suffix=None
+    supplied_configuration,
+    file_name=None,
+    directory=None,
+    file_name_suffix=None,
+    file_name_prefix=None,
 ):
     """
     Context manager to create a temporary configuration file.
@@ -309,7 +321,11 @@ def create_temporary_configuration_file(
     temp_source_path = None
     try:
         temp_source_path = write_temporary_configuration(
-            supplied_configuration, file_name, directory, file_name_suffix
+            supplied_configuration,
+            file_name=file_name,
+            directory=directory,
+            file_name_suffix=file_name_suffix,
+            file_name_prefix=file_name_prefix,
         )
         yield temp_source_path
     finally:

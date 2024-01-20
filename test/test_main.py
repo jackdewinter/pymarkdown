@@ -25,6 +25,7 @@ def test_markdown_with_no_parameters():
     expected_output = """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
+               [--continue-on-error]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE] [--return-code-scheme {default,minimal}]
                {plugins,extensions,scan,scan-stdin,version} ...
@@ -55,6 +56,8 @@ optional arguments:
                         assuming default
   --stack-trace         if an error occurs, print out the stack trace for
                         debug purposes
+  --continue-on-error   if a tokenization or plugin error occurs, allow
+                        processing to continue
   --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
                         minimum level required to log messages
   --log-file LOG_FILE   destination file for log messages
@@ -86,6 +89,7 @@ def test_markdown_with_no_parameters_through_module():
     expected_output = """usage: __main.py__ [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                    [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                    [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
+                   [--continue-on-error]
                    [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                    [--log-file LOG_FILE]
                    [--return-code-scheme {default,minimal}]
@@ -117,6 +121,8 @@ optional arguments:
                         assuming default
   --stack-trace         if an error occurs, print out the stack trace for
                         debug purposes
+  --continue-on-error   if a tokenization or plugin error occurs, allow
+                        processing to continue
   --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
                         minimum level required to log messages
   --log-file LOG_FILE   destination file for log messages
@@ -148,6 +154,7 @@ def test_markdown_with_no_parameters_through_main():
     expected_output = """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
+               [--continue-on-error]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE] [--return-code-scheme {default,minimal}]
                {plugins,extensions,scan,scan-stdin,version} ...
@@ -178,6 +185,8 @@ optional arguments:
                         assuming default
   --stack-trace         if an error occurs, print out the stack trace for
                         debug purposes
+  --continue-on-error   if a tokenization or plugin error occurs, allow
+                        processing to continue
   --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
                         minimum level required to log messages
   --log-file LOG_FILE   destination file for log messages
@@ -208,6 +217,7 @@ def test_markdown_with_dash_h():
     expected_output = """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
+               [--continue-on-error]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE] [--return-code-scheme {default,minimal}]
                {plugins,extensions,scan,scan-stdin,version} ...
@@ -238,6 +248,8 @@ optional arguments:
                         assuming default
   --stack-trace         if an error occurs, print out the stack trace for
                         debug purposes
+  --continue-on-error   if a tokenization or plugin error occurs, allow
+                        processing to continue
   --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
                         minimum level required to log messages
   --log-file LOG_FILE   destination file for log messages
