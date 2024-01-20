@@ -136,13 +136,6 @@ class PyMarkdownLint:
             default="",
             help=argparse.SUPPRESS,
         )
-        # parser.add_argument(
-        #     "-x-fix",
-        #     dest="x_fix",
-        #     action="store_true",
-        #     default="",
-        #     help=argparse.SUPPRESS,
-        # )
         parser.add_argument(
             "-x-fix-debug",
             dest="x_fix_debug",
