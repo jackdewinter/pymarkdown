@@ -547,8 +547,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_line_fix():
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
-        "-x-fix",
-        "scan",
+        "fix",
         source_path,
     ]
 
@@ -1282,47 +1281,47 @@ def test_markdown_with_plugins_list_only():
   ID      NAMES                           ENABLED    ENABLED    VERSION  FIX
                                           (DEFAULT)  (CURRENT)
 
-  md001   heading-increment, header-incr  True       True       0.5.0    Yes
+  md001   heading-increment, header-incr  True       True       0.5.1    Yes
           ement
   md002   first-heading-h1, first-header  False      False      0.5.0    No
           -h1
   md003   heading-style, header-style     True       True       0.5.0    No
-  md004   ul-style                        True       True       0.5.0    Yes
-  md005   list-indent                     True       True       0.5.0    Yes
-  md006   ul-start-left                   False      False      0.5.0    Yes
-  md007   ul-indent                       True       True       0.5.0    Yes
-  md009   no-trailing-spaces              True       True       0.5.0    Yes
-  md010   no-hard-tabs                    True       True       0.5.0    Yes
+  md004   ul-style                        True       True       0.5.1    Yes
+  md005   list-indent                     True       True       0.5.1    Yes
+  md006   ul-start-left                   False      False      0.5.1    Yes
+  md007   ul-indent                       True       True       0.5.1    Yes
+  md009   no-trailing-spaces              True       True       0.5.1    Yes
+  md010   no-hard-tabs                    True       True       0.5.1    Yes
   md011   no-reversed-links               True       True       0.5.0    No
   md012   no-multiple-blanks              True       True       0.5.0    No
   md013   line-length                     True       True       0.5.0    No
   md014   commands-show-output            True       True       0.5.0    No
   md018   no-missing-space-atx            True       True       0.5.0    No
-  md019   no-multiple-space-atx           True       True       0.5.0    Yes
+  md019   no-multiple-space-atx           True       True       0.5.1    Yes
   md020   no-missing-space-closed-atx     True       True       0.5.0    No
-  md021   no-multiple-space-closed-atx    True       True       0.5.0    Yes
+  md021   no-multiple-space-closed-atx    True       True       0.5.1    Yes
   md022   blanks-around-headings, blanks  True       True       0.5.0    No
           -around-headers
-  md023   heading-start-left, header-sta  True       True       0.5.0    Yes
+  md023   heading-start-left, header-sta  True       True       0.5.1    Yes
           rt-left
   md024   no-duplicate-heading, no-dupli  True       True       0.5.0    No
           cate-header
   md025   single-title, single-h1         True       True       0.5.0    No
   md026   no-trailing-punctuation         True       True       0.5.0    No
-  md027   no-multiple-space-blockquote    True       True       0.5.0    Yes
+  md027   no-multiple-space-blockquote    True       True       0.5.1    Yes
   md028   no-blanks-blockquote            True       True       0.5.0    No
-  md029   ol-prefix                       True       True       0.5.0    Yes
-  md030   list-marker-space               True       True       0.5.0    Yes
+  md029   ol-prefix                       True       True       0.5.1    Yes
+  md030   list-marker-space               True       True       0.5.1    Yes
   md031   blanks-around-fences            True       True       0.5.0    No
   md032   blanks-around-lists             True       True       0.5.0    No
   md033   no-inline-html                  True       True       0.5.1    No
   md034   no-bare-urls                    True       True       0.5.0    No
-  md035   hr-style                        True       True       0.5.0    Yes
+  md035   hr-style                        True       True       0.5.1    Yes
   md036   no-emphasis-as-heading, no-emp  True       True       0.5.0    No
           hasis-as-header
-  md037   no-space-in-emphasis            True       True       0.5.0    Yes
-  md038   no-space-in-code                True       True       0.5.0    Yes
-  md039   no-space-in-links               True       True       0.5.0    Yes
+  md037   no-space-in-emphasis            True       True       0.5.1    Yes
+  md038   no-space-in-code                True       True       0.5.1    Yes
+  md039   no-space-in-links               True       True       0.5.1    Yes
   md040   fenced-code-language            True       True       0.5.0    No
   md041   first-line-heading, first-line  True       True       0.5.0    No
           -h1
@@ -1332,8 +1331,8 @@ def test_markdown_with_plugins_list_only():
   md044   proper-names                    True       True       0.5.0    No
   md045   no-alt-text                     True       True       0.5.0    No
   md046   code-block-style                True       True       0.5.0    No
-  md047   single-trailing-newline         True       True       0.5.0    Yes
-  md048   code-fence-style                True       True       0.5.0    Yes
+  md047   single-trailing-newline         True       True       0.5.1    Yes
+  md048   code-fence-style                True       True       0.5.1    Yes
   pml100  disallowed-html                 False      False      0.5.0    No
 
 """
@@ -1365,47 +1364,47 @@ def test_markdown_with_plugins_list_only_all():
   ID      NAMES                           ENABLED    ENABLED    VERSION  FIX
                                           (DEFAULT)  (CURRENT)
 
-  md001   heading-increment, header-incr  True       True       0.5.0    Yes
+  md001   heading-increment, header-incr  True       True       0.5.1    Yes
           ement
   md002   first-heading-h1, first-header  False      False      0.5.0    No
           -h1
   md003   heading-style, header-style     True       True       0.5.0    No
-  md004   ul-style                        True       True       0.5.0    Yes
-  md005   list-indent                     True       True       0.5.0    Yes
-  md006   ul-start-left                   False      False      0.5.0    Yes
-  md007   ul-indent                       True       True       0.5.0    Yes
-  md009   no-trailing-spaces              True       True       0.5.0    Yes
-  md010   no-hard-tabs                    True       True       0.5.0    Yes
+  md004   ul-style                        True       True       0.5.1    Yes
+  md005   list-indent                     True       True       0.5.1    Yes
+  md006   ul-start-left                   False      False      0.5.1    Yes
+  md007   ul-indent                       True       True       0.5.1    Yes
+  md009   no-trailing-spaces              True       True       0.5.1    Yes
+  md010   no-hard-tabs                    True       True       0.5.1    Yes
   md011   no-reversed-links               True       True       0.5.0    No
   md012   no-multiple-blanks              True       True       0.5.0    No
   md013   line-length                     True       True       0.5.0    No
   md014   commands-show-output            True       True       0.5.0    No
   md018   no-missing-space-atx            True       True       0.5.0    No
-  md019   no-multiple-space-atx           True       True       0.5.0    Yes
+  md019   no-multiple-space-atx           True       True       0.5.1    Yes
   md020   no-missing-space-closed-atx     True       True       0.5.0    No
-  md021   no-multiple-space-closed-atx    True       True       0.5.0    Yes
+  md021   no-multiple-space-closed-atx    True       True       0.5.1    Yes
   md022   blanks-around-headings, blanks  True       True       0.5.0    No
           -around-headers
-  md023   heading-start-left, header-sta  True       True       0.5.0    Yes
+  md023   heading-start-left, header-sta  True       True       0.5.1    Yes
           rt-left
   md024   no-duplicate-heading, no-dupli  True       True       0.5.0    No
           cate-header
   md025   single-title, single-h1         True       True       0.5.0    No
   md026   no-trailing-punctuation         True       True       0.5.0    No
-  md027   no-multiple-space-blockquote    True       True       0.5.0    Yes
+  md027   no-multiple-space-blockquote    True       True       0.5.1    Yes
   md028   no-blanks-blockquote            True       True       0.5.0    No
-  md029   ol-prefix                       True       True       0.5.0    Yes
-  md030   list-marker-space               True       True       0.5.0    Yes
+  md029   ol-prefix                       True       True       0.5.1    Yes
+  md030   list-marker-space               True       True       0.5.1    Yes
   md031   blanks-around-fences            True       True       0.5.0    No
   md032   blanks-around-lists             True       True       0.5.0    No
   md033   no-inline-html                  True       True       0.5.1    No
   md034   no-bare-urls                    True       True       0.5.0    No
-  md035   hr-style                        True       True       0.5.0    Yes
+  md035   hr-style                        True       True       0.5.1    Yes
   md036   no-emphasis-as-heading, no-emp  True       True       0.5.0    No
           hasis-as-header
-  md037   no-space-in-emphasis            True       True       0.5.0    Yes
-  md038   no-space-in-code                True       True       0.5.0    Yes
-  md039   no-space-in-links               True       True       0.5.0    Yes
+  md037   no-space-in-emphasis            True       True       0.5.1    Yes
+  md038   no-space-in-code                True       True       0.5.1    Yes
+  md039   no-space-in-links               True       True       0.5.1    Yes
   md040   fenced-code-language            True       True       0.5.0    No
   md041   first-line-heading, first-line  True       True       0.5.0    No
           -h1
@@ -1415,8 +1414,8 @@ def test_markdown_with_plugins_list_only_all():
   md044   proper-names                    True       True       0.5.0    No
   md045   no-alt-text                     True       True       0.5.0    No
   md046   code-block-style                True       True       0.5.0    No
-  md047   single-trailing-newline         True       True       0.5.0    Yes
-  md048   code-fence-style                True       True       0.5.0    Yes
+  md047   single-trailing-newline         True       True       0.5.1    Yes
+  md048   code-fence-style                True       True       0.5.1    Yes
   md999   debug-only                      False      False      0.0.0    No
   pml100  disallowed-html                 False      False      0.5.0    No
 
@@ -1448,10 +1447,10 @@ def test_markdown_with_plugins_list_and_filter_by_id_ends_with_nine():
   ID     NAMES                  ENABLED    ENABLED    VERSION  FIX
                                 (DEFAULT)  (CURRENT)
 
-  md009  no-trailing-spaces     True       True       0.5.0    Yes
-  md019  no-multiple-space-atx  True       True       0.5.0    Yes
-  md029  ol-prefix              True       True       0.5.0    Yes
-  md039  no-space-in-links      True       True       0.5.0    Yes
+  md009  no-trailing-spaces     True       True       0.5.1    Yes
+  md019  no-multiple-space-atx  True       True       0.5.1    Yes
+  md029  ol-prefix              True       True       0.5.1    Yes
+  md039  no-space-in-links      True       True       0.5.1    Yes
 
 """
     expected_error = ""
@@ -1502,14 +1501,14 @@ def test_markdown_with_plugins_list_and_filter_by_name_link():
   ID     NAMES                            ENABLED    ENABLED    VERSION  FIX
                                           (DEFAULT)  (CURRENT)
 
-  md001  heading-increment, header-incre  True       True       0.5.0    Yes
+  md001  heading-increment, header-incre  True       True       0.5.1    Yes
          ment
   md002  first-heading-h1, first-header-  False      False      0.5.0    No
          h1
   md003  heading-style, header-style      True       True       0.5.0    No
   md022  blanks-around-headings, blanks-  True       True       0.5.0    No
          around-headers
-  md023  heading-start-left, header-star  True       True       0.5.0    Yes
+  md023  heading-start-left, header-star  True       True       0.5.1    Yes
          t-left
   md024  no-duplicate-heading, no-duplic  True       True       0.5.0    No
          ate-header
@@ -1736,8 +1735,7 @@ def test_markdown_detect_issue_report_in_fix_mode():
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
-        "-x-fix",
-        "scan",
+        "fix",
         source_path,
     ]
 
@@ -1774,9 +1772,8 @@ def test_markdown_detect_issue_report_in_fix_mode_with_stack_trace():
     supplied_arguments = [
         "--add-plugin",
         plugin_path,
-        "-x-fix",
         "--stack-trace",
-        "scan",
+        "fix",
         source_path,
     ]
 
@@ -1856,8 +1853,7 @@ def test_markdown_normal_token_error_not_reported_with_fix():
         supplied_arguments = [
             "--add-plugin",
             plugin_path,
-            "-x-fix",
-            "scan",
+            "fix",
             temp_source_path,
         ]
 
@@ -1892,8 +1888,7 @@ def test_markdown_fixed_issue_with_debug_on():
             "--disable-rules",
             "md009",
             "-x-fix-debug",
-            "-x-fix",
-            "scan",
+            "fix",
             temp_source_path,
         ]
 
@@ -1948,8 +1943,7 @@ def test_markdown_fixed_issue_line_with_debug_and_file_debug_on():
             "md009",
             "-x-fix-file-debug",
             "-x-fix-debug",
-            "-x-fix",
-            "scan",
+            "fix",
             temp_source_path,
         ]
 
@@ -2042,8 +2036,7 @@ We skipped out a 2nd level heading in this document
         supplied_arguments = [
             "-x-fix-file-debug",
             "-x-fix-debug",
-            "-x-fix",
-            "scan",
+            "fix",
             temp_source_path,
         ]
 
@@ -2133,8 +2126,7 @@ We skipped out a 2nd level heading in this document
         supplied_arguments = [
             "--add-plugin",
             plugin_path,
-            "-x-fix",
-            "scan",
+            "fix",
             temp_source_path,
         ]
 
@@ -2179,8 +2171,7 @@ def test_markdown_plugins_wanting_to_fix_unknown_token_stack_trace():
             "--stack-trace",
             "--add-plugin",
             plugin_path,
-            "-x-fix",
-            "scan",
+            "fix",
             temp_source_path,
         ]
 

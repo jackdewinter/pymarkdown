@@ -125,7 +125,7 @@ def test_markdown_with_dash_dash_log_level_invalid(caplog):
                [--continue-on-error]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE] [--return-code-scheme {default,minimal}]
-               {plugins,extensions,scan,scan-stdin,version} ...
+               {extensions,fix,plugins,scan,scan-stdin,version} ...
 main.py: error: argument --log-level: invalid validate_log_level_type value: 'invalid'
 """
 
@@ -452,8 +452,7 @@ def test_markdown_fix_with_no_rescan_log_debug(caplog):
             "--log-level",
             "DEBUG",
             "-x-fix-no-rescan-log",
-            "-x-fix",
-            "scan",
+            "fix",
             temp_source_path,
         ]
 
@@ -514,8 +513,7 @@ def test_markdown_fix_with_no_rescan_log_info(caplog):
             "--log-level",
             "INFO",
             "-x-fix-no-rescan-log",
-            "-x-fix",
-            "scan",
+            "fix",
             temp_source_path,
         ]
 
@@ -573,8 +571,7 @@ def test_markdown_fix_with_no_rescan_log_warn(caplog):
             "--log-level",
             "WARNING",
             "-x-fix-no-rescan-log",
-            "-x-fix",
-            "scan",
+            "fix",
             temp_source_path,
         ]
 

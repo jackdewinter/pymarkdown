@@ -18,15 +18,17 @@ def test_application_file_scanner_args_no_changes():
 Lint any found files.
 
 positional arguments:
-  path                  one or more paths to scan for eligible files
+  path                  one or more paths to examine for eligible files
 
 optional arguments:
   -h, --help            show this help message and exit
-  -l, --list-files      list the eligible files and exit
-  -r, --recurse         recursively scan directories for files
+  -l, --list-files      list any eligible files found on the specified paths
+                        and exit
+  -r, --recurse         recursively traverse any found directories for
+                        matching files
   -ae ALTERNATE_EXTENSIONS, --alternate-extensions ALTERNATE_EXTENSIONS
-                        provide an alternate set of file extensions to scan
-                        for"""
+                        provide an alternate set of file extensions to match
+                        against"""
     parser = argparse.ArgumentParser(description="Lint any found files.", prog="pytest")
 
     # Act
@@ -67,15 +69,17 @@ def test_application_file_scanner_args_with_file_type_name():
 Lint any found files.
 
 positional arguments:
-  path                  one or more paths to scan for eligible MINE files
+  path                  one or more paths to examine for eligible MINE files
 
 optional arguments:
   -h, --help            show this help message and exit
-  -l, --list-files      list the eligible MINE files and exit
-  -r, --recurse         recursively scan directories for files
+  -l, --list-files      list any eligible MINE files found on the specified
+                        paths and exit
+  -r, --recurse         recursively traverse any found directories for
+                        matching files
   -ae ALTERNATE_EXTENSIONS, --alternate-extensions ALTERNATE_EXTENSIONS
-                        provide an alternate set of file extensions to scan
-                        for"""
+                        provide an alternate set of file extensions to match
+                        against"""
     parser = argparse.ArgumentParser(description="Lint any found files.", prog="pytest")
 
     # Act
@@ -99,15 +103,17 @@ def test_application_file_scanner_args_with_empty_file_type_name():
 Lint any found files.
 
 positional arguments:
-  path                  one or more paths to scan for eligible files
+  path                  one or more paths to examine for eligible files
 
 optional arguments:
   -h, --help            show this help message and exit
-  -l, --list-files      list the eligible files and exit
-  -r, --recurse         recursively scan directories for files
+  -l, --list-files      list any eligible files found on the specified paths
+                        and exit
+  -r, --recurse         recursively traverse any found directories for
+                        matching files
   -ae ALTERNATE_EXTENSIONS, --alternate-extensions ALTERNATE_EXTENSIONS
-                        provide an alternate set of file extensions to scan
-                        for"""
+                        provide an alternate set of file extensions to match
+                        against"""
     parser = argparse.ArgumentParser(description="Lint any found files.", prog="pytest")
 
     # Act
@@ -131,14 +137,15 @@ def test_application_file_scanner_args_without_list_files():
 Lint any found files.
 
 positional arguments:
-  path                  one or more paths to scan for eligible files
+  path                  one or more paths to examine for eligible files
 
 optional arguments:
   -h, --help            show this help message and exit
-  -r, --recurse         recursively scan directories for files
+  -r, --recurse         recursively traverse any found directories for
+                        matching files
   -ae ALTERNATE_EXTENSIONS, --alternate-extensions ALTERNATE_EXTENSIONS
-                        provide an alternate set of file extensions to scan
-                        for"""
+                        provide an alternate set of file extensions to match
+                        against"""
     parser = argparse.ArgumentParser(description="Lint any found files.", prog="pytest")
 
     # Act
@@ -162,14 +169,15 @@ def test_application_file_scanner_args_without_recurse_directories():
 Lint any found files.
 
 positional arguments:
-  path                  one or more paths to scan for eligible files
+  path                  one or more paths to examine for eligible files
 
 optional arguments:
   -h, --help            show this help message and exit
-  -l, --list-files      list the eligible files and exit
+  -l, --list-files      list any eligible files found on the specified paths
+                        and exit
   -ae ALTERNATE_EXTENSIONS, --alternate-extensions ALTERNATE_EXTENSIONS
-                        provide an alternate set of file extensions to scan
-                        for"""
+                        provide an alternate set of file extensions to match
+                        against"""
     parser = argparse.ArgumentParser(description="Lint any found files.", prog="pytest")
 
     # Act
@@ -193,12 +201,14 @@ def test_application_file_scanner_args_without_alternate_extensions():
 Lint any found files.
 
 positional arguments:
-  path              one or more paths to scan for eligible files
+  path              one or more paths to examine for eligible files
 
 optional arguments:
   -h, --help        show this help message and exit
-  -l, --list-files  list the eligible files and exit
-  -r, --recurse     recursively scan directories for files"""
+  -l, --list-files  list any eligible files found on the specified paths and
+                    exit
+  -r, --recurse     recursively traverse any found directories for matching
+                    files"""
     parser = argparse.ArgumentParser(description="Lint any found files.", prog="pytest")
 
     # Act

@@ -7,8 +7,25 @@ for a version 1.0 release in early 2024.  To a large extent, this
 involves adding the "fix" feature for some rules, and double checking
 the output of many of the existing rules, looking for missing issues.
 
+Some other notable additions/changes are:
+
+- the `--continue-on-error` command line flag allows PyMarkdown to
+  continue processing after any tokenization error or plugin error
+  - while we hope this is not necessary long term, it is useful
+- added `py.typed` file for any API users
+  - this allows mypy to understand the typing included with the
+    PyMarkdown API
+- more parameterized tests
+  - borrowing a pattern we have observed, transitioning scenario tests
+    over to this new pattern
+  - any plugin with the new Fix feature has parameterized tests
+
 ### Added
 
+- [Issue 618](https://github.com/jackdewinter/pymarkdown/issues/618)
+  - Ability to tell PyMarkdown to fix issues
+  - Not every plugin supports fix, see `pymarkdown plugins list` for
+    the current list of plugins and fix status
 - [Issue 802](https://github.com/jackdewinter/pymarkdown/issues/802)
   - Extension: Extended Autolinks
 - [Issue 803](https://github.com/jackdewinter/pymarkdown/issues/803)

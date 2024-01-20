@@ -40,7 +40,7 @@ class RuleMd048(RulePlugin):
             plugin_id="MD048",
             plugin_enabled_by_default=True,
             plugin_description="Code fence style",
-            plugin_version="0.5.0",
+            plugin_version="0.5.1",
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md048.md",
             plugin_configuration="style",
             plugin_supports_fix=True,
