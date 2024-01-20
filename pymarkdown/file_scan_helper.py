@@ -765,13 +765,16 @@ class FileScanHelper:
         return FileScanHelper.__stdin_scan_subcommand == args.primary_subparser  # type: ignore
 
     @staticmethod
-    def add_argparse_subparser(subparsers: argparse._SubParsersAction, is_fix_mode:bool) -> None:  # type: ignore
+    def add_argparse_subparser(subparsers: argparse._SubParsersAction, is_fix_mode: bool) -> None:  # type: ignore
         """
         Add the subparser for scanning.
         """
         subparser_action = "fix" if is_fix_mode else "scan"
-        subparser_command = FileScanHelper.__normal_fix_subcommand if is_fix_mode else FileScanHelper.__normal_scan_subcommand
-        
+        subparser_command = (
+            FileScanHelper.__normal_fix_subcommand
+            if is_fix_mode
+            else FileScanHelper.__normal_scan_subcommand
+        )
 
         new_sub_parser = subparsers.add_parser(
             subparser_command,
