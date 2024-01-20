@@ -41,6 +41,7 @@ class FileScanHelper:
 
     __normal_scan_subcommand = "scan"
     __stdin_scan_subcommand = "scan-stdin"
+    __normal_fix_subcommand = "fix"
 
     # pylint: disable=too-many-arguments
     def __init__(
@@ -72,19 +73,20 @@ class FileScanHelper:
         """
 
         self.__continue_on_error = args.continue_on_error
+        in_fix_mode = args.primary_subparser == FileScanHelper.__normal_fix_subcommand
 
         # sourcery skip: raise-specific-error
         did_fix_any_file = False
         did_fail_any_file = False
         if use_standard_in:
+            assert not in_fix_mode
             POGGER.debug("Scanning from: (stdin)")
             self.__scan_from_stdin(args, string_to_scan)
-            assert not args.x_fix
 
         else:
             POGGER.debug("Scanning from: $", files_to_scan)
             for next_file in files_to_scan:
-                if args.x_fix:
+                if in_fix_mode:
                     did_fix_file, did_succeed = self.__fix_specific_file(
                         next_file,
                         next_file,
@@ -763,19 +765,27 @@ class FileScanHelper:
         return FileScanHelper.__stdin_scan_subcommand == args.primary_subparser  # type: ignore
 
     @staticmethod
-    def add_argparse_subparser(subparsers: argparse._SubParsersAction) -> None:  # type: ignore
+    def add_argparse_subparser(subparsers: argparse._SubParsersAction, is_fix_mode: bool) -> None:  # type: ignore
         """
         Add the subparser for scanning.
         """
+        subparser_action = "fix" if is_fix_mode else "scan"
+        subparser_command = (
+            FileScanHelper.__normal_fix_subcommand
+            if is_fix_mode
+            else FileScanHelper.__normal_scan_subcommand
+        )
+
         new_sub_parser = subparsers.add_parser(
-            FileScanHelper.__normal_scan_subcommand,
-            help="scan the Markdown files in the specified paths",
+            subparser_command,
+            help=f"{subparser_action} the Markdown files in any specified paths",
         )
         ApplicationFileScanner.add_default_command_line_arguments(
             new_sub_parser, ".md", "Markdown"
         )
 
-        subparsers.add_parser(
-            FileScanHelper.__stdin_scan_subcommand,
-            help="scan the standard input as a Markdown file",
-        )
+        if not is_fix_mode:
+            subparsers.add_parser(
+                FileScanHelper.__stdin_scan_subcommand,
+                help="scan the standard input as a Markdown file",
+            )
