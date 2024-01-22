@@ -7,7 +7,7 @@ verify_ssl = true
 black = "==23.12.1"
 coverage = "==7.3.2"
 isort = "==5.13.2"
-flake8 = "==6.1.0"
+flake8 = "==7.0.0"
 flake8-bugbear = "==24.1.17"
 flake8-bandit = "==4.1.1"
 mypy = "==1.8.0"
