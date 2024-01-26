@@ -67,15 +67,17 @@ image tags than the default `!--` (HTML comment) are strongly discouraged.
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
-| `allowed_elements` | `string` | `!--,![CDATA[,!DOCTYPE` | Comma separated list of tag starts that are allowable. |
+| `allowed_elements` | `string` | `!--,![CDATA[,!DOCTYPE` | Comma separated list of tag starts that are allowable.** |
 | `allow_first_image_element` | `boolean` | `True` | Whether to allow an image HTML block. |
 
-To be clear, if using the `allowed_elements` configuration value, the supplied
-value is a comma separated list of allowable element sequences.  Those
-element names are derived by taking the start of the tag and skipping
-over the start character `<`.
-From that point, the parser collects the contents of the tag up to one of the
-following:
+** The comma-separated list of items is a string with a format of `{item},...,{item}`.
+Any leading or trailing space characters surrounding the `{item}` are trimmed during
+processing.  Empty `{item}` values after this trimming has been applied will generate
+a configuration error.
+
+The element names in the list are derived by taking the start of the tag and skipping
+over the start character `<`.  From that point, the parser collects the contents
+of the tag up to one of the following:
 
 - the first whitespace character
 - the close HTML tag character (`/`)

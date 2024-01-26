@@ -481,6 +481,190 @@ def test_reference_links_549():
 
 
 @pytest.mark.gfm
+def test_reference_links_549ax():
+    """
+    Test case 549:  variant
+    """
+
+    # Arrange
+    source_markdown = """[ Foo  bar ]: /url
+
+[Baz][Foo bar]"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::foo bar: Foo  bar : :/url:::::]",
+        "[BLANK(2,1):]",
+        "[para(3,1):]",
+        "[link(3,1):full:/url::::Foo bar:Baz:False::::]",
+        "[text(3,2):Baz:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><a href="/url">Baz</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_549aa():
+    """
+    Test case 549:  variant
+    """
+
+    # Arrange
+    source_markdown = """[\x0cFoo\x0c\x0cbar\x0c]: /url
+
+[Baz][Foo bar]"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::foo bar:\x0cFoo\x0c\x0cbar\x0c: :/url:::::]",
+        "[BLANK(2,1):]",
+        "[para(3,1):]",
+        "[link(3,1):full:/url::::Foo bar:Baz:False::::]",
+        "[text(3,2):Baz:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><a href="/url">Baz</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_549bx():
+    """
+    Test case 549:  variant
+    """
+
+    # Arrange
+    source_markdown = """[Foo bar]: /url
+
+[Baz][ Foo  bar ]"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::foo bar:Foo bar: :/url:::::]",
+        "[BLANK(2,1):]",
+        "[para(3,1):]",
+        "[link(3,1):full:/url:::: Foo  bar :Baz:False::::]",
+        "[text(3,2):Baz:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><a href="/url">Baz</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_549ba():
+    """
+    Test case 549:  variant
+    """
+
+    # Arrange
+    source_markdown = """[Foo bar]: /url
+
+[Baz][\x0cFoo\x0c\x0cbar\x0c]"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::foo bar:Foo bar: :/url:::::]",
+        "[BLANK(2,1):]",
+        "[para(3,1):]",
+        "[link(3,1):full:/url::::\x0cFoo\x0c\x0cbar\x0c:Baz:False::::]",
+        "[text(3,2):Baz:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><a href="/url">Baz</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_549c():
+    """
+    Test case 549:  variant
+    """
+
+    # Arrange
+    source_markdown = """[Foo bar]: /url
+
+[Baz][\u00a0Foo  bar ]"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::foo bar:Foo bar: :/url:::::]",
+        "[BLANK(2,1):]",
+        "[para(3,1):]",
+        "[text(3,1):[:]",
+        "[text(3,2):Baz:]",
+        "[text(3,5):]:]",
+        "[text(3,6):[:]",
+        "[text(3,7):\u00a0Foo  bar :]",
+        "[text(3,17):]:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>[Baz][\u00a0Foo  bar ]</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_549d():
+    """
+    Test case 549:  variant
+    """
+
+    # Arrange
+    source_markdown = """[Foo bar]: /url
+
+[Baz][ Foo  bar\u00a0]"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::foo bar:Foo bar: :/url:::::]",
+        "[BLANK(2,1):]",
+        "[para(3,1):]",
+        "[text(3,1):[:]",
+        "[text(3,2):Baz:]",
+        "[text(3,5):]:]",
+        "[text(3,6):[:]",
+        "[text(3,7): Foo  bar\u00a0:]",
+        "[text(3,17):]:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>[Baz][ Foo  bar\u00a0]</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_549e():
+    """
+    Test case 549:  variant
+    """
+
+    # Arrange
+    source_markdown = """[Foo bar]: /url
+
+[Baz][ Foo\u00a0\u00a0bar ]"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::foo bar:Foo bar: :/url:::::]",
+        "[BLANK(2,1):]",
+        "[para(3,1):]",
+        "[text(3,1):[:]",
+        "[text(3,2):Baz:]",
+        "[text(3,5):]:]",
+        "[text(3,6):[:]",
+        "[text(3,7): Foo\u00a0\u00a0bar :]",
+        "[text(3,17):]:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>[Baz][ Foo\u00a0\u00a0bar ]</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_reference_links_550():
     """
     Test case 550:  (part 1) No whitespace is allowed between the link text and the link label:

@@ -64,10 +64,10 @@ class RuleMd044(RulePlugin):
         if names := self.plugin_configuration.get_string_property(
             "names",
             default_value="",
-        ).strip():
+        ).strip(" "):
             lower_list: List[str] = []
             for next_name in names.split(","):
-                next_name = next_name.strip()
+                next_name = next_name.strip(" ")
                 if not next_name:
                     raise ValueError(
                         "Elements in the comma-separated list cannot be empty."

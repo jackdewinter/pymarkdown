@@ -44,7 +44,7 @@ class RuleMd025(RulePlugin):
 
     @classmethod
     def __validate_configuration_title(cls, found_value: str) -> None:
-        found_value = found_value.strip()
+        found_value = found_value.strip(" ")
         if not found_value:
             raise ValueError("Empty strings are not allowable values.")
         if ":" in found_value:

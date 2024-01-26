@@ -577,13 +577,17 @@ class TextMarkdownToken(InlineMarkdownToken):
             )
             arrays_to_combine: List[List[str]] = []
             if newlines_in_adjusted == newlines_in_whitespace:
-                arrays_to_combine.append(adjusted_text_token.split("\n"))
+                arrays_to_combine.append(
+                    adjusted_text_token.split(ParserHelper.newline_character)
+                )
             else:
                 TextMarkdownToken.__handle_text_token_normal_enhanced(
                     arrays_to_combine, text_token
                 )
 
-            arrays_to_combine.append(resolved_whitespace.split("\n"))
+            arrays_to_combine.append(
+                resolved_whitespace.split(ParserHelper.newline_character)
+            )
             assert len(arrays_to_combine[0]) == len(arrays_to_combine[1])
             POGGER.debug("arrays_to_combine>:$:<", arrays_to_combine)
             final_parts: List[str] = []

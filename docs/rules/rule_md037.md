@@ -31,7 +31,7 @@ such as `***` for combining an italics emphasis with a bold emphasis.
 ### Failure Scenarios
 
 This rule triggers if a pair of matching emphasis characters occur
-within the same paragraph with space around either of the emphasis
+within the same paragraph with unicode whitespace around either of the emphasis
 characters.
 
 ```Markdown

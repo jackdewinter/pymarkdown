@@ -1,6 +1,7 @@
 """
 Extra tests.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 from test.utils import act_and_assert, create_temporary_configuration_file
 
@@ -1818,7 +1819,7 @@ this
 
 
 @pytest.mark.gfm
-def test_extra_020():
+def test_extra_020x():
     """
     TBD
     """
@@ -1948,6 +1949,96 @@ this</p>
 <li>
 <p>that</p>
 </li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_020c():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """> 1. list
+>    this
+> \x0c
+>    [abc]: /url
+> 1. that
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n]",
+        "[olist(1,3):.:1:5::   \n\n   \n]",
+        "[para(1,6):\n]",
+        "[text(1,6):list\nthis::\n]",
+        "[end-para:::True]",
+        "[BLANK(3,3):\x0c]",
+        "[link-ref-def(4,6):True::abc:: :/url:::::]",
+        "[li(5,3):5::1]",
+        "[para(5,6):]",
+        "[text(5,6):that:]",
+        "[end-para:::True]",
+        "[BLANK(6,1):]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>
+<p>list
+this</p>
+</li>
+<li>
+<p>that</p>
+</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_020d():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """> 1. list
+>    this
+> \u00a0
+>    [abc]: /url
+> 1. that
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> ]",
+        "[olist(1,3):.:1:5::   \n\n   \n]",
+        "[para(1,6):\n\n\n]",
+        "[text(1,6):list\nthis\n\u00a0\n::\n\n\n]",
+        "[text(4,1):[:]",
+        "[text(4,2):abc:]",
+        "[text(4,5):]:]",
+        "[text(4,6):: /url:]",
+        "[end-para:::True]",
+        "[li(5,3):5::1]",
+        "[para(5,6):]",
+        "[text(5,6):that:]",
+        "[end-para:::True]",
+        "[BLANK(6,1):]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>list
+this
+\u00a0
+[abc]: /url</li>
+<li>that</li>
 </ol>
 </blockquote>"""
 
@@ -4640,6 +4731,55 @@ def test_extra_034e():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.gfm
+def test_extra_035x():
+    """
+    TBD - from https://github.com/jackdewinter/pymarkdown/issues/945
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    input_path = os.path.join("test", "resources", "test-issue-945.md")
+
+    supplied_arguments = ["--stack-trace", "scan", input_path]
+
+    expected_return_code = 1
+    expected_output = f"{input_path}:1:2: MD010: Hard tabs [Column: 2] (no-hard-tabs)"
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.gfm
+def test_extra_035a():
+    """
+    This may look like a blank line, but according to GFM, no space characters above x20
+    unless using emphasis.
+    """
+
+    # Arrange
+    source_markdown = """The next line contains UTF characters c2a0 (NO-BREAK SPACE):
+\u00a0
+This page should not break pymarkdown"""
+    expected_tokens = [
+        "[para(1,1):\n\n]",
+        "[text(1,1):The next line contains UTF characters c2a0 (NO-BREAK SPACE):\n\u00a0\nThis page should not break pymarkdown::\n\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>The next line contains UTF characters c2a0 (NO-BREAK SPACE):
+\u00a0
+This page should not break pymarkdown</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm

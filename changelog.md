@@ -2,6 +2,20 @@
 
 ## Unversioned - In Main, Not Released
 
+### Added
+
+- None
+
+### Fixed
+
+- None
+
+### Changed
+
+- None
+
+## Version 0.9.16 - Date: 2024-01-20
+
 This release is going to focus on getting the feature list complete
 for a version 1.0 release in early 2024.  To a large extent, this
 involves adding the "fix" feature for some rules, and double checking

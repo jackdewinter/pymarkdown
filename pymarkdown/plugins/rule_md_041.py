@@ -46,7 +46,7 @@ class RuleMd041(RulePlugin):
 
     @classmethod
     def __validate_configuration_title(cls, found_value: str) -> None:
-        found_value = found_value.strip()
+        found_value = found_value.strip(" ")
         if ":" in found_value:
             raise ValueError("Colons (:) are not allowed in the value.")
 
@@ -66,7 +66,7 @@ class RuleMd041(RulePlugin):
                 valid_value_fn=self.__validate_configuration_title,
             )
             .lower()
-            .strip()
+            .strip(" ")
         )
 
     def starting_new_file(self) -> None:
@@ -96,7 +96,7 @@ class RuleMd041(RulePlugin):
         elif self.__seen_html_block_start:
             assert token.is_text
             text_token = cast(TextMarkdownToken, token)
-            html_block_contents = text_token.token_text.strip()
+            html_block_contents = text_token.token_text.strip(" ")
             if not html_block_contents.startswith(
                 "<h1 "
             ) and not html_block_contents.startswith("<h1>"):

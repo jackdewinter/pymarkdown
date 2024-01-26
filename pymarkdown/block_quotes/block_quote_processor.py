@@ -10,6 +10,7 @@ from pymarkdown.block_quotes.block_quote_non_fenced_helper import (
     BlockQuoteNonFencedHelper,
 )
 from pymarkdown.container_blocks.container_grab_bag import ContainerGrabBag
+from pymarkdown.general.constants import Constants
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.parser_state import ParserState
 from pymarkdown.general.position_marker import PositionMarker
@@ -326,10 +327,9 @@ class BlockQuoteProcessor:
                 POGGER.debug(
                     "token_stack[x]>$", parser_state.token_stack[adjusted_current_count]
                 )
-                if (
-                    parser_state.token_stack[adjusted_current_count].is_list
-                    and adjusted_text_to_parse.strip()
-                ):
+                if parser_state.token_stack[
+                    adjusted_current_count
+                ].is_list and adjusted_text_to_parse.strip(Constants.ascii_whitespace):
                     POGGER.debug("\n\nBOOM\n\n")
                     parser_state.nested_list_start = cast(
                         ListStackToken, parser_state.token_stack[adjusted_current_count]

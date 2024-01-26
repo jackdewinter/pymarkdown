@@ -33,7 +33,7 @@ commands provided.
 ### Failure Scenarios
 
 This rule triggers if every line within a Code Block element begins with
-the `$` indicator, after any leading whitespace has been removed.
+the `$` indicator, after any leading space characters have been removed.
 
 ````Markdown
 ```shell

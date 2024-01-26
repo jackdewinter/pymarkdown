@@ -407,7 +407,7 @@ Title: my document
 
 
 @pytest.mark.gfm
-def test_front_matter_14():
+def test_front_matter_14x():
     """
     Any whitespace after the three - characters in the start boundary is acceptable.
     """
@@ -424,6 +424,55 @@ Title: my document
         "[BLANK(4,1):]",
     ]
     expected_gfm = """"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=config_map
+    )
+
+
+@pytest.mark.gfm
+def test_front_matter_14a():
+    """
+    14 - variant
+    """
+
+    # Arrange
+    source_markdown = """---\x0c\x0c
+Title: my document
+---
+"""
+    expected_tokens = [
+        "[front-matter(1,1):---\x0c\x0c:---:['Title: my document']:{'Title': 'my document'}]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=config_map
+    )
+
+
+@pytest.mark.gfm
+def test_front_matter_14b():
+    """
+    14 - variant, but with \u00a0 which is unicode ws, but not normal whitespace
+    """
+
+    # Arrange
+    source_markdown = """---\u00a0\u00a0
+Title: my document
+---
+"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):---\u00a0\u00a0\nTitle: my document::\n]",
+        "[end-setext::]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<h2>---\u00a0\u00a0
+Title: my document</h2>"""
 
     # Act & Assert
     act_and_assert(
@@ -449,6 +498,55 @@ Title: my document
         "[BLANK(4,1):]",
     ]
     expected_gfm = """"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=config_map
+    )
+
+
+@pytest.mark.gfm
+def test_front_matter_15a():
+    """
+    Any whitespace after the three - characters in the end boundary is acceptable.
+    """
+
+    # Arrange
+    source_markdown = """---
+Title: my document
+---\x0c\x0c
+"""
+    expected_tokens = [
+        "[front-matter(1,1):---:---\x0c\x0c:['Title: my document']:{'Title': 'my document'}]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=config_map
+    )
+
+
+@pytest.mark.gfm
+def test_front_matter_15b():
+    """
+    Any whitespace after the three - characters in the end boundary is acceptable.
+    """
+
+    # Arrange
+    source_markdown = """---
+Title: my document
+---\u00a0\u00a0
+"""
+    expected_tokens = [
+        "[tbreak(1,1):-::---]",
+        "[para(2,1):\n]",
+        "[text(2,1):Title: my document\n---\u00a0\u00a0::\n]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<hr />\n<p>Title: my document\n---\u00a0\u00a0</p>"""
 
     # Act & Assert
     act_and_assert(

@@ -6,6 +6,7 @@ from typing import List, Optional, Tuple, cast
 
 from pymarkdown.block_quotes.block_quote_count_helper import BlockQuoteCountHelper
 from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
+from pymarkdown.general.constants import Constants
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.parser_state import ParserState
@@ -195,7 +196,7 @@ class BlockQuoteNonFencedHelper:
         )
         POGGER.debug("text_removed_by_container=[$]", removed_text)
         POGGER.debug("removed_text=[$]", removed_text)
-        if line_to_parse.strip():
+        if line_to_parse.strip(Constants.ascii_whitespace):
             return (
                 line_to_parse,
                 start_index,

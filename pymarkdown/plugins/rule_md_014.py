@@ -55,5 +55,7 @@ class RuleMd014(RulePlugin):
             split_token_text = text_token.token_text.split(
                 ParserHelper.newline_character
             )
-            if all(next_line.strip().startswith("$") for next_line in split_token_text):
+            if all(
+                next_line.strip(" ").startswith("$") for next_line in split_token_text
+            ):
                 self.report_next_token_error(context, token)

@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_list_blocks_231():
+def test_list_blocks_231x():
     """
     Test case 231:  If the list item is ordered, then it is also assigned a start number, based on the ordered list marker.
     """
@@ -42,6 +42,75 @@ with two lines.</p>
 <blockquote>
 <p>A block quote.</p>
 </blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_231a():
+    """
+    Test case 231:  If the list item is ordered, then it is also assigned a start number, based on the ordered list marker.
+    """
+
+    # Arrange
+    source_markdown = """A paragraph
+with two lines.
+\x0c
+    indented code
+\x0c
+> A block quote."""
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):A paragraph\nwith two lines.::\n]",
+        "[end-para:::True]",
+        "[BLANK(3,1):\x0c]",
+        "[icode-block(4,5):    :]",
+        "[text(4,5):indented code:]",
+        "[end-icode-block:::True]",
+        "[BLANK(5,1):\x0c]",
+        "[block-quote(6,1)::> ]",
+        "[para(6,3):]",
+        "[text(6,3):A block quote.:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<p>A paragraph
+with two lines.</p>
+<pre><code>indented code
+</code></pre>
+<blockquote>
+<p>A block quote.</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_231b():
+    """
+    Test case 231:  variant
+    """
+
+    # Arrange
+    source_markdown = """A paragraph
+with two lines.
+\u00a0
+    indented code
+\u00a0
+> A block quote."""
+    expected_tokens = [
+        "[para(1,1):\n\n\n    \n]",
+        "[text(1,1):A paragraph\nwith two lines.\n\u00a0\nindented code\n\u00a0::\n\n\n\n]",
+        "[end-para:::True]",
+        "[block-quote(6,1)::> ]",
+        "[para(6,3):]",
+        "[text(6,3):A block quote.:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<p>A paragraph\nwith two lines.\n\u00a0\nindented code\n\u00a0</p>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)

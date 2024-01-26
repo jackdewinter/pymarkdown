@@ -100,7 +100,12 @@ sequence is not followed by anything; it cannot be followed by any headings.
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
-| `required_headings` | `string` | `""` | Comma separated list of headings to require the document to have. |
+| `required_headings` | `string` | `""` | Comma separated list of headings to require the document to have.** |
+
+** The comma-separated list of items is a string with a format of `{item},...,{item}`.
+Any leading or trailing space characters surrounding the `{item}` are trimmed during
+processing.  Empty `{item}` values after this trimming has been applied will generate
+a configuration error.
 
 For the `required_headings` list, each element is expected to be in one
 of two forms.  The first form is that of a uncomplicated text Atx Heading, such as

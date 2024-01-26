@@ -295,6 +295,7 @@ def write_temporary_configuration(
                 dir=directory,
                 suffix=file_name_suffix,
                 prefix=file_name_prefix,
+                encoding="utf-8",
             ) as outfile:
                 if isinstance(supplied_configuration, str):
                     outfile.write(supplied_configuration)

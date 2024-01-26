@@ -235,7 +235,7 @@ class InlineBacktickHelper:
             ]
         ):
             stripped_between_attempt = between_text[1:-1]
-            if len(stripped_between_attempt.strip()) != 0:
+            if len(stripped_between_attempt.strip(" ")) != 0:
                 leading_whitespace, trailing_whitespace = (
                     between_text[0],
                     between_text[-1],

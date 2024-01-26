@@ -276,3 +276,52 @@ this is a paragraph
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_pragma_parsing_011a():
+    """
+    Test case 11:  Pragma heading, but with extra spacing after the closing comment.
+    """
+
+    # Arrange
+    source_markdown = """<!-- pyml -->\x0c\x0c\x0c
+this is a paragraph
+"""
+    expected_tokens = [
+        "[para(2,1):]",
+        "[text(2,1):this is a paragraph:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[pragma:1:<!-- pyml -->\x0c\x0c\x0c]",
+    ]
+    expected_gfm = "<p>this is a paragraph</p>"
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_pragma_parsing_011b():
+    """
+    Test case 11:  Pragma heading, but with extra spacing after the closing comment.
+    """
+
+    # Arrange
+    source_markdown = """<!-- pyml -->\u00a0\u00a0
+this is a paragraph
+"""
+    expected_tokens = [
+        "[html-block(1,1)]",
+        "[text(1,1):<!-- pyml -->\u00a0\u00a0:]",
+        "[end-html-block:::False]",
+        "[para(2,1):]",
+        "[text(2,1):this is a paragraph:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+    ]
+    expected_gfm = """<!-- pyml -->\u00a0\u00a0
+<p>this is a paragraph</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

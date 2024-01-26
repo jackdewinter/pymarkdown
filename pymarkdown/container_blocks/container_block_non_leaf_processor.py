@@ -215,7 +215,9 @@ class ContainerBlockNonLeafProcessor:
             if inner_token.is_block_quote_start:
                 block_quote_token = cast(BlockQuoteMarkdownToken, inner_token)
                 assert block_quote_token.bleading_spaces is not None
-                split_spaces = block_quote_token.bleading_spaces.split("\n")
+                split_spaces = block_quote_token.bleading_spaces.split(
+                    ParserHelper.newline_character
+                )
                 grab_bag.indent_already_processed = len(split_spaces[-1])
             else:
                 assert inner_token.is_list_start

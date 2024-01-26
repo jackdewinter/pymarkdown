@@ -121,6 +121,44 @@ def test_pragmas_disable_next_line_no_id():
 
 
 @pytest.mark.gfm
+def test_pragmas_disable_next_line_no_id_more_spaces():
+    """
+    Test the case where we specify a 'disable-next-line' pragma, but specify no id to disable.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "pragmas",
+        "atx_heading_with_multiple_spaces_disable_with_no_id_ms.md",
+    )
+    supplied_arguments = [
+        "scan",
+        source_path,
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        f"{source_path}:2:1: "
+        + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
+    )
+    expected_error = (
+        f"{source_path}:1:1: "
+        + "INLINE: Inline configuration command 'disable-next-line' specified a plugin with a blank id.\n"
+    )
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.gfm
 def test_pragmas_disable_next_line_bad_id():
     """
     Test the case where we specify a 'disable-next-line' pragma, but specify a bad id to disable.
@@ -414,14 +452,9 @@ def test_pragmas_disable_next_line_valid_id_extra_ws_after_pragma():
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = """{source_path}:2:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)
-""".replace(
-        "{source_path}", source_path
-    )
-    expected_error = "{source_path}:1:1: INLINE: Inline configuration specified without command.".replace(
-        "{source_path}", source_path
-    )
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -450,14 +483,9 @@ def test_pragmas_disable_next_line_valid_id_extra_ws_after():
         source_path,
     ]
 
-    expected_return_code = 1
-    expected_output = """[pso[[psf[{source_path}:2:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)]]]]
-""".replace(
-        "{source_path}", source_path
-    )
-    expected_error = "[pse[[ppf[{source_path}:1:1: INLINE: Inline configuration specified without command.]]]]".replace(
-        "{source_path}", source_path
-    )
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)

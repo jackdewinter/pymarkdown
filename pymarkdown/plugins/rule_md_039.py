@@ -3,6 +3,7 @@ Module to implement a plugin that looks for spaces within link labels.
 """
 from typing import cast
 
+from pymarkdown.general.constants import Constants
 from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
@@ -35,7 +36,9 @@ class RuleMd039(RulePlugin):
         """
         if token.is_inline_link or token.is_inline_image:
             link_token = cast(LinkStartMarkdownToken, token)
-            stripped_text_from_blocks = link_token.text_from_blocks.strip()
+            stripped_text_from_blocks = link_token.text_from_blocks.strip(
+                Constants.ascii_whitespace
+            )
             if link_token.text_from_blocks != stripped_text_from_blocks:
                 if context.in_fix_mode:
                     self.register_fix_token_request(

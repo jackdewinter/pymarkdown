@@ -101,10 +101,12 @@ class LinkParseHelper:
         )
 
         # Fold multiple spaces into a single space character.
-        link_label = ParserHelper.space_character.join(link_label.split())
+        # x = link_label.split(ParserHelper.space_character)
+        split_label = [s for s in link_label.split(ParserHelper.space_character) if s]
+        link_label = ParserHelper.space_character.join(split_label)
 
         # Fold the case of any characters to their lower equivalent.
-        return link_label.casefold().strip()
+        return link_label.casefold().strip(ParserHelper.space_character)
 
     @staticmethod
     def look_up_link(

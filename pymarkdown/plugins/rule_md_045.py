@@ -3,6 +3,7 @@ Module to implement a plugin that looks for image elements that do not specify a
 """
 from typing import cast
 
+from pymarkdown.general.constants import Constants
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
@@ -35,5 +36,7 @@ class RuleMd045(RulePlugin):
         """
         if token.is_inline_image:
             image_token = cast(ImageStartMarkdownToken, token)
-            if not image_token.text_from_blocks.strip():
+            if not image_token.text_from_blocks.strip(
+                Constants.unicode_whitespace.value()
+            ):
                 self.report_next_token_error(context, token)
