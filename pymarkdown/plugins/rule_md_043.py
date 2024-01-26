@@ -84,10 +84,7 @@ class RuleMd043(RulePlugin):
                 new_index, extracted_whitespace = ParserHelper.extract_ascii_whitespace(
                     next_part, new_index
                 )
-                if (
-                    not extracted_whitespace
-                    or len(extracted_whitespace) != 1
-                ):
+                if not extracted_whitespace or len(extracted_whitespace) != 1:
                     return (
                         [],
                         False,

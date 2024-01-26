@@ -153,7 +153,9 @@ class PragmaExtension(ParserExtension):
         after_whitespace_index, _ = ParserHelper.extract_spaces(line_after_prefix, 0)
         assert after_whitespace_index is not None
         new_start_index = after_whitespace_index + len(PragmaToken.pragma_title)
-        after_whitespace_index, _ = ParserHelper.extract_spaces(line_after_prefix, new_start_index)
+        after_whitespace_index, _ = ParserHelper.extract_spaces(
+            line_after_prefix, new_start_index
+        )
         command_data = line_after_prefix[
             after_whitespace_index : -len(PragmaToken.pragma_suffix)
         ]
