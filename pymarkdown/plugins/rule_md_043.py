@@ -87,7 +87,6 @@ class RuleMd043(RulePlugin):
                 if (
                     not extracted_whitespace
                     or len(extracted_whitespace) != 1
-                    or len(next_part) == new_index
                 ):
                     return (
                         [],
