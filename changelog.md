@@ -8,7 +8,10 @@
 
 ### Fixed
 
-- None
+- [Issue 945](https://github.com/jackdewinter/pymarkdown/issues/945)
+  - inconsistent splitting of whitespace caused some issues
+  - went through all strip() calls and ensured that they have the
+    specific type of whitespace identified and documented
 
 ### Changed
 
