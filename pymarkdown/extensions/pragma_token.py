@@ -15,6 +15,7 @@ from pymarkdown.extension_manager.extension_manager_constants import (
     ExtensionManagerConstants,
 )
 from pymarkdown.extension_manager.parser_extension import ParserExtension
+from pymarkdown.general.constants import Constants
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.position_marker import PositionMarker
@@ -110,7 +111,9 @@ class PragmaExtension(ParserExtension):
                     else PragmaToken.pragma_prefix
                 ),
             )
-            remaining_line = line_to_parse[start_index:].rstrip().lower()
+            remaining_line = (
+                line_to_parse[start_index:].rstrip(Constants.ascii_whitespace).lower()
+            )
             if remaining_line.startswith(
                 PragmaToken.pragma_title
             ) and remaining_line.endswith(PragmaToken.pragma_suffix):
@@ -146,12 +149,15 @@ class PragmaExtension(ParserExtension):
             prefix_length = len(PragmaToken.pragma_alternate_prefix)
             actual_line_number = -next_line_number
 
-        line_after_prefix = pragma_lines[next_line_number][prefix_length:].rstrip()
+        line_after_prefix = pragma_lines[next_line_number][prefix_length:]
         after_whitespace_index, _ = ParserHelper.extract_spaces(line_after_prefix, 0)
         assert after_whitespace_index is not None
+        new_start_index = after_whitespace_index + len(PragmaToken.pragma_title)
+        after_whitespace_index, _ = ParserHelper.extract_spaces(
+            line_after_prefix, new_start_index
+        )
         command_data = line_after_prefix[
-            after_whitespace_index
-            + len(PragmaToken.pragma_title) : -len(PragmaToken.pragma_suffix)
+            after_whitespace_index : -len(PragmaToken.pragma_suffix)
         ]
         after_command_index, command = ParserHelper.extract_until_spaces(
             command_data, 0
@@ -211,7 +217,7 @@ class PragmaExtension(ParserExtension):
         ids_to_disable = command_data[after_command_index:].split(",")
         processed_ids = set()
         for next_id in ids_to_disable:
-            next_id = next_id.strip().lower()
+            next_id = next_id.strip(" ").lower()
             if not next_id:
                 log_pragma_failure(
                     scan_file,
@@ -317,7 +323,7 @@ class PragmaExtension(ParserExtension):
         ids_to_disable = command_data[after_number_index:].split(",")
         processed_ids = set()
         for next_id in ids_to_disable:
-            next_id = next_id.strip().lower()
+            next_id = next_id.strip(" ").lower()
             if not next_id:
                 log_pragma_failure(
                     scan_file,

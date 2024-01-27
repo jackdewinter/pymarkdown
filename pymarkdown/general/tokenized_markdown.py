@@ -18,6 +18,7 @@ from pymarkdown.extension_manager.extension_manager import ExtensionManager
 from pymarkdown.extensions.front_matter_extension import FrontMatterExtension
 from pymarkdown.extensions.pragma_token import PragmaToken
 from pymarkdown.general.bad_tokenization_error import BadTokenizationError
+from pymarkdown.general.constants import Constants
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.parser_state import ParserState
@@ -337,7 +338,9 @@ class TokenizedMarkdown:
     ) -> Tuple[Optional[List[MarkdownToken]], Optional[RequeueLineInfo]]:
         POGGER.debug(">>>>$", self.__tokenized_document)
 
-        if not next_line_in_document or not next_line_in_document.strip():
+        if not next_line_in_document or not next_line_in_document.strip(
+            Constants.ascii_whitespace
+        ):
             POGGER.debug("call __parse_blocks_pass>>handle_blank_line")
             (
                 tokens_from_line,
@@ -760,9 +763,10 @@ class TokenizedMarkdown:
         POGGER.debug("hbl>>close_only_these_blocks>>$", close_only_these_blocks)
         POGGER.debug("hbl>>do_include_block_quotes>>$", do_include_block_quotes)
 
-        non_whitespace_index, extracted_whitespace = ParserHelper.extract_spaces(
-            input_line, 0
-        )
+        (
+            non_whitespace_index,
+            extracted_whitespace,
+        ) = ParserHelper.extract_ascii_whitespace(input_line, 0)
         assert extracted_whitespace is not None
         assert non_whitespace_index is not None
         return (

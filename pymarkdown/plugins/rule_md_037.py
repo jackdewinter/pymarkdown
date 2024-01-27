@@ -3,6 +3,7 @@ Module to implement a plugin that looks for spaces within emphasis sections.
 """
 from typing import List, Optional, Tuple, cast
 
+from pymarkdown.general.constants import Constants
 from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
@@ -56,9 +57,13 @@ class RuleMd037(RulePlugin):
             assert start_token is not None
             adjusted_token_text = start_token.token_text
             if did_first_start_with_space:
-                adjusted_token_text = adjusted_token_text.lstrip()
+                adjusted_token_text = adjusted_token_text.lstrip(
+                    Constants.unicode_whitespace.value()
+                )
             if did_last_end_with_space:
-                adjusted_token_text = adjusted_token_text.rstrip()
+                adjusted_token_text = adjusted_token_text.rstrip(
+                    Constants.unicode_whitespace.value()
+                )
             self.register_fix_token_request(
                 context,
                 start_token,
@@ -69,7 +74,9 @@ class RuleMd037(RulePlugin):
         else:
             if did_first_start_with_space:
                 assert start_token is not None
-                adjusted_token_text = start_token.token_text.lstrip()
+                adjusted_token_text = start_token.token_text.lstrip(
+                    Constants.unicode_whitespace.value()
+                )
                 self.register_fix_token_request(
                     context,
                     start_token,
@@ -79,7 +86,9 @@ class RuleMd037(RulePlugin):
                 )
             if did_last_end_with_space:
                 assert end_token is not None
-                adjusted_token_text = end_token.token_text.rstrip()
+                adjusted_token_text = end_token.token_text.rstrip(
+                    Constants.unicode_whitespace.value()
+                )
                 self.register_fix_token_request(
                     context,
                     end_token,

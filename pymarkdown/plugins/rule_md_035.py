@@ -41,7 +41,7 @@ class RuleMd035(RulePlugin):
     def __validate_configuration_style(cls, found_value: str) -> None:
         if found_value == RuleMd035.__consistent_style:
             return
-        if found_value != found_value.strip():
+        if found_value != found_value.strip(" "):
             raise ValueError(
                 "Allowable values cannot including leading or trailing spaces."
             )

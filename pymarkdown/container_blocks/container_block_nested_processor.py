@@ -10,6 +10,7 @@ from pymarkdown.block_quotes.block_quote_count_helper import BlockQuoteCountHelp
 from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
 from pymarkdown.container_blocks.container_grab_bag import ContainerGrabBag
 from pymarkdown.container_blocks.container_indices import ContainerIndices
+from pymarkdown.general.constants import Constants
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.parser_state import ParserState
@@ -428,7 +429,9 @@ class ContainerBlockNestedProcessor:
             POGGER.debug(
                 "parser_state.token_document>>$<<", parser_state.token_document
             )
-            if parser_state.nested_list_start and grab_bag.adj_line_to_parse.strip():
+            if parser_state.nested_list_start and grab_bag.adj_line_to_parse.strip(
+                Constants.ascii_whitespace
+            ):
                 (
                     grab_bag.start_index,
                     indent_level,

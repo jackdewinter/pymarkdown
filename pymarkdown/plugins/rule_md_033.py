@@ -54,9 +54,14 @@ class RuleMd033(RulePlugin):
             default_value="!--,![CDATA[,!DOCTYPE",
         )
         self.__allowed_elements = []
-        for next_element in allowed_elements.split(","):
-            if next_element := next_element.strip():
-                self.__allowed_elements.append(next_element)
+        if allowed_elements := allowed_elements.strip(" "):
+            for next_element in allowed_elements.split(","):
+                if next_element := next_element.strip(" "):
+                    self.__allowed_elements.append(next_element)
+                else:
+                    raise ValueError(
+                        "Elements in the comma-separated list cannot be empty."
+                    )
 
     def starting_new_file(self) -> None:
         """

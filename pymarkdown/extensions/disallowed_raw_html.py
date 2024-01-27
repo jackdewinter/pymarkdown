@@ -85,7 +85,7 @@ class MarkdownDisallowRawHtmlExtension(ParserExtension):
         if modify_tag_names is not None:
             tag_config_name = f"extensions.{self.get_identifier()}.change_tag_names"
             for next_tag_part in modify_tag_names.split(","):
-                next_tag_part = next_tag_part.strip()
+                next_tag_part = next_tag_part.strip(" ")
                 if not next_tag_part:
                     raise ValueError(
                         f"Configuration item '{tag_config_name}' contains at least one empty string."

@@ -44,7 +44,7 @@ class RuleMd043(RulePlugin):
 
     @classmethod
     def __validate_heading_pattern(cls, found_value: str) -> None:
-        if found_value.strip():
+        if found_value.strip(" "):
             _, _, compile_error = cls.__compile(found_value)
             if compile_error:
                 raise ValueError(f"Heading format not valid: {compile_error}")
@@ -57,6 +57,7 @@ class RuleMd043(RulePlugin):
         compiled_lines: List[Union[str, Tuple[int, str]]] = []
         are_any_wildcards = False
         for next_part in found_parts:
+            next_part = next_part.strip(" ")
             if next_part == "*":
                 if compiled_lines and compiled_lines[-1] == "*":
                     return (
@@ -83,17 +84,11 @@ class RuleMd043(RulePlugin):
                 new_index, extracted_whitespace = ParserHelper.extract_ascii_whitespace(
                     next_part, new_index
                 )
-                if not extracted_whitespace:
+                if not extracted_whitespace or len(extracted_whitespace) != 1:
                     return (
                         [],
                         False,
-                        "Element must have at least one space character after any hash characters (#).",
-                    )
-                if len(next_part) == new_index:
-                    return (
-                        [],
-                        False,
-                        "Element must have at least one non-space character after any space characters.",
+                        "Element must have exactly one space character and one non-space character after any hash characters (#).",
                     )
                 compiled_lines.append((count, next_part[new_index:]))
         return compiled_lines, are_any_wildcards, None

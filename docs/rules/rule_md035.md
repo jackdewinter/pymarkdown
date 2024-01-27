@@ -75,8 +75,10 @@ is made, so that the following example will not trigger this rule:
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `style` | `string` | `consistent` | `consistent` for consistent, or a specific marker** |
 
-** If a specific marker is configured, it must be valid multiples (three or more) of either the
-`-` character, the `_` character, or the `*` character, with optional whitespace between them.
+** If a specific marker is configured, it must be valid multiples (three or more)
+of either the `-` character, the `_` character, or the `*` character, with optional
+whitespace between them. The specific marker cannot start or end with a space
+character.
 
 ## Origination of Rule
 

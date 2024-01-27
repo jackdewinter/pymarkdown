@@ -44,6 +44,42 @@ def test_md033_bad_configuration_allowed_elements():
 
 
 @pytest.mark.rules
+def test_md033_bad_configuration_allowed_elements_with_empty():
+    """
+    Test to verify that a configuration error is thrown when supplying the
+    allowed_elements value with an integer that is not a string.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md004", "good_list_asterisk_single_level.md"
+    )
+    supplied_arguments = [
+        "--set",
+        "plugins.md033.allowed_elements=html,,a",
+        "--strict-config",
+        "scan",
+        source_path,
+    ]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = (
+        "BadPluginError encountered while configuring plugins:\n"
+        + "Elements in the comma-separated list cannot be empty."
+    )
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
 def test_md033_bad_configuration_allow_first_image_element():
     """
     Test to verify that a configuration error is thrown when supplying the

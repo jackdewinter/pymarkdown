@@ -28,7 +28,9 @@ sight impaired people.
 ### Failure Scenarios
 
 This rule triggers when the link label for an image has no characters or only
-whitespace characters:
+whitespace characters.  As the focus of this rule is to provide text to help
+identify the image, the whitespace characters compared against are the set
+of Unicode whitespace characters.
 
 ````Markdown
 [](/url)

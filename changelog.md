@@ -2,6 +2,23 @@
 
 ## Unversioned - In Main, Not Released
 
+### Added
+
+- None
+
+### Fixed
+
+- [Issue 945](https://github.com/jackdewinter/pymarkdown/issues/945)
+  - inconsistent splitting of whitespace caused some issues
+  - went through all strip() calls and ensured that they have the
+    specific type of whitespace identified and documented
+
+### Changed
+
+- None
+
+## Version 0.9.16 - Date: 2024-01-20
+
 This release is going to focus on getting the feature list complete
 for a version 1.0 release in early 2024.  To a large extent, this
 involves adding the "fix" feature for some rules, and double checking

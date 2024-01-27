@@ -103,7 +103,11 @@ document will not trigger this rule:
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `level` | `integer` | `1` | Level that is expected from the first heading (Atx or SetExt) in the document. |
-| `front_matter_title` | `string` | `title` | Name of the front-matter field that has the title associated with the document. |
+| `front_matter_title` | `string` | `title` | Name of the front-matter field that has the title associated with the document.** |
+
+** Any leading or trailing space characters are removed from the `front_matter_title`
+during processing.  This value is expected not to have the `:` at the end. Therefore,
+a header value of `subject:` would be entered as `subject`.
 
 ## Origination of Rule
 

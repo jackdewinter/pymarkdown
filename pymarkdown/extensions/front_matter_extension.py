@@ -14,6 +14,7 @@ from pymarkdown.extension_manager.extension_manager_constants import (
 )
 from pymarkdown.extension_manager.parser_extension import ParserExtension
 from pymarkdown.extensions.front_matter_markdown_token import FrontMatterMarkdownToken
+from pymarkdown.general.constants import Constants
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.general.source_providers import SourceProvider
@@ -77,7 +78,7 @@ class FrontMatterExtension(ParserExtension):
         Take care of processing eligibility and processing for front matter support.
         """
         start_char, extracted_index = ThematicLeafBlockProcessor.is_thematic_break(
-            first_line_in_document.rstrip(),
+            first_line_in_document.rstrip(Constants.ascii_whitespace),
             0,
             "",
             whitespace_allowed_between_characters=False,
@@ -111,7 +112,7 @@ class FrontMatterExtension(ParserExtension):
         Optional[str], Optional[FrontMatterMarkdownToken], int, Optional[List[str]]
     ]:
         starting_line = token_to_use
-        clean_starting_line = starting_line.rstrip()
+        clean_starting_line = starting_line.rstrip(Constants.ascii_whitespace)
         repeat_again = True
         have_closing = False
         collected_lines: List[str] = []
@@ -119,15 +120,17 @@ class FrontMatterExtension(ParserExtension):
         next_line = None
         while repeat_again:
             next_line = source_provider.get_next_line()
-            if next_line and next_line.rstrip():
+            if next_line and next_line.rstrip(Constants.ascii_whitespace):
                 start_char, _ = ThematicLeafBlockProcessor.is_thematic_break(
-                    next_line.rstrip(),
+                    next_line.rstrip(Constants.ascii_whitespace),
                     0,
                     "",
                     whitespace_allowed_between_characters=False,
                 )
-                have_closing = (
-                    bool(start_char) and clean_starting_line == next_line.rstrip()
+                have_closing = bool(
+                    start_char
+                ) and clean_starting_line == next_line.rstrip(
+                    Constants.ascii_whitespace
                 )
                 repeat_again = not have_closing
             elif not self.__allow_blank_lines:
