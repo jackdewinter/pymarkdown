@@ -536,6 +536,41 @@ a line of text  with    tabs
 """,
     ),
     pluginRuleTest(
+        "mix_md010_md030_with_tabs",
+        source_file_contents="""*\t#\tlist\titem\t1
+\tlist\t1\ttext
+*  ## list\titem 2
+
+   paragraph
+*  ## list\titem 3
+""",
+        disable_rules=__plugin_disable_md022,
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:1: MD030: Spaces after list markers [Expected: 1; Actual: 3] (list-marker-space)
+{temp_source_path}:1:2: MD010: Hard tabs [Column: 2] (no-hard-tabs)
+{temp_source_path}:1:5: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)
+{temp_source_path}:1:6: MD010: Hard tabs [Column: 6] (no-hard-tabs)
+{temp_source_path}:1:13: MD010: Hard tabs [Column: 13] (no-hard-tabs)
+{temp_source_path}:1:21: MD010: Hard tabs [Column: 21] (no-hard-tabs)
+{temp_source_path}:2:1: MD010: Hard tabs [Column: 1] (no-hard-tabs)
+{temp_source_path}:2:9: MD010: Hard tabs [Column: 9] (no-hard-tabs)
+{temp_source_path}:2:14: MD010: Hard tabs [Column: 14] (no-hard-tabs)
+{temp_source_path}:3:1: MD005: Inconsistent indentation for list items at the same level [Expected: 2; Actual: 0] (list-indent)
+{temp_source_path}:3:1: MD030: Spaces after list markers [Expected: 1; Actual: 2] (list-marker-space)
+{temp_source_path}:3:11: MD010: Hard tabs [Column: 11] (no-hard-tabs)
+{temp_source_path}:6:1: MD005: Inconsistent indentation for list items at the same level [Expected: 2; Actual: 0] (list-indent)
+{temp_source_path}:6:1: MD030: Spaces after list markers [Expected: 1; Actual: 2] (list-marker-space)
+{temp_source_path}:6:11: MD010: Hard tabs [Column: 11] (no-hard-tabs)
+""",
+        fix_expected_file_contents="""* # list    item    1
+   list    1   text
+* ## list  item 2
+
+  paragraph
+* ## list  item 3
+""",
+    ),
+    pluginRuleTest(
         "mix_md010_md047",
         source_file_contents="""item\t1""",
         scan_expected_return_code=1,
