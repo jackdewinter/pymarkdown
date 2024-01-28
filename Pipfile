@@ -32,7 +32,7 @@ types-pyyaml = "*"
 
 [packages]
 columnar = ">=1.4.0"
-application-properties = ">=0.8.1"
+application-properties = ">=0.8.2"
 typing-extensions = ">=4.7.0"
 
 [requires]
