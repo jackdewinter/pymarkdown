@@ -18,7 +18,9 @@
 
 ### Changed
 
-- None
+- [Issue 966](https://github.com/jackdewinter/newsite.git)
+  - adjusted fix for Md009 to remove any trailing whitespace if the line is within
+    an Atx Heading
 
 ## Version 0.9.16 - Date: 2024-01-20
 

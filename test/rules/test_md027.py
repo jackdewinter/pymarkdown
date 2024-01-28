@@ -649,7 +649,7 @@ scanTests = [
 """,
         fix_expected_file_contents="""> # Header 1
 >
-> ## Header 2\a\a
+> ## Header 2
 """.replace(
             "\a", " "
         ),

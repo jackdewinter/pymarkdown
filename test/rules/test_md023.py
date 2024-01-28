@@ -348,12 +348,10 @@ Some more text
         scan_expected_output="""{temp_source_path}:1:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 {temp_source_path}:1:15: MD009: Trailing spaces [Expected: 0 or 2; Actual: 3] (no-trailing-spaces)
 """,
-        fix_expected_file_contents="""## Heading 2\a\a
+        fix_expected_file_contents="""## Heading 2
 
 Some more text
-""".replace(
-            "\a", " "
-        ),
+""",
     ),
     pluginRuleTest(
         "mix_md023_md019",

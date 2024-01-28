@@ -151,7 +151,12 @@ class RuleMd009(RulePlugin):
             self.__strict_mode and not is_list_empty_line
         ):
             if context.in_fix_mode:
-                if extracted_whitespace_length < self.__break_spaces:
+                this_leaf_token = self.__leaf_tokens[self.__leaf_token_index]
+
+                if (
+                    extracted_whitespace_length < self.__break_spaces
+                    or this_leaf_token.is_atx_heading
+                ):
                     line = line[:first_non_whitespace_index]
                 else:
                     line = line[: first_non_whitespace_index + self.__break_spaces]
