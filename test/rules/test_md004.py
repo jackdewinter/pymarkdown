@@ -328,11 +328,11 @@ this is a separator
 {temp_source_path}:6:6: MD007: Unordered list indentation [Expected: 4, Actual=5] (ul-indent)
 """,
         fix_expected_file_contents="""+ first
-   + second
-     + third
+  + second
+    + third
 + first
-   + second
-     + third
+  + second
+    + third
 """,
     ),
     pluginRuleTest(

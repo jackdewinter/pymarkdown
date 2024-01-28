@@ -310,7 +310,9 @@
             "too-many-arguments": 6
         },
         "pymarkdown/plugins/rule_md_028.py": {},
-        "pymarkdown/plugins/rule_md_029.py": {},
+        "pymarkdown/plugins/rule_md_029.py": {
+            "too-many-arguments": 1
+        },
         "pymarkdown/plugins/rule_md_030.py": {
             "too-many-instance-attributes": 1
         },
@@ -493,7 +495,7 @@
         "too-many-instance-attributes": 24,
         "too-many-public-methods": 4,
         "too-few-public-methods": 39,
-        "too-many-arguments": 226,
+        "too-many-arguments": 227,
         "too-many-locals": 38,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 2,

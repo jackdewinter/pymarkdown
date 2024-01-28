@@ -124,7 +124,7 @@ scanTests = [
 """,
         fix_expected_file_contents="""0. first
    1. first-first
-   2.  first-second
+   2. first-second
 1. second
    1. second-first
 """,

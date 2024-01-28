@@ -4704,6 +4704,104 @@ def test_list_blocks_extra_6xc():
 
 
 @pytest.mark.gfm
+def test_list_blocks_extra_6xd():
+    """
+    Test case 06:  the sublist is properly idented, but the start is extra
+                   indented to right justify the list
+    """
+
+    # Arrange
+    source_markdown = """* First
+  * Second
+* Third
+"""
+    expected_tokens = [
+        "[ulist(1,1):*::2::]",
+        "[para(1,3):]",
+        "[text(1,3):First:]",
+        "[end-para:::True]",
+        "[ulist(2,3):*::4:  ]",
+        "[para(2,5):]",
+        "[text(2,5):Second:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[li(3,1):2::]",
+        "[para(3,3):]",
+        "[text(3,3):Third:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>First
+<ul>
+<li>Second</li>
+</ul>
+</li>
+<li>Third</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_extra_6xe():
+    """
+    Test case 06:  the sublist is properly idented, but the start is extra
+                   indented to right justify the list
+    """
+
+    # Arrange
+    source_markdown = """ *  First
+    first paragraph
+
+    *  Second
+
+    second paragraph
+ *  Third
+"""
+    expected_tokens = [
+        "[ulist(1,2):*::4: :    \n\n    \n]",
+        "[para(1,5):\n]",
+        "[text(1,5):First\nfirst paragraph::\n]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[ulist(4,5):*::7:    :]",
+        "[para(4,8):]",
+        "[text(4,8):Second:]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+        "[para(6,5):]",
+        "[text(6,5):second paragraph:]",
+        "[end-para:::True]",
+        "[li(7,2):4: :]",
+        "[para(7,5):]",
+        "[text(7,5):Third:]",
+        "[end-para:::True]",
+        "[BLANK(8,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>First
+first paragraph</p>
+<ul>
+<li>Second</li>
+</ul>
+<p>second paragraph</p>
+</li>
+<li>
+<p>Third</p>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_list_blocks_extra_6ax():
     """
     Test case 06:  the sublist is properly idented, but the start is

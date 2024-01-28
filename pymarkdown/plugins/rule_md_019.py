@@ -5,6 +5,7 @@ mark on an atx heading.
 from typing import Optional, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.general.tab_helper import TabHelper
 from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
@@ -21,7 +22,7 @@ class RuleMd019(RulePlugin):
 
     def __init__(self) -> None:
         super().__init__()
-        self.__atx_heading_token: Optional[MarkdownToken] = None
+        self.__atx_heading_token: Optional[AtxHeadingMarkdownToken] = None
 
     def get_details(self) -> PluginDetailsV2:
         """
@@ -65,7 +66,7 @@ class RuleMd019(RulePlugin):
         if token.is_atx_heading:
             atx_token = cast(AtxHeadingMarkdownToken, token)
             if not atx_token.remove_trailing_count:
-                self.__atx_heading_token = token
+                self.__atx_heading_token = atx_token
         elif token.is_paragraph_end:
             self.__atx_heading_token = None
         elif token.is_text:
@@ -73,5 +74,14 @@ class RuleMd019(RulePlugin):
             resolved_extracted_whitespace = ParserHelper.remove_all_from_text(
                 text_token.extracted_whitespace
             )
+            if self.__atx_heading_token and "\t" in resolved_extracted_whitespace:
+                start_index = (
+                    self.__atx_heading_token.column_number
+                    - 1
+                    + self.__atx_heading_token.hash_count
+                )
+                resolved_extracted_whitespace = TabHelper.detabify_string(
+                    resolved_extracted_whitespace, start_index
+                )
             if self.__atx_heading_token and len(resolved_extracted_whitespace) > 1:
                 self.__report(context, text_token)

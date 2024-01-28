@@ -4746,7 +4746,10 @@ def test_extra_035x():
     supplied_arguments = ["--stack-trace", "scan", input_path]
 
     expected_return_code = 1
-    expected_output = f"{input_path}:1:2: MD010: Hard tabs [Column: 2] (no-hard-tabs)"
+    expected_output = """{input_path}:1:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)
+{input_path}:1:2: MD010: Hard tabs [Column: 2] (no-hard-tabs)""".replace(
+        "{input_path}", input_path
+    )
     expected_error = ""
 
     # Act
