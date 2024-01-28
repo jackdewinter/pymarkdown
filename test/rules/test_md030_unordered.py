@@ -393,11 +393,11 @@ another paragraph
     pluginRuleTest(
         "mix_md030_md007",
         source_file_contents=""" *  First
-   first paragraph
+    first paragraph
 
     *  Second
 
-   second paragraph
+    second paragraph
  *  Third
 """,
         scan_expected_return_code=1,
@@ -409,11 +409,11 @@ another paragraph
 {temp_source_path}:7:2: MD030: Spaces after list markers [Expected: 1; Actual: 2] (list-marker-space)
 """,
         fix_expected_file_contents="""* First
-   first paragraph
+  first paragraph
 
-   * Second
+  * Second
 
-   second paragraph
+  second paragraph
 * Third
 """,
     ),
@@ -459,9 +459,9 @@ another paragraph
 """,
         fix_expected_file_contents="""* # Heading 1
 
-   * ## Heading 2
+  * ## Heading 2
 
-      * ### Heading 3
+    * ### Heading 3
 """,
     ),
     pluginRuleTest(

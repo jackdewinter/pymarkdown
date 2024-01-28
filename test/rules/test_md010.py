@@ -485,12 +485,13 @@ code	block
     ),
     pluginRuleTest(
         "mix_md010_md019",
-        source_file_contents="""#  Heading 1
+        source_file_contents="""#\tHeading 1
 
 a line of text\twith\ttabs
 """,
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:1:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)
+{temp_source_path}:1:2: MD010: Hard tabs [Column: 2] (no-hard-tabs)
 {temp_source_path}:3:15: MD010: Hard tabs [Column: 15] (no-hard-tabs)
 {temp_source_path}:3:21: MD010: Hard tabs [Column: 21] (no-hard-tabs)
 """,

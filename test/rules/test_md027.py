@@ -628,8 +628,8 @@ scanTests = [
 {temp_source_path}:3:9: MD007: Unordered list indentation [Expected: 4, Actual=6] (ul-indent)
 """,
         fix_expected_file_contents="""> + first
->    + second
->       + third
+>   + second
+>     + third
 """,
     ),
     pluginRuleTest(

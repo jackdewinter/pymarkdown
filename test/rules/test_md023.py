@@ -384,9 +384,9 @@ Some more text
 """,
         fix_expected_file_contents="""* # Heading 1
 
-   * ## Heading 2
+  * ## Heading 2
 
-      * ### Heading 3
+    * ### Heading 3
 """,
     ),
     pluginRuleTest(

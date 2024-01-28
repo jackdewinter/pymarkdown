@@ -39,6 +39,7 @@ class RuleMd007(RulePlugin):
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md007.md",
             plugin_configuration="indent,start_indented",
             plugin_supports_fix=True,
+            plugin_fix_level=3,
         )
 
     @classmethod
@@ -165,10 +166,15 @@ class RuleMd007(RulePlugin):
         calculated_column_number: int,
     ) -> None:
         list_token = cast(ListStartMarkdownToken, token)
+
+        # column_delta is the space before the list start and follow_space_delta
+        # is the space following the list start, before the list text commences.
         column_delta = adjusted_column_number - calculated_column_number
-        whitespace_length = len(list_token.extracted_whitespace)
-        assert whitespace_length >= column_delta
+        follow_space_delta = (list_token.indent_level - list_token.column_number) - 1
+
+        assert len(list_token.extracted_whitespace) >= column_delta
         adjusted_whitespace = list_token.extracted_whitespace[:-column_delta]
+
         self.register_fix_token_request(
             context,
             token,
@@ -176,14 +182,35 @@ class RuleMd007(RulePlugin):
             "extracted_whitespace",
             adjusted_whitespace,
         )
-        if token.is_new_list_item:
+        self.register_fix_token_request(
+            context,
+            token,
+            "next_token",
+            "indent_level",
+            list_token.indent_level - column_delta - follow_space_delta,
+        )
+        if not token.is_new_list_item:
             self.register_fix_token_request(
                 context,
                 token,
                 "next_token",
-                "indent_level",
-                list_token.indent_level - column_delta,
+                "column_number",
+                list_token.column_number - column_delta,
             )
+            if list_token.leading_spaces:
+                new_spaces = []
+                total_delta = column_delta + follow_space_delta
+                for i in list_token.leading_spaces.split("\n"):
+                    if len(i) >= list_token.indent_level:
+                        i = i[:-total_delta]
+                    new_spaces.append(i)
+                self.register_fix_token_request(
+                    context,
+                    list_token,
+                    "next_token",
+                    "leading_spaces",
+                    "\n".join(new_spaces),
+                )
 
     def __check(self, context: PluginScanContext, token: MarkdownToken) -> None:
         # print(f"{token}".replace(ParserHelper.newline_character, "\\n"))

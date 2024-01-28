@@ -95,9 +95,9 @@ class RuleMd029(RulePlugin):
         self, context: PluginScanContext, token: MarkdownToken
     ) -> Tuple[Optional[str], Optional[int]]:
         list_token = cast(ListStartMarkdownToken, token)
-        list_style: Optional[str] = self.__style
-        last_known_number: Optional[int] = int(list_token.list_start_content)
+        last_known_number: int = int(list_token.list_start_content)
 
+        list_style: str = self.__style
         if list_style == RuleMd029.__one_or_ordered_style and last_known_number != 1:
             list_style = RuleMd029.__ordered_style
 
@@ -109,27 +109,12 @@ class RuleMd029(RulePlugin):
         elif list_style == RuleMd029.__zero_style:
             is_valid = last_known_number == 0
         # print(f"list_style={list_style},last_known_number={last_known_number},is_valid={is_valid}")
-        if not is_valid:
-            assert list_style is not None
-            style, expected_number = self.__calculate_match_info(
-                list_style, True, last_known_number
-            )
-            extra_error_information = f"Expected: {expected_number}; Actual: {last_known_number}; Style: {style}"
-            if context.in_fix_mode:
-                self.register_fix_token_request(
-                    context,
-                    token,
-                    "next_token",
-                    "list_start_content",
-                    str(expected_number),
-                )
-                last_known_number = expected_number
-            else:
-                self.report_next_token_error(
-                    context, token, extra_error_information=extra_error_information
-                )
-                list_style, last_known_number = (None, None)
-        return list_style, last_known_number
+        if is_valid:
+            return list_style, last_known_number
+
+        return self.__report_invalid(
+            context, list_token, True, list_style, last_known_number, None
+        )
 
     def __match_non_first_items(
         self,
@@ -140,7 +125,8 @@ class RuleMd029(RulePlugin):
     ) -> Tuple[Optional[str], Optional[int]]:
         if list_style:
             list_token = cast(ListStartMarkdownToken, token)
-            new_number: Optional[int] = int(list_token.list_start_content)
+            new_number: int = int(list_token.list_start_content)
+
             # print(f"list_style={list_style},last_known_number={last_known_number},new_number={new_number}")
             if list_style == RuleMd029.__one_or_ordered_style:
                 list_style = (
@@ -159,28 +145,60 @@ class RuleMd029(RulePlugin):
                 assert last_known_number is not None
                 is_valid = new_number == last_known_number + 1
             if not is_valid:
-                style, expected_number = self.__calculate_match_info(
-                    list_style, False, last_known_number
+                return self.__report_invalid(
+                    context,
+                    list_token,
+                    False,
+                    list_style,
+                    last_known_number,
+                    new_number,
                 )
-                extra_error_information = (
-                    f"Expected: {expected_number}; Actual: {new_number}; Style: {style}"
-                )
-                if context.in_fix_mode:
+            last_known_number = new_number
+        return list_style, last_known_number
+
+    # pylint: disable=too-many-arguments
+    def __report_invalid(
+        self,
+        context: PluginScanContext,
+        token: ListStartMarkdownToken,
+        initial_match: bool,
+        list_style: str,
+        last_known_number: Optional[int],
+        new_number: Optional[int],
+    ) -> Tuple[Optional[str], Optional[int]]:
+        style, expected_number = self.__calculate_match_info(
+            list_style, initial_match, last_known_number
+        )
+        actual_number = last_known_number if new_number is None else new_number
+        extra_error_information = (
+            f"Expected: {expected_number}; Actual: {actual_number}; Style: {style}"
+        )
+        if context.in_fix_mode:
+            self.register_fix_token_request(
+                context,
+                token,
+                "next_token",
+                "list_start_content",
+                str(expected_number),
+            )
+            if not initial_match and new_number is not None:
+                expected_number_as_string = str(expected_number)
+                new_number_as_string = str(new_number)
+                if delta := len(expected_number_as_string) - len(new_number_as_string):
                     self.register_fix_token_request(
                         context,
                         token,
                         "next_token",
-                        "list_start_content",
-                        str(expected_number),
+                        "indent_level",
+                        token.indent_level + delta,
                     )
-                    new_number = expected_number
-                else:
-                    self.report_next_token_error(
-                        context, token, extra_error_information=extra_error_information
-                    )
-                    list_style, new_number = (None, None)
-            last_known_number = new_number
-        return list_style, last_known_number
+            return list_style, expected_number
+        self.report_next_token_error(
+            context, token, extra_error_information=extra_error_information
+        )
+        return (None, None)
+
+    # pylint: enable=too-many-arguments
 
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """

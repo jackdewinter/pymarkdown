@@ -28,9 +28,11 @@ This triggers several rules:
             supplied_arguments = ["scan", file_name_1, file_name_3]
 
             expected_return_code = 1
-            expected_output = """{file_name_1}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)
+            expected_output = """{file_name_1}:1:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)
+{file_name_1}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)
 {file_name_1}:1:2: MD010: Hard tabs [Column: 2] (no-hard-tabs)
 {file_name_1}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
+{file_name_3}:1:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)
 {file_name_3}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)
 {file_name_3}:1:2: MD010: Hard tabs [Column: 2] (no-hard-tabs)
 {file_name_3}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
@@ -89,7 +91,8 @@ throw_exception
                 ]
 
                 expected_return_code = 1
-                expected_output = """{file_name_1}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)
+                expected_output = """{file_name_1}:1:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)
+{file_name_1}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)
 {file_name_1}:1:2: MD010: Hard tabs [Column: 2] (no-hard-tabs)
 {file_name_1}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
 """.replace(
@@ -153,9 +156,11 @@ throw_exception
                 ]
 
                 expected_return_code = 1
-                expected_output = """{file_name_1}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)
+                expected_output = """{file_name_1}:1:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)
+{file_name_1}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)
 {file_name_1}:1:2: MD010: Hard tabs [Column: 2] (no-hard-tabs)
 {file_name_1}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
+{file_name_3}:1:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)
 {file_name_3}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)
 {file_name_3}:1:2: MD010: Hard tabs [Column: 2] (no-hard-tabs)
 {file_name_3}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
@@ -213,7 +218,8 @@ test: assert
                 ]
 
                 expected_return_code = 1
-                expected_output = """{file_name_1}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)
+                expected_output = """{file_name_1}:1:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)
+{file_name_1}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)
 {file_name_1}:1:2: MD010: Hard tabs [Column: 2] (no-hard-tabs)
 {file_name_1}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
 """.replace(
@@ -273,9 +279,11 @@ test: assert
                 ]
 
                 expected_return_code = 1
-                expected_output = """{file_name_1}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)
+                expected_output = """{file_name_1}:1:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)
+{file_name_1}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)
 {file_name_1}:1:2: MD010: Hard tabs [Column: 2] (no-hard-tabs)
 {file_name_1}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)
+{file_name_3}:1:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)
 {file_name_3}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)
 {file_name_3}:1:2: MD010: Hard tabs [Column: 2] (no-hard-tabs)
 {file_name_3}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)

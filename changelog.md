@@ -12,6 +12,9 @@
   - inconsistent splitting of whitespace caused some issues
   - went through all strip() calls and ensured that they have the
     specific type of whitespace identified and documented
+- [Issue 964](https://github.com/jackdewinter/pymarkdown/issues/964)
+  - final fix states needed verification and fixing of any issues
+  - uncovered and fixed issues in Md007, Md019, and Md029
 
 ### Changed
 

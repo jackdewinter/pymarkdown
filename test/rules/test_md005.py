@@ -778,6 +778,52 @@ scanTests = [
 """,
     ),
     pluginRuleTest(
+        "mix_md005_md007_only_md005_1",
+        disable_rules="md007",
+        source_file_contents=""" + first
+   + second
+     + third
++ first
+  + second
+    + third
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD005: Inconsistent indentation for list items at the same level [Expected: 1; Actual: 0] (list-indent)
+{temp_source_path}:5:3: MD005: Inconsistent indentation for list items at the same level [Expected: 3; Actual: 2] (list-indent)
+{temp_source_path}:6:5: MD005: Inconsistent indentation for list items at the same level [Expected: 5; Actual: 4] (list-indent)
+""",
+        fix_expected_file_contents=""" + first
+   + second
+     + third
+ + first
+   + second
+     + third
+""",
+    ),
+    pluginRuleTest(
+        "mix_md005_md007_only_md005_2",
+        disable_rules="md007",
+        source_file_contents=""" + first
+    + second
+       + third
++ first
+  + second
+    + third
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD005: Inconsistent indentation for list items at the same level [Expected: 1; Actual: 0] (list-indent)
+{temp_source_path}:5:3: MD005: Inconsistent indentation for list items at the same level [Expected: 4; Actual: 2] (list-indent)
+{temp_source_path}:6:5: MD005: Inconsistent indentation for list items at the same level [Expected: 7; Actual: 4] (list-indent)
+""",
+        fix_expected_file_contents=""" + first
+    + second
+       + third
+ + first
+    + second
+       + third
+""",
+    ),
+    pluginRuleTest(
         "mix_md005_md007",
         source_file_contents=""" + first
    + second
@@ -795,11 +841,11 @@ scanTests = [
 {temp_source_path}:6:5: MD005: Inconsistent indentation for list items at the same level [Expected: 5; Actual: 4] (list-indent)
 """,
         fix_expected_file_contents="""+ first
-   + second
-     + third
+  + second
+    + third
 + first
-   + second
-     + third
+  + second
+    + third
 """,
     ),
     pluginRuleTest(
@@ -857,6 +903,30 @@ scanTests = [
 + Heading 2
     + Heading 3
     + Heading 4
+""",
+    ),
+    pluginRuleTest(
+        "mix_md005_md007_md030",
+        source_file_contents="""+  Heading 1
+ +  Heading 2
+    +  Heading 3
+     +  Heading 4
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:1: MD030: Spaces after list markers [Expected: 1; Actual: 2] (list-marker-space)
+{temp_source_path}:2:2: MD005: Inconsistent indentation for list items at the same level [Expected: 1; Actual: 1] (list-indent)
+{temp_source_path}:2:2: MD007: Unordered list indentation [Expected: 0, Actual=1] (ul-indent)
+{temp_source_path}:2:2: MD030: Spaces after list markers [Expected: 1; Actual: 2] (list-marker-space)
+{temp_source_path}:3:5: MD007: Unordered list indentation [Expected: 2, Actual=4] (ul-indent)
+{temp_source_path}:3:5: MD030: Spaces after list markers [Expected: 1; Actual: 2] (list-marker-space)
+{temp_source_path}:4:6: MD005: Inconsistent indentation for list items at the same level [Expected: 5; Actual: 5] (list-indent)
+{temp_source_path}:4:6: MD007: Unordered list indentation [Expected: 2, Actual=5] (ul-indent)
+{temp_source_path}:4:6: MD030: Spaces after list markers [Expected: 1; Actual: 2] (list-marker-space)
+""",
+        fix_expected_file_contents="""+ Heading 1
++ Heading 2
+  + Heading 3
+  + Heading 4
 """,
     ),
 ]
