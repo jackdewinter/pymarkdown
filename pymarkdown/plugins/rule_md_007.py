@@ -166,11 +166,15 @@ class RuleMd007(RulePlugin):
         calculated_column_number: int,
     ) -> None:
         list_token = cast(ListStartMarkdownToken, token)
+
+        # column_delta is the space before the list start and follow_space_delta
+        # is the space following the list start, before the list text commences.
         column_delta = adjusted_column_number - calculated_column_number
-        whitespace_length = len(list_token.extracted_whitespace)
-        assert whitespace_length >= column_delta
-        adjusted_whitespace = list_token.extracted_whitespace[:-column_delta]
         follow_space_delta = (list_token.indent_level - list_token.column_number) - 1
+
+        assert len(list_token.extracted_whitespace) >= column_delta
+        adjusted_whitespace = list_token.extracted_whitespace[:-column_delta]
+
         self.register_fix_token_request(
             context,
             token,
