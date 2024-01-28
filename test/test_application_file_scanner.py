@@ -1,6 +1,7 @@
 """
 Module to provide tests for the application file scanner module.
 """
+
 import argparse
 from test.utils import assert_that_exception_is_raised, compare_expected_to_actual
 

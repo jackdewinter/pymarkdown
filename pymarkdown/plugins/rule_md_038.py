@@ -1,6 +1,7 @@
 """
 Module to implement a plugin that looks for leading and trailing spaces within code spans.
 """
+
 from typing import cast
 
 from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2

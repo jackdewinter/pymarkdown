@@ -2,6 +2,7 @@
 Module to implement a plugin that looks for inconsistencies in the
 style used for Unordered List elements.
 """
+
 from typing import Dict, cast
 
 from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
@@ -128,13 +129,13 @@ class RuleMd004(RulePlugin):
                     self.__style_type in (RuleMd004.__consistent_style)
                     and not self.__actual_style_type
                 ):
-                    self.__actual_style_type[
-                        self.__current_list_level
-                    ] = self.__get_sequence_type(list_token)
+                    self.__actual_style_type[self.__current_list_level] = (
+                        self.__get_sequence_type(list_token)
+                    )
                 else:
-                    self.__actual_style_type[
-                        self.__current_list_level
-                    ] = self.__actual_style_type[0]
+                    self.__actual_style_type[self.__current_list_level] = (
+                        self.__actual_style_type[0]
+                    )
 
             this_start_style = self.__get_sequence_type(list_token)
             if self.__actual_style_type[self.__current_list_level] != this_start_style:

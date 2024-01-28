@@ -1,6 +1,7 @@
 """
 Module to provide a base class for any patch classes.
 """
+
 import unittest
 from typing import Any, List, Optional, Union
 from unittest.mock import AsyncMock, MagicMock, _patch

@@ -1,6 +1,7 @@
 """
 Module to implement a plugin that looks for spaces within link labels.
 """
+
 from typing import cast
 
 from pymarkdown.general.constants import Constants

@@ -1,6 +1,7 @@
 """
 Module to provide classes to deal with extensions.
 """
+
 import argparse
 import logging
 import re
@@ -90,9 +91,9 @@ class ExtensionManager:
                 == ExtensionManagerConstants.EXTENSION_INTERFACE_VERSION_BASIC
             )
             self.__extension_details[next_extension.extension_id] = next_extension
-            self.__extension_objects[
-                next_extension.extension_id
-            ] = next_extension_object
+            self.__extension_objects[next_extension.extension_id] = (
+                next_extension_object
+            )
             _ = next_extension.extension_interface_version
             _ = next_extension.extension_configuration
 

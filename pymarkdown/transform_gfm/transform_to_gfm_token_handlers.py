@@ -1,6 +1,7 @@
 """
 Module to provide for the handlers for tokens to allow transformation into HTML.
 """
+
 import inspect
 import logging
 from typing import Dict, List, Optional, cast

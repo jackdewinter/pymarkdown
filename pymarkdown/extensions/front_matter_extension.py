@@ -1,6 +1,7 @@
 """
 Module to implement the front matter extensions.
 """
+
 import logging
 from typing import Any, List, Optional, Tuple, Union
 

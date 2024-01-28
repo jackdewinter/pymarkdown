@@ -1,6 +1,7 @@
 """
 Module to implement a plugin that ensures that blank lines surround fenced block quotes.
 """
+
 from typing import List, Optional, cast
 
 from pymarkdown.general.parser_helper import ParserHelper

@@ -1,6 +1,7 @@
 """
 Tests for the various is_character* functions.
 """
+
 from pymarkdown.general.parser_helper import ParserHelper
 
 

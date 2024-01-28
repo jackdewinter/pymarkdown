@@ -22,8 +22,7 @@ class ApplicationFileScannerOutputProtocol(Protocol):
     def __call__(
         self,
         output_string: str,
-    ) -> None:
-        ...  # pragma: no cover
+    ) -> None: ...  # pragma: no cover
 
 
 # pylint: enable=too-few-public-methods

@@ -1,6 +1,7 @@
 """
 Module to provide tests for source providers.
 """
+
 import os
 
 from pymarkdown.general.source_providers import (

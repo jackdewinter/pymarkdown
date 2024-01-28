@@ -1,6 +1,7 @@
 """
 Module to provide processing for the handling of leaf elements within container blocks.
 """
+
 from __future__ import annotations
 
 import logging
@@ -134,13 +135,13 @@ class ContainerBlockLeafProcessor:
 
         orig_text_removed_by_container = grab_bag.text_removed_by_container
 
-        adjust_token: Optional[
-            ListStartMarkdownToken
-        ] = ContainerBlockLeafProcessor.__adjust_for_inner_list_container(
-            parser_state,
-            last_block_index,
-            last_list_index,
-            position_marker.line_number,
+        adjust_token: Optional[ListStartMarkdownToken] = (
+            ContainerBlockLeafProcessor.__adjust_for_inner_list_container(
+                parser_state,
+                last_block_index,
+                last_list_index,
+                position_marker.line_number,
+            )
         )
 
         # POGGER.debug("position_marker.text>>:$:<<", position_marker.text_to_parse)

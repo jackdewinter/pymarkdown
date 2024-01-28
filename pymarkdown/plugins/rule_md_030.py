@@ -1,6 +1,7 @@
 """
 Module to implement a plugin that ensures consistent spacing after the list markers.
 """
+
 from typing import Dict, List, Optional, cast
 
 from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2

@@ -1,6 +1,7 @@
 """
 Module to provide processing for the setext heading leaf blocks.
 """
+
 import logging
 from typing import List, Optional, Tuple, cast
 

@@ -1,6 +1,7 @@
 """
 Module to provide functionality to test scripts from within pytest.
 """
+
 import difflib
 import io
 import logging

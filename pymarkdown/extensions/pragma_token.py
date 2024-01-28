@@ -1,6 +1,7 @@
 """
 Module to provide for linter instructions that can be embedded within the document.
 """
+
 import logging
 from typing import Dict, List, Optional, Set, Tuple
 
@@ -36,8 +37,9 @@ class LogPragmaFailureProtocol(Protocol):
     Protocol to specify a function that allows failures to be reported.
     """
 
-    def __call__(self, scan_file: str, line_number: int, pragma_error: str) -> None:
-        ...  # pragma: no cover
+    def __call__(
+        self, scan_file: str, line_number: int, pragma_error: str
+    ) -> None: ...  # pragma: no cover
 
 
 # pylint: enable=too-few-public-methods

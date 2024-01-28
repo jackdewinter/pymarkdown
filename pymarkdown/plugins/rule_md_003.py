@@ -2,6 +2,7 @@
 Module to implement a plugin that looks for heading styles that are inconsistent
 throughout the document.
 """
+
 from typing import Tuple, cast
 
 from pymarkdown.plugin_manager.plugin_details import PluginDetails

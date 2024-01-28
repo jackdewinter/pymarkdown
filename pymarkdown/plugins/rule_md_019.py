@@ -2,6 +2,7 @@
 Module to implement a plugin that looks for multiple spaces after the hash
 mark on an atx heading.
 """
+
 from typing import Optional, cast
 
 from pymarkdown.general.parser_helper import ParserHelper

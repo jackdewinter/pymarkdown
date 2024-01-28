@@ -1,6 +1,7 @@
 """
 Module to help with the parsing of character reference inline elements.
 """
+
 import json
 import logging
 import os

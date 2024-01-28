@@ -1,6 +1,7 @@
 """
 Module to help with the parsing of inline elements at the end of the line.
 """
+
 import logging
 from typing import List, Optional, Tuple, cast
 

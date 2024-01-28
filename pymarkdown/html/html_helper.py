@@ -1,6 +1,7 @@
 """
 Module to provide helper functions for parsing html.
 """
+
 import logging
 import string
 from typing import List, Optional, Tuple, cast

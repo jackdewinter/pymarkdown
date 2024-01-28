@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD034 rule.
 """
+
 import os
 from test.markdown_scanner import MarkdownScanner
 

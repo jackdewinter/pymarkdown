@@ -2,7 +2,6 @@
 Module to provide constants to deal with extensions.
 """
 
-
 # pylint: disable=too-few-public-methods
 
 

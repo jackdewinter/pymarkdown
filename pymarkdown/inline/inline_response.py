@@ -1,6 +1,7 @@
 """
 Module to hold the response from the inline handle_* functions.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field

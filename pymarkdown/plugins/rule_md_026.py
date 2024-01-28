@@ -1,6 +1,7 @@
 """
 Module to implement a plugin that looks for trailing punctuation in headings.
 """
+
 from typing import Optional, cast
 
 from pymarkdown.general.parser_helper import ParserHelper

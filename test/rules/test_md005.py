@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD005 rule.
 """
+
 import os
 from test.rules.utils import (
     build_fix_and_clash_lists,

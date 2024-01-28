@@ -1,6 +1,7 @@
 """
 Module to provide for verification of the line numbers and column numbers in tokens.
 """
+
 from pymarkdown.general.constants import Constants
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.position_marker import PositionMarker
@@ -1100,9 +1101,9 @@ def __maintain_block_stack_containers(
             print(
                 f">>block_quote_start_token.leading_text_index>>{block_quote_start_token.leading_text_index}<"
             )
-            list_block_start_indices[
-                current_token
-            ] = block_quote_start_token.leading_text_index
+            list_block_start_indices[current_token] = (
+                block_quote_start_token.leading_text_index
+            )
     elif current_token.is_list_end:
         start_list_token = current_token.start_markdown_token
         print(
@@ -1998,9 +1999,11 @@ def __verify_next_inline_blank_line(
 ):
     return (
         estimated_line_number + 1,
-        estimated_column_number + len(current_inline_token.extracted_whitespace)
-        if current_inline_token.is_text
-        else 1,
+        (
+            estimated_column_number + len(current_inline_token.extracted_whitespace)
+            if current_inline_token.is_text
+            else 1
+        ),
     )
 
 
@@ -2740,9 +2743,11 @@ def __verify_next_inline_code_span(
         last_token.rehydrate_index += delta_line_number
     return (
         estimated_line_number + delta_line_number,
-        -delta_column_number
-        if delta_column_number < 0
-        else estimated_column_number + delta_column_number,
+        (
+            -delta_column_number
+            if delta_column_number < 0
+            else estimated_column_number + delta_column_number
+        ),
     )
 
 
@@ -2858,9 +2863,9 @@ def __verify_next_inline_text_appply_whitespace(
             print(
                 f"split_current_line[{next_line_index}]>{ParserHelper.make_value_visible(split_current_line[next_line_index])}<"
             )
-            split_current_line[
-                next_line_index
-            ] = f"{split_extracted_whitespace[combined_index]}{split_current_line[next_line_index]}"
+            split_current_line[next_line_index] = (
+                f"{split_extracted_whitespace[combined_index]}{split_current_line[next_line_index]}"
+            )
             print(f">>link_stack={ParserHelper.make_value_visible(link_stack)}")
             if not link_stack:
                 last_token.rehydrate_index += 1

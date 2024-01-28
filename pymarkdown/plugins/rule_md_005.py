@@ -2,6 +2,7 @@
 Module to implement a plugin that ensures that the indentation for List Items
 are equivalent with each other.
 """
+
 import copy
 from dataclasses import dataclass
 from enum import Enum
@@ -357,9 +358,9 @@ class RuleMd005(RulePlugin):
             elif content_length != last_length:
                 assert last_token is not None
                 if last_token.column_number == list_token.column_number:
-                    self.__ordered_list_alignment[
-                        list_level
-                    ] = OrderedListAlignment.LEFT
+                    self.__ordered_list_alignment[list_level] = (
+                        OrderedListAlignment.LEFT
+                    )
                     break
                 last_total_length = len(last_token.extracted_whitespace) + len(
                     last_token.list_start_content
@@ -368,9 +369,9 @@ class RuleMd005(RulePlugin):
                     list_token.list_start_content
                 )
                 if last_total_length == next_total_length:
-                    self.__ordered_list_alignment[
-                        list_level
-                    ] = OrderedListAlignment.RIGHT
+                    self.__ordered_list_alignment[list_level] = (
+                        OrderedListAlignment.RIGHT
+                    )
                     break
 
     def __handle_unordered_list_start(

@@ -1,6 +1,7 @@
 """
 Inline processing
 """
+
 import logging
 from typing import List, cast
 

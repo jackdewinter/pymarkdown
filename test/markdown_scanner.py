@@ -1,6 +1,7 @@
 """
 Module to provide for a local instance of an InProcessExecution class.
 """
+
 import os
 import sys
 from test.pytest_execute import InProcessExecution

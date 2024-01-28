@@ -43,9 +43,11 @@ class UriAutolinkMarkdownToken(InlineMarkdownToken):
         InlineMarkdownToken.__init__(
             self,
             MarkdownToken._token_inline_uri_autolink,
-            f"1:{self.__autolink_text}"
-            if self.__add_http_prefix
-            else self.__autolink_text,
+            (
+                f"1:{self.__autolink_text}"
+                if self.__add_http_prefix
+                else self.__autolink_text
+            ),
             line_number=line_number,
             column_number=column_number,
         )

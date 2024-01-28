@@ -1,6 +1,7 @@
 """
 Module to help contain the elements of a link.
 """
+
 # pylint: disable=too-many-instance-attributes
 from dataclasses import dataclass
 from typing import Optional

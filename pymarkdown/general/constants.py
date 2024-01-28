@@ -2,7 +2,6 @@
 Constants
 """
 
-
 from typing import Any, Callable, Union, cast
 
 

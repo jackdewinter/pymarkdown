@@ -2,6 +2,7 @@
 Module to implement a plugin that looks for single line emphasis text that looks
 like it is being used instead of a heading.
 """
+
 from enum import Enum
 from typing import Optional, cast
 

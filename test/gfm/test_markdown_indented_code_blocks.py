@@ -1,6 +1,7 @@
 """
 https://github.github.com/gfm/#indented-code-blocks
 """
+
 from test.utils import act_and_assert
 
 import pytest

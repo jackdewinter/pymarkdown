@@ -1,6 +1,7 @@
 """
 Module to provide helpers for the processing of leaf blocks.
 """
+
 import logging
 from typing import List, Optional, cast
 

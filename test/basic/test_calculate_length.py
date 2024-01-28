@@ -1,6 +1,7 @@
 """
 Tests for the calculate_length function
 """
+
 from pymarkdown.general.tab_helper import TabHelper
 
 

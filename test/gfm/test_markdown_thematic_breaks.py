@@ -1,6 +1,7 @@
 """
 https://github.github.com/gfm/#thematic-breaks
 """
+
 from test.utils import act_and_assert
 
 import pytest

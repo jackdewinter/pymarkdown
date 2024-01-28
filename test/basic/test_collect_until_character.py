@@ -1,6 +1,7 @@
 """
 Tests for the collect_until_character function.
 """
+
 from pymarkdown.general.parser_helper import ParserHelper
 
 

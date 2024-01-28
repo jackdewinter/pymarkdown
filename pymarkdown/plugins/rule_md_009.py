@@ -1,6 +1,7 @@
 """
 Module to implement a plugin that looks for trailing spaces in the files.
 """
+
 from typing import List, Optional, cast
 
 from pymarkdown.general.parser_helper import ParserHelper

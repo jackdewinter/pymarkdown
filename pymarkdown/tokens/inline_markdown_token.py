@@ -1,6 +1,7 @@
 """
 Module to provide for an inline element that can be added to markdown parsing stream.
 """
+
 import logging
 from typing import Optional
 

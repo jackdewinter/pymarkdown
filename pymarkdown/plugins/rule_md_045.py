@@ -1,6 +1,7 @@
 """
 Module to implement a plugin that looks for image elements that do not specify alternate text.
 """
+
 from typing import cast
 
 from pymarkdown.general.constants import Constants

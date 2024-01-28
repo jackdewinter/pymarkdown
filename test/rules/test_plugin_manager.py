@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the plugin manager for the scanner.
 """
+
 import os
 from test.markdown_scanner import MarkdownScanner
 from test.utils import (

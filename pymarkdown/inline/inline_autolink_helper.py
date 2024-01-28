@@ -1,6 +1,7 @@
 """
 Module to help with the parsing of autolink inline elements.
 """
+
 import logging
 import re
 import string
@@ -90,10 +91,10 @@ class InlineAutoLinkHelper:
                 inline_request.remaining_line
             )
 
-            new_token: Optional[
-                MarkdownToken
-            ] = InlineAutoLinkHelper.__parse_valid_uri_autolink(
-                between_brackets, inline_request.line_number, new_column_number
+            new_token: Optional[MarkdownToken] = (
+                InlineAutoLinkHelper.__parse_valid_uri_autolink(
+                    between_brackets, inline_request.line_number, new_column_number
+                )
             )
             if not new_token:
                 new_token = InlineAutoLinkHelper.__parse_valid_email_autolink(

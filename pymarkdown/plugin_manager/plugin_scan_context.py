@@ -1,6 +1,7 @@
 """
 Module to provide context when reporting any errors.
 """
+
 from __future__ import annotations
 
 from io import TextIOWrapper

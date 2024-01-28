@@ -1,6 +1,7 @@
 """
 Module to provide classes to deal with plugins.
 """
+
 import argparse
 import inspect
 import logging
@@ -637,9 +638,7 @@ class PluginManager:
         return plugin_object
 
     # pylint: disable=too-many-locals
-    def __unpack_plugin_details(
-        self, plugin_instance: RulePlugin
-    ) -> Tuple[
+    def __unpack_plugin_details(self, plugin_instance: RulePlugin) -> Tuple[
         str,
         str,
         str,

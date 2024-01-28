@@ -1,6 +1,7 @@
 """
 Module to provide transformations for a new list item.
 """
+
 import logging
 from typing import Optional, cast
 

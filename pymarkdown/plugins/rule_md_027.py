@@ -1,6 +1,7 @@
 """
 Module to implement a plugin that looks for excessive spaces after the block quote character.
 """
+
 from typing import Dict, List, Optional, Tuple, cast
 
 from pymarkdown.general.parser_helper import ParserHelper

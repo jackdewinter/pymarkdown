@@ -2,6 +2,7 @@
 Module to provide for "-m pymarkdown" access to the module,
 as if it was run from the console.
 """
+
 from pymarkdown.main import PyMarkdownLint
 
 

@@ -1,6 +1,7 @@
 """
 Module to provide tests for altering how the command line handles exceptions.
 """
+
 import os
 from test.markdown_scanner import MarkdownScanner
 from test.utils import create_temporary_configuration_file

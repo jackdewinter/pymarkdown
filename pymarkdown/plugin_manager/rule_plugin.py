@@ -166,9 +166,11 @@ class RulePlugin(ABC):
         context.add_triggered_rule(
             context.scan_file,
             line_number + line_number_delta,
-            column_number + column_number_delta
-            if column_number_delta >= 0
-            else -column_number_delta,
+            (
+                column_number + column_number_delta
+                if column_number_delta >= 0
+                else -column_number_delta
+            ),
             plugin_details.plugin_id,
             plugin_details.plugin_name,
             plugin_details.plugin_description,

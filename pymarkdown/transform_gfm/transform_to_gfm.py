@@ -1,6 +1,7 @@
 """
 Module to provide for a transformation from markdown tokens to html for GFM.
 """
+
 import logging
 from typing import List
 

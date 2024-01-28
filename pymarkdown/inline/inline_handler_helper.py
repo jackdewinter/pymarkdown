@@ -1,6 +1,7 @@
 """
 Module to orchestrate the handling of the different inline elements.
 """
+
 import logging
 from typing import Dict, List, Optional, Tuple, cast
 
@@ -49,8 +50,7 @@ class InlineHandlerProtocol(Protocol):
         self,
         parser_properties: ParseBlockPassProperties,
         inline_request: InlineRequest,
-    ) -> InlineResponse:
-        ...  # pragma: no cover
+    ) -> InlineResponse: ...  # pragma: no cover
 
 
 # pylint: enable=too-few-public-methods
@@ -184,14 +184,14 @@ class InlineHandlerHelper:
         """
         Register the handlers necessary to deal with token's start and end.
         """
-        InlineHandlerHelper.__inline_character_handlers[
-            inline_character
-        ] = start_token_handler
+        InlineHandlerHelper.__inline_character_handlers[inline_character] = (
+            start_token_handler
+        )
         InlineHandlerHelper.valid_inline_text_block_sequence_starts += inline_character
         if is_simple_handler:
-            InlineHandlerHelper.__inline_simple_character_handlers[
-                inline_character
-            ] = start_token_handler
+            InlineHandlerHelper.__inline_simple_character_handlers[inline_character] = (
+                start_token_handler
+            )
             InlineHandlerHelper.__valid_inline_simple_text_block_sequence_starts += (
                 inline_character
             )

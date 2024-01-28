@@ -1,6 +1,7 @@
 """
 Module to provide for a list item that can be check off.
 """
+
 from typing import Optional, cast
 
 from application_properties import ApplicationPropertiesFacade

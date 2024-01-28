@@ -1,6 +1,7 @@
 """
 Module to implement a plugin that looks for inline links with empty link URIs.
 """
+
 from typing import cast
 
 from pymarkdown.general.constants import Constants

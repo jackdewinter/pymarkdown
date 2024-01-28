@@ -1,6 +1,7 @@
 """
 Module to provide for a simple implementation of a title case algorithm.
 """
+
 import argparse
 import logging
 import os

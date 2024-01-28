@@ -2,6 +2,7 @@
 Module to implement a plugin that looks for code blocks for scripts that do not
 look right.
 """
+
 from typing import cast
 
 from pymarkdown.general.parser_helper import ParserHelper
