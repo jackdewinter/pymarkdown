@@ -1,6 +1,7 @@
 """
 Module to helper with determining whether to continue with the link reference definitions.
 """
+
 import logging
 from typing import List, Optional, Tuple, cast
 

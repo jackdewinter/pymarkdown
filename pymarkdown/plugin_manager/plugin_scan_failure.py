@@ -1,6 +1,7 @@
 """
 Module to contain information about a failure reported by one of the rule plugins.
 """
+
 from dataclasses import dataclass
 from typing import Optional
 

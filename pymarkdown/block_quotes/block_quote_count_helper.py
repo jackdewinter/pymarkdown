@@ -1,6 +1,7 @@
 """
 Module to provide processing for the block quotes.
 """
+
 import logging
 from typing import List, Optional, Tuple, cast
 
@@ -688,9 +689,11 @@ class BlockQuoteCountHelper:
             "conditional_2:$: = len(ts:$:) > 2 and ts[1].is_bq:$:",
             conditional_2,
             parser_state.token_stack,
-            parser_state.token_stack[1].is_block_quote
-            if len(parser_state.token_stack) > 2
-            else None,
+            (
+                parser_state.token_stack[1].is_block_quote
+                if len(parser_state.token_stack) > 2
+                else None
+            ),
         )
         conditional_3 = last_bq_index != 1 or stack_increase_needed
         POGGER.debug(

@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD029 rule.
 """
+
 import os
 from test.rules.utils import (
     execute_configuration_test,

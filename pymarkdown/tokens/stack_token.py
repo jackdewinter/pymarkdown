@@ -1,6 +1,7 @@
 """
 Module to provide for an element that can be added to the stack.
 """
+
 from typing import Any, List, Optional
 
 from pymarkdown.general.parser_helper import ParserHelper

@@ -1,6 +1,7 @@
 """
 Module to implement a plugin that looks for fenced code blocks without a language specified.
 """
+
 from typing import cast
 
 from pymarkdown.general.constants import Constants

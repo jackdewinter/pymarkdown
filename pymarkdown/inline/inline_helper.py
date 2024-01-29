@@ -1,6 +1,7 @@
 """
 Module to help with the parsing of inline elements.
 """
+
 import logging
 from typing import Dict, List, Optional, Tuple
 
@@ -171,11 +172,13 @@ class InlineHelper:
             text_parts.extend(
                 [
                     text_to_append[start_index:next_index],
-                    ParserHelper.create_replacement_markers(
-                        text_to_append[next_index], escaped_part
-                    )
-                    if add_text_signature
-                    else escaped_part,
+                    (
+                        ParserHelper.create_replacement_markers(
+                            text_to_append[next_index], escaped_part
+                        )
+                        if add_text_signature
+                        else escaped_part
+                    ),
                 ]
             )
 
@@ -286,9 +289,11 @@ class InlineHelper:
         POGGER.debug("line_start_index>:$:<", line_start_index)
         line_end_index = tabified_text.find("\n", line_start_index)
         return (
-            tabified_text[line_start_index:line_end_index]
-            if line_end_index != -1
-            else tabified_text[line_start_index:],
+            (
+                tabified_text[line_start_index:line_end_index]
+                if line_end_index != -1
+                else tabified_text[line_start_index:]
+            ),
             line_start_index,
         )
 

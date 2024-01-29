@@ -1,6 +1,7 @@
 """
 Module to handle the calculationof list looseness for the GRM transformer.
 """
+
 import logging
 from typing import List, Optional, Tuple, cast
 

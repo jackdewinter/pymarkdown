@@ -1,6 +1,7 @@
 """
 Tests for the collect_backwards_while_character function.
 """
+
 from pymarkdown.general.parser_helper import ParserHelper
 
 

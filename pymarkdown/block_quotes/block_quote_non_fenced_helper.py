@@ -1,6 +1,7 @@
 """
 Module to provide processing for non-fenced-code-block sections.
 """
+
 import logging
 from typing import List, Optional, Tuple, cast
 

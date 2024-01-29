@@ -1,6 +1,7 @@
 """
 Module to test that the return code schemes are set up properly.
 """
+
 import os
 import runpy
 from test.markdown_scanner import MarkdownScanner

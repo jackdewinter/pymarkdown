@@ -1,6 +1,7 @@
 """
 Module to provide for an element that can be added to markdown parsing stream.
 """
+
 from enum import Enum
 from typing import List, Optional, Union
 

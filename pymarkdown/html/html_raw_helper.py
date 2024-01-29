@@ -1,6 +1,7 @@
 """
 Module to provide helper functions for parsing the raw html inline blocks.
 """
+
 import logging
 import string
 from typing import Optional, Tuple, Union

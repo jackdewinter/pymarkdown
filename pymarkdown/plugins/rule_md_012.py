@@ -1,6 +1,7 @@
 """
 Module to implement a plugin that looks for multiple blank lines in the files.
 """
+
 from typing import Optional
 
 from pymarkdown.plugin_manager.plugin_details import PluginDetails

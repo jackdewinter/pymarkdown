@@ -1,6 +1,7 @@
 """
 Testing various aspects of whitespaces around link reference definitions.
 """
+
 from test.utils import act_and_assert
 
 import pytest

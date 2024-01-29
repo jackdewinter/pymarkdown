@@ -1,6 +1,7 @@
 """
 Module to implement a plugin that ensures that the style of fenced code blocks is consistent.
 """
+
 from typing import cast
 
 from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2

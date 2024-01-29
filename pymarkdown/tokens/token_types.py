@@ -2,7 +2,6 @@
 Module to contain lists of the available token types.
 """
 
-
 from typing import List
 
 from pymarkdown.tokens.atx_heading_markdown_token import AtxHeadingMarkdownToken

@@ -1,6 +1,7 @@
 """
 Module to implement a plugin that ensures that top-level lists are surrounded by Blank Lines.
 """
+
 from typing import List, Optional
 
 from pymarkdown.plugin_manager.plugin_details import PluginDetails

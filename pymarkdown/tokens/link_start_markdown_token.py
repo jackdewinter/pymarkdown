@@ -150,9 +150,11 @@ class LinkStartMarkdownToken(ReferenceMarkdownToken):
                 ParserHelper.remove_all_from_text(link_token.text_from_blocks),
                 "](",
                 link_token.before_link_whitespace,
-                f"<{link_token.active_link_uri}>"
-                if link_token.did_use_angle_start
-                else link_token.active_link_uri,
+                (
+                    f"<{link_token.active_link_uri}>"
+                    if link_token.did_use_angle_start
+                    else link_token.active_link_uri
+                ),
                 link_token.before_title_whitespace,
             ]
         )

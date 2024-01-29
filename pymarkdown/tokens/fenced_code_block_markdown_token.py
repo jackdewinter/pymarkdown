@@ -214,12 +214,15 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
             )
 
             fence_parts = [
-                ""
-                if previous_token is not None
-                and (
-                    previous_token.is_blank_line or previous_token.is_fenced_code_block
-                )
-                else ParserHelper.newline_character,
+                (
+                    ""
+                    if previous_token is not None
+                    and (
+                        previous_token.is_blank_line
+                        or previous_token.is_fenced_code_block
+                    )
+                    else ParserHelper.newline_character
+                ),
                 current_end_token.extracted_whitespace,
                 ParserHelper.repeat_string(
                     current_start_token.fence_character, fence_count

@@ -1,6 +1,7 @@
 """
 Module to provide processing for the nested scenarios that may contain container blocks.
 """
+
 from __future__ import annotations
 
 import logging
@@ -227,9 +228,11 @@ class ContainerBlockNestedProcessor:
         """
         POGGER.debug("check next container_start>recursing")
         adj_block, position_marker = (
-            None
-            if grab_bag.end_container_indices.block_index == -1
-            else grab_bag.end_container_indices.block_index,
+            (
+                None
+                if grab_bag.end_container_indices.block_index == -1
+                else grab_bag.end_container_indices.block_index
+            ),
             PositionMarker(position_marker.line_number, -1, grab_bag.adj_line_to_parse),
         )
         new_container_depth = grab_bag.container_depth + 1

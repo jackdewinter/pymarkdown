@@ -1,6 +1,7 @@
 """
 Class to provide a "grab bag" for commonly used properties for the Container Block Processor.
 """
+
 import logging
 from typing import Any, List, Optional, Tuple
 
@@ -46,8 +47,7 @@ class ParseForContainerBlocksProtocol(Protocol):
         Optional[RequeueLineInfo],
         bool,
         bool,
-    ]:
-        ...  # pragma: no cover
+    ]: ...  # pragma: no cover
 
     # pylint: enable=too-many-arguments
 

@@ -1,6 +1,7 @@
 """
 Module to provide processing for indented leaf blocks.
 """
+
 import logging
 from typing import List, Optional, Tuple, cast
 

@@ -2,7 +2,6 @@
 Module for directly using PyMarkdown's list api.
 """
 
-
 import os
 from test.utils import assert_if_lists_different, assert_that_exception_is_raised
 

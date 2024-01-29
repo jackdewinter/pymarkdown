@@ -4,8 +4,8 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-black = "==23.12.1"
-coverage = "==7.4.0"
+black = "==24.1.0"
+coverage = "==7.4.1"
 isort = "==5.13.2"
 flake8 = "==7.0.0"
 flake8-bugbear = "==24.1.17"
@@ -32,7 +32,7 @@ types-pyyaml = "*"
 
 [packages]
 columnar = ">=1.4.0"
-application-properties = ">=0.8.1"
+application-properties = ">=0.8.2"
 typing-extensions = ">=4.7.0"
 
 [requires]

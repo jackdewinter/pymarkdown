@@ -1,6 +1,7 @@
 """
 https://github.com/jackdewinter/pymarkdown/issues/456
 """
+
 from test.utils import act_and_assert
 
 import pytest

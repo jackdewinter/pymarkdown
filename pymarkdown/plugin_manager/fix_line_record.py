@@ -1,6 +1,7 @@
 """
 Module to hold information regarding a line fix that was made.
 """
+
 from dataclasses import dataclass
 
 

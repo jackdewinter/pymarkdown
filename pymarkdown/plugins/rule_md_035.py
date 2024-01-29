@@ -1,6 +1,7 @@
 """
 Module to implement a plugin that looks for inconsistent styles for thematic breaks.
 """
+
 from typing import cast
 
 from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2

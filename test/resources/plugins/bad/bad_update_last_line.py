@@ -2,6 +2,7 @@
 Module to implement a sample plugin that always adds a newline to the
 end of the file.  This is meant to clash with rule Md047
 """
+
 from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin

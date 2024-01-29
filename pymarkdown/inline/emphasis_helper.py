@@ -1,6 +1,7 @@
 """
 Emphasis helper
 """
+
 import logging
 from typing import List, Optional, Tuple, cast
 

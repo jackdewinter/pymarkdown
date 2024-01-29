@@ -1,6 +1,7 @@
 """
 Module to provide a high level abstraction of the extensions.
 """
+
 from typing import TYPE_CHECKING, Dict, Optional, cast
 
 from pymarkdown.extensions.disallowed_raw_html import MarkdownDisallowRawHtmlExtension

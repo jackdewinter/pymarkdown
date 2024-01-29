@@ -1,6 +1,7 @@
 """
 Module to helper with the parsing of link reference definitions.
 """
+
 import logging
 from typing import List, Optional, Tuple, cast
 

@@ -1,6 +1,7 @@
 """
 Module to implement a sample plugin that has a non-string description.
 """
+
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 

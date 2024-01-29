@@ -1,6 +1,7 @@
 """
 Module to help with the parsing of backslash inline elements.
 """
+
 import logging
 
 from pymarkdown.container_blocks.parse_block_pass_properties import (

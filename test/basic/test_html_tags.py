@@ -1,6 +1,7 @@
 """
 Tests for the functions that deal with parsing of html tags.
 """
+
 from pymarkdown.html.html_helper import HtmlHelper
 
 

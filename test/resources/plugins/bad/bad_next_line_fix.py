@@ -2,6 +2,7 @@
 Module to implement a sample plugin that has a bad next_line function the reports
 a scan error during fix mode.
 """
+
 from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 

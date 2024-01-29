@@ -1,6 +1,7 @@
 """
 Module to provide tests related to logging.
 """
+
 import logging
 import os
 import tempfile

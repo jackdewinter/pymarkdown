@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD006 rule.
 """
+
 import os
 from test.rules.utils import (
     execute_fix_test,

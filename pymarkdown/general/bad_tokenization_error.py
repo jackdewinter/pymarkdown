@@ -1,6 +1,7 @@
 """
 Module to provide an indication of an error while tokenizing the Markdown file.
 """
+
 from typing import Optional
 
 

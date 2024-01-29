@@ -1,6 +1,7 @@
 """
 Module to provide for the creation of a new link.
 """
+
 import logging
 from typing import List, Optional, Tuple, cast
 
@@ -36,8 +37,7 @@ class ProcessSimpleInlineProtocol(Protocol):
         self,
         parser_properties: ParseBlockPassProperties,
         source_text: str,
-    ) -> str:
-        ...  # pragma: no cover
+    ) -> str: ...  # pragma: no cover
 
 
 # pylint: enable=too-few-public-methods

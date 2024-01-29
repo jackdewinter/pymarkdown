@@ -1,6 +1,7 @@
 """
 Module to provide for the ability to search the text for a link.
 """
+
 import logging
 from typing import List, Optional, Tuple, cast
 
@@ -384,7 +385,12 @@ class LinkSearchHelper:
         remaining_line: str,
         tabified_remaining_line: Optional[str],
         tabified_text: Optional[str],
-    ) -> Tuple[int, str, str, LinkHelperProperties,]:
+    ) -> Tuple[
+        int,
+        str,
+        str,
+        LinkHelperProperties,
+    ]:
         POGGER.debug(
             "handle_link_types>>$<<$<<",
             inline_blocks,

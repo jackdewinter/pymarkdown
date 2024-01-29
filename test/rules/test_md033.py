@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the MD033 rule.
 """
+
 import os
 from test.markdown_scanner import MarkdownScanner
 

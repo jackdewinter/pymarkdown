@@ -148,11 +148,13 @@ class AtxHeadingMarkdownToken(LeafMarkdownToken):
         return "".join(
             [
                 current_end_token.extra_end_data,
-                ParserHelper.repeat_string(
-                    "#", current_start_token.remove_trailing_count
-                )
-                if current_start_token.remove_trailing_count
-                else "",
+                (
+                    ParserHelper.repeat_string(
+                        "#", current_start_token.remove_trailing_count
+                    )
+                    if current_start_token.remove_trailing_count
+                    else ""
+                ),
                 current_end_token.extracted_whitespace,
                 ParserHelper.newline_character,
             ]

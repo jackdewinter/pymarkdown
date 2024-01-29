@@ -1,6 +1,7 @@
 """
 Module to implement a sample plugin that has an empty string field from get_details.
 """
+
 from pymarkdown.plugin_manager.plugin_details import PluginDetails
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 

@@ -1,6 +1,7 @@
 """
 Module to allow for the details on the extension to be encapsulated.
 """
+
 from dataclasses import dataclass
 from typing import Optional
 

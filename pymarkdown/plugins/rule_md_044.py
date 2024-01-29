@@ -2,6 +2,7 @@
 Module to implement a plugin that ensures that specific proper names have
 the correct capitalization.
 """
+
 from typing import List, cast
 
 from pymarkdown.general.constants import Constants

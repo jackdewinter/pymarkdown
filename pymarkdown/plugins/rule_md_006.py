@@ -2,6 +2,7 @@
 Module to implement a plugin that ensures that all Unordered List Items
 start at the beginning of the line.
 """
+
 from typing import List, cast
 
 from pymarkdown.general.parser_helper import ParserHelper

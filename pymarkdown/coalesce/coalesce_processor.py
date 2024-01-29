@@ -1,6 +1,7 @@
 """
 Processing to coalesce a text tokens with a list of tokens.
 """
+
 import logging
 from typing import List, cast
 

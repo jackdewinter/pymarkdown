@@ -1,6 +1,7 @@
 """
 Module to implement a plugin that looks for spaces within emphasis sections.
 """
+
 from typing import List, Optional, Tuple, cast
 
 from pymarkdown.general.constants import Constants

@@ -1,6 +1,7 @@
 """
 Module to implement a plugin that looks for multiple top level headings.
 """
+
 from typing import cast
 
 from pymarkdown.extensions.front_matter_markdown_token import FrontMatterMarkdownToken

@@ -1,6 +1,7 @@
 """
 Tests for the extract_whitespace function.
 """
+
 from pymarkdown.general.parser_helper import ParserHelper
 
 

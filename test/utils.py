@@ -1,6 +1,7 @@
 """
 Module to provide helper methods for tests.
 """
+
 import difflib
 import io
 import json

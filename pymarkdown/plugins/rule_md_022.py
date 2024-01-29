@@ -2,6 +2,7 @@
 Module to implement a plugin that looks for headings that are not surrounded by
 blank lines.
 """
+
 from typing import Optional
 
 from pymarkdown.plugin_manager.plugin_details import PluginDetails

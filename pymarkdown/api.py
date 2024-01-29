@@ -2,6 +2,7 @@
 Module to provide for an API to directly communicate with PyMarkdown instead
 of using a command line.
 """
+
 import argparse
 from dataclasses import dataclass
 from typing import Any, List, Optional

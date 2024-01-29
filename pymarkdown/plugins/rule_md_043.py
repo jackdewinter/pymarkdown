@@ -1,6 +1,7 @@
 """
 Module to implement a plugin that ensures that a mandates set of headers are present.
 """
+
 from typing import List, Optional, Tuple, Union, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
@@ -192,9 +193,9 @@ class RuleMd043(RulePlugin):
             and heading_index < len(self.__compiled_headings)
             and heading_index < scan_limit
         ):
-            this_compiled_heading: Union[
-                str, Tuple[int, str]
-            ] = self.__compiled_headings[heading_index]
+            this_compiled_heading: Union[str, Tuple[int, str]] = (
+                self.__compiled_headings[heading_index]
+            )
             # if self.__show_debug:
             #     print(
             #         "vghm:this_compiled_heading="

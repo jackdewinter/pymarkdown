@@ -1,6 +1,7 @@
 """
 Extra tests.
 """
+
 import os
 from test.markdown_scanner import MarkdownScanner
 from test.utils import act_and_assert, create_temporary_configuration_file

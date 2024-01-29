@@ -2,7 +2,6 @@
 Module to provide tests related to the PML100 rule.
 """
 
-
 from dataclasses import dataclass
 from test.markdown_scanner import MarkdownScanner
 from test.utils import assert_if_strings_different

@@ -2,6 +2,7 @@
 Module to implement a plugin that looks for headings that do not start at the
 beginning of the line.
 """
+
 from typing import Optional, cast
 
 from pymarkdown.general.parser_helper import ParserHelper

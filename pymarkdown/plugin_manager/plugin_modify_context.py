@@ -1,6 +1,7 @@
 """
 Module to provide for a context with which tokens can be modified.
 """
+
 from abc import abstractproperty
 
 

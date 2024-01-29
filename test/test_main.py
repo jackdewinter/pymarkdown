@@ -1,6 +1,7 @@
 """
 Module to provide tests related to the basic parts of the scanner.
 """
+
 import logging
 import os
 import runpy

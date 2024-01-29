@@ -1,6 +1,7 @@
 """
 Module to implement a plugin that ensures that Block Quote elements are surrounded by Blank Lines.
 """
+
 from typing import List, cast
 
 from pymarkdown.plugin_manager.plugin_details import PluginDetails

@@ -3,6 +3,7 @@ Module to implement a plugin that looks for text in a paragraph where a line sta
 with what could be a closed atx heading, except there is no spaces between the hashes
 and the text of the heading, either at the start, end, or both.
 """
+
 import re
 from typing import Any, Optional, cast
 

@@ -1,6 +1,7 @@
 """
 Module to implement a plugin that looks for excessively long lines in the file.
 """
+
 from typing import List, Tuple
 
 from pymarkdown.general.parser_helper import ParserHelper

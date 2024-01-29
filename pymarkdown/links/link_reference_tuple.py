@@ -1,6 +1,7 @@
 """
 Module to hold the tuple of information for creating a Link Reference Definition.
 """
+
 from dataclasses import dataclass
 from typing import Optional
 

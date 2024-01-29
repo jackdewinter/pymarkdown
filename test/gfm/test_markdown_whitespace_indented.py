@@ -5,6 +5,7 @@ Note that there are various functions that are `x_with_blank_line` where
      `x` is the function before it.  As indented code blocks do not interupt
      paragraphs, the blank line is needed to force the indented code block.
 """
+
 from test.utils import act_and_assert
 
 import pytest

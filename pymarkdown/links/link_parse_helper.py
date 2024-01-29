@@ -1,6 +1,7 @@
 """
 Module to provide for the ability to parse the text for a link.
 """
+
 import logging
 import urllib
 import urllib.parse
@@ -939,7 +940,11 @@ class LinkParseHelper:
         new_index: int,
         text_from_blocks: str,
         tabified_text: Optional[str],
-    ) -> Tuple[int, bool, LinkHelperProperties,]:
+    ) -> Tuple[
+        int,
+        bool,
+        LinkHelperProperties,
+    ]:
         """
         Look for links in the various formats.
         """

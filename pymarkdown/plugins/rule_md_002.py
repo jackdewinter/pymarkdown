@@ -2,6 +2,7 @@
 Module to implement a plugin that looks to see if the first heading in a file is
 a top level heading.
 """
+
 from typing import cast
 
 from pymarkdown.plugin_manager.plugin_details import PluginDetails

@@ -1,6 +1,7 @@
 """
 Module to provide tests related to alternate extensions.
 """
+
 import os
 from test.markdown_scanner import MarkdownScanner
 

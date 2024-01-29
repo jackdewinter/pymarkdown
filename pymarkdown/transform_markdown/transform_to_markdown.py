@@ -1,6 +1,7 @@
 """
 Module to provide for a transformation from tokens to a markdown document.
 """
+
 import collections
 import inspect
 import logging

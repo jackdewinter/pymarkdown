@@ -1,6 +1,7 @@
 """
 Module to provide processing for the non-leaf scenarios that may contain container blocks.
 """
+
 from __future__ import annotations
 
 import logging

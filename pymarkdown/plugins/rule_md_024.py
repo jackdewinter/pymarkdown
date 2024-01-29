@@ -2,6 +2,7 @@
 Module to implement a plugin that looks for multiple heading lines with the same
 content.
 """
+
 from typing import Dict, List, Optional, cast
 
 from pymarkdown.plugin_manager.plugin_details import PluginDetails

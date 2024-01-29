@@ -1,6 +1,7 @@
 """
 Module containing extra information for a link reference.
 """
+
 from dataclasses import dataclass
 from typing import Optional
 

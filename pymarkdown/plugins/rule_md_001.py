@@ -2,6 +2,7 @@
 Module to implement a plugin that looks for heading that increment more than one
 level at a time (going up).
 """
+
 from typing import cast
 
 from pymarkdown.extensions.front_matter_markdown_token import FrontMatterMarkdownToken

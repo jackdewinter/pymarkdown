@@ -1,6 +1,7 @@
 """
 Tests for the optional front-matter processing
 """
+
 import copy
 import os
 from test.markdown_scanner import MarkdownScanner

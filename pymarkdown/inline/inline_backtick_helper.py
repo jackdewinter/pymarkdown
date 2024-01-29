@@ -1,6 +1,7 @@
 """
 Module to help with the parsing of bkactick inline elements.
 """
+
 import logging
 from typing import List, Optional, Tuple
 

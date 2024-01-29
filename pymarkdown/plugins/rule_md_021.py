@@ -2,6 +2,7 @@
 Module to implement a plugin that looks for more than one space between either the
 opening or closing hashes of an atx heading.
 """
+
 from typing import Optional, cast
 
 from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2

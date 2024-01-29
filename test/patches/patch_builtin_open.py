@@ -1,6 +1,7 @@
 """
 Module to patch the "builtin.open" function.
 """
+
 import unittest.mock
 from contextlib import contextmanager
 from test.patches.patch_base import PatchBase

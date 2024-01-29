@@ -1,6 +1,7 @@
 """
 Module to hold the token to fix and how to fix it.
 """
+
 from dataclasses import dataclass
 from typing import Union
 

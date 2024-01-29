@@ -1,6 +1,7 @@
 """
 Module to implement a plugin that looks for inline HTML in the files.
 """
+
 from typing import List, cast
 
 from pymarkdown.general.parser_helper import ParserHelper

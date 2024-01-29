@@ -2,6 +2,7 @@
 Module to implement a plugin that ensures that Ordered List Items have
 consistent numeric prefaces.
 """
+
 from typing import List, Optional, Tuple, cast
 
 from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2

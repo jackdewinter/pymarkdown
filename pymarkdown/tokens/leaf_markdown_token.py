@@ -1,6 +1,7 @@
 """
 Module to provide for a leaf element that can be added to markdown parsing stream.
 """
+
 from typing import Optional, Union
 
 from typing_extensions import override

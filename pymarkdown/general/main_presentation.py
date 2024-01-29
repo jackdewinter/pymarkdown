@@ -1,6 +1,7 @@
 """
 Module to provide for the output of the PyMarkdown application.
 """
+
 import sys
 from typing import Optional
 

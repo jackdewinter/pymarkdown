@@ -1,6 +1,7 @@
 """
 Module to implement a plugin that ensures that the first line in a file is a top level heading.
 """
+
 from typing import Optional, cast
 
 from pymarkdown.extensions.front_matter_markdown_token import FrontMatterMarkdownToken

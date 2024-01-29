@@ -1,6 +1,7 @@
 """
 Module to provide a tokenization of a markdown-encoded string.
 """
+
 import logging
 import os
 from typing import List, Optional, Tuple, cast

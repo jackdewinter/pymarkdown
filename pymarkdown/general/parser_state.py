@@ -1,6 +1,7 @@
 """
 Module to provide for an encapsulation of the high level state of the parser.
 """
+
 from __future__ import annotations
 
 import copy
@@ -36,8 +37,7 @@ class CloseOpenBlocksProtocol(Protocol):
         caller_can_handle_requeue: bool = False,
         requeue_reset: bool = False,
         was_forced: bool = False,
-    ) -> Tuple[List[MarkdownToken], Optional[RequeueLineInfo]]:
-        ...  # pragma: no cover
+    ) -> Tuple[List[MarkdownToken], Optional[RequeueLineInfo]]: ...  # pragma: no cover
 
     # pylint: enable=too-many-arguments
 
@@ -57,8 +57,9 @@ class HandleBlankLineProtocol(Protocol):
         input_line: str,
         from_main_transform: bool,
         position_marker: Optional[PositionMarker] = None,
-    ) -> Tuple[Optional[List[MarkdownToken]], Optional[RequeueLineInfo]]:
-        ...  # pragma: no cover
+    ) -> Tuple[
+        Optional[List[MarkdownToken]], Optional[RequeueLineInfo]
+    ]: ...  # pragma: no cover
 
 
 # pylint: enable=too-few-public-methods

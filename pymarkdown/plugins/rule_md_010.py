@@ -1,6 +1,7 @@
 """
 Module to implement a plugin that looks for hard tabs in the files.
 """
+
 from typing import List, Optional, cast
 
 from pymarkdown.general.tab_helper import TabHelper

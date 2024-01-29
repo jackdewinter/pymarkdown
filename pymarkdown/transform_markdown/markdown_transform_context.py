@@ -39,8 +39,7 @@ class StartMarkdownTokenTransformProtocol(Protocol):
         context: "MarkdownTransformContext",
         current_token: MarkdownToken,
         previous_token: Optional[MarkdownToken],
-    ) -> str:
-        ...  # pragma: no cover
+    ) -> str: ...  # pragma: no cover
 
 
 # pylint: enable=too-few-public-methods
@@ -58,8 +57,7 @@ class EndMarkdownTokenTransformProtocol(Protocol):
         current_token: MarkdownToken,
         previous_token: Optional[MarkdownToken],
         next_token: Optional[MarkdownToken],
-    ) -> str:
-        ...  # pragma: no cover
+    ) -> str: ...  # pragma: no cover
 
 
 # pylint: enable=too-few-public-methods
@@ -79,8 +77,7 @@ class StartMarkdownContainerTokenTransformProtocol(Protocol):
         previous_token: Optional[MarkdownToken],
         next_token: Optional[MarkdownToken],
         transformed_data: str,
-    ) -> str:
-        ...  # pragma: no cover
+    ) -> str: ...  # pragma: no cover
 
     # pylint: enable=too-many-arguments
 
@@ -100,8 +97,7 @@ class EndMarkdownContainerTokenTransformProtocol(Protocol):
         current_token: MarkdownToken,
         actual_tokens: List[MarkdownToken],
         token_index: int,
-    ) -> str:
-        ...  # pragma: no cover
+    ) -> str: ...  # pragma: no cover
 
 
 # pylint: enable=too-few-public-methods
@@ -118,8 +114,7 @@ class RegisterMarkdownTransformHandlersProtocol(Protocol):
         type_to_register: type,
         start_function: StartMarkdownTokenTransformProtocol,
         end_function: Optional[EndMarkdownTokenTransformProtocol],
-    ) -> None:
-        ...  # pragma: no cover
+    ) -> None: ...  # pragma: no cover
 
 
 # pylint: enable=too-few-public-methods
@@ -136,8 +131,7 @@ class StartHtmlTokenTransformProtocol(Protocol):
         output_html: str,
         next_token: MarkdownToken,
         transform_state: TransformState,
-    ) -> str:
-        ...  # pragma: no cover
+    ) -> str: ...  # pragma: no cover
 
 
 # pylint: enable=too-few-public-methods
@@ -154,8 +148,7 @@ class EndHtmlTokenTransformProtocol(Protocol):
         output_html: str,
         next_token: MarkdownToken,
         transform_state: TransformState,
-    ) -> str:
-        ...  # pragma: no cover
+    ) -> str: ...  # pragma: no cover
 
 
 # pylint: enable=too-few-public-methods
@@ -172,8 +165,7 @@ class RegisterHtmlTransformHandlersProtocol(Protocol):
         type_to_register: type,
         start_function: StartHtmlTokenTransformProtocol,
         end_function: Optional[EndHtmlTokenTransformProtocol],
-    ) -> None:
-        ...  # pragma: no cover
+    ) -> None: ...  # pragma: no cover
 
 
 # pylint: enable=too-few-public-methods

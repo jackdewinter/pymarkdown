@@ -2,7 +2,6 @@
 Module to contain lists of the available extension token types.
 """
 
-
 from typing import List
 
 from pymarkdown.extensions.front_matter_markdown_token import FrontMatterMarkdownToken

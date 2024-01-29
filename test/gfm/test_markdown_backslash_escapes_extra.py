@@ -1,6 +1,7 @@
 """
 https://github.github.com/gfm/#backslash-escapes
 """
+
 from test.utils import act_and_assert
 
 import pytest

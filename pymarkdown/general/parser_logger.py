@@ -2,6 +2,7 @@
 Module to provide for a simple logger wrapper that provides extra
 functionality for logging parsing information.
 """
+
 import logging
 from typing import Any, List, cast
 
@@ -113,10 +114,10 @@ class ParserLogger:
                     int(next_array_index / 2)
                 ]
             elif show_whitespace:
-                recipient_array[
-                    next_array_index
-                ] = ParserHelper.make_whitespace_visible(
-                    args[int(next_array_index / 2)]
+                recipient_array[next_array_index] = (
+                    ParserHelper.make_whitespace_visible(
+                        args[int(next_array_index / 2)]
+                    )
                 )
             else:
                 recipient_array[next_array_index] = ParserHelper.make_value_visible(

@@ -1,6 +1,7 @@
 """
 Module to provide for a leaf element that can be added to markdown parsing stream that handles front matter.
 """
+
 import logging
 from typing import Dict, List, Optional, Tuple, cast
 

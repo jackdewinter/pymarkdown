@@ -2,6 +2,7 @@
 Module to implement a plugin that looks for text sequences that make
 it appear like the author got the inline link syntax reversed.
 """
+
 import re
 from typing import List
 

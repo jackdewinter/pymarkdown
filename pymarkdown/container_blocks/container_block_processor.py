@@ -1,6 +1,7 @@
 """
 Module to provide processing for the container blocks.
 """
+
 from __future__ import annotations
 
 import copy
@@ -118,9 +119,11 @@ class ContainerBlockProcessor:
             container_start_bq_count,
             parser_properties,
             ignore_link_definition_start,
-            original_line
-            if original_line is not None
-            else position_marker.text_to_parse,
+            (
+                original_line
+                if original_line is not None
+                else position_marker.text_to_parse
+            ),
             ContainerBlockProcessor.parse_line_for_container_blocks,
         )
         (
@@ -298,9 +301,11 @@ class ContainerBlockProcessor:
             ind for ind in parser_state.token_stack if ind.is_list
         ]
         grab_bag.block_quote_data = BlockQuoteData(
-            0
-            if grab_bag.initial_block_quote_count is None
-            else grab_bag.initial_block_quote_count,
+            (
+                0
+                if grab_bag.initial_block_quote_count is None
+                else grab_bag.initial_block_quote_count
+            ),
             parser_state.count_of_block_quotes_on_stack(),
         )
 

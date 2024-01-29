@@ -1,6 +1,7 @@
 """
 Module to provide for a simple bootstrap for the project.
 """
+
 from pymarkdown.main import PyMarkdownLint
 
 

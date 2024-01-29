@@ -2,6 +2,7 @@
 Module to implement a plugin that ensures that nested Unordered List Items
 start at predictable positions.
 """
+
 from typing import Tuple, cast
 
 from pymarkdown.general.parser_helper import ParserHelper

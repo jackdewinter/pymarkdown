@@ -1,6 +1,7 @@
 """
 Module to test the StackToken class.
 """
+
 from pymarkdown.tokens.stack_token import StackToken
 
 

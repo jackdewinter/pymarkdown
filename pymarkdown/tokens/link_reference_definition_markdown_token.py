@@ -56,17 +56,23 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
                 self.__link_title_raw,
                 self.__end_whitespace,
             ) = (
-                ""
-                if link_debug.collected_destination == self.__link_name
-                else link_debug.collected_destination,
+                (
+                    ""
+                    if link_debug.collected_destination == self.__link_name
+                    else link_debug.collected_destination
+                ),
                 link_debug.line_destination_whitespace,
-                ""
-                if link_debug.inline_raw_link == self.__link_destination
-                else link_debug.inline_raw_link,
+                (
+                    ""
+                    if link_debug.inline_raw_link == self.__link_destination
+                    else link_debug.inline_raw_link
+                ),
                 link_debug.line_title_whitespace,
-                ""
-                if link_debug.inline_raw_title == self.__link_title
-                else link_debug.inline_raw_title,
+                (
+                    ""
+                    if link_debug.inline_raw_title == self.__link_title
+                    else link_debug.inline_raw_title
+                ),
                 link_debug.end_whitespace,
             )
         else:
