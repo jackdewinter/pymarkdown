@@ -106,19 +106,21 @@ jobs:
 
       - name: Execute Tests
         run: pipenv run pytest --cov-fail-under=90 --cov --cov-branch
-      # - name: Archive coverage artifacts
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: ${{ matrix.platform }} Coverage
-      #     path: |
-      #       ./report/coverage.xml
-      # - name: Report Coverage
-      #   uses: codecov/codecov-action@v3
-      #   if: github.event_name != 'schedule'
-      #   with:
-      #     file: ./report/coverage.xml
-      #     name: ${{ matrix.python }} - ${{ matrix.platform }}
-      #     fail_ci_if_error: true
+
+      - name: Archive coverage artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.platform }} Coverage
+          path: |
+            ./report/coverage.xml
+
+      - name: Report Coverage
+        uses: codecov/codecov-action@v3
+        if: github.event_name != 'schedule'
+        with:
+          file: ./report/coverage.xml
+          name: ${{ matrix.python }} - ${{ matrix.platform }}
+          fail_ci_if_error: true
 
   packaging:
 
