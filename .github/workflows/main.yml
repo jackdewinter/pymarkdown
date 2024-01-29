@@ -105,7 +105,7 @@ jobs:
           pipenv uninstall pytest-html
 
       - name: Execute Tests
-        run: pipenv run pytest --cov-fail-under=90 --cov --cov-branch
+        run: pipenv run pytest --cov-fail-under=90 --cov --cov-branch --cov-report xml:report/coverage.xml
 
       - name: Archive coverage artifacts
         uses: actions/upload-artifact@v4
