@@ -115,7 +115,7 @@ jobs:
             ./report/coverage.xml
 
       - name: Report Coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         if: github.event_name != 'schedule'
         with:
           file: ./report/coverage.xml
