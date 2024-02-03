@@ -27,6 +27,9 @@
   - fixed issue with md019 continuing to search for text blocks once the
     heading was completed
   - verified that Md021 does not have the same issue, but added tests to be sure
+- [Issue 981](https://github.com/jackdewinter/pymarkdown/issues/981)
+  - added documentation for Rule Pml100
+  - cleaned up mentions of whitespace in pragma and front matter extensions
 
 ### Changed
 
