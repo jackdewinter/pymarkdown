@@ -445,8 +445,24 @@ scanTests = [
 """,
     ),
     pluginRuleTest(
-        "good_list_indentation_by_four",
+        "good_list_indentation_by_four_ul_only",
         source_file_name=f"{source_path}good_list_indentation_by_four.md",
+        source_file_contents="""This is a test
+
+* this is level 1
+    * this is level 2
+        * this is level 3
+""",
+        set_args=["plugins.md007.indent=$#4"],
+    ),
+    pluginRuleTest(
+        "good_list_indentation_by_four_ul_in_ol",
+        source_file_contents="""This is a test
+
+1. this is level 1
+   * this is level 2
+       * this is level 3
+""",
         set_args=["plugins.md007.indent=$#4"],
     ),
     pluginRuleTest(
@@ -475,6 +491,13 @@ scanTests = [
 
 1. Ordered item
    - Sub unordered item
+""",
+    ),
+    pluginRuleTest(
+        "example",
+        source_file_contents="""* indented properly
+  1. indented properly
+     * indented properly
 """,
     ),
     pluginRuleTest(

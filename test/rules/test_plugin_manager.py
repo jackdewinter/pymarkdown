@@ -1335,7 +1335,8 @@ def test_markdown_with_plugins_list_only():
   md047   single-trailing-newline         True       True       0.5.1    Yes
   md048   code-fence-style                True       True       0.5.1    Yes
   pml100  disallowed-html                 False      False      0.5.0    No
-
+  pml101  list-anchored-indent            False      False      0.5.0    No
+  
 """
     expected_error = ""
 
@@ -1419,7 +1420,7 @@ def test_markdown_with_plugins_list_only_all():
   md048   code-fence-style                True       True       0.5.1    Yes
   md999   debug-only                      False      False      0.0.0    No
   pml100  disallowed-html                 False      False      0.5.0    No
-
+  pml101  list-anchored-indent            False      False      0.5.0    No
 """
     expected_error = ""
 

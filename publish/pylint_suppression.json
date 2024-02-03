@@ -343,6 +343,7 @@
         "pymarkdown/plugins/rule_md_047.py": {},
         "pymarkdown/plugins/rule_md_048.py": {},
         "pymarkdown/plugins/rule_pml_100.py": {},
+        "pymarkdown/plugins/rule_pml_101.py": {},
         "pymarkdown/plugins/utils/container_token_manager.py": {},
         "pymarkdown/plugins/utils/list_tracker.py": {},
         "pymarkdown/return_code_helper.py": {},
