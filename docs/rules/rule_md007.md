@@ -76,7 +76,7 @@ lists into two distinct unordered lists, as this rule does not apply to ordered
 list indentations.  If indentation support is also required for ordered lists,
 refer to the selection below on [Python-Markdown Support](#python-markdown-support).
 
-In addition, there are occasion where parsers exect to start the first level of
+In addition, there are occasion where parsers expect to start the first level of
 lists with the specified amount of indentation.  For those situations, the `start_indented`
 configuration value can be set to `True` to accomodate these parsers.
 

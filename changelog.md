@@ -10,6 +10,7 @@
     - Used by tools such as `mkdocs` to build documentation sites
   - Defaults to an indent of 4 that starts from the beginning of the line or
     after a block quote start
+  - Updated documentation for Md007 to mention Pml101 and when to use it
 
 ### Fixed
 
