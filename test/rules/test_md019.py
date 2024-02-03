@@ -18,6 +18,7 @@ source_path = os.path.join("test", "resources", "rules", "md019") + os.sep
 
 __plugin_disable_md010 = "md010"
 __plugin_disable_md023 = "md023"
+__plugin_disable_md013_md033 = "md013,md033"
 
 scanTests = [
     pluginRuleTest(
@@ -84,6 +85,68 @@ scanTests = [
         fix_expected_file_contents="""# Heading 1
 
 ## Heading 2
+""",
+    ),
+    pluginRuleTest(
+        "issue-977",
+        disable_rules=__plugin_disable_md013_md033,
+        source_file_contents="""## Run optimization
+
+<pre>
+bazel run //tools/pymarkdown -- --help
+usage: pymarkdown.py [-h] [--commit COMMIT] [--steps STEPS]
+
+                     [--overwrite OVERWRITE] [--root_path ROOT_PATH]
+
+options:
+""",
+    ),
+    pluginRuleTest(
+        "good_proper_heading_followed_by_paragraph_indented_lines",
+        source_file_contents="""# Heading 1
+
+  Text
+  more text
+""",
+    ),
+    pluginRuleTest(
+        "good_proper_heading_followed_by_fenced_indented_lines",
+        source_file_contents="""# Heading 1
+
+```text
+  Text
+  more text
+```
+""",
+    ),
+    pluginRuleTest(
+        "bad_empty_heading_with_spaces_followed_by_fenced_indented_lines",
+        source_file_contents="""#\a\a
+
+```text
+  Text
+  more text
+```
+""".replace(
+            "\a", " "
+        ),
+        scan_expected_return_code=1,
+        scan_expected_output="{temp_source_path}:1:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)",
+        fix_expected_file_contents="""#\a
+
+```text
+  Text
+  more text
+```
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "good_empty_heading_with_empty_text",
+        source_file_contents="""#
+
+empty
 """,
     ),
     pluginRuleTest(
