@@ -86,3 +86,4 @@ class RuleMd019(RulePlugin):
                 )
             if self.__atx_heading_token and len(resolved_extracted_whitespace) > 1:
                 self.__report(context, text_token)
+            self.__atx_heading_token = None

@@ -23,6 +23,10 @@
 - [Issue 964](https://github.com/jackdewinter/pymarkdown/issues/964)
   - final fix states needed verification and fixing of any issues
   - uncovered and fixed issues in Md007, Md019, and Md029
+- [Issue 977](https://github.com/jackdewinter/pymarkdown/issues/977)
+  - fixed issue with md019 continuing to search for text blocks once the
+    heading was completed
+  - verified that Md021 does not have the same issue, but added tests to be sure
 
 ### Changed
 

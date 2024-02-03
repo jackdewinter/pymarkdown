@@ -17,6 +17,7 @@ import pytest
 source_path = os.path.join("test", "resources", "rules", "md021") + os.sep
 
 __plugin_disable_md010 = "md010"
+__plugin_disable_md033 = "md033"
 
 scanTests = [
     pluginRuleTest(
@@ -122,6 +123,52 @@ scanTests = [
 
 ## Heading 2 ##
 """,
+    ),
+    pluginRuleTest(
+        "issue-977",
+        disable_rules=__plugin_disable_md033,
+        source_file_contents="""## Run optimization ##
+
+<pre>
+bazel run //tools/pymarkdown -- --help
+usage: pymarkdown.py [-h] [--commit COMMIT] [--steps STEPS]
+
+                     [--overwrite OVERWRITE] [--root_path ROOT_PATH]
+
+options:
+""",
+    ),
+    pluginRuleTest(
+        "good_proper_heading_followed_by_paragraph_indented_lines",
+        source_file_contents="""# Heading 1 #
+
+  Text
+  more text
+""",
+    ),
+    pluginRuleTest(
+        "good_proper_heading_followed_by_fenced_indented_lines",
+        source_file_contents="""# Heading 1 #
+
+```text
+  Text
+  more text
+```
+""",
+    ),
+    pluginRuleTest(
+        "bad_empty_heading_with_spaces_followed_by_fenced_indented_lines",
+        source_file_contents="""#\a\a#
+
+```text
+  Text
+  more text
+```
+""".replace(
+            "\a", " "
+        ),
+        scan_expected_return_code=1,
+        scan_expected_output="{temp_source_path}:1:1: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)",
     ),
     pluginRuleTest(
         "mix_md021_md010",
