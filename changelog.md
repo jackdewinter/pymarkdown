@@ -4,7 +4,12 @@
 
 ### Added
 
-- None
+- [Issue 975](https://github.com/jackdewinter/pymarkdown/issues/975)
+  - Added a new rule Pml101 to deal with "anchored list indents"
+  - This adds support for `Python-Markdown` and other parsers like it
+    - Used by tools such as `mkdocs` to build documentation sites
+  - Defaults to an indent of 4 that starts from the beginning of the line or
+    after a block quote start
 
 ### Fixed
 
