@@ -33,6 +33,10 @@
 - [Issue 981](https://github.com/jackdewinter/pymarkdown/issues/981)
   - added documentation for Rule Pml100
   - cleaned up mentions of whitespace in pragma and front matter extensions
+- [Issue 986](https://github.com/jackdewinter/pymarkdown/issues/986)
+  - initial setting of log level to DEBUG with `--stack-trace` command line
+    flag not working as expected
+  - fixed to properly set log level to DEBUG for early application debugging
 
 ### Changed
 
