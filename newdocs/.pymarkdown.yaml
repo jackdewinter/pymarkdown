@@ -1,0 +1,10 @@
+extensions:
+  front-matter:
+    enabled: true
+plugins:
+  ul-indent:
+    enabled: false
+  no-trailing-punctuation:
+    enabled: false
+  list-anchored-indent:
+    enabled: true
