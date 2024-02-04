@@ -15,6 +15,7 @@ release, we are moving our documentation from plain Markdown files hosted in thi
 repository GitHub to the [ReadTheDocs](https://pymarkdown.readthedocs.io/en/latest/)
 format. Please bear with us during this transitional period.
 
+<!--- pyml disable-next-line no-trailing-punctuation-->
 ## And On with The Show...
 
 PyMarkdown is primarily a Markdown Linter.  To ensure that the Markdown
