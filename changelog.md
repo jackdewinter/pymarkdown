@@ -11,6 +11,9 @@
   - Defaults to an indent of 4 that starts from the beginning of the line or
     after a block quote start
   - Updated documentation for Md007 to mention Pml101 and when to use it
+- [Issue 983](https://github.com/jackdewinter/pymarkdown/issues/983)
+  - Added base foundation for new documentation, publishing on
+    read-the-docs.
 
 ### Fixed
 
