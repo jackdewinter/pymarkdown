@@ -1,0 +1,18 @@
+site_name: PyMarkdown Linter (PyMarkdownLnt)
+# site_url: http://127.0.0.1:8000/
+site_description: Documentation for the PyMarkdown Linter project.
+site_author: Jack De Winter
+theme: readthedocs
+# repo_url: https://github.com/jackdewinter/pymarkdown
+docs_dir: src
+site_dir: site
+nav:
+  - 'index.md'
+  # - 'another.md'
+  # - 'User Guide':
+  #   - 'Writing your docs': 'writing-your-docs.md'
+  #   - 'Styling your docs': 'styling-your-docs.md'
+  # - 'My About Page' : 'about.md'
+markdown_extensions:
+  - toc:
+      permalink: "#"
