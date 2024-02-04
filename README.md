@@ -8,6 +8,16 @@
 |Community|[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/jackdewinter/pymarkdown/graphs/commit-activity) [![Stars](https://img.shields.io/github/stars/jackdewinter/pymarkdown.svg)](https://github.com/jackdewinter/pymarkdown/stargazers)  [![Forks](https://img.shields.io/github/forks/jackdewinter/pymarkdown.svg)](https://github.com/jackdewinter/pymarkdown/network/members)  [![Contributors](https://img.shields.io/github/contributors/jackdewinter/pymarkdown.svg)](https://github.com/jackdewinter/pymarkdown/graphs/contributors)  [![Downloads](https://img.shields.io/pypi/dm/pymarkdownlnt.svg)](https://pypistats.org/packages/pymarkdownlnt)|
 |Maintainers|[![LinkedIn](https://img.shields.io/badge/-LinkedIn-black.svg?logo=linkedin&colorB=555)](https://www.linkedin.com/in/jackdewinter/)|
 
+## Note To Any Readers
+
+As part of our effort to clean up the project in preparation for a version 1.0.0
+release, we are moving our documentation from plain Markdown files hosted in this
+repository GitHub to the [ReadTheDocs](https://pymarkdown.readthedocs.io/en/latest/)
+format. Please bear with us during this transitional period.
+
+<!--- pyml disable-next-line no-trailing-punctuation-->
+## And On with The Show...
+
 PyMarkdown is primarily a Markdown Linter.  To ensure that the Markdown
 [linting](https://en.wikipedia.org/wiki/Lint_%28software%29)
 is accomplished successfully, the rules engine that powers the linter uses a Markdown

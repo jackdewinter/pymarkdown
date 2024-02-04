@@ -74,6 +74,40 @@ jobs:
       - name: Execute PyMarkdown on Current Docs
         run: pipenv run python ${{github.workspace}}/main.py --config ${{github.workspace}}/clean.json scan ${{github.workspace}} ${{github.workspace}}/docs
 
+  doc-lint:
+
+    name: Document Quality Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python ${{ env.default-python-version }}
+        uses: actions/setup-python@v5.0.0
+        with:
+          python-version: ${{ env.default-python-version }}
+
+      - name: Install PipEnv
+        run: |
+          pip install pipenv==2022.1.8
+
+      - name: Sync With Repository
+        run: |
+          pipenv update -d
+          pipenv graph
+
+      - name: Execute PyMarkdown on Docs
+        run: |
+          cd newdocs
+          pipenv run python ../main.py scan src
+
+      - name: Execute MdFormat on Docs
+        run: |
+          cd newdocs
+          pipenv run mdformat --align-semantic-breaks-in-lists --wrap 80 --check .
+  
   scenario-tests:
 
     name: Scenario Tests
@@ -126,7 +160,7 @@ jobs:
 
     name: Package Application
     runs-on: ubuntu-latest
-    needs: [ lint, scenario-tests ]
+    needs: [ doc-lint, lint, scenario-tests ]
     # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
     steps:

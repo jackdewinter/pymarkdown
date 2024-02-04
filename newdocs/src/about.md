@@ -1,4 +1,3 @@
 # About Page
 
-blah
-blah
+blah blah
