@@ -48,6 +48,14 @@ we found was contained in these documents:
 - [Python Markdown](https://python-markdown.github.io/extensions/meta_data/)
 - [Jekyll Static Site Generator](https://jekyllrb.com/docs/front-matter/)
 
+### Specifics
+
+For clarity in the following sections, any mention of the word "whitespace"
+refers to ascii whitespace characters `"\x20\x09\x0a\x0b\x0c\x0d"`. Specifically,
+these characters are the space character `\x20`, the tab character `\x09`,
+the newline character `\x0a`, the line tabulation character `\x0b`, the form feed
+character `\x0c`, and the carriage return character `\x0d`.
+
 ### Front Matter Blocks
 
 The Front Matter Block start character sequence of `---` must be by itself
