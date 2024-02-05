@@ -125,8 +125,6 @@ def test_markdown_with_enabled_by_configuration_id():
         supplied_configuration
     ) as configuration_file:
         supplied_arguments = [
-            "--log-level",
-            "DEBUG",
             "-c",
             configuration_file,
             "scan",
@@ -184,8 +182,8 @@ def test_markdown_with_enabled_by_configuration_name():
         supplied_arguments = [
             "-c",
             configuration_file,
-            "--log-level",
-            "DEBUG",
+            # "--log-level",
+            # "DEBUG",
             "scan",
             source_path,
         ]

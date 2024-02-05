@@ -67,12 +67,10 @@ class ApplicationLogging:
         new_level = logging.DEBUG if show_stack_trace else logging.WARNING
         base_logger.setLevel(new_level)
         if show_stack_trace:
-            base_logger.warn(
-                "Application logging set to '%s' (%s).",
-                ApplicationLogging.__log_level_to_name_map[new_level],
-                ApplicationLogging.__log_level_to_name_map[base_logger.level],
+            base_logger.warning(
+                "Application logging set to '%s'.",
+                logging.getLevelName(base_logger.level),
             )
-        base_logger.root.handlers = []
         logging.basicConfig(stream=sys.stdout, level=new_level)
 
     def __calculate_effective_levels(

@@ -283,7 +283,7 @@ this is a separator
     pluginRuleTest(
         "mix_md004_md006",
         is_mix_test=True,
-        use_debug=True,
+        use_debug=False,
         enable_rules=__plugin_enable_md006,
         disable_rules=__plugin_disable_md007,
         source_file_contents=""" + first

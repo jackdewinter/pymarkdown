@@ -89,7 +89,7 @@ def test_md045_bad_inline_image_whitespace_only():
         "test", "resources", "rules", "md045", "bad_inline_image_whitespace_only.md"
     )
     supplied_arguments = [
-        "--stack-trace",
+        # "--stack-trace",
         "--disable-rules",
         "md039",
         "--set",
