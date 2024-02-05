@@ -4744,7 +4744,7 @@ def test_extra_035x():
     scanner = MarkdownScanner()
     input_path = os.path.join("test", "resources", "test-issue-945.md")
 
-    supplied_arguments = ["--stack-trace", "scan", input_path]
+    supplied_arguments = ["scan", input_path]
 
     expected_return_code = 1
     expected_output = """{input_path}:1:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)

@@ -29,6 +29,13 @@ class ApplicationLogging:
         log_level_info: logging.INFO,
         log_level_debug: logging.DEBUG,
     }
+    __log_level_to_name_map = {
+        logging.CRITICAL: log_level_critical,
+        logging.ERROR: log_level_error,
+        logging.WARNING: log_level_warning,
+        logging.INFO: log_level_info,
+        logging.DEBUG: log_level_debug,
+    }
 
     def __init__(
         self,
@@ -57,7 +64,14 @@ class ApplicationLogging:
         """
         self.__show_stack_trace = show_stack_trace
         base_logger = logging.getLogger()
-        base_logger.setLevel(logging.DEBUG if show_stack_trace else logging.WARNING)
+        new_level = logging.DEBUG if show_stack_trace else logging.WARNING
+        base_logger.setLevel(new_level)
+        if show_stack_trace:
+            base_logger.warning(
+                "Application logging set to '%s'.",
+                logging.getLevelName(base_logger.level),
+            )
+        logging.basicConfig(stream=sys.stdout, level=new_level)
 
     def __calculate_effective_levels(
         self, args: argparse.Namespace
