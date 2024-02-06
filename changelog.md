@@ -12,7 +12,7 @@
 
 ## Version 0.9.17 - Date: 2024-02-05
 
-This release is going to focus on getting the feature list complete
+This release focuses on getting the feature list complete
 for a version 1.0 release in early 2024.  This release marked the
 start of moving documentation from this repository to the more
 curated [ReadTheDocs](https://pymarkdown.readthedocs.io/en/latest/).
