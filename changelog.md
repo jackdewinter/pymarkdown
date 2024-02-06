@@ -4,6 +4,34 @@
 
 ### Added
 
+- None
+
+### Fixed
+
+### Changed
+
+## Version 0.9.17 - Date: 2024-02-05
+
+This release is going to focus on getting the feature list complete
+for a version 1.0 release in early 2024.  This release marked the
+start of moving documentation from this repository to the more
+curated [ReadTheDocs](https://pymarkdown.readthedocs.io/en/latest/).
+
+Some notable additions/changes are:
+
+- taking a second pass at the outputs from the recent `fix` addition, re-verifying
+  the output and fixing any issues
+- cleaning up documentation to properly note what type of whitespace is used
+  in the core and well as various extensions and plugins
+  - at the same time, clearly followed the specification on what kind of whitespace
+    to use, instead of allowing unicode whitespace by default
+- for parsers like Python-Markdown, used in the MkDocs tools, added Rule Pml101
+  to handle the different indentation requirements
+  - note that this new rule give advice against Md007, so only one of the two
+    rules should be enabled at any one time
+
+### Added
+
 - [Issue 975](https://github.com/jackdewinter/pymarkdown/issues/975)
   - Added a new rule Pml101 to deal with "anchored list indents"
   - This adds support for `Python-Markdown` and other parsers like it
