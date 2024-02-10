@@ -57,6 +57,21 @@ scanTests = [
         source_file_name=f"{source_path}good_paragraph_no_extra.md",
     ),
     pluginRuleTest(
+        "two_paragraphs_list_item_empty_line_no_spaces",
+        set_args=[
+            "plugins.md009.list_item_empty_lines=$!True",
+        ],
+        source_file_contents="""this is one paragraph
+\a\a\a\a
+this is another paragraph
+""".replace(
+            "\a", " "
+        ),
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:2:1: MD009: Trailing spaces [Expected: 0 or 2; Actual: 4] (no-trailing-spaces)
+""",
+    ),
+    pluginRuleTest(
         "good_indented_code_block_with_extra",
         source_file_name=f"{source_path}good_indented_code_block_with_extra.md",
     ),
@@ -65,14 +80,28 @@ scanTests = [
         source_file_name=f"{source_path}good_fenced_code_block_with_extra.md",
     ),
     pluginRuleTest(
-        "unordered_list_item_empty_lines",
-        source_file_name=f"{source_path}good_unordered_list_item_empty_lines.md",
+        "unordered_list_item_empty_line_no_spaces",
+        source_file_contents="""- list item text
+
+  list item text
+""".replace(
+            "\a", " "
+        ),
     ),
     pluginRuleTest(
-        "unordered_list_item_empty_lines_with_config_strict",
+        "unordered_list_item_empty_line",
+        source_file_name=f"{source_path}good_unordered_list_item_empty_lines.md",
+        source_file_contents="""- list item text
+\a\a
+  list item text
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "unordered_list_item_empty_line_strict",
         source_file_name=f"{source_path}good_unordered_list_item_empty_lines.md",
         set_args=["plugins.md009.strict=$!True"],
-        use_strict_config=True,
         source_file_contents="""- list item text
 \a\a
   list item text
@@ -80,7 +109,24 @@ scanTests = [
             "\a", " "
         ),
         scan_expected_return_code=1,
-        scan_expected_output="{temp_source_path}:2:1: MD009: Trailing spaces [Expected: 0; Actual: 2] (no-trailing-spaces)",
+        scan_expected_output="""{temp_source_path}:2:1: MD009: Trailing spaces [Expected: 0; Actual: 2] (no-trailing-spaces)
+""",
+        fix_expected_file_contents="""- list item text
+
+  list item text
+""",
+    ),
+    pluginRuleTest(
+        "unordered_list_item_empty_line_extra_space",
+        source_file_contents="""- list item text
+\a\a\a\a
+  list item text
+""".replace(
+            "\a", " "
+        ),
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:2:1: MD009: Trailing spaces [Expected: 0 or 2; Actual: 4] (no-trailing-spaces)
+""",
         fix_expected_file_contents="""- list item text
 \a\a
   list item text
@@ -89,19 +135,358 @@ scanTests = [
         ),
     ),
     pluginRuleTest(
-        "good_unordered_list_item_empty_lines_with_config_strict_and_list_empty",
-        source_file_name=f"{source_path}good_unordered_list_item_empty_lines.md",
+        "unordered_list_item_empty_line_extra_space_strict",
+        source_file_contents="""- list item text
+\a\a\a\a
+  list item text
+""".replace(
+            "\a", " "
+        ),
+        set_args=["plugins.md009.strict=$!True"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:2:1: MD009: Trailing spaces [Expected: 0; Actual: 4] (no-trailing-spaces)
+""",
+        fix_expected_file_contents="""- list item text
+
+  list item text
+""",
+    ),
+    pluginRuleTest(
+        "ordered_list_item_empty_line_no_spaces",
+        source_file_contents="""1. list item text
+
+   list item text
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "ordered_list_item_empty_line",
+        source_file_contents="""1. list item text
+\a\a
+   list item text
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "ordered_list_item_empty_line_strict",
+        source_file_contents="""1. list item text
+\a\a
+   list item text
+""".replace(
+            "\a", " "
+        ),
+        set_args=["plugins.md009.strict=$!True"],
+        scan_expected_return_code=1,
+        scan_expected_output="{temp_source_path}:2:1: MD009: Trailing spaces [Expected: 0; Actual: 2] (no-trailing-spaces)",
+        fix_expected_file_contents="""1. list item text
+
+   list item text
+""",
+    ),
+    pluginRuleTest(
+        "ordered_list_item_empty_line_extra_space",
+        source_file_contents="""1. list item text
+\a\a\a\a
+   list item text
+""".replace(
+            "\a", " "
+        ),
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:2:1: MD009: Trailing spaces [Expected: 0 or 2; Actual: 4] (no-trailing-spaces)
+""",
+        fix_expected_file_contents="""1. list item text
+\a\a
+   list item text
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "ordered_list_item_empty_line_extra_space_strict",
+        source_file_contents="""1. list item text
+\a\a\a\a
+   list item text
+""".replace(
+            "\a", " "
+        ),
+        set_args=["plugins.md009.strict=$!True"],
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:2:1: MD009: Trailing spaces [Expected: 0; Actual: 4] (no-trailing-spaces)
+""",
+        fix_expected_file_contents="""1. list item text
+
+   list item text
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "unordered_list_item_empty_line_with_list_empty_and_exact_spaces",
         set_args=[
-            "plugins.md009.strict=$!True",
             "plugins.md009.list_item_empty_lines=$!True",
         ],
         use_strict_config=True,
+        source_file_contents="""- list item text
+\a\a\a\a
+  list item text
+""".replace(
+            "\a", " "
+        ),
     ),
     pluginRuleTest(
-        "good_ordered_list_item_empty_lines_with_list_empty",
-        source_file_name=f"{source_path}good_unordered_list_item_empty_lines.md",
-        set_args=["plugins.md009.list_item_empty_lines=$!True"],
+        "unordered_list_item_empty_line_with_list_empty_and_exact_spaces_minus_one",
+        set_args=[
+            "plugins.md009.list_item_empty_lines=$!True",
+        ],
         use_strict_config=True,
+        source_file_contents="""- list item text
+\a\a\a
+  list item text
+""".replace(
+            "\a", " "
+        ),
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:2:1: MD009: Trailing spaces [Expected: 4; Actual: 3] (no-trailing-spaces)
+""",
+        fix_expected_file_contents="""- list item text
+\a\a\a\a
+  list item text
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "unordered_list_item_empty_line_with_list_empty_and_exact_spaces_plus_one",
+        set_args=[
+            "plugins.md009.list_item_empty_lines=$!True",
+        ],
+        use_strict_config=True,
+        source_file_contents="""- list item text
+\a\a\a\a\a
+  list item text
+""".replace(
+            "\a", " "
+        ),
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:2:1: MD009: Trailing spaces [Expected: 4; Actual: 5] (no-trailing-spaces)
+""",
+        fix_expected_file_contents="""- list item text
+\a\a\a\a
+  list item text
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "unordered_list_item_with_new_list_item_empty_line_with_list_empty_and_exact_spaces",
+        set_args=[
+            "plugins.md009.list_item_empty_lines=$!True",
+        ],
+        use_strict_config=True,
+        source_file_contents="""- list item text
+- list item text
+\a\a\a\a
+  list item text
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "unordered_list_item_with_new_list_item_empty_line_with_list_empty_and_exact_spaces_plus_one",
+        set_args=[
+            "plugins.md009.list_item_empty_lines=$!True",
+        ],
+        use_strict_config=True,
+        source_file_contents="""- list item text
+- list item text
+\a\a\a\a\a
+  list item text
+""".replace(
+            "\a", " "
+        ),
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD009: Trailing spaces [Expected: 4; Actual: 5] (no-trailing-spaces)
+""",
+        fix_expected_file_contents="""- list item text
+- list item text
+\a\a\a\a
+  list item text
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "unordered_list_item_with_nested_list_item_empty_line_with_list_empty_and_exact_spaces",
+        set_args=[
+            "plugins.md009.list_item_empty_lines=$!True",
+        ],
+        use_strict_config=True,
+        source_file_contents="""- list item text
+  - list item text
+\a\a\a\a\a\a
+    list item text
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "unordered_list_item_with_nested_list_item_empty_line_with_list_empty_and_exact_spaces_plus_one",
+        set_args=[
+            "plugins.md009.list_item_empty_lines=$!True",
+        ],
+        use_strict_config=True,
+        source_file_contents="""- list item text
+  - list item text
+\a\a\a\a\a\a\a
+    list item text
+""".replace(
+            "\a", " "
+        ),
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD009: Trailing spaces [Expected: 6; Actual: 7] (no-trailing-spaces)
+""",
+        fix_expected_file_contents="""- list item text
+  - list item text
+\a\a\a\a\a\a
+    list item text
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "ordered_list_item_empty_line_with_list_empty_and_exact_spaces",
+        set_args=[
+            "plugins.md009.list_item_empty_lines=$!True",
+        ],
+        use_strict_config=True,
+        source_file_contents="""1. list item text
+\a\a\a\a\a
+   list item text
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "ordered_list_item_empty_line_with_list_empty_and_exact_spaces_minus_one",
+        set_args=[
+            "plugins.md009.list_item_empty_lines=$!True",
+        ],
+        use_strict_config=True,
+        source_file_contents="""1. list item text
+\a\a\a\a
+   list item text
+""".replace(
+            "\a", " "
+        ),
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:2:1: MD009: Trailing spaces [Expected: 5; Actual: 4] (no-trailing-spaces)
+""",
+        fix_expected_file_contents="""1. list item text
+\a\a\a\a\a
+   list item text
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "ordered_list_item_empty_line_with_list_empty_and_exact_spaces_plus_one",
+        set_args=[
+            "plugins.md009.list_item_empty_lines=$!True",
+        ],
+        use_strict_config=True,
+        source_file_contents="""1. list item text
+\a\a\a\a\a\a
+   list item text
+""".replace(
+            "\a", " "
+        ),
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:2:1: MD009: Trailing spaces [Expected: 5; Actual: 6] (no-trailing-spaces)
+""",
+        fix_expected_file_contents="""1. list item text
+\a\a\a\a\a
+   list item text
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "ordered_list_item_with_new_list_item_empty_line_with_list_empty_and_exact_spaces",
+        set_args=[
+            "plugins.md009.list_item_empty_lines=$!True",
+        ],
+        use_strict_config=True,
+        source_file_contents="""1. list item text
+1. list item text
+\a\a\a\a\a
+   list item text
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "ordered_list_item_with_new_list_item_empty_line_with_list_empty_and_exact_spaces_plus_one",
+        set_args=[
+            "plugins.md009.list_item_empty_lines=$!True",
+        ],
+        use_strict_config=True,
+        source_file_contents="""1. list item text
+1. list item text
+\a\a\a\a\a\a
+   list item text
+""".replace(
+            "\a", " "
+        ),
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD009: Trailing spaces [Expected: 5; Actual: 6] (no-trailing-spaces)
+""",
+        fix_expected_file_contents="""1. list item text
+1. list item text
+\a\a\a\a\a
+   list item text
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "ordered_list_item_with_nested_list_item_empty_line_with_list_empty_and_exact_spaces",
+        set_args=[
+            "plugins.md009.list_item_empty_lines=$!True",
+        ],
+        use_strict_config=True,
+        source_file_contents="""1. list item text
+   1. list item text
+\a\a\a\a\a\a\a\a
+      list item text
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "ordered_list_item_with_nested_list_item_empty_line_with_list_empty_and_exact_spaces_plus_one",
+        set_args=[
+            "plugins.md009.list_item_empty_lines=$!True",
+        ],
+        use_strict_config=True,
+        source_file_contents="""1. list item text
+   1. list item text
+\a\a\a\a\a\a\a\a\a
+      list item text
+""".replace(
+            "\a", " "
+        ),
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD009: Trailing spaces [Expected: 8; Actual: 9] (no-trailing-spaces)
+""",
+        fix_expected_file_contents="""1. list item text
+   1. list item text
+\a\a\a\a\a\a\a\a
+      list item text
+""".replace(
+            "\a", " "
+        ),
     ),
     pluginRuleTest(
         "bad_paragraph_increasing_extra",
@@ -194,12 +579,10 @@ end of the line.\a\a
 {temp_source_path}:4:17: MD009: Trailing spaces [Expected: 0; Actual: 2] (no-trailing-spaces)
 """,
         fix_expected_file_contents="""this is some text
-each line has some\a\a
-extra spaces at the\a\a
-end of the line.\a\a
-""".replace(
-            "\a", " "
-        ),
+each line has some
+extra spaces at the
+end of the line.
+""",
     ),
     pluginRuleTest(
         "bad_atx_heading_with_extra",

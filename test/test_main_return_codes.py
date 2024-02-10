@@ -5,7 +5,11 @@ Module to test that the return code schemes are set up properly.
 import os
 import runpy
 from test.markdown_scanner import MarkdownScanner
-from test.utils import copy_to_temp_file
+from test.utils import (
+    assert_file_is_as_expected,
+    copy_to_temp_file,
+    create_temporary_configuration_file,
+)
 
 
 def test_markdown_return_code_command_line_bad():
@@ -139,21 +143,21 @@ def test_markdown_return_code_default_fixed_at_least_one_file():
     Test to make sure a return code of 3 for FIXED_AT_LEAST_ONE_FILE is a default.
 
     This function shadows
-    test_md009_good_unordered_list_item_empty_lines_with_config_strict_fix
+    test_md009 fix good_unordered_list_item_empty_lines_with_config_strict without the list_item_empty_lines config
     and is shadowed by
     test_markdown_return_code_minimal_fixed_at_least_one_file
     """
 
     # Arrange
     scanner = MarkdownScanner()
-    with copy_to_temp_file(
-        os.path.join(
-            "test",
-            "resources",
-            "rules",
-            "md009",
-            "good_unordered_list_item_empty_lines.md",
-        )
+    source_file_contents = """- list item text
+\a\a
+  list item text
+""".replace(
+        "\a", " "
+    )
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
     ) as temp_source_path:
         supplied_arguments = [
             "--set",
@@ -166,7 +170,10 @@ def test_markdown_return_code_default_fixed_at_least_one_file():
         expected_return_code = 3
         expected_output = f"Fixed: {temp_source_path}"
         expected_error = ""
-        # expected_file_contents = generate_md009_expected_contents(temp_source_path, 2)
+        expected_file_contents = """- list item text
+
+  list item text
+"""
 
         # Act
         execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -175,7 +182,7 @@ def test_markdown_return_code_default_fixed_at_least_one_file():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
-        # assert_file_is_as_expected(temp_source_path, expected_file_contents)
+        assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
 def test_markdown_return_code_default_scan_triggered_at_least_once():
@@ -376,6 +383,8 @@ def test_markdown_return_code_minimal_fixed_at_least_one_file():
         supplied_arguments = [
             "--set",
             "plugins.md009.strict=$!True",
+            "--set",
+            "plugins.md009.list_item_empty_lines=$!True",
             "--strict-config",
             "--return-code-scheme",
             "minimal",

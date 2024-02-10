@@ -8,7 +8,12 @@
 
 ### Fixed
 
+- [Issue 992](https://github.com/jackdewinter/pymarkdown/issues/992)
+  - Verified behavior of Rule Md009, fixing some small issues
+
 ### Changed
+
+- None
 
 ## Version 0.9.17 - Date: 2024-02-05
 
