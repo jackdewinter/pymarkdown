@@ -8,7 +8,8 @@
 
 ### Fixed
 
-- None
+- [Issue 992](https://github.com/jackdewinter/pymarkdown/issues/992)
+  - Verified behavior of Rule Md009, fixing some small issues
 
 ### Changed
 
