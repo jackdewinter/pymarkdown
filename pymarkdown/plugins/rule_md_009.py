@@ -9,6 +9,7 @@ from pymarkdown.plugin_manager.plugin_details import PluginDetails, PluginDetail
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.container_markdown_token import ContainerMarkdownToken
+from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 
 
@@ -86,23 +87,6 @@ class RuleMd009(RulePlugin):
         self.__inline_token_index = 0
         self.__container_token_stack = []
 
-    def __report_error(
-        self,
-        context: PluginScanContext,
-        extracted_whitespace_length: int,
-        first_non_whitespace_index: int,
-    ) -> None:
-        if self.__strict_mode or self.__break_spaces < 2:
-            extra_error_information = "0"
-        else:
-            extra_error_information = f"0 or {self.__break_spaces}"
-        extra_error_information = f"Expected: {extra_error_information}; Actual: {extracted_whitespace_length}"
-        self.report_next_line_error(
-            context,
-            first_non_whitespace_index + 1,
-            extra_error_information=extra_error_information,
-        )
-
     def next_line(self, context: PluginScanContext, line: str) -> None:
         """
         Event that a new line is being processed.
@@ -139,33 +123,88 @@ class RuleMd009(RulePlugin):
         ) = ParserHelper.extract_spaces_from_end(line)
         extracted_whitespace_length = len(extracted_whitespace)
 
-        is_list_empty_line = False
-        leaf_token = self.__leaf_owner_tokens[self.__leaf_token_index]
-        if leaf_token is not None:
-            is_list_empty_line = (
-                self.__list_item_empty_lines_mode
-                and leaf_token.is_list_start
-                and first_non_whitespace_index == 0
-            )
+        is_within_list = False
+        new_list_indent = -1
+        expected_list_indent = -1
+        if self.__list_item_empty_lines_mode and first_non_whitespace_index == 0:
+            leaf_token = self.__leaf_owner_tokens[self.__leaf_token_index]
+            if leaf_token is not None:
+                is_within_list = True
+                list_owner_token = cast(ListStartMarkdownToken, leaf_token)
+                expected_list_indent = (
+                    list_owner_token.indent_level + self.__break_spaces
+                )
+                if extracted_whitespace_length != expected_list_indent:
+                    new_list_indent = expected_list_indent
 
-        if extracted_whitespace_length != self.__break_spaces or (
-            self.__strict_mode and not is_list_empty_line
+        if (
+            not is_within_list
+            and (
+                extracted_whitespace_length != self.__break_spaces or self.__strict_mode
+            )
+            or new_list_indent != -1
         ):
             if context.in_fix_mode:
-                this_leaf_token = self.__leaf_tokens[self.__leaf_token_index]
+                self.__report_fix(
+                    context,
+                    line,
+                    new_list_indent,
+                    extracted_whitespace_length,
+                    first_non_whitespace_index,
+                )
+            else:
+                self.__report_error(
+                    context,
+                    extracted_whitespace_length,
+                    first_non_whitespace_index,
+                    expected_list_indent,
+                )
 
+    # pylint: disable=too-many-arguments
+    def __report_fix(
+        self,
+        context: PluginScanContext,
+        line: str,
+        new_list_indent: int,
+        extracted_whitespace_length: int,
+        first_non_whitespace_index: int,
+    ) -> None:
+        if new_list_indent != -1:
+            line = " " * new_list_indent
+        else:
+            this_leaf_token = self.__leaf_tokens[self.__leaf_token_index]
+            line = (
+                line[:first_non_whitespace_index]
                 if (
                     extracted_whitespace_length < self.__break_spaces
                     or this_leaf_token.is_atx_heading
-                ):
-                    line = line[:first_non_whitespace_index]
-                else:
-                    line = line[: first_non_whitespace_index + self.__break_spaces]
-                context.set_current_fix_line(line)
-            else:
-                self.__report_error(
-                    context, extracted_whitespace_length, first_non_whitespace_index
+                    or self.__strict_mode
                 )
+                else line[: first_non_whitespace_index + self.__break_spaces]
+            )
+        context.set_current_fix_line(line)
+
+    # pylint: enable=too-many-arguments
+
+    def __report_error(
+        self,
+        context: PluginScanContext,
+        extracted_whitespace_length: int,
+        first_non_whitespace_index: int,
+        expected_list_indent: int,
+    ) -> None:
+        if expected_list_indent != -1:
+            extra_error_information = str(expected_list_indent)
+        elif self.__strict_mode or self.__break_spaces < 2:
+            extra_error_information = "0"
+        else:
+            extra_error_information = f"0 or {self.__break_spaces}"
+        extra_error_information = f"Expected: {extra_error_information}; Actual: {extracted_whitespace_length}"
+        self.report_next_line_error(
+            context,
+            first_non_whitespace_index + 1,
+            extra_error_information=extra_error_information,
+        )
 
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """

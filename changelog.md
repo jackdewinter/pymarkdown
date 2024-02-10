@@ -8,7 +8,11 @@
 
 ### Fixed
 
+- None
+
 ### Changed
+
+- None
 
 ## Version 0.9.17 - Date: 2024-02-05
 
