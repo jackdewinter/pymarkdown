@@ -10,10 +10,15 @@
 
 - [Issue 992](https://github.com/jackdewinter/pymarkdown/issues/992)
   - Verified behavior of Rule Md009, fixing some small issues
+- [Issue 994](https://github.com/jackdewinter/pymarkdown/issues/994)
+  - Verified behavior of Rule Md029, adding configuration for starting ordered
+    lists from integers greater than 1
 
 ### Changed
 
-- None
+- [Issue 944](https://github.com/jackdewinter/pymarkdown/issues/944)
+  - verified that all existing fix tests are parameterized
+  - new fix tests for rule going forward will require this
 
 ## Version 0.9.17 - Date: 2024-02-05
 

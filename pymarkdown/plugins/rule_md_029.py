@@ -33,6 +33,7 @@ class RuleMd029(RulePlugin):
     def __init__(self) -> None:
         super().__init__()
         self.__style = ""
+        self.__allow_extended_start_values = False
         self.__list_stack: List[MarkdownToken] = []
         self.__ordered_list_stack: List[Tuple[Optional[str], Optional[int]]] = []
 
@@ -47,7 +48,7 @@ class RuleMd029(RulePlugin):
             plugin_description="Ordered list item prefix",
             plugin_version="0.5.1",
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md029.md",
-            plugin_configuration="style",
+            plugin_configuration="style,allow_extended_start_values",
             plugin_supports_fix=True,
         )
 
@@ -65,6 +66,13 @@ class RuleMd029(RulePlugin):
             default_value=RuleMd029.__one_or_ordered_style,
             valid_value_fn=self.__validate_configuration_style,
         )
+        self.__allow_extended_start_values = (
+            self.plugin_configuration.get_boolean_property(
+                "allow_extended_start_values", default_value=False
+            )
+        )
+
+        # add optional to allow non- 0-1 start for ordered
 
     def starting_new_file(self) -> None:
         """
@@ -104,7 +112,7 @@ class RuleMd029(RulePlugin):
 
         is_valid = True
         if list_style == RuleMd029.__ordered_style:
-            is_valid = last_known_number in {0, 1}
+            is_valid = self.__allow_extended_start_values or last_known_number in {0, 1}
         elif list_style == RuleMd029.__one_style:
             is_valid = last_known_number == 1
         elif list_style == RuleMd029.__zero_style:

@@ -68,6 +68,20 @@ Instead of the default `one_or_ordered` configuration, the `one` configuration
 will trigger is any Ordered List Item element does not start with `1` and the
 `zero` configuration will trigger instead if not a `0`.
 
+Note that enabling the `allow_extended_start_values` configuration allows any
+non-negative integer to start an `ordered` list. If the default `one_or_ordered`
+configuration is in effect, any other integer other than `0` or `1` will force
+the `ordered` configuration to be chosen.  Therefore, given the above failure
+scenario:
+
+````Markdown
+2. second item
+3. third item
+````
+
+and enabling the configuration `allow_extended_start_values` will cause this
+scenario to become a correct scenario.
+
 ### Clarifications
 
 The determination of whether the `one` part or the `ordered` part of the configuration
@@ -117,6 +131,7 @@ with Commonmark.
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `style` | string (see below) | `one_or_ordered` | Style for Ordered List Starts in the document. |
+| `allow_extended_start_values` | `boolean` | `False` | Using the `ordered` style, allows for any integer to start the list. |
 
 Valid heading styles:
 
@@ -124,7 +139,7 @@ Valid heading styles:
 | -- | -- |
 | `one_or_ordered` | Either of the `one` or `ordered` styles below. |
 | `one` | All Ordered List Items must start with `1`. |
-| `ordered` | Starting with `0` or `1`, each following List Item must be one greater than its predecessor. |
+| `ordered` | Starting with `0` or `1`, each List Item must be one greater than its predecessor. |
 | `zero` | All Ordered List Items must start with `0`. |
 
 ## Origination of Rule

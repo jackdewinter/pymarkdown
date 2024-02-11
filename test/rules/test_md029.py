@@ -92,6 +92,15 @@ scanTests = [
 """,
     ),
     pluginRuleTest(
+        "bad_two_three_four_list_with_config",
+        source_file_name=f"{source_path}bad_two_three_four_list.md",
+        source_file_contents="""2. Simple
+3. One
+4. List
+""",
+        set_args=["plugins.md029.allow_extended_start_values=$!True"],
+    ),
+    pluginRuleTest(
         "bad_nested_lists_1_with_no_config",
         source_file_contents="""2. first
    1. first-first
@@ -110,6 +119,17 @@ scanTests = [
    1. second-first
    2. second-second
 """,
+    ),
+    pluginRuleTest(
+        "bad_nested_lists_1_with_config",
+        source_file_contents="""2. first
+   1. first-first
+   1. first-second
+3. second
+   1. second-first
+   2. second-second
+""",
+        set_args=["plugins.md029.allow_extended_start_values=$!True"],
     ),
     pluginRuleTest(
         "bad_nested_lists_2_with_no_config",
@@ -396,6 +416,29 @@ text to break up lists
    1. first-first
    2. first-second
 2. second
+   1. second-first
+""",
+    ),
+    pluginRuleTest(
+        "bad_nested_lists_with_config_ordered_extended",
+        use_strict_config=True,
+        set_args=[
+            "plugins.md029.style=ordered",
+            "plugins.md029.allow_extended_start_values=$!True",
+        ],
+        source_file_contents="""2. first
+   1. first-first
+   1. first-second
+3. second
+   1. second-first
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:4: MD029: Ordered list item prefix [Expected: 2; Actual: 1; Style: 1/2/3] (ol-prefix)
+""",
+        fix_expected_file_contents="""2. first
+   1. first-first
+   2. first-second
+3. second
    1. second-first
 """,
     ),
