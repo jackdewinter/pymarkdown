@@ -4,7 +4,9 @@
 
 ### Added
 
-- None
+- [Issue 990](https://github.com/jackdewinter/pymarkdown/issues/990)
+  - added ability to use a TOML file in `pyproject.toml` format with the
+    `--config` command line flag
 
 ### Fixed
 
