@@ -8,10 +8,12 @@ import logging
 import os
 from typing import Callable, Optional
 
+import tomli
 import yaml
 from application_properties import (
     ApplicationProperties,
     ApplicationPropertiesJsonLoader,
+    ApplicationPropertiesTomlLoader,
     ApplicationPropertiesUtilities,
     ApplicationPropertiesYamlLoader,
 )
@@ -98,6 +100,13 @@ class ApplicationConfigurationHelper:
             except yaml.MarkedYAMLError:
                 did_load_as_yaml = False
 
+            try:
+                with open(args.configuration_file, "rb") as infile:
+                    tomli.load(infile)
+                did_load_as_toml = True
+            except tomli.TOMLDecodeError:
+                did_load_as_toml = False
+
             if did_load_as_json:
                 LOGGER.debug(
                     "Attempting to load configuration file '%s' as a JSON file.",
@@ -122,8 +131,20 @@ class ApplicationConfigurationHelper:
                     clear_property_map=False,
                     check_for_file_presence=False,
                 )
+            elif did_load_as_toml:
+                LOGGER.debug(
+                    "Attempting to load configuration file '%s' as a TOML file.",
+                    args.configuration_file,
+                )
+                ApplicationPropertiesTomlLoader.load_and_set(
+                    application_properties,
+                    args.configuration_file,
+                    handle_error_fn=handle_error_fn,
+                    clear_property_map=False,
+                    check_for_file_presence=False,
+                )
             else:
-                formatted_error = f"Specified configuration file '{args.configuration_file}' was not parseable as a JSON file or a YAML file."
+                formatted_error = f"Specified configuration file '{args.configuration_file}' was not parseable as a JSON, YAML, or TOML file."
                 LOGGER.warning(formatted_error)
                 handle_error_fn(formatted_error, None)
 
