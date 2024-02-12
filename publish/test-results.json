@@ -1556,7 +1556,7 @@
         },
         {
             "name": "test.test_main_config",
-            "totalTests": 14,
+            "totalTests": 15,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,

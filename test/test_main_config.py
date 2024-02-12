@@ -191,7 +191,7 @@ def test_markdown_with_dash_e_single_by_id_and_non_json_config_file():
 
         expected_return_code = 1
         expected_output = ""
-        expected_error = f"Specified configuration file '{configuration_file}' was not parseable as a JSON file or a YAML file."
+        expected_error = f"Specified configuration file '{configuration_file}' was not parseable as a JSON, YAML, or TOML file."
 
         # Act
         execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -646,6 +646,61 @@ a.c = "3"
         ):
             supplied_arguments = [
                 "--strict-config",
+                "scan",
+                source_path,
+            ]
+
+            expected_return_code = 1
+            expected_output = ""
+            expected_error = "Configuration Error: The value for property 'log.file' must be of type 'str'.\n"
+
+            # Act
+            with temporary_change_to_directory(tmp_dir_path):
+                execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+            # Assert
+            execute_results.assert_results(
+                expected_output, expected_error, expected_return_code
+            )
+
+
+def test_markdown_with_pyproject_direct_configuration_file_with_error():
+    """
+    Test to make sure that a pyproject configuration will be read and have the
+    same errors as if it was specified on the command line.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    default_configuration = """
+[tool.pymarkdown]
+plugins.MD013.enabled = false
+plugins.MD003.style = "atx"
+plugins.MD004.style = "asterisk"
+plugins.MD007.indent = 4
+plugins.MD033.enabled = false
+plugins.MD041.enabled = false
+plugins.MD022.enabled = false
+log.file = 2
+"""
+
+    # Note that the default configuration file is determined by the current working
+    # directory, so this test creates a new directory and executes the parser from
+    # within that directory.
+    with tempfile.TemporaryDirectory() as tmp_dir_path:
+        with create_temporary_configuration_file(
+            default_configuration,
+            file_name="pyproject.toml",
+            directory=tmp_dir_path,
+            file_name_suffix=".toml",
+        ) as config_path:
+            supplied_arguments = [
+                "--strict-config",
+                "--config",
+                config_path,
                 "scan",
                 source_path,
             ]

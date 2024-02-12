@@ -349,7 +349,7 @@ bye
 
             expected_return_code = 1
             expected_output = ""
-            expected_error = f"Specified configuration file '{configuration_file}' was not parseable as a JSON file or a YAML file."
+            expected_error = f"Specified configuration file '{configuration_file}' was not parseable as a JSON, YAML, or TOML file."
 
             # Act
             execute_results = scanner.invoke_main(

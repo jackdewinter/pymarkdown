@@ -80,7 +80,7 @@ def test_api_config_with_bad_contents():
     with create_temporary_configuration_file(
         supplied_configuration
     ) as configuration_file:
-        expected_output = f"Specified configuration file '{configuration_file}' was not parseable as a JSON file or a YAML file."
+        expected_output = f"Specified configuration file '{configuration_file}' was not parseable as a JSON, YAML, or TOML file."
 
         # Act & Assert
         assert_that_exception_is_raised(
