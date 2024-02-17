@@ -250,6 +250,96 @@ this text __is__ in bold
         fix_expected_file_contents="""abc *[link](/url)* ghi
 """,
     ),
+    pluginRuleTest(
+        "bad_surrounding_emphasis_backslash_surround",
+        source_file_contents="""abc * \\! * ghi
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:5: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
+""",
+        fix_expected_file_contents="""abc *\\!* ghi
+""",
+    ),
+    pluginRuleTest(
+        "bad_surrounding_emphasis_backslash_before_fix",
+        source_file_contents="""abc * \\!* ghi
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:5: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
+""",
+        fix_expected_file_contents="""abc *\\!* ghi
+""",
+    ),
+    pluginRuleTest(
+        "bad_surrounding_emphasis_backslash_after_fix",
+        source_file_contents="""abc *\\! * ghi
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:5: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
+""",
+        fix_expected_file_contents="""abc *\\!* ghi
+""",
+    ),
+    pluginRuleTest(
+        "bad_surrounding_emphasis_reference_surround",
+        source_file_contents="""abc * &amp; * ghi
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:5: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
+""",
+        fix_expected_file_contents="""abc *&amp;* ghi
+""",
+    ),
+    pluginRuleTest(
+        "bad_surrounding_emphasis_reference_before_fix",
+        source_file_contents="""abc * &amp;* ghi
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:5: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
+""",
+        fix_expected_file_contents="""abc *&amp;* ghi
+""",
+    ),
+    pluginRuleTest(
+        "bad_surrounding_emphasis_reference_after_fix",
+        source_file_contents="""abc *&amp; * ghi
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:5: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
+""",
+        fix_expected_file_contents="""abc *&amp;* ghi
+""",
+    ),
+    pluginRuleTest(
+        "bad_surrounding_emphasis_autolink_surround",
+        source_file_contents="""abc * <http://google.com> * ghi
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:5: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
+""",
+        fix_expected_file_contents="""abc *<http://google.com>* ghi
+""",
+    ),
+    pluginRuleTest(
+        "bad_surrounding_emphasis_autolink_before_fix",
+        source_file_contents="""abc * <http://google.com>* ghi
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:5: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
+""",
+        fix_expected_file_contents="""abc *<http://google.com>* ghi
+""",
+    ),
+    pluginRuleTest(
+        "bad_surrounding_emphasis_autolink_after_fix",
+        source_file_contents="""abc *<http://google.com> * ghi
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:5: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
+""",
+        fix_expected_file_contents="""abc *<http://google.com>* ghi
+""",
+    ),
 ]
 fixTests = []
 for i in scanTests:
