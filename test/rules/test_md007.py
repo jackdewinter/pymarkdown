@@ -530,7 +530,7 @@ scanTests = [
     ),
     pluginRuleTest(
         "mix_md007_md005_only_md007_1",
-        disable_rules="md005",
+        disable_rules=__plugin_disable_md005,
         source_file_contents=""" + first
    + second
      + third
@@ -553,7 +553,7 @@ scanTests = [
     ),
     pluginRuleTest(
         "mix_md007_md005_only_md007_2",
-        disable_rules="md005",
+        disable_rules=__plugin_disable_md005,
         source_file_contents=""" + first
    + second
      + third
@@ -621,7 +621,7 @@ scanTests = [
     ),
     pluginRuleTest(
         "mix_md007_md030_xx",
-        disable_rules="MD030",
+        disable_rules=__plugin_disable_md030,
         source_file_contents=""" *  First
     first paragraph
 
@@ -646,7 +646,7 @@ scanTests = [
     ),
     pluginRuleTest(
         "mix_md007_md030",
-        disable_rules="md005",
+        disable_rules=__plugin_disable_md005,
         source_file_contents=""" *  First
     first paragraph
 

@@ -72,18 +72,19 @@ class RuleMd019(RulePlugin):
             self.__atx_heading_token = None
         elif token.is_text:
             text_token = cast(TextMarkdownToken, token)
-            resolved_extracted_whitespace = ParserHelper.remove_all_from_text(
-                text_token.extracted_whitespace
-            )
-            if self.__atx_heading_token and "\t" in resolved_extracted_whitespace:
-                start_index = (
-                    self.__atx_heading_token.column_number
-                    - 1
-                    + self.__atx_heading_token.hash_count
+            if self.__atx_heading_token:
+                resolved_extracted_whitespace = ParserHelper.remove_all_from_text(
+                    text_token.extracted_whitespace
                 )
-                resolved_extracted_whitespace = TabHelper.detabify_string(
-                    resolved_extracted_whitespace, start_index
-                )
-            if self.__atx_heading_token and len(resolved_extracted_whitespace) > 1:
-                self.__report(context, text_token)
+                if "\t" in resolved_extracted_whitespace:
+                    start_index = (
+                        self.__atx_heading_token.column_number
+                        - 1
+                        + self.__atx_heading_token.hash_count
+                    )
+                    resolved_extracted_whitespace = TabHelper.detabify_string(
+                        resolved_extracted_whitespace, start_index
+                    )
+                if len(resolved_extracted_whitespace) > 1:
+                    self.__report(context, text_token)
             self.__atx_heading_token = None

@@ -15,6 +15,8 @@
 - [Issue 994](https://github.com/jackdewinter/pymarkdown/issues/994)
   - Verified behavior of Rule Md029, adding configuration for starting ordered
     lists from integers greater than 1
+- [Issue 1001](https://github.com/jackdewinter/pymarkdown/issues/1001)
+  - Verified behavior of rules Md019 and Md021, fixing issues with Md021
 
 ### Changed
 
