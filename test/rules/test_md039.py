@@ -455,6 +455,21 @@ link
 [<img src="img_girl.jpg">]: /url
 """,
     ),
+    pluginRuleTest(
+        "bad_inline_link_both_space_with_tabs",
+        source_file_contents="""this is not
+[\ta test\t](https://www.example.com)
+link
+""",
+        disable_rules="md010",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:2:1: MD039: Spaces inside link text (no-space-in-links)
+""",
+        fix_expected_file_contents="""this is not
+[a test](https://www.example.com)
+link
+""",
+    ),
 ]
 fixTests = []
 for i in scanTests:
