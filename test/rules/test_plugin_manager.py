@@ -1322,7 +1322,7 @@ def test_markdown_with_plugins_list_only():
           hasis-as-header
   md037   no-space-in-emphasis            True       True       0.5.1    Yes
   md038   no-space-in-code                True       True       0.5.1    Yes
-  md039   no-space-in-links               True       True       0.5.1    Yes
+  md039   no-space-in-links               True       True       0.5.2    Yes
   md040   fenced-code-language            True       True       0.5.0    No
   md041   first-line-heading, first-line  True       True       0.5.0    No
           -h1
@@ -1406,7 +1406,7 @@ def test_markdown_with_plugins_list_only_all():
           hasis-as-header
   md037   no-space-in-emphasis            True       True       0.5.1    Yes
   md038   no-space-in-code                True       True       0.5.1    Yes
-  md039   no-space-in-links               True       True       0.5.1    Yes
+  md039   no-space-in-links               True       True       0.5.2    Yes
   md040   fenced-code-language            True       True       0.5.0    No
   md041   first-line-heading, first-line  True       True       0.5.0    No
           -h1
@@ -1452,7 +1452,7 @@ def test_markdown_with_plugins_list_and_filter_by_id_ends_with_nine():
   md009  no-trailing-spaces     True       True       0.5.1    Yes
   md019  no-multiple-space-atx  True       True       0.5.1    Yes
   md029  ol-prefix              True       True       0.5.1    Yes
-  md039  no-space-in-links      True       True       0.5.1    Yes
+  md039  no-space-in-links      True       True       0.5.2    Yes
 
 """
     expected_error = ""

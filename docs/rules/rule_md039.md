@@ -28,7 +28,8 @@ for a link label addresses this specific issue.
 
 This rule triggers when the link label for any link or image includes leading
 whitespace or trailing whitespace.  This is true for all four forms of links and
-for all four forms of images.
+for all four forms of images, as well as their associated link reference
+definitions.
 
 ```Markdown
 this is not
@@ -68,8 +69,8 @@ This rule is largely inspired by the MarkdownLint rule
 ### Differences From MarkdownLint Rule
 
 The difference between this rule and the original rule is that the original
-rule only fired on links, not image links.  As the only difference between
-a link:
+rule only fired on links, not image links or link definitions.  As the only difference
+between a link:
 
 ```Markdown
 [a link](https://www.example.com)
@@ -82,3 +83,4 @@ and an image:
 ```
 
 is the `!` character, it made sense for the implementation to respect both elements.
+Once that transition was done, it made sense to also extend

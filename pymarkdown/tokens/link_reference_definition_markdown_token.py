@@ -217,6 +217,13 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
             )
             super()._set_extra_data(extra_data)
             return True
+        if field_name == "link_name_debug" and isinstance(field_value, str):
+            self.__link_name_debug = field_value
+            extra_data = self.__validate_proper_fields_are_valid(
+                self.extracted_whitespace
+            )
+            super()._set_extra_data(extra_data)
+            return True
         return super()._modify_token(field_name, field_value)
 
     def register_for_markdown_transform(
