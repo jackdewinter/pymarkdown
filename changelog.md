@@ -25,6 +25,10 @@
 - [Issue 944](https://github.com/jackdewinter/pymarkdown/issues/944)
   - verified that all existing fix tests are parameterized
   - new fix tests for rule going forward will require this
+- [Issue 1005](https://github.com/jackdewinter/pymarkdown/issues/1005)
+  - verified behavior of rule Md039
+  - added link reference defintion's link title to the previous list
+    of link title and image's link title for examination
 
 ## Version 0.9.17 - Date: 2024-02-05
 
