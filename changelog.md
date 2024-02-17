@@ -17,6 +17,8 @@
     lists from integers greater than 1
 - [Issue 1001](https://github.com/jackdewinter/pymarkdown/issues/1001)
   - Verified behavior of rules Md019 and Md021, fixing issues with Md021
+- [Issue 1003](https://github.com/jackdewinter/pymarkdown/issues/1003)
+  - Verified behavior of rules Md037 with more types of inline elements
 
 ### Changed
 
