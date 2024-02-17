@@ -17,12 +17,18 @@ import pytest
 source_path = os.path.join("test", "resources", "rules", "md021") + os.sep
 
 __plugin_disable_md010 = "md010"
+__plugin_disable_md023 = "md023"
+__plugin_disable_md026 = "md026"
 __plugin_disable_md033 = "md033"
 
 scanTests = [
     pluginRuleTest(
         "good_single_spacing",
         source_file_name=f"{source_path}single_spacing.md",
+        source_file_contents="""# Heading 1 #
+
+## Heading 2 ##
+""",
     ),
     pluginRuleTest(
         "bad_multiple_spacing_both",
@@ -73,21 +79,58 @@ scanTests = [
     pluginRuleTest(
         "good_multiple_spacing_with_inline",
         source_file_name=f"{source_path}multiple_spacing_with_inline.md",
+        source_file_contents="""# Heading *number*  1 ##
+
+## Heading *number*  2 ##
+""",
     ),
     pluginRuleTest(
-        "bad_multiple_spacing_with_indent",
-        source_file_name=f"{source_path}multiple_spacing_left.md",
-        source_file_contents="""#  Heading 1 #
+        "bad_multiple_spacing_with_inline",
+        source_file_contents="""# Heading *number* 1  #
 
-##  Heading 2 ##
+##  Heading *number*  2  ##
 """,
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:1:1: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)
-{temp_source_path}:3:1: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)
-""",
-        fix_expected_file_contents="""# Heading 1 #
+{temp_source_path}:3:1: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)""",
+        fix_expected_file_contents="""# Heading *number* 1 #
 
-## Heading 2 ##
+## Heading *number*  2 ##
+""",
+    ),
+    pluginRuleTest(
+        "bad_multiple_spacing_with_inline_only",
+        source_file_contents="""# *number  1*  #
+
+##  *number  2*  ##
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:1: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)
+{temp_source_path}:3:1: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)""",
+        fix_expected_file_contents="""# *number  1* #
+
+## *number  2* ##
+""",
+    ),
+    pluginRuleTest(
+        "bad_multiple_spacing_with_indent",
+        disable_rules=__plugin_disable_md023,
+        source_file_contents=""" #  Heading 1  #
+
+ ## Heading 2  ##
+
+ ##  Heading 3 ##
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:2: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)
+{temp_source_path}:3:2: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)
+{temp_source_path}:5:2: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)
+""",
+        fix_expected_file_contents=""" # Heading 1 #
+
+ ## Heading 2 ##
+
+ ## Heading 3 ##
 """,
     ),
     pluginRuleTest(
@@ -169,6 +212,218 @@ options:
         ),
         scan_expected_return_code=1,
         scan_expected_output="{temp_source_path}:1:1: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)",
+    ),
+    pluginRuleTest(
+        "bad_extra_space_only_raw_html",
+        source_file_contents="""##  <foo></foo><foo/>  ##
+
+just some text
+""",
+        disable_rules=__plugin_disable_md033,
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:1: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)
+""",
+        fix_expected_file_contents="""## <foo></foo><foo/> ##
+
+just some text
+""",
+    ),
+    pluginRuleTest(
+        "good_extra_space_only_raw_html",
+        disable_rules=__plugin_disable_md033,
+        source_file_contents="""## <foo></foo><foo/> ##
+
+just some text
+""",
+    ),
+    pluginRuleTest(
+        "bad_extra_space_only_emphasis",
+        source_file_contents="""#  *Heading 1#*  #
+
+##  *Heading 2#*  ##
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:1: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)
+{temp_source_path}:3:1: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)""",
+        fix_expected_file_contents="""# *Heading 1#* #
+
+## *Heading 2#* ##
+""",
+    ),
+    pluginRuleTest(
+        "good_extra_space_only_emphasis",
+        source_file_contents="""# *Heading 1#* #
+
+## *Heading 2#* ##
+""",
+    ),
+    pluginRuleTest(
+        "bad_extra_space_only_autolink",
+        source_file_contents="""#  <https://google.com>  #
+
+just some text
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:1: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)
+""",
+        fix_expected_file_contents="""# <https://google.com> #
+
+just some text
+""",
+    ),
+    pluginRuleTest(
+        "good_extra_space_only_autolink",
+        source_file_contents="""# <https://google.com> #
+
+just some text
+""",
+    ),
+    pluginRuleTest(
+        "bad_extra_space_only_link",
+        source_file_contents="""#  [google](https://google.com)  #
+
+just some text
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:1: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)
+""",
+        fix_expected_file_contents="""# [google](https://google.com) #
+
+just some text
+""",
+    ),
+    pluginRuleTest(
+        "good_extra_space_only_link",
+        source_file_contents="""# [google](https://google.com) #
+
+just some text
+""",
+    ),
+    pluginRuleTest(
+        "bad_extra_space_only_codespan",
+        source_file_contents="""#  `codespan`  #
+
+just some text
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:1: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)
+""",
+        fix_expected_file_contents="""# `codespan` #
+
+just some text
+""",
+    ),
+    pluginRuleTest(
+        "good_extra_space_only_codepsan",
+        source_file_contents="""# `codespan` #
+
+just some text
+""",
+    ),
+    pluginRuleTest(
+        "bad_extra_space_only_reference",
+        source_file_contents="""#  &amp;  #
+
+just some text
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:1: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)
+""",
+        fix_expected_file_contents="""# &amp; #
+
+just some text
+""",
+    ),
+    pluginRuleTest(
+        "good_extra_space_only_reference",
+        source_file_contents="""# &amp; #
+
+just some text
+""",
+    ),
+    pluginRuleTest(
+        "bad_extra_space_only_backslash",
+        disable_rules=__plugin_disable_md026,
+        source_file_contents="""#  \\!  #
+
+just some text
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:1: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)
+""",
+        fix_expected_file_contents="""# \\! #
+
+just some text
+""",
+    ),
+    pluginRuleTest(
+        "good_extra_space_only_backslash",
+        source_file_contents="""# \\! #
+
+just some text
+""",
+        disable_rules=__plugin_disable_md026,
+    ),
+    pluginRuleTest(
+        "good_extra_space_backslash_reference",
+        source_file_contents="""# \\! &#20; #
+
+just some text
+""",
+        disable_rules=__plugin_disable_md026,
+    ),
+    pluginRuleTest(
+        "bad_extra_space_tab_before_backslash_reference",
+        source_file_contents="""#\t\\! &#20; #
+
+just some text
+""",
+        disable_rules="md010",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:1: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)
+""",
+        fix_expected_file_contents="""# \\! &#20; #
+
+just some text
+""",
+    ),
+    pluginRuleTest(
+        "bad_extra_space_tab_after_backslash_reference",
+        source_file_contents="""# \\! &#20;\t#
+
+just some text
+""",
+        disable_rules="md010",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:1: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)
+""",
+        fix_expected_file_contents="""# \\! &#20; #
+
+just some text
+""",
+    ),
+    pluginRuleTest(
+        "good_extra_space_tab_after_backslash_reference_with_extra_inner_space",
+        source_file_contents="""# \\!  &#20;\t#
+
+just some text
+""",
+        disable_rules="md010",
+    ),
+    pluginRuleTest(
+        "bad_extra_space_tab_both_backslash_reference",
+        source_file_contents="""#\t\\! &#20;\t#
+
+just some text
+""",
+        disable_rules="md010",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:1: MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)
+""",
+        fix_expected_file_contents="""# \\! &#20; #
+
+just some text
+""",
     ),
     pluginRuleTest(
         "mix_md021_md010",

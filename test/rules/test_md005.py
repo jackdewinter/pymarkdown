@@ -780,7 +780,7 @@ scanTests = [
     ),
     pluginRuleTest(
         "mix_md005_md007_only_md005_1",
-        disable_rules="md007",
+        disable_rules=__plugin_disable_md007,
         source_file_contents=""" + first
    + second
      + third
@@ -803,7 +803,7 @@ scanTests = [
     ),
     pluginRuleTest(
         "mix_md005_md007_only_md005_2",
-        disable_rules="md007",
+        disable_rules=__plugin_disable_md007,
         source_file_contents=""" + first
     + second
        + third

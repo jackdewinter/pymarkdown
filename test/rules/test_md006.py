@@ -188,8 +188,8 @@ scanTests = [
     pluginRuleTest(
         "mix_md006_md004",
         is_mix_test=True,
-        enable_rules="MD006",
-        disable_rules="MD007",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules=__plugin_disable_md007,
         source_file_contents=""" + first
    * second
      - third
@@ -225,7 +225,7 @@ def test_md006_scan(test: pluginRuleTest) -> None:
     """
     Execute a parameterized scan test for plugin md001.
     """
-    execute_scan_test(test, "md006")
+    execute_scan_test(test, plugin_enable_this_rule)
 
 
 @pytest.mark.parametrize("test", fixTests, ids=id_test_plug_rule_fn)

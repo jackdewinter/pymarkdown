@@ -268,7 +268,8 @@ def test_api_scan_with_multiple_scan_issues():
 
     # Assert
     assert scan_result
-    assert len(scan_result.scan_failures) == 5
+    assert len(scan_result.scan_failures) == 6
+    print(scan_result.scan_failures)
     assert scan_result.scan_failures[0].partial_equals(
         PyMarkdownScanFailure(source_path, 1, 1, "MD022", "", "", None)
     )
@@ -276,12 +277,15 @@ def test_api_scan_with_multiple_scan_issues():
         PyMarkdownScanFailure(source_path, 1, 12, "MD010", "", "", None)
     )
     assert scan_result.scan_failures[2].partial_equals(
-        PyMarkdownScanFailure(source_path, 2, 2, "MD022", "", "", None)
+        PyMarkdownScanFailure(source_path, 2, 2, "MD021", "", "", None)
     )
     assert scan_result.scan_failures[3].partial_equals(
-        PyMarkdownScanFailure(source_path, 2, 2, "MD023", "", "", None)
+        PyMarkdownScanFailure(source_path, 2, 2, "MD022", "", "", None)
     )
     assert scan_result.scan_failures[4].partial_equals(
+        PyMarkdownScanFailure(source_path, 2, 2, "MD023", "", "", None)
+    )
+    assert scan_result.scan_failures[5].partial_equals(
         PyMarkdownScanFailure(source_path, 2, 14, "MD010", "", "", None)
     )
 
