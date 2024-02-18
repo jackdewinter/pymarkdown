@@ -4,7 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-black = "==24.1.1"
+black = "==24.2.0"
 coverage = "==7.4.1"
 isort = "==5.13.2"
 flake8 = "==7.0.0"
@@ -28,7 +28,7 @@ pytest-console-scripts = "==1.4.1"
 pytest-timeout = "==2.2.0"
 pytest-html = "==4.1.1"
 pytest-xdist = "==3.5.0"
-setuptools = "==69.0.3"
+setuptools = "==69.1.0"
 snakeviz = "==2.2.0"
 sourcery = "==1.15.0"
 twine = "==4.0.2"
