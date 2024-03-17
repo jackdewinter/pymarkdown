@@ -433,7 +433,12 @@ class InlineTextBlockHelper:
             if tabified_text:
                 assert tabified_text is not None
                 text_to_append = InlineTabifiedTextBlockHelper.complete_inline_block_processing_tabified(
-                    source_text, start_index, tabified_text, newlines_encountered
+                    source_text,
+                    start_index,
+                    tabified_text,
+                    newlines_encountered,
+                    inline_blocks,
+                    end_string,
                 )
                 POGGER.debug("text_to_append>:$:<", text_to_append)
 

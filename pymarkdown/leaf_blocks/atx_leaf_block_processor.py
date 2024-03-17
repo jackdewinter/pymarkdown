@@ -273,7 +273,7 @@ class AtxLeafBlockProcessor:
         POGGER.debug("extracted_whitespace>>$<<", extracted_whitespace)
         return extracted_whitespace
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __prepare_for_create_atx_heading_with_tab(
         parser_state: ParserState,
@@ -322,6 +322,9 @@ class AtxLeafBlockProcessor:
             #     leading_spaces = list_markdown_token.extracted_whitespace
             #     assert False
             POGGER.debug(">>leading_spaces>:$:<", leading_spaces)
+            if leading_spaces is not None and "\n" in leading_spaces:
+                last_index = leading_spaces.rindex("\n")
+                leading_spaces = leading_spaces[last_index + 1 :]
 
         POGGER.debug(">>reconstructed_line>:$:<", reconstructed_line)
         _, adj_original_index, split_tab = TabHelper.find_tabified_string(
@@ -358,7 +361,7 @@ class AtxLeafBlockProcessor:
             split_tab,
         )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
 
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod

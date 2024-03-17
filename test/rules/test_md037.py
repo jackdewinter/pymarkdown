@@ -147,6 +147,7 @@ this text __ is __ in bold
 ---
 """,
         scan_expected_return_code=1,
+        use_debug=True,
         scan_expected_output="""{temp_source_path}:1:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
 {temp_source_path}:4:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
 {temp_source_path}:7:11: MD037: Spaces inside emphasis markers (no-space-in-emphasis)

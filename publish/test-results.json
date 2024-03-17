@@ -195,6 +195,14 @@
             "elapsedTimeInMilliseconds": 0
         },
         {
+            "name": "test.basic.test_get_replacement_indices",
+            "totalTests": 4,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
             "name": "test.basic.test_html_tags",
             "totalTests": 29,
             "failedTests": 0,
@@ -1252,7 +1260,7 @@
         },
         {
             "name": "test.rules.test_md023",
-            "totalTests": 31,
+            "totalTests": 106,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1604,10 +1612,10 @@
         },
         {
             "name": "test.test_markdown_extra",
-            "totalTests": 115,
+            "totalTests": 133,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 1,
             "elapsedTimeInMilliseconds": 0
         },
         {

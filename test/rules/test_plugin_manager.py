@@ -1303,7 +1303,7 @@ def test_markdown_with_plugins_list_only():
   md021   no-multiple-space-closed-atx    True       True       0.5.1    Yes
   md022   blanks-around-headings, blanks  True       True       0.5.0    No
           -around-headers
-  md023   heading-start-left, header-sta  True       True       0.5.1    Yes
+  md023   heading-start-left, header-sta  True       True       0.5.2    Yes
           rt-left
   md024   no-duplicate-heading, no-dupli  True       True       0.5.0    No
           cate-header
@@ -1387,7 +1387,7 @@ def test_markdown_with_plugins_list_only_all():
   md021   no-multiple-space-closed-atx    True       True       0.5.1    Yes
   md022   blanks-around-headings, blanks  True       True       0.5.0    No
           -around-headers
-  md023   heading-start-left, header-sta  True       True       0.5.1    Yes
+  md023   heading-start-left, header-sta  True       True       0.5.2    Yes
           rt-left
   md024   no-duplicate-heading, no-dupli  True       True       0.5.0    No
           cate-header
@@ -1510,7 +1510,7 @@ def test_markdown_with_plugins_list_and_filter_by_name_link():
   md003  heading-style, header-style      True       True       0.5.0    No
   md022  blanks-around-headings, blanks-  True       True       0.5.0    No
          around-headers
-  md023  heading-start-left, header-star  True       True       0.5.1    Yes
+  md023  heading-start-left, header-star  True       True       0.5.2    Yes
          t-left
   md024  no-duplicate-heading, no-duplic  True       True       0.5.0    No
          ate-header
