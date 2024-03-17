@@ -39,7 +39,9 @@ class InlineLineEndHelper:
         coalesced_stack: List[MarkdownToken],
         tabified_text: Optional[str],
         inline_request: InlineRequest,
-    ) -> Tuple[str, Optional[str], List[MarkdownToken], str, Optional[str], str]:
+    ) -> Tuple[
+        str, Optional[str], List[MarkdownToken], str, Optional[str], str, Optional[str]
+    ]:
         """
         Handle the inline case of having the end of line character encountered.
         """
@@ -64,6 +66,7 @@ class InlineLineEndHelper:
             append_to_current_string,
             end_string,
             remaining_line,
+            tabified_remaining_line,
         ) = InlineLineEndHelper.__select_line_ending(
             new_tokens,
             line_number,
@@ -76,6 +79,7 @@ class InlineLineEndHelper:
             is_setext,
             tabified_text,
             inline_request,
+            tabified_remaining_line,
         )
 
         InlineLineEndHelper.__handle_line_end_adjust_block_quote(coalesced_stack)
@@ -87,6 +91,7 @@ class InlineLineEndHelper:
             remaining_line,
             end_string,
             current_string,
+            tabified_remaining_line,
         )
 
     # pylint: enable=too-many-arguments
@@ -138,7 +143,26 @@ class InlineLineEndHelper:
         POGGER.debug("__is_proper_hard_break>>$>>", is_proper_hard_break)
         return is_proper_hard_break
 
-    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __select_line_end_hard_break(
+        new_tokens: List[MarkdownToken],
+        line_number: int,
+        adj_hard_column: int,
+        current_string: str,
+    ) -> Tuple[str, Optional[str], str]:
+        POGGER.debug(">>proper hard break")
+        new_tokens.append(
+            HardBreakMarkdownToken(
+                InlineBackslashHelper.backslash_character,
+                line_number,
+                adj_hard_column - 1,
+            )
+        )
+        current_string, whitespace_to_add = current_string[:-1], None
+        append_to_current_string = ""
+        return current_string, whitespace_to_add, append_to_current_string
+
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __select_line_ending(
         new_tokens: List[MarkdownToken],
@@ -152,7 +176,8 @@ class InlineLineEndHelper:
         is_setext: bool,
         tabified_text: Optional[str],
         inline_request: InlineRequest,
-    ) -> Tuple[str, Optional[str], str, Optional[str], str]:
+        tabified_remaining_line: Optional[str],
+    ) -> Tuple[str, Optional[str], str, Optional[str], str, Optional[str]]:
         # POGGER.debug(">>removed_end_whitespace>:$:<", removed_end_whitespace)
         # POGGER.debug(">>tabified_text>:$:<", tabified_text)
         # POGGER.debug(
@@ -172,21 +197,18 @@ class InlineLineEndHelper:
         #     remaining_line,
         # )
 
-        is_proper_end = not tabified_text or tabified_text.endswith("  ")
+        is_proper_end = not tabified_text or (
+            tabified_remaining_line and tabified_remaining_line.endswith("  ")
+        )
 
         if InlineLineEndHelper.__is_proper_hard_break(
             current_string, removed_end_whitespace_size
         ):
-            POGGER.debug(">>proper hard break")
-            new_tokens.append(
-                HardBreakMarkdownToken(
-                    InlineBackslashHelper.backslash_character,
-                    line_number,
-                    adj_hard_column - 1,
+            current_string, whitespace_to_add, append_to_current_string = (
+                InlineLineEndHelper.__select_line_end_hard_break(
+                    new_tokens, line_number, adj_hard_column, current_string
                 )
             )
-            current_string, whitespace_to_add = current_string[:-1], None
-            append_to_current_string = ""
         elif removed_end_whitespace_size >= 2 and is_proper_end:
             POGGER.debug(">>whitespace hard break")
             new_tokens.append(
@@ -196,6 +218,18 @@ class InlineLineEndHelper:
             )
             whitespace_to_add = None
             append_to_current_string = ""
+
+            if tabified_remaining_line is not None:
+                number_collected_characters, start_index = (
+                    ParserHelper.collect_backwards_while_character(
+                        tabified_remaining_line, len(tabified_remaining_line), " "
+                    )
+                )
+                assert (
+                    number_collected_characters is not None
+                    and number_collected_characters >= 2
+                )
+                tabified_remaining_line = tabified_remaining_line[:start_index]
         else:
             POGGER.debug(">>normal end")
             # POGGER.debug("current_string>:$:<", current_string)
@@ -232,9 +266,10 @@ class InlineLineEndHelper:
             append_to_current_string,
             end_string,
             remaining_line,
+            tabified_remaining_line,
         )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -262,8 +297,9 @@ class InlineLineEndHelper:
             new_index, ex_ws = ParserHelper.extract_spaces(remaining_line, 0)
             # POGGER.debug("<<new_index<<$<<", new_index)
             # POGGER.debug("<<ex_ws<<$<<", ex_ws)
-            assert new_index
-            end_string = f"{ex_ws}{ParserHelper.whitespace_split_character}"
+            end_string = (
+                f"{ex_ws}{ParserHelper.whitespace_split_character}" if new_index else ""
+            )
             remaining_line = remaining_line[new_index:]
         if not is_setext and tabified_remaining_line and removed_end_whitespace:
             POGGER.debug("<<tabified_remaining_line>:$:<", tabified_remaining_line)
@@ -325,6 +361,7 @@ class InlineLineEndHelper:
             remaining_line,
             end_string,
             current_string,
+            tabified_remaining_line,
         ) = InlineLineEndHelper.__handle_line_end(
             remaining_line,
             tabified_remaining_line,
@@ -408,8 +445,8 @@ class InlineLineEndHelper:
         newline_index = end_suffix.rfind("\n")
         if is_setext:
             special_index = end_suffix.rfind(ParserHelper.whitespace_split_character)
-            if special_index != -1 and newline_index != 1:
-                max_index = max(special_index, special_index)
+            if special_index != -1 or newline_index != -1:
+                max_index = max(special_index, newline_index)
                 end_suffix = end_suffix[max_index + 1 :]
             else:
                 assert special_index == -1

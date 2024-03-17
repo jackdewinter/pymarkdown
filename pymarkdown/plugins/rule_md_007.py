@@ -73,6 +73,8 @@ class RuleMd007(RulePlugin):
         Event that a new token is being processed.
         """
         # print(f">>>{token}".replace(ParserHelper.newline_character, "\\n"))
+        self.__container_manager.premanage_container_tokens(token)
+
         if token.is_unordered_list_start or (
             token.is_new_list_item
             and self.__container_manager.container_token_stack[

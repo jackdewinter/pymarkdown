@@ -305,7 +305,7 @@ scanTests = [
 >    * this is level 2
 """,
         scan_expected_return_code=1,
-        scan_expected_output="{temp_source_path}:5:6: MD007: Unordered list indentation [Expected: 2, Actual=3] (ul-indent)",
+        scan_expected_output="""{temp_source_path}:5:6: MD007: Unordered list indentation [Expected: 2, Actual=3] (ul-indent)""",
         fix_expected_file_contents="""> This is some text
 > ---------
 >

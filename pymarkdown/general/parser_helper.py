@@ -697,6 +697,41 @@ class ParserHelper:
         return ParserHelper.__resolve_escapes_from_text(token_text)
 
     @staticmethod
+    def is_character_replacement_marker(
+        source_string: str, index_in_string: int
+    ) -> bool:
+        """
+        Determine if the specified character is a replacement marker character.
+        """
+        return (
+            0 <= index_in_string < len(source_string)
+            and source_string[index_in_string] == ParserHelper.__alert_character
+        )
+
+    @staticmethod
+    def get_replacement_indices(
+        source_string: str, index_in_string: int
+    ) -> Tuple[int, int, int]:
+        """
+        Find the next replacement character index, as well as the middle and end indices
+        for the replacement.
+        """
+        start_replacement_index = ParserHelper.__find_with_escape(
+            source_string, ParserHelper.__alert_character, index_in_string
+        )
+        middle_replacement_index = -1
+        end_replacement_index = -1
+        if start_replacement_index != -1:
+            middle_replacement_index = source_string.find(
+                ParserHelper.__alert_character, start_replacement_index + 1
+            )
+            if middle_replacement_index != -1:
+                end_replacement_index = source_string.find(
+                    ParserHelper.__alert_character, middle_replacement_index + 1
+                )
+        return start_replacement_index, middle_replacement_index, end_replacement_index
+
+    @staticmethod
     def __resolve_replacement_markers_from_text(main_text: str) -> str:
         """
         Resolve the alert characters (i.e. replacement markers) out of the text string.

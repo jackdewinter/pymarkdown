@@ -287,7 +287,6 @@ class InlineBacktickHelper:
             inline_request.tabified_text
         )
         POGGER.debug("split_tabified_lines>>$<<", split_tabified_lines)
-        assert len(split_tabified_lines) == len(split_source_lines)
 
         (
             start_array_index,

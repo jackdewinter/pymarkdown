@@ -4787,6 +4787,732 @@ This page should not break pymarkdown</p>"""
 
 
 @pytest.mark.gfm
+def test_extra_036():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """+ # heading 1
+  just some text
+\t# heading 2
+"""
+    expected_tokens = [
+        "[ulist(1,1):+::2::  \n\n]",
+        "[atx(1,3):1:0:]",
+        "[text(1,5):heading 1: ]",
+        "[end-atx::]",
+        "[para(2,3):]",
+        "[text(2,3):just some text:]",
+        "[end-para:::False]",
+        "[atx(3,5):1:0:\t]",
+        "[text(3,7):heading 2: ]",
+        "[end-atx::]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h1>heading 1</h1>
+just some text
+<h1>heading 2</h1>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_037():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """1.  A paragraph
+with two lines.
+
+1.  A paragraph
+    with two lines.
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:4::\n\n    \n]",
+        "[para(1,5):\n]",
+        "[text(1,5):A paragraph\nwith two lines.::\n]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[li(4,1):4::1]",
+        "[para(4,5):\n]",
+        "[text(4,5):A paragraph\nwith two lines.::\n]",
+        "[end-para:::True]",
+        "[BLANK(6,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<p>A paragraph
+with two lines.</p>
+</li>
+<li>
+<p>A paragraph
+with two lines.</p>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_038x():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """
++ heading 1\a\a
+  part 2
+  part 3
+  ---
+""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[BLANK(1,1):]",
+        "[ulist(2,1):+::2::  \n  \n  \n]",
+        "[setext(5,3):-:3::(2,3)]",
+        "[text(2,3):heading 1:]",
+        "[hard-break(2,12):  :\n]",
+        "[text(3,1):part 2\npart 3::\n]",
+        "[end-setext::]",
+        "[BLANK(6,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>heading 1<br />
+part 2
+part 3</h2>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_038a():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """
+heading 1\a\a
+ part 2
+part 3
+---
+""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[BLANK(1,1):]",
+        "[setext(5,1):-:3::(2,1)]",
+        "[text(2,1):heading 1:]",
+        "[hard-break(2,10):  :\n]",
+        "[text(3,2):part 2\npart 3:: \x02\n]",
+        "[end-setext::]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<h2>heading 1<br />
+part 2
+part 3</h2>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_038bx():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """
++ heading 1\a\a
+\tpart 2
+\tpart 3
+""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[BLANK(1,1):]",
+        "[ulist(2,1):+::2::\n\n]",
+        "[para(2,3):\n\t\n\t]",
+        "[text(2,3):heading 1:]",
+        "[hard-break(2,12):  :\n]",
+        "[text(3,2):part 2\npart 3::\n]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>heading 1<br />
+part 2
+part 3</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_038ba():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """
++ heading 1\a\a
+\tpart 2
+\tpart 3
+\t---
+""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[BLANK(1,1):]",
+        "[ulist(2,1):+::2::\n\n\n]",
+        "[setext(5,5):-:3::(2,3)]",
+        "[text(2,3):heading 1:]",
+        "[hard-break(2,12):  :\n]",
+        "[text(3,2):\a\t\a\x03\apart 2\npart 3::\n\t\x02]",
+        "[end-setext:\t:]",
+        "[BLANK(6,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>heading 1<br />
+part 2
+part 3</h2>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_038bb():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """
++ heading\t1\a\a
+\tpart 2
+\tpart 3
+\t---
+""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[BLANK(1,1):]",
+        "[ulist(2,1):+::2::\n\n\n]",
+        "[setext(5,5):-:3::(2,3)]",
+        "[text(2,3):heading\t1:]",
+        "[hard-break(2,12):  :\n]",
+        "[text(3,2):\a\t\a\x03\apart 2\npart 3::\n\t\x02]",
+        "[end-setext:\t:]",
+        "[BLANK(6,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>heading\t1<br />
+part 2
+part 3</h2>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_038bc():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """
++ heading 1\t\t
+\tpart 2
+\tpart 3
+\t---
+""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[BLANK(1,1):]",
+        "[ulist(2,1):+::2::\n\n\n]",
+        "[setext(5,5):-:3::(2,3)]",
+        "[text(2,3):heading 1\t\t\npart 2\npart 3::\n\t\x02\n\t\x02]",
+        "[end-setext:\t:]",
+        "[BLANK(6,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>heading 1\t\t
+part 2
+part 3</h2>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_038bd():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """
++ heading\t1\\
+\t part 2
+\tpart 3
+\t---
+""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[BLANK(1,1):]",
+        "[ulist(2,1):+::2::\n\n\n]",
+        "[setext(5,5):-:3::(2,3)]",
+        "[text(2,3):heading\t1:]",
+        "[hard-break(2,14):\\:\n]",
+        "[text(3,3):\a\t \a\x03\apart 2\npart 3::\n\t\x02]",
+        "[end-setext:\t:]",
+        "[BLANK(6,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>heading	1<br />
+part 2
+part 3</h2>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_038be():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """
++ heading\t1
+\tpart 2
+\tpart 3
+\t---
+""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[BLANK(1,1):]",
+        "[ulist(2,1):+::2::\n\n\n]",
+        "[setext(5,5):-:3::(2,3)]",
+        "[text(2,3):heading\t1\npart 2\npart 3::\n\t\x02\n\t\x02]",
+        "[end-setext:\t:]",
+        "[BLANK(6,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>heading\t1
+part 2
+part 3</h2>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_038cx():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """
++ heading 1\a\a
+  part 2
+  part 3
+""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[BLANK(1,1):]",
+        "[ulist(2,1):+::2::  \n  \n]",
+        "[para(2,3):\n\n]",
+        "[text(2,3):heading 1:]",
+        "[hard-break(2,12):  :\n]",
+        "[text(3,1):part 2\npart 3::\n]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>heading 1<br />
+part 2
+part 3</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_038ca():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """
++ heading 1\a\a
+  part 2
+  part 3
+  ---
+""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[BLANK(1,1):]",
+        "[ulist(2,1):+::2::  \n  \n  \n]",
+        "[setext(5,3):-:3::(2,3)]",
+        "[text(2,3):heading 1:]",
+        "[hard-break(2,12):  :\n]",
+        "[text(3,1):part 2\npart 3::\n]",
+        "[end-setext::]",
+        "[BLANK(6,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>heading 1<br />
+part 2
+part 3</h2>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_038dx():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """1. heading 1
+\tpart 2
+   part *3*\a
+\tpart 4
+   part *5*\a
+\tpart 6
+   ----
+""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n   \n\n   \n\n   \n]",
+        "[setext(7,4):-:4::(1,4)]",
+        "[text(1,4):heading 1\npart 2\npart ::\n\t\x02\n]",
+        "[emphasis(3,6):1:*]",
+        "[text(3,7):3:]",
+        "[end-emphasis(3,8)::]",
+        "[text(3,9):\npart 4\npart :: \n\t\x02\n]",
+        "[emphasis(5,6):1:*]",
+        "[text(5,7):5:]",
+        "[end-emphasis(5,8)::]",
+        "[text(5,9):\npart 6:: \n\t\x02]",
+        "[end-setext::]",
+        "[BLANK(8,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<h2>heading 1
+part 2
+part <em>3</em>
+part 4
+part <em>5</em>
+part 6</h2>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_038da():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """1. heading *1*\a
+\tpart 2
+   part *3*\a
+\tpart 4
+   part *5*\a
+\tpart 6
+   ----
+""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n   \n\n   \n\n   \n]",
+        "[setext(7,4):-:4::(1,4)]",
+        "[text(1,4):heading :]",
+        "[emphasis(1,12):1:*]",
+        "[text(1,13):1:]",
+        "[end-emphasis(1,14)::]",
+        "[text(1,15):\npart 2\npart :: \n\t\x02\n]",
+        "[emphasis(3,6):1:*]",
+        "[text(3,7):3:]",
+        "[end-emphasis(3,8)::]",
+        "[text(3,9):\npart 4\npart :: \n\t\x02\n]",
+        "[emphasis(5,6):1:*]",
+        "[text(5,7):5:]",
+        "[end-emphasis(5,8)::]",
+        "[text(5,9):\npart 6:: \n\t\x02]",
+        "[end-setext::]",
+        "[BLANK(8,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<h2>heading <em>1</em>
+part 2
+part <em>3</em>
+part 4
+part <em>5</em>
+part 6</h2>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_039x():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """+ heading 2\a\a
+\tpart 2
+\tpart 3
+\tpart 4
+\t----
+""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[ulist(1,1):+::2::\n\n\n\n]",
+        "[setext(5,5):-:4::(1,3)]",
+        "[text(1,3):heading 2:]",
+        "[hard-break(1,12):  :\n]",
+        "[text(2,2):\a\t\a\x03\apart 2\npart 3\npart 4::\n\t\x02\n\t\x02]",
+        "[end-setext:\t:]",
+        "[BLANK(6,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>heading 2<br />
+part 2
+part 3
+part 4</h2>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_039a():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """1. heading 1
+\tpart 2
+   part 3\a\a
+\tpart 4
+   part 5\a\a
+\tpart 6
+   ----
+""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n   \n\n   \n\n   \n]",
+        "[setext(7,4):-:4::(1,4)]",
+        "[text(1,4):heading 1\npart 2\npart 3::\n\t\x02\n]",
+        "[hard-break(3,7):  :\n]",
+        "[text(4,2):\a\t\a\x03\apart 4\npart 5::\n]",
+        "[hard-break(5,7):  :\n]",
+        "[text(6,2):\a\t\a\x03\apart 6:]",
+        "[end-setext::]",
+        "[BLANK(8,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<h2>heading 1
+part 2
+part 3<br />
+part 4
+part 5<br />
+part 6</h2>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_040x():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """+ heading `1` abc
+\tpart 2
+\tpart 3
+\t----
+"""
+    expected_tokens = [
+        "[ulist(1,1):+::2::\n\n\n]",
+        "[setext(4,5):-:4::(1,3)]",
+        "[text(1,3):heading :]",
+        "[icode-span(1,11):1:`::]",
+        "[text(1,14): abc\npart 2\npart 3::\n\t\x02\n\t\x02]",
+        "[end-setext:\t:]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>heading <code>1</code> abc
+part 2
+part 3</h2>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_040a():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """+ heading `\t1` abc
+\tpart 2
+\tpart 3
+\t----
+"""
+    expected_tokens = [
+        "[ulist(1,1):+::2::\n\n\n]",
+        "[setext(4,5):-:4::(1,3)]",
+        "[text(1,3):heading :]",
+        "[icode-span(1,11):\t1:`::]",
+        "[text(1,15): abc\npart 2\npart 3::\n\t\x02\n\t\x02]",
+        "[end-setext:\t:]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>heading <code>\t1</code> abc
+part 2
+part 3</h2>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_extra_040b():
+    """
+    TBD, when fixed, also fix bad_setext_four_unordered_list_with_tab_codespan_13
+    """
+
+    # Arrange
+    source_markdown = """+ heading 1 `abc
+\tdef` part 2
+\tpart 3
+\t----
+"""
+    expected_tokens = [
+        "[ulist(1,1):+::2::\n\n\n]",
+        "[setext(4,5):-:4::(1,3)]",
+        "[text(1,3):heading :]",
+        "[icode-span(1,11):\t1:`::]",
+        "[text(1,15): abc\npart 2\npart 3::\n\t\x02\n\t\x02]",
+        "[end-setext:\t:]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>heading 1 <code>abc def</code> part 2
+part 3</h2>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_extra_999():
     """
     Temporary test to keep coverage up while consistency checks disabled.

@@ -3,12 +3,13 @@ Module to help with the parsing of tabbified text inline elements.
 """
 
 import logging
-from typing import Optional
+from typing import List, Optional
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.tab_helper import TabHelper
 from pymarkdown.inline.inline_helper import InlineHelper
+from pymarkdown.tokens.markdown_token import MarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -41,11 +42,9 @@ class InlineTabifiedTextBlockHelper:
 
         stop_character = source_text[next_index]
         if stop_character == "\n":
-            ex_original_line, _ = TabHelper.find_detabify_string_ex(
-                adj_tabified_text, current_line_source_text
+            return InlineTabifiedTextBlockHelper.__tabified_adjust(
+                current_line_source_text, source_text, adj_tabified_text, start_index
             )
-            assert ex_original_line is not None
-            return ex_original_line
 
         POGGER.debug("stop_character>:$:<", stop_character)
 
@@ -76,6 +75,37 @@ class InlineTabifiedTextBlockHelper:
             stop_character_in_tabified_index,
             current_line_leading_space,
         )
+
+    @staticmethod
+    def __tabified_adjust(
+        current_line_source_text: str,
+        source_text: str,
+        adj_tabified_text: str,
+        start_index: int,
+    ) -> str:
+        adj_current_line_source_text = current_line_source_text
+        non_whitespace_index, ex_ws = ParserHelper.extract_spaces(
+            current_line_source_text, 0
+        )
+        assert ex_ws is not None
+        if start_index == 0:
+            was_last_character_newline = True
+        else:
+            was_last_character_newline = source_text[start_index - 1] == "\n"
+
+        if ex_ws and was_last_character_newline:
+            new_start = ParserHelper.create_replace_with_nothing_marker(ex_ws)
+            adj_current_line_source_text = current_line_source_text[
+                non_whitespace_index:
+            ]
+        else:
+            new_start = ""
+
+        ex_original_line, _ = TabHelper.find_detabify_string_ex(
+            adj_tabified_text, adj_current_line_source_text
+        )
+        assert ex_original_line is not None
+        return new_start + ex_original_line
 
     @staticmethod
     def __handle_next_inline_character_tabified_find_stop(
@@ -178,12 +208,15 @@ class InlineTabifiedTextBlockHelper:
 
     # pylint: enable=too-many-arguments
 
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def complete_inline_block_processing_tabified(
         source_text: str,
         start_index: int,
         tabified_text: str,
         newlines_encountered: int,
+        inline_blocks: List[MarkdownToken],
+        end_string: Optional[str],
     ) -> str:
         """
         Complete the processing on a tabified block
@@ -258,6 +291,13 @@ class InlineTabifiedTextBlockHelper:
         )
         POGGER.debug("current_line_tabified_text>:$:<", current_line_tabified_text)
 
+        if inline_blocks and inline_blocks[-1].is_inline_hard_break and not end_string:
+            return InlineTabifiedTextBlockHelper.__tabified_adjust(
+                current_line_source_text,
+                source_text,
+                current_line_tabified_text,
+                current_line_start_index,
+            )
         found_word_index = InlineHelper.calculate_word_index(
             current_line_tabified_text,
             source_text_word,
@@ -265,3 +305,5 @@ class InlineTabifiedTextBlockHelper:
             source_text_spaces,
         )
         return current_line_tabified_text[found_word_index:]
+
+    # pylint: enable=too-many-arguments, too-many-locals

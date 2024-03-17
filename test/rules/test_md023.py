@@ -244,6 +244,7 @@ Long Heading
         "bad_improper_indent_setext_in_list_item",
         source_file_name=f"{source_path}improper_indent_setext_in_list_item.md",
         enable_rules=plugin_enable_this_rule,
+        use_debug=True,
         disable_rules=__plugin_disable_md005_md030_md032,
         source_file_contents="""- Some text
 
@@ -337,6 +338,920 @@ Long Heading
         enable_rules=plugin_enable_this_rule,
         disable_rules=__plugin_disable_md009,
     ),
+    pluginRuleTest(
+        "bad_atx_block_quote_with_tab",
+        source_file_contents=""">\t# heading 1
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md027",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""> # heading 1
+""",
+    ),
+    pluginRuleTest(
+        "bad_setext_both_block_quote_with_tab",
+        source_file_contents=""">\theading 1
+>\t----
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md027",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:2:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""> heading 1
+> ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_setext_one_block_quote_with_tab",
+        source_file_contents=""">\theading 1
+> ----
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md027",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:2:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""> heading 1
+> ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_setext_two_block_quote_with_tab",
+        source_file_contents="""> heading 1
+>\t----
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md027",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:2:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""> heading 1
+> ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_setext_four_block_quote_with_tab",
+        source_file_contents=""">\theading 1
+>\tpart 2
+>\tpart 3
+>\t----
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md027",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""> heading 1
+> part 2
+> part 3
+> ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_atx_unordered_list_with_tab",
+        source_file_contents="""+\t# heading 1
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md027,md030",
+        use_debug=True,
+    ),
+    pluginRuleTest(
+        "bad_atx_unordered_list_with_tab_second",
+        source_file_contents="""+ # heading 1
+\t# heading 2
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md022,md025,md027,md030",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:2:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""+ # heading 1
+  # heading 2
+""",
+    ),
+    pluginRuleTest(
+        "bad_atx_unordered_list_with_tab_third",
+        source_file_contents="""+ # heading 1
+  just some text
+\t# heading 2
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md022,md025,md027,md030",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""+ # heading 1
+  just some text
+  # heading 2
+""",
+    ),
+    pluginRuleTest(
+        "bad_atx_unordered_list_new_list_item_with_tab_second",
+        source_file_contents="""+ # heading 1
+  # heading 2
++ # heading 1
+\t# heading 2
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md022,md024,md025,md027,md030",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""+ # heading 1
+  # heading 2
++ # heading 1
+  # heading 2
+""",
+    ),
+    pluginRuleTest(
+        "bad_atx_unordered_list_new_list_item_with_tab_third",
+        source_file_contents="""+ # heading 1
+  # heading 2
++ # heading 1
+  # heading 2
+\t# heading 3
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md022,md024,md025,md027,md030",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""+ # heading 1
+  # heading 2
++ # heading 1
+  # heading 2
+  # heading 3
+""",
+    ),
+    pluginRuleTest(
+        "bad_setext_both_unordered_list_with_tab",
+        source_file_contents="""+\theading 1
+\t----
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md027,md030",
+    ),
+    pluginRuleTest(
+        "bad_setext_one_unordered_list_with_tab",
+        source_file_contents="""+\theading 1
+  ----
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md027,md030,md032",
+    ),
+    pluginRuleTest(
+        "bad_setext_two_unordered_list_with_tab",
+        source_file_contents="""+ heading 1
+\t----
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md027",
+        scan_expected_return_code=1,
+        use_debug=True,
+        scan_expected_output="""{temp_source_path}:2:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""+ heading 1
+  ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_setext_four_unordered_list_with_tab",
+        source_file_contents="""+ heading 1
+  part 2
+\tpart 3
+  ----
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md027",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:3: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""+ heading 1
+  part 2
+  part 3
+  ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_setext_four_unordered_list_with_tab_13",
+        source_file_contents="""
++ heading 1\a\a
+\tpart 2
+\tpart 3
+\t----
++ heading 1
+  part 2
+  part 3
+  ---
++ heading 1
+  part 2
+  part 3
+  ---
+""".replace(
+            "\a", " "
+        ),
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md027,md022,md024",
+        scan_expected_return_code=1,
+        use_debug=True,
+        scan_expected_output="""{temp_source_path}:5:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""
++ heading 1\a\a
+  part 2
+  part 3
+  ----
++ heading 1
+  part 2
+  part 3
+  ---
++ heading 1
+  part 2
+  part 3
+  ---
+""".replace(
+            "\a", " "
+        ),
+    ),
+    # dependent on test_extra_040b
+    #     pluginRuleTest(
+    #         "bad_setext_four_unordered_list_with_tab_codespan_13",
+    #         source_file_contents="""
+    # + heading `1` abc
+    # \tpart 2
+    # \tpart 3
+    # \t----
+    # + heading 1
+    #   part 2
+    #   part 3
+    #   ---
+    # + heading 1
+    #   part 2
+    #   part 3
+    #   ---
+    # """.replace("\a", " "),
+    #         enable_rules=plugin_enable_this_rule,
+    #         disable_rules="md010,md027,md022,md024",
+    #         scan_expected_return_code=1,
+    #         use_debug=True,
+    #         scan_expected_output="""{temp_source_path}:5:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+    # """,
+    #         fix_expected_file_contents="""
+    # + heading 1 abc
+    #   part 2
+    #   part 3
+    #   ----
+    # + heading 1
+    #   part 2
+    #   part 3
+    #   ---
+    # + heading 1
+    #   part 2
+    #   part 3
+    #   ---
+    # """.replace("\a", " "),
+    #     ),
+    pluginRuleTest(
+        "bad_setext_four_unordered_list_with_tab_23",
+        source_file_contents="""
++ heading 1
+  part 2
+  part 3
+  ----
++ heading 2\a\a
+\tpart 2
+\tpart 3
+\t---
++ heading 1
+  part 2
+  part 3
+  ---""".replace(
+            "\a", " "
+        ),
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md027,md022,md024,md047",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:9:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""
++ heading 1
+  part 2
+  part 3
+  ----
++ heading 2\a\a
+  part 2
+  part 3
+  ---
++ heading 1
+  part 2
+  part 3
+  ---""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "bad_setext_four_unordered_list_with_tab_33",
+        source_file_contents="""
++ heading 1
+  part 2
+  part 3
+  ---
++ heading 1
+  part 2
+  part 3
+  ---
++ heading 2\a\a
+\tpart 2
+\tpart 3
+\t----
+""".replace(
+            "\a", " "
+        ),
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md027,md022,md024",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:13:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""
++ heading 1
+  part 2
+  part 3
+  ---
++ heading 1
+  part 2
+  part 3
+  ---
++ heading 2\a\a
+  part 2
+  part 3
+  ----
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "bad_setext_four_unordered_unordered_list_with_tab",
+        source_file_contents="""+ heading 0
+  + heading 1
+\tpart 2
+\tpart 3
+\t----
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md027,md022",
+    ),
+    pluginRuleTest(
+        "bad_setext_four_unordered_ordered_list_with_tab",
+        source_file_contents="""+ heading 0
+  1. heading 1
+\t\tpart 2
+\t\tpart 3
+\t\t----
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md027,md022",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:9: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""+ heading 0
+  1. heading 1
+     part 2
+     part 3
+     ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_setext_four_ordered_ordered_list_with_tab",
+        source_file_contents="""1. heading 0
+   1. heading 1
+\t\tpart 2
+\t\tpart 3
+\t\t----
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md027,md022",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:9: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""1. heading 0
+   1. heading 1
+      part 2
+      part 3
+      ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_setext_four_ordered_unordered_list_with_tab",
+        source_file_contents="""1. heading 0
+   + heading 1
+\t\tpart 2
+\t\tpart 3
+\t\t----
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md027,md022",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:9: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""1. heading 0
+   + heading 1
+     part 2
+     part 3
+     ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_atx_ordered_list_with_tab",
+        source_file_contents="""1.\t# heading 1
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md027,md030",
+    ),
+    pluginRuleTest(
+        "bad_atx_ordered_list_with_tab_second",
+        source_file_contents="""1. # heading 1
+\t# heading 2
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md022,md025,md027,md030",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:2:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""1. # heading 1
+   # heading 2
+""",
+    ),
+    pluginRuleTest(
+        "bad_atx_ordered_list_with_tab_third",
+        source_file_contents="""1. # heading 1
+   just some text
+\t# heading 2
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md022,md025,md027,md030",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""1. # heading 1
+   just some text
+   # heading 2
+""",
+    ),
+    pluginRuleTest(
+        "bad_atx_ordered_list_new_list_item_with_tab_second",
+        source_file_contents="""1. # heading 1
+   # heading 2
+1. # heading 1
+\t# heading 2
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md022,md024,md025,md027,md030",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""1. # heading 1
+   # heading 2
+1. # heading 1
+   # heading 2
+""",
+    ),
+    pluginRuleTest(
+        "bad_atx_ordered_list_new_list_item_with_tab_third",
+        source_file_contents="""1. # heading 1
+   # heading 2
+1. # heading 1
+   # heading 2
+\t# heading 3
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md022,md024,md025,md027,md030",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""1. # heading 1
+   # heading 2
+1. # heading 1
+   # heading 2
+   # heading 3
+""",
+    ),
+    pluginRuleTest(
+        "bad_setext_both_ordered_list_with_tab",
+        source_file_contents="""1.\theading 1
+\t----
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md027,md030",
+    ),
+    pluginRuleTest(
+        "bad_setext_one_ordered_list_with_tab",
+        source_file_contents="""1.\theading 1
+    ----
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md027,md030,md032",
+    ),
+    pluginRuleTest(
+        "bad_setext_two_ordered_list_with_tab",
+        source_file_contents="""1. heading 1
+\t----
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md027",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:2:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""1. heading 1
+   ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_setext_four_ordered_list_with_tab",
+        source_file_contents="""1. heading 1
+\tpart 2
+\tpart 3
+\t----
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md027",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""1. heading 1
+   part 2
+   part 3
+   ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_setext_four_ordered_list_with_tab_and_hard_break",
+        source_file_contents="""1. heading 1
+\tpart 2
+   part 3\a\a
+\tpart 4
+   part 5\a\a
+\tpart 6
+   ----
+""".replace(
+            "\a", " "
+        ),
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md009,md010,md027",
+        # use_debug=True,
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:7:4: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""1. heading 1
+   part 2
+   part 3\a\a
+   part 4
+   part 5\a\a
+   part 6
+   ----
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "bad_setext_four_ordered_list_with_tab_and_emphasis",
+        source_file_contents="""1. heading 1
+\tpart 2
+   part *3*\a
+\tpart 4
+   ----
+""".replace(
+            "\a", " "
+        ),
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md009,md010,md027",
+        use_debug=True,
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:4: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""1. heading 1
+   part 2
+   part *3*\a
+   part 4
+   ----
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "bad_setext_four_ordered_list_with_tab_and_double_emphasis_1",
+        source_file_contents="""1. heading 1
+\tpart 2
+   part *3*\a
+   part *4*\a
+\tpart 6
+   ----
+""".replace(
+            "\a", " "
+        ),
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md009,md010,md027",
+        use_debug=True,
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:4: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""1. heading 1
+   part 2
+   part *3*\a
+   part *4*\a
+   part 6
+   ----
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "bad_setext_four_ordered_list_with_tab_and_double_emphasis_2",
+        source_file_contents="""1. heading 1
+\tpart 2
+   part *3*\a
+\tpart 4
+   part *5*\a
+\tpart 6
+   ----
+""".replace(
+            "\a", " "
+        ),
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md009,md010,md027",
+        use_debug=True,
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:7:4: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""1. heading 1
+   part 2
+   part *3*\a
+   part 4
+   part *5*\a
+   part 6
+   ----
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "bad_setext_four_ordered_list_with_tab_13",
+        source_file_contents="""
+1. heading 2\a\a
+\tpart 2
+\tpart 3
+\t----
+1. heading 1
+   part 2
+   part 3
+   ---
+1. heading 1
+   part 2
+   part 3
+   ---
+""".replace(
+            "\a", " "
+        ),
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md027,md022,md024",
+        scan_expected_return_code=1,
+        use_debug=True,
+        scan_expected_output="""{temp_source_path}:5:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""
+1. heading 2\a\a
+   part 2
+   part 3
+   ----
+1. heading 1
+   part 2
+   part 3
+   ---
+1. heading 1
+   part 2
+   part 3
+   ---
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "bad_setext_four_ordered_list_with_tab_23",
+        source_file_contents="""
+1. heading 1
+   part 2
+   part 3
+   ---
+1. heading 2\a\a
+\tpart 2
+\tpart 3
+\t----
+1. heading 1
+   part 2
+   part 3
+   ---""".replace(
+            "\a", " "
+        ),
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md027,md022,md024,md047",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:9:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""
+1. heading 1
+   part 2
+   part 3
+   ---
+1. heading 2\a\a
+   part 2
+   part 3
+   ----
+1. heading 1
+   part 2
+   part 3
+   ---""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "bad_setext_four_ordered_list_with_tab_33",
+        source_file_contents="""
+1. heading 1
+   part 2
+   part 3
+   ---
+1. heading 1
+   part 2
+   part 3
+   ---
+1. heading 2\a\a
+\tpart 2
+\tpart 3
+\t----
+""".replace(
+            "\a", " "
+        ),
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md027,md022,md024",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:13:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""
+1. heading 1
+   part 2
+   part 3
+   ---
+1. heading 1
+   part 2
+   part 3
+   ---
+1. heading 2\a\a
+   part 2
+   part 3
+   ----
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "bad_atx_unordered_unordered_with_tab",
+        source_file_contents="""+ # heading 1
+   + # heading 2
+\t\t# heading 3
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md007,md010,md022,md024,md025,md027,md030",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:9: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""+ # heading 1
+   + # heading 2
+     # heading 3
+""",
+    ),
+    pluginRuleTest(
+        "bad_atx_unordered_ordered_with_tab",
+        source_file_contents="""+ # heading 1
+  1. # heading 2
+\t\t# heading 3
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md022,md024,md025,md027,md030",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:9: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""+ # heading 1
+  1. # heading 2
+     # heading 3
+""",
+    ),
+    pluginRuleTest(
+        "bad_atx_ordered_ordered_with_tab",
+        source_file_contents="""1. # heading 1
+   1. # heading 2
+\t\t# heading 3
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md022,md024,md025,md027,md030",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:9: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""1. # heading 1
+   1. # heading 2
+      # heading 3
+""",
+    ),
+    pluginRuleTest(
+        "bad_atx_ordered_unordered_with_tab",
+        source_file_contents="""1. # heading 1
+   + # heading 2
+\t\t# heading 3
+""",
+        enable_rules=plugin_enable_this_rule,
+        disable_rules="md010,md022,md024,md025,md027,md030",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:9: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+""",
+        fix_expected_file_contents="""1. # heading 1
+   + # heading 2
+     # heading 3
+""",
+    ),
+    #     pluginRuleTest(
+    #         "bad_atx_blockquote_unordered_unordered_with_tab",
+    #         source_file_contents="""> + # heading 1
+    # >    + # heading 2
+    # > \t\t# heading 3
+    # """,
+    #         enable_rules=plugin_enable_this_rule,
+    #         disable_rules="md007,md010,md022,md024,md025,md027,md030",
+    #         use_debug=True,
+    #         scan_expected_return_code=1,
+    #         scan_expected_output="""{temp_source_path}:3:9: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+    # """,
+    #         fix_expected_file_contents="""+ # heading 1
+    #   # heading 2
+    # + # heading 1
+    #   # heading 2
+    #   # heading 3
+    # """,
+    #     ),
+    #     pluginRuleTest(
+    #         "bad_atx_blockquote_unordered_ordered_with_tab",
+    #         source_file_contents="""> + # heading 1
+    # >   1. # heading 2
+    # > \t\t# heading 3
+    # """,
+    #         enable_rules=plugin_enable_this_rule,
+    #         disable_rules="md010,md022,md024,md025,md027,md030",
+    #         scan_expected_return_code=1,
+    #         scan_expected_output="""{temp_source_path}:3:9: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+    # """,
+    #         fix_expected_file_contents="""+ # heading 1
+    #   # heading 2
+    # + # heading 1
+    #   # heading 2
+    #   # heading 3
+    # """,
+    #     ),
+    #     pluginRuleTest(
+    #         "bad_atx_blockquote_ordered_ordered_with_tab",
+    #         source_file_contents="""> 1. # heading 1
+    # >    1. # heading 2
+    # > \t\t# heading 3
+    # """,
+    #         enable_rules=plugin_enable_this_rule,
+    #         disable_rules="md010,md022,md024,md025,md027,md030",
+    #         scan_expected_return_code=1,
+    #         scan_expected_output="""{temp_source_path}:3:9: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+    # """,
+    #         fix_expected_file_contents="""+ # heading 1
+    #   # heading 2
+    # + # heading 1
+    #   # heading 2
+    #   # heading 3
+    # """,
+    #     ),
+    #     pluginRuleTest(
+    #         "bad_atx_blockquote_ordered_unordered_with_tab",
+    #         source_file_contents="""> 1. # heading 1
+    # >    + # heading 2
+    # > \t\t# heading 3
+    # """,
+    #         enable_rules=plugin_enable_this_rule,
+    #         disable_rules="md010,md022,md024,md025,md027,md030",
+    #         scan_expected_return_code=1,
+    #         scan_expected_output="""{temp_source_path}:3:9: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
+    # """,
+    #         fix_expected_file_contents="""+ # heading 1
+    #   # heading 2
+    # + # heading 1
+    #   # heading 2
+    #   # heading 3
+    # """,
+    #     ),
     pluginRuleTest(
         "mix_md023_md009",
         source_file_contents="""  ## Heading 2\a\a\a
