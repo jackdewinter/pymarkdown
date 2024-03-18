@@ -115,6 +115,7 @@ class RuleMd023(RulePlugin):
         self.__setext_start_token = token
         self.__any_leading_whitespace_detected = bool(token.extracted_whitespace)
         if self.__any_leading_whitespace_detected and context.in_fix_mode:
+            assert token.extracted_whitespace
             whitespace_to_add = " " if token.extracted_whitespace[0] == "\t" else ""
             self.register_fix_token_request(
                 context,
