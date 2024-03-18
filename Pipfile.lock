@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "8c4c2e592581103b16b027c33f6486eecf2b7154f58d133a31864ffa9dd7c164"
+            "sha256": "814f38aea7111a6d75c3f7f6a3261c074922411d1036c5ded803715e5aabbccd"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -752,15 +752,16 @@
                 "sha256:a9dbb1838d43bb1e6f03bd5dca9412c552544a9bc42d6abb5dc32adfe8ae7c0d"
             ],
             "index": "pypi",
+            "markers": "python_version >= '3.8'",
             "version": "==0.7.17"
         },
         "mdformat-admon": {
             "hashes": [
-                "sha256:0d6347b729dff1468b15275d683ce0f4b8592dfe5f2145b95b7983167ee9cc78",
-                "sha256:82bb44d541d266a49501a0c751d9e4367934876093c97c85efa2e1a5d1bb4577"
+                "sha256:66bf6debb4f904ff4549b5bc59380a92add16c16fb51b220f3f7288157702fea",
+                "sha256:fb99e5c1ed63207712abd8edd7af880227d972dbbc5a5266ae0ff205dec3210f"
             ],
             "markers": "python_full_version >= '3.8.0'",
-            "version": "==2.0.1"
+            "version": "==2.0.2"
         },
         "mdformat-frontmatter": {
             "hashes": [
@@ -780,11 +781,12 @@
         },
         "mdformat-mkdocs": {
             "hashes": [
-                "sha256:1d2df72812bc113b8f8ea5f9e46d85800e934eff1baa3f4b358b6510a3766035",
-                "sha256:dc925c9b185a2f3fa48df1be1dc686d8582304861fa6c1b65a686f069551ea6e"
+                "sha256:1ab29f9057c8764bb910712aa27217eb2750d030ad03f383aacdcd29e7328400",
+                "sha256:390c34515c5740a525b7391a54dc73d056cb875f1390dd11495da3e8e0077f02"
             ],
             "index": "pypi",
-            "version": "==2.0.2"
+            "markers": "python_full_version >= '3.8.4'",
+            "version": "==2.0.4"
         },
         "mdformat-tables": {
             "hashes": [
@@ -1342,7 +1344,7 @@
                 "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc",
                 "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"
             ],
-            "markers": "python_version >= '3.7'",
+            "markers": "python_version < '3.11'",
             "version": "==2.0.1"
         },
         "tomlkit": {
