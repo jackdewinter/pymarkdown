@@ -494,17 +494,28 @@ class LeafBlockProcessorParagraph:
             POGGER.debug(">>prefix>:$:<", prefix)
             (
                 corrected_prefix,
-                corrected_suffix,
+                extracted_whitespace,
                 split_tab,
                 split_tab_with_block_quote_suffix,
             ) = TabHelper.match_tabbed_whitespace(extracted_whitespace, prefix)
             POGGER.debug(">>corrected_prefix>:$:<", corrected_prefix)
-            POGGER.debug(">>corrected_suffix>:$:<", corrected_suffix)
+            POGGER.debug(">>corrected_suffix>:$:<", extracted_whitespace)
             POGGER.debug(">>split_tab>>$>>", split_tab)
-            extracted_whitespace = corrected_suffix
             if split_tab:
-                assert split_tab_with_block_quote_suffix
-                TabHelper.adjust_block_quote_indent_for_tab(parser_state)
+                if split_tab_with_block_quote_suffix:
+                    TabHelper.adjust_block_quote_indent_for_tab(parser_state)
+                else:
+                    alternate_leading_space = (
+                        corrected_prefix
+                        if corrected_prefix and "\t" in corrected_prefix
+                        else None
+                    )
+                    TabHelper.adjust_block_quote_indent_for_tab(
+                        parser_state,
+                        corrected_prefix + extracted_whitespace,
+                        original_line=original_line,
+                        alternate_list_leading_space=alternate_leading_space,
+                    )
             # assert False
         return extracted_whitespace
 
