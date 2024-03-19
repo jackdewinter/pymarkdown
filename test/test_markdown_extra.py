@@ -5513,6 +5513,69 @@ part 3</h2>
 
 
 @pytest.mark.gfm
+def test_extra_041x():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """Consider this code:
+
+\tcode block here
+"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):Consider this code::]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[icode-block(3,5):\t:]",
+        "[text(3,5):code block here:]",
+        "[end-icode-block:::True]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<p>Consider this code:</p>
+<pre><code>code block here
+</code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_041a():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """- Consider this code:
+
+\tcode block here
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::\n\n]",
+        "[para(1,3):]",
+        "[text(1,3):Consider this code::]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[para(3,5):\t]",
+        "[text(3,5):code block here:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>Consider this code:</p>
+<p>code block here</p>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_extra_999():
     """
     Temporary test to keep coverage up while consistency checks disabled.
