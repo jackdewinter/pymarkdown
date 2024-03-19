@@ -4,6 +4,20 @@
 
 ### Added
 
+- None
+
+### Fixed
+
+- None
+
+### Changed
+
+- None
+
+## Version 0.9.18 - Date: 2024-03-18
+
+### Added
+
 - [Issue 990](https://github.com/jackdewinter/pymarkdown/issues/990)
   - added ability to use a TOML file in `pyproject.toml` format with the
     `--config` command line flag
@@ -18,7 +32,12 @@
 - [Issue 1001](https://github.com/jackdewinter/pymarkdown/issues/1001)
   - Verified behavior of rules Md019 and Md021, fixing issues with Md021
 - [Issue 1003](https://github.com/jackdewinter/pymarkdown/issues/1003)
-  - Verified behavior of rules Md037 with more types of inline elements
+  - Verified behavior of rule Md037 with more types of inline elements
+- [Issue 1007](https://github.com/jackdewinter/pymarkdown/issues/1007)
+  - Verified behavior of rule md023 with more cases, especially tab characters
+  - multiple cases of fixing the rule and multiple cases of fixing the parser
+- [Issue 1015](https://github.com/jackdewinter/pymarkdown/issues/1015)
+  - Fixed issue with split tab and a simple list indent
 
 ### Changed
 
@@ -29,6 +48,8 @@
   - verified behavior of rule Md039
   - added link reference defintion's link title to the previous list
     of link title and image's link title for examination
+- [Issue 1007](https://github.com/jackdewinter/pymarkdown/issues/1007)
+  - changed GHA workflow to be more precise when unable to start remote job
 
 ## Version 0.9.17 - Date: 2024-02-05
 
