@@ -46,13 +46,10 @@ class TransformToGfmListLooseness:
             )
             if check_me:
                 POGGER.debug("check-->?")
-                if TransformToGfmListLooseness.__is_token_loose(
+                is_loose = stop_me = TransformToGfmListLooseness.__is_token_loose(
                     actual_tokens, current_token_index
-                ):
-                    is_loose, stop_me = True, True
-                    POGGER.debug("check-->Loose")
-                else:
-                    POGGER.debug("check-->Normal")
+                )
+                POGGER.debug("check-->Loose=$", is_loose)
             if stop_me:
                 break
             current_token_index += 1

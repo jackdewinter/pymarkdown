@@ -66,9 +66,11 @@ class RuleMd048(RulePlugin):
         """
         Event that the a new file to be scanned is starting.
         """
-        self.__actual_style_type = ""
-        if self.__style_type != RuleMd048.__consistent_style:
-            self.__actual_style_type = self.__style_type
+        self.__actual_style_type = (
+            self.__style_type
+            if self.__style_type != RuleMd048.__consistent_style
+            else ""
+        )
 
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """

@@ -423,16 +423,17 @@ class EmphasisHelper:
         if current_token.token_text[0] == EmphasisHelper.__simple_emphasis:
             is_closer = EmphasisHelper.__is_right_flanking_delimiter_run(current_token)
         elif current_token.token_text[0] == EmphasisHelper.__strikethrough_emphasis:
-            is_closer = False
-            if len(current_token.token_text) < 3:
-                is_closer = EmphasisHelper.__is_right_flanking_delimiter_run(
-                    current_token
-                )
+            is_closer = (
+                EmphasisHelper.__is_right_flanking_delimiter_run(current_token)
+                if len(current_token.token_text) < 3
+                else False
+            )
         # Rule 4 and 8
         else:
             assert current_token.token_text[0] == EmphasisHelper.__complex_emphasis
-            is_closer = EmphasisHelper.__is_right_flanking_delimiter_run(current_token)
-            if is_closer:
+            if is_closer := EmphasisHelper.__is_right_flanking_delimiter_run(
+                current_token
+            ):
                 assert current_token.following_two is not None
                 is_left_flanking, following_two = (
                     EmphasisHelper.__is_left_flanking_delimiter_run(current_token),
@@ -457,11 +458,11 @@ class EmphasisHelper:
             is_opener = EmphasisHelper.__is_left_flanking_delimiter_run(current_token)
             # POGGER.debug("is_opener (simple)=$", is_opener)
         elif current_token.token_text[0] == EmphasisHelper.__strikethrough_emphasis:
-            is_opener = False
-            if len(current_token.token_text) < 3:
-                is_opener = EmphasisHelper.__is_left_flanking_delimiter_run(
-                    current_token
-                )
+            is_opener = (
+                EmphasisHelper.__is_left_flanking_delimiter_run(current_token)
+                if len(current_token.token_text) < 3
+                else False
+            )
         else:
             assert current_token.token_text[0] == EmphasisHelper.__complex_emphasis
             is_opener = EmphasisHelper.__is_left_flanking_delimiter_run(current_token)

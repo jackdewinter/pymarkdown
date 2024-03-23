@@ -187,10 +187,12 @@ class ListBlockCreateNewHandler:
         adj_ws: Optional[str],
     ) -> Tuple[Optional[str], Optional[str], int, int]:
         if forced_container_whitespace:
-            whitespace_to_add: Optional[str] = forced_container_whitespace
-            assert whitespace_to_add is not None
-            if alt_adj_ws:
-                whitespace_to_add += alt_adj_ws
+            assert forced_container_whitespace is not None
+            whitespace_to_add: Optional[str] = (
+                forced_container_whitespace + alt_adj_ws
+                if alt_adj_ws
+                else forced_container_whitespace
+            )
             ws_before_marker += len(forced_container_whitespace)
             indent_level += len(forced_container_whitespace)
             assert alt_adj_ws is not None
@@ -208,7 +210,6 @@ class ListBlockCreateNewHandler:
         whitespace_to_add: Optional[str],
         index: int,
     ) -> Tuple[Optional[str], int]:
-        tabbed_whitespace_to_add = None
         tabbed_adjust = -1
         (
             tabbed_extract_spaces_index,
@@ -227,8 +228,9 @@ class ListBlockCreateNewHandler:
             "detabbed_tabbed_extract_spaces>:$:<", detabbed_tabbed_extract_spaces
         )
         assert detabbed_tabbed_extract_spaces == whitespace_to_add
-        if "\t" in tabbed_extract_spaces:
-            tabbed_whitespace_to_add = tabbed_extract_spaces
+        tabbed_whitespace_to_add = (
+            tabbed_extract_spaces if "\t" in tabbed_extract_spaces else None
+        )
 
         POGGER.debug("is_ulist>:$:<", is_ulist)
 
@@ -604,9 +606,11 @@ class ListBlockCreateNewHandler:
                 ListStartMarkdownToken,
                 last_list_stack_token.matching_markdown_token,
             )
-            old_indent = 2
-            if last_list_markdown_token.is_ordered_list_start:
-                old_indent += len(last_list_markdown_token.list_start_content)
+            old_indent = (
+                len(last_list_markdown_token.list_start_content)
+                if last_list_markdown_token.is_ordered_list_start
+                else 2
+            )
             POGGER.debug(
                 "new_token.column_number($) <= old_indent($)",
                 new_token.column_number,
@@ -801,15 +805,17 @@ class ListBlockCreateNewHandler:
         ## AND some combination of the IF statement, then switch.
         ## i.e. a + at col 1 followed by a - at column 1 is a new list
         ## i.e. a + at col 1 followed by a - at column 3 is a new sublist
-        last_list_indent = last_list_stack_token.indent_level
-        if last_list_stack_token.last_new_list_token:
-            last_list_indent = last_list_stack_token.last_new_list_token.indent_level
-
+        last_list_indent = (
+            last_list_stack_token.last_new_list_token.indent_level
+            if last_list_stack_token.last_new_list_token
+            else last_list_stack_token.indent_level
+        )
         POGGER.debug(
             "position_marker.index_number>>$ >= xx>>$",
             position_marker,
             last_list_indent,
         )
+
         is_indented_enough = position_marker.index_number >= last_list_indent
         POGGER.debug("is_indented_enough>>$", is_indented_enough)
         if (
@@ -876,9 +882,11 @@ class ListBlockCreateNewHandler:
         )
         POGGER.debug("last_list_markdown_token>>$", last_list_markdown_token)
 
-        last_list_indent = last_list_markdown_token.indent_level
-        if last_list_stack_token.last_new_list_token:
-            last_list_indent = last_list_stack_token.last_new_list_token.indent_level
+        last_list_indent = (
+            last_list_stack_token.last_new_list_token.indent_level
+            if last_list_stack_token.last_new_list_token
+            else last_list_markdown_token.indent_level
+        )
 
         POGGER.debug(
             "current_start_index>>$ >= last_list_indent>>$",

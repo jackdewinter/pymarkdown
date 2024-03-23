@@ -82,8 +82,7 @@ class LinkParseHelper:
             link_name,
             link_value,
         )
-        did_add_definition = link_name not in LinkParseHelper.__link_definitions
-        if did_add_definition:
+        if did_add_definition := link_name not in LinkParseHelper.__link_definitions:
             LinkParseHelper.__link_definitions[link_name] = link_value
             POGGER.debug(">>added def>>$-->$", link_name, link_value)
         return did_add_definition
@@ -153,7 +152,6 @@ class LinkParseHelper:
 
         # TODO label type as Enum?
 
-        text_to_scan = source_text
         if tabified_text:
             assert tabified_text is not None
             text_to_scan = tabified_text
@@ -162,12 +160,13 @@ class LinkParseHelper:
             )
             POGGER.debug("tabified_new_index>:$:<", tabified_new_index)
             new_index = tabified_new_index
+        else:
+            text_to_scan = source_text
 
         after_open_index = new_index + 1
-        tried_full_reference_form = ParserHelper.is_character_at_index(
+        if tried_full_reference_form := ParserHelper.is_character_at_index(
             text_to_scan, after_open_index, LinkParseHelper.__link_format_reference_end
-        )
-        if tried_full_reference_form:
+        ):
             ex_label: Optional[str] = ""
 
             POGGER.debug("collapsed reference")
@@ -223,9 +222,9 @@ class LinkParseHelper:
         after_open_index: int,
     ) -> Tuple[Optional[str], str, str, str, int, bool]:
         POGGER.debug("full reference?")
-        POGGER.debug(">>did_extract>>$>", text_to_scan[after_open_index:])
+        POGGER.debug(">>tried_full_reference_form>>$>", text_to_scan[after_open_index:])
         (
-            did_extract,
+            tried_full_reference_form,
             after_label_index,
             ex_label,
         ) = LinkParseHelper.extract_link_label(
@@ -235,12 +234,11 @@ class LinkParseHelper:
             include_reference_colon=False,
         )
         POGGER.debug(
-            ">>did_extract>>$>after_label_index>$>ex_label>$>",
-            did_extract,
+            ">>tried_full_reference_form>>$>after_label_index>$>ex_label>$>",
+            tried_full_reference_form,
             after_label_index,
             ex_label,
         )
-        tried_full_reference_form = did_extract
         if tried_full_reference_form:
             assert ex_label is not None
             label_type = Constants.link_type__full
@@ -488,11 +486,10 @@ class LinkParseHelper:
 
         POGGER.debug("parse_link_destination>>new_index>>$>>", source_text[new_index:])
         start_index = new_index
-        did_use_angle_start = ParserHelper.is_character_at_index(
-            source_text, new_index, LinkParseHelper.__angle_link_start
-        )
         ex_link: Optional[str] = ""
-        if did_use_angle_start:
+        if did_use_angle_start := ParserHelper.is_character_at_index(
+            source_text, new_index, LinkParseHelper.__angle_link_start
+        ):
             POGGER.debug(
                 ">parse_angle_link_destination>new_index>$>$",
                 new_index,
@@ -605,8 +602,7 @@ class LinkParseHelper:
                 source_text, newer_index, LinkParseHelper.__non_angle_link_unnest
             ):
                 POGGER.debug("-1")
-                keep_collecting = bool(nesting_level)
-                if keep_collecting:
+                if keep_collecting := bool(nesting_level):
                     destination_parts.append(LinkParseHelper.__non_angle_link_unnest)
                     newer_index += 1
                     nesting_level -= 1
@@ -848,7 +844,6 @@ class LinkParseHelper:
         POGGER.debug("source_text>:$:<", source_text)
         POGGER.debug("tabified_text>:$:<", tabified_text)
 
-        text_to_scan = source_text
         if tabified_text:
             text_to_scan = tabified_text
             tabified_new_index = LinkParseHelper.__translate_between_strings(
@@ -856,7 +851,8 @@ class LinkParseHelper:
             )
             POGGER.debug("tabified_new_index>:$:<", tabified_new_index)
             new_index = tabified_new_index
-
+        else:
+            text_to_scan = source_text
         new_index += 1
 
         newer_index, lhp.before_link_whitespace = ParserHelper.extract_ascii_whitespace(

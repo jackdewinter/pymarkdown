@@ -39,9 +39,9 @@ class RuleMd038(RulePlugin):
         if not token.is_inline_code_span:
             return
         code_span_token = cast(InlineCodeSpanMarkdownToken, token)
-        has_trailing = False
         if len(code_span_token.span_text) == 1:
             has_leading = code_span_token.span_text[0] == " "
+            has_trailing = False
         else:
             has_leading = (
                 code_span_token.span_text[0] == " "

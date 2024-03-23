@@ -106,17 +106,20 @@ class RuleMd029(RulePlugin):
         list_token = cast(ListStartMarkdownToken, token)
         last_known_number: int = int(list_token.list_start_content)
 
-        list_style: str = self.__style
-        if list_style == RuleMd029.__one_or_ordered_style and last_known_number != 1:
-            list_style = RuleMd029.__ordered_style
-
-        is_valid = True
+        list_style = (
+            RuleMd029.__ordered_style
+            if self.__style == RuleMd029.__one_or_ordered_style
+            and last_known_number != 1
+            else self.__style
+        )
         if list_style == RuleMd029.__ordered_style:
             is_valid = self.__allow_extended_start_values or last_known_number in {0, 1}
         elif list_style == RuleMd029.__one_style:
             is_valid = last_known_number == 1
         elif list_style == RuleMd029.__zero_style:
             is_valid = last_known_number == 0
+        else:
+            is_valid = True
         # print(f"list_style={list_style},last_known_number={last_known_number},is_valid={is_valid}")
         if is_valid:
             return list_style, last_known_number
@@ -144,7 +147,7 @@ class RuleMd029(RulePlugin):
                     else RuleMd029.__ordered_style
                 )
 
-            is_valid = False
+            # is_valid = False
             if list_style == RuleMd029.__one_style:
                 is_valid = new_number == 1
             elif list_style == RuleMd029.__zero_style:

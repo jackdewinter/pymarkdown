@@ -63,10 +63,11 @@ class RuleMd002(RulePlugin):
         """
         Event that a new token is being processed.
         """
-        hash_count = None
         if token.is_atx_heading or token.is_setext_heading:
             heading_token = cast(AtxHeadingMarkdownToken, token)
             hash_count = heading_token.hash_count
+        else:
+            hash_count = None
 
         if not self.__have_seen_first_heading and hash_count:
             self.__have_seen_first_heading = True

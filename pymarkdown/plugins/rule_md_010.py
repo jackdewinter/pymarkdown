@@ -117,7 +117,6 @@ class RuleMd010(RulePlugin):
         ):
             self.__leaf_token_index += 1
 
-        do_process = False
         if "\t" in line:
             is_inside_of_fenced_code_block = (
                 self.__is_line_inside_of_fenced_code_block()
@@ -139,6 +138,8 @@ class RuleMd010(RulePlugin):
             #         ff += 1
             #     x = 1
             #     assert False
+        else:
+            do_process = False
         if do_process:
             if context.in_fix_mode:
                 context.set_current_fix_line(TabHelper.detabify_string(line))

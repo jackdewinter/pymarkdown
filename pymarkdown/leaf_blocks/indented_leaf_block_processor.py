@@ -147,13 +147,11 @@ class IndentedLeafBlockProcessor:
         else:
             is_list_start_line = True
             list_tabbed_adjust = last_list_token.tabbed_adjust
-            if last_list_token.is_ordered_list_start:
-                last_list_lead_spaces = (
-                    last_list_token.list_start_content
-                    + last_list_token.list_start_sequence
-                )
-            else:
-                last_list_lead_spaces = last_list_token.list_start_sequence
+            last_list_lead_spaces = (
+                last_list_token.list_start_content + last_list_token.list_start_sequence
+                if last_list_token.is_ordered_list_start
+                else last_list_token.list_start_sequence
+            )
             xx_delta = last_list_token.indent_level - len(last_list_lead_spaces)
             last_list_lead_spaces += " " * xx_delta
 
@@ -678,10 +676,11 @@ class IndentedLeafBlockProcessor:
             ):
                 next_character = tabified_extracted_space[next_character_index]
                 POGGER.debug("next_character>:$:<", next_character)
-                if next_character == ParserHelper.tab_character:
-                    length_so_far = (1 + (length_so_far // 4)) * 4
-                else:
-                    length_so_far += 1
+                length_so_far = (
+                    (1 + (length_so_far // 4)) * 4
+                    if next_character == ParserHelper.tab_character
+                    else length_so_far + 1
+                )
                 last_index += 1
                 POGGER.debug("length_so_far>:$:<", length_so_far)
                 next_character_index += 1

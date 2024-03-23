@@ -419,12 +419,11 @@ class FileScanHelper:
                 next_triggered_plugin_id
             ].plugin_fix_level
             assert triggered_plugin_fix_level > minimum_fix_level
-            if new_minimum_fix_level is None:
-                new_minimum_fix_level = triggered_plugin_fix_level
-            else:
-                new_minimum_fix_level = min(
-                    new_minimum_fix_level, triggered_plugin_fix_level
-                )
+            new_minimum_fix_level = (
+                triggered_plugin_fix_level
+                if new_minimum_fix_level is None
+                else min(new_minimum_fix_level, triggered_plugin_fix_level)
+            )
         if new_minimum_fix_level is not None:
             keep_processing = True
             minimum_fix_level = new_minimum_fix_level

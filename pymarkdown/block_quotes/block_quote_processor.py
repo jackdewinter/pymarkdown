@@ -460,12 +460,11 @@ class BlockQuoteProcessor:
                 break
             eligible_stack_index -= 1
         POGGER.debug("eligible_stack_index=$", eligible_stack_index)
-        if eligible_stack_index >= 0:
-            root_index = (
-                parser_state.token_stack.index(eligible_stack[eligible_stack_index]) + 1
-            )
-        else:
-            root_index = 0
+        root_index = (
+            (parser_state.token_stack.index(eligible_stack[eligible_stack_index]) + 1)
+            if eligible_stack_index >= 0
+            else 0
+        )
         POGGER.debug("root_index=$", root_index)
         (
             container_level_tokens,

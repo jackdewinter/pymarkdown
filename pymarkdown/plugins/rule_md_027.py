@@ -139,7 +139,6 @@ class RuleMd027(RulePlugin):
         context: PluginScanContext,
         alternate_token: MarkdownToken,
     ) -> bool:
-        keep_going = True
         if alternate_token.is_paragraph:
             para_token = cast(ParagraphMarkdownToken, alternate_token)
             extracted_whitespace = "\n" * ParserHelper.count_newlines_in_text(
@@ -152,16 +151,15 @@ class RuleMd027(RulePlugin):
                 "extracted_whitespace",
                 extracted_whitespace,
             )
-            keep_going = False
-        else:
-            assert (
-                alternate_token.is_setext_heading_end
-                or alternate_token.is_fenced_code_block_end
-            )
-            self.register_fix_token_request(
-                context, alternate_token, "next_token", "extracted_whitespace", ""
-            )
-        return keep_going
+            return False
+        assert (
+            alternate_token.is_setext_heading_end
+            or alternate_token.is_fenced_code_block_end
+        )
+        self.register_fix_token_request(
+            context, alternate_token, "next_token", "extracted_whitespace", ""
+        )
+        return True
 
     def __report_issue_setext_text(
         self, context: PluginScanContext, token: MarkdownToken
@@ -501,15 +499,12 @@ class RuleMd027(RulePlugin):
         #     print(f"container_tokens={ParserHelper.make_value_visible(self.__container_tokens)};")
         _ = num_container_tokens
         if found_block_quote_token := self.__get_last_block_quote():
-            is_start_properly_scoped = False
-            if is_new_list_item:
-                is_start_properly_scoped = (
-                    found_block_quote_token == self.__container_tokens[-2]
-                )
-            else:
-                is_start_properly_scoped = (
-                    found_block_quote_token == self.__container_tokens[-1]
-                )
+            # is_start_properly_scoped = False
+            is_start_properly_scoped = (
+                (found_block_quote_token == self.__container_tokens[-2])
+                if is_new_list_item
+                else (found_block_quote_token == self.__container_tokens[-1])
+            )
             # if self.__debug_on:
             #     print(
             #         f"is_start_properly_scoped={is_start_properly_scoped};"

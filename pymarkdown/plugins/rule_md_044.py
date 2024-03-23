@@ -97,14 +97,14 @@ class RuleMd044(RulePlugin):
         ]
         after_found_index = found_index + len(required_capitalization)
 
-        is_character_before_match = False
-        if found_index > 0:
-            is_character_before_match = original_source[found_index - 1].isalnum()
-
-        is_character_after_match = False
-        if after_found_index < len(original_source):
-            is_character_after_match = original_source[after_found_index].isalnum()
-
+        is_character_before_match = (
+            original_source[found_index - 1].isalnum() if found_index > 0 else False
+        )
+        is_character_after_match = (
+            original_source[after_found_index].isalnum()
+            if after_found_index < len(original_source)
+            else False
+        )
         if not is_character_after_match and not is_character_before_match:
             assert len(original_found_text) == len(required_capitalization)
             if original_found_text != required_capitalization:

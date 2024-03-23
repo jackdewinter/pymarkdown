@@ -560,15 +560,16 @@ class TransformListBlock:
         POGGER.debug(f"adj->list_leading_space_length>>:{list_leading_space_length}:<<")
         POGGER.debug(f"list_start_content_length:{list_start_content_length}:<<")
 
-        if current_token.is_new_list_item:
-            pad_to_length = current_token.column_number - 1
-        else:
-            pad_to_length = (
+        pad_to_length = (
+            current_token.column_number - 1
+            if current_token.is_new_list_item
+            else (
                 containing_list_token.indent_level
                 - block_quote_leading_space_length
                 - list_leading_space_length
                 - list_start_content_length
             )
+        )
         POGGER.debug(f"pad_to_length:{pad_to_length}:<<")
         POGGER.debug(f"adj->starting_whitespace>>:{starting_whitespace}:<<")
         post_adjust_whitespace = starting_whitespace.ljust(pad_to_length, " ")

@@ -288,10 +288,10 @@ class ApplicationFileScanner:
         handle_output: ApplicationFileScannerOutputProtocol,
         handle_error: ApplicationFileScannerOutputProtocol,
     ) -> bool:
-        if did_list_files := only_list_files:
+        if only_list_files:
             LOGGER.info("Sending list of files that would have been scanned to stdout.")
             if files_to_scan:
                 handle_output("\n".join(files_to_scan))
             else:
                 handle_error("No matching files found.")
-        return did_list_files
+        return only_list_files

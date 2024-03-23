@@ -737,12 +737,11 @@ class TransformContainers:
                 + ParserHelper.make_value_visible(container_line)
                 + ":<"
             )
-            if tabbed_leading_space:
-                container_line = tabbed_leading_space + container_line
-            else:
-                container_line = (
-                    split_leading_spaces[last_container_token_index] + container_line
-                )
+            container_line = (
+                tabbed_leading_space + container_line
+                if tabbed_leading_space
+                else split_leading_spaces[last_container_token_index] + container_line
+            )
             POGGER.debug(
                 " -->container_line>:"
                 + ParserHelper.make_value_visible(container_line)

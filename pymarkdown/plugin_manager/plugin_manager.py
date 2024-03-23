@@ -213,11 +213,13 @@ class PluginManager:
     def __handle_argparse_subparser_list(
         self, args: argparse.Namespace
     ) -> ApplicationResult:
-        list_re = None
-        if args.list_filter:
-            list_re = re.compile(
+        list_re = (
+            re.compile(
                 "^" + args.list_filter.replace("*", ".*").replace("?", ".") + "$"
             )
+            if args.list_filter
+            else None
+        )
 
         show_rows: List[List[str]] = []
         ids = self.all_plugin_ids
@@ -1020,7 +1022,6 @@ class PluginManager:
         is_last_line_in_file: bool,
         was_newline_added_at_end_of_file: bool,
     ) -> None:
-        was_line_fixed = True
         if is_last_line_in_file:
             if self.__show_fix_debug:
                 print(
@@ -1045,6 +1046,7 @@ class PluginManager:
             #     line_to_write += "\n"
         else:
             line_to_write = line + "\n"
+            was_line_fixed = True
 
         if self.__show_fix_debug:
             replaced_line = line_to_write.replace("\n", "\\n").replace("\t", "\\t")

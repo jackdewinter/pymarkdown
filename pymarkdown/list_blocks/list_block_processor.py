@@ -515,10 +515,11 @@ class ListBlockProcessor:
         list_stack_token = cast(ListStackToken, parser_state.token_stack[ind])
         before_ws_length = list_stack_token.ws_before_marker
         leading_space_length = TabHelper.calculate_length(extracted_whitespace)
-        if list_stack_token.last_new_list_token:
-            requested_list_indent = list_stack_token.last_new_list_token.indent_level
-        else:
-            requested_list_indent = list_stack_token.indent_level
+        requested_list_indent = (
+            list_stack_token.last_new_list_token.indent_level
+            if list_stack_token.last_new_list_token
+            else list_stack_token.indent_level
+        )
 
         allow_list_continue = ListBlockProcessor.__can_list_continue(
             parser_state,
@@ -534,10 +535,10 @@ class ListBlockProcessor:
             parser_state.token_stack[-1].is_paragraph,
         )
         used_indent = None
-        was_paragraph_continuation = (
-            leading_space_length >= requested_list_indent and allow_list_continue
-        )
-        if was_paragraph_continuation:
+        if (
+            was_paragraph_continuation := leading_space_length >= requested_list_indent
+            and allow_list_continue
+        ):
             POGGER.debug("list-in-progress: was_paragraph_continuation")
             container_level_tokens: List[MarkdownToken] = []
             (
@@ -698,13 +699,12 @@ class ListBlockProcessor:
             parser_state, line_to_parse, start_index, extracted_whitespace
         )
 
-        was_paragraph_continuation = (
+        if was_paragraph_continuation := (
             parser_state.token_stack[-1].is_paragraph
             and leading_space_length >= requested_list_indent
             and allow_list_continue
             and not was_breakable_leaf_detected
-        )
-        if was_paragraph_continuation:
+        ):
             container_level_tokens: List[MarkdownToken] = []
             POGGER.debug(
                 "1>>line_to_parse>>$>>",
@@ -918,10 +918,10 @@ class ListBlockProcessor:
             assert leading_space is not None
             POGGER.debug("requested_list_indent($)", requested_list_indent)
             POGGER.debug("leading_space($)", leading_space)
-            removed_whitespace = leading_space[:requested_list_indent]
             padded_spaces = ParserHelper.repeat_string(
                 ParserHelper.space_character, remaining_indent
             )
+            removed_whitespace = leading_space[:requested_list_indent]
             if "\t" in original_line:
                 removed_whitespace = (
                     ListBlockProcessor.__adjust_line_for_list_in_process_with_tab(

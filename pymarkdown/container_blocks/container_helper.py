@@ -90,9 +90,11 @@ class ContainerHelper:
         did_reduce_list = ContainerHelper.__reduce_containers_if_required_bq_list(
             parser_state, position_marker, extracted_whitespace, x_tokens
         )
-        was_list_ended = False
-        if grab_bag.container_tokens and grab_bag.container_tokens[-1].is_end_token:
-            was_list_ended = grab_bag.container_tokens[-1].is_list_end
+        was_list_ended = (
+            grab_bag.container_tokens[-1].is_list_end
+            if grab_bag.container_tokens and grab_bag.container_tokens[-1].is_end_token
+            else False
+        )
 
         matching_start_token = cast(
             BlockQuoteMarkdownToken, first_new_token.start_markdown_token
@@ -120,10 +122,11 @@ class ContainerHelper:
         POGGER.debug("extra_end_data>>:$:<", first_new_token.extra_end_data)
         assert first_new_token.extra_end_data is None
 
-        was_paragraph_closed = False
-        if new_tokens and new_tokens[0].is_end_token:
-            was_paragraph_closed = new_tokens[0].is_paragraph_end
-
+        was_paragraph_closed = (
+            new_tokens[0].is_paragraph_end
+            if new_tokens and new_tokens[0].is_end_token
+            else False
+        )
         if did_reduce_list or was_list_ended or not was_paragraph_closed:
             first_new_token.set_extra_end_data(None)
         else:

@@ -88,11 +88,9 @@ class InlineTabifiedTextBlockHelper:
             current_line_source_text, 0
         )
         assert ex_ws is not None
-        if start_index == 0:
-            was_last_character_newline = True
-        else:
-            was_last_character_newline = source_text[start_index - 1] == "\n"
-
+        was_last_character_newline = (
+            True if start_index == 0 else source_text[start_index - 1] == "\n"
+        )
         if ex_ws and was_last_character_newline:
             new_start = ParserHelper.create_replace_with_nothing_marker(ex_ws)
             adj_current_line_source_text = current_line_source_text[
