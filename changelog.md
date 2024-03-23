@@ -12,7 +12,10 @@
 
 ### Changed
 
-- None
+- [Issue 1031](https://github.com/jackdewinter/pymarkdown/issues/1031)
+  - went through code base and used if/else expressions where possible
+- [Issue 1033](https://github.com/jackdewinter/pymarkdown/issues/1033)
+  - went through tests for Md007, add some extra tests to cover missed scenarios
 
 ## Version 0.9.18 - Date: 2024-03-18
 

@@ -501,6 +501,171 @@ scanTests = [
 """,
     ),
     pluginRuleTest(
+        "bad_all_indents",
+        source_file_contents=""" * bad indent 1
+    + bad indent 2
+       - bad indent 3
+""",
+        disable_rules="md004",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:2: MD007: Unordered list indentation [Expected: 0, Actual=1] (ul-indent)
+{temp_source_path}:2:5: MD007: Unordered list indentation [Expected: 2, Actual=4] (ul-indent)
+{temp_source_path}:3:8: MD007: Unordered list indentation [Expected: 4, Actual=7] (ul-indent)""",
+        fix_expected_file_contents="""* bad indent 1
+  + bad indent 2
+    - bad indent 3
+""",
+    ),
+    pluginRuleTest(
+        "bad_all_indents_a",
+        source_file_contents=""" * bad indent 1
+   + bad indent 2
+      - bad indent 3
+""",
+        disable_rules="md004",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:2: MD007: Unordered list indentation [Expected: 0, Actual=1] (ul-indent)
+{temp_source_path}:2:4: MD007: Unordered list indentation [Expected: 2, Actual=3] (ul-indent)
+{temp_source_path}:3:7: MD007: Unordered list indentation [Expected: 4, Actual=6] (ul-indent)""",
+        fix_expected_file_contents="""* bad indent 1
+  + bad indent 2
+    - bad indent 3
+""",
+    ),
+    pluginRuleTest(
+        "bad_first_indent_with_extra_lines",
+        source_file_contents="""* good indent 1
+  next line 1
+  + good indent 2
+    next line 2
+    - good indent 3
+      next line 3
+""",
+        disable_rules="md004",
+        scan_expected_return_code=0,
+    ),
+    pluginRuleTest(
+        "bad_all_indent_with_extra_lines",
+        source_file_contents=""" * bad indent 1
+   next line 1
+   + bad indent 2
+     next line 2
+      - bad indent 3
+        next line 3
+""",
+        disable_rules="md004",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:2: MD007: Unordered list indentation [Expected: 0, Actual=1] (ul-indent)
+{temp_source_path}:3:4: MD007: Unordered list indentation [Expected: 2, Actual=3] (ul-indent)
+{temp_source_path}:5:7: MD007: Unordered list indentation [Expected: 4, Actual=6] (ul-indent)""",
+        fix_expected_file_contents="""* bad indent 1
+  next line 1
+  + bad indent 2
+    next line 2
+    - bad indent 3
+      next line 3
+""",
+    ),
+    pluginRuleTest(
+        "bad_all_indent_with_extra_lines_and_blanks",
+        source_file_contents=""" * bad indent 1
+
+   next line 1
+   + bad indent 2
+
+     next line 2
+      - bad indent 3
+
+        next line 3
+""",
+        disable_rules="md004",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:2: MD007: Unordered list indentation [Expected: 0, Actual=1] (ul-indent)
+{temp_source_path}:4:4: MD007: Unordered list indentation [Expected: 2, Actual=3] (ul-indent)
+{temp_source_path}:7:7: MD007: Unordered list indentation [Expected: 4, Actual=6] (ul-indent)""",
+        fix_expected_file_contents="""* bad indent 1
+
+  next line 1
+  + bad indent 2
+
+    next line 2
+    - bad indent 3
+
+      next line 3
+""",
+    ),
+    pluginRuleTest(
+        "bad_all_indent_with_extra_lines_and_blanks_and_multiples",
+        source_file_contents=""" * bad indent 1.0
+
+   next line 1.0
+ * bad indent 1.1
+
+   next line 1.1
+   + bad indent 2.0
+
+     next line 2.0
+   + bad indent 2.1
+
+     next line 2.1
+      - bad indent 3.0
+
+        next line 3.0
+      - bad indent 3.1
+
+        next line 3.1
+   + bad indent 2.2
+
+     next line 2.2
+   + bad indent 2.3
+
+     next line 2.3
+ * bad indent 1.2
+
+   next line 1.2
+""",
+        disable_rules="md004",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:2: MD007: Unordered list indentation [Expected: 0, Actual=1] (ul-indent)
+{temp_source_path}:4:2: MD007: Unordered list indentation [Expected: 0, Actual=1] (ul-indent)
+{temp_source_path}:7:4: MD007: Unordered list indentation [Expected: 2, Actual=3] (ul-indent)
+{temp_source_path}:10:4: MD007: Unordered list indentation [Expected: 2, Actual=3] (ul-indent)
+{temp_source_path}:13:7: MD007: Unordered list indentation [Expected: 4, Actual=6] (ul-indent)
+{temp_source_path}:16:7: MD007: Unordered list indentation [Expected: 4, Actual=6] (ul-indent)
+{temp_source_path}:19:4: MD007: Unordered list indentation [Expected: 2, Actual=3] (ul-indent)
+{temp_source_path}:22:4: MD007: Unordered list indentation [Expected: 2, Actual=3] (ul-indent)
+{temp_source_path}:25:2: MD007: Unordered list indentation [Expected: 0, Actual=1] (ul-indent)
+""",
+        fix_expected_file_contents="""* bad indent 1.0
+
+  next line 1.0
+* bad indent 1.1
+
+  next line 1.1
+  + bad indent 2.0
+
+    next line 2.0
+  + bad indent 2.1
+
+    next line 2.1
+    - bad indent 3.0
+
+      next line 3.0
+    - bad indent 3.1
+
+      next line 3.1
+  + bad indent 2.2
+
+    next line 2.2
+  + bad indent 2.3
+
+    next line 2.3
+* bad indent 1.2
+
+  next line 1.2
+""",
+    ),
+    pluginRuleTest(
         "mix_md007_md004",
         source_file_contents=""" + first
    * second
