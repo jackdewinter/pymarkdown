@@ -617,6 +617,48 @@ scanTests = [
         source_file_name=f"{source_path}issue-189-mini.md",
     ),
     pluginRuleTest(
+        "xxxx",
+        source_file_contents=""">  *  Heading 1
+>\a
+>  *  Heading 2
+>\a
+""".replace(
+            "\a", " "
+        ),
+        disable_rules="md007,md009,md012,md030",
+        scan_expected_return_code=1,
+        # use_debug=True,
+        scan_expected_output="""{temp_source_path}:1:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+{temp_source_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+""",
+        fix_expected_file_contents="""> *  Heading 1
+>\a
+> *  Heading 2
+>\a
+""".replace(
+            "\a", " "
+        ),
+    ),
+    pluginRuleTest(
+        "xxxx1",
+        source_file_contents=""">  *  Heading 1
+>     fff
+>  *  Heading 2
+>     fff
+""",
+        disable_rules="md007,md009,md012,md030",
+        scan_expected_return_code=1,
+        # use_debug=True,
+        scan_expected_output="""{temp_source_path}:1:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+{temp_source_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+""",
+        fix_expected_file_contents="""> *  Heading 1
+>    fff
+> *  Heading 2
+>    fff
+""",
+    ),
+    pluginRuleTest(
         "mix_md027_md007",
         source_file_contents=""">  + first
 >     + second

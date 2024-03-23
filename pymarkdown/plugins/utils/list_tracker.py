@@ -46,17 +46,20 @@ class ListTracker:
         # Weird calculation.  A blank line terminates the previous line and is
         # blank line on its own... EXCEPT if it is not followed by an inline.
         list_stack_length = len(self.__list_stack)
+        x = True
         if self.__was_last_blank_line and not token.is_end_token:
             if not token.is_container and list_stack_length:
                 self.__line_count[list_stack_length] += 1
+                x = False
             self.__was_last_blank_line = False
         if token.is_blank_line:
             self.__was_last_blank_line = True
 
-        if list_stack_length:
+        if list_stack_length and x:
             self.__line_count[list_stack_length] += self.__count_newlines_in_token(
                 token
             )
+        x = False
 
     def register(self, token: MarkdownToken, register_value: int) -> None:
         """
@@ -114,6 +117,7 @@ class ListTracker:
             list_level
         ]
         self.__list_start_indices[list_level][token] = self.__line_count[list_level]
+        self.__was_last_blank_line = False
 
     def list_end(self) -> None:
         """

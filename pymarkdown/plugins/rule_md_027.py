@@ -601,11 +601,12 @@ class RuleMd027(RulePlugin):
                 for registered_token, adj in registration_map.items():
                     start, stop = self.__list_tracker.get_start_stop(registered_token)
                     for next_index in range(start, stop):
-                        split_leading_spaces[next_index] = (
-                            split_leading_spaces[next_index][:-adj]
-                            if adj > 0
-                            else split_leading_spaces[next_index] + (" " * -adj)
-                        )
+                        assert adj > 0
+                        split_leading_spaces[next_index] = split_leading_spaces[
+                            next_index
+                        ][:-adj]
+                        # else:
+                        #     split_leading_spaces[next_index] = split_leading_spaces[next_index] + (" " * -adj)
                 rebuilt_leading_spaces = "\n".join(split_leading_spaces)
                 if rebuilt_leading_spaces != list_token.leading_spaces:
                     self.register_fix_token_request(

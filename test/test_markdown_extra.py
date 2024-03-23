@@ -5519,6 +5519,127 @@ def test_extra_041x():
     """
 
     # Arrange
+    source_markdown = """>  *  Heading 1
+>     fff
+>  *  Heading 2
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> ]",
+        "[ulist(1,4):*::6: :    \n]",
+        "[para(1,7):\n]",
+        "[text(1,7):Heading 1\nfff::\n]",
+        "[end-para:::True]",
+        "[li(3,4):6: :]",
+        "[para(3,7):]",
+        "[text(3,7):Heading 2:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>Heading 1
+fff</li>
+<li>Heading 2</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_041a():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """>  *  Heading 1
+>     fff
+>  *  Heading 2
+>     fff
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> ]",
+        "[ulist(1,4):*::6: :    \n    \n]",
+        "[para(1,7):\n]",
+        "[text(1,7):Heading 1\nfff::\n]",
+        "[end-para:::True]",
+        "[li(3,4):6: :]",
+        "[para(3,7):\n]",
+        "[text(3,7):Heading 2\nfff::\n]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>Heading 1
+fff</li>
+<li>Heading 2
+fff</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_041b():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """>  *  Heading 1
+>\a
+>  *  Heading 2
+>\a
+""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> ]",
+        "[ulist(1,4):*::6: :\n\n]",
+        "[para(1,7):]",
+        "[text(1,7):Heading 1:]",
+        "[end-para:::True]",
+        "[BLANK(2,3):]",
+        "[li(3,4):6: :]",
+        "[para(3,7):]",
+        "[text(3,7):Heading 2:]",
+        "[end-para:::True]",
+        "[BLANK(4,3):]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<p>Heading 1</p>
+</li>
+<li>
+<p>Heading 2</p>
+</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_042x():
+    """
+    TBD
+    """
+
+    # Arrange
     source_markdown = """Consider this code:
 
 \tcode block here
@@ -5542,7 +5663,7 @@ def test_extra_041x():
 
 
 @pytest.mark.gfm
-def test_extra_041a():
+def test_extra_042a():
     """
     TBD
     """
