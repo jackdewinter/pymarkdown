@@ -409,12 +409,15 @@ class ContainerBlockNonLeafProcessor:
                 )
         else:
             is_paragraph_continuation = (
-                parser_state.token_stack and parser_state.token_stack[-1].is_paragraph
+                bool(parser_state.token_stack)
+                and parser_state.token_stack[-1].is_paragraph
             )
             list_index = parser_state.find_last_list_block_on_stack()
             block_index = parser_state.find_last_block_quote_on_stack()
-            if is_paragraph_continuation and block_index > list_index:
-                grab_bag.was_paragraph_continuation = True
+            assert not grab_bag.was_paragraph_continuation
+            grab_bag.was_paragraph_continuation = (
+                is_paragraph_continuation and block_index > list_index
+            )
 
         grab_bag.can_continue = not grab_bag.requeue_line_info
         return did_process

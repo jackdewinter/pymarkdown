@@ -1097,11 +1097,11 @@ class InlineHandlerHelper:
 
         if ParserHelper.newline_character in str(current_token):
             POGGER.debug(">>para_owner>>$<<", para_owner)
-            split_paragraph_lines: Optional[List[str]] = None
-            if para_owner:
-                split_paragraph_lines = para_owner.extracted_whitespace.split(
-                    ParserHelper.newline_character
-                )
+            split_paragraph_lines: Optional[List[str]] = (
+                para_owner.extracted_whitespace.split(ParserHelper.newline_character)
+                if para_owner
+                else None
+            )
 
             reference_token = cast(ReferenceMarkdownToken, current_token)
             POGGER.debug(">>current_token.label_type>>$<<", reference_token.label_type)

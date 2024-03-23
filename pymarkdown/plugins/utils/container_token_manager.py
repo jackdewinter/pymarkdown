@@ -22,7 +22,6 @@ class ContainerTokenManager:
         self.bq_line_index: Dict[int, int] = {}
         self.last_leaf_token: Optional[MarkdownToken] = None
         self.list_adjust_map: Dict[int, int] = {}
-        self.__xx = False
 
     def clear(self) -> None:
         """
@@ -31,7 +30,6 @@ class ContainerTokenManager:
         self.container_token_stack = []
         self.bq_line_index = {}
         self.last_leaf_token = None
-        self.__xx = False
 
     @classmethod
     def __is_simple_delta(cls, token: MarkdownToken) -> bool:
@@ -78,13 +76,10 @@ class ContainerTokenManager:
             bq_delta = 1
         elif self.__is_remember_leaf_token(token):
             self.last_leaf_token = token
-            if token.is_setext_heading:
-                self.__xx = True
         elif self.__is_clear_leaf_token(token):
             self.last_leaf_token = None
             if token.is_setext_heading_end or token.is_fenced_code_block_end:
                 bq_delta = 1
-                self.__xx = False
         elif token.is_fenced_code_block:
             bq_delta = 1
             self.last_leaf_token = token

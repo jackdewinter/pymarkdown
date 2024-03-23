@@ -64,9 +64,11 @@ class ListBlockStartsHelper:
             or skip_whitespace_check
         ):
             assert extracted_whitespace is not None
-            adj_extracted_whitespace = extracted_whitespace
-            if parent_indent:
-                adj_extracted_whitespace = extracted_whitespace[parent_indent:]
+            adj_extracted_whitespace = (
+                extracted_whitespace[parent_indent:]
+                if parent_indent
+                else extracted_whitespace
+            )
             is_start = ListBlockStartsHelper.__is_start_ulist(
                 line_to_parse, start_index, adj_extracted_whitespace
             )
@@ -321,12 +323,10 @@ class ListBlockStartsHelper:
     def __is_start_ulist(
         line_to_parse: str, start_index: int, extracted_whitespace: Optional[str]
     ) -> bool:
-        is_start = ParserHelper.is_character_at_index_one_of(
-            line_to_parse, start_index, ListBlockStartsHelper.__ulist_start_characters
-        )
-
         # Thematic breaks have precedence, so stop a list start if we find one.
-        if is_start:
+        if is_start := ParserHelper.is_character_at_index_one_of(
+            line_to_parse, start_index, ListBlockStartsHelper.__ulist_start_characters
+        ):
             is_break, _ = ThematicLeafBlockProcessor.is_thematic_break(
                 line_to_parse, start_index, extracted_whitespace
             )
@@ -337,10 +337,9 @@ class ListBlockStartsHelper:
     def __is_start_olist(
         line_to_parse: str, start_index: int
     ) -> Tuple[bool, Optional[int], Optional[int], Optional[bool]]:
-        is_start = ParserHelper.is_character_at_index_one_of(
+        if is_start := ParserHelper.is_character_at_index_one_of(
             line_to_parse, start_index, string.digits
-        )
-        if is_start:
+        ):
             index, olist_index_number = ParserHelper.collect_while_one_of_characters(
                 line_to_parse, start_index, string.digits
             )
@@ -415,9 +414,10 @@ class ListBlockStartsHelper:
                 )
         POGGER.debug("is_first_item_in_list>>$", is_first_item_in_list)
 
-        is_sub_list = False
         if parser_state.token_stack[-2].is_list:
             list_token = cast(ListStackToken, parser_state.token_stack[-2])
             is_sub_list = start_index >= list_token.indent_level
+        else:
+            is_sub_list = False
 
         return is_first_item_in_list, is_sub_list

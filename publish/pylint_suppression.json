@@ -430,8 +430,7 @@
         },
         "pymarkdown/tokens/reference_markdown_token.py": {
             "too-many-instance-attributes": 1,
-            "too-many-arguments": 1,
-            "protected-access": 1
+            "too-many-arguments": 1
         },
         "pymarkdown/tokens/setext_heading_markdown_token.py": {
             "too-many-arguments": 1,
@@ -504,7 +503,7 @@
         "too-many-locals": 41,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 2,
-        "protected-access": 26,
+        "protected-access": 25,
         "deprecated-decorator": 3,
         "broad-exception-caught": 3
     }

@@ -708,7 +708,6 @@ class BlockQuoteCountHelper:
             conditional_2,
             conditional_3,
         )
-        force_list_continuation = False
         if conditional_1 and conditional_2 and conditional_3:
             (
                 stack_hard_limit,
@@ -723,6 +722,9 @@ class BlockQuoteCountHelper:
                 stack_decrease_needed,
                 block_quote_data,
             )
+        else:
+            force_list_continuation = False
+
         POGGER.debug(
             "<<__calculate_stack_hard_limit<<$,$",
             stack_hard_limit,

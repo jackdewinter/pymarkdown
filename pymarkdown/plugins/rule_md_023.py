@@ -58,12 +58,13 @@ class RuleMd023(RulePlugin):
         self.__last_skipped_text_token = None
 
     def __fix_adjustments(self, ex_ws: str, ind: int = 0) -> str:
-        atx_container_token = None
         if self.__container_manager.container_token_stack:
             stack_length = len(self.__container_manager.container_token_stack)
             atx_container_token = self.__container_manager.container_token_stack[
                 stack_length - 1
             ]
+        else:
+            atx_container_token = None
 
         fixed_whitespace = ""
         if atx_container_token is not None:

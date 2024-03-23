@@ -60,10 +60,9 @@ class RuleMd024(RulePlugin):
         self.__start_token = None
         self.__hash_count = -1
         self.__last_hash_count = 0
-        if self.__siblings_only:
-            self.__heading_content_map = [{}, {}, {}, {}, {}, {}]
-        else:
-            self.__heading_content_map = [{}]
+        self.__heading_content_map = (
+            [{}, {}, {}, {}, {}, {}] if self.__siblings_only else [{}]
+        )
 
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """

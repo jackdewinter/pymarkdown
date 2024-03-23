@@ -190,14 +190,12 @@ class LeafBlockProcessorParagraph:
             POGGER.debug("checked_whitespace_for_tab=:$:", checked_whitespace_for_tab)
             POGGER.debug("is_block_quote_container=:$:", is_block_quote_container)
 
-            corrected_index = -1
-            ends_without_modification = original_line.endswith(text_to_parse)
-            POGGER.debug("ends_without_modification=:$:", ends_without_modification)
-            if ends_without_modification:
+            if original_line.endswith(text_to_parse):
                 corrected_index = len(original_line) - len(text_to_parse)
                 corrected_tab_text = original_line[corrected_index:]
                 assert corrected_tab_text == text_to_parse
             else:
+                corrected_index = -1
                 POGGER.debug("original_line=:$:", original_line)
                 POGGER.debug("text_to_parse=:$:", text_to_parse)
                 initial_offset = (

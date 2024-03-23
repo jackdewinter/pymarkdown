@@ -71,24 +71,14 @@ class TransformBlockQuote:
             f">bquote>next_token>{ParserHelper.make_value_visible(next_token)}"
         )
 
-        if (
-            next_token
+        selected_leading_sequence = (
+            ""
+            if next_token
             and next_token.is_block_quote_start
             and current_token.line_number == next_token.line_number
-        ):
-            POGGER.debug(">bquote> will be done by following bquote>")
-            selected_leading_sequence = ""
-        else:
-            POGGER.debug(f">bquote>bleading_spaces>{new_instance.bleading_spaces}<")
-            POGGER.debug(
-                f">bquote>tabbed_bleading_spaces>{ParserHelper.make_value_visible(new_instance.tabbed_bleading_spaces)}"
-            )
-            selected_leading_sequence = (
-                new_instance.calculate_next_bleading_space_part()
-            )
-            POGGER.debug(
-                f">bquote>selected_leading_sequence>{selected_leading_sequence}<"
-            )
+            else new_instance.calculate_next_bleading_space_part()
+        )
+        POGGER.debug(f">bquote>selected_leading_sequence>{selected_leading_sequence}<")
 
         POGGER.debug(
             f">bquote>already_existing_whitespace>:{already_existing_whitespace}:<"

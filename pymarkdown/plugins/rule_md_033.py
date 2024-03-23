@@ -93,7 +93,6 @@ class RuleMd033(RulePlugin):
             tag_text = new_tag_text
         extra_data = f"Element: {tag_text}"
 
-        is_first_image_element = False
         if (
             self.__is_first_html_block
             and self.__allow_first_image_element
@@ -110,6 +109,8 @@ class RuleMd033(RulePlugin):
                     full_tag_text.startswith("<img")
                     and end_of_image_index == len(full_tag_text) - 1
                 )
+        else:
+            is_first_image_element = False
 
         if not is_first_image_element and tag_text not in self.__allowed_elements:
             self.report_next_token_error(

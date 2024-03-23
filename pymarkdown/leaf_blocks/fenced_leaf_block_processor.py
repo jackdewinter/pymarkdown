@@ -177,11 +177,10 @@ class FencedLeafBlockProcessor:
     ) -> Tuple[bool, str]:
         reconstructed_line = position_marker.text_to_parse
         was_indented = not parser_state.token_stack[-2].is_document
-        indent_prefix: Optional[str] = " " * position_marker.index_indent
-        is_bq_start = False
-        if original_line.startswith(">"):
-            is_bq_start = True
-            indent_prefix = None
+        if is_bq_start := original_line.startswith(">"):
+            indent_prefix: Optional[str] = None
+        else:
+            indent_prefix = " " * position_marker.index_indent
         (
             _,
             adj_original_index,
@@ -320,9 +319,11 @@ class FencedLeafBlockProcessor:
         assert extracted_whitespace is not None
 
         was_indented = not parser_state.token_stack[-2].is_document
-        indent_prefix: Optional[str] = " " * position_marker.index_indent
-        if original_line.startswith(">"):
-            indent_prefix = None
+        indent_prefix: Optional[str] = (
+            None
+            if original_line.startswith(">")
+            else " " * position_marker.index_indent
+        )
 
         _, adj_original_index, split_tab = TabHelper.find_tabified_string(
             original_line,
@@ -406,10 +407,11 @@ class FencedLeafBlockProcessor:
                 parser_state.token_stack[-1].matching_markdown_token,
             )
 
-            removed_char_length = None
-            if adjusted_corrected_prefix is not None:
-                removed_char_length = len(adjusted_corrected_prefix)
-
+            removed_char_length = (
+                len(adjusted_corrected_prefix)
+                if adjusted_corrected_prefix is not None
+                else None
+            )
             LeafBlockHelper.correct_for_leaf_block_start_in_list(
                 parser_state,
                 position_marker.index_indent,
@@ -762,14 +764,13 @@ class FencedLeafBlockProcessor:
         )
         new_tokens.append(new_token)
         assert extracted_whitespace is not None
-        if split_tab_whitespace is not None:
-            whitespace_start_count += TabHelper.calculate_length(
-                split_tab_whitespace, 0
-            )
-        else:
-            whitespace_start_count += TabHelper.calculate_length(
+        whitespace_start_count += (
+            TabHelper.calculate_length(split_tab_whitespace, 0)
+            if split_tab_whitespace is not None
+            else TabHelper.calculate_length(
                 extracted_whitespace, corrected_prefix_length
             )
+        )
         parser_state.token_stack.append(
             FencedCodeBlockStackToken(
                 code_fence_character=line_to_parse[position_marker.index_number],
@@ -1059,12 +1060,10 @@ class FencedLeafBlockProcessor:
         position_marker: PositionMarker,
         was_indented: bool,
     ) -> Tuple[str, int, bool, Optional[str]]:
-        if original_line.startswith(">"):
-            is_bq_start = True
+        if is_bq_start := original_line.startswith(">"):
             indent_prefix = None
         else:
             indent_prefix = " " * position_marker.index_indent
-            is_bq_start = False
         (
             adj_original,
             adj_original_index,

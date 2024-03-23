@@ -142,13 +142,14 @@ class RuleMd013(RulePlugin):
 
         line_length = len(line)
         compare_length = self.__line_length
-        is_actually_longer = False
         if line_length > self.__minimum_line_length:
             is_actually_longer, compare_length = self.__is_really_longer(
                 line_length, compare_length
             )
+        else:
+            is_actually_longer = False
         if is_actually_longer:
-            trigger_rule = False
+            # trigger_rule = False
             if self.__strict_mode:
                 trigger_rule = True
             else:
@@ -156,11 +157,11 @@ class RuleMd013(RulePlugin):
                     line, compare_length
                 )
                 # print("next_index=" + str(next_space_index))
-
-                if self.__stern_mode:
-                    trigger_rule = line_length == next_space_index
-                else:
-                    trigger_rule = line_length != next_space_index
+                trigger_rule = (
+                    line_length == next_space_index
+                    if self.__stern_mode
+                    else line_length != next_space_index
+                )
 
             if trigger_rule:
                 extra_error_information = (

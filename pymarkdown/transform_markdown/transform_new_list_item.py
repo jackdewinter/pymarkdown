@@ -104,12 +104,12 @@ class TransformNewListItem:
         )
 
         POGGER.debug(f"rnli->start_sequence>:{start_sequence}:")
-        if next_token.is_blank_line:
-            start_sequence = TransformNewListItem.__rehydrate_next_list_item_blank_line(
+        start_sequence = (
+            TransformNewListItem.__rehydrate_next_list_item_blank_line(
                 start_sequence, current_list_token, next_token
             )
-        else:
-            start_sequence = (
+            if next_token.is_blank_line
+            else (
                 TransformNewListItem.__rehydrate_next_list_item_not_blank_line(
                     context,
                     start_sequence,
@@ -119,6 +119,7 @@ class TransformNewListItem:
                     next_token,
                 )
             )
+        )
         POGGER.debug(f"rnli->start_sequence>:{start_sequence}:")
 
         return start_sequence

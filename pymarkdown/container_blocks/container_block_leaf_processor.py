@@ -572,9 +572,11 @@ class ContainerBlockLeafProcessor:
                 ListStartMarkdownToken,
                 parser_state.token_stack[last_list_index].matching_markdown_token,
             )
-            calc_indent_level = list_token.indent_level
-            if grab_bag.text_removed_by_container:
-                calc_indent_level -= len(grab_bag.text_removed_by_container)
+            calc_indent_level = (
+                list_token.indent_level - len(grab_bag.text_removed_by_container)
+                if grab_bag.text_removed_by_container
+                else list_token.indent_level
+            )
             if len(extracted_leaf_whitespace) > calc_indent_level:
                 extracted_leaf_whitespace = extracted_leaf_whitespace[
                     :calc_indent_level
@@ -928,14 +930,14 @@ class ContainerBlockLeafProcessor:
         # TODO THIS IS A KLUDGE
         #
         # As soon as we go past here, if we are going to get rid of the
-        keep_processing = True
-        new_indent_level = None
         if (
             last_list_index > 0
             and text_removed_by_container is None
             and len(parser_state.token_stack) - 1 == current_stack_index
         ):
             keep_processing = total_ws != current_indent_level
+        else:
+            keep_processing = True
 
         if keep_processing:
             last_list_index = 0
@@ -952,6 +954,9 @@ class ContainerBlockLeafProcessor:
                 text_removed_by_container,
             )
             keep_processing = new_indent_level is not None
+        else:
+            new_indent_level = None
+
         return keep_processing, last_list_index, new_indent_level, non_last_block_index
 
     # pylint: enable=too-many-arguments

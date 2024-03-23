@@ -224,22 +224,21 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
         """
         return self.__after_title_whitespace
 
-    # pylint: disable=protected-access
     def __compose_extra_data_field(self, token_name: str) -> Tuple[str, str]:
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
-        extra_data = self.simple_extra_data
-        if token_name == MarkdownToken._token_inline_image:
-            extra_data = f"{extra_data}{MarkdownToken.extra_data_separator}"
+        extra_data = (
+            f"{self.simple_extra_data}{MarkdownToken.extra_data_separator}"
+            if token_name == MarkdownToken._token_inline_image
+            else self.simple_extra_data
+        )
 
         # Purposefully split this way to accommodate the extra data
         assert self.__label_type is not None
         part_1, part_2 = self.__build_extra_data(extra_data, self.__label_type)
         self._set_extra_data(f"{part_1}{part_2}")
         return part_1, part_2
-
-    # pylint: enable=protected-access
 
     @override
     def _modify_token(self, field_name: str, field_value: Union[str, int]) -> bool:
