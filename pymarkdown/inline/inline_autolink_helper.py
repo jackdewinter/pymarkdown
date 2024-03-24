@@ -166,10 +166,11 @@ class InlineAutoLinkHelper:
             InlineAutoLinkHelper.angle_bracket_start not in text_to_parse
             and text_to_parse[0] in string.ascii_letters
         ):
-            path_index, uri_scheme = ParserHelper.collect_while_one_of_characters(
-                text_to_parse, 1, InlineAutoLinkHelper.__valid_scheme_characters
+            path_index, uri_scheme = (
+                ParserHelper.collect_while_one_of_characters_verified(
+                    text_to_parse, 1, InlineAutoLinkHelper.__valid_scheme_characters
+                )
             )
-            assert path_index is not None
             uri_scheme, text_to_parse_size = f"{text_to_parse[0]}{uri_scheme}", len(
                 text_to_parse
             )

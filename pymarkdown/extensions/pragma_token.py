@@ -152,20 +152,18 @@ class PragmaExtension(ParserExtension):
             actual_line_number = -next_line_number
 
         line_after_prefix = pragma_lines[next_line_number][prefix_length:]
-        after_whitespace_index, _ = ParserHelper.extract_spaces(line_after_prefix, 0)
-        assert after_whitespace_index is not None
-        new_start_index = after_whitespace_index + len(PragmaToken.pragma_title)
-        after_whitespace_index, _ = ParserHelper.extract_spaces(
-            line_after_prefix, new_start_index
+        after_whitespace_index, _ = ParserHelper.extract_spaces_verified(
+            line_after_prefix, 0
+        )
+        after_whitespace_index, _ = ParserHelper.extract_spaces_verified(
+            line_after_prefix, after_whitespace_index + len(PragmaToken.pragma_title)
         )
         command_data = line_after_prefix[
             after_whitespace_index : -len(PragmaToken.pragma_suffix)
         ]
-        after_command_index, command = ParserHelper.extract_until_spaces(
+        after_command_index, command = ParserHelper.extract_until_spaces_verified(
             command_data, 0
         )
-        assert command is not None
-        assert after_command_index is not None
         command = command.lower()
         if not command:
             log_pragma_failure(
@@ -251,10 +249,9 @@ class PragmaExtension(ParserExtension):
         actual_line_number: int,
         command: str,
     ) -> Tuple[bool, int, Optional[int]]:
-        after_space_index, _ = ParserHelper.extract_spaces(
+        after_space_index, _ = ParserHelper.extract_spaces_verified(
             command_data, after_command_index
         )
-        assert after_space_index is not None
         if after_space_index == len(command_data):
             log_pragma_failure(
                 scan_file,
@@ -262,11 +259,10 @@ class PragmaExtension(ParserExtension):
                 f"Inline configuration command '{command}' was not followed by a count and a list of plugin ids to temporarily disable.",
             )
             return False, -1, None
-        after_num_index, extracted_number = ParserHelper.extract_until_spaces(
+        after_num_index, extracted_number = ParserHelper.extract_until_spaces_verified(
             command_data, after_space_index
         )
 
-        assert extracted_number is not None
         try:
             count_value = int(extracted_number)
         except ValueError:
@@ -279,8 +275,7 @@ class PragmaExtension(ParserExtension):
             )
             return False, -1, None
 
-        assert after_num_index is not None
-        after_number_index, _ = ParserHelper.extract_spaces(
+        after_number_index, _ = ParserHelper.extract_spaces_verified(
             command_data, after_num_index
         )
         if after_number_index == len(command_data):
@@ -290,7 +285,6 @@ class PragmaExtension(ParserExtension):
                 f"Inline configuration command '{command}' and its count were not followed by a list of plugin ids to temporarily disable.",
             )
             return False, -1, None
-        assert after_number_index is not None
         return True, after_number_index, count_value
 
     # pylint: enable=too-many-arguments

@@ -32,7 +32,7 @@ class ThematicLeafBlockProcessor:
     def is_thematic_break(
         line_to_parse: str,
         start_index: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         skip_whitespace_check: bool = False,
         whitespace_allowed_between_characters: bool = True,
     ) -> Tuple[Optional[str], Optional[int]]:
@@ -40,7 +40,6 @@ class ThematicLeafBlockProcessor:
         Determine whether or not we have a thematic break.
         """
 
-        assert extracted_whitespace is not None
         thematic_break_character, end_of_break_index = None, None
         is_thematic_character = ParserHelper.is_character_at_index_one_of(
             line_to_parse,
@@ -88,7 +87,7 @@ class ThematicLeafBlockProcessor:
     def parse_thematic_break(
         parser_state: ParserState,
         position_marker: PositionMarker,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         block_quote_data: BlockQuoteData,
         original_line: str,
         grab_bag: ContainerGrabBag,
@@ -98,7 +97,6 @@ class ThematicLeafBlockProcessor:
         """
 
         new_tokens: List[MarkdownToken] = []
-
         start_char, index = ThematicLeafBlockProcessor.is_thematic_break(
             position_marker.text_to_parse,
             position_marker.index_number,
@@ -135,15 +133,16 @@ class ThematicLeafBlockProcessor:
                     split_tab,
                     split_tab_with_block_quote_suffix,
                     extra_whitespace_prefix,
-                    extracted_whitespace,
+                    new_extracted_whitespace,
                     _,
                 ) = TabHelper.parse_thematic_break_with_tab(
                     original_line, token_text, extracted_whitespace
                 )
+                assert new_extracted_whitespace is not None
+                extracted_whitespace = new_extracted_whitespace
                 # POGGER.debug("extra_whitespace_prefix>>:$:<", extra_whitespace_prefix)
                 # POGGER.debug("extracted_whitespace>>:$:<", extracted_whitespace)
 
-            assert extracted_whitespace is not None
             ThematicLeafBlockProcessor.__perform_adjusts(
                 parser_state,
                 position_marker,

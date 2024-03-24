@@ -221,14 +221,11 @@ class InlineLineEndHelper:
 
             if tabified_remaining_line is not None:
                 number_collected_characters, start_index = (
-                    ParserHelper.collect_backwards_while_character(
+                    ParserHelper.collect_backwards_while_character_verified(
                         tabified_remaining_line, len(tabified_remaining_line), " "
                     )
                 )
-                assert (
-                    number_collected_characters is not None
-                    and number_collected_characters >= 2
-                )
+                assert number_collected_characters >= 2
                 tabified_remaining_line = tabified_remaining_line[:start_index]
         else:
             POGGER.debug(">>normal end")

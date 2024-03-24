@@ -88,9 +88,7 @@ class ListBlockPreListHelper:
         (
             after_marker_ws_index,
             after_marker_whitespace,
-        ) = ParserHelper.extract_spaces(line_to_parse, start_index + 1)
-        assert after_marker_ws_index is not None
-        assert after_marker_whitespace is not None
+        ) = ParserHelper.extract_spaces_verified(line_to_parse, start_index + 1)
         assert extracted_whitespace is not None
         ws_after_marker, ws_before_marker, line_to_parse_size = (
             TabHelper.calculate_length(

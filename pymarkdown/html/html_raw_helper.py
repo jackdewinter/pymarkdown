@@ -124,10 +124,9 @@ class HtmlRawHelper:
         token_to_use: Optional[Union[TextMarkdownToken, RawHtmlMarkdownToken]] = None
         assert inline_request.parse_properties is not None
         if was_open and inline_request.parse_properties.is_disallow_raw_html_enabled:
-            _, tag_name = ParserHelper.collect_until_one_of_characters(
+            _, tag_name = ParserHelper.collect_until_one_of_characters_verified(
                 valid_raw_html, 0, " /"
             )
-            assert tag_name is not None
             assert inline_request.parse_properties.disallow_raw_html is not None
             if inline_request.parse_properties.disallow_raw_html.is_html_tag_disallowed(
                 tag_name
@@ -157,10 +156,13 @@ class HtmlRawHelper:
             HtmlRawHelper.__parse_raw_tag_name(text_to_parse, 0),
         )
         if tag_name:
-            parse_index, extracted_whitespace = ParserHelper.extract_ascii_whitespace(
-                text_to_parse, len(tag_name)
+            parse_index: Optional[int] = None
+            extracted_whitespace: Optional[str] = None
+            parse_index, extracted_whitespace = (
+                ParserHelper.extract_ascii_whitespace_verified(
+                    text_to_parse, len(tag_name)
+                )
             )
-            assert parse_index is not None
             while extracted_whitespace and ParserHelper.is_character_at_index_one_of(
                 text_to_parse,
                 parse_index,
@@ -196,11 +198,10 @@ class HtmlRawHelper:
             text_to_parse, 0, HtmlRawHelper.__html_tag_start
         ):
             if tag_name := HtmlRawHelper.__parse_raw_tag_name(text_to_parse, 1):
-                parse_index: Optional[int] = len(tag_name)
-                assert parse_index is not None
+                parse_index: int = len(tag_name)
                 text_to_parse_size = len(text_to_parse)
                 if parse_index != text_to_parse_size:
-                    parse_index, _ = ParserHelper.extract_spaces(
+                    parse_index, _ = ParserHelper.extract_spaces_verified(
                         text_to_parse, parse_index
                     )
                 if parse_index == text_to_parse_size:
@@ -254,10 +255,9 @@ class HtmlRawHelper:
             (
                 parse_index,
                 declaration_name,
-            ) = ParserHelper.collect_while_one_of_characters(
+            ) = ParserHelper.collect_while_one_of_characters_verified(
                 text_to_parse, 1, HtmlRawHelper.__html_block_4_continued_start
             )
-            assert parse_index is not None
             if declaration_name:
                 whitespace_count, _ = ParserHelper.collect_while_character(
                     text_to_parse,
@@ -291,14 +291,12 @@ class HtmlRawHelper:
         """
         Handle the parsing of the attributes for an open tag.
         """
-        parse_index, _ = ParserHelper.collect_while_one_of_characters(
+        parse_index, _ = ParserHelper.collect_while_one_of_characters_verified(
             text_to_parse, start_index, HtmlRawHelper.__tag_attribute_name_characters
         )
-        assert parse_index is not None
-        end_name_index, extracted_whitespace = ParserHelper.extract_ascii_whitespace(
-            text_to_parse, parse_index
+        end_name_index, extracted_whitespace = (
+            ParserHelper.extract_ascii_whitespace_verified(text_to_parse, parse_index)
         )
-        assert end_name_index is not None
         if ParserHelper.is_character_at_index(
             text_to_parse,
             end_name_index,
@@ -307,20 +305,20 @@ class HtmlRawHelper:
             (
                 value_start_index,
                 _,
-            ) = ParserHelper.extract_ascii_whitespace(text_to_parse, end_name_index + 1)
-            assert value_start_index is not None
+            ) = ParserHelper.extract_ascii_whitespace_verified(
+                text_to_parse, end_name_index + 1
+            )
             value_end_index: Optional[int] = None
             if ParserHelper.is_character_at_index_one_of(
                 text_to_parse,
                 value_start_index,
                 HtmlRawHelper.__html_attribute_value_single,
             ):
-                value_end_index, _ = ParserHelper.collect_until_character(
+                value_end_index, _ = ParserHelper.collect_until_character_verified(
                     text_to_parse,
                     value_start_index + 1,
                     HtmlRawHelper.__html_attribute_value_single,
                 )
-                assert value_end_index is not None
                 if not ParserHelper.is_character_at_index(
                     text_to_parse,
                     value_end_index,
@@ -333,12 +331,11 @@ class HtmlRawHelper:
                 value_start_index,
                 HtmlRawHelper.__html_attribute_value_double,
             ):
-                value_end_index, _ = ParserHelper.collect_until_character(
+                value_end_index, _ = ParserHelper.collect_until_character_verified(
                     text_to_parse,
                     value_start_index + 1,
                     HtmlRawHelper.__html_attribute_value_double,
                 )
-                assert value_end_index is not None
                 if not ParserHelper.is_character_at_index(
                     text_to_parse,
                     value_end_index,
@@ -347,15 +344,18 @@ class HtmlRawHelper:
                     return None, None
                 value_end_index += 1
             else:
-                value_end_index, _ = ParserHelper.collect_until_one_of_characters(
-                    text_to_parse,
-                    value_start_index,
-                    HtmlRawHelper.__unquoted_attribute_value_stop,
+                value_end_index, _ = (
+                    ParserHelper.collect_until_one_of_characters_verified(
+                        text_to_parse,
+                        value_start_index,
+                        HtmlRawHelper.__unquoted_attribute_value_stop,
+                    )
                 )
-            assert value_end_index is not None
             (
                 end_name_index,
                 extracted_whitespace,
-            ) = ParserHelper.extract_ascii_whitespace(text_to_parse, value_end_index)
+            ) = ParserHelper.extract_ascii_whitespace_verified(
+                text_to_parse, value_end_index
+            )
 
         return end_name_index, extracted_whitespace

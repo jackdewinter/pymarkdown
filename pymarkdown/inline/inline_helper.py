@@ -51,17 +51,15 @@ class InlineHelper:
             new_index,
             source_text[new_index:],
         )
-        next_index, data = ParserHelper.collect_until_one_of_characters(
+        next_index, data = ParserHelper.collect_until_one_of_characters_verified(
             source_text, new_index, break_characters
         )
-        assert data is not None
         extracted_parts: List[str] = [data]
         POGGER.debug(
             ">>next_index1>>$>>data>>$>>",
             next_index,
             data,
         )
-        assert next_index is not None
         while next_index < len(source_text) and (
             source_text[next_index] != close_character or nesting_level != 0
         ):
@@ -78,7 +76,6 @@ class InlineHelper:
                 close_character,
                 break_characters,
             )
-            assert next_index is not None
             POGGER.debug(
                 "back>>next_index>>$>>data>>$>>",
                 next_index,
@@ -89,7 +86,6 @@ class InlineHelper:
             next_index,
             data,
         )
-        assert next_index is not None
         if (
             ParserHelper.is_character_at_index(source_text, next_index, close_character)
             and nesting_level == 0
@@ -141,11 +137,9 @@ class InlineHelper:
             extracted_parts.append(close_character)
             next_index += 1
             nesting_level -= 1
-        nexter_index, new_data = ParserHelper.collect_until_one_of_characters(
+        nexter_index, new_data = ParserHelper.collect_until_one_of_characters_verified(
             source_text, next_index, break_characters
         )
-        assert new_data is not None
-        assert nexter_index is not None
         extracted_parts.append(new_data)
         return nexter_index, nesting_level
 
@@ -256,7 +250,6 @@ class InlineHelper:
                 adj_tabified_text[tabified_start_index:],
             )
 
-        assert tabified_start_index is not None
         return tabified_start_index
 
     # pylint: enable=too-many-arguments
@@ -302,7 +295,7 @@ class InlineHelper:
         current_line_tabified_text: str,
         source_text_word: str,
         find_word_count: int,
-        source_text_spaces: Optional[str],
+        source_text_spaces: str,
     ) -> int:
         """
         Calculate the location of a given word.

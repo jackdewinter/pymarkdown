@@ -178,8 +178,7 @@ class ContainerBlockNestedProcessor:
         POGGER.debug("check next container_start>")
         POGGER.debug("check next container_start>stack>>$", parser_state.token_stack)
 
-        _, ex_ws_test = ParserHelper.extract_spaces(line_to_parse, 0)
-        assert ex_ws_test is not None
+        _, ex_ws_test = ParserHelper.extract_spaces_verified(line_to_parse, 0)
 
         whitespace_scan_start_index = 0
         for token_stack_item in parser_state.token_stack:
@@ -500,8 +499,7 @@ class ContainerBlockNestedProcessor:
         adj_line_to_parse: str,
         end_container_indices: ContainerIndices,
     ) -> Tuple[int, int, bool, int]:
-        start_index, _ = ParserHelper.extract_spaces(adj_line_to_parse, 0)
-        assert start_index is not None
+        start_index, _ = ParserHelper.extract_spaces_verified(adj_line_to_parse, 0)
         POGGER.debug("start_index>>$<<", start_index)
 
         assert parser_state.nested_list_start is not None

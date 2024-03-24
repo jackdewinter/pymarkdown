@@ -35,7 +35,7 @@ class IndentedLeafBlockProcessor:
     def parse_indented_code_block(
         parser_state: ParserState,
         position_marker: PositionMarker,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         removed_chars_at_start: Optional[int],
         last_block_quote_index: int,
         original_line: str,
@@ -45,8 +45,6 @@ class IndentedLeafBlockProcessor:
         """
 
         new_tokens: List[MarkdownToken] = []
-
-        assert extracted_whitespace is not None
         assert removed_chars_at_start is not None
         if (
             TabHelper.is_length_greater_than_or_equal_to(
@@ -264,10 +262,11 @@ class IndentedLeafBlockProcessor:
             parser_state, original_line, last_list_index
         )
 
-        _, ex_space = ParserHelper.extract_spaces(position_marker.text_to_parse, 0)
+        _, ex_space = ParserHelper.extract_spaces_verified(
+            position_marker.text_to_parse, 0
+        )
         # POGGER.debug("after_space_index>:$:<", after_space_index)
         # POGGER.debug("ex_space>:$:<", ex_space)
-        assert ex_space is not None
         assert len(ex_space) >= 4
         was_indented = not parser_state.token_stack[-2].is_document
         fex_space, fex_space_index, split_tab = TabHelper.find_tabified_string(
@@ -361,7 +360,7 @@ class IndentedLeafBlockProcessor:
 
         lead_space_len = len(last_block_quote_lead_spaces)
         POGGER.debug("lead_space_len>:$:<", lead_space_len)
-        after_space_index, ex_space = ParserHelper.extract_spaces(
+        after_space_index, ex_space = ParserHelper.extract_spaces_verified(
             original_line, lead_space_len + adj_lead_space_len
         )
         return IndentedLeafBlockProcessor.__parse_indented_code_block_with_tab_complete(
@@ -375,15 +374,14 @@ class IndentedLeafBlockProcessor:
     # pylint: enable=too-many-arguments
     @staticmethod
     def __parse_indented_code_block_with_tab_complete(
-        after_space_index: Optional[int],
-        ex_space: Optional[str],
+        after_space_index: int,
+        ex_space: str,
         lead_space_len: int,
         original_line: str,
         adjust_block_quote_indent: bool,
     ) -> Tuple[Optional[str], Optional[str], Optional[str], bool]:
         POGGER.debug("after_space_index>:$:<", after_space_index)
         POGGER.debug("ex_space>:$:<", ex_space)
-        assert ex_space is not None
         detabified_ex_space = TabHelper.detabify_string(
             ex_space, additional_start_delta=lead_space_len
         )

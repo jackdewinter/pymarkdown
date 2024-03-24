@@ -159,13 +159,12 @@ class TextMarkdownToken(InlineMarkdownToken):
         (
             collected_whitespace_length,
             first_non_whitespace_index,
-        ) = ParserHelper.collect_backwards_while_one_of_characters(
+        ) = ParserHelper.collect_backwards_while_one_of_characters_verified(
             self.__token_text, -1, Constants.ascii_whitespace
         )
         # POGGER.debug("collected_whitespace_length=:$:", collected_whitespace_length)
         # POGGER.debug("first_non_whitespace_index=:$:", first_non_whitespace_index)
 
-        assert first_non_whitespace_index is not None
         if collected_whitespace_length:
             removed_whitespace = self.__token_text[
                 first_non_whitespace_index : first_non_whitespace_index
@@ -176,13 +175,11 @@ class TextMarkdownToken(InlineMarkdownToken):
                 (
                     collected_whitespace_length,
                     first_non_whitespace_index,
-                ) = ParserHelper.collect_backwards_while_one_of_characters(
+                ) = ParserHelper.collect_backwards_while_one_of_characters_verified(
                     self.__tabified_text, -1, Constants.ascii_whitespace
                 )
                 # POGGER.debug("collected_whitespace_length=:$:", collected_whitespace_length)
                 # POGGER.debug("first_non_whitespace_index=:$:", first_non_whitespace_index)
-                assert collected_whitespace_length is not None
-                assert first_non_whitespace_index is not None
                 removed_whitespace = self.__tabified_text[
                     first_non_whitespace_index : first_non_whitespace_index
                     + collected_whitespace_length

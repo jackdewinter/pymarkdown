@@ -114,8 +114,7 @@ class ContainerBlockLeafProcessor:
         (
             new_index_number,
             extracted_leaf_whitespace,
-        ) = ParserHelper.extract_spaces(position_marker.text_to_parse, 0)
-        assert new_index_number is not None
+        ) = ParserHelper.extract_spaces_verified(position_marker.text_to_parse, 0)
 
         total_ws = new_index_number + position_marker.index_indent
 
@@ -230,6 +229,7 @@ class ContainerBlockLeafProcessor:
         )
 
         if not outer_processed:
+            assert leaf_token_whitespace is not None
             new_tokens = (
                 AtxLeafBlockProcessor.parse_atx_headings(
                     parser_state,
@@ -289,11 +289,12 @@ class ContainerBlockLeafProcessor:
         remaining_line_to_parse = incoming_position_marker.text_to_parse[
             incoming_position_marker.index_number :
         ]
-        (new_index_number, leaf_token_whitespace) = ParserHelper.extract_spaces(
-            incoming_position_marker.text_to_parse,
-            incoming_position_marker.index_number,
+        (new_index_number, leaf_token_whitespace) = (
+            ParserHelper.extract_spaces_verified(
+                incoming_position_marker.text_to_parse,
+                incoming_position_marker.index_number,
+            )
         )
-        assert new_index_number is not None
         POGGER.debug(">>leaf_token_whitespace>>:$:<<", leaf_token_whitespace)
 
         position_marker = PositionMarker(
@@ -459,8 +460,7 @@ class ContainerBlockLeafProcessor:
         (
             non_space_index,
             ex_ws,
-        ) = ParserHelper.extract_spaces(orig_prefix, 0)
-        assert ex_ws is not None
+        ) = ParserHelper.extract_spaces_verified(orig_prefix, 0)
         original_up_to_non_space = orig_prefix[:non_space_index]
         redone_original = orig_suffix + original_up_to_non_space
         detabified_redone_original = TabHelper.detabify_string(redone_original)
@@ -608,13 +608,12 @@ class ContainerBlockLeafProcessor:
         xposition_marker: PositionMarker,
         last_block_index: int,
         last_list_index: int,
-        extracted_leaf_whitespace: Optional[str],
+        extracted_leaf_whitespace: str,
         grab_bag: ContainerGrabBag,
     ) -> Tuple[Optional[str], Optional[str], PositionMarker]:
         POGGER.debug("??? adjust_for_list_container")
         removed_leading_space = None
         actual_removed_leading_space = None
-        assert extracted_leaf_whitespace is not None
         list_token: Optional[ListStartMarkdownToken] = None
         # pylint: disable=chained-comparison
         if (

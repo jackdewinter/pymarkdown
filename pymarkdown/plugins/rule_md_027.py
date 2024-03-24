@@ -910,10 +910,9 @@ class RuleMd027(RulePlugin):
             recombine_list.extend(
                 (code_span_token.span_text[start_index:next_index], "\n")
             )
-            after_space_index, _ = ParserHelper.collect_while_spaces(
+            after_space_index, _ = ParserHelper.collect_while_spaces_verified(
                 code_span_token.span_text, next_index + 3
             )
-            assert after_space_index is not None
             is_there = ParserHelper.is_character_at_index(
                 code_span_token.span_text, after_space_index, "\x07"
             )
@@ -934,10 +933,9 @@ class RuleMd027(RulePlugin):
         recombine_list = []
         for next_tag_line in raw_html_token.raw_tag.split("\n"):
             if next_tag_line.startswith("\a"):
-                after_space_index, _ = ParserHelper.collect_while_spaces(
+                after_space_index, _ = ParserHelper.collect_while_spaces_verified(
                     next_tag_line, 1
                 )
-                assert after_space_index is not None
                 remaining_line = next_tag_line[after_space_index:]
                 assert remaining_line.startswith("\a\x03\a")
                 remaining_line = remaining_line[3:]

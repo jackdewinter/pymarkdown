@@ -767,9 +767,7 @@ class TokenizedMarkdown:
         (
             non_whitespace_index,
             extracted_whitespace,
-        ) = ParserHelper.extract_ascii_whitespace(input_line, 0)
-        assert extracted_whitespace is not None
-        assert non_whitespace_index is not None
+        ) = ParserHelper.extract_ascii_whitespace_verified(input_line, 0)
         return (
             close_only_these_blocks,
             do_include_block_quotes,

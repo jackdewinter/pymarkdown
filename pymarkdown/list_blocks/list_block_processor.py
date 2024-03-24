@@ -624,7 +624,7 @@ class ListBlockProcessor:
         parser_state: ParserState,
         line_to_parse: str,
         start_index: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
     ) -> bool:
         POGGER.debug("is_theme_break>>?")
         is_theme_break, _ = ThematicLeafBlockProcessor.is_thematic_break(
@@ -695,6 +695,7 @@ class ListBlockProcessor:
             parser_state.token_stack[-1].is_paragraph,
         )
 
+        assert extracted_whitespace is not None
         was_breakable_leaf_detected = ListBlockProcessor.__check_for_paragraph_break(
             parser_state, line_to_parse, start_index, extracted_whitespace
         )
@@ -710,6 +711,7 @@ class ListBlockProcessor:
                 "1>>line_to_parse>>$>>",
                 line_to_parse,
             )
+            assert extracted_whitespace is not None
             (
                 line_to_parse,
                 used_indent,
@@ -732,6 +734,7 @@ class ListBlockProcessor:
                 "2>>line_to_parse>>$>>",
                 line_to_parse,
             )
+            assert extracted_whitespace is not None
             (
                 container_level_tokens,
                 requeue_line_info,
@@ -785,7 +788,7 @@ class ListBlockProcessor:
         container_level_tokens: List[MarkdownToken],
         ind: Optional[int],
         line_to_parse: str,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         start_index: int,
         before_ws_length: int,
         leading_space_length: int,
@@ -858,9 +861,8 @@ class ListBlockProcessor:
     def __adjust_line_for_list_in_process_with_tab(
         original_line: str, remaining_indent: int, removed_whitespace: str
     ) -> str:
-        _, ex_ws = ParserHelper.extract_spaces(original_line, 0)
+        _, ex_ws = ParserHelper.extract_spaces_verified(original_line, 0)
         POGGER.debug("ex_ws($)", ex_ws)
-        assert ex_ws is not None
         if "\t" in ex_ws:
             detabified_ws = TabHelper.detabify_string(ex_ws, 0)
             POGGER.debug("detabified_ws($)", detabified_ws)
@@ -894,7 +896,7 @@ class ListBlockProcessor:
     def __adjust_line_for_list_in_process(
         line_to_parse: str,
         start_index: int,
-        leading_space: Optional[str],
+        leading_space: str,
         leading_space_length: int,
         requested_list_indent: int,
         original_line: str,
@@ -915,7 +917,6 @@ class ListBlockProcessor:
             start_index = 0
             removed_whitespace = None
         else:
-            assert leading_space is not None
             POGGER.debug("requested_list_indent($)", requested_list_indent)
             POGGER.debug("leading_space($)", leading_space)
             padded_spaces = ParserHelper.repeat_string(
@@ -944,7 +945,7 @@ class ListBlockProcessor:
         parser_state: ParserState,
         line_to_parse: str,
         start_index: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         ind: Optional[int],
         leading_space_length: int,
     ) -> Tuple[List[MarkdownToken], Optional[RequeueLineInfo]]:
