@@ -45,7 +45,7 @@ class LinkReferenceDefinitionParseHelper:
             POGGER.debug("BAIL")
             return False, -1, None
 
-        new_index: Optional[int] = None
+        new_index = -1
         (
             keep_going,
             new_index,
@@ -68,6 +68,7 @@ class LinkReferenceDefinitionParseHelper:
         else:
             inline_link = None
         if keep_going:
+            assert new_index is not None
             (
                 keep_going,
                 new_index,
@@ -176,7 +177,7 @@ class LinkReferenceDefinitionParseHelper:
     # pylint: disable=too-many-arguments
     @staticmethod
     def __create_lrd_token(
-        new_index: Optional[int],
+        new_index: int,
         collected_destination: Optional[str],
         normalized_destination: Optional[str],
         line_destination_whitespace: Optional[str],
@@ -222,17 +223,16 @@ class LinkReferenceDefinitionParseHelper:
     @staticmethod
     def __verify_link_definition_end(
         line_to_parse: str, new_index: Optional[int]
-    ) -> Tuple[bool, Optional[int], Optional[str]]:
+    ) -> Tuple[bool, int, Optional[str]]:
         """
         Verify that the link reference definition's ends properly.
         """
 
         assert new_index is not None
         POGGER.debug("look for EOL-ws>>$<<", line_to_parse[new_index:])
-        new_index, ex_ws = ParserHelper.extract_ascii_whitespace(
+        new_index, ex_ws = ParserHelper.extract_ascii_whitespace_verified(
             line_to_parse, new_index
         )
-        assert new_index is not None
         POGGER.debug("look for EOL>>$<<", line_to_parse[new_index:])
         if new_index < len(line_to_parse):
             POGGER.debug(">> characters left at EOL, bailing")

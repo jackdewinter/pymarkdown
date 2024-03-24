@@ -3,7 +3,7 @@ Module to provide processing for the leaf blocks.
 """
 
 import logging
-from typing import List, Optional
+from typing import List
 
 from pymarkdown.container_blocks.container_grab_bag import ContainerGrabBag
 from pymarkdown.general.parser_logger import ParserLogger
@@ -32,14 +32,11 @@ class LeafBlockProcessor:
         parser_state: ParserState,
         line_to_parse: str,
         start_index: int,
-        extracted_whitespace: Optional[str],
-        exclude_thematic_break: bool = False,
+        extracted_whitespace: str,
     ) -> bool:
         """
         Determine whether we have a valid leaf block start.
         """
-
-        assert not exclude_thematic_break
 
         is_thematic_break_start, _ = ThematicLeafBlockProcessor.is_thematic_break(
             line_to_parse,
@@ -99,7 +96,7 @@ class LeafBlockProcessor:
         parser_state: ParserState,
         position_marker: PositionMarker,
         outer_processed: bool,
-        leaf_token_whitespace: Optional[str],
+        leaf_token_whitespace: str,
         new_tokens: List[MarkdownToken],
         grab_bag: ContainerGrabBag,
     ) -> bool:
@@ -140,7 +137,6 @@ class LeafBlockProcessor:
             new_tokens.extend(html_tokens)
         if parser_state.token_stack[-1].is_html_block:
             POGGER.debug(">>html continued>>")
-            assert leaf_token_whitespace is not None
             html_tokens = HtmlHelper.check_normal_html_block_end(
                 parser_state,
                 position_marker.text_to_parse,
@@ -162,7 +158,7 @@ class LeafBlockProcessor:
 
     @staticmethod
     def close_indented_block_if_indent_not_there(
-        parser_state: ParserState, leaf_token_whitespace: Optional[str]
+        parser_state: ParserState, leaf_token_whitespace: str
     ) -> List[MarkdownToken]:
         """
         If we have an indented block going on and the current line does not
@@ -175,7 +171,6 @@ class LeafBlockProcessor:
         )
         POGGER.debug("leaf_token_whitespace>>$>", leaf_token_whitespace)
         pre_tokens: List[MarkdownToken] = []
-        assert leaf_token_whitespace is not None
         if parser_state.token_stack[
             -1
         ].is_indented_code_block and TabHelper.is_length_less_than_or_equal_to(

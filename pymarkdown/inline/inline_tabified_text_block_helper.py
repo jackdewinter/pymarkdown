@@ -59,13 +59,12 @@ class InlineTabifiedTextBlockHelper:
         (
             current_line_leading_space_index,
             current_line_leading_space,
-        ) = ParserHelper.extract_spaces(current_line_source_text, 0)
+        ) = ParserHelper.extract_spaces_verified(current_line_source_text, 0)
         POGGER.debug(
             "current_line_leading_space_index>:$:<, current_line_leading_space>:$:<",
             current_line_leading_space_index,
             current_line_leading_space,
         )
-        assert current_line_leading_space_index is not None
 
         return InlineTabifiedTextBlockHelper.__handle_next_inline_character_tabified_cleanup(
             current_line_source_text,
@@ -84,10 +83,9 @@ class InlineTabifiedTextBlockHelper:
         start_index: int,
     ) -> str:
         adj_current_line_source_text = current_line_source_text
-        non_whitespace_index, ex_ws = ParserHelper.extract_spaces(
+        non_whitespace_index, ex_ws = ParserHelper.extract_spaces_verified(
             current_line_source_text, 0
         )
-        assert ex_ws is not None
         was_last_character_newline = (
             True if start_index == 0 else source_text[start_index - 1] == "\n"
         )
@@ -172,7 +170,7 @@ class InlineTabifiedTextBlockHelper:
         stop_character: str,
         adj_tabified_text: str,
         stop_character_in_tabified_index: int,
-        current_line_leading_space: Optional[str],
+        current_line_leading_space: str,
     ) -> str:
         (
             current_line_first_word_index,
@@ -220,19 +218,18 @@ class InlineTabifiedTextBlockHelper:
         Complete the processing on a tabified block
         """
 
-        source_text_spaces_index, source_text_spaces = ParserHelper.extract_spaces(
-            source_text, start_index
+        source_text_spaces_index, source_text_spaces = (
+            ParserHelper.extract_spaces_verified(source_text, start_index)
         )
         POGGER.debug(
             "source_text_spaces_index=>:$:<, source_text_spaces=>:$:<",
             source_text_spaces_index,
             source_text_spaces,
         )
-        assert source_text_spaces_index is not None
         (
             source_text_word_index,
             source_text_word,
-        ) = ParserHelper.collect_until_one_of_characters(
+        ) = ParserHelper.collect_until_one_of_characters_verified(
             source_text, source_text_spaces_index, " \t"
         )
         POGGER.debug(
@@ -240,7 +237,6 @@ class InlineTabifiedTextBlockHelper:
             source_text_word_index,
             source_text_word,
         )
-        assert source_text_word is not None
 
         current_line_source_text, current_line_start_index = InlineHelper.xdf(
             source_text, newlines_encountered

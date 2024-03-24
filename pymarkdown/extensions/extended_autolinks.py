@@ -128,12 +128,9 @@ class MarkdownExtendedAutolinksExtension(ParserExtension):
     def __handle_www_autolink_valid_path(source_text: str, new_index: int) -> int:
         current_index = new_index
         if current_index < len(source_text) and source_text[current_index] == "/":
-            current_index += 1
-            temp_index, _ = ParserHelper.collect_until_one_of_characters(
-                source_text, current_index, " \t\n<"
+            current_index, _ = ParserHelper.collect_until_one_of_characters_verified(
+                source_text, current_index + 1, " \t\n<"
             )
-            assert temp_index is not None
-            current_index = temp_index
 
             # Strip any trailing characters.
             while source_text[current_index - 1] in "?!.,:*_~":
@@ -417,20 +414,21 @@ class MarkdownExtendedAutolinksExtension(ParserExtension):
         at_index: int,
         between_brackets: Optional[str],
     ) -> Tuple[Optional[EmailAutolinkMarkdownToken], Optional[str], int]:
-        _, user_part_index = ParserHelper.collect_backwards_while_one_of_characters(
-            inline_request.source_text,
-            at_index - 1,
-            MarkdownExtendedAutolinksExtension.__email_first_part,
+        _, user_part_index = (
+            ParserHelper.collect_backwards_while_one_of_characters_verified(
+                inline_request.source_text,
+                at_index - 1,
+                MarkdownExtendedAutolinksExtension.__email_first_part,
+            )
         )
-        assert user_part_index is not None
         user_id_part = inline_request.source_text[user_part_index:at_index]
-        domain_part_index, domain_part = ParserHelper.collect_while_one_of_characters(
-            inline_request.source_text,
-            at_index + 1,
-            MarkdownExtendedAutolinksExtension.__email_domain_part,
+        domain_part_index, domain_part = (
+            ParserHelper.collect_while_one_of_characters_verified(
+                inline_request.source_text,
+                at_index + 1,
+                MarkdownExtendedAutolinksExtension.__email_domain_part,
+            )
         )
-        assert domain_part_index is not None
-        assert domain_part is not None
         new_token = None
         next_index = -1
         collected_text = inline_request.source_text[at_index:domain_part_index]
@@ -519,24 +517,23 @@ class MarkdownExtendedAutolinksExtension(ParserExtension):
             inline_request
         )
         if is_valid_prefix and is_valid_start:
-            user_part_index, _ = ParserHelper.collect_while_one_of_characters(
+            user_part_index, _ = ParserHelper.collect_while_one_of_characters_verified(
                 inline_request.source_text,
                 new_index,
                 MarkdownExtendedAutolinksExtension.__email_first_part,
             )
-            assert user_part_index is not None
             is_valid_prefix = ParserHelper.is_character_at_index(
                 inline_request.source_text, user_part_index, "@"
             )
         if is_valid_prefix and is_valid_start:
-            assert user_part_index is not None
             user_part_index += 1
-            domain_part_index, _ = ParserHelper.collect_while_one_of_characters(
-                inline_request.source_text,
-                user_part_index,
-                MarkdownExtendedAutolinksExtension.__email_domain_part,
+            domain_part_index, _ = (
+                ParserHelper.collect_while_one_of_characters_verified(
+                    inline_request.source_text,
+                    user_part_index,
+                    MarkdownExtendedAutolinksExtension.__email_domain_part,
+                )
             )
-            assert domain_part_index is not None
             collected_text = inline_request.source_text[
                 user_part_index:domain_part_index
             ]

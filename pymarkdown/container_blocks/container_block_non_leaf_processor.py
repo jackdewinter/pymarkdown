@@ -251,14 +251,18 @@ class ContainerBlockNonLeafProcessor:
             POGGER.debug(
                 "position_marker.index_number:$:", position_marker.index_number
             )
-            leading_whitespace: Optional[str] = grab_bag.extracted_whitespace
             if position_marker.index_number == -1 and grab_bag.container_depth:
                 leading_whitespace = (
                     ContainerBlockNonLeafProcessor.__calculate_indent_used_by_container(
-                        parser_state, position_marker, leading_whitespace, grab_bag
+                        parser_state,
+                        position_marker,
+                        grab_bag.extracted_whitespace,
+                        grab_bag,
                     )
                 )
-            assert leading_whitespace is not None
+            else:
+                leading_whitespace = grab_bag.extracted_whitespace
+
             if len(leading_whitespace) >= 4:
                 POGGER.debug(">>leading_whitespace_processing")
                 ContainerBlockNonLeafProcessor.__handle_leading_whitespace(
@@ -476,7 +480,7 @@ class ContainerBlockNonLeafProcessor:
         position_marker: PositionMarker,
         leading_whitespace: Optional[str],
         grab_bag: ContainerGrabBag,
-    ) -> Optional[str]:
+    ) -> str:
         POGGER.debug("original_line_to_parse:$:", parser_state.original_line_to_parse)
         POGGER.debug("leading_whitespace:$:", leading_whitespace)
         POGGER.debug("text_to_parse=:$:", position_marker.text_to_parse)
@@ -510,7 +514,7 @@ class ContainerBlockNonLeafProcessor:
                 current_indent += delta
             stack_search_index += 1
         assert stack_search_index > grab_bag.container_depth
-        _, leading_whitespace = ParserHelper.extract_spaces(
+        _, leading_whitespace = ParserHelper.extract_spaces_verified(
             parser_state.original_line_to_parse, current_indent
         )
         POGGER.debug("leading_whitespace=:$:", leading_whitespace)
@@ -639,7 +643,7 @@ class ContainerBlockNonLeafProcessor:
         assert grab_bag.is_leaf_tokens_empty()
         POGGER.debug("clt>>lazy-check")
 
-        after_ws_index, ex_whitespace = ParserHelper.extract_spaces(
+        after_ws_index, ex_whitespace = ParserHelper.extract_spaces_verified(
             grab_bag.line_to_parse, 0
         )
         remaining_line = grab_bag.line_to_parse[after_ws_index:]

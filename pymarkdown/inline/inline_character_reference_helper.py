@@ -138,12 +138,11 @@ class InlineCharacterReferenceHelper:
     ) -> Tuple[str, int, int]:
         hex_char = source_text[new_index]
         new_index += 1
-        end_index, collected_string = ParserHelper.collect_while_one_of_characters(
-            source_text, new_index, string.hexdigits
+        end_index, collected_string = (
+            ParserHelper.collect_while_one_of_characters_verified(
+                source_text, new_index, string.hexdigits
+            )
         )
-
-        assert end_index is not None
-        assert collected_string is not None
         POGGER.debug(
             "&#x>>a>>$>>b>>$>>$", end_index, collected_string, source_text_size
         )
@@ -162,12 +161,11 @@ class InlineCharacterReferenceHelper:
     def __handle_numeric_character_reference_decimal(
         new_index: int, source_text: str, source_text_size: int
     ) -> Tuple[str, int, int]:
-        end_index, collected_string = ParserHelper.collect_while_one_of_characters(
-            source_text, new_index, string.digits
+        end_index, collected_string = (
+            ParserHelper.collect_while_one_of_characters_verified(
+                source_text, new_index, string.digits
+            )
         )
-
-        assert end_index is not None
-        assert collected_string is not None
         POGGER.debug("&#>>a>>$>>b>>$>>$", end_index, collected_string, source_text_size)
 
         delta = end_index - new_index

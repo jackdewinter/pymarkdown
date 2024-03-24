@@ -252,10 +252,9 @@ class TabHelper:
         # LOGGER.debug("source_string=:%s:", ParserHelper.make_whitespace_visible(source_string.replace("\t", "\\t")))
         # LOGGER.debug("additional_start_delta=:%d:", additional_start_delta)
         while next_tab_index != -1:
-            _, start_index = ParserHelper.collect_backwards_while_spaces(
+            _, start_index = ParserHelper.collect_backwards_while_spaces_verified(
                 source_string, next_tab_index
             )
-            assert start_index is not None
             # LOGGER.debug("start_index=:%d:", start_index)
             end_index, _ = ParserHelper.collect_while_spaces(
                 source_string, next_tab_index

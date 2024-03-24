@@ -39,7 +39,7 @@ class BlockQuoteProcessor:
     def __adjust_lazy_handling(
         parser_state: ParserState,
         line_to_parse: str,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         was_paragraph_continuation: bool,
     ) -> Tuple[bool, bool]:
         if (
@@ -55,7 +55,6 @@ class BlockQuoteProcessor:
                     line_to_parse,
                     0,
                     extracted_whitespace,
-                    exclude_thematic_break=False,
                 )
             )
 
@@ -76,7 +75,7 @@ class BlockQuoteProcessor:
         position_marker: PositionMarker,
         block_quote_data: BlockQuoteData,
         line_to_parse: str,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         was_paragraph_continuation: bool,
     ) -> Tuple[List[MarkdownToken], BlockQuoteData, bool]:
         """

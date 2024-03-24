@@ -10,6 +10,7 @@ from pymarkdown.general.constants import Constants
 LOGGER = logging.getLogger(__name__)
 
 
+# pylint: disable=too-many-lines
 # pylint: disable=too-many-public-methods
 class ParserHelper:
     """
@@ -141,8 +142,10 @@ class ParserHelper:
         """
         From the start_index, continue extracting whitespace while we have it.
 
-        Returns the index of the first non-whitespace character and any extracted
-        whitespace in a tuple.
+        Returns a tuple with the index of the first non-whitespace character and any extracted
+        whitespace
+        OR
+        a tuple of None values if the start_index is not within the source_string.
         """
 
         if not 0 <= start_index <= len(source_string):
@@ -155,14 +158,34 @@ class ParserHelper:
         return index, source_string[start_index:index]
 
     @staticmethod
+    def extract_spaces_verified(
+        source_string: str, start_index: int
+    ) -> Tuple[int, str]:
+        """
+        From the start_index, continue extracting whitespace while we have it.
+
+        Returns a tuple with the index of the first non-whitespace character and any extracted
+        whitespace.  If start_index is not within the source_string,
+        this function will throw an AssertError.
+        """
+        index, extracted_string = ParserHelper.extract_spaces(
+            source_string, start_index
+        )
+        assert index is not None
+        assert extracted_string is not None
+        return index, extracted_string
+
+    @staticmethod
     def extract_ascii_whitespace(
         source_string: str, start_index: int
     ) -> Tuple[Optional[int], Optional[str]]:
         """
         From the start_index, continue extracting whitespace while we have it.
 
-        Returns the index of the first non-whitespace character and any extracted
-        whitespace in a tuple.
+        Returns a tuple with the index of the first non-whitespace character and
+        any extracted whitespace
+        OR
+        a tuple of None values if the start_index is not within the source_string.
         """
 
         if not 0 <= start_index <= len(source_string):
@@ -175,6 +198,24 @@ class ParserHelper:
             index += 1
 
         return index, source_string[start_index:index]
+
+    @staticmethod
+    def extract_ascii_whitespace_verified(
+        source_string: str, start_index: int
+    ) -> Tuple[int, str]:
+        """
+        From the start_index, continue extracting whitespace while we have it.
+
+        Returns a tuple with the index of the first non-whitespace character and
+        any extracted whitespace.  If start_index is not within the source_string,
+        this function will throw an AssertError.
+        """
+        index, extracted_string = ParserHelper.extract_ascii_whitespace(
+            source_string, start_index
+        )
+        assert index is not None
+        assert extracted_string is not None
+        return index, extracted_string
 
     @staticmethod
     def extract_spaces_from_end(
@@ -195,8 +236,6 @@ class ParserHelper:
         while ParserHelper.is_character_at_index_whitespace(source_string, index):
             index -= 1
 
-        # if start_index is not None:
-        #     return index + 1, source_string[index + 1 : start_index]
         return index + 1, source_string[index + 1 :]
 
     @staticmethod
@@ -206,8 +245,10 @@ class ParserHelper:
         """
         From the start_index, continue extracting until we hit whitespace.
 
-        Returns the index of the first whitespace character and any extracted text
-        in a tuple.
+        Returns a tuple with the index of the first whitespace character and any
+        extracted text
+        OR
+        a Tuple of None values if the start_index is not within the source_string.
         """
 
         if not 0 <= start_index <= len(source_string):
@@ -220,14 +261,35 @@ class ParserHelper:
         return index, source_string[start_index:index]
 
     @staticmethod
+    def extract_until_spaces_verified(
+        source_string: str, start_index: int
+    ) -> Tuple[int, str]:
+        """
+        From the start_index, continue extracting until we hit whitespace.
+
+        Returns a tuple with the index of the first whitespace character and any
+        extracted text. If start_index is not within the source_string, this
+        function will throw an AssertError.
+        """
+
+        index, extracted_string = ParserHelper.extract_until_spaces(
+            source_string, start_index
+        )
+        assert index is not None
+        assert extracted_string is not None
+        return index, extracted_string
+
+    @staticmethod
     def collect_while_character(
         source_string: str, start_index: int, match_character: str
     ) -> Tuple[Optional[int], Optional[int]]:
         """
         Collect a sequence of the same character from a given starting point in a string.
 
-        Returns the number of characters collected and the index of the first non-matching
-        character and any extracted text in a tuple.
+        Returns a tuple with the number of characters collected and the index of the first
+        non-matching character and any extracted text
+        OR
+        a tuple of None values if the start_index is not within the source_string.
         """
 
         source_string_size = len(source_string)
@@ -241,6 +303,24 @@ class ParserHelper:
         return index - start_index, index
 
     @staticmethod
+    def collect_while_character_verified(
+        source_string: str, start_index: int, match_character: str
+    ) -> Tuple[int, int]:
+        """
+        Collect a sequence of the same character from a given starting point in a string.
+
+        Returns a tuple with the number of characters collected and the index of the first
+        non-matching character and any extracted text. If start_index is not within the
+        source_string, this function will throw an AssertError.
+        """
+        index, extracted_string = ParserHelper.collect_while_character(
+            source_string, start_index, match_character
+        )
+        assert index is not None
+        assert extracted_string is not None
+        return index, extracted_string
+
+    @staticmethod
     def collect_backwards_while_spaces(
         source_string: str, end_index: int
     ) -> Tuple[Optional[int], Optional[int]]:
@@ -249,12 +329,34 @@ class ParserHelper:
         towards the start of the string while the character is a space character
         or a tab character.
 
-        Returns the number of characters collected and the index of the first non-matching
-        character and any extracted text in a tuple.
+        Returns a tuple with the number of characters collected and the index of
+        he first non-matching character and any extracted text
+        OR
+        a tuple of None values if the end_index is not within the source_string.
         """
         return ParserHelper.collect_backwards_while_one_of_characters(
             source_string, end_index, ParserHelper.__normal_whitespace
         )
+
+    @staticmethod
+    def collect_backwards_while_spaces_verified(
+        source_string: str, end_index: int
+    ) -> Tuple[int, int]:
+        """
+        Collect from a given starting point in a string going backwards
+        towards the start of the string while the character is a space character
+        or a tab character.
+
+        Returns a tuple with the number of characters collected and the index of
+        he first non-matching character and any extracted text.  If end_index is
+        not within the source_string, this function will throw an AssertError.
+        """
+        index, extracted_string = ParserHelper.collect_backwards_while_spaces(
+            source_string, end_index
+        )
+        assert index is not None
+        assert extracted_string is not None
+        return index, extracted_string
 
     @staticmethod
     def collect_backwards_while_character(
@@ -264,8 +366,10 @@ class ParserHelper:
         Collect a sequence of the same character from a given starting point in a
         string going backwards towards the start of the string.
 
-        Returns the number of characters collected and the index of the first non-matching
-        character and any extracted text in a tuple.
+        Returns a tuple with the number of characters collected and the index of
+        the first non-matching character and any extracted text
+        OR
+        a tuple of None values if the end_index is not within the source_string.
         """
 
         source_string_size = len(source_string)
@@ -280,6 +384,25 @@ class ParserHelper:
         return end_index - index, index
 
     @staticmethod
+    def collect_backwards_while_character_verified(
+        source_string: str, end_index: int, match_character: str
+    ) -> Tuple[int, int]:
+        """
+        Collect a sequence of the same character from a given starting point in a
+        string going backwards towards the start of the string.
+
+        Returns a tuple with the number of characters collected and the index of
+        the first non-matching character and any extracted text. If end_index is
+        not within the source_string, this function will throw an AssertError.
+        """
+        index, extracted_string = ParserHelper.collect_backwards_while_character(
+            source_string, end_index, match_character
+        )
+        assert index is not None
+        assert extracted_string is not None
+        return index, extracted_string
+
+    @staticmethod
     def collect_backwards_while_one_of_characters(
         source_string: str, end_index: int, match_characters: str
     ) -> Tuple[Optional[int], Optional[int]]:
@@ -287,8 +410,11 @@ class ParserHelper:
         Collect a sequence of the same character from a given starting point in
         a string going backwards towards the start of the string.
 
-        Returns the number of characters collected and the index of the first non-matching
-        character and any extracted text in a tuple.
+        Returns a tuple with the number of characters collected and the index of
+        the first non-matching character and any extracted text
+        OR
+        a tuple of None values if the end_index is not within the source_string
+        or the value of -1.
         """
 
         source_string_size = len(source_string)
@@ -303,14 +429,37 @@ class ParserHelper:
         return end_index - index, index
 
     @staticmethod
+    def collect_backwards_while_one_of_characters_verified(
+        source_string: str, end_index: int, match_characters: str
+    ) -> Tuple[int, int]:
+        """
+        Collect a sequence of the same character from a given starting point in
+        a string going backwards towards the start of the string.
+
+        Returns a tuple with the number of characters collected and the index of
+        the first non-matching character and any extracted text.  If end_index is
+        not within the source_string or the value of -1, this function will throw an AssertError.
+        """
+        index, extracted_string = (
+            ParserHelper.collect_backwards_while_one_of_characters(
+                source_string, end_index, match_characters
+            )
+        )
+        assert index is not None
+        assert extracted_string is not None
+        return index, extracted_string
+
+    @staticmethod
     def collect_until_character(
         source_string: str, start_index: int, match_character: str
     ) -> Tuple[Optional[int], Optional[str]]:
         """
         Collect a sequence of characters from a given starting point in a string until we hit a given character.
 
-        Returns the index of the first non-matching character and any extracted text
-        in a tuple.
+        Returns a tuple with the index of the first non-matching character and
+        any extracted text
+        OR
+        a tuple of None values if the start_index is not within the source_string.
         """
 
         source_string_size = len(source_string)
@@ -324,6 +473,24 @@ class ParserHelper:
         return index, source_string[start_index:index]
 
     @staticmethod
+    def collect_until_character_verified(
+        source_string: str, start_index: int, match_character: str
+    ) -> Tuple[int, str]:
+        """
+        Collect a sequence of characters from a given starting point in a string until we hit a given character.
+
+        Returns a tuple with the index of the first non-matching character and
+        any extracted text.  If start_index is not within the source_string,
+        this function will throw an AssertError.
+        """
+        index, extracted_string = ParserHelper.collect_until_character(
+            source_string, start_index, match_character
+        )
+        assert index is not None
+        assert extracted_string is not None
+        return index, extracted_string
+
+    @staticmethod
     def collect_while_spaces(
         source_string: str, start_index: int
     ) -> Tuple[Optional[int], Optional[str]]:
@@ -331,12 +498,33 @@ class ParserHelper:
         Collect characters from a given starting point in a string as long
         as the character is either a string or a tab character.
 
-        Returns the index of the first non-matching character and any extracted text
-        in a tuple.
+        Returns a tuple with the index of the first non-matching character and
+        any extracted text
+        OR
+        a tuple of None values if the start_index is not within the source_string.
         """
         return ParserHelper.collect_while_one_of_characters(
             source_string, start_index, ParserHelper.__normal_whitespace
         )
+
+    @staticmethod
+    def collect_while_spaces_verified(
+        source_string: str, start_index: int
+    ) -> Tuple[int, str]:
+        """
+        Collect characters from a given starting point in a string as long
+        as the character is either a string or a tab character.
+
+        Returns a tuple with the index of the first non-matching character and
+        any extracted text.  If start_index is not within the source_string,
+        this function will throw an AssertError.
+        """
+        index, extracted_string = ParserHelper.collect_while_spaces(
+            source_string, start_index
+        )
+        assert index is not None
+        assert extracted_string is not None
+        return index, extracted_string
 
     @staticmethod
     def collect_while_one_of_characters(
@@ -346,8 +534,10 @@ class ParserHelper:
         Collect a sequence of characters from a given starting point in a string as long
         as the character is one of the match characters.
 
-        Returns the index of the first non-matching character and any extracted text
-        in a tuple.
+        Returns a tuple with the index of the first non-matching character and any
+        extracted text
+        OR
+        a tuple of None values if the start_index is not within the source_string.
         """
 
         source_string_size = len(source_string)
@@ -361,6 +551,25 @@ class ParserHelper:
         return index, source_string[start_index:index]
 
     @staticmethod
+    def collect_while_one_of_characters_verified(
+        source_string: str, start_index: int, match_characters: str
+    ) -> Tuple[int, str]:
+        """
+        Collect a sequence of characters from a given starting point in a string as long
+        as the character is one of the match characters.
+
+        Returns a tuple with the index of the first non-matching character and any
+        extracted text.  If start_index is not within the source_string,
+        this function will throw an AssertError.
+        """
+        index, extracted_string = ParserHelper.collect_while_one_of_characters(
+            source_string, start_index, match_characters
+        )
+        assert index is not None
+        assert extracted_string is not None
+        return index, extracted_string
+
+    @staticmethod
     def collect_until_one_of_characters(
         source_string: str, start_index: int, match_characters: str
     ) -> Tuple[Optional[int], Optional[str]]:
@@ -368,8 +577,9 @@ class ParserHelper:
         Collect a sequence of characters from a given starting point in a string until
         we hit one of a given set of characters.
 
-        Returns the index of the first non-matching character and any extracted text
-        in a tuple.
+        Returns a tuple with the index of the first non-matching character and any extracted text
+        OR
+        a tuple of None values if the start_index is not within the source_string.
         """
 
         source_string_size = len(source_string)
@@ -383,6 +593,25 @@ class ParserHelper:
             index += 1
 
         return index, source_string[start_index:index]
+
+    @staticmethod
+    def collect_until_one_of_characters_verified(
+        source_string: str, start_index: int, match_characters: str
+    ) -> Tuple[int, str]:
+        """
+        Collect a sequence of characters from a given starting point in a string until
+        we hit one of a given set of characters.
+
+        Returns a tuple with the index of the first non-matching character and any extracted text.
+        If start_index is not within the source_string, this function will throw an AssertError.
+        """
+
+        index, extracted_string = ParserHelper.collect_until_one_of_characters(
+            source_string, start_index, match_characters
+        )
+        assert index is not None
+        assert extracted_string is not None
+        return index, extracted_string
 
     @staticmethod
     def index_any_of(source_text: str, find_any: str, start_index: int = 0) -> int:

@@ -281,8 +281,7 @@ class ContainerBlockProcessor:
         (
             new_start_index,
             grab_bag.extracted_whitespace,
-        ) = ParserHelper.extract_spaces(position_marker.text_to_parse, 0)
-        assert new_start_index is not None
+        ) = ParserHelper.extract_spaces_verified(position_marker.text_to_parse, 0)
         grab_bag.start_index = new_start_index
         ContainerBlockProcessor.__calculate_for_container_blocks(
             parser_state,

@@ -529,11 +529,9 @@ class InlineHandlerHelper:
         bool,
         int,
     ]:
-        repeat_count, new_index = ParserHelper.collect_while_character(
+        repeat_count, new_index = ParserHelper.collect_while_character_verified(
             source_text, next_index, special_sequence
         )
-        assert new_index is not None
-        assert repeat_count is not None
         return (
             source_text[next_index:new_index],
             repeat_count,

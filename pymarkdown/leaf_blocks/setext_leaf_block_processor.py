@@ -34,7 +34,7 @@ class SetextLeafBlockProcessor:
         original_line: str,
         line_to_parse: str,
         extracted_whitespace: str,
-    ) -> Tuple[str, Optional[str], bool, bool, Optional[str]]:
+    ) -> Tuple[str, str, bool, bool, Optional[str]]:
         POGGER.debug("original_line>>:$:<", original_line)
         POGGER.debug("line_to_parse>>:$:<", line_to_parse)
 
@@ -48,6 +48,7 @@ class SetextLeafBlockProcessor:
         ) = TabHelper.parse_thematic_break_with_tab(
             original_line, line_to_parse, extracted_whitespace
         )
+        assert new_extracted_whitespace is not None
         POGGER.debug("token_text>>:$:<", token_text)
         POGGER.debug("split_tab>>:$:<", split_tab)
         POGGER.debug(
@@ -68,7 +69,7 @@ class SetextLeafBlockProcessor:
     def parse_setext_headings(
         parser_state: ParserState,
         position_marker: PositionMarker,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         block_quote_data: BlockQuoteData,
         original_line: str,
     ) -> List[MarkdownToken]:
@@ -77,7 +78,6 @@ class SetextLeafBlockProcessor:
         """
 
         new_tokens: List[MarkdownToken] = []
-        assert extracted_whitespace is not None
         POGGER.debug("extracted_whitespace=>:$:<", extracted_whitespace)
         if (
             TabHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
@@ -120,7 +120,6 @@ class SetextLeafBlockProcessor:
                     extracted_whitespace,
                 )
 
-            assert extracted_whitespace is not None
             SetextLeafBlockProcessor.__prepare_and_create_setext_token(
                 parser_state,
                 position_marker,
@@ -153,7 +152,7 @@ class SetextLeafBlockProcessor:
         split_tab_with_block_quote_suffix: bool,
         extra_whitespace_prefix: Optional[str],
     ) -> Tuple[int, int, str]:
-        _, collected_to_index = ParserHelper.collect_while_character(
+        _, collected_to_index = ParserHelper.collect_while_character_verified(
             line_to_parse,
             0,
             position_marker.text_to_parse[position_marker.index_number],
@@ -163,13 +162,10 @@ class SetextLeafBlockProcessor:
         )
 
         POGGER.debug(">>collected_to_index>:$:<", collected_to_index)
-        assert collected_to_index is not None
         (
             after_whitespace_index,
             extra_whitespace_after_setext,
-        ) = ParserHelper.extract_spaces(line_to_parse, collected_to_index)
-        assert after_whitespace_index is not None
-        assert extra_whitespace_after_setext is not None
+        ) = ParserHelper.extract_spaces_verified(line_to_parse, collected_to_index)
 
         if not is_paragraph_continuation and after_whitespace_index == len(
             line_to_parse

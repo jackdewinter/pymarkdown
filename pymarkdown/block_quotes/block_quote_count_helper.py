@@ -749,10 +749,9 @@ class BlockQuoteCountHelper:
         (
             length_of_available_whitespace,
             _,
-        ) = ParserHelper.extract_spaces(position_marker.text_to_parse, 0)
+        ) = ParserHelper.extract_spaces_verified(position_marker.text_to_parse, 0)
         POGGER.debug("len(ws)>>:$:", length_of_available_whitespace)
 
-        assert length_of_available_whitespace is not None
         (
             stack_hard_limit,
             extra_consumed_whitespace,

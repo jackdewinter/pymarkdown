@@ -214,10 +214,8 @@ class ListBlockCreateNewHandler:
         (
             tabbed_extract_spaces_index,
             tabbed_extract_spaces,
-        ) = ParserHelper.extract_spaces(original_line, 0)
+        ) = ParserHelper.extract_spaces_verified(original_line, 0)
         POGGER.debug("tabbed_extract_spaces_index>:$:<", tabbed_extract_spaces_index)
-        assert tabbed_extract_spaces_index is not None
-        assert tabbed_extract_spaces is not None
         POGGER.debug("tabbed_extract_spaces>:$:<", tabbed_extract_spaces)
         POGGER.debug("text_to_parse>:$:<", position_marker.text_to_parse)
         POGGER.debug("index_number>:$:<", position_marker.index_number)

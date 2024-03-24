@@ -86,11 +86,9 @@ class RuleMd033(RulePlugin):
         elif tag_text.startswith("!DOCTYPE"):
             tag_text = "!DOCTYPE"
         else:
-            _, new_tag_text = ParserHelper.collect_until_one_of_characters(
+            _, tag_text = ParserHelper.collect_until_one_of_characters_verified(
                 tag_text, 0, " \n\t/>"
             )
-            assert new_tag_text is not None
-            tag_text = new_tag_text
         extra_data = f"Element: {tag_text}"
 
         if (

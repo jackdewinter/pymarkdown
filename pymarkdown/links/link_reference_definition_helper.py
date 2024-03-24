@@ -221,11 +221,9 @@ class LinkReferenceDefinitionHelper:
                 line_to_parse
             )
             (
-                new_start_index,
+                start_index,
                 extracted_whitespace,
-            ) = ParserHelper.extract_ascii_whitespace(line_to_parse, 0)
-            assert new_start_index is not None
-            start_index = new_start_index
+            ) = ParserHelper.extract_ascii_whitespace_verified(line_to_parse, 0)
 
             POGGER.debug(">>line_to_parse>>$<<", line_to_parse)
         return (
@@ -519,10 +517,9 @@ class LinkReferenceDefinitionHelper:
                 line_to_parse,
             ) = True, link_ref_stack_token.add_joined_lines_before_suffix("")
             line_to_parse = line_to_parse[:-1]
-            start_index, extracted_whitespace = ParserHelper.extract_spaces(
+            start_index, extracted_whitespace = ParserHelper.extract_spaces_verified(
                 line_to_parse, 0
             )
-            assert start_index is not None
             POGGER.debug(">>line_to_parse>>$<<", line_to_parse)
             (
                 did_complete_lrd,

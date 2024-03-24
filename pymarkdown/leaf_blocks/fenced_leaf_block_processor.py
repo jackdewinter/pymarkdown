@@ -65,14 +65,12 @@ class FencedLeafBlockProcessor:
             FencedLeafBlockProcessor.__fenced_code_block_start_characters,
         ):
             POGGER.debug("ifcb:collected_count>:$:<$<<", line_to_parse, start_index)
-            collected_count, new_index = ParserHelper.collect_while_character(
+            collected_count, new_index = ParserHelper.collect_while_character_verified(
                 line_to_parse, start_index, line_to_parse[start_index]
             )
             POGGER.debug(
                 "ifcb:collected_count:$, new_index:$", collected_count, new_index
             )
-            assert collected_count is not None
-            assert new_index is not None
             after_fence_index = new_index
             (
                 non_whitespace_index,
@@ -98,12 +96,12 @@ class FencedLeafBlockProcessor:
     def parse_fenced_code_block(
         parser_state: ParserState,
         position_marker: PositionMarker,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         original_line: str,
         detabified_original_start_index: int,
         block_quote_data: BlockQuoteData,
         grab_bag: ContainerGrabBag,
-    ) -> Tuple[List[MarkdownToken], Optional[str]]:
+    ) -> Tuple[List[MarkdownToken], str]:
         """
         Handle the parsing of a fenced code block
         """
@@ -202,7 +200,7 @@ class FencedLeafBlockProcessor:
         parser_state: ParserState,
         position_marker: PositionMarker,
         collected_count: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         new_tokens: List[MarkdownToken],
         after_fence_index: int,
         original_line: str,
@@ -244,10 +242,11 @@ class FencedLeafBlockProcessor:
                     parser_state, position_marker, original_line
                 )
 
-        after_fence_and_spaces_index, extracted_spaces = ParserHelper.extract_spaces(
-            position_marker.text_to_parse, after_fence_index
+        after_fence_and_spaces_index, extracted_spaces = (
+            ParserHelper.extract_spaces_verified(
+                position_marker.text_to_parse, after_fence_index
+            )
         )
-        assert after_fence_and_spaces_index is not None
         # POGGER.debug("after_fence_and_spaces_index:$:", after_fence_and_spaces_index)
 
         fenced_token = cast(FencedCodeBlockStackToken, parser_state.token_stack[-1])
@@ -271,8 +270,6 @@ class FencedLeafBlockProcessor:
                     parser_state, split_tab_whitespace
                 )
 
-            assert extracted_whitespace is not None
-            assert extracted_spaces is not None
             new_end_token = parser_state.token_stack[
                 -1
             ].generate_close_markdown_token_from_stack_token(
@@ -293,8 +290,8 @@ class FencedLeafBlockProcessor:
         original_line: str,
         detabified_original_start_index: int,
         collected_count: int,
-        extracted_whitespace: Optional[str],
-    ) -> Tuple[int, bool, Optional[str], bool]:
+        extracted_whitespace: str,
+    ) -> Tuple[int, bool, str, bool]:
         (
             after_fence_index,
             adj_end,
@@ -316,8 +313,6 @@ class FencedLeafBlockProcessor:
             after_fence_in_original
         )
 
-        assert extracted_whitespace is not None
-
         was_indented = not parser_state.token_stack[-2].is_document
         indent_prefix: Optional[str] = (
             None
@@ -332,7 +327,7 @@ class FencedLeafBlockProcessor:
             reconstruct_prefix=indent_prefix,
         )
 
-        _, new_extracted_whitespace = ParserHelper.extract_spaces(
+        _, new_extracted_whitespace = ParserHelper.extract_spaces_verified(
             original_line, adj_original_index
         )
 
@@ -352,8 +347,9 @@ class FencedLeafBlockProcessor:
         detabified_original_line = TabHelper.detabify_string(original_line)
         adj_original_line = detabified_original_line[detabified_original_start_index:]
 
-        after_whitespace_index, _ = ParserHelper.extract_spaces(adj_original_line, 0)
-        assert after_whitespace_index is not None
+        after_whitespace_index, _ = ParserHelper.extract_spaces_verified(
+            adj_original_line, 0
+        )
         after_fence_index = after_whitespace_index + collected_count
         adj_end = adj_original_line[after_whitespace_index:]
         fence_string = adj_original_line[after_whitespace_index:after_fence_index]
@@ -367,7 +363,7 @@ class FencedLeafBlockProcessor:
         position_marker: PositionMarker,
         non_whitespace_index: int,
         collected_count: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         original_line: str,
         new_index: int,
         block_quote_data: BlockQuoteData,
@@ -426,10 +422,10 @@ class FencedLeafBlockProcessor:
     @staticmethod
     def __parse_fenced_code_block_already_in(
         parser_state: ParserState,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         original_line: str,
         line_to_parse: str,
-    ) -> Optional[str]:
+    ) -> str:
         fenced_token = cast(FencedCodeBlockStackToken, parser_state.token_stack[-1])
         if fenced_token.whitespace_start_count and extracted_whitespace:
             POGGER.debug("original_line>:$:<", original_line)
@@ -542,7 +538,7 @@ class FencedLeafBlockProcessor:
         position_marker: PositionMarker,
         non_whitespace_index: int,
         collected_count: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         original_line: str,
         new_index: int,
         block_quote_data: BlockQuoteData,
@@ -597,7 +593,7 @@ class FencedLeafBlockProcessor:
         split_tab: bool,
         block_quote_data: BlockQuoteData,
         split_tab_whitespace: Optional[str],
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         grab_bag: ContainerGrabBag,
     ) -> Tuple[StackToken, List[MarkdownToken], int]:
         old_top_of_stack = parser_state.token_stack[-1]
@@ -636,13 +632,13 @@ class FencedLeafBlockProcessor:
         new_index: int,
         non_whitespace_index: int,
         collected_count: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         after_fence_index: int,
     ) -> Tuple[
         str,
         int,
-        Optional[str],
-        Optional[str],
+        str,
+        str,
         bool,
         int,
         str,
@@ -681,9 +677,9 @@ class FencedLeafBlockProcessor:
         (
             after_extracted_text_index,
             extracted_text,
-        ) = ParserHelper.extract_until_spaces(adjusted_string, non_whitespace_index)
-        assert extracted_text is not None
-
+        ) = ParserHelper.extract_until_spaces_verified(
+            adjusted_string, non_whitespace_index
+        )
         return (
             line_to_parse,
             non_whitespace_index,
@@ -704,8 +700,8 @@ class FencedLeafBlockProcessor:
     def __add_fenced_tokens_create(
         parser_state: ParserState,
         position_marker: PositionMarker,
-        extracted_whitespace: Optional[str],
-        extracted_whitespace_before_info_string: Optional[str],
+        extracted_whitespace: str,
+        extracted_whitespace_before_info_string: str,
         corrected_prefix_length: int,
         collected_count: int,
         extracted_text: str,
@@ -750,7 +746,6 @@ class FencedLeafBlockProcessor:
             pre_text_after_extracted_text = ""
 
         assert extracted_whitespace is not None
-        assert extracted_whitespace_before_info_string is not None
         new_token = FencedCodeBlockMarkdownToken(
             position_marker.text_to_parse[position_marker.index_number],
             collected_count,
@@ -783,7 +778,7 @@ class FencedLeafBlockProcessor:
 
     # pylint: enable=too-many-arguments, too-many-locals
 
-    # pylint: disable=too-many-arguments, too-many-locals
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __add_fenced_tokens_with_tab(
         position_marker: PositionMarker,
@@ -791,11 +786,9 @@ class FencedLeafBlockProcessor:
         new_index: int,
         non_whitespace_index: int,
         collected_count: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         after_fence_index: int,
-    ) -> Tuple[
-        str, int, Optional[str], Optional[str], bool, int, Optional[str], Optional[str]
-    ]:
+    ) -> Tuple[str, int, str, str, bool, int, Optional[str], Optional[str]]:
         split_tab = False
         corrected_prefix_length = 0
         line_to_parse = position_marker.text_to_parse
@@ -819,23 +812,19 @@ class FencedLeafBlockProcessor:
                 extracted_whitespace,
             )
 
-            assert adj_original_line is not None
-
             line_to_parse = adj_original_line
             new_index = line_to_parse.find(fence_string)
             new_index += len(fence_string)
 
             (
-                new_non_whitespace_index,
+                non_whitespace_index,
                 extracted_whitespace_before_info_string,
-            ) = ParserHelper.extract_ascii_whitespace(line_to_parse, new_index)
-            assert new_non_whitespace_index is not None
-            non_whitespace_index = new_non_whitespace_index
+            ) = ParserHelper.extract_ascii_whitespace_verified(line_to_parse, new_index)
         else:
             (
                 _,
                 extracted_whitespace_before_info_string,
-            ) = ParserHelper.extract_ascii_whitespace(line_to_parse, new_index)
+            ) = ParserHelper.extract_ascii_whitespace_verified(line_to_parse, new_index)
         return (
             line_to_parse,
             non_whitespace_index,
@@ -847,7 +836,7 @@ class FencedLeafBlockProcessor:
             adjusted_corrected_prefix,
         )
 
-    # pylint: enable=too-many-arguments, too-many-locals
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
@@ -857,8 +846,8 @@ class FencedLeafBlockProcessor:
         new_index: int,
         collected_count: int,
         after_fence_index: int,
-        extracted_whitespace: Optional[str],
-    ) -> Tuple[str, str, bool, Optional[str], int, Optional[str], Optional[str]]:
+        extracted_whitespace: str,
+    ) -> Tuple[str, str, bool, str, int, Optional[str], Optional[str]]:
         fence_string = line_to_parse[new_index - collected_count : new_index]
         split_tab = False
         corrected_prefix_length = 0
@@ -883,7 +872,6 @@ class FencedLeafBlockProcessor:
         fence_string_index = original_line.find(fence_string)
         assert fence_string_index != -1
         if prefix := original_line[:fence_string_index]:
-            assert extracted_whitespace is not None
             (
                 corrected_prefix,
                 corrected_suffix,
@@ -925,7 +913,7 @@ class FencedLeafBlockProcessor:
     def handle_fenced_code_block(
         parser_state: ParserState,
         position_marker: PositionMarker,
-        leaf_token_whitespace: Optional[str],
+        leaf_token_whitespace: str,
         new_tokens: List[MarkdownToken],
         original_line: str,
         detabified_original_start_index: int,
@@ -959,7 +947,6 @@ class FencedLeafBlockProcessor:
         elif parser_state.token_stack[-1].is_fenced_code_block:
             POGGER.debug(">>still in fenced block>:$:<", original_line)
             POGGER.debug(">>leaf_token_whitespace>:$:<", leaf_token_whitespace)
-            assert leaf_token_whitespace is not None
             token_text = position_marker.text_to_parse[position_marker.index_number :]
             if ParserHelper.tab_character in original_line:
                 (
@@ -1155,10 +1142,9 @@ class FencedLeafBlockProcessor:
         split_tab: bool,
         split_tab_whitespace: Optional[str],
     ) -> Tuple[str, str]:
-        space_end_index, extracted_whitespace = ParserHelper.extract_spaces(
+        space_end_index, extracted_whitespace = ParserHelper.extract_spaces_verified(
             adj_original, 0
         )
-        assert extracted_whitespace is not None
         assert space_end_index != -1
 
         # detabified_extracted_whitespace = TabHelper.detabify_string(
