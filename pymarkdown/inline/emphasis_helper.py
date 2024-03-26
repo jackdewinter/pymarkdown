@@ -368,8 +368,12 @@ class EmphasisHelper:
         Is the current token a right flanking delimiter run?
         """
 
-        assert current_token.preceding_two is not None
-        assert current_token.following_two is not None
+        assert (
+            current_token.preceding_two is not None
+        ), "Preceeding character string cannot be None."
+        assert (
+            current_token.following_two is not None
+        ), "Following character string cannot be None."
         preceding_two, following_two = (
             current_token.preceding_two.rjust(2, ParserHelper.space_character),
             current_token.following_two.ljust(2, ParserHelper.space_character),
@@ -393,8 +397,12 @@ class EmphasisHelper:
         """
         Is the current token a left flanking delimiter run?
         """
-        assert current_token.preceding_two is not None
-        assert current_token.following_two is not None
+        assert (
+            current_token.preceding_two is not None
+        ), "Preceeding character string cannot be None."
+        assert (
+            current_token.following_two is not None
+        ), "Following character string cannot be None."
         preceding_two, following_two = (
             current_token.preceding_two.rjust(2, ParserHelper.space_character),
             current_token.following_two.ljust(2, ParserHelper.space_character),
@@ -417,7 +425,9 @@ class EmphasisHelper:
         Determine if the current token is a potential closer.
         """
 
-        assert current_token.token_text[0] in EmphasisHelper.get_inline_emphasis()
+        assert (
+            current_token.token_text[0] in EmphasisHelper.get_inline_emphasis()
+        ), "Must be a valid emphasis character."
 
         # Rule 3 and 7
         if current_token.token_text[0] == EmphasisHelper.__simple_emphasis:
@@ -430,11 +440,15 @@ class EmphasisHelper:
             )
         # Rule 4 and 8
         else:
-            assert current_token.token_text[0] == EmphasisHelper.__complex_emphasis
+            assert (
+                current_token.token_text[0] == EmphasisHelper.__complex_emphasis
+            ), "Must be a valid emphasis character."
             if is_closer := EmphasisHelper.__is_right_flanking_delimiter_run(
                 current_token
             ):
-                assert current_token.following_two is not None
+                assert (
+                    current_token.following_two is not None
+                ), "Following character string cannot be None."
                 is_left_flanking, following_two = (
                     EmphasisHelper.__is_left_flanking_delimiter_run(current_token),
                     current_token.following_two.ljust(2, ParserHelper.space_character),
@@ -451,7 +465,9 @@ class EmphasisHelper:
         Determine if the current token is a potential opener.
         """
 
-        assert current_token.token_text[0] in EmphasisHelper.get_inline_emphasis()
+        assert (
+            current_token.token_text[0] in EmphasisHelper.get_inline_emphasis()
+        ), "Must be a valid emphasis character."
 
         # Rule 1
         if current_token.token_text[0] == EmphasisHelper.__simple_emphasis:
@@ -464,11 +480,15 @@ class EmphasisHelper:
                 else False
             )
         else:
-            assert current_token.token_text[0] == EmphasisHelper.__complex_emphasis
+            assert (
+                current_token.token_text[0] == EmphasisHelper.__complex_emphasis
+            ), "Must be a valid emphasis character."
             is_opener = EmphasisHelper.__is_left_flanking_delimiter_run(current_token)
             # POGGER.debug("is_opener (complex)=$", is_opener)
             if is_opener:
-                assert current_token.preceding_two is not None
+                assert (
+                    current_token.preceding_two is not None
+                ), "Preceeding character string cannot be None."
                 is_right_flanking, preceding_two = (
                     EmphasisHelper.__is_right_flanking_delimiter_run(current_token),
                     current_token.preceding_two.rjust(2, ParserHelper.space_character),

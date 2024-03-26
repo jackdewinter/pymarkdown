@@ -54,7 +54,9 @@ class TransformToGfmListLooseness:
                 break
             current_token_index += 1
 
-        assert current_token_index != len(actual_tokens)
+        assert current_token_index != len(
+            actual_tokens
+        ), "Index must be within the string."
         POGGER.debug(
             "__calculate_list_looseness<<$<<$\n\n",
             actual_token_index,
@@ -137,7 +139,7 @@ class TransformToGfmListLooseness:
 
     @staticmethod
     def __handle_new_list_item(current_token: MarkdownToken, stack_count: int) -> bool:
-        assert not current_token.is_block
+        assert not current_token.is_block, "Cannot be a block."
         POGGER.debug(">>list--item>>$", stack_count)
         return stack_count == 0
 
@@ -156,7 +158,7 @@ class TransformToGfmListLooseness:
                 POGGER.debug("<<check!!")
 
                 check_index = current_token_index + 1
-                assert check_index < len(actual_tokens)
+                assert check_index < len(actual_tokens), "Index must be within list."
                 POGGER.debug_with_visible_whitespace(
                     "<<check>>$", actual_tokens[check_index]
                 )
@@ -255,7 +257,7 @@ class TransformToGfmListLooseness:
         pre_prev_token = actual_tokens[search_back_index]
         if pre_prev_token.is_end_token:
             end_token = cast(EndMarkdownToken, pre_prev_token)
-            assert end_token.start_markdown_token
+            assert end_token.start_markdown_token, "End token must have a start token."
             pre_prev_token = end_token.start_markdown_token
             POGGER.debug(">>end_>using_start>>$", pre_prev_token)
 
@@ -315,10 +317,12 @@ class TransformToGfmListLooseness:
         Figure out what the list start for the current token is.
         """
 
-        assert not actual_tokens[actual_token_index].is_list_start
+        assert not actual_tokens[
+            actual_token_index
+        ].is_list_start, "Must not be a list start."
         current_index, stack_count = actual_token_index - 1, 0
         while True:
-            assert current_index >= 0
+            assert current_index >= 0, "Must not go below 0."
             if actual_tokens[current_index].is_list_start:
                 if stack_count == 0:
                     break

@@ -64,7 +64,7 @@ class StackToken:
         """
         Overrides the default implementation
         """
-        assert isinstance(other, StackToken)
+        assert isinstance(other, StackToken), "Cover other objects."
         return self.type_name == other.type_name and self.extra_data == other.extra_data
 
     @property
@@ -106,7 +106,7 @@ class StackToken:
         Generate the token emitted to close off the current stack token
         """
 
-        assert self._stack_link_definition != self.type_name
+        assert self._stack_link_definition != self.type_name, "TODO: why?"
         assert self.matching_markdown_token, str(self)
 
         return EndMarkdownToken(

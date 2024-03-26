@@ -138,7 +138,7 @@ class ThematicLeafBlockProcessor:
                 ) = TabHelper.parse_thematic_break_with_tab(
                     original_line, token_text, extracted_whitespace
                 )
-                assert new_extracted_whitespace is not None
+                assert new_extracted_whitespace is not None, "TODO: Tab"
                 extracted_whitespace = new_extracted_whitespace
                 # POGGER.debug("extra_whitespace_prefix>>:$:<", extra_whitespace_prefix)
                 # POGGER.debug("extracted_whitespace>>:$:<", extracted_whitespace)
@@ -188,7 +188,6 @@ class ThematicLeafBlockProcessor:
         grab_bag: ContainerGrabBag,
     ) -> None:
         if split_tab and not split_tab_with_block_quote_suffix:
-            assert extracted_whitespace is not None
             ThematicLeafBlockProcessor.__parse_thematic_break_with_suffix(
                 parser_state,
                 position_marker,
@@ -224,7 +223,9 @@ class ThematicLeafBlockProcessor:
         POGGER.debug("parser_state.token_stack[-1]>>:$:<", parser_state.token_stack[-1])
         POGGER.debug("parser_state.token_stack>>:$:<", parser_state.token_stack)
         POGGER.debug("parser_state.token_document>>:$:<", parser_state.token_document)
-        assert parser_state.token_stack[-1].is_list
+        assert parser_state.token_stack[
+            -1
+        ].is_list, "This should only be a list container."
         modified_whitespace = (
             extra_whitespace_prefix + extracted_whitespace
             if extra_whitespace_prefix is not None

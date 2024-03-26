@@ -26,6 +26,7 @@ class TransformNewListItem:
     Class to provide transformations for a new list item.
     """
 
+    # pylint: disable=too-many-locals
     @staticmethod
     def rehydrate_next_list_item(
         context: MarkdownTransformContext,
@@ -37,16 +38,22 @@ class TransformNewListItem:
         """
         Rehydrate the next list item token.
         """
-        _ = previous_token
-        assert next_token is not None
-
-        assert context.container_token_stack[-1].is_list_start
-        assert isinstance(context.container_token_stack[-1], ListStartMarkdownToken)
+        assert next_token is not None, "If there is a list start, must have a list end."
+        assert (
+            previous_token is not None
+        ), "If this is a new list item, must have a list start."
+        assert context.container_token_stack[
+            -1
+        ].is_list_start, "Must occured within a list."
+        # assert isinstance(context.container_token_stack[-1], ListStartMarkdownToken)
+        list_start_token = cast(
+            ListStartMarkdownToken, context.container_token_stack[-1]
+        )
 
         current_list_token = cast(NewListItemMarkdownToken, current_token)
 
         POGGER.debug("__rehydrate_next_list_item")
-        context.container_token_stack[-1].adjust_for_new_list_item(current_list_token)
+        list_start_token.adjust_for_new_list_item(current_list_token)
 
         (
             adjustment_since_newline,
@@ -59,7 +66,6 @@ class TransformNewListItem:
 
         did_container_start_midline = False
         had_weird_block_quote_in_list = False
-        assert previous_token
         (
             previous_indent,
             extracted_whitespace2,
@@ -100,7 +106,7 @@ class TransformNewListItem:
         POGGER.debug(f"rnli->extracted_whitespace>:{extracted_whitespace}:")
         start_sequence = (
             f"{whitespace_to_use}{current_list_token.list_start_content}"
-            + f"{context.container_token_stack[-1].list_start_sequence}"
+            + f"{list_start_token.list_start_sequence}"
         )
 
         POGGER.debug(f"rnli->start_sequence>:{start_sequence}:")
@@ -121,11 +127,12 @@ class TransformNewListItem:
             )
         )
         POGGER.debug(f"rnli->start_sequence>:{start_sequence}:")
-
         return start_sequence
 
-    @staticmethod
+    # pylint: enable=too-many-locals
+
     # pylint: disable=too-many-arguments
+    @staticmethod
     def __rehydrate_next_list_item_not_blank_line(
         context: MarkdownTransformContext,
         start_sequence: str,
@@ -139,13 +146,18 @@ class TransformNewListItem:
         # POGGER.debug(f"did_container_start_midline={did_container_start_midline}=")
         # POGGER.debug(f"adjustment_since_newline={adjustment_since_newline}=")
 
-        assert context.container_token_stack[-1].is_list_start
-        assert isinstance(context.container_token_stack[-1], ListStartMarkdownToken)
+        assert context.container_token_stack[
+            -1
+        ].is_list_start, "If this is a new list item, must have a list start."
+        list_start_token = cast(
+            ListStartMarkdownToken, context.container_token_stack[-1]
+        )
+        # assert isinstance(context.container_token_stack[-1], ListStartMarkdownToken)
 
         if did_container_start_midline:
             POGGER.debug("did start midline")
             # POGGER.debug(f"next_token:{ParserHelper.make_value_visible(next_token)}")
-            project_indent_level = context.container_token_stack[-1].indent_level
+            project_indent_level = list_start_token.indent_level
             if next_token and next_token.is_block_quote_start:
                 next_block_token = cast(BlockQuoteMarkdownToken, next_token)
                 next_block_quote_leading_space = (
@@ -156,21 +168,17 @@ class TransformNewListItem:
                 # POGGER.debug(
                 #     f"did start midline:next_block_quote_leading_space:{next_block_quote_leading_space}:"
                 # )
-                ex_whitespace, _ = ParserHelper.extract_spaces(
+                ex_whitespace, _ = ParserHelper.extract_spaces_verified(
                     next_block_quote_leading_space, 0
                 )
-                assert ex_whitespace is not None
                 # POGGER.debug(f"did start midline:ab:{ex_whitespace}:")
                 project_indent_level -= ex_whitespace
             start_sequence = start_sequence.ljust(project_indent_level, " ")
         else:
             POGGER.debug("did not start midline")
-            calculated_indent = (
-                context.container_token_stack[-1].indent_level
-                - adjustment_since_newline
-            )
+            calculated_indent = list_start_token.indent_level - adjustment_since_newline
             POGGER.debug(
-                f"calculated_indent:{calculated_indent} = indent_level:{context.container_token_stack[-1].indent_level} - adjustment_since_newline:{adjustment_since_newline}"
+                f"calculated_indent:{calculated_indent} = indent_level:{list_start_token.indent_level} - adjustment_since_newline:{adjustment_since_newline}"
             )
             POGGER.debug(
                 f"had_weird_block_quote_in_list:{had_weird_block_quote_in_list}"
@@ -181,7 +189,7 @@ class TransformNewListItem:
                 POGGER.debug(f"calculated_indent:{calculated_indent}")
             POGGER.debug(
                 f"rnli->calculated_indent={calculated_indent} = "
-                + f"indent_level={context.container_token_stack[-1].indent_level} - "
+                + f"indent_level={list_start_token.indent_level} - "
                 + f"adjustment_since_newline={adjustment_since_newline}"
             )
             POGGER.debug(f"start_sequence:{start_sequence}")
@@ -220,7 +228,7 @@ class TransformNewListItem:
     def __recalc_adjustment_since_newline(
         context: MarkdownTransformContext, adjustment_since_newline: int
     ) -> int:
-        assert not adjustment_since_newline
+        assert not adjustment_since_newline, "TODO: Check"
         POGGER.debug(
             f"rnli->container_token_stack>:{ParserHelper.make_value_visible(context.container_token_stack)}:"
         )

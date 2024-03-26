@@ -35,9 +35,11 @@ class ListBlockCanCloseHelper:
         stack_index = len(parser_state.token_stack) - 1
         while stack_index and not parser_state.token_stack[stack_index].is_list:
             stack_index -= 1
-        assert stack_index
+        assert stack_index, "Stack index must be positive. (Document = index 0)"
         last_stack_index = stack_index
-        assert parser_state.token_stack[stack_index].is_list
+        assert parser_state.token_stack[
+            stack_index
+        ].is_list, "Current block must be a list."
         stack_index -= 1
         while stack_index and not parser_state.token_stack[stack_index].is_list:
             stack_index -= 1
@@ -90,7 +92,9 @@ class ListBlockCanCloseHelper:
         balancing_tokens: List[MarkdownToken],
         new_stack: StackToken,
     ) -> None:
-        assert new_stack.matching_markdown_token is not None
+        assert (
+            new_stack.matching_markdown_token is not None
+        ), "New stack token must have a matching markdown token."
         matching_column_number = new_stack.matching_markdown_token.column_number
 
         (
@@ -127,11 +131,11 @@ class ListBlockCanCloseHelper:
                 include_lists=True,
                 include_block_quotes=True,
             )
-            assert close_tokens
+            assert close_tokens, "At least one token must have been returned."
             balancing_tokens.extend(close_tokens)
             POGGER.debug("close_tokens>>$", close_tokens)
             POGGER.debug("parser_state.token_stack>>$", parser_state.token_stack)
-            assert parser_state.token_stack[-1].is_list
+            assert parser_state.token_stack[-1].is_list, "Current block must be a list."
 
             (
                 list_count,

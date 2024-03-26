@@ -119,7 +119,7 @@ class InlineHelper:
             inline_response = InlineBackslashHelper.handle_inline_backslash(
                 parser_properties, inline_request
             )
-            assert inline_response.new_index is not None
+            assert inline_response.new_index is not None, "New index must be defined."
             next_index = inline_response.new_index
             extracted_parts.append(source_text[old_index:next_index])
         elif start_character is not None and ParserHelper.is_character_at_index(
@@ -132,7 +132,7 @@ class InlineHelper:
         else:
             assert ParserHelper.is_character_at_index(
                 source_text, next_index, close_character
-            )
+            ), "Character at index must be the close character."
             POGGER.debug("pre-close>>next_index>>$>>", next_index)
             extracted_parts.append(close_character)
             next_index += 1
@@ -210,7 +210,9 @@ class InlineHelper:
             POGGER.debug("first_word_index>:$:<", first_word_index)
             first_word_count += 1
         POGGER.debug("first_word_count>:$:<", first_word_count)
-        assert first_word_index == current_line_leading_space_index
+        assert (
+            first_word_index == current_line_leading_space_index
+        ), "Indices must match up."
 
         tabified_start_index = adj_tabified_text.rfind(
             current_line_first_word, 0, stop_character_in_tabified_index
@@ -233,7 +235,9 @@ class InlineHelper:
                     tabified_start_index:stop_character_in_tabified_index
                 ],
             )
-            assert tabified_start_index <= stop_character_in_tabified_index
+            assert (
+                tabified_start_index <= stop_character_in_tabified_index
+            ), "Normal and tabified indices must match up."
 
         if current_line_leading_space:
             POGGER.debug(
@@ -262,11 +266,11 @@ class InlineHelper:
         start_index = 0
         for _ in range(newlines_encountered):
             next_index = tabified_text.find("\n", start_index)
-            assert next_index != -1
+            assert next_index != -1, "Next newline must be found."
             start_index = next_index + 1
 
         next_index = tabified_text.find("\n", start_index)
-        assert next_index == -1
+        assert next_index == -1, "Next newline must not be found."
 
         return tabified_text[start_index:], start_index
 
@@ -318,7 +322,7 @@ class InlineHelper:
                 found_word_index,
                 current_line_tabified_text[found_word_index:],
             )
-            assert found_word_index != -1
+            assert found_word_index != -1, "Found index must be set to a valid index."
 
         if source_text_spaces:
             POGGER.debug(

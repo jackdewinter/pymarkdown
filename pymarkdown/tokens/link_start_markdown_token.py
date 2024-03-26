@@ -34,9 +34,6 @@ class LinkStartMarkdownToken(ReferenceMarkdownToken):
         column_number: int,
         lhp: LinkHelperProperties,
     ) -> None:
-        # assert lhp.pre_inline_link is not None
-        # assert lhp.label_type is not None
-        # assert lhp.inline_link is not None
         ReferenceMarkdownToken.__init__(
             self,
             lhp,
@@ -124,14 +121,16 @@ class LinkStartMarkdownToken(ReferenceMarkdownToken):
                 ]
             )
         elif link_token.label_type == Constants.link_type__full:
-            assert link_token.ex_label is not None
+            assert link_token.ex_label is not None, "Full links must have a label"
             link_parts.extend(
                 ["[", link_token.text_from_blocks, "][", link_token.ex_label, "]"]
             )
         elif link_token.label_type == Constants.link_type__collapsed:
             link_parts.extend(["[", link_token.text_from_blocks, "][]"])
         else:
-            assert link_token.label_type == Constants.link_type__inline
+            assert (
+                link_token.label_type == Constants.link_type__inline
+            ), "The default is an inline link."
             LinkStartMarkdownToken.__rehydrate_inline_link_text_from_token_type_inline(
                 link_token, link_parts
             )
@@ -142,8 +141,12 @@ class LinkStartMarkdownToken(ReferenceMarkdownToken):
     def __rehydrate_inline_link_text_from_token_type_inline(
         link_token: ReferenceMarkdownToken, link_parts: List[str]
     ) -> None:
-        assert link_token.before_title_whitespace is not None
-        assert link_token.before_link_whitespace is not None
+        assert (
+            link_token.before_title_whitespace is not None
+        ), "Before title whitespace must be defined."
+        assert (
+            link_token.before_link_whitespace is not None
+        ), "Before link whitespace must be defined."
         link_parts.extend(
             [
                 "[",
@@ -169,7 +172,9 @@ class LinkStartMarkdownToken(ReferenceMarkdownToken):
                 title_prefix = '"'
                 title_suffix = '"'
 
-            assert link_token.after_title_whitespace is not None
+            assert (
+                link_token.after_title_whitespace is not None
+            ), "After title whitespace must be defined."
             link_parts.extend(
                 [
                     title_prefix,

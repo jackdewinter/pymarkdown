@@ -146,7 +146,7 @@ class LeafBlockProcessor:
                 grab_bag.original_line,
                 did_adjust_block_quote,
             )
-            assert html_tokens
+            assert html_tokens, "At least one token should have been produced."
             new_tokens.extend(html_tokens)
             outer_processed = True
         else:

@@ -76,7 +76,9 @@ class InlineBacktickHelper:
             extracted_start_backticks_size,
         )
 
-        assert inline_response.new_index is not None
+        assert (
+            inline_response.new_index is not None
+        ), "new_index should be defined by this point."
         POGGER.debug(
             ">>delta_line_number>>$<<",
             inline_response.delta_line_number,
@@ -134,9 +136,15 @@ class InlineBacktickHelper:
                 "",
                 end_backtick_start_index,
             )
-            assert inline_request.line_number is not None
-            assert inline_request.column_number is not None
-            assert inline_request.remaining_line is not None
+            assert (
+                inline_request.line_number is not None
+            ), "line_number must be defined by now."
+            assert (
+                inline_request.column_number is not None
+            ), "column_number must be defined by now."
+            assert (
+                inline_request.remaining_line is not None
+            ), "remaining_line must be defined by now."
             new_column_number = inline_request.column_number + len(
                 inline_request.remaining_line
             )
@@ -277,7 +285,9 @@ class InlineBacktickHelper:
             inline_request.source_text
         )
         POGGER.debug("split_source_lines>>$<<", split_source_lines)
-        assert inline_request.tabified_text is not None
+        assert (
+            inline_request.tabified_text is not None
+        ), "tabified_text must be defined by now."
         split_tabified_lines = InlineBacktickHelper.__backtick_split_lines(
             inline_request.tabified_text
         )
@@ -296,7 +306,9 @@ class InlineBacktickHelper:
             start_delta,
             calculated_index,
         )
-        assert calculated_index + start_delta == new_index
+        assert (
+            calculated_index + start_delta == new_index
+        ), "calculations should equal current position"
 
         (
             end_array_index,
@@ -311,7 +323,9 @@ class InlineBacktickHelper:
             end_delta,
             calculated_index,
         )
-        assert calculated_index + end_delta == end_backtick_start_index
+        assert (
+            calculated_index + end_delta == end_backtick_start_index
+        ), "calculations should equal current position"
 
         if start_array_index == end_array_index:
             POGGER.debug("same")
@@ -349,7 +363,7 @@ class InlineBacktickHelper:
             if start_index <= index_to_find < start_index + len(array_element):
                 break
             start_index += len(array_element)
-        assert start_index != (start_index + len(split_array))
+        assert start_index != (start_index + len(split_array)), "TODO: why?"
         delta = index_to_find - start_index
         POGGER.debug("i=$,start_index=$,delta=$", _array_index, start_index, delta)
         return _array_index, delta, start_index

@@ -121,7 +121,7 @@ class TransformContainers:
 
         if not container_stack:
             record_item = container_records[0]
-            assert record_item.item_a
+            assert record_item.item_a, "TODO: huh?"
             pre_container_text = transformed_data[: record_item.item_b]
             container_text = transformed_data[record_item.item_b :]
             adjusted_text = TransformContainers.__apply_container_transformation(
@@ -495,7 +495,9 @@ class TransformContainers:
             previous_token,
         ):
             previous_block_token = cast(BlockQuoteMarkdownToken, previous_token)
-            assert previous_block_token.bleading_spaces is not None
+            assert (
+                previous_block_token.bleading_spaces is not None
+            ), "Bleading spaces must be defined by this point."
             split_leading_spaces = previous_block_token.bleading_spaces.split(
                 ParserHelper.newline_character
             )
@@ -535,7 +537,9 @@ class TransformContainers:
         new_list_item_adjust = True
         if len(removed_tokens) == 1 and removed_tokens[-1].is_block_quote_start:
             removed_block_token = cast(BlockQuoteMarkdownToken, removed_tokens[-1])
-            assert removed_block_token.bleading_spaces is not None
+            assert (
+                removed_block_token.bleading_spaces is not None
+            ), "Bleading spaces must be defined by this point."
             leading_spaces_newline_count = removed_block_token.bleading_spaces.count(
                 "\n"
             )
@@ -674,8 +678,8 @@ class TransformContainers:
             and current_changed_record.item_d.is_block_quote_end
         )
         if was_abrupt_block_quote_end:
-            assert current_changed_record is not None
-            assert current_changed_record.item_d is not None
+            assert current_changed_record is not None, "TODO: huh?"
+            assert current_changed_record.item_d is not None, "TODO: huh?"
             was_abrupt_block_quote_end = bool(
                 current_changed_record.item_d.was_forced
                 and current_changed_record.item_d.extra_end_data == "> "
@@ -716,7 +720,9 @@ class TransformContainers:
         tabbed_leading_space: Optional[str] = None
         if token_stack[-1].is_block_quote_start:
             prev_block_token = cast(BlockQuoteMarkdownToken, token_stack[-1])
-            assert prev_block_token.bleading_spaces is not None
+            assert (
+                prev_block_token.bleading_spaces is not None
+            ), "Bleading spaces must be defined by this point."
             split_leading_spaces = prev_block_token.bleading_spaces.split(
                 ParserHelper.newline_character
             )
@@ -726,7 +732,9 @@ class TransformContainers:
                 ]
         else:
             prev_list_token = cast(ListStartMarkdownToken, token_stack[-1])
-            assert prev_list_token.leading_spaces is not None
+            assert (
+                prev_list_token.leading_spaces is not None
+            ), "Leading spaces must be defined by this point."
             split_leading_spaces = prev_list_token.leading_spaces.split(
                 ParserHelper.newline_character
             )
@@ -808,7 +816,9 @@ class TransformContainers:
             )
         split_leading_spaces = leading_spaces.split(ParserHelper.newline_character)
         inner_token_index = container_token_indices[nested_list_start_index]
-        assert inner_token_index < len(split_leading_spaces)
+        assert inner_token_index < len(
+            split_leading_spaces
+        ), "Index must be within the string."
         POGGER.debug(
             f"inner_index->{str(container_token_indices[nested_list_start_index])}"
         )

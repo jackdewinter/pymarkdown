@@ -53,7 +53,7 @@ class LinkReferenceDefinitionParseHelper:
         ) = LinkParseHelper.extract_link_label(
             parser_state.parse_properties, line_to_parse, start_index + 1
         )
-        assert is_blank_line is not None
+        assert is_blank_line is not None, "TODO: check"
         if keep_going:
             (
                 keep_going,
@@ -68,7 +68,6 @@ class LinkReferenceDefinitionParseHelper:
         else:
             inline_link = None
         if keep_going:
-            assert new_index is not None
             (
                 keep_going,
                 new_index,
@@ -90,7 +89,7 @@ class LinkReferenceDefinitionParseHelper:
                 line_to_parse, new_index
             )
         if keep_going:
-            assert collected_destination is not None
+            assert collected_destination is not None, "TODO: Check"
             normalized_destination = LinkParseHelper.normalize_link_label(
                 collected_destination
             )
@@ -131,7 +130,7 @@ class LinkReferenceDefinitionParseHelper:
         if parser_state.token_stack[-1].is_paragraph:
             return False
 
-        assert extracted_whitespace is not None
+        assert extracted_whitespace is not None, "TODO: Check"
         POGGER.debug(
             "__is_link_reference_definition - extracted_whitespace:>:$:<",
             extracted_whitespace,
@@ -188,7 +187,7 @@ class LinkReferenceDefinitionParseHelper:
         line_title_whitespace: Optional[str],
         end_whitespace: Optional[str],
     ) -> Tuple[bool, Optional[int], Optional[LinkReferenceDefinitionTuple]]:
-        assert new_index != -1
+        assert new_index != -1, "TODO: check, also why passed in if just to return?"
 
         POGGER.debug(
             ">>collected_destination(normalized)>>$",
@@ -228,7 +227,7 @@ class LinkReferenceDefinitionParseHelper:
         Verify that the link reference definition's ends properly.
         """
 
-        assert new_index is not None
+        assert new_index is not None, "TODO: check"
         POGGER.debug("look for EOL-ws>>$<<", line_to_parse[new_index:])
         new_index, ex_ws = ParserHelper.extract_ascii_whitespace_verified(
             line_to_parse, new_index

@@ -76,7 +76,7 @@ class TransformToGfmTokenHandlers:
         #     handler_instance = token_type(**init_parameters)  # type: ignore
         #     token_name = handler_instance.token_name
 
-        assert token_name
+        assert token_name, "This must not be empty."
         self.__start_token_handlers[token_name] = start_token_handler
         if end_token_handler:
             self.__end_token_handlers[token_name] = end_token_handler

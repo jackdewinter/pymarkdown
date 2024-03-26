@@ -144,7 +144,9 @@ class AtxHeadingMarkdownToken(LeafMarkdownToken):
         )
 
         del context.block_stack[-1]
-        assert current_end_token.extra_end_data is not None
+        assert (
+            current_end_token.extra_end_data is not None
+        ), "extra_end_data must be defined by now."
         return "".join(
             [
                 current_end_token.extra_end_data,

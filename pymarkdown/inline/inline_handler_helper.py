@@ -148,6 +148,9 @@ class InlineHandlerHelper:
         parser_properties: ParseBlockPassProperties,
         inline_request: InlineRequest,
     ) -> InlineResponse:
+        """
+        Registered handler.
+        """
         _ = parser_properties
 
         inline_response = InlineResponse()
@@ -220,11 +223,15 @@ class InlineHandlerHelper:
                 proc_fn = InlineHandlerHelper.__inline_character_handlers[
                     source_text[next_index]
                 ]
-                assert proc_fn is not None
+                # assert proc_fn is not None
                 inline_response = proc_fn(parser_properties, inline_request)
-                assert inline_response.new_string is not None
+                assert (
+                    inline_response.new_string is not None
+                ), "new_string should be defined by this point."
+                assert (
+                    inline_response.new_index is not None
+                ), "new_index should be defined by this point."
                 processed_parts.append(inline_response.new_string)
-                assert inline_response.new_index is not None
                 start_index = inline_response.new_index
             else:
                 processed_parts.append(ParserHelper.newline_character)
@@ -243,6 +250,17 @@ class InlineHandlerHelper:
         parser_properties: ParseBlockPassProperties,
         inline_request: InlineRequest,
     ) -> InlineResponse:
+        """
+        Registered handler.
+        """
+        assert (
+            inline_request.line_number is not None
+            and inline_request.column_number is not None
+            and inline_request.remaining_line is not None
+            and inline_request.current_string_unresolved is not None
+        ), "These four fields must be defined by now."
+
+        # TODO pass these in and only pass in changes?
         return InlineHandlerHelper.__handle_inline_special(
             parser_properties,
             inline_request.source_text,
@@ -267,11 +285,11 @@ class InlineHandlerHelper:
         next_index: int,
         inline_blocks: List[MarkdownToken],
         special_length: int,
-        remaining_line: Optional[str],
+        remaining_line: str,
         tabified_remaining_line: Optional[str],
-        current_string_unresolved: Optional[str],
-        line_number: Optional[int],
-        column_number: Optional[int],
+        current_string_unresolved: str,
+        line_number: int,
+        column_number: int,
         para_owner: Optional[ParagraphMarkdownToken],
         tabified_text: Optional[str],
         last_container_token: Optional[MarkdownToken],
@@ -279,10 +297,6 @@ class InlineHandlerHelper:
         """
         Handle the collection of special inline characters for later processing.
         """
-        assert remaining_line is not None
-        assert column_number is not None
-        assert current_string_unresolved is not None
-
         inline_response = InlineResponse()
         inline_response.new_string = ""
 
@@ -316,7 +330,6 @@ class InlineHandlerHelper:
             last_container_token,
         )
         if not inline_response.new_tokens:
-            assert line_number is not None
             POGGER.debug(">>create>>$,$<<", line_number, column_number)
             inline_response.new_tokens = [
                 SpecialTextMarkdownToken(
@@ -551,11 +564,21 @@ class InlineHandlerHelper:
         parser_properties: ParseBlockPassProperties,
         inline_request: InlineRequest,
     ) -> InlineResponse:
+        """
+        Registered handler.
+        """
         if ParserHelper.are_characters_at_index(
             inline_request.source_text,
             inline_request.next_index,
             LinkSearchHelper.image_start_sequence,
         ):
+            assert (
+                inline_request.line_number is not None
+                and inline_request.column_number is not None
+                and inline_request.remaining_line is not None
+                and inline_request.current_string_unresolved is not None
+            ), "These four fields must be defined by now."
+
             inline_response = InlineHandlerHelper.__handle_inline_special(
                 parser_properties,
                 inline_request.source_text,
@@ -571,7 +594,9 @@ class InlineHandlerHelper:
                 inline_request.tabified_text,
                 None,
             )
-            assert not inline_response.consume_rest_of_line
+            assert (
+                not inline_response.consume_rest_of_line
+            ), "After the processing, make sure we are not just consuming the rest of the line."
         else:
             inline_response = InlineResponse()
             (
@@ -764,7 +789,7 @@ class InlineHandlerHelper:
         """
 
         proc_fn = InlineHandlerHelper.__get_handler(source_text[next_index])
-        assert proc_fn is not None
+        # assert proc_fn is not None
         inline_response = proc_fn(parser_properties, inline_request)
 
         line_number += inline_response.delta_line_number
@@ -828,7 +853,9 @@ class InlineHandlerHelper:
                 ">>new_token.start_markdown_token>>$<<",
                 end_token.start_markdown_token,
             )
-            assert end_token.start_markdown_token
+            assert (
+                end_token.start_markdown_token
+            ), "End markdown tokens should have the starting token."
             repeat_count = new_index - next_index
             POGGER.debug(">>delta_line>>$<<", delta_line)
             POGGER.debug(">>repeat_count>>$<<", repeat_count)
@@ -867,7 +894,9 @@ class InlineHandlerHelper:
         delta_line: int,
         repeat_count: int,
     ) -> Tuple[int, int]:
-        assert current_token.ex_label is not None
+        assert (
+            current_token.ex_label is not None
+        ), "All reference tokens must have a label."
         if newline_count := ParserHelper.count_newlines_in_text(current_token.ex_label):
             POGGER.debug(">>ex_label")
             delta_line += newline_count
@@ -895,17 +924,26 @@ class InlineHandlerHelper:
         delta_line: int,
         repeat_count: int,
     ) -> Tuple[int, int]:
-        assert current_token.is_inline_link or current_token.is_inline_image
+        assert (
+            current_token.is_inline_link or current_token.is_inline_image
+        ), "TODO: check"
         active_link_title = current_token.active_link_title
 
-        assert current_token.before_title_whitespace is not None
+        assert (
+            current_token.before_title_whitespace is not None
+        ), "For an inline, this must be defined."
+        assert (
+            current_token.before_link_whitespace is not None
+        ), "For an inline, this must be defined."
         link_part_lengths = [0] * 5
         link_part_lengths[0] = len(current_token.active_link_uri) + len(
             current_token.before_title_whitespace
         )
         if current_token.inline_title_bounding_character:
-            assert active_link_title is not None
-            assert current_token.after_title_whitespace is not None
+            assert (
+                active_link_title is not None
+                and current_token.after_title_whitespace is not None
+            ), "If we have an inline link, both these should be defined."
 
             link_part_lengths[1] = 1
             link_part_lengths[2] = len(active_link_title) + 1
@@ -917,7 +955,6 @@ class InlineHandlerHelper:
             total_newlines,
         ) = InlineHandlerHelper.__calculate_inline_label(current_token)
 
-        assert current_token.before_link_whitespace is not None
         (
             link_part_index,
             delta_line,
@@ -944,7 +981,7 @@ class InlineHandlerHelper:
             last_spaces,
         )
 
-        assert active_link_title is not None
+        assert active_link_title is not None, "For an inline, this must be defined."
         (
             link_part_index,
             delta_line,
@@ -956,7 +993,9 @@ class InlineHandlerHelper:
         if new_link_part_length is not None:
             link_part_lengths[2] = new_link_part_length
 
-        assert current_token.after_title_whitespace is not None
+        assert (
+            current_token.after_title_whitespace is not None
+        ), "For an inline, this must be defined."
         (
             link_part_index,
             delta_line,
@@ -1007,7 +1046,9 @@ class InlineHandlerHelper:
             )
         if link_part_index >= 0:
             if split_paragraph_lines:
-                assert para_owner is not None
+                assert (
+                    para_owner is not None
+                ), "If we have a paragraph, must have a paragraph token."
                 link_part_lengths[4] = len(
                     split_paragraph_lines[para_owner.rehydrate_index]
                 )

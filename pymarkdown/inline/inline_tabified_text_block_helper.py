@@ -100,7 +100,7 @@ class InlineTabifiedTextBlockHelper:
         ex_original_line, _ = TabHelper.find_detabify_string_ex(
             adj_tabified_text, adj_current_line_source_text
         )
-        assert ex_original_line is not None
+        assert ex_original_line is not None, "TODO: Tab"
         return new_start + ex_original_line
 
     @staticmethod
@@ -152,14 +152,18 @@ class InlineTabifiedTextBlockHelper:
                 stop_character_in_tabified_index,
                 adj_tabified_text[stop_character_in_tabified_index:],
             )
-            assert stop_character_in_tabified_index != -1
+            assert (
+                stop_character_in_tabified_index != -1
+            ), "Stop character must be found."
         POGGER.debug("found_in_tabified_text_count>:$:<", found_in_tabified_text_count)
         POGGER.debug(
             "adj_tabified_text[$]>:$:<",
             stop_character_in_tabified_index,
             adj_tabified_text[stop_character_in_tabified_index:],
         )
-        assert adj_tabified_text[stop_character_in_tabified_index] == stop_character
+        assert (
+            adj_tabified_text[stop_character_in_tabified_index] == stop_character
+        ), "Found character must be stop character."
         return stop_character_in_tabified_index
 
     # pylint: disable=too-many-arguments
@@ -175,7 +179,7 @@ class InlineTabifiedTextBlockHelper:
         (
             current_line_first_word_index,
             current_line_first_word,
-        ) = ParserHelper.collect_until_one_of_characters(
+        ) = ParserHelper.collect_until_one_of_characters_verified(
             current_line_source_text,
             current_line_leading_space_index,
             " \t" + stop_character,
@@ -191,7 +195,6 @@ class InlineTabifiedTextBlockHelper:
                 adj_tabified_text, stop_character_in_tabified_index
             )
         else:
-            assert current_line_first_word is not None
             tabified_start_index = InlineHelper.pdff(
                 current_line_source_text,
                 current_line_first_word,

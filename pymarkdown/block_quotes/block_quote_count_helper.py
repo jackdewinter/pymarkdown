@@ -38,14 +38,13 @@ class BlockQuoteCountHelper:
     def is_block_quote_start(
         line_to_parse: str,
         start_index: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         adj_ws: Optional[str] = None,
     ) -> bool:
         """
         Determine if we have the start of a block quote section.
         """
 
-        assert extracted_whitespace is not None
         return TabHelper.is_length_less_than_or_equal_to(
             extracted_whitespace if adj_ws is None else adj_ws, 3
         ) and ParserHelper.is_character_at_index(
@@ -185,7 +184,7 @@ class BlockQuoteCountHelper:
                 POGGER.debug("avoid_block_starts=$", avoid_block_starts)
                 continue_processing = False
             else:
-                assert current_count > stack_count
+                assert current_count > stack_count, "Took care of ==, so left with >."
                 (
                     start_index,
                     adjusted_line,
@@ -278,8 +277,9 @@ class BlockQuoteCountHelper:
                 if not count_to_consume:
                     final_stack_index = stack_index
             stack_index += 1
-        assert not count_to_consume
-        assert final_stack_index
+        assert (
+            not count_to_consume and final_stack_index
+        ), "We expected to find something, so verify that we did."
         return final_stack_index
 
     # pylint: disable=too-many-arguments
@@ -291,10 +291,9 @@ class BlockQuoteCountHelper:
         position_marker: PositionMarker,
         original_start_index: int,
         container_start_bq_count: int,
-        extracted_whitespace: Optional[str],
-    ) -> Tuple[Optional[str], int, BlockQuoteData]:
+        extracted_whitespace: str,
+    ) -> Tuple[int, BlockQuoteData]:
         POGGER.debug("container_level_tokens>>$", container_level_tokens)
-        assert extracted_whitespace is not None
         stack_count = block_quote_data.stack_count
         while block_quote_data.current_count > stack_count:
             POGGER.debug(
@@ -318,7 +317,7 @@ class BlockQuoteCountHelper:
             assert (
                 position_marker.text_to_parse[original_start_index]
                 == BlockQuoteCountHelper.__block_quote_character
-            )
+            ), "Character at index must be a > character to start the block quote."
             original_start_index += 1
             if ParserHelper.is_character_at_index_whitespace(
                 position_marker.text_to_parse, original_start_index
@@ -351,7 +350,7 @@ class BlockQuoteCountHelper:
             container_level_tokens,
         )
 
-        return extracted_whitespace, original_start_index, block_quote_data
+        return original_start_index, block_quote_data
 
     # pylint: enable=too-many-arguments
 
@@ -428,7 +427,9 @@ class BlockQuoteCountHelper:
                 -1,
             )
             POGGER.debug("found_index:$", found_index)
-            assert found_index < len(text_after_current_block_quote)
+            assert found_index < len(
+                text_after_current_block_quote
+            ), "Found index must be within string."
             whitespace_after_block_quote = text_after_current_block_quote[:found_index]
             text_after_block_quote = text_after_current_block_quote[found_index:]
             POGGER.debug(
@@ -537,7 +538,7 @@ class BlockQuoteCountHelper:
     def ensure_stack_at_level(
         parser_state: ParserState,
         block_quote_data: BlockQuoteData,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         position_marker: PositionMarker,
         original_start_index: int,
         container_start_bq_count: int,
@@ -612,7 +613,6 @@ class BlockQuoteCountHelper:
             )
 
             (
-                extracted_whitespace,
                 original_start_index,
                 block_quote_data,
             ) = BlockQuoteCountHelper.__increase_stack(
@@ -670,45 +670,55 @@ class BlockQuoteCountHelper:
             parser_state.find_last_block_quote_on_stack(),
         )
 
-        # TODO need to find a better way, stopgap
-        assert parser_state.original_line_to_parse is not None
-        conditional_1 = parser_state.original_line_to_parse.endswith(
-            position_marker.text_to_parse
-        )
-        POGGER.debug(
-            "conditional_1:$: = oltp:$:endswith(ttp:$:)",
-            conditional_1,
-            parser_state.original_line_to_parse,
-            position_marker.text_to_parse,
-        )
-        conditional_2 = (
-            len(parser_state.token_stack) > 2
-            and parser_state.token_stack[1].is_block_quote
-        )
-        POGGER.debug(
-            "conditional_2:$: = len(ts:$:) > 2 and ts[1].is_bq:$:",
-            conditional_2,
-            parser_state.token_stack,
-            (
-                parser_state.token_stack[1].is_block_quote
-                if len(parser_state.token_stack) > 2
-                else None
-            ),
-        )
-        conditional_3 = last_bq_index != 1 or stack_increase_needed
-        POGGER.debug(
-            "conditional_3:$: = lbl:$: != 1 or stack_increase_needed:$:",
-            conditional_3,
-            last_bq_index,
-            stack_increase_needed,
-        )
-        POGGER.debug(
-            "conditional_1>>:$ and ty2:$: and ty3:$:",
-            conditional_1,
-            conditional_2,
-            conditional_3,
-        )
-        if conditional_1 and conditional_2 and conditional_3:
+        assert (
+            parser_state.original_line_to_parse is not None
+        ), "The original line to parse must be defined."
+        # TDone need to find a better way, stopgap
+        # conditional_1 = parser_state.original_line_to_parse.endswith(
+        #     position_marker.text_to_parse
+        # )
+        # POGGER.debug(
+        #     "conditional_1:$: = oltp:$:endswith(ttp:$:)",
+        #     conditional_1,
+        #     parser_state.original_line_to_parse,
+        #     position_marker.text_to_parse,
+        # )
+        # conditional_2 = (
+        #     len(parser_state.token_stack) > 2
+        #     and parser_state.token_stack[1].is_block_quote
+        # )
+        # POGGER.debug(
+        #     "conditional_2:$: = len(ts:$:) > 2 and ts[1].is_bq:$:",
+        #     conditional_2,
+        #     parser_state.token_stack,
+        #     (
+        #         parser_state.token_stack[1].is_block_quote
+        #         if len(parser_state.token_stack) > 2
+        #         else None
+        #     ),
+        # )
+        # conditional_3 = last_bq_index != 1 or stack_increase_needed
+        # POGGER.debug(
+        #     "conditional_3:$: = lbl:$: != 1 or stack_increase_needed:$:",
+        #     conditional_3,
+        #     last_bq_index,
+        #     stack_increase_needed,
+        # )
+        # POGGER.debug(
+        #     "conditional_1>>:$ and ty2:$: and ty3:$:",
+        #     conditional_1,
+        #     conditional_2,
+        #     conditional_3,
+        # )
+        # if conditional_1 and conditional_2 and conditional_3:
+        if (
+            parser_state.original_line_to_parse.endswith(position_marker.text_to_parse)
+            and (
+                len(parser_state.token_stack) > 2
+                and parser_state.token_stack[1].is_block_quote
+            )
+            and (last_bq_index != 1 or stack_increase_needed)
+        ):
             (
                 stack_hard_limit,
                 extra_consumed_whitespace,
@@ -801,7 +811,9 @@ class BlockQuoteCountHelper:
     ) -> Tuple[Optional[int], Optional[int]]:
         POGGER.debug("eligible")
         stack_hard_limit, extra_consumed_whitespace = None, None
-        assert parser_state.original_line_to_parse is not None
+        assert (
+            parser_state.original_line_to_parse is not None
+        ), "The original line to parse must be defined."
         if remaining_text := parser_state.original_line_to_parse[
             : -len(position_marker.text_to_parse)
         ]:
@@ -809,20 +821,26 @@ class BlockQuoteCountHelper:
 
             # use up already extracted text/ws
             current_stack_index, indent_text_count, extra_consumed_whitespace = 1, 0, 0
-            assert parser_state.token_stack[current_stack_index].is_block_quote
+            assert parser_state.token_stack[
+                current_stack_index
+            ].is_block_quote, "The specified index must point to a block quote."
             POGGER.debug("bq")
             start_index = remaining_text.find(">")
-            assert start_index != -1
+            assert (
+                start_index != -1
+            ), "A block quote start character (>) must be present in the remaing text to parse."
             POGGER.debug("bq-found")
             indent_text_count = start_index + 1
             assert (
                 indent_text_count < len(remaining_text)
                 and remaining_text[indent_text_count] == ParserHelper.space_character
-            )
+            ), "The indent_text_count needs rooms to grow, and currently specifies a space character."
             POGGER.debug("bq-space-found")
             indent_text_count += 1
             current_stack_index += 1
-            assert indent_text_count == len(remaining_text)
+            assert indent_text_count == len(
+                remaining_text
+            ), "Counts should equal each other."
 
             # if there is whitespace
             (
@@ -852,7 +870,9 @@ class BlockQuoteCountHelper:
         adjust_current_block_quote: bool,
         last_bq_index: int,
     ) -> Tuple[int, int, int, int]:
-        assert parser_state.token_stack[current_stack_index].is_list
+        assert parser_state.token_stack[
+            current_stack_index
+        ].is_list, "Since we have taken care of any block quotes, this must be a list."
         list_stack_token = cast(
             ListStackToken, parser_state.token_stack[current_stack_index]
         )
@@ -867,7 +887,9 @@ class BlockQuoteCountHelper:
             delta,
             length_of_available_whitespace,
         )
-        assert length_of_available_whitespace >= delta
+        assert (
+            length_of_available_whitespace >= delta
+        ), "Amount of whitespace to start with should always be greater than the amount to reduce by."
         list_token = cast(
             ListStartMarkdownToken, list_stack_token.matching_markdown_token
         )

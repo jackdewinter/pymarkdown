@@ -50,7 +50,7 @@ class InlineTextBlockHelper:
 
         fold_space: Optional[List[str]] = None
         if is_para or is_setext:
-            assert para_space is not None
+            assert para_space is not None, "TODO: check"
             fold_space = para_space.split(ParserHelper.newline_character)
 
         return source_text, fold_space
@@ -92,17 +92,19 @@ class InlineTextBlockHelper:
             source_text, whitespace_to_recombine, is_para, is_setext, para_space
         )
 
-        assert start_index is not None
+        assert start_index is not None, "TODO: check"
         next_index = ParserHelper.index_any_of(
             source_text,
             InlineHandlerHelper.valid_inline_text_block_sequence_starts,
             start_index,
         )
         newlines_encountered = 0
-        assert parser_properties is not None
+        assert (
+            parser_properties is not None
+        ), "Parser properties must be defined by now."
         while next_index != -1:
             old_next_index = next_index
-            assert start_index is not None
+            assert start_index is not None, "TODO: check"
             (
                 line_number,
                 column_number,
@@ -424,14 +426,14 @@ class InlineTextBlockHelper:
         POGGER.debug("__cibp>line_number>$<", line_number)
         POGGER.debug("__cibp>column_number>$<", column_number)
 
-        assert start_index is not None
+        assert start_index is not None, "TODO: Check"
         if start_index < len(source_text):
             text_to_append = source_text[start_index:]
             POGGER.debug("text_to_append>:$:<", text_to_append)
 
             POGGER.debug("tabified_text=>:$:<", tabified_text)
             if tabified_text:
-                assert tabified_text is not None
+                assert tabified_text is not None, "TODO: check if on previous line"
                 text_to_append = InlineTabifiedTextBlockHelper.complete_inline_block_processing_tabified(
                     source_text,
                     start_index,
@@ -490,8 +492,9 @@ class InlineTextBlockHelper:
             else:
                 left_to_consume -= token_text_len
                 inline_block_index -= 1
-        assert inline_block_index >= 0
-        assert stop_block_token is not None
+        assert (
+            inline_block_index >= 0 and stop_block_token is not None
+        ), "End of loop criteria."
         if len(stop_block_token.token_text) > left_to_consume:
             left_text = stop_block_token.token_text[:-left_to_consume]
             new_token = TextMarkdownToken(
@@ -524,7 +527,7 @@ class InlineTextBlockHelper:
             if left_to_consume <= len(current_string):
                 assert current_string_unresolved.endswith(
                     current_string[-left_to_consume:]
-                )
+                ), "Unresolve string must end with part of the current string."
                 current_string = current_string[:-left_to_consume]
                 current_string_unresolved = current_string_unresolved[:-left_to_consume]
             else:
@@ -889,7 +892,9 @@ class InlineTextBlockHelper:
                     "coalesced_list[-1]..leading_text_index=$",
                     block_quote_token.leading_text_index,
                 )
-                assert block_quote_token.bleading_spaces is not None
+                assert (
+                    block_quote_token.bleading_spaces is not None
+                ), "Bleading spaces must be defined by now."
                 split_leading_spaces = block_quote_token.bleading_spaces.split(
                     ParserHelper.newline_character
                 )
@@ -899,20 +904,22 @@ class InlineTextBlockHelper:
                 column_number += selected_split_length
 
             line_number += 1
-            assert fold_space
+            assert fold_space, "TODO: explain"
             fold_space = fold_space[1:]
             column_number += len(fold_space[0])
         elif not was_column_number_reset:
             column_number += len(remaining_line)
         else:
-            assert did_line_number_change
+            assert did_line_number_change, "If here, the line number must have changed."
             if coalesced_stack and coalesced_stack[-1].is_block_quote_start:
                 block_quote_token = cast(BlockQuoteMarkdownToken, coalesced_stack[-1])
                 POGGER.debug(
                     "coalesced_list[-1].leading_text_index=$",
                     block_quote_token.leading_text_index,
                 )
-                assert block_quote_token.bleading_spaces is not None
+                assert (
+                    block_quote_token.bleading_spaces is not None
+                ), "Bleading spaces must be defined by now."
                 split_leading_spaces = block_quote_token.bleading_spaces.split(
                     ParserHelper.newline_character
                 )
@@ -997,9 +1004,11 @@ class InlineTextBlockHelper:
             "__complete_inline_loop--whitespace_to_add>>$>>",
             whitespace_to_add,
         )
-        assert new_string is not None
+        assert new_string is not None, "TODO: check"
         if original_string is not None:
-            assert not new_string_unresolved or new_string_unresolved == original_string
+            assert (
+                not new_string_unresolved or new_string_unresolved == original_string
+            ), "TODO: explain"
             replaced_string = ParserHelper.create_replacement_markers(
                 original_string, InlineHelper.append_text("", new_string)
             )
@@ -1021,7 +1030,9 @@ class InlineTextBlockHelper:
                 "split_end_string>>$>>",
                 split_end_string,
             )
-            assert len(split_end_string) >= 2
+            assert (
+                len(split_end_string) >= 2
+            ), "end_string must be split into at least 2 parts"
             new_string = split_end_string[len(split_end_string) - 2] + new_string
 
         current_string_unresolved = (
@@ -1036,7 +1047,7 @@ class InlineTextBlockHelper:
         )
 
         start_index = new_index
-        assert start_index is not None
+        assert start_index is not None, "TODO: check"
         next_index = ParserHelper.index_any_of(
             source_text,
             InlineHandlerHelper.valid_inline_text_block_sequence_starts,

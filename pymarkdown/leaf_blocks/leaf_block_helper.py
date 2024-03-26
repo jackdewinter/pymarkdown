@@ -3,7 +3,7 @@ Module to provide helpers for the processing of leaf blocks.
 """
 
 import logging
-from typing import List, Optional, cast
+from typing import List, Optional, Tuple, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
@@ -86,7 +86,9 @@ class LeafBlockHelper:
         )
 
         if was_token_already_added_to_stack:
-            assert top_of_stack is not None
+            assert (
+                top_of_stack is not None
+            ), "If token was added, top_of_stack should be defined."
             parser_state.token_stack.append(top_of_stack)
             POGGER.debug(
                 ">>correct_for_leaf_block_start_in_list>>stack>>$>>",
@@ -96,7 +98,6 @@ class LeafBlockHelper:
         POGGER.debug(
             ">>correct_for_leaf_block_start_in_list>>tokens_to_add>>$>>", html_tokens
         )
-        # assert False
 
     # pylint: enable=too-many-arguments
 
@@ -110,12 +111,16 @@ class LeafBlockHelper:
     ) -> str:
         after_index_index = len(leading_chars_at_start) + indent_count
         used_indent_text = leading_chars_at_start + used_indent
-        assert parser_state.original_line_to_parse is not None
+        assert (
+            parser_state.original_line_to_parse is not None
+        ), "Original line must be defined by now."
         reconstructed_line = (
             used_indent_text + parser_state.original_line_to_parse[after_index_index:]
         )
         detabified_original_line = TabHelper.detabify_string(original_line)
-        assert detabified_original_line == reconstructed_line
+        assert (
+            detabified_original_line == reconstructed_line
+        ), "Detabified original must equal reconstructed."
         keep_going = True
         detab_index = 1
         while keep_going:
@@ -124,8 +129,31 @@ class LeafBlockHelper:
             keep_going = len(detab_orig_prefix) < len(used_indent_text)
             if keep_going:
                 detab_index += 1
-        assert len(detab_orig_prefix) == len(used_indent_text)
+        assert len(detab_orig_prefix) == len(
+            used_indent_text
+        ), "Detab prefix must equal used indent."
         return orig_prefix[len(leading_chars_at_start) :]
+
+    @staticmethod
+    def __xx(parser_state: ParserState, removed_chars_at_start: int) -> Tuple[int, str]:
+        leading_chars_at_start = ""
+        last_bq_index = parser_state.find_last_block_quote_on_stack()
+        if last_bq_index > 0:
+            last_bq_token = cast(
+                BlockQuoteMarkdownToken,
+                parser_state.token_stack[last_bq_index].matching_markdown_token,
+            )
+            assert (
+                last_bq_token.bleading_spaces is not None
+            ), "Block quote tokens must have bleading spaces defined"
+            leading_chars_at_start = last_bq_token.bleading_spaces
+            last_newline_index = leading_chars_at_start.rfind("\n")
+            assert (
+                last_newline_index != -1
+            ), "leading_chars_at_start must always have at least one newline character"
+            leading_chars_at_start = leading_chars_at_start[last_newline_index + 1 :]
+            removed_chars_at_start -= len(leading_chars_at_start)
+        return removed_chars_at_start, leading_chars_at_start
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -146,23 +174,9 @@ class LeafBlockHelper:
                 indent_count = alt_removed_chars_at_start
             else:
                 if is_html:
-                    last_bq_index = parser_state.find_last_block_quote_on_stack()
-                    if last_bq_index > 0:
-                        last_bq_token = cast(
-                            BlockQuoteMarkdownToken,
-                            parser_state.token_stack[
-                                last_bq_index
-                            ].matching_markdown_token,
-                        )
-                        assert last_bq_token.bleading_spaces is not None
-                        leading_chars_at_start = last_bq_token.bleading_spaces
-                        last_newline_index = leading_chars_at_start.rfind("\n")
-                        assert last_newline_index != -1
-                        leading_chars_at_start = leading_chars_at_start[
-                            last_newline_index + 1 :
-                        ]
-                        removed_chars_at_start -= len(leading_chars_at_start)
-
+                    removed_chars_at_start, leading_chars_at_start = (
+                        LeafBlockHelper.__xx(parser_state, removed_chars_at_start)
+                    )
                 indent_count = removed_chars_at_start
             used_indent = ParserHelper.repeat_string(" ", indent_count)
             if (
@@ -178,7 +192,9 @@ class LeafBlockHelper:
                     indent_count,
                     used_indent,
                 )
-        assert list_stack_token.matching_markdown_token is not None
+        assert (
+            list_stack_token.matching_markdown_token is not None
+        ), "Container stack tokens always have markdown tokens."
         list_markdown_token = cast(
             ListStartMarkdownToken, list_stack_token.matching_markdown_token
         )
@@ -208,7 +224,9 @@ class LeafBlockHelper:
         adjust_with_leading_spaces = False
         is_remaining_list_token = True
         while is_remaining_list_token:
-            assert parser_state.token_stack[-1].is_list
+            assert parser_state.token_stack[
+                -1
+            ].is_list, "Token at the end of the stack must be a list token."
             list_stack_token = cast(ListStackToken, parser_state.token_stack[-1])
 
             POGGER.debug(">>removed_chars_at_start>>$>>", removed_chars_at_start)
@@ -227,21 +245,21 @@ class LeafBlockHelper:
                 tokens_from_close,
             )
             html_tokens.extend(tokens_from_close)
-
             is_remaining_list_token = parser_state.token_stack[-1].is_list
 
         if is_remaining_list_token:
-            assert parser_state.token_stack[-1].is_list
+            assert parser_state.token_stack[
+                -1
+            ].is_list, "Token at the end of the stack must be a list token."
             list_stack_token = cast(ListStackToken, parser_state.token_stack[-1])
-            delta_indent = removed_chars_at_start - list_stack_token.indent_level
-            POGGER.debug(
-                ">>correct_for_leaf_block_start_in_list>>delta_indent>>$>>",
-                delta_indent,
-            )
-            assert not delta_indent
+            # delta_indent = removed_chars_at_start - list_stack_token.indent_level
+            # POGGER.debug(
+            #     ">>correct_for_leaf_block_start_in_list>>delta_indent>>$>>",
+            #     delta_indent,
+            # )
+            # assert not delta_indent
 
             POGGER.debug(">>delay_tab_match>>$>>", delay_tab_match)
-            # assert not delay_tab_match
             if adjust_with_leading_spaces:
                 LeafBlockHelper.__handle_leaf_start_adjust(
                     parser_state,

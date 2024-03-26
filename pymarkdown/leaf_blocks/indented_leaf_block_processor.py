@@ -45,7 +45,7 @@ class IndentedLeafBlockProcessor:
         """
 
         new_tokens: List[MarkdownToken] = []
-        assert removed_chars_at_start is not None
+        assert removed_chars_at_start is not None, "TODO: Check"
         if (
             TabHelper.is_length_greater_than_or_equal_to(
                 extracted_whitespace, 4, start_index=removed_chars_at_start
@@ -217,8 +217,8 @@ class IndentedLeafBlockProcessor:
         search_index: int,
     ) -> Tuple[str, Optional[str], Optional[str]]:
         xx_left_over = ""
-        assert ex_part is not None
-        assert detabbed_ex_part is not None
+        assert ex_part is not None, "TODO: Check"
+        assert detabbed_ex_part is not None, "TODO: Check"
         delta = len(detabbed_ex_part) - 4
         if is_list_start_line:
             xx_left_over = " " * delta
@@ -267,7 +267,9 @@ class IndentedLeafBlockProcessor:
         )
         # POGGER.debug("after_space_index>:$:<", after_space_index)
         # POGGER.debug("ex_space>:$:<", ex_space)
-        assert len(ex_space) >= 4
+        assert (
+            len(ex_space) >= 4
+        ), "An indented code block must be indented by at least 4 spaces."
         was_indented = not parser_state.token_stack[-2].is_document
         fex_space, fex_space_index, split_tab = TabHelper.find_tabified_string(
             original_line,
@@ -276,7 +278,9 @@ class IndentedLeafBlockProcessor:
             reconstruct_prefix=last_list_lead_spaces,
             was_indented=was_indented,
         )
-        assert original_line.endswith(fex_space)
+        assert original_line.endswith(
+            fex_space
+        ), "Original line must end with the tabified string."
 
         indent_used = 0
         extra_index = 0
@@ -335,7 +339,9 @@ class IndentedLeafBlockProcessor:
         if not is_in_list and not is_in_block_quote:
             next_character = position_marker.text_to_parse[position_marker.index_number]
             next_character_index = original_line.find(next_character)
-            assert next_character_index != -1
+            assert (
+                next_character_index != -1
+            ), "Next character must be found in the original line."
             return (
                 original_line[:next_character_index],
                 None,
@@ -408,7 +414,7 @@ class IndentedLeafBlockProcessor:
             last_good_space_index,
             space_prefix,
         ) = TabHelper.search_for_tabbed_prefix(ex_space, 4, lead_space_len)
-        assert space_prefix is not None
+        assert space_prefix is not None, "TODO: tab"
 
         if len(detabified_ex_space) == 4:
             xx_extracted_space = space_prefix
@@ -461,7 +467,7 @@ class IndentedLeafBlockProcessor:
                 xx_extracted_space,
                 xx_left_over,
             )
-            assert xextracted_whitespace is not None
+            assert xextracted_whitespace is not None, "TODO: Check"
             extracted_whitespace = xextracted_whitespace
         elif tabified_extracted_space:
             (_, adj_ws, _) = IndentedLeafBlockProcessor.__recalculate_whitespace(
@@ -473,7 +479,7 @@ class IndentedLeafBlockProcessor:
             indented_text = original_line[adj_ws_length:]
         elif xx_extracted_space is not None:
             extracted_whitespace = xx_extracted_space
-            assert xx_left_over is not None
+            assert xx_left_over is not None, "TODO: Check"
             indented_text = xx_left_over
 
         # POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
@@ -482,7 +488,6 @@ class IndentedLeafBlockProcessor:
         if adjust_block_quote_indent:
             TabHelper.adjust_block_quote_indent_for_tab(parser_state)
 
-        assert extracted_whitespace is not None
         new_tokens.append(
             TextMarkdownToken(
                 indented_text,
@@ -508,7 +513,9 @@ class IndentedLeafBlockProcessor:
             parser_state.token_stack[last_block_quote_index].matching_markdown_token,
         )
         last_block_quote_lead_spaces = last_block_quote_token.bleading_spaces
-        assert last_block_quote_lead_spaces is not None
+        assert (
+            last_block_quote_lead_spaces is not None
+        ), "Bleading spaces must be defined by now."
         POGGER.debug("last_block_quote_lead_spaces>:$:<", last_block_quote_lead_spaces)
         lead_space_last_line_index = last_block_quote_lead_spaces.rfind("\n")
         POGGER.debug("original_line>:$:<", original_line)
@@ -520,18 +527,22 @@ class IndentedLeafBlockProcessor:
             POGGER.debug(
                 "last_block_quote_lead_spaces>:$:<", last_block_quote_lead_spaces
             )
-        assert last_block_quote_lead_spaces[-1] == " "
+        assert (
+            last_block_quote_lead_spaces[-1] == " "
+        ), "Last character of bleading spaces must be a space."
         last_part_minus_tailing_space = last_block_quote_lead_spaces[:-1]
         POGGER.debug(
             "last_part_minus_tailing_space>:$:<", last_part_minus_tailing_space
         )
-        assert original_line.startswith(last_part_minus_tailing_space)
+        assert original_line.startswith(
+            last_part_minus_tailing_space
+        ), "TODO: huh? see below"
         trailing_char_in_original = original_line[len(last_part_minus_tailing_space)]
         POGGER.debug("trailing_char_in_original>:$:<", trailing_char_in_original)
         if trailing_char_in_original == ParserHelper.tab_character:
             adjust_block_quote_indent = True
             adj_lead_space_len = -1
-            assert original_line.startswith(last_part_minus_tailing_space)
+            assert original_line.startswith(last_part_minus_tailing_space), "TODO: huh?"
         POGGER.debug("last_block_quote_lead_spaces>:$:<", last_block_quote_lead_spaces)
         # if not adjust_block_quote_indent:
         #     assert original_line.startswith(last_block_quote_lead_spaces)
@@ -555,7 +566,7 @@ class IndentedLeafBlockProcessor:
         xx_extracted_space: Optional[str],
         xx_left_over: Optional[str],
     ) -> Tuple[int, Optional[str], str]:
-        assert extracted_whitespace is not None
+        assert extracted_whitespace is not None, "TODO: Check"
         column_number = (
             position_marker.index_number
             + position_marker.index_indent
@@ -655,7 +666,7 @@ class IndentedLeafBlockProcessor:
         """
         Recalculate the whitespace characteristics.
         """
-        assert whitespace_to_parse is not None
+        assert whitespace_to_parse is not None, "TODO: Check"
         POGGER.debug("whitespace_to_parse>>$>>", whitespace_to_parse)
         POGGER.debug("offset_index>>$>>", offset_index)
         POGGER.debug("tabified_extracted_space>>$>>", tabified_extracted_space)
@@ -683,7 +694,9 @@ class IndentedLeafBlockProcessor:
                 POGGER.debug("length_so_far>:$:<", length_so_far)
                 next_character_index += 1
             POGGER.debug("length_so_far>:$:<", length_so_far)
-            assert length_so_far == 4
+            assert (
+                length_so_far == 4
+            ), "length_so_far must equate to a prefix of exactly 4 characters."
             POGGER.debug("last_index>:$:<", last_index)
             tabbed_prefix = tabified_extracted_space[:last_index]
             POGGER.debug("tabbed_prefix>:$:<", tabbed_prefix)
@@ -693,7 +706,9 @@ class IndentedLeafBlockProcessor:
             )
             POGGER.debug("tabbed_prefix>:$:<", tabbed_prefix)
             POGGER.debug("err>:$:<", err)
-            assert len(err) == 4
+            assert (
+                len(err) == 4
+            ), "Tabbed prefix must equate to a prefix of exactly 4 characters."
             adj_ws = tabbed_prefix
             left_ws = tabified_extracted_space[last_index:]
 

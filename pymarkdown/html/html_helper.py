@@ -437,7 +437,9 @@ class HtmlHelper:
                     adjusted_remaining_html_tag, line_to_parse, character_index
                 )
                 if is_complete:
-                    assert complete_parse_index is not None
+                    assert (
+                        complete_parse_index is not None
+                    ), "If is_complete is True, this must be set."
                     html_block_type, character_index = (
                         HtmlHelper.html_block_7,
                         complete_parse_index,
@@ -514,7 +516,7 @@ class HtmlHelper:
         Determine if the current sequence of characters would start a html block element.
         """
 
-        assert extracted_whitespace is not None
+        assert extracted_whitespace is not None, "TODO: work"
         if (
             skip_whitespace_check
             or TabHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
@@ -543,6 +545,9 @@ class HtmlHelper:
         orignal_line_end_prefix_index: int,
     ) -> Tuple[Optional[str], Optional[int]]:
         stack_token_index = len(parser_state.token_stack) - 1
+        # assert stack_token_index > 0, "Must be a valid stack token."
+        # Can omit check as splits only happen with containers, which guarantees one token.
+
         alternate_list_leading_space = None
         removed_chars_at_start: Optional[int] = None
         # while (
@@ -553,20 +558,25 @@ class HtmlHelper:
         #     and not parser_state.token_stack[stack_token_index].is_list
         # ):
         #     stack_token_index -= 1
-        assert stack_token_index > 0
         if parser_state.token_stack[stack_token_index].is_list:
             orignal_line_prefix = original_line[:orignal_line_end_prefix_index]
             stop_index = -1
             if len(orignal_line_prefix) == 1:
-                assert orignal_line_prefix == ParserHelper.tab_character
+                assert (
+                    orignal_line_prefix == ParserHelper.tab_character
+                ), "Prefix must be a single tab character."
                 sdddd = TabHelper.detabify_string(orignal_line_prefix)
-                assert len(sdddd) > position_marker.index_indent
+                assert (
+                    len(sdddd) > position_marker.index_indent
+                ), "String length must be larger than the indent."
                 stop_index = 1
             else:
                 end_index = 1
                 keep_going = True
                 while keep_going:
-                    assert end_index < len(orignal_line_prefix) + 1
+                    assert (
+                        end_index < len(orignal_line_prefix) + 1
+                    ), "End index not in range."
                     sample_slice = TabHelper.detabify_string(
                         orignal_line_prefix[:end_index]
                     )
@@ -574,8 +584,8 @@ class HtmlHelper:
                         stop_index = end_index
                         keep_going = False
                     end_index += 1
+                assert stop_index != -1, "Valid slice not found."
 
-            assert stop_index != -1
             original_prefix = original_line[: stop_index - 1]
             if stack_token_index <= 1:
                 alternate_list_leading_space = original_prefix
@@ -714,7 +724,9 @@ class HtmlHelper:
         via an empty line or BLANK.
         """
 
-        assert parser_state.token_stack[-1].is_html_block
+        assert parser_state.token_stack[
+            -1
+        ].is_html_block, "Trailing token on stack must be HTML."
         html_token = cast(HtmlBlockStackToken, parser_state.token_stack[-1])
         if html_token.html_block_type in [
             HtmlHelper.html_block_6,
@@ -774,14 +786,18 @@ class HtmlHelper:
             and parser_state.token_stack[stack_token_index].is_block_quote
         ):
             POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
-            assert tabified_whitespace is not None
+            assert (
+                tabified_whitespace is not None
+            ), "With split_tab being true, tabified_whitespace must be defined."
             tabified_whitespace = ParserHelper.create_replacement_markers(
                 tabified_whitespace, extracted_whitespace
             )
             POGGER.debug("tabified_whitespace>:$:<", tabified_whitespace)
             if not did_adjust_block_quote:
                 TabHelper.adjust_block_quote_indent_for_tab(parser_state)
-        assert tabified_whitespace is not None
+        assert (
+            tabified_whitespace is not None
+        ), "Either split_tab is true and replacement markers in place, or False."
         return tabified_whitespace, tabified_text
 
     @staticmethod
@@ -812,8 +828,10 @@ class HtmlHelper:
                     )
                 )
                 continue
-            assert parser_state.parse_properties is not None
-            assert parser_state.parse_properties.disallow_raw_html is not None
+            assert (
+                parser_state.parse_properties is not None
+                and parser_state.parse_properties.disallow_raw_html is not None
+            ), "Disallow raw html extension must be defined by this point."
             tag_start = (
                 ParserHelper.create_replacement_markers(
                     HtmlHelper.__html_block_start_character, "&lt;"
@@ -877,7 +895,9 @@ class HtmlHelper:
         ]
 
         is_block_terminated, adj_line = False, line_to_parse[start_index:]
-        assert parser_state.token_stack[-1].is_html_block
+        assert parser_state.token_stack[
+            -1
+        ].is_html_block, "Trailing token must be HTML token."
         html_token = cast(HtmlBlockStackToken, parser_state.token_stack[-1])
         if html_token.html_block_type == HtmlHelper.html_block_1:
             for next_end_tag in HtmlHelper.__html_block_1_end_tags:
@@ -897,8 +917,8 @@ class HtmlHelper:
                 parser_state,
                 only_these_blocks=[HtmlBlockStackToken],
             )
-            POGGER.debug("terminated_block_tokens=$", terminated_block_tokens)
-            assert terminated_block_tokens
+            # POGGER.debug("terminated_block_tokens=$", terminated_block_tokens)
+            assert terminated_block_tokens, "At least one token must be produced."
             new_tokens.extend(terminated_block_tokens)
         return new_tokens
 

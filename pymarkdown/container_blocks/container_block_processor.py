@@ -141,7 +141,9 @@ class ContainerBlockProcessor:
 
         # POGGER.debug(">>parser_state.token_stack:$", parser_state.token_stack)
         # POGGER.debug(">>is_not_in_root_list=:$:", is_not_in_root_list)
-        assert grab_bag.extracted_whitespace is not None
+        assert (
+            grab_bag.extracted_whitespace is not None
+        ), "Must have whitespace by this point."
         if (
             not grab_bag.container_depth
             and len(grab_bag.extracted_whitespace) >= 4
@@ -391,7 +393,9 @@ class ContainerBlockProcessor:
         parser_state: ParserState,
         found_block_quote_token: Optional[BlockQuoteMarkdownToken],
     ) -> bool:
-        assert found_block_quote_token
+        assert (
+            found_block_quote_token
+        ), "If we are processing a block quote, need a token."
         POGGER.debug(
             "PLFCB>>found_block_quote_token>>:$:",
             ParserHelper.make_value_visible(found_block_quote_token),
@@ -421,7 +425,9 @@ class ContainerBlockProcessor:
         found_block_quote_token: Optional[BlockQuoteMarkdownToken],
         grab_bag: ContainerGrabBag,
     ) -> None:
-        assert grab_bag.extracted_whitespace is not None
+        assert (
+            grab_bag.extracted_whitespace is not None
+        ), "Must have whitespace by this point."
         previous_ws_len = 0
         force_reline, ws_len = (
             False,
@@ -496,7 +502,7 @@ class ContainerBlockProcessor:
                 "PLFCB>>leading_text_index>>$",
                 found_block_quote_token.leading_text_index,
             )
-        assert token_index >= 0
+        assert token_index >= 0, "Token index should be positive by this point."
         return token_index, found_block_quote_token
 
     @staticmethod
@@ -509,22 +515,30 @@ class ContainerBlockProcessor:
         """
 
         grab_bag.adj_ws = grab_bag.extracted_whitespace
-        assert grab_bag.adj_ws is not None
+        assert (
+            grab_bag.adj_ws is not None
+        ), "Adjusted whitespace must be set by this point."
 
         last_block_stack_index = parser_state.find_last_list_block_on_stack()
         if last_block_stack_index <= 0:
-            assert not grab_bag.current_container_blocks
+            assert (
+                not grab_bag.current_container_blocks
+            ), "Must not have container blocks by this point."
             POGGER.debug("PLFCB>>No Started lists")
             if grab_bag.adjusted_block_index is None:
                 POGGER.debug("PLFCB>>No Started Block Quote")
             else:
                 POGGER.debug("PLFCB>>Started Block Quote")
-                assert grab_bag.extracted_whitespace is not None
+                assert (
+                    grab_bag.extracted_whitespace is not None
+                ), "Must have whitespace by this point."
                 grab_bag.adj_ws = grab_bag.extracted_whitespace[
                     grab_bag.adjusted_block_index :
                 ]
         else:
-            assert grab_bag.current_container_blocks
+            assert (
+                grab_bag.current_container_blocks is not None
+            ), "Must have container blocks by this point."
             POGGER.debug(
                 "PLFCB>>Started list-last stack>>$",
                 parser_state.token_stack,
@@ -539,14 +553,14 @@ class ContainerBlockProcessor:
                 found_block_quote_token,
             ) = ContainerBlockProcessor.__look_for_any_list_start(parser_state)
 
-            assert grab_bag.adj_ws is not None
+            assert grab_bag.adj_ws is not None, "TODO: why here?"
             ContainerBlockProcessor.__calculate_adjusted_whitespace_kludge(
                 parser_state,
                 token_index,
                 found_block_quote_token,
                 grab_bag,
             )
-            assert grab_bag.adj_ws is not None
+            # assert grab_bag.adj_ws is not None, "Adjusted whitespace must be set by this point."
 
     @staticmethod
     def __look_for_pragmas(

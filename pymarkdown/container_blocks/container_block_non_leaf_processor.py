@@ -46,7 +46,6 @@ class ContainerBlockNonLeafProcessor:
             position_marker,
             grab_bag,
         )
-        # assert grab_bag.extracted_whitespace is not None
         if ContainerBlockNonLeafProcessor.__look_for_override(
             parser_state,
             position_marker,
@@ -64,7 +63,9 @@ class ContainerBlockNonLeafProcessor:
         position_marker: PositionMarker,
         grab_bag: ContainerGrabBag,
     ) -> None:
-        assert grab_bag.extracted_whitespace is not None
+        assert (
+            grab_bag.extracted_whitespace is not None
+        ), "Extracted whitespace must be defined at this point."
         need_leading_whitespace_processing = (
             grab_bag.container_depth < (len(parser_state.token_stack) - 1)
             and len(grab_bag.extracted_whitespace) >= 4
@@ -120,13 +121,17 @@ class ContainerBlockNonLeafProcessor:
                     BlockQuoteMarkdownToken,
                     last_container_stack_token.matching_markdown_token,
                 )
-                assert block_token.bleading_spaces is not None
+                assert (
+                    block_token.bleading_spaces is not None
+                ), "Bleading spaces must be defined by this point."
                 split_spaces = block_token.bleading_spaces.split(
                     ParserHelper.newline_character
                 )
                 last_leading_space = split_spaces[-1]
                 ex_ws_index, _ = ParserHelper.extract_spaces(last_leading_space, 0)
-                assert grab_bag.adj_ws is not None
+                assert (
+                    grab_bag.adj_ws is not None
+                ), "Adjusted whitespace must be defined by this point."
                 if (
                     len(grab_bag.adj_ws) >= 4
                     and grab_bag.indent_used_by_container
@@ -182,7 +187,9 @@ class ContainerBlockNonLeafProcessor:
             POGGER.debug(
                 "nested_force_list_continuation=$", nested_force_list_continuation
             )
-            assert not nested_force_list_continuation
+            assert (
+                not nested_force_list_continuation
+            ), "This cannot be a nested and forced list continuation."
         if grab_bag.can_continue:
             did_process = ContainerBlockNonLeafProcessor.__handle_block_continuations(
                 parser_state,
@@ -197,7 +204,9 @@ class ContainerBlockNonLeafProcessor:
         grab_bag: ContainerGrabBag,
     ) -> None:
         grab_bag.did_indent_processing = True
-        assert grab_bag.extracted_whitespace is not None
+        assert (
+            grab_bag.extracted_whitespace is not None
+        ), "Extracted whitespace must be defined at this point."
         for stack_capture_index in range(1, len(parser_state.token_stack)):
             POGGER.debug(
                 "$>stack:$:",
@@ -207,7 +216,9 @@ class ContainerBlockNonLeafProcessor:
             inner_token = parser_state.token_stack[
                 stack_capture_index
             ].matching_markdown_token
-            assert inner_token is not None
+            assert (
+                inner_token is not None
+            ), "All container and leaf tokens have a matching markdown token."
             POGGER.debug(
                 "$>token:$:",
                 stack_capture_index,
@@ -215,13 +226,17 @@ class ContainerBlockNonLeafProcessor:
             )
             if inner_token.is_block_quote_start:
                 block_quote_token = cast(BlockQuoteMarkdownToken, inner_token)
-                assert block_quote_token.bleading_spaces is not None
+                assert (
+                    block_quote_token.bleading_spaces is not None
+                ), "Bleading spaces must be defined by this point."
                 split_spaces = block_quote_token.bleading_spaces.split(
                     ParserHelper.newline_character
                 )
                 grab_bag.indent_already_processed = len(split_spaces[-1])
             else:
-                assert inner_token.is_list_start
+                assert (
+                    inner_token.is_list_start
+                ), "If it is not a block start, it must be a list start."
                 list_token = cast(ListStartMarkdownToken, inner_token)
                 grab_bag.indent_already_processed = list_token.indent_level
         delta = len(grab_bag.extracted_whitespace) - grab_bag.indent_already_processed
@@ -241,7 +256,9 @@ class ContainerBlockNonLeafProcessor:
         position_marker: PositionMarker,
         grab_bag: ContainerGrabBag,
     ) -> None:
-        assert grab_bag.extracted_whitespace is not None
+        assert (
+            grab_bag.extracted_whitespace is not None
+        ), "Extracted whitespace must be defined at this point."
         grab_bag.indent_used_by_container = 0
         if grab_bag.is_para_continue and not grab_bag.container_depth:
             ContainerBlockNonLeafProcessor.__special_list_block_block(
@@ -261,6 +278,9 @@ class ContainerBlockNonLeafProcessor:
                     )
                 )
             else:
+                assert (
+                    grab_bag.extracted_whitespace is not None
+                ), "Extracted whitespace must be defined by this point."
                 leading_whitespace = grab_bag.extracted_whitespace
 
             if len(leading_whitespace) >= 4:
@@ -344,7 +364,7 @@ class ContainerBlockNonLeafProcessor:
             assert grab_bag.last_block_quote_index in (
                 grab_bag.end_container_indices.block_index - 1,
                 grab_bag.end_container_indices.block_index,
-            )
+            ), "Sanity check for block index failed."
         elif grab_bag.end_container_indices.olist_index != -1:
             grab_bag.last_list_start_index = grab_bag.end_container_indices.olist_index
         elif grab_bag.end_container_indices.ulist_index != -1:
@@ -418,7 +438,9 @@ class ContainerBlockNonLeafProcessor:
             )
             list_index = parser_state.find_last_list_block_on_stack()
             block_index = parser_state.find_last_block_quote_on_stack()
-            assert not grab_bag.was_paragraph_continuation
+            assert (
+                not grab_bag.was_paragraph_continuation
+            ), "This cannot be a paragraph continuation."
             grab_bag.was_paragraph_continuation = (
                 is_paragraph_continuation and block_index > list_index
             )
@@ -448,7 +470,9 @@ class ContainerBlockNonLeafProcessor:
             parser_state.token_stack[1].matching_markdown_token,
         )
         container_x_used_indent = list_token.indent_level
-        assert grab_bag.extracted_whitespace is not None
+        assert (
+            grab_bag.extracted_whitespace is not None
+        ), "Extracted whitespace must be defined at this point."
         extracted_whitespace_length = len(grab_bag.extracted_whitespace)
         POGGER.debug("text_to_parse=:$:", position_marker.text_to_parse)
         POGGER.debug(
@@ -486,15 +510,19 @@ class ContainerBlockNonLeafProcessor:
         POGGER.debug("text_to_parse=:$:", position_marker.text_to_parse)
         POGGER.debug("parser_state.token_stack=:$:", parser_state.token_stack)
         stack_search_index, current_indent = 1, 0
-        assert parser_state.original_line_to_parse is not None
+        assert (
+            parser_state.original_line_to_parse is not None
+        ), "Original line must be defined by this point."
         while stack_search_index <= grab_bag.container_depth:
             if parser_state.token_stack[stack_search_index].is_block_quote:
                 current_indent = parser_state.original_line_to_parse.find(">")
-                assert current_indent != -1
+                assert (
+                    current_indent != -1
+                ), "Since we have a block quote, there should be at least one block quote start character."
                 assert (
                     parser_state.original_line_to_parse[current_indent + 1]
                     == ParserHelper.space_character
-                )
+                ), "After the start character must be a space."
                 current_indent += 1
 
                 # TODO add tests with no space between `>` and next block
@@ -502,10 +530,12 @@ class ContainerBlockNonLeafProcessor:
                     current_indent < len(parser_state.original_line_to_parse)
                     and parser_state.original_line_to_parse[current_indent]
                     == ParserHelper.space_character
-                )
+                ), "After the start character must be a space."
                 current_indent += 1
             else:
-                assert parser_state.token_stack[stack_search_index].is_list
+                assert parser_state.token_stack[
+                    stack_search_index
+                ].is_list, "If not a block quote, this must be a list."
                 list_token = cast(
                     ListStartMarkdownToken, parser_state.token_stack[stack_search_index]
                 )
@@ -513,7 +543,9 @@ class ContainerBlockNonLeafProcessor:
                 POGGER.debug("delta=:$:", delta)
                 current_indent += delta
             stack_search_index += 1
-        assert stack_search_index > grab_bag.container_depth
+        assert (
+            stack_search_index > grab_bag.container_depth
+        ), "The new index must be more than the container depth."
         _, leading_whitespace = ParserHelper.extract_spaces_verified(
             parser_state.original_line_to_parse, current_indent
         )
@@ -525,10 +557,9 @@ class ContainerBlockNonLeafProcessor:
     def __handle_leading_whitespace(
         parser_state: ParserState,
         position_marker: PositionMarker,
-        leading_whitespace: Optional[str],
+        leading_whitespace: str,
         grab_bag: ContainerGrabBag,
     ) -> None:
-        assert leading_whitespace is not None
         grab_bag.indent_already_processed, found_stack_index, remaining_whitespace = (
             0,
             0,
@@ -597,9 +628,8 @@ class ContainerBlockNonLeafProcessor:
         # )
         inner_token = parser_state.token_stack[i].matching_markdown_token
         if inner_token is None:
-            assert parser_state.token_stack[i].was_link_definition_started
+            assert parser_state.token_stack[i].was_link_definition_started, "TODO: why?"
             return True, 0, remaining_whitespace
-        assert inner_token is not None
         if inner_token.is_block_quote_start:
             start_bq_index = remaining_whitespace.find(">")
             if start_bq_index < 0 or start_bq_index >= 4:
@@ -616,9 +646,10 @@ class ContainerBlockNonLeafProcessor:
                     i + 1 if parser_state.token_stack[i].is_indented_code_block else i
                 )
             return True, found_stack_index, remaining_whitespace
-        assert inner_token.is_list_start
         list_token = cast(ListStartMarkdownToken, inner_token)
-        assert grab_bag.indent_used_by_container >= 0
+        assert (
+            grab_bag.indent_used_by_container >= 0
+        ), "If using a container, should have processed indent."
         remaining_indent = list_token.indent_level - (
             grab_bag.indent_already_processed + grab_bag.indent_used_by_container
         )
@@ -640,7 +671,7 @@ class ContainerBlockNonLeafProcessor:
         position_marker: PositionMarker,
         grab_bag: ContainerGrabBag,
     ) -> None:
-        assert grab_bag.is_leaf_tokens_empty()
+        assert grab_bag.is_leaf_tokens_empty(), "No leaf tokens should be present yet."
         POGGER.debug("clt>>lazy-check")
 
         after_ws_index, ex_whitespace = ParserHelper.extract_spaces_verified(
@@ -680,7 +711,9 @@ class ContainerBlockNonLeafProcessor:
         )
         POGGER.debug("text_to_parse>$<", new_position_marker.text_to_parse)
         POGGER.debug("index_number>$<", new_position_marker.index_number)
-        assert grab_bag.container_start_bq_count is not None
+        assert (
+            grab_bag.container_start_bq_count is not None
+        ), "If here, we should have a count of bq starts."
         (
             did_process,
             block_index,
@@ -720,7 +753,9 @@ class ContainerBlockNonLeafProcessor:
             parser_state
         )
         if did_process:
-            assert not grab_bag.container_tokens
+            assert (
+                not grab_bag.container_tokens
+            ), "Should not have any container tokens yet."
             POGGER.debug("clt>>list-in-progress")
             resultant_tokens = ListBlockProcessor.list_in_process(
                 parser_state,
@@ -761,9 +796,15 @@ class ContainerBlockNonLeafProcessor:
         )
         new_list_index = -1
         if not did_process:
-            assert grab_bag.adj_ws is not None
-            assert grab_bag.extracted_whitespace is not None
-            assert grab_bag.removed_chars_at_start_of_line is not None
+            assert (
+                grab_bag.adj_ws is not None
+            ), "If we have a list, we must have adjusted whitespace."
+            assert (
+                grab_bag.extracted_whitespace is not None
+            ), "Extracted whitespace must be defined at this point."
+            assert (
+                grab_bag.removed_chars_at_start_of_line is not None
+            ), "If we have a list, we must have removed characters."
             (
                 did_process,
                 new_list_index,
@@ -777,7 +818,9 @@ class ContainerBlockNonLeafProcessor:
             )
             # POGGER.debug_with_visible_whitespace("handle_list_block>$", resultant_tokens)
             if not grab_bag.requeue_line_info:
-                assert new_line_to_parse is not None
+                assert (
+                    new_line_to_parse is not None
+                ), "If not requeuing, must have more line to parse."
                 grab_bag.line_to_parse = new_line_to_parse
                 grab_bag.extend_container_tokens(resultant_tokens)
         POGGER.debug(

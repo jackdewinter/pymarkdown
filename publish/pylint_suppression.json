@@ -488,6 +488,7 @@
         },
         "pymarkdown/transform_markdown/transform_new_list_item.py": {
             "too-few-public-methods": 1,
+            "too-many-locals": 1,
             "too-many-arguments": 1
         },
         "pymarkdown/transform_markdown/transform_to_markdown.py": {
@@ -500,7 +501,7 @@
         "too-many-public-methods": 4,
         "too-few-public-methods": 39,
         "too-many-arguments": 230,
-        "too-many-locals": 39,
+        "too-many-locals": 40,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 2,
         "protected-access": 25,
