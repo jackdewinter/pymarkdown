@@ -68,6 +68,7 @@ class LinkReferenceDefinitionParseHelper:
         else:
             inline_link = None
         if keep_going:
+            assert new_index is not None
             (
                 keep_going,
                 new_index,

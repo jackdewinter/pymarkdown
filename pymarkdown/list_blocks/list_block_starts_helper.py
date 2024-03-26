@@ -328,6 +328,7 @@ class ListBlockStartsHelper:
         if is_start := ParserHelper.is_character_at_index_one_of(
             line_to_parse, start_index, ListBlockStartsHelper.__ulist_start_characters
         ):
+            assert extracted_whitespace is not None
             is_break, _ = ThematicLeafBlockProcessor.is_thematic_break(
                 line_to_parse, start_index, extracted_whitespace
             )

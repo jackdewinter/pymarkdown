@@ -718,6 +718,7 @@ class ListBlockProcessor:
                 "1>>line_to_parse>>$>>",
                 line_to_parse,
             )
+            assert extracted_whitespace is not None
             (
                 line_to_parse,
                 used_indent,
@@ -740,6 +741,7 @@ class ListBlockProcessor:
                 "2>>line_to_parse>>$>>",
                 line_to_parse,
             )
+            assert extracted_whitespace is not None
             (
                 container_level_tokens,
                 requeue_line_info,

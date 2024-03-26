@@ -237,6 +237,7 @@ class ContainerBlockLeafProcessor:
         )
 
         if not outer_processed:
+            assert leaf_token_whitespace is not None
             new_tokens = (
                 AtxLeafBlockProcessor.parse_atx_headings(
                     parser_state,
