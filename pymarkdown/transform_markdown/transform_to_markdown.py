@@ -114,7 +114,9 @@ class TransformToMarkdown:
         current_token_type = token_type
         token_name = None
         token_class = None
-        assert "get_markdown_token_type" in token_type.__dict__
+        assert (
+            "get_markdown_token_type" in token_type.__dict__
+        ), "Must be present in dictionary."
         token_name = token_type.__dict__["get_markdown_token_type"].__func__()
 
         while current_token_type not in [
@@ -124,7 +126,7 @@ class TransformToMarkdown:
             SpecialMarkdownToken,
         ]:
             new_bases = list(current_token_type.__bases__)
-            assert len(new_bases) == 1
+            assert len(new_bases) == 1, "Only one."
             current_token_type = new_bases[0]
         if current_token_type == ContainerMarkdownToken:
             token_class = MarkdownTokenClass.CONTAINER_BLOCK
@@ -133,11 +135,12 @@ class TransformToMarkdown:
         elif current_token_type == InlineMarkdownToken:
             token_class = MarkdownTokenClass.INLINE_BLOCK
         else:
-            assert current_token_type == SpecialMarkdownToken
+            assert current_token_type == SpecialMarkdownToken, "Default is special."
             token_class = MarkdownTokenClass.SPECIAL
 
-        assert token_name is not None
-        assert token_class is not None
+        assert (
+            token_name is not None and token_class is not None
+        ), "Both must be defined."
         return token_name, token_class
 
     def register_handlers(
@@ -155,7 +158,7 @@ class TransformToMarkdown:
             MarkdownTokenClass.LEAF_BLOCK,
             MarkdownTokenClass.INLINE_BLOCK,
             MarkdownTokenClass.SPECIAL,
-        ]
+        ], "Must be one of three classes."
 
         self.start_token_handlers[type_name] = start_token_handler
         if end_token_handler:
@@ -171,7 +174,9 @@ class TransformToMarkdown:
         Register the handlers necessary to deal with token's start and end.
         """
         type_name, type_class = self.__get_token_type_info(token_type)
-        assert type_class in [MarkdownTokenClass.CONTAINER_BLOCK]
+        assert type_class in [
+            MarkdownTokenClass.CONTAINER_BLOCK
+        ], "Must be of class CONTAINER_BLOCK"
 
         self.start_container_token_handlers[type_name] = start_token_handler
         if end_token_handler:
@@ -249,8 +254,10 @@ class TransformToMarkdown:
                 pragma_token, transformed_data
             )
 
-        assert not self.context.block_stack
-        assert not self.context.container_token_stack
+        assert not self.context.block_stack, "Nothing must be left at the end."
+        assert (
+            not self.context.container_token_stack
+        ), "Nothing must be left at the end."
         return transformed_data
 
     @classmethod

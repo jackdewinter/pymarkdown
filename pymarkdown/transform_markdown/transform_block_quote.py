@@ -162,7 +162,9 @@ class TransformBlockQuote:
             f"current_end_token_extra>:{ParserHelper.make_value_visible(current_end_token_extra)}:<"
         )
         start_leading_index = current_start_token.leading_text_index
-        assert current_start_token.bleading_spaces is not None
+        assert (
+            current_start_token.bleading_spaces is not None
+        ), "Bleading spaces should be defined by now."
         split_start_leading = current_start_token.bleading_spaces.split(
             ParserHelper.newline_character
         )

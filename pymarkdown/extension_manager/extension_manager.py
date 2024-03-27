@@ -89,7 +89,7 @@ class ExtensionManager:
             assert (
                 next_extension.extension_interface_version
                 == ExtensionManagerConstants.EXTENSION_INTERFACE_VERSION_BASIC
-            )
+            ), "Only the basic extension version is supported."
             self.__extension_details[next_extension.extension_id] = next_extension
             self.__extension_objects[next_extension.extension_id] = (
                 next_extension_object
@@ -202,7 +202,9 @@ class ExtensionManager:
             return self.__handle_argparse_subparser_list(args)
         if subparser_value == "info":
             return self.__handle_argparse_subparser_info(args)
-        assert ExtensionManager.__argparse_subparser
+        assert (
+            ExtensionManager.__argparse_subparser is not None
+        ), "Subparser must be defined by this point."
         ExtensionManager.__argparse_subparser.print_help()
         return ApplicationResult.COMMAND_LINE_ERROR
 
@@ -357,7 +359,9 @@ class ExtensionManager:
             extension_object.extension_id,
         )
 
-        assert self.__properties
+        assert (
+            self.__properties is not None
+        ), "Properties must be defined by this point."
         plugin_section_title = (
             f"{ExtensionManager.__extensions_prefix}{self.__properties.separator}"
             + f"{extension_object.extension_id}{self.__properties.separator}"

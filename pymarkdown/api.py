@@ -301,7 +301,7 @@ class PyMarkdownApi:
     ) -> "PyMarkdownScanPathResult":
         assert (
             not this_presentation.pso
-        )  # should not display for scan_path, but for ext ops and plugin ops
+        ), "should not display for scan_path, but for ext ops and plugin ops"
         if return_code != 0:
             self.__generate_exception(this_presentation)
         return PyMarkdownScanPathResult(

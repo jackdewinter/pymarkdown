@@ -35,10 +35,6 @@ class ImageStartMarkdownToken(ReferenceMarkdownToken):
         column_number: int,
         lhp: LinkHelperProperties,
     ) -> None:
-        # assert lhp.label_type is not None
-        # assert lhp.pre_inline_link is not None
-        # assert lhp.inline_link is not None
-
         self.__image_alt_text = image_alt_text
         ReferenceMarkdownToken.__init__(
             self,

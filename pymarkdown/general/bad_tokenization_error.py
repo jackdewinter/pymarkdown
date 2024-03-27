@@ -12,5 +12,5 @@ class BadTokenizationError(Exception):
     """
 
     def __init__(self, formatted_message: Optional[str] = None):
-        assert formatted_message
+        assert formatted_message is not None, "TODO: cleanup?"
         super().__init__(formatted_message)

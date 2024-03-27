@@ -147,7 +147,7 @@ class LinkSearchHelper:
             consume_rest_of_line,
         )
         if is_valid:
-            assert valid_special_start_text is not None
+            assert valid_special_start_text is not None, "TODO: check"
             LinkSearchHelper.__deactivate_used_tokens(
                 inline_blocks, search_index, valid_special_start_text
             )
@@ -188,7 +188,9 @@ class LinkSearchHelper:
             valid_special_start_text: Optional[str] = special_text_token.token_text
             if special_text_token.is_active:
                 # POGGER.debug(">>>>>>$", inline_blocks)
-                assert valid_special_start_text is not None
+                assert (
+                    valid_special_start_text is not None
+                ), "if active, the token_text must be defined"
                 (
                     updated_index,
                     token_to_append,
@@ -277,7 +279,7 @@ class LinkSearchHelper:
         assert (
             inline_blocks[search_index].is_inline_link
             or inline_blocks[search_index].is_inline_image
-        )
+        ), "token to deactivate must be a link or image"
 
         POGGER.debug(
             "\nresolve_inline_emphasis>>$",
@@ -346,16 +348,29 @@ class LinkSearchHelper:
         POGGER.debug("<<<<<<<update_index<<<<<<<$<<", update_index)
         POGGER.debug("<<<<<<<text_from_blocks_raw<<<<<<<$<<", text_from_blocks_raw)
         if update_index != -1:
-            assert lhp.ex_label is not None
-            assert lhp.inline_link is not None
-            assert lhp.pre_inline_link is not None
-            assert lhp.inline_title is not None
-            assert lhp.pre_inline_title is not None
-            assert lhp.bounding_character is not None
-            assert lhp.before_title_whitespace is not None
-            assert lhp.after_title_whitespace is not None
-            assert lhp.before_link_whitespace is not None
-            assert lhp.label_type is not None
+            # TODO combine?
+            assert lhp.ex_label is not None, "if successful, this field is defined"
+            assert lhp.inline_link is not None, "if successful, this field is defined"
+            assert (
+                lhp.pre_inline_link is not None
+            ), "if successful, this field is defined"
+            assert lhp.inline_title is not None, "if successful, this field is defined"
+            assert (
+                lhp.pre_inline_title is not None
+            ), "if successful, this field is defined"
+            assert (
+                lhp.bounding_character is not None
+            ), "if successful, this field is defined"
+            assert (
+                lhp.before_title_whitespace is not None
+            ), "if successful, this field is defined"
+            assert (
+                lhp.after_title_whitespace is not None
+            ), "if successful, this field is defined"
+            assert (
+                lhp.before_link_whitespace is not None
+            ), "if successful, this field is defined"
+            assert lhp.label_type is not None, "if successful, this field is defined"
             return LinkCreateHelper.create_link_token(
                 parser_properties,
                 start_text,

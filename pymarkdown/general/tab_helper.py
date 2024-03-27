@@ -48,8 +48,8 @@ class TabHelper:
             ParserHelper.make_value_visible(tabified_token_text),
         )
         LOGGER.debug("tabified_token_text_index>>:%d:<", tabified_token_text_index)
-        assert tabified_token_text_index != -1
-        assert tabified_token_text is not None
+        assert tabified_token_text_index != -1, "Detabified string must be found."
+        assert tabified_token_text is not None, "Detabified string must be found."
 
         tabified_leading_spaces = original_line[:tabified_token_text_index]
         LOGGER.debug(
@@ -62,7 +62,7 @@ class TabHelper:
         split_tab = False
         split_tab_with_block_quote_suffix = False
         if tabified_leading_spaces:
-            assert extracted_whitespace is not None
+            assert extracted_whitespace is not None, "TODO: check"
             (
                 tabified_prefix,
                 tabified_suffix,
@@ -102,7 +102,7 @@ class TabHelper:
         """
         Match any tabbed whitespace with its non-tabbed counterpart.
         """
-        assert corrected_extracted_whitespace != ""
+        assert corrected_extracted_whitespace != "", "TODO: check"
         detabified_suffix = ""
         detabified_prefix = ""
         corrected_prefix = ""
@@ -133,10 +133,10 @@ class TabHelper:
             LOGGER.debug("detabified_suffix=:%s:", detabified_suffix)
             if len(detabified_suffix) < len(extracted_whitespace):
                 index_from_end -= 1
-        assert index_from_end >= 0
+        assert index_from_end >= 0, "Index must be within the string."
 
         if not have_been_inside_loop:
-            assert not extracted_whitespace
+            assert not extracted_whitespace, "TODO: explain?"
             corrected_prefix = corrected_extracted_whitespace
             corrected_suffix = ""
 
@@ -158,7 +158,9 @@ class TabHelper:
         if split_tab:
             split_tab_with_block_quote_suffix = detabified_prefix.endswith(">")
         elif detabified_prefix:
-            assert detabified_prefix.endswith(" ")
+            assert detabified_prefix.endswith(
+                " "
+            ), "Detabified prefix must end with a space."
         #     assert detabified_suffix[1:] == extracted_whitespace
 
         return (
@@ -381,7 +383,9 @@ class TabHelper:
                 use_proper_traverse,
                 abc,
             )
-        assert adj_original is not None
+        assert (
+            adj_original is not None
+        ), "Adjusted original line must be defined by now."
         return_index = (
             adj_traverse_original_index if use_proper_traverse else adj_original_index
         )
@@ -456,7 +460,9 @@ class TabHelper:
         #     block_quote_token,
         # )
         block_quote_leading_spaces = block_quote_token.bleading_spaces
-        assert block_quote_leading_spaces is not None
+        assert (
+            block_quote_leading_spaces is not None
+        ), "Block quote bleading spaces must be defined by now."
         # POGGER.debug("block_quote_leading_spaces=:$:", block_quote_leading_spaces)
         block_quote_leading_spaces_index = block_quote_leading_spaces.rfind("\n")
         last_block_quote_leading_space = block_quote_leading_spaces[
@@ -465,7 +471,9 @@ class TabHelper:
         # POGGER.debug(
         #     "last_block_quote_leading_space=:$:", last_block_quote_leading_space
         # )
-        assert last_block_quote_leading_space.endswith(" ")
+        assert last_block_quote_leading_space.endswith(
+            " "
+        ), "Block quote ls must end with a space."
         last_block_quote_leading_space = last_block_quote_leading_space[:-1]
         # POGGER.debug(
         #     "last_block_quote_leading_space=:$:", last_block_quote_leading_space
@@ -496,7 +504,7 @@ class TabHelper:
         reconstructed_line, _, _ = TabHelper.find_tabified_string_split(
             recon_line, "", original_line, True, False
         )
-        assert reconstructed_line is not None
+        assert reconstructed_line is not None, "reconstructed_line must be found."
         text_to_use_count = 1
         keep_going = text_to_use_count < len(reconstructed_line)
         while keep_going:
@@ -508,7 +516,9 @@ class TabHelper:
             ) < len(last_list_leading_space)
             if keep_going:
                 text_to_use_count += 1
-        assert reconstructed_line[text_to_use_count - 1] == "\t"
+        assert (
+            reconstructed_line[text_to_use_count - 1] == "\t"
+        ), "Last character must be a tab."
         return reconstructed_line[: text_to_use_count - 1]
 
     @staticmethod
@@ -523,9 +533,11 @@ class TabHelper:
         if fenced_switch_enabled:
             assert tab_index < last_list_leading_space_length or (
                 last_list_leading_space_length == 0
-            )  # and tab_index == 0)
+            ), "Tab index must be within leading spaces."  # and tab_index == 0)
         else:
-            assert tab_index < last_list_leading_space_length
+            assert (
+                tab_index < last_list_leading_space_length
+            ), "Tab index must be within leading spaces."
         last_list_leading_space = (
             extracted_whitespace[:tab_index]
             if alternate_list_leading_space is None
@@ -544,7 +556,7 @@ class TabHelper:
         alternate_list_leading_space: Optional[str],
         original_line: Optional[str] = None,
     ) -> Optional[str]:
-        assert extracted_whitespace is not None
+        assert extracted_whitespace is not None, "TODO: check"
 
         list_start_token = cast(
             ListStartMarkdownToken,
@@ -555,7 +567,7 @@ class TabHelper:
             ParserHelper.make_value_visible(list_start_token),
         )
         list_leading_spaces = list_start_token.leading_spaces
-        assert list_leading_spaces is not None
+        assert list_leading_spaces is not None, "Leading spaces must be defined by now."
         LOGGER.debug(
             "list_leading_spaces=:%s:",
             ParserHelper.make_value_visible(list_leading_spaces),
@@ -641,7 +653,7 @@ class TabHelper:
             and not parser_state.token_stack[stack_token_index].is_list
         ):
             stack_token_index -= 1
-        assert stack_token_index != 0
+        assert stack_token_index != 0, "Must not have gone back to the root index."
 
         LOGGER.debug(
             "parser_state=:%s:",
@@ -689,5 +701,7 @@ class TabHelper:
             )
             # POGGER.debug("detabified_ex_space>:$:<", detabified_ex_space)
             space_index += 1
-        assert len(detabified_ex_space) >= whitespace_used_count
+        assert (
+            len(detabified_ex_space) >= whitespace_used_count
+        ), "Proper amount of space must be used up."
         return detabified_ex_space, last_good_space_index, space_prefix

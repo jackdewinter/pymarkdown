@@ -122,12 +122,16 @@ class HtmlRawHelper:
                 add_replace_marker_if_empty=True,
             )
         token_to_use: Optional[Union[TextMarkdownToken, RawHtmlMarkdownToken]] = None
-        assert inline_request.parse_properties is not None
+        assert (
+            inline_request.parse_properties is not None
+        ), "Parse paroperties must be defined."
         if was_open and inline_request.parse_properties.is_disallow_raw_html_enabled:
             _, tag_name = ParserHelper.collect_until_one_of_characters_verified(
                 valid_raw_html, 0, " /"
             )
-            assert inline_request.parse_properties.disallow_raw_html is not None
+            assert (
+                inline_request.parse_properties.disallow_raw_html is not None
+            ), "Extension must be defined by this point."
             if inline_request.parse_properties.disallow_raw_html.is_html_tag_disallowed(
                 tag_name
             ):

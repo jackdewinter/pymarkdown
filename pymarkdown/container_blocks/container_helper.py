@@ -84,7 +84,7 @@ class ContainerHelper:
             until_this_index=len(parser_state.token_stack) - 1,
         )
         POGGER.debug("x_tokens>>:$:<", x_tokens)
-        assert len(x_tokens) == 1
+        assert len(x_tokens) == 1, "Should have generated only one token."
         first_new_token = cast(EndMarkdownToken, x_tokens[0])
 
         did_reduce_list = ContainerHelper.__reduce_containers_if_required_bq_list(
@@ -103,7 +103,9 @@ class ContainerHelper:
             "start_markdown_token.bleading>>:$:<",
             matching_start_token.bleading_spaces,
         )
-        assert matching_start_token.bleading_spaces is not None
+        assert (
+            matching_start_token.bleading_spaces is not None
+        ), "Bleading spaces must be defined by this point."
         last_newline_index = matching_start_token.bleading_spaces.rfind("\n")
         # if last_newline_index == -1:
         #     last_newline_part =matching_start_token.leading_spaces
@@ -113,14 +115,18 @@ class ContainerHelper:
         ]
         POGGER.debug("last_newline_part>>:$:<", last_newline_part)
         if split_tab:
-            assert last_newline_part.endswith(" ")
+            assert last_newline_part.endswith(
+                " "
+            ), "Bleading space part must end with a space character."
             last_newline_part = last_newline_part[:-1]
             POGGER.debug("last_newline_part>>:$:<", last_newline_part)
             split_tab = False
         POGGER.debug("split_tab>>:$:<", split_tab)
 
         POGGER.debug("extra_end_data>>:$:<", first_new_token.extra_end_data)
-        assert first_new_token.extra_end_data is None
+        assert (
+            first_new_token.extra_end_data is None
+        ), "Extra data must be defined by this point."
 
         was_paragraph_closed = (
             new_tokens[0].is_paragraph_end

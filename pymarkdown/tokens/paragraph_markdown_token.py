@@ -156,7 +156,7 @@ class ParagraphMarkdownToken(LeafMarkdownToken):
         )
         assert (
             rehydrate_index == expected_rehydrate_index
-        ), f"rehydrate_index={rehydrate_index};expected_rehydrate_index={expected_rehydrate_index}"
+        ), "Rehydrate index must match up at end of paragraph."
         return f"{top_stack_token.final_whitespace}{ParserHelper.newline_character}"
 
     @staticmethod

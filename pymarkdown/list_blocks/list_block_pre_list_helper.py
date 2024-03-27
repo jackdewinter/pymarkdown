@@ -54,7 +54,7 @@ class ListBlockPreListHelper:
         )
 
         POGGER.debug("--$--$", start_index, start_index + 1)
-        assert adj_ws is not None
+        assert adj_ws is not None, "TODO: Check"
         (
             indent_level,
             remaining_whitespace,
@@ -89,7 +89,7 @@ class ListBlockPreListHelper:
             after_marker_ws_index,
             after_marker_whitespace,
         ) = ParserHelper.extract_spaces_verified(line_to_parse, start_index + 1)
-        assert extracted_whitespace is not None
+        assert extracted_whitespace is not None, "TODO: Check"
         ws_after_marker, ws_before_marker, line_to_parse_size = (
             TabHelper.calculate_length(
                 after_marker_whitespace, start_index=start_index + 1
@@ -248,7 +248,9 @@ class ListBlockPreListHelper:
         container_level_tokens: List[MarkdownToken] = []
         adjusted_stack_count = block_quote_data.stack_count
         while block_quote_data.current_count < adjusted_stack_count:
-            assert not container_level_tokens
+            assert (
+                not container_level_tokens
+            ), "Container tokens cannot have been filled."
             last_block_index = parser_state.find_last_block_quote_on_stack()
             previous_last_block_token = cast(
                 BlockQuoteMarkdownToken,
@@ -340,7 +342,7 @@ class ListBlockPreListHelper:
         )
         removed_leading_spaces = previous_last_block_token.remove_last_bleading_space()
         POGGER.debug("removed_leading_spaces>>$<<", removed_leading_spaces)
-        assert removed_leading_spaces is not None
+        assert removed_leading_spaces is not None, "Removed spaces cannot be None."
         POGGER.debug(
             "prev>>$<<, current>>$<<",
             previous_last_block_token,

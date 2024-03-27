@@ -54,7 +54,7 @@ class ListBlockStartsHelper:
             start_index,
         )
 
-        assert adj_ws is not None
+        assert adj_ws is not None, "TODO: Check"
         POGGER.debug("skip_whitespace_check>>$", skip_whitespace_check)
         POGGER.debug("len(adj_ws)>>$", len(adj_ws))
         POGGER.debug("parent_indent>>$", parent_indent)
@@ -63,7 +63,7 @@ class ListBlockStartsHelper:
             TabHelper.is_length_less_than_or_equal_to(adj_ws, 3 + parent_indent)
             or skip_whitespace_check
         ):
-            assert extracted_whitespace is not None
+            assert extracted_whitespace is not None, "TODO: Check"
             adj_extracted_whitespace = (
                 extracted_whitespace[parent_indent:]
                 if parent_indent
@@ -127,7 +127,7 @@ class ListBlockStartsHelper:
         POGGER.debug("after_adjust>>ws=$=", adj_ws)
         POGGER.debug("after_adjust>>parent_indent=$=", parent_indent)
 
-        assert adj_ws is not None
+        assert adj_ws is not None, "TODO: Check"
 
         POGGER.debug("skip_whitespace_check>>$", skip_whitespace_check)
         POGGER.debug("len(adj_ws)>>$", len(adj_ws))
@@ -145,8 +145,9 @@ class ListBlockStartsHelper:
         else:
             is_start, index, number_of_digits, is_not_one = False, None, None, False
         if is_start:
-            assert index is not None
-            assert is_not_one is not None
+            assert (
+                index is not None and is_not_one is not None
+            ), "If is_start, these must be valid."
             (
                 is_start,
                 after_all_whitespace_index,
@@ -156,8 +157,9 @@ class ListBlockStartsHelper:
         else:
             after_all_whitespace_index = -1
         if is_start:
-            assert index is not None
-            assert is_not_one is not None
+            assert (
+                index is not None and is_not_one is not None
+            ), "If is_start, these must be valid."
             is_start = ListBlockStartsHelper.__is_start_phase_two(
                 parser_state,
                 line_to_parse[index],
@@ -179,7 +181,7 @@ class ListBlockStartsHelper:
         line_to_parse: str,
         start_index: int,
     ) -> Tuple[Optional[str], int]:
-        assert adj_ws is not None
+        assert adj_ws is not None, "TODO: Check"
         (
             child_list_token,
             parent_list_token,
@@ -320,7 +322,7 @@ class ListBlockStartsHelper:
 
     @staticmethod
     def __is_start_ulist(
-        line_to_parse: str, start_index: int, extracted_whitespace: Optional[str]
+        line_to_parse: str, start_index: int, extracted_whitespace: str
     ) -> bool:
         # Thematic breaks have precedence, so stop a list start if we find one.
         if is_start := ParserHelper.is_character_at_index_one_of(

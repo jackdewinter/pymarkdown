@@ -50,7 +50,9 @@ class ContainerBlockNestedProcessor:
         POGGER.debug("was_container_start>$", was_container_start)
 
         if was_container_start and position_marker.text_to_parse:
-            assert grab_bag.container_depth < 10
+            assert (
+                grab_bag.container_depth < 10
+            ), "Prevent nesting from going beyond 10 deep."
             nested_container_starts = (
                 ContainerBlockNestedProcessor.__get_nested_container_starts(
                     parser_state,
@@ -75,7 +77,9 @@ class ContainerBlockNestedProcessor:
                 grab_bag,
             )
 
-            assert grab_bag.is_leaf_tokens_empty()
+            assert (
+                grab_bag.is_leaf_tokens_empty()
+            ), "No leaf tokens are expected at this point."
             adjusted_text_to_parse = ContainerBlockNestedProcessor.__do_nested_cleanup(
                 parser_state,
                 indent_level_delta,
@@ -187,14 +191,13 @@ class ContainerBlockNestedProcessor:
                 if list_stack_token.ws_before_marker <= len(ex_ws_test):
                     whitespace_scan_start_index = list_stack_token.ws_before_marker
 
-        after_ws_index, ex_whitespace = ParserHelper.extract_spaces(
+        ws_index, ex_white = ParserHelper.extract_spaces(
             line_to_parse, whitespace_scan_start_index
         )
-        if not ex_whitespace:
-            ex_whitespace = ""
-            after_ws_index = whitespace_scan_start_index
-
-        assert after_ws_index is not None
+        ex_whitespace = "" if ex_white is None else ex_white
+        after_ws_index: int = (
+            whitespace_scan_start_index if ws_index is None else ws_index
+        )
 
         nested_ulist_start, _, _, _ = ListBlockStartsHelper.is_ulist_start(
             parser_state, line_to_parse, after_ws_index, ex_whitespace, False
@@ -266,8 +269,8 @@ class ContainerBlockNestedProcessor:
         assert (
             not grab_bag.requeue_line_info
             or not grab_bag.requeue_line_info.lines_to_requeue
-        )
-        assert adjusted_text_to_parse is not None
+        ), "Requeing not supported."
+        assert adjusted_text_to_parse is not None, "Adjusted text should be defined."
 
         POGGER.debug("\nRECURSED\n\n")
 
@@ -347,7 +350,9 @@ class ContainerBlockNestedProcessor:
                         last_container_index
                     ].matching_markdown_token,
                 )
-                assert block_quote_token.bleading_spaces is not None
+                assert (
+                    block_quote_token.bleading_spaces is not None
+                ), "Bleading spaces are always defined for block quotes."
                 split_spaces = block_quote_token.bleading_spaces.split(
                     ParserHelper.newline_character
                 )
@@ -361,7 +366,9 @@ class ContainerBlockNestedProcessor:
         block_quote_token: BlockQuoteMarkdownToken,
         grab_bag: ContainerGrabBag,
     ) -> str:
-        assert block_quote_token.bleading_spaces is not None
+        assert (
+            block_quote_token.bleading_spaces is not None
+        ), "Bleading spaces are always defined for block quotes."
         split_spaces = block_quote_token.bleading_spaces.split(
             ParserHelper.newline_character
         )
@@ -393,7 +400,9 @@ class ContainerBlockNestedProcessor:
             )
             POGGER.debug("adjusted_length=$", adjusted_length)
             if adjusted_length != nested_removed_text_length:
-                assert parser_state.original_line_to_parse
+                assert (
+                    parser_state.original_line_to_parse is not None
+                ), "Original line must be defined by this point."
                 nested_removed_text = parser_state.original_line_to_parse[
                     :adjusted_length
                 ]
@@ -423,7 +432,9 @@ class ContainerBlockNestedProcessor:
             and not nested_container_starts.ulist_index
             and not nested_container_starts.olist_index
         ):
-            assert active_container_index == grab_bag.end_container_indices.block_index
+            assert (
+                active_container_index == grab_bag.end_container_indices.block_index
+            ), "Without a list start index, the active container must be a block quote."
             POGGER.debug(
                 "parser_state.nested_list_start>>$<<",
                 parser_state.nested_list_start,
@@ -490,7 +501,9 @@ class ContainerBlockNestedProcessor:
             and indent_was_adjusted
             and parser_state.nested_list_start
         ):
-            assert parser_state.nested_list_start is not None
+            assert (
+                parser_state.nested_list_start is not None
+            ), "The nested list start cannot be None."
         return False
 
     @staticmethod
@@ -502,8 +515,12 @@ class ContainerBlockNestedProcessor:
         start_index, _ = ParserHelper.extract_spaces_verified(adj_line_to_parse, 0)
         POGGER.debug("start_index>>$<<", start_index)
 
-        assert parser_state.nested_list_start is not None
-        assert parser_state.nested_list_start.matching_markdown_token is not None
+        assert (
+            parser_state.nested_list_start is not None
+        ), "The nested list start cannot be None."
+        assert (
+            parser_state.nested_list_start.matching_markdown_token is not None
+        ), "List stack starts always have matching markdown tokens."
         POGGER.debug(
             "parser_state.nested_list_start.matching_markdown_token>>$<<",
             parser_state.nested_list_start.matching_markdown_token,
@@ -526,7 +543,7 @@ class ContainerBlockNestedProcessor:
             assert (
                 parser_state.nested_list_start.matching_markdown_token.line_number
                 == token_after_list_start.line_number
-            )
+            ), "Token after the list start must have the same line number as the list start."
             column_number_delta = (
                 token_after_list_start.column_number
                 - parser_state.nested_list_start.matching_markdown_token.column_number

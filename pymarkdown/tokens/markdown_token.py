@@ -657,7 +657,6 @@ class EndMarkdownToken(MarkdownToken):
         line_number: int = 0,
         column_number: int = 0,
     ) -> None:
-        assert start_markdown_token
         if isinstance(start_markdown_token, MarkdownToken):
             assert (
                 start_markdown_token.requires_end_token

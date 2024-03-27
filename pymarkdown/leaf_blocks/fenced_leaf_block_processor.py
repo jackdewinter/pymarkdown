@@ -54,7 +54,7 @@ class FencedLeafBlockProcessor:
         Determine if we have the start of a fenced code block.
         """
 
-        assert extracted_whitespace is not None
+        assert extracted_whitespace is not None, "TODO: Check"
         after_fence_index: Optional[int] = None
         if (
             skip_whitespace_check
@@ -125,9 +125,11 @@ class FencedLeafBlockProcessor:
         )
         if is_fence_start and not parser_state.token_stack[-1].is_html_block:
             POGGER.debug("parse_fenced_code_block:fenced")
-            assert collected_count is not None
-            assert non_whitespace_index is not None
-            assert after_fence_index is not None
+            assert (
+                collected_count is not None
+                and non_whitespace_index is not None
+                and after_fence_index is not None
+            ), "If is_fence_start, all these must be defined."
             if parser_state.token_stack[-1].is_fenced_code_block:
                 POGGER.debug("parse_fenced_code_block:check fence end")
                 FencedLeafBlockProcessor.__check_for_fenced_end(
@@ -142,7 +144,7 @@ class FencedLeafBlockProcessor:
                 )
             else:
                 POGGER.debug("parse_fenced_code_block:check fence start")
-                assert new_index is not None
+                assert new_index is not None, "TODO: why?"
                 new_tokens = FencedLeafBlockProcessor.__process_fenced_start(
                     parser_state,
                     position_marker,
@@ -300,8 +302,10 @@ class FencedLeafBlockProcessor:
             collected_count, original_line, detabified_original_start_index
         )
 
-        assert fence_string in original_line
         original_fence_string_index = original_line.find(fence_string)
+        assert (
+            original_fence_string_index != -1
+        ), "fence_string must be in original line"
         after_fence_in_original = original_line[
             original_fence_string_index + collected_count :
         ]
@@ -353,7 +357,7 @@ class FencedLeafBlockProcessor:
         after_fence_index = after_whitespace_index + collected_count
         adj_end = adj_original_line[after_whitespace_index:]
         fence_string = adj_original_line[after_whitespace_index:after_fence_index]
-        assert fence_string in original_line
+        assert fence_string in original_line, "fence_string must be in original line"
         return after_fence_index, adj_end, fence_string
 
     # pylint: disable=too-many-arguments
@@ -732,7 +736,6 @@ class FencedLeafBlockProcessor:
             text_after_extracted_text,
         )
 
-        assert extracted_text is not None
         extracted_text = InlineBackslashHelper.handle_backslashes(
             parser_state.parse_properties, extracted_text
         )
@@ -745,7 +748,6 @@ class FencedLeafBlockProcessor:
         if pre_text_after_extracted_text == text_after_extracted_text:
             pre_text_after_extracted_text = ""
 
-        assert extracted_whitespace is not None
         new_token = FencedCodeBlockMarkdownToken(
             position_marker.text_to_parse[position_marker.index_number],
             collected_count,
@@ -758,7 +760,6 @@ class FencedLeafBlockProcessor:
             position_marker,
         )
         new_tokens.append(new_token)
-        assert extracted_whitespace is not None
         whitespace_start_count += (
             TabHelper.calculate_length(split_tab_whitespace, 0)
             if split_tab_whitespace is not None
@@ -870,7 +871,7 @@ class FencedLeafBlockProcessor:
             )
 
         fence_string_index = original_line.find(fence_string)
-        assert fence_string_index != -1
+        assert fence_string_index != -1, "fence string must be in original line"
         if prefix := original_line[:fence_string_index]:
             (
                 corrected_prefix,
@@ -905,7 +906,7 @@ class FencedLeafBlockProcessor:
     ) -> str:
         line_suffix = line_to_parse[new_index - collected_count : after_fence_index]
         line_suffix_index = original_line.find(line_suffix)
-        assert line_suffix_index != -1
+        assert line_suffix_index != -1, "line_suffix must be in original_line"
         return original_line[line_suffix_index:]
 
     # pylint: disable=too-many-arguments
@@ -1007,7 +1008,7 @@ class FencedLeafBlockProcessor:
         )
         POGGER.debug("whitespace_start_count>:$:<", whitespace_start_count)
         if detabified_before_count_length < whitespace_start_count:
-            assert before_count == new_extracted_whitespace
+            assert before_count == new_extracted_whitespace, "TODO: check logic"
             after_count = ""
         POGGER.debug("before_count>:$:<", before_count)
         POGGER.debug("after_count>:$:<", after_count)
@@ -1028,9 +1029,11 @@ class FencedLeafBlockProcessor:
     ) -> Tuple[str, int, bool, bool]:
         adj_original = reconstructed_line
         adj_original_index = original_line.find(reconstructed_line)
-        assert adj_original_index != -1
+        assert adj_original_index != -1, "reconstructed_line must be in original line."
         split_tab = False
-        assert original_line.endswith(reconstructed_line)
+        assert original_line.endswith(
+            reconstructed_line
+        ), "TODO: Clearer??? reconstructed_line must end the original line"
         original_line_prefix = original_line[: -len(reconstructed_line)]
         split_tab = original_line_prefix.endswith(">")
         reconstructed_line_has_tab = split_tab
@@ -1145,7 +1148,7 @@ class FencedLeafBlockProcessor:
         space_end_index, extracted_whitespace = ParserHelper.extract_spaces_verified(
             adj_original, 0
         )
-        assert space_end_index != -1
+        # assert space_end_index != -1
 
         # detabified_extracted_whitespace = TabHelper.detabify_string(
         #     extracted_whitespace, adj_original_index
@@ -1154,7 +1157,7 @@ class FencedLeafBlockProcessor:
 
         new_extracted_whitespace = extracted_whitespace
         if new_extracted_whitespace and whitespace_start_count:
-            assert was_indented
+            assert was_indented, "TODO: huh?"
             new_extracted_whitespace = FencedLeafBlockProcessor.__handle_fenced_code_block_with_tab_and_extracted_whitespace(
                 new_extracted_whitespace,
                 adj_original_index,

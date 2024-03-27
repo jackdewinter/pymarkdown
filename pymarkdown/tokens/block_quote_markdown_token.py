@@ -151,7 +151,9 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
         Calculate the next leading space based on the leading_text_index,
         optonally incrementing it as well.
         """
-        assert self.bleading_spaces is not None
+        assert (
+            self.bleading_spaces is not None
+        ), "Bleading spaces must be defined by now."
 
         # print(f"increment_index>>:{increment_index}:<<")
         tabbed_leading = None

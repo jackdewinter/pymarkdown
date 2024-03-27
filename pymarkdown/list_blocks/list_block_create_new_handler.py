@@ -129,7 +129,7 @@ class ListBlockCreateNewHandler:
             alt_adj_ws,
             container_depth,
         )
-        assert new_container_level_tokens is not None
+        assert new_container_level_tokens is not None, "TODO: check"
         container_level_tokens.extend(new_container_level_tokens)
         return True, adjusted_text_to_parse, requeue_line_info
 
@@ -186,8 +186,7 @@ class ListBlockCreateNewHandler:
         extracted_whitespace: Optional[str],
         adj_ws: Optional[str],
     ) -> Tuple[Optional[str], Optional[str], int, int]:
-        if forced_container_whitespace:
-            assert forced_container_whitespace is not None
+        if forced_container_whitespace is not None:
             whitespace_to_add: Optional[str] = (
                 forced_container_whitespace + alt_adj_ws
                 if alt_adj_ws
@@ -195,7 +194,9 @@ class ListBlockCreateNewHandler:
             )
             ws_before_marker += len(forced_container_whitespace)
             indent_level += len(forced_container_whitespace)
-            assert alt_adj_ws is not None
+            assert (
+                alt_adj_ws is not None
+            ), "if whitespace was formed, alt_adj_ws must be defined"
             alt_adj_ws += forced_container_whitespace
         else:
             whitespace_to_add = extracted_whitespace if adj_ws is None else adj_ws
@@ -225,7 +226,9 @@ class ListBlockCreateNewHandler:
         POGGER.debug(
             "detabbed_tabbed_extract_spaces>:$:<", detabbed_tabbed_extract_spaces
         )
-        assert detabbed_tabbed_extract_spaces == whitespace_to_add
+        assert (
+            detabbed_tabbed_extract_spaces == whitespace_to_add
+        ), "two whitespaces must be equal"
         tabbed_whitespace_to_add = (
             tabbed_extract_spaces if "\t" in tabbed_extract_spaces else None
         )
@@ -246,7 +249,9 @@ class ListBlockCreateNewHandler:
             tabbed_extract_spaces_index : tabbed_extract_spaces_index + parse_index
         ]
         POGGER.debug("tabbed_marker>:$:<", tabbed_marker)
-        assert untabbed_marker == tabbed_marker
+        assert (
+            untabbed_marker == tabbed_marker
+        ), "tabbed and untabbed strings must be equal"
 
         tabbed_extract_spaces_index += len(tabbed_marker)
         POGGER.debug(
@@ -324,7 +329,9 @@ class ListBlockCreateNewHandler:
                 parser_state, was_forced=True
             )
 
-        assert container_level_tokens is not None
+        assert (
+            container_level_tokens is not None
+        ), "some contain tokens must be produced"
         POGGER.debug("__post_list>>before>>$", container_level_tokens)
         if not did_find or not emit_li:
             POGGER.debug("__post_list>>adding>>$", new_token)
@@ -332,7 +339,7 @@ class ListBlockCreateNewHandler:
             container_level_tokens.append(new_token)
         else:
             POGGER.debug("__post_list>>new list item>>")
-            assert emit_li
+            assert emit_li, "if here, emitting a new list item, not a start"
             ListBlockCreateNewHandler.__post_list_use_new_list_item(
                 parser_state,
                 new_token,
@@ -388,7 +395,7 @@ class ListBlockCreateNewHandler:
             container_level_tokens.extend(new_tokens)
 
         top_stack_item = parser_state.token_stack[-1]
-        assert top_stack_item.is_list
+        assert top_stack_item.is_list, "top stack item must be a list."
         top_stack_list_token = cast(ListStackToken, top_stack_item)
         POGGER.debug("new_token>$", new_token)
         POGGER.debug("top_stack_item>$", top_stack_list_token)
@@ -638,7 +645,7 @@ class ListBlockCreateNewHandler:
             did_find,
             last_list_index,
         ) = LeafBlockProcessorParagraph.check_for_list_in_process(parser_state)
-        assert last_list_index > 0
+        assert did_find and last_list_index > 0, "if here, a list must be in progress"
         last_list_index_token = cast(
             ListStackToken, parser_state.token_stack[last_list_index]
         )
@@ -648,7 +655,6 @@ class ListBlockCreateNewHandler:
             did_find,
             last_list_index,
         )
-        assert did_find
         POGGER.debug(
             "ARE-EQUAL>>stack>>$>>new>>$",
             last_list_index_token,
@@ -692,7 +698,9 @@ class ListBlockCreateNewHandler:
         POGGER.debug("parent_list_indent>>$", parent_list_indent)
         new_token_column_number = new_token.column_number
         POGGER.debug("new_token_column_number>>$", new_token_column_number)
-        assert parser_state.original_line_to_parse is not None
+        assert (
+            parser_state.original_line_to_parse is not None
+        ), "Original line must have been defined by now."
         intermediate_line_content = parser_state.original_line_to_parse[
             parent_list_indent : new_token_column_number - 1
         ]
@@ -705,7 +713,9 @@ class ListBlockCreateNewHandler:
             )
             if close_tokens:
                 container_level_tokens.extend(close_tokens)
-                assert not container_depth
+                assert (
+                    not container_depth
+                ), "If here, we must have a non-zero container depth."
                 list_token = cast(
                     ListStartMarkdownToken,
                     last_list_index_token.matching_markdown_token,
@@ -750,7 +760,7 @@ class ListBlockCreateNewHandler:
             parser_state.token_document[document_token_index].is_any_list_token
         ):
             document_token_index -= 1
-        assert document_token_index >= 0
+        assert document_token_index >= 0, "List token must be found."
         document_list_token = cast(
             ListStartMarkdownToken, parser_state.token_document[document_token_index]
         )
@@ -874,7 +884,6 @@ class ListBlockCreateNewHandler:
             old_start_index,
         )
         POGGER.debug("last_list_stack_token>>$", last_list_stack_token)
-        assert last_list_stack_token is not None
         last_list_markdown_token = cast(
             ListStartMarkdownToken, last_list_stack_token.matching_markdown_token
         )
@@ -928,7 +937,7 @@ class ListBlockCreateNewHandler:
         # to be called using the same pattern.
         _ = index
 
-        assert extracted_whitespace is not None
+        assert extracted_whitespace is not None, "TODO: Check"
         new_token = UnorderedListStartMarkdownToken(
             position_marker.text_to_parse[position_marker.index_number],
             indent_level,
@@ -963,7 +972,7 @@ class ListBlockCreateNewHandler:
         ws_after_marker: int,
         index: int,
     ) -> Tuple[ListStartMarkdownToken, ListStackToken]:
-        assert extracted_whitespace is not None
+        assert extracted_whitespace is not None, "TODO: Check"
         new_token = OrderedListStartMarkdownToken(
             position_marker.text_to_parse[index],
             position_marker.text_to_parse[position_marker.index_number : index],

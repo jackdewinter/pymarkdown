@@ -165,7 +165,9 @@ class LinkCreateHelper:
         current_string_unresolved: str,
         lhp: LinkHelperProperties,
     ) -> Tuple[bool, str]:
-        assert start_text == LinkCreateHelper.image_start_sequence
+        assert (
+            start_text == LinkCreateHelper.image_start_sequence
+        ), "This should be the image start sequence."
         POGGER.debug("\n>>__consume_text_for_image_alt_text>>$>>", inline_blocks)
         POGGER.debug("\n>>__consume_text_for_image_alt_text>>$>>", ind)
         POGGER.debug("\n>>__consume_text_for_image_alt_text>>$>>", remaining_line)
@@ -296,9 +298,7 @@ class LinkCreateHelper:
     def __handle_next_alt_text_else(
         next_token: MarkdownToken, alt_text_parts: List[str]
     ) -> None:
-        assert (
-            next_token.is_inline_image
-        ), f"Not handled: {ParserHelper.make_value_visible(next_token)}"
+        assert next_token.is_inline_image, "This should be an inline image token."
         image_token = cast(ImageStartMarkdownToken, next_token)
         alt_text_parts.append(image_token.image_alt_text)
 

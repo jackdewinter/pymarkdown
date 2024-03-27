@@ -36,7 +36,9 @@ class TransformListBlock:
         Rehydrate the unordered list start token.
         """
 
-        assert next_token is not None
+        assert (
+            next_token is not None
+        ), "If there is a start token, must be at least an end token."
         POGGER.debug(
             f">>current_token>>{ParserHelper.make_value_visible(current_token)}<<"
         )
@@ -202,7 +204,9 @@ class TransformListBlock:
             )
         elif previous_token.is_block_quote_start:
             POGGER.debug("rlspt>>is_block_quote_start")
-            assert containing_block_quote_token is not None
+            assert (
+                containing_block_quote_token is not None
+            ), "Indicated a nested block start, must have a token."
             (
                 previous_indent,
                 post_adjust_whitespace,
@@ -330,7 +334,9 @@ class TransformListBlock:
         containing_block_quote_token: BlockQuoteMarkdownToken,
     ) -> Tuple[int, str, str]:
         previous_block_token = cast(BlockQuoteMarkdownToken, previous_token)
-        assert previous_block_token.bleading_spaces is not None
+        assert (
+            previous_block_token.bleading_spaces is not None
+        ), "Bleading spaces must be defined by now."
         previous_indent = (
             len(
                 previous_block_token.calculate_next_bleading_space_part(
@@ -346,8 +352,12 @@ class TransformListBlock:
         POGGER.debug(
             f"adj->containing_block_quote_token>>:{ParserHelper.make_value_visible(containing_block_quote_token)}:<<"
         )
-        assert current_token.line_number == containing_block_quote_token.line_number
-        assert containing_block_quote_token.bleading_spaces is not None
+        assert (
+            current_token.line_number == containing_block_quote_token.line_number
+        ), "Line numbers must be the same."
+        assert (
+            containing_block_quote_token.bleading_spaces is not None
+        ), "Bleading spaces must be defined by now."
         split_leading_spaces = containing_block_quote_token.bleading_spaces.split(
             ParserHelper.newline_character
         )
@@ -490,7 +500,7 @@ class TransformListBlock:
             assert (
                 context.container_token_stack[token_stack_index].is_list_start
                 or context.container_token_stack[token_stack_index].is_block_quote_start
-            )
+            ), "TODO: check?"
         # while (
         #     token_stack_index >= 0
         #     and not self.context.container_token_stack[token_stack_index].is_list_start
@@ -606,7 +616,6 @@ class TransformListBlock:
         deeper_containing_block_quote_token: BlockQuoteMarkdownToken,
         current_token: Union[ListStartMarkdownToken, NewListItemMarkdownToken],
     ) -> Tuple[bool, str, bool, int, bool]:
-        assert previous_token is not None
         POGGER.debug(
             f"previous_token:{ParserHelper.make_value_visible(previous_token)}:"
         )
@@ -619,7 +628,7 @@ class TransformListBlock:
         )
         had_weird_block_quote_in_list = False
         do_perform_block_quote_ending = False
-        if previous_token and previous_token.is_end_token:
+        if previous_token.is_end_token:
             previous_end_token = cast(EndMarkdownToken, previous_token)
             if previous_end_token.start_markdown_token.is_block_quote_start:
                 had_weird_block_quote_in_list = True
@@ -633,7 +642,9 @@ class TransformListBlock:
                 POGGER.debug(
                     f"previous_token.start_markdown_token.leading_spaces:{block_quote_token.bleading_spaces}:"
                 )
-                assert block_quote_token.bleading_spaces is not None
+                assert (
+                    block_quote_token.bleading_spaces is not None
+                ), "Bleading spaces must be defined by now."
                 newline_count = ParserHelper.count_characters_in_text(
                     block_quote_token.bleading_spaces, "\n"
                 )
@@ -682,11 +693,13 @@ class TransformListBlock:
         did_container_start_midline = False
         check_list_for_indent = True
         if do_perform_block_quote_ending:
-            assert isinstance(previous_token, EndMarkdownToken)
+            assert isinstance(previous_token, EndMarkdownToken), "TODO: huh?"
             previous_block_quote_token = cast(
                 BlockQuoteMarkdownToken, previous_token.start_markdown_token
             )
-            assert previous_block_quote_token.bleading_spaces is not None
+            assert (
+                previous_block_quote_token.bleading_spaces is not None
+            ), "Bleading spaces must be defined by now."
             split_leading_spaces = previous_block_quote_token.bleading_spaces.split(
                 ParserHelper.newline_character
             )
@@ -712,7 +725,9 @@ class TransformListBlock:
             # up to here?
             check_list_for_indent = False
         else:
-            assert deeper_containing_block_quote_token is not None
+            assert (
+                deeper_containing_block_quote_token is not None
+            ), "This condition must exist for the logic to be here."
             POGGER.debug(
                 f"adj->deeper_containing_block_quote_token.line_number>>:{deeper_containing_block_quote_token.line_number}:<<"
             )
@@ -725,7 +740,9 @@ class TransformListBlock:
                 - deeper_containing_block_quote_token.line_number
             )
             POGGER.debug(f"index:{line_number_delta}")
-            assert deeper_containing_block_quote_token.bleading_spaces is not None
+            assert (
+                deeper_containing_block_quote_token.bleading_spaces is not None
+            ), "Bleading spaces must be defined by now."
             split_leading_spaces = (
                 deeper_containing_block_quote_token.bleading_spaces.split(
                     ParserHelper.newline_character

@@ -266,7 +266,9 @@ class ParserState:
         if not self.token_stack[last_stack_index].is_document:
             self.__last_block_quote_stack_token = self.token_stack[last_stack_index]
             markdown_token = self.token_stack[last_stack_index].matching_markdown_token
-            assert markdown_token is not None
+            assert (
+                markdown_token is not None
+            ), "Always start with a container or leaf token, that has a matching markdown token."
             self.__last_block_quote_markdown_token_index = self.token_document.index(
                 markdown_token
             )
