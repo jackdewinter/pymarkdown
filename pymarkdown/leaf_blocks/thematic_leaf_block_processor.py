@@ -133,13 +133,11 @@ class ThematicLeafBlockProcessor:
                     split_tab,
                     split_tab_with_block_quote_suffix,
                     extra_whitespace_prefix,
-                    new_extracted_whitespace,
+                    extracted_whitespace,
                     _,
                 ) = TabHelper.parse_thematic_break_with_tab(
                     original_line, token_text, extracted_whitespace
                 )
-                assert new_extracted_whitespace is not None, "TODO: Tab"
-                extracted_whitespace = new_extracted_whitespace
                 # POGGER.debug("extra_whitespace_prefix>>:$:<", extra_whitespace_prefix)
                 # POGGER.debug("extracted_whitespace>>:$:<", extracted_whitespace)
 

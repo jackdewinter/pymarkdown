@@ -121,7 +121,6 @@ class TransformContainers:
 
         if not container_stack:
             record_item = container_records[0]
-            assert record_item.item_a, "TODO: huh?"
             pre_container_text = transformed_data[: record_item.item_b]
             container_text = transformed_data[record_item.item_b :]
             adjusted_text = TransformContainers.__apply_container_transformation(
@@ -678,8 +677,12 @@ class TransformContainers:
             and current_changed_record.item_d.is_block_quote_end
         )
         if was_abrupt_block_quote_end:
-            assert current_changed_record is not None, "TODO: huh?"
-            assert current_changed_record.item_d is not None, "TODO: huh?"
+            assert (
+                current_changed_record is not None
+            ), "If an abrupt bq end, the change record must be defined."
+            assert (
+                current_changed_record.item_d is not None
+            ), "If an abrupt bq end, the change record's item_d field must be defined."
             was_abrupt_block_quote_end = bool(
                 current_changed_record.item_d.was_forced
                 and current_changed_record.item_d.extra_end_data == "> "

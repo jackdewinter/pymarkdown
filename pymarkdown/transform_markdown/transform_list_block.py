@@ -293,9 +293,7 @@ class TransformListBlock:
                 f"rls>>containing_block_quote_token>>{ParserHelper.make_value_visible(containing_block_quote_token.leading_text_index)}<<"
             )
 
-        token_stack_index = (
-            TransformListBlock.__look_backward_for_list_or_block_quote_start(context)
-        )
+        token_stack_index = len(context.container_token_stack) - 1
         POGGER.debug(f"rls>>token_stack_index2>>{token_stack_index}<<")
 
         containing_list_token, deeper_containing_block_quote_token = None, None
@@ -491,25 +489,6 @@ class TransformListBlock:
         return found_block_token
 
     @staticmethod
-    def __look_backward_for_list_or_block_quote_start(
-        context: MarkdownTransformContext,
-    ) -> int:
-        token_stack_index = len(context.container_token_stack) - 1
-        POGGER.debug(f"rls>>token_stack_index>>{token_stack_index}<<")
-        if token_stack_index >= 0:
-            assert (
-                context.container_token_stack[token_stack_index].is_list_start
-                or context.container_token_stack[token_stack_index].is_block_quote_start
-            ), "TODO: check?"
-        # while (
-        #     token_stack_index >= 0
-        #     and not self.context.container_token_stack[token_stack_index].is_list_start
-        #     and not self.context.container_token_stack[token_stack_index].is_block_quote_start
-        # ):
-        #     token_stack_index -= 1
-        return token_stack_index
-
-    @staticmethod
     def __rehydrate_list_start_contained_in_list_start(
         previous_token: MarkdownToken,
         current_token: Union[ListStartMarkdownToken, NewListItemMarkdownToken],
@@ -693,9 +672,15 @@ class TransformListBlock:
         did_container_start_midline = False
         check_list_for_indent = True
         if do_perform_block_quote_ending:
-            assert isinstance(previous_token, EndMarkdownToken), "TODO: huh?"
+            assert (
+                previous_token.is_end_token
+            ), "Block quote ending must indicate an end token."
+            previous_end_token = cast(EndMarkdownToken, previous_token)
+            POGGER.debug(
+                f">>{ParserHelper.make_value_visible(previous_end_token.start_markdown_token)}"
+            )
             previous_block_quote_token = cast(
-                BlockQuoteMarkdownToken, previous_token.start_markdown_token
+                BlockQuoteMarkdownToken, previous_end_token.start_markdown_token
             )
             assert (
                 previous_block_quote_token.bleading_spaces is not None
@@ -715,9 +700,6 @@ class TransformListBlock:
             #     block_quote_leading_space = ""
             #     starting_whitespace = ""
             # else:
-            POGGER.debug(
-                f">>{ParserHelper.make_value_visible(previous_token.start_markdown_token)}"
-            )
 
             block_quote_leading_space = split_leading_spaces[-1]
             starting_whitespace = block_quote_leading_space

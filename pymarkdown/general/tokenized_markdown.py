@@ -593,7 +593,9 @@ class TokenizedMarkdown:
             POGGER.debug(
                 "cob>>original_line_to_parse>$>", parser_state.original_line_to_parse
             )
-            assert not requeue_line_info.lines_to_requeue[0], "TODO: why?"
+            assert not requeue_line_info.lines_to_requeue[
+                0
+            ], "Resetting implies something must have been there to reset."
             requeue_line_info.lines_to_requeue[0] = parser_state.original_line_to_parse
             POGGER.debug(
                 "cob>>(adjusted)lines_to_requeue>>$",
@@ -824,7 +826,6 @@ class TokenizedMarkdown:
             force_default_handling,
             requeue_line_info,
         ) = TokenizedMarkdown.__handle_blank_line_token_stack(parser_state)
-
         if requeue_line_info:
             return new_tokens, requeue_line_info
 
@@ -863,14 +864,14 @@ class TokenizedMarkdown:
         POGGER.debug("hbl>>new_tokens>>$", new_tokens)
         assert non_whitespace_index == len(
             input_line
-        ), "Index must be set to the end of the line."
-        assert not (
-            requeue_line_info and requeue_line_info.force_ignore_first_as_lrd
-        ), "TODO: huh?"
+        ), "Index must be set to the end of the line, since processing has completed."
+        # assert not (
+        #     requeue_line_info and requeue_line_info.force_ignore_first_as_lrd
+        # ), "TOoDO: huh?"
         new_tokens.append(BlankLineMarkdownToken(extracted_whitespace, position_marker))
         POGGER.debug("hbl>>new_tokens>>$", new_tokens)
 
-        return new_tokens, requeue_line_info
+        return new_tokens, None
 
     @staticmethod
     def __handle_blank_line_token_stack(

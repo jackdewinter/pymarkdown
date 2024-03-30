@@ -569,10 +569,7 @@ class BlockQuoteNonFencedHelper:
                 POGGER.debug("found_bq_stack_token.ls>>:$:<<", current_leading_spaces)
                 assert current_leading_spaces.startswith(
                     original_block_quote_token.bleading_spaces
-                ), "TODO: Overlap?"
-                assert (
-                    original_block_quote_token.bleading_spaces is not None
-                ), "Block quote markdown tokens always have bleading spaces."
+                ), "The bleading spaces for nested block quotes must be related."
                 (
                     special_case,
                     adjusted_removed_text,

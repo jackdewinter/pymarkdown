@@ -235,9 +235,10 @@ class ContainerBlockLeafProcessor:
         ) = ContainerBlockLeafProcessor.__handle_block_leaf_tokens(
             parser_state, position_marker, detabified_original_start_index, grab_bag
         )
-
         if not outer_processed:
-            assert leaf_token_whitespace is not None
+            assert (
+                grab_bag.removed_chars_at_start_of_line is not None
+            ), "When processing these leaf elements, removed_chars_at_start_of_line must be defined by now."
             new_tokens = (
                 AtxLeafBlockProcessor.parse_atx_headings(
                     parser_state,
@@ -951,18 +952,15 @@ class ContainerBlockLeafProcessor:
         last_block_index: int,
         line_number: int,
     ) -> Tuple[bool, int, Optional[int], int]:
-        # TODO THIS IS A KLUDGE
-        #
-        # As soon as we go past here, if we are going to get rid of the
-        if (
-            last_list_index > 0
-            and text_removed_by_container is None
-            and len(parser_state.token_stack) - 1 == current_stack_index
-        ):
-            keep_processing = total_ws != current_indent_level
-        else:
-            keep_processing = True
-
+        keep_processing = (
+            total_ws != current_indent_level
+            if (
+                last_list_index > 0
+                and text_removed_by_container is None
+                and len(parser_state.token_stack) - 1 == current_stack_index
+            )
+            else True
+        )
         if keep_processing:
             last_list_index = 0
             (

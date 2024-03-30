@@ -33,9 +33,9 @@ class ListBlockStartsHelper:
         parser_state: ParserState,
         line_to_parse: str,
         start_index: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         skip_whitespace_check: bool,
-        adj_ws: Optional[str] = None,
+        adj_ws: Optional[str],
     ) -> Tuple[bool, int, Optional[int], Optional[int]]:
         """
         Determine if we have the start of an un-numbered list.
@@ -44,26 +44,24 @@ class ListBlockStartsHelper:
         POGGER.debug("is_ulist_start>>start_index>>$<<", start_index)
         POGGER.debug("is_ulist_start>>adj_ws>>$<<", adj_ws)
         POGGER.debug("is_ulist_start>>extracted_whitespace>>$<<", extracted_whitespace)
+        ex_ws = extracted_whitespace if adj_ws is None else adj_ws
         (
-            adj_ws,
+            check_ws,
             parent_indent,
         ) = ListBlockStartsHelper.__adjust_whitespace_for_nested_lists(
             parser_state,
-            extracted_whitespace if adj_ws is None else adj_ws,
+            ex_ws,
             line_to_parse,
             start_index,
         )
-
-        assert adj_ws is not None, "TODO: Check"
         POGGER.debug("skip_whitespace_check>>$", skip_whitespace_check)
-        POGGER.debug("len(adj_ws)>>$", len(adj_ws))
         POGGER.debug("parent_indent>>$", parent_indent)
+        POGGER.debug("len(check_ws)>>$", len(check_ws))
 
         if (
-            TabHelper.is_length_less_than_or_equal_to(adj_ws, 3 + parent_indent)
+            TabHelper.is_length_less_than_or_equal_to(check_ws, 3 + parent_indent)
             or skip_whitespace_check
         ):
-            assert extracted_whitespace is not None, "TODO: Check"
             adj_extracted_whitespace = (
                 extracted_whitespace[parent_indent:]
                 if parent_indent
@@ -103,7 +101,7 @@ class ListBlockStartsHelper:
         parser_state: ParserState,
         line_to_parse: str,
         start_index: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         skip_whitespace_check: bool,
         adj_ws: Optional[str] = None,
     ) -> Tuple[bool, int, Optional[int], Optional[int]]:
@@ -115,25 +113,25 @@ class ListBlockStartsHelper:
         POGGER.debug("is_olist_start>>start_index>>$<<", start_index)
         POGGER.debug("is_olist_start>>adj_ws>>$<<", adj_ws)
         POGGER.debug("is_olist_start>>extracted_whitespace>>$<<", extracted_whitespace)
+
+        ex_ws = extracted_whitespace if adj_ws is None else adj_ws
         (
-            adj_ws,
+            check_ws,
             parent_indent,
         ) = ListBlockStartsHelper.__adjust_whitespace_for_nested_lists(
             parser_state,
-            extracted_whitespace if adj_ws is None else adj_ws,
+            ex_ws,
             line_to_parse,
             start_index,
         )
-        POGGER.debug("after_adjust>>ws=$=", adj_ws)
+        POGGER.debug("after_adjust>>ws=$=", check_ws)
         POGGER.debug("after_adjust>>parent_indent=$=", parent_indent)
 
-        assert adj_ws is not None, "TODO: Check"
-
         POGGER.debug("skip_whitespace_check>>$", skip_whitespace_check)
-        POGGER.debug("len(adj_ws)>>$", len(adj_ws))
+        POGGER.debug("len(check_ws)>>$", len(check_ws))
 
         if (
-            TabHelper.is_length_less_than_or_equal_to(adj_ws, 3 + parent_indent)
+            TabHelper.is_length_less_than_or_equal_to(check_ws, 3 + parent_indent)
             or skip_whitespace_check
         ):
             (
@@ -154,21 +152,18 @@ class ListBlockStartsHelper:
             ) = ListBlockStartsHelper.__is_start_phase_one(
                 parser_state, line_to_parse, index, is_not_one
             )
+            if is_start:
+                is_start = ListBlockStartsHelper.__is_start_phase_two(
+                    parser_state,
+                    line_to_parse[index],
+                    False,
+                    is_not_one,
+                    after_all_whitespace_index,
+                    line_to_parse,
+                    start_index,
+                )
         else:
             after_all_whitespace_index = -1
-        if is_start:
-            assert (
-                index is not None and is_not_one is not None
-            ), "If is_start, these must be valid."
-            is_start = ListBlockStartsHelper.__is_start_phase_two(
-                parser_state,
-                line_to_parse[index],
-                False,
-                is_not_one,
-                after_all_whitespace_index,
-                line_to_parse,
-                start_index,
-            )
 
         return is_start, after_all_whitespace_index, index, number_of_digits
 
@@ -177,11 +172,10 @@ class ListBlockStartsHelper:
     @staticmethod
     def __adjust_whitespace_for_nested_lists(
         parser_state: ParserState,
-        adj_ws: Optional[str],
+        adj_ws: str,
         line_to_parse: str,
         start_index: int,
-    ) -> Tuple[Optional[str], int]:
-        assert adj_ws is not None, "TODO: Check"
+    ) -> Tuple[str, int]:
         (
             child_list_token,
             parent_list_token,

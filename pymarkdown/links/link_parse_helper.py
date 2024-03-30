@@ -148,14 +148,11 @@ class LinkParseHelper:
         new_index: int,
         source_text: str,
         text_from_blocks: str,
-        tabified_text: Optional[str],
+        tabified_text: str,
     ) -> Tuple[str, bool, int, str, str, Optional[str]]:
         POGGER.debug("collapsed reference?")
 
-        # TODO label type as Enum?
-
         if tabified_text:
-            assert tabified_text is not None, "TODO: check"
             text_to_scan = tabified_text
             tabified_new_index = LinkParseHelper.__translate_between_strings(
                 source_text, tabified_text, new_index
@@ -193,8 +190,6 @@ class LinkParseHelper:
             )
 
         if tabified_text and update_index != -1:
-            assert tabified_text is not None, "TODO: check"
-
             # Both of the above functions consume the last character of the link.
             # Instead of guessing, we "rewind" the index by one character so that
             # we can have something to sync on that is not an end of line or whitespace.
@@ -336,8 +331,7 @@ class LinkParseHelper:
         POGGER.debug("parse_link_title>>new_index>>$>>", source_text[new_index:])
         ex_title: Optional[str] = ""
         bounding_character = ""
-        newer_index: Optional[int] = new_index
-        assert newer_index is not None, "TODO: check"
+        newer_index = new_index
         if ParserHelper.is_character_at_index(
             source_text, newer_index, LinkParseHelper.__link_title_single
         ):
@@ -388,7 +382,6 @@ class LinkParseHelper:
         POGGER.debug("parse_link_title>>pre>>$>>", pre_ex_title)
         POGGER.debug("parse_link_title>>after>>$>>", ex_title)
 
-        assert newer_index is not None, "TODO: check"
         return ex_title, pre_ex_title, newer_index, bounding_character
 
     @staticmethod
@@ -516,7 +509,6 @@ class LinkParseHelper:
             newer_index, ex_link = LinkParseHelper.__parse_non_angle_link_destination(
                 parser_properties, source_text, new_index
             )
-            assert newer_index is not None, "TODO: Check"
             new_index = newer_index
             POGGER.debug(
                 ">parse_non_angle_link_destination>new_index>$>ex_link>$>",
@@ -561,7 +553,7 @@ class LinkParseHelper:
     @staticmethod
     def __parse_non_angle_link_destination(
         parser_properties: ParseBlockPassProperties, source_text: str, new_index: int
-    ) -> Tuple[Optional[int], Optional[str]]:
+    ) -> Tuple[int, Optional[str]]:
         """
         Parse a link destination that is not included in angle brackets.
         """
@@ -907,6 +899,9 @@ class LinkParseHelper:
         did_use_angle_start: Optional[bool],
     ) -> Tuple[int, bool]:
         if newer_index != -1:
+            assert (
+                did_use_angle_start is not None
+            ), "If index is not -1, did_use_angle_start must be defined."
             if tabified_text:
                 untabified_newer_index = LinkParseHelper.__translate_between_strings(
                     tabified_text, source_text, newer_index
@@ -914,7 +909,6 @@ class LinkParseHelper:
                 POGGER.debug("untabified_newer_index>:$:<", untabified_newer_index)
                 newer_index = untabified_newer_index
 
-            assert did_use_angle_start is not None, "TODO: Check"
             if ParserHelper.is_character_at_index(
                 source_text, newer_index, LinkParseHelper.__link_format_inline_end
             ):
@@ -956,6 +950,7 @@ class LinkParseHelper:
         lhp.before_link_whitespace = ""
         lhp.before_title_whitespace = ""
         lhp.after_title_whitespace = ""
+
         if ParserHelper.is_character_at_index(
             source_text, new_index, LinkParseHelper.__link_format_inline_start
         ):
@@ -967,6 +962,9 @@ class LinkParseHelper:
         elif ParserHelper.is_character_at_index(
             source_text, new_index, LinkParseHelper.__link_format_reference_start
         ):
+            assert (
+                tabified_text is not None
+            ), "If we have a link start character, must have tabified text."
             (
                 lhp.label_type,
                 tried_full_reference_form,

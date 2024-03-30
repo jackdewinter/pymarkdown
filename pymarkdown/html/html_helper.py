@@ -507,7 +507,7 @@ class HtmlHelper:
     def is_html_block(
         line_to_parse: str,
         start_index: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         token_stack: List[StackToken],
         parse_properties: ParseBlockPassProperties,
         skip_whitespace_check: bool = False,
@@ -516,7 +516,6 @@ class HtmlHelper:
         Determine if the current sequence of characters would start a html block element.
         """
 
-        assert extracted_whitespace is not None, "TODO: work"
         if (
             skip_whitespace_check
             or TabHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
@@ -525,15 +524,10 @@ class HtmlHelper:
             start_index,
             HtmlHelper.__html_block_start_character,
         ):
-            (
-                html_block_type,
-                remaining_html_tag,
-            ) = HtmlHelper.__determine_html_block_type(
+            return HtmlHelper.__determine_html_block_type(
                 token_stack, line_to_parse, start_index, parse_properties
             )
-        else:
-            html_block_type, remaining_html_tag = None, None
-        return html_block_type, remaining_html_tag
+        return None, None
 
     # pylint: enable=too-many-arguments
 
@@ -786,18 +780,12 @@ class HtmlHelper:
             and parser_state.token_stack[stack_token_index].is_block_quote
         ):
             POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
-            assert (
-                tabified_whitespace is not None
-            ), "With split_tab being true, tabified_whitespace must be defined."
             tabified_whitespace = ParserHelper.create_replacement_markers(
                 tabified_whitespace, extracted_whitespace
             )
             POGGER.debug("tabified_whitespace>:$:<", tabified_whitespace)
             if not did_adjust_block_quote:
                 TabHelper.adjust_block_quote_indent_for_tab(parser_state)
-        assert (
-            tabified_whitespace is not None
-        ), "Either split_tab is true and replacement markers in place, or False."
         return tabified_whitespace, tabified_text
 
     @staticmethod

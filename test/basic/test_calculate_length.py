@@ -2,6 +2,8 @@
 Tests for the calculate_length function
 """
 
+from test.utils import assert_that_exception_is_raised
+
 from pymarkdown.general.tab_helper import TabHelper
 
 
@@ -381,14 +383,12 @@ def test_find_detabify_string_ex_bad():
     # Arrange
     original_line = "\t0\t01\t012\t0123\t"
     input_string = "abc"
-    expected_output = None
-    expected_index = -1
 
-    # Act
-    actual_output, actual_index = TabHelper.find_detabify_string_ex(
-        original_line, input_string
+    # Act & assert
+    assert_that_exception_is_raised(
+        AssertionError,
+        "A detabbified string must be found.",
+        TabHelper.find_detabify_string_ex,
+        original_line,
+        input_string,
     )
-
-    # Assert
-    assert expected_output == actual_output
-    assert expected_index == actual_index

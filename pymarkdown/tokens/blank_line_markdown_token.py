@@ -27,17 +27,15 @@ class BlankLineMarkdownToken(LeafMarkdownToken):
         position_marker: Optional[PositionMarker],
         column_delta: int = 0,
     ) -> None:
-        if position_marker:
-            line_number, column_number = position_marker.line_number, (
-                position_marker.index_number
-                + position_marker.index_indent
-                + 1
-                - column_delta
-            )
-        else:
-            # TODO do this better
-            line_number, column_number = 0, 0
-
+        line_number = position_marker.line_number if position_marker else 0
+        column_number = (
+            position_marker.index_number
+            + position_marker.index_indent
+            + 1
+            - column_delta
+            if position_marker
+            else 0
+        )
         LeafMarkdownToken.__init__(
             self,
             MarkdownToken._token_blank_line,

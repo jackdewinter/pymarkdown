@@ -136,8 +136,7 @@
         "pymarkdown/inline/inline_character_reference_helper.py": {},
         "pymarkdown/inline/inline_handler_helper.py": {
             "too-few-public-methods": 1,
-            "too-many-arguments": 10,
-            "too-many-locals": 3
+            "too-many-arguments": 6
         },
         "pymarkdown/inline/inline_helper.py": {
             "too-many-arguments": 2
@@ -500,8 +499,8 @@
         "too-many-instance-attributes": 24,
         "too-many-public-methods": 4,
         "too-few-public-methods": 39,
-        "too-many-arguments": 230,
-        "too-many-locals": 40,
+        "too-many-arguments": 226,
+        "too-many-locals": 37,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 2,
         "protected-access": 25,
