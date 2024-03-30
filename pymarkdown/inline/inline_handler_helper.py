@@ -490,6 +490,13 @@ class InlineHandlerHelper:
             inline_request.next_index,
             LinkSearchHelper.image_start_sequence,
         ):
+            assert (
+                inline_request.line_number is not None
+                and inline_request.column_number is not None
+                and inline_request.remaining_line is not None
+                and inline_request.current_string_unresolved is not None
+            ), "These four fields must be defined by now."
+
             inline_response = InlineHandlerHelper.__handle_inline_special(
                 parser_properties,
                 inline_request,
