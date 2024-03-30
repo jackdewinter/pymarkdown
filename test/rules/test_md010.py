@@ -588,7 +588,7 @@ a line of text  with    tabs
     code block here
 
 - Consider this code:
-	code block here""",
+\tcode block here""",
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:5:1: MD010: Hard tabs [Column: 1] (no-hard-tabs)
 {temp_source_path}:5:16: MD047: Each file should end with a single newline character. (single-trailing-newline)
@@ -601,7 +601,7 @@ a line of text  with    tabs
     code block here
 
 - Consider this code:
-	code block here""",
+\tcode block here""",
         disable_rules="md010",
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:5:16: MD047: Each file should end with a single newline character. (single-trailing-newline)
