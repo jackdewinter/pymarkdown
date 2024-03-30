@@ -151,6 +151,8 @@ jobs:
       - name: Report Coverage
         uses: codecov/codecov-action@v4
         if: github.event_name != 'schedule'
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}        
         with:
           file: ./report/coverage.xml
           name: ${{ matrix.python }} - ${{ matrix.platform }}
