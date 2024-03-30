@@ -58,12 +58,13 @@ class RuleMd031(RulePlugin):
     def __handle_fenced_code_block(
         self, context: PluginScanContext, token: MarkdownToken
     ) -> None:
-        can_trigger = True
-        if (
-            self.__container_token_stack
+
+        can_trigger = (
+            self.__trigger_in_list_items
+            if self.__container_token_stack
             and self.__container_token_stack[-1].is_list_start
-        ):
-            can_trigger = self.__trigger_in_list_items
+            else True
+        )
         if (
             self.__last_non_end_token
             and not self.__last_non_end_token.is_blank_line

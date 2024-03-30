@@ -142,7 +142,6 @@ class TextMarkdownToken(InlineMarkdownToken):
         data_field_parts = [self.__token_text, self.__extracted_whitespace]
         if self.__end_whitespace:
             data_field_parts.append(self.__end_whitespace)
-            assert not self.__tabified_text
         elif self.__tabified_text:
             data_field_parts.extend(("", self.__tabified_text))
         self._set_extra_data(MarkdownToken.extra_data_separator.join(data_field_parts))
@@ -159,13 +158,12 @@ class TextMarkdownToken(InlineMarkdownToken):
         (
             collected_whitespace_length,
             first_non_whitespace_index,
-        ) = ParserHelper.collect_backwards_while_one_of_characters(
+        ) = ParserHelper.collect_backwards_while_one_of_characters_verified(
             self.__token_text, -1, Constants.ascii_whitespace
         )
         # POGGER.debug("collected_whitespace_length=:$:", collected_whitespace_length)
         # POGGER.debug("first_non_whitespace_index=:$:", first_non_whitespace_index)
 
-        assert first_non_whitespace_index is not None
         if collected_whitespace_length:
             removed_whitespace = self.__token_text[
                 first_non_whitespace_index : first_non_whitespace_index
@@ -176,13 +174,11 @@ class TextMarkdownToken(InlineMarkdownToken):
                 (
                     collected_whitespace_length,
                     first_non_whitespace_index,
-                ) = ParserHelper.collect_backwards_while_one_of_characters(
+                ) = ParserHelper.collect_backwards_while_one_of_characters_verified(
                     self.__tabified_text, -1, Constants.ascii_whitespace
                 )
                 # POGGER.debug("collected_whitespace_length=:$:", collected_whitespace_length)
                 # POGGER.debug("first_non_whitespace_index=:$:", first_non_whitespace_index)
-                assert collected_whitespace_length is not None
-                assert first_non_whitespace_index is not None
                 removed_whitespace = self.__tabified_text[
                     first_non_whitespace_index : first_non_whitespace_index
                     + collected_whitespace_length
@@ -205,6 +201,9 @@ class TextMarkdownToken(InlineMarkdownToken):
         if other_text_token.is_blank_line:
             text_to_combine = ""
             tabified_text_to_combine: Optional[str] = ""
+            assert (
+                other_text_token.extra_data is not None
+            ), "If the other token is a blank line, the extra_data field must be set."
             (
                 whitespace_present,
                 blank_line_sequence,
@@ -213,7 +212,7 @@ class TextMarkdownToken(InlineMarkdownToken):
                 ParserHelper.replace_noop_character,
             )
         else:
-            assert other_text_token.is_text
+            assert other_text_token.is_text, "if not a blank line, must be a text token"
             text_other_token = cast(TextMarkdownToken, other_text_token)
 
             text_to_combine = text_other_token.token_text
@@ -251,17 +250,20 @@ class TextMarkdownToken(InlineMarkdownToken):
         return removed_whitespace
 
     def __combine_handle_whitespace(
-        self, remove_leading_spaces: int, whitespace_present: Optional[str]
+        self, remove_leading_spaces: int, whitespace_present: str
     ) -> Tuple[str, str]:
         prefix_whitespace = ""
-        whitespace_to_append, removed_whitespace = None, ""
+        removed_whitespace = ""
+
         if not remove_leading_spaces:
-            assert whitespace_present is not None
             prefix_whitespace = whitespace_present
         elif remove_leading_spaces == -1:
-            whitespace_to_append, prefix_whitespace = whitespace_present, ""
+            prefix_whitespace = ""
+            self.__extracted_whitespace = (
+                f"{self.__extracted_whitespace}"
+                + f"{ParserHelper.newline_character}{whitespace_present}"
+            )
         else:
-            assert whitespace_present is not None
             whitespace_present_size = len(whitespace_present)
             POGGER.debug(
                 "whitespace_present>>$>>$<<",
@@ -269,18 +271,15 @@ class TextMarkdownToken(InlineMarkdownToken):
                 whitespace_present,
             )
             POGGER.debug("remove_leading_spaces>>$<<", remove_leading_spaces)
-            if whitespace_present_size < remove_leading_spaces:
-                removed_whitespace, prefix_whitespace = whitespace_present, ""
-            else:
-                removed_whitespace, prefix_whitespace = (
-                    whitespace_present[:remove_leading_spaces],
-                    whitespace_present[remove_leading_spaces:],
-                )
-
-        if whitespace_to_append is not None:
-            self.__extracted_whitespace = (
-                f"{self.__extracted_whitespace}"
-                + f"{ParserHelper.newline_character}{whitespace_to_append}"
+            removed_whitespace = (
+                whitespace_present
+                if whitespace_present_size < remove_leading_spaces
+                else whitespace_present[:remove_leading_spaces]
+            )
+            prefix_whitespace = (
+                ""
+                if whitespace_present_size < remove_leading_spaces
+                else whitespace_present[remove_leading_spaces:]
             )
         return removed_whitespace, prefix_whitespace
 
@@ -336,7 +335,7 @@ class TextMarkdownToken(InlineMarkdownToken):
         )
 
         extra_line = ""
-        assert context.block_stack
+        # assert context.block_stack
         if context.block_stack[-1].is_indented_code_block:
             code_block_token = cast(
                 IndentedCodeBlockMarkdownToken, context.block_stack[-1]
@@ -390,7 +389,9 @@ class TextMarkdownToken(InlineMarkdownToken):
                 owner_paragraph_token.extracted_whitespace,
                 owner_paragraph_token.rehydrate_index,
             )
-            assert current_token.end_whitespace
+            assert (
+                current_token.end_whitespace
+            ), "if there is a newline, there must be end_whitespace."
             main_text, _ = ParserHelper.recombine_string_with_whitespace(
                 main_text,
                 current_token.end_whitespace,
@@ -433,14 +434,14 @@ class TextMarkdownToken(InlineMarkdownToken):
             )
             split_setext_text_size = len(split_setext_text)
             if split_setext_text_size == 1:
-                assert text_part_index == 0
+                assert text_part_index == 0, "This must match with the line below."
                 ws_suffix_text = split_setext_text[0]
                 # if text_part_index == 0:
                 #     ws_suffix_text = split_setext_text[0]
                 # else:
                 #     ws_prefix_text = split_setext_text[0]
             else:
-                assert split_setext_text_size == 2
+                assert split_setext_text_size == 2, "if not 1 part, must be 2 parts."
                 ws_prefix_text = split_setext_text[0]
                 ws_suffix_text = split_setext_text[1]
 
@@ -461,7 +462,9 @@ class TextMarkdownToken(InlineMarkdownToken):
 
         if ParserHelper.newline_character in main_text:
             split_token_text = main_text.split(ParserHelper.newline_character)
-            assert current_token.end_whitespace is not None
+            assert (
+                current_token.end_whitespace is not None
+            ), "if there is a newline, there must be end_whitespace."
             split_parent_whitespace_text = current_token.end_whitespace.split(
                 ParserHelper.newline_character
             )
@@ -588,7 +591,9 @@ class TextMarkdownToken(InlineMarkdownToken):
             arrays_to_combine.append(
                 resolved_whitespace.split(ParserHelper.newline_character)
             )
-            assert len(arrays_to_combine[0]) == len(arrays_to_combine[1])
+            assert len(arrays_to_combine[0]) == len(
+                arrays_to_combine[1]
+            ), "Items must have the same length."
             POGGER.debug("arrays_to_combine>:$:<", arrays_to_combine)
             final_parts: List[str] = []
             for loop_index in range(len(arrays_to_combine[0]) * 2):
@@ -617,20 +622,24 @@ class TextMarkdownToken(InlineMarkdownToken):
         include replacing a character sequence with a newline.  Specifically target that.
         """
 
-        assert "\a" in text_token.token_text
+        assert (
+            "\a" in text_token.token_text
+        ), "Token_text must have at least one replace character to be here."
         replace_character_count = ParserHelper.count_characters_in_text(
             text_token.token_text, "\a"
         )
-        assert replace_character_count % 3 == 0
+        assert (
+            replace_character_count % 3 == 0
+        ), "Replace characters always occur in threes."
 
         start_index = 0
         current_line = ""
         processed_lines: List[str] = []
-        next_index, found_prefix = ParserHelper.collect_until_one_of_characters(
-            text_token.token_text, start_index, "\a\n"
+        next_index, found_prefix = (
+            ParserHelper.collect_until_one_of_characters_verified(
+                text_token.token_text, start_index, "\a\n"
+            )
         )
-        assert next_index is not None
-        assert found_prefix is not None
         # POGGER.debug("next_index>:$:<", next_index)
         # POGGER.debug("found_prefix>:$:<", found_prefix)
         while next_index < len(text_token.token_text):
@@ -646,17 +655,17 @@ class TextMarkdownToken(InlineMarkdownToken):
                 processed_lines.append(current_line)
                 current_line = ""
                 start_index = next_index
-            next_index, found_prefix = ParserHelper.collect_until_one_of_characters(
-                text_token.token_text, start_index + 1, "\a\n"
+            next_index, found_prefix = (
+                ParserHelper.collect_until_one_of_characters_verified(
+                    text_token.token_text, start_index + 1, "\a\n"
+                )
             )
-            assert next_index is not None
-            assert found_prefix is not None
             # POGGER.debug("next_index>:$:<", next_index)
             # POGGER.debug("found_prefix>:$:<", found_prefix)
         current_line += found_prefix
 
         # POGGER.debug("currernt_line>:$:<", current_line)
-        assert current_line
+        assert current_line, "current_line must contain some text."
         processed_lines.append(current_line)
 
         arrays_to_combine.append(processed_lines)

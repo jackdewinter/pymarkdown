@@ -35,7 +35,7 @@ class InlineHelper:
         new_index: int,
         close_character: str,
         start_character: Optional[str],
-    ) -> Tuple[Optional[int], Optional[str]]:
+    ) -> Tuple[int, Optional[str]]:
         """
         Extract a string that is bounded by some manner of characters.
         """
@@ -51,17 +51,15 @@ class InlineHelper:
             new_index,
             source_text[new_index:],
         )
-        next_index, data = ParserHelper.collect_until_one_of_characters(
+        next_index, data = ParserHelper.collect_until_one_of_characters_verified(
             source_text, new_index, break_characters
         )
-        assert data is not None
         extracted_parts: List[str] = [data]
         POGGER.debug(
             ">>next_index1>>$>>data>>$>>",
             next_index,
             data,
         )
-        assert next_index is not None
         while next_index < len(source_text) and (
             source_text[next_index] != close_character or nesting_level != 0
         ):
@@ -78,7 +76,6 @@ class InlineHelper:
                 close_character,
                 break_characters,
             )
-            assert next_index is not None
             POGGER.debug(
                 "back>>next_index>>$>>data>>$>>",
                 next_index,
@@ -89,7 +86,6 @@ class InlineHelper:
             next_index,
             data,
         )
-        assert next_index is not None
         if (
             ParserHelper.is_character_at_index(source_text, next_index, close_character)
             and nesting_level == 0
@@ -123,7 +119,7 @@ class InlineHelper:
             inline_response = InlineBackslashHelper.handle_inline_backslash(
                 parser_properties, inline_request
             )
-            assert inline_response.new_index is not None
+            assert inline_response.new_index is not None, "New index must be defined."
             next_index = inline_response.new_index
             extracted_parts.append(source_text[old_index:next_index])
         elif start_character is not None and ParserHelper.is_character_at_index(
@@ -136,16 +132,14 @@ class InlineHelper:
         else:
             assert ParserHelper.is_character_at_index(
                 source_text, next_index, close_character
-            )
+            ), "Character at index must be the close character."
             POGGER.debug("pre-close>>next_index>>$>>", next_index)
             extracted_parts.append(close_character)
             next_index += 1
             nesting_level -= 1
-        nexter_index, new_data = ParserHelper.collect_until_one_of_characters(
+        nexter_index, new_data = ParserHelper.collect_until_one_of_characters_verified(
             source_text, next_index, break_characters
         )
-        assert new_data is not None
-        assert nexter_index is not None
         extracted_parts.append(new_data)
         return nexter_index, nesting_level
 
@@ -216,7 +210,9 @@ class InlineHelper:
             POGGER.debug("first_word_index>:$:<", first_word_index)
             first_word_count += 1
         POGGER.debug("first_word_count>:$:<", first_word_count)
-        assert first_word_index == current_line_leading_space_index
+        assert (
+            first_word_index == current_line_leading_space_index
+        ), "Indices must match up."
 
         tabified_start_index = adj_tabified_text.rfind(
             current_line_first_word, 0, stop_character_in_tabified_index
@@ -239,7 +235,9 @@ class InlineHelper:
                     tabified_start_index:stop_character_in_tabified_index
                 ],
             )
-            assert tabified_start_index <= stop_character_in_tabified_index
+            assert (
+                tabified_start_index <= stop_character_in_tabified_index
+            ), "Normal and tabified indices must match up."
 
         if current_line_leading_space:
             POGGER.debug(
@@ -256,7 +254,6 @@ class InlineHelper:
                 adj_tabified_text[tabified_start_index:],
             )
 
-        assert tabified_start_index is not None
         return tabified_start_index
 
     # pylint: enable=too-many-arguments
@@ -269,11 +266,11 @@ class InlineHelper:
         start_index = 0
         for _ in range(newlines_encountered):
             next_index = tabified_text.find("\n", start_index)
-            assert next_index != -1
+            assert next_index != -1, "Next newline must be found."
             start_index = next_index + 1
 
         next_index = tabified_text.find("\n", start_index)
-        assert next_index == -1
+        assert next_index == -1, "Next newline must not be found."
 
         return tabified_text[start_index:], start_index
 
@@ -302,7 +299,7 @@ class InlineHelper:
         current_line_tabified_text: str,
         source_text_word: str,
         find_word_count: int,
-        source_text_spaces: Optional[str],
+        source_text_spaces: str,
     ) -> int:
         """
         Calculate the location of a given word.
@@ -325,7 +322,7 @@ class InlineHelper:
                 found_word_index,
                 current_line_tabified_text[found_word_index:],
             )
-            assert found_word_index != -1
+            assert found_word_index != -1, "Found index must be set to a valid index."
 
         if source_text_spaces:
             POGGER.debug(

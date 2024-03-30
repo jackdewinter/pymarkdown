@@ -62,7 +62,9 @@ class InlineCharacterReferenceHelper:
             "",
             len(inline_request.source_text),
         )
-        assert inline_response.new_index is not None
+        assert (
+            inline_response.new_index is not None
+        ), "new_index should be defined by this point."
         if (
             inline_response.new_index < source_text_size
             and inline_request.source_text[inline_response.new_index]
@@ -124,11 +126,15 @@ class InlineCharacterReferenceHelper:
 
             # The only entities we should encounter either have a length of 1 or 2
             if len(entity_characters) == 1:
-                assert len(entity_codepoints) == 1
+                assert len(entity_codepoints) == 1, "Codepoint validation."
             else:
-                assert len(entity_codepoints) == 2
-                assert ord(entity_characters[1]) == entity_codepoints[1]
-            assert ord(entity_characters[0]) == entity_codepoints[0]
+                assert len(entity_codepoints) == 2, "Codepoint validation."
+                assert (
+                    ord(entity_characters[1]) == entity_codepoints[1]
+                ), "Codepoint validation."
+            assert (
+                ord(entity_characters[0]) == entity_codepoints[0]
+            ), "Codepoint validation."
             approved_entity_map[next_name] = entity_characters
         return approved_entity_map
 
@@ -138,12 +144,11 @@ class InlineCharacterReferenceHelper:
     ) -> Tuple[str, int, int]:
         hex_char = source_text[new_index]
         new_index += 1
-        end_index, collected_string = ParserHelper.collect_while_one_of_characters(
-            source_text, new_index, string.hexdigits
+        end_index, collected_string = (
+            ParserHelper.collect_while_one_of_characters_verified(
+                source_text, new_index, string.hexdigits
+            )
         )
-
-        assert end_index is not None
-        assert collected_string is not None
         POGGER.debug(
             "&#x>>a>>$>>b>>$>>$", end_index, collected_string, source_text_size
         )
@@ -162,12 +167,11 @@ class InlineCharacterReferenceHelper:
     def __handle_numeric_character_reference_decimal(
         new_index: int, source_text: str, source_text_size: int
     ) -> Tuple[str, int, int]:
-        end_index, collected_string = ParserHelper.collect_while_one_of_characters(
-            source_text, new_index, string.digits
+        end_index, collected_string = (
+            ParserHelper.collect_while_one_of_characters_verified(
+                source_text, new_index, string.digits
+            )
         )
-
-        assert end_index is not None
-        assert collected_string is not None
         POGGER.debug("&#>>a>>$>>b>>$>>$", end_index, collected_string, source_text_size)
 
         delta = end_index - new_index
@@ -233,7 +237,9 @@ class InlineCharacterReferenceHelper:
     ) -> None:
         original_new_index = inline_response.new_index
         POGGER.debug("here")
-        assert inline_response.new_index is not None
+        assert (
+            inline_response.new_index is not None
+        ), "new_index should be defined by this point."
         (
             inline_response.new_string,
             inline_response.new_index,
@@ -255,14 +261,18 @@ class InlineCharacterReferenceHelper:
         source_text_size: int,
     ) -> None:
         POGGER.debug("there")
-        assert inline_response.new_index is not None
+        assert (
+            inline_response.new_index is not None
+        ), "new_index should be defined by this point."
         end_index, collected_string = ParserHelper.collect_while_one_of_characters(
             inline_request.source_text,
             inline_response.new_index,
             InlineCharacterReferenceHelper.__ascii_letters_and_digits,
         )
         if collected_string:
-            assert end_index is not None
+            assert (
+                end_index is not None
+            ), "if collected_string is defined, end_index should also be defined"
             collected_string = f"{InlineCharacterReferenceHelper.character_reference_start_character}{collected_string}"
             if (
                 end_index < source_text_size

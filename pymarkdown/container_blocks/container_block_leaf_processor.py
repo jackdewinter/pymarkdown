@@ -55,7 +55,9 @@ class ContainerBlockLeafProcessor:
         """
         Handle the handoff between processing containers and the leaf tokens.
         """
-        assert parser_state.original_line_to_parse is not None
+        assert (
+            parser_state.original_line_to_parse is not None
+        ), "Original line should be defined by this point."
         calculated_indent = len(parser_state.original_line_to_parse) - len(
             grab_bag.line_to_parse
         )
@@ -66,7 +68,7 @@ class ContainerBlockLeafProcessor:
             and ">" in grab_bag.indent_used_by_list
             and parser_state.token_stack[-1].is_paragraph
             and parser_state.token_stack[-2].is_block_quote
-        )
+        ), "This sequence should have been dealt with before here."
 
         POGGER.debug("ttp>>:$:<", position_marker.text_to_parse)
         POGGER.debug("index_number>>:$:<", position_marker.index_number)
@@ -100,7 +102,9 @@ class ContainerBlockLeafProcessor:
         """
         Main entry point from the ContainerBlockProcessor for processing leaf tokens.
         """
-        assert grab_bag.is_leaf_tokens_empty()
+        assert (
+            grab_bag.is_leaf_tokens_empty()
+        ), "No leaf tokens should be present at this point."
         POGGER.debug("parsing leaf>>")
         position_marker = PositionMarker(
             xposition_marker.line_number,
@@ -114,8 +118,7 @@ class ContainerBlockLeafProcessor:
         (
             new_index_number,
             extracted_leaf_whitespace,
-        ) = ParserHelper.extract_spaces(position_marker.text_to_parse, 0)
-        assert new_index_number is not None
+        ) = ParserHelper.extract_spaces_verified(position_marker.text_to_parse, 0)
 
         total_ws = new_index_number + position_marker.index_indent
 
@@ -130,7 +133,9 @@ class ContainerBlockLeafProcessor:
         )
         if grab_bag.requeue_line_info:
             POGGER.debug("requeuing after __handle_special_block_quote_reduction")
-            assert grab_bag.is_leaf_tokens_empty()
+            assert (
+                grab_bag.is_leaf_tokens_empty()
+            ), "No leaf tokens should be present at this point."
             return
 
         orig_text_removed_by_container = grab_bag.text_removed_by_container
@@ -216,7 +221,9 @@ class ContainerBlockLeafProcessor:
         detabified_original_start_index = detabified_original_line.find(
             position_marker.text_to_parse
         )
-        assert detabified_original_start_index != -1
+        assert (
+            detabified_original_start_index != -1
+        ), "Text must also be found in the original line."
         POGGER.debug(
             "detabified_original_start_index:$:", detabified_original_start_index
         )
@@ -228,8 +235,10 @@ class ContainerBlockLeafProcessor:
         ) = ContainerBlockLeafProcessor.__handle_block_leaf_tokens(
             parser_state, position_marker, detabified_original_start_index, grab_bag
         )
-
         if not outer_processed:
+            assert (
+                grab_bag.removed_chars_at_start_of_line is not None
+            ), "When processing these leaf elements, removed_chars_at_start_of_line must be defined by now."
             new_tokens = (
                 AtxLeafBlockProcessor.parse_atx_headings(
                     parser_state,
@@ -280,7 +289,7 @@ class ContainerBlockLeafProcessor:
         incoming_position_marker: PositionMarker,
         detabified_original_start_index: int,
         grab_bag: ContainerGrabBag,
-    ) -> Tuple[bool, PositionMarker, Optional[str]]:
+    ) -> Tuple[bool, PositionMarker, str]:
         POGGER.debug(
             "line>>$>>index>>$>>",
             incoming_position_marker.text_to_parse,
@@ -289,11 +298,12 @@ class ContainerBlockLeafProcessor:
         remaining_line_to_parse = incoming_position_marker.text_to_parse[
             incoming_position_marker.index_number :
         ]
-        (new_index_number, leaf_token_whitespace) = ParserHelper.extract_spaces(
-            incoming_position_marker.text_to_parse,
-            incoming_position_marker.index_number,
+        (new_index_number, leaf_token_whitespace) = (
+            ParserHelper.extract_spaces_verified(
+                incoming_position_marker.text_to_parse,
+                incoming_position_marker.index_number,
+            )
         )
-        assert new_index_number is not None
         POGGER.debug(">>leaf_token_whitespace>>:$:<<", leaf_token_whitespace)
 
         position_marker = PositionMarker(
@@ -361,7 +371,9 @@ class ContainerBlockLeafProcessor:
         last_list_index: int,
         grab_bag: ContainerGrabBag,
     ) -> None:
-        assert grab_bag.is_leaf_tokens_empty()
+        assert (
+            grab_bag.is_leaf_tokens_empty()
+        ), "No leaf tokens should be present at this point."
         real_stack_count = parser_state.count_of_block_quotes_on_stack()
         POGGER.debug(
             "stack_count>>:$:($)<",
@@ -437,7 +449,9 @@ class ContainerBlockLeafProcessor:
         bq_index: int,
         grab_bag: ContainerGrabBag,
     ) -> Tuple[str, str]:
-        assert grab_bag.text_removed_by_container is not None
+        assert (
+            grab_bag.text_removed_by_container is not None
+        ), "Block quote processing means we removed at least some text."
         removed_text_length = len(grab_bag.text_removed_by_container)
         if (
             adj_original[removed_text_length - 1] == "\t"
@@ -450,7 +464,9 @@ class ContainerBlockLeafProcessor:
                 parser_state.token_stack[bq_index].matching_markdown_token,
             )
             last_leading_space = xx_block_quote_token.remove_last_bleading_space()
-            assert last_leading_space[0] == "\n"
+            assert (
+                last_leading_space[0] == "\n"
+            ), "Removed leading space must start with \\n."
             last_leading_space = last_leading_space[1:]
             xx_block_quote_token.add_bleading_spaces(">")
         else:
@@ -459,8 +475,7 @@ class ContainerBlockLeafProcessor:
         (
             non_space_index,
             ex_ws,
-        ) = ParserHelper.extract_spaces(orig_prefix, 0)
-        assert ex_ws is not None
+        ) = ParserHelper.extract_spaces_verified(orig_prefix, 0)
         original_up_to_non_space = orig_prefix[:non_space_index]
         redone_original = orig_suffix + original_up_to_non_space
         detabified_redone_original = TabHelper.detabify_string(redone_original)
@@ -478,14 +493,18 @@ class ContainerBlockLeafProcessor:
         list_index = parser_state.find_last_list_block_on_stack()
 
         current_list_indent = -1
-        assert list_index > bq_index
+        assert (
+            list_index > bq_index
+        ), "If here, the list is embedded within a block quotes, and the indices must support that."
         xx_list_token = cast(
             ListStartMarkdownToken,
             parser_state.token_stack[list_index].matching_markdown_token,
         )
         current_list_indent = xx_list_token.indent_level
 
-        assert grab_bag.text_removed_by_container is not None
+        assert (
+            grab_bag.text_removed_by_container is not None
+        ), "If here, some text must have been removed."
         reconstructed_line = (
             grab_bag.text_removed_by_container + xposition_marker.text_to_parse
         )
@@ -572,9 +591,11 @@ class ContainerBlockLeafProcessor:
                 ListStartMarkdownToken,
                 parser_state.token_stack[last_list_index].matching_markdown_token,
             )
-            calc_indent_level = list_token.indent_level
-            if grab_bag.text_removed_by_container:
-                calc_indent_level -= len(grab_bag.text_removed_by_container)
+            calc_indent_level = (
+                list_token.indent_level - len(grab_bag.text_removed_by_container)
+                if grab_bag.text_removed_by_container
+                else list_token.indent_level
+            )
             if len(extracted_leaf_whitespace) > calc_indent_level:
                 extracted_leaf_whitespace = extracted_leaf_whitespace[
                     :calc_indent_level
@@ -606,13 +627,12 @@ class ContainerBlockLeafProcessor:
         xposition_marker: PositionMarker,
         last_block_index: int,
         last_list_index: int,
-        extracted_leaf_whitespace: Optional[str],
+        extracted_leaf_whitespace: str,
         grab_bag: ContainerGrabBag,
     ) -> Tuple[Optional[str], Optional[str], PositionMarker]:
         POGGER.debug("??? adjust_for_list_container")
         removed_leading_space = None
         actual_removed_leading_space = None
-        assert extracted_leaf_whitespace is not None
         list_token: Optional[ListStartMarkdownToken] = None
         # pylint: disable=chained-comparison
         if (
@@ -652,7 +672,9 @@ class ContainerBlockLeafProcessor:
             and grab_bag.block_quote_data.stack_count > 1
             and grab_bag.is_para_continue
         ):
-            assert grab_bag.text_removed_by_container is not None
+            assert (
+                grab_bag.text_removed_by_container is not None
+            ), "If here, some text must have been removed."
             total_removed = len(grab_bag.text_removed_by_container) + len(
                 actual_removed_leading_space
             )
@@ -685,7 +707,7 @@ class ContainerBlockLeafProcessor:
             assert (
                 parser_state.token_document[document_index].is_list_start
                 or parser_state.token_document[document_index].is_new_list_item
-            )
+            ), "Specified token is a list token."
             found_list_token = parser_state.token_document[document_index]
         return found_list_token
 
@@ -707,7 +729,7 @@ class ContainerBlockLeafProcessor:
                 actual_removed_leading_space = ""
             assert xposition_marker.text_to_parse.startswith(
                 actual_removed_leading_space
-            )
+            ), "Text to parse must begin with the reported leading whitespace."
             position_marker = PositionMarker(
                 xposition_marker.line_number,
                 0,
@@ -730,7 +752,9 @@ class ContainerBlockLeafProcessor:
         if close_tokens:
             grab_bag.extend_container_tokens(close_tokens)
 
-        assert parser_state.original_line_to_parse
+        assert (
+            parser_state.original_line_to_parse is not None
+        ), "Original line must have been set by this point."
         (
             new_index_indent,
             new_text_to_parse,
@@ -844,7 +868,9 @@ class ContainerBlockLeafProcessor:
 
     @staticmethod
     def __val(parser_state: ParserState, new_text_to_parse: str) -> None:
-        assert parser_state.original_line_to_parse is not None
+        assert (
+            parser_state.original_line_to_parse is not None
+        ), "Original line must have been set by this point."
         if len(parser_state.original_line_to_parse) == len(new_text_to_parse):
             assert parser_state.original_line_to_parse.replace(
                 ">", ParserHelper.space_character
@@ -872,7 +898,9 @@ class ContainerBlockLeafProcessor:
         current_indent_level: int,
         grab_bag: ContainerGrabBag,
     ) -> Tuple[int, str]:
-        assert parser_state.original_line_to_parse is not None
+        assert (
+            parser_state.original_line_to_parse is not None
+        ), "Original line must have been set by this point."
         POGGER.debug(
             "parser_state.original_line_to_parse>>:$:($)",
             parser_state.original_line_to_parse,
@@ -883,7 +911,6 @@ class ContainerBlockLeafProcessor:
             xposition_marker.text_to_parse,
             len(xposition_marker.text_to_parse),
         )
-        assert parser_state.original_line_to_parse
         if grab_bag.weird_adjusted_text:
             new_index_indent = len(grab_bag.weird_adjusted_text)
             grab_bag.text_removed_by_container = grab_bag.weird_adjusted_text
@@ -892,7 +919,7 @@ class ContainerBlockLeafProcessor:
             POGGER.debug("current_indent_level>>:$:<", current_indent_level)
             current_indent_level -= xposition_marker.index_indent
             POGGER.debug("current_indent_level>>:$:<", current_indent_level)
-            assert current_indent_level >= 0
+            assert current_indent_level >= 0, "Current indent must not go below 0."
 
             prefix_text = xposition_marker.text_to_parse[:current_indent_level]
             new_text_to_parse = xposition_marker.text_to_parse[current_indent_level:]
@@ -925,18 +952,15 @@ class ContainerBlockLeafProcessor:
         last_block_index: int,
         line_number: int,
     ) -> Tuple[bool, int, Optional[int], int]:
-        # TODO THIS IS A KLUDGE
-        #
-        # As soon as we go past here, if we are going to get rid of the
-        keep_processing = True
-        new_indent_level = None
-        if (
-            last_list_index > 0
-            and text_removed_by_container is None
-            and len(parser_state.token_stack) - 1 == current_stack_index
-        ):
-            keep_processing = total_ws != current_indent_level
-
+        keep_processing = (
+            total_ws != current_indent_level
+            if (
+                last_list_index > 0
+                and text_removed_by_container is None
+                and len(parser_state.token_stack) - 1 == current_stack_index
+            )
+            else True
+        )
         if keep_processing:
             last_list_index = 0
             (
@@ -952,6 +976,9 @@ class ContainerBlockLeafProcessor:
                 text_removed_by_container,
             )
             keep_processing = new_indent_level is not None
+        else:
+            new_indent_level = None
+
         return keep_processing, last_list_index, new_indent_level, non_last_block_index
 
     # pylint: enable=too-many-arguments
@@ -1010,7 +1037,9 @@ class ContainerBlockLeafProcessor:
             total_ws,
         )
         if continue_in_loop and keep_processing:
-            assert proposed_indent_level is not None
+            assert (
+                proposed_indent_level is not None
+            ), "Proposed ident level within lists must be decided."
             if proposed_indent_level > total_ws:
                 did_hit_indent_level_threshold = True
                 continue_in_loop = False
@@ -1110,7 +1139,9 @@ class ContainerBlockLeafProcessor:
         matching_token = parser_state.token_stack[
             current_stack_index
         ].matching_markdown_token
-        assert matching_token is not None
+        assert (
+            matching_token is not None
+        ), "Matching token is always set for containers."
         POGGER.debug("line_number=$", line_number)
         POGGER.debug(
             "matching_markdown_token.line_number=$", matching_token.line_number

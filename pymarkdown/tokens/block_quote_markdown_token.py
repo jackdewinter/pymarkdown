@@ -90,14 +90,15 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
             self.__leading_spaces,
         )
         POGGER.debug("add_leading_spaces>>:$:<<", leading_spaces_to_add)
-        if skip_adding_newline:
-            self.__leading_spaces = f"{self.__leading_spaces}{leading_spaces_to_add}"
-        else:
-            self.__leading_spaces = (
+        self.__leading_spaces = (
+            f"{self.__leading_spaces}{leading_spaces_to_add}"
+            if skip_adding_newline
+            else (
                 f"{self.__leading_spaces}{ParserHelper.newline_character}{leading_spaces_to_add}"
                 if self.__leading_spaces
                 else leading_spaces_to_add
             )
+        )
         POGGER.debug(
             "__leading_spaces>>:$:<<",
             self.__leading_spaces,
@@ -150,7 +151,9 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
         Calculate the next leading space based on the leading_text_index,
         optonally incrementing it as well.
         """
-        assert self.bleading_spaces is not None
+        assert (
+            self.bleading_spaces is not None
+        ), "Bleading spaces must be defined by now."
 
         # print(f"increment_index>>:{increment_index}:<<")
         tabbed_leading = None

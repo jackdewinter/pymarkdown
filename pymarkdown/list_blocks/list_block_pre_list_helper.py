@@ -3,7 +3,7 @@ Module to provide for the initial process once we have decided to parse a list b
 """
 
 import logging
-from typing import List, Optional, Tuple, cast
+from typing import List, Tuple, cast
 
 from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
 from pymarkdown.general.parser_helper import ParserHelper
@@ -34,10 +34,10 @@ class ListBlockPreListHelper:
         parser_state: ParserState,
         line_to_parse: str,
         start_index: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         marker_width_minus_one: int,
         block_quote_data: BlockQuoteData,
-        adj_ws: Optional[str],
+        adj_ws: str,
         position_marker: PositionMarker,
         container_depth: int,
     ) -> Tuple[int, int, int, int, int, List[MarkdownToken], BlockQuoteData]:
@@ -54,7 +54,6 @@ class ListBlockPreListHelper:
         )
 
         POGGER.debug("--$--$", start_index, start_index + 1)
-        assert adj_ws is not None
         (
             indent_level,
             remaining_whitespace,
@@ -83,15 +82,12 @@ class ListBlockPreListHelper:
 
     @staticmethod
     def __calculate_whitespace_values(
-        line_to_parse: str, start_index: int, extracted_whitespace: Optional[str]
+        line_to_parse: str, start_index: int, extracted_whitespace: str
     ) -> Tuple[int, int, int, int]:
         (
             after_marker_ws_index,
             after_marker_whitespace,
-        ) = ParserHelper.extract_spaces(line_to_parse, start_index + 1)
-        assert after_marker_ws_index is not None
-        assert after_marker_whitespace is not None
-        assert extracted_whitespace is not None
+        ) = ParserHelper.extract_spaces_verified(line_to_parse, start_index + 1)
         ws_after_marker, ws_before_marker, line_to_parse_size = (
             TabHelper.calculate_length(
                 after_marker_whitespace, start_index=start_index + 1
@@ -250,7 +246,9 @@ class ListBlockPreListHelper:
         container_level_tokens: List[MarkdownToken] = []
         adjusted_stack_count = block_quote_data.stack_count
         while block_quote_data.current_count < adjusted_stack_count:
-            assert not container_level_tokens
+            assert (
+                not container_level_tokens
+            ), "Container tokens cannot have been filled."
             last_block_index = parser_state.find_last_block_quote_on_stack()
             previous_last_block_token = cast(
                 BlockQuoteMarkdownToken,
@@ -342,7 +340,7 @@ class ListBlockPreListHelper:
         )
         removed_leading_spaces = previous_last_block_token.remove_last_bleading_space()
         POGGER.debug("removed_leading_spaces>>$<<", removed_leading_spaces)
-        assert removed_leading_spaces is not None
+        assert removed_leading_spaces is not None, "Removed spaces cannot be None."
         POGGER.debug(
             "prev>>$<<, current>>$<<",
             previous_last_block_token,

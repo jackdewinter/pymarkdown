@@ -203,9 +203,13 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
         current_end_token = cast(EndMarkdownToken, current_token)
         if not current_end_token.was_forced:
             # We need to do this as the ending fence may be longer than the opening fence.
-            assert current_token.extra_data is not None
+            assert (
+                current_token.extra_data is not None
+            ), "extra_data must be defined by this point"
             split_extra_data = current_token.extra_data.split(":")
-            assert len(split_extra_data) >= 3
+            assert (
+                len(split_extra_data) >= 3
+            ), "Extra data must split into at least 3 parts."
             extra_end_space = split_extra_data[1]
             fence_count = int(split_extra_data[2])
 
@@ -233,7 +237,9 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
 
             return "".join(fence_parts)
 
-        assert previous_token is not None
+        assert (
+            previous_token is not None
+        ), "Previous token must be defined if processing the end of a fenced block."
         is_previous_code_block = previous_token.is_fenced_code_block
         return (
             ParserHelper.newline_character

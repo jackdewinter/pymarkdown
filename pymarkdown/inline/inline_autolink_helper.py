@@ -47,7 +47,9 @@ class InlineAutoLinkHelper:
         new_column_number: int,
         closing_angle_index: int,
     ) -> Tuple[Optional[Union[RawHtmlMarkdownToken, TextMarkdownToken]], str, int]:
-        assert inline_request.line_number is not None
+        assert (
+            inline_request.line_number is not None
+        ), "Request line number cannot be None."
         new_token, after_index = HtmlRawHelper.parse_raw_html(
             between_brackets,
             remaining_line,
@@ -56,8 +58,10 @@ class InlineAutoLinkHelper:
             inline_request,
         )
         if after_index != -1:
+            assert (
+                new_token is not None
+            ), "If after_index is valid, new_token must also be valid."
             closing_angle_index = after_index + inline_request.next_index + 1
-            assert new_token is not None
             if new_token.is_inline_raw_html:
                 html_token = cast(RawHtmlMarkdownToken, new_token)
                 between_brackets = html_token.raw_tag
@@ -72,6 +76,7 @@ class InlineAutoLinkHelper:
         """
         Given an open angle bracket, determine which of the three possibilities it is.
         """
+        _ = parser_properties
         closing_angle_index = inline_request.source_text.find(
             InlineAutoLinkHelper.__angle_bracket_end, inline_request.next_index
         )
@@ -84,9 +89,11 @@ class InlineAutoLinkHelper:
             )
             closing_angle_index += 1
 
-            assert inline_request.line_number is not None
-            assert inline_request.column_number is not None
-            assert inline_request.remaining_line is not None
+            assert (
+                inline_request.line_number is not None
+                and inline_request.column_number is not None
+                and inline_request.remaining_line is not None
+            ), "Proper processing must leave these in a valid state."
             new_column_number = inline_request.column_number + len(
                 inline_request.remaining_line
             )
@@ -166,10 +173,11 @@ class InlineAutoLinkHelper:
             InlineAutoLinkHelper.angle_bracket_start not in text_to_parse
             and text_to_parse[0] in string.ascii_letters
         ):
-            path_index, uri_scheme = ParserHelper.collect_while_one_of_characters(
-                text_to_parse, 1, InlineAutoLinkHelper.__valid_scheme_characters
+            path_index, uri_scheme = (
+                ParserHelper.collect_while_one_of_characters_verified(
+                    text_to_parse, 1, InlineAutoLinkHelper.__valid_scheme_characters
+                )
             )
-            assert path_index is not None
             uri_scheme, text_to_parse_size = f"{text_to_parse[0]}{uri_scheme}", len(
                 text_to_parse
             )

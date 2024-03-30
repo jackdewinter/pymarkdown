@@ -35,7 +35,7 @@ class LeafBlockProcessorParagraph:
     def parse_paragraph(
         parser_state: ParserState,
         position_marker: PositionMarker,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         block_quote_data: BlockQuoteData,
         text_removed_by_container: Optional[str],
         original_line: str,
@@ -44,7 +44,6 @@ class LeafBlockProcessorParagraph:
         Handle the parsing of a paragraph.
         """
         POGGER.debug(">>text_removed_by_container>>:$:<<", text_removed_by_container)
-        assert extracted_whitespace is not None
         POGGER.debug(">>extracted_whitespace>>:$:<<", extracted_whitespace)
         POGGER.debug("position_marker.text_to_parse=:$:", position_marker.text_to_parse)
         POGGER.debug("position_marker.index_number=:$:", position_marker.index_number)
@@ -109,15 +108,13 @@ class LeafBlockProcessorParagraph:
                 "position_marker.text_to_parse=:$:", position_marker.text_to_parse
             )
             POGGER.debug("adjusted_index=:$:", adjusted_index)
-            new_index, end_string = ParserHelper.extract_ascii_whitespace(
-                position_marker.text_to_parse, adjusted_index
+            adjusted_index, extracted_whitespace = (
+                ParserHelper.extract_ascii_whitespace_verified(
+                    position_marker.text_to_parse, adjusted_index
+                )
             )
-            POGGER.debug("new_index=:$:", new_index)
-            POGGER.debug("end_string=:$:", end_string)
-            assert new_index is not None and end_string
-            assert not extracted_whitespace
-            adjusted_index = new_index
-            extracted_whitespace = end_string
+            POGGER.debug("adjusted_index=:$:", adjusted_index)
+            POGGER.debug("extracted_whitespace=:$:", extracted_whitespace)
 
         new_tokens.append(
             LeafBlockProcessorParagraph.__parse_paragraph_create_text_token(
@@ -137,7 +134,7 @@ class LeafBlockProcessorParagraph:
         parser_state: ParserState,
         position_marker: PositionMarker,
         adjusted_index: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         original_line: str,
     ) -> TextMarkdownToken:
         text_to_parse = position_marker.text_to_parse[adjusted_index:]
@@ -145,7 +142,6 @@ class LeafBlockProcessorParagraph:
         POGGER.debug("text_to_parse=:$:", text_to_parse)
         POGGER.debug("extracted_whitespace=:$:", extracted_whitespace)
         POGGER.debug("original_line=:$:", original_line)
-        assert extracted_whitespace is not None
 
         (
             corrected_tab_text,
@@ -190,13 +186,13 @@ class LeafBlockProcessorParagraph:
             POGGER.debug("checked_whitespace_for_tab=:$:", checked_whitespace_for_tab)
             POGGER.debug("is_block_quote_container=:$:", is_block_quote_container)
 
-            corrected_index = -1
-            ends_without_modification = original_line.endswith(text_to_parse)
-            POGGER.debug("ends_without_modification=:$:", ends_without_modification)
-            if ends_without_modification:
+            if original_line.endswith(text_to_parse):
                 corrected_index = len(original_line) - len(text_to_parse)
+                assert corrected_index >= 0, "Index cannot be negative."
                 corrected_tab_text = original_line[corrected_index:]
-                assert corrected_tab_text == text_to_parse
+                assert (
+                    corrected_tab_text == text_to_parse
+                ), "Constructed string must equal provided text."
             else:
                 POGGER.debug("original_line=:$:", original_line)
                 POGGER.debug("text_to_parse=:$:", text_to_parse)
@@ -206,17 +202,14 @@ class LeafBlockProcessorParagraph:
                     else 0
                 )
                 POGGER.debug("initial_offset=:$:", initial_offset)
-                adj_text_to_parse, _, _ = TabHelper.find_detabify_string(
+                corrected_tab_text, _, _ = TabHelper.find_detabify_string_verified(
                     original_line,
                     text_to_parse,
                     use_proper_traverse=True,
                     initial_offset=initial_offset,
                 )
-                POGGER.debug("adj_text_to_parse=:$:", adj_text_to_parse)
-                assert adj_text_to_parse is not None
+                POGGER.debug("adj_text_to_parse=:$:", corrected_tab_text)
                 corrected_index = 0
-                corrected_tab_text = adj_text_to_parse
-            assert corrected_index != -1
         else:
             corrected_extracted_whitespace = extracted_whitespace
         return corrected_tab_text, corrected_extracted_whitespace
@@ -247,7 +240,6 @@ class LeafBlockProcessorParagraph:
             last_container_index = parser_state.find_last_container_on_stack()
             last_container_token = parser_state.token_stack[last_container_index]
             is_block_quote_container = last_container_token.is_block_quote
-            assert corrected_extracted_whitespace
             (
                 corrected_prefix,
                 corrected_suffix,
@@ -296,7 +288,7 @@ class LeafBlockProcessorParagraph:
     def __adjust_paragraph_for_containers(
         parser_state: ParserState,
         container_index: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         adjusted_whitespace_length: int,
     ) -> int:
         if not parser_state.token_stack[container_index].is_block_quote:
@@ -314,9 +306,8 @@ class LeafBlockProcessorParagraph:
 
     @staticmethod
     def __adjust_paragraph_for_list(
-        top_list_token: ListStackToken, extracted_whitespace: Optional[str]
+        top_list_token: ListStackToken, extracted_whitespace: str
     ) -> int:
-        assert extracted_whitespace is not None
         ex_ws_length = len(extracted_whitespace)
         POGGER.debug(">>owners-indent>>$", top_list_token.indent_level)
         POGGER.debug(">>ws_before_marker>>$", top_list_token.ws_before_marker)
@@ -356,20 +347,15 @@ class LeafBlockProcessorParagraph:
     def __handle_paragraph_prep_block_reduce(
         parser_state: ParserState,
         position_marker: PositionMarker,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
     ) -> List[MarkdownToken]:
-        # TODO cyclic?
-
         new_tokens, _ = parser_state.close_open_blocks_fn(
             parser_state,
             only_these_blocks=[BlockQuoteStackToken],
             include_block_quotes=True,
         )
         if new_tokens:
-            assert (
-                extracted_whitespace is not None
-                and parser_state.token_stack[-1].is_list
-            )
+            assert parser_state.token_stack[-1].is_list, "Must be within list block."
             search_index = len(parser_state.token_stack)
             leading_space_length = (
                 len(extracted_whitespace) + position_marker.index_indent
@@ -406,15 +392,17 @@ class LeafBlockProcessorParagraph:
         parser_state: ParserState,
         block_quote_data: BlockQuoteData,
         position_marker: PositionMarker,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         original_line: str,
-    ) -> Tuple[List[MarkdownToken], Optional[str], bool]:
+    ) -> Tuple[List[MarkdownToken], str, bool]:
         # In cases where the list ended on the same line as we are processing, the
         # container tokens will not yet be added to the token_document.  As such,
         # make sure to construct a "proper" list that takes those into account
         # before checking to see if this is an issue.
         adjusted_document = parser_state.token_document[:]
-        assert parser_state.same_line_container_tokens is not None
+        assert (
+            parser_state.same_line_container_tokens is not None
+        ), "Should have some tokens."
         adjusted_document.extend(parser_state.same_line_container_tokens)
         did_add_paragraph_token = False
 
@@ -424,10 +412,9 @@ class LeafBlockProcessorParagraph:
             and adjusted_document[-2].is_any_list_token
         ):
             (
-                did_find,
+                _,
                 last_list_index,
-            ) = LeafBlockProcessorParagraph.check_for_list_in_process(parser_state)
-            assert did_find
+            ) = LeafBlockProcessorParagraph.verify_list_in_process(parser_state)
             new_tokens, _ = parser_state.close_open_blocks_fn(
                 parser_state, until_this_index=last_list_index
             )
@@ -441,7 +428,6 @@ class LeafBlockProcessorParagraph:
             new_tokens = []
 
         if not parser_state.token_stack[-1].is_paragraph:
-            assert extracted_whitespace is not None
             if ParserHelper.tab_character in original_line:
                 extracted_whitespace = (
                     LeafBlockProcessorParagraph.__paragraph_prep_whitespace_with_tab(
@@ -477,7 +463,7 @@ class LeafBlockProcessorParagraph:
             position_marker.text_to_parse[position_marker.index_number :],
         )
         (
-            rest_of_string,
+            _,
             _,
             rest_of_string_index,
         ) = TabHelper.find_detabify_string(
@@ -485,9 +471,7 @@ class LeafBlockProcessorParagraph:
             position_marker.text_to_parse[position_marker.index_number :],
             use_proper_traverse=True,
         )
-        POGGER.debug(">>rest_of_string>>$>>", rest_of_string)
         POGGER.debug(">>rest_of_string_index>>$>>", rest_of_string_index)
-        assert rest_of_string is not None
         prefix = original_line[:rest_of_string_index]
         if prefix and ParserHelper.tab_character in prefix:
             POGGER.debug(">>extracted_whitespace>:$:<", extracted_whitespace)
@@ -526,8 +510,17 @@ class LeafBlockProcessorParagraph:
         """
 
         stack_index = len(parser_state.token_stack) - 1
-
         while stack_index >= 0 and not parser_state.token_stack[stack_index].is_list:
             stack_index -= 1
-
         return stack_index >= 0, stack_index
+
+    @staticmethod
+    def verify_list_in_process(parser_state: ParserState) -> Tuple[bool, int]:
+        """
+        From the end of the stack, verify that there is already a list in progress.
+        """
+        did_find_list, stack_index = (
+            LeafBlockProcessorParagraph.check_for_list_in_process(parser_state)
+        )
+        assert did_find_list, "List must exist on the stack."
+        return did_find_list, stack_index

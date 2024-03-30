@@ -146,12 +146,11 @@ class RuleMd005(RulePlugin):
 
             expected_indent = list_token.indent_level - delta_indent
 
-        if delta_indent > 0:
-            adjusted_whitespace = list_token.extracted_whitespace[:-delta_indent]
-        else:
-            adjusted_whitespace = list_token.extracted_whitespace + (
-                " " * (-delta_indent)
-            )
+        adjusted_whitespace = (
+            list_token.extracted_whitespace[:-delta_indent]
+            if delta_indent > 0
+            else list_token.extracted_whitespace + " " * (-delta_indent)
+        )
         self.register_fix_token_request(
             context, token, "next_token", "indent_level", expected_indent
         )
@@ -177,13 +176,11 @@ class RuleMd005(RulePlugin):
         base_token = self.__ordered_list_starts[list_level]
         expected_indent = base_token.column_number
         delta_indent = list_token.column_number - expected_indent
-        if delta_indent > 0:
-            adjusted_whitespace = list_token.extracted_whitespace[:-delta_indent]
-        else:
-            adjusted_whitespace = list_token.extracted_whitespace + (
-                " " * (-delta_indent)
-            )
-
+        adjusted_whitespace = (
+            list_token.extracted_whitespace[:-delta_indent]
+            if delta_indent > 0
+            else list_token.extracted_whitespace + (" " * (-delta_indent))
+        )
         self.register_fix_token_request(
             context,
             token,
@@ -238,12 +235,11 @@ class RuleMd005(RulePlugin):
         else:
             self.__unordered_current_indents[list_level] = expected_indent
 
-        if delta_indent > 0:
-            adjusted_whitespace = list_token.extracted_whitespace[:-delta_indent]
-        else:
-            adjusted_whitespace = list_token.extracted_whitespace + (
-                " " * (-delta_indent)
-            )
+        adjusted_whitespace = (
+            list_token.extracted_whitespace[:-delta_indent]
+            if delta_indent > 0
+            else list_token.extracted_whitespace + (" " * (-delta_indent))
+        )
         self.register_fix_token_request(
             context, token, "next_token", "indent_level", expected_indent
         )
@@ -449,8 +445,8 @@ class RuleMd005(RulePlugin):
             del self.__deferred_adjustment[list_stack_length]
 
         owner = self.__read_only_list_stack[-1]
-        end_token = cast(EndMarkdownToken, token)
         if do_leading_adjustments and owner in self.__leading_space_adjustments:
+            end_token = cast(EndMarkdownToken, token)
             list_start_token = cast(
                 ListStartMarkdownToken, end_token.start_markdown_token
             )

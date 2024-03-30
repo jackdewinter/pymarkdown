@@ -34,6 +34,8 @@ from pymarkdown.tokens.stack_token import ListStackToken, StackToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
+# pylint: disable=too-many-lines
+
 
 class ListBlockProcessor:
     """
@@ -45,12 +47,11 @@ class ListBlockProcessor:
         acceptable_indent_stack_index: int,
         parser_state: ParserState,
         stack_index: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
     ) -> int:
         box_start = 1 if stack_index == 1 else ((stack_index + 1) * 4) + stack_index
         box_end = (stack_index * 4) + (stack_index - 1)
 
-        assert extracted_whitespace is not None
         is_in_this_box = box_start <= len(extracted_whitespace) + 1 <= box_end
         can_promote_to_next_box = (stack_index + 1) < len(
             parser_state.token_stack
@@ -66,10 +67,10 @@ class ListBlockProcessor:
         parser_state: ParserState,
         container_depth: int,
         removed_chars_at_start: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         indent_already_processed: bool,
-        adj_ws: Optional[str],
-    ) -> Tuple[int, Optional[str], Optional[str], Optional[str], bool]:
+        adj_ws: str,
+    ) -> Tuple[int, Optional[str], str, str, bool]:
         indent_already_used, forced_container_whitespace = 0, None
         is_in_root_list = (
             not container_depth
@@ -78,7 +79,6 @@ class ListBlockProcessor:
             and parser_state.token_stack[1].is_list
         )
 
-        assert extracted_whitespace is not None
         if (
             not removed_chars_at_start
             and is_in_root_list
@@ -106,7 +106,7 @@ class ListBlockProcessor:
                 list_stack_token = parser_state.token_stack[
                     acceptable_indent_stack_index
                 ]
-                assert list_stack_token.is_list
+                assert list_stack_token.is_list, "Token must be a list token."
                 list_token = cast(
                     ListStartMarkdownToken, list_stack_token.matching_markdown_token
                 )
@@ -130,8 +130,8 @@ class ListBlockProcessor:
     def __handle_list_block_init(
         parser_state: ParserState,
         position_marker: PositionMarker,
-        extracted_whitespace: Optional[str],
-        adj_ws: Optional[str],
+        extracted_whitespace: str,
+        adj_ws: str,
         is_ulist: bool,
         container_depth: int,
         removed_chars_at_start: int,
@@ -143,8 +143,8 @@ class ListBlockProcessor:
         Optional[int],
         int,
         Optional[str],
-        Optional[str],
-        Optional[str],
+        str,
+        str,
         bool,
     ]:
         POGGER.debug(
@@ -174,24 +174,34 @@ class ListBlockProcessor:
             adj_ws,
         )
 
-        is_start_fn = (
-            ListBlockStartsHelper.is_ulist_start
-            if is_ulist
-            else ListBlockStartsHelper.is_olist_start
-        )
-        (
-            started_ulist,
-            end_of_ulist_start_index,
-            index,
-            number_of_digits,
-        ) = is_start_fn(
-            parser_state,
-            position_marker.text_to_parse,
-            position_marker.index_number,
-            extracted_whitespace,
-            False,
-            adj_ws,
-        )
+        if is_ulist:
+            (
+                started_ulist,
+                end_of_ulist_start_index,
+                index,
+                number_of_digits,
+            ) = ListBlockStartsHelper.is_ulist_start(
+                parser_state,
+                position_marker.text_to_parse,
+                position_marker.index_number,
+                extracted_whitespace,
+                False,
+                adj_ws,
+            )
+        else:
+            (
+                started_ulist,
+                end_of_ulist_start_index,
+                index,
+                number_of_digits,
+            ) = ListBlockStartsHelper.is_olist_start(
+                parser_state,
+                position_marker.text_to_parse,
+                position_marker.index_number,
+                extracted_whitespace,
+                False,
+                adj_ws,
+            )
         return (
             started_ulist,
             end_of_ulist_start_index,
@@ -214,9 +224,9 @@ class ListBlockProcessor:
         indent_level: int,
         ws_before_marker: int,
         ws_after_marker: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         forced_container_whitespace: Optional[str],
-        adj_ws: Optional[str],
+        adj_ws: str,
         adjusted_text_to_parse: Optional[str],
         index: int,
         container_level_tokens: List[MarkdownToken],
@@ -254,8 +264,8 @@ class ListBlockProcessor:
                 container_depth,
                 original_line,
                 is_ulist,
-                alt_adj_ws=adj_ws,
-                forced_container_whitespace=forced_container_whitespace,
+                adj_ws,
+                forced_container_whitespace,
             )
         return (
             False,
@@ -269,8 +279,8 @@ class ListBlockProcessor:
     def __handle_list_block_pull_from_grab_bag(
         grab_bag: ContainerGrabBag,
     ) -> Tuple[
-        Optional[str],
-        Optional[str],
+        str,
+        str,
         BlockQuoteData,
         int,
         List[StackToken],
@@ -278,11 +288,19 @@ class ListBlockProcessor:
         bool,
         str,
     ]:
-        extracted_whitespace: Optional[str] = grab_bag.extracted_whitespace
-        adj_ws: Optional[str] = grab_bag.adj_ws
-        block_quote_data: BlockQuoteData = grab_bag.block_quote_data
-        assert grab_bag.removed_chars_at_start_of_line is not None
+        assert (
+            grab_bag.extracted_whitespace is not None
+        ), "extracted_whitespace must be defined by now"
+        assert (
+            grab_bag.removed_chars_at_start_of_line is not None
+        ), "Characters must have been removed by this point."
+        assert grab_bag.adj_ws is not None, "adj_ws must be defined by now"
+
+        extracted_whitespace = grab_bag.extracted_whitespace
         removed_chars_at_start: int = grab_bag.removed_chars_at_start_of_line
+        adj_ws = grab_bag.adj_ws
+
+        block_quote_data: BlockQuoteData = grab_bag.block_quote_data
 
         current_container_blocks: List[StackToken] = grab_bag.current_container_blocks
         container_depth: int = grab_bag.container_depth
@@ -361,8 +379,9 @@ class ListBlockProcessor:
         if started_ulist:
             POGGER.debug("clt>>ulist-start")
             removed_chars_at_start = indent_already_used
-            assert index is not None
-            assert number_of_digits is not None
+            assert (
+                index is not None and number_of_digits is not None
+            ), "If started_ulist, both index and number_of_digits must be valid."
             (
                 indent_level,
                 remaining_whitespace,
@@ -448,13 +467,11 @@ class ListBlockProcessor:
     @staticmethod
     def __list_in_process_update_containers(
         parser_state: ParserState,
-        ind: Optional[int],
+        ind: int,
         used_indent: Optional[str],
         was_paragraph_continuation: bool,
         start_index: int,
     ) -> None:
-        assert ind is not None
-
         stack_index = parser_state.find_last_list_block_on_stack()
         if stack_index > 0:
             list_token = cast(
@@ -478,7 +495,9 @@ class ListBlockProcessor:
             stack_index = parser_state.find_last_list_block_on_stack()
             need_to_add_leading_spaces = False
             if stack_index > 0:
-                assert parser_state.original_line_to_parse is not None
+                assert (
+                    parser_state.original_line_to_parse is not None
+                ), "Original line must be defined by this point."
 
                 last_container_index = parser_state.find_last_container_on_stack()
                 consumed_text = parser_state.original_line_to_parse[:start_index]
@@ -500,25 +519,32 @@ class ListBlockProcessor:
 
     @staticmethod
     def list_in_process(
-        parser_state: ParserState, ind: Optional[int], grab_bag: ContainerGrabBag
+        parser_state: ParserState, ind: int, grab_bag: ContainerGrabBag
     ) -> List[MarkdownToken]:
         """
         Handle the processing of a line where there is a list in process.
         """
+        assert (
+            grab_bag.extracted_whitespace is not None
+        ), "Extracted whitespace must be defined by this point."
+        assert parser_state.token_stack[
+            ind
+        ].is_list, "Index must point to a valid list."
+        extracted_whitespace = grab_bag.extracted_whitespace
+        assert (
+            extracted_whitespace is not None
+        ), "extracted_whitespace must be defined by now"
+
         line_to_parse = grab_bag.line_to_parse
         start_index = grab_bag.start_index
-        extracted_whitespace = grab_bag.extracted_whitespace
-
-        assert extracted_whitespace is not None
-        assert ind is not None
-        assert parser_state.token_stack[ind].is_list
         list_stack_token = cast(ListStackToken, parser_state.token_stack[ind])
         before_ws_length = list_stack_token.ws_before_marker
         leading_space_length = TabHelper.calculate_length(extracted_whitespace)
-        if list_stack_token.last_new_list_token:
-            requested_list_indent = list_stack_token.last_new_list_token.indent_level
-        else:
-            requested_list_indent = list_stack_token.indent_level
+        requested_list_indent = (
+            list_stack_token.last_new_list_token.indent_level
+            if list_stack_token.last_new_list_token
+            else list_stack_token.indent_level
+        )
 
         allow_list_continue = ListBlockProcessor.__can_list_continue(
             parser_state,
@@ -534,10 +560,10 @@ class ListBlockProcessor:
             parser_state.token_stack[-1].is_paragraph,
         )
         used_indent = None
-        was_paragraph_continuation = (
-            leading_space_length >= requested_list_indent and allow_list_continue
-        )
-        if was_paragraph_continuation:
+        if (
+            was_paragraph_continuation := leading_space_length >= requested_list_indent
+            and allow_list_continue
+        ):
             POGGER.debug("list-in-progress: was_paragraph_continuation")
             container_level_tokens: List[MarkdownToken] = []
             (
@@ -578,7 +604,6 @@ class ListBlockProcessor:
                 grab_bag.requeue_line_info = requeue_line_info
                 grab_bag.was_paragraph_continuation = False
                 return []
-
         ListBlockProcessor.__list_in_process_update_containers(
             parser_state, ind, used_indent, was_paragraph_continuation, start_index
         )
@@ -595,22 +620,14 @@ class ListBlockProcessor:
         parser_state: ParserState,
         line_to_parse: str,
         start_index: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         leading_space_length: int,
     ) -> bool:
         started_ulist, _, _, _ = ListBlockStartsHelper.is_ulist_start(
-            parser_state,
-            line_to_parse,
-            start_index,
-            extracted_whitespace,
-            True,
+            parser_state, line_to_parse, start_index, extracted_whitespace, True, None
         )
         started_olist, _, _, _ = ListBlockStartsHelper.is_olist_start(
-            parser_state,
-            line_to_parse,
-            start_index,
-            extracted_whitespace,
-            True,
+            parser_state, line_to_parse, start_index, extracted_whitespace, True, None
         )
         return (
             (not parser_state.token_document[-1].is_blank_line)
@@ -623,7 +640,7 @@ class ListBlockProcessor:
         parser_state: ParserState,
         line_to_parse: str,
         start_index: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
     ) -> bool:
         POGGER.debug("is_theme_break>>?")
         is_theme_break, _ = ThematicLeafBlockProcessor.is_thematic_break(
@@ -669,15 +686,15 @@ class ListBlockProcessor:
         before_ws_length: int,
         line_to_parse: str,
         start_index: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         allow_list_continue: bool,
-        ind: Optional[int],
+        ind: int,
         original_line: str,
     ) -> Tuple[
         List[MarkdownToken],
         str,
         Optional[str],
-        Optional[int],
+        int,
         Optional[RequeueLineInfo],
         bool,
     ]:
@@ -698,13 +715,12 @@ class ListBlockProcessor:
             parser_state, line_to_parse, start_index, extracted_whitespace
         )
 
-        was_paragraph_continuation = (
+        if was_paragraph_continuation := (
             parser_state.token_stack[-1].is_paragraph
             and leading_space_length >= requested_list_indent
             and allow_list_continue
             and not was_breakable_leaf_detected
-        )
-        if was_paragraph_continuation:
+        ):
             container_level_tokens: List[MarkdownToken] = []
             POGGER.debug(
                 "1>>line_to_parse>>$>>",
@@ -748,7 +764,7 @@ class ListBlockProcessor:
                 requeue_line_info,
             )
             if requeue_line_info:
-                return [], line_to_parse, None, None, requeue_line_info, False
+                return [], line_to_parse, None, -1, requeue_line_info, False
 
             (
                 line_to_parse,
@@ -783,15 +799,14 @@ class ListBlockProcessor:
     def __adjust_for_nested_list(
         parser_state: ParserState,
         container_level_tokens: List[MarkdownToken],
-        ind: Optional[int],
+        ind: int,
         line_to_parse: str,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         start_index: int,
         before_ws_length: int,
         leading_space_length: int,
         original_line: str,
-    ) -> Tuple[str, Optional[str], Optional[int]]:
-        assert ind is not None
+    ) -> Tuple[str, Optional[str], int]:
         POGGER.debug(
             "2>>__check_for_list_closures>>$>>",
             container_level_tokens,
@@ -820,7 +835,7 @@ class ListBlockProcessor:
                 ind = last_list_index
                 found_owning_list = cast(ListStackToken, parser_state.token_stack[ind])
         else:
-            assert parser_state.token_stack[ind].is_list
+            assert parser_state.token_stack[ind].is_list, "Token must be a list token."
             found_owning_list = cast(ListStackToken, parser_state.token_stack[ind])
 
         if found_owning_list:
@@ -858,13 +873,14 @@ class ListBlockProcessor:
     def __adjust_line_for_list_in_process_with_tab(
         original_line: str, remaining_indent: int, removed_whitespace: str
     ) -> str:
-        _, ex_ws = ParserHelper.extract_spaces(original_line, 0)
+        _, ex_ws = ParserHelper.extract_spaces_verified(original_line, 0)
         POGGER.debug("ex_ws($)", ex_ws)
-        assert ex_ws is not None
         if "\t" in ex_ws:
             detabified_ws = TabHelper.detabify_string(ex_ws, 0)
             POGGER.debug("detabified_ws($)", detabified_ws)
-            assert len(detabified_ws) >= remaining_indent
+            assert (
+                len(detabified_ws) >= remaining_indent
+            ), "Length must be greater than the indent."
 
             sub_ws = None
             i = -1
@@ -872,7 +888,7 @@ class ListBlockProcessor:
             # for i in range(len(ex_ws)):
             while do_loop:
                 i += 1
-                assert i < len(ex_ws)
+                assert i < len(ex_ws), "Index must be within the string."
                 sub_ws = ex_ws[: i + 1]
                 POGGER.debug("sub_ws($)", sub_ws)
                 detabified_ws = TabHelper.detabify_string(sub_ws, 0)
@@ -885,7 +901,7 @@ class ListBlockProcessor:
                 if len(detabified_ws) >= len(removed_whitespace):
                     do_loop = False
             if len(detabified_ws) <= len(removed_whitespace):
-                assert sub_ws is not None
+                assert sub_ws is not None, "Subws must have been defined."
                 removed_whitespace = sub_ws
         return removed_whitespace
 
@@ -894,7 +910,7 @@ class ListBlockProcessor:
     def __adjust_line_for_list_in_process(
         line_to_parse: str,
         start_index: int,
-        leading_space: Optional[str],
+        leading_space: str,
         leading_space_length: int,
         requested_list_indent: int,
         original_line: str,
@@ -915,13 +931,12 @@ class ListBlockProcessor:
             start_index = 0
             removed_whitespace = None
         else:
-            assert leading_space is not None
             POGGER.debug("requested_list_indent($)", requested_list_indent)
             POGGER.debug("leading_space($)", leading_space)
-            removed_whitespace = leading_space[:requested_list_indent]
             padded_spaces = ParserHelper.repeat_string(
                 ParserHelper.space_character, remaining_indent
             )
+            removed_whitespace = leading_space[:requested_list_indent]
             if "\t" in original_line:
                 removed_whitespace = (
                     ListBlockProcessor.__adjust_line_for_list_in_process_with_tab(
@@ -944,8 +959,8 @@ class ListBlockProcessor:
         parser_state: ParserState,
         line_to_parse: str,
         start_index: int,
-        extracted_whitespace: Optional[str],
-        ind: Optional[int],
+        extracted_whitespace: str,
+        ind: int,
         leading_space_length: int,
     ) -> Tuple[List[MarkdownToken], Optional[RequeueLineInfo]]:
         """
@@ -955,7 +970,6 @@ class ListBlockProcessor:
         POGGER.debug("ws(naa)>>line_to_parse>>$<<", line_to_parse)
         POGGER.debug("ws(naa)>>stack>>$", parser_state.token_stack)
         POGGER.debug("ws(naa)>>tokens>>$", parser_state.token_document)
-        assert ind is not None
 
         is_leaf_block_start = LeafBlockProcessor.is_paragraph_ending_leaf_block_start(
             parser_state, line_to_parse, start_index, extracted_whitespace

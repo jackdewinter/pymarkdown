@@ -383,7 +383,6 @@ class RuleMd043(RulePlugin):
         )
         # if self.__show_debug:
         #     print(str((end_heading_index, end_token_index, failure_token)))
-        found_match = False
         if not failure_token and end_heading_index < len(self.__compiled_headings):
             # if self.__show_debug:
             #     print(
@@ -405,6 +404,8 @@ class RuleMd043(RulePlugin):
                 )
                 # if self.__show_debug:
                 #     print("found_match=" + str(found_match))
+        else:
+            found_match = False
         if not found_match:
             search_index += 1
         return found_match, search_index

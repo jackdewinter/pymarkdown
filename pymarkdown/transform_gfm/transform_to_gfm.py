@@ -52,8 +52,10 @@ class TransformToGfm:
         )
 
         # This is the easiest way to finish covering the missing items.
-        assert transform_state.next_token is None
-        assert not transform_state.is_in_fenced_code_block
+        assert (
+            transform_state.next_token is None
+            and not transform_state.is_in_fenced_code_block
+        ), "Initial state must be set properly."
 
         for next_token in transform_state.actual_tokens:
             output_html = self.__token_handlers.apply_transformation(
@@ -116,7 +118,9 @@ class TransformToGfm:
         POGGER.debug("trailing_part>:$:<", trailing_part)
         if output_html.endswith("</ul>") or output_html.endswith("</ol>"):
             trailing_part.append(ParserHelper.newline_character)
-        assert transform_state.add_trailing_text is not None
+        assert (
+            transform_state.add_trailing_text is not None
+        ), "Trailing text must be defined by now."
         trailing_part.append(transform_state.add_trailing_text)
         combined_text = "".join(trailing_part)
         POGGER.debug("__apply_trailing_text>:$:<", combined_text)

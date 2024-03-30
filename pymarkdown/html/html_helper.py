@@ -162,11 +162,9 @@ class HtmlHelper:
         ):
             return -1
 
-        new_string_index, __ = ParserHelper.collect_while_one_of_characters(
+        new_string_index, __ = ParserHelper.collect_while_one_of_characters_verified(
             string_to_parse, string_index + 1, HtmlHelper.__attribute_other_characters
         )
-        assert new_string_index is not None
-
         if new_string_index < string_to_parse_length and string_to_parse[
             new_string_index
         ] in [
@@ -184,10 +182,9 @@ class HtmlHelper:
         Determine and extract an optional attribute value.
         """
 
-        non_whitespace_index, _ = ParserHelper.extract_spaces(
+        non_whitespace_index, _ = ParserHelper.extract_spaces_verified(
             line_to_parse, value_index
         )
-        assert non_whitespace_index is not None
         line_to_parse_size = len(line_to_parse)
         if (
             non_whitespace_index < line_to_parse_size
@@ -196,10 +193,9 @@ class HtmlHelper:
         ) or non_whitespace_index >= line_to_parse_size:
             return non_whitespace_index
 
-        non_whitespace_index, _ = ParserHelper.extract_spaces(
+        non_whitespace_index, _ = ParserHelper.extract_spaces_verified(
             line_to_parse, non_whitespace_index + 1
         )
-        assert non_whitespace_index is not None
         if non_whitespace_index < line_to_parse_size:
             first_character_of_value = line_to_parse[non_whitespace_index]
             extracted_text: Optional[str] = None
@@ -207,12 +203,11 @@ class HtmlHelper:
                 (
                     non_whitespace_index,
                     _,
-                ) = ParserHelper.collect_until_character(
+                ) = ParserHelper.collect_until_character_verified(
                     line_to_parse,
                     non_whitespace_index + 1,
                     HtmlHelper.__html_attribute_value_double,
                 )
-                assert non_whitespace_index is not None
                 if non_whitespace_index == line_to_parse_size:
                     return -1
                 non_whitespace_index += 1
@@ -220,12 +215,11 @@ class HtmlHelper:
                 (
                     non_whitespace_index,
                     _,
-                ) = ParserHelper.collect_until_character(
+                ) = ParserHelper.collect_until_character_verified(
                     line_to_parse,
                     non_whitespace_index + 1,
                     HtmlHelper.__html_attribute_value_single,
                 )
-                assert non_whitespace_index is not None
                 if non_whitespace_index == line_to_parse_size:
                     return -1
                 non_whitespace_index += 1
@@ -233,13 +227,11 @@ class HtmlHelper:
                 (
                     non_whitespace_index,
                     extracted_text,
-                ) = ParserHelper.collect_until_one_of_characters(
+                ) = ParserHelper.collect_until_one_of_characters_verified(
                     line_to_parse,
                     non_whitespace_index,
                     HtmlHelper.__html_tag_attribute_value_terminators,
                 )
-                assert non_whitespace_index is not None
-
                 if not extracted_text:
                     non_whitespace_index = -1
         else:
@@ -254,12 +246,10 @@ class HtmlHelper:
         Determine if the supplied information is a completed end of tag specification.
         """
 
-        is_valid = HtmlHelper.is_valid_tag_name(tag_name)
-        non_whitespace_index, _ = ParserHelper.extract_spaces(
+        non_whitespace_index, _ = ParserHelper.extract_spaces_verified(
             line_to_parse, next_char_index
         )
-        assert non_whitespace_index is not None
-        is_valid = is_valid and (
+        is_valid = HtmlHelper.is_valid_tag_name(tag_name) and (
             non_whitespace_index < len(line_to_parse)
             and line_to_parse[non_whitespace_index] == HtmlHelper.__html_tag_end
         )
@@ -285,10 +275,9 @@ class HtmlHelper:
             tag_name
         ) and not HtmlHelper.__is_valid_block_1_tag_name(tag_name)
 
-        non_whitespace_index, extracted_whitespace = ParserHelper.extract_spaces(
-            line_to_parse, next_char_index
+        non_whitespace_index, extracted_whitespace = (
+            ParserHelper.extract_spaces_verified(line_to_parse, next_char_index)
         )
-        assert non_whitespace_index is not None
         are_attributes_valid: bool = True
         line_to_parse_size: int = len(line_to_parse)
         while (
@@ -302,22 +291,21 @@ class HtmlHelper:
             non_whitespace_index = HtmlHelper.extract_html_attribute_name(
                 line_to_parse, non_whitespace_index
             )
-            assert non_whitespace_index is not None
             are_attributes_valid = non_whitespace_index != -1
             if not are_attributes_valid:
                 break
             non_whitespace_index = HtmlHelper.extract_optional_attribute_value(
                 line_to_parse, non_whitespace_index
             )
-            assert non_whitespace_index is not None
             are_attributes_valid = non_whitespace_index != -1
             if not are_attributes_valid:
                 break
             (
                 non_whitespace_index,
                 extracted_whitespace,
-            ) = ParserHelper.extract_spaces(line_to_parse, non_whitespace_index)
-            assert non_whitespace_index is not None
+            ) = ParserHelper.extract_spaces_verified(
+                line_to_parse, non_whitespace_index
+            )
 
         if non_whitespace_index < line_to_parse_size:
             if line_to_parse[non_whitespace_index] == HtmlHelper.__html_tag_start:
@@ -330,17 +318,17 @@ class HtmlHelper:
         else:
             is_end_of_tag_present = False
 
-        non_whitespace_index, _ = ParserHelper.extract_spaces(
+        non_whitespace_indexx, _ = ParserHelper.extract_spaces(
             line_to_parse, non_whitespace_index
         )
         return (
             (
                 is_tag_valid
                 and is_end_of_tag_present
-                and non_whitespace_index == line_to_parse_size
+                and non_whitespace_indexx == line_to_parse_size
                 and are_attributes_valid
             ),
-            non_whitespace_index,
+            non_whitespace_indexx,
         )
 
     @staticmethod
@@ -449,7 +437,9 @@ class HtmlHelper:
                     adjusted_remaining_html_tag, line_to_parse, character_index
                 )
                 if is_complete:
-                    assert complete_parse_index is not None
+                    assert (
+                        complete_parse_index is not None
+                    ), "If is_complete is True, this must be set."
                     html_block_type, character_index = (
                         HtmlHelper.html_block_7,
                         complete_parse_index,
@@ -483,11 +473,9 @@ class HtmlHelper:
             (
                 new_character_index,
                 new_remaining_html_tag,
-            ) = ParserHelper.collect_until_one_of_characters(
+            ) = ParserHelper.collect_until_one_of_characters_verified(
                 line_to_parse, character_index, HtmlHelper.__html_tag_name_end
             )
-            assert new_character_index is not None
-            assert new_remaining_html_tag is not None
             remaining_html_tag = new_remaining_html_tag
             character_index = new_character_index
             remaining_html_tag = remaining_html_tag.lower()
@@ -519,7 +507,7 @@ class HtmlHelper:
     def is_html_block(
         line_to_parse: str,
         start_index: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         token_stack: List[StackToken],
         parse_properties: ParseBlockPassProperties,
         skip_whitespace_check: bool = False,
@@ -528,7 +516,6 @@ class HtmlHelper:
         Determine if the current sequence of characters would start a html block element.
         """
 
-        assert extracted_whitespace is not None
         if (
             skip_whitespace_check
             or TabHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
@@ -537,15 +524,10 @@ class HtmlHelper:
             start_index,
             HtmlHelper.__html_block_start_character,
         ):
-            (
-                html_block_type,
-                remaining_html_tag,
-            ) = HtmlHelper.__determine_html_block_type(
+            return HtmlHelper.__determine_html_block_type(
                 token_stack, line_to_parse, start_index, parse_properties
             )
-        else:
-            html_block_type, remaining_html_tag = None, None
-        return html_block_type, remaining_html_tag
+        return None, None
 
     # pylint: enable=too-many-arguments
 
@@ -557,6 +539,9 @@ class HtmlHelper:
         orignal_line_end_prefix_index: int,
     ) -> Tuple[Optional[str], Optional[int]]:
         stack_token_index = len(parser_state.token_stack) - 1
+        # assert stack_token_index > 0, "Must be a valid stack token."
+        # Can omit check as splits only happen with containers, which guarantees one token.
+
         alternate_list_leading_space = None
         removed_chars_at_start: Optional[int] = None
         # while (
@@ -567,20 +552,25 @@ class HtmlHelper:
         #     and not parser_state.token_stack[stack_token_index].is_list
         # ):
         #     stack_token_index -= 1
-        assert stack_token_index > 0
         if parser_state.token_stack[stack_token_index].is_list:
             orignal_line_prefix = original_line[:orignal_line_end_prefix_index]
             stop_index = -1
             if len(orignal_line_prefix) == 1:
-                assert orignal_line_prefix == ParserHelper.tab_character
+                assert (
+                    orignal_line_prefix == ParserHelper.tab_character
+                ), "Prefix must be a single tab character."
                 sdddd = TabHelper.detabify_string(orignal_line_prefix)
-                assert len(sdddd) > position_marker.index_indent
+                assert (
+                    len(sdddd) > position_marker.index_indent
+                ), "String length must be larger than the indent."
                 stop_index = 1
             else:
                 end_index = 1
                 keep_going = True
                 while keep_going:
-                    assert end_index < len(orignal_line_prefix) + 1
+                    assert (
+                        end_index < len(orignal_line_prefix) + 1
+                    ), "End index not in range."
                     sample_slice = TabHelper.detabify_string(
                         orignal_line_prefix[:end_index]
                     )
@@ -588,8 +578,8 @@ class HtmlHelper:
                         stop_index = end_index
                         keep_going = False
                     end_index += 1
+                assert stop_index != -1, "Valid slice not found."
 
-            assert stop_index != -1
             original_prefix = original_line[: stop_index - 1]
             if stack_token_index <= 1:
                 alternate_list_leading_space = original_prefix
@@ -603,7 +593,7 @@ class HtmlHelper:
         position_marker: PositionMarker,
         new_tokens: List[MarkdownToken],
         original_line: str,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         block_quote_data: BlockQuoteData,
         html_block_type: str,
         grab_bag: ContainerGrabBag,
@@ -660,7 +650,6 @@ class HtmlHelper:
         POGGER.debug("split_tab=$", split_tab)
         did_adjust_block_quote = split_tab != old_split_tab or did_adjust_block_quote
 
-        assert extracted_whitespace is not None
         new_token = HtmlBlockMarkdownToken(position_marker, extracted_whitespace)
         new_tokens.append(new_token)
         parser_state.token_stack.append(HtmlBlockStackToken(html_block_type, new_token))
@@ -673,7 +662,7 @@ class HtmlHelper:
     def parse_html_block(
         parser_state: ParserState,
         position_marker: PositionMarker,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         block_quote_data: BlockQuoteData,
         original_line: str,
         grab_bag: ContainerGrabBag,
@@ -729,7 +718,9 @@ class HtmlHelper:
         via an empty line or BLANK.
         """
 
-        assert parser_state.token_stack[-1].is_html_block
+        assert parser_state.token_stack[
+            -1
+        ].is_html_block, "Trailing token on stack must be HTML."
         html_token = cast(HtmlBlockStackToken, parser_state.token_stack[-1])
         if html_token.html_block_type in [
             HtmlHelper.html_block_6,
@@ -789,51 +780,46 @@ class HtmlHelper:
             and parser_state.token_stack[stack_token_index].is_block_quote
         ):
             POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
-            assert tabified_whitespace is not None
             tabified_whitespace = ParserHelper.create_replacement_markers(
                 tabified_whitespace, extracted_whitespace
             )
             POGGER.debug("tabified_whitespace>:$:<", tabified_whitespace)
             if not did_adjust_block_quote:
                 TabHelper.adjust_block_quote_indent_for_tab(parser_state)
-        assert tabified_whitespace is not None
         return tabified_whitespace, tabified_text
 
     @staticmethod
     def __handle_disallow(parser_state: ParserState, token_text: str) -> str:
         cleaned_up_text_parts: List[str] = []
-        new_index, new_index_text = ParserHelper.collect_until_character(
+        new_index, new_index_text = ParserHelper.collect_until_character_verified(
             token_text, 0, HtmlHelper.__html_block_start_character
         )
-        assert new_index is not None
         x_index: int = new_index
-        assert new_index_text is not None
         while x_index < len(token_text):
-            assert new_index_text is not None
             cleaned_up_text_parts.append(new_index_text)
-            assert new_index is not None
             (
                 after_text_index,
                 collected_text,
-            ) = ParserHelper.collect_until_one_of_characters(
+            ) = ParserHelper.collect_until_one_of_characters_verified(
                 token_text, new_index + 1, " /<>"
             )
-            assert after_text_index is not None
-            assert collected_text is not None
             if (
                 after_text_index + 1 < len(token_text)
                 and token_text[after_text_index] == "<"
             ):
                 cleaned_up_text_parts.append(f"<{collected_text}")
-                assert after_text_index is not None
-                new_index, new_index_text = ParserHelper.collect_until_character(
-                    token_text,
-                    after_text_index,
-                    HtmlHelper.__html_block_start_character,
+                new_index, new_index_text = (
+                    ParserHelper.collect_until_character_verified(
+                        token_text,
+                        after_text_index,
+                        HtmlHelper.__html_block_start_character,
+                    )
                 )
                 continue
-            assert parser_state.parse_properties is not None
-            assert parser_state.parse_properties.disallow_raw_html is not None
+            assert (
+                parser_state.parse_properties is not None
+                and parser_state.parse_properties.disallow_raw_html is not None
+            ), "Disallow raw html extension must be defined by this point."
             tag_start = (
                 ParserHelper.create_replacement_markers(
                     HtmlHelper.__html_block_start_character, "&lt;"
@@ -844,16 +830,12 @@ class HtmlHelper:
                 else HtmlHelper.__html_block_start_character
             )
             cleaned_up_text_parts.append(tag_start + collected_text)
-            assert after_text_index is not None
-            new_index, new_index_text = ParserHelper.collect_until_character(
+            new_index, new_index_text = ParserHelper.collect_until_character_verified(
                 token_text,
                 after_text_index,
                 HtmlHelper.__html_block_start_character,
             )
-            assert new_index is not None
             x_index = new_index
-            assert new_index_text is not None
-        assert new_index_text is not None
         cleaned_up_text_parts.append(new_index_text)
         return "".join(cleaned_up_text_parts)
 
@@ -901,7 +883,9 @@ class HtmlHelper:
         ]
 
         is_block_terminated, adj_line = False, line_to_parse[start_index:]
-        assert parser_state.token_stack[-1].is_html_block
+        assert parser_state.token_stack[
+            -1
+        ].is_html_block, "Trailing token must be HTML token."
         html_token = cast(HtmlBlockStackToken, parser_state.token_stack[-1])
         if html_token.html_block_type == HtmlHelper.html_block_1:
             for next_end_tag in HtmlHelper.__html_block_1_end_tags:
@@ -921,8 +905,8 @@ class HtmlHelper:
                 parser_state,
                 only_these_blocks=[HtmlBlockStackToken],
             )
-            POGGER.debug("terminated_block_tokens=$", terminated_block_tokens)
-            assert terminated_block_tokens
+            # POGGER.debug("terminated_block_tokens=$", terminated_block_tokens)
+            assert terminated_block_tokens, "At least one token must be produced."
             new_tokens.extend(terminated_block_tokens)
         return new_tokens
 

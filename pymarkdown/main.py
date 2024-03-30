@@ -77,7 +77,9 @@ class PyMarkdownLint:
     @staticmethod
     def __get_semantic_version() -> str:
         file_path = __file__
-        assert os.path.isabs(file_path)
+        assert os.path.isabs(
+            file_path
+        ), "This should hold on all operating systems.  This is to be sure of that assumption."
         file_path = file_path.replace(os.sep, "/")
         last_index = file_path.rindex("/")
         file_path = f"{file_path[: last_index + 1]}version.py"
@@ -356,7 +358,9 @@ class PyMarkdownLint:
             self.__initialize_parser()
 
             POGGER.info("Processing files with parser.")
-            assert self.__tokenizer
+            assert (
+                self.__tokenizer is not None
+            ), "When scanning, the tokenizer should have already been initialized."
             fsh = FileScanHelper(
                 self.__tokenizer,
                 self.__plugins,

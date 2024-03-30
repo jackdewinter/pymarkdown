@@ -139,7 +139,6 @@ class RuleMd027(RulePlugin):
         context: PluginScanContext,
         alternate_token: MarkdownToken,
     ) -> bool:
-        keep_going = True
         if alternate_token.is_paragraph:
             para_token = cast(ParagraphMarkdownToken, alternate_token)
             extracted_whitespace = "\n" * ParserHelper.count_newlines_in_text(
@@ -152,16 +151,15 @@ class RuleMd027(RulePlugin):
                 "extracted_whitespace",
                 extracted_whitespace,
             )
-            keep_going = False
-        else:
-            assert (
-                alternate_token.is_setext_heading_end
-                or alternate_token.is_fenced_code_block_end
-            )
-            self.register_fix_token_request(
-                context, alternate_token, "next_token", "extracted_whitespace", ""
-            )
-        return keep_going
+            return False
+        assert (
+            alternate_token.is_setext_heading_end
+            or alternate_token.is_fenced_code_block_end
+        )
+        self.register_fix_token_request(
+            context, alternate_token, "next_token", "extracted_whitespace", ""
+        )
+        return True
 
     def __report_issue_setext_text(
         self, context: PluginScanContext, token: MarkdownToken
@@ -501,15 +499,12 @@ class RuleMd027(RulePlugin):
         #     print(f"container_tokens={ParserHelper.make_value_visible(self.__container_tokens)};")
         _ = num_container_tokens
         if found_block_quote_token := self.__get_last_block_quote():
-            is_start_properly_scoped = False
-            if is_new_list_item:
-                is_start_properly_scoped = (
-                    found_block_quote_token == self.__container_tokens[-2]
-                )
-            else:
-                is_start_properly_scoped = (
-                    found_block_quote_token == self.__container_tokens[-1]
-                )
+            # is_start_properly_scoped = False
+            is_start_properly_scoped = (
+                (found_block_quote_token == self.__container_tokens[-2])
+                if is_new_list_item
+                else (found_block_quote_token == self.__container_tokens[-1])
+            )
             # if self.__debug_on:
             #     print(
             #         f"is_start_properly_scoped={is_start_properly_scoped};"
@@ -606,11 +601,12 @@ class RuleMd027(RulePlugin):
                 for registered_token, adj in registration_map.items():
                     start, stop = self.__list_tracker.get_start_stop(registered_token)
                     for next_index in range(start, stop):
-                        split_leading_spaces[next_index] = (
-                            split_leading_spaces[next_index][:-adj]
-                            if adj > 0
-                            else split_leading_spaces[next_index] + (" " * -adj)
-                        )
+                        assert adj > 0
+                        split_leading_spaces[next_index] = split_leading_spaces[
+                            next_index
+                        ][:-adj]
+                        # else:
+                        #     split_leading_spaces[next_index] = split_leading_spaces[next_index] + (" " * -adj)
                 rebuilt_leading_spaces = "\n".join(split_leading_spaces)
                 if rebuilt_leading_spaces != list_token.leading_spaces:
                     self.register_fix_token_request(
@@ -914,10 +910,9 @@ class RuleMd027(RulePlugin):
             recombine_list.extend(
                 (code_span_token.span_text[start_index:next_index], "\n")
             )
-            after_space_index, _ = ParserHelper.collect_while_spaces(
+            after_space_index, _ = ParserHelper.collect_while_spaces_verified(
                 code_span_token.span_text, next_index + 3
             )
-            assert after_space_index is not None
             is_there = ParserHelper.is_character_at_index(
                 code_span_token.span_text, after_space_index, "\x07"
             )
@@ -938,10 +933,9 @@ class RuleMd027(RulePlugin):
         recombine_list = []
         for next_tag_line in raw_html_token.raw_tag.split("\n"):
             if next_tag_line.startswith("\a"):
-                after_space_index, _ = ParserHelper.collect_while_spaces(
+                after_space_index, _ = ParserHelper.collect_while_spaces_verified(
                     next_tag_line, 1
                 )
-                assert after_space_index is not None
                 remaining_line = next_tag_line[after_space_index:]
                 assert remaining_line.startswith("\a\x03\a")
                 remaining_line = remaining_line[3:]

@@ -70,22 +70,23 @@ class RuleMd003(RulePlugin):
             default_value=RuleMd003.__consistent_style,
             valid_value_fn=self.__validate_configuration_style,
         )
-        if self.__style_type == RuleMd003.__consistent_style:
-            self.__allow_consistent_setext_update = (
-                self.plugin_configuration.get_boolean_property(
-                    "allow-setext-update", default_value=False
-                )
+        self.__allow_consistent_setext_update = (
+            self.plugin_configuration.get_boolean_property(
+                "allow-setext-update", default_value=False
             )
-        else:
-            self.__allow_consistent_setext_update = False
+            if self.__style_type == RuleMd003.__consistent_style
+            else False
+        )
 
     def starting_new_file(self) -> None:
         """
         Event that the a new file to be scanned is starting.
         """
-        self.__actual_style_type = ""
-        if self.__style_type != RuleMd003.__consistent_style:
-            self.__actual_style_type = self.__style_type
+        self.__actual_style_type = (
+            self.__style_type
+            if self.__style_type != RuleMd003.__consistent_style
+            else ""
+        )
 
     def __handle_simple_styles(
         self, heading_style_type: str, is_heading_level_1_or_2: bool

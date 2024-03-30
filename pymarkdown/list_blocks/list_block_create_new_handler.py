@@ -34,6 +34,7 @@ from pymarkdown.tokens.unordered_list_start_markdown_token import (
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
+# pylint: disable=too-many-lines
 # pylint: disable=too-few-public-methods
 
 
@@ -48,7 +49,7 @@ class ListBlockCreateNewHandler:
         parser_state: ParserState,
         position_marker: PositionMarker,
         indent_level: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         ws_before_marker: int,
         ws_after_marker: int,
         index: int,
@@ -65,6 +66,7 @@ class ListBlockCreateNewHandler:
         """
         Create a new list at the current location.
         """
+        assert alt_adj_ws is not None
         adj_ws = ListBlockCreateNewHandler.__calculate_create_adj_ws(
             alt_adj_ws, position_marker, parser_state
         )
@@ -73,6 +75,7 @@ class ListBlockCreateNewHandler:
         )
         if found_block_quote_before_list and adj_ws is None and alt_adj_ws is not None:
             adj_ws = alt_adj_ws
+
         (
             whitespace_to_add,
             alt_adj_ws,
@@ -86,6 +89,7 @@ class ListBlockCreateNewHandler:
             extracted_whitespace,
             adj_ws,
         )
+
         tabbed_whitespace_to_add = None
         tabbed_adjust = -1
         if "\t" in original_line:
@@ -96,21 +100,32 @@ class ListBlockCreateNewHandler:
                 position_marker, original_line, is_ulist, whitespace_to_add, index
             )
 
-        other_create_token_fn = (
-            ListBlockCreateNewHandler.__handle_list_block_unordered
-            if is_ulist
-            else ListBlockCreateNewHandler.__handle_list_block_ordered
-        )
-        new_token, new_stack = other_create_token_fn(
-            position_marker,
-            indent_level,
-            tabbed_adjust,
-            whitespace_to_add,
-            tabbed_whitespace_to_add,
-            ws_before_marker,
-            ws_after_marker,
-            index,
-        )
+        if is_ulist:
+            new_token, new_stack = (
+                ListBlockCreateNewHandler.__handle_list_block_unordered(
+                    position_marker,
+                    indent_level,
+                    tabbed_adjust,
+                    whitespace_to_add,
+                    tabbed_whitespace_to_add,
+                    ws_before_marker,
+                    ws_after_marker,
+                    index,
+                )
+            )
+        else:
+            new_token, new_stack = (
+                ListBlockCreateNewHandler.__handle_list_block_ordered(
+                    position_marker,
+                    indent_level,
+                    tabbed_adjust,
+                    whitespace_to_add,
+                    tabbed_whitespace_to_add,
+                    ws_before_marker,
+                    ws_after_marker,
+                    index,
+                )
+            )
         (
             new_container_level_tokens,
             adjusted_text_to_parse,
@@ -129,7 +144,6 @@ class ListBlockCreateNewHandler:
             alt_adj_ws,
             container_depth,
         )
-        assert new_container_level_tokens is not None
         container_level_tokens.extend(new_container_level_tokens)
         return True, adjusted_text_to_parse, requeue_line_info
 
@@ -137,11 +151,11 @@ class ListBlockCreateNewHandler:
 
     @staticmethod
     def __calculate_create_adj_ws(
-        adj_ws: Optional[str],
+        adj_ws: str,
         position_marker: PositionMarker,
         parser_state: ParserState,
     ) -> Optional[str]:
-        create_adj_ws = adj_ws
+        create_adj_ws: Optional[str] = adj_ws
         POGGER.debug("adj_ws=>:$:<", create_adj_ws)
         if position_marker.index_number:
             POGGER.debug("adjusting for nested")
@@ -180,20 +194,20 @@ class ListBlockCreateNewHandler:
     @staticmethod
     def __create_new_list_handle_whitespace(
         forced_container_whitespace: Optional[str],
-        alt_adj_ws: Optional[str],
+        alt_adj_ws: str,
         ws_before_marker: int,
         indent_level: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         adj_ws: Optional[str],
-    ) -> Tuple[Optional[str], Optional[str], int, int]:
-        if forced_container_whitespace:
-            whitespace_to_add: Optional[str] = forced_container_whitespace
-            assert whitespace_to_add is not None
-            if alt_adj_ws:
-                whitespace_to_add += alt_adj_ws
+    ) -> Tuple[str, str, int, int]:
+        if forced_container_whitespace is not None:
+            whitespace_to_add = (
+                forced_container_whitespace + alt_adj_ws
+                if alt_adj_ws
+                else forced_container_whitespace
+            )
             ws_before_marker += len(forced_container_whitespace)
             indent_level += len(forced_container_whitespace)
-            assert alt_adj_ws is not None
             alt_adj_ws += forced_container_whitespace
         else:
             whitespace_to_add = extracted_whitespace if adj_ws is None else adj_ws
@@ -208,15 +222,12 @@ class ListBlockCreateNewHandler:
         whitespace_to_add: Optional[str],
         index: int,
     ) -> Tuple[Optional[str], int]:
-        tabbed_whitespace_to_add = None
         tabbed_adjust = -1
         (
             tabbed_extract_spaces_index,
             tabbed_extract_spaces,
-        ) = ParserHelper.extract_spaces(original_line, 0)
+        ) = ParserHelper.extract_spaces_verified(original_line, 0)
         POGGER.debug("tabbed_extract_spaces_index>:$:<", tabbed_extract_spaces_index)
-        assert tabbed_extract_spaces_index is not None
-        assert tabbed_extract_spaces is not None
         POGGER.debug("tabbed_extract_spaces>:$:<", tabbed_extract_spaces)
         POGGER.debug("text_to_parse>:$:<", position_marker.text_to_parse)
         POGGER.debug("index_number>:$:<", position_marker.index_number)
@@ -226,9 +237,12 @@ class ListBlockCreateNewHandler:
         POGGER.debug(
             "detabbed_tabbed_extract_spaces>:$:<", detabbed_tabbed_extract_spaces
         )
-        assert detabbed_tabbed_extract_spaces == whitespace_to_add
-        if "\t" in tabbed_extract_spaces:
-            tabbed_whitespace_to_add = tabbed_extract_spaces
+        assert (
+            detabbed_tabbed_extract_spaces == whitespace_to_add
+        ), "two whitespaces must be equal"
+        tabbed_whitespace_to_add = (
+            tabbed_extract_spaces if "\t" in tabbed_extract_spaces else None
+        )
 
         POGGER.debug("is_ulist>:$:<", is_ulist)
 
@@ -246,7 +260,9 @@ class ListBlockCreateNewHandler:
             tabbed_extract_spaces_index : tabbed_extract_spaces_index + parse_index
         ]
         POGGER.debug("tabbed_marker>:$:<", tabbed_marker)
-        assert untabbed_marker == tabbed_marker
+        assert (
+            untabbed_marker == tabbed_marker
+        ), "tabbed and untabbed strings must be equal"
 
         tabbed_extract_spaces_index += len(tabbed_marker)
         POGGER.debug(
@@ -285,9 +301,9 @@ class ListBlockCreateNewHandler:
         current_container_blocks: List[StackToken],
         position_marker: PositionMarker,
         adj_ws: Optional[str],
-        alt_adj_ws: Optional[str],
+        alt_adj_ws: str,
         container_depth: int,
-    ) -> Tuple[Optional[List[MarkdownToken]], Optional[str], Optional[RequeueLineInfo]]:
+    ) -> Tuple[List[MarkdownToken], Optional[str], Optional[RequeueLineInfo]]:
         """
         Handle the processing of the last part of the list.
         """
@@ -324,7 +340,9 @@ class ListBlockCreateNewHandler:
                 parser_state, was_forced=True
             )
 
-        assert container_level_tokens is not None
+        assert (
+            container_level_tokens is not None
+        ), "Posting some token must be the result of one of these actions."
         POGGER.debug("__post_list>>before>>$", container_level_tokens)
         if not did_find or not emit_li:
             POGGER.debug("__post_list>>adding>>$", new_token)
@@ -332,7 +350,7 @@ class ListBlockCreateNewHandler:
             container_level_tokens.append(new_token)
         else:
             POGGER.debug("__post_list>>new list item>>")
-            assert emit_li
+            assert emit_li, "if here, emitting a new list item, not a start"
             ListBlockCreateNewHandler.__post_list_use_new_list_item(
                 parser_state,
                 new_token,
@@ -362,7 +380,7 @@ class ListBlockCreateNewHandler:
         indent_level: int,
         position_marker: PositionMarker,
         adj_ws: Optional[str],
-        alt_adj_ws: Optional[str],
+        alt_adj_ws: str,
     ) -> None:
         POGGER.debug("instead of-->$", new_token)
 
@@ -388,7 +406,7 @@ class ListBlockCreateNewHandler:
             container_level_tokens.extend(new_tokens)
 
         top_stack_item = parser_state.token_stack[-1]
-        assert top_stack_item.is_list
+        assert top_stack_item.is_list, "top stack item must be a list."
         top_stack_list_token = cast(ListStackToken, top_stack_item)
         POGGER.debug("new_token>$", new_token)
         POGGER.debug("top_stack_item>$", top_stack_list_token)
@@ -401,11 +419,7 @@ class ListBlockCreateNewHandler:
 
         POGGER.debug("adj_ws-->:$:<", adj_ws)
         POGGER.debug("alt_adj_ws-->:$:<", alt_adj_ws)
-        exws = (
-            alt_adj_ws
-            if adj_ws is None and alt_adj_ws is not None
-            else new_token.extracted_whitespace
-        )
+        exws = alt_adj_ws if adj_ws is None else new_token.extracted_whitespace
 
         # Replace the "other" list start token with a new list item token.
         # The overwritting of the value of new_token is specifically called for.
@@ -604,9 +618,11 @@ class ListBlockCreateNewHandler:
                 ListStartMarkdownToken,
                 last_list_stack_token.matching_markdown_token,
             )
-            old_indent = 2
-            if last_list_markdown_token.is_ordered_list_start:
-                old_indent += len(last_list_markdown_token.list_start_content)
+            old_indent = (
+                len(last_list_markdown_token.list_start_content)
+                if last_list_markdown_token.is_ordered_list_start
+                else 2
+            )
             POGGER.debug(
                 "new_token.column_number($) <= old_indent($)",
                 new_token.column_number,
@@ -635,8 +651,7 @@ class ListBlockCreateNewHandler:
         (
             did_find,
             last_list_index,
-        ) = LeafBlockProcessorParagraph.check_for_list_in_process(parser_state)
-        assert last_list_index > 0
+        ) = LeafBlockProcessorParagraph.verify_list_in_process(parser_state)
         last_list_index_token = cast(
             ListStackToken, parser_state.token_stack[last_list_index]
         )
@@ -646,7 +661,6 @@ class ListBlockCreateNewHandler:
             did_find,
             last_list_index,
         )
-        assert did_find
         POGGER.debug(
             "ARE-EQUAL>>stack>>$>>new>>$",
             last_list_index_token,
@@ -690,7 +704,9 @@ class ListBlockCreateNewHandler:
         POGGER.debug("parent_list_indent>>$", parent_list_indent)
         new_token_column_number = new_token.column_number
         POGGER.debug("new_token_column_number>>$", new_token_column_number)
-        assert parser_state.original_line_to_parse is not None
+        assert (
+            parser_state.original_line_to_parse is not None
+        ), "Original line must have been defined by now."
         intermediate_line_content = parser_state.original_line_to_parse[
             parent_list_indent : new_token_column_number - 1
         ]
@@ -703,7 +719,9 @@ class ListBlockCreateNewHandler:
             )
             if close_tokens:
                 container_level_tokens.extend(close_tokens)
-                assert not container_depth
+                assert (
+                    not container_depth
+                ), "If here, we must have a non-zero container depth."
                 list_token = cast(
                     ListStartMarkdownToken,
                     last_list_index_token.matching_markdown_token,
@@ -748,7 +766,7 @@ class ListBlockCreateNewHandler:
             parser_state.token_document[document_token_index].is_any_list_token
         ):
             document_token_index -= 1
-        assert document_token_index >= 0
+        assert document_token_index >= 0, "List token must be found."
         document_list_token = cast(
             ListStartMarkdownToken, parser_state.token_document[document_token_index]
         )
@@ -801,15 +819,17 @@ class ListBlockCreateNewHandler:
         ## AND some combination of the IF statement, then switch.
         ## i.e. a + at col 1 followed by a - at column 1 is a new list
         ## i.e. a + at col 1 followed by a - at column 3 is a new sublist
-        last_list_indent = last_list_stack_token.indent_level
-        if last_list_stack_token.last_new_list_token:
-            last_list_indent = last_list_stack_token.last_new_list_token.indent_level
-
+        last_list_indent = (
+            last_list_stack_token.last_new_list_token.indent_level
+            if last_list_stack_token.last_new_list_token
+            else last_list_stack_token.indent_level
+        )
         POGGER.debug(
             "position_marker.index_number>>$ >= xx>>$",
             position_marker,
             last_list_indent,
         )
+
         is_indented_enough = position_marker.index_number >= last_list_indent
         POGGER.debug("is_indented_enough>>$", is_indented_enough)
         if (
@@ -870,15 +890,16 @@ class ListBlockCreateNewHandler:
             old_start_index,
         )
         POGGER.debug("last_list_stack_token>>$", last_list_stack_token)
-        assert last_list_stack_token is not None
         last_list_markdown_token = cast(
             ListStartMarkdownToken, last_list_stack_token.matching_markdown_token
         )
         POGGER.debug("last_list_markdown_token>>$", last_list_markdown_token)
 
-        last_list_indent = last_list_markdown_token.indent_level
-        if last_list_stack_token.last_new_list_token:
-            last_list_indent = last_list_stack_token.last_new_list_token.indent_level
+        last_list_indent = (
+            last_list_stack_token.last_new_list_token.indent_level
+            if last_list_stack_token.last_new_list_token
+            else last_list_markdown_token.indent_level
+        )
 
         POGGER.debug(
             "current_start_index>>$ >= last_list_indent>>$",
@@ -912,7 +933,7 @@ class ListBlockCreateNewHandler:
         position_marker: PositionMarker,
         indent_level: int,
         tabbed_adjust: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         tabbed_whitespace_to_add: Optional[str],
         ws_before_marker: int,
         ws_after_marker: int,
@@ -922,7 +943,6 @@ class ListBlockCreateNewHandler:
         # to be called using the same pattern.
         _ = index
 
-        assert extracted_whitespace is not None
         new_token = UnorderedListStartMarkdownToken(
             position_marker.text_to_parse[position_marker.index_number],
             indent_level,
@@ -951,13 +971,12 @@ class ListBlockCreateNewHandler:
         position_marker: PositionMarker,
         indent_level: int,
         tabbed_adjust: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         tabbed_whitespace_to_add: Optional[str],
         ws_before_marker: int,
         ws_after_marker: int,
         index: int,
     ) -> Tuple[ListStartMarkdownToken, ListStackToken]:
-        assert extracted_whitespace is not None
         new_token = OrderedListStartMarkdownToken(
             position_marker.text_to_parse[index],
             position_marker.text_to_parse[position_marker.index_number : index],

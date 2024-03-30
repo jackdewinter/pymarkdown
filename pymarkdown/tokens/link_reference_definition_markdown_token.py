@@ -76,15 +76,11 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
                 link_debug.end_whitespace,
             )
         else:
-            # TODO do this better.
-            (
-                self.__link_name_debug,
-                self.__link_destination_whitespace,
-                self.__link_destination_raw,
-                self.__link_title_whitespace,
-                self.__link_title_raw,
-                self.__end_whitespace,
-            ) = ("", "", "", "", "", "")
+            self.__link_name_debug = self.__link_destination_whitespace = (
+                self.__link_destination_raw
+            ) = self.__link_title_whitespace = self.__link_title_raw = (
+                self.__end_whitespace
+            ) = ""
 
         extra_data = self.__validate_proper_fields_are_valid(extracted_whitespace)
         LeafMarkdownToken.__init__(
@@ -106,14 +102,16 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
     # pylint: enable=protected-access
 
     def __validate_proper_fields_are_valid(self, extracted_whitespace: str) -> str:
-        assert self.__end_whitespace is not None
-        assert self.__link_title_raw is not None
-        assert self.__link_title is not None
-        assert self.__link_title_whitespace is not None
-        assert self.__link_destination_raw is not None
-        assert self.__link_destination is not None
-        assert self.__link_destination_whitespace is not None
-        assert self.__link_name_debug is not None
+        assert self.__end_whitespace is not None, "This field should be defined."
+        assert self.__link_title_raw is not None, "This field should be defined."
+        assert self.__link_title is not None, "This field should be defined."
+        assert self.__link_title_whitespace is not None, "This field should be defined."
+        assert self.__link_destination_raw is not None, "This field should be defined."
+        assert self.__link_destination is not None, "This field should be defined."
+        assert (
+            self.__link_destination_whitespace is not None
+        ), "This field should be defined."
+        assert self.__link_name_debug is not None, "This field should be defined."
         return MarkdownToken.extra_data_separator.join(
             [
                 str(self.did_add_definition),
@@ -256,11 +254,17 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
         link_destination_text = (
             current_lrd_token.link_destination_raw or current_lrd_token.link_destination
         )
-        assert current_lrd_token.link_destination_whitespace is not None
-        assert link_destination_text is not None
-        assert current_lrd_token.link_title_whitespace is not None
-        assert link_title_text is not None
-        assert current_lrd_token.end_whitespace is not None
+        assert (
+            current_lrd_token.link_destination_whitespace is not None
+        ), "This field should be defined."
+        assert link_destination_text is not None, "This field should be defined."
+        assert (
+            current_lrd_token.link_title_whitespace is not None
+        ), "This field should be defined."
+        assert link_title_text is not None, "This field should be defined."
+        assert (
+            current_lrd_token.end_whitespace is not None
+        ), "This field should be defined."
         link_def_parts: List[str] = [
             current_lrd_token.extracted_whitespace,
             "[",

@@ -34,14 +34,13 @@ class AtxLeafBlockProcessor:
     def is_atx_heading(
         line_to_parse: str,
         start_index: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         skip_whitespace_check: bool = False,
     ) -> Tuple[bool, Optional[int], Optional[int], Optional[str]]:
         """
         Determine whether or not an ATX Heading is about to start.
         """
 
-        assert extracted_whitespace is not None
         if (
             TabHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
             or skip_whitespace_check
@@ -50,13 +49,12 @@ class AtxLeafBlockProcessor:
             start_index,
             AtxLeafBlockProcessor.__atx_character,
         ):
-            hash_count, new_index = ParserHelper.collect_while_character(
+            hash_count, new_index = ParserHelper.collect_while_character_verified(
                 line_to_parse,
                 start_index,
                 AtxLeafBlockProcessor.__atx_character,
             )
 
-            assert new_index is not None
             non_whitespace_index, _ = ParserHelper.collect_while_spaces(
                 line_to_parse, new_index
             )
@@ -64,7 +62,6 @@ class AtxLeafBlockProcessor:
                 new_index:non_whitespace_index
             ]
 
-            assert hash_count is not None
             if hash_count <= 6 and (
                 extracted_whitespace_at_start
                 or non_whitespace_index == len(line_to_parse)
@@ -82,7 +79,7 @@ class AtxLeafBlockProcessor:
     def parse_atx_headings(
         parser_state: ParserState,
         position_marker: PositionMarker,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         block_quote_data: BlockQuoteData,
         original_line: str,
         grab_bag: ContainerGrabBag,
@@ -107,7 +104,11 @@ class AtxLeafBlockProcessor:
             )
             return []
 
-        assert non_whitespace_index is not None
+        assert (
+            non_whitespace_index is not None
+            and hash_count is not None
+            and extracted_whitespace_at_start is not None
+        ), "If a heading was found, all of the rest are defined."
         return AtxLeafBlockProcessor.__parse_atx_heading_found(
             parser_state,
             position_marker,
@@ -128,14 +129,13 @@ class AtxLeafBlockProcessor:
         parser_state: ParserState,
         position_marker: PositionMarker,
         original_line: str,
-        hash_count: Optional[int],
+        hash_count: int,
         non_whitespace_index: int,
         block_quote_data: BlockQuoteData,
-        extracted_whitespace_at_start: Optional[str],
-        extracted_whitespace: Optional[str],
+        extracted_whitespace_at_start: str,
+        extracted_whitespace: str,
         grab_bag: ContainerGrabBag,
     ) -> List[MarkdownToken]:
-        assert extracted_whitespace_at_start is not None
         POGGER.debug(
             "parse_atx_headings>>start",
         )
@@ -161,8 +161,6 @@ class AtxLeafBlockProcessor:
             block_quote_data,
             grab_bag,
         )
-        assert hash_count is not None
-        assert extracted_whitespace is not None
 
         POGGER.debug("extracted_whitespace>>$<<", extracted_whitespace)
         POGGER.debug("removed_chars_at_start>>$", position_marker.index_indent)
@@ -245,9 +243,8 @@ class AtxLeafBlockProcessor:
     def __parse_atx_headings_delay_tab_match(
         position_marker: PositionMarker, original_line: str
     ) -> str:
-        _, ex_ws = ParserHelper.extract_spaces(original_line, 0)
+        _, ex_ws = ParserHelper.extract_spaces_verified(original_line, 0)
         POGGER.debug("ex_ws>>$<<", ex_ws)
-        assert ex_ws is not None
 
         loop_index = 0
         rep = True
@@ -273,7 +270,7 @@ class AtxLeafBlockProcessor:
         POGGER.debug("extracted_whitespace>>$<<", extracted_whitespace)
         return extracted_whitespace
 
-    # pylint: disable=too-many-arguments, too-many-locals
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __prepare_for_create_atx_heading_with_tab(
         parser_state: ParserState,
@@ -317,7 +314,7 @@ class AtxLeafBlockProcessor:
             )
             leading_spaces = list_markdown_token.leading_spaces
 
-            # TODO This needs to be fixed at a higher level, should not be needed
+            # TOoDO This needs to be fixed at a higher level, should not be needed
             # if not leading_spaces and parser_state.token_stack[stack_index].is_ordered_list:
             #     leading_spaces = list_markdown_token.extracted_whitespace
             #     assert False
@@ -335,24 +332,19 @@ class AtxLeafBlockProcessor:
         )
         POGGER.debug(">>adj_original_index>:$:<", adj_original_index)
 
-        after_pre_hash_whitespace_index, ex_whitespace = ParserHelper.extract_spaces(
-            original_line, adj_original_index
+        after_pre_hash_whitespace_index, extracted_whitespace = (
+            ParserHelper.extract_spaces_verified(original_line, adj_original_index)
         )
         POGGER.debug(
             ">>after_pre_hash_whitespace_index>:$:<", after_pre_hash_whitespace_index
         )
-        POGGER.debug(">>ex_whitespace>:$:<", ex_whitespace)
-        assert ex_whitespace is not None
-        assert after_pre_hash_whitespace_index is not None
-        extracted_whitespace = ex_whitespace
+        POGGER.debug(">>extracted_whitespace>:$:<", extracted_whitespace)
 
-        after_post_hash_whitespace_index, ex_whitespace = ParserHelper.extract_spaces(
-            original_line, after_pre_hash_whitespace_index + hash_count
+        after_post_hash_whitespace_index, extracted_whitespace_at_start = (
+            ParserHelper.extract_spaces_verified(
+                original_line, after_pre_hash_whitespace_index + hash_count
+            )
         )
-        assert ex_whitespace is not None
-        assert after_post_hash_whitespace_index is not None
-        extracted_whitespace_at_start = ex_whitespace
-
         remaining_line = original_line[after_post_hash_whitespace_index:]
         return (
             remaining_line,
@@ -361,7 +353,7 @@ class AtxLeafBlockProcessor:
             split_tab,
         )
 
-    # pylint: enable=too-many-arguments, too-many-locals
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
@@ -371,13 +363,11 @@ class AtxLeafBlockProcessor:
         remaining_line: str,
         original_line: str,
         extracted_whitespace_at_start: str,
-        extracted_whitespace: Optional[str],
-        hash_count: Optional[int],
+        extracted_whitespace: str,
+        hash_count: int,
         block_quote_data: BlockQuoteData,
         grab_bag: ContainerGrabBag,
-    ) -> Tuple[
-        StackToken, str, int, str, str, List[MarkdownToken], str, Optional[str], bool
-    ]:
+    ) -> Tuple[StackToken, str, int, str, str, List[MarkdownToken], str, str, bool]:
         (
             old_top_of_stack,
             remove_trailing_count,
@@ -398,9 +388,7 @@ class AtxLeafBlockProcessor:
             ParserHelper.tab_character in original_line
             and not eligble_for_tab_match_delay
         ):
-            assert extracted_whitespace is not None
             POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
-            assert hash_count is not None
             (
                 remaining_line,
                 extracted_whitespace_at_start,
@@ -431,7 +419,7 @@ class AtxLeafBlockProcessor:
             grab_bag,
         ):
             POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
-            extracted_whitespace = TabHelper.adjust_block_quote_indent_for_tab(
+            extracted_whitespace = TabHelper.adjust_block_quote_indent_for_tab_verified(
                 parser_state, extracted_whitespace
             )
             POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
@@ -485,7 +473,9 @@ class AtxLeafBlockProcessor:
                     keep_going = True
         if keep_going:
             POGGER.debug("2!!!!!")
-            assert parser_state.token_stack[possible_list_index].is_list
+            assert parser_state.token_stack[
+                possible_list_index
+            ].is_list, "Should follow through from above."
             list_stack_token = cast(
                 ListStackToken, parser_state.token_stack[possible_list_index]
             )
@@ -521,12 +511,10 @@ class AtxLeafBlockProcessor:
                     remaining_line = remaining_line[:end_index]
                     (
                         _,
-                        new_non_whitespace_index,
-                    ) = ParserHelper.collect_backwards_while_spaces(
+                        end_index,
+                    ) = ParserHelper.collect_backwards_while_spaces_verified(
                         remaining_line, len(remaining_line) - 1
                     )
-                    assert new_non_whitespace_index is not None
-                    end_index = new_non_whitespace_index
                     extracted_whitespace_before_end = remaining_line[end_index:]
                     remaining_line = remaining_line[:end_index]
                 else:

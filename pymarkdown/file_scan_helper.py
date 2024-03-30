@@ -79,7 +79,7 @@ class FileScanHelper:
         did_fix_any_file = False
         did_fail_any_file = False
         if use_standard_in:
-            assert not in_fix_mode
+            assert not in_fix_mode, "Standard-in cannot be used with fix mode."
             POGGER.debug("Scanning from: (stdin)")
             self.__scan_from_stdin(args, string_to_scan)
 
@@ -165,7 +165,6 @@ class FileScanHelper:
             POGGER.info("Starting file '$'.", next_file_name)
 
             POGGER.info("Scanning file '$' token-by-token.", next_file_name)
-            assert self.__tokenizer
             actual_tokens = self.__tokenizer.transform_from_provider(
                 source_provider, do_add_end_of_stream_token=True
             )
@@ -279,7 +278,6 @@ class FileScanHelper:
             print(f"scan: {next_file_two}")
         POGGER.info("Rescanning file '$' before line-by-line fixes.", next_file_two)
         source_provider = FileSourceProvider(next_file_two)
-        assert self.__tokenizer is not None
 
         if fix_nolog_rescan:
             saved_log_level = logging.WARNING
@@ -332,7 +330,9 @@ class FileScanHelper:
         # If tokens are returned, then no changes were made due to tokens and the
         # tokenized list can be reused without any worry of changes.
         if actual_tokens:
-            assert not did_any_tokens_get_fixed
+            assert (
+                not did_any_tokens_get_fixed
+            ), "Reusing tokens assumes that no tokens were fixed/changed."
             POGGER.info(
                 "Scanning for token fixes did not change file.  Reusing tokens for line-by-line fixes."
             )
@@ -418,13 +418,14 @@ class FileScanHelper:
             triggered_plugin_fix_level = fixes_by_id[
                 next_triggered_plugin_id
             ].plugin_fix_level
-            assert triggered_plugin_fix_level > minimum_fix_level
-            if new_minimum_fix_level is None:
-                new_minimum_fix_level = triggered_plugin_fix_level
-            else:
-                new_minimum_fix_level = min(
-                    new_minimum_fix_level, triggered_plugin_fix_level
-                )
+            assert (
+                triggered_plugin_fix_level > minimum_fix_level
+            ), "Triggered plugin levels should only increase."
+            new_minimum_fix_level = (
+                triggered_plugin_fix_level
+                if new_minimum_fix_level is None
+                else min(new_minimum_fix_level, triggered_plugin_fix_level)
+            )
         if new_minimum_fix_level is not None:
             keep_processing = True
             minimum_fix_level = new_minimum_fix_level
@@ -567,7 +568,6 @@ class FileScanHelper:
         self.__print_file_in_debug_mode(fix_debug, fix_file_debug, next_file)
 
         POGGER.info("Scanning file to fix '$' token-by-token.", next_file_name)
-        assert self.__tokenizer
         source_provider = FileSourceProvider(next_file)
         actual_tokens = self.__tokenizer.transform_from_provider(
             source_provider, do_add_end_of_stream_token=True

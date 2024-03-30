@@ -26,11 +26,10 @@ class ThematicBreakMarkdownToken(LeafMarkdownToken):
     def __init__(
         self,
         start_character: str,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         rest_of_line: str,
         position_marker: PositionMarker,
     ) -> None:
-        assert extracted_whitespace is not None
         self.__start_character = start_character
         self.__extracted_whitespace = extracted_whitespace
         self.__rest_of_line = rest_of_line

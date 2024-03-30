@@ -4,6 +4,29 @@
 
 ### Added
 
+- None
+
+### Fixed
+
+- None
+
+### Changed
+
+- [Issue 1031](https://github.com/jackdewinter/pymarkdown/issues/1031)
+  - went through code base and used if/else expressions where possible
+- [Issue 1033](https://github.com/jackdewinter/pymarkdown/issues/1033)
+  - went through tests for Md007, add some extra tests to cover missed scenarios
+- [Issue 1037](https://github.com/jackdewinter/pymarkdown/issues/1037)
+  - replaced calls to collect/extract ParserHelper functions followed by
+    asserts with X_verified functions that do that already
+- [Issue 1039](https://github.com/jackdewinter/pymarkdown/issues/1039)
+  - ensure that all asserts have a message with their reasoning
+  - verify that the asserts are required, refactoring where necessary
+
+## Version 0.9.18 - Date: 2024-03-18
+
+### Added
+
 - [Issue 990](https://github.com/jackdewinter/pymarkdown/issues/990)
   - added ability to use a TOML file in `pyproject.toml` format with the
     `--config` command line flag
@@ -18,7 +41,12 @@
 - [Issue 1001](https://github.com/jackdewinter/pymarkdown/issues/1001)
   - Verified behavior of rules Md019 and Md021, fixing issues with Md021
 - [Issue 1003](https://github.com/jackdewinter/pymarkdown/issues/1003)
-  - Verified behavior of rules Md037 with more types of inline elements
+  - Verified behavior of rule Md037 with more types of inline elements
+- [Issue 1007](https://github.com/jackdewinter/pymarkdown/issues/1007)
+  - Verified behavior of rule md023 with more cases, especially tab characters
+  - multiple cases of fixing the rule and multiple cases of fixing the parser
+- [Issue 1015](https://github.com/jackdewinter/pymarkdown/issues/1015)
+  - Fixed issue with split tab and a simple list indent
 
 ### Changed
 
@@ -29,6 +57,8 @@
   - verified behavior of rule Md039
   - added link reference defintion's link title to the previous list
     of link title and image's link title for examination
+- [Issue 1007](https://github.com/jackdewinter/pymarkdown/issues/1007)
+  - changed GHA workflow to be more precise when unable to start remote job
 
 ## Version 0.9.17 - Date: 2024-02-05
 

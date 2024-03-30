@@ -6,7 +6,7 @@ container modules.
 """
 
 import logging
-from typing import List, Optional, cast
+from typing import List, cast
 
 from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
 from pymarkdown.container_blocks.container_grab_bag import ContainerGrabBag
@@ -31,11 +31,11 @@ class ContainerHelper:
     def __reduce_containers_if_required_bq_list(
         parser_state: ParserState,
         position_marker: PositionMarker,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         new_tokens: List[MarkdownToken],
     ) -> bool:
         did_once = False
-        if extracted_whitespace is not None and parser_state.token_stack[-1].is_list:
+        if parser_state.token_stack[-1].is_list:
             search_index = len(parser_state.token_stack)
             leading_space_length = (
                 len(extracted_whitespace) + position_marker.index_indent
@@ -73,10 +73,9 @@ class ContainerHelper:
         position_marker: PositionMarker,
         new_tokens: List[MarkdownToken],
         split_tab: bool,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         grab_bag: ContainerGrabBag,
     ) -> bool:
-        # TODO cyclic?
         x_tokens, _ = parser_state.close_open_blocks_fn(
             parser_state,
             include_block_quotes=True,
@@ -84,15 +83,17 @@ class ContainerHelper:
             until_this_index=len(parser_state.token_stack) - 1,
         )
         POGGER.debug("x_tokens>>:$:<", x_tokens)
-        assert len(x_tokens) == 1
+        assert len(x_tokens) == 1, "Should have generated only one token."
         first_new_token = cast(EndMarkdownToken, x_tokens[0])
 
         did_reduce_list = ContainerHelper.__reduce_containers_if_required_bq_list(
             parser_state, position_marker, extracted_whitespace, x_tokens
         )
-        was_list_ended = False
-        if grab_bag.container_tokens and grab_bag.container_tokens[-1].is_end_token:
-            was_list_ended = grab_bag.container_tokens[-1].is_list_end
+        was_list_ended = (
+            grab_bag.container_tokens[-1].is_list_end
+            if grab_bag.container_tokens and grab_bag.container_tokens[-1].is_end_token
+            else False
+        )
 
         matching_start_token = cast(
             BlockQuoteMarkdownToken, first_new_token.start_markdown_token
@@ -101,7 +102,9 @@ class ContainerHelper:
             "start_markdown_token.bleading>>:$:<",
             matching_start_token.bleading_spaces,
         )
-        assert matching_start_token.bleading_spaces is not None
+        assert (
+            matching_start_token.bleading_spaces is not None
+        ), "Bleading spaces must be defined by this point."
         last_newline_index = matching_start_token.bleading_spaces.rfind("\n")
         # if last_newline_index == -1:
         #     last_newline_part =matching_start_token.leading_spaces
@@ -111,19 +114,24 @@ class ContainerHelper:
         ]
         POGGER.debug("last_newline_part>>:$:<", last_newline_part)
         if split_tab:
-            assert last_newline_part.endswith(" ")
+            assert last_newline_part.endswith(
+                " "
+            ), "Bleading space part must end with a space character."
             last_newline_part = last_newline_part[:-1]
             POGGER.debug("last_newline_part>>:$:<", last_newline_part)
             split_tab = False
         POGGER.debug("split_tab>>:$:<", split_tab)
 
         POGGER.debug("extra_end_data>>:$:<", first_new_token.extra_end_data)
-        assert first_new_token.extra_end_data is None
+        assert (
+            first_new_token.extra_end_data is None
+        ), "Extra data must be defined by this point."
 
-        was_paragraph_closed = False
-        if new_tokens and new_tokens[0].is_end_token:
-            was_paragraph_closed = new_tokens[0].is_paragraph_end
-
+        was_paragraph_closed = (
+            new_tokens[0].is_paragraph_end
+            if new_tokens and new_tokens[0].is_end_token
+            else False
+        )
         if did_reduce_list or was_list_ended or not was_paragraph_closed:
             first_new_token.set_extra_end_data(None)
         else:
@@ -142,7 +150,7 @@ class ContainerHelper:
         block_quote_data: BlockQuoteData,
         new_tokens: List[MarkdownToken],
         split_tab: bool,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         grab_bag: ContainerGrabBag,
     ) -> bool:
         """

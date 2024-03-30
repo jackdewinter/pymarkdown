@@ -3,7 +3,7 @@ Module to help with the parsing of bkactick inline elements.
 """
 
 import logging
-from typing import List, Optional, Tuple
+from typing import List, Tuple
 
 from pymarkdown.container_blocks.parse_block_pass_properties import (
     ParseBlockPassProperties,
@@ -34,21 +34,21 @@ class InlineBacktickHelper:
         """
         Handle the inline case of backticks for code spans.
         """
+        _ = parser_properties
+
         POGGER.debug("before_collect>$", inline_request.next_index)
         POGGER.debug("inline_request.source_text>:$:<", inline_request.source_text)
         POGGER.debug("inline_request.tabified_text>:$:<", inline_request.tabified_text)
         (
             new_index,
             extracted_start_backticks,
-        ) = ParserHelper.collect_while_one_of_characters(
+        ) = ParserHelper.collect_while_one_of_characters_verified(
             inline_request.source_text,
             inline_request.next_index,
             InlineBacktickHelper.code_span_bounds,
         )
         POGGER.debug("after_collect>$>$", new_index, extracted_start_backticks)
 
-        assert new_index is not None
-        assert extracted_start_backticks is not None
         extracted_start_backticks_size, end_backtick_start_index = (
             len(extracted_start_backticks),
             inline_request.source_text.find(extracted_start_backticks, new_index),
@@ -57,12 +57,11 @@ class InlineBacktickHelper:
             (
                 end_backticks_index,
                 end_backticks_attempt,
-            ) = ParserHelper.collect_while_one_of_characters(
+            ) = ParserHelper.collect_while_one_of_characters_verified(
                 inline_request.source_text,
                 end_backtick_start_index,
                 InlineBacktickHelper.code_span_bounds,
             )
-            assert end_backticks_attempt is not None
             if len(end_backticks_attempt) == extracted_start_backticks_size:
                 break
             end_backtick_start_index = inline_request.source_text.find(
@@ -77,7 +76,9 @@ class InlineBacktickHelper:
             extracted_start_backticks_size,
         )
 
-        assert inline_response.new_index is not None
+        assert (
+            inline_response.new_index is not None
+        ), "new_index should be defined by this point."
         POGGER.debug(
             ">>delta_line_number>>$<<",
             inline_response.delta_line_number,
@@ -135,9 +136,15 @@ class InlineBacktickHelper:
                 "",
                 end_backtick_start_index,
             )
-            assert inline_request.line_number is not None
-            assert inline_request.column_number is not None
-            assert inline_request.remaining_line is not None
+            assert (
+                inline_request.line_number is not None
+            ), "line_number must be defined by now."
+            assert (
+                inline_request.column_number is not None
+            ), "column_number must be defined by now."
+            assert (
+                inline_request.remaining_line is not None
+            ), "remaining_line must be defined by now."
             new_column_number = inline_request.column_number + len(
                 inline_request.remaining_line
             )
@@ -165,31 +172,27 @@ class InlineBacktickHelper:
 
     @staticmethod
     def __backtick_split_lines(input_string: str) -> List[str]:
-        current_index: Optional[int] = 0
-        assert current_index is not None
-        next_index, extracted_text = ParserHelper.collect_while_one_of_characters(
-            input_string, current_index, " \t"
+        current_index = 0
+        next_index, extracted_text = (
+            ParserHelper.collect_while_one_of_characters_verified(
+                input_string, current_index, " \t"
+            )
         )
-        assert next_index is not None
-        assert extracted_text is not None
         split_array: List[str] = [extracted_text]
         # POGGER.debug("next_index:$, extracted_text>:$:<", next_index, extracted_text)
         while next_index < len(input_string):
-            current_index = None
             (
                 current_index,
                 extracted_text,
-            ) = ParserHelper.collect_until_one_of_characters(
+            ) = ParserHelper.collect_until_one_of_characters_verified(
                 input_string, next_index, " \t"
             )
-            assert current_index is not None
-            assert extracted_text is not None
             split_array.append(extracted_text)
-            next_index, extracted_text = ParserHelper.collect_while_one_of_characters(
-                input_string, current_index, " \t"
+            next_index, extracted_text = (
+                ParserHelper.collect_while_one_of_characters_verified(
+                    input_string, current_index, " \t"
+                )
             )
-            assert next_index is not None
-            assert extracted_text is not None
             split_array.append(extracted_text)
         return split_array
 
@@ -282,7 +285,9 @@ class InlineBacktickHelper:
             inline_request.source_text
         )
         POGGER.debug("split_source_lines>>$<<", split_source_lines)
-        assert inline_request.tabified_text is not None
+        assert (
+            inline_request.tabified_text is not None
+        ), "tabified_text must be defined by now."
         split_tabified_lines = InlineBacktickHelper.__backtick_split_lines(
             inline_request.tabified_text
         )
@@ -301,7 +306,9 @@ class InlineBacktickHelper:
             start_delta,
             calculated_index,
         )
-        assert calculated_index + start_delta == new_index
+        assert (
+            calculated_index + start_delta == new_index
+        ), "calculations should equal current position"
 
         (
             end_array_index,
@@ -316,7 +323,9 @@ class InlineBacktickHelper:
             end_delta,
             calculated_index,
         )
-        assert calculated_index + end_delta == end_backtick_start_index
+        assert (
+            calculated_index + end_delta == end_backtick_start_index
+        ), "calculations should equal current position"
 
         if start_array_index == end_array_index:
             POGGER.debug("same")
@@ -354,7 +363,9 @@ class InlineBacktickHelper:
             if start_index <= index_to_find < start_index + len(array_element):
                 break
             start_index += len(array_element)
-        assert start_index != (start_index + len(split_array))
+        assert start_index != (
+            start_index + len(split_array)
+        ), "For loop must stop before the end."
         delta = index_to_find - start_index
         POGGER.debug("i=$,start_index=$,delta=$", _array_index, start_index, delta)
         return _array_index, delta, start_index

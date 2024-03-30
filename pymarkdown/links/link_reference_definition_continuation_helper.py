@@ -40,13 +40,13 @@ class LinkReferenceDefinitionContinuationHelper:
         position_marker: PositionMarker,
         was_started: bool,
         remaining_line_to_parse: str,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         unmodified_line_to_parse: str,
         original_stack_depth: int,
         original_document_depth: int,
-        end_lrd_index: Optional[int],
+        end_lrd_index: int,
         line_to_parse_size: int,
-        is_blank_line: Optional[bool],
+        is_blank_line: bool,
         did_complete_lrd: bool,
         parsed_lrd_tuple: Optional[LinkReferenceDefinitionTuple],
         lines_to_requeue: List[str],
@@ -55,14 +55,11 @@ class LinkReferenceDefinitionContinuationHelper:
         """
         Determine whether to continue with the processing of the LRD.
         """
-        assert is_blank_line is not None
-        assert end_lrd_index is not None
-        did_pause_lrd: bool = (
+        if did_pause_lrd := (
             end_lrd_index >= 0
             and end_lrd_index == line_to_parse_size
             and not is_blank_line
-        )
-        if did_pause_lrd:
+        ):
             POGGER.debug(">>parse_link_reference_definition>>continuation")
             LinkReferenceDefinitionContinuationHelper.__add_line_for_lrd_continuation(
                 parser_state,
@@ -79,11 +76,7 @@ class LinkReferenceDefinitionContinuationHelper:
                 parser_state,
                 did_complete_lrd,
                 parsed_lrd_tuple,
-                end_lrd_index,
-                remaining_line_to_parse,
-                is_blank_line,
                 lines_to_requeue,
-                extracted_whitespace,
                 process_mode,
                 did_pause_lrd,
             )
@@ -100,30 +93,28 @@ class LinkReferenceDefinitionContinuationHelper:
         parser_state: ParserState,
         did_complete_lrd: bool,
         parsed_lrd_tuple: Optional[LinkReferenceDefinitionTuple],
-        end_lrd_index: int,
-        remaining_line_to_parse: str,
-        is_blank_line: bool,
         lines_to_requeue: List[str],
-        extracted_whitespace: Optional[str],
         process_mode: int,
         did_pause_lrd: bool,
     ) -> Tuple[bool, bool, List[MarkdownToken]]:
         """
         As part of processing a link reference definition, stop a continuation.
         """
-
         POGGER.debug(">>parse_link_reference_definition>>no longer need start")
         if did_complete_lrd:
-            assert parsed_lrd_tuple
-            assert parsed_lrd_tuple.normalized_destination is not None
+            assert parsed_lrd_tuple, "LRd tuple must be defined by now."
+            assert (
+                parsed_lrd_tuple.normalized_destination is not None
+            ), "normalized_destination must be defined by now."
             did_add_definition = LinkParseHelper.add_link_definition(
                 parsed_lrd_tuple.normalized_destination, parsed_lrd_tuple.link_titles
             )
-            assert not (end_lrd_index < -1 and remaining_line_to_parse)
             link_def_token = cast(
                 LinkDefinitionStackToken, parser_state.token_stack[-1]
             )
-            assert link_def_token.extracted_whitespace is not None
+            assert (
+                link_def_token.extracted_whitespace is not None
+            ), "extracted_whitespace must be defined by now."
             extracted_whitespace = link_def_token.extracted_whitespace
 
             POGGER.debug(
@@ -160,8 +151,9 @@ class LinkReferenceDefinitionContinuationHelper:
                     parsed_lrd_tuple,
                 )
 
-            assert extracted_whitespace is not None
-            assert parsed_lrd_tuple.normalized_destination is not None
+            assert (
+                parsed_lrd_tuple.normalized_destination is not None
+            ), "normalized_destination must be defined by now."
             new_tokens: List[MarkdownToken] = [
                 LinkReferenceDefinitionMarkdownToken(
                     did_add_definition,
@@ -173,18 +165,17 @@ class LinkReferenceDefinitionContinuationHelper:
                 )
             ]
             POGGER.debug(">>link_info>>$", parsed_lrd_tuple.link_info)
-            assert parsed_lrd_tuple.link_info.line_destination_whitespace is not None
-            POGGER.debug(
-                ">>line_destination_whitespace>>$",
-                ParserHelper.make_whitespace_visible(
-                    parsed_lrd_tuple.link_info.line_destination_whitespace
-                ),
-            )
+            # assert parsed_lrd_tuple.link_info.line_destination_whitespace is not None
+            # POGGER.debug(
+            #     ">>line_destination_whitespace>>$",
+            #     ParserHelper.make_whitespace_visible(
+            #         parsed_lrd_tuple.link_info.line_destination_whitespace
+            #     ),
+            # )
             POGGER.debug(">>new_tokens>>$", new_tokens)
             del parser_state.token_stack[-1]
             return did_pause_lrd, len(lines_to_requeue) > 1, new_tokens
 
-        assert is_blank_line
         del parser_state.token_stack[-1]
         return did_pause_lrd, True, []
 
@@ -198,14 +189,16 @@ class LinkReferenceDefinitionContinuationHelper:
         last_container_index: int,
         lines_to_requeue: List[str],
         process_mode: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         parsed_lrd_tuple: LinkReferenceDefinitionTuple,
-    ) -> Tuple[Optional[str], LinkReferenceDefinitionTuple]:
+    ) -> Tuple[str, LinkReferenceDefinitionTuple]:
         POGGER.debug(
             "extracted_whitespace>:$:<",
             link_def_token.extracted_whitespace,
         )
-        assert parser_state.token_stack[last_container_index].is_block_quote
+        assert parser_state.token_stack[
+            last_container_index
+        ].is_block_quote, "Container must be a block quote."
         last_block_quote_index = parser_state.find_last_block_quote_on_stack()
         last_block_quote_token = parser_state.token_stack[last_block_quote_index]
         block_quote_token = cast(
@@ -278,10 +271,10 @@ class LinkReferenceDefinitionContinuationHelper:
     @staticmethod
     def __stop_lrd_continuation_with_tab_multiple(
         parser_state: ParserState,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         link_def_token: LinkDefinitionStackToken,
         block_quote_token: BlockQuoteMarkdownToken,
-    ) -> Tuple[Optional[str], LinkReferenceDefinitionTuple]:
+    ) -> Tuple[str, LinkReferenceDefinitionTuple]:
         split_tabs_list: List[bool] = []
         completed_lrd_text: str = ""
         alt_ws: Optional[str] = None
@@ -301,6 +294,8 @@ class LinkReferenceDefinitionContinuationHelper:
             )
 
         POGGER.debug("completed_lrd_text>:$:<", completed_lrd_text)
+        assert alt_ws is not None, "This value must be set inside of the for loop."
+
         (
             did_succeed,
             next_index,
@@ -308,15 +303,18 @@ class LinkReferenceDefinitionContinuationHelper:
         ) = LinkReferenceDefinitionParseHelper.parse_link_reference_definition(
             parser_state, completed_lrd_text, 0, alt_ws, True
         )
-        assert did_succeed
-        assert len(completed_lrd_text) == next_index
-        assert new_parsed_lrd_tuple is not None
-        parsed_lrd_tuple = new_parsed_lrd_tuple
+        assert (
+            did_succeed
+        ), "Since this is the stop and there is at least one valid match, this must be true."
+        assert (
+            len(completed_lrd_text) == next_index
+        ), "Index must be at the end of the stirng."
+        assert new_parsed_lrd_tuple is not None, "New tuple must be defined."
 
         LinkReferenceDefinitionContinuationHelper.__xx_multiple_fix_leading_spaces(
             block_quote_token, split_tabs_list, link_def_token
         )
-        return extracted_whitespace, parsed_lrd_tuple
+        return extracted_whitespace, new_parsed_lrd_tuple
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -325,10 +323,10 @@ class LinkReferenceDefinitionContinuationHelper:
         this_line_index: int,
         this_line: str,
         completed_lrd_text: str,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         alt_ws: Optional[str],
         split_tabs_list: List[bool],
-    ) -> Tuple[str, Optional[str], Optional[str]]:
+    ) -> Tuple[str, str, Optional[str]]:
         original_this_line = link_def_token.unmodified_lines[this_line_index]
         POGGER.debug("this_line_index>:$:<", this_line_index)
         POGGER.debug("this_line>:$:<", this_line)
@@ -360,7 +358,7 @@ class LinkReferenceDefinitionContinuationHelper:
     @staticmethod
     def __find_line_ws(parsed_lines: str, original_lines: str) -> Tuple[str, bool, int]:
         start_text_index = original_lines.find(parsed_lines)
-        assert start_text_index != -1
+        assert start_text_index != -1, "Index must be found within string."
         POGGER.debug("start_text_index>:$:<", start_text_index)
         start_whitespace_index, _ = ParserHelper.extract_spaces_from_end(
             original_lines, start_text_index
@@ -387,7 +385,9 @@ class LinkReferenceDefinitionContinuationHelper:
         POGGER.debug(
             "block_quote_token.leading_spaces>:$:<", block_quote_token.bleading_spaces
         )
-        assert block_quote_token.bleading_spaces is not None
+        assert (
+            block_quote_token.bleading_spaces is not None
+        ), "Bleading spaces must be defined by now."
         leading_spaces: List[str] = []
         for _ in link_def_token.continuation_lines:
             last_leading_space = block_quote_token.remove_last_bleading_space()
@@ -395,7 +395,9 @@ class LinkReferenceDefinitionContinuationHelper:
             if last_leading_space[0] == "\n":
                 last_leading_space = last_leading_space[1:]
             leading_spaces.append(last_leading_space)
-        assert len(split_tabs_list) == len(leading_spaces)
+        assert len(split_tabs_list) == len(
+            leading_spaces
+        ), "The two lists must have the same length."
         POGGER.debug("leading_spaces>:$:<", leading_spaces)
         POGGER.debug(
             "block_quote_token.leading_spaces>:$:<", block_quote_token.bleading_spaces
@@ -415,7 +417,7 @@ class LinkReferenceDefinitionContinuationHelper:
         position_marker: PositionMarker,
         was_started: bool,
         remaining_line_to_parse: str,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         unmodified_line_to_parse: str,
         original_stack_depth: int,
         original_document_depth: int,
@@ -447,7 +449,9 @@ class LinkReferenceDefinitionContinuationHelper:
 
         POGGER.debug(">>line_to_store>>add>:$<<", line_to_store)
         POGGER.debug(">>unmodified_line_to_parse>>add>:$<<", unmodified_line_to_parse)
-        assert unmodified_line_to_parse.endswith(line_to_store)
+        assert unmodified_line_to_parse.endswith(
+            line_to_store
+        ), "Unmodified line must end with the processed line."
         new_token.add_continuation_line(line_to_store)
         new_token.add_unmodified_line(unmodified_line_to_parse)
 

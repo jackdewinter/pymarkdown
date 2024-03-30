@@ -34,7 +34,7 @@ class LinkReferenceDefinitionHelper:
         parser_state: ParserState,
         position_marker: PositionMarker,
         remaining_line_to_parse: str,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         unmodified_line_to_parse: str,
         original_stack_depth: int,
         original_document_depth: int,
@@ -45,7 +45,6 @@ class LinkReferenceDefinitionHelper:
         Process a link deference definition.  Note, this requires a lot of work to
         handle properly because of partial definitions across lines.
         """
-
         line_to_parse = position_marker.text_to_parse
         start_index: int = position_marker.index_number
         lines_to_requeue: List[str] = []
@@ -84,10 +83,8 @@ class LinkReferenceDefinitionHelper:
             extracted_whitespace,
             start_index,
         )
-
         POGGER.debug(">>line_to_parse>:$:<", line_to_parse)
         line_to_parse_size = len(line_to_parse)
-        assert start_index is not None
 
         (
             did_complete_lrd,
@@ -129,6 +126,9 @@ class LinkReferenceDefinitionHelper:
             process_mode,
         )
         if lines_to_requeue:
+            assert (
+                lrd_stack_token is not None
+            ), "Stack token is created before determining requeue, therefore it must be declared."
             LinkReferenceDefinitionHelper.__prepare_for_requeue(
                 parser_state,
                 lrd_stack_token,
@@ -160,8 +160,8 @@ class LinkReferenceDefinitionHelper:
         start_index: int,
         original_line: str,
         unmodified_line_to_parse: str,
-    ) -> Tuple[str, str, str, int, Optional[bool]]:
-        is_blank_line: Optional[bool] = not line_to_parse and not start_index
+    ) -> Tuple[str, str, str, int, bool]:
+        is_blank_line = not line_to_parse and not start_index
 
         POGGER.debug(">>original_line>:$:<", original_line)
         if ParserHelper.tab_character in original_line and not is_blank_line:
@@ -172,7 +172,9 @@ class LinkReferenceDefinitionHelper:
             first_character_to_parse_index = original_line.find(
                 first_character_to_parse
             )
-            assert first_character_to_parse_index != -1
+            assert (
+                first_character_to_parse_index != -1
+            ), "Character not found within string."
 
             line_to_parse = original_line[first_character_to_parse_index:]
             unmodified_line_to_parse = original_line
@@ -195,20 +197,19 @@ class LinkReferenceDefinitionHelper:
         original_stack_depth: int,
         original_document_depth: int,
         line_to_parse: str,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         start_index: int,
-    ) -> Tuple[
-        bool, Optional[LinkDefinitionStackToken], int, int, str, Optional[str], int
-    ]:
+    ) -> Tuple[bool, Optional[LinkDefinitionStackToken], int, int, str, str, int]:
         lrd_stack_token: Optional[LinkDefinitionStackToken] = None
 
         if was_started := parser_state.token_stack[-1].was_link_definition_started:
             lrd_stack_token = cast(
                 LinkDefinitionStackToken, parser_state.token_stack[-1]
             )
-            assert lrd_stack_token is not None
-            assert lrd_stack_token.original_stack_depth is not None
-            assert lrd_stack_token.original_document_depth is not None
+            assert (
+                lrd_stack_token.original_stack_depth is not None
+                and lrd_stack_token.original_document_depth is not None
+            ), "stack and document depth must both be defined."
             original_stack_depth, original_document_depth = (
                 lrd_stack_token.original_stack_depth,
                 lrd_stack_token.original_document_depth,
@@ -221,11 +222,9 @@ class LinkReferenceDefinitionHelper:
                 line_to_parse
             )
             (
-                new_start_index,
+                start_index,
                 extracted_whitespace,
-            ) = ParserHelper.extract_ascii_whitespace(line_to_parse, 0)
-            assert new_start_index is not None
-            start_index = new_start_index
+            ) = ParserHelper.extract_ascii_whitespace_verified(line_to_parse, 0)
 
             POGGER.debug(">>line_to_parse>>$<<", line_to_parse)
         return (
@@ -246,19 +245,17 @@ class LinkReferenceDefinitionHelper:
         parser_state: ParserState,
         line_to_parse: str,
         start_index: int,
-        extracted_whitespace: Optional[str],
-        is_blank_line: Optional[bool],
+        extracted_whitespace: str,
+        is_blank_line: bool,
         was_started: bool,
         line_to_parse_size: int,
         remaining_line_to_parse: str,
         lines_to_requeue: List[str],
         unmodified_line_to_parse: str,
-    ) -> Tuple[
-        bool, Optional[int], Optional[LinkReferenceDefinitionTuple], Optional[bool], str
-    ]:
+    ) -> Tuple[bool, int, Optional[LinkReferenceDefinitionTuple], bool, str]:
         if was_started:
             POGGER.debug(">>parse_link_reference_definition>>was_started")
-            did_complete_lrd: Optional[bool] = False
+
             (
                 did_complete_lrd,
                 end_lrd_index,
@@ -291,7 +288,7 @@ class LinkReferenceDefinitionHelper:
                 )
                 (
                     is_blank_line,
-                    line_to_parsex,
+                    line_to_parse,
                     did_complete_lrd,
                     end_lrd_index,
                     parsed_lrd_tuple,
@@ -301,8 +298,6 @@ class LinkReferenceDefinitionHelper:
                     lines_to_requeue,
                     unmodified_line_to_parse,
                 )
-                assert line_to_parsex is not None
-                line_to_parse = line_to_parsex
         else:
             (
                 did_complete_lrd,
@@ -321,7 +316,6 @@ class LinkReferenceDefinitionHelper:
                 end_lrd_index,
                 line_to_parse_size,
             )
-        assert did_complete_lrd is not None
         return (
             did_complete_lrd,
             end_lrd_index,
@@ -336,7 +330,9 @@ class LinkReferenceDefinitionHelper:
     def __prepare_for_requeue_reset_markdown_token(
         parser_state: ParserState, lrd_stack_token: LinkDefinitionStackToken
     ) -> None:
-        assert lrd_stack_token.last_block_quote_markdown_token_index is not None
+        assert (
+            lrd_stack_token.last_block_quote_markdown_token_index is not None
+        ), "Index must be defined by now."
         POGGER.debug(
             ">>XXXXXX>>last_block_quote_markdown_token_index:$:",
             lrd_stack_token.last_block_quote_markdown_token_index,
@@ -351,12 +347,16 @@ class LinkReferenceDefinitionHelper:
         del parser_state.token_document[
             lrd_stack_token.last_block_quote_markdown_token_index
         ]
-        assert lrd_stack_token.copy_of_last_block_quote_markdown_token is not None
+        assert (
+            lrd_stack_token.copy_of_last_block_quote_markdown_token is not None
+        ), "Token must be defined by now."
         parser_state.token_document.insert(
             lrd_stack_token.last_block_quote_markdown_token_index,
             lrd_stack_token.copy_of_last_block_quote_markdown_token,
         )
-        assert lrd_stack_token.last_block_quote_stack_token is not None
+        assert (
+            lrd_stack_token.last_block_quote_stack_token is not None
+        ), "Token must be defined by now."
         POGGER.debug(
             "last_block_quote_stack_token>:$:<",
             lrd_stack_token.last_block_quote_stack_token,
@@ -392,7 +392,9 @@ class LinkReferenceDefinitionHelper:
         else:
             while len(parser_state.token_stack):
                 del parser_state.token_stack[-1]
-            assert lrd_stack_token.copy_of_token_stack is not None
+            assert (
+                lrd_stack_token.copy_of_token_stack is not None
+            ), "Token must be defined by now."
             parser_state.token_stack.extend(lrd_stack_token.copy_of_token_stack)
         POGGER.debug(">>XXXXXX>>token_stack(after):$:", parser_state.token_stack)
 
@@ -410,7 +412,7 @@ class LinkReferenceDefinitionHelper:
     @staticmethod
     def __prepare_for_requeue(
         parser_state: ParserState,
-        lrd_stack_token: Optional[LinkDefinitionStackToken],
+        lrd_stack_token: LinkDefinitionStackToken,
         did_complete_lrd: bool,
         original_stack_depth: int,
         original_document_depth: int,
@@ -423,7 +425,6 @@ class LinkReferenceDefinitionHelper:
         # original_document_depth and stack, such as passing in a copy of the both
         # elements so they can be reset on the rewind.
         # i.e. icode would go back on stack, end-icode would not be in document.
-        assert lrd_stack_token is not None
         POGGER.debug("lines_to_requeue:$:", lines_to_requeue)
         POGGER.debug(
             ">>XXXXXX>>copy_of_last_block_quote_markdown_token:$:",
@@ -450,10 +451,10 @@ class LinkReferenceDefinitionHelper:
         lines_to_requeue: List[str],
         unmodified_line_to_parse: str,
     ) -> Tuple[
-        Optional[bool],
-        Optional[str],
-        Optional[bool],
-        Optional[int],
+        bool,
+        str,
+        bool,
+        int,
         Optional[LinkReferenceDefinitionTuple],
     ]:
         """
@@ -474,7 +475,9 @@ class LinkReferenceDefinitionHelper:
 
         POGGER.debug(">>remaining_line_to_parse>>add>:$<<", remaining_line_to_parse)
         POGGER.debug(">>unmodified_line_to_parse>>add>:$<<", unmodified_line_to_parse)
-        assert unmodified_line_to_parse.endswith(remaining_line_to_parse)
+        assert unmodified_line_to_parse.endswith(
+            remaining_line_to_parse
+        ), "Current line must end with the remaining text."
         link_ref_stack_token.add_continuation_line(remaining_line_to_parse)
         link_ref_stack_token.add_unmodified_line(unmodified_line_to_parse)
         while link_ref_stack_token.continuation_lines:
@@ -519,10 +522,9 @@ class LinkReferenceDefinitionHelper:
                 line_to_parse,
             ) = True, link_ref_stack_token.add_joined_lines_before_suffix("")
             line_to_parse = line_to_parse[:-1]
-            start_index, extracted_whitespace = ParserHelper.extract_spaces(
+            start_index, extracted_whitespace = ParserHelper.extract_spaces_verified(
                 line_to_parse, 0
             )
-            assert start_index is not None
             POGGER.debug(">>line_to_parse>>$<<", line_to_parse)
             (
                 did_complete_lrd,
@@ -544,6 +546,12 @@ class LinkReferenceDefinitionHelper:
             )
             if did_complete_lrd:
                 break
+        assert is_blank_line is not None, "while loop must have executed at least once."
+        assert line_to_parse is not None, "while loop must have executed at least once."
+        assert (
+            did_complete_lrd is not None
+        ), "while loop must have executed at least once."
+        assert end_lrd_index is not None, "while loop must have executed at least once."
         return (
             is_blank_line,
             line_to_parse,
@@ -558,7 +566,7 @@ class LinkReferenceDefinitionHelper:
         parser_state: ParserState,
         outer_processed: bool,
         position_marker: PositionMarker,
-        leaf_token_whitespace: Optional[str],
+        leaf_token_whitespace: str,
         remaining_line_to_parse: str,
         ignore_link_definition_start: bool,
         pre_tokens: List[MarkdownToken],
@@ -577,7 +585,9 @@ class LinkReferenceDefinitionHelper:
                 "plflb-process_link_reference_definition>>outer_processed>>$",
                 position_marker.text_to_parse[position_marker.index_number :],
             )
-            assert parser_state.original_line_to_parse is not None
+            assert (
+                parser_state.original_line_to_parse is not None
+            ), "Original line must be defined by now."
             (
                 outer_processed,
                 _,  # did_complete_lrd,

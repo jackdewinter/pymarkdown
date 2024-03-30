@@ -82,8 +82,7 @@ class LinkParseHelper:
             link_name,
             link_value,
         )
-        did_add_definition = link_name not in LinkParseHelper.__link_definitions
-        if did_add_definition:
+        if did_add_definition := link_name not in LinkParseHelper.__link_definitions:
             LinkParseHelper.__link_definitions[link_name] = link_value
             POGGER.debug(">>added def>>$-->$", link_name, link_value)
         return did_add_definition
@@ -132,8 +131,10 @@ class LinkParseHelper:
         else:
             POGGER.debug(link_type)
             link_titles = LinkParseHelper.__link_definitions[link_label]
-            assert link_titles.inline_link is not None
-            assert link_titles.inline_title is not None
+            assert (
+                link_titles.inline_link is not None
+                and link_titles.inline_title is not None
+            ), "Link and title must be defined by now."
             update_index, inline_link, inline_title = (
                 new_index,
                 link_titles.inline_link,
@@ -147,27 +148,24 @@ class LinkParseHelper:
         new_index: int,
         source_text: str,
         text_from_blocks: str,
-        tabified_text: Optional[str],
+        tabified_text: str,
     ) -> Tuple[str, bool, int, str, str, Optional[str]]:
         POGGER.debug("collapsed reference?")
 
-        # TODO label type as Enum?
-
-        text_to_scan = source_text
         if tabified_text:
-            assert tabified_text is not None
             text_to_scan = tabified_text
             tabified_new_index = LinkParseHelper.__translate_between_strings(
                 source_text, tabified_text, new_index
             )
             POGGER.debug("tabified_new_index>:$:<", tabified_new_index)
             new_index = tabified_new_index
+        else:
+            text_to_scan = source_text
 
         after_open_index = new_index + 1
-        tried_full_reference_form = ParserHelper.is_character_at_index(
+        if tried_full_reference_form := ParserHelper.is_character_at_index(
             text_to_scan, after_open_index, LinkParseHelper.__link_format_reference_end
-        )
-        if tried_full_reference_form:
+        ):
             ex_label: Optional[str] = ""
 
             POGGER.debug("collapsed reference")
@@ -192,15 +190,13 @@ class LinkParseHelper:
             )
 
         if tabified_text and update_index != -1:
-            assert tabified_text is not None
-
             # Both of the above functions consume the last character of the link.
             # Instead of guessing, we "rewind" the index by one character so that
             # we can have something to sync on that is not an end of line or whitespace.
             assert (
                 tabified_text[update_index - 1]
                 == LinkParseHelper.__link_format_reference_end
-            )
+            ), "Values must be equal."
             untabified_update_index = LinkParseHelper.__translate_between_strings(
                 tabified_text, source_text, update_index - 1
             )
@@ -223,9 +219,9 @@ class LinkParseHelper:
         after_open_index: int,
     ) -> Tuple[Optional[str], str, str, str, int, bool]:
         POGGER.debug("full reference?")
-        POGGER.debug(">>did_extract>>$>", text_to_scan[after_open_index:])
+        POGGER.debug(">>tried_full_reference_form>>$>", text_to_scan[after_open_index:])
         (
-            did_extract,
+            tried_full_reference_form,
             after_label_index,
             ex_label,
         ) = LinkParseHelper.extract_link_label(
@@ -235,14 +231,13 @@ class LinkParseHelper:
             include_reference_colon=False,
         )
         POGGER.debug(
-            ">>did_extract>>$>after_label_index>$>ex_label>$>",
-            did_extract,
+            ">>tried_full_reference_form>>$>after_label_index>$>ex_label>$>",
+            tried_full_reference_form,
             after_label_index,
             ex_label,
         )
-        tried_full_reference_form = did_extract
         if tried_full_reference_form:
-            assert ex_label is not None
+            assert ex_label is not None, "If Full reference, the label is the link."
             label_type = Constants.link_type__full
             update_index, inline_link, inline_title = LinkParseHelper.look_up_link(
                 ex_label, after_label_index, "full reference"
@@ -309,7 +304,9 @@ class LinkParseHelper:
                 stop_character_in_destination_index,
                 destination_text[stop_character_in_destination_index:],
             )
-            assert stop_character_in_destination_index != -1
+            assert (
+                stop_character_in_destination_index != -1
+            ), "Stop character must be found."
         POGGER.debug(
             "found_in_destination_text_count>:$:<", found_in_destination_text_count
         )
@@ -318,7 +315,9 @@ class LinkParseHelper:
             stop_character_in_destination_index,
             destination_text[stop_character_in_destination_index:],
         )
-        assert destination_text[stop_character_in_destination_index] == stop_character
+        assert (
+            destination_text[stop_character_in_destination_index] == stop_character
+        ), "Stop index must refer to the expected stop character."
         return stop_character_in_destination_index
 
     @staticmethod
@@ -332,8 +331,7 @@ class LinkParseHelper:
         POGGER.debug("parse_link_title>>new_index>>$>>", source_text[new_index:])
         ex_title: Optional[str] = ""
         bounding_character = ""
-        newer_index: Optional[int] = new_index
-        assert newer_index is not None
+        newer_index = new_index
         if ParserHelper.is_character_at_index(
             source_text, newer_index, LinkParseHelper.__link_title_single
         ):
@@ -384,27 +382,22 @@ class LinkParseHelper:
         POGGER.debug("parse_link_title>>pre>>$>>", pre_ex_title)
         POGGER.debug("parse_link_title>>after>>$>>", ex_title)
 
-        assert newer_index is not None
         return ex_title, pre_ex_title, newer_index, bounding_character
 
     @staticmethod
     def extract_link_title(
         parser_properties: ParseBlockPassProperties,
         line_to_parse: str,
-        new_index: Optional[int],
+        new_index: int,
         is_blank_line: bool,
-    ) -> Tuple[
-        bool, Optional[int], Optional[str], Optional[str], Optional[str], Optional[str]
-    ]:
+    ) -> Tuple[bool, int, Optional[str], Optional[str], Optional[str], Optional[str]]:
         """
         Extract the link reference definition's optional link title.
         """
         POGGER.debug("before ws>>$>", line_to_parse[new_index:])
-        assert new_index is not None
-        new_index, ex_ws = ParserHelper.extract_ascii_whitespace(
+        new_index, ex_ws = ParserHelper.extract_ascii_whitespace_verified(
             line_to_parse, new_index
         )
-        assert new_index is not None
         POGGER.debug(
             "after ws>>$>ex_ws>$",
             line_to_parse[new_index:],
@@ -437,11 +430,11 @@ class LinkParseHelper:
 
     @staticmethod
     def __encode_link_destination(link_to_encode: str) -> str:
-        percent_index, before_data = ParserHelper.collect_until_one_of_characters(
-            link_to_encode, 0, LinkParseHelper.__special_link_destination_characters
+        percent_index, before_data = (
+            ParserHelper.collect_until_one_of_characters_verified(
+                link_to_encode, 0, LinkParseHelper.__special_link_destination_characters
+            )
         )
-        assert percent_index is not None
-        assert before_data is not None
         el_parts, link_to_encode_size = [
             urllib.parse.quote(before_data, safe=LinkParseHelper.__link_safe_characters)
         ], len(link_to_encode)
@@ -460,16 +453,18 @@ class LinkParseHelper:
                 else:
                     el_parts.append("%25")
             else:
-                assert special_character == "&"
+                assert (
+                    special_character == "&"
+                ), "Special character is either % (see if) or &."
                 el_parts.append("&amp;")
 
-            percent_index, before_data = ParserHelper.collect_until_one_of_characters(
-                link_to_encode,
-                percent_index,
-                LinkParseHelper.__special_link_destination_characters,
+            percent_index, before_data = (
+                ParserHelper.collect_until_one_of_characters_verified(
+                    link_to_encode,
+                    percent_index,
+                    LinkParseHelper.__special_link_destination_characters,
+                )
             )
-            assert percent_index is not None
-            assert before_data is not None
             el_parts.append(
                 urllib.parse.quote(
                     before_data, safe=LinkParseHelper.__link_safe_characters
@@ -488,11 +483,10 @@ class LinkParseHelper:
 
         POGGER.debug("parse_link_destination>>new_index>>$>>", source_text[new_index:])
         start_index = new_index
-        did_use_angle_start = ParserHelper.is_character_at_index(
-            source_text, new_index, LinkParseHelper.__angle_link_start
-        )
         ex_link: Optional[str] = ""
-        if did_use_angle_start:
+        if did_use_angle_start := ParserHelper.is_character_at_index(
+            source_text, new_index, LinkParseHelper.__angle_link_start
+        ):
             POGGER.debug(
                 ">parse_angle_link_destination>new_index>$>$",
                 new_index,
@@ -515,7 +509,6 @@ class LinkParseHelper:
             newer_index, ex_link = LinkParseHelper.__parse_non_angle_link_destination(
                 parser_properties, source_text, new_index
             )
-            assert newer_index is not None
             new_index = newer_index
             POGGER.debug(
                 ">parse_non_angle_link_destination>new_index>$>ex_link>$>",
@@ -560,27 +553,26 @@ class LinkParseHelper:
     @staticmethod
     def __parse_non_angle_link_destination(
         parser_properties: ParseBlockPassProperties, source_text: str, new_index: int
-    ) -> Tuple[Optional[int], Optional[str]]:
+    ) -> Tuple[int, Optional[str]]:
         """
         Parse a link destination that is not included in angle brackets.
         """
 
         destination_parts: List[str] = []
         keep_collecting, nesting_level = True, 0
-        newer_index: Optional[int] = new_index
+        newer_index = new_index
         while keep_collecting:
-            assert newer_index is not None
             POGGER.debug(
                 "collected_destination>>$<<source_text<<$>>nesting_level>>$>>",
                 destination_parts,
                 source_text[newer_index:],
                 nesting_level,
             )
-            newer_index, before_part = ParserHelper.collect_until_one_of_characters(
-                source_text, newer_index, LinkParseHelper.__non_angle_link_breaks
+            newer_index, before_part = (
+                ParserHelper.collect_until_one_of_characters_verified(
+                    source_text, newer_index, LinkParseHelper.__non_angle_link_breaks
+                )
             )
-            assert newer_index is not None
-            assert before_part is not None
             destination_parts.append(before_part)
             POGGER.debug(">>>>>>$<<<<<", source_text[newer_index:])
             if ParserHelper.is_character_at_index(
@@ -592,6 +584,9 @@ class LinkParseHelper:
                 inline_response = InlineBackslashHelper.handle_inline_backslash(
                     parser_properties, inline_request
                 )
+                assert (
+                    inline_response.new_index is not None
+                ), "Index must be defined by now."
                 newer_index = inline_response.new_index
                 destination_parts.append(source_text[old_new_index:newer_index])
             elif ParserHelper.is_character_at_index(
@@ -605,8 +600,7 @@ class LinkParseHelper:
                 source_text, newer_index, LinkParseHelper.__non_angle_link_unnest
             ):
                 POGGER.debug("-1")
-                keep_collecting = bool(nesting_level)
-                if keep_collecting:
+                if keep_collecting := bool(nesting_level):
                     destination_parts.append(LinkParseHelper.__non_angle_link_unnest)
                     newer_index += 1
                     nesting_level -= 1
@@ -626,16 +620,15 @@ class LinkParseHelper:
         """
 
         destination_parts: List[str] = []
-        newer_index: Optional[int] = new_index + 1
+        newer_index = new_index + 1
         while True:
-            assert newer_index is not None
-            newer_index, ert_new = ParserHelper.collect_until_one_of_characters(
-                source_text,
-                newer_index,
-                LinkParseHelper.__angle_link_destination_breaks,
+            newer_index, ert_new = (
+                ParserHelper.collect_until_one_of_characters_verified(
+                    source_text,
+                    newer_index,
+                    LinkParseHelper.__angle_link_destination_breaks,
+                )
             )
-            assert newer_index is not None
-            assert ert_new is not None
             destination_parts.append(ert_new)
 
             if not ParserHelper.is_character_at_index(
@@ -648,6 +641,9 @@ class LinkParseHelper:
             inline_response = InlineBackslashHelper.handle_inline_backslash(
                 parser_properties, inline_request
             )
+            assert (
+                inline_response.new_index is not None
+            ), "Index must be defined by now."
             newer_index = inline_response.new_index
             destination_parts.append(source_text[old_new_index:newer_index])
         if ParserHelper.is_character_at_index(
@@ -671,7 +667,6 @@ class LinkParseHelper:
         lhp.bounding_character = ""
         lhp.before_title_whitespace = ""
         lhp.after_title_whitespace = ""
-        newer_index: Optional[int] = None
         temp_bool = None
         POGGER.debug(">>search for link destination")
         (
@@ -697,12 +692,11 @@ class LinkParseHelper:
             (
                 newer_index,
                 lhp.before_title_whitespace,
-            ) = ParserHelper.extract_ascii_whitespace(source_text, newer_index)
+            ) = ParserHelper.extract_ascii_whitespace_verified(source_text, newer_index)
             POGGER.debug(
                 "after ws>>$>",
                 source_text[newer_index:],
             )
-            assert newer_index is not None
             if ParserHelper.is_character_at_index_not(
                 source_text, newer_index, LinkParseHelper.__link_format_inline_end
             ):
@@ -718,8 +712,7 @@ class LinkParseHelper:
             (
                 newer_index,
                 lhp.after_title_whitespace,
-            ) = ParserHelper.extract_ascii_whitespace(source_text, newer_index)
-        assert newer_index is not None
+            ) = ParserHelper.extract_ascii_whitespace_verified(source_text, newer_index)
         return newer_index
 
     @staticmethod
@@ -735,12 +728,9 @@ class LinkParseHelper:
         label_parts: List[str] = []
 
         while True:
-            newer_index, ert_new = ParserHelper.collect_until_one_of_characters(
+            new_index, ert_new = ParserHelper.collect_until_one_of_characters_verified(
                 line_to_parse, new_index, LinkParseHelper.__link_label_breaks
             )
-            assert newer_index is not None
-            assert ert_new is not None
-            new_index = newer_index
             label_parts.append(ert_new)
             if ParserHelper.is_character_at_index(
                 line_to_parse, new_index, InlineBackslashHelper.backslash_character
@@ -749,7 +739,9 @@ class LinkParseHelper:
                 inline_response = InlineBackslashHelper.handle_inline_backslash(
                     parser_properties, InlineRequest(line_to_parse, new_index)
                 )
-                assert inline_response.new_index is not None
+                assert (
+                    inline_response.new_index is not None
+                ), "TODO: can these be wrapped?"
                 new_index = inline_response.new_index
                 label_parts.append(line_to_parse[old_new_index:new_index])
             elif ParserHelper.is_character_at_index(
@@ -790,24 +782,18 @@ class LinkParseHelper:
         line_to_parse: str,
         start_index: int,
         is_blank_line: bool,
-    ) -> Tuple[
-        bool, Optional[int], Optional[str], Optional[str], Optional[str], Optional[str]
-    ]:
+    ) -> Tuple[bool, int, Optional[str], Optional[str], Optional[str], Optional[str]]:
         """
         Extract the link reference definition's link destination.
         """
-        after_whitespace_index: Optional[int] = None
         (
             after_whitespace_index,
             prefix_whitespace,
-        ) = ParserHelper.collect_while_one_of_characters(
+        ) = ParserHelper.collect_while_one_of_characters_verified(
             line_to_parse, start_index, Constants.ascii_whitespace
         )
-        assert after_whitespace_index is not None
         if after_whitespace_index == len(line_to_parse) and not is_blank_line:
             return False, after_whitespace_index, None, None, None, None
-
-        assert prefix_whitespace is not None
         POGGER.debug(
             "Pre-LD>>$<<", ParserHelper.make_whitespace_visible(prefix_whitespace)
         )
@@ -848,7 +834,6 @@ class LinkParseHelper:
         POGGER.debug("source_text>:$:<", source_text)
         POGGER.debug("tabified_text>:$:<", tabified_text)
 
-        text_to_scan = source_text
         if tabified_text:
             text_to_scan = tabified_text
             tabified_new_index = LinkParseHelper.__translate_between_strings(
@@ -856,11 +841,12 @@ class LinkParseHelper:
             )
             POGGER.debug("tabified_new_index>:$:<", tabified_new_index)
             new_index = tabified_new_index
-
+        else:
+            text_to_scan = source_text
         new_index += 1
 
-        newer_index, lhp.before_link_whitespace = ParserHelper.extract_ascii_whitespace(
-            text_to_scan, new_index
+        newer_index, lhp.before_link_whitespace = (
+            ParserHelper.extract_ascii_whitespace_verified(text_to_scan, new_index)
         )
 
         POGGER.debug(
@@ -868,7 +854,6 @@ class LinkParseHelper:
             newer_index,
             text_to_scan[newer_index:],
         )
-        assert newer_index is not None
         if not ParserHelper.is_character_at_index(
             text_to_scan, newer_index, LinkParseHelper.__link_format_inline_end
         ):
@@ -892,7 +877,6 @@ class LinkParseHelper:
             lhp.inline_title,
             newer_index,
         )
-        assert newer_index is not None
         (
             newer_index,
             lhp.did_use_angle_start,
@@ -915,6 +899,9 @@ class LinkParseHelper:
         did_use_angle_start: Optional[bool],
     ) -> Tuple[int, bool]:
         if newer_index != -1:
+            assert (
+                did_use_angle_start is not None
+            ), "If index is not -1, did_use_angle_start must be defined."
             if tabified_text:
                 untabified_newer_index = LinkParseHelper.__translate_between_strings(
                     tabified_text, source_text, newer_index
@@ -922,7 +909,6 @@ class LinkParseHelper:
                 POGGER.debug("untabified_newer_index>:$:<", untabified_newer_index)
                 newer_index = untabified_newer_index
 
-            assert did_use_angle_start is not None
             if ParserHelper.is_character_at_index(
                 source_text, newer_index, LinkParseHelper.__link_format_inline_end
             ):
@@ -964,6 +950,7 @@ class LinkParseHelper:
         lhp.before_link_whitespace = ""
         lhp.before_title_whitespace = ""
         lhp.after_title_whitespace = ""
+
         if ParserHelper.is_character_at_index(
             source_text, new_index, LinkParseHelper.__link_format_inline_start
         ):
@@ -975,6 +962,9 @@ class LinkParseHelper:
         elif ParserHelper.is_character_at_index(
             source_text, new_index, LinkParseHelper.__link_format_reference_start
         ):
+            assert (
+                tabified_text is not None
+            ), "If we have a link start character, must have tabified text."
             (
                 lhp.label_type,
                 tried_full_reference_form,

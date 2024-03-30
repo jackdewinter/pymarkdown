@@ -89,7 +89,9 @@ class InlineProcessor:
         POGGER.debug("STACK?:$", current_token)
         if current_token.is_container:
             if current_token.is_new_list_item:
-                assert coalesced_stack[-1].is_list_start
+                assert coalesced_stack[
+                    -1
+                ].is_list_start, "New list items can only exist within lists."
                 list_token = cast(ListStartMarkdownToken, coalesced_stack[-1])
                 new_item_token = cast(NewListItemMarkdownToken, current_token)
                 list_token.adjust_for_new_list_item(
@@ -108,7 +110,9 @@ class InlineProcessor:
                     )
                 else:
                     list_token = cast(ListStartMarkdownToken, current_token)
-                    assert list_token.last_new_list_token is None
+                    assert (
+                        list_token.last_new_list_token is None
+                    ), "Cannot have any new list items registered."
                     POGGER.info("-->not bq-")
 
         elif current_token.is_list_end or current_token.is_block_quote_end:
@@ -182,9 +186,13 @@ class InlineProcessor:
         coalesced_stack: List[MarkdownToken],
         parse_properties: ParseBlockPassProperties,
     ) -> List[MarkdownToken]:
-        assert coalesced_list[-1].is_paragraph
+        assert coalesced_list[
+            -1
+        ].is_paragraph, "Must already be within a paragraph block."
         paragraph_token = cast(ParagraphMarkdownToken, coalesced_list[-1])
-        assert coalesced_results[coalesce_index].is_text
+        assert coalesced_results[
+            coalesce_index
+        ].is_text, "Results must already be text tokens."
         text_token = cast(TextMarkdownToken, coalesced_results[coalesce_index])
         POGGER.debug(
             ">>before_add_ws>>$>>add>>$>>",
@@ -201,6 +209,7 @@ class InlineProcessor:
             ParserHelper.make_whitespace_visible(str(text_token.token_text)),
         )
         return InlineTextBlockHelper.process_inline_text_block(
+            parse_properties,
             text_token.token_text,
             coalesced_stack,
             is_para=True,
@@ -209,7 +218,6 @@ class InlineProcessor:
             column_number=text_token.column_number,
             para_owner=paragraph_token,
             tabified_text=text_token.tabified_text,
-            parser_properties=parse_properties,
         )
 
     @staticmethod
@@ -220,7 +228,9 @@ class InlineProcessor:
         coalesced_list: List[MarkdownToken],
         parse_properties: ParseBlockPassProperties,
     ) -> List[MarkdownToken]:
-        assert coalesced_results[coalesce_index].is_text
+        assert coalesced_results[
+            coalesce_index
+        ].is_text, "Coalesced tokens must be text."
         text_token = cast(TextMarkdownToken, coalesced_results[coalesce_index])
         POGGER.debug("atx-block>>$<<", text_token)
         POGGER.debug(
@@ -232,19 +242,23 @@ class InlineProcessor:
             text_token.extracted_whitespace,
         )
 
-        assert coalesced_list[-1].is_atx_heading
+        assert coalesced_list[
+            -1
+        ].is_atx_heading, "Final coalseced token must be an ATX token."
         atx_token = cast(AtxHeadingMarkdownToken, coalesced_list[-1])
         POGGER.debug(">>text_token>>$", text_token)
         return InlineTextBlockHelper.process_inline_text_block(
+            parse_properties,
             text_token.token_text,
             coalesced_stack,
             text_token.extracted_whitespace,
             line_number=text_token.line_number,
-            column_number=text_token.column_number
-            + len(text_token.extracted_whitespace)
-            + atx_token.hash_count,
+            column_number=(
+                text_token.column_number
+                + len(text_token.extracted_whitespace)
+                + atx_token.hash_count
+            ),
             tabified_text=text_token.tabified_text,
-            parser_properties=parse_properties,
         )
 
     @staticmethod
@@ -254,10 +268,13 @@ class InlineProcessor:
         coalesced_stack: List[MarkdownToken],
         parse_properties: ParseBlockPassProperties,
     ) -> List[MarkdownToken]:
-        assert coalesced_results[coalesce_index].is_text
+        assert coalesced_results[
+            coalesce_index
+        ].is_text, "Coalesced tokens must be text."
         text_token = cast(TextMarkdownToken, coalesced_results[coalesce_index])
         POGGER.debug(">>text_token>>$", text_token)
         processed_tokens = InlineTextBlockHelper.process_inline_text_block(
+            parse_properties,
             text_token.token_text,
             coalesced_stack,
             whitespace_to_recombine=text_token.extracted_whitespace,
@@ -266,7 +283,6 @@ class InlineProcessor:
             line_number=text_token.line_number,
             column_number=text_token.column_number,
             tabified_text=text_token.tabified_text,
-            parser_properties=parse_properties,
         )
         POGGER.debug(
             "processed_tokens>>$",
@@ -281,25 +297,31 @@ class InlineProcessor:
         coalesced_list: List[MarkdownToken],
         coalesced_stack: List[MarkdownToken],
     ) -> List[MarkdownToken]:
-        assert coalesced_results[coalesce_index].is_text
+        assert coalesced_results[
+            coalesce_index
+        ].is_text, "Coalesced tokens must be text."
         text_token = cast(TextMarkdownToken, coalesced_results[coalesce_index])
         encoded_text = InlineHelper.append_text("", text_token.token_text)
         if coalesced_list[-1].is_fenced_code_block:
             line_number_delta, new_column_number = 1, 1
 
-            POGGER.info("coalesced_stack:$<", coalesced_stack)
+            # POGGER.info("coalesced_stack:$<", coalesced_stack)
             if coalesced_stack:
                 if coalesced_stack[-1].is_block_quote_start:
                     block_quote_token = cast(
                         BlockQuoteMarkdownToken, coalesced_stack[-1]
                     )
-                    assert block_quote_token.bleading_spaces
+                    assert (
+                        block_quote_token.bleading_spaces
+                    ), "Bleading spaces must be defined."
                     split_leading_spaces = block_quote_token.bleading_spaces.split(
                         ParserHelper.newline_character
                     )
                 else:
                     list_token = cast(ListStartMarkdownToken, coalesced_stack[-1])
-                    assert list_token.leading_spaces
+                    assert (
+                        list_token.leading_spaces is not None
+                    ), "Leading spaces must be defined."
                     split_leading_spaces = list_token.leading_spaces.split(
                         ParserHelper.newline_character
                     )
@@ -310,16 +332,18 @@ class InlineProcessor:
                 )
             else:
                 leading_whitespace = text_token.extracted_whitespace
-                POGGER.debug(">>$<<", text_token)
-                assert ParserHelper.newline_character not in leading_whitespace
-                POGGER.info(
-                    "leading_whitespace:$<",
-                    leading_whitespace,
-                )
+                # POGGER.debug(">>$<<", text_token)
+                assert (
+                    ParserHelper.newline_character not in leading_whitespace
+                ), "Whitespace cannot contain any newlines."
+                # POGGER.info(
+                #     "leading_whitespace:$<",
+                #     leading_whitespace,
+                # )
                 leading_whitespace = ParserHelper.remove_all_from_text(
                     leading_whitespace
                 )
-                POGGER.info("leading_whitespace:$<", leading_whitespace)
+                # POGGER.info("leading_whitespace:$<", leading_whitespace)
                 new_column_number += len(leading_whitespace)
         else:
             line_number_delta, new_column_number = (
@@ -334,8 +358,8 @@ class InlineProcessor:
                 column_number=new_column_number,
             )
         ]
-        POGGER.debug(
-            "new Text>>$>>",
-            processed_tokens,
-        )
+        # POGGER.debug(
+        #     "new Text>>$>>",
+        #     processed_tokens,
+        # )
         return processed_tokens

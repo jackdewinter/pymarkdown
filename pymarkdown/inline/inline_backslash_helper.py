@@ -108,7 +108,7 @@ class InlineBackslashHelper:
                 assert (
                     source_text[next_index]
                     == InlineCharacterReferenceHelper.character_reference_start_character
-                )
+                ), "If not a backslahs, must be a character reference character."
                 inline_response = (
                     InlineCharacterReferenceHelper.handle_character_reference(
                         parser_properties, inline_request
@@ -118,8 +118,9 @@ class InlineBackslashHelper:
                 inline_response.new_string,
                 inline_response.new_index,
             )
-            assert new_string is not None
-            assert new_index is not None
+            assert (
+                new_string is not None and new_index is not None
+            ), "String and index results must be valid."
             POGGER.debug("handle_backslashes<<$<<$", new_string, new_index)
             string_parts.append(new_string)
             start_index = new_index

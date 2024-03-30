@@ -39,7 +39,7 @@ class BlockQuoteProcessor:
     def __adjust_lazy_handling(
         parser_state: ParserState,
         line_to_parse: str,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         was_paragraph_continuation: bool,
     ) -> Tuple[bool, bool]:
         if (
@@ -55,7 +55,6 @@ class BlockQuoteProcessor:
                     line_to_parse,
                     0,
                     extracted_whitespace,
-                    exclude_thematic_break=False,
                 )
             )
 
@@ -76,7 +75,7 @@ class BlockQuoteProcessor:
         position_marker: PositionMarker,
         block_quote_data: BlockQuoteData,
         line_to_parse: str,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         was_paragraph_continuation: bool,
     ) -> Tuple[List[MarkdownToken], BlockQuoteData, bool]:
         """
@@ -135,7 +134,7 @@ class BlockQuoteProcessor:
     def __handle_block_quote_block_really_start(
         parser_state: ParserState,
         position_marker: PositionMarker,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         grab_bag: ContainerGrabBag,
     ) -> Tuple[
         Optional[RequeueLineInfo],
@@ -145,7 +144,9 @@ class BlockQuoteProcessor:
         List[MarkdownToken],
         List[MarkdownToken],
     ]:
-        assert grab_bag.container_start_bq_count is not None
+        assert (
+            grab_bag.container_start_bq_count is not None
+        ), "If starting here, we need a block quote count."
         POGGER.debug("handle_block_quote_block>>block-start")
         POGGER.debug("original_line:>:$:<", grab_bag.original_line)
         (
@@ -210,6 +211,9 @@ class BlockQuoteProcessor:
         """
         POGGER.debug("handle_block_quote_block>>start")
         extracted_whitespace: Optional[str] = grab_bag.extracted_whitespace
+        assert (
+            extracted_whitespace is not None
+        ), "Extracted whitespace must be available at this point."
         adj_ws: Optional[str] = grab_bag.adj_ws
 
         (
@@ -246,7 +250,9 @@ class BlockQuoteProcessor:
         )
 
         if really_start:
-            assert not requeue_line_info
+            assert (
+                not requeue_line_info
+            ), "If we need to start, we should not be requeuing a line."
             (
                 requeue_line_info,
                 did_process,
@@ -345,10 +351,9 @@ class BlockQuoteProcessor:
     def __check_if_really_start(
         parser_state: ParserState,
         position_marker: PositionMarker,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         adj_ws: Optional[str],
     ) -> Tuple[bool, Optional[RequeueLineInfo]]:
-        assert extracted_whitespace is not None
         POGGER.debug(
             "handle_block_quote_block>>text>:$:<", position_marker.text_to_parse
         )
@@ -424,7 +429,11 @@ class BlockQuoteProcessor:
                 if requeue_line_info:
                     return False, requeue_line_info
             else:
-                assert eligible_stack[eligible_stack_index].is_block_quote
+                assert eligible_stack[
+                    eligible_stack_index
+                ].is_block_quote, (
+                    "If its not a list token, it must be a block quote token."
+                )
                 break  # pragma: no cover
             eligible_stack_index += 1
         POGGER.debug(
@@ -442,7 +451,9 @@ class BlockQuoteProcessor:
         eligible_stack: List[StackToken],
         eligible_stack_index: int,
     ) -> Tuple[int, Optional[RequeueLineInfo]]:
-        assert eligible_stack[eligible_stack_index].is_list
+        assert eligible_stack[
+            eligible_stack_index
+        ].is_list, "Stack for lists should always end with list tokens."
         list_token = cast(ListStackToken, eligible_stack[eligible_stack_index])
         current_indent = list_token.indent_level
         if current_indent <= position_marker.index_number:
@@ -454,18 +465,19 @@ class BlockQuoteProcessor:
         POGGER.debug("eligible_stack_index=$", eligible_stack_index)
 
         while eligible_stack_index >= 0:
-            assert eligible_stack[eligible_stack_index].is_list
+            assert eligible_stack[
+                eligible_stack_index
+            ].is_list, "Stack for lists should always end with list tokens."
             list_token = cast(ListStackToken, eligible_stack[eligible_stack_index])
             if list_token.indent_level <= position_marker.index_number:
                 break
             eligible_stack_index -= 1
         POGGER.debug("eligible_stack_index=$", eligible_stack_index)
-        if eligible_stack_index >= 0:
-            root_index = (
-                parser_state.token_stack.index(eligible_stack[eligible_stack_index]) + 1
-            )
-        else:
-            root_index = 0
+        root_index = (
+            (parser_state.token_stack.index(eligible_stack[eligible_stack_index]) + 1)
+            if eligible_stack_index >= 0
+            else 0
+        )
         POGGER.debug("root_index=$", root_index)
         (
             container_level_tokens,
@@ -486,7 +498,7 @@ class BlockQuoteProcessor:
         parser_state: ParserState,
         position_marker: PositionMarker,
         block_quote_data: BlockQuoteData,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         container_start_bq_count: int,
         original_line: str,
     ) -> Tuple[
@@ -596,7 +608,7 @@ class BlockQuoteProcessor:
         block_quote_data: BlockQuoteData,
         start_index: int,
         line_to_parse: str,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         original_start_index: int,
         container_start_bq_count: int,
         position_marker: PositionMarker,
@@ -703,7 +715,7 @@ class BlockQuoteProcessor:
         container_level_tokens: List[MarkdownToken],
     ) -> Tuple[BlockQuoteData, str, List[MarkdownToken], str]:
         POGGER.debug("handle_block_quote_section>>fenced")
-        assert start_index >= 0
+        assert start_index >= 0, "Index must be valid."
         removed_text, line_to_parse = (
             line_to_parse[:start_index],
             line_to_parse[start_index:],

@@ -33,7 +33,6 @@ class NewListItemMarkdownToken(ContainerMarkdownToken):
             extracted_whitespace,
             list_start_content,
         )
-        assert extracted_whitespace is not None
         ContainerMarkdownToken.__init__(
             self,
             MarkdownToken._token_new_list_item,

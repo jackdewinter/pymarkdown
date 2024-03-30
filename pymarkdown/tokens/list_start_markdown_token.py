@@ -129,8 +129,7 @@ class ListStartMarkdownToken(ContainerMarkdownToken):
         """
         Adjust this token for a new list item (uses copy to keep track).
         """
-        assert new_list_item_token and new_list_item_token.is_new_list_item
-
+        # assert new_list_item_token and new_list_item_token.is_new_list_item
         self.__last_new_list_token = new_list_item_token
 
         if not skip_adjustment:
@@ -172,7 +171,9 @@ class ListStartMarkdownToken(ContainerMarkdownToken):
         """
         Remove the last leading space and return it.
         """
-        assert self.__leading_spaces is not None
+        assert (
+            self.__leading_spaces is not None
+        ), "Leading spaces must be defined by now."
         last_separator_index = self.__leading_spaces.rfind("\n")
         if last_separator_index == -1:
             extracted_text = self.__leading_spaces

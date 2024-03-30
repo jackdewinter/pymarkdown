@@ -46,8 +46,7 @@ class RuleMd035(RulePlugin):
             raise ValueError(
                 "Allowable values cannot including leading or trailing spaces."
             )
-        is_valid = bool(found_value)
-        if is_valid:
+        if is_valid := bool(found_value):
             valid_character = None
             for next_character in found_value:
                 if next_character not in " _-*":
@@ -88,29 +87,30 @@ class RuleMd035(RulePlugin):
         """
         Event that a new token is being processed.
         """
-        if token.is_thematic_break:
-            break_token = cast(ThematicBreakMarkdownToken, token)
-            if self.__actual_style:
-                if self.__actual_style != break_token.rest_of_line:
-                    if context.in_fix_mode:
-                        self.register_fix_token_request(
-                            context,
-                            token,
-                            "next_token",
-                            "start_character",
-                            self.__actual_style[0],
-                        )
-                        self.register_fix_token_request(
-                            context,
-                            token,
-                            "next_token",
-                            "rest_of_line",
-                            self.__actual_style,
-                        )
-                    else:
-                        extra_data = f"Expected: {self.__actual_style}, Actual: {break_token.rest_of_line}"
-                        self.report_next_token_error(
-                            context, token, extra_error_information=extra_data
-                        )
-            else:
-                self.__actual_style = break_token.rest_of_line
+        if not token.is_thematic_break:
+            return
+        break_token = cast(ThematicBreakMarkdownToken, token)
+        if self.__actual_style:
+            if self.__actual_style != break_token.rest_of_line:
+                if context.in_fix_mode:
+                    self.register_fix_token_request(
+                        context,
+                        token,
+                        "next_token",
+                        "start_character",
+                        self.__actual_style[0],
+                    )
+                    self.register_fix_token_request(
+                        context,
+                        token,
+                        "next_token",
+                        "rest_of_line",
+                        self.__actual_style,
+                    )
+                else:
+                    extra_data = f"Expected: {self.__actual_style}, Actual: {break_token.rest_of_line}"
+                    self.report_next_token_error(
+                        context, token, extra_error_information=extra_data
+                    )
+        else:
+            self.__actual_style = break_token.rest_of_line

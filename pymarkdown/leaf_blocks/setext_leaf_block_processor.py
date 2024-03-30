@@ -34,7 +34,7 @@ class SetextLeafBlockProcessor:
         original_line: str,
         line_to_parse: str,
         extracted_whitespace: str,
-    ) -> Tuple[str, Optional[str], bool, bool, Optional[str]]:
+    ) -> Tuple[str, str, bool, bool, Optional[str]]:
         POGGER.debug("original_line>>:$:<", original_line)
         POGGER.debug("line_to_parse>>:$:<", line_to_parse)
 
@@ -68,7 +68,7 @@ class SetextLeafBlockProcessor:
     def parse_setext_headings(
         parser_state: ParserState,
         position_marker: PositionMarker,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         block_quote_data: BlockQuoteData,
         original_line: str,
     ) -> List[MarkdownToken]:
@@ -77,7 +77,6 @@ class SetextLeafBlockProcessor:
         """
 
         new_tokens: List[MarkdownToken] = []
-        assert extracted_whitespace is not None
         POGGER.debug("extracted_whitespace=>:$:<", extracted_whitespace)
         if (
             TabHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
@@ -120,7 +119,6 @@ class SetextLeafBlockProcessor:
                     extracted_whitespace,
                 )
 
-            assert extracted_whitespace is not None
             SetextLeafBlockProcessor.__prepare_and_create_setext_token(
                 parser_state,
                 position_marker,
@@ -153,7 +151,7 @@ class SetextLeafBlockProcessor:
         split_tab_with_block_quote_suffix: bool,
         extra_whitespace_prefix: Optional[str],
     ) -> Tuple[int, int, str]:
-        _, collected_to_index = ParserHelper.collect_while_character(
+        _, collected_to_index = ParserHelper.collect_while_character_verified(
             line_to_parse,
             0,
             position_marker.text_to_parse[position_marker.index_number],
@@ -163,13 +161,10 @@ class SetextLeafBlockProcessor:
         )
 
         POGGER.debug(">>collected_to_index>:$:<", collected_to_index)
-        assert collected_to_index is not None
         (
             after_whitespace_index,
             extra_whitespace_after_setext,
-        ) = ParserHelper.extract_spaces(line_to_parse, collected_to_index)
-        assert after_whitespace_index is not None
-        assert extra_whitespace_after_setext is not None
+        ) = ParserHelper.extract_spaces_verified(line_to_parse, collected_to_index)
 
         if not is_paragraph_continuation and after_whitespace_index == len(
             line_to_parse
@@ -212,7 +207,7 @@ class SetextLeafBlockProcessor:
         POGGER.debug("parser_state.token_stack[-1]>>:$:<", parser_state.token_stack[-1])
         POGGER.debug("parser_state.token_stack>>:$:<", parser_state.token_stack)
         POGGER.debug("parser_state.token_document>>:$:<", parser_state.token_document)
-        assert parser_state.token_stack[-1].is_list
+        assert parser_state.token_stack[-1].is_list, "Should be within a list block."
         modified_whitespace = (
             extra_whitespace_prefix + extracted_whitespace
             if extra_whitespace_prefix is not None
@@ -248,8 +243,12 @@ class SetextLeafBlockProcessor:
                 parser_state.original_line_to_parse,
             )
             adj_text = position_marker.text_to_parse[position_marker.index_number :]
-            assert parser_state.original_line_to_parse is not None
-            assert parser_state.original_line_to_parse.endswith(adj_text)
+            assert (
+                parser_state.original_line_to_parse is not None
+            ), "Original line should be defined by this point."
+            assert parser_state.original_line_to_parse.endswith(
+                adj_text
+            ), "Original line should end with the adjusted text."
             removed_text_length = len(parser_state.original_line_to_parse) - len(
                 adj_text
             )
@@ -268,8 +267,8 @@ class SetextLeafBlockProcessor:
         position_marker: PositionMarker,
         collected_to_index: int,
         new_tokens: List[MarkdownToken],
-        extracted_whitespace: Optional[str],
-        extra_whitespace_after_setext: Optional[str],
+        extracted_whitespace: str,
+        extra_whitespace_after_setext: str,
     ) -> None:
         token_index = len(parser_state.token_document) - 1
         while not parser_state.token_document[token_index].is_paragraph:
@@ -278,7 +277,9 @@ class SetextLeafBlockProcessor:
         paragraph_token = cast(
             ParagraphMarkdownToken, parser_state.token_document[token_index]
         )
-        assert paragraph_token.extra_data is not None
+        assert (
+            paragraph_token.extra_data is not None
+        ), "SetExt token extra data should already be defined."
         replacement_token = SetextHeadingMarkdownToken(
             position_marker.text_to_parse[position_marker.index_number],
             collected_to_index - position_marker.index_number,
@@ -292,8 +293,6 @@ class SetextLeafBlockProcessor:
         # the last paragraph of text (see case 61) and translates it
         # into a heading, this has to be done separately, as there is no
         # stack token to close.
-        assert extra_whitespace_after_setext is not None
-        assert extracted_whitespace is not None
         new_tokens.append(
             replacement_token.generate_close_markdown_token_from_markdown_token(
                 extracted_whitespace, extra_whitespace_after_setext
