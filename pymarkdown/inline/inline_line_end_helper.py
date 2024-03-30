@@ -303,14 +303,10 @@ class InlineLineEndHelper:
         if not is_setext and tabified_remaining_line and removed_end_whitespace:
             POGGER.debug("<<tabified_remaining_line>:$:<", tabified_remaining_line)
             POGGER.debug("<<removed_end_whitespace>:$:<", removed_end_whitespace)
-            adj_original, _ = TabHelper.find_detabify_string_ex(
+            removed_end_whitespace, _ = TabHelper.find_detabify_string_ex(
                 tabified_remaining_line, removed_end_whitespace
             )
-            POGGER.debug("<<adj_original<<$<<", adj_original)
-            assert (
-                adj_original is not None
-            ), "Since we are tabbed, the call must always find a string."
-            removed_end_whitespace = adj_original
+            POGGER.debug("<<removed_end_whitespace<<$<<", removed_end_whitespace)
 
         POGGER.debug("<<end_string<<$<<", end_string)
         end_string = (
@@ -388,6 +384,9 @@ class InlineLineEndHelper:
 
         if not inline_response.new_tokens:
             # POGGER.debug("ws")
+            assert (
+                end_string is not None
+            ), "If no new tokens, an end_string must be produced."
             end_string = InlineLineEndHelper.__add_recombined_whitespace(
                 bool(whitespace_to_recombine),
                 source_text,
@@ -478,9 +477,9 @@ class InlineLineEndHelper:
         did_recombine: bool,
         source_text: str,
         inline_response: InlineResponse,
-        end_string: Optional[str],
+        end_string: str,
         is_setext: bool,
-    ) -> Optional[str]:
+    ) -> str:
         POGGER.debug("__arw>>did_recombine>>$>>", did_recombine)
         POGGER.debug(
             "__arw>>end_string>>$>>",
@@ -494,7 +493,7 @@ class InlineLineEndHelper:
             assert (
                 inline_response.new_index is not None
             ), "new_index should be defined by this point."
-            new_index, extracted_whitespace = ParserHelper.extract_spaces(
+            new_index, extracted_whitespace = ParserHelper.extract_spaces_verified(
                 source_text, inline_response.new_index
             )
             POGGER.debug("__arw>>$>>", source_text[: inline_response.new_index])
@@ -503,10 +502,11 @@ class InlineLineEndHelper:
                 "__arw>>extracted_whitespace>>$>>",
                 extracted_whitespace,
             )
+            assert (
+                is_setext
+            ), "If trying to recombine and whitespace is found, must be text in an SetExt heading."
             if extracted_whitespace:
                 inline_response.new_index = new_index
-                assert end_string is not None, "TODO: check"
-                assert is_setext, "TODO: why?"
                 end_string = f"{end_string}{extracted_whitespace}{ParserHelper.whitespace_split_character}"
                 POGGER.debug(
                     "__arw>>end_string>>$>>",

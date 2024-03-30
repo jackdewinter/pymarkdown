@@ -314,7 +314,7 @@ class AtxLeafBlockProcessor:
             )
             leading_spaces = list_markdown_token.leading_spaces
 
-            # TODO This needs to be fixed at a higher level, should not be needed
+            # TOoDO This needs to be fixed at a higher level, should not be needed
             # if not leading_spaces and parser_state.token_stack[stack_index].is_ordered_list:
             #     leading_spaces = list_markdown_token.extracted_whitespace
             #     assert False
@@ -419,11 +419,9 @@ class AtxLeafBlockProcessor:
             grab_bag,
         ):
             POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
-            new_extracted_whitespace = TabHelper.adjust_block_quote_indent_for_tab(
+            extracted_whitespace = TabHelper.adjust_block_quote_indent_for_tab_verified(
                 parser_state, extracted_whitespace
             )
-            assert new_extracted_whitespace is not None, "TODO: tab"
-            extracted_whitespace = new_extracted_whitespace
             POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
 
         (

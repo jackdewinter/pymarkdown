@@ -142,7 +142,6 @@ class TextMarkdownToken(InlineMarkdownToken):
         data_field_parts = [self.__token_text, self.__extracted_whitespace]
         if self.__end_whitespace:
             data_field_parts.append(self.__end_whitespace)
-            assert not self.__tabified_text, "TODO: why?"
         elif self.__tabified_text:
             data_field_parts.extend(("", self.__tabified_text))
         self._set_extra_data(MarkdownToken.extra_data_separator.join(data_field_parts))
@@ -202,6 +201,9 @@ class TextMarkdownToken(InlineMarkdownToken):
         if other_text_token.is_blank_line:
             text_to_combine = ""
             tabified_text_to_combine: Optional[str] = ""
+            assert (
+                other_text_token.extra_data is not None
+            ), "If the other token is a blank line, the extra_data field must be set."
             (
                 whitespace_present,
                 blank_line_sequence,
@@ -248,17 +250,20 @@ class TextMarkdownToken(InlineMarkdownToken):
         return removed_whitespace
 
     def __combine_handle_whitespace(
-        self, remove_leading_spaces: int, whitespace_present: Optional[str]
+        self, remove_leading_spaces: int, whitespace_present: str
     ) -> Tuple[str, str]:
         prefix_whitespace = ""
-        whitespace_to_append, removed_whitespace = None, ""
+        removed_whitespace = ""
+
         if not remove_leading_spaces:
-            assert whitespace_present is not None, "TODO: check"
             prefix_whitespace = whitespace_present
         elif remove_leading_spaces == -1:
-            whitespace_to_append, prefix_whitespace = whitespace_present, ""
+            prefix_whitespace = ""
+            self.__extracted_whitespace = (
+                f"{self.__extracted_whitespace}"
+                + f"{ParserHelper.newline_character}{whitespace_present}"
+            )
         else:
-            assert whitespace_present is not None
             whitespace_present_size = len(whitespace_present)
             POGGER.debug(
                 "whitespace_present>>$>>$<<",
@@ -266,18 +271,15 @@ class TextMarkdownToken(InlineMarkdownToken):
                 whitespace_present,
             )
             POGGER.debug("remove_leading_spaces>>$<<", remove_leading_spaces)
-            if whitespace_present_size < remove_leading_spaces:
-                removed_whitespace, prefix_whitespace = whitespace_present, ""
-            else:
-                removed_whitespace, prefix_whitespace = (
-                    whitespace_present[:remove_leading_spaces],
-                    whitespace_present[remove_leading_spaces:],
-                )
-
-        if whitespace_to_append is not None:
-            self.__extracted_whitespace = (
-                f"{self.__extracted_whitespace}"
-                + f"{ParserHelper.newline_character}{whitespace_to_append}"
+            removed_whitespace = (
+                whitespace_present
+                if whitespace_present_size < remove_leading_spaces
+                else whitespace_present[:remove_leading_spaces]
+            )
+            prefix_whitespace = (
+                ""
+                if whitespace_present_size < remove_leading_spaces
+                else whitespace_present[remove_leading_spaces:]
             )
         return removed_whitespace, prefix_whitespace
 
@@ -432,7 +434,7 @@ class TextMarkdownToken(InlineMarkdownToken):
             )
             split_setext_text_size = len(split_setext_text)
             if split_setext_text_size == 1:
-                assert text_part_index == 0, "TODO: why?"
+                assert text_part_index == 0, "This must match with the line below."
                 ws_suffix_text = split_setext_text[0]
                 # if text_part_index == 0:
                 #     ws_suffix_text = split_setext_text[0]

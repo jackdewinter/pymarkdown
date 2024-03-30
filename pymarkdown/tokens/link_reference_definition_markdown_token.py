@@ -76,15 +76,11 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
                 link_debug.end_whitespace,
             )
         else:
-            # TODO do this better.
-            (
-                self.__link_name_debug,
-                self.__link_destination_whitespace,
-                self.__link_destination_raw,
-                self.__link_title_whitespace,
-                self.__link_title_raw,
-                self.__end_whitespace,
-            ) = ("", "", "", "", "", "")
+            self.__link_name_debug = self.__link_destination_whitespace = (
+                self.__link_destination_raw
+            ) = self.__link_title_whitespace = self.__link_title_raw = (
+                self.__end_whitespace
+            ) = ""
 
         extra_data = self.__validate_proper_fields_are_valid(extracted_whitespace)
         LeafMarkdownToken.__init__(

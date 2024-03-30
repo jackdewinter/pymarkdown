@@ -48,7 +48,6 @@ class SetextLeafBlockProcessor:
         ) = TabHelper.parse_thematic_break_with_tab(
             original_line, line_to_parse, extracted_whitespace
         )
-        assert new_extracted_whitespace is not None, "TODO: Tab"
         POGGER.debug("token_text>>:$:<", token_text)
         POGGER.debug("split_tab>>:$:<", split_tab)
         POGGER.debug(

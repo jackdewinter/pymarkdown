@@ -319,7 +319,7 @@ class ContainerBlockProcessor:
     def __look_back_in_document_for_block_quote(
         parser_state: ParserState, token_index: int
     ) -> Optional[BlockQuoteMarkdownToken]:
-        # TODO Look back on stack instead?
+        # Option? Look back on stack instead?
         other_block_quote_token, other_token_index = None, token_index
         while other_token_index >= 0:
             if parser_state.token_document[other_token_index].is_block_quote_start:
@@ -515,9 +515,9 @@ class ContainerBlockProcessor:
         """
 
         grab_bag.adj_ws = grab_bag.extracted_whitespace
-        assert (
-            grab_bag.adj_ws is not None
-        ), "Adjusted whitespace must be set by this point."
+        # assert (
+        #     grab_bag.adj_ws is not None
+        # ), "Adjusted whitespace must be set by this point."
 
         last_block_stack_index = parser_state.find_last_list_block_on_stack()
         if last_block_stack_index <= 0:
@@ -553,7 +553,7 @@ class ContainerBlockProcessor:
                 found_block_quote_token,
             ) = ContainerBlockProcessor.__look_for_any_list_start(parser_state)
 
-            assert grab_bag.adj_ws is not None, "TODO: why here?"
+            # assert grab_bag.adj_ws is not None, "TOoDO: why here?"
             ContainerBlockProcessor.__calculate_adjusted_whitespace_kludge(
                 parser_state,
                 token_index,

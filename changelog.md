@@ -19,6 +19,9 @@
 - [Issue 1037](https://github.com/jackdewinter/pymarkdown/issues/1037)
   - replaced calls to collect/extract ParserHelper functions followed by
     asserts with X_verified functions that do that already
+- [Issue 1039](https://github.com/jackdewinter/pymarkdown/issues/1039)
+  - ensure that all asserts have a message with their reasoning
+  - verify that the asserts are required, refactoring where necessary
 
 ## Version 0.9.18 - Date: 2024-03-18
 

@@ -35,7 +35,7 @@ class InlineHelper:
         new_index: int,
         close_character: str,
         start_character: Optional[str],
-    ) -> Tuple[Optional[int], Optional[str]]:
+    ) -> Tuple[int, Optional[str]]:
         """
         Extract a string that is bounded by some manner of characters.
         """

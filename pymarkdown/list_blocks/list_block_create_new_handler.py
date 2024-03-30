@@ -34,6 +34,7 @@ from pymarkdown.tokens.unordered_list_start_markdown_token import (
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
+# pylint: disable=too-many-lines
 # pylint: disable=too-few-public-methods
 
 
@@ -48,7 +49,7 @@ class ListBlockCreateNewHandler:
         parser_state: ParserState,
         position_marker: PositionMarker,
         indent_level: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         ws_before_marker: int,
         ws_after_marker: int,
         index: int,
@@ -65,6 +66,7 @@ class ListBlockCreateNewHandler:
         """
         Create a new list at the current location.
         """
+        assert alt_adj_ws is not None
         adj_ws = ListBlockCreateNewHandler.__calculate_create_adj_ws(
             alt_adj_ws, position_marker, parser_state
         )
@@ -73,6 +75,7 @@ class ListBlockCreateNewHandler:
         )
         if found_block_quote_before_list and adj_ws is None and alt_adj_ws is not None:
             adj_ws = alt_adj_ws
+
         (
             whitespace_to_add,
             alt_adj_ws,
@@ -86,6 +89,7 @@ class ListBlockCreateNewHandler:
             extracted_whitespace,
             adj_ws,
         )
+
         tabbed_whitespace_to_add = None
         tabbed_adjust = -1
         if "\t" in original_line:
@@ -96,21 +100,32 @@ class ListBlockCreateNewHandler:
                 position_marker, original_line, is_ulist, whitespace_to_add, index
             )
 
-        other_create_token_fn = (
-            ListBlockCreateNewHandler.__handle_list_block_unordered
-            if is_ulist
-            else ListBlockCreateNewHandler.__handle_list_block_ordered
-        )
-        new_token, new_stack = other_create_token_fn(
-            position_marker,
-            indent_level,
-            tabbed_adjust,
-            whitespace_to_add,
-            tabbed_whitespace_to_add,
-            ws_before_marker,
-            ws_after_marker,
-            index,
-        )
+        if is_ulist:
+            new_token, new_stack = (
+                ListBlockCreateNewHandler.__handle_list_block_unordered(
+                    position_marker,
+                    indent_level,
+                    tabbed_adjust,
+                    whitespace_to_add,
+                    tabbed_whitespace_to_add,
+                    ws_before_marker,
+                    ws_after_marker,
+                    index,
+                )
+            )
+        else:
+            new_token, new_stack = (
+                ListBlockCreateNewHandler.__handle_list_block_ordered(
+                    position_marker,
+                    indent_level,
+                    tabbed_adjust,
+                    whitespace_to_add,
+                    tabbed_whitespace_to_add,
+                    ws_before_marker,
+                    ws_after_marker,
+                    index,
+                )
+            )
         (
             new_container_level_tokens,
             adjusted_text_to_parse,
@@ -129,7 +144,6 @@ class ListBlockCreateNewHandler:
             alt_adj_ws,
             container_depth,
         )
-        assert new_container_level_tokens is not None, "TODO: check"
         container_level_tokens.extend(new_container_level_tokens)
         return True, adjusted_text_to_parse, requeue_line_info
 
@@ -137,11 +151,11 @@ class ListBlockCreateNewHandler:
 
     @staticmethod
     def __calculate_create_adj_ws(
-        adj_ws: Optional[str],
+        adj_ws: str,
         position_marker: PositionMarker,
         parser_state: ParserState,
     ) -> Optional[str]:
-        create_adj_ws = adj_ws
+        create_adj_ws: Optional[str] = adj_ws
         POGGER.debug("adj_ws=>:$:<", create_adj_ws)
         if position_marker.index_number:
             POGGER.debug("adjusting for nested")
@@ -180,23 +194,20 @@ class ListBlockCreateNewHandler:
     @staticmethod
     def __create_new_list_handle_whitespace(
         forced_container_whitespace: Optional[str],
-        alt_adj_ws: Optional[str],
+        alt_adj_ws: str,
         ws_before_marker: int,
         indent_level: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         adj_ws: Optional[str],
-    ) -> Tuple[Optional[str], Optional[str], int, int]:
+    ) -> Tuple[str, str, int, int]:
         if forced_container_whitespace is not None:
-            whitespace_to_add: Optional[str] = (
+            whitespace_to_add = (
                 forced_container_whitespace + alt_adj_ws
                 if alt_adj_ws
                 else forced_container_whitespace
             )
             ws_before_marker += len(forced_container_whitespace)
             indent_level += len(forced_container_whitespace)
-            assert (
-                alt_adj_ws is not None
-            ), "if whitespace was formed, alt_adj_ws must be defined"
             alt_adj_ws += forced_container_whitespace
         else:
             whitespace_to_add = extracted_whitespace if adj_ws is None else adj_ws
@@ -290,9 +301,9 @@ class ListBlockCreateNewHandler:
         current_container_blocks: List[StackToken],
         position_marker: PositionMarker,
         adj_ws: Optional[str],
-        alt_adj_ws: Optional[str],
+        alt_adj_ws: str,
         container_depth: int,
-    ) -> Tuple[Optional[List[MarkdownToken]], Optional[str], Optional[RequeueLineInfo]]:
+    ) -> Tuple[List[MarkdownToken], Optional[str], Optional[RequeueLineInfo]]:
         """
         Handle the processing of the last part of the list.
         """
@@ -331,7 +342,7 @@ class ListBlockCreateNewHandler:
 
         assert (
             container_level_tokens is not None
-        ), "some contain tokens must be produced"
+        ), "Posting some token must be the result of one of these actions."
         POGGER.debug("__post_list>>before>>$", container_level_tokens)
         if not did_find or not emit_li:
             POGGER.debug("__post_list>>adding>>$", new_token)
@@ -369,7 +380,7 @@ class ListBlockCreateNewHandler:
         indent_level: int,
         position_marker: PositionMarker,
         adj_ws: Optional[str],
-        alt_adj_ws: Optional[str],
+        alt_adj_ws: str,
     ) -> None:
         POGGER.debug("instead of-->$", new_token)
 
@@ -408,11 +419,7 @@ class ListBlockCreateNewHandler:
 
         POGGER.debug("adj_ws-->:$:<", adj_ws)
         POGGER.debug("alt_adj_ws-->:$:<", alt_adj_ws)
-        exws = (
-            alt_adj_ws
-            if adj_ws is None and alt_adj_ws is not None
-            else new_token.extracted_whitespace
-        )
+        exws = alt_adj_ws if adj_ws is None else new_token.extracted_whitespace
 
         # Replace the "other" list start token with a new list item token.
         # The overwritting of the value of new_token is specifically called for.
@@ -644,8 +651,7 @@ class ListBlockCreateNewHandler:
         (
             did_find,
             last_list_index,
-        ) = LeafBlockProcessorParagraph.check_for_list_in_process(parser_state)
-        assert did_find and last_list_index > 0, "if here, a list must be in progress"
+        ) = LeafBlockProcessorParagraph.verify_list_in_process(parser_state)
         last_list_index_token = cast(
             ListStackToken, parser_state.token_stack[last_list_index]
         )
@@ -927,7 +933,7 @@ class ListBlockCreateNewHandler:
         position_marker: PositionMarker,
         indent_level: int,
         tabbed_adjust: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         tabbed_whitespace_to_add: Optional[str],
         ws_before_marker: int,
         ws_after_marker: int,
@@ -937,7 +943,6 @@ class ListBlockCreateNewHandler:
         # to be called using the same pattern.
         _ = index
 
-        assert extracted_whitespace is not None, "TODO: Check"
         new_token = UnorderedListStartMarkdownToken(
             position_marker.text_to_parse[position_marker.index_number],
             indent_level,
@@ -966,13 +971,12 @@ class ListBlockCreateNewHandler:
         position_marker: PositionMarker,
         indent_level: int,
         tabbed_adjust: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         tabbed_whitespace_to_add: Optional[str],
         ws_before_marker: int,
         ws_after_marker: int,
         index: int,
     ) -> Tuple[ListStartMarkdownToken, ListStackToken]:
-        assert extracted_whitespace is not None, "TODO: Check"
         new_token = OrderedListStartMarkdownToken(
             position_marker.text_to_parse[index],
             position_marker.text_to_parse[position_marker.index_number : index],

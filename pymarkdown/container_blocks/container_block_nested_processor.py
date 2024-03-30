@@ -200,10 +200,10 @@ class ContainerBlockNestedProcessor:
         )
 
         nested_ulist_start, _, _, _ = ListBlockStartsHelper.is_ulist_start(
-            parser_state, line_to_parse, after_ws_index, ex_whitespace, False
+            parser_state, line_to_parse, after_ws_index, ex_whitespace, False, None
         )
         nested_olist_start, _, _, _ = ListBlockStartsHelper.is_olist_start(
-            parser_state, line_to_parse, after_ws_index, ex_whitespace, False
+            parser_state, line_to_parse, after_ws_index, ex_whitespace, False, None
         )
         nested_block_start = (
             False

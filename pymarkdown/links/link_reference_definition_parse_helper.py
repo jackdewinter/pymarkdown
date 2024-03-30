@@ -32,12 +32,13 @@ class LinkReferenceDefinitionParseHelper:
         parser_state: ParserState,
         line_to_parse: str,
         start_index: int,
-        extracted_whitespace: Optional[str],
-        is_blank_line: Optional[bool],
-    ) -> Tuple[bool, Optional[int], Optional[LinkReferenceDefinitionTuple]]:
+        extracted_whitespace: str,
+        is_blank_line: bool,
+    ) -> Tuple[bool, int, Optional[LinkReferenceDefinitionTuple]]:
         """
         Handle the parsing of what appears to be a link reference definition.
         """
+
         did_start = LinkReferenceDefinitionParseHelper.__is_link_reference_definition(
             parser_state, line_to_parse, start_index, extracted_whitespace
         )
@@ -53,7 +54,6 @@ class LinkReferenceDefinitionParseHelper:
         ) = LinkParseHelper.extract_link_label(
             parser_state.parse_properties, line_to_parse, start_index + 1
         )
-        assert is_blank_line is not None, "TODO: check"
         if keep_going:
             (
                 keep_going,
@@ -65,10 +65,7 @@ class LinkReferenceDefinitionParseHelper:
             ) = LinkParseHelper.extract_link_destination(
                 parser_state.parse_properties, line_to_parse, new_index, is_blank_line
             )
-        else:
-            inline_link = None
         if keep_going:
-            assert new_index is not None
             (
                 keep_going,
                 new_index,
@@ -90,7 +87,9 @@ class LinkReferenceDefinitionParseHelper:
                 line_to_parse, new_index
             )
         if keep_going:
-            assert collected_destination is not None, "TODO: Check"
+            assert (
+                collected_destination is not None
+            ), "if extract_link_label returned true, this must be defined."
             normalized_destination = LinkParseHelper.normalize_link_label(
                 collected_destination
             )
@@ -122,7 +121,7 @@ class LinkReferenceDefinitionParseHelper:
         parser_state: ParserState,
         line_to_parse: str,
         start_index: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
     ) -> bool:
         """
         Determine whether or not we have the start of a link reference definition.
@@ -131,7 +130,6 @@ class LinkReferenceDefinitionParseHelper:
         if parser_state.token_stack[-1].is_paragraph:
             return False
 
-        assert extracted_whitespace is not None, "TODO: Check"
         POGGER.debug(
             "__is_link_reference_definition - extracted_whitespace:>:$:<",
             extracted_whitespace,
@@ -187,9 +185,7 @@ class LinkReferenceDefinitionParseHelper:
         inline_raw_title: Optional[str],
         line_title_whitespace: Optional[str],
         end_whitespace: Optional[str],
-    ) -> Tuple[bool, Optional[int], Optional[LinkReferenceDefinitionTuple]]:
-        assert new_index != -1, "TODO: check, also why passed in if just to return?"
-
+    ) -> Tuple[bool, int, Optional[LinkReferenceDefinitionTuple]]:
         POGGER.debug(
             ">>collected_destination(normalized)>>$",
             normalized_destination,
@@ -222,13 +218,12 @@ class LinkReferenceDefinitionParseHelper:
 
     @staticmethod
     def __verify_link_definition_end(
-        line_to_parse: str, new_index: Optional[int]
+        line_to_parse: str, new_index: int
     ) -> Tuple[bool, int, Optional[str]]:
         """
         Verify that the link reference definition's ends properly.
         """
 
-        assert new_index is not None, "TODO: check"
         POGGER.debug("look for EOL-ws>>$<<", line_to_parse[new_index:])
         new_index, ex_ws = ParserHelper.extract_ascii_whitespace_verified(
             line_to_parse, new_index

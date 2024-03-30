@@ -6,7 +6,7 @@ container modules.
 """
 
 import logging
-from typing import List, Optional, cast
+from typing import List, cast
 
 from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
 from pymarkdown.container_blocks.container_grab_bag import ContainerGrabBag
@@ -31,11 +31,11 @@ class ContainerHelper:
     def __reduce_containers_if_required_bq_list(
         parser_state: ParserState,
         position_marker: PositionMarker,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         new_tokens: List[MarkdownToken],
     ) -> bool:
         did_once = False
-        if extracted_whitespace is not None and parser_state.token_stack[-1].is_list:
+        if parser_state.token_stack[-1].is_list:
             search_index = len(parser_state.token_stack)
             leading_space_length = (
                 len(extracted_whitespace) + position_marker.index_indent
@@ -73,10 +73,9 @@ class ContainerHelper:
         position_marker: PositionMarker,
         new_tokens: List[MarkdownToken],
         split_tab: bool,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         grab_bag: ContainerGrabBag,
     ) -> bool:
-        # TODO cyclic?
         x_tokens, _ = parser_state.close_open_blocks_fn(
             parser_state,
             include_block_quotes=True,
@@ -151,7 +150,7 @@ class ContainerHelper:
         block_quote_data: BlockQuoteData,
         new_tokens: List[MarkdownToken],
         split_tab: bool,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         grab_bag: ContainerGrabBag,
     ) -> bool:
         """

@@ -50,7 +50,6 @@ class SetextHeadingMarkdownToken(LeafMarkdownToken):
         elif self.__heading_character == "-":
             self.__hash_count = 2
         else:
-            # TODO better way to do this
             self.__hash_count = -1
 
         LeafMarkdownToken.__init__(

@@ -28,17 +28,15 @@ class HtmlBlockMarkdownToken(LeafMarkdownToken):
     def __init__(
         self, position_marker: PositionMarker, extracted_whitespace: str
     ) -> None:
-        if position_marker:
-            line_number, column_number = position_marker.line_number, (
-                position_marker.index_number
-                + position_marker.index_indent
-                + 1
-                - len(extracted_whitespace)
-            )
-        else:
-            # TODO better way to do this.
-            line_number, column_number = -1, -1
-
+        line_number = position_marker.line_number if position_marker else -1
+        column_number = (
+            position_marker.index_number
+            + position_marker.index_indent
+            + 1
+            - len(extracted_whitespace)
+            if position_marker
+            else -1
+        )
         LeafMarkdownToken.__init__(
             self,
             MarkdownToken._token_html_block,

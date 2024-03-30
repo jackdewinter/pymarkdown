@@ -47,14 +47,13 @@ class FencedLeafBlockProcessor:
     def is_fenced_code_block(
         line_to_parse: str,
         start_index: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         skip_whitespace_check: bool = False,
     ) -> Tuple[bool, Optional[int], Optional[int], Optional[int], Optional[int]]:
         """
         Determine if we have the start of a fenced code block.
         """
 
-        assert extracted_whitespace is not None, "TODO: Check"
         after_fence_index: Optional[int] = None
         if (
             skip_whitespace_check
@@ -126,9 +125,10 @@ class FencedLeafBlockProcessor:
         if is_fence_start and not parser_state.token_stack[-1].is_html_block:
             POGGER.debug("parse_fenced_code_block:fenced")
             assert (
-                collected_count is not None
-                and non_whitespace_index is not None
+                non_whitespace_index is not None
                 and after_fence_index is not None
+                and collected_count is not None
+                and new_index is not None
             ), "If is_fence_start, all these must be defined."
             if parser_state.token_stack[-1].is_fenced_code_block:
                 POGGER.debug("parse_fenced_code_block:check fence end")
@@ -144,7 +144,6 @@ class FencedLeafBlockProcessor:
                 )
             else:
                 POGGER.debug("parse_fenced_code_block:check fence start")
-                assert new_index is not None, "TODO: why?"
                 new_tokens = FencedLeafBlockProcessor.__process_fenced_start(
                     parser_state,
                     position_marker,
@@ -487,12 +486,10 @@ class FencedLeafBlockProcessor:
                 ex_space_index + 1 if split_tab else ex_space_index
             )
 
-            (
-                detabified_ex_space,
-                last_good_space_index,
-                _,
-            ) = TabHelper.search_for_tabbed_prefix(
-                ex_space, whitespace_used_count, modified_ex_space_index
+            (last_good_space_index, _, detabified_ex_space) = (
+                TabHelper.search_for_tabbed_prefix(
+                    ex_space, modified_ex_space_index, whitespace_used_count
+                )
             )
 
             do_normal_processing = len(detabified_ex_space) == whitespace_used_count
@@ -1008,7 +1005,9 @@ class FencedLeafBlockProcessor:
         )
         POGGER.debug("whitespace_start_count>:$:<", whitespace_start_count)
         if detabified_before_count_length < whitespace_start_count:
-            assert before_count == new_extracted_whitespace, "TODO: check logic"
+            assert (
+                before_count == new_extracted_whitespace
+            ), "If we do not have enough length, before_count must equal new_extracted_whitespace."
             after_count = ""
         POGGER.debug("before_count>:$:<", before_count)
         POGGER.debug("after_count>:$:<", after_count)
@@ -1026,22 +1025,20 @@ class FencedLeafBlockProcessor:
     @staticmethod
     def __handle_fenced_code_block_with_tab_starts_tab(
         original_line: str, reconstructed_line: str, resolved_leaf_token_whitespace: str
-    ) -> Tuple[str, int, bool, bool]:
+    ) -> Tuple[str, int, bool]:
         adj_original = reconstructed_line
         adj_original_index = original_line.find(reconstructed_line)
         assert adj_original_index != -1, "reconstructed_line must be in original line."
-        split_tab = False
         assert original_line.endswith(
             reconstructed_line
-        ), "TODO: Clearer??? reconstructed_line must end the original line"
+        ), "Reconstructed_line must end the original line to verify it was built properly."
         original_line_prefix = original_line[: -len(reconstructed_line)]
         split_tab = original_line_prefix.endswith(">")
-        reconstructed_line_has_tab = split_tab
 
         resolved_leaf_token_whitespace = TabHelper.detabify_string(
             resolved_leaf_token_whitespace, adj_original_index
         )
-        return adj_original, adj_original_index, split_tab, reconstructed_line_has_tab
+        return adj_original, adj_original_index, split_tab
 
     @staticmethod
     def __handle_fenced_code_block_with_tab_not_starts_tab(
@@ -1095,17 +1092,16 @@ class FencedLeafBlockProcessor:
             leaf_token_whitespace
         )
         reconstructed_line = resolved_leaf_token_whitespace + token_text
-        reconstructed_line_has_tab = True
         split_tab_whitespace: Optional[str] = None
         if reconstructed_line[0] == "\t":
             (
                 adj_original,
                 adj_original_index,
                 split_tab,
-                reconstructed_line_has_tab,
             ) = FencedLeafBlockProcessor.__handle_fenced_code_block_with_tab_starts_tab(
                 original_line, reconstructed_line, resolved_leaf_token_whitespace
             )
+            reconstructed_line_has_tab = split_tab
         else:
             (
                 adj_original,
@@ -1115,6 +1111,7 @@ class FencedLeafBlockProcessor:
             ) = FencedLeafBlockProcessor.__handle_fenced_code_block_with_tab_not_starts_tab(
                 original_line, reconstructed_line, position_marker, was_indented
             )
+            reconstructed_line_has_tab = True
 
         (
             leaf_token_whitespace,
@@ -1125,7 +1122,6 @@ class FencedLeafBlockProcessor:
             adj_original,
             adj_original_index,
             whitespace_start_count,
-            was_indented,
             reconstructed_line_has_tab,
             split_tab,
             split_tab_whitespace,
@@ -1140,7 +1136,6 @@ class FencedLeafBlockProcessor:
         adj_original: str,
         adj_original_index: int,
         whitespace_start_count: int,
-        was_indented: bool,
         reconstructed_line_has_tab: bool,
         split_tab: bool,
         split_tab_whitespace: Optional[str],
@@ -1157,7 +1152,7 @@ class FencedLeafBlockProcessor:
 
         new_extracted_whitespace = extracted_whitespace
         if new_extracted_whitespace and whitespace_start_count:
-            assert was_indented, "TODO: huh?"
+            # assert not was_indented, "TOoDO: huh?"
             new_extracted_whitespace = FencedLeafBlockProcessor.__handle_fenced_code_block_with_tab_and_extracted_whitespace(
                 new_extracted_whitespace,
                 adj_original_index,

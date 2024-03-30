@@ -363,7 +363,9 @@ class InlineBacktickHelper:
             if start_index <= index_to_find < start_index + len(array_element):
                 break
             start_index += len(array_element)
-        assert start_index != (start_index + len(split_array)), "TODO: why?"
+        assert start_index != (
+            start_index + len(split_array)
+        ), "For loop must stop before the end."
         delta = index_to_find - start_index
         POGGER.debug("i=$,start_index=$,delta=$", _array_index, start_index, delta)
         return _array_index, delta, start_index

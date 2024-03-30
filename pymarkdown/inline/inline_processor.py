@@ -209,6 +209,7 @@ class InlineProcessor:
             ParserHelper.make_whitespace_visible(str(text_token.token_text)),
         )
         return InlineTextBlockHelper.process_inline_text_block(
+            parse_properties,
             text_token.token_text,
             coalesced_stack,
             is_para=True,
@@ -217,7 +218,6 @@ class InlineProcessor:
             column_number=text_token.column_number,
             para_owner=paragraph_token,
             tabified_text=text_token.tabified_text,
-            parser_properties=parse_properties,
         )
 
     @staticmethod
@@ -248,15 +248,17 @@ class InlineProcessor:
         atx_token = cast(AtxHeadingMarkdownToken, coalesced_list[-1])
         POGGER.debug(">>text_token>>$", text_token)
         return InlineTextBlockHelper.process_inline_text_block(
+            parse_properties,
             text_token.token_text,
             coalesced_stack,
             text_token.extracted_whitespace,
             line_number=text_token.line_number,
-            column_number=text_token.column_number
-            + len(text_token.extracted_whitespace)
-            + atx_token.hash_count,
+            column_number=(
+                text_token.column_number
+                + len(text_token.extracted_whitespace)
+                + atx_token.hash_count
+            ),
             tabified_text=text_token.tabified_text,
-            parser_properties=parse_properties,
         )
 
     @staticmethod
@@ -272,6 +274,7 @@ class InlineProcessor:
         text_token = cast(TextMarkdownToken, coalesced_results[coalesce_index])
         POGGER.debug(">>text_token>>$", text_token)
         processed_tokens = InlineTextBlockHelper.process_inline_text_block(
+            parse_properties,
             text_token.token_text,
             coalesced_stack,
             whitespace_to_recombine=text_token.extracted_whitespace,
@@ -280,7 +283,6 @@ class InlineProcessor:
             line_number=text_token.line_number,
             column_number=text_token.column_number,
             tabified_text=text_token.tabified_text,
-            parser_properties=parse_properties,
         )
         POGGER.debug(
             "processed_tokens>>$",

@@ -228,7 +228,6 @@ class TransformNewListItem:
     def __recalc_adjustment_since_newline(
         context: MarkdownTransformContext, adjustment_since_newline: int
     ) -> int:
-        assert not adjustment_since_newline, "TODO: Check"
         POGGER.debug(
             f"rnli->container_token_stack>:{ParserHelper.make_value_visible(context.container_token_stack)}:"
         )

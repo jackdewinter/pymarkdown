@@ -20,8 +20,8 @@ class TabHelper:
 
     @staticmethod
     def parse_thematic_break_with_tab(
-        original_line: str, token_text: str, extracted_whitespace: Optional[str]
-    ) -> Tuple[str, bool, bool, Optional[str], Optional[str], int]:
+        original_line: str, token_text: str, extracted_whitespace: str
+    ) -> Tuple[str, bool, bool, Optional[str], str, int]:
         """
         Generic type of algorithm to deal with tabs, in this case, used by thematic breaks
         and HTML blocks.
@@ -62,7 +62,6 @@ class TabHelper:
         split_tab = False
         split_tab_with_block_quote_suffix = False
         if tabified_leading_spaces:
-            assert extracted_whitespace is not None, "TODO: check"
             (
                 tabified_prefix,
                 tabified_suffix,
@@ -102,7 +101,6 @@ class TabHelper:
         """
         Match any tabbed whitespace with its non-tabbed counterpart.
         """
-        assert corrected_extracted_whitespace != "", "TODO: check"
         detabified_suffix = ""
         detabified_prefix = ""
         corrected_prefix = ""
@@ -136,7 +134,6 @@ class TabHelper:
         assert index_from_end >= 0, "Index must be within the string."
 
         if not have_been_inside_loop:
-            assert not extracted_whitespace, "TODO: explain?"
             corrected_prefix = corrected_extracted_whitespace
             corrected_suffix = ""
 
@@ -173,7 +170,7 @@ class TabHelper:
     @staticmethod
     def find_detabify_string_ex(
         original_line: str, detabified_line_to_match: str
-    ) -> Tuple[Optional[str], int]:
+    ) -> Tuple[str, int]:
         """
         Find a detabified line within the original line, automatically looking at all four tab offsets.
         """
@@ -188,7 +185,30 @@ class TabHelper:
             )
             if adjusted_original_line is not None:
                 return adjusted_original_line, original_index
-        return None, -1
+        raise AssertionError("A detabbified string must be found.")
+
+    @staticmethod
+    def find_detabify_string_verified(
+        original_line: str,
+        detabified_line_to_match: str,
+        initial_offset: int = 0,
+        use_proper_traverse: bool = False,
+    ) -> Tuple[str, int, int]:
+        """
+        Find a detabified line within the original line, asserting if the first return value is not defined.
+        """
+        adjusted_original_line, original_start_index, original_line_index = (
+            TabHelper.find_detabify_string(
+                original_line,
+                detabified_line_to_match,
+                initial_offset,
+                use_proper_traverse,
+            )
+        )
+        assert (
+            adjusted_original_line is not None
+        ), "adjusted_original_line must be defined."
+        return adjusted_original_line, original_start_index, original_line_index
 
     @staticmethod
     def find_detabify_string(
@@ -494,34 +514,6 @@ class TabHelper:
         # )
 
     @staticmethod
-    def __adjust_block_quote_indent_for_tab_list_kludge(
-        original_line: str, extracted_whitespace: str, last_list_leading_space: str
-    ) -> str:
-        orig_end_ws_index, _ = ParserHelper.extract_ascii_whitespace(original_line, 0)
-        orig_after_ws = original_line[orig_end_ws_index:]
-        recon_line = last_list_leading_space + extracted_whitespace[:-1] + orig_after_ws
-
-        reconstructed_line, _, _ = TabHelper.find_tabified_string_split(
-            recon_line, "", original_line, True, False
-        )
-        assert reconstructed_line is not None, "reconstructed_line must be found."
-        text_to_use_count = 1
-        keep_going = text_to_use_count < len(reconstructed_line)
-        while keep_going:
-            detabbified_line = TabHelper.detabify_string(
-                reconstructed_line[:text_to_use_count]
-            )
-            keep_going = text_to_use_count < len(reconstructed_line) and len(
-                detabbified_line
-            ) < len(last_list_leading_space)
-            if keep_going:
-                text_to_use_count += 1
-        assert (
-            reconstructed_line[text_to_use_count - 1] == "\t"
-        ), "Last character must be a tab."
-        return reconstructed_line[: text_to_use_count - 1]
-
-    @staticmethod
     def __adjust_block_quote_indent_for_tab_list_normal(
         last_list_leading_space: str,
         fenced_switch_enabled: bool,
@@ -551,13 +543,11 @@ class TabHelper:
     def __adjust_block_quote_indent_for_tab_list(
         parser_state: ParserState,
         stack_token_index: int,
-        extracted_whitespace: Optional[str],
+        extracted_whitespace: str,
         fenced_switch_enabled: bool,
         alternate_list_leading_space: Optional[str],
         original_line: Optional[str] = None,
-    ) -> Optional[str]:
-        assert extracted_whitespace is not None, "TODO: check"
-
+    ) -> str:
         list_start_token = cast(
             ListStartMarkdownToken,
             parser_state.token_stack[stack_token_index].matching_markdown_token,
@@ -625,6 +615,28 @@ class TabHelper:
         return extracted_whitespace
 
     # pylint: enable=too-many-arguments
+    @staticmethod
+    def adjust_block_quote_indent_for_tab_verified(
+        parser_state: ParserState,
+        extracted_whitespace: Optional[str] = None,
+        alternate_list_leading_space: Optional[str] = None,
+        fenced_switch_enabled: bool = False,
+        original_line: Optional[str] = None,
+    ) -> str:
+        """
+        Adjust the last block quote for a tab, asserting if the returned string is not defined.
+        """
+        extracted_whitespace = TabHelper.adjust_block_quote_indent_for_tab(
+            parser_state,
+            extracted_whitespace,
+            alternate_list_leading_space,
+            fenced_switch_enabled,
+            original_line,
+        )
+        assert (
+            extracted_whitespace is not None
+        ), "extracted_whitespace must be defined by now."
+        return extracted_whitespace
 
     @staticmethod
     def adjust_block_quote_indent_for_tab(
@@ -637,7 +649,6 @@ class TabHelper:
         """
         Adjust the last block quote for a tab.
         """
-
         LOGGER.debug(
             "extracted_whitespace=:%s:",
             ParserHelper.make_value_visible(extracted_whitespace),
@@ -666,6 +677,9 @@ class TabHelper:
                 parser_state, stack_token_index
             )
         else:
+            assert (
+                extracted_whitespace is not None
+            ), "If we are not looking at a block quote, extracted_whitespace must be defined."
             extracted_whitespace = TabHelper.__adjust_block_quote_indent_for_tab_list(
                 parser_state,
                 stack_token_index,
@@ -677,31 +691,86 @@ class TabHelper:
         return extracted_whitespace
 
     @staticmethod
+    def __adjust_block_quote_indent_for_tab_list_kludge(
+        original_line: str, extracted_whitespace: str, last_list_leading_space: str
+    ) -> str:
+        orig_end_ws_index, _ = ParserHelper.extract_ascii_whitespace(original_line, 0)
+        orig_after_ws = original_line[orig_end_ws_index:]
+        recon_line = last_list_leading_space + extracted_whitespace[:-1] + orig_after_ws
+
+        reconstructed_line, _, _ = TabHelper.find_tabified_string_split(
+            recon_line, "", original_line, True, False
+        )
+        assert reconstructed_line is not None, "reconstructed_line must be found."
+        text_to_use_count = 1
+        keep_going = text_to_use_count < len(reconstructed_line)
+        while keep_going:
+            detabbified_line = TabHelper.detabify_string(
+                reconstructed_line[:text_to_use_count]
+            )
+            keep_going = text_to_use_count < len(reconstructed_line) and len(
+                detabbified_line
+            ) < len(last_list_leading_space)
+            if keep_going:
+                text_to_use_count += 1
+        assert (
+            reconstructed_line[text_to_use_count - 1] == "\t"
+        ), "Last character must be a tab."
+        return reconstructed_line[: text_to_use_count - 1]
+
+    @staticmethod
     def search_for_tabbed_prefix(
-        ex_space: str, whitespace_used_count: int, start_offset: int
-    ) -> Tuple[str, int, Optional[str]]:
+        extracted_space: str, detabify_index: int, lead_space_len: int
+    ) -> Tuple[int, str, str]:
         """
         Look for a specific tabbed prefix length within a given string.
         """
+        extra_detabify_index = 0
+        indent_used = 0
 
-        last_good_space_index = -1
-        space_index = 1
-        space_prefix = None
-        detabified_ex_space = ""
-        while (
-            space_index < len(ex_space) + 1
-            and len(detabified_ex_space) < whitespace_used_count
-        ):
-            # POGGER.debug("space_index>:$:<", space_index)
-            last_good_space_index = space_index
-            space_prefix = ex_space[:space_index]
-            # POGGER.debug("sdf>:$:<", space_prefix)
-            detabified_ex_space = TabHelper.detabify_string(
-                space_prefix, additional_start_delta=start_offset
+        search_index = 1
+        keep_going = True
+        while keep_going:
+            ex_part = extracted_space[indent_used : indent_used + search_index]
+            detabbed_ex_part = TabHelper.detabify_string(
+                ex_part, detabify_index + extra_detabify_index
             )
-            # POGGER.debug("detabified_ex_space>:$:<", detabified_ex_space)
-            space_index += 1
+            keep_going = (
+                search_index < len(extracted_space) + 1
+                and len(detabbed_ex_part) < lead_space_len
+            )
+            if keep_going:
+                search_index += 1
         assert (
-            len(detabified_ex_space) >= whitespace_used_count
+            len(detabbed_ex_part) >= lead_space_len
         ), "Proper amount of space must be used up."
-        return detabified_ex_space, last_good_space_index, space_prefix
+        return search_index, ex_part, detabbed_ex_part
+
+    @staticmethod
+    def search_for_tabbed_prefix2(
+        extracted_space: str,
+        detabify_index: int,
+        extra_detabify_index: int,
+        indent_used: int,
+        lead_space_len: int,
+    ) -> Tuple[int, str, str]:
+        """
+        Look for a specific tabbed prefix length within a given string.
+        """
+        search_index = 1
+        keep_going = True
+        while keep_going:
+            ex_part = extracted_space[indent_used : indent_used + search_index]
+            detabbed_ex_part = TabHelper.detabify_string(
+                ex_part, detabify_index + extra_detabify_index
+            )
+            keep_going = (
+                len(detabbed_ex_part) < len(extracted_space)
+                and len(detabbed_ex_part) < lead_space_len
+            )
+            if keep_going:
+                search_index += 1
+        assert (
+            len(detabbed_ex_part) >= lead_space_len
+        ), "Proper amount of space must be used up."
+        return search_index, ex_part, detabbed_ex_part

@@ -100,7 +100,6 @@ class InlineTabifiedTextBlockHelper:
         ex_original_line, _ = TabHelper.find_detabify_string_ex(
             adj_tabified_text, adj_current_line_source_text
         )
-        assert ex_original_line is not None, "TODO: Tab"
         return new_start + ex_original_line
 
     @staticmethod
