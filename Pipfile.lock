@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "f0a17407784f0a4798db43d5145be850191ccebff118d922d3816a7fa776b38b"
+            "sha256": "b8b663fb441b5b438c5b8a0379d15338d13c1632351844f12c03bd10e044aaea"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -574,6 +574,9 @@
             "version": "==3.6"
         },
         "markdown-it-py": {
+            "extras": [
+                "linkify"
+            ],
             "hashes": [
                 "sha256:355216845c60bd96232cd8d8c40e8f9765cc86f46880e43a8fd22dc1a1a8cab1",
                 "sha256:e3f60a94fa066dc52ec76661e37c851cb232d92f9886b15cb560aaada2df8feb"
@@ -661,15 +664,16 @@
                 "sha256:a9dbb1838d43bb1e6f03bd5dca9412c552544a9bc42d6abb5dc32adfe8ae7c0d"
             ],
             "index": "pypi",
+            "markers": "python_version >= '3.8'",
             "version": "==0.7.17"
         },
         "mdformat-admon": {
             "hashes": [
-                "sha256:66bf6debb4f904ff4549b5bc59380a92add16c16fb51b220f3f7288157702fea",
-                "sha256:fb99e5c1ed63207712abd8edd7af880227d972dbbc5a5266ae0ff205dec3210f"
+                "sha256:2890a68ec3be06e08772d9c92d84c665b398fba1fa18f870b989f94aa6cd5aad",
+                "sha256:d3a114fb894a4db2828e895dab9f48399d49805c63cf425d1b3c65e21e3d0053"
             ],
             "markers": "python_full_version >= '3.8.0'",
-            "version": "==2.0.2"
+            "version": "==2.0.3"
         },
         "mdformat-frontmatter": {
             "hashes": [
@@ -689,11 +693,12 @@
         },
         "mdformat-mkdocs": {
             "hashes": [
-                "sha256:2f5d9f5f157cf19234d73a653135c22d804014916ea2c03346b055266b6b4dbe",
-                "sha256:7677613cad9248d781dc956d43b76ad5f4e4789bb20e933329c4ccb638eb0b77"
+                "sha256:864d50189b9e82e166936d6ec594cc9587a19aa06150ef1f04ed463975d56a35",
+                "sha256:fb0f84e3412f4f2a955967aa3933f17e4f76e9a051ffe92a9493de5bfa21f6ef"
             ],
             "index": "pypi",
-            "version": "==2.0.6"
+            "markers": "python_full_version >= '3.8.0'",
+            "version": "==2.0.9"
         },
         "mdformat-tables": {
             "hashes": [
@@ -1236,7 +1241,7 @@
                 "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc",
                 "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"
             ],
-            "markers": "python_version >= '3.7'",
+            "markers": "python_version < '3.11'",
             "version": "==2.0.1"
         },
         "tomlkit": {
