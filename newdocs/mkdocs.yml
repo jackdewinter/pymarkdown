@@ -7,12 +7,26 @@ theme: readthedocs
 docs_dir: src
 site_dir: site
 nav:
-  - 'index.md'
-  - 'another.md'
-  # - 'User Guide':
-  #   - 'Writing your docs': 'writing-your-docs.md'
-  #   - 'Styling your docs': 'styling-your-docs.md'
-  # - 'My About Page' : 'about.md'
+  - "Introduction":
+    - 'index.md'
+    - 'getting-started.md'
+  - "User Guide":
+    - 'user-guide.md'
+    - 'advanced_extensions.md'
+    - 'advanced_plugins.md'
+    - 'advanced_pre-commit.md'
+    - 'advanced_configuration.md'
+  - "Devloper Guide":
+    - 'api.md'
+    - 'development.md'
+  - "Usual Project Stuff":
+    - 'usual.md'
+    - 'contribute.md'
+    - "Changelog" : https://github.com/jackdewinter/pymarkdown/blob/main/changelog.md
+    - "Frequently Asked Questions": https://github.com/jackdewinter/pymarkdown/blob/main/docs/faq.md
 markdown_extensions:
   - toc:
       permalink: "#"
+theme:
+  name: readthedocs
+  navigation_depth: 5

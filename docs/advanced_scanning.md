@@ -108,7 +108,7 @@ found file is output to the command line.
 
 For example, if you execute this command in the project directory:
 
-```shell
+```txt
 pymarkdown scan -l examples
 ```
 

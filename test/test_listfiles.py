@@ -367,6 +367,7 @@ def test_markdown_with_dash_l_on_directory():
 {source_path}developer.md
 {source_path}extensions.md
 {source_path}faq.md
+{source_path}old_README.md
 {source_path}pre-commit.md
 {source_path}rules.md
 {source_path}writing_rule_plugins.md""".replace(
@@ -415,6 +416,7 @@ def test_markdown_with_dash_l_and_dash_r_on_directory():
 {extensions_source_path}strikethrough.md
 {extensions_source_path}task-list-items.md
 {source_path}faq.md
+{source_path}old_README.md
 {source_path}pre-commit.md
 {source_path}rules.md
 {rules_source_path}rule_md001.md

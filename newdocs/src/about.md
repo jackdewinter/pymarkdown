@@ -1,3 +1,0 @@
-# About Page
-
-blah blah

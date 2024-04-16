@@ -1,5 +1,7 @@
 # Developer Documentation
 
+[TBD: add description of how to write new plugin]
+
 This document is provided to help developers extend the PyMarkdown project to
 solve their immediate needs.  This is meant to be an evolving document, growing
 with the needs of any developers who want to help out with the project or
