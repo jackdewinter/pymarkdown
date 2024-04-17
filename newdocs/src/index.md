@@ -13,7 +13,7 @@ release, we are moving our documentation from plain Markdown files hosted on
 [GitHub](https://github.com/jackdewinter/pymarkdown) to this new format. Please
 bear with us during this transitional period.
 
-## And On with The Show...
+## And On with The Show
 
 PyMarkdown is primarily a Markdown linter. To ensure that the Markdown
 [linting](https://en.wikipedia.org/wiki/Lint_%28software%29) is conducted with
