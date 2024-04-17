@@ -39,7 +39,7 @@ cd %SCAN_DOCS_SCRIPT_DIRECTORY%\newdocs
 if defined MY_VERBOSE (
     echo {Scanning the documentation using PyMarkdown.}
 )
-pipenv run python ..\main.py -d Md030 -e pml101 --set "plugins.line-length.code_block_line_length=$#160" --set "extensions.linter-pragmas.enabled=true" scan src
+pipenv run python ..\main.py --config clean.json scan src
 if ERRORLEVEL 1 (
 	echo.
 	echo {Scanning the documentation using PyMarkdown failed.}

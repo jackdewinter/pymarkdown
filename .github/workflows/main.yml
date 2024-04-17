@@ -98,9 +98,9 @@ jobs:
           pipenv update -d
           pipenv graph
 
-      - name: Execute PyMarkdown on Docs
+      - name: Execute PyMarkdown on NewDocs
         run: |
-          pipenv run python main.py --config clean.json scan newdocs/src
+          pipenv run python main.py --config newdocs/clean.json scan newdocs/src
 
       # - name: Execute MdFormat on Docs
       #   run: |

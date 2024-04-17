@@ -1,0 +1,31 @@
+{
+    "plugins": {
+        "no-space-in-code": {
+            "enabled": false
+        },
+        "no-space-in-emphasis": {
+            "enabled": false
+        },
+        "line-length": {
+            "enabled": false,
+            "code_block_line_length" : 160
+        },
+        "no-duplicate-heading": {
+            "enabled": false
+        },
+        "list-marker-space" : {
+            "enabled": false
+        },
+        "list-anchored-indent" : {
+            "enabled": true
+        }
+    },
+    "extensions": {
+        "front-matter" : {
+            "enabled" : true
+        },
+        "linter-pragmas": {
+            "enabled" : true
+        }
+    }
+}

@@ -2,7 +2,7 @@
 
 * [ ] Are you running the latest version of this application?
 * [ ] Have you checked the [Frequently Asked Questions](https://github.com/jackdewinter/pymarkdown/blob/main/docs/faq.md) document?
-* [ ] Have you dimplified the bug report to the essential details?
+* [ ] Have you simplified the bug report to the essential details?
   * [ ] Do you have a distinct command line to report?
   * [ ] Can you clearly state the configuration for this bug report?
   * [ ] Do you have a minimal document that highlights this bug?
