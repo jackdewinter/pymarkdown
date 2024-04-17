@@ -91,6 +91,9 @@ However, we also expose the following other ways to execute the PyMarkdown appli
 - easy-to-use built-in hooks for [Pre-Commit](https://pymarkdown.readthedocs.io/en/latest/getting-started/#installing-via-pre-commit)
 - a simple [API layer](https://pymarkdown.readthedocs.io/en/latest/api/)
 
+For more information on the Pymarkdown application and its command lines,
+please [look here](https://pymarkdown.readthedocs.io/en/latest/).
+
 ## What If It Is Missing A Feature That I Am Looking For?
 
 Our project team is very open to discussing any features that you would like to

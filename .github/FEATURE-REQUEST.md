@@ -14,7 +14,7 @@ Please replace any of `[these areas]` in the paragraphs below with the requested
 
 ### Desired Behavior of Feature
 
-[Provide a clear picture of the feature you would like to see added.  Markdown document samples and other references will help you convey your feature.]
+[Provide a clear picture of the feature you would like to see added, including specific scenarios or contexts where this feature would be particularly useful.  Markdown document samples, use cases, and other references will help you convey the necessity and impact your feature.]
 
 ### What Are the Benefits of This Feature?
 

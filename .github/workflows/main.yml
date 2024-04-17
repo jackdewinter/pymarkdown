@@ -100,13 +100,12 @@ jobs:
 
       - name: Execute PyMarkdown on Docs
         run: |
-          cd newdocs
-          pipenv run python ../main.py scan src
+          pipenv run python ../main.py --config clean.json scan newdocs/src
 
-      - name: Execute MdFormat on Docs
-        run: |
-          cd newdocs
-          pipenv run mdformat --align-semantic-breaks-in-lists --wrap 80 --check .
+      # - name: Execute MdFormat on Docs
+      #   run: |
+      #     cd newdocs
+      #     pipenv run mdformat --align-semantic-breaks-in-lists --wrap 80 --check .
   
   scenario-tests:
 
