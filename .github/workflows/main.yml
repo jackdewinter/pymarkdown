@@ -100,7 +100,7 @@ jobs:
 
       - name: Execute PyMarkdown on Docs
         run: |
-          pipenv run python ../main.py --config clean.json scan newdocs/src
+          pipenv run python main.py --config clean.json scan newdocs/src
 
       # - name: Execute MdFormat on Docs
       #   run: |
