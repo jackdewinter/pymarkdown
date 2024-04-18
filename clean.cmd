@@ -254,6 +254,14 @@ if defined MY_MYPY (
 	goto good_end
 )
 
+echo {Scanning documentation to ensure its compliance.}
+call scan_docs.cmd
+if ERRORLEVEL 1 (
+	echo.
+	echo {Scanning of documentation failed.}
+	goto error_end
+)
+
 echo {Executing pylint utils analyzer on Python source code to verify suppressions and document them.}
 pipenv run python ..\pylint_utils\main.py --config setup.cfg --recurse -r publish\pylint_suppression.json %PYTHON_MODULE_NAME%
 if ERRORLEVEL 1 (
