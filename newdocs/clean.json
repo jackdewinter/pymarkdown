@@ -1,17 +1,8 @@
 {
     "plugins": {
-        "no-space-in-code": {
-            "enabled": false
-        },
-        "no-space-in-emphasis": {
-            "enabled": false
-        },
         "line-length": {
-            "enabled": false,
+            "enabled": true,
             "code_block_line_length" : 160
-        },
-        "no-duplicate-heading": {
-            "enabled": false
         },
         "list-marker-space" : {
             "enabled": false

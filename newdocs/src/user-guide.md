@@ -2,7 +2,6 @@
 summary: Guide for users on how to use PyMarkdown.
 authors:
   - Jack De Winter
-date: 1938-04-18
 ---
 
 # Introduction
@@ -450,9 +449,16 @@ this information is also available on the command line by using the
 [`extension` command](#extension-command).
 Enabling an extension from the command line can be done by using the form
 `--set "extensions.{id}.enabled=$!True"`. Disabling the extension can be
-done using the form `--set "extensions.{id}.enabled=$!False"`.  Note that
-on a Windows system, the `!` character is a special character, so you will
-need to enter it as `^^!` on the command line to properly escape the `!` character.
+done using the form `--set "extensions.{id}.enabled=$!False"`.
+
+When entering this argument on a Windows system, the `!` character is a special
+character, so you will need to enter it as `^^!` on the command line to properly
+escape the `!` character.  When entering this on a Linux or MacOs system, the `$`
+character is a special character, so you will need to enclose the argument
+in single quote characters `'` instead of normal quote characters `"`.
+
+For more information on specifying configuration on the command line, please
+refer to our documentation on [Command Line Configuration](./advanced_configuration.md#command-line-configuration).
 
 ##### Pragma Extension
 

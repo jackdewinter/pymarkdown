@@ -4,7 +4,6 @@ authors:
   - Jack De Winter
 ---
 
-
 # Getting Started
 
 There are two main paths to executing the PyMarkdown linter: either installing

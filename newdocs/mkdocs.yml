@@ -12,10 +12,10 @@ nav:
     - 'getting-started.md'
   - "User Guide":
     - 'user-guide.md'
+    - 'advanced_configuration.md'
     - 'advanced_extensions.md'
     - 'advanced_plugins.md'
     - 'advanced_pre-commit.md'
-    - 'advanced_configuration.md'
   - "Devloper Guide":
     - 'api.md'
     - 'development.md'
