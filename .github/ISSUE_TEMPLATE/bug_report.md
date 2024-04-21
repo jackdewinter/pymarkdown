@@ -7,32 +7,64 @@ assignees: ''
 
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+## Prerequisites
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+* [ ] Are you running the latest version of this application?
+* [ ] Have you checked the [Frequently Asked Questions](https://github.com/jackdewinter/pymarkdown/blob/main/docs/faq.md) document?
+* [ ] Have you simplified the bug report to the essential details?
+  * [ ] Do you have a distinct command line to report?
+  * [ ] Can you clearly state the configuration for this bug report?
+  * [ ] Do you have a minimal document that highlights this bug?
+  * [ ] Are any required files (configuration or Markdown document) attached to the issue?
+* [ ] Did you perform a cursory search of other issues to look for related issues?
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+## Bug Report
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+Please replace any of `[these areas]` in the paragraphs below with the requested information.
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+### Bug Type
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+* [ ] Assertion Failure
+* [ ] Documentation
+* [ ] Scan/Rule not working as expected
+* [ ] Fix/Rule not working as expected
+* [ ] Other
+  [Other reason]
 
-**Additional context**
-Add any other context about the problem here.
+### Description
+
+[Provide a concise description of what the issue is.]
+
+### Specifics
+
+What operating system and version are you running into this behavior on?
+
+[Provide Operating System and Version Number]
+
+What version are you seeing this behavior in? (Run `pip list` or `pipenv run pip list` and look for the entry beside `pymarkdownlnt`.)
+
+[PyMarkdownLnt Version Number]
+
+Are there any extra steps that need to be taken before executing the application?
+
+[Any non-standard requirements?]
+
+What is the command line you invoke to get this behavior?
+
+[Assume that anything up to the first `pymarkdown` or `pymarkdownlnt` is already provided.]
+
+Are you using a configuration file? Either on the command line or one of the implicit configuration files? If so, attach that file to this issue.
+
+[Attach any configuration files that would alter processing behavior.]
+
+What Markdown document causes this behavior to manifest?  Attach that file to this issue.
+
+[Attach a minimal Markdown document that makes this behavior occur.]
+
+### Actual Behavior
+
+[Describe what behavior was seen when the specifics for executing the application were applied.]
+
+### Expected Behavior
+
+[Describe the behavior that you believe should occur instead of the Actual Behavior. Include any specifics on why that behavior is more correct.]

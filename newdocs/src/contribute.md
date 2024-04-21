@@ -1,3 +1,9 @@
+---
+summary: How to contribute to the application.
+authors:
+  - Jack De Winter
+---
+
 # Contributing
 
 Thanks for your interest in contributing to this application!
