@@ -8,9 +8,9 @@
   - Started movement of docs from README.md and docs directory to
     the newdocs directory with a shorter README.md.
 - [Issue 1059](https://github.com/jackdewinter/pymarkdown/issues/1059)
-  - Added updated pre-commit documentation.
+  - Complete redo of pre-commit documentation.
 - [Issue 1070](https://github.com/jackdewinter/pymarkdown/issues/1070)
-  - Added updated advanced configuration documentation.
+  - Complete redo of advanced configuration documentation.
 
 ### Fixed
 
