@@ -4,6 +4,28 @@
 
 ### Added
 
+- None
+
+### Fixed
+
+- None
+
+### Changed
+
+- None
+
+## Version 0.9.19 - Date: 2024-04-30
+
+This release focuses on getting the documentation up to date
+and in the new read-the-docs format.  Some small issues were
+addressed, but this is mainly to get the documents into good
+shape for release.
+
+To view the new documentation, goto
+[ReadTheDocs](https://pymarkdown.readthedocs.io/en/latest/).
+
+### Added
+
 - [Issue 801](https://github.com/jackdewinter/pymarkdown/issues/801)
   - Started movement of docs from README.md and docs directory to
     the newdocs directory with a shorter README.md.
