@@ -590,7 +590,7 @@ In addition to enabling and disabling rules, many of the rules have extra config
 that allow you to adjust their
 default values to meet your needs.  Information on how to set that configuration
 on
-a per rule basis is covered in the document [Advanced Configuration](./advanced_configuration.md).
+a per rule basis is covered in the document [Advanced Configuration](./advanced_configuration.md#rule-plugins).
 For other information
 about rules and their capabilities, consult the [Advanced Rules Guide](./advanced_plugins.md).
 That guide covers these topics in more detail, including a list of all rules that
@@ -669,7 +669,7 @@ of configuration
 files is simple, there are a fair number of interactions to consider
 when supplying configuration.  As such, this is more fully covered in the
 [Advanced Configuration](./advanced_configuration.md)
-document.
+document, especially the section on the [configuration files](./advanced_configuration.md#configuration-files).
 
 ##### --set  (configuration)
 
@@ -678,7 +678,7 @@ to explicitly set for
 the current execution of the PyMarkdown application.  While the basic usage of configuration
 files is typically simple, there are a fair number of interactions to consider
 when supplying configuration.  As such, this is more fully covered in the
-[Advanced Configuration](./advanced_configuration.md)
+[Advanced Configuration](./advanced_configuration.md#specific-command-line-settings)
 section of this documentation.
 
 ##### --strict-config (configuration)

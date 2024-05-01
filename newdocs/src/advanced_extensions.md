@@ -7,3 +7,6 @@ Other things that will be added:
 
 - ensure solid documentation on each extensions
 - ensure each extension has good examples
+
+- move Pragma Extension and Front-Matter Extension from user guide into here, with
+  teaser left there

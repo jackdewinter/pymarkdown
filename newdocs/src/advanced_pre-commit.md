@@ -203,7 +203,7 @@ This section relates to configuration files, as they are described in the
 document on [Advanced Configuration](./advanced_configuration.md#configuration-files).
 If you have not read that document to understand how PyMarkdown handles
 configuration files, please read that document before proceeding.  Note that
-while we can specify configuration files with [different internal formats](./advanced_configuration.md#different-types),
+while we can specify configuration files with [different internal formats](./advanced_configuration.md#configuration-file-types),
 the following configuration examples are going to specify a JSON configuration file
 named `pymarkdown.json`.
 
@@ -466,7 +466,7 @@ on these subjects.
 
 ### Command Line Arguments Vs Configuration File
 
-As part of our documentation on [Advanced Configuration](./advanced_configuration.md#command-line-arguments-vs-configuration-file),
+As part of our documentation on [Advanced Configuration](./advanced_configuration.md#command-line-vs-configuration-file),
 we delve into this topic, providing our views on why to choose configuration files
 over command line arguments.  There is no cut-and-dried answer that we can provide
 for everyone.  Your own team's context is important.
