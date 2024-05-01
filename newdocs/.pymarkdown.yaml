@@ -8,3 +8,7 @@ plugins:
     enabled: false
   list-anchored-indent:
     enabled: true
+
+        # "list-marker-space" : {
+        #     "enabled": false
+        # },
