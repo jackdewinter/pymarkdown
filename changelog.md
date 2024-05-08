@@ -4,7 +4,8 @@
 
 ### Added
 
-- None
+- [Issue 1075](https://github.com/jackdewinter/pymarkdown/issues/1075)
+  - Complete redo of advanced extensions documentation.
 
 ### Fixed
 

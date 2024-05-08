@@ -35,11 +35,10 @@ echo {Scanning the documentation directory for warnings.}
 
 rem Cleanly start the main part of the script
 
-cd %SCAN_DOCS_SCRIPT_DIRECTORY%\newdocs
 if defined MY_VERBOSE (
     echo {Scanning the documentation using PyMarkdown.}
 )
-pipenv run python ..\main.py --config clean.json scan src
+pipenv run python main.py --config %SCAN_DOCS_SCRIPT_DIRECTORY%\newdocs\clean.json scan -r %SCAN_DOCS_SCRIPT_DIRECTORY%\newdocs\src
 if ERRORLEVEL 1 (
 	echo.
 	echo {Scanning the documentation using PyMarkdown failed.}

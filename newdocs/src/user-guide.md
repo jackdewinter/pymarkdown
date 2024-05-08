@@ -440,25 +440,7 @@ document down into its constituent elements.
 These extensions are fully documented in the
 [Advanced Extensions](./advanced_extensions.md)
 document, including information about how they perform, details on the
-extension, and configuration information.  The two most often used extensions
-are Pragmas and Document Front-Matter.
-
-Note that each extension specifies whether it is enabled or disabled by default.
-In addition to having this information be available in the extension's documentation,
-this information is also available on the command line by using the
-[`extension` command](#extension-command).
-Enabling an extension from the command line can be done by using the form
-`--set "extensions.{id}.enabled=$!True"`. Disabling the extension can be
-done using the form `--set "extensions.{id}.enabled=$!False"`.
-
-When entering this argument on a Windows system, the `!` character is a special
-character, so you will need to enter it as `^^!` on the command line to properly
-escape the `!` character.  When entering this on a Linux or MacOs system, the `$`
-character is a special character, so you will need to enclose the argument
-in single quote characters `'` instead of normal quote characters `"`.
-
-For more information on specifying configuration on the command line, please
-refer to our documentation on [Command Line Configuration](./advanced_configuration.md#command-line-configuration).
+extension, and configuration information.
 
 ##### Pragma Extension
 

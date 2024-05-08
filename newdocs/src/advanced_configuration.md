@@ -1,3 +1,9 @@
+---
+summary: More information on configuration and how to apply it.
+authors:
+  - Jack De Winter
+---
+
 # Advanced Configuration
 
 Configuration is one of those topics that almost every application has to deal with.
@@ -764,6 +770,24 @@ landed on generating a ValueError for any invalid integer values, such as `$#1.1
 There were alternatives, but this was the decision that felt the most
 correct to us.  If a user took the time to use the integer prefix `$#`,
 we felt they would want use to error out on any non-integer value.
+
+#### Special Characters and Shells
+
+On a Windows system, when entering configuration item type arguments that specify
+a boolean type, the `!` character is used. Since this character is a special character,
+you need to enter it as `^^!` on the command line to properly escape the `!` character.
+
+```text
+pipenv run pymarkdown --set extensions.front-matter.enabled=$^^!True scan -r .
+```
+
+On a Linux or MacOs system, most shells treat the `$` character as a special
+character.  To escape this character, you need to enclose the argument with the
+`'` character instead of the normal `"` character.
+
+```text
+pipenv run pymarkdown --set 'extensions.front-matter.enabled=$!True' scan -r .
+```
 
 #### Typing Examples
 
