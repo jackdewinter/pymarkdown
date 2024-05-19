@@ -487,8 +487,8 @@ def test_markdown_with_extensions_info_and_found_filter():
   Id                 front-matter
   Name               Front Matter Metadata
   Short Description  Allows metadata to be parsed from document front matter.
-  Description Url    https://github.com/jackdewinter/pymarkdown/blob/main/docs
-                     /extensions/front-matter.md
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/extensions/fr
+                     ont-matter/
 """
     expected_error = ""
 

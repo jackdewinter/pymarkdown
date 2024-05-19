@@ -322,7 +322,7 @@ As the `example-2.md` file is not mentioned in the output, it makes sense
 that PyMarkdown's rule MD041 did not have any issue with a level 1 ATX Heading,
 largely confirming the above assumption.
 If desired, we can take the extra step to verify this by looking at the documentation
-page for [Rule MD041](https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md041.md#Correctness)
+page for [Rule MD041](./plugins/rule_md041.md#Correctness)
 which states:
 
 > In most cases, the top-level heading of a document is used as the title of that
@@ -444,7 +444,7 @@ extension, and configuration information.
 
 ##### Pragma Extension
 
-The [Pragma](https://github.com/jackdewinter/pymarkdown/blob/main/docs/extensions/pragmas.md)
+The [Pragma](./extensions/pragmas.md)
 extension (id of `linter-pragmas`, enabled by default) allows for the introduction
 of special instructions into the Markdown
 document.  These instructions can then be used by PyMarkdown to ask for special
@@ -480,7 +480,7 @@ or using targeted suppressions with pragmas.
 
 ##### Document Front-Matter Extension
 
-The [Document Front-Matter](https://github.com/jackdewinter/pymarkdown/blob/main/docs/extensions/front-matter.md)
+The [Document Front-Matter](./extensions/front-matter.md)
 extension (id of `front-matter` and disabled by default) allows for an optional
 YAML front-matter block to be inserted at the first line of the document.
 For applications that aggregate Markdown pages into a condensed form (such
@@ -521,11 +521,11 @@ Plugin rules (usually just referred to as rules) are the code that enables
 the rule engine to look for behavior that it believes is sub-optimal.  The scope
 of these
 rules may vary from detecting long lines in the document
-([Rule MD013](https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md013.md)),
+([Rule MD013](./plugins/rule_md013.md)),
 to superfluous blank lines in the document
-([Rule MD012](https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md012.md)),
+([Rule MD012](./plugins/rule_md012.md)),
 to detecting what looks like a missed Markdown ATX Heading annotation
-([Rule MD018](https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md018.md)).
+([Rule MD018](./plugins/rule_md018.md)).
 
 For most users, they only need to know how to disable or enable the rules released
 with PyMarkdown.
@@ -929,7 +929,7 @@ results:
   Id                   md001
   Name(s)              heading-increment,header-increment
   Short Description    Heading levels should only increment by one level at a time.
-  Description Url      https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md001.md
+  Description Url      https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md001.md
   Configuration Items  front_matter_title
 ```
 
@@ -982,7 +982,7 @@ result:
   Id                 front-matter
   Name               Front Matter Metadata
   Short Description  Allows metadata to be parsed from document front matter.
-  Description Url    https://github.com/jackdewinter/pymarkdown/blob/main/docs/extensions/front-matter.md
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/extensions/front-matter/
 ```
 
 ### Version Command

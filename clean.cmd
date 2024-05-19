@@ -149,6 +149,22 @@ if defined MY_MYPY (
 	goto executeMyPy
 )
 
+echo {Creating extensions.md summary file...}
+pipenv run python newdocs\generate_extensions_file.py
+if ERRORLEVEL 1 (
+	echo.
+	echo {Creation of extensions.md summary file failed.}
+	goto error_end
+)
+
+echo {Creating rules.md summary file...}
+pipenv run python newdocs\generate_rules_file.py
+if ERRORLEVEL 1 (
+	echo.
+	echo {Creation of rules.md summary file failed.}
+	goto error_end
+)
+
 echo {Executing black formatter on Python code.}
 pipenv run black %MY_VERBOSE% .
 if ERRORLEVEL 1 (

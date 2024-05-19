@@ -1617,8 +1617,8 @@ def test_markdown_with_plugins_info_and_found_filter():
   Name(s)              heading-increment,header-increment
   Short Description    Heading levels should only increment by one level at a
                        time.
-  Description Url      https://github.com/jackdewinter/pymarkdown/blob/main/do
-                       cs/rules/rule_md001.md
+  Description Url      https://pymarkdown.readthedocs.io/en/latest/plugins/rul
+                       e_md001.md
   Configuration Items  front_matter_title
 """
     expected_error = ""
@@ -1648,8 +1648,8 @@ def test_markdown_with_plugins_info_and_found_filter_no_configuration():
   Id                 md023
   Name(s)            heading-start-left,header-start-left
   Short Description  Headings must start at the beginning of the line.
-  Description Url    https://github.com/jackdewinter/pymarkdown/blob/main/docs
-                     /rules/rule_md023.md
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md023.md
 """
     expected_error = ""
 

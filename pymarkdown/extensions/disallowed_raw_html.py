@@ -39,7 +39,7 @@ class MarkdownDisallowRawHtmlExtension(ParserExtension):
             extension_enabled_by_default=False,
             extension_version="0.5.0",
             extension_interface_version=ExtensionManagerConstants.EXTENSION_INTERFACE_VERSION_BASIC,
-            extension_url="https://github.github.com/gfm/#disallowed-raw-html-extension-",
+            extension_url="https://pymarkdown.readthedocs.io/en/latest/extensions/disallowed-raw-html/",
             extension_configuration=None,
         )
 

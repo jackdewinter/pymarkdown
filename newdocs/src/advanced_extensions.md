@@ -152,11 +152,6 @@ the documentation for [rule plugins](./advanced_plugins.md),
 as the only difference is the word `extensions`
 in the configuration item name instead of the word `plugins`.
 
-## Full List of Extensions
+## List of Extensions
 
-- [Front-Matter](./extensions/front-matter.md)
-- [Pragmas](./extensions/pragmas.md)
-- [Task List Items](./extensions/task-list-items.md)
-- [Strikethrough](./extensions/strikethrough.md)
-- [Autolinks (Extended)](./extensions/extended-autolinks.md)
-- [Disallowed Raw HTML](./extensions/disallowed-raw-html.md)
+For a full list of extensions, check out the [extensions list](./extensions.md).

@@ -180,7 +180,7 @@ For the rule engine itself, each of the ever-expanding set of
 implemented as a plugin. As all rules are implemented as plugins, support for
 adding, enabling, and disabling plugins has been present since the start of the
 project. The core set of rules are our own implementations of the MD\* rules
-provided in the Npm [MarkdownLint](https://github.com/markdownlint/markdownlint)
+provided in the Npm [MarkdownLint](https://github.com/DavidAnson/markdownlint)
 project.
 
 ## What to Do Next?

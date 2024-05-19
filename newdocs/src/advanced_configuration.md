@@ -1106,7 +1106,7 @@ the contents of:
 }
 ```
 
-According to the documentation on [Rule md003](https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md003.md),
+According to the documentation on [Rule Md003](./plugins/rule_md003.md),
 the id for that rule is `md003` and it has one alias `heading-style-h1`.
 This means that the `plugins.md003` configuration takes
 precedence over the `plugins.heading-style-h1` configuration,

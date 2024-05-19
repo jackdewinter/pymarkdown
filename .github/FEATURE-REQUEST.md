@@ -1,7 +1,7 @@
 ## Prerequisites
 
 * [ ] Are you running the latest version of this application?
-* [ ] Have you checked the [Frequently Asked Questions](https://github.com/jackdewinter/pymarkdown/blob/main/docs/faq.md) document?
+* [ ] Have you checked the [Frequently Asked Questions](https://pymarkdown.readthedocs.io/en/latest/faq) document?
 * [ ] Did you perform a cursory search of other issues to look for related issues?
 
 ## Feature Request

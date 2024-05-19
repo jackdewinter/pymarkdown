@@ -34,7 +34,7 @@ class RuleMd025(RulePlugin):
             plugin_description="Multiple top-level headings in the same document",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md025.md",
+            plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md025.md",
             plugin_configuration="level, front_matter_title",
         )
 

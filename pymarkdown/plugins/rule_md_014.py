@@ -33,7 +33,7 @@ class RuleMd014(RulePlugin):
             plugin_enabled_by_default=True,
             plugin_description="Dollar signs used before commands without showing output",
             plugin_version="0.5.0",
-            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md014.md",
+            plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md014.md",
             plugin_supports_fix=False,
         )
 

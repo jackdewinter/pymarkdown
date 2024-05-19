@@ -43,7 +43,7 @@ class RuleMd044(RulePlugin):
             plugin_enabled_by_default=True,
             plugin_description="Proper names should have the correct capitalization",
             plugin_version="0.5.0",
-            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md044.md",
+            plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md044.md",
             plugin_configuration="names,code_blocks",
             plugin_supports_fix=False,
         )
