@@ -33,7 +33,7 @@ class RulePml101(RulePlugin):
             plugin_enabled_by_default=False,
             plugin_description="Anchored list indentation",
             plugin_version="0.5.0",
-            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_pml101.md",
+            plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_pml101.md",
             plugin_configuration="indent",
             plugin_supports_fix=False,
             plugin_fix_level=3,

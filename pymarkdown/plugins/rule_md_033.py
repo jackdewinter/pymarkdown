@@ -37,7 +37,7 @@ class RuleMd033(RulePlugin):
             plugin_description="Inline HTML",
             plugin_version="0.5.1",
             plugin_interface_version=1,
-            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md033.md",
+            plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md033.md",
             plugin_configuration="allowed_elements, allow_first_image_element",
         )
 

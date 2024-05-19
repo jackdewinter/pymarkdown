@@ -67,7 +67,7 @@ class PragmaExtension(ParserExtension):
             extension_enabled_by_default=True,
             extension_version="0.5.0",
             extension_interface_version=ExtensionManagerConstants.EXTENSION_INTERFACE_VERSION_BASIC,
-            extension_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/extensions/pragmas.md",
+            extension_url="https://pymarkdown.readthedocs.io/en/latest/extensions/pragmas/",
             extension_configuration=None,
         )
 

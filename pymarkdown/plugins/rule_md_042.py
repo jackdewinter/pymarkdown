@@ -28,7 +28,7 @@ class RuleMd042(RulePlugin):
             plugin_description="No empty links",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md042.md",
+            plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md042.md",
         )
 
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:

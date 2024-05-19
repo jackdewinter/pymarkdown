@@ -34,7 +34,7 @@ class RuleMd026(RulePlugin):
             plugin_description="Trailing punctuation present in heading text.",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md026.md",
+            plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md026.md",
             plugin_configuration="punctuation",
         )
 

@@ -44,7 +44,7 @@ class RuleMd013(RulePlugin):
             plugin_description="Line length",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md013.md",
+            plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md013.md",
             plugin_configuration="line_length,heading_line_length,code_block_line_length,"
             + "code_blocks,headings,strict,stern",
         )

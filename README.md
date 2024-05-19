@@ -65,7 +65,7 @@ This project required Python 3.8 or later to function.
 
 The PyMarkdown project is released with 46 out-of-the-box rules to check your
 Markdown with.  Roughly 44 of those rules are our version of the rules provided
-by the [Markdown Lint](https://github.com/markdownlint/markdownlint) project.
+by the [Markdown Lint](https://github.com/DavidAnson/markdownlint) project.
 We purposefully made the decision to implement those rules as they are somewhat
 of a standard due to Markdown Lint being a plugin for VSCode.
 

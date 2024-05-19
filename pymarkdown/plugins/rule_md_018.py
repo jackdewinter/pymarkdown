@@ -271,7 +271,7 @@ class RuleMd018(RulePlugin):
             plugin_description="No space present after the hash character on a possible Atx Heading.",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md018.md",
+            plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md018.md",
         )
 
     def starting_new_file(self) -> None:

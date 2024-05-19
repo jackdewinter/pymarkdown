@@ -40,7 +40,7 @@ about your scenario. Before submitting a new issue, please follow these steps:
    issue and submit it as such.
 1. **Check our Frequently Asked Questions document.**  
    Consult our
-   [Frequently Asked Questions](https://github.com/jackdewinter/pymarkdown/blob/main/docs/faq.md)
+   [Frequently Asked Questions](./faq.md)
    document to see if your issue is a common issue or related to a common
    issue. This document will either solve your problem or help you be more
    specific in your definition of the issue if you submit a new issue.

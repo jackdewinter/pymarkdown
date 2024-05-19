@@ -123,10 +123,10 @@ Eighth, I Am" which goes:
 
 That quote is very applicable here.  For extensions, the scope is typically larger
 than a plugin rule, with more things to consider.  For example, the existing
-[Pragmas Extension](https://github.com/jackdewinter/pymarkdown/blob/main/docs/extensions/pragmas.md)
+[Pragmas Extension](./extensions/pragmas.md)
 had to inject itself high up in the parsing process to ensure that it could be
 taken care of before anything else.  Other extensions, such as the
-[StrikeThrough Extension](https://github.com/jackdewinter/pymarkdown/blob/main/docs/extensions/strikethrough.md),
+[StrikeThrough Extension](./extensions/strikethrough.md),
 leveraged the existing inline emphasis code by adding other emphasis options.
 
 And then there are the scenario tests.  One of our project team's core tenets is

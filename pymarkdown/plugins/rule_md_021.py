@@ -38,7 +38,7 @@ class RuleMd021(RulePlugin):
             plugin_enabled_by_default=True,
             plugin_description="Multiple spaces are present inside hash characters on Atx Closed Heading.",
             plugin_version="0.5.1",
-            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md021.md",
+            plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md021.md",
             plugin_supports_fix=True,
         )
 

@@ -1,19 +1,8 @@
 # Change Log
 
-## Unversioned - In Main, Not Released
-
-### Added
-
-- [Issue 1075](https://github.com/jackdewinter/pymarkdown/issues/1075)
-  - Complete redo of advanced extensions documentation.
-
-### Fixed
-
-- None
-
-### Changed
-
-- None
+This changelog is kept here for historical purposes.  For
+the current changelog, goto our
+[documentation site](https://pymarkdown.readthedocs.io/en/latest/changelog/).
 
 ## Version 0.9.19 - Date: 2024-04-30
 

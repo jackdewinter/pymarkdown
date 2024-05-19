@@ -16,14 +16,20 @@ nav:
     - 'advanced_extensions.md'
     - 'advanced_plugins.md'
     - 'advanced_pre-commit.md'
+  - "Extensions & Rules":
+    - extensions.md
+    - rules.md
   - "Devloper Guide":
     - 'api.md'
     - 'development.md'
   - "Usual Project Stuff":
     - 'usual.md'
     - 'contribute.md'
-    - "Changelog" : https://github.com/jackdewinter/pymarkdown/blob/main/changelog.md
-    - "Frequently Asked Questions": https://github.com/jackdewinter/pymarkdown/blob/main/docs/faq.md
+    - "Changelog" : changelog.md
+    - "Frequently Asked Questions": faq.md
+not_in_nav: |
+  /plugins/*
+  /extensions/*
 markdown_extensions:
   - toc:
       permalink: "#"

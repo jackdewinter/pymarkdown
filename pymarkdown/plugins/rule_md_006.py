@@ -34,7 +34,7 @@ class RuleMd006(RulePlugin):
             plugin_enabled_by_default=False,
             plugin_description="Consider starting bulleted lists at the beginning of the line",
             plugin_version="0.5.1",
-            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md006.md",
+            plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md006.md",
             plugin_supports_fix=True,
         )
 

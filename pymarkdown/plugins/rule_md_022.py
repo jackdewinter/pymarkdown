@@ -38,7 +38,7 @@ class RuleMd022(RulePlugin):
             plugin_description="Headings should be surrounded by blank lines.",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md022.md",
+            plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md022.md",
             plugin_configuration="lines_above, lines_below",
         )
 
