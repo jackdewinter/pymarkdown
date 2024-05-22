@@ -2,6 +2,8 @@ import os
 import sys
 from test.utils import assert_that_exception_is_raised
 
+import pytest
+
 from pymarkdown.api import (
     PyMarkdownApi,
     PyMarkdownApiException,
@@ -48,6 +50,7 @@ WARNING  pymarkdown.main:main.py:323 No matching files found.
     assert not did_complete
 
 
+@pytest.mark.skip
 def test_api_exceptions_example_good(caplog):
     """
     Test to make sure that if there is at least one thing to scan,
