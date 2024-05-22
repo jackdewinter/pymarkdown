@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "74c8ddab42934aa80170fbf5cffa56e1dca35d774333c5a95e5b613f8b61f294"
+            "sha256": "cd65a4c9dc7600966e1521244234dd25013cfa17f9c92398bba87e591c7656f9"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -1187,11 +1187,11 @@
         },
         "setuptools": {
             "hashes": [
-                "sha256:6c1fccdac05a97e598fb0ae3bbed5904ccb317337a51139dcd51453611bbb987",
-                "sha256:c636ac361bc47580504644275c9ad802c50415c7522212252c033bd15f301f32"
+                "sha256:54faa7f2e8d2d11bcd2c07bed282eef1046b5c080d1c32add737d7b5817b1ad4",
+                "sha256:f211a66637b8fa059bb28183da127d4e86396c991a942b028c6650d4319c3fd0"
             ],
             "index": "pypi",
-            "version": "==69.5.1"
+            "version": "==70.0.0"
         },
         "six": {
             "hashes": [
@@ -1269,10 +1269,10 @@
         },
         "trove-classifiers": {
             "hashes": [
-                "sha256:2ebdddebd43e749ac6b6e9b9aa158ab489603dff147cba8714787729cdb9ea37",
-                "sha256:d47a6f1c48803091c3fc81f535fecfeef65b558f2b9e4e83df7a79d17bce8bbf"
+                "sha256:8a6242bbb5c9ae88d34cf665e816b287d2212973c8777dfaef5ec18d72ac1d03",
+                "sha256:c43ade18704823e4afa3d9db7083294bc4708a5e02afbcefacd0e9d03a7a24ef"
             ],
-            "version": "==2024.5.17"
+            "version": "==2024.5.22"
         },
         "twine": {
             "hashes": [
