@@ -521,7 +521,7 @@ Spaces inside emphasis markers.
 | Property | Value |
 | --- | -- |
 | Aliases | `md038`, `no-space-in-code` |
-| Autofix Available | Yes [*](#fix-description) |
+| Autofix Available | Yes* |
 | Enabled By Default | Yes |
 
 <!--- pyml disable-next-line no-duplicate-heading-->

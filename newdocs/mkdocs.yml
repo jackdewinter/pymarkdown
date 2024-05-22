@@ -6,6 +6,12 @@ theme: readthedocs
 # repo_url: https://github.com/jackdewinter/pymarkdown
 docs_dir: src
 site_dir: site
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [..]
 nav:
   - "Introduction":
     - 'index.md'
@@ -21,6 +27,7 @@ nav:
     - rules.md
   - "Devloper Guide":
     - 'api.md'
+    - "API Listing": api/pymarkdownapi.md
     - 'development.md'
   - "Usual Project Stuff":
     - 'usual.md'

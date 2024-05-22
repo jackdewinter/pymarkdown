@@ -8,6 +8,8 @@
     - Complete redo of advanced extensions documentation.
 - [Issue 1079](https://github.com/jackdewinter/pymarkdown/issues/1079)
     - Complete redo of advanced rules documentation.
+- [Issue 1083](https://github.com/jackdewinter/pymarkdown/issues/1083)
+    - Complete redo of api documentation.
 
 ### Fixed
 
