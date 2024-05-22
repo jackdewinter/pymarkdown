@@ -322,7 +322,7 @@ As the `example-2.md` file is not mentioned in the output, it makes sense
 that PyMarkdown's rule MD041 did not have any issue with a level 1 ATX Heading,
 largely confirming the above assumption.
 If desired, we can take the extra step to verify this by looking at the documentation
-page for [Rule MD041](./plugins/rule_md041.md#Correctness)
+page for [Rule MD041](./plugins/rule_md041.md#reasoning)
 which states:
 
 > In most cases, the top-level heading of a document is used as the title of that
