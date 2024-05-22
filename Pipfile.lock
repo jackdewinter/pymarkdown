@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "efd18dc42122ea867f1364335cc612b936b5df7ddf4602967c8204d126c8a7fe"
+            "sha256": "1f12dc54cf1d5cc2d8edd995653e4a457fce7b9a988b3e435244230471659f96"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -729,6 +729,7 @@
                 "sha256:a6dfbb75e03252917f2473ea9653f7cd799c3064e54d4c8140044c5c065f53c3"
             ],
             "index": "pypi",
+            "markers": "python_full_version >= '3.8.1'",
             "version": "==7.0.0"
         },
         "flake8-bandit": {
@@ -741,11 +742,12 @@
         },
         "flake8-bugbear": {
             "hashes": [
-                "sha256:663ef5de80cd32aacd39d362212983bc4636435a6f83700b4ed35acbd0b7d1b8",
-                "sha256:f9cb5f2a9e792dd80ff68e89a14c12eed8620af8b41a49d823b7a33064ac9658"
+                "sha256:cb430dd86bc821d79ccc0b030789a9c87a47a369667f12ba06e80f11305e8258",
+                "sha256:ff8d4ba5719019ebf98e754624c30c05cef0dadcf18a65d91c7567300e52a130"
             ],
             "index": "pypi",
-            "version": "==24.2.6"
+            "markers": "python_full_version >= '3.8.1'",
+            "version": "==24.4.26"
         },
         "ghp-import": {
             "hashes": [
