@@ -1,8 +1,12 @@
 import os
 import sys
-from pymarkdown.api import PyMarkdownApi, PyMarkdownApiException, PyMarkdownApiNoFilesFoundException
 from test.utils import assert_that_exception_is_raised
 
+from pymarkdown.api import (
+    PyMarkdownApi,
+    PyMarkdownApiException,
+    PyMarkdownApiNoFilesFoundException,
+)
 
 
 def test_api_api_basics_example(caplog):
@@ -14,7 +18,13 @@ def test_api_api_basics_example(caplog):
     source_path = "some-manner-of-path"
 
     # Act
-    assert_that_exception_is_raised(PyMarkdownApiNoFilesFoundException, "Provided path 'some-manner-of-path' does not exist.", PyMarkdownApi().scan_path, source_path)
+    assert_that_exception_is_raised(
+        PyMarkdownApiNoFilesFoundException,
+        "Provided path 'some-manner-of-path' does not exist.",
+        PyMarkdownApi().scan_path,
+        source_path,
+    )
+
 
 def test_api_exceptions_example_bad(caplog):
     """
@@ -29,9 +39,12 @@ def test_api_exceptions_example_bad(caplog):
         print(f"API Exception: {this_exception}", file=sys.stderr)
         did_complete = False
 
-    assert caplog.text == """WARNING  pymarkdown.main:main.py:323 Provided path 'some-manner-of-path' does not exist.
+    assert (
+        caplog.text
+        == """WARNING  pymarkdown.main:main.py:323 Provided path 'some-manner-of-path' does not exist.
 WARNING  pymarkdown.main:main.py:323 No matching files found.
 """
+    )
     assert not did_complete
 
 
@@ -52,7 +65,8 @@ def test_api_exceptions_example_good(caplog):
     assert did_complete
     assert caplog.text == ""
 
-def test_api_positive_results(caplog,capsys):
+
+def test_api_positive_results(caplog, capsys):
     """
     Test to make sure that we test the "sample.md" and the output
     from the API documentation.
@@ -78,16 +92,15 @@ def test_api_positive_results(caplog,capsys):
     captured = capsys.readouterr()
     assert captured.out == "[]\n[]\n"
 
-def test_api_scan_failures(caplog,capsys):
+
+def test_api_scan_failures(caplog, capsys):
     """
     Test to make sure that we test a modified "sample.md" and the output
     from the API documentation. This modification should cause Rule Md047
     to fire.
     """
 
-    resource_path = os.path.join(
-        "test", "resources", "apis", "scan_failures_sample.md"
-    )
+    resource_path = os.path.join("test", "resources", "apis", "scan_failures_sample.md")
 
     try:
         scan_result = PyMarkdownApi().scan_path(resource_path)
@@ -104,9 +117,13 @@ def test_api_scan_failures(caplog,capsys):
     assert caplog.text == ""
     captured = capsys.readouterr()
     modified_resource_path = resource_path.replace("\\", "\\\\")
-    assert captured.out == f"[PyMarkdownScanFailure(scan_file='{modified_resource_path}', line_number=3, column_number=18, rule_id='MD047', rule_name='single-trailing-newline', rule_description='Each file should end with a single newline character.', extra_error_information='')]\n[]\n"
+    assert (
+        captured.out
+        == f"[PyMarkdownScanFailure(scan_file='{modified_resource_path}', line_number=3, column_number=18, rule_id='MD047', rule_name='single-trailing-newline', rule_description='Each file should end with a single newline character.', extra_error_information='')]\n[]\n"
+    )
 
-def test_api_extra_information(caplog,capsys):
+
+def test_api_extra_information(caplog, capsys):
     """
     Test to make sure that we test a modified "sample.md" that has extra
     information in its failure object.
@@ -131,9 +148,13 @@ def test_api_extra_information(caplog,capsys):
     assert caplog.text == ""
     captured = capsys.readouterr()
     modified_resource_path = resource_path.replace("\\", "\\\\")
-    assert captured.out == f"[PyMarkdownScanFailure(scan_file='{modified_resource_path}', line_number=3, column_number=2, rule_id='MD007', rule_name='ul-indent', rule_description='Unordered list indentation', extra_error_information=' [Expected: 0, Actual=1]')]\n[]\n"
+    assert (
+        captured.out
+        == f"[PyMarkdownScanFailure(scan_file='{modified_resource_path}', line_number=3, column_number=2, rule_id='MD007', rule_name='ul-indent', rule_description='Unordered list indentation', extra_error_information=' [Expected: 0, Actual=1]')]\n[]\n"
+    )
 
-def test_api_pragma_failures(caplog,capsys):
+
+def test_api_pragma_failures(caplog, capsys):
     """
     Test to make sure that we test a modified "sample.md" with a malformed pragma.
     """
@@ -157,7 +178,9 @@ def test_api_pragma_failures(caplog,capsys):
     assert caplog.text == ""
     captured = capsys.readouterr()
     modified_resource_path = resource_path.replace("\\", "\\\\")
-    assert captured.out == f"""[PyMarkdownScanFailure(scan_file='{modified_resource_path}', line_number=4, column_number=2, rule_id='MD007', rule_name='ul-indent', rule_description='Unordered list indentation', extra_error_information=' [Expected: 0, Actual=1]')]
+    assert (
+        captured.out
+        == f"""[PyMarkdownScanFailure(scan_file='{modified_resource_path}', line_number=4, column_number=2, rule_id='MD007', rule_name='ul-indent', rule_description='Unordered list indentation', extra_error_information=' [Expected: 0, Actual=1]')]
 [PyMarkdownPragmaError(file_path='{modified_resource_path}', line_number=3, pragma_error="Inline configuration command 'disable-next-line' unable to find a plugin with the id 'invalid'.")]
 """
-
+    )
