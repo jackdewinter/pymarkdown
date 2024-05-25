@@ -19,9 +19,11 @@ from pymarkdown.leaf_blocks.leaf_block_helper import LeafBlockHelper
 from pymarkdown.tokens.fenced_code_block_markdown_token import (
     FencedCodeBlockMarkdownToken,
 )
+from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.tokens.stack_token import (
     FencedCodeBlockStackToken,
+    ListStackToken,
     ParagraphStackToken,
     StackToken,
 )
@@ -164,6 +166,7 @@ class FencedLeafBlockProcessor:
                     extracted_whitespace,
                     original_line,
                     position_marker.text_to_parse,
+                    grab_bag.indent_used_by_list,
                 )
             )
         return new_tokens, extracted_whitespace
@@ -428,6 +431,7 @@ class FencedLeafBlockProcessor:
         extracted_whitespace: str,
         original_line: str,
         line_to_parse: str,
+        indent_used_by_list: Optional[str],
     ) -> str:
         fenced_token = cast(FencedCodeBlockStackToken, parser_state.token_stack[-1])
         if fenced_token.whitespace_start_count and extracted_whitespace:
@@ -447,11 +451,13 @@ class FencedLeafBlockProcessor:
                 removed_whitespace,
                 whitespace_padding,
             ) = FencedLeafBlockProcessor.__parse_fenced_code_block_already_in_with_tab(
+                parser_state,
                 whitespace_used_count,
                 whitespace_left_count,
                 original_line,
                 line_to_parse,
                 current_whitespace_length,
+                indent_used_by_list,
             )
             if do_normal_processing:
                 removed_whitespace = ParserHelper.create_replace_with_nothing_marker(
@@ -467,44 +473,67 @@ class FencedLeafBlockProcessor:
         POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
         return extracted_whitespace
 
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __parse_fenced_code_block_already_in_with_tab(
+        parser_state: ParserState,
         whitespace_used_count: int,
         whitespace_left_count: int,
         original_line: str,
         line_to_parse: str,
         current_whitespace_length: int,
+        indent_used_by_list: Optional[str],
     ) -> Tuple[bool, str, str]:
         do_normal_processing = True
         removed_whitespace = ""
         whitespace_padding = ""
         if whitespace_left_count and "\t" in original_line:
-            ex_space, ex_space_index, split_tab = TabHelper.find_tabified_string(
-                original_line, line_to_parse, use_proper_traverse=True
-            )
-            modified_ex_space_index = (
-                ex_space_index + 1 if split_tab else ex_space_index
-            )
-
-            (last_good_space_index, _, detabified_ex_space) = (
-                TabHelper.search_for_tabbed_prefix(
-                    ex_space, modified_ex_space_index, whitespace_used_count
+            if original_line.startswith("\t\t"):
+                whitespace_padding = "\t"
+                removed_whitespace = ParserHelper.create_replace_with_nothing_marker(
+                    "\t"
                 )
-            )
+                do_normal_processing = False
 
-            do_normal_processing = len(detabified_ex_space) == whitespace_used_count
-            if not do_normal_processing:
-                (
-                    removed_whitespace,
-                    whitespace_padding,
-                ) = FencedLeafBlockProcessor.__parse_fenced_code_block_already_in_with_tab_whitespace(
-                    ex_space,
-                    last_good_space_index,
-                    detabified_ex_space,
-                    whitespace_used_count,
-                    current_whitespace_length,
+                last_container_token = parser_state.token_stack[-2]
+                assert last_container_token.is_list
+                list_stack_token = cast(ListStackToken, last_container_token)
+                list_markdown_token = cast(
+                    ListStartMarkdownToken, list_stack_token.matching_markdown_token
                 )
+                list_markdown_token.remove_last_leading_space()
+            else:
+                ex_space, ex_space_index, split_tab = TabHelper.find_tabified_string(
+                    original_line,
+                    line_to_parse,
+                    use_proper_traverse=True,
+                    reconstruct_prefix=indent_used_by_list,
+                )
+                modified_ex_space_index = (
+                    ex_space_index + 1 if split_tab else ex_space_index
+                )
+
+                (last_good_space_index, _, detabified_ex_space) = (
+                    TabHelper.search_for_tabbed_prefix(
+                        ex_space, modified_ex_space_index, whitespace_used_count
+                    )
+                )
+
+                do_normal_processing = len(detabified_ex_space) == whitespace_used_count
+                if not do_normal_processing:
+                    (
+                        removed_whitespace,
+                        whitespace_padding,
+                    ) = FencedLeafBlockProcessor.__parse_fenced_code_block_already_in_with_tab_whitespace(
+                        ex_space,
+                        last_good_space_index,
+                        detabified_ex_space,
+                        whitespace_used_count,
+                        current_whitespace_length,
+                    )
         return do_normal_processing, removed_whitespace, whitespace_padding
+
+    # pylint: enable=too-many-arguments, too-many-locals
 
     @staticmethod
     def __parse_fenced_code_block_already_in_with_tab_whitespace(
