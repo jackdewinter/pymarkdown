@@ -38,7 +38,7 @@ class RulePml100(RulePlugin):
             plugin_enabled_by_default=False,
             plugin_description="Disallowed HTML",
             plugin_version="0.5.0",
-            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_pml100.md",
+            plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_pml100.md",
             plugin_configuration=None,
             plugin_supports_fix=False,
         )

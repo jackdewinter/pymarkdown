@@ -27,7 +27,7 @@ AUTHOR = "Jack De Winter"
 AUTHOR_EMAIL = "jack.de.winter@outlook.com"
 PROJECT_URL = "https://github.com/jackdewinter/pymarkdown"
 PROJECT_URLS = {
-    "Change Log": "https://github.com/jackdewinter/pymarkdown/blob/main/changelog.md",
+    "Change Log": "https://pymarkdown.readthedocs.io/en/latest/changelog/",
 }
 
 PACKAGE_NAME = "pymarkdownlnt"

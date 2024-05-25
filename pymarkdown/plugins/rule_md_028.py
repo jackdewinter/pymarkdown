@@ -36,7 +36,7 @@ class RuleMd028(RulePlugin):
             plugin_description="Blank line inside blockquote",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md028.md",
+            plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md028.md",
         )
 
     def starting_new_file(self) -> None:

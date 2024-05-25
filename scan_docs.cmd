@@ -35,26 +35,25 @@ echo {Scanning the documentation directory for warnings.}
 
 rem Cleanly start the main part of the script
 
-cd %SCAN_DOCS_SCRIPT_DIRECTORY%\newdocs
 if defined MY_VERBOSE (
     echo {Scanning the documentation using PyMarkdown.}
 )
-pipenv run python ..\main.py scan src
+pipenv run python main.py --config %SCAN_DOCS_SCRIPT_DIRECTORY%\newdocs\clean.json scan -r %SCAN_DOCS_SCRIPT_DIRECTORY%\newdocs\src
 if ERRORLEVEL 1 (
 	echo.
 	echo {Scanning the documentation using PyMarkdown failed.}
 	goto error_end
 )
 
-if defined MY_VERBOSE (
-    echo {Reformatting the documentation using MdFormat.}
-)
-pipenv run  mdformat --align-semantic-breaks-in-lists --wrap 80 .
-if ERRORLEVEL 1 (
-	echo.
-	echo {Reformatting the documentation using MdFormat failed.}
-	goto error_end
-)
+@REM if defined MY_VERBOSE (
+@REM     echo {Reformatting the documentation using MdFormat.}
+@REM )
+@REM pipenv run mdformat --align-semantic-breaks-in-lists --end-of-line keep --wrap 80 .
+@REM if ERRORLEVEL 1 (
+@REM 	echo.
+@REM 	echo {Reformatting the documentation using MdFormat failed.}
+@REM 	goto error_end
+@REM )
 
 rem Cleanly exit the script
 

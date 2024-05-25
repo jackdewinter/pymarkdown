@@ -6,13 +6,40 @@ theme: readthedocs
 # repo_url: https://github.com/jackdewinter/pymarkdown
 docs_dir: src
 site_dir: site
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [..]
 nav:
-  - 'index.md'
-  - 'another.md'
-  # - 'User Guide':
-  #   - 'Writing your docs': 'writing-your-docs.md'
-  #   - 'Styling your docs': 'styling-your-docs.md'
-  # - 'My About Page' : 'about.md'
+  - "Introduction":
+    - 'index.md'
+    - 'getting-started.md'
+  - "User Guide":
+    - 'user-guide.md'
+    - 'advanced_configuration.md'
+    - 'advanced_extensions.md'
+    - 'advanced_plugins.md'
+    - 'advanced_pre-commit.md'
+  - "Extensions & Rules":
+    - extensions.md
+    - rules.md
+  - "Devloper Guide":
+    - 'api.md'
+    - "API Listing": api/pymarkdownapi.md
+    - 'development.md'
+  - "Usual Project Stuff":
+    - 'usual.md'
+    - 'contribute.md'
+    - "Changelog" : changelog.md
+    - "Frequently Asked Questions": faq.md
+not_in_nav: |
+  /plugins/*
+  /extensions/*
 markdown_extensions:
   - toc:
       permalink: "#"
+theme:
+  name: readthedocs
+  navigation_depth: 5

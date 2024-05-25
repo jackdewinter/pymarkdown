@@ -11,7 +11,7 @@
 
 This extension allows for the parsing of "pragmas" that provide extra
 information to the PyMarkdown parser.  This information is then used
-by the PyMarkdown linter (plugin rules engine) to alter how rule
+by the PyMarkdown linter (plugin rule engine) to alter how rule
 violations are processed.
 
 The most common use case for pragmas is to disable any rule violations

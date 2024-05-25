@@ -1,10 +1,28 @@
 # Change Log
 
-## Unversioned - In Main, Not Released
+This changelog is kept here for historical purposes.  For
+the current changelog, goto our
+[documentation site](https://pymarkdown.readthedocs.io/en/latest/changelog/).
+
+## Version 0.9.19 - Date: 2024-04-30
+
+This release focuses on getting the documentation up to date
+and in the new read-the-docs format.  Some small issues were
+addressed, but this is mainly to get the documents into good
+shape for release.
+
+To view the new documentation, goto
+[ReadTheDocs](https://pymarkdown.readthedocs.io/en/latest/).
 
 ### Added
 
-- None
+- [Issue 801](https://github.com/jackdewinter/pymarkdown/issues/801)
+  - Started movement of docs from README.md and docs directory to
+    the newdocs directory with a shorter README.md.
+- [Issue 1059](https://github.com/jackdewinter/pymarkdown/issues/1059)
+  - Complete redo of pre-commit documentation.
+- [Issue 1070](https://github.com/jackdewinter/pymarkdown/issues/1070)
+  - Complete redo of advanced configuration documentation.
 
 ### Fixed
 

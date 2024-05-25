@@ -7,7 +7,7 @@ repos:
         entry: pipenv run python utils/correct_pdoc_issues.py
         pass_filenames: false
   - repo: https://github.com/jackdewinter/pymarkdown
-    rev: v0.9.11
+    rev: v0.9.18
     hooks:
       - id: pymarkdown
         pass_filenames: false
@@ -17,6 +17,16 @@ repos:
           - scan
           - .
           - ./docs
+  - repo: https://github.com/jackdewinter/pymarkdown
+    rev: v0.9.18
+    hooks:
+      - id: pymarkdown
+        pass_filenames: false
+        args:
+          - --config
+          - newdocs/clean.json
+          - scan
+          - ./newdocs/src
   - repo: local
     hooks:
       - id: verify-install-requirements

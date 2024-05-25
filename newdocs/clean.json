@@ -1,0 +1,22 @@
+{
+    "plugins": {
+        "line-length": {
+            "enabled": true,
+            "code_block_line_length" : 160
+        },
+        "ul-indent" : {
+            "enabled": false
+        },
+        "list-anchored-indent" : {
+            "enabled": true
+        }
+    },
+    "extensions": {
+        "front-matter" : {
+            "enabled" : true
+        },
+        "linter-pragmas": {
+            "enabled" : true
+        }
+    }
+}

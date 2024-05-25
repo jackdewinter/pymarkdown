@@ -149,6 +149,22 @@ if defined MY_MYPY (
 	goto executeMyPy
 )
 
+echo {Creating extensions.md summary file...}
+pipenv run python newdocs\generate_extensions_file.py
+if ERRORLEVEL 1 (
+	echo.
+	echo {Creation of extensions.md summary file failed.}
+	goto error_end
+)
+
+echo {Creating rules.md summary file...}
+pipenv run python newdocs\generate_rules_file.py
+if ERRORLEVEL 1 (
+	echo.
+	echo {Creation of rules.md summary file failed.}
+	goto error_end
+)
+
 echo {Executing black formatter on Python code.}
 pipenv run black %MY_VERBOSE% .
 if ERRORLEVEL 1 (
@@ -252,6 +268,14 @@ rem pipenv run stubgen --output stubs -p columnar
 rem pipenv run stubgen --output stubs -p wcwidth
 if defined MY_MYPY (
 	goto good_end
+)
+
+echo {Scanning documentation to ensure its compliance.}
+call scan_docs.cmd
+if ERRORLEVEL 1 (
+	echo.
+	echo {Scanning of documentation failed.}
+	goto error_end
 )
 
 echo {Executing pylint utils analyzer on Python source code to verify suppressions and document them.}

@@ -11,6 +11,14 @@
             "elapsedTimeInMilliseconds": 0
         },
         {
+            "name": "test.api.test_api_examples",
+            "totalTests": 7,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 1,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
             "name": "test.api.test_api_general",
             "totalTests": 4,
             "failedTests": 0,
