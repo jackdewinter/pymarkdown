@@ -13,7 +13,10 @@
 
 ### Fixed
 
-- None
+- [Issue 1015](https://github.com/jackdewinter/pymarkdown/issues/1015)
+    - Fixed issue with double tabs within fenced block
+- [Issue 1077](https://github.com/jackdewinter/pymarkdown/issues/1077)
+    - Fixed issue with previous cleanup
 
 ### Changed
 

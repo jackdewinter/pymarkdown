@@ -5748,6 +5748,182 @@ def test_extra_042d():
 
 
 @pytest.mark.gfm
+def test_extra_042x():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """# test
+
+## Example: [foo][bar]
+
+[foo]: https://example.com
+"""
+    expected_tokens = [
+        "[atx(1,1):1:0:]",
+        "[text(1,3):test: ]",
+        "[end-atx::]",
+        "[BLANK(2,1):]",
+        "[atx(3,1):2:0:]",
+        "[text(3,4):Example: : ]",
+        "[text(3,13):[:]",
+        "[text(3,14):foo:]",
+        "[text(3,17):]:]",
+        "[text(3,18):[:]",
+        "[text(3,19):bar:]",
+        "[text(3,22):]:]",
+        "[end-atx::]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::foo:: :https://example.com:::::]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<h1>test</h1>
+<h2>Example: [foo][bar]</h2>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_042xx():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """# test
+
+## Example: [foo][bar]
+
+[bar]: https://example.com
+"""
+    expected_tokens = [
+        "[atx(1,1):1:0:]",
+        "[text(1,3):test: ]",
+        "[end-atx::]",
+        "[BLANK(2,1):]",
+        "[atx(3,1):2:0:]",
+        "[text(3,4):Example: : ]",
+        "[link(3,13):full:https://example.com::::bar:foo:False::::]",
+        "[text(3,14):foo:]",
+        "[end-link::]",
+        "[end-atx::]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::bar:: :https://example.com:::::]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<h1>test</h1>
+<h2>Example: <a href="https://example.com">foo</a></h2>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_042xa():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """# test
+
+## Example: [foo](https://example.com)
+
+"""
+    expected_tokens = [
+        "[atx(1,1):1:0:]",
+        "[text(1,3):test: ]",
+        "[end-atx::]",
+        "[BLANK(2,1):]",
+        "[atx(3,1):2:0:]",
+        "[text(3,4):Example: : ]",
+        "[link(3,13):inline:https://example.com:::::foo:False::::]",
+        "[text(3,14):foo:]",
+        "[end-link::]",
+        "[end-atx::]",
+        "[BLANK(4,1):]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<h1>test</h1>
+<h2>Example: <a href="https://example.com">foo</a></h2>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_042xb():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """# test
+
+## Example: [foo]
+
+[foo]: https://example.com
+"""
+    expected_tokens = [
+        "[atx(1,1):1:0:]",
+        "[text(1,3):test: ]",
+        "[end-atx::]",
+        "[BLANK(2,1):]",
+        "[atx(3,1):2:0:]",
+        "[text(3,4):Example: : ]",
+        "[link(3,13):shortcut:https://example.com:::::foo:False::::]",
+        "[text(3,14):foo:]",
+        "[end-link::]",
+        "[end-atx::]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::foo:: :https://example.com:::::]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<h1>test</h1>
+<h2>Example: <a href="https://example.com">foo</a></h2>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_042xc():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """# test
+
+## Example: [foo][]
+
+[foo]: https://example.com
+"""
+    expected_tokens = [
+        "[atx(1,1):1:0:]",
+        "[text(1,3):test: ]",
+        "[end-atx::]",
+        "[BLANK(2,1):]",
+        "[atx(3,1):2:0:]",
+        "[text(3,4):Example: : ]",
+        "[link(3,13):collapsed:https://example.com:::::foo:False::::]",
+        "[text(3,14):foo:]",
+        "[end-link::]",
+        "[end-atx::]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::foo:: :https://example.com:::::]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<h1>test</h1>
+<h2>Example: <a href="https://example.com">foo</a></h2>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_extra_999():
     """
     Temporary test to keep coverage up while consistency checks disabled.

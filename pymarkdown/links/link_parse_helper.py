@@ -148,7 +148,7 @@ class LinkParseHelper:
         new_index: int,
         source_text: str,
         text_from_blocks: str,
-        tabified_text: str,
+        tabified_text: Optional[str],
     ) -> Tuple[str, bool, int, str, str, Optional[str]]:
         POGGER.debug("collapsed reference?")
 
@@ -962,9 +962,6 @@ class LinkParseHelper:
         elif ParserHelper.is_character_at_index(
             source_text, new_index, LinkParseHelper.__link_format_reference_start
         ):
-            assert (
-                tabified_text is not None
-            ), "If we have a link start character, must have tabified text."
             (
                 lhp.label_type,
                 tried_full_reference_form,

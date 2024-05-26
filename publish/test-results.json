@@ -1620,7 +1620,7 @@
         },
         {
             "name": "test.test_markdown_extra",
-            "totalTests": 138,
+            "totalTests": 143,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 1,
