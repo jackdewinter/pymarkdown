@@ -581,6 +581,32 @@ a line of text  with    tabs
         fix_expected_file_contents="""item    1
 """,
     ),
+    pluginRuleTest(
+        "issue-1015-positive",
+        source_file_name=f"{source_path}issue-1015.md",
+        source_file_contents="""Consider this code:
+    code block here
+
+- Consider this code:
+\tcode block here""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD010: Hard tabs [Column: 1] (no-hard-tabs)
+{temp_source_path}:5:16: MD047: Each file should end with a single newline character. (single-trailing-newline)
+""",
+    ),
+    pluginRuleTest(
+        "issue-1015-negative",
+        source_file_name=f"{source_path}issue-1015.md",
+        source_file_contents="""Consider this code:
+    code block here
+
+- Consider this code:
+\tcode block here""",
+        disable_rules="md010",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:16: MD047: Each file should end with a single newline character. (single-trailing-newline)
+""",
+    ),
 ]
 fixTests = []
 for i in scanTests:

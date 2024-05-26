@@ -500,6 +500,7 @@ class LeafBlockProcessorParagraph:
                         original_line=original_line,
                         alternate_list_leading_space=alternate_leading_space,
                     )
+            # assert False
         return extracted_whitespace
 
     @staticmethod

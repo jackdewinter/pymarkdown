@@ -5519,127 +5519,6 @@ def test_extra_041x():
     """
 
     # Arrange
-    source_markdown = """>  *  Heading 1
->     fff
->  *  Heading 2
-"""
-    expected_tokens = [
-        "[block-quote(1,1)::> \n> \n> ]",
-        "[ulist(1,4):*::6: :    \n]",
-        "[para(1,7):\n]",
-        "[text(1,7):Heading 1\nfff::\n]",
-        "[end-para:::True]",
-        "[li(3,4):6: :]",
-        "[para(3,7):]",
-        "[text(3,7):Heading 2:]",
-        "[end-para:::True]",
-        "[BLANK(4,1):]",
-        "[end-ulist:::True]",
-        "[end-block-quote:::True]",
-    ]
-    expected_gfm = """<blockquote>
-<ul>
-<li>Heading 1
-fff</li>
-<li>Heading 2</li>
-</ul>
-</blockquote>"""
-
-    # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
-
-
-@pytest.mark.gfm
-def test_extra_041a():
-    """
-    TBD
-    """
-
-    # Arrange
-    source_markdown = """>  *  Heading 1
->     fff
->  *  Heading 2
->     fff
-"""
-    expected_tokens = [
-        "[block-quote(1,1)::> \n> \n> \n> ]",
-        "[ulist(1,4):*::6: :    \n    \n]",
-        "[para(1,7):\n]",
-        "[text(1,7):Heading 1\nfff::\n]",
-        "[end-para:::True]",
-        "[li(3,4):6: :]",
-        "[para(3,7):\n]",
-        "[text(3,7):Heading 2\nfff::\n]",
-        "[end-para:::True]",
-        "[BLANK(5,1):]",
-        "[end-ulist:::True]",
-        "[end-block-quote:::True]",
-    ]
-    expected_gfm = """<blockquote>
-<ul>
-<li>Heading 1
-fff</li>
-<li>Heading 2
-fff</li>
-</ul>
-</blockquote>"""
-
-    # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
-
-
-@pytest.mark.gfm
-def test_extra_041b():
-    """
-    TBD
-    """
-
-    # Arrange
-    source_markdown = """>  *  Heading 1
->\a
->  *  Heading 2
->\a
-""".replace(
-        "\a", " "
-    )
-    expected_tokens = [
-        "[block-quote(1,1)::> \n> \n> \n> ]",
-        "[ulist(1,4):*::6: :\n\n]",
-        "[para(1,7):]",
-        "[text(1,7):Heading 1:]",
-        "[end-para:::True]",
-        "[BLANK(2,3):]",
-        "[li(3,4):6: :]",
-        "[para(3,7):]",
-        "[text(3,7):Heading 2:]",
-        "[end-para:::True]",
-        "[BLANK(4,3):]",
-        "[BLANK(5,1):]",
-        "[end-ulist:::True]",
-        "[end-block-quote:::True]",
-    ]
-    expected_gfm = """<blockquote>
-<ul>
-<li>
-<p>Heading 1</p>
-</li>
-<li>
-<p>Heading 2</p>
-</li>
-</ul>
-</blockquote>"""
-
-    # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
-
-
-@pytest.mark.gfm
-def test_extra_042x():
-    """
-    TBD
-    """
-
-    # Arrange
     source_markdown = """Consider this code:
 
 \tcode block here
@@ -5663,7 +5542,7 @@ def test_extra_042x():
 
 
 @pytest.mark.gfm
-def test_extra_042a():
+def test_extra_041a():
     """
     TBD
     """
@@ -5691,6 +5570,178 @@ def test_extra_042a():
 <p>code block here</p>
 </li>
 </ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_042b():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """- Consider this code:
+
+\tcode block here
+- **resource**: produces a resource
+
+\t```mcl
+\tfile "/tmp/hello" {
+\t}
+\t```
+
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::\n\n\n\n\n\n\n\n]",
+        "[para(1,3):]",
+        "[text(1,3):Consider this code::]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[para(3,5):\t]",
+        "[text(3,5):code block here:]",
+        "[end-para:::True]",
+        "[li(4,1):2::]",
+        "[para(4,3):]",
+        "[emphasis(4,3):2:*]",
+        "[text(4,5):resource:]",
+        "[end-emphasis(4,13)::]",
+        "[text(4,15):: produces a resource:]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[fcode-block(6,5):`:3:mcl::::\t:]",
+        '[text(7,1):file \a"\a&quot;\a/tmp/hello\a"\a&quot;\a {\n\a\t\a\x03\a}:\a\t\a\x03\a]',
+        "[end-fcode-block:\t::3:False]",
+        "[BLANK(10,1):]",
+        "[BLANK(11,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>Consider this code:</p>
+<p>code block here</p>
+</li>
+<li>
+<p><strong>resource</strong>: produces a resource</p>
+<pre><code class="language-mcl">file &quot;/tmp/hello&quot; {
+}
+</code></pre>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_042c():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """- Consider this code:
+
+\tcode block here
+- **resource**: produces a resource
+
+\t```mcl
+\tfile "/tmp/hello" {
+\t\tcontent => "world",
+\t\tmode => "o=rwx",
+\t}
+\t```
+
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::\n\n\n\n\n\n\n\n]",
+        "[para(1,3):]",
+        "[text(1,3):Consider this code::]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[para(3,5):\t]",
+        "[text(3,5):code block here:]",
+        "[end-para:::True]",
+        "[li(4,1):2::]",
+        "[para(4,3):]",
+        "[emphasis(4,3):2:*]",
+        "[text(4,5):resource:]",
+        "[end-emphasis(4,13)::]",
+        "[text(4,15):: produces a resource:]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[fcode-block(6,5):`:3:mcl::::\t:]",
+        '[text(7,1):file \a"\a&quot;\a/tmp/hello\a"\a&quot;\a {\n\a\t\a\x03\a\tcontent =\a>\a&gt;\a \a"\a&quot;\aworld\a"\a&quot;\a,\n\a\t\a\x03\a\tmode =\a>\a&gt;\a \a"\a&quot;\ao=rwx\a"\a&quot;\a,\n\a\t\a\x03\a}:\a\t\a\x03\a]',
+        "[end-fcode-block:\t::3:False]",
+        "[BLANK(12,1):]",
+        "[BLANK(13,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>Consider this code:</p>
+<p>code block here</p>
+</li>
+<li>
+<p><strong>resource</strong>: produces a resource</p>
+<pre><code class="language-mcl">file &quot;/tmp/hello&quot; {
+\tcontent =&gt; &quot;world&quot;,
+\tmode =&gt; &quot;o=rwx&quot;,
+}
+</code></pre>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_042d():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """> **resource**: produces a resource
+
+>\t```mcl
+>\tfile "/tmp/hello" {
+>\t\tcontent => "world",
+>\t\tmode => "o=rwx",
+>\t}
+>\t```
+
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n]",
+        "[para(1,3):]",
+        "[emphasis(1,3):2:*]",
+        "[text(1,5):resource:]",
+        "[end-emphasis(1,13)::]",
+        "[text(1,15):: produces a resource:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(2,1):]",
+        "[block-quote(3,1)::>\n>\n>\n>\n>\n>\n]",
+        "[fcode-block(3,5):`:3:mcl::::\t:]",
+        '[text(4,2):file \a"\a&quot;\a/tmp/hello\a"\a&quot;\a {\n\a\t\t\a\t\acontent =\a>\a&gt;\a \a"\a&quot;\aworld\a"\a&quot;\a,\n\a\t\t\a\t\amode =\a>\a&gt;\a \a"\a&quot;\ao=rwx\a"\a&quot;\a,\n\a\t\a\x03\a}:\a\t\a\x03\a]',
+        "[end-fcode-block:\t::3:False]",
+        "[end-block-quote:::True]",
+        "[BLANK(9,1):]",
+        "[BLANK(10,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<p><strong>resource</strong>: produces a resource</p>
+</blockquote>
+<blockquote>
+<pre><code class="language-mcl">file &quot;/tmp/hello&quot; {
+\tcontent =&gt; &quot;world&quot;,
+\tmode =&gt; &quot;o=rwx&quot;,
+}
+</code></pre>
+</blockquote>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
