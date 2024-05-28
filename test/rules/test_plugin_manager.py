@@ -1256,7 +1256,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_interface_version():
     expected_return_code = 1
     expected_output = ""
     expected_error = """BadPluginError encountered while loading plugins:
-Plugin 'bad_interface_version.py' with an interface version ('-1') that is not '1' or '2'.
+Plugin 'bad_interface_version.py' with an interface version ('-1') that is not '1', '2', or '3'.
 """
 
     # Act
@@ -1282,60 +1282,60 @@ def test_markdown_with_plugins_list_only():
   ID      NAMES                           ENABLED    ENABLED    VERSION  FIX
                                           (DEFAULT)  (CURRENT)
 
-  md001   heading-increment, header-incr  True       True       0.5.1    Yes
+  md001   heading-increment, header-incr  True       True       0.6.0    Yes
           ement
-  md002   first-heading-h1, first-header  False      False      0.5.0    No
+  md002   first-heading-h1, first-header  False      False      0.6.0    No
           -h1
-  md003   heading-style, header-style     True       True       0.5.0    No
-  md004   ul-style                        True       True       0.5.1    Yes
+  md003   heading-style, header-style     True       True       0.6.0    No
+  md004   ul-style                        True       True       0.6.0    Yes
   md005   list-indent                     True       True       0.5.1    Yes
   md006   ul-start-left                   False      False      0.5.1    Yes
-  md007   ul-indent                       True       True       0.5.1    Yes
-  md009   no-trailing-spaces              True       True       0.5.1    Yes
-  md010   no-hard-tabs                    True       True       0.5.1    Yes
+  md007   ul-indent                       True       True       0.6.0    Yes
+  md009   no-trailing-spaces              True       True       0.6.0    Yes
+  md010   no-hard-tabs                    True       True       0.6.0    Yes
   md011   no-reversed-links               True       True       0.5.0    No
-  md012   no-multiple-blanks              True       True       0.5.0    No
-  md013   line-length                     True       True       0.5.0    No
+  md012   no-multiple-blanks              True       True       0.6.0    No
+  md013   line-length                     True       True       0.6.0    No
   md014   commands-show-output            True       True       0.5.0    No
   md018   no-missing-space-atx            True       True       0.5.0    No
   md019   no-multiple-space-atx           True       True       0.5.1    Yes
   md020   no-missing-space-closed-atx     True       True       0.5.0    No
   md021   no-multiple-space-closed-atx    True       True       0.5.1    Yes
-  md022   blanks-around-headings, blanks  True       True       0.5.0    No
+  md022   blanks-around-headings, blanks  True       True       0.6.0    No
           -around-headers
   md023   heading-start-left, header-sta  True       True       0.5.2    Yes
           rt-left
-  md024   no-duplicate-heading, no-dupli  True       True       0.5.0    No
+  md024   no-duplicate-heading, no-dupli  True       True       0.6.0    No
           cate-header
-  md025   single-title, single-h1         True       True       0.5.0    No
-  md026   no-trailing-punctuation         True       True       0.5.0    No
+  md025   single-title, single-h1         True       True       0.6.0    No
+  md026   no-trailing-punctuation         True       True       0.6.0    No
   md027   no-multiple-space-blockquote    True       True       0.5.1    Yes
   md028   no-blanks-blockquote            True       True       0.5.0    No
-  md029   ol-prefix                       True       True       0.5.1    Yes
-  md030   list-marker-space               True       True       0.5.1    Yes
-  md031   blanks-around-fences            True       True       0.5.0    No
+  md029   ol-prefix                       True       True       0.6.0    Yes
+  md030   list-marker-space               True       True       0.6.0    Yes
+  md031   blanks-around-fences            True       True       0.6.0    No
   md032   blanks-around-lists             True       True       0.5.0    No
-  md033   no-inline-html                  True       True       0.5.1    No
+  md033   no-inline-html                  True       True       0.6.0    No
   md034   no-bare-urls                    True       True       0.5.0    No
-  md035   hr-style                        True       True       0.5.1    Yes
-  md036   no-emphasis-as-heading, no-emp  True       True       0.5.0    No
+  md035   hr-style                        True       True       0.6.0    Yes
+  md036   no-emphasis-as-heading, no-emp  True       True       0.6.0    No
           hasis-as-header
   md037   no-space-in-emphasis            True       True       0.5.1    Yes
   md038   no-space-in-code                True       True       0.5.1    Yes
   md039   no-space-in-links               True       True       0.5.2    Yes
   md040   fenced-code-language            True       True       0.5.0    No
-  md041   first-line-heading, first-line  True       True       0.5.0    No
+  md041   first-line-heading, first-line  True       True       0.6.0    No
           -h1
   md042   no-empty-links                  True       True       0.5.0    No
-  md043   required-headings, required-he  True       True       0.5.0    No
+  md043   required-headings, required-he  True       True       0.6.0    No
           aders
-  md044   proper-names                    True       True       0.5.0    No
+  md044   proper-names                    True       True       0.6.0    No
   md045   no-alt-text                     True       True       0.5.0    No
-  md046   code-block-style                True       True       0.5.0    No
+  md046   code-block-style                True       True       0.6.0    No
   md047   single-trailing-newline         True       True       0.5.1    Yes
-  md048   code-fence-style                True       True       0.5.1    Yes
-  pml100  disallowed-html                 False      False      0.5.0    No
-  pml101  list-anchored-indent            False      False      0.5.0    No
+  md048   code-fence-style                True       True       0.6.0    Yes
+  pml100  disallowed-html                 False      False      0.6.0    No
+  pml101  list-anchored-indent            False      False      0.6.0    No
   
 """
     expected_error = ""
@@ -1366,61 +1366,61 @@ def test_markdown_with_plugins_list_only_all():
   ID      NAMES                           ENABLED    ENABLED    VERSION  FIX
                                           (DEFAULT)  (CURRENT)
 
-  md001   heading-increment, header-incr  True       True       0.5.1    Yes
+  md001   heading-increment, header-incr  True       True       0.6.0    Yes
           ement
-  md002   first-heading-h1, first-header  False      False      0.5.0    No
+  md002   first-heading-h1, first-header  False      False      0.6.0    No
           -h1
-  md003   heading-style, header-style     True       True       0.5.0    No
-  md004   ul-style                        True       True       0.5.1    Yes
+  md003   heading-style, header-style     True       True       0.6.0    No
+  md004   ul-style                        True       True       0.6.0    Yes
   md005   list-indent                     True       True       0.5.1    Yes
   md006   ul-start-left                   False      False      0.5.1    Yes
-  md007   ul-indent                       True       True       0.5.1    Yes
-  md009   no-trailing-spaces              True       True       0.5.1    Yes
-  md010   no-hard-tabs                    True       True       0.5.1    Yes
+  md007   ul-indent                       True       True       0.6.0    Yes
+  md009   no-trailing-spaces              True       True       0.6.0    Yes
+  md010   no-hard-tabs                    True       True       0.6.0    Yes
   md011   no-reversed-links               True       True       0.5.0    No
-  md012   no-multiple-blanks              True       True       0.5.0    No
-  md013   line-length                     True       True       0.5.0    No
+  md012   no-multiple-blanks              True       True       0.6.0    No
+  md013   line-length                     True       True       0.6.0    No
   md014   commands-show-output            True       True       0.5.0    No
   md018   no-missing-space-atx            True       True       0.5.0    No
   md019   no-multiple-space-atx           True       True       0.5.1    Yes
   md020   no-missing-space-closed-atx     True       True       0.5.0    No
   md021   no-multiple-space-closed-atx    True       True       0.5.1    Yes
-  md022   blanks-around-headings, blanks  True       True       0.5.0    No
+  md022   blanks-around-headings, blanks  True       True       0.6.0    No
           -around-headers
   md023   heading-start-left, header-sta  True       True       0.5.2    Yes
           rt-left
-  md024   no-duplicate-heading, no-dupli  True       True       0.5.0    No
+  md024   no-duplicate-heading, no-dupli  True       True       0.6.0    No
           cate-header
-  md025   single-title, single-h1         True       True       0.5.0    No
-  md026   no-trailing-punctuation         True       True       0.5.0    No
+  md025   single-title, single-h1         True       True       0.6.0    No
+  md026   no-trailing-punctuation         True       True       0.6.0    No
   md027   no-multiple-space-blockquote    True       True       0.5.1    Yes
   md028   no-blanks-blockquote            True       True       0.5.0    No
-  md029   ol-prefix                       True       True       0.5.1    Yes
-  md030   list-marker-space               True       True       0.5.1    Yes
-  md031   blanks-around-fences            True       True       0.5.0    No
+  md029   ol-prefix                       True       True       0.6.0    Yes
+  md030   list-marker-space               True       True       0.6.0    Yes
+  md031   blanks-around-fences            True       True       0.6.0    No
   md032   blanks-around-lists             True       True       0.5.0    No
-  md033   no-inline-html                  True       True       0.5.1    No
+  md033   no-inline-html                  True       True       0.6.0    No
   md034   no-bare-urls                    True       True       0.5.0    No
-  md035   hr-style                        True       True       0.5.1    Yes
-  md036   no-emphasis-as-heading, no-emp  True       True       0.5.0    No
+  md035   hr-style                        True       True       0.6.0    Yes
+  md036   no-emphasis-as-heading, no-emp  True       True       0.6.0    No
           hasis-as-header
   md037   no-space-in-emphasis            True       True       0.5.1    Yes
   md038   no-space-in-code                True       True       0.5.1    Yes
   md039   no-space-in-links               True       True       0.5.2    Yes
   md040   fenced-code-language            True       True       0.5.0    No
-  md041   first-line-heading, first-line  True       True       0.5.0    No
+  md041   first-line-heading, first-line  True       True       0.6.0    No
           -h1
   md042   no-empty-links                  True       True       0.5.0    No
-  md043   required-headings, required-he  True       True       0.5.0    No
+  md043   required-headings, required-he  True       True       0.6.0    No
           aders
-  md044   proper-names                    True       True       0.5.0    No
+  md044   proper-names                    True       True       0.6.0    No
   md045   no-alt-text                     True       True       0.5.0    No
-  md046   code-block-style                True       True       0.5.0    No
+  md046   code-block-style                True       True       0.6.0    No
   md047   single-trailing-newline         True       True       0.5.1    Yes
-  md048   code-fence-style                True       True       0.5.1    Yes
+  md048   code-fence-style                True       True       0.6.0    Yes
   md999   debug-only                      False      False      0.0.0    No
-  pml100  disallowed-html                 False      False      0.5.0    No
-  pml101  list-anchored-indent            False      False      0.5.0    No
+  pml100  disallowed-html                 False      False      0.6.0    No
+  pml101  list-anchored-indent            False      False      0.6.0    No
 """
     expected_error = ""
 
@@ -1449,9 +1449,9 @@ def test_markdown_with_plugins_list_and_filter_by_id_ends_with_nine():
   ID     NAMES                  ENABLED    ENABLED    VERSION  FIX
                                 (DEFAULT)  (CURRENT)
 
-  md009  no-trailing-spaces     True       True       0.5.1    Yes
+  md009  no-trailing-spaces     True       True       0.6.0    Yes
   md019  no-multiple-space-atx  True       True       0.5.1    Yes
-  md029  ol-prefix              True       True       0.5.1    Yes
+  md029  ol-prefix              True       True       0.6.0    Yes
   md039  no-space-in-links      True       True       0.5.2    Yes
 
 """
@@ -1503,20 +1503,20 @@ def test_markdown_with_plugins_list_and_filter_by_name_link():
   ID     NAMES                            ENABLED    ENABLED    VERSION  FIX
                                           (DEFAULT)  (CURRENT)
 
-  md001  heading-increment, header-incre  True       True       0.5.1    Yes
+  md001  heading-increment, header-incre  True       True       0.6.0    Yes
          ment
-  md002  first-heading-h1, first-header-  False      False      0.5.0    No
+  md002  first-heading-h1, first-header-  False      False      0.6.0    No
          h1
-  md003  heading-style, header-style      True       True       0.5.0    No
-  md022  blanks-around-headings, blanks-  True       True       0.5.0    No
+  md003  heading-style, header-style      True       True       0.6.0    No
+  md022  blanks-around-headings, blanks-  True       True       0.6.0    No
          around-headers
   md023  heading-start-left, header-star  True       True       0.5.2    Yes
          t-left
-  md024  no-duplicate-heading, no-duplic  True       True       0.5.0    No
+  md024  no-duplicate-heading, no-duplic  True       True       0.6.0    No
          ate-header
-  md036  no-emphasis-as-heading, no-emph  True       True       0.5.0    No
+  md036  no-emphasis-as-heading, no-emph  True       True       0.6.0    No
          asis-as-header
-  md043  required-headings, required-hea  True       True       0.5.0    No
+  md043  required-headings, required-hea  True       True       0.6.0    No
          ders
 """
     expected_error = ""
@@ -1611,15 +1611,21 @@ def test_markdown_with_plugins_info_and_found_filter():
     supplied_arguments = ["plugins", "info", "md001"]
 
     expected_return_code = 0
-    expected_output = """  ITEM                 DESCRIPTION
+    expected_output = """
+  ITEM               DESCRIPTION
 
-  Id                   md001
-  Name(s)              heading-increment,header-increment
-  Short Description    Heading levels should only increment by one level at a
-                       time.
-  Description Url      https://pymarkdown.readthedocs.io/en/latest/plugins/rul
-                       e_md001.md
-  Configuration Items  front_matter_title
+  Id                 md001
+  Name(s)            heading-increment,header-increment
+  Short Description  Heading levels should only increment by one level at a ti
+                     me.
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md001.md
+
+
+  CONFIGURATION ITEM  TYPE    VALUE
+
+  front_matter_title  string  "title"
+
 """
     expected_error = ""
 
@@ -1673,11 +1679,90 @@ def test_markdown_with_plugins_info_and_found_filter_no_configuration_and_no_url
     supplied_arguments = ["plugins", "info", "md999"]
 
     expected_return_code = 0
-    expected_output = """  ITEM               DESCRIPTION
+    expected_output = """MD999>>init_from_config
+MD999>>test_value>>1
+MD999>>other_test_value>>1
+
+  ITEM               DESCRIPTION
 
   Id                 md999
   Name(s)            debug-only
   Short Description  Debug plugin
+
+"""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_dash_add_plugin_with_bad_query_config():
+    """
+    Test to make sure we get an error logged if a plugin has an exception during query_config.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    plugin_path = os.path.join(
+        "test", "resources", "plugins", "bad", "bad_query_config.py"
+    )
+    supplied_arguments = [
+        "--add-plugin",
+        plugin_path,
+        "plugins",
+        "info",
+        "mde007",
+    ]
+
+    expected_return_code = 1
+    expected_output = """MDE007>>init_from_config
+MDE007>>init_from_config"""
+    expected_error = """
+Unexpected Error(BadPluginError): Plugin id 'MDE007' had a critical failure during the '__handle_argparse_subparser_info' action."""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_dash_add_plugin_with_v2_query_config():
+    """
+    Test to make sure we get an error logged if a plugin has an old query_config.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    plugin_path = os.path.join(
+        "test", "resources", "plugins", "bad", "old_query_config.py"
+    )
+    supplied_arguments = [
+        "--add-plugin",
+        plugin_path,
+        "plugins",
+        "info",
+        "mde007",
+    ]
+
+    expected_return_code = 0
+    expected_output = """MDE007>>init_from_config
+MDE007>>init_from_config
+
+  ITEM                 DESCRIPTION
+
+  Id                   mde007
+  Name(s)              bad-query-config
+  Short Description    Test for a old query_config
+  Configuration Items  something
+
 """
     expected_error = ""
 

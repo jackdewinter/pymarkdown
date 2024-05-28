@@ -6,9 +6,11 @@ import os
 from test.rules.utils import (
     execute_configuration_test,
     execute_fix_test,
+    execute_query_configuration_test,
     execute_scan_test,
     id_test_plug_rule_fn,
     pluginConfigErrorTest,
+    pluginQueryConfigTest,
     pluginRuleTest,
 )
 
@@ -390,3 +392,25 @@ def test_md004_config(test: pluginRuleTest) -> None:
     Execute a parameterized fix test for plugin md001.
     """
     execute_configuration_test(test, f"{source_path}good_list_asterisk_single_level.md")
+
+
+def test_md004_query_config():
+    config_test = pluginQueryConfigTest(
+        "md004",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md004
+  Name(s)            ul-style
+  Short Description  Inconsistent Unordered List Start style
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md004.md
+
+
+  CONFIGURATION ITEM  TYPE    VALUE
+
+  style               string  "consistent"
+
+""",
+    )
+    execute_query_configuration_test(config_test)

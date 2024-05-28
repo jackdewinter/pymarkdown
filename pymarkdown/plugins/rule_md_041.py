@@ -2,10 +2,14 @@
 Module to implement a plugin that ensures that the first line in a file is a top level heading.
 """
 
-from typing import Optional, cast
+from typing import List, Optional, cast
 
 from pymarkdown.extensions.front_matter_markdown_token import FrontMatterMarkdownToken
-from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_details import (
+    PluginDetails,
+    PluginDetailsV3,
+    QueryConfigItem,
+)
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.atx_heading_markdown_token import AtxHeadingMarkdownToken
@@ -29,13 +33,12 @@ class RuleMd041(RulePlugin):
         """
         Get the details for the plugin.
         """
-        return PluginDetails(
+        return PluginDetailsV3(
             plugin_name="first-line-heading,first-line-h1",
             plugin_id="MD041",
             plugin_enabled_by_default=True,
             plugin_description="First line in file should be a top level heading",
-            plugin_version="0.5.0",
-            plugin_interface_version=1,
+            plugin_version="0.6.0",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md041.md",
             plugin_configuration="level,front_matter_title",
         )
@@ -69,6 +72,15 @@ class RuleMd041(RulePlugin):
             .lower()
             .strip(" ")
         )
+
+    def query_config(self) -> List[QueryConfigItem]:
+        """
+        Query to find out the configuration that the rule is using.
+        """
+        return [
+            QueryConfigItem("level", self.__start_level),
+            QueryConfigItem("front_matter_title", self.__front_matter_title),
+        ]
 
     def starting_new_file(self) -> None:
         """

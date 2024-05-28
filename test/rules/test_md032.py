@@ -4,6 +4,7 @@ Module to provide tests related to the MD032 rule.
 
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.rules.utils import execute_query_configuration_test, pluginQueryConfigTest
 
 import pytest
 
@@ -504,3 +505,20 @@ def test_md032_bad_fenced_block_in_list_in_block_quote():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+def test_md032_query_config():
+    config_test = pluginQueryConfigTest(
+        "md032",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md032
+  Name(s)            blanks-around-lists
+  Short Description  Lists should be surrounded by blank lines
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md032.md
+
+""",
+    )
+    execute_query_configuration_test(config_test)

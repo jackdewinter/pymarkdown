@@ -4,6 +4,7 @@ Module to provide tests related to the MD034 rule.
 
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.rules.utils import execute_query_configuration_test, pluginQueryConfigTest
 
 import pytest
 
@@ -462,3 +463,20 @@ def test_md034_good_only_url_marker_and_leading():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+def test_md034_query_config():
+    config_test = pluginQueryConfigTest(
+        "md034",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md034
+  Name(s)            no-bare-urls
+  Short Description  Bare URL used
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md034.md
+
+""",
+    )
+    execute_query_configuration_test(config_test)

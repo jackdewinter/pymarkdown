@@ -2,9 +2,13 @@
 Module to implement a plugin that looks for inconsistent styles for thematic breaks.
 """
 
-from typing import cast
+from typing import List, cast
 
-from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
+from pymarkdown.plugin_manager.plugin_details import (
+    PluginDetailsV2,
+    PluginDetailsV3,
+    QueryConfigItem,
+)
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.markdown_token import MarkdownToken
@@ -27,12 +31,12 @@ class RuleMd035(RulePlugin):
         """
         Get the details for the plugin.
         """
-        return PluginDetailsV2(
+        return PluginDetailsV3(
             plugin_name="hr-style",
             plugin_id="MD035",
             plugin_enabled_by_default=True,
             plugin_description="Horizontal rule style",
-            plugin_version="0.5.1",
+            plugin_version="0.6.0",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md035.md",
             plugin_configuration="style",
             plugin_supports_fix=True,
@@ -75,6 +79,14 @@ class RuleMd035(RulePlugin):
         )
         if self.__rule_style != RuleMd035.__consistent_style:
             self.__actual_style = self.__rule_style
+
+    def query_config(self) -> List[QueryConfigItem]:
+        """
+        Query to find out the configuration that the rule is using.
+        """
+        return [
+            QueryConfigItem("style", self.__rule_style),
+        ]
 
     def starting_new_file(self) -> None:
         """

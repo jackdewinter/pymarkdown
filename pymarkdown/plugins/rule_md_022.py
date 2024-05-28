@@ -3,9 +3,13 @@ Module to implement a plugin that looks for headings that are not surrounded by
 blank lines.
 """
 
-from typing import Optional
+from typing import List, Optional
 
-from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_details import (
+    PluginDetails,
+    PluginDetailsV3,
+    QueryConfigItem,
+)
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.markdown_token import MarkdownToken
@@ -31,13 +35,12 @@ class RuleMd022(RulePlugin):
         """
         Get the details for the plugin.
         """
-        return PluginDetails(
+        return PluginDetailsV3(
             plugin_name="blanks-around-headings,blanks-around-headers",
             plugin_id="MD022",
             plugin_enabled_by_default=True,
             plugin_description="Headings should be surrounded by blank lines.",
-            plugin_version="0.5.0",
-            plugin_interface_version=1,
+            plugin_version="0.6.0",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md022.md",
             plugin_configuration="lines_above, lines_below",
         )
@@ -61,6 +64,15 @@ class RuleMd022(RulePlugin):
             default_value=1,
             valid_value_fn=RuleMd022.__validate_configuration_value,
         )
+
+    def query_config(self) -> List[QueryConfigItem]:
+        """
+        Query to find out the configuration that the rule is using.
+        """
+        return [
+            QueryConfigItem("lines_above", self.__lines_above),
+            QueryConfigItem("lines_below", self.__lines_below),
+        ]
 
     def starting_new_file(self) -> None:
         """

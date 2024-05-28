@@ -21,7 +21,7 @@ from pymarkdown.plugin_manager.bad_plugin_error import BadPluginError
 from pymarkdown.plugin_manager.fix_line_record import FixLineRecord
 from pymarkdown.plugin_manager.fix_token_record import FixTokenRecord
 from pymarkdown.plugin_manager.found_plugin import FoundPlugin
-from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
+from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2, QueryConfigItem
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.plugin_scan_failure import PluginScanFailure
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
@@ -71,6 +71,7 @@ class PluginManager:
         self.__enabled_plugins_for_next_line: List[FoundPlugin] = []
         self.__enabled_plugins_for_completed_file: List[FoundPlugin] = []
         self.__all_ids: Dict[str, FoundPlugin] = {}
+        self.__properties: Optional[ApplicationProperties] = None
 
     # pylint: disable=too-many-arguments
     def initialize(
@@ -92,7 +93,8 @@ class PluginManager:
             self.__loaded_classes,
             self.__show_stack_trace,
             self.__show_fix_debug,
-        ) = (0, 0, [], show_stack_trace, show_fix_debug)
+            self.__properties,
+        ) = (0, 0, [], show_stack_trace, show_fix_debug, properties)
 
         plugin_files = self.__find_eligible_plugins_in_directory(directory_to_search)
         self.__load_plugins(directory_to_search, plugin_files)
@@ -294,6 +296,9 @@ class PluginManager:
             )
             return ApplicationResult.NO_FILES_TO_SCAN
 
+        assert self.__properties is not None
+        self.__apply_configuration(matching_plugins[0], self.__properties)
+
         found_plugin = matching_plugins[0]
         show_rows = [
             ["Id", found_plugin.plugin_id],
@@ -303,13 +308,56 @@ class PluginManager:
         if found_plugin.plugin_url:
             next_row = ["Description Url", found_plugin.plugin_url]
             show_rows.append(next_row)
-        if found_plugin.plugin_configuration:
+
+        actual_item_list = []
+        if (
+            found_plugin.plugin_interface_version == 3
+            and found_plugin.plugin_instance.is_query_config_implemented_in_plugin
+        ):
+            try:
+                actual_item_list = found_plugin.plugin_instance.query_config()
+            except Exception as this_exception:
+                raise BadPluginError(
+                    found_plugin.plugin_id,
+                    inspect.stack()[0].function,
+                    cause=this_exception,
+                ) from this_exception
+
+        self.__handle_argparse_subparser_info_display(
+            found_plugin, actual_item_list, show_rows
+        )
+        return ApplicationResult.SUCCESS
+
+    def __handle_argparse_subparser_info_display(
+        self,
+        found_plugin: FoundPlugin,
+        actual_item_list: List[QueryConfigItem],
+        show_rows: List[List[str]],
+    ) -> None:
+        if not actual_item_list and found_plugin.plugin_configuration:
             next_row = ["Configuration Items", found_plugin.plugin_configuration]
             show_rows.append(next_row)
 
         headers = ["Item", "Description"]
         self.__print_columnar_data(headers, show_rows)
-        return ApplicationResult.SUCCESS
+
+        if actual_item_list:
+            show_rows = []
+            for next_item in actual_item_list:
+                if isinstance(next_item.value, str):
+                    value_type = "string"
+                    display_value = f'"{next_item.value}"'
+                elif isinstance(next_item.value, bool):
+                    value_type = "boolean"
+                    display_value = str(next_item.value)
+                else:
+                    value_type = "integer"
+                    display_value = str(next_item.value)
+                next_row = [next_item.name, value_type, display_value]
+                show_rows.append(next_row)
+
+            headers = ["Configuration Item", "Type", "Value"]
+            self.__print_columnar_data(headers, show_rows)
 
     def handle_argparse_subparser(self, args: argparse.Namespace) -> ApplicationResult:
         """
@@ -631,10 +679,10 @@ class PluginManager:
             [plugin_id, *plugin_names],
         )
 
-        if plugin_object.plugin_interface_version not in (1, 2):
+        if plugin_object.plugin_interface_version not in (1, 2, 3):
             raise BadPluginError(
                 formatted_message=f"Plugin '{instance_file_name}' with an interface version "
-                + f"('{plugin_object.plugin_interface_version}') that is not '1' or '2'."
+                + f"('{plugin_object.plugin_interface_version}') that is not '1', '2', or '3'."
             )
 
         return plugin_object
@@ -678,7 +726,7 @@ class PluginManager:
             )
             if (
                 isinstance(instance_details, PluginDetailsV2)
-                and plugin_interface_version == 2
+                and plugin_interface_version >= 2
             ):
                 plugin_supports_fix = instance_details.plugin_supports_fix
                 plugin_fix_level = instance_details.plugin_fix_level
@@ -859,7 +907,36 @@ class PluginManager:
             plugin_specific_facade = first_facade
         return plugin_specific_facade
 
-    def apply_configuration(self, properties: ApplicationProperties) -> None:
+    def __apply_configuration(
+        self, next_plugin: FoundPlugin, properties: ApplicationProperties
+    ) -> None:
+        try:
+            plugin_specific_facade = self.__find_configuration_for_plugin(
+                next_plugin, properties, always_return_facade=True
+            )
+
+            assert plugin_specific_facade
+            next_plugin.plugin_instance.set_configuration_map(plugin_specific_facade)
+            next_plugin.plugin_instance.initialize_from_config()
+        except Exception as this_exception:
+            raise BadPluginError(
+                next_plugin.plugin_id,
+                inspect.stack()[0].function,
+                cause=this_exception,
+            ) from this_exception
+
+        if next_plugin.plugin_instance.is_next_token_implemented_in_plugin:
+            self.__enabled_plugins_for_next_token.append(next_plugin)
+        if next_plugin.plugin_instance.is_next_line_implemented_in_plugin:
+            self.__enabled_plugins_for_next_line.append(next_plugin)
+        if next_plugin.plugin_instance.is_completed_file_implemented_in_plugin:
+            self.__enabled_plugins_for_completed_file.append(next_plugin)
+        if next_plugin.plugin_instance.is_starting_new_file_implemented_in_plugin:
+            self.__enabled_plugins_for_starting_new_file.append(next_plugin)
+
+    def apply_configuration(
+        self, properties: ApplicationProperties, use_full_list: bool = False
+    ) -> None:
         """
         Apply any supplied configuration to each of the enabled plugins.
         """
@@ -871,32 +948,11 @@ class PluginManager:
             self.__enabled_plugins_for_completed_file,
         ) = ([], [], [], [])
 
-        for next_plugin in self.__enabled_plugins:
-            try:
-                plugin_specific_facade = self.__find_configuration_for_plugin(
-                    next_plugin, properties, always_return_facade=True
-                )
-
-                assert plugin_specific_facade
-                next_plugin.plugin_instance.set_configuration_map(
-                    plugin_specific_facade
-                )
-                next_plugin.plugin_instance.initialize_from_config()
-            except Exception as this_exception:
-                raise BadPluginError(
-                    next_plugin.plugin_id,
-                    inspect.stack()[0].function,
-                    cause=this_exception,
-                ) from this_exception
-
-            if next_plugin.plugin_instance.is_next_token_implemented_in_plugin:
-                self.__enabled_plugins_for_next_token.append(next_plugin)
-            if next_plugin.plugin_instance.is_next_line_implemented_in_plugin:
-                self.__enabled_plugins_for_next_line.append(next_plugin)
-            if next_plugin.plugin_instance.is_completed_file_implemented_in_plugin:
-                self.__enabled_plugins_for_completed_file.append(next_plugin)
-            if next_plugin.plugin_instance.is_starting_new_file_implemented_in_plugin:
-                self.__enabled_plugins_for_starting_new_file.append(next_plugin)
+        proper_list = (
+            self.__registered_plugins if use_full_list else self.__enabled_plugins
+        )
+        for next_plugin in proper_list:
+            self.__apply_configuration(next_plugin, properties)
 
     # pylint: disable=too-many-arguments
     def starting_new_file(

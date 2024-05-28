@@ -3,7 +3,7 @@ Module to provide details about a plugin, supplied by the plugin.
 """
 
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Union
 
 
 # pylint: disable=too-many-instance-attributes
@@ -35,3 +35,22 @@ class PluginDetailsV2(PluginDetails):
     plugin_supports_fix: bool = False
     plugin_interface_version: int = 2
     plugin_fix_level: int = 1
+
+
+@dataclass(frozen=True)
+class PluginDetailsV3(PluginDetailsV2):
+    """
+    Class to provide details about a plugin, supplied by the plugin.
+    """
+
+    plugin_interface_version: int = 3
+
+
+@dataclass(frozen=True)
+class QueryConfigItem:
+    """
+    Class to provide information on the configuration items for the plugin.
+    """
+
+    name: str
+    value: Union[bool, int, str]

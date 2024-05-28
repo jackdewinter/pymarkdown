@@ -5,8 +5,10 @@ Module to provide tests related to the MD023 rule.
 import os
 from test.rules.utils import (
     execute_fix_test,
+    execute_query_configuration_test,
     execute_scan_test,
     id_test_plug_rule_fn,
+    pluginQueryConfigTest,
     pluginRuleTest,
 )
 
@@ -1342,3 +1344,20 @@ def test_md023_fix(test: pluginRuleTest) -> None:
     Execute a parameterized fix test for plugin md001.
     """
     execute_fix_test(test)
+
+
+def test_md023_query_config():
+    config_test = pluginQueryConfigTest(
+        "md023",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md023
+  Name(s)            heading-start-left,header-start-left
+  Short Description  Headings must start at the beginning of the line.
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md023.md
+
+""",
+    )
+    execute_query_configuration_test(config_test)

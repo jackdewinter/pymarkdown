@@ -5,7 +5,11 @@ consistent numeric prefaces.
 
 from typing import List, Optional, Tuple, cast
 
-from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
+from pymarkdown.plugin_manager.plugin_details import (
+    PluginDetailsV2,
+    PluginDetailsV3,
+    QueryConfigItem,
+)
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
@@ -41,12 +45,12 @@ class RuleMd029(RulePlugin):
         """
         Get the details for the plugin.
         """
-        return PluginDetailsV2(
+        return PluginDetailsV3(
             plugin_name="ol-prefix",
             plugin_id="MD029",
             plugin_enabled_by_default=True,
             plugin_description="Ordered list item prefix",
-            plugin_version="0.5.1",
+            plugin_version="0.6.0",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md029.md",
             plugin_configuration="style,allow_extended_start_values",
             plugin_supports_fix=True,
@@ -73,6 +77,17 @@ class RuleMd029(RulePlugin):
         )
 
         # add optional to allow non- 0-1 start for ordered
+
+    def query_config(self) -> List[QueryConfigItem]:
+        """
+        Query to find out the configuration that the rule is using.
+        """
+        return [
+            QueryConfigItem("style", self.__style),
+            QueryConfigItem(
+                "allow_extended_start_values", self.__allow_extended_start_values
+            ),
+        ]
 
     def starting_new_file(self) -> None:
         """

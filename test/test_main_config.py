@@ -390,7 +390,7 @@ MD999>>test_value>>10
 MD999>>other_test_value>>1
 """
         expected_error = """BadPluginError encountered while configuring plugins:
-Plugin id 'MD999' had a critical failure during the 'apply_configuration' action.
+Plugin id 'MD999' had a critical failure during the '__apply_configuration' action.
 """
 
         # Act

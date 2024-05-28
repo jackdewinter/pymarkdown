@@ -4,6 +4,7 @@ Module to provide tests related to the MD020 rule.
 
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.rules.utils import execute_query_configuration_test, pluginQueryConfigTest
 
 import pytest
 
@@ -1321,3 +1322,20 @@ def test_md020_bad_single_paragraph_with_whitespace_at_end():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+def test_md020_query_config():
+    config_test = pluginQueryConfigTest(
+        "md020",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md020
+  Name(s)            no-missing-space-closed-atx
+  Short Description  No space present inside of the hashes on a possible Atx C
+                     losed Heading.
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md020.md
+  """,
+    )
+    execute_query_configuration_test(config_test)

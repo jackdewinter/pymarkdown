@@ -271,7 +271,7 @@ def test_api_config_with_exception_during_confiuguration():
     supplied_configuration = {"plugins": {"md999": {"test_value": 10}}}
 
     expected_output = """BadPluginError encountered while configuring plugins:
-Plugin id 'MD999' had a critical failure during the 'apply_configuration' action."""
+Plugin id 'MD999' had a critical failure during the '__apply_configuration' action."""
 
     with create_temporary_configuration_file(
         supplied_configuration
@@ -292,7 +292,7 @@ Plugin id 'MD999' had a critical failure during the 'apply_configuration' action
     assert (
         caught_exception.reason
         == """BadPluginError encountered while configuring plugins:
-Plugin id 'MD999' had a critical failure during the 'apply_configuration' action."""
+Plugin id 'MD999' had a critical failure during the '__apply_configuration' action."""
     )
     assert (
         std_output.getvalue()

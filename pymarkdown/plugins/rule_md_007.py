@@ -3,10 +3,14 @@ Module to implement a plugin that ensures that nested Unordered List Items
 start at predictable positions.
 """
 
-from typing import Tuple, cast
+from typing import List, Tuple, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
-from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
+from pymarkdown.plugin_manager.plugin_details import (
+    PluginDetailsV2,
+    PluginDetailsV3,
+    QueryConfigItem,
+)
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.plugins.utils.container_token_manager import ContainerTokenManager
@@ -31,12 +35,12 @@ class RuleMd007(RulePlugin):
         """
         Get the details for the plugin.
         """
-        return PluginDetailsV2(
+        return PluginDetailsV3(
             plugin_name="ul-indent",
             plugin_id="MD007",
             plugin_enabled_by_default=True,
             plugin_description="Unordered list indentation",
-            plugin_version="0.5.1",
+            plugin_version="0.6.0",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md007.md",
             plugin_configuration="indent,start_indented",
             plugin_supports_fix=True,
@@ -61,6 +65,15 @@ class RuleMd007(RulePlugin):
             "start_indented",
             default_value=False,
         )
+
+    def query_config(self) -> List[QueryConfigItem]:
+        """
+        Query to find out the configuration that the rule is using.
+        """
+        return [
+            QueryConfigItem("indent", self.__indent_basis),
+            QueryConfigItem("start_indented", self.__start_indented),
+        ]
 
     def starting_new_file(self) -> None:
         """

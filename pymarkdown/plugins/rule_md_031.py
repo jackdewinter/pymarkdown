@@ -5,7 +5,11 @@ Module to implement a plugin that ensures that blank lines surround fenced block
 from typing import List, Optional, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
-from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_details import (
+    PluginDetails,
+    PluginDetailsV3,
+    QueryConfigItem,
+)
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
@@ -28,13 +32,12 @@ class RuleMd031(RulePlugin):
         """
         Get the details for the plugin.
         """
-        return PluginDetails(
+        return PluginDetailsV3(
             plugin_name="blanks-around-fences",
             plugin_id="MD031",
             plugin_enabled_by_default=True,
             plugin_description="Fenced code blocks should be surrounded by blank lines",
-            plugin_version="0.5.0",
-            plugin_interface_version=1,
+            plugin_version="0.6.0",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md031.md",
             plugin_configuration="list_items",
         )
@@ -46,6 +49,14 @@ class RuleMd031(RulePlugin):
         self.__trigger_in_list_items = self.plugin_configuration.get_boolean_property(
             "list_items", default_value=True
         )
+
+    def query_config(self) -> List[QueryConfigItem]:
+        """
+        Query to find out the configuration that the rule is using.
+        """
+        return [
+            QueryConfigItem("list_items", self.__trigger_in_list_items),
+        ]
 
     def starting_new_file(self) -> None:
         """

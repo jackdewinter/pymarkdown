@@ -2,9 +2,13 @@
 Module to implement a plugin that ensures that the style of fenced code blocks is consistent.
 """
 
-from typing import cast
+from typing import List, cast
 
-from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
+from pymarkdown.plugin_manager.plugin_details import (
+    PluginDetailsV2,
+    PluginDetailsV3,
+    QueryConfigItem,
+)
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.fenced_code_block_markdown_token import (
@@ -36,12 +40,12 @@ class RuleMd048(RulePlugin):
         """
         Get the details for the plugin.
         """
-        return PluginDetailsV2(
+        return PluginDetailsV3(
             plugin_name="code-fence-style",
             plugin_id="MD048",
             plugin_enabled_by_default=True,
             plugin_description="Code fence style",
-            plugin_version="0.5.1",
+            plugin_version="0.6.0",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md048.md",
             plugin_configuration="style",
             plugin_supports_fix=True,
@@ -61,6 +65,14 @@ class RuleMd048(RulePlugin):
             default_value=RuleMd048.__consistent_style,
             valid_value_fn=self.__validate_configuration_style,
         )
+
+    def query_config(self) -> List[QueryConfigItem]:
+        """
+        Query to find out the configuration that the rule is using.
+        """
+        return [
+            QueryConfigItem("style", self.__style_type),
+        ]
 
     def starting_new_file(self) -> None:
         """

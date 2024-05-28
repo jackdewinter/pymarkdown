@@ -6,9 +6,11 @@ import os
 from test.rules.utils import (
     execute_configuration_test,
     execute_fix_test,
+    execute_query_configuration_test,
     execute_scan_test,
     id_test_plug_rule_fn,
     pluginConfigErrorTest,
+    pluginQueryConfigTest,
     pluginRuleTest,
 )
 
@@ -638,3 +640,24 @@ def test_md010_config(test: pluginRuleTest) -> None:
     execute_configuration_test(
         test, f"{source_path}bad_simple_text_with_tabs_in_code_block.md"
     )
+
+
+def test_md010_query_config():
+    config_test = pluginQueryConfigTest(
+        "md010",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md010
+  Name(s)            no-hard-tabs
+  Short Description  Hard tabs
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md010.md
+
+
+  CONFIGURATION ITEM  TYPE     VALUE
+
+  code_blocks         boolean  True
+""",
+    )
+    execute_query_configuration_test(config_test)

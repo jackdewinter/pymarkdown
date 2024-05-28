@@ -6,9 +6,11 @@ import os
 from test.rules.utils import (
     execute_configuration_test,
     execute_fix_test,
+    execute_query_configuration_test,
     execute_scan_test,
     id_test_plug_rule_fn,
     pluginConfigErrorTest,
+    pluginQueryConfigTest,
     pluginRuleTest,
 )
 
@@ -226,3 +228,25 @@ def test_md048_config(test: pluginRuleTest) -> None:
     Execute a parameterized fix test for plugin md001.
     """
     execute_configuration_test(test, f"{source_path}bad_fenced_backticks_and_tildes.md")
+
+
+def test_md048_query_config():
+    config_test = pluginQueryConfigTest(
+        "md048",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md048
+  Name(s)            code-fence-style
+  Short Description  Code fence style
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md048.md
+
+
+  CONFIGURATION ITEM  TYPE    VALUE
+
+  style               string  "consistent"
+
+""",
+    )
+    execute_query_configuration_test(config_test)

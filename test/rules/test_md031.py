@@ -4,6 +4,7 @@ Module to provide tests related to the MD031 rule.
 
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.rules.utils import execute_query_configuration_test, pluginQueryConfigTest
 
 import pytest
 
@@ -863,3 +864,25 @@ def test_md031_in_block_quotes_fall_off_after_fenced_open():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+def test_md031_query_config():
+    config_test = pluginQueryConfigTest(
+        "md031",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md031
+  Name(s)            blanks-around-fences
+  Short Description  Fenced code blocks should be surrounded by blank lines
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md031.md
+
+
+  CONFIGURATION ITEM  TYPE     VALUE
+
+  list_items          boolean  True
+
+""",
+    )
+    execute_query_configuration_test(config_test)

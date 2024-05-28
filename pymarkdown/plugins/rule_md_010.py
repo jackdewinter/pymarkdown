@@ -5,7 +5,11 @@ Module to implement a plugin that looks for hard tabs in the files.
 from typing import List, Optional, cast
 
 from pymarkdown.general.tab_helper import TabHelper
-from pymarkdown.plugin_manager.plugin_details import PluginDetails, PluginDetailsV2
+from pymarkdown.plugin_manager.plugin_details import (
+    PluginDetails,
+    PluginDetailsV3,
+    QueryConfigItem,
+)
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.fenced_code_block_markdown_token import (
@@ -31,12 +35,12 @@ class RuleMd010(RulePlugin):
         """
         Get the details for the plugin.
         """
-        return PluginDetailsV2(
+        return PluginDetailsV3(
             plugin_name="no-hard-tabs",
             plugin_id="MD010",
             plugin_enabled_by_default=True,
             plugin_description="Hard tabs",
-            plugin_version="0.5.1",
+            plugin_version="0.6.0",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md010.md",
             plugin_configuration="code_blocks",
             plugin_supports_fix=True,
@@ -51,6 +55,12 @@ class RuleMd010(RulePlugin):
             "code_blocks",
             default_value=True,
         )
+
+    def query_config(self) -> List[QueryConfigItem]:
+        """
+        Query to find out the configuration that the rule is using.
+        """
+        return [QueryConfigItem("code_blocks", self.__check_in_code_blocks)]
 
     def starting_new_file(self) -> None:
         """

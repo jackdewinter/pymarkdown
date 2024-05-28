@@ -4,6 +4,7 @@ Module to provide tests related to the MD026 rule.
 
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.rules.utils import execute_query_configuration_test, pluginQueryConfigTest
 from test.utils import create_temporary_configuration_file
 
 import pytest
@@ -371,3 +372,26 @@ def test_md026_good_ends_with_punctuation_setext_with_configuration():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
+
+
+def test_md026_query_config():
+    config_test = pluginQueryConfigTest(
+        "md026",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md026
+  Name(s)            no-trailing-punctuation
+  Short Description  Trailing punctuation present in heading text.
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md026.md
+
+
+  CONFIGURATION ITEM  TYPE    VALUE
+
+  punctuation         string  ".,;:!。，；
+                              ：！"
+
+""",
+    )
+    execute_query_configuration_test(config_test)

@@ -7,7 +7,11 @@ from typing import List, cast
 
 from pymarkdown.general.constants import Constants
 from pymarkdown.general.parser_helper import ParserHelper
-from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
+from pymarkdown.plugin_manager.plugin_details import (
+    PluginDetailsV2,
+    PluginDetailsV3,
+    QueryConfigItem,
+)
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.inline_code_span_markdown_token import (
@@ -32,17 +36,18 @@ class RuleMd044(RulePlugin):
         self.__proper_name_list: List[str] = []
         self.__check_in_code_blocks: bool = False
         self.__is_in_code_block: bool = False
+        self.__names: str = ""
 
     def get_details(self) -> PluginDetailsV2:
         """
         Get the details for the plugin.
         """
-        return PluginDetailsV2(
+        return PluginDetailsV3(
             plugin_name="proper-names",
             plugin_id="MD044",
             plugin_enabled_by_default=True,
             plugin_description="Proper names should have the correct capitalization",
-            plugin_version="0.5.0",
+            plugin_version="0.6.0",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md044.md",
             plugin_configuration="names,code_blocks",
             plugin_supports_fix=False,
@@ -62,12 +67,13 @@ class RuleMd044(RulePlugin):
             "code_blocks", default_value=True
         )
         self.__proper_name_list = []
-        if names := self.plugin_configuration.get_string_property(
+        self.__names = self.plugin_configuration.get_string_property(
             "names",
             default_value="",
-        ).strip(" "):
+        ).strip(" ")
+        if self.__names:
             lower_list: List[str] = []
-            for next_name in names.split(","):
+            for next_name in self.__names.split(","):
                 next_name = next_name.strip(" ")
                 if not next_name:
                     raise ValueError(
@@ -80,6 +86,15 @@ class RuleMd044(RulePlugin):
                     )
                 lower_list.append(next_name.lower())
                 self.__proper_name_list.append(next_name)
+
+    def query_config(self) -> List[QueryConfigItem]:
+        """
+        Query to find out the configuration that the rule is using.
+        """
+        return [
+            QueryConfigItem("code_blocks", self.__check_in_code_blocks),
+            QueryConfigItem("names", self.__names),
+        ]
 
     # pylint: disable=too-many-arguments
     def __check_for_proper_match(

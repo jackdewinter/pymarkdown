@@ -6,8 +6,10 @@ import os
 from test.rules.utils import (
     build_fix_and_clash_lists,
     execute_fix_test,
+    execute_query_configuration_test,
     execute_scan_test,
     id_test_plug_rule_fn,
+    pluginQueryConfigTest,
     pluginRuleTest,
 )
 
@@ -971,3 +973,20 @@ def test_md005_bad_unordered_ordered_right_fix():
     configuration is also set to asterisk.
     """
     # see "bad_ordered_right_unordered_x"
+
+
+def test_md005_query_config():
+    config_test = pluginQueryConfigTest(
+        "md005",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md005
+  Name(s)            list-indent
+  Short Description  Inconsistent indentation for list items at the same level
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md005.md
+
+""",
+    )
+    execute_query_configuration_test(config_test)

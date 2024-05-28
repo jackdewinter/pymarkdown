@@ -2,11 +2,15 @@
 Module to implement a plugin that
 """
 
-from typing import Set, Tuple, cast
+from typing import List, Set, Tuple, cast
 
 from pymarkdown.extensions.disallowed_raw_html import MarkdownDisallowRawHtmlExtension
 from pymarkdown.general.parser_helper import ParserHelper
-from pymarkdown.plugin_manager.plugin_details import PluginDetails, PluginDetailsV2
+from pymarkdown.plugin_manager.plugin_details import (
+    PluginDetails,
+    PluginDetailsV3,
+    QueryConfigItem,
+)
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.plugins.utils.container_token_manager import ContainerTokenManager
@@ -27,17 +31,18 @@ class RulePml100(RulePlugin):
         self.__container_manager = ContainerTokenManager()
         self.__in_block = False
         self.__disallowed_tag_names: Set[str] = set()
+        self.__modify_tag_names = ""
 
     def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
-        return PluginDetailsV2(
+        return PluginDetailsV3(
             plugin_name="disallowed-html",
             plugin_id="PML100",
             plugin_enabled_by_default=False,
             plugin_description="Disallowed HTML",
-            plugin_version="0.5.0",
+            plugin_version="0.6.0",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_pml100.md",
             plugin_configuration=None,
             plugin_supports_fix=False,
@@ -58,13 +63,13 @@ class RulePml100(RulePlugin):
             "script",
             "plaintext",
         }
-        modify_tag_names = self.plugin_configuration.get_string_property(
+        self.__modify_tag_names = self.plugin_configuration.get_string_property(
             "change_tag_names",
             default_value=None,
         )
-        if modify_tag_names is not None:
+        if self.__modify_tag_names is not None:
             tag_config_name = "plugins.disallowed-html.change_tag_names"
-            for next_tag_part in modify_tag_names.split(","):
+            for next_tag_part in self.__modify_tag_names.split(","):
                 next_tag_part = next_tag_part.strip(" ")
                 if not next_tag_part:
                     raise ValueError(
@@ -85,6 +90,14 @@ class RulePml100(RulePlugin):
                     self.__disallowed_tag_names.add(remaining_tag_part.lower())
                 else:
                     self.__disallowed_tag_names.remove(remaining_tag_part.lower())
+
+    def query_config(self) -> List[QueryConfigItem]:
+        """
+        Query to find out the configuration that the rule is using.
+        """
+        return [
+            QueryConfigItem("change_tag_names", self.__modify_tag_names),
+        ]
 
     def starting_new_file(self) -> None:
         """

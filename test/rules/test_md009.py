@@ -6,9 +6,11 @@ import os
 from test.rules.utils import (
     execute_configuration_test,
     execute_fix_test,
+    execute_query_configuration_test,
     execute_scan_test,
     id_test_plug_rule_fn,
     pluginConfigErrorTest,
+    pluginQueryConfigTest,
     pluginRuleTest,
 )
 
@@ -777,3 +779,26 @@ def test_md009_config(test: pluginRuleTest) -> None:
     Execute a parameterized fix test for plugin md001.
     """
     execute_configuration_test(test, f"{source_path}good_paragraph_no_extra.md")
+
+
+def test_md009_query_config():
+    config_test = pluginQueryConfigTest(
+        "md009",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md009
+  Name(s)            no-trailing-spaces
+  Short Description  Trailing spaces
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md009.md
+
+
+  CONFIGURATION ITEM     TYPE     VALUE
+
+  br_spaces              integer  2
+  strict                 boolean  False
+  list_item_empty_lines  boolean  False
+""",
+    )
+    execute_query_configuration_test(config_test)

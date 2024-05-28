@@ -5,9 +5,11 @@ Module to provide tests related to the MD007 rule.
 import os
 from test.rules.utils import (
     execute_configuration_test,
+    execute_query_configuration_test,
     execute_scan_test,
     id_test_plug_rule_fn,
     pluginConfigErrorTest,
+    pluginQueryConfigTest,
     pluginRuleTest,
 )
 
@@ -566,3 +568,25 @@ def test_pml101_config(test: pluginRuleTest) -> None:
     Execute a parameterized fix test for plugin md001.
     """
     execute_configuration_test(test, f"{source_path}good_list_indentation.md")
+
+
+def test_pml101_query_config():
+    config_test = pluginQueryConfigTest(
+        "pml101",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 pml101
+  Name(s)            list-anchored-indent
+  Short Description  Anchored list indentation
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     pml101.md
+
+
+  CONFIGURATION ITEM  TYPE     VALUE
+
+  indent              integer  4
+
+""",
+    )
+    execute_query_configuration_test(config_test)

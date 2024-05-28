@@ -4,6 +4,7 @@ Module to provide tests related to the MD025 rule.
 
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.rules.utils import execute_query_configuration_test, pluginQueryConfigTest
 
 import pytest
 
@@ -558,3 +559,26 @@ def test_md025_bad_front_matter_title_top_level_setext():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+def test_md025_query_config():
+    config_test = pluginQueryConfigTest(
+        "md025",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md025
+  Name(s)            single-title,single-h1
+  Short Description  Multiple top-level headings in the same document
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md025.md
+
+
+  CONFIGURATION ITEM  TYPE     VALUE
+
+  level               integer  1
+  front_matter_title  string   "title"
+
+""",
+    )
+    execute_query_configuration_test(config_test)
