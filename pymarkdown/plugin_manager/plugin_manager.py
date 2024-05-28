@@ -296,7 +296,7 @@ class PluginManager:
             )
             return ApplicationResult.NO_FILES_TO_SCAN
 
-        assert self.__properties is not None
+        assert self.__properties is not None, "Should have been set during initialize."
         self.__apply_configuration(matching_plugins[0], self.__properties)
 
         found_plugin = matching_plugins[0]
