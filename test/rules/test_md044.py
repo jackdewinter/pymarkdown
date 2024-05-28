@@ -4,6 +4,7 @@ Module to provide tests related to the MD044 rule.
 
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.rules.utils import execute_query_configuration_test, pluginQueryConfigTest
 
 import pytest
 
@@ -1533,3 +1534,26 @@ def test_md044_good_collapsed_image_multiple():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+def test_md044_query_config():
+    config_test = pluginQueryConfigTest(
+        "md044",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md044
+  Name(s)            proper-names
+  Short Description  Proper names should have the correct capitalization
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md044.md
+
+
+  CONFIGURATION ITEM  TYPE     VALUE
+
+  code_blocks         boolean  True
+  names               string   ""
+
+""",
+    )
+    execute_query_configuration_test(config_test)

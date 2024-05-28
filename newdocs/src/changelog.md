@@ -10,6 +10,8 @@
     - Complete redo of advanced rules documentation.
 - [Issue 1083](https://github.com/jackdewinter/pymarkdown/issues/1083)
     - Complete redo of api documentation.
+- [Issue 1081](https://github.com/jackdewinter/pymarkdown/issues/1081)
+    - Added "plugins info" extension to show current configuration.
 
 ### Fixed
 

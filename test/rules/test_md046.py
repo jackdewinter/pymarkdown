@@ -4,6 +4,7 @@ Module to provide tests related to the MD046 rule.
 
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.rules.utils import execute_query_configuration_test, pluginQueryConfigTest
 
 import pytest
 
@@ -392,3 +393,25 @@ def test_md046_bad_fenced_and_indented_with_indented():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+def test_md046_query_config():
+    config_test = pluginQueryConfigTest(
+        "md046",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md046
+  Name(s)            code-block-style
+  Short Description  Code block style
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md046.md
+
+
+  CONFIGURATION ITEM  TYPE    VALUE
+
+  style               string  "consistent"
+
+""",
+    )
+    execute_query_configuration_test(config_test)

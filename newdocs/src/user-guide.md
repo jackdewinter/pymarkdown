@@ -920,18 +920,41 @@ optional arguments:
 ```
 
 The output of the subcommand presents focused information on the rule in
-question.  For example, using an argument of `md001` produces the following
+question.  For example, using an argument of `md005` produces the following
 results:
 
 ```txt
   ITEM                 DESCRIPTION
 
-  Id                   md001
-  Name(s)              heading-increment,header-increment
-  Short Description    Heading levels should only increment by one level at a time.
-  Description Url      https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md001.md
-  Configuration Items  front_matter_title
+  Id                 md005
+  Name(s)            list-indent
+  Short Description  Inconsistent indentation for list items at the same level
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md005.md
 ```
+
+In addition to this, any rules that adhere to interface version 3 of the plugin
+specification will also display information on any current configuration for
+that rule. For example, using an argument of `md001` produces the following
+results:
+
+```txt
+  ITEM                 DESCRIPTION
+
+  Id                 md001
+  Name(s)            heading-increment,header-increment
+  Short Description  Heading levels should only increment by one level at a time.
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md001.md
+
+
+  CONFIGURATION ITEM  TYPE    VALUE
+
+  front_matter_title  string  "title"
+```
+
+In addition to the normal text in the first section, a second section is used to
+convey information about the current settings for an configuration items for the
+current rule.  This information was added to assist in debugging issues with configuration
+not being set properly.
 
 ### Extension Command
 

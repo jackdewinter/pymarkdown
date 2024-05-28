@@ -5,8 +5,10 @@ Module to provide tests related to the MD006 rule.
 import os
 from test.rules.utils import (
     execute_fix_test,
+    execute_query_configuration_test,
     execute_scan_test,
     id_test_plug_rule_fn,
+    pluginQueryConfigTest,
     pluginRuleTest,
 )
 
@@ -234,3 +236,22 @@ def test_md006_fix(test: pluginRuleTest) -> None:
     Execute a parameterized fix test for plugin md001.
     """
     execute_fix_test(test)
+
+
+def test_md006_query_config():
+    config_test = pluginQueryConfigTest(
+        "md006",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md006
+  Name(s)            ul-start-left
+  Short Description  Consider starting bulleted lists at the beginning of the
+                     line
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md006.md
+
+
+""",
+    )
+    execute_query_configuration_test(config_test)

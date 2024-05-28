@@ -4,6 +4,7 @@ Module to provide tests related to the MD026 rule.
 
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.rules.utils import execute_query_configuration_test, pluginQueryConfigTest
 
 import pytest
 
@@ -713,3 +714,26 @@ def test_md041_good_html_block_heading():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+def test_md041_query_config():
+    config_test = pluginQueryConfigTest(
+        "md041",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md041
+  Name(s)            first-line-heading,first-line-h1
+  Short Description  First line in file should be a top level heading
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md041.md
+
+
+  CONFIGURATION ITEM  TYPE     VALUE
+
+  level               integer  1
+  front_matter_title  string   "title"
+
+""",
+    )
+    execute_query_configuration_test(config_test)

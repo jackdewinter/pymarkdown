@@ -2,10 +2,14 @@
 Module to implement a plugin that
 """
 
-from typing import Tuple, cast
+from typing import List, Tuple, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
-from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
+from pymarkdown.plugin_manager.plugin_details import (
+    PluginDetailsV2,
+    PluginDetailsV3,
+    QueryConfigItem,
+)
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.plugins.utils.container_token_manager import ContainerTokenManager
@@ -27,12 +31,12 @@ class RulePml101(RulePlugin):
         """
         Get the details for the plugin.
         """
-        return PluginDetailsV2(
+        return PluginDetailsV3(
             plugin_name="list-anchored-indent",
             plugin_id="PML101",
             plugin_enabled_by_default=False,
             plugin_description="Anchored list indentation",
-            plugin_version="0.5.0",
+            plugin_version="0.6.0",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_pml101.md",
             plugin_configuration="indent",
             plugin_supports_fix=False,
@@ -55,6 +59,14 @@ class RulePml101(RulePlugin):
             default_value=4,
             valid_value_fn=self.__validate_configuration_indent,
         )
+
+    def query_config(self) -> List[QueryConfigItem]:
+        """
+        Query to find out the configuration that the rule is using.
+        """
+        return [
+            QueryConfigItem("indent", self.__indent_basis),
+        ]
 
     def starting_new_file(self) -> None:
         """

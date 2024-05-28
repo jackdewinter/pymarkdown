@@ -4,6 +4,7 @@ Module to provide tests related to the MD042 rule.
 
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.rules.utils import execute_query_configuration_test, pluginQueryConfigTest
 
 import pytest
 
@@ -246,3 +247,20 @@ def test_md042_bad_empty_image():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+def test_md042_query_config():
+    config_test = pluginQueryConfigTest(
+        "md042",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md042
+  Name(s)            no-empty-links
+  Short Description  No empty links
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md042.md
+
+""",
+    )
+    execute_query_configuration_test(config_test)

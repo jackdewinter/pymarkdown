@@ -6,9 +6,11 @@ import os
 from test.rules.utils import (
     execute_configuration_test,
     execute_fix_test,
+    execute_query_configuration_test,
     execute_scan_test,
     id_test_plug_rule_fn,
     pluginConfigErrorTest,
+    pluginQueryConfigTest,
     pluginRuleTest,
 )
 
@@ -866,3 +868,26 @@ def test_md007_config(test: pluginRuleTest) -> None:
     Execute a parameterized fix test for plugin md001.
     """
     execute_configuration_test(test, f"{source_path}good_list_indentation.md")
+
+
+def test_md007_query_config():
+    config_test = pluginQueryConfigTest(
+        "md007",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md007
+  Name(s)            ul-indent
+  Short Description  Unordered list indentation
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md007.md
+
+
+  CONFIGURATION ITEM  TYPE     VALUE
+
+  indent              integer  2
+  start_indented      boolean  False  
+
+""",
+    )
+    execute_query_configuration_test(config_test)

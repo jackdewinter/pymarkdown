@@ -5,7 +5,11 @@ Module to implement a plugin that looks for trailing spaces in the files.
 from typing import List, Optional, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
-from pymarkdown.plugin_manager.plugin_details import PluginDetails, PluginDetailsV2
+from pymarkdown.plugin_manager.plugin_details import (
+    PluginDetails,
+    PluginDetailsV3,
+    QueryConfigItem,
+)
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.container_markdown_token import ContainerMarkdownToken
@@ -35,12 +39,12 @@ class RuleMd009(RulePlugin):
         """
         Get the details for the plugin.
         """
-        return PluginDetailsV2(
+        return PluginDetailsV3(
             plugin_name="no-trailing-spaces",
             plugin_id="MD009",
             plugin_enabled_by_default=True,
             plugin_description="Trailing spaces",
-            plugin_version="0.5.1",
+            plugin_version="0.6.0",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md009.md",
             plugin_configuration="br_spaces,list_item_empty_lines,strict",
             plugin_supports_fix=True,
@@ -75,6 +79,16 @@ class RuleMd009(RulePlugin):
                 default_value=False,
             )
         )
+
+    def query_config(self) -> List[QueryConfigItem]:
+        """
+        Query to find out the configuration that the rule is using.
+        """
+        return [
+            QueryConfigItem("br_spaces", self.__break_spaces),
+            QueryConfigItem("strict", self.__strict_mode),
+            QueryConfigItem("list_item_empty_lines", self.__list_item_empty_lines_mode),
+        ]
 
     def starting_new_file(self) -> None:
         """

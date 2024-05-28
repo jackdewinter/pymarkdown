@@ -7,9 +7,11 @@ from test.rules.utils import (
     build_fix_and_clash_lists,
     execute_configuration_test,
     execute_fix_test,
+    execute_query_configuration_test,
     execute_scan_test,
     id_test_plug_rule_fn,
     pluginConfigErrorTest,
+    pluginQueryConfigTest,
     pluginRuleTest,
 )
 
@@ -354,3 +356,28 @@ def test_md001_config(test: pluginRuleTest) -> None:
     Execute a parameterized fix test for plugin md001.
     """
     execute_configuration_test(test, f"{source_path}good_spacing_ol_single.md")
+
+
+def test_md030_query_config():
+    config_test = pluginQueryConfigTest(
+        "md030",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md030
+  Name(s)            list-marker-space
+  Short Description  Spaces after list markers
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md030.md
+
+
+  CONFIGURATION ITEM  TYPE     VALUE
+
+  ul_single           integer  1
+  ul_multi            integer  1
+  ol_single           integer  1
+  ol_multi            integer  1
+
+""",
+    )
+    execute_query_configuration_test(config_test)

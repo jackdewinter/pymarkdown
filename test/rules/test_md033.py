@@ -4,6 +4,7 @@ Module to provide tests related to the MD033 rule.
 
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.rules.utils import execute_query_configuration_test, pluginQueryConfigTest
 
 import pytest
 
@@ -657,3 +658,26 @@ def test_md033_bad_html_declaration():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+def test_md033_query_config():
+    config_test = pluginQueryConfigTest(
+        "md033",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md033
+  Name(s)            no-inline-html
+  Short Description  Inline HTML
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md033.md
+
+
+  CONFIGURATION ITEM         TYPE     VALUE
+
+  allow_first_image_element  boolean  True
+  allowed_elements           string   "!--,![CDATA[,!DOCTYPE"
+
+""",
+    )
+    execute_query_configuration_test(config_test)

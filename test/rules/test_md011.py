@@ -4,6 +4,7 @@ Module to provide tests related to the MD011 rule.
 
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.rules.utils import execute_query_configuration_test, pluginQueryConfigTest
 
 import pytest
 
@@ -160,3 +161,19 @@ def test_md011_good_with_reversed_in_html_block():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+def test_md011_query_config():
+    config_test = pluginQueryConfigTest(
+        "md011",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md011
+  Name(s)            no-reversed-links
+  Short Description  Reversed link syntax
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md011.md
+""",
+    )
+    execute_query_configuration_test(config_test)

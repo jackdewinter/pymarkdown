@@ -5,8 +5,10 @@ Module to provide tests related to the MD021 rule.
 import os
 from test.rules.utils import (
     execute_fix_test,
+    execute_query_configuration_test,
     execute_scan_test,
     id_test_plug_rule_fn,
+    pluginQueryConfigTest,
     pluginRuleTest,
 )
 
@@ -458,3 +460,20 @@ def test_md021_fix(test: pluginRuleTest) -> None:
     Execute a parameterized fix test for plugin md001.
     """
     execute_fix_test(test)
+
+
+def test_md021_query_config():
+    config_test = pluginQueryConfigTest(
+        "md021",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md021
+  Name(s)            no-multiple-space-closed-atx
+  Short Description  Multiple spaces are present inside hash characters on Atx
+                      Closed Heading.
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md021.md
+  """,
+    )
+    execute_query_configuration_test(config_test)

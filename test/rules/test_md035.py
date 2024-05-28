@@ -6,9 +6,11 @@ import os
 from test.rules.utils import (
     execute_configuration_test,
     execute_fix_test,
+    execute_query_configuration_test,
     execute_scan_test,
     id_test_plug_rule_fn,
     pluginConfigErrorTest,
+    pluginQueryConfigTest,
     pluginRuleTest,
 )
 
@@ -270,3 +272,25 @@ def test_md035_config(test: pluginRuleTest) -> None:
     Execute a parameterized fix test for plugin md001.
     """
     execute_configuration_test(test, f"{source_path}good_consistent_dash.md")
+
+
+def test_md035_query_config():
+    config_test = pluginQueryConfigTest(
+        "md035",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md035
+  Name(s)            hr-style
+  Short Description  Horizontal rule style
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md035.md
+
+
+  CONFIGURATION ITEM  TYPE    VALUE
+
+  style               string  "consistent"
+
+""",
+    )
+    execute_query_configuration_test(config_test)

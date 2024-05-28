@@ -2,7 +2,13 @@
 Module to implement a plugin that ensures the code blocks maintain a consistent style.
 """
 
-from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from typing import List
+
+from pymarkdown.plugin_manager.plugin_details import (
+    PluginDetails,
+    PluginDetailsV3,
+    QueryConfigItem,
+)
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.markdown_token import MarkdownToken
@@ -31,13 +37,12 @@ class RuleMd046(RulePlugin):
         """
         Get the details for the plugin.
         """
-        return PluginDetails(
+        return PluginDetailsV3(
             plugin_name="code-block-style",
             plugin_id="MD046",
             plugin_enabled_by_default=True,
             plugin_description="Code block style",
-            plugin_version="0.5.0",
-            plugin_interface_version=1,
+            plugin_version="0.6.0",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md046.md",
             plugin_configuration="style",
         )
@@ -56,6 +61,14 @@ class RuleMd046(RulePlugin):
             default_value=RuleMd046.__consistent_style,
             valid_value_fn=self.__validate_configuration_style,
         )
+
+    def query_config(self) -> List[QueryConfigItem]:
+        """
+        Query to find out the configuration that the rule is using.
+        """
+        return [
+            QueryConfigItem("style", self.__style_type),
+        ]
 
     def starting_new_file(self) -> None:
         """

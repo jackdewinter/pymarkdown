@@ -5,7 +5,11 @@ Module to implement a plugin that looks for excessively long lines in the file.
 from typing import List, Tuple
 
 from pymarkdown.general.parser_helper import ParserHelper
-from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_details import (
+    PluginDetails,
+    PluginDetailsV3,
+    QueryConfigItem,
+)
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.markdown_token import MarkdownToken
@@ -37,13 +41,12 @@ class RuleMd013(RulePlugin):
         """
         Get the details for the plugin.
         """
-        return PluginDetails(
+        return PluginDetailsV3(
             plugin_name="line-length",
             plugin_id="MD013",
             plugin_enabled_by_default=True,
             plugin_description="Line length",
-            plugin_version="0.5.0",
-            plugin_interface_version=1,
+            plugin_version="0.6.0",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md013.md",
             plugin_configuration="line_length,heading_line_length,code_block_line_length,"
             + "code_blocks,headings,strict,stern",
@@ -95,6 +98,20 @@ class RuleMd013(RulePlugin):
             "stern",
             default_value=False,
         )
+
+    def query_config(self) -> List[QueryConfigItem]:
+        """
+        Query to find out the configuration that the rule is using.
+        """
+        return [
+            QueryConfigItem("line_length", self.__line_length),
+            QueryConfigItem("code_block_line_length", self.__code_block_line_length),
+            QueryConfigItem("heading_line_length", self.__heading_line_length),
+            QueryConfigItem("code_blocks", self.__code_blocks_active),
+            QueryConfigItem("headings", self.__headings_active),
+            QueryConfigItem("strict", self.__strict_mode),
+            QueryConfigItem("stern", self.__stern_mode),
+        ]
 
     def starting_new_file(self) -> None:
         """

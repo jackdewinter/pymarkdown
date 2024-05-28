@@ -3,9 +3,13 @@ Module to implement a plugin that looks for inconsistencies in the
 style used for Unordered List elements.
 """
 
-from typing import Dict, cast
+from typing import Dict, List, cast
 
-from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
+from pymarkdown.plugin_manager.plugin_details import (
+    PluginDetailsV2,
+    PluginDetailsV3,
+    QueryConfigItem,
+)
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.markdown_token import MarkdownToken
@@ -44,13 +48,13 @@ class RuleMd004(RulePlugin):
         """
         Get the details for the plugin.
         """
-        return PluginDetailsV2(
+        return PluginDetailsV3(
             # bullet, ul
             plugin_name="ul-style",
             plugin_id="MD004",
             plugin_enabled_by_default=True,
             plugin_description="Inconsistent Unordered List Start style",
-            plugin_version="0.5.1",
+            plugin_version="0.6.0",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md004.md",
             plugin_configuration="style",
             plugin_supports_fix=True,
@@ -70,6 +74,12 @@ class RuleMd004(RulePlugin):
             default_value=RuleMd004.__consistent_style,
             valid_value_fn=self.__validate_configuration_style,
         )
+
+    def query_config(self) -> List[QueryConfigItem]:
+        """
+        Query to find out the configuration that the rule is using.
+        """
+        return [QueryConfigItem("style", self.__style_type)]
 
     def starting_new_file(self) -> None:
         """

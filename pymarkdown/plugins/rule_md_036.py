@@ -4,10 +4,14 @@ like it is being used instead of a heading.
 """
 
 from enum import Enum
-from typing import Optional, cast
+from typing import List, Optional, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
-from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_details import (
+    PluginDetails,
+    PluginDetailsV3,
+    QueryConfigItem,
+)
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.markdown_token import MarkdownToken
@@ -42,13 +46,12 @@ class RuleMd036(RulePlugin):
         """
         Get the details for the plugin.
         """
-        return PluginDetails(
+        return PluginDetailsV3(
             plugin_name="no-emphasis-as-heading,no-emphasis-as-header",
             plugin_id="MD036",
             plugin_enabled_by_default=True,
             plugin_description="Emphasis possibly used instead of a heading element.",
-            plugin_version="0.5.0",
-            plugin_interface_version=1,
+            plugin_version="0.6.0",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md036.md",
             plugin_configuration="punctuation",
         )
@@ -60,6 +63,14 @@ class RuleMd036(RulePlugin):
         self.__punctuation = self.plugin_configuration.get_string_property(
             "punctuation", default_value=".,;:!?。，；：？"
         )
+
+    def query_config(self) -> List[QueryConfigItem]:
+        """
+        Query to find out the configuration that the rule is using.
+        """
+        return [
+            QueryConfigItem("punctuation", self.__punctuation),
+        ]
 
     def starting_new_file(self) -> None:
         """

@@ -5,7 +5,11 @@ Module to implement a plugin that ensures that a mandates set of headers are pre
 from typing import List, Optional, Tuple, Union, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
-from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_details import (
+    PluginDetails,
+    PluginDetailsV3,
+    QueryConfigItem,
+)
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.atx_heading_markdown_token import AtxHeadingMarkdownToken
@@ -27,18 +31,18 @@ class RuleMd043(RulePlugin):
         self.__compiled_headings: List[Union[str, Tuple[int, str]]] = []
         self.__prefix_index: int = -1
         self.__suffix_index: int = -1
+        self.__raw_headings: str = ""
 
     def get_details(self) -> PluginDetails:
         """
         Get the details for the plugin.
         """
-        return PluginDetails(
+        return PluginDetailsV3(
             plugin_name="required-headings,required-headers",
             plugin_id="MD043",
             plugin_enabled_by_default=True,
             plugin_description="Required heading structure",
-            plugin_version="0.5.0",
-            plugin_interface_version=1,
+            plugin_version="0.6.0",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md043.md",
             plugin_configuration="headings",
         )
@@ -103,6 +107,7 @@ class RuleMd043(RulePlugin):
             default_value="",
             valid_value_fn=self.__validate_heading_pattern,
         )
+        self.__raw_headings = raw_headings
         self.__compiled_headings = []
         self.__headings_have_wildcards = False
         if raw_headings:
@@ -132,6 +137,14 @@ class RuleMd043(RulePlugin):
                     self.__suffix_index = heading_index + 1
                 else:
                     heading_index -= 1
+
+    def query_config(self) -> List[QueryConfigItem]:
+        """
+        Query to find out the configuration that the rule is using.
+        """
+        return [
+            QueryConfigItem("headings", self.__raw_headings),
+        ]
 
     def __verify_single_heading_match_atx(
         self, matching_all_token_index: int, hash_count: int, expected_text: str

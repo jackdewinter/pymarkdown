@@ -6,9 +6,11 @@ import os
 from test.rules.utils import (
     execute_configuration_test,
     execute_fix_test,
+    execute_query_configuration_test,
     execute_scan_test,
     id_test_plug_rule_fn,
     pluginConfigErrorTest,
+    pluginQueryConfigTest,
     pluginRuleTest,
 )
 
@@ -648,3 +650,26 @@ def test_md029_config(test: pluginRuleTest) -> None:
     Execute a parameterized fix test for plugin md001.
     """
     execute_configuration_test(test, f"{source_path}good_one_list.md")
+
+
+def test_md029_query_config():
+    config_test = pluginQueryConfigTest(
+        "md029",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md029
+  Name(s)            ol-prefix
+  Short Description  Ordered list item prefix
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md029.md
+
+
+  CONFIGURATION ITEM           TYPE     VALUE
+
+  style                        string   "one_or_ordered"
+  allow_extended_start_values  boolean  False
+
+""",
+    )
+    execute_query_configuration_test(config_test)

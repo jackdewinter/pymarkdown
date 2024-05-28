@@ -4,6 +4,7 @@ Module to provide tests related to the MD022 rule.
 
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.rules.utils import execute_query_configuration_test, pluginQueryConfigTest
 from test.utils import create_temporary_configuration_file
 
 import pytest
@@ -1922,3 +1923,26 @@ def test_md022_fenced_block_before_header():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+def test_md022_query_config():
+    config_test = pluginQueryConfigTest(
+        "md022",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md022
+  Name(s)            blanks-around-headings,blanks-around-headers
+  Short Description  Headings should be surrounded by blank lines.
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md022.md
+
+
+  CONFIGURATION ITEM  TYPE     VALUE
+
+  lines_above         integer  1
+  lines_below         integer  1
+
+""",
+    )
+    execute_query_configuration_test(config_test)

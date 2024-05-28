@@ -4,6 +4,7 @@ Module to provide tests related to the MD003 rule.
 
 import os
 from test.markdown_scanner import MarkdownScanner
+from test.rules.utils import execute_query_configuration_test, pluginQueryConfigTest
 from test.utils import create_temporary_configuration_file
 
 import pytest
@@ -1693,3 +1694,27 @@ def test_md003_setext_with_atx_closed_all_samples():
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
+
+
+def test_md003_query_config():
+    config_test = pluginQueryConfigTest(
+        "md003",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md003
+  Name(s)            heading-style,header-style
+  Short Description  Heading style should be consistent throughout the documen
+                     t.
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md003.md
+
+
+  CONFIGURATION ITEM   TYPE     VALUE
+
+  style                string   "consistent"
+  allow-setext-update  boolean  False
+
+""",
+    )
+    execute_query_configuration_test(config_test)

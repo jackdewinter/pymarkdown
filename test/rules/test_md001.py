@@ -6,9 +6,11 @@ import os
 from test.rules.utils import (
     execute_configuration_test,
     execute_fix_test,
+    execute_query_configuration_test,
     execute_scan_test,
     id_test_plug_rule_fn,
     pluginConfigErrorTest,
+    pluginQueryConfigTest,
     pluginRuleTest,
 )
 
@@ -185,3 +187,26 @@ def test_md001_config(test: pluginRuleTest) -> None:
     Execute a parameterized fix test for plugin md001.
     """
     execute_configuration_test(test, f"{source_path}front_matter_with_title.md")
+
+
+def test_md001_query_config():
+    config_test = pluginQueryConfigTest(
+        "md001",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md001
+  Name(s)            heading-increment,header-increment
+  Short Description  Heading levels should only increment by one level at a ti
+                     me.
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md001.md
+
+
+  CONFIGURATION ITEM  TYPE    VALUE
+
+  front_matter_title  string  "title"
+
+""",
+    )
+    execute_query_configuration_test(config_test)

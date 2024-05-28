@@ -4,7 +4,11 @@ Module to implement a plugin that ensures consistent spacing after the list mark
 
 from typing import Dict, List, Optional, cast
 
-from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
+from pymarkdown.plugin_manager.plugin_details import (
+    PluginDetailsV2,
+    PluginDetailsV3,
+    QueryConfigItem,
+)
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.plugins.utils.list_tracker import ListTracker
@@ -35,12 +39,12 @@ class RuleMd030(RulePlugin):
         """
         Get the details for the plugin.
         """
-        return PluginDetailsV2(
+        return PluginDetailsV3(
             plugin_name="list-marker-space",
             plugin_id="MD030",
             plugin_enabled_by_default=True,
             plugin_description="Spaces after list markers",
-            plugin_version="0.5.1",
+            plugin_version="0.6.0",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md030.md",
             plugin_configuration="ul_single,ol_single,ul_multi,ol_multi",
             plugin_supports_fix=True,
@@ -75,6 +79,17 @@ class RuleMd030(RulePlugin):
             default_value=1,
             valid_value_fn=self.__validate_minimum,
         )
+
+    def query_config(self) -> List[QueryConfigItem]:
+        """
+        Query to find out the configuration that the rule is using.
+        """
+        return [
+            QueryConfigItem("ul_single", self.__ul_single),
+            QueryConfigItem("ul_multi", self.__ul_multi),
+            QueryConfigItem("ol_single", self.__ol_single),
+            QueryConfigItem("ol_multi", self.__ol_multi),
+        ]
 
     def starting_new_file(self) -> None:
         """

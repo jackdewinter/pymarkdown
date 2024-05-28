@@ -208,3 +208,34 @@ def execute_configuration_test(test: pluginConfigErrorTest, file_to_use: str):
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@dataclass
+class pluginQueryConfigTest:
+    rule_id: str
+    expected_output: str
+
+
+def execute_query_configuration_test(test: pluginQueryConfigTest):
+    scanner = MarkdownScanner()
+
+    supplied_arguments = []
+    # if test.use_strict_config:
+    #     supplied_arguments.append("--strict-config")
+    # if test.set_args:
+    #     for next_set_arg in test.set_args:
+    #         supplied_arguments.extend(("--set", next_set_arg))
+
+    supplied_arguments.extend(("plugins", "info", test.rule_id))
+
+    expected_return_code = 0
+    expected_output = test.expected_output
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )

@@ -5,8 +5,10 @@ Module to provide tests related to the MD037 rule.
 import os
 from test.rules.utils import (
     execute_fix_test,
+    execute_query_configuration_test,
     execute_scan_test,
     id_test_plug_rule_fn,
+    pluginQueryConfigTest,
     pluginRuleTest,
 )
 
@@ -362,3 +364,20 @@ def test_md037_fix(test: pluginRuleTest) -> None:
     Execute a parameterized fix test for plugin md001.
     """
     execute_fix_test(test)
+
+
+def test_md037_query_config():
+    config_test = pluginQueryConfigTest(
+        "md037",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md037
+  Name(s)            no-space-in-emphasis
+  Short Description  Spaces inside emphasis markers
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md037.md
+
+""",
+    )
+    execute_query_configuration_test(config_test)

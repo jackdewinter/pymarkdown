@@ -4,6 +4,7 @@ Module to provide tests related to the PML100 rule.
 
 from dataclasses import dataclass
 from test.markdown_scanner import MarkdownScanner
+from test.rules.utils import execute_query_configuration_test, pluginQueryConfigTest
 from test.utils import assert_if_strings_different
 from typing import Any, List
 
@@ -685,3 +686,25 @@ def test_pml100_errors(test: ErrorPml100Test) -> None:
     assert_if_strings_different(
         test.expected_stderr, execute_results.std_err.getvalue()
     )
+
+
+def test_pml100_query_config():
+    config_test = pluginQueryConfigTest(
+        "pml100",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 pml100
+  Name(s)            disallowed-html
+  Short Description  Disallowed HTML
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     pml100.md
+
+
+  CONFIGURATION ITEM  TYPE     VALUE
+
+  change_tag_names    integer  None
+
+""",
+    )
+    execute_query_configuration_test(config_test)

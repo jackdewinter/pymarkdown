@@ -5,8 +5,10 @@ Module to provide tests related to the MD047 rule.
 import os
 from test.rules.utils import (
     execute_fix_test,
+    execute_query_configuration_test,
     execute_scan_test,
     id_test_plug_rule_fn,
+    pluginQueryConfigTest,
     pluginRuleTest,
 )
 
@@ -156,3 +158,19 @@ def test_md047_fix(test: pluginRuleTest) -> None:
     Execute a parameterized fix test for plugin md001.
     """
     execute_fix_test(test)
+
+
+def test_md047_query_config():
+    config_test = pluginQueryConfigTest(
+        "md047",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md047
+  Name(s)            single-trailing-newline
+  Short Description  Each file should end with a single newline character.
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md047.md
+""",
+    )
+    execute_query_configuration_test(config_test)

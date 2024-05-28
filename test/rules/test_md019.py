@@ -5,8 +5,10 @@ Module to provide tests related to the MD019 rule.
 import os
 from test.rules.utils import (
     execute_fix_test,
+    execute_query_configuration_test,
     execute_scan_test,
     id_test_plug_rule_fn,
+    pluginQueryConfigTest,
     pluginRuleTest,
 )
 
@@ -410,3 +412,20 @@ def test_md019_fix(test: pluginRuleTest) -> None:
     Execute a parameterized fix test for plugin md001.
     """
     execute_fix_test(test)
+
+
+def test_md019_query_config():
+    config_test = pluginQueryConfigTest(
+        "md019",
+        """
+  ITEM               DESCRIPTION
+
+  Id                 md019
+  Name(s)            no-multiple-space-atx
+  Short Description  Multiple spaces are present after hash character on Atx H
+                     eading.
+  Description Url    https://pymarkdown.readthedocs.io/en/latest/plugins/rule_
+                     md019.md
+  """,
+    )
+    execute_query_configuration_test(config_test)

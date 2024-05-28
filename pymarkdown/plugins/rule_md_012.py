@@ -2,9 +2,13 @@
 Module to implement a plugin that looks for multiple blank lines in the files.
 """
 
-from typing import Optional
+from typing import List, Optional
 
-from pymarkdown.plugin_manager.plugin_details import PluginDetails
+from pymarkdown.plugin_manager.plugin_details import (
+    PluginDetails,
+    PluginDetailsV3,
+    QueryConfigItem,
+)
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.markdown_token import MarkdownToken
@@ -25,13 +29,12 @@ class RuleMd012(RulePlugin):
         """
         Get the details for the plugin.
         """
-        return PluginDetails(
+        return PluginDetailsV3(
             plugin_name="no-multiple-blanks",
             plugin_id="MD012",
             plugin_enabled_by_default=True,
             plugin_description="Multiple consecutive blank lines",
-            plugin_version="0.5.0",
-            plugin_interface_version=1,
+            plugin_version="0.6.0",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md012.md",
             plugin_configuration="maximum",
         )
@@ -50,6 +53,12 @@ class RuleMd012(RulePlugin):
             default_value=1,
             valid_value_fn=self.__validate_maximum,
         )
+
+    def query_config(self) -> List[QueryConfigItem]:
+        """
+        Query to find out the configuration that the rule is using.
+        """
+        return [QueryConfigItem("maximum", self.__blank_lines_maximum)]
 
     def starting_new_file(self) -> None:
         """
