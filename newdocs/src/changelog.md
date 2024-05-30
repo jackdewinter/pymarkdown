@@ -4,6 +4,28 @@
 
 ### Added
 
+- None
+
+### Fixed
+
+- None
+
+### Changed
+
+- None
+
+## Version 0.9.20 - Date: 2024-05-30
+
+This release focuses on completing the work to get the documentation up to date
+and in the new read-the-docs format.  Some user issues were
+addressed, but this was mainly to get the documents into good
+shape for release.
+
+To view the new documentation, goto
+[ReadTheDocs](https://pymarkdown.readthedocs.io/en/latest/).
+
+### Added
+
 - [Issue 1075](https://github.com/jackdewinter/pymarkdown/issues/1075)
     - Complete redo of advanced extensions documentation.
 - [Issue 1079](https://github.com/jackdewinter/pymarkdown/issues/1079)
