@@ -4,6 +4,29 @@
 
 ### Added
 
+- None
+
+### Fixed
+
+- None
+
+### Changed
+
+- None
+
+## Version 0.9.20 - Date: 2024-05-30
+
+This release focuses on completing the work to get the documentation up to date
+and in the new read-the-docs format.  Some user issues were
+addressed, but this was mainly to get the documents into good
+shape for release.
+
+To view the new documentation, goto
+[ReadTheDocs](https://pymarkdown.readthedocs.io/en/latest/).
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Added
+
 - [Issue 1075](https://github.com/jackdewinter/pymarkdown/issues/1075)
     - Complete redo of advanced extensions documentation.
 - [Issue 1079](https://github.com/jackdewinter/pymarkdown/issues/1079)
@@ -13,6 +36,7 @@
 - [Issue 1081](https://github.com/jackdewinter/pymarkdown/issues/1081)
     - Added "plugins info" extension to show current configuration.
 
+<!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Issue 1015](https://github.com/jackdewinter/pymarkdown/issues/1015)
@@ -20,6 +44,7 @@
 - [Issue 1077](https://github.com/jackdewinter/pymarkdown/issues/1077)
     - Fixed issue with previous cleanup
 
+<!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - None
