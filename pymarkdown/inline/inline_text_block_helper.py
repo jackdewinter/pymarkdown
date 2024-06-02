@@ -116,6 +116,7 @@ class InlineTextBlockHelper:
                 last_column_number,
                 start_index,
                 next_index,
+                adj_newlines,
             ) = InlineTextBlockHelper.__handle_next_inline_character(
                 parser_properties,
                 source_text,
@@ -137,7 +138,10 @@ class InlineTextBlockHelper:
                 split_para_space,
                 tabified_text,
                 newlines_encountered,
+                para_space,
             )
+            if adj_newlines:
+                newlines_encountered += adj_newlines
             if source_text[old_next_index] == "\n":
                 newlines_encountered += 1
 
@@ -180,6 +184,7 @@ class InlineTextBlockHelper:
         split_para_space: Optional[List[str]],
         tabified_text: Optional[str],
         newlines_encountered: int,
+        para_space: Optional[str] = None,
     ) -> Tuple[
         int,
         int,
@@ -188,6 +193,7 @@ class InlineTextBlockHelper:
         str,
         str,
         Optional[List[str]],
+        int,
         int,
         int,
         int,
@@ -214,6 +220,8 @@ class InlineTextBlockHelper:
             parser_properties,
             coalesced_stack,
             current_string,
+            whitespace_to_recombine,
+            para_space,
         )
 
         (
@@ -327,6 +335,7 @@ class InlineTextBlockHelper:
             last_column_number,
             new_start_index,
             next_index,
+            inline_response.adj_newlines,
         )
 
     # pylint: enable=too-many-arguments, too-many-locals
@@ -347,6 +356,8 @@ class InlineTextBlockHelper:
         parse_properties: ParseBlockPassProperties,
         coalesced_stack: List[MarkdownToken],
         current_string: str,
+        whitespace_to_recombine: Optional[str],
+        para_space: Optional[str] = None,
     ) -> Tuple[bool, str, int, Optional[MarkdownToken], Optional[str], InlineRequest]:
         (
             remaining_line,
@@ -385,6 +396,8 @@ class InlineTextBlockHelper:
             tabified_text,
             parse_properties,
             last_container_token,
+            whitespace_to_recombine,
+            para_space,
         )
         return (
             False,

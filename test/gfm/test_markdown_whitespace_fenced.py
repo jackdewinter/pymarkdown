@@ -1868,14 +1868,14 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_x1_an
         "[block-quote(1,1)::> \n> \n\n\n]",
         "[para(1,3):\n\n\t\n\t\n\t]",
         "[text(1,3):abc\ndef\n::\n\n]",
-        "[icode-span(3,2):python\a\n\a \aabc\a\n\a \a:```::]",
+        "[icode-span(3,2):python\a\n\a \a\a\x03\a\t\aabc\a\n\a \a\a\x03\a\t\a:```::]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <p>abc
 def
-<code>python abc </code></p>
+<code>python \tabc \t</code></p>
 </blockquote>"""
 
     # Act & Assert

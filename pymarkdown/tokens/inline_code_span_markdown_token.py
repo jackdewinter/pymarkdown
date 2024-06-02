@@ -139,7 +139,9 @@ class InlineCodeSpanMarkdownToken(InlineMarkdownToken):
             return ""
 
         current_inline_token = cast(InlineCodeSpanMarkdownToken, current_token)
-        span_text = ParserHelper.remove_all_from_text(current_inline_token.span_text)
+        span_text = ParserHelper.remove_all_from_text(
+            current_inline_token.span_text, include_noops=True
+        )
         leading_whitespace = ParserHelper.remove_all_from_text(
             current_inline_token.leading_whitespace
         )

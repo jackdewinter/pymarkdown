@@ -8,7 +8,8 @@
 
 ### Fixed
 
-- None
+- [Issue 1099](https://github.com/jackdewinter/pymarkdown/issues/1099)
+    - Fixed longstanding issue with tabs and newlines in code spans
 
 ### Changed
 

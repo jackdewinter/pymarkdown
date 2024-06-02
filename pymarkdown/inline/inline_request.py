@@ -32,6 +32,8 @@ class InlineRequest:
     tabified_text: Optional[str] = None
     parse_properties: Optional[ParseBlockPassProperties] = None
     last_container_token: Optional[MarkdownToken] = None
+    whitespace_to_recombine: Optional[str] = None
+    para_space: Optional[str] = None
 
 
 # pylint: enable=too-many-instance-attributes
