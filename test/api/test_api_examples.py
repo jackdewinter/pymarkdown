@@ -50,7 +50,7 @@ WARNING  pymarkdown.main:main.py:323 No matching files found.
     assert not did_complete
 
 
-@pytest.mark.skip
+@pytest.mark.timeout(30)
 def test_api_exceptions_example_good(caplog):
     """
     Test to make sure that if there is at least one thing to scan,

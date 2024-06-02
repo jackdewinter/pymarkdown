@@ -5478,7 +5478,6 @@ part 3</h2>
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_extra_040b():
     """
@@ -5494,10 +5493,43 @@ def test_extra_040b():
     expected_tokens = [
         "[ulist(1,1):+::2::\n\n\n]",
         "[setext(4,5):-:4::(1,3)]",
-        "[text(1,3):heading :]",
-        "[icode-span(1,11):\t1:`::]",
-        "[text(1,15): abc\npart 2\npart 3::\n\t\x02\n\t\x02]",
+        "[text(1,3):heading 1 :]",
+        "[icode-span(1,13):abc\a\n\a \a\tdef:`::]",
+        "[text(2,6): part 2\npart 3::\n\t\x02]",
         "[end-setext:\t:]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>heading 1 <code>abc \tdef</code> part 2
+part 3</h2>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_040c():
+    """
+    TBD, when fixed, also fix bad_setext_four_unordered_list_with_tab_codespan_13
+    """
+
+    # Arrange
+    source_markdown = """+ heading 1 `abc
+  def` part 2
+  part 3
+  ----
+"""
+    expected_tokens = [
+        "[ulist(1,1):+::2::  \n  \n  \n]",
+        "[setext(4,3):-:4::(1,3)]",
+        "[text(1,3):heading 1 :]",
+        "[icode-span(1,13):abc\a\n\a \adef:`::]",
+        "[text(2,5): part 2\npart 3::\n]",
+        "[end-setext::]",
         "[BLANK(5,1):]",
         "[end-ulist:::True]",
     ]
@@ -5506,6 +5538,71 @@ def test_extra_040b():
 <h2>heading 1 <code>abc def</code> part 2
 part 3</h2>
 </li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_040d():
+    """
+    TBD, when fixed, also fix bad_setext_four_unordered_list_with_tab_codespan_13
+    """
+
+    # Arrange
+    source_markdown = """+ heading 1 `abc
+   def` part 2
+  part 3
+  ----
+"""
+    expected_tokens = [
+        "[ulist(1,1):+::2::  \n  \n  \n]",
+        "[setext(4,3):-:4::(1,3)]",
+        "[text(1,3):heading 1 :]",
+        "[icode-span(1,13):abc\a\n\a \a def:`::]",
+        "[text(2,6): part 2\npart 3::\n]",
+        "[end-setext::]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>heading 1 <code>abc  def</code> part 2
+part 3</h2>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_040e():
+    """
+    TBD, when fixed, also fix bad_setext_four_unordered_list_with_tab_codespan_13
+    """
+
+    # Arrange
+    source_markdown = """+ heading 1 `abc
+\tdef` part 2
+\tpart 3
+
+"""
+    expected_tokens = [
+        "[ulist(1,1):+::2::\n\n\n]",
+        "[para(1,3):\n\t\n\t]",
+        "[text(1,3):heading 1 :]",
+        "[icode-span(1,13):abc\a\n\a \a\a\x03\a\t\adef:`::]",
+        "[text(2,5): part 2\npart 3::\n]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>heading 1 <code>abc \tdef</code> part 2
+part 3</li>
 </ul>"""
 
     # Act & Assert
