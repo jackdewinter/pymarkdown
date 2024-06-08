@@ -1969,12 +1969,7 @@ def test_whitespaces_html_with_tabs_before_within_block_quotes_x2():
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n]",
         "[para(1,3):\n\n  \t]",
-        "[text(1,3):abc\ndef\n::\n\n]",
-        "[text(3,4):*:]",
-        "[text(3,5): :]",
-        "[text(3,6):*:]",
-        "[text(3,7): :]",
-        "[text(3,8):*:]",
+        "[text(1,3):abc\ndef\n* * *::\n\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]

@@ -560,9 +560,7 @@ def test_paragraph_series_m_ib_ul_t_nl_i2_ulb_nl_i4_t_ib():
     expected_tokens = [
         "[ulist(1,1):-::2::  \n  \n]",
         "[para(1,3):\n\n  ]",
-        "[text(1,3):abc\n::\n]",
-        "[text(2,1):*:]",
-        "[text(2,2):\nfoo::\n]",
+        "[text(1,3):abc\n*\nfoo::\n\n]",
         "[end-para:::True]",
         "[BLANK(4,1):]",
         "[end-ulist:::True]",
@@ -872,9 +870,7 @@ def test_paragraph_series_m_ib_i2_ul_nl_i4_ulb_nl_i4_t_ib():
     expected_tokens = [
         "[ulist(1,3):-::4:  :    \n    \n]",
         "[para(1,5):\n\n]",
-        "[text(1,5):abc\n::\n]",
-        "[text(2,1):*:]",
-        "[text(2,2):\nfoo::\n]",
+        "[text(1,5):abc\n*\nfoo::\n\n]",
         "[end-para:::True]",
         "[BLANK(4,1):]",
         "[end-ulist:::True]",
@@ -966,9 +962,7 @@ def test_paragraph_series_m_ib_i2_ul_t_nl_i4_ulb_nl_i4_t_ib():
     expected_tokens = [
         "[ulist(1,3):-::4:  :    \n    \n]",
         "[para(1,5):\n\n]",
-        "[text(1,5):abc\n::\n]",
-        "[text(2,1):*:]",
-        "[text(2,2):\nfoo::\n]",
+        "[text(1,5):abc\n*\nfoo::\n\n]",
         "[end-para:::True]",
         "[BLANK(4,1):]",
         "[end-ulist:::True]",

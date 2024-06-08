@@ -317,8 +317,7 @@ def test_emphasis_443():
     source_markdown = """__ is not an empty emphasis"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):__:]",
-        "[text(1,3): is not an empty emphasis:]",
+        "[text(1,1):__ is not an empty emphasis:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>__ is not an empty emphasis</p>"""
@@ -337,8 +336,7 @@ def test_emphasis_444():
     source_markdown = """____ is not an empty strong emphasis"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):____:]",
-        "[text(1,5): is not an empty strong emphasis:]",
+        "[text(1,1):____ is not an empty strong emphasis:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>____ is not an empty strong emphasis</p>"""

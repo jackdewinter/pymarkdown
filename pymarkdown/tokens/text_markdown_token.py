@@ -188,7 +188,10 @@ class TextMarkdownToken(InlineMarkdownToken):
         return removed_whitespace
 
     def combine(
-        self, other_text_token: MarkdownToken, remove_leading_spaces: int
+        self,
+        other_text_token: MarkdownToken,
+        remove_leading_spaces: int,
+        only_change_text_blocks: bool,
     ) -> str:
         """
         Combine the two text tokens together with a line feed between.
@@ -198,6 +201,10 @@ class TextMarkdownToken(InlineMarkdownToken):
         If remove_leading_spaces == 0, then.
         """
 
+        # if self.line_number == other_text_token.line_number:
+        if only_change_text_blocks:
+
+            return self.__combine_only_text_blocks(other_text_token)
         if other_text_token.is_blank_line:
             text_to_combine = ""
             tabified_text_to_combine: Optional[str] = ""
@@ -233,11 +240,6 @@ class TextMarkdownToken(InlineMarkdownToken):
             other_token_text = tabified_text_to_combine or text_to_combine
 
             this_token_text = self.__tabified_text or self.__token_text
-            # POGGER.debug("this_token_text>:$:<", this_token_text)
-            # POGGER.debug("blank_line_sequence>:$:<", blank_line_sequence)
-            # POGGER.debug("prefix_whitespace>:$:<", prefix_whitespace)
-            # POGGER.debug("other_token_text>:$:<", other_token_text)
-
             self.__tabified_text = (
                 f"{this_token_text}{ParserHelper.newline_character}{blank_line_sequence}"
                 + f"{prefix_whitespace}{other_token_text}"
@@ -248,6 +250,22 @@ class TextMarkdownToken(InlineMarkdownToken):
         )
         self.__compose_extra_data_field()
         return removed_whitespace
+
+    def __combine_only_text_blocks(self, other_text_token: MarkdownToken) -> str:
+        the_other_text_token = cast(TextMarkdownToken, other_text_token)
+        assert the_other_text_token is not None
+        self.__token_text = self.token_text + the_other_text_token.token_text
+        self.__extracted_whitespace = (
+            self.extracted_whitespace + the_other_text_token.extracted_whitespace
+        )
+        if the_other_text_token.end_whitespace is not None:
+            self.__end_whitespace = (
+                (self.end_whitespace + the_other_text_token.end_whitespace)
+                if self.end_whitespace is not None
+                else the_other_text_token.end_whitespace
+            )
+        self.__compose_extra_data_field()
+        return ""
 
     def __combine_handle_whitespace(
         self, remove_leading_spaces: int, whitespace_present: str

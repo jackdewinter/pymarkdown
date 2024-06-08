@@ -15,13 +15,7 @@ def test_emphasis_380():
 
     # Arrange
     source_markdown = """_foo bar _"""
-    expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):_:]",
-        "[text(1,2):foo bar :]",
-        "[text(1,10):_:]",
-        "[end-para:::True]",
-    ]
+    expected_tokens = ["[para(1,1):]", "[text(1,1):_foo bar _:]", "[end-para:::True]"]
     expected_gfm = """<p>_foo bar _</p>"""
 
     # Act & Assert
@@ -36,14 +30,7 @@ def test_emphasis_381():
 
     # Arrange
     source_markdown = """_(_foo)"""
-    expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):_:]",
-        "[text(1,2):(:]",
-        "[text(1,3):_:]",
-        "[text(1,4):foo):]",
-        "[end-para:::True]",
-    ]
+    expected_tokens = ["[para(1,1):]", "[text(1,1):_(_foo):]", "[end-para:::True]"]
     expected_gfm = """<p>_(_foo)</p>"""
 
     # Act & Assert
@@ -83,14 +70,7 @@ def test_emphasis_383():
 
     # Arrange
     source_markdown = """_foo_bar"""
-    expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):_:]",
-        "[text(1,2):foo:]",
-        "[text(1,5):_:]",
-        "[text(1,6):bar:]",
-        "[end-para:::True]",
-    ]
+    expected_tokens = ["[para(1,1):]", "[text(1,1):_foo_bar:]", "[end-para:::True]"]
     expected_gfm = """<p>_foo_bar</p>"""
 
     # Act & Assert
@@ -107,10 +87,7 @@ def test_emphasis_384():
     source_markdown = """_пристаням_стремятся"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):_:]",
-        "[text(1,2):пристаням:]",
-        "[text(1,11):_:]",
-        "[text(1,12):стремятся:]",
+        "[text(1,1):_пристаням_стремятся:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>_пристаням_стремятся</p>"""
@@ -130,11 +107,7 @@ def test_emphasis_385():
     expected_tokens = [
         "[para(1,1):]",
         "[emphasis(1,1):1:_]",
-        "[text(1,2):foo:]",
-        "[text(1,5):_:]",
-        "[text(1,6):bar:]",
-        "[text(1,9):_:]",
-        "[text(1,10):baz:]",
+        "[text(1,2):foo_bar_baz:]",
         "[end-emphasis(1,13)::]",
         "[end-para:::True]",
     ]

@@ -1028,13 +1028,11 @@ def test_paragraph_series_j_em_l_t_t():
     source_markdown = """a*[link](/uri "title")*a"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):a:]",
-        "[text(1,2):*:]",
+        "[text(1,1):a*:]",
         '[link(1,3):inline:/uri:title::::link:False:":: :]',
         "[text(1,4):link:]",
         "[end-link::]",
-        "[text(1,23):*:]",
-        "[text(1,24):a:]",
+        "[text(1,23):*a:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>a*<a href="/uri" title="title">link</a>*a</p>"""
@@ -1054,11 +1052,9 @@ def test_paragraph_series_j_em_i_t_t():
     source_markdown = """a*![link](/uri "title")*a"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):a:]",
-        "[text(1,2):*:]",
+        "[text(1,1):a*:]",
         '[image(1,3):inline:/uri:title:link::::link:False:":: :]',
-        "[text(1,24):*:]",
-        "[text(1,25):a:]",
+        "[text(1,24):*a:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>a*<img src="/uri" alt="link" title="title" />*a</p>"""

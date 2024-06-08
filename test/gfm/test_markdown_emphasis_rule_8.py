@@ -15,13 +15,7 @@ def test_emphasis_406():
 
     # Arrange
     source_markdown = """__foo bar __"""
-    expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):__:]",
-        "[text(1,3):foo bar :]",
-        "[text(1,11):__:]",
-        "[end-para:::True]",
-    ]
+    expected_tokens = ["[para(1,1):]", "[text(1,1):__foo bar __:]", "[end-para:::True]"]
     expected_gfm = """<p>__foo bar __</p>"""
 
     # Act & Assert
@@ -36,14 +30,7 @@ def test_emphasis_407():
 
     # Arrange
     source_markdown = """__(__foo)"""
-    expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):__:]",
-        "[text(1,3):(:]",
-        "[text(1,4):__:]",
-        "[text(1,6):foo):]",
-        "[end-para:::True]",
-    ]
+    expected_tokens = ["[para(1,1):]", "[text(1,1):__(__foo):]", "[end-para:::True]"]
     expected_gfm = """<p>__(__foo)</p>"""
 
     # Act & Assert
@@ -83,14 +70,7 @@ def test_emphasis_409():
 
     # Arrange
     source_markdown = """__foo__bar"""
-    expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):__:]",
-        "[text(1,3):foo:]",
-        "[text(1,6):__:]",
-        "[text(1,8):bar:]",
-        "[end-para:::True]",
-    ]
+    expected_tokens = ["[para(1,1):]", "[text(1,1):__foo__bar:]", "[end-para:::True]"]
     expected_gfm = """<p>__foo__bar</p>"""
 
     # Act & Assert
@@ -107,10 +87,7 @@ def test_emphasis_410():
     source_markdown = """__пристаням__стремятся"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):__:]",
-        "[text(1,3):пристаням:]",
-        "[text(1,12):__:]",
-        "[text(1,14):стремятся:]",
+        "[text(1,1):__пристаням__стремятся:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>__пристаням__стремятся</p>"""
@@ -130,11 +107,7 @@ def test_emphasis_411():
     expected_tokens = [
         "[para(1,1):]",
         "[emphasis(1,1):2:_]",
-        "[text(1,3):foo:]",
-        "[text(1,6):__:]",
-        "[text(1,8):bar:]",
-        "[text(1,11):__:]",
-        "[text(1,13):baz:]",
+        "[text(1,3):foo__bar__baz:]",
         "[end-emphasis(1,16)::]",
         "[end-para:::True]",
     ]

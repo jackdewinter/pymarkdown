@@ -622,10 +622,7 @@ def test_character_references_337():
     source_markdown = """[a](url &quot;tit&quot;)"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):[:]",
-        "[text(1,2):a:]",
-        "[text(1,3):]:]",
-        '[text(1,4):(url \a&quot;\a\a"\a&quot;\a\atit\a&quot;\a\a"\a&quot;\a\a):]',
+        '[text(1,1):[a](url \a&quot;\a\a"\a&quot;\a\atit\a&quot;\a\a"\a&quot;\a\a):]',
         "[end-para:::True]",
     ]
     expected_gfm = """<p>[a](url &quot;tit&quot;)</p>"""

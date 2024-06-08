@@ -1250,11 +1250,7 @@ i "testing")a
 ---"""
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
-        "[text(1,1):a:]",
-        "[text(1,2):[:]",
-        "[text(1,3):Foo:]",
-        "[text(1,6):]:]",
-        '[text(1,7):(/ur\ni \a"\a&quot;\atesting\a"\a&quot;\a)a::\n]',
+        '[text(1,1):a[Foo](/ur\ni \a"\a&quot;\atesting\a"\a&quot;\a)a::\n]',
         "[end-setext::]",
     ]
     expected_gfm = """<h2>a[Foo](/ur\ni &quot;testing&quot;)a</h2>"""
@@ -1853,11 +1849,7 @@ i "testing")a
 ---"""
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
-        "[text(1,1):a:]",
-        "[text(1,2):![:]",
-        "[text(1,4):Foo:]",
-        "[text(1,7):]:]",
-        '[text(1,8):(/ur\ni \a"\a&quot;\atesting\a"\a&quot;\a)a::\n]',
+        '[text(1,1):a![Foo](/ur\ni \a"\a&quot;\atesting\a"\a&quot;\a)a::\n]',
         "[end-setext::]",
     ]
     expected_gfm = """<h2>a![Foo](/ur\ni &quot;testing&quot;)a</h2>"""
@@ -2262,11 +2254,7 @@ def test_setext_headings_extra_70a():
 ---"""
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
-        "[text(1,1):a:]",
-        "[text(1,2):[:]",
-        "[text(1,3):Foo:]",
-        "[text(1,6):]:]",
-        '[text(1,7):(\a<\a&lt;\a/my\nuri\a>\a&gt;\a \a"\a&quot;\atesting\a"\a&quot;\a)a::\n \x02]',
+        '[text(1,1):a[Foo](\a<\a&lt;\a/my\nuri\a>\a&gt;\a \a"\a&quot;\atesting\a"\a&quot;\a)a::\n \x02]',
         "[end-setext::]",
     ]
     expected_gfm = """<h2>a[Foo](&lt;/my\nuri&gt; &quot;testing&quot;)a</h2>"""
@@ -2519,11 +2507,7 @@ def test_setext_headings_extra_75a():
 ---"""
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
-        "[text(1,1):a:]",
-        "[text(1,2):![:]",
-        "[text(1,4):Foo:]",
-        "[text(1,7):]:]",
-        '[text(1,8):(\a<\a&lt;\a/my\nuri\a>\a&gt;\a \a"\a&quot;\atesting\a"\a&quot;\a)a::\n \x02]',
+        '[text(1,1):a![Foo](\a<\a&lt;\a/my\nuri\a>\a&gt;\a \a"\a&quot;\atesting\a"\a&quot;\a)a::\n \x02]',
         "[end-setext::]",
     ]
     expected_gfm = """<h2>a![Foo](&lt;/my\nuri&gt; &quot;testing&quot;)a</h2>"""

@@ -268,10 +268,7 @@ def test_textual_content_extra_14():
     source_markdown = """[foo\bbar](/bar\b "ti\btle")"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):[:]",
-        "[text(1,2):foo\x05\bbar:]",
-        "[text(1,9):]:]",
-        '[text(1,10):(/bar\x05\b \a"\a&quot;\ati\x05\btle\a"\a&quot;\a):]',
+        '[text(1,1):[foo\x05\bbar](/bar\x05\b \a"\a&quot;\ati\x05\btle\a"\a&quot;\a):]',
         "[end-para:::True]",
     ]
     expected_gfm = """<p>[foo\bbar](/bar\b &quot;ti\btle&quot;)</p>"""
@@ -311,10 +308,7 @@ def test_textual_content_extra_16():
     source_markdown = """[foobar](/b\bar "title")"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):[:]",
-        "[text(1,2):foobar:]",
-        "[text(1,8):]:]",
-        '[text(1,9):(/b\x05\bar \a"\a&quot;\atitle\a"\a&quot;\a):]',
+        '[text(1,1):[foobar](/b\x05\bar \a"\a&quot;\atitle\a"\a&quot;\a):]',
         "[end-para:::True]",
     ]
     expected_gfm = """<p>[foobar](/b\bar &quot;title&quot;)</p>"""

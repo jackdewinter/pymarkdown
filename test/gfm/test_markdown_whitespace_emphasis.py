@@ -57,13 +57,7 @@ def test_whitespaces_emphasis_1a():
 
     # Arrange
     source_markdown = """*\u00a0*"""
-    expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):*:]",
-        "[text(1,2):\u00a0:]",
-        "[text(1,3):*:]",
-        "[end-para:::True]",
-    ]
+    expected_tokens = ["[para(1,1):]", "[text(1,1):*\u00a0*:]", "[end-para:::True]"]
     expected_gfm = """<p>*\u00a0*</p>"""
 
     # Act & Assert
@@ -78,13 +72,7 @@ def test_whitespaces_emphasis_1ax():
 
     # Arrange
     source_markdown = """**\u00a0**"""
-    expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):**:]",
-        "[text(1,3):\u00a0:]",
-        "[text(1,4):**:]",
-        "[end-para:::True]",
-    ]
+    expected_tokens = ["[para(1,1):]", "[text(1,1):**\u00a0**:]", "[end-para:::True]"]
     expected_gfm = """<p>**\u00a0**</p>"""
 
     # Act & Assert
@@ -99,13 +87,7 @@ def test_whitespaces_emphasis_1b():
 
     # Arrange
     source_markdown = """_ _"""
-    expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):_:]",
-        "[text(1,2): :]",
-        "[text(1,3):_:]",
-        "[end-para:::True]",
-    ]
+    expected_tokens = ["[para(1,1):]", "[text(1,1):_ _:]", "[end-para:::True]"]
     expected_gfm = """<p>_ _</p>"""
 
     # Act & Assert
@@ -135,13 +117,7 @@ def test_whitespaces_emphasis_1c():
 
     # Arrange
     source_markdown = """_\u00a0_"""
-    expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):_:]",
-        "[text(1,2):\u00a0:]",
-        "[text(1,3):_:]",
-        "[end-para:::True]",
-    ]
+    expected_tokens = ["[para(1,1):]", "[text(1,1):_\u00a0_:]", "[end-para:::True]"]
     expected_gfm = """<p>_\u00a0_</p>"""
 
     # Act & Assert
@@ -156,13 +132,7 @@ def test_whitespaces_emphasis_1cx():
 
     # Arrange
     source_markdown = """__\u00a0__"""
-    expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):__:]",
-        "[text(1,3):\u00a0:]",
-        "[text(1,4):__:]",
-        "[end-para:::True]",
-    ]
+    expected_tokens = ["[para(1,1):]", "[text(1,1):__\u00a0__:]", "[end-para:::True]"]
     expected_gfm = """<p>__\u00a0__</p>"""
 
     # Act & Assert
@@ -177,13 +147,7 @@ def test_whitespaces_emphasis_1d():
 
     # Arrange
     source_markdown = """*\u2000*"""
-    expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):*:]",
-        "[text(1,2):\u2000:]",
-        "[text(1,3):*:]",
-        "[end-para:::True]",
-    ]
+    expected_tokens = ["[para(1,1):]", "[text(1,1):*\u2000*:]", "[end-para:::True]"]
     expected_gfm = """<p>*\u2000*</p>"""
 
     # Act & Assert
@@ -198,13 +162,7 @@ def test_whitespaces_emphasis_1dx():
 
     # Arrange
     source_markdown = """**\u2000**"""
-    expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):**:]",
-        "[text(1,3):\u2000:]",
-        "[text(1,4):**:]",
-        "[end-para:::True]",
-    ]
+    expected_tokens = ["[para(1,1):]", "[text(1,1):**\u2000**:]", "[end-para:::True]"]
     expected_gfm = """<p>**\u2000**</p>"""
 
     # Act & Assert
@@ -219,13 +177,7 @@ def test_whitespaces_emphasis_1e():
 
     # Arrange
     source_markdown = """_\u2000_"""
-    expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):_:]",
-        "[text(1,2):\u2000:]",
-        "[text(1,3):_:]",
-        "[end-para:::True]",
-    ]
+    expected_tokens = ["[para(1,1):]", "[text(1,1):_\u2000_:]", "[end-para:::True]"]
     expected_gfm = """<p>_\u2000_</p>"""
 
     # Act & Assert
@@ -240,13 +192,7 @@ def test_whitespaces_emphasis_1ex():
 
     # Arrange
     source_markdown = """__\u2000__"""
-    expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):__:]",
-        "[text(1,3):\u2000:]",
-        "[text(1,4):__:]",
-        "[end-para:::True]",
-    ]
+    expected_tokens = ["[para(1,1):]", "[text(1,1):__\u2000__:]", "[end-para:::True]"]
     expected_gfm = """<p>__\u2000__</p>"""
 
     # Act & Assert
@@ -1141,15 +1087,7 @@ def test_whitespaces_emphasis_6x():
 
     # Arrange
     source_markdown = """a*.foo.*.a"""
-    expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):a:]",
-        "[text(1,2):*:]",
-        "[text(1,3):.foo.:]",
-        "[text(1,8):*:]",
-        "[text(1,9):.a:]",
-        "[end-para:::True]",
-    ]
+    expected_tokens = ["[para(1,1):]", "[text(1,1):a*.foo.*.a:]", "[end-para:::True]"]
     expected_gfm = """<p>a*.foo.*.a</p>"""
 
     # Act & Assert
@@ -1164,15 +1102,7 @@ def test_whitespaces_emphasis_6xx():
 
     # Arrange
     source_markdown = """a**.foo.**.a"""
-    expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):a:]",
-        "[text(1,2):**:]",
-        "[text(1,4):.foo.:]",
-        "[text(1,9):**:]",
-        "[text(1,11):.a:]",
-        "[end-para:::True]",
-    ]
+    expected_tokens = ["[para(1,1):]", "[text(1,1):a**.foo.**.a:]", "[end-para:::True]"]
     expected_gfm = """<p>a**.foo.**.a</p>"""
 
     # Act & Assert
@@ -1187,15 +1117,7 @@ def test_whitespaces_emphasis_6a():
 
     # Arrange
     source_markdown = """a*\u007efoo\u007e*a"""
-    expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):a:]",
-        "[text(1,2):*:]",
-        "[text(1,3):~foo~:]",
-        "[text(1,8):*:]",
-        "[text(1,9):a:]",
-        "[end-para:::True]",
-    ]
+    expected_tokens = ["[para(1,1):]", "[text(1,1):a*~foo~*a:]", "[end-para:::True]"]
     expected_gfm = """<p>a*~foo~*a</p>"""
 
     # Act & Assert
@@ -1210,15 +1132,7 @@ def test_whitespaces_emphasis_6ax():
 
     # Arrange
     source_markdown = """a**\u007efoo\u007e**a"""
-    expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):a:]",
-        "[text(1,2):**:]",
-        "[text(1,4):~foo~:]",
-        "[text(1,9):**:]",
-        "[text(1,11):a:]",
-        "[end-para:::True]",
-    ]
+    expected_tokens = ["[para(1,1):]", "[text(1,1):a**~foo~**a:]", "[end-para:::True]"]
     expected_gfm = """<p>a**~foo~**a</p>"""
 
     # Act & Assert
@@ -1233,15 +1147,7 @@ def test_whitespaces_emphasis_6b():
 
     # Arrange
     source_markdown = """a_.foo._.a"""
-    expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):a:]",
-        "[text(1,2):_:]",
-        "[text(1,3):.foo.:]",
-        "[text(1,8):_:]",
-        "[text(1,9):.a:]",
-        "[end-para:::True]",
-    ]
+    expected_tokens = ["[para(1,1):]", "[text(1,1):a_.foo._.a:]", "[end-para:::True]"]
     expected_gfm = """<p>a_.foo._.a</p>"""
 
     # Act & Assert
@@ -1256,15 +1162,7 @@ def test_whitespaces_emphasis_6bx():
 
     # Arrange
     source_markdown = """a__.foo.__.a"""
-    expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):a:]",
-        "[text(1,2):__:]",
-        "[text(1,4):.foo.:]",
-        "[text(1,9):__:]",
-        "[text(1,11):.a:]",
-        "[end-para:::True]",
-    ]
+    expected_tokens = ["[para(1,1):]", "[text(1,1):a__.foo.__.a:]", "[end-para:::True]"]
     expected_gfm = """<p>a__.foo.__.a</p>"""
 
     # Act & Assert
@@ -1279,15 +1177,7 @@ def test_whitespaces_emphasis_6c():
 
     # Arrange
     source_markdown = """a_\u007efoo\u007e_a"""
-    expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):a:]",
-        "[text(1,2):_:]",
-        "[text(1,3):~foo~:]",
-        "[text(1,8):_:]",
-        "[text(1,9):a:]",
-        "[end-para:::True]",
-    ]
+    expected_tokens = ["[para(1,1):]", "[text(1,1):a_~foo~_a:]", "[end-para:::True]"]
     expected_gfm = """<p>a_~foo~_a</p>"""
 
     # Act & Assert
@@ -1302,15 +1192,7 @@ def test_whitespaces_emphasis_6cx():
 
     # Arrange
     source_markdown = """a__\u007efoo\u007e__a"""
-    expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):a:]",
-        "[text(1,2):__:]",
-        "[text(1,4):~foo~:]",
-        "[text(1,9):__:]",
-        "[text(1,11):a:]",
-        "[end-para:::True]",
-    ]
+    expected_tokens = ["[para(1,1):]", "[text(1,1):a__~foo~__a:]", "[end-para:::True]"]
     expected_gfm = """<p>a__~foo~__a</p>"""
 
     # Act & Assert
@@ -1327,11 +1209,7 @@ def test_whitespaces_emphasis_6d():
     source_markdown = """a*\u203ffoo\u203f*a"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):a:]",
-        "[text(1,2):*:]",
-        "[text(1,3):‿foo‿:]",
-        "[text(1,8):*:]",
-        "[text(1,9):a:]",
+        "[text(1,1):a*\u203ffoo\u203f*a:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>a*\u203ffoo\u203f*a</p>"""
@@ -1350,11 +1228,7 @@ def test_whitespaces_emphasis_6dx():
     source_markdown = """a**\u203ffoo\u203f**a"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):a:]",
-        "[text(1,2):**:]",
-        "[text(1,4):‿foo‿:]",
-        "[text(1,9):**:]",
-        "[text(1,11):a:]",
+        "[text(1,1):a**\u203ffoo\u203f**a:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>a**\u203ffoo\u203f**a</p>"""
@@ -1373,11 +1247,7 @@ def test_whitespaces_emphasis_6e():
     source_markdown = """a_\u203ffoo\u203f_a"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):a:]",
-        "[text(1,2):_:]",
-        "[text(1,3):‿foo‿:]",
-        "[text(1,8):_:]",
-        "[text(1,9):a:]",
+        "[text(1,1):a_\u203ffoo\u203f_a:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>a_\u203ffoo\u203f_a</p>"""
@@ -1396,11 +1266,7 @@ def test_whitespaces_emphasis_6ex():
     source_markdown = """a__\u203ffoo\u203f__a"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):a:]",
-        "[text(1,2):__:]",
-        "[text(1,4):‿foo‿:]",
-        "[text(1,9):__:]",
-        "[text(1,11):a:]",
+        "[text(1,1):a__\u203ffoo\u203f__a:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>a__\u203ffoo\u203f__a</p>"""

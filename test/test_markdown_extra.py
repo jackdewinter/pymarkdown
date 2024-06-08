@@ -2019,11 +2019,7 @@ def test_extra_020d():
         "[block-quote(1,1)::> \n> \n> \n> \n> ]",
         "[olist(1,3):.:1:5::   \n\n   \n]",
         "[para(1,6):\n\n\n]",
-        "[text(1,6):list\nthis\n\u00a0\n::\n\n\n]",
-        "[text(4,1):[:]",
-        "[text(4,2):abc:]",
-        "[text(4,5):]:]",
-        "[text(4,6):: /url:]",
+        "[text(1,6):list\nthis\n\u00a0\n[abc]: /url::\n\n\n]",
         "[end-para:::True]",
         "[li(5,3):5::1]",
         "[para(5,6):]",
@@ -5863,13 +5859,7 @@ def test_extra_042x():
         "[end-atx::]",
         "[BLANK(2,1):]",
         "[atx(3,1):2:0:]",
-        "[text(3,4):Example: : ]",
-        "[text(3,13):[:]",
-        "[text(3,14):foo:]",
-        "[text(3,17):]:]",
-        "[text(3,18):[:]",
-        "[text(3,19):bar:]",
-        "[text(3,22):]:]",
+        "[text(3,4):Example: [foo][bar]: ]",
         "[end-atx::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::foo:: :https://example.com:::::]",
@@ -6015,6 +6005,44 @@ def test_extra_042xc():
     ]
     expected_gfm = """<h1>test</h1>
 <h2>Example: <a href="https://example.com">foo</a></h2>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_043x():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """this \\* text * is * in italics"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):this \\\b* text * is * in italics:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>this * text * is * in italics</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_043a():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """this &#x2a; text * is * in italics"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):this \a&#x2a;\a*\a text * is * in italics:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>this * text * is * in italics</p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)

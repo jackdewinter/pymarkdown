@@ -516,9 +516,7 @@ def test_image_link_595():
     expected_tokens = [
         "[para(1,1):\n]",
         "[image(1,1):shortcut:/url:title:foo::::foo:False::::]",
-        "[text(1,7):\n:: \n]",
-        "[text(2,1):[:]",
-        "[text(2,2):]:]",
+        "[text(1,7):\n[]:: \n]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
         '[link-ref-def(4,1):True::foo:: :/url:: :title:"title":]',
@@ -594,20 +592,11 @@ def test_image_link_598():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):![:]",
-        "[text(1,3):[:]",
-        "[text(1,4):foo:]",
-        "[text(1,7):]:]",
-        "[text(1,8):]:]",
+        "[text(1,1):![[foo]]:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[para(3,1):]",
-        "[text(3,1):[:]",
-        "[text(3,2):[:]",
-        "[text(3,3):foo:]",
-        "[text(3,6):]:]",
-        "[text(3,7):]:]",
-        '[text(3,8):: /url \a"\a&quot;\atitle\a"\a&quot;\a:]',
+        '[text(3,1):[[foo]]: /url \a"\a&quot;\atitle\a"\a&quot;\a:]',
         "[end-para:::True]",
         "[BLANK(4,1):]",
     ]
@@ -656,8 +645,7 @@ def test_image_link_600():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):!\\\b[foo:]",
-        "[text(1,7):]:]",
+        "[text(1,1):!\\\b[foo]:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',
