@@ -147,8 +147,11 @@ class TokenizedMarkdown:
                 coalesced_results, self.__parse_properties
             )
 
+            final_coalesced_results = CoalesceProcessor.coalesce_text_blocks(
+                final_pass_results, only_change_text_blocks=True
+            )
             POGGER.debug("\n\n>>>>>>>final_pass_results>>>>>>")
-            return final_pass_results
+            return final_coalesced_results
         except Exception as this_exception:
             raise BadTokenizationError(
                 "An unhandled error occurred processing the document."

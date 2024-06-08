@@ -594,8 +594,7 @@ def test_code_spans_351():
     source_markdown = """*foo`*`"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):*:]",
-        "[text(1,2):foo:]",
+        "[text(1,1):*foo:]",
         "[icode-span(1,5):*:`::]",
         "[end-para:::True]",
     ]
@@ -615,8 +614,7 @@ def test_code_spans_352():
     source_markdown = """[not a `link](/foo`)"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):[:]",
-        "[text(1,2):not a :]",
+        "[text(1,1):[not a :]",
         "[icode-span(1,8):link](/foo:`::]",
         "[text(1,20):):]",
         "[end-para:::True]",

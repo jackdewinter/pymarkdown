@@ -15,12 +15,7 @@ def test_emphasis_457():
 
     # Arrange
     source_markdown = """foo ___"""
-    expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):foo :]",
-        "[text(1,5):___:]",
-        "[end-para:::True]",
-    ]
+    expected_tokens = ["[para(1,1):]", "[text(1,1):foo ___:]", "[end-para:::True]"]
     expected_gfm = """<p>foo ___</p>"""
 
     # Act & Assert
@@ -79,12 +74,7 @@ def test_emphasis_460():
 
     # Arrange
     source_markdown = """foo _____"""
-    expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):foo :]",
-        "[text(1,5):_____:]",
-        "[end-para:::True]",
-    ]
+    expected_tokens = ["[para(1,1):]", "[text(1,1):foo _____:]", "[end-para:::True]"]
     expected_gfm = """<p>foo _____</p>"""
 
     # Act & Assert

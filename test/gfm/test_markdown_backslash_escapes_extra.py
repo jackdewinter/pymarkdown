@@ -151,9 +151,7 @@ def test_backslash_escapes_extra_7():
     source_markdown = """\\*it's* me!"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):\\\b*it's:]",
-        "[text(1,7):*:]",
-        "[text(1,8): me!:]",
+        "[text(1,1):\\\b*it's* me!:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>*it's* me!</p>"""
@@ -172,8 +170,7 @@ def test_backslash_escapes_extra_8():
     source_markdown = """*it's\\* me!"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):*:]",
-        "[text(1,2):it's\\\b* me!:]",
+        "[text(1,1):*it's\\\b* me!:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>*it's* me!</p>"""
@@ -195,8 +192,7 @@ def test_backslash_escapes_extra_9():
         "[emphasis(1,1):1:*]",
         "[text(1,2):\\\b*it's:]",
         "[end-emphasis(1,8)::]",
-        "[text(1,9):*:]",
-        "[text(1,10): me!:]",
+        "[text(1,9):* me!:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><em>*it's</em>* me!</p>"""
@@ -238,9 +234,7 @@ def test_backslash_escapes_extra_11():
     source_markdown = """\\[Foo](/uri) is a link"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):\\\b[Foo:]",
-        "[text(1,6):]:]",
-        "[text(1,7):(/uri) is a link:]",
+        "[text(1,1):\\\b[Foo](/uri) is a link:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>[Foo](/uri) is a link</p>"""
@@ -283,9 +277,7 @@ def test_backslash_escapes_extra_13():
     source_markdown = """!\\[foo](/url "title") is an image"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):!\\\b[foo:]",
-        "[text(1,7):]:]",
-        '[text(1,8):(/url \a"\a&quot;\atitle\a"\a&quot;\a) is an image:]',
+        '[text(1,1):!\\\b[foo](/url \a"\a&quot;\atitle\a"\a&quot;\a) is an image:]',
         "[end-para:::True]",
     ]
     expected_gfm = """<p>![foo](/url &quot;title&quot;) is an image</p>"""
@@ -446,9 +438,7 @@ def test_backslash_escapes_extra_20():
 ---"""
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
-        "[text(1,1):\\\b*it's:]",
-        "[text(1,7):*:]",
-        "[text(1,8): me!:]",
+        "[text(1,1):\\\b*it's* me!:]",
         "[end-setext::]",
     ]
     expected_gfm = """<h2>*it's* me!</h2>"""
@@ -468,8 +458,7 @@ def test_backslash_escapes_extra_21():
 ---"""
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
-        "[text(1,1):*:]",
-        "[text(1,2):it's\\\b* me!:]",
+        "[text(1,1):*it's\\\b* me!:]",
         "[end-setext::]",
     ]
     expected_gfm = """<h2>*it's* me!</h2>"""
@@ -492,8 +481,7 @@ def test_backslash_escapes_extra_22():
         "[emphasis(1,1):1:*]",
         "[text(1,2):\\\b*it's:]",
         "[end-emphasis(1,8)::]",
-        "[text(1,9):*:]",
-        "[text(1,10): me!:]",
+        "[text(1,9):* me!:]",
         "[end-setext::]",
     ]
     expected_gfm = """<h2><em>*it's</em>* me!</h2>"""
@@ -537,9 +525,7 @@ def test_backslash_escapes_extra_24():
 ---"""
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
-        "[text(1,1):\\\b[Foo:]",
-        "[text(1,6):]:]",
-        "[text(1,7):(/uri) is a link:]",
+        "[text(1,1):\\\b[Foo](/uri) is a link:]",
         "[end-setext::]",
     ]
     expected_gfm = """<h2>[Foo](/uri) is a link</h2>"""
@@ -583,9 +569,7 @@ def test_backslash_escapes_extra_26():
 ---"""
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
-        "[text(1,1):!\\\b[foo:]",
-        "[text(1,7):]:]",
-        '[text(1,8):(/url \a"\a&quot;\atitle\a"\a&quot;\a) is an image:]',
+        '[text(1,1):!\\\b[foo](/url \a"\a&quot;\atitle\a"\a&quot;\a) is an image:]',
         "[end-setext::]",
     ]
     expected_gfm = """<h2>![foo](/url &quot;title&quot;) is an image</h2>"""
@@ -738,13 +722,7 @@ def test_backslash_escapes_extra_33():
 
     # Arrange
     source_markdown = """# \\*it's* me!"""
-    expected_tokens = [
-        "[atx(1,1):1:0:]",
-        "[text(1,3):\\\b*it's: ]",
-        "[text(1,9):*:]",
-        "[text(1,10): me!:]",
-        "[end-atx::]",
-    ]
+    expected_tokens = ["[atx(1,1):1:0:]", "[text(1,3):\\\b*it's* me!: ]", "[end-atx::]"]
     expected_gfm = """<h1>*it's* me!</h1>"""
 
     # Act & Assert
@@ -761,9 +739,7 @@ def test_backslash_escapes_extra_34():
     source_markdown = """# *it's\\* me!"""
     expected_tokens = [
         "[atx(1,1):1:0:]",
-        "[text(1,3)::\a \a\x03\a]",
-        "[text(1,3):*:]",
-        "[text(1,4):it's\\\b* me!:]",
+        "[text(1,3):*it's\\\b* me!:\a \a\x03\a]",
         "[end-atx::]",
     ]
     expected_gfm = """<h1>*it's* me!</h1>"""
@@ -786,8 +762,7 @@ def test_backslash_escapes_extra_35():
         "[emphasis(1,3):1:*]",
         "[text(1,4):\\\b*it's:]",
         "[end-emphasis(1,10)::]",
-        "[text(1,11):*:]",
-        "[text(1,12): me!:]",
+        "[text(1,11):* me!:]",
         "[end-atx::]",
     ]
     expected_gfm = """<h1><em>*it's</em>* me!</h1>"""
@@ -806,8 +781,7 @@ def test_backslash_escapes_extra_36():
     source_markdown = """# **it's\\** me!"""
     expected_tokens = [
         "[atx(1,1):1:0:]",
-        "[text(1,3)::\a \a\x03\a]",
-        "[text(1,3):*:]",
+        "[text(1,3):*:\a \a\x03\a]",
         "[emphasis(1,4):1:*]",
         "[text(1,5):it's\\\b*:]",
         "[end-emphasis(1,11)::]",
@@ -830,9 +804,7 @@ def test_backslash_escapes_extra_37():
     source_markdown = """# \\[Foo](/uri) is a link"""
     expected_tokens = [
         "[atx(1,1):1:0:]",
-        "[text(1,3):\\\b[Foo: ]",
-        "[text(1,8):]:]",
-        "[text(1,9):(/uri) is a link:]",
+        "[text(1,3):\\\b[Foo](/uri) is a link: ]",
         "[end-atx::]",
     ]
     expected_gfm = """<h1>[Foo](/uri) is a link</h1>"""
@@ -874,9 +846,7 @@ def test_backslash_escapes_extra_39():
     source_markdown = """# !\\[foo](/url "title") is an image"""
     expected_tokens = [
         "[atx(1,1):1:0:]",
-        "[text(1,3):!\\\b[foo: ]",
-        "[text(1,9):]:]",
-        '[text(1,10):(/url \a"\a&quot;\atitle\a"\a&quot;\a) is an image:]',
+        '[text(1,3):!\\\b[foo](/url \a"\a&quot;\atitle\a"\a&quot;\a) is an image: ]',
         "[end-atx::]",
     ]
     expected_gfm = """<h1>![foo](/url &quot;title&quot;) is an image</h1>"""

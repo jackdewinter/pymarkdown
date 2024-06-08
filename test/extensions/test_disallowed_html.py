@@ -1093,9 +1093,7 @@ def test_disallowed_html_raw_enabled():
     source_markdown = "This is a <noframes> example."
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):This is a :]",
-        "[text(1,11):\a<\a&lt;\anoframes>:]",
-        "[text(1,21): example.:]",
+        "[text(1,1):This is a \a<\a&lt;\anoframes> example.:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>This is a &lt;noframes> example.</p>"""
@@ -1160,9 +1158,7 @@ def test_disallowed_html_raw_with_attributes_enabled():
     source_markdown = "This is a <noframes some=True> example."
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):This is a :]",
-        "[text(1,11):\a<\a&lt;\anoframes some=True>:]",
-        "[text(1,31): example.:]",
+        "[text(1,1):This is a \a<\a&lt;\anoframes some=True> example.:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>This is a &lt;noframes some=True> example.</p>"""
@@ -1204,9 +1200,7 @@ def test_disallowed_html_raw_with_openclose_enabled():
     source_markdown = "This is a <noframes/> example."
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):This is a :]",
-        "[text(1,11):\a<\a&lt;\anoframes/>:]",
-        "[text(1,22): example.:]",
+        "[text(1,1):This is a \a<\a&lt;\anoframes/> example.:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>This is a &lt;noframes/> example.</p>"""

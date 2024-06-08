@@ -2698,9 +2698,7 @@ def test_block_quotes_extra_03ab():
         "[BLANK(2,1):]",
         "[block-quote(3,1)::> ]",
         "[para(3,3):]",
-        "[text(3,3):[:]",
-        "[text(3,4):foo:]",
-        "[text(3,7):]:]",
+        "[text(3,3):[foo]:]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]

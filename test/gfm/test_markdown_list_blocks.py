@@ -2237,8 +2237,7 @@ foo
 1."""
     expected_tokens = [
         "[para(1,1):\n]",
-        "[text(1,1):foo\n::\n]",
-        "[text(2,1):*:]",
+        "[text(1,1):foo\n*::\n]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
         "[para(4,1):\n]",

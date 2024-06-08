@@ -63,15 +63,11 @@ def test_strikethrough_492_x():
 new paragraph~~."""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):This :]",
-        "[text(1,6):~~:]",
-        "[text(1,8):has a:]",
+        "[text(1,1):This ~~has a:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[para(3,1):]",
-        "[text(3,1):new paragraph:]",
-        "[text(3,14):~~:]",
-        "[text(3,16):.:]",
+        "[text(3,1):new paragraph~~.:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>This ~~has a</p>\n<p>new paragraph~~.</p>"""
@@ -115,11 +111,7 @@ def test_strikethrough_493_x():
     source_markdown = """This will ~~~not~~~ strike."""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):This will :]",
-        "[text(1,11):~~~:]",
-        "[text(1,14):not:]",
-        "[text(1,17):~~~:]",
-        "[text(1,20): strike.:]",
+        "[text(1,1):This will ~~~not~~~ strike.:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>This will ~~~not~~~ strike.</p>"""
@@ -157,11 +149,7 @@ def test_strikethrough_493_b():
     source_markdown = """This will ~~~not~~ strike."""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):This will :]",
-        "[text(1,11):~~~:]",
-        "[text(1,14):not:]",
-        "[text(1,17):~~:]",
-        "[text(1,19): strike.:]",
+        "[text(1,1):This will ~~~not~~ strike.:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>This will ~~~not~~ strike.</p>"""

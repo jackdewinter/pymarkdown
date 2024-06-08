@@ -515,9 +515,7 @@ def test_autolinks_620c():
     source_markdown = """<my_scheme:foo.bar>"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):\a<\a&lt;\amy:]",
-        "[text(1,4):_:]",
-        "[text(1,5):scheme:foo.bar\a>\a&gt;\a:]",
+        "[text(1,1):\a<\a&lt;\amy_scheme:foo.bar\a>\a&gt;\a:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>&lt;my_scheme:foo.bar&gt;</p>"""
@@ -536,9 +534,7 @@ def test_autolinks_620d():
     source_markdown = """<no_domain@>"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):\a<\a&lt;\ano:]",
-        "[text(1,4):_:]",
-        "[text(1,5):domain@\a>\a&gt;\a:]",
+        "[text(1,1):\a<\a&lt;\ano_domain@\a>\a&gt;\a:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>&lt;no_domain@&gt;</p>"""

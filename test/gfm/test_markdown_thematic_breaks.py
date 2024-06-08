@@ -72,10 +72,7 @@ def test_thematic_breaks_016():
 __"""
     expected_tokens = [
         "[para(1,1):\n\n]",
-        "[text(1,1):--\n::\n]",
-        "[text(2,1):**:]",
-        "[text(2,3):\n::\n]",
-        "[text(3,1):__:]",
+        "[text(1,1):--\n**\n__::\n\n]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>--
@@ -140,8 +137,7 @@ def test_thematic_breaks_019():
     ***"""
     expected_tokens = [
         "[para(1,1):\n    ]",
-        "[text(1,1):Foo\n::\n]",
-        "[text(2,5):***:]",
+        "[text(1,1):Foo\n***::\n]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>Foo
@@ -240,14 +236,7 @@ a------
 ---a---"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):_:]",
-        "[text(1,2): :]",
-        "[text(1,3):_:]",
-        "[text(1,4): :]",
-        "[text(1,5):_:]",
-        "[text(1,6): :]",
-        "[text(1,7):_:]",
-        "[text(1,8): a:]",
+        "[text(1,1):_ _ _ _ a:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[para(3,1):]",

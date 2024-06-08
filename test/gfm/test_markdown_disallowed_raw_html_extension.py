@@ -24,11 +24,7 @@ def test_disallowed_raw_html_extension_657():
     expected_tokens = [
         "[para(1,1):]",
         "[raw-html(1,1):strong]",
-        "[text(1,9): :]",
-        "[text(1,10):\a<\a&lt;\atitle>:]",
-        "[text(1,17): :]",
-        "[text(1,18):\a<\a&lt;\astyle>:]",
-        "[text(1,25): :]",
+        "[text(1,9): \a<\a&lt;\atitle> \a<\a&lt;\astyle> :]",
         "[raw-html(1,26):em]",
         "[end-para:::True]",
         "[BLANK(2,1):]",

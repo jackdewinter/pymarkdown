@@ -26,7 +26,7 @@ class CoalesceProcessor:
 
     @staticmethod
     def coalesce_text_blocks(
-        first_pass_results: List[MarkdownToken],
+        first_pass_results: List[MarkdownToken], only_change_text_blocks: bool = False
     ) -> List[MarkdownToken]:
         """
         Take a pass and combine any two adjacent text blocks into one.
@@ -41,9 +41,12 @@ class CoalesceProcessor:
             if coalesced_list[-1].is_text:
                 # POGGER.debug("__coalesce_with_previous")
                 did_process = CoalesceProcessor.__coalesce_with_previous(
-                    first_pass_results, coalesced_list, coalesce_index
+                    first_pass_results,
+                    coalesced_list,
+                    coalesce_index,
+                    only_change_text_blocks,
                 )
-            else:
+            elif not only_change_text_blocks:
                 did_process = (
                     first_pass_results[coalesce_index].is_blank_line
                     and coalesced_list[-1].is_code_block
@@ -53,12 +56,15 @@ class CoalesceProcessor:
                     CoalesceProcessor.__coalesce_with_blank_line(
                         first_pass_results, coalesced_list, coalesce_index
                     )
+            else:
+                did_process = False
             if not did_process:
                 coalesced_list.append(first_pass_results[coalesce_index])
                 # POGGER.debug("coalesced_list:$:", coalesced_list)
 
         # POGGER.debug("--Final--coalesced_list:$:", coalesced_list)
-        CoalesceProcessor.__calculate_final_whitespaces(coalesced_list)
+        if not only_change_text_blocks:
+            CoalesceProcessor.__calculate_final_whitespaces(coalesced_list)
         # POGGER.debug("coalesced_list:$:", coalesced_list)
 
         return coalesced_list
@@ -96,6 +102,7 @@ class CoalesceProcessor:
         first_pass_results: List[MarkdownToken],
         coalesced_list: List[MarkdownToken],
         coalesce_index: int,
+        only_change_text_blocks: bool,
     ) -> bool:
         # POGGER.debug(">>coalesce_text_blocks>>>>$<<", coalesced_list[-1])
         if not first_pass_results[coalesce_index].is_text and (
@@ -121,7 +128,9 @@ class CoalesceProcessor:
         # POGGER.debug("combine1>>$", text_token)
         # POGGER.debug("combine2>>$", first_pass_results[coalesce_index])
         indented_whitespace = text_token.combine(
-            first_pass_results[coalesce_index], remove_leading_spaces
+            first_pass_results[coalesce_index],
+            remove_leading_spaces,
+            only_change_text_blocks,
         )
         # POGGER.debug("combined>>$", text_token)
         # POGGER.debug("indented_whitespace>>$<<", indented_whitespace)

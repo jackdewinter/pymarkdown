@@ -306,9 +306,7 @@ def test_raw_html_637():
     source_markdown = """<33> <__>"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):\a<\a&lt;\a33\a>\a&gt;\a \a<\a&lt;\a:]",
-        "[text(1,7):__:]",
-        "[text(1,9):\a>\a&gt;\a:]",
+        "[text(1,1):\a<\a&lt;\a33\a>\a&gt;\a \a<\a&lt;\a__\a>\a&gt;\a:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>&lt;33&gt; &lt;__&gt;</p>"""
@@ -327,9 +325,7 @@ def test_raw_html_638():
     source_markdown = """<a h*#ref="hi">"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):\a<\a&lt;\aa h:]",
-        "[text(1,5):*:]",
-        '[text(1,6):#ref=\a"\a&quot;\ahi\a"\a&quot;\a\a>\a&gt;\a:]',
+        '[text(1,1):\a<\a&lt;\aa h*#ref=\a"\a&quot;\ahi\a"\a&quot;\a\a>\a&gt;\a:]',
         "[end-para:::True]",
     ]
     expected_gfm = """<p>&lt;a h*#ref=&quot;hi&quot;&gt;</p>"""
@@ -652,11 +648,7 @@ def test_raw_html_646a():
     source_markdown = """foo <![CDATA[>&<>"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):foo \a<\a&lt;\a:]",
-        "[text(1,6):![:]",
-        "[text(1,8):CDATA:]",
-        "[text(1,13):[:]",
-        "[text(1,14):\a>\a&gt;\a\a&\a&amp;\a\a<\a&lt;\a\a>\a&gt;\a:]",
+        "[text(1,1):foo \a<\a&lt;\a![CDATA[\a>\a&gt;\a\a&\a&amp;\a\a<\a&lt;\a\a>\a&gt;\a:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>foo &lt;![CDATA[&gt;&amp;&lt;&gt;</p>"""

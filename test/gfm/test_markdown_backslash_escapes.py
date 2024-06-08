@@ -63,19 +63,7 @@ def test_backslash_escapes_310():
 \\&ouml; not a character entity"""
     expected_tokens = [
         "[para(1,1):\n\n\n\n\n\n\n\n]",
-        "[text(1,1):\\\b*not emphasized:]",
-        "[text(1,17):*:]",
-        "[text(1,18):\n\\\b\a<\a&lt;\abr/\a>\a&gt;\a not a tag\n\\\b[not a link::\n\n]",
-        "[text(3,13):]:]",
-        """[text(3,14):(/foo)
-\\\b`not code`
-1\\\b. not a list
-\\\b* not a list
-\\\b# not a heading
-\\\b[foo::\n\n\n\n\n]""",
-        "[text(8,6):]:]",
-        """[text(8,7):: /url \a\"\a&quot;\anot a reference\a\"\a&quot;\a
-\\\b\a&\a&amp;\aouml; not a character entity::\n]""",
+        '[text(1,1):\\\b*not emphasized*\n\\\b\a<\a&lt;\abr/\a>\a&gt;\a not a tag\n\\\b[not a link](/foo)\n\\\b`not code`\n1\\\b. not a list\n\\\b* not a list\n\\\b# not a heading\n\\\b[foo]: /url \a"\a&quot;\anot a reference\a"\a&quot;\a\n\\\b\a&\a&amp;\aouml; not a character entity::\n\n\n\n\n\n\n\n]',
         "[end-para:::True]",
     ]
     expected_gfm = """<p>*not emphasized*
