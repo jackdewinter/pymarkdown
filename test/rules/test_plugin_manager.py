@@ -1329,7 +1329,7 @@ def test_markdown_with_plugins_list_only():
   md042   no-empty-links                  True       True       0.5.0    No
   md043   required-headings, required-he  True       True       0.6.0    No
           aders
-  md044   proper-names                    True       True       0.6.0    No
+  md044   proper-names                    True       True       0.7.0    Yes
   md045   no-alt-text                     True       True       0.5.0    No
   md046   code-block-style                True       True       0.6.0    No
   md047   single-trailing-newline         True       True       0.5.1    Yes
@@ -1413,7 +1413,7 @@ def test_markdown_with_plugins_list_only_all():
   md042   no-empty-links                  True       True       0.5.0    No
   md043   required-headings, required-he  True       True       0.6.0    No
           aders
-  md044   proper-names                    True       True       0.6.0    No
+  md044   proper-names                    True       True       0.7.0    Yes
   md045   no-alt-text                     True       True       0.5.0    No
   md046   code-block-style                True       True       0.6.0    No
   md047   single-trailing-newline         True       True       0.5.1    Yes

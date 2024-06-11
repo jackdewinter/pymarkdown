@@ -397,7 +397,8 @@
         "pymarkdown/tokens/link_reference_definition_markdown_token.py": {
             "too-many-instance-attributes": 1,
             "too-many-arguments": 1,
-            "protected-access": 1
+            "protected-access": 1,
+            "too-many-return-statements": 1
         },
         "pymarkdown/tokens/link_start_markdown_token.py": {
             "protected-access": 1
@@ -503,6 +504,7 @@
         "too-many-boolean-expressions": 2,
         "protected-access": 25,
         "deprecated-decorator": 3,
-        "broad-exception-caught": 3
+        "broad-exception-caught": 3,
+        "too-many-return-statements": 1
     }
 }

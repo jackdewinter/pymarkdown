@@ -4,7 +4,8 @@
 
 ### Added
 
-- None
+- [Issue 826](https://github.com/jackdewinter/pymarkdown/issues/826)
+    - Added fix mode for Rule Md044
 
 ### Fixed
 
@@ -13,7 +14,9 @@
 
 ### Changed
 
-- None
+- [Issue 1103](https://github.com/jackdewinter/pymarkdown/issues/1103)
+    - added round of coalescing any text tokens separated during inline processing
+    - rewrote rule md037 to new text tokens
 
 ## Version 0.9.20 - Date: 2024-05-30
 

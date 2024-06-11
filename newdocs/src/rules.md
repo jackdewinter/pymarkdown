@@ -611,7 +611,7 @@ Required heading structure.
 | Property | Value |
 | --- | -- |
 | Aliases | `md044`, `proper-names` |
-| Autofix Available | Pending |
+| Autofix Available | Yes |
 | Enabled By Default | Yes |
 
 <!--- pyml disable-next-line no-duplicate-heading-->

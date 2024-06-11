@@ -184,30 +184,48 @@ def execute_fix_test(test: pluginRuleTest):
         assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
-def execute_configuration_test(test: pluginConfigErrorTest, file_to_use: str):
+def execute_configuration_test(
+    test: pluginConfigErrorTest,
+    file_to_use: Optional[str] = None,
+    file_contents: Optional[str] = None,
+):
     scanner = MarkdownScanner()
 
-    temp_source_path = copy_to_temporary_file(file_to_use)
-    supplied_arguments = []
-    if test.use_strict_config:
-        supplied_arguments.append("--strict-config")
-    if test.set_args:
-        for next_set_arg in test.set_args:
-            supplied_arguments.extend(("--set", next_set_arg))
+    temp_source_path = None
+    try:
+        if file_to_use is not None:
+            temp_source_path = copy_to_temporary_file(file_to_use)
+        elif file_contents is not None:
+            temp_source_path = write_temporary_configuration(
+                file_to_use, file_name_suffix=".md"
+            )
+        else:
+            raise AssertionError(
+                "One of `file_to_use` and `file_contents` must be specified."
+            )
+        supplied_arguments = []
+        if test.use_strict_config:
+            supplied_arguments.append("--strict-config")
+        if test.set_args:
+            for next_set_arg in test.set_args:
+                supplied_arguments.extend(("--set", next_set_arg))
 
-    supplied_arguments.extend(("scan", temp_source_path))
+        supplied_arguments.extend(("scan", temp_source_path))
 
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = test.expected_error
+        expected_return_code = 1
+        expected_output = ""
+        expected_error = test.expected_error
 
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+    finally:
+        if temp_source_path is not None and os.path.isfile(temp_source_path):
+            os.remove(temp_source_path)
 
 
 @dataclass
