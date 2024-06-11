@@ -212,38 +212,46 @@ possible -> MD019/MD021, MD023
 possible -> md027 19/21/23/05/07 when blanks inside of list
          -> mod027 and most others
 
-Md001 Atx/SetExt hash_count
-MD004 UnorderedListStartMarkdownToken list_start_sequence
-Md005 NewListItemMarkdownToken indent_level, extracted_whitespace
-      UnorderedListStartMarkdownToken indent_level, extracted_whitespace, column_number, leading_spaces
-      OrderedListStartMarkdownToken indent_level, extracted_whitespace, column_number, leading_spaces
-MD006(d) NewListItemMarkdownToken indent_level, extracted_whitespace
-      UnorderedListStartMarkdownToken indent_level, extracted_whitespace
-MD007 NewListItemMarkdownToken indent_level, extracted_whitespace
-      UnorderedListStartMarkdownToken indent_level, extracted_whitespace
 MD009 line -> no trailing spaces
 MD010 line -> detabify
-MD019 AtxHeadingMarkdownToken extracted_whitespace
-MD021 AtxHeadingMarkdownToken extracted_whitespace, extra_end_data
-MD023 AtxHeadingMarkdownToken extracted_whitespace
-MD029 OrderedListStartMarkdownToken list_start_content
-md030 spaces after list markers, def = 1
-MD035 ThematicBreakMarkdownToken start_character,rest_of_line
-MD037 TextMarkdownToken (within emphasis) token_text
-MD038 InlineCodeSpanMarkdownToken span_text
-MD039 LinkStartMarkdownToken text_from_blocks
 MD047 line -> adds newline to end
-MD048 FencedCodeBlockMarkdownToken fence_character
 
-MD027   BlankLineMarkdownToken extracted_whitespace
-        ParagraphMarkdownToken extracted_whitespace
-        EndToken extracted_whitespace
+Md001 Atx/SetExt                                def   hash_count
+MD004 UnorderedListStartMarkdownToken           def   list_start_sequence
+Md005 NewListItemMarkdownToken                  2     indent_level, extracted_whitespace
+      UnorderedListStartMarkdownToken           def   indent_level, extracted_whitespace, column_number, leading_spaces
+      OrderedListStartMarkdownToken                   indent_level, extracted_whitespace, column_number, leading_spaces
+MD006(d) NewListItemMarkdownToken               def   indent_level, extracted_whitespace
+      UnorderedListStartMarkdownToken                 indent_level, extracted_whitespace
+MD007 NewListItemMarkdownToken                  3     indent_level, extracted_whitespace
+      UnorderedListStartMarkdownToken                 indent_level, extracted_whitespace
+MD019 AtxHeadingMarkdownToken                   def   extracted_whitespace
+MD021 AtxHeadingMarkdownToken                   def   extracted_whitespace, extra_end_data
+MD023 AtxHeadingMarkdownToken                   def   extracted_whitespace
+MD029 OrderedListStartMarkdownToken             def   list_start_content
+md030 ListStartMArkdownToken                    def   indent_level
+MD035 ThematicBreakMarkdownToken                def   start_character,rest_of_line
+MD037 TextMarkdownToken (within emphasis)       def   token_text
+MD038 InlineCodeSpanMarkdownToken               def   span_text
+MD039 LinkStartMarkdownToken                    def   text_from_blocks
+      ImageStartMarkdownToken
+MD044 TextMarkdownToken                         def   token_text
+      InlineCodeSpanMarkdownToken                     span_text
+      LinkReferenceDefinitionMarkdownToken            link_name, link_name_debug, link_title_raw, link_title
+      LinkStartMarkdownToken                          link_title, pre_link_title, text_from_blocks
+MD048 FencedCodeBlockMarkdownToken              def   fence_character
+
+MD027 BlankLineMarkdownToken                    5     extracted_whitespace
+      ParagraphMarkdownToken                          extracted_whitespace
+      EndToken                                        extracted_whitespace
         SetExt
         them
         fenc
         atx
         lrd
         Text end_whitespace
-       NewListItemMarkdownToken indent_level, extracted_whitespace
-      UnorderedListStartMarkdownToken indent_level, extracted_whitespace, column_number, leading_spaces
-      OrderedListStartMarkdownToken indent_level, extracted_whitespace, column_number, leading_spaces
+      NewListItemMarkdownToken            indent_level, extracted_whitespace
+      UnorderedListStartMarkdownToken     indent_level, extracted_whitespace, column_number, leading_spaces
+      OrderedListStartMarkdownToken       indent_level, extracted_whitespace, column_number, leading_spaces
+
+change docs for md044

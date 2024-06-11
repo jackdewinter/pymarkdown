@@ -3,7 +3,7 @@
 | Property | Value |
 | --- | -- |
 | Aliases | `md044`, `proper-names` |
-| Autofix Available | Pending |
+| Autofix Available | Yes |
 | Enabled By Default | Yes |
 
 ## Summary
@@ -83,8 +83,8 @@ this is a reparagraph
 
 ## Fix Description
 
-The auto-fix feature for this rule is scheduled to be added soon after the v1.0.0
-release.
+The specified word is replaced by the properly cased word presented in the
+configuration item.
 
 ## Configuration
 

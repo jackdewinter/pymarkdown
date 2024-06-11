@@ -274,7 +274,7 @@ def write_temporary_configuration(
     directory=None,
     file_name_prefix=None,
     file_name_suffix=None,
-):
+) -> str:
     """
     Write the configuration as a temporary file that is kept around.
     """

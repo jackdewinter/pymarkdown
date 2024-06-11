@@ -199,6 +199,7 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
         """
         return self.__link_title_whitespace
 
+    # pylint: disable=too-many-return-statements
     @override
     def _modify_token(self, field_name: str, field_value: Union[str, int]) -> bool:
         if field_name == "link_destination_whitespace" and isinstance(field_value, str):
@@ -215,6 +216,13 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
             )
             super()._set_extra_data(extra_data)
             return True
+        if field_name == "link_name" and isinstance(field_value, str):
+            self.__link_name = field_value
+            extra_data = self.__validate_proper_fields_are_valid(
+                self.extracted_whitespace
+            )
+            super()._set_extra_data(extra_data)
+            return True
         if field_name == "link_name_debug" and isinstance(field_value, str):
             self.__link_name_debug = field_value
             extra_data = self.__validate_proper_fields_are_valid(
@@ -222,7 +230,23 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
             )
             super()._set_extra_data(extra_data)
             return True
+        if field_name == "link_title" and isinstance(field_value, str):
+            self.__link_title = field_value
+            extra_data = self.__validate_proper_fields_are_valid(
+                self.extracted_whitespace
+            )
+            super()._set_extra_data(extra_data)
+            return True
+        if field_name == "link_title_raw" and isinstance(field_value, str):
+            self.__link_title_raw = field_value
+            extra_data = self.__validate_proper_fields_are_valid(
+                self.extracted_whitespace
+            )
+            super()._set_extra_data(extra_data)
+            return True
         return super()._modify_token(field_name, field_value)
+
+    # pylint: enable=too-many-return-statements
 
     def register_for_markdown_transform(
         self, registration_function: RegisterMarkdownTransformHandlersProtocol

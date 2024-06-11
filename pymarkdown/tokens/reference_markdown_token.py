@@ -177,6 +177,13 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
         return self.__link_title
 
     @property
+    def pre_link_title(self) -> Optional[str]:
+        """
+        Returns the text associated with the link's title.
+        """
+        return self.__pre_link_title
+
+    @property
     def active_link_title(self) -> Optional[str]:
         """
         Returns the active text associated with the link's title, preferring the __pre_link_title over the __link_title.
@@ -252,6 +259,16 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
     def _modify_token(self, field_name: str, field_value: Union[str, int]) -> bool:
         if field_name == "text_from_blocks" and isinstance(field_value, str):
             self.__text_from_blocks = field_value
+            self.__compose_extra_data_field(self.token_name)
+
+            return True
+        if field_name == "link_title" and isinstance(field_value, str):
+            self.__link_title = field_value
+            self.__compose_extra_data_field(self.token_name)
+
+            return True
+        if field_name == "pre_link_title" and isinstance(field_value, str):
+            self.__pre_link_title = field_value
             self.__compose_extra_data_field(self.token_name)
 
             return True

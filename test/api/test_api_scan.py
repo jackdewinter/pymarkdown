@@ -196,6 +196,7 @@ def test_api_scan_recursive_for_directory():
         f"{docs_prefix}advanced_scanning.md",
         f"{docs_prefix}api-usage.md",
         f"{docs_prefix}api.md",
+        f"{docs_prefix}developer.md",
         f"{extensions_prefix}front-matter.md",
         f"{docs_prefix}old_README.md",
         f"{docs_prefix}pre-commit.md",
@@ -236,7 +237,7 @@ def test_api_scan_recursive_for_directory():
     for i in scan_result.scan_failures:
         itemized_scan_failures = itemized_scan_failures + "\n" + str(i)
     print(itemized_scan_failures)
-    assert len(scan_result.scan_failures) == 68
+    assert len(scan_result.scan_failures) == 70
 
     scan_failures = []
     for i in scan_result.scan_failures:
