@@ -3,7 +3,7 @@
 | Property | Value |
 | --- | -- |
 | Aliases | `md046`, `code-block-style` |
-| Autofix Available | Pending |
+| Autofix Available | Yes |
 | Enabled By Default | Yes |
 
 ## Summary
@@ -53,14 +53,30 @@ b=c
 ```
 ````
 
-Note that setting the `style` configuration value explicitly to `indented`
+Note that setting the `style` configuration item value to `indented`
 will cause the above Markdown document to trigger this rule, while a
 value of `fenced` or `consistent` will not cause this rule to trigger.
 
 ## Fix Description
 
-The auto-fix feature for this rule is scheduled to be added soon after the v1.0.0
-release.
+Setting the `style` configuration item value to either `indented`
+or `fenced` will cause all code blocks to be transformed into the specified
+value.  If set to `consistent`, the first code block in the document will
+set the style for the rest of the document.
+
+Note that the translation from fenced-to-indented code block and the
+translation from indented-to-fenced code block have their issues.
+
+- For both translations, any whitespace before the code block is removed during
+  the transition.
+- When translating to a fenced code block, there is no guaranteed way to properly
+  set the language for the fenced code block.  As such, it is left blank and will
+  cause Rule Md040 to be triggered when next scanned.
+- When translating to an indented code block, there are parsing issues with an
+  indented code block that immediately follows a paragraph.  As indented code blocks
+  cannot interrupt a paragraph block, an extra blank line is inserted between the
+  paragraph and the new indented code block to allow the indented code block to
+  be properly recognized.
 
 ## Configuration
 

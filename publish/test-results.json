@@ -1484,7 +1484,7 @@
         },
         {
             "name": "test.rules.test_md046",
-            "totalTests": 12,
+            "totalTests": 36,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1508,7 +1508,7 @@
         },
         {
             "name": "test.rules.test_plugin_manager",
-            "totalTests": 55,
+            "totalTests": 57,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,

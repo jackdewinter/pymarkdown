@@ -49,6 +49,7 @@ class RuleMd048(RulePlugin):
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md048.md",
             plugin_configuration="style",
             plugin_supports_fix=True,
+            plugin_fix_level=2,
         )
 
     @classmethod

@@ -1331,7 +1331,7 @@ def test_markdown_with_plugins_list_only():
           aders
   md044   proper-names                    True       True       0.7.0    Yes
   md045   no-alt-text                     True       True       0.5.0    No
-  md046   code-block-style                True       True       0.6.0    No
+  md046   code-block-style                True       True       0.7.0    Yes
   md047   single-trailing-newline         True       True       0.5.1    Yes
   md048   code-fence-style                True       True       0.6.0    Yes
   pml100  disallowed-html                 False      False      0.6.0    No
@@ -1415,7 +1415,7 @@ def test_markdown_with_plugins_list_only_all():
           aders
   md044   proper-names                    True       True       0.7.0    Yes
   md045   no-alt-text                     True       True       0.5.0    No
-  md046   code-block-style                True       True       0.6.0    No
+  md046   code-block-style                True       True       0.7.0    Yes
   md047   single-trailing-newline         True       True       0.5.1    Yes
   md048   code-fence-style                True       True       0.6.0    Yes
   md999   debug-only                      False      False      0.0.0    No
@@ -2221,6 +2221,97 @@ We skipped out a 2nd level heading in this document
         expected_output = ""
         expected_error = """BadPluginFixError encountered while scanning '{path}':
 Multiple plugins (MDE003 and MD001) have requested a fix for the same field of the same token.""".replace(
+            "{path}", temp_source_path
+        )
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+
+
+def test_markdown_plugins_wanting_to_fix_and_replace_same_token():
+    """
+    Test to make sure that
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    plugin_path = os.path.join(
+        "test", "resources", "plugins", "bad", "bad_fix_indented_token_like_md046.py"
+    )
+
+    original_file_contents = """~~~Markdown
+# fred
+~~~
+"""
+    with create_temporary_configuration_file(
+        original_file_contents, file_name_suffix=".md"
+    ) as temp_source_path:
+
+        supplied_arguments = [
+            "--set",
+            "plugins.md046.style=indented",
+            "--add-plugin",
+            plugin_path,
+            "fix",
+            temp_source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = ""
+        expected_error = """BadPluginFixError encountered while scanning '{path}':
+Multiple plugins (MDE003 and MD046) are in conflict about fixing the token.""".replace(
+            "{path}", temp_source_path
+        )
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+
+
+def test_markdown_plugins_wanting_to_replace_same_token():
+    """
+    Test to make sure that
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    plugin_path = os.path.join(
+        "test",
+        "resources",
+        "plugins",
+        "bad",
+        "bad_replace_indented_token_like_md046.py",
+    )
+
+    original_file_contents = """~~~Markdown
+# fred
+~~~
+
+    # fred
+"""
+    with create_temporary_configuration_file(
+        original_file_contents, file_name_suffix=".md"
+    ) as temp_source_path:
+        supplied_arguments = [
+            "--add-plugin",
+            plugin_path,
+            "fix",
+            temp_source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = ""
+        expected_error = """BadPluginFixError encountered while scanning '{path}':
+Multiple plugins (MDE003 and MD046) are in conflict about replacing the token.""".replace(
             "{path}", temp_source_path
         )
 

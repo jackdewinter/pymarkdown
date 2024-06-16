@@ -1,5 +1,0 @@
-    # fred
-
-wilma
-
-    # barney

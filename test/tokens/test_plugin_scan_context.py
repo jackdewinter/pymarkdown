@@ -32,6 +32,7 @@ def test_plugin_scan_context_register_token_fix_no_map():
         fix_mode=True,
         file_output=None,
         fix_token_map=None,
+        replace_tokens_list=None,
     )
 
     # Act
@@ -55,6 +56,7 @@ def test_plugin_scan_context_register_token_first_one():
         fix_mode=True,
         file_output=None,
         fix_token_map=token_map,
+        replace_tokens_list=None,
     )
     token_to_report = __NotSupportedToken()
 
@@ -84,6 +86,7 @@ def test_plugin_scan_context_register_token_second_one():
         fix_mode=True,
         file_output=None,
         fix_token_map=token_map,
+        replace_tokens_list=None,
     )
     token_to_report = __NotSupportedToken()
     scan_context.register_fix_token_request(

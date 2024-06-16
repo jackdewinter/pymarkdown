@@ -24,6 +24,7 @@ from pymarkdown.plugin_manager.found_plugin import FoundPlugin
 from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2, QueryConfigItem
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.plugin_scan_failure import PluginScanFailure
+from pymarkdown.plugin_manager.replace_tokens_record import ReplaceTokensRecord
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.return_code_helper import ApplicationResult
 from pymarkdown.tokens.markdown_token import MarkdownToken
@@ -962,6 +963,7 @@ class PluginManager:
         temp_output: Optional[TextIOWrapper] = None,
         fix_token_map: Optional[Dict[MarkdownToken, List[FixTokenRecord]]] = None,
         constraint_id_list: Optional[List[str]] = None,
+        replace_tokens_list: Optional[List[ReplaceTokensRecord]] = None,
     ) -> PluginScanContext:
         """
         Inform any listeners that a new current file has been started.
@@ -982,7 +984,12 @@ class PluginManager:
                 ) from this_exception
 
         context = PluginScanContext(
-            self, file_being_started, fix_mode, temp_output, fix_token_map
+            self,
+            file_being_started,
+            fix_mode,
+            temp_output,
+            fix_token_map,
+            replace_tokens_list,
         )
         context.set_last_line_fixed(None)
         return context
