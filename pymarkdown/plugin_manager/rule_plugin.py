@@ -128,6 +128,20 @@ class RulePlugin(ABC):
             token, self.get_details().plugin_id, plugin_action, field_name, field_value
         )
 
+    def register_replace_tokens_request(
+        self,
+        context: PluginScanContext,
+        start_token: MarkdownToken,
+        end_token: MarkdownToken,
+        replacement_tokens: List[MarkdownToken],
+    ) -> None:
+        """
+        Register a request to replace a sequence of tokens.
+        """
+        context.register_replace_tokens_request(
+            self.get_details().plugin_id, start_token, end_token, replacement_tokens
+        )
+
     # pylint: enable=too-many-arguments
 
     def report_next_line_error(

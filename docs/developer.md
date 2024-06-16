@@ -254,4 +254,6 @@ MD027 BlankLineMarkdownToken                    5     extracted_whitespace
       UnorderedListStartMarkdownToken     indent_level, extracted_whitespace, column_number, leading_spaces
       OrderedListStartMarkdownToken       indent_level, extracted_whitespace, column_number, leading_spaces
 
-change docs for md044
+Md046 FencedCodeBlockMarkdownToken        replacement
+      TextMarkdownToken                   replacement
+      IndentedCodeBlockMarkdownToken      replacement

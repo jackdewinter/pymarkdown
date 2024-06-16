@@ -26,6 +26,7 @@ from pymarkdown.plugin_manager.fix_token_record import FixTokenRecord
 from pymarkdown.plugin_manager.found_plugin import FoundPlugin
 from pymarkdown.plugin_manager.plugin_manager import PluginManager
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
+from pymarkdown.plugin_manager.replace_tokens_record import ReplaceTokensRecord
 from pymarkdown.return_code_helper import ApplicationResult, ReturnCodeHelper
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_markdown.transform_to_markdown import TransformToMarkdown
@@ -320,12 +321,11 @@ class FileScanHelper:
         (
             next_file_two,
             actual_tokens,
-            fix_token_map,
+            did_any_tokens_get_fixed,
             collected_token_triggers,
         ) = self.__process_file_fix_tokens(
             next_file, next_file_name, fix_debug, fix_file_debug, fix_list, collect_list
         )
-        did_any_tokens_get_fixed = bool(fix_token_map)
 
         # If tokens are returned, then no changes were made due to tokens and the
         # tokenized list can be reused without any worry of changes.
@@ -553,7 +553,7 @@ class FileScanHelper:
 
     # pylint: enable=too-many-arguments, too-many-locals
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     def __process_file_fix_tokens(
         self,
         next_file: str,
@@ -562,9 +562,7 @@ class FileScanHelper:
         fix_file_debug: bool,
         fix_list: List[str],
         collect_list: List[str],
-    ) -> Tuple[
-        str, List[MarkdownToken], Dict[MarkdownToken, List[FixTokenRecord]], Set[str]
-    ]:
+    ) -> Tuple[str, List[MarkdownToken], bool, Set[str]]:
         self.__print_file_in_debug_mode(fix_debug, fix_file_debug, next_file)
 
         POGGER.info("Scanning file to fix '$' token-by-token.", next_file_name)
@@ -574,12 +572,14 @@ class FileScanHelper:
         )
 
         fix_token_map: Dict[MarkdownToken, List[FixTokenRecord]] = {}
+        replace_tokens_list: List[ReplaceTokensRecord] = []
         fix_context = self.__plugins.starting_new_file(
             next_file_name,
             fix_mode=True,
             temp_output=None,
             fix_token_map=fix_token_map,
             constraint_id_list=fix_list,
+            replace_tokens_list=replace_tokens_list,
         )
         report_context = self.__plugins.starting_new_file(
             next_file_name, constraint_id_list=collect_list
@@ -596,11 +596,12 @@ class FileScanHelper:
         POGGER.info("Completed scanning file '$' for fixes.", next_file_name)
         self.__plugins.completed_file(fix_context, -1, context_map)
 
-        if fix_context.get_fix_token_map():
+        did_any_tokens_get_fixed = False
+        if fix_context.get_fix_token_map() or fix_context.get_replace_tokens_list():
             (
                 next_file,
                 actual_tokens,
-                fix_token_map,
+                did_any_tokens_get_fixed,
             ) = self.__process_file_fix_tokens_apply_fixes(
                 fix_context,
                 next_file,
@@ -608,17 +609,101 @@ class FileScanHelper:
                 fix_token_map,
                 fix_debug,
                 fix_file_debug,
+                replace_tokens_list,
             )
         return (
             next_file,
             actual_tokens,
-            fix_token_map,
+            did_any_tokens_get_fixed,
             report_context.get_triggered_rules(),
         )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
+
+    def __look_for_collisions(
+        self,
+        next_replacement: ReplaceTokensRecord,
+        actual_tokens: List[MarkdownToken],
+        fixed_token_indices: Dict[int, List[str]],
+        replaced_token_indices: Dict[int, str],
+    ) -> None:
+        start_index = actual_tokens.index(next_replacement.start_token)
+        end_index = actual_tokens.index(next_replacement.end_token)
+        next_match_with_fixed_tokens = next(
+            (i for i in range(start_index, end_index + 1) if i in fixed_token_indices),
+            None,
+        )
+        if next_match_with_fixed_tokens is not None:
+            previous_plugin_ids = ",".join(
+                fixed_token_indices[next_match_with_fixed_tokens]
+            )
+            POGGER.info(
+                "Previous plugins ($) set one or more fields for the current token.",
+                previous_plugin_ids,
+            )
+            POGGER.info(
+                "Current plugin ($) wants to replace the token with another token.",
+                next_replacement.plugin_id,
+            )
+
+            raise BadPluginFixError(
+                f"Multiple plugins ({previous_plugin_ids} and {next_replacement.plugin_id}) are in conflict about fixing the token."
+            )
+        for next_index in range(start_index, end_index + 1):
+            if next_index in replaced_token_indices:
+                POGGER.info(
+                    "Previous plugin ($) replaced the token.",
+                    replaced_token_indices[next_index],
+                )
+                POGGER.info(
+                    "Current plugin ($) wants to replace the same token with another token.",
+                    next_replacement.plugin_id,
+                )
+
+                raise BadPluginFixError(
+                    f"Multiple plugins ({replaced_token_indices[next_index]} and {next_replacement.plugin_id}) are in conflict about replacing the token."
+                )
+            replaced_token_indices[next_index] = next_replacement.plugin_id
+
+    def __apply_replacement_fix(
+        self,
+        next_replacement: ReplaceTokensRecord,
+        actual_tokens: List[MarkdownToken],
+    ) -> None:
+        start_index = actual_tokens.index(next_replacement.start_token)
+        end_index = actual_tokens.index(next_replacement.end_token)
+
+        new_tokens = actual_tokens[:start_index]
+        new_tokens.extend(next_replacement.replacement_tokens)
+        new_tokens.extend(actual_tokens[end_index + 1 :])
+
+        actual_tokens.clear()
+        actual_tokens.extend(new_tokens)
 
     # pylint: disable=too-many-arguments
+    def __xx(
+        self,
+        did_any_tokens_get_fixed: bool,
+        replace_tokens_list: List[ReplaceTokensRecord],
+        actual_tokens: List[MarkdownToken],
+        fixed_token_indices: Dict[int, List[str]],
+        replaced_token_indices: Dict[int, str],
+    ) -> bool:
+        for next_replace_index in replace_tokens_list:
+            self.__look_for_collisions(
+                next_replace_index,
+                actual_tokens,
+                fixed_token_indices,
+                replaced_token_indices,
+            )
+        for next_replace_index in replace_tokens_list:
+            did_any_tokens_get_fixed = True
+            self.__apply_replacement_fix(next_replace_index, actual_tokens)
+        return did_any_tokens_get_fixed
+
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments,too-many-locals
     def __process_file_fix_tokens_apply_fixes(
         self,
         context: PluginScanContext,
@@ -627,17 +712,40 @@ class FileScanHelper:
         fix_token_map: Dict[MarkdownToken, List[FixTokenRecord]],
         fix_debug: bool,
         fix_file_debug: bool,
-    ) -> Tuple[str, List[MarkdownToken], Dict[MarkdownToken, List[FixTokenRecord]]]:
+        replace_tokens_list: List[ReplaceTokensRecord],
+    ) -> Tuple[str, List[MarkdownToken], bool]:
+
+        fixed_token_indices: Dict[int, List[str]] = {}
+        replaced_token_indices: Dict[int, str] = {}
+
+        did_any_tokens_get_fixed = False
+        if fix_debug:
+            print("--")
         for token_instance, requested_fixes in context.get_fix_token_map().items():
             if fix_debug:
                 print(f"BEFORE:{str(token_instance)}:{str(requested_fixes)}")
             self.__apply_token_fix(
                 context, token_instance, requested_fixes, actual_tokens
             )
+            actual_token_index = actual_tokens.index(token_instance)
+            fixed_token_indices[actual_token_index] = [
+                i.plugin_id for i in requested_fixes
+            ]
             if fix_debug:
                 print(f" AFTER:{str(token_instance)}:{str(requested_fixes)}")
         if fix_debug:
             print("--")
+        did_any_tokens_get_fixed = self.__xx(
+            did_any_tokens_get_fixed,
+            replace_tokens_list,
+            actual_tokens,
+            fixed_token_indices,
+            replaced_token_indices,
+        )
+        if fix_debug:
+            print("--")
+
+        did_any_tokens_get_fixed = did_any_tokens_get_fixed or bool(fix_token_map)
 
         transformer = TransformToMarkdown()
         markdown_from_tokens = transformer.transform(actual_tokens)
@@ -650,9 +758,9 @@ class FileScanHelper:
             actual_tokens.clear()
 
         self.__print_file_in_debug_mode(fix_debug, fix_file_debug, temporary_file_name)
-        return next_file, actual_tokens, fix_token_map
+        return next_file, actual_tokens, did_any_tokens_get_fixed
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments,too-many-locals
 
     def __print_file_in_debug_mode(
         self, fix_debug: bool, fix_file_debug: bool, next_file: str

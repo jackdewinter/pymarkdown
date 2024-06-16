@@ -641,7 +641,7 @@ Images should have alternate text (alt text).
 | Property | Value |
 | --- | -- |
 | Aliases | `md046`, `code-block-style` |
-| Autofix Available | Pending |
+| Autofix Available | Yes |
 | Enabled By Default | Yes |
 
 <!--- pyml disable-next-line no-duplicate-heading-->

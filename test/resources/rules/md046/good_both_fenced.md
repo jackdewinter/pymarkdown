@@ -1,7 +1,0 @@
-```Markdown
-# fred
-```
-
-```Markdown
-# barney
-```

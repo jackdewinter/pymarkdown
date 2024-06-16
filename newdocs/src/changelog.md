@@ -6,6 +6,8 @@
 
 - [Issue 826](https://github.com/jackdewinter/pymarkdown/issues/826)
     - Added fix mode for Rule Md044
+- [Issue 824](https://github.com/jackdewinter/pymarkdown/issues/824)
+    - Added fix mode for Rule Md046
 
 ### Fixed
 

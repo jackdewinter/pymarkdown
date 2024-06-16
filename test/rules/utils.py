@@ -42,7 +42,7 @@ class pluginRuleTest:
     scan_expected_output: str = ""
     scan_expected_error: str = ""
     fix_expected_return_code: int = 3
-    fix_expected_file_contents: str = ""
+    fix_expected_file_contents: Optional[str] = None
     fix_expected_output: Optional[str] = None
     fix_expected_error: str = ""
     add_plugin_path: str = ""

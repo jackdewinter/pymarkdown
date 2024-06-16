@@ -94,8 +94,8 @@
             "protected-access": 1
         },
         "pymarkdown/file_scan_helper.py": {
-            "too-many-arguments": 8,
-            "too-many-locals": 4
+            "too-many-arguments": 9,
+            "too-many-locals": 6
         },
         "pymarkdown/general/__init__.py": {},
         "pymarkdown/general/bad_tokenization_error.py": {},
@@ -267,6 +267,7 @@
             "too-many-arguments": 3
         },
         "pymarkdown/plugin_manager/plugin_scan_failure.py": {},
+        "pymarkdown/plugin_manager/replace_tokens_record.py": {},
         "pymarkdown/plugin_manager/rule_plugin.py": {
             "too-many-arguments": 2
         },
@@ -498,8 +499,8 @@
         "too-many-instance-attributes": 24,
         "too-many-public-methods": 4,
         "too-few-public-methods": 39,
-        "too-many-arguments": 226,
-        "too-many-locals": 38,
+        "too-many-arguments": 227,
+        "too-many-locals": 40,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 2,
         "protected-access": 25,
