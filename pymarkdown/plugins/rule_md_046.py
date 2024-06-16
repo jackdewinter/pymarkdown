@@ -2,7 +2,7 @@
 Module to implement a plugin that ensures the code blocks maintain a consistent style.
 """
 
-from typing import List, Optional, cast
+from typing import List, Optional, Tuple, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.position_marker import PositionMarker
@@ -137,7 +137,9 @@ class RuleMd046(RulePlugin):
                     )
         self.__last_token = token
 
-    def __create_new_fenced_tokens(self):
+    def __create_new_fenced_tokens(
+        self,
+    ) -> Tuple[List[MarkdownToken], EndMarkdownToken]:
         collected_count = 3
         new_fenced_start_token = FencedCodeBlockMarkdownToken(
             fence_character="`",
@@ -162,7 +164,9 @@ class RuleMd046(RulePlugin):
         replacement_tokens: List[MarkdownToken] = [new_fenced_start_token]
         return replacement_tokens, new_end_token
 
-    def __create_new_indented_tokens(self):
+    def __create_new_indented_tokens(
+        self,
+    ) -> Tuple[List[MarkdownToken], EndMarkdownToken]:
         new_indented_start_token = IndentedCodeBlockMarkdownToken(
             extracted_whitespace="    ", line_number=0, column_number=0
         )
@@ -181,7 +185,7 @@ class RuleMd046(RulePlugin):
             )
             for _ in range(newlines_in_inner_text_token):
                 new_indented_start_token.add_indented_whitespace("    ")
-        replacement_tokens = [new_indented_start_token]
+        replacement_tokens = [cast(MarkdownToken, new_indented_start_token)]
         return replacement_tokens, new_end_token
 
     def __fix(self, context: PluginScanContext, end_fix_token: MarkdownToken) -> None:
