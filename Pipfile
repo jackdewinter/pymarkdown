@@ -7,7 +7,7 @@ verify_ssl = true
 black = "==24.4.2"
 coverage = "==7.5.3"
 isort = "==5.13.2"
-flake8 = "==7.0.0"
+flake8 = "==7.1.0"
 flake8-bugbear = "==24.4.26"
 flake8-bandit = "==4.1.1"
 mkdocs = "==1.6.0"
