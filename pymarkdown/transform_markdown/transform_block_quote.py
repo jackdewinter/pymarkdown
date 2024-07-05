@@ -197,8 +197,7 @@ class TransformBlockQuote:
         POGGER.debug(f">>{any_non_container_end_tokens}")
 
         del context.container_token_indents[-1]
-        CHANGE_5 = True
-        if CHANGE_5 and context.container_token_indents and any_non_container_end_tokens:
+        if context.container_token_indents and any_non_container_end_tokens:
             indent_adjust = actual_tokens[search_index].line_number - current_start_token.line_number - 1
 
             for indent_index in range(len(context.container_token_indents)-1, -1, -1):

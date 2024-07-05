@@ -14,6 +14,7 @@
 - https://github.com/jackdewinter/pymarkdown/issues/1124
 https://github.com/jackdewinter/pymarkdown/issues/1125
 https://github.com/jackdewinter/pymarkdown/issues/1126
+https://github.com/jackdewinter/pymarkdown/issues/1127
 
 ### Changed
 
