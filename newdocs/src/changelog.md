@@ -10,6 +10,8 @@
 
 - [None](https://github.com/jackdewinter/pymarkdown/issues/1120)
 - https://github.com/jackdewinter/pymarkdown/issues/1122
+- https://github.com/jackdewinter/pymarkdown/issues/1123
+- https://github.com/jackdewinter/pymarkdown/issues/1124
 
 ### Changed
 
