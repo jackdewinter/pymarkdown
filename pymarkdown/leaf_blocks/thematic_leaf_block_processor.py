@@ -3,7 +3,7 @@ Module to provide processing for thematic break leaf blocks.
 """
 
 import logging
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, cast
 
 from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
 from pymarkdown.container_blocks.container_grab_bag import ContainerGrabBag
@@ -14,8 +14,13 @@ from pymarkdown.general.parser_state import ParserState
 from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.general.tab_helper import TabHelper
 from pymarkdown.leaf_blocks.leaf_block_helper import LeafBlockHelper
+from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
-from pymarkdown.tokens.stack_token import ParagraphStackToken, StackToken
+from pymarkdown.tokens.stack_token import (
+    ListStackToken,
+    ParagraphStackToken,
+    StackToken,
+)
 from pymarkdown.tokens.thematic_break_markdown_token import ThematicBreakMarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
@@ -84,6 +89,46 @@ class ThematicLeafBlockProcessor:
         return thematic_break_character, end_of_break_index
 
     @staticmethod
+    def __handle_existing_paragraph_special(parser_state:ParserState, grab_bag:ContainerGrabBag, new_tokens:List[MarkdownToken]) -> None:
+        if parser_state.token_stack[-1].is_list and grab_bag.text_removed_by_container is not None:
+            stack_list_token = cast(ListStackToken, parser_state.token_stack[-1])
+            indent_delta = stack_list_token.indent_level - len(
+                grab_bag.text_removed_by_container
+            )
+            if indent_delta > 0:
+                closed_tokens, _ = parser_state.close_open_blocks_fn(
+                    parser_state,
+                    was_forced=True,
+                    include_lists=True,
+                    until_this_index=len(parser_state.token_stack) - 1,
+                )
+                new_tokens.extend(closed_tokens)
+                assert parser_state.token_stack[-1].is_list
+                list_token = cast(
+                    ListStartMarkdownToken,
+                    parser_state.token_stack[-1].matching_markdown_token,
+                )
+                list_token.add_leading_spaces(" " * indent_delta)
+
+    @staticmethod
+    def __handle_existing_paragraph(
+        parser_state:ParserState, grab_bag:ContainerGrabBag, new_tokens:List[MarkdownToken], block_quote_data:BlockQuoteData
+    ) -> List[MarkdownToken]:
+        force_paragraph_close_if_present = (
+            block_quote_data.current_count == 0 and block_quote_data.stack_count > 0
+        )
+        new_tokens, _ = parser_state.close_open_blocks_fn(
+            parser_state,
+            only_these_blocks=[ParagraphStackToken],
+            was_forced=force_paragraph_close_if_present,
+        )
+        if new_tokens and grab_bag.text_removed_by_container:
+            ThematicLeafBlockProcessor.__handle_existing_paragraph_special(
+                parser_state, grab_bag, new_tokens
+            )
+        return new_tokens
+
+    @staticmethod
     def parse_thematic_break(
         parser_state: ParserState,
         position_marker: PositionMarker,
@@ -109,14 +154,8 @@ class ThematicLeafBlockProcessor:
                 "parse_thematic_break>>start",
             )
             if parser_state.token_stack[-1].is_paragraph:
-                force_paragraph_close_if_present = (
-                    block_quote_data.current_count == 0
-                    and block_quote_data.stack_count > 0
-                )
-                new_tokens, _ = parser_state.close_open_blocks_fn(
-                    parser_state,
-                    only_these_blocks=[ParagraphStackToken],
-                    was_forced=force_paragraph_close_if_present,
+                new_tokens = ThematicLeafBlockProcessor.__handle_existing_paragraph(
+                    parser_state, grab_bag, new_tokens, block_quote_data
                 )
 
             token_text = position_marker.text_to_parse[
