@@ -44,7 +44,7 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
             position_marker=position_marker,
         )
         self.__compose_extra_data_field()
-        self.weird_kludge_one = None
+        self.weird_kludge_one: Optional[int] = None
 
     # pylint: disable=protected-access
     @staticmethod
@@ -166,12 +166,13 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
             ParserHelper.newline_character
         )
         absolute_index = self.leading_text_index + delta
-        if allow_overflow and absolute_index >= len(split_leading_spaces):
-            leading_text = ""
-        else:
-            leading_text = split_leading_spaces[self.leading_text_index + delta]
-            if increment_index:
-                self.leading_text_index += 1
+        assert not (allow_overflow and absolute_index >= len(split_leading_spaces))
+        # if allow_overflow and absolute_index >= len(split_leading_spaces):
+        #     leading_text = ""
+        # else:
+        leading_text = split_leading_spaces[self.leading_text_index + delta]
+        if increment_index:
+            self.leading_text_index += 1
 
         if tabbed_leading is not None:
             leading_text = tabbed_leading

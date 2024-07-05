@@ -15,7 +15,7 @@
         },
         "pymarkdown/application_logging.py": {},
         "pymarkdown/block_quotes/block_quote_count_helper.py": {
-            "too-many-arguments": 7
+            "too-many-arguments": 8
         },
         "pymarkdown/block_quotes/block_quote_data.py": {},
         "pymarkdown/block_quotes/block_quote_non_fenced_helper.py": {
@@ -24,7 +24,8 @@
             "too-many-locals": 1
         },
         "pymarkdown/block_quotes/block_quote_processor.py": {
-            "too-many-arguments": 4
+            "too-many-arguments": 5,
+            "too-many-locals": 2
         },
         "pymarkdown/coalesce/coalesce_processor.py": {
             "too-few-public-methods": 1
@@ -320,7 +321,9 @@
         "pymarkdown/plugins/rule_md_030.py": {
             "too-many-instance-attributes": 1
         },
-        "pymarkdown/plugins/rule_md_031.py": {},
+        "pymarkdown/plugins/rule_md_031.py": {
+            "too-many-instance-attributes": 1
+        },
         "pymarkdown/plugins/rule_md_032.py": {},
         "pymarkdown/plugins/rule_md_033.py": {},
         "pymarkdown/plugins/rule_md_034.py": {
@@ -483,7 +486,7 @@
             "too-many-boolean-expressions": 1
         },
         "pymarkdown/transform_markdown/transform_list_block.py": {
-            "too-many-arguments": 2
+            "too-many-arguments": 4
         },
         "pymarkdown/transform_markdown/transform_new_list_item.py": {
             "too-few-public-methods": 1,
@@ -496,11 +499,11 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-instance-attributes": 24,
+        "too-many-instance-attributes": 25,
         "too-many-public-methods": 4,
         "too-few-public-methods": 39,
-        "too-many-arguments": 227,
-        "too-many-locals": 40,
+        "too-many-arguments": 231,
+        "too-many-locals": 42,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 2,
         "protected-access": 25,

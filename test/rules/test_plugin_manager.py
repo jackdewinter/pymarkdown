@@ -1313,7 +1313,7 @@ def test_markdown_with_plugins_list_only():
   md028   no-blanks-blockquote            True       True       0.5.0    No
   md029   ol-prefix                       True       True       0.6.0    Yes
   md030   list-marker-space               True       True       0.6.0    Yes
-  md031   blanks-around-fences            True       True       0.6.0    No
+  md031   blanks-around-fences            True       True       0.7.0    Yes
   md032   blanks-around-lists             True       True       0.5.0    No
   md033   no-inline-html                  True       True       0.6.0    No
   md034   no-bare-urls                    True       True       0.5.0    No
@@ -1397,7 +1397,7 @@ def test_markdown_with_plugins_list_only_all():
   md028   no-blanks-blockquote            True       True       0.5.0    No
   md029   ol-prefix                       True       True       0.6.0    Yes
   md030   list-marker-space               True       True       0.6.0    Yes
-  md031   blanks-around-fences            True       True       0.6.0    No
+  md031   blanks-around-fences            True       True       0.7.0    Yes
   md032   blanks-around-lists             True       True       0.5.0    No
   md033   no-inline-html                  True       True       0.6.0    No
   md034   no-bare-urls                    True       True       0.5.0    No

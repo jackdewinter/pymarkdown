@@ -667,15 +667,20 @@ class FileScanHelper:
 
     def __apply_replacement_fix(
         self,
+        context: PluginScanContext,
         next_replacement: ReplaceTokensRecord,
         actual_tokens: List[MarkdownToken],
     ) -> None:
         start_index = actual_tokens.index(next_replacement.start_token)
         end_index = actual_tokens.index(next_replacement.end_token)
+        index_delta = end_index - start_index + 1
 
         new_tokens = actual_tokens[:start_index]
         new_tokens.extend(next_replacement.replacement_tokens)
-        new_tokens.extend(actual_tokens[end_index + 1 :])
+        end_tokens = actual_tokens[end_index + 1 :]
+        for next_token in end_tokens:
+            next_token.adjust_line_number(context, index_delta)
+        new_tokens.extend(end_tokens)
 
         actual_tokens.clear()
         actual_tokens.extend(new_tokens)
@@ -683,6 +688,7 @@ class FileScanHelper:
     # pylint: disable=too-many-arguments
     def __xx(
         self,
+        context: PluginScanContext,
         did_any_tokens_get_fixed: bool,
         replace_tokens_list: List[ReplaceTokensRecord],
         actual_tokens: List[MarkdownToken],
@@ -698,7 +704,7 @@ class FileScanHelper:
             )
         for next_replace_index in replace_tokens_list:
             did_any_tokens_get_fixed = True
-            self.__apply_replacement_fix(next_replace_index, actual_tokens)
+            self.__apply_replacement_fix(context, next_replace_index, actual_tokens)
         return did_any_tokens_get_fixed
 
     # pylint: enable=too-many-arguments
@@ -736,6 +742,7 @@ class FileScanHelper:
         if fix_debug:
             print("--")
         did_any_tokens_get_fixed = self.__xx(
+            context,
             did_any_tokens_get_fixed,
             replace_tokens_list,
             actual_tokens,

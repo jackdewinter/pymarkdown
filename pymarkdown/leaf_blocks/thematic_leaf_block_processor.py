@@ -89,8 +89,15 @@ class ThematicLeafBlockProcessor:
         return thematic_break_character, end_of_break_index
 
     @staticmethod
-    def __handle_existing_paragraph_special(parser_state:ParserState, grab_bag:ContainerGrabBag, new_tokens:List[MarkdownToken]) -> None:
-        if parser_state.token_stack[-1].is_list and grab_bag.text_removed_by_container is not None:
+    def __handle_existing_paragraph_special(
+        parser_state: ParserState,
+        grab_bag: ContainerGrabBag,
+        new_tokens: List[MarkdownToken],
+    ) -> None:
+        if (
+            parser_state.token_stack[-1].is_list
+            and grab_bag.text_removed_by_container is not None
+        ):
             stack_list_token = cast(ListStackToken, parser_state.token_stack[-1])
             indent_delta = stack_list_token.indent_level - len(
                 grab_bag.text_removed_by_container
@@ -112,7 +119,10 @@ class ThematicLeafBlockProcessor:
 
     @staticmethod
     def __handle_existing_paragraph(
-        parser_state:ParserState, grab_bag:ContainerGrabBag, new_tokens:List[MarkdownToken], block_quote_data:BlockQuoteData
+        parser_state: ParserState,
+        grab_bag: ContainerGrabBag,
+        new_tokens: List[MarkdownToken],
+        block_quote_data: BlockQuoteData,
     ) -> List[MarkdownToken]:
         force_paragraph_close_if_present = (
             block_quote_data.current_count == 0 and block_quote_data.stack_count > 0

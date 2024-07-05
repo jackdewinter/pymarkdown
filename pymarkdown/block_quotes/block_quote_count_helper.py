@@ -24,6 +24,9 @@ from pymarkdown.tokens.stack_token import (
     ParagraphStackToken,
 )
 
+# pylint: disable=too-many-lines
+
+
 POGGER = ParserLogger(logging.getLogger(__name__))
 
 
@@ -151,6 +154,41 @@ class BlockQuoteCountHelper:
 
     # pylint: disable=too-many-arguments
     @staticmethod
+    def __xx(
+        parser_state: ParserState,
+        adjusted_line: str,
+        start_index: int,
+        current_count: int,
+        stack_count: int,
+        last_block_quote_index: int,
+    ) -> Tuple[bool, int, int, int]:
+        (
+            continue_processing,
+            start_index,
+        ) = BlockQuoteCountHelper.__is_special_double_block_case(
+            parser_state, adjusted_line, start_index, current_count, stack_count
+        )
+        if not continue_processing and current_count < stack_count:
+            continue_proc, stack_token_index = BlockQuoteCountHelper.__xx_part_one(
+                parser_state, start_index, current_count
+            )
+            if continue_proc:
+                current_count, start_index, last_block_quote_index = (
+                    BlockQuoteCountHelper.__xx_part_two(
+                        parser_state,
+                        stack_token_index,
+                        start_index,
+                        current_count,
+                        stack_count,
+                        last_block_quote_index,
+                    )
+                )
+        return continue_processing, current_count, start_index, last_block_quote_index
+
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
     def __should_continue_processing(
         parser_state: ParserState,
         current_count: int,
@@ -214,14 +252,17 @@ class BlockQuoteCountHelper:
             ):
                 (
                     continue_processing,
+                    current_count,
                     start_index,
-                ) = BlockQuoteCountHelper.__is_special_double_block_case(
-                    parser_state, adjusted_line, start_index, current_count, stack_count
+                    last_block_quote_index,
+                ) = BlockQuoteCountHelper.__xx(
+                    parser_state,
+                    adjusted_line,
+                    start_index,
+                    current_count,
+                    stack_count,
+                    last_block_quote_index,
                 )
-                if not continue_processing and current_count < stack_count:
-                    continue_proc, stack_token_index = BlockQuoteCountHelper.__xx_part_one(parser_state, start_index, current_count, stack_count)
-                    if continue_proc:
-                        current_count, start_index, last_block_quote_index = BlockQuoteCountHelper.__xx_part_two(parser_state, stack_token_index, start_index, current_count, stack_count, last_block_quote_index)
             else:
                 continue_processing = True
         return (
@@ -234,47 +275,77 @@ class BlockQuoteCountHelper:
         )
 
     @staticmethod
-    def __xx_part_one(parser_state:ParserState, start_index, current_count, stack_count):
+    def __xx_part_one(
+        parser_state: ParserState, start_index: int, current_count: int
+    ) -> Tuple[bool, int]:
         if parser_state.token_stack[-1].is_fenced_code_block:
             return False, -1
-        block_quote_character_count = ParserHelper.count_characters_in_text(parser_state.original_line_to_parse[:start_index], ">")
+        assert parser_state.original_line_to_parse is not None
+        block_quote_character_count = ParserHelper.count_characters_in_text(
+            parser_state.original_line_to_parse[:start_index], ">"
+        )
         if block_quote_character_count > current_count:
             return False, -1
         count_block_quotes = 0
-        for stack_token_index in range(len(parser_state.token_stack)):
-            if parser_state.token_stack[stack_token_index].is_block_quote:
+        found_index = -2
+        for stack_token_index, stack_token in enumerate(
+            parser_state.token_stack
+        ):  # pragma: no cover
+            if stack_token.is_block_quote:
                 count_block_quotes += 1
                 if count_block_quotes == block_quote_character_count:
+                    found_index = stack_token_index
                     break
-        assert stack_token_index != len(parser_state.token_stack), "should have completed before this"
-        stack_token_index += 1
-        return not parser_state.token_stack[stack_token_index].is_block_quote, stack_token_index
+        assert found_index != -2
+        assert found_index != len(
+            parser_state.token_stack
+        ), "should have completed before this"
+        found_index += 1
+        return (
+            not parser_state.token_stack[found_index].is_block_quote,
+            found_index,
+        )
 
     @staticmethod
-    def __xx_part_two(parser_state:ParserState, stack_index, start_index, current_count, stack_count, last_block_quote_index):
+    def __xx_part_two(
+        parser_state: ParserState,
+        stack_index: int,
+        start_index: int,
+        current_count: int,
+        stack_count: int,
+        last_block_quote_index: int,
+    ) -> Tuple[int, int, int]:
         # At this point, we have a "prefix", which may be partial, that has the
         # current_count of > characters, and ends with a list. If we are here,
         # we know that previous lines have had at least one more > character and
         # counted block quote.
-        assert parser_state.token_stack[stack_index].is_list, "If not bq, must be a list."
+        assert parser_state.token_stack[
+            stack_index
+        ].is_list, "If not bq, must be a list."
         while parser_state.token_stack[stack_index].is_list:
             stack_index += 1
-        embedded_list_stack_token = parser_state.token_stack[stack_index-1]
-        if parser_state.original_line_to_parse[start_index:embedded_list_stack_token.indent_level].strip():
+        embedded_list_stack_token = cast(
+            ListStackToken, parser_state.token_stack[stack_index - 1]
+        )
+        assert parser_state.original_line_to_parse is not None
+        if parser_state.original_line_to_parse[
+            start_index : embedded_list_stack_token.indent_level
+        ].strip():
             return current_count, start_index, last_block_quote_index
         assert current_count + 1 == stack_count
         if (
-            parser_state.original_line_to_parse[
-                embedded_list_stack_token.indent_level
-            ]
+            parser_state.original_line_to_parse[embedded_list_stack_token.indent_level]
             != ">"
         ):
             return current_count, start_index, last_block_quote_index
         last_block_quote_index = embedded_list_stack_token.indent_level + 1
         if last_block_quote_index < len(parser_state.original_line_to_parse):
-            character_after_block_quote = parser_state.original_line_to_parse[last_block_quote_index]
-            if character_after_block_quote == " ":
-                last_block_quote_index += 1
+            character_after_block_quote = parser_state.original_line_to_parse[
+                last_block_quote_index
+            ]
+            assert character_after_block_quote == " "
+            # if character_after_block_quote == " ":
+            last_block_quote_index += 1
 
         return current_count + 1, last_block_quote_index, last_block_quote_index
 
@@ -389,13 +460,14 @@ class BlockQuoteCountHelper:
             stack_count,
             block_quote_data,
         )
-        if not skip:
-            block_quote_data = BlockQuoteCountHelper.decrease_stack_to_level(
-                parser_state,
-                block_quote_data.current_count,
-                stack_count,
-                container_level_tokens,
-            )
+        assert not skip
+        # if not skip:
+        block_quote_data = BlockQuoteCountHelper.decrease_stack_to_level(
+            parser_state,
+            block_quote_data.current_count,
+            stack_count,
+            container_level_tokens,
+        )
         POGGER.debug(
             "container_level_tokens>>$",
             container_level_tokens,
@@ -955,21 +1027,24 @@ class BlockQuoteCountHelper:
         indent_text_count += delta
         length_of_available_whitespace -= delta
         extra_consumed_whitespace += delta
-        if adjust_current_block_quote:
-            POGGER.debug(
-                "__calculate_stack_hard_limit>>last_block_token>>$",
-                parser_state.token_stack[last_bq_index].matching_markdown_token,
-            )
-            block_token = cast(
-                BlockQuoteMarkdownToken,
-                parser_state.token_stack[last_bq_index].matching_markdown_token,
-            )
-            block_token.add_bleading_spaces(
-                ParserHelper.repeat_string(ParserHelper.space_character, delta), True
-            )
-            POGGER.debug(
-                "__calculate_stack_hard_limit>>last_block_token>>$", block_token
-            )
+
+        assert not adjust_current_block_quote
+        _ = last_bq_index
+        # if adjust_current_block_quote:
+        #     POGGER.debug(
+        #         "__calculate_stack_hard_limit>>last_block_token>>$",
+        #         parser_state.token_stack[last_bq_index].matching_markdown_token,
+        #     )
+        #     block_token = cast(
+        #         BlockQuoteMarkdownToken,
+        #         parser_state.token_stack[last_bq_index].matching_markdown_token,
+        #     )
+        #     block_token.add_bleading_spaces(
+        #         ParserHelper.repeat_string(ParserHelper.space_character, delta), True
+        #     )
+        #     POGGER.debug(
+        #         "__calculate_stack_hard_limit>>last_block_token>>$", block_token
+        #     )
 
         return (
             current_stack_index,

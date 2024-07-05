@@ -2,8 +2,8 @@
 Module to provide context to markdown transforms.
 """
 
-from dataclasses import dataclass
 import logging
+from dataclasses import dataclass
 from typing import List, Optional
 
 from typing_extensions import Protocol
@@ -17,7 +17,11 @@ POGGER = ParserLogger(logging.getLogger(__name__))
 
 @dataclass
 class IndentAdjustment:
-    adjustment:int = 0
+    """
+    Class to hold indent adjustments.
+    """
+
+    adjustment: int = 0
 
 
 # pylint: disable=too-few-public-methods

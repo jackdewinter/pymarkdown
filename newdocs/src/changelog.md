@@ -8,13 +8,24 @@
 
 ### Fixed
 
-- [None](https://github.com/jackdewinter/pymarkdown/issues/1120)
-- https://github.com/jackdewinter/pymarkdown/issues/1122
-- https://github.com/jackdewinter/pymarkdown/issues/1123
-- https://github.com/jackdewinter/pymarkdown/issues/1124
-https://github.com/jackdewinter/pymarkdown/issues/1125
-https://github.com/jackdewinter/pymarkdown/issues/1126
-https://github.com/jackdewinter/pymarkdown/issues/1127
+- [Issue 1120](https://github.com/jackdewinter/pymarkdown/issues/1120)
+    - within Block-List, thematic break can sometimes not report newlines to the
+      list block
+- [Issue 1122](https://github.com/jackdewinter/pymarkdown/issues/1122)
+    - opening a fenced code block in a Bq-List-Bq was closing the outer BQ
+- [Issue 1123](https://github.com/jackdewinter/pymarkdown/issues/1123)
+    - in some cases within a Bq-List-Bq, not counting the newlines properly
+- [Issue 1124](https://github.com/jackdewinter/pymarkdown/issues/1124)
+    - list items within a Bq-List-Bq can have incorrect starting text regarding
+      the innermost block
+- [Issue 1125](https://github.com/jackdewinter/pymarkdown/issues/1125)
+    - parsing of blank lines within Bq-List-Bq does not always add the right
+      newlines to the list
+- [Issue 1126](https://github.com/jackdewinter/pymarkdown/issues/1126)
+    - under some circumstances, with a Bq-List-Bq, thematic break can cause
+      the block quote to close
+- [Issue 1127](https://github.com/jackdewinter/pymarkdown/issues/1127)
+    - rehydration can be wrong with indented blocks in Bq-List-Bq
 
 ### Changed
 

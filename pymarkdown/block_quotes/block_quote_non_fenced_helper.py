@@ -600,26 +600,28 @@ class BlockQuoteNonFencedHelper:
     ) -> Tuple[bool, str]:
         POGGER.debug("original_removed_text>>:$:", original_removed_text)
         POGGER.debug("adjusted_removed_text>>:$:", adjusted_removed_text)
-        if len(current_leading_spaces) > len(original_block_quote_bleading_spaces):
-            current_leading_spaces = current_leading_spaces[
-                len(original_block_quote_bleading_spaces) :
-            ]
-            POGGER.debug("current_leading_spaces>>:$:", current_leading_spaces)
-            assert (
-                current_leading_spaces[0] == "\n"
-            ), "In these cases, the leading spaces will always start with a \n."
-            current_leading_spaces = current_leading_spaces[1:]
-            POGGER.debug(
-                "current_leading_spaces>>:$:($)",
-                current_leading_spaces,
-                len(current_leading_spaces),
-            )
-            special_case = True
-            if not extra_consumed_whitespace:
-                extra_consumed_whitespace = 0
-            adjusted_removed_text = original_removed_text[
-                len(current_leading_spaces) - extra_consumed_whitespace :
-            ]
+        assert len(current_leading_spaces) <= len(original_block_quote_bleading_spaces)
+        _ = extra_consumed_whitespace
+        # if len(current_leading_spaces) > len(original_block_quote_bleading_spaces):
+        #     current_leading_spaces = current_leading_spaces[
+        #         len(original_block_quote_bleading_spaces) :
+        #     ]
+        #     POGGER.debug("current_leading_spaces>>:$:", current_leading_spaces)
+        #     assert (
+        #         current_leading_spaces[0] == "\n"
+        #     ), "In these cases, the leading spaces will always start with a \n."
+        #     current_leading_spaces = current_leading_spaces[1:]
+        #     POGGER.debug(
+        #         "current_leading_spaces>>:$:($)",
+        #         current_leading_spaces,
+        #         len(current_leading_spaces),
+        #     )
+        #     special_case = True
+        #     if not extra_consumed_whitespace:
+        #         extra_consumed_whitespace = 0
+        #     adjusted_removed_text = original_removed_text[
+        #         len(current_leading_spaces) - extra_consumed_whitespace :
+        #     ]
         return special_case, adjusted_removed_text
 
     # pylint: enable=too-many-arguments

@@ -198,11 +198,17 @@ class TransformBlockQuote:
 
         del context.container_token_indents[-1]
         if context.container_token_indents and any_non_container_end_tokens:
-            indent_adjust = actual_tokens[search_index].line_number - current_start_token.line_number - 1
+            indent_adjust = (
+                actual_tokens[search_index].line_number
+                - current_start_token.line_number
+                - 1
+            )
 
-            for indent_index in range(len(context.container_token_indents)-1, -1, -1):
+            for indent_index in range(len(context.container_token_indents) - 1, -1, -1):
                 if context.container_token_stack[indent_index].is_block_quote_start:
-                    context.container_token_indents[indent_index].adjustment += indent_adjust
+                    context.container_token_indents[
+                        indent_index
+                    ].adjustment += indent_adjust
                     break
         del context.container_token_stack[-1]
 

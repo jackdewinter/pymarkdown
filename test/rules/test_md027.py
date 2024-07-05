@@ -619,7 +619,7 @@ scanTests = [
         source_file_name=f"{source_path}issue-189-mini.md",
     ),
     pluginRuleTest(
-        "xxxx",
+        "bad_block_quote_with_interwoven_blank_lines",
         source_file_contents=""">  *  Heading 1
 >\a
 >  *  Heading 2
@@ -642,7 +642,7 @@ scanTests = [
         ),
     ),
     pluginRuleTest(
-        "xxxx1",
+        "bad_block_quote_with_interwoven_indented_code",
         source_file_contents=""">  *  Heading 1
 >     fff
 >  *  Heading 2
@@ -659,6 +659,24 @@ scanTests = [
 > *  Heading 2
 >    fff
 """,
+    ),
+    pluginRuleTest(
+        "good_block_quote_with_deeper_nesting",
+        source_file_contents="""> > > block 3
+> > > block 3
+> > > block 3
+> > --------
+> >
+> > ```block
+> > A code block
+> > ```
+> >
+> > --------
+""",
+        disable_rules="md007,md009,md012,md030",
+        scan_expected_return_code=0,
+        # use_debug=True,
+        scan_expected_output="",
     ),
     pluginRuleTest(
         "mix_md027_md007",

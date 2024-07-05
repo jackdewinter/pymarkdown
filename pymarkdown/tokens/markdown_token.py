@@ -590,7 +590,12 @@ class MarkdownToken:
         """
         return self.token_name == MarkdownToken._token_inline_image
 
-    def adjust_line_number(self, context: PluginModifyContext, adjust_delta:int) -> None:
+    def adjust_line_number(
+        self, context: PluginModifyContext, adjust_delta: int
+    ) -> None:
+        """
+        Adjust the line number by a given amount.
+        """
         # By design, tokens can only be modified in fix mode during the token pass.
         if not context.in_fix_mode:
             raise BadPluginFixError(
