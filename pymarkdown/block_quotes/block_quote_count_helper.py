@@ -218,8 +218,7 @@ class BlockQuoteCountHelper:
                 ) = BlockQuoteCountHelper.__is_special_double_block_case(
                     parser_state, adjusted_line, start_index, current_count, stack_count
                 )
-                CHANGE_1 = True
-                if not continue_processing and current_count < stack_count and CHANGE_1:
+                if not continue_processing and current_count < stack_count:
                     continue_proc, stack_token_index = BlockQuoteCountHelper.__xx_part_one(parser_state, start_index, current_count, stack_count)
                     if continue_proc:
                         current_count, start_index, last_block_quote_index = BlockQuoteCountHelper.__xx_part_two(parser_state, stack_token_index, start_index, current_count, stack_count, last_block_quote_index)
