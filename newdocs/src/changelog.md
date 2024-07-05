@@ -8,7 +8,7 @@
 
 ### Fixed
 
-- None
+- [None](https://github.com/jackdewinter/pymarkdown/issues/1120)
 
 ### Changed
 
