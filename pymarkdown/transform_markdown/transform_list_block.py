@@ -734,8 +734,7 @@ class TransformListBlock:
                 - deeper_containing_block_quote_token.line_number
             )
             POGGER.debug(f"index:{line_number_delta}")
-            CHANGE_8 = True
-            if CHANGE_8 and deeper_containing_block_quote_token:
+            if deeper_containing_block_quote_token:
                 adjust_token_index = next(
                     (
                         i
