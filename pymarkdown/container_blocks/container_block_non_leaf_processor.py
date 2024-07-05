@@ -5,7 +5,7 @@ Module to provide processing for the non-leaf scenarios that may contain contain
 from __future__ import annotations
 
 import logging
-from typing import Optional, Tuple, cast
+from typing import List, Optional, Tuple, cast
 
 from pymarkdown.block_quotes.block_quote_processor import BlockQuoteProcessor
 from pymarkdown.container_blocks.container_block_nested_processor import (
@@ -23,6 +23,7 @@ from pymarkdown.leaf_blocks.leaf_block_processor_paragraph import (
 from pymarkdown.list_blocks.list_block_processor import ListBlockProcessor
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
+from pymarkdown.tokens.markdown_token import MarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -737,14 +738,9 @@ class ContainerBlockNonLeafProcessor:
             POGGER.debug(">>requeuing lines after looking for block start. returning.")
 
         if grab_bag.did_blank:
-            assert block_leaf_tokens and block_leaf_tokens[-1].is_blank_line, "should be a blank at the end"
-            POGGER.debug(">>already handled blank line. returning.")
-            grab_bag.extend_container_tokens_with_leaf_tokens()
-            stack_index = len(parser_state.token_stack) - 1
-            if stack_index > 2 and parser_state.token_stack[stack_index].is_block_quote and parser_state.token_stack[stack_index-1].is_block_quote and\
-                parser_state.token_stack[stack_index-2].is_list and \
-                parser_state.token_stack[stack_index-2].matching_markdown_token.line_number != block_leaf_tokens[-1].line_number:
-                    parser_state.token_stack[stack_index-2].matching_markdown_token.add_leading_spaces("")
+            ContainerBlockNonLeafProcessor.__get_block_start_index_handle_blank_line(
+                parser_state, grab_bag, block_leaf_tokens
+            )
 
         grab_bag.can_continue = (
             not grab_bag.requeue_line_info and not grab_bag.did_blank
@@ -754,6 +750,32 @@ class ContainerBlockNonLeafProcessor:
             block_index,
             avoid_block_starts,
         )
+
+    @staticmethod
+    def __get_block_start_index_handle_blank_line(
+        parser_state: ParserState,
+        grab_bag: ContainerGrabBag,
+        block_leaf_tokens: List[MarkdownToken],
+    ) -> None:
+        assert (
+            block_leaf_tokens and block_leaf_tokens[-1].is_blank_line
+        ), "should be a blank at the end"
+        POGGER.debug(">>already handled blank line. returning.")
+        grab_bag.extend_container_tokens_with_leaf_tokens()
+        stack_index = len(parser_state.token_stack) - 1
+        if (
+            stack_index > 2
+            and parser_state.token_stack[stack_index].is_block_quote
+            and parser_state.token_stack[stack_index - 1].is_block_quote
+            and parser_state.token_stack[stack_index - 2].is_list
+        ):
+            list_token = cast(
+                ListStartMarkdownToken,
+                parser_state.token_stack[stack_index - 2].matching_markdown_token,
+            )
+            assert list_token is not None
+            if list_token.line_number != block_leaf_tokens[-1].line_number:
+                list_token.add_leading_spaces("")
 
     @staticmethod
     def __process_list_in_progress(

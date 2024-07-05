@@ -550,7 +550,7 @@ class TransformContainers:
                 + f"fg={leading_spaces_newline_count} + "
                 + f"line={removed_block_token.line_number}"
             )
-            weird_kludge_one_count = removed_tokens[-1].weird_kludge_one
+            weird_kludge_one_count = removed_block_token.weird_kludge_one
             new_list_item_adjust = leading_spaces_newline_count > 1 and (
                 weird_kludge_one_count is None or weird_kludge_one_count <= 1
             )

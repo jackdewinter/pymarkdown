@@ -150,7 +150,9 @@ class BlockQuoteProcessor:
         ), "If starting here, we need a block quote count."
         POGGER.debug("handle_block_quote_block>>block-start")
         POGGER.debug("original_line:>:$:<", grab_bag.original_line)
-        POGGER.debug("container_start_bq_count:>:$:<", grab_bag.container_start_bq_count)
+        POGGER.debug(
+            "container_start_bq_count:>:$:<", grab_bag.container_start_bq_count
+        )
         (
             adjusted_text_to_parse,
             adjusted_index_number,
@@ -556,7 +558,11 @@ class BlockQuoteProcessor:
             parser_state.token_stack[-1].is_fenced_code_block,
             parser_state.token_stack[-1].is_html_block,
         )
-        POGGER.debug("block_quote_data>>:curr=$:stack=$:", block_quote_data.current_count, block_quote_data.stack_count)
+        POGGER.debug(
+            "block_quote_data>>:curr=$:stack=$:",
+            block_quote_data.current_count,
+            block_quote_data.stack_count,
+        )
         POGGER.debug("start_index>>:$:", start_index)
         POGGER.debug("line_to_parse>>:$:", line_to_parse)
         POGGER.debug("last_block_quote_index>>:$:", last_block_quote_index)
@@ -602,23 +608,45 @@ class BlockQuoteProcessor:
     # pylint: enable=too-many-arguments
 
     @staticmethod
-    def __handle_existing_block_quote_fenced_special(parser_state, start_index, block_quote_data):
-        block_quote_character_count = ParserHelper.count_characters_in_text(parser_state.original_line_to_parse[:start_index], ">")
-        assert block_quote_character_count <= block_quote_data.current_count, "if not, overreach"
+    def __handle_existing_block_quote_fenced_special(
+        parser_state: ParserState, start_index: int, block_quote_data: BlockQuoteData
+    ) -> Tuple[bool, int]:
+        assert parser_state.original_line_to_parse is not None
+        block_quote_character_count = ParserHelper.count_characters_in_text(
+            parser_state.original_line_to_parse[:start_index], ">"
+        )
+        assert (
+            block_quote_character_count <= block_quote_data.current_count
+        ), "if not, overreach"
         count_block_quotes = 0
-        for stack_token_index in range(len(parser_state.token_stack)):
-            if parser_state.token_stack[stack_token_index].is_block_quote:
+        find_token_index = 0
+        for stack_token_index, stack_token in enumerate(
+            parser_state.token_stack
+        ):  # pragma: no cover
+            if stack_token.is_block_quote:
                 count_block_quotes += 1
                 if count_block_quotes == block_quote_character_count:
+                    find_token_index = stack_token_index
                     break
-        assert stack_token_index != len(parser_state.token_stack), "should have completed before this"
-        stack_token_index += 1
-        process_fenced_block = parser_state.token_stack[stack_token_index].is_block_quote
-        return process_fenced_block, stack_token_index
+        assert find_token_index != len(
+            parser_state.token_stack
+        ), "should have completed before this"
+        find_token_index += 1
+        process_fenced_block = parser_state.token_stack[find_token_index].is_block_quote
+        return process_fenced_block, find_token_index
 
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
-    def __handle_existing_block_quote_fenced_special_part_two(parser_state:ParserState, stack_index, line_to_parse, start_index, block_quote_data, leaf_tokens,
-            container_level_tokens, avoid_block_starts) -> Tuple[
+    def __handle_existing_block_quote_fenced_special_part_two(
+        parser_state: ParserState,
+        stack_index: int,
+        line_to_parse: str,
+        start_index: int,
+        block_quote_data: BlockQuoteData,
+        leaf_tokens: List[MarkdownToken],
+        container_level_tokens: List[MarkdownToken],
+        avoid_block_starts: bool,
+    ) -> Tuple[
         str,
         int,
         List[MarkdownToken],
@@ -636,36 +664,52 @@ class BlockQuoteProcessor:
         # current_count of > characters, and ends with a list. If we are here,
         # we know that previous lines have had at least one more > character and
         # counted block quote.
-        assert parser_state.token_stack[stack_index].is_list, "If not bq, must be a list."
+        assert parser_state.token_stack[
+            stack_index
+        ].is_list, "If not bq, must be a list."
         while parser_state.token_stack[stack_index].is_list:
             stack_index += 1
-        embedded_list_stack_token = parser_state.token_stack[stack_index-1]
+        embedded_list_stack_token = cast(
+            ListStackToken, parser_state.token_stack[stack_index - 1]
+        )
         block_stack_token = parser_state.token_stack[stack_index]
-        block_markdown_token = cast(BlockQuoteMarkdownToken, block_stack_token.matching_markdown_token)
-        list_markdown_token = cast(ListStartMarkdownToken, embedded_list_stack_token.matching_markdown_token)
-        character_after_list = parser_state.original_line_to_parse[start_index:embedded_list_stack_token.indent_level].strip()
+        block_markdown_token = cast(
+            BlockQuoteMarkdownToken, block_stack_token.matching_markdown_token
+        )
+        list_markdown_token = cast(
+            ListStartMarkdownToken, embedded_list_stack_token.matching_markdown_token
+        )
+        assert parser_state.original_line_to_parse is not None
+        character_after_list = parser_state.original_line_to_parse[
+            start_index : embedded_list_stack_token.indent_level
+        ].strip()
         assert not character_after_list
         assert block_quote_data.current_count + 1 == block_quote_data.stack_count
         sd = parser_state.original_line_to_parse[embedded_list_stack_token.indent_level]
         assert sd == ">"
         last_block_quote_index = embedded_list_stack_token.indent_level + 1
-        character_after_block_quote = parser_state.original_line_to_parse[last_block_quote_index]
-        if character_after_block_quote == " ":
-            last_block_quote_index += 1
+        character_after_block_quote = parser_state.original_line_to_parse[
+            last_block_quote_index
+        ]
+        assert character_after_block_quote == " "
+        last_block_quote_index += 1
         # character_after_block_quote = parser_state.original_line_to_parse[last_block_quote_index]
 
-        start_index = last_block_quote_index
-        text_removed_by_container = parser_state.original_line_to_parse[:start_index]
+        text_removed_by_container = parser_state.original_line_to_parse[
+            :last_block_quote_index
+        ]
         block_markdown_token.add_bleading_spaces(text_removed_by_container)
         if block_markdown_token.weird_kludge_one:
             block_markdown_token.weird_kludge_one += 1
         else:
             block_markdown_token.weird_kludge_one = 1
         list_markdown_token.add_leading_spaces("")
-        block_quote_data = BlockQuoteData(block_quote_data.current_count + 1, block_quote_data.stack_count)
+        block_quote_data = BlockQuoteData(
+            block_quote_data.current_count + 1, block_quote_data.stack_count
+        )
         return (
-            line_to_parse[start_index:],
-            start_index,
+            line_to_parse[last_block_quote_index:],
+            last_block_quote_index,
             leaf_tokens,
             container_level_tokens,
             block_quote_data,
@@ -678,7 +722,9 @@ class BlockQuoteProcessor:
             False,
         )
 
-    # pylint: disable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
+
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __handle_existing_block_quote(
         parser_state: ParserState,
@@ -732,11 +778,26 @@ class BlockQuoteProcessor:
             )
 
         process_fenced_block = parser_state.token_stack[-1].is_fenced_code_block
-        if process_fenced_block and block_quote_data.current_count < block_quote_data.stack_count:
-            process_fenced_block, stack_index = BlockQuoteProcessor.__handle_existing_block_quote_fenced_special(parser_state, start_index, block_quote_data)
+        if (
+            process_fenced_block
+            and block_quote_data.current_count < block_quote_data.stack_count
+        ):
+            process_fenced_block, stack_index = (
+                BlockQuoteProcessor.__handle_existing_block_quote_fenced_special(
+                    parser_state, start_index, block_quote_data
+                )
+            )
             if not process_fenced_block:
-                return BlockQuoteProcessor.__handle_existing_block_quote_fenced_special_part_two(parser_state, stack_index, line_to_parse, start_index, block_quote_data, leaf_tokens,
-            container_level_tokens, avoid_block_starts)
+                return BlockQuoteProcessor.__handle_existing_block_quote_fenced_special_part_two(
+                    parser_state,
+                    stack_index,
+                    line_to_parse,
+                    start_index,
+                    block_quote_data,
+                    leaf_tokens,
+                    container_level_tokens,
+                    avoid_block_starts,
+                )
         if not process_fenced_block:
             return BlockQuoteNonFencedHelper.handle_non_fenced_code_section(
                 parser_state,
@@ -787,7 +848,7 @@ class BlockQuoteProcessor:
             False,
         )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
 
     @staticmethod
     def __handle_fenced_code_section(

@@ -476,6 +476,9 @@ class RuleMd027(RulePlugin):
         # )
         del self.__bq_line_index[num_container_tokens]
         del self.__container_tokens[-1]
+        end_token = cast(EndMarkdownToken, token)
+        if end_token.extra_end_data and num_container_tokens > 1:
+            self.__bq_line_index[num_container_tokens - 1] -= 1
 
     def __get_last_block_quote(self) -> Optional[MarkdownToken]:
         return next(

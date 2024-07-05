@@ -397,6 +397,7 @@ class TransformListBlock:
 
         return True, previous_indent
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __rehydrate_list_start_contained_in_list(
         context: MarkdownTransformContext,
@@ -422,8 +423,8 @@ class TransformListBlock:
             block_quote_leading_space_length,
             had_weird_block_quote_in_list,
             list_leading_space_length,
-        ) = TransformListBlock.__rehydrate_list_start_contained_in_list_start(context,
-            previous_token, current_token, deeper_containing_block_quote_token
+        ) = TransformListBlock.__rehydrate_list_start_contained_in_list_start(
+            context, previous_token, current_token, deeper_containing_block_quote_token
         )
 
         list_start_content_length = 0
@@ -470,6 +471,8 @@ class TransformListBlock:
             had_weird_block_quote_in_list,
         )
 
+    # pylint: enable=too-many-arguments
+
     @staticmethod
     def __look_for_last_block_token(
         context: MarkdownTransformContext,
@@ -514,8 +517,11 @@ class TransformListBlock:
                 did_container_start_midline,
                 block_quote_leading_space_length,
                 had_weird_block_quote_in_list,
-            ) = TransformListBlock.__rehydrate_list_start_contained_in_list_deeper_block_quote(context,
-                previous_token, deeper_containing_block_quote_token, current_token
+            ) = TransformListBlock.__rehydrate_list_start_contained_in_list_deeper_block_quote(
+                context,
+                previous_token,
+                deeper_containing_block_quote_token,
+                current_token,
             )
 
         if (
@@ -643,7 +649,10 @@ class TransformListBlock:
                 do_perform_block_quote_ending = (
                     projected_start_line != current_token.line_number
                 )
-                assert projected_start_line == current_token.line_number or (projected_start_line == current_token.line_number +1)
+                assert projected_start_line in [
+                    current_token.line_number,
+                    current_token.line_number + 1,
+                ], "should be one of the two, unless we have miscalculated"
         (
             block_quote_leading_space,
             starting_whitespace,
@@ -670,6 +679,7 @@ class TransformListBlock:
             had_weird_block_quote_in_list,
         )
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __rehydrate_list_start_deep(
         context: MarkdownTransformContext,
@@ -734,18 +744,22 @@ class TransformListBlock:
                 - deeper_containing_block_quote_token.line_number
             )
             POGGER.debug(f"index:{line_number_delta}")
-            if deeper_containing_block_quote_token:
-                adjust_token_index = next(
-                    (
-                        i
-                        for i in range(len(context.container_token_stack))
-                        if context.container_token_stack[i]
-                        == deeper_containing_block_quote_token
-                    ),
-                    None,
-                )
-                assert adjust_token_index is not None
-                line_number_delta -= context.container_token_indents[adjust_token_index].adjustment
+            assert deeper_containing_block_quote_token
+            # if deeper_containing_block_quote_token:
+            adjust_token_index = next(  # pragma: no cover
+                (
+                    i
+                    for i in range(len(context.container_token_stack))
+                    if context.container_token_stack[i]
+                    == deeper_containing_block_quote_token
+                ),
+                None,
+            )
+            assert adjust_token_index is not None
+            line_number_delta -= context.container_token_indents[
+                adjust_token_index
+            ].adjustment
+            # endif
 
             assert (
                 deeper_containing_block_quote_token.bleading_spaces is not None
@@ -768,6 +782,8 @@ class TransformListBlock:
             did_container_start_midline,
             check_list_for_indent,
         )
+
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     @staticmethod
