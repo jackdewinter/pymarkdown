@@ -4,16 +4,40 @@
 
 ### Added
 
+- None
+
+### Fixed
+
+- None
+
+### Changed
+
+- None
+
+## Version 0.9.21 - Date: 2024-07-01
+
+This release focuses on enabling the fix modes for various rules,
+performing more testing of scenarios to prepare for the release.
+Not finding anything major, but uncovering some "weird" combinations
+that are causing unpredictable behavior.  That behavior is mostly
+in the area of producing the correct Markdown from tokens to allow
+the fix mode to produce reliable fixes.
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Added
+
 - [Issue 826](https://github.com/jackdewinter/pymarkdown/issues/826)
     - Added fix mode for Rule Md044
 - [Issue 824](https://github.com/jackdewinter/pymarkdown/issues/824)
     - Added fix mode for Rule Md046
 
+<!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Issue 1099](https://github.com/jackdewinter/pymarkdown/issues/1099)
     - Fixed longstanding issue with tabs and newlines in code spans
 
+<!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - [Issue 1103](https://github.com/jackdewinter/pymarkdown/issues/1103)
