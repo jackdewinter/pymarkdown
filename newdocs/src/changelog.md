@@ -12,6 +12,7 @@
 - https://github.com/jackdewinter/pymarkdown/issues/1122
 - https://github.com/jackdewinter/pymarkdown/issues/1123
 - https://github.com/jackdewinter/pymarkdown/issues/1124
+https://github.com/jackdewinter/pymarkdown/issues/1125
 
 ### Changed
 

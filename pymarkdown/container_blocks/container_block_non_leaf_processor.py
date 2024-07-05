@@ -741,8 +741,7 @@ class ContainerBlockNonLeafProcessor:
             POGGER.debug(">>already handled blank line. returning.")
             grab_bag.extend_container_tokens_with_leaf_tokens()
             stack_index = len(parser_state.token_stack) - 1
-            CHANGE_3 = True
-            if CHANGE_3 and stack_index > 2 and parser_state.token_stack[stack_index].is_block_quote and parser_state.token_stack[stack_index-1].is_block_quote and\
+            if stack_index > 2 and parser_state.token_stack[stack_index].is_block_quote and parser_state.token_stack[stack_index-1].is_block_quote and\
                 parser_state.token_stack[stack_index-2].is_list and \
                 parser_state.token_stack[stack_index-2].matching_markdown_token.line_number != block_leaf_tokens[-1].line_number:
                     parser_state.token_stack[stack_index-2].matching_markdown_token.add_leading_spaces("")
