@@ -44,6 +44,7 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
             position_marker=position_marker,
         )
         self.__compose_extra_data_field()
+        self.weird_kludge_one = None
 
     # pylint: disable=protected-access
     @staticmethod

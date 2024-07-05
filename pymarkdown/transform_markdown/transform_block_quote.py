@@ -8,6 +8,7 @@ from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.transform_markdown.markdown_transform_context import (
+    IndentAdjustment,
     MarkdownTransformContext,
 )
 
@@ -110,6 +111,8 @@ class TransformBlockQuote:
         )
         new_instance.leading_text_index = 0
         context.container_token_stack.append(new_instance)
+        context.container_token_indents.append(IndentAdjustment())
+
         POGGER.debug(f">bquote>{ParserHelper.make_value_visible(new_instance)}")
         POGGER.debug(
             f">self.container_token_stack>{ParserHelper.make_value_visible(context.container_token_stack)}"
@@ -193,6 +196,15 @@ class TransformBlockQuote:
         any_non_container_end_tokens = search_index < len(actual_tokens)
         POGGER.debug(f">>{any_non_container_end_tokens}")
 
+        del context.container_token_indents[-1]
+        CHANGE_5 = True
+        if CHANGE_5 and context.container_token_indents and any_non_container_end_tokens:
+            indent_adjust = actual_tokens[search_index].line_number - current_start_token.line_number - 1
+
+            for indent_index in range(len(context.container_token_indents)-1, -1, -1):
+                if context.container_token_stack[indent_index].is_block_quote_start:
+                    context.container_token_indents[indent_index].adjustment += indent_adjust
+                    break
         del context.container_token_stack[-1]
 
         return adjusted_end_string

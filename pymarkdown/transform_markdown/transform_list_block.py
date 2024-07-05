@@ -13,6 +13,7 @@ from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.tokens.new_list_item_markdown_token import NewListItemMarkdownToken
 from pymarkdown.transform_markdown.markdown_transform_context import (
+    IndentAdjustment,
     MarkdownTransformContext,
 )
 
@@ -74,6 +75,7 @@ class TransformListBlock:
             f">>had_weird_block_quote_in_list>>{had_weird_block_quote_in_list}<<"
         )
         context.container_token_stack.append(copy.deepcopy(current_list_token))
+        context.container_token_indents.append(IndentAdjustment())
 
         POGGER.debug(f">>extracted_whitespace>>{extracted_whitespace}<<")
         POGGER.debug(
@@ -113,6 +115,7 @@ class TransformListBlock:
         """
         _ = actual_tokens, token_index
         del context.container_token_stack[-1]
+        del context.container_token_indents[-1]
 
         current_end_token = cast(EndMarkdownToken, current_token)
         current_start_token = cast(
@@ -233,6 +236,7 @@ class TransformListBlock:
                 did_container_start_midline,
                 had_weird_block_quote_in_list,
             ) = TransformListBlock.__rehydrate_list_start_contained_in_list(
+                context,
                 current_token,
                 containing_list_token,
                 deeper_containing_block_quote_token,
@@ -395,6 +399,7 @@ class TransformListBlock:
 
     @staticmethod
     def __rehydrate_list_start_contained_in_list(
+        context: MarkdownTransformContext,
         current_token: Union[ListStartMarkdownToken, NewListItemMarkdownToken],
         containing_list_token: ListStartMarkdownToken,
         deeper_containing_block_quote_token: Optional[BlockQuoteMarkdownToken],
@@ -417,7 +422,7 @@ class TransformListBlock:
             block_quote_leading_space_length,
             had_weird_block_quote_in_list,
             list_leading_space_length,
-        ) = TransformListBlock.__rehydrate_list_start_contained_in_list_start(
+        ) = TransformListBlock.__rehydrate_list_start_contained_in_list_start(context,
             previous_token, current_token, deeper_containing_block_quote_token
         )
 
@@ -490,6 +495,7 @@ class TransformListBlock:
 
     @staticmethod
     def __rehydrate_list_start_contained_in_list_start(
+        context: MarkdownTransformContext,
         previous_token: MarkdownToken,
         current_token: Union[ListStartMarkdownToken, NewListItemMarkdownToken],
         deeper_containing_block_quote_token: Optional[BlockQuoteMarkdownToken],
@@ -508,7 +514,7 @@ class TransformListBlock:
                 did_container_start_midline,
                 block_quote_leading_space_length,
                 had_weird_block_quote_in_list,
-            ) = TransformListBlock.__rehydrate_list_start_contained_in_list_deeper_block_quote(
+            ) = TransformListBlock.__rehydrate_list_start_contained_in_list_deeper_block_quote(context,
                 previous_token, deeper_containing_block_quote_token, current_token
             )
 
@@ -591,6 +597,7 @@ class TransformListBlock:
 
     @staticmethod
     def __rehydrate_list_start_contained_in_list_deeper_block_quote(
+        context: MarkdownTransformContext,
         previous_token: MarkdownToken,
         deeper_containing_block_quote_token: BlockQuoteMarkdownToken,
         current_token: Union[ListStartMarkdownToken, NewListItemMarkdownToken],
@@ -632,15 +639,18 @@ class TransformListBlock:
                 POGGER.debug(f"previous_start_line:{previous_start_line}:")
                 projected_start_line = previous_start_line + (newline_count + 1)
                 POGGER.debug(f"projected_start_line:{projected_start_line}:")
+                POGGER.debug(f"current_token.line_number:{current_token.line_number}:")
                 do_perform_block_quote_ending = (
                     projected_start_line != current_token.line_number
                 )
+                assert projected_start_line == current_token.line_number or (projected_start_line == current_token.line_number +1)
         (
             block_quote_leading_space,
             starting_whitespace,
             did_container_start_midline,
             check_list_for_indent,
         ) = TransformListBlock.__rehydrate_list_start_deep(
+            context,
             do_perform_block_quote_ending,
             previous_token,
             current_token,
@@ -662,6 +672,7 @@ class TransformListBlock:
 
     @staticmethod
     def __rehydrate_list_start_deep(
+        context: MarkdownTransformContext,
         do_perform_block_quote_ending: bool,
         previous_token: MarkdownToken,
         current_token: MarkdownToken,
@@ -717,11 +728,26 @@ class TransformListBlock:
             POGGER.debug(
                 f"adj->current_token.line_number>>:{current_token.line_number}:<<"
             )
+            # line_number_delta = ParserHelper.count_newlines_in_text(transformed_data) - current_token.line_number
             line_number_delta = (
                 current_token.line_number
                 - deeper_containing_block_quote_token.line_number
             )
             POGGER.debug(f"index:{line_number_delta}")
+            CHANGE_8 = True
+            if CHANGE_8 and deeper_containing_block_quote_token:
+                adjust_token_index = next(
+                    (
+                        i
+                        for i in range(len(context.container_token_stack))
+                        if context.container_token_stack[i]
+                        == deeper_containing_block_quote_token
+                    ),
+                    None,
+                )
+                assert adjust_token_index is not None
+                line_number_delta -= context.container_token_indents[adjust_token_index].adjustment
+
             assert (
                 deeper_containing_block_quote_token.bleading_spaces is not None
             ), "Bleading spaces must be defined by now."
