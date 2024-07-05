@@ -550,7 +550,10 @@ class TransformContainers:
                 + f"fg={leading_spaces_newline_count} + "
                 + f"line={removed_block_token.line_number}"
             )
-            new_list_item_adjust = leading_spaces_newline_count > 1
+            weird_kludge_one_count = removed_tokens[-1].weird_kludge_one
+            new_list_item_adjust = leading_spaces_newline_count > 1 and (
+                weird_kludge_one_count is None or weird_kludge_one_count <= 1
+            )
             POGGER.debug(f"new_list_item_adjust:{new_list_item_adjust}")
 
         return (
@@ -685,7 +688,8 @@ class TransformContainers:
             ), "If an abrupt bq end, the change record's item_d field must be defined."
             was_abrupt_block_quote_end = bool(
                 current_changed_record.item_d.was_forced
-                and current_changed_record.item_d.extra_end_data == "> "
+                and current_changed_record.item_d.extra_end_data
+                and ">" in current_changed_record.item_d.extra_end_data
             )
 
         applied_leading_spaces_to_start_of_container_line = (

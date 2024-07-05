@@ -218,6 +218,10 @@ class BlockQuoteCountHelper:
                 ) = BlockQuoteCountHelper.__is_special_double_block_case(
                     parser_state, adjusted_line, start_index, current_count, stack_count
                 )
+                if not continue_processing and current_count < stack_count:
+                    continue_proc, stack_token_index = BlockQuoteCountHelper.__xx_part_one(parser_state, start_index, current_count, stack_count)
+                    if continue_proc:
+                        current_count, start_index, last_block_quote_index = BlockQuoteCountHelper.__xx_part_two(parser_state, stack_token_index, start_index, current_count, stack_count, last_block_quote_index)
             else:
                 continue_processing = True
         return (
@@ -228,6 +232,51 @@ class BlockQuoteCountHelper:
             last_block_quote_index,
             current_count,
         )
+
+    @staticmethod
+    def __xx_part_one(parser_state:ParserState, start_index, current_count, stack_count):
+        if parser_state.token_stack[-1].is_fenced_code_block:
+            return False, -1
+        block_quote_character_count = ParserHelper.count_characters_in_text(parser_state.original_line_to_parse[:start_index], ">")
+        if block_quote_character_count > current_count:
+            return False, -1
+        count_block_quotes = 0
+        for stack_token_index in range(len(parser_state.token_stack)):
+            if parser_state.token_stack[stack_token_index].is_block_quote:
+                count_block_quotes += 1
+                if count_block_quotes == block_quote_character_count:
+                    break
+        assert stack_token_index != len(parser_state.token_stack), "should have completed before this"
+        stack_token_index += 1
+        return not parser_state.token_stack[stack_token_index].is_block_quote, stack_token_index
+
+    @staticmethod
+    def __xx_part_two(parser_state:ParserState, stack_index, start_index, current_count, stack_count, last_block_quote_index):
+        # At this point, we have a "prefix", which may be partial, that has the
+        # current_count of > characters, and ends with a list. If we are here,
+        # we know that previous lines have had at least one more > character and
+        # counted block quote.
+        assert parser_state.token_stack[stack_index].is_list, "If not bq, must be a list."
+        while parser_state.token_stack[stack_index].is_list:
+            stack_index += 1
+        embedded_list_stack_token = parser_state.token_stack[stack_index-1]
+        if parser_state.original_line_to_parse[start_index:embedded_list_stack_token.indent_level].strip():
+            return current_count, start_index, last_block_quote_index
+        assert current_count + 1 == stack_count
+        if (
+            parser_state.original_line_to_parse[
+                embedded_list_stack_token.indent_level
+            ]
+            != ">"
+        ):
+            return current_count, start_index, last_block_quote_index
+        last_block_quote_index = embedded_list_stack_token.indent_level + 1
+        if last_block_quote_index < len(parser_state.original_line_to_parse):
+            character_after_block_quote = parser_state.original_line_to_parse[last_block_quote_index]
+            if character_after_block_quote == " ":
+                last_block_quote_index += 1
+
+        return current_count + 1, last_block_quote_index, last_block_quote_index
 
     # pylint: enable=too-many-arguments
     @staticmethod
@@ -294,6 +343,8 @@ class BlockQuoteCountHelper:
         extracted_whitespace: str,
     ) -> Tuple[int, BlockQuoteData]:
         POGGER.debug("container_level_tokens>>$", container_level_tokens)
+        POGGER.debug("current_count>>$", block_quote_data.current_count)
+        POGGER.debug("stack_count>>$", block_quote_data.stack_count)
         stack_count = block_quote_data.stack_count
         while block_quote_data.current_count > stack_count:
             POGGER.debug(
@@ -560,6 +611,8 @@ class BlockQuoteCountHelper:
             parser_state, block_quote_data
         )
 
+        POGGER.debug("current_count>>$", block_quote_data.current_count)
+        POGGER.debug("stack_count>>$", block_quote_data.stack_count)
         POGGER.debug(
             "stack_increase_needed>>$, stack_decrease_needed=$",
             stack_increase_needed,

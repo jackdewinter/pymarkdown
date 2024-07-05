@@ -715,6 +715,7 @@ class ContainerBlockNonLeafProcessor:
         )
         POGGER.debug("text_to_parse>$<", new_position_marker.text_to_parse)
         POGGER.debug("index_number>$<", new_position_marker.index_number)
+        POGGER.debug("container_start_bq_count>$<", grab_bag.container_start_bq_count)
         assert (
             grab_bag.container_start_bq_count is not None
         ), "If here, we should have a count of bq starts."
@@ -736,8 +737,14 @@ class ContainerBlockNonLeafProcessor:
             POGGER.debug(">>requeuing lines after looking for block start. returning.")
 
         if grab_bag.did_blank:
+            assert block_leaf_tokens and block_leaf_tokens[-1].is_blank_line, "should be a blank at the end"
             POGGER.debug(">>already handled blank line. returning.")
             grab_bag.extend_container_tokens_with_leaf_tokens()
+            stack_index = len(parser_state.token_stack) - 1
+            if stack_index > 2 and parser_state.token_stack[stack_index].is_block_quote and parser_state.token_stack[stack_index-1].is_block_quote and\
+                parser_state.token_stack[stack_index-2].is_list and \
+                parser_state.token_stack[stack_index-2].matching_markdown_token.line_number != block_leaf_tokens[-1].line_number:
+                    parser_state.token_stack[stack_index-2].matching_markdown_token.add_leading_spaces("")
 
         grab_bag.can_continue = (
             not grab_bag.requeue_line_info and not grab_bag.did_blank

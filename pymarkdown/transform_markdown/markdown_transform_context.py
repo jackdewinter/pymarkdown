@@ -2,6 +2,7 @@
 Module to provide context to markdown transforms.
 """
 
+from dataclasses import dataclass
 import logging
 from typing import List, Optional
 
@@ -14,6 +15,11 @@ from pymarkdown.transform_gfm.transform_state import TransformState
 POGGER = ParserLogger(logging.getLogger(__name__))
 
 
+@dataclass
+class IndentAdjustment:
+    adjustment:int = 0
+
+
 # pylint: disable=too-few-public-methods
 class MarkdownTransformContext:
     """
@@ -23,6 +29,7 @@ class MarkdownTransformContext:
     def __init__(self) -> None:
         self.block_stack: List[MarkdownToken] = []
         self.container_token_stack: List[MarkdownToken] = []
+        self.container_token_indents: List[IndentAdjustment] = []
 
 
 # pylint: enable=too-few-public-methods
