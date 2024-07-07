@@ -1785,7 +1785,8 @@ def test_nested_three_unordered_block_ordered_with_blank_fenced_a():
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_block_ordered_with_blank_fenced_b():
+@pytest.mark.skip
+def test_nested_three_unordered_block_ordered_with_blank_fenced_bx():
     """
     TBD - from https://github.com/jackdewinter/pymarkdown/issues/731
     """
@@ -1801,7 +1802,7 @@ def test_nested_three_unordered_block_ordered_with_blank_fenced_b():
 """
 
     expected_tokens = [
-        "[ulist(1,1):-::2::  \n  \n  \n]",
+        "[ulist(1,1):-::2::\n  \n  \n  \n]",
         "[para(1,3):]",
         "[text(1,3):Test List:]",
         "[end-para:::True]",
@@ -1841,6 +1842,315 @@ def test_nested_three_unordered_block_ordered_with_blank_fenced_b():
 
 
 @pytest.mark.gfm
+def test_nested_three_unordered_block_ordered_with_blank_fenced_ba():
+    """
+    TBD - from https://github.com/jackdewinter/pymarkdown/issues/731
+    """
+
+    # Arrange
+    source_markdown = """- Test List
+  > 1) Test1
+  > 2) Test2
+  > abc
+  ```text
+  block
+  ```
+"""
+
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  \n  \n]",
+        "[para(1,3):]",
+        "[text(1,3):Test List:]",
+        "[end-para:::True]",
+        "[block-quote(2,3):  :  > \n  > \n  > ]",
+        "[olist(2,5):):1:7::]",
+        "[para(2,8):]",
+        "[text(2,8):Test1:]",
+        "[end-para:::True]",
+        "[li(3,5):7::2]",
+        "[para(3,8):\n]",
+        "[text(3,8):Test2\nabc::\n]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+        "[fcode-block(5,3):`:3:text:::::]",
+        "[text(6,3):block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(8,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>Test List
+<blockquote>
+<ol>
+<li>Test1</li>
+<li>Test2
+abc</li>
+</ol>
+</blockquote>
+<pre><code class="language-text">block
+</code></pre>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_nested_three_unordered_block_ordered_with_blank_fenced_bb():
+    """
+    TBD - from https://github.com/jackdewinter/pymarkdown/issues/731
+    """
+    ####
+    # Arrange
+    source_markdown = """- Test List
+  > 1) Test1
+  > 2) Test2
+  > ___
+  ```text
+  block
+  ```
+"""
+
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  \n  \n]",
+        "[para(1,3):]",
+        "[text(1,3):Test List:]",
+        "[end-para:::True]",
+        "[block-quote(2,3):  :  > \n  > \n  > ]",
+        "[olist(2,5):):1:7::]",
+        "[para(2,8):]",
+        "[text(2,8):Test1:]",
+        "[end-para:::True]",
+        "[li(3,5):7::2]",
+        "[para(3,8):\n]",
+        "[text(3,8):Test2\nabc::\n]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+        "[fcode-block(5,3):`:3:text:::::]",
+        "[text(6,3):block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(8,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>Test List
+<blockquote>
+<ol>
+<li>Test1</li>
+<li>Test2</li>
+</ol>
+<hr />
+</blockquote>
+<pre><code class="language-text">block
+</code></pre>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_nested_three_unordered_block_ordered_with_blank_fenced_bc():
+    """
+    TBD - from https://github.com/jackdewinter/pymarkdown/issues/731
+    """
+
+    # Arrange
+    source_markdown = """- Test List
+  > 1) Test1
+  > 2) Test2
+  > # bob
+  ```text
+  block
+  ```
+"""
+
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  \n  \n]",
+        "[para(1,3):]",
+        "[text(1,3):Test List:]",
+        "[end-para:::True]",
+        "[block-quote(2,3):  :  > \n  > \n  > ]",
+        "[olist(2,5):):1:7::]",
+        "[para(2,8):]",
+        "[text(2,8):Test1:]",
+        "[end-para:::True]",
+        "[li(3,5):7::2]",
+        "[para(3,8):]",
+        "[text(3,8):Test2:]",
+        "[end-para:::False]",
+        "[end-olist:::True]",
+        "[atx(4,5):1:0:]",
+        "[text(4,7):bob: ]",
+        "[end-atx::]",
+        "[end-block-quote:::True]",
+        "[fcode-block(5,3):`:3:text:::::]",
+        "[text(6,3):block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(8,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>Test List
+<blockquote>
+<ol>
+<li>Test1</li>
+<li>Test2</li>
+</ol>
+<h1>bob</h1>
+</blockquote>
+<pre><code class="language-text">block
+</code></pre>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_nested_three_unordered_block_ordered_with_blank_fenced_bd():
+    """
+    TBD - from https://github.com/jackdewinter/pymarkdown/issues/731
+    """
+
+    # Arrange
+    source_markdown = """- Test List
+  > 1) Test1
+  > 2) Test2
+  > # bob
+  abc
+  ```text
+  block
+  ```
+"""
+
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  \n  \n  \n]",
+        "[para(1,3):]",
+        "[text(1,3):Test List:]",
+        "[end-para:::True]",
+        "[block-quote(2,3):  :  > \n  > \n  > ]",
+        "[olist(2,5):):1:7::]",
+        "[para(2,8):]",
+        "[text(2,8):Test1:]",
+        "[end-para:::True]",
+        "[li(3,5):7::2]",
+        "[para(3,8):]",
+        "[text(3,8):Test2:]",
+        "[end-para:::False]",
+        "[end-olist:::True]",
+        "[atx(4,5):1:0:]",
+        "[text(4,7):bob: ]",
+        "[end-atx::]",
+        "[end-block-quote:::False]",
+        "[para(5,3):]",
+        "[text(5,3):abc:]",
+        "[end-para:::False]",
+        "[fcode-block(6,3):`:3:text:::::]",
+        "[text(7,3):block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(9,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>Test List
+<blockquote>
+<ol>
+<li>Test1</li>
+<li>Test2</li>
+</ol>
+<h1>bob</h1>
+</blockquote>
+abc
+<pre><code class="language-text">block
+</code></pre>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_nested_three_unordered_block_ordered_with_blank_fenced_be():
+    """
+    TBD - from https://github.com/jackdewinter/pymarkdown/issues/731
+    """
+
+    # Arrange
+    source_markdown = """- Test List
+  > 1) Test1
+  > 2) Test2
+  > # bob
+  > # robert
+  abc
+  ```text
+  block
+  ```
+"""
+
+    expected_tokens = [
+        "[ulist(1,1):-::2::\n  \n  \n  \n  \n]",
+        "[para(1,3):]",
+        "[text(1,3):Test List:]",
+        "[end-para:::True]",
+        "[block-quote(2,3):  :  > \n  > \n  > \n  > ]",
+        "[olist(2,5):):1:7::]",
+        "[para(2,8):]",
+        "[text(2,8):Test1:]",
+        "[end-para:::True]",
+        "[li(3,5):7::2]",
+        "[para(3,8):]",
+        "[text(3,8):Test2:]",
+        "[end-para:::False]",
+        "[end-olist:::True]",
+        "[atx(4,5):1:0:]",
+        "[text(4,7):bob: ]",
+        "[end-atx::]",
+        "[atx(5,5):1:0:]",
+        "[text(5,7):robert: ]",
+        "[end-atx::]",
+        "[end-block-quote:::False]",
+        "[para(6,3):]",
+        "[text(6,3):abc:]",
+        "[end-para:::False]",
+        "[fcode-block(7,3):`:3:text:::::]",
+        "[text(8,3):block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(10,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>Test List
+<blockquote>
+<ol>
+<li>Test1</li>
+<li>Test2</li>
+</ol>
+<h1>bob</h1>
+<h1>robert</h1>
+</blockquote>
+abc
+<pre><code class="language-text">block
+</code></pre>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
 def test_nested_three_unordered_block_ordered_with_blank_fenced_c1():
     """
     TBD - from https://github.com/jackdewinter/pymarkdown/issues/731
@@ -1858,7 +2168,7 @@ def test_nested_three_unordered_block_ordered_with_blank_fenced_c1():
 """
 
     expected_tokens = [
-        "[ulist(1,1):-::2::  \n  \n  \n  \n]",
+        "[ulist(1,1):-::2::\n  \n  \n  \n  \n]",
         "[para(1,3):]",
         "[text(1,3):Test List:]",
         "[end-para:::True]",

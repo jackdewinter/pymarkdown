@@ -20,8 +20,8 @@
         "pymarkdown/block_quotes/block_quote_data.py": {},
         "pymarkdown/block_quotes/block_quote_non_fenced_helper.py": {
             "too-few-public-methods": 1,
-            "too-many-arguments": 6,
-            "too-many-locals": 1
+            "too-many-arguments": 7,
+            "too-many-locals": 3
         },
         "pymarkdown/block_quotes/block_quote_processor.py": {
             "too-many-arguments": 5,
@@ -502,8 +502,8 @@
         "too-many-instance-attributes": 25,
         "too-many-public-methods": 4,
         "too-few-public-methods": 39,
-        "too-many-arguments": 231,
-        "too-many-locals": 42,
+        "too-many-arguments": 232,
+        "too-many-locals": 44,
         "chained-comparison": 1,
         "too-many-boolean-expressions": 2,
         "protected-access": 25,

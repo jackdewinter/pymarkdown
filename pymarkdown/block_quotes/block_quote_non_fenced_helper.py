@@ -152,7 +152,7 @@ class BlockQuoteNonFencedHelper:
 
     # pylint: enable=too-many-arguments, too-many-locals
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments,too-many-locals
     @staticmethod
     def __handle_non_fenced_code_section_no_requeue(
         parser_state: ParserState,
@@ -182,6 +182,7 @@ class BlockQuoteNonFencedHelper:
         found_bq_stack_token = cast(
             BlockQuoteStackToken, parser_state.token_stack[stack_index]
         )
+        is_not_blank_line = bool(line_to_parse.strip(Constants.ascii_whitespace))
 
         BlockQuoteNonFencedHelper.__do_block_quote_leading_spaces_adjustments(
             parser_state,
@@ -195,10 +196,12 @@ class BlockQuoteNonFencedHelper:
             extra_consumed_whitespace,
             container_level_tokens,
             original_line,
+            is_not_blank_line,
+            position_marker,
         )
         POGGER.debug("text_removed_by_container=[$]", removed_text)
         POGGER.debug("removed_text=[$]", removed_text)
-        if line_to_parse.strip(Constants.ascii_whitespace):
+        if is_not_blank_line:
             return (
                 line_to_parse,
                 start_index,
@@ -221,9 +224,9 @@ class BlockQuoteNonFencedHelper:
             leaf_tokens,
         )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments,too-many-locals
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments,too-many-locals
     @staticmethod
     def __do_block_quote_leading_spaces_adjustments(
         parser_state: ParserState,
@@ -237,6 +240,8 @@ class BlockQuoteNonFencedHelper:
         extra_consumed_whitespace: Optional[int],
         container_level_tokens: List[MarkdownToken],
         original_line: str,
+        is_not_blank_line: bool,
+        position_marker: PositionMarker,
     ) -> None:
         POGGER.debug("__hbqs>>removed_text>>:$:<", removed_text)
         POGGER.debug("__hbqs>>container_start_bq_count>>$", container_start_bq_count)
@@ -287,13 +292,17 @@ class BlockQuoteNonFencedHelper:
         POGGER.debug("dbqlsa>>special_case>>$", special_case)
 
         BlockQuoteNonFencedHelper.__do_block_quote_leading_spaces_adjustments_adjust_bleading(
+            parser_state,
             found_bq_stack_token,
             tabbed_removed_text,
             adjusted_removed_text,
             special_case,
+            is_not_blank_line,
+            stack_index,
+            position_marker,
         )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments,too-many-locals
 
     @staticmethod
     def __handle_normal_blank_line(
@@ -328,18 +337,6 @@ class BlockQuoteNonFencedHelper:
         assert not (
             requeue_line_info and requeue_line_info.lines_to_requeue
         ), "No handling of requeuing available here."
-
-        # KLUDGE!
-        if (
-            len(parser_state.token_stack) == 3
-            and parser_state.token_stack[1].is_list
-            and parser_state.token_stack[2].is_block_quote
-        ):
-            list_token = cast(
-                ListStartMarkdownToken,
-                parser_state.token_stack[1].matching_markdown_token,
-            )
-            list_token.add_leading_spaces("")
 
         return True, leaf_tokens
 
@@ -491,12 +488,17 @@ class BlockQuoteNonFencedHelper:
                     original_start_index -= indent_delta
         return original_start_index
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __do_block_quote_leading_spaces_adjustments_adjust_bleading(
+        parser_state: ParserState,
         found_bq_stack_token: BlockQuoteStackToken,
         tabbed_removed_text: Optional[str],
         adjusted_removed_text: str,
         special_case: bool,
+        is_not_blank_line: bool,
+        stack_index: int,
+        position_marker: PositionMarker,
     ) -> None:
         assert (
             found_bq_stack_token.matching_markdown_token is not None
@@ -521,8 +523,28 @@ class BlockQuoteNonFencedHelper:
         POGGER.debug(
             "dbqlsa>>leading_text_index>>$", block_quote_token.leading_text_index
         )
+        if not is_not_blank_line:
+            assert parser_state.token_stack[stack_index] == found_bq_stack_token
+            found_list_stack_index = 0
+            for search_index in range(stack_index, 0, -1):
+                if (
+                    parser_state.token_stack[search_index].is_list
+                    and not found_list_stack_index
+                ):
+                    found_list_stack_index = search_index
+            if found_list_stack_index:
+                list_token = cast(
+                    ListStartMarkdownToken,
+                    parser_state.token_stack[
+                        found_list_stack_index
+                    ].matching_markdown_token,
+                )
+                if position_marker.line_number != list_token.line_number:
+                    list_token.add_leading_spaces("")
 
         POGGER.debug("__hbqs>>bq>>$", block_quote_token)
+
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     @staticmethod

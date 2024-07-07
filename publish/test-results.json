@@ -868,10 +868,10 @@
         },
         {
             "name": "test.nested_three.test_markdown_nested_three_ordered_block_block",
-            "totalTests": 48,
+            "totalTests": 51,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 1,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -948,10 +948,10 @@
         },
         {
             "name": "test.nested_three.test_markdown_nested_three_unordered_block_ordered",
-            "totalTests": 47,
+            "totalTests": 52,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 6,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -1364,7 +1364,7 @@
         },
         {
             "name": "test.rules.test_md031",
-            "totalTests": 110,
+            "totalTests": 126,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1620,10 +1620,10 @@
         },
         {
             "name": "test.test_markdown_extra",
-            "totalTests": 163,
+            "totalTests": 180,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 1,
+            "skippedTests": 2,
             "elapsedTimeInMilliseconds": 0
         },
         {

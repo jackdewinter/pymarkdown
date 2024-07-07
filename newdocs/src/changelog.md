@@ -4,7 +4,8 @@
 
 ### Added
 
-- None
+- [Issue 818](https://github.com/jackdewinter/pymarkdown/issues/818)
+    - Adding Fix Mode for Md031.
 
 ### Fixed
 
@@ -26,6 +27,9 @@
       the block quote to close
 - [Issue 1127](https://github.com/jackdewinter/pymarkdown/issues/1127)
     - rehydration can be wrong with indented blocks in Bq-List-Bq
+- [Issue 1130](https://github.com/jackdewinter/pymarkdown/issues/1130)
+    - check for adding extra line to list with blank line in *-List-Bq
+      not flexible enough
 
 ### Changed
 
