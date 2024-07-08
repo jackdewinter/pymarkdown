@@ -295,6 +295,7 @@ class TransformToGfmListLooseness:
         token_to_check = actual_tokens[check_index]
 
         POGGER.debug("token_to_check-->$", token_to_check)
+        is_loose = False
         if token_to_check.is_blank_line:
             POGGER.debug("before_blank-->$", actual_tokens[check_index - 1])
             if (
@@ -306,8 +307,33 @@ class TransformToGfmListLooseness:
                 POGGER.debug("!!!Starting BQ Blank!!!")
             else:
                 POGGER.debug("!!!LOOSE!!!")
-                return True
-        return False
+                is_loose = True
+        return is_loose and TransformToGfmListLooseness.__is_really_loose(
+            actual_tokens, check_index
+        )
+
+    @staticmethod
+    def __is_really_loose(actual_tokens: List[MarkdownToken], check_index: int) -> bool:
+        real_answer = None
+        inner_containers = 0
+        search_index = check_index - 1
+        while real_answer is None and search_index >= 0:
+            rt = actual_tokens[search_index]
+            if rt.is_block_quote_end or rt.is_list_end:
+                inner_containers += 1
+            elif rt.is_list_start:
+                if inner_containers:
+                    inner_containers -= 1
+                else:
+                    real_answer = True
+            elif rt.is_block_quote_start:
+                if inner_containers:
+                    inner_containers -= 1
+                else:
+                    real_answer = False
+            search_index -= 1
+        assert real_answer is not None, "must always have a real answer"
+        return real_answer
 
     @staticmethod
     def __find_owning_list_start(
