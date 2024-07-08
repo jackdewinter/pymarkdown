@@ -492,6 +492,7 @@ class TransformContainers:
             removed_tokens,
             applied_leading_spaces_to_start_of_container_line,
             previous_token,
+            container_line,
         ):
             previous_block_token = cast(BlockQuoteMarkdownToken, previous_token)
             assert (
@@ -527,6 +528,7 @@ class TransformContainers:
         removed_tokens: List[MarkdownToken],
         applied_leading_spaces_to_start_of_container_line: bool,
         previous_token: MarkdownToken,
+        container_line: str,
     ) -> bool:
         if not token_stack[-1].is_new_list_item:
             return (
@@ -556,10 +558,51 @@ class TransformContainers:
             )
             POGGER.debug(f"new_list_item_adjust:{new_list_item_adjust}")
 
+            if new_list_item_adjust:
+                new_list_item_adjust = TransformContainers.__look_for_container_prefix(
+                    token_stack, container_line
+                )
         return (
             token_stack[-1].line_number != previous_token.line_number
             and new_list_item_adjust
         )
+
+    @staticmethod
+    def __look_for_container_prefix(
+        token_stack: List[MarkdownToken], container_line: str
+    ) -> bool:
+        end_stack_index = len(token_stack) - 1
+        assert token_stack[end_stack_index].is_new_list_item
+        end_stack_index -= 1
+        assert token_stack[end_stack_index].is_list_start
+
+        stack_index = 0
+        container_lindex_index, _ = ParserHelper.collect_while_spaces_verified(
+            container_line, 0
+        )
+        is_tracking = True
+        while stack_index < end_stack_index and is_tracking:
+            if token_stack[stack_index].is_block_quote_start:  # pragma: no cover
+                is_tracking = ParserHelper.is_character_at_index(
+                    container_line, container_lindex_index, ">"
+                )
+                container_lindex_index, _ = ParserHelper.collect_while_spaces_verified(
+                    container_line, container_lindex_index + 1
+                )
+            stack_index += 1
+        assert is_tracking
+        list_token = cast(ListStartMarkdownToken, token_stack[end_stack_index])
+        if not list_token.is_unordered_list_start:
+            container_lindex_index, numeric_prefix = (
+                ParserHelper.collect_while_one_of_characters_verified(
+                    container_line, container_lindex_index, "0123456789"
+                )
+            )
+            assert len(numeric_prefix) > 0
+        is_tracking = ParserHelper.is_character_at_index(
+            container_line, container_lindex_index, list_token.list_start_sequence
+        )
+        return not is_tracking
 
     @staticmethod
     def __find_last_block_quote_on_stack(token_stack: List[MarkdownToken]) -> int:
@@ -738,7 +781,11 @@ class TransformContainers:
                     last_container_token_index
                 ]
         else:
-            prev_list_token = cast(ListStartMarkdownToken, token_stack[-1])
+            prev_list_token = (
+                cast(ListStartMarkdownToken, token_stack[-2])
+                if token_stack[-1].is_new_list_item
+                else cast(ListStartMarkdownToken, token_stack[-1])
+            )
             assert (
                 prev_list_token.leading_spaces is not None
             ), "Leading spaces must be defined by this point."

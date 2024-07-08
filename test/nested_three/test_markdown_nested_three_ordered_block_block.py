@@ -645,7 +645,7 @@ item</p>
 
 
 @pytest.mark.gfm
-def test_nested_three_ordered_nl_block_skip_nl_block_skip():
+def test_nested_three_ordered_nl_block_skip_nl_block_skip_x():
     """
     Verify that a nesting of ordered list, block quote, block quote works
     properly.
@@ -671,6 +671,137 @@ def test_nested_three_ordered_nl_block_skip_nl_block_skip():
     ]
     expected_gfm = """<ol>
 <li>
+<blockquote>
+<blockquote>
+<p>list
+item</p>
+</blockquote>
+</blockquote>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_ordered_nl_block_skip_nl_block_skip_1():
+    """
+    Verify that a nesting of ordered list, block quote, block quote works
+    properly.
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+   > def
+   > > list
+       item"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n\n   \n]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,4):   :   > ]",
+        "[para(2,6):]",
+        "[text(2,6):def:]",
+        "[end-para:::True]",
+        "[block-quote(3,4):   :   > > \n]",
+        "[para(3,8):\n    ]",
+        "[text(3,8):list\nitem::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<blockquote>
+<p>def</p>
+<blockquote>
+<p>list
+item</p>
+</blockquote>
+</blockquote>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_ordered_nl_block_skip_nl_block_skip_2():
+    """
+    Verify that a nesting of ordered list, block quote, block quote works
+    properly.
+    """
+
+    # Arrange
+    source_markdown = """1.
+   > def
+   > > list
+       item"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n\n   \n]",
+        "[BLANK(1,3):]",
+        "[block-quote(2,4):   :   > ]",
+        "[para(2,6):]",
+        "[text(2,6):def:]",
+        "[end-para:::True]",
+        "[block-quote(3,4):   :   > > \n]",
+        "[para(3,8):\n    ]",
+        "[text(3,8):list\nitem::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<blockquote>
+<p>def</p>
+<blockquote>
+<p>list
+item</p>
+</blockquote>
+</blockquote>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_nested_three_ordered_nl_block_skip_nl_block_skip_3():
+    """
+    Verify that a nesting of ordered list, block quote, block quote works
+    properly.
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+   >
+   > > list
+       item"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n\n   \n]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,4):   :   >]",
+        "[BLANK(2,5):]",
+        "[block-quote(3,4):   :   > > \n]",
+        "[para(3,8):\n    ]",
+        "[text(3,8):list\nitem::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
 <blockquote>
 <blockquote>
 <p>list

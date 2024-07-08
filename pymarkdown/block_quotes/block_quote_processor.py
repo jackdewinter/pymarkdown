@@ -676,9 +676,6 @@ class BlockQuoteProcessor:
         block_markdown_token = cast(
             BlockQuoteMarkdownToken, block_stack_token.matching_markdown_token
         )
-        list_markdown_token = cast(
-            ListStartMarkdownToken, embedded_list_stack_token.matching_markdown_token
-        )
         assert parser_state.original_line_to_parse is not None
         character_after_list = parser_state.original_line_to_parse[
             start_index : embedded_list_stack_token.indent_level
@@ -703,7 +700,6 @@ class BlockQuoteProcessor:
             block_markdown_token.weird_kludge_one += 1
         else:
             block_markdown_token.weird_kludge_one = 1
-        list_markdown_token.add_leading_spaces("")
         block_quote_data = BlockQuoteData(
             block_quote_data.current_count + 1, block_quote_data.stack_count
         )
