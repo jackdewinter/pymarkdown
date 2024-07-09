@@ -32,6 +32,8 @@
       not flexible enough
 - [Issue 1132](https://github.com/jackdewinter/pymarkdown/issues/1132)
     - false positives (negatives?) for list looseness fixed
+- [Issue 1135](https://github.com/jackdewinter/pymarkdown/issues/1135)
+    - fixed issue introduced with above shortcuting in Bq-List-Bq scenarios
 
 ### Changed
 
