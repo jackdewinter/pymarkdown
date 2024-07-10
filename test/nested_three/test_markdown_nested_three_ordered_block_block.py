@@ -773,7 +773,6 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_nl_block_skip_nl_block_skip_3():
     """
     Verify that a nesting of ordered list, block quote, block quote works

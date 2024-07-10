@@ -30,6 +30,11 @@
 - [Issue 1130](https://github.com/jackdewinter/pymarkdown/issues/1130)
     - check for adding extra line to list with blank line in *-List-Bq
       not flexible enough
+- [Issue 1132](https://github.com/jackdewinter/pymarkdown/issues/1132)
+    - false positives (negatives?) for list looseness fixed
+- [Issue 1135](https://github.com/jackdewinter/pymarkdown/issues/1135)
+    - fixed issue introduced with above shortcuting in Bq-List-Bq scenarios
+      to avoid assert
 
 ### Changed
 

@@ -871,7 +871,7 @@
             "totalTests": 51,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 1,
+            "skippedTests": 0,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -948,10 +948,10 @@
         },
         {
             "name": "test.nested_three.test_markdown_nested_three_unordered_block_ordered",
-            "totalTests": 52,
+            "totalTests": 54,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 6,
+            "skippedTests": 7,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -1623,7 +1623,7 @@
             "totalTests": 180,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 2,
+            "skippedTests": 1,
             "elapsedTimeInMilliseconds": 0
         },
         {

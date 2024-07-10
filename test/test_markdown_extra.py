@@ -6648,7 +6648,6 @@ def test_extra_044fb():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_044fc():
     """
     TBD
@@ -6660,15 +6659,14 @@ def test_extra_044fc():
 > + another list
 """
     expected_tokens = [
-        "[block-quote(1,1)::> ]",
+        "[block-quote(1,1)::> \n> ]",
         "[ulist(1,3):+::4::\n]",
-        "[block-quote(1,5)::> \n>   > \n> ]",
+        "[block-quote(1,5)::> \n>   > ]",
         "[tbreak(1,7):-::-----]",
-        "[para(2,7):]",
-        "[text(2,7):abc:]",
-        "[end-para:::True]",
+        "[fcode-block(2,7):`:3:block:::::]",
+        "[end-fcode-block::::True]",
         "[end-block-quote:::True]",
-        "[li(3,3):4:  :]",
+        "[li(3,3):4::]",
         "[para(3,5):]",
         "[text(3,5):another list:]",
         "[end-para:::True]",
@@ -7639,8 +7637,8 @@ un-block</p>
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_extra_044jec():
     """
     TBD
