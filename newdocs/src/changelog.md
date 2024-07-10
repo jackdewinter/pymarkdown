@@ -34,6 +34,7 @@
     - false positives (negatives?) for list looseness fixed
 - [Issue 1135](https://github.com/jackdewinter/pymarkdown/issues/1135)
     - fixed issue introduced with above shortcuting in Bq-List-Bq scenarios
+      to avoid assert
 
 ### Changed
 
