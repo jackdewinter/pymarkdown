@@ -2017,7 +2017,7 @@ def test_nested_three_unordered_block_ordered_with_blank_fenced_bc():
 
 @pytest.mark.gfm
 @pytest.mark.skip
-def test_nested_three_unordered_block_ordered_with_blank_fenced_bd():
+def test_nested_three_unordered_block_ordered_with_blank_fenced_bdx():
     """
     TBD - from https://github.com/jackdewinter/pymarkdown/issues/731
     """
@@ -2071,6 +2071,122 @@ def test_nested_three_unordered_block_ordered_with_blank_fenced_bd():
 <h1>bob</h1>
 </blockquote>
 abc
+<pre><code class="language-text">block
+</code></pre>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_unordered_block_ordered_with_blank_fenced_bda():
+    """
+    TBD - from https://github.com/jackdewinter/pymarkdown/issues/731
+    """
+
+    # Arrange
+    source_markdown = """- Test List
+  > 1) Test1
+  > 2) Test2
+  > bob
+  abc
+  ```text
+  block
+  ```
+"""
+
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  \n  \n]",
+        "[para(1,3):]",
+        "[text(1,3):Test List:]",
+        "[end-para:::True]",
+        "[block-quote(2,3):  :  > \n  > \n  > \n]",
+        "[olist(2,5):):1:7::\n  ]",
+        "[para(2,8):]",
+        "[text(2,8):Test1:]",
+        "[end-para:::True]",
+        "[li(3,5):7::2]",
+        "[para(3,8):\n\n]",
+        "[text(3,8):Test2\nbob\nabc::\n\n]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+        "[fcode-block(6,3):`:3:text:::::]",
+        "[text(7,3):block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(9,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>Test List
+<blockquote>
+<ol>
+<li>Test1</li>
+<li>Test2
+bob
+abc</li>
+</ol>
+</blockquote>
+<pre><code class="language-text">block
+</code></pre>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_unordered_block_ordered_with_blank_fenced_bdb():
+    """
+    TBD - from https://github.com/jackdewinter/pymarkdown/issues/731
+    """
+
+    # Arrange
+    source_markdown = """- Test List
+  > 1) Test1
+  > 2) Test2
+  >    bob
+  abc
+  ```text
+  block
+  ```
+"""
+
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  \n  \n]",
+        "[para(1,3):]",
+        "[text(1,3):Test List:]",
+        "[end-para:::True]",
+        "[block-quote(2,3):  :  > \n  > \n  > \n]",
+        "[olist(2,5):):1:7::   \n  ]",
+        "[para(2,8):]",
+        "[text(2,8):Test1:]",
+        "[end-para:::True]",
+        "[li(3,5):7::2]",
+        "[para(3,8):\n\n]",
+        "[text(3,8):Test2\nbob\nabc::\n\n]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+        "[fcode-block(6,3):`:3:text:::::]",
+        "[text(7,3):block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(9,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>Test List
+<blockquote>
+<ol>
+<li>Test1</li>
+<li>Test2
+bob
+abc</li>
+</ol>
+</blockquote>
 <pre><code class="language-text">block
 </code></pre>
 </li>

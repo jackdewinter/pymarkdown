@@ -249,6 +249,9 @@ class TransformToMarkdown:
         transformed_data = self.__correct_for_final_newline(
             transformed_data, actual_tokens
         )
+        transformed_data = transformed_data.replace(
+            ParserLogger.start_range_sequence, ""
+        ).replace(ParserLogger.end_range_sequence, "")
         if pragma_token:
             transformed_data = self.__handle_pragma_processing(
                 pragma_token, transformed_data
