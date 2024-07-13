@@ -28,6 +28,9 @@ class ParserLogger:
     are only done when needed.
     """
 
+    start_range_sequence = "\u8268"
+    end_range_sequence = "\u8269"
+
     __global_count = 0
 
     def __init__(self, my_logger: logging.Logger) -> None:
@@ -123,4 +126,13 @@ class ParserLogger:
                 recipient_array[next_array_index] = ParserHelper.make_value_visible(
                     args[int(next_array_index / 2)]
                 )
-        return "".join(recipient_array)
+        formatted_string = "".join(recipient_array)
+        if ParserLogger.start_range_sequence in formatted_string:
+            formatted_string = formatted_string.replace(
+                ParserLogger.start_range_sequence, ""
+            )
+        if ParserLogger.end_range_sequence in formatted_string:
+            formatted_string = formatted_string.replace(
+                ParserLogger.end_range_sequence, ""
+            )
+        return formatted_string

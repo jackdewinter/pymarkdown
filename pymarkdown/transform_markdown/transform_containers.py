@@ -132,6 +132,65 @@ class TransformContainers:
             POGGER.debug(f"trn>:{transformed_data}:<")
         return transformed_data
 
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __apply_line_transformation(
+        did_move_ahead: bool,
+        token_stack: List[MarkdownToken],
+        container_token_indices: List[int],
+        current_changed_record: Optional[MarkdownChangeRecord],
+        container_line: str,
+        actual_tokens: List[MarkdownToken],
+        removed_tokens: List[MarkdownToken],
+        base_line_number: int,
+        delta_line: int,
+        is_in_multiline_paragraph: bool,
+    ) -> str:
+        (
+            last_container_token_index,
+            applied_leading_spaces_to_start_of_container_line,
+            container_line,
+            was_abrupt_block_quote_end,
+            did_adjust_due_to_block_quote_start,
+        ) = TransformContainers.__apply_primary_transformation(
+            did_move_ahead,
+            token_stack,
+            container_token_indices,
+            current_changed_record,
+            container_line,
+            actual_tokens,
+        )
+
+        container_line = TransformContainers.__adjust_for_list(
+            token_stack,
+            applied_leading_spaces_to_start_of_container_line,
+            container_token_indices,
+            container_line,
+            removed_tokens,
+        )
+        container_line = TransformContainers.__adjust_for_block_quote(
+            token_stack,
+            applied_leading_spaces_to_start_of_container_line,
+            container_line,
+            container_token_indices,
+            base_line_number + delta_line,
+            did_adjust_due_to_block_quote_start,
+            is_in_multiline_paragraph,
+        )
+
+        TransformContainers.__adjust_state_for_element(
+            token_stack,
+            container_token_indices,
+            did_move_ahead,
+            current_changed_record,
+            last_container_token_index,
+            was_abrupt_block_quote_end,
+        )
+
+        return container_line
+
+    # pylint: enable=too-many-arguments
+
     # pylint: disable=too-many-locals
     @staticmethod
     def __apply_container_transformation(
@@ -139,13 +198,13 @@ class TransformContainers:
         container_records: List[MarkdownChangeRecord],
         actual_tokens: List[MarkdownToken],
     ) -> str:
-        POGGER.debug(
-            f">>incoming>>:{ParserHelper.make_value_visible(container_text)}:<<"
-        )
+        # POGGER.debug(
+        #     f">>incoming>>:{ParserHelper.make_value_visible(container_text)}:<<"
+        # )
 
-        POGGER.debug(
-            f">>container_records>>{ParserHelper.make_value_visible(container_records)}"
-        )
+        # POGGER.debug(
+        #     f">>container_records>>{ParserHelper.make_value_visible(container_records)}"
+        # )
 
         token_stack: List[MarkdownToken] = []
         container_token_indices: List[int] = []
@@ -171,6 +230,7 @@ class TransformContainers:
             + ParserHelper.make_value_visible(split_container_text)
         )
 
+        is_in_multiline_paragraph = False
         for container_line in split_container_text:  # pragma: no cover
             container_line_length = len(container_line)
             # POGGER.debug(
@@ -187,6 +247,8 @@ class TransformContainers:
             #     + ":<"
             # )
 
+            is_para_start_in_line = ParserLogger.start_range_sequence in container_line
+            is_para_end_in_line = ParserLogger.end_range_sequence in container_line
             old_record_index = record_index
             (
                 record_index,
@@ -206,42 +268,25 @@ class TransformContainers:
                 transformed_parts.append(container_line)
                 break
 
-            (
-                last_container_token_index,
-                applied_leading_spaces_to_start_of_container_line,
-                container_line,
-                was_abrupt_block_quote_end,
-            ) = TransformContainers.__apply_primary_transformation(
+            container_line = TransformContainers.__apply_line_transformation(
                 did_move_ahead,
                 token_stack,
                 container_token_indices,
                 current_changed_record,
                 container_line,
                 actual_tokens,
-            )
-
-            container_line = TransformContainers.__adjust_for_list(
-                token_stack,
-                applied_leading_spaces_to_start_of_container_line,
-                container_token_indices,
-                container_line,
                 removed_tokens,
-            )
-            container_line = TransformContainers.__adjust_for_block_quote(
-                token_stack,
-                container_line,
-                container_token_indices,
-                base_line_number + delta_line,
+                base_line_number,
+                delta_line,
+                is_in_multiline_paragraph,
             )
 
-            TransformContainers.__adjust_state_for_element(
-                token_stack,
-                container_token_indices,
-                did_move_ahead,
-                current_changed_record,
-                last_container_token_index,
-                was_abrupt_block_quote_end,
-            )
+            if is_in_multiline_paragraph:
+                is_in_multiline_paragraph = not is_para_end_in_line
+            else:
+                is_in_multiline_paragraph = (
+                    is_para_start_in_line and not is_para_end_in_line
+                )
 
             transformed_parts.append(container_line)
             container_text_index += container_line_length + 1
@@ -392,12 +437,16 @@ class TransformContainers:
 
     # pylint: enable=too-many-arguments
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __adjust_for_block_quote(
         token_stack: List[MarkdownToken],
+        applied_leading_spaces_to_start_of_container_line: bool,
         container_line: str,
         container_token_indices: List[int],
         line_number: int,
+        did_adjust_due_to_block_quote_start: bool,
+        is_in_multiline_paragraph: bool,
     ) -> str:
         if not (len(token_stack) > 1 and token_stack[-1].is_block_quote_start):
             return container_line
@@ -428,8 +477,13 @@ class TransformContainers:
                 token_stack,
                 container_token_indices,
                 line_number,
+                applied_leading_spaces_to_start_of_container_line,
+                did_adjust_due_to_block_quote_start,
+                is_in_multiline_paragraph,
             )
         return container_line
+
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __adjust_for_list(
@@ -616,6 +670,7 @@ class TransformContainers:
             stack_index -= 1
         return nested_block_start_index
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __adjust_for_block_quote_previous_line(
         container_line: str,
@@ -623,6 +678,9 @@ class TransformContainers:
         token_stack: List[MarkdownToken],
         container_token_indices: List[int],
         line_number: int,
+        applied_leading_spaces_to_start_of_container_line: bool,
+        did_adjust_due_to_block_quote_start: bool,
+        is_in_multiline_paragraph: bool,
     ) -> str:
         previous_token = token_stack[nested_list_start_index]
         # POGGER.debug(f"nested_list_start_index->{nested_list_start_index}")
@@ -636,12 +694,23 @@ class TransformContainers:
             or line_number != previous_token.line_number
         ):
             POGGER.debug("different line as list start")
+            is_special_case = not (
+                did_adjust_due_to_block_quote_start and not is_in_multiline_paragraph
+            )
+            container_line_change_required = (
+                not applied_leading_spaces_to_start_of_container_line
+                or (
+                    applied_leading_spaces_to_start_of_container_line
+                    and is_special_case
+                )
+            )
             container_line = TransformContainers.__adjust(
                 nested_list_start_index,
                 token_stack,
                 container_token_indices,
                 container_line,
                 False,
+                apply_change_to_container_line=container_line_change_required,
             )
         else:
             POGGER.debug("same line as list start")
@@ -664,6 +733,8 @@ class TransformContainers:
                     if pre_previous_token.line_number != previous_token.line_number:
                         container_line = different_line_prefix + container_line
         return container_line
+
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __adjust_for_block_quote_same_line(
@@ -701,7 +772,7 @@ class TransformContainers:
         current_changed_record: Optional[MarkdownChangeRecord],
         container_line: str,
         actual_tokens: List[MarkdownToken],
-    ) -> Tuple[int, bool, str, bool]:
+    ) -> Tuple[int, bool, str, bool, bool]:
         POGGER.debug(
             f" -->did_move_ahead>{ParserHelper.make_value_visible(did_move_ahead)}"
         )
@@ -747,14 +818,19 @@ class TransformContainers:
 
         last_container_token_index = container_token_indices[-1]
         if applied_leading_spaces_to_start_of_container_line:
-            container_line = TransformContainers.__apply_primary_transformation_adjust_container_line(
-                token_stack, last_container_token_index, container_line
+            container_line, did_adjust_due_to_block_quote_start = (
+                TransformContainers.__apply_primary_transformation_adjust_container_line(
+                    token_stack, last_container_token_index, container_line
+                )
             )
+        else:
+            did_adjust_due_to_block_quote_start = False
         return (
             last_container_token_index,
             applied_leading_spaces_to_start_of_container_line,
             container_line,
             was_abrupt_block_quote_end,
+            did_adjust_due_to_block_quote_start,
         )
 
     # pylint: enable=too-many-arguments
@@ -765,10 +841,12 @@ class TransformContainers:
         token_stack: List[MarkdownToken],
         last_container_token_index: int,
         container_line: str,
-    ) -> str:
+    ) -> Tuple[str, bool]:
         POGGER.debug(f" container->{ParserHelper.make_value_visible(token_stack[-1])}")
+        did_adjust_due_to_block_quote_start = False
         tabbed_leading_space: Optional[str] = None
         if token_stack[-1].is_block_quote_start:
+            did_adjust_due_to_block_quote_start = True
             prev_block_token = cast(BlockQuoteMarkdownToken, token_stack[-1])
             assert (
                 prev_block_token.bleading_spaces is not None
@@ -795,9 +873,7 @@ class TransformContainers:
         if last_container_token_index < len(split_leading_spaces):
             POGGER.debug(f" -->{ParserHelper.make_value_visible(split_leading_spaces)}")
             POGGER.debug(
-                " primary-->container_line>:"
-                + ParserHelper.make_value_visible(container_line)
-                + ":<"
+                f" primary-->container_line>:{ParserHelper.make_value_visible(container_line)}:<"
             )
             container_line = (
                 tabbed_leading_space + container_line
@@ -805,11 +881,11 @@ class TransformContainers:
                 else split_leading_spaces[last_container_token_index] + container_line
             )
             POGGER.debug(
-                " -->container_line>:"
-                + ParserHelper.make_value_visible(container_line)
-                + ":<"
+                f" -->container_line>:{ParserHelper.make_value_visible(container_line)}:<"
             )
-        return container_line
+        else:
+            did_adjust_due_to_block_quote_start = False
+        return container_line, did_adjust_due_to_block_quote_start
 
     @staticmethod
     def __apply_primary_transformation_start(
@@ -840,6 +916,7 @@ class TransformContainers:
                 # pylint: enable=too-many-boolean-expressions
         return is_list_start_after_two_block_starts
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __adjust(
         nested_list_start_index: int,
@@ -847,13 +924,19 @@ class TransformContainers:
         container_token_indices: List[int],
         container_line: str,
         apply_list_fix: bool,
+        apply_change_to_container_line: bool = True,
     ) -> str:
         previous_token = token_stack[nested_list_start_index]
-        if apply_list_fix and previous_token.is_list_start:
+        if (
+            apply_list_fix
+            and apply_change_to_container_line
+            and previous_token.is_list_start
+        ):
             previous_list_token = cast(ListStartMarkdownToken, previous_token)
             delta = previous_list_token.indent_level - len(container_line)
             POGGER.debug(f"delta->{delta}")
             container_line += ParserHelper.repeat_string(" ", delta)
+
         if previous_token.is_block_quote_start:
             previous_block_token = cast(BlockQuoteMarkdownToken, previous_token)
             leading_spaces = (
@@ -876,12 +959,15 @@ class TransformContainers:
         POGGER.debug(
             f"inner_index->{str(container_token_indices[nested_list_start_index])}"
         )
-        container_line = split_leading_spaces[inner_token_index] + container_line
+        if apply_change_to_container_line:
+            container_line = split_leading_spaces[inner_token_index] + container_line
         container_token_indices[nested_list_start_index] = inner_token_index + 1
         POGGER.debug(
             f"inner_index->{str(container_token_indices[nested_list_start_index])}"
         )
         return container_line
+
+    # pylint: enable=too-many-arguments
 
     @classmethod
     def __get_last_list_index(cls, token_stack: List[MarkdownToken]) -> int:

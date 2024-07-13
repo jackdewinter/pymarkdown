@@ -7,6 +7,7 @@ from typing import Optional, Union, cast
 from typing_extensions import override
 
 from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.tokens.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
@@ -126,7 +127,7 @@ class ParagraphMarkdownToken(LeafMarkdownToken):
         if ParserHelper.newline_character in extracted_whitespace:
             line_end_index = extracted_whitespace.index(ParserHelper.newline_character)
             extracted_whitespace = extracted_whitespace[:line_end_index]
-        return ParserHelper.resolve_all_from_text(extracted_whitespace)
+        return f"{ParserLogger.start_range_sequence}{ParserHelper.resolve_all_from_text(extracted_whitespace)}"
 
     @staticmethod
     def __rehydrate_paragraph_end(
@@ -157,7 +158,7 @@ class ParagraphMarkdownToken(LeafMarkdownToken):
         assert (
             rehydrate_index == expected_rehydrate_index
         ), "Rehydrate index must match up at end of paragraph."
-        return f"{top_stack_token.final_whitespace}{ParserHelper.newline_character}"
+        return f"{top_stack_token.final_whitespace}{ParserLogger.end_range_sequence}{ParserHelper.newline_character}"
 
     @staticmethod
     def register_for_html_transform(
