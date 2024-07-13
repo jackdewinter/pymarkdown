@@ -948,7 +948,7 @@
         },
         {
             "name": "test.nested_three.test_markdown_nested_three_unordered_block_ordered",
-            "totalTests": 56,
+            "totalTests": 54,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 7,
