@@ -35,6 +35,8 @@
 - [Issue 1135](https://github.com/jackdewinter/pymarkdown/issues/1135)
     - fixed issue introduced with above shortcuting in Bq-List-Bq scenarios
       to avoid assert
+- [Issue 1137](https://github.com/jackdewinter/pymarkdown/issues/1137)
+    - fixed issue with hanging indents and some Bq-List-Bq scenarios
 
 ### Changed
 
