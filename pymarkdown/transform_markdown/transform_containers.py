@@ -14,6 +14,8 @@ from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
+# pylint: disable=too-many-lines
+
 
 @dataclass
 class MarkdownChangeRecord:
@@ -167,6 +169,7 @@ class TransformContainers:
             container_token_indices,
             container_line,
             removed_tokens,
+            current_changed_record,
         )
         container_line = TransformContainers.__adjust_for_block_quote(
             token_stack,
@@ -406,7 +409,7 @@ class TransformContainers:
         old_record_index += 1
         return old_record_index, did_move_ahead, current_changed_record
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments,too-many-boolean-expressions
     @staticmethod
     def __adjust_state_for_element(
         token_stack: List[MarkdownToken],
@@ -418,13 +421,49 @@ class TransformContainers:
     ) -> None:
         if was_abrupt_block_quote_end:
             return
-        POGGER.debug(f" -->{ParserHelper.make_value_visible(token_stack)}")
-        POGGER.debug(f" -->{ParserHelper.make_value_visible(container_token_indices)}")
+        # POGGER.debug(f" -->{ParserHelper.make_value_visible(token_stack)}")
+        # POGGER.debug(f" -->{ParserHelper.make_value_visible(container_token_indices)}")
         did_change_to_list_token = (
             did_move_ahead
             and (current_changed_record is not None and current_changed_record.item_a)
             and (token_stack[-1].is_list_start or token_stack[-1].is_new_list_item)
         )
+
+        # Attempt to address one of the open issues.
+        # if False:
+        #     xx = did_move_ahead and not did_change_to_list_token and last_container_token_index == 0 and \
+        #         current_changed_record and current_changed_record.item_c and current_changed_record.item_c.is_block_quote_start and\
+        #         len(token_stack) > 2 and token_stack[-1].is_block_quote_start and token_stack[-2].is_block_quote_start
+        #     if xx:
+        #         x1 = token_stack[-1]
+        #         i1 = container_token_indices[len(token_stack) - 1]
+        #         l1 = token_stack[-1].bleading_spaces.split("\n")
+        #         c1 = l1[i1]
+        #         x2 = token_stack[-2]
+        #         i2 = container_token_indices[len(token_stack) - 2]
+        #         l2 = token_stack[-2].bleading_spaces.split("\n")
+        #         if i2 < len(l2) and token_stack[-1].line_number != token_stack[-2].line_number:
+        #             c2 = l2[i2]
+        #             if c1 and c2 and c1.startswith(c2):
+        #                 assert False
+
+        # This corresponds to __do_block_quote_leading_spaces_adjustments_adjust_bleading
+        # and yes... this is a kludge.
+        if (
+            did_move_ahead
+            and not did_change_to_list_token
+            and last_container_token_index == 0
+            and current_changed_record
+            and current_changed_record.item_c
+            and current_changed_record.item_c.is_block_quote_start
+            and len(token_stack) >= 4
+            and token_stack[-1].is_block_quote_start
+            and token_stack[-2].is_list_start
+            and token_stack[-3].is_list_start
+            and token_stack[-4].is_block_quote_start
+            and token_stack[-1].line_number != token_stack[-2].line_number
+        ):
+            container_token_indices[-4] += 1
 
         # May need earlier if both new item and start of new list on same line
         if not did_change_to_list_token:
@@ -435,7 +474,7 @@ class TransformContainers:
         POGGER.debug(f" -->{ParserHelper.make_value_visible(token_stack)}")
         POGGER.debug(f" -->{ParserHelper.make_value_visible(container_token_indices)}")
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments,too-many-boolean-expressions
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -485,6 +524,7 @@ class TransformContainers:
 
     # pylint: enable=too-many-arguments
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __adjust_for_list(
         token_stack: List[MarkdownToken],
@@ -492,6 +532,7 @@ class TransformContainers:
         container_token_indices: List[int],
         container_line: str,
         removed_tokens: List[MarkdownToken],
+        current_changed_record: Optional[MarkdownChangeRecord],
     ) -> str:
         if (
             len(token_stack) > 1
@@ -526,8 +567,11 @@ class TransformContainers:
                     container_token_indices,
                     inner_token_index,
                     nested_block_start_index,
+                    current_changed_record,
                 )
         return container_line
+
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -540,6 +584,7 @@ class TransformContainers:
         container_token_indices: List[int],
         inner_token_index: int,
         nested_block_start_index: int,
+        current_changed_record: Optional[MarkdownChangeRecord],
     ) -> str:
         if TransformContainers.__adjust_for_list_check(
             token_stack,
@@ -560,19 +605,34 @@ class TransformContainers:
             )
             if inner_token_index < len(split_leading_spaces):
                 POGGER.debug(
-                    " adj-->container_line>:"
-                    + ParserHelper.make_value_visible(container_line)
-                    + ":<"
+                    f" adj-->container_line>:{ParserHelper.make_value_visible(container_line)}:<"
                 )
                 container_line = (
                     split_leading_spaces[inner_token_index] + container_line
                 )
                 POGGER.debug(
-                    " adj-->container_line>:"
-                    + ParserHelper.make_value_visible(container_line)
-                    + ":<"
+                    f" adj-->container_line>:{ParserHelper.make_value_visible(container_line)}:<"
                 )
-        container_token_indices[nested_block_start_index] = inner_token_index + 1
+
+        check_end_data = current_changed_record is not None and (
+            current_changed_record.item_d is None
+            or (
+                current_changed_record.item_d is not None
+                and not current_changed_record.item_d.extra_end_data
+            )
+        )
+        if (
+            not removed_tokens
+            or not removed_tokens[-1].is_block_quote_start
+            or check_end_data
+        ):
+            container_token_indices[nested_block_start_index] = inner_token_index + 1
+        if (
+            removed_tokens
+            and current_changed_record
+            and current_changed_record.item_d is not None
+        ):
+            container_token_indices[-1] += 1
         return container_line
 
     # pylint: enable=too-many-arguments

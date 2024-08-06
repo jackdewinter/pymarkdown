@@ -111,6 +111,7 @@ class TransformBlockQuote:
         )
         new_instance.leading_text_index = 0
         context.container_token_stack.append(new_instance)
+        context.original_container_token_stack.append(current_token)
         context.container_token_indents.append(IndentAdjustment())
 
         POGGER.debug(f">bquote>{ParserHelper.make_value_visible(new_instance)}")
@@ -157,9 +158,9 @@ class TransformBlockQuote:
             BlockQuoteMarkdownToken, current_end_token.start_markdown_token
         )
 
-        POGGER.debug(
-            f"current_start_block_token>:{ParserHelper.make_value_visible(current_start_token)}:<"
-        )
+        # POGGER.debug(
+        #     f"current_start_block_token>:{ParserHelper.make_value_visible(current_start_token)}:<"
+        # )
         current_end_token_extra = current_end_token.extra_end_data
         POGGER.debug(
             f"current_end_token_extra>:{ParserHelper.make_value_visible(current_end_token_extra)}:<"
@@ -201,7 +202,7 @@ class TransformBlockQuote:
             indent_adjust = (
                 actual_tokens[search_index].line_number
                 - current_start_token.line_number
-                - 1
+                - 0
             )
 
             for indent_index in range(len(context.container_token_indents) - 1, -1, -1):
@@ -211,5 +212,29 @@ class TransformBlockQuote:
                     ].adjustment += indent_adjust
                     break
         del context.container_token_stack[-1]
+        del context.original_container_token_stack[-1]
 
+        TransformBlockQuote.__apply_kludge_two(context, current_start_token)
         return adjusted_end_string
+
+    @staticmethod
+    def __apply_kludge_two(
+        context: MarkdownTransformContext, current_start_token: BlockQuoteMarkdownToken
+    ) -> None:
+        found_block_quote_token: Optional[BlockQuoteMarkdownToken] = None
+        for stack_index in range(
+            len(context.original_container_token_stack) - 1, -1, -1
+        ):
+            stack_token = context.original_container_token_stack[stack_index]
+            if stack_token.is_block_quote_start:
+                found_block_quote_token = cast(BlockQuoteMarkdownToken, stack_token)
+                break
+        if found_block_quote_token is not None:
+            assert current_start_token.bleading_spaces is not None
+            newline_count = ParserHelper.count_newlines_in_text(
+                current_start_token.bleading_spaces
+            )
+            if found_block_quote_token.weird_kludge_two is None:
+                found_block_quote_token.weird_kludge_two = newline_count
+            else:
+                found_block_quote_token.weird_kludge_two += newline_count

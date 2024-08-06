@@ -328,26 +328,34 @@ class BlockQuoteCountHelper:
             ListStackToken, parser_state.token_stack[stack_index - 1]
         )
         assert parser_state.original_line_to_parse is not None
-        if parser_state.original_line_to_parse[
-            start_index : embedded_list_stack_token.indent_level
-        ].strip():
-            return current_count, start_index, last_block_quote_index
-        assert current_count + 1 == stack_count
         if (
-            parser_state.original_line_to_parse[embedded_list_stack_token.indent_level]
+            parser_state.original_line_to_parse[
+                start_index : embedded_list_stack_token.indent_level
+            ].strip()
+            or parser_state.original_line_to_parse[
+                embedded_list_stack_token.indent_level
+            ]
             != ">"
         ):
             return current_count, start_index, last_block_quote_index
+        current_count += 1
         last_block_quote_index = embedded_list_stack_token.indent_level + 1
-        if last_block_quote_index < len(parser_state.original_line_to_parse):
-            character_after_block_quote = parser_state.original_line_to_parse[
-                last_block_quote_index
-            ]
-            assert character_after_block_quote == " "
-            # if character_after_block_quote == " ":
-            last_block_quote_index += 1
 
-        return current_count + 1, last_block_quote_index, last_block_quote_index
+        if ParserHelper.is_character_at_index(
+            parser_state.original_line_to_parse, last_block_quote_index, " "
+        ):
+            last_block_quote_index += 1
+        if current_count < stack_count and ParserHelper.is_character_at_index(
+            parser_state.original_line_to_parse, last_block_quote_index, ">"
+        ):
+            current_count += 1
+            last_block_quote_index += 1
+            if ParserHelper.is_character_at_index(
+                parser_state.original_line_to_parse, last_block_quote_index, " "
+            ):
+                last_block_quote_index += 1
+
+        return current_count, last_block_quote_index, last_block_quote_index
 
     # pylint: enable=too-many-arguments
     @staticmethod
@@ -460,14 +468,13 @@ class BlockQuoteCountHelper:
             stack_count,
             block_quote_data,
         )
-        assert not skip
-        # if not skip:
-        block_quote_data = BlockQuoteCountHelper.decrease_stack_to_level(
-            parser_state,
-            block_quote_data.current_count,
-            stack_count,
-            container_level_tokens,
-        )
+        if not skip:
+            block_quote_data = BlockQuoteCountHelper.decrease_stack_to_level(
+                parser_state,
+                block_quote_data.current_count,
+                stack_count,
+                container_level_tokens,
+            )
         POGGER.debug(
             "container_level_tokens>>$",
             container_level_tokens,

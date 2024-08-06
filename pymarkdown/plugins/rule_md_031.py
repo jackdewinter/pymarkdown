@@ -28,6 +28,7 @@ class ClosedContainerAdjustments:
     """
 
     adjustment: int = 0
+    count: int = 0
 
 
 @dataclass(frozen=True)
@@ -38,6 +39,7 @@ class PendingContainerAdjustment:
 
     insert_index: int
     leading_space_to_insert: str
+    do_insert: bool = True
 
 
 # pylint: disable=too-many-instance-attributes
@@ -172,7 +174,9 @@ class RuleMd031(RulePlugin):
                 PendingContainerAdjustment(leading_space_insert_index, "")
             )
 
-    def __fix_spacing_list(self, token: MarkdownToken) -> None:
+    def __fix_spacing_list(
+        self, context: PluginScanContext, token: MarkdownToken
+    ) -> None:
         initial_index = container_index = len(self.__container_token_stack) - 1
         while (
             container_index > 0
@@ -180,29 +184,81 @@ class RuleMd031(RulePlugin):
         ):
             container_index -= 1
         if container_index:
-            block_quote_index = cast(
-                BlockQuoteMarkdownToken,
-                self.__container_token_stack[container_index - 1],
+
+            block_quote_index, index, ss = self.__xxxx(
+                context, token, container_index, initial_index
             )
-            index = token.line_number - block_quote_index.line_number
+
             assert block_quote_index.bleading_spaces is not None
             split_bleading_spaces = block_quote_index.bleading_spaces.split("\n")
             self.__container_adjustments[container_index - 1].append(
                 PendingContainerAdjustment(index, split_bleading_spaces[index].rstrip())
             )
-        adjust = (
-            0
-            if initial_index >= 1
-            and not container_index
-            and self.__closed_container_adjustments[-1].adjustment
-            else 1
-        )
+            if ss is not None:
+                self.__container_adjustments[container_index - 1].append(
+                    PendingContainerAdjustment(index, ss, do_insert=False)
+                )
+
+        adjust = self.__calculate_adjust(initial_index, container_index)
         index = (
             token.line_number - self.__container_token_stack[initial_index].line_number
         )
         index -= self.__closed_container_adjustments[-1].adjustment
         self.__container_adjustments[initial_index].append(
             PendingContainerAdjustment(index - adjust, "")
+        )
+
+    def __xxxx(
+        self,
+        context: PluginScanContext,
+        token: MarkdownToken,
+        container_index: int,
+        initial_index: int,
+    ) -> Tuple[BlockQuoteMarkdownToken, int, Optional[str]]:
+        block_quote_index = cast(
+            BlockQuoteMarkdownToken,
+            self.__container_token_stack[container_index - 1],
+        )
+        index = (
+            token.line_number
+            - block_quote_index.line_number
+            - self.__closed_container_adjustments[container_index - 1].adjustment
+        )
+        df = self.__closed_container_adjustments[container_index - 1].adjustment
+        ff = df != 0
+        if ff:
+            index += self.__closed_container_adjustments[container_index - 1].count
+
+        ss = None
+        if (
+            container_index == initial_index
+            and self.__last_token is not None
+            and self.__last_token.is_block_quote_end
+        ):
+            x = cast(EndMarkdownToken, self.__last_token)
+            assert x.extra_end_data is not None
+            ss = x.extra_end_data
+            self.register_fix_token_request(
+                context, x, "next_token", "extra_end_data", ""
+            )
+            self.__container_adjustments[container_index - 1].append(
+                PendingContainerAdjustment(index, ss)
+            )
+        return block_quote_index, index, ss
+
+    def __calculate_adjust(self, initial_index: int, container_index: int) -> int:
+        if (
+            initial_index >= 2
+            and not container_index
+            and self.__closed_container_adjustments[-1].adjustment
+        ):
+            return 1
+        return (
+            0
+            if initial_index >= 1
+            and not container_index
+            and self.__closed_container_adjustments[-1].adjustment
+            else 1
         )
 
     def __fix_spacing(
@@ -215,7 +271,7 @@ class RuleMd031(RulePlugin):
             if self.__container_token_stack[-1].is_block_quote_start:
                 self.__fix_spacing_block_quote(token)
             else:
-                self.__fix_spacing_list(token)
+                self.__fix_spacing_list(context, token)
 
         replacement_tokens = [
             BlankLineMarkdownToken(
@@ -245,7 +301,7 @@ class RuleMd031(RulePlugin):
             else:
                 self.report_next_token_error(context, token)
 
-    def __calculate_deltas(self) -> Tuple[int, int]:
+    def __calculate_end_deltas(self) -> Tuple[int, int]:
         line_number_delta = 0
         assert self.__last_non_end_token is not None
         if self.__last_non_end_token.is_text:
@@ -297,7 +353,7 @@ class RuleMd031(RulePlugin):
                 self.__fix_spacing(context, token, False)
             else:
                 assert self.__last_non_end_token
-                line_number_delta, column_number_delta = self.__calculate_deltas()
+                line_number_delta, column_number_delta = self.__calculate_end_deltas()
                 self.report_next_token_error(
                     context,
                     self.__end_fenced_code_block_token.start_markdown_token,
@@ -329,10 +385,15 @@ class RuleMd031(RulePlugin):
             split_spaces = list_token.leading_spaces.split("\n")
 
         for next_container_adjustment in next_container_adjustment_list[::-1]:
-            split_spaces.insert(
-                next_container_adjustment.insert_index,
-                next_container_adjustment.leading_space_to_insert,
-            )
+            if next_container_adjustment.do_insert:
+                split_spaces.insert(
+                    next_container_adjustment.insert_index,
+                    next_container_adjustment.leading_space_to_insert,
+                )
+            else:
+                split_spaces[next_container_adjustment.insert_index] = (
+                    next_container_adjustment.leading_space_to_insert
+                )
 
         self.register_fix_token_request(
             context,
@@ -355,6 +416,7 @@ class RuleMd031(RulePlugin):
                 self.__closed_container_adjustments[
                     stack_index
                 ].adjustment += line_number_delta
+                self.__closed_container_adjustments[stack_index].count += 1
                 break
 
     def __process_pending_container_end_list(self, token: MarkdownToken) -> None:
@@ -394,9 +456,9 @@ class RuleMd031(RulePlugin):
         return bool(
             context.in_fix_mode
             and token.is_fenced_code_block
-            and self.__container_token_stack
-            and len(self.__container_token_stack) > 1
+            and len(self.__container_token_stack) >= 2
             and self.__container_token_stack[-1].is_block_quote_start
+            and self.__container_token_stack[-2].is_block_quote_start
             and self.__last_token
             and self.__second_last_token
             and self.__last_token.is_block_quote_end
@@ -409,6 +471,7 @@ class RuleMd031(RulePlugin):
         """
 
         special_case = self.__calculate_special_case(context, token)
+        # special_case = False
 
         if not token.is_end_token or token.is_end_of_stream:
             while self.__pending_container_ends and not special_case:

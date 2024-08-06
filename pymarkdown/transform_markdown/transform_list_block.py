@@ -75,6 +75,7 @@ class TransformListBlock:
             f">>had_weird_block_quote_in_list>>{had_weird_block_quote_in_list}<<"
         )
         context.container_token_stack.append(copy.deepcopy(current_list_token))
+        context.original_container_token_stack.append(current_list_token)
         context.container_token_indents.append(IndentAdjustment())
 
         POGGER.debug(f">>extracted_whitespace>>{extracted_whitespace}<<")
@@ -115,6 +116,7 @@ class TransformListBlock:
         """
         _ = actual_tokens, token_index
         del context.container_token_stack[-1]
+        del context.original_container_token_stack[-1]
         del context.container_token_indents[-1]
 
         current_end_token = cast(EndMarkdownToken, current_token)
@@ -292,10 +294,6 @@ class TransformListBlock:
         POGGER.debug(
             f"rls>>containing_block_quote_token>>{ParserHelper.make_value_visible(containing_block_quote_token)}<<"
         )
-        if containing_block_quote_token:
-            POGGER.debug(
-                f"rls>>containing_block_quote_token>>{ParserHelper.make_value_visible(containing_block_quote_token.leading_text_index)}<<"
-            )
 
         token_stack_index = len(context.container_token_stack) - 1
         POGGER.debug(f"rls>>token_stack_index2>>{token_stack_index}<<")
@@ -477,7 +475,7 @@ class TransformListBlock:
     def __look_for_last_block_token(
         context: MarkdownTransformContext,
     ) -> Optional[BlockQuoteMarkdownToken]:
-        found_block_token: Optional[BlockQuoteMarkdownToken] = None
+        # found_block_token: Optional[BlockQuoteMarkdownToken] = None
         found_token = next(
             (
                 context.container_token_stack[i]
@@ -489,12 +487,7 @@ class TransformListBlock:
         POGGER.debug(
             f">>found_block_token>>{ParserHelper.make_value_visible(found_token)}<"
         )
-        if found_token:
-            found_block_token = cast(BlockQuoteMarkdownToken, found_token)
-            POGGER.debug(
-                f">>found_block_token-->index>>{found_block_token.leading_text_index}<"
-            )
-        return found_block_token
+        return cast(BlockQuoteMarkdownToken, found_token) if found_token else None
 
     @staticmethod
     def __rehydrate_list_start_contained_in_list_start(
@@ -643,7 +636,11 @@ class TransformListBlock:
                 previous_start_line = block_quote_token.line_number
                 POGGER.debug(f"newline_count:{newline_count}:")
                 POGGER.debug(f"previous_start_line:{previous_start_line}:")
-                projected_start_line = previous_start_line + (newline_count + 1)
+                projected_start_line = previous_start_line + (
+                    newline_count + 1
+                )  # 044lld off by 2  044lle off by 1
+                if block_quote_token.weird_kludge_two:
+                    projected_start_line += block_quote_token.weird_kludge_two
                 POGGER.debug(f"projected_start_line:{projected_start_line}:")
                 POGGER.debug(f"current_token.line_number:{current_token.line_number}:")
                 do_perform_block_quote_ending = (

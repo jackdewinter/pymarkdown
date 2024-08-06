@@ -340,7 +340,7 @@
         },
         {
             "name": "test.gfm.test_markdown_block_quotes",
-            "totalTests": 95,
+            "totalTests": 97,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -948,10 +948,10 @@
         },
         {
             "name": "test.nested_three.test_markdown_nested_three_unordered_block_ordered",
-            "totalTests": 54,
+            "totalTests": 56,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 7,
+            "skippedTests": 6,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -1300,7 +1300,7 @@
         },
         {
             "name": "test.rules.test_md027",
-            "totalTests": 110,
+            "totalTests": 115,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1364,7 +1364,7 @@
         },
         {
             "name": "test.rules.test_md031",
-            "totalTests": 126,
+            "totalTests": 269,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1396,7 +1396,7 @@
         },
         {
             "name": "test.rules.test_md035",
-            "totalTests": 29,
+            "totalTests": 30,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1620,10 +1620,10 @@
         },
         {
             "name": "test.test_markdown_extra",
-            "totalTests": 180,
+            "totalTests": 250,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 1,
+            "skippedTests": 12,
             "elapsedTimeInMilliseconds": 0
         },
         {

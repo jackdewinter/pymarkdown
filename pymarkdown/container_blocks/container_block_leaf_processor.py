@@ -432,6 +432,7 @@ class ContainerBlockLeafProcessor:
             )
             if list_token.line_number != current_line_number:
                 POGGER.debug("plt-a>>last_block_token>>$", list_token)
+
                 list_token.add_leading_spaces("")
                 POGGER.debug(
                     "plt-a>>last_block_token>>$",
@@ -577,19 +578,27 @@ class ContainerBlockLeafProcessor:
         last_list_index: int,
         extracted_leaf_whitespace: str,
         grab_bag: ContainerGrabBag,
-    ) -> Tuple[Optional[ListStartMarkdownToken], Optional[str], Optional[str]]:
+    ) -> Tuple[
+        Optional[ListStartMarkdownToken],
+        Optional[str],
+        Optional[str],
+        Optional[ListStackToken],
+    ]:
         list_token: Optional[ListStartMarkdownToken] = None
         POGGER.debug("yes adjust_for_list_container")
         removed_leading_space = None
         actual_removed_leading_space = None
+        list_stack_token = None
 
         found_list_token = ContainerBlockLeafProcessor.__adjust_for_list_container_find(
             parser_state, xposition_marker
         )
         if not found_list_token:
+            list_stack_token = cast(
+                ListStackToken, parser_state.token_stack[last_list_index]
+            )
             list_token = cast(
-                ListStartMarkdownToken,
-                parser_state.token_stack[last_list_index].matching_markdown_token,
+                ListStartMarkdownToken, list_stack_token.matching_markdown_token
             )
             calc_indent_level = (
                 list_token.indent_level - len(grab_bag.text_removed_by_container)
@@ -618,7 +627,12 @@ class ContainerBlockLeafProcessor:
 
             if not grab_bag.container_depth and not xposition_marker.index_indent:
                 removed_leading_space = extracted_leaf_whitespace
-        return list_token, removed_leading_space, actual_removed_leading_space
+        return (
+            list_token,
+            removed_leading_space,
+            actual_removed_leading_space,
+            list_stack_token,
+        )
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -645,6 +659,7 @@ class ContainerBlockLeafProcessor:
                 list_token,
                 removed_leading_space,
                 actual_removed_leading_space,
+                list_stack_token,
             ) = ContainerBlockLeafProcessor.__adjust_for_list_container_after_block_quote(
                 parser_state,
                 xposition_marker,
@@ -662,7 +677,53 @@ class ContainerBlockLeafProcessor:
                 xposition_marker.text_to_parse,
                 index_indent=xposition_marker.index_indent,
             )
-        # pylint: disable=too-many-boolean-expressions
+
+        if ContainerBlockLeafProcessor.__adjust_for_list_container_kludge(
+            parser_state,
+            xposition_marker,
+            removed_leading_space,
+            actual_removed_leading_space,
+            list_token,
+            grab_bag,
+            last_list_index,
+            last_block_index,
+        ):
+            assert actual_removed_leading_space is not None
+            assert (
+                grab_bag.text_removed_by_container is not None
+            ), "If here, some text must have been removed."
+            total_removed = len(grab_bag.text_removed_by_container) + len(
+                actual_removed_leading_space
+            )
+            assert list_stack_token is not None
+            if total_removed < list_stack_token.start_index:
+                delta = len(actual_removed_leading_space)
+            else:
+                assert list_token is not None
+                delta = list_token.indent_level - total_removed
+            xposition_marker = PositionMarker(
+                xposition_marker.line_number,
+                xposition_marker.index_number,
+                xposition_marker.text_to_parse[delta:],
+                xposition_marker.index_indent,
+            )
+        return removed_leading_space, actual_removed_leading_space, xposition_marker
+
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-boolean-expressions,too-many-arguments
+    @staticmethod
+    def __adjust_for_list_container_kludge(
+        parser_state: ParserState,
+        xposition_marker: PositionMarker,
+        removed_leading_space: Optional[str],
+        actual_removed_leading_space: Optional[str],
+        list_token: Optional[ListStartMarkdownToken],
+        grab_bag: ContainerGrabBag,
+        last_list_index: int,
+        last_block_index: int,
+    ) -> bool:
+        apply_fix = False
         if (
             removed_leading_space is None
             and actual_removed_leading_space
@@ -672,24 +733,36 @@ class ContainerBlockLeafProcessor:
             and grab_bag.block_quote_data.stack_count > 1
             and grab_bag.is_para_continue
         ):
-            assert (
-                grab_bag.text_removed_by_container is not None
-            ), "If here, some text must have been removed."
-            total_removed = len(grab_bag.text_removed_by_container) + len(
-                actual_removed_leading_space
+            keep_searching = True
+            while keep_searching and last_list_index > last_block_index:
+                inner_token = cast(
+                    ListStackToken, parser_state.token_stack[last_list_index]
+                )
+                indent_delta = inner_token.indent_level - xposition_marker.index_indent
+                line_to_parse = xposition_marker.text_to_parse
+                if line_to_parse[:indent_delta].strip():
+                    last_list_index -= 1
+                else:
+                    keep_searching = False
+
+            if last_list_index == last_block_index:
+                indent_delta = 0
+
+            after_ws_index, extracted_whitespace = ParserHelper.extract_spaces_verified(
+                line_to_parse, indent_delta
             )
-            delta = list_token.indent_level - total_removed
-            # assert t1 >= list_token.indent_level
-            xposition_marker = PositionMarker(
-                xposition_marker.line_number,
-                xposition_marker.index_number,
-                xposition_marker.text_to_parse[delta:],
+
+            apply_fix = not LeafBlockProcessor.is_paragraph_ending_leaf_block_start(
+                parser_state,
+                line_to_parse,
+                after_ws_index,
+                extracted_whitespace,
+                grab_bag.original_line,
                 xposition_marker.index_indent,
             )
-        # pylint: enable=too-many-boolean-expressions
-        return removed_leading_space, actual_removed_leading_space, xposition_marker
+        return apply_fix
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-boolean-expressions, too-many-arguments
 
     @staticmethod
     def __adjust_for_list_container_find(
@@ -746,7 +819,7 @@ class ContainerBlockLeafProcessor:
             parser_state,
             last_block_index,
             total_ws,
-            xposition_marker.line_number,
+            xposition_marker,
             grab_bag,
         )
         if close_tokens:
@@ -919,6 +992,7 @@ class ContainerBlockLeafProcessor:
             POGGER.debug("current_indent_level>>:$:<", current_indent_level)
             current_indent_level -= xposition_marker.index_indent
             POGGER.debug("current_indent_level>>:$:<", current_indent_level)
+            current_indent_level = max(current_indent_level, 0)
             assert current_indent_level >= 0, "Current indent must not go below 0."
 
             prefix_text = xposition_marker.text_to_parse[:current_indent_level]
@@ -985,23 +1059,22 @@ class ContainerBlockLeafProcessor:
 
     # pylint: disable=too-many-arguments
     @staticmethod
-    def __calculate_current_indent_level_loop(
+    def __xx_part_one(
         parser_state: ParserState,
-        last_block_index: int,
-        total_ws: int,
-        line_number: int,
+        position_marker: PositionMarker,
         current_stack_index: int,
-        text_removed_by_container: Optional[str],
+        total_ws: int,
         current_indent_level: int,
-        non_last_block_index: int,
         last_list_index: int,
-        had_non_block_token: bool,
-        did_hit_indent_level_threshold: bool,
-    ) -> Tuple[int, int, int, bool, bool, bool]:
+        text_removed_by_container: Optional[str],
+        non_last_block_index: int,
+        last_block_index: int,
+    ) -> Tuple[Optional[int], bool, bool, int, int, bool]:
         proposed_indent_level: Optional[int] = 0
         POGGER.debug("token:$:", parser_state.token_stack[current_stack_index])
         continue_in_loop = True
         keep_processing = True
+        had_non_block_token = False
         if parser_state.token_stack[current_stack_index].is_block_quote:
             (
                 keep_processing,
@@ -1017,7 +1090,7 @@ class ContainerBlockLeafProcessor:
                 text_removed_by_container,
                 non_last_block_index,
                 last_block_index,
-                line_number,
+                position_marker.line_number,
             )
             if keep_processing:
                 proposed_indent_level = new_indent_level
@@ -1031,21 +1104,134 @@ class ContainerBlockLeafProcessor:
         else:
             had_non_block_token = True
             continue_in_loop = False
+        return (
+            proposed_indent_level,
+            continue_in_loop,
+            keep_processing,
+            last_list_index,
+            non_last_block_index,
+            had_non_block_token,
+        )
+
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=chained-comparison,too-many-arguments,too-many-locals
+    @staticmethod
+    def __xx_part_two(
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        proposed_indent_level: Optional[int],
+        total_ws: int,
+        current_stack_index: int,
+        current_indent_level: int,
+        adj_ws: Optional[str],
+        is_para_continue: bool,
+        last_list_index: int,
+        last_block_index: int,
+        original_line: str,
+        did_hit_indent_level_threshold: bool,
+        continue_in_loop: bool,
+    ) -> Tuple[bool, bool, int]:
+        assert (
+            proposed_indent_level is not None
+        ), "Proposed ident level within lists must be decided."
+        if proposed_indent_level > total_ws:
+            did_hit_indent_level_threshold = True
+            continue_in_loop = False
+            if parser_state.token_stack[current_stack_index].is_list:
+                is_total_ws_in_range = (
+                    total_ws > current_indent_level and total_ws < proposed_indent_level
+                )
+                if (
+                    is_total_ws_in_range
+                    and not adj_ws
+                    and is_para_continue
+                    and last_list_index == last_block_index + 1
+                ):
+                    after_ws_index, extracted_whitespace = (
+                        ParserHelper.extract_spaces_verified(
+                            position_marker.text_to_parse,
+                            position_marker.index_number,
+                        )
+                    )
+                    keep_going = (
+                        not LeafBlockProcessor.is_paragraph_ending_leaf_block_start(
+                            parser_state,
+                            position_marker.text_to_parse,
+                            after_ws_index,
+                            extracted_whitespace,
+                            original_line,
+                            position_marker.index_indent,
+                        )
+                    )
+                    if keep_going:
+                        current_indent_level += len(extracted_whitespace)
+        else:
+            current_indent_level = proposed_indent_level
+            # POGGER.debug("current_indent_level:$", current_indent_level)
+        return did_hit_indent_level_threshold, continue_in_loop, current_indent_level
+
+    # pylint: enable=chained-comparison,too-many-arguments,too-many-locals
+
+    # pylint: disable=too-many-arguments, too-many-locals
+    @staticmethod
+    def __calculate_current_indent_level_loop(
+        parser_state: ParserState,
+        last_block_index: int,
+        total_ws: int,
+        position_marker: PositionMarker,
+        current_stack_index: int,
+        text_removed_by_container: Optional[str],
+        current_indent_level: int,
+        non_last_block_index: int,
+        last_list_index: int,
+        had_non_block_token: bool,
+        did_hit_indent_level_threshold: bool,
+        adj_ws: Optional[str],
+        is_para_continue: bool,
+        original_line: str,
+    ) -> Tuple[int, int, int, bool, bool, bool]:
+        (
+            proposed_indent_level,
+            continue_in_loop,
+            keep_processing,
+            last_list_index,
+            non_last_block_index,
+            had_non_block_token,
+        ) = ContainerBlockLeafProcessor.__xx_part_one(
+            parser_state,
+            position_marker,
+            current_stack_index,
+            total_ws,
+            current_indent_level,
+            last_list_index,
+            text_removed_by_container,
+            non_last_block_index,
+            last_block_index,
+        )
         POGGER.debug(
             "proposed_indent_level:$ <= total_ws:$<",
             proposed_indent_level,
             total_ws,
         )
         if continue_in_loop and keep_processing:
-            assert (
-                proposed_indent_level is not None
-            ), "Proposed ident level within lists must be decided."
-            if proposed_indent_level > total_ws:
-                did_hit_indent_level_threshold = True
-                continue_in_loop = False
-            else:
-                current_indent_level = proposed_indent_level
-                POGGER.debug("current_indent_level:$", current_indent_level)
+            did_hit_indent_level_threshold, continue_in_loop, current_indent_level = (
+                ContainerBlockLeafProcessor.__xx_part_two(
+                    parser_state,
+                    position_marker,
+                    proposed_indent_level,
+                    total_ws,
+                    current_stack_index,
+                    current_indent_level,
+                    adj_ws,
+                    is_para_continue,
+                    last_list_index,
+                    last_block_index,
+                    original_line,
+                    did_hit_indent_level_threshold,
+                    continue_in_loop,
+                )
+            )
         return (
             current_indent_level,
             non_last_block_index,
@@ -1055,14 +1241,14 @@ class ContainerBlockLeafProcessor:
             continue_in_loop,
         )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
 
     @staticmethod
     def __calculate_current_indent_level(
         parser_state: ParserState,
         last_block_index: int,
         total_ws: int,
-        line_number: int,
+        position_marker: PositionMarker,
         grab_bag: ContainerGrabBag,
     ) -> Tuple[int, List[MarkdownToken]]:
         text_removed_by_container = grab_bag.text_removed_by_container
@@ -1085,7 +1271,7 @@ class ContainerBlockLeafProcessor:
                 parser_state,
                 last_block_index,
                 total_ws,
-                line_number,
+                position_marker,
                 current_stack_index,
                 text_removed_by_container,
                 current_indent_level,
@@ -1093,6 +1279,9 @@ class ContainerBlockLeafProcessor:
                 last_list_index,
                 had_non_block_token,
                 did_hit_indent_level_threshold,
+                grab_bag.adj_ws,
+                grab_bag.is_para_continue,
+                grab_bag.original_line,
             )
             POGGER.debug("<<current_indent_level:$", current_indent_level)
             if not continue_in_loop:

@@ -40,7 +40,6 @@ class AtxLeafBlockProcessor:
         """
         Determine whether or not an ATX Heading is about to start.
         """
-
         if (
             TabHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
             or skip_whitespace_check
@@ -88,6 +87,9 @@ class AtxLeafBlockProcessor:
         Handle the parsing of an atx heading.
         """
 
+        ex_ws = LeafBlockHelper.realize_leading_whitespace(
+            parser_state, position_marker, extracted_whitespace, original_line
+        )
         (
             heading_found,
             non_whitespace_index,
@@ -96,7 +98,7 @@ class AtxLeafBlockProcessor:
         ) = AtxLeafBlockProcessor.is_atx_heading(
             position_marker.text_to_parse,
             position_marker.index_number,
-            extracted_whitespace,
+            ex_ws,
         )
         if not heading_found:
             POGGER.debug(
@@ -409,7 +411,7 @@ class AtxLeafBlockProcessor:
 
         new_tokens, _ = parser_state.close_open_blocks_fn(parser_state)
         POGGER.debug("new_tokens>:$:<", new_tokens)
-        if ContainerHelper.reduce_containers_if_required(
+        split_tab, extracted_whitespace = ContainerHelper.reduce_containers_if_required(
             parser_state,
             position_marker,
             block_quote_data,
@@ -417,7 +419,8 @@ class AtxLeafBlockProcessor:
             split_tab,
             extracted_whitespace,
             grab_bag,
-        ):
+        )
+        if split_tab:
             POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
             extracted_whitespace = TabHelper.adjust_block_quote_indent_for_tab_verified(
                 parser_state, extracted_whitespace

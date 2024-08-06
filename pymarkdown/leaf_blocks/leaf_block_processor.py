@@ -27,12 +27,15 @@ class LeafBlockProcessor:
     Class to provide processing for the leaf blocks.
     """
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def is_paragraph_ending_leaf_block_start(
         parser_state: ParserState,
         line_to_parse: str,
         start_index: int,
         extracted_whitespace: str,
+        original_line: str,
+        index_indent: int,
     ) -> bool:
         """
         Determine whether we have a valid leaf block start.
@@ -70,7 +73,12 @@ class LeafBlockProcessor:
                 _,
                 _,
             ) = FencedLeafBlockProcessor.is_fenced_code_block(
-                line_to_parse, start_index, extracted_whitespace
+                parser_state,
+                line_to_parse,
+                start_index,
+                extracted_whitespace,
+                original_line,
+                index_indent,
             )
             POGGER.debug(
                 "is_paragraph_ending_leaf_block_start>>is_fenced_code_block>>$",
@@ -89,6 +97,8 @@ class LeafBlockProcessor:
             is_leaf_block_start,
         )
         return is_leaf_block_start
+
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -115,6 +125,7 @@ class LeafBlockProcessor:
                 html_tokens,
                 did_adjust_block_quote,
                 alt_removed_chars_at_start,
+                leaf_token_whitespace,
             ) = HtmlHelper.parse_html_block(
                 parser_state,
                 position_marker,

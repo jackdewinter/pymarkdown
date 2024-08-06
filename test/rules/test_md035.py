@@ -243,6 +243,22 @@ this is one section
 ___
 """,
     ),
+    pluginRuleTest(  # bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_list from md031
+        "bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_list",
+        source_file_contents="""> > + ______
+> >   + list 1
+> >     list 2
+> >   + list 3
+> >   ______
+> >   ```block
+> >   A code block
+> >   ```
+> >   ______
+""",
+        disable_rules="md031,md032",
+        scan_expected_return_code=0,
+        scan_expected_output="",
+    ),
 ]
 fixTests = []
 for i in scanTests:

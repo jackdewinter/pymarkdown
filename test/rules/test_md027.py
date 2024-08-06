@@ -599,6 +599,10 @@ scanTests = [
     pluginRuleTest(
         "good_block_quote_unordered_list_text_first",
         source_file_name=f"{source_path}bad_block_quote_unordered_list_text_first.md",
+        source_file_contents="""> +  list
+>   this
+> + that
+""",
         disable_rules=__plugin_disable_md005_md030,
     ),
     pluginRuleTest(
@@ -674,6 +678,81 @@ scanTests = [
 > > --------
 """,
         disable_rules="md007,md009,md012,md030",
+        scan_expected_return_code=0,
+        # use_debug=True,
+        scan_expected_output="",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_with_previous_inner_block",
+        source_file_contents="""> + list 1
+>   > block 2
+>   > block 3
+>   ------
+>   ```block
+>   A code block
+>   ```
+>   ------
+> + another list
+""",
+        disable_rules="md007,md009,md012,md030,md031",
+        scan_expected_return_code=0,
+        # use_debug=True,
+        scan_expected_output="",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_block",
+        source_file_contents="""> > >
+> > > > fourth block 1
+> > > > fourth block 2
+> > > --------
+> > > ```block
+> > > A code block
+> > > ```
+> > > --------
+""",
+        disable_rules="md007,md009,md012,md030,md031",
+        scan_expected_return_code=0,
+        # use_debug=True,
+        scan_expected_output="",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_block_x",
+        source_file_contents=""">
+> > fourth block 1
+""",
+        disable_rules="",
+        scan_expected_return_code=0,
+        # use_debug=True,
+        scan_expected_output="",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_in_list_with_previous_block",
+        source_file_contents="""1. > + ----
+   >   > block 1
+   >   > block 2
+   >   ```block
+   >   A code block
+   >   ```
+   >   ----
+""",
+        disable_rules="md007,md009,md012,md030,md031",
+        scan_expected_return_code=0,
+        # use_debug=True,
+        scan_expected_output="",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_in_block_quote_wtih_previous_block",
+        source_file_contents="""> + + -----
+>     > block 1
+>     > block 2
+>     -----
+>     ```block
+>     A code block
+>     ```
+>     -----
+> + another list
+""",
+        disable_rules="md007,md009,md012,md030,md031",
         scan_expected_return_code=0,
         # use_debug=True,
         scan_expected_output="",

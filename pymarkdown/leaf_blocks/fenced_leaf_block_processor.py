@@ -45,11 +45,15 @@ class FencedLeafBlockProcessor:
         f"{__fenced_start_tilde}{__fenced_start_backtick}"
     )
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def is_fenced_code_block(
+        parser_state: ParserState,
         line_to_parse: str,
         start_index: int,
         extracted_whitespace: str,
+        original_line: str,
+        index_indent: int,
         skip_whitespace_check: bool = False,
     ) -> Tuple[bool, Optional[int], Optional[int], Optional[int], Optional[int]]:
         """
@@ -57,6 +61,11 @@ class FencedLeafBlockProcessor:
         """
 
         after_fence_index: Optional[int] = None
+        position_marker = PositionMarker(0, 0, "", index_indent)
+        extracted_whitespace = LeafBlockHelper.realize_leading_whitespace(
+            parser_state, position_marker, extracted_whitespace, original_line
+        )
+
         if (
             skip_whitespace_check
             or TabHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
@@ -92,6 +101,8 @@ class FencedLeafBlockProcessor:
                 )
         return False, None, None, None, None
 
+    # pylint: enable=too-many-arguments
+
     # pylint: disable=too-many-arguments
     @staticmethod
     def parse_fenced_code_block(
@@ -120,9 +131,12 @@ class FencedLeafBlockProcessor:
             collected_count,
             new_index,
         ) = FencedLeafBlockProcessor.is_fenced_code_block(
+            parser_state,
             position_marker.text_to_parse,
             position_marker.index_number,
             extracted_whitespace,
+            original_line,
+            position_marker.index_indent,
         )
         if is_fence_start and not parser_state.token_stack[-1].is_html_block:
             POGGER.debug("parse_fenced_code_block:fenced")
@@ -625,14 +639,14 @@ class FencedLeafBlockProcessor:
         split_tab_whitespace: Optional[str],
         extracted_whitespace: str,
         grab_bag: ContainerGrabBag,
-    ) -> Tuple[StackToken, List[MarkdownToken], int]:
+    ) -> Tuple[StackToken, List[MarkdownToken], int, str]:
         old_top_of_stack = parser_state.token_stack[-1]
         new_tokens, _ = parser_state.close_open_blocks_fn(
             parser_state,
             only_these_blocks=[ParagraphStackToken],
         )
 
-        if split_tab := ContainerHelper.reduce_containers_if_required(
+        split_tab, extracted_whitespace = ContainerHelper.reduce_containers_if_required(
             parser_state,
             position_marker,
             block_quote_data,
@@ -640,7 +654,8 @@ class FencedLeafBlockProcessor:
             split_tab,
             extracted_whitespace,
             grab_bag,
-        ):
+        )
+        if split_tab:
             TabHelper.adjust_block_quote_indent_for_tab(
                 parser_state,
                 extracted_whitespace=split_tab_whitespace,
@@ -650,7 +665,12 @@ class FencedLeafBlockProcessor:
         else:
             whitespace_count_delta = 0
 
-        return old_top_of_stack, new_tokens, whitespace_count_delta
+        return (
+            old_top_of_stack,
+            new_tokens,
+            whitespace_count_delta,
+            extracted_whitespace,
+        )
 
     # pylint: enable=too-many-arguments
 
@@ -743,18 +763,16 @@ class FencedLeafBlockProcessor:
         adjusted_corrected_prefix: Optional[str],
         grab_bag: ContainerGrabBag,
     ) -> Tuple[StackToken, List[MarkdownToken], Optional[str]]:
-        (
-            old_top_of_stack,
-            new_tokens,
-            whitespace_start_count,
-        ) = FencedLeafBlockProcessor.__add_fenced_tokens_calc(
-            parser_state,
-            position_marker,
-            split_tab,
-            block_quote_data,
-            split_tab_whitespace,
-            extracted_whitespace,
-            grab_bag,
+        (old_top_of_stack, new_tokens, whitespace_start_count, extracted_whitespace) = (
+            FencedLeafBlockProcessor.__add_fenced_tokens_calc(
+                parser_state,
+                position_marker,
+                split_tab,
+                block_quote_data,
+                split_tab_whitespace,
+                extracted_whitespace,
+                grab_bag,
+            )
         )
 
         pre_extracted_text, pre_text_after_extracted_text = (
