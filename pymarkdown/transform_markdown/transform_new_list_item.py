@@ -90,7 +90,7 @@ class TransformNewListItem:
 
         adjustment_since_newline = (
             TransformNewListItem.__recalc_adjustment_since_newline(
-                context, adjustment_since_newline
+                context, adjustment_since_newline, current_token
             )
         )
         # assert len(post_adjust_whitespace) == adjustment_since_newline
@@ -226,7 +226,9 @@ class TransformNewListItem:
 
     @staticmethod
     def __recalc_adjustment_since_newline(
-        context: MarkdownTransformContext, adjustment_since_newline: int
+        context: MarkdownTransformContext,
+        adjustment_since_newline: int,
+        current_token: MarkdownToken,
     ) -> int:
         POGGER.debug(
             f"rnli->container_token_stack>:{ParserHelper.make_value_visible(context.container_token_stack)}:"
@@ -244,9 +246,19 @@ class TransformNewListItem:
             f"rnli->found_block_quote_token>:{ParserHelper.make_value_visible(found_block_quote_token)}:"
         )
         if found_block_quote_token:
-            leading_space = found_block_quote_token.calculate_next_bleading_space_part(
-                increment_index=False, delta=-1
+            line_number_delta = (
+                current_token.line_number - found_block_quote_token.line_number
             )
+            line_number_delta -= context.container_token_indents[stack_index].adjustment
+            assert found_block_quote_token.bleading_spaces is not None
+            split_leading_spaces = found_block_quote_token.bleading_spaces.split(
+                ParserHelper.newline_character
+            )
+            leading_space = (
+                split_leading_spaces[line_number_delta - 1]
+                or split_leading_spaces[line_number_delta]
+            )
+
             POGGER.debug(f"rnli->leading_space>:{leading_space}:")
             adjustment_since_newline = len(leading_space)
         return adjustment_since_newline

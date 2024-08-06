@@ -1898,7 +1898,6 @@ abc</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_block_ordered_with_blank_fenced_bb():
     """
     TBD - from https://github.com/jackdewinter/pymarkdown/issues/731
@@ -1915,12 +1914,12 @@ def test_nested_three_unordered_block_ordered_with_blank_fenced_bb():
 """
 
     expected_tokens = [
-        "[ulist(1,1):-::2::  \n  \n  \n]",
+        "[ulist(1,1):-::2::\n  \n  \n  \n]",
         "[para(1,3):]",
         "[text(1,3):Test List:]",
         "[end-para:::True]",
         "[block-quote(2,3):  :  > \n  > \n  > ]",
-        "[olist(2,5):):1:7::]",
+        "[olist(2,5):):1:7:]",
         "[para(2,8):]",
         "[text(2,8):Test1:]",
         "[end-para:::True]",

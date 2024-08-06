@@ -6,10 +6,11 @@ verify_ssl = true
 [dev-packages]
 black = "==24.4.2"
 coverage = "==7.5.3"
-isort = "==5.13.2"
 flake8 = "==7.0.0"
 flake8-bugbear = "==24.4.26"
 flake8-bandit = "==4.1.1"
+importlib-metadata = "==8.0.0"
+isort = "==5.13.2"
 mkdocs = "==1.6.0"
 mkdocstrings = "0.25.1"
 mkdocstrings-python = "1.10.3"
@@ -30,13 +31,13 @@ pytest-xdist = "==3.6.1"
 setuptools = "==70.0.0"
 snakeviz = "==2.2.0"
 sourcery = "==1.16.0"
-twine = "==5.1.0"
 types-pyyaml = "*"
 
 [packages]
 columnar = ">=1.4.0"
 application-properties = ">=0.8.2"
 typing-extensions = ">=4.7.0"
+twine = "<5.1"
 
 [requires]
 python_version = "3.8"

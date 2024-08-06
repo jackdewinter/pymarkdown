@@ -36,12 +36,15 @@ class BlockQuoteProcessor:
     Class to provide processing for the block quotes.
     """
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __adjust_lazy_handling(
         parser_state: ParserState,
         line_to_parse: str,
         extracted_whitespace: str,
         was_paragraph_continuation: bool,
+        original_line: str,
+        index_indent: int,
     ) -> Tuple[bool, bool]:
         if (
             parser_state.token_stack[-1].is_paragraph
@@ -56,6 +59,8 @@ class BlockQuoteProcessor:
                     line_to_parse,
                     0,
                     extracted_whitespace,
+                    original_line,
+                    index_indent,
                 )
             )
 
@@ -69,6 +74,8 @@ class BlockQuoteProcessor:
             is_leaf_block_start = False
         return was_paragraph_continuation, is_leaf_block_start
 
+    # pylint: enable=too-many-arguments
+
     # pylint: disable=too-many-arguments
     @staticmethod
     def check_for_lazy_handling(
@@ -78,6 +85,7 @@ class BlockQuoteProcessor:
         line_to_parse: str,
         extracted_whitespace: str,
         was_paragraph_continuation: bool,
+        original_line: str,
     ) -> Tuple[List[MarkdownToken], BlockQuoteData, bool]:
         """
         Check if there is any processing to be handled during the handling of
@@ -106,6 +114,8 @@ class BlockQuoteProcessor:
                 line_to_parse,
                 extracted_whitespace,
                 was_paragraph_continuation,
+                original_line,
+                position_marker.index_indent,
             )
             if (
                 parser_state.token_stack[-1].is_code_block
@@ -819,7 +829,7 @@ class BlockQuoteProcessor:
 
     # pylint: enable=too-many-arguments, too-many-locals
 
-    # pylint: disable=too-many-arguments, too-many-locals
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __handlers(
         process_fenced_block: bool,
@@ -900,7 +910,7 @@ class BlockQuoteProcessor:
             False,
         )
 
-    # pylint: enable=too-many-arguments, too-many-locals
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __handle_fenced_code_section(

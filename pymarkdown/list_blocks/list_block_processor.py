@@ -517,9 +517,13 @@ class ListBlockProcessor:
                 )
                 list_token.add_leading_spaces("")
 
+    # pylint: disable=too-many-locals
     @staticmethod
     def list_in_process(
-        parser_state: ParserState, ind: int, grab_bag: ContainerGrabBag
+        parser_state: ParserState,
+        ind: int,
+        index_indent: int,
+        grab_bag: ContainerGrabBag,
     ) -> List[MarkdownToken]:
         """
         Handle the processing of a line where there is a list in process.
@@ -597,6 +601,7 @@ class ListBlockProcessor:
                 allow_list_continue,
                 ind,
                 grab_bag.original_line,
+                index_indent,
             )
             if requeue_line_info:
                 grab_bag.line_to_parse = line_to_parse
@@ -614,6 +619,8 @@ class ListBlockProcessor:
         grab_bag.was_paragraph_continuation = was_paragraph_continuation
 
         return container_level_tokens
+
+    # pylint: enable=too-many-locals
 
     @staticmethod
     def __can_list_continue(
@@ -635,12 +642,15 @@ class ListBlockProcessor:
             else True
         )
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __check_for_paragraph_break(
         parser_state: ParserState,
         line_to_parse: str,
         start_index: int,
         extracted_whitespace: str,
+        original_line: str,
+        index_indent: int,
     ) -> bool:
         POGGER.debug("is_theme_break>>?")
         is_theme_break, _ = ThematicLeafBlockProcessor.is_thematic_break(
@@ -657,7 +667,13 @@ class ListBlockProcessor:
         POGGER.debug("is_atx_heading>>$", is_atx_heading)
         POGGER.debug("is_fenced_start>>?")
         is_fenced_start, _, _, _, _ = FencedLeafBlockProcessor.is_fenced_code_block(
-            line_to_parse, start_index, extracted_whitespace, skip_whitespace_check=True
+            parser_state,
+            line_to_parse,
+            start_index,
+            extracted_whitespace,
+            original_line,
+            index_indent,
+            skip_whitespace_check=True,
         )
         POGGER.debug("is_fenced_start>>$", is_fenced_start)
         POGGER.debug("is_html_start>>?")
@@ -677,7 +693,9 @@ class ListBlockProcessor:
             or bool(is_html_start)
         )
 
-    # pylint: disable=too-many-arguments
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments,too-many-locals
     @staticmethod
     def __process_list_non_continue(
         parser_state: ParserState,
@@ -690,6 +708,7 @@ class ListBlockProcessor:
         allow_list_continue: bool,
         ind: int,
         original_line: str,
+        index_indent: int,
     ) -> Tuple[
         List[MarkdownToken],
         str,
@@ -712,7 +731,12 @@ class ListBlockProcessor:
         )
 
         was_breakable_leaf_detected = ListBlockProcessor.__check_for_paragraph_break(
-            parser_state, line_to_parse, start_index, extracted_whitespace
+            parser_state,
+            line_to_parse,
+            start_index,
+            extracted_whitespace,
+            original_line,
+            index_indent,
         )
 
         if was_paragraph_continuation := (
@@ -758,6 +782,8 @@ class ListBlockProcessor:
                 extracted_whitespace,
                 ind,
                 leading_space_length,
+                original_line,
+                index_indent,
             )
             POGGER.debug(
                 "2>>requeue_line_info>>$>>",
@@ -792,7 +818,7 @@ class ListBlockProcessor:
             was_paragraph_continuation,
         )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments,too-many-locals
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -962,6 +988,8 @@ class ListBlockProcessor:
         extracted_whitespace: str,
         ind: int,
         leading_space_length: int,
+        original_line: str,
+        index_indent: int,
     ) -> Tuple[List[MarkdownToken], Optional[RequeueLineInfo]]:
         """
         Check to see if the list in progress and the level of lists shown require
@@ -972,7 +1000,12 @@ class ListBlockProcessor:
         POGGER.debug("ws(naa)>>tokens>>$", parser_state.token_document)
 
         is_leaf_block_start = LeafBlockProcessor.is_paragraph_ending_leaf_block_start(
-            parser_state, line_to_parse, start_index, extracted_whitespace
+            parser_state,
+            line_to_parse,
+            start_index,
+            extracted_whitespace,
+            original_line,
+            index_indent,
         )
         if not parser_state.token_stack[-1].is_paragraph or is_leaf_block_start:
             POGGER.debug("ws (normal and adjusted) not enough to continue")

@@ -8,6 +8,7 @@ from typing import List, Optional, Tuple, cast
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.parser_state import ParserState
+from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.general.tab_helper import TabHelper
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
@@ -135,7 +136,9 @@ class LeafBlockHelper:
         return orig_prefix[len(leading_chars_at_start) :]
 
     @staticmethod
-    def __xx(parser_state: ParserState, removed_chars_at_start: int) -> Tuple[int, str]:
+    def __determine_removed_and_leading_characters(
+        parser_state: ParserState, removed_chars_at_start: int
+    ) -> Tuple[int, str]:
         leading_chars_at_start = ""
         last_bq_index = parser_state.find_last_block_quote_on_stack()
         if last_bq_index > 0:
@@ -175,7 +178,9 @@ class LeafBlockHelper:
             else:
                 if is_html:
                     removed_chars_at_start, leading_chars_at_start = (
-                        LeafBlockHelper.__xx(parser_state, removed_chars_at_start)
+                        LeafBlockHelper.__determine_removed_and_leading_characters(
+                            parser_state, removed_chars_at_start
+                        )
                     )
                 indent_count = removed_chars_at_start
             used_indent = ParserHelper.repeat_string(" ", indent_count)
@@ -221,6 +226,11 @@ class LeafBlockHelper:
             ">>correct_for_leaf_block_start_in_list>>tokens_to_add>>$>>", html_tokens
         )
 
+        assert parser_state.original_line_to_parse is not None
+        ws_count, _ = ParserHelper.collect_while_spaces_verified(
+            parser_state.original_line_to_parse[removed_chars_at_start:], 0
+        )
+
         adjust_with_leading_spaces = False
         is_remaining_list_token = True
         while is_remaining_list_token:
@@ -231,7 +241,7 @@ class LeafBlockHelper:
 
             POGGER.debug(">>removed_chars_at_start>>$>>", removed_chars_at_start)
             POGGER.debug(">>stack indent>>$>>", list_stack_token.indent_level)
-            if removed_chars_at_start >= list_stack_token.indent_level:
+            if (removed_chars_at_start + ws_count) >= list_stack_token.indent_level:
                 break  # pragma: no cover
 
             tokens_from_close, _ = parser_state.close_open_blocks_fn(
@@ -290,3 +300,65 @@ class LeafBlockHelper:
                 pre_tokens.append(last_element)
             del parser_state.token_document[-1]
         return pre_tokens
+
+    @staticmethod
+    def realize_leading_whitespace(
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        extracted_whitespace: str,
+        original_line: str,
+    ) -> str:
+        """
+        In cases where we "probably" have more than 3 spaces, we need to check to make
+        sure that we actually have those once the containers are taken into account.
+        """
+        new_whitespace = extracted_whitespace
+        if (
+            extracted_whitespace
+            and position_marker.index_indent
+            # and len(extracted_whitespace) > 3
+        ):
+            indexed_original_line = original_line[: position_marker.index_indent]
+            if indexed_original_line.endswith(">") or indexed_original_line.endswith(
+                "> "
+            ):
+                bq_present = ParserHelper.count_characters_in_text(
+                    indexed_original_line, ">"
+                )
+                stack_index = LeafBlockHelper.__find_nth_block_quote(
+                    parser_state, bq_present
+                )
+                new_stack_index = stack_index + 1
+                best_indent = None
+                while (
+                    new_stack_index < len(parser_state.token_stack)
+                    and parser_state.token_stack[new_stack_index].is_list
+                ):
+                    inner_list_token = cast(
+                        ListStackToken, parser_state.token_stack[new_stack_index]
+                    )
+                    indent_delta = (
+                        inner_list_token.indent_level - position_marker.index_indent
+                    )
+                    # assert False
+                    if indent_delta <= len(extracted_whitespace):
+                        best_indent = indent_delta
+                    new_stack_index += 1
+                new_whitespace = (
+                    extracted_whitespace[best_indent:]
+                    if best_indent is not None
+                    else ""
+                )
+        return new_whitespace
+
+    @staticmethod
+    def __find_nth_block_quote(parser_state: ParserState, bq_present: int) -> int:
+        bq_encountered = 0
+        stack_index = 1
+        while True:
+            if parser_state.token_stack[stack_index].is_block_quote:
+                bq_encountered += 1
+                if bq_encountered == bq_present:
+                    break
+            stack_index += 1
+        return stack_index

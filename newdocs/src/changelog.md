@@ -2,11 +2,55 @@
 
 ## Unversioned - In Main, Not Released
 
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Added
+
+- None
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
+- None
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+- None
+
+## Version 0.9.22 - Date: 2024-08-05
+
+This release was focused on enabling fixing for Rule Md031 and
+uncovering any issues with the more deeply nested container cases.
+The good news is that, as the list in the fixed section shows,
+we fixed a lot of issues.  The better news is that only a handful
+of those fixes dealt with the parser, with the bulk of the issues
+dealing with transitioning from Markdown to our internal token format
+and back to Markdown again.
+
+Why is this important? When a user asks the PyMarkdown linter to fix
+any issues that it can, our team wants to have the utmost confidence
+that PyMarkdown is producing the correct fix.  Therefore, we tokenize
+the Markdown and base our rules off tokens that we know are correct.
+The only way to validate that we have the correct tokens is to take
+those tokens and recreate the Markdown.  If we cannot produce the
+exact Markdown that we started with, then we have a problem.
+
+In most of the fixed issues below, the tokens are correct and
+can produce the proper HTML from the Markdown.  However, in over 90%
+of the fixed issues below, when we recreate the Markdown, the Markdown
+that we produce if off by a couple of whitespace characters.  For
+the reasons stated above, it is important to our team to fix these
+issues with transparency.  Therefore, while the fixed list is somewhat
+long, it is an honest reflection of the issues that we found and
+addressed.
+
+<!--- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - [Issue 818](https://github.com/jackdewinter/pymarkdown/issues/818)
     - Adding Fix Mode for Md031.
 
+<!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Issue 1120](https://github.com/jackdewinter/pymarkdown/issues/1120)
@@ -37,7 +81,45 @@
       to avoid assert
 - [Issue 1137](https://github.com/jackdewinter/pymarkdown/issues/1137)
     - fixed issue with hanging indents and some Bq-List-Bq scenarios
+- [Issue 1141](https://github.com/jackdewinter/pymarkdown/issues/1141)
+    - fixed assert with Bq-List-Bq with previously untested branch
+- [Issue 1142](https://github.com/jackdewinter/pymarkdown/issues/1142)
+    - fixed assert with list-list-bq-bq with previously untested branch
+- [Issue 1143](https://github.com/jackdewinter/pymarkdown/issues/1143)
+    - fixed rehydate with first leading space not being calculated properly
+- [Issue 1144](https://github.com/jackdewinter/pymarkdown/issues/1144)
+    - fixed parsing error with bq-list-bq-list and HTML block not being recongized
+- [Issue 1145](https://github.com/jackdewinter/pymarkdown/issues/1145)
+    - fixed rehydration where last leading space of just closed block not being set
+      properly
+- [Issue 1146](https://github.com/jackdewinter/pymarkdown/issues/1146)
+    - fixed parsing issue with text after whitespace not taking indent into account
+- [Issue 1147](https://github.com/jackdewinter/pymarkdown/issues/1147)
+    - fixed issue with double counting of spaces to list and paragraph
+- [Issue 1148](https://github.com/jackdewinter/pymarkdown/issues/1148)
+    - fixed parsing error with bq-list-bq-list and ATX block not being recongized
+- [Issue 1149](https://github.com/jackdewinter/pymarkdown/issues/1149)
+    - fixed parsing error with bq-list-bq-list and fenced block not being recongized
+- [Issue 1150](https://github.com/jackdewinter/pymarkdown/issues/1150)
+    - fixed hydration with thematic break after multiple lists and bq to render previous
+      leading spaces as invalid
+- [Issue 1151](https://github.com/jackdewinter/pymarkdown/issues/1151)
+    - fixed assert with Bq-List-Bq with previously untested branch
+- [Issue 1152](https://github.com/jackdewinter/pymarkdown/issues/1152)
+    - fixed rehydrate problem with indents not being calculated properly for inner
+      blocks
+- [Issue 1153](https://github.com/jackdewinter/pymarkdown/issues/1153)
+    - fixed rehydrate issue with sequences causing leading spaces to be incorrect
+- [Issue 1154](https://github.com/jackdewinter/pymarkdown/issues/1154)
+    - fixed rehydrate issue with sequences causing leading spaces to be incorrect
+- [Issue 1155](https://github.com/jackdewinter/pymarkdown/issues/1155)
+    - fixed rehydrate issue with prior and closed block quotes not being factored
+      in properly
+- [Issue 1156](https://github.com/jackdewinter/pymarkdown/issues/1156)
+    - fixed rehydrate issue with extra block quote character being added at end
+      of document
 
+<!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - None

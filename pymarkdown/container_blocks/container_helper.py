@@ -6,7 +6,7 @@ container modules.
 """
 
 import logging
-from typing import List, cast
+from typing import List, Tuple, cast
 
 from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
 from pymarkdown.container_blocks.container_grab_bag import ContainerGrabBag
@@ -33,8 +33,9 @@ class ContainerHelper:
         position_marker: PositionMarker,
         extracted_whitespace: str,
         new_tokens: List[MarkdownToken],
-    ) -> bool:
+    ) -> Tuple[bool, str, str]:
         did_once = False
+        whitespace_prefix = ""
         if parser_state.token_stack[-1].is_list:
             search_index = len(parser_state.token_stack)
             leading_space_length = (
@@ -64,7 +65,17 @@ class ContainerHelper:
                 requeue_reset=True,
             )
             new_tokens.extend(container_level_tokens)
-        return did_once
+
+            indent_delta = list_token.indent_level - position_marker.index_indent
+            if len(extracted_whitespace) > indent_delta:
+                whitespace_prefix = extracted_whitespace[:indent_delta]
+                extracted_whitespace = extracted_whitespace[indent_delta:]
+
+            # Covered by test_extra_044mcz3, currently disabled.
+            else:
+                whitespace_prefix = extracted_whitespace
+                extracted_whitespace = ""
+        return did_once, extracted_whitespace, whitespace_prefix
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -75,7 +86,7 @@ class ContainerHelper:
         split_tab: bool,
         extracted_whitespace: str,
         grab_bag: ContainerGrabBag,
-    ) -> bool:
+    ) -> Tuple[bool, str]:
         x_tokens, _ = parser_state.close_open_blocks_fn(
             parser_state,
             include_block_quotes=True,
@@ -86,8 +97,10 @@ class ContainerHelper:
         assert len(x_tokens) == 1, "Should have generated only one token."
         first_new_token = cast(EndMarkdownToken, x_tokens[0])
 
-        did_reduce_list = ContainerHelper.__reduce_containers_if_required_bq_list(
-            parser_state, position_marker, extracted_whitespace, x_tokens
+        did_reduce_list, extracted_whitespace, whitespace_prefix = (
+            ContainerHelper.__reduce_containers_if_required_bq_list(
+                parser_state, position_marker, extracted_whitespace, x_tokens
+            )
         )
         was_list_ended = (
             grab_bag.container_tokens[-1].is_list_end
@@ -121,6 +134,7 @@ class ContainerHelper:
             POGGER.debug("last_newline_part>>:$:<", last_newline_part)
             split_tab = False
         POGGER.debug("split_tab>>:$:<", split_tab)
+        last_newline_part += whitespace_prefix
 
         POGGER.debug("extra_end_data>>:$:<", first_new_token.extra_end_data)
         assert (
@@ -138,7 +152,7 @@ class ContainerHelper:
             first_new_token.set_extra_end_data(last_newline_part)
 
         new_tokens.extend(x_tokens)
-        return split_tab
+        return split_tab, extracted_whitespace
 
     # pylint: enable=too-many-arguments
 
@@ -152,7 +166,7 @@ class ContainerHelper:
         split_tab: bool,
         extracted_whitespace: str,
         grab_bag: ContainerGrabBag,
-    ) -> bool:
+    ) -> Tuple[bool, str]:
         """
         Given a drop in the current count of block quotes versus what is actually
         specified, reduce the containers.
@@ -172,16 +186,18 @@ class ContainerHelper:
             and block_quote_data.stack_count > block_quote_data.current_count
             and parser_state.token_stack[-1].is_block_quote
         ):
-            split_tab = ContainerHelper.__reduce_containers_if_required_bq(
-                parser_state,
-                position_marker,
-                new_tokens,
-                split_tab,
-                extracted_whitespace,
-                grab_bag,
+            split_tab, extracted_whitespace = (
+                ContainerHelper.__reduce_containers_if_required_bq(
+                    parser_state,
+                    position_marker,
+                    new_tokens,
+                    split_tab,
+                    extracted_whitespace,
+                    grab_bag,
+                )
             )
 
-        return split_tab
+        return split_tab, extracted_whitespace
 
     # pylint: enable=too-many-arguments
 

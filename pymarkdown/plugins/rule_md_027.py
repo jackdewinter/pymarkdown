@@ -46,6 +46,7 @@ class RuleMd027(RulePlugin):
         self.__delayed_blank_line: Optional[MarkdownToken] = None
         self.__delayed_blank_line_bq_index: Optional[int] = None
         self.__delayed_blank_line_with_list_end = False
+        self.__delayed_blank_line_container_token: Optional[MarkdownToken] = None
         self.__have_incremented_for_this_line = False
         self.__last_token: Optional[MarkdownToken] = None
         # self.__debug_on = False
@@ -81,6 +82,7 @@ class RuleMd027(RulePlugin):
         self.__is_paragraph_end_delayed = False
         self.__delayed_blank_line = None
         self.__delayed_blank_line_bq_index = None
+        self.__delayed_blank_line_container_token = None
         self.__delayed_blank_line_with_list_end = False
         self.__have_incremented_for_this_line = False
         self.__last_token = None
@@ -316,6 +318,7 @@ class RuleMd027(RulePlugin):
             self.__delayed_blank_line = None
             self.__delayed_blank_line_bq_index = None
             self.__delayed_blank_line_with_list_end = False
+            self.__delayed_blank_line_container_token = None
 
     # pylint: enable=too-many-arguments
 
@@ -426,6 +429,7 @@ class RuleMd027(RulePlugin):
                 did_trigger = delayed_list_item[2]
                 if not did_trigger:
                     blank_token = delayed_list_item[3]
+                    # assert False
                     self.report_next_token_error(
                         context,
                         blank_token,
@@ -634,46 +638,13 @@ class RuleMd027(RulePlugin):
         #     print(f"__handle_blank_line>>{token}<<")
         blank_line_token = cast(BlankLineMarkdownToken, token)
 
-        if self.__container_tokens and self.__container_tokens[-1].is_block_quote_start:
-            scoped_block_quote_token = cast(
-                BlockQuoteMarkdownToken, self.__container_tokens[-1]
-            )
-            assert scoped_block_quote_token.bleading_spaces is not None
-            split_leading_spaces = scoped_block_quote_token.bleading_spaces.split(
-                ParserHelper.newline_character
-            )
+        assert self.__delayed_blank_line_container_token is not None
+        scoped_token = self.__delayed_blank_line_container_token
+        if scoped_token is not None and scoped_token.is_block_quote_start:
 
-            # If we are closing other containers, can cause issues. So do not fire.
-            is_end_with_other_closed_containers = (
-                delayed_bq_index == len(split_leading_spaces) - 1
-                and self.__delayed_blank_line_with_list_end
+            self.__handle_blank_line_inner(
+                scoped_token, delayed_bq_index, blank_line_token
             )
-
-            # If we have matching nested block quotes, and then a blank line, we need to prevent
-            # the firing.
-            is_special_case = (
-                delayed_bq_index == 0
-                and len(split_leading_spaces) == 1
-                and blank_line_token.line_number != scoped_block_quote_token.line_number
-            )
-
-            if (
-                not is_special_case
-                and not is_end_with_other_closed_containers
-                and delayed_bq_index < len(split_leading_spaces)
-            ):
-                specific_block_quote_prefix = split_leading_spaces[delayed_bq_index]
-                mod_specific_block_quote_prefix = specific_block_quote_prefix.rstrip(
-                    " "
-                )
-                if mod_specific_block_quote_prefix != specific_block_quote_prefix:
-                    self.__register_blank_line(
-                        scoped_block_quote_token,
-                        delayed_bq_index,
-                        mod_specific_block_quote_prefix,
-                        bool(blank_line_token.extracted_whitespace),
-                        blank_line_token,
-                    )
 
         if blank_line_token.extracted_whitespace:
             # if self.__debug_on:
@@ -683,6 +654,48 @@ class RuleMd027(RulePlugin):
 
         assert self.__bq_line_index
         self.__bq_line_index[num_container_tokens] += 1
+
+    def __handle_blank_line_inner(
+        self,
+        scoped_token: MarkdownToken,
+        delayed_bq_index: int,
+        blank_line_token: BlankLineMarkdownToken,
+    ) -> None:
+        scoped_block_quote_token = cast(BlockQuoteMarkdownToken, scoped_token)
+        assert scoped_block_quote_token.bleading_spaces is not None
+        split_leading_spaces = scoped_block_quote_token.bleading_spaces.split(
+            ParserHelper.newline_character
+        )
+
+        # If we are closing other containers, can cause issues. So do not fire.
+        is_end_with_other_closed_containers = (
+            delayed_bq_index == len(split_leading_spaces) - 1
+            and self.__delayed_blank_line_with_list_end
+        )
+
+        # If we have matching nested block quotes, and then a blank line, we need to prevent
+        # the firing.
+        is_special_case = (
+            delayed_bq_index == 0
+            and len(split_leading_spaces) == 1
+            and blank_line_token.line_number != scoped_block_quote_token.line_number
+        )
+
+        assert (
+            not is_special_case
+            and not is_end_with_other_closed_containers
+            and delayed_bq_index < len(split_leading_spaces)
+        )
+        specific_block_quote_prefix = split_leading_spaces[delayed_bq_index]
+        mod_specific_block_quote_prefix = specific_block_quote_prefix.rstrip(" ")
+        if mod_specific_block_quote_prefix != specific_block_quote_prefix:
+            self.__register_blank_line(
+                scoped_block_quote_token,
+                delayed_bq_index,
+                mod_specific_block_quote_prefix,
+                bool(blank_line_token.extracted_whitespace),
+                blank_line_token,
+            )
 
     def __handle_common_element(
         self,
@@ -1197,6 +1210,7 @@ class RuleMd027(RulePlugin):
                 num_container_tokens
             ]
             self.__delayed_blank_line_with_list_end = False
+            self.__delayed_blank_line_container_token = self.__container_tokens[-1]
             # if self.__debug_on:
             #     print("[[Delaying blank line]]")
         elif token.is_atx_heading or token.is_thematic_break:

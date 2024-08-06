@@ -300,6 +300,7 @@ class BlockQuoteNonFencedHelper:
             is_not_blank_line,
             stack_index,
             position_marker,
+            text_removed_by_container,
         )
 
     # pylint: enable=too-many-arguments,too-many-locals
@@ -499,6 +500,7 @@ class BlockQuoteNonFencedHelper:
         is_not_blank_line: bool,
         stack_index: int,
         position_marker: PositionMarker,
+        text_removed_by_container: str,
     ) -> None:
         assert (
             found_bq_stack_token.matching_markdown_token is not None
@@ -512,6 +514,14 @@ class BlockQuoteNonFencedHelper:
         )
         POGGER.debug("dbqlsa>>bq>>$", block_quote_token)
         POGGER.debug("dbqlsa>>tabbed_removed_text>>$", tabbed_removed_text)
+
+        adjusted_removed_text = BlockQuoteNonFencedHelper.__check_for_kludge(
+            parser_state,
+            block_quote_token,
+            stack_index,
+            text_removed_by_container,
+            adjusted_removed_text,
+        )
 
         block_quote_token.add_bleading_spaces(
             adjusted_removed_text,
@@ -545,6 +555,44 @@ class BlockQuoteNonFencedHelper:
         POGGER.debug("__hbqs>>bq>>$", block_quote_token)
 
     # pylint: enable=too-many-arguments
+
+    @staticmethod
+    def __check_for_kludge(
+        parser_state: ParserState,
+        block_quote_token: BlockQuoteMarkdownToken,
+        stack_index: int,
+        text_removed_by_container: str,
+        adjusted_removed_text: str,
+    ) -> str:
+        if not block_quote_token.bleading_spaces and stack_index > 3:
+            continue_with_adjustment = (
+                parser_state.token_stack[stack_index - 1].is_list
+                and parser_state.token_stack[stack_index - 2].is_list
+                and parser_state.token_stack[stack_index - 3].is_block_quote
+            )
+            if continue_with_adjustment:
+                lists_new_list_token = cast(
+                    ListStackToken, parser_state.token_stack[stack_index - 1]
+                ).last_new_list_token
+                if lists_new_list_token is not None:
+                    continue_with_adjustment = (
+                        block_quote_token.line_number
+                        != lists_new_list_token.line_number
+                    )
+                else:
+                    bq_inner_token = parser_state.token_stack[
+                        stack_index - 3
+                    ].matching_markdown_token
+                    assert bq_inner_token is not None
+                    continue_with_adjustment = (
+                        block_quote_token.line_number != bq_inner_token.line_number
+                    )
+            if continue_with_adjustment:
+                assert parser_state.original_line_to_parse is not None
+                adjusted_removed_text = parser_state.original_line_to_parse[
+                    : len(text_removed_by_container)
+                ]
+        return adjusted_removed_text
 
     # pylint: disable=too-many-arguments
     @staticmethod

@@ -63,9 +63,7 @@ class PluginScanContext(PluginModifyContext):
         """
         Register a sequence of tokens and what to replace them with.
         """
-        assert (
-            self.__replace_token_list is not None
-        ), "The replace list should always be present when fixing."
+        assert self.__replace_token_list is not None
         new_record = ReplaceTokensRecord(
             plugin_id, start_token, end_token, replacement_tokens
         )

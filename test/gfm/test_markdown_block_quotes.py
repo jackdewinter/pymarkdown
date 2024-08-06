@@ -686,7 +686,7 @@ def test_block_quotes_213b():
 
 
 @pytest.mark.gfm
-def test_block_quotes_213c():
+def test_block_quotes_213cx():
     """
     Test case 213c:  variation of 213 that has a block quote before the
         second line, but also includes a properly indented text line that
@@ -716,6 +716,84 @@ def test_block_quotes_213c():
 brr</li>
 <li>bar</li>
 </ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_block_quotes_213ca():
+    """
+    Test case 213c:  variation of 213 that has a block quote before the
+        second line, but also includes a properly indented text line that
+        belongs to the list
+    """
+
+    # Arrange
+    source_markdown = """> - foo
+>   brr
+> - bar"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> ]",
+        "[ulist(1,3):-::4::  ]",
+        "[para(1,5):\n]",
+        "[text(1,5):foo\nbrr::\n]",
+        "[end-para:::True]",
+        "[li(3,3):4::]",
+        "[para(3,5):]",
+        "[text(3,5):bar:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>foo
+brr</li>
+<li>bar</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_block_quotes_213cb():
+    """
+    Test case 213c:  variation of 213 that has a block quote before the
+        second line, but also includes a properly indented text line that
+        belongs to the list
+    """
+
+    # Arrange
+    source_markdown = """> > - foo
+      brr
+> > - bar"""
+    expected_tokens = [
+        "[block-quote(1,1)::]",
+        "[block-quote(1,3)::> > \n\n> > ]",
+        "[ulist(1,5):-::6::      ]",
+        "[para(1,7):\n]",
+        "[text(1,7):foo\nbrr::\n]",
+        "[end-para:::True]",
+        "[li(3,5):6::]",
+        "[para(3,7):]",
+        "[text(3,7):bar:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<blockquote>
+<ul>
+<li>foo
+brr</li>
+<li>bar</li>
+</ul>
+</blockquote>
 </blockquote>"""
 
     # Act & Assert

@@ -424,6 +424,7 @@ class ContainerBlockNonLeafProcessor:
         if not did_process:
             did_process = ContainerBlockNonLeafProcessor.__process_list_in_progress(
                 parser_state,
+                position_marker.index_indent,
                 grab_bag,
             )
             if not grab_bag.requeue_line_info:
@@ -697,6 +698,7 @@ class ContainerBlockNonLeafProcessor:
             remaining_line,
             ex_whitespace,
             grab_bag.was_paragraph_continuation,
+            grab_bag.original_line,
         )
         grab_bag.extend_container_tokens(lazy_tokens)
 
@@ -780,6 +782,7 @@ class ContainerBlockNonLeafProcessor:
     @staticmethod
     def __process_list_in_progress(
         parser_state: ParserState,
+        index_indent: int,
         grab_bag: ContainerGrabBag,
     ) -> bool:
         did_process, ind = LeafBlockProcessorParagraph.check_for_list_in_process(
@@ -793,6 +796,7 @@ class ContainerBlockNonLeafProcessor:
             resultant_tokens = ListBlockProcessor.list_in_process(
                 parser_state,
                 ind,
+                index_indent,
                 grab_bag,
             )
             grab_bag.extend_container_tokens(resultant_tokens)
