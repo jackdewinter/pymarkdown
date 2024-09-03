@@ -25,7 +25,7 @@ nav:
   - "Extensions & Rules":
     - extensions.md
     - rules.md
-  - "Devloper Guide":
+  - "Developer Guide":
     - 'api.md'
     - "API Listing": api/pymarkdownapi.md
     - 'development.md'
