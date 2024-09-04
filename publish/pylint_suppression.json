@@ -484,8 +484,8 @@
         "pymarkdown/transform_markdown/transform_block_quote.py": {},
         "pymarkdown/transform_markdown/transform_containers.py": {
             "too-few-public-methods": 1,
-            "too-many-arguments": 10,
-            "too-many-locals": 1,
+            "too-many-arguments": 18,
+            "too-many-locals": 3,
             "too-many-boolean-expressions": 2
         },
         "pymarkdown/transform_markdown/transform_list_block.py": {
@@ -505,8 +505,8 @@
         "too-many-instance-attributes": 26,
         "too-many-public-methods": 4,
         "too-few-public-methods": 39,
-        "too-many-arguments": 245,
-        "too-many-locals": 48,
+        "too-many-arguments": 252,
+        "too-many-locals": 49,
         "chained-comparison": 2,
         "too-many-boolean-expressions": 3,
         "protected-access": 25,

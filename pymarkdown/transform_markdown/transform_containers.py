@@ -1147,7 +1147,6 @@ class TransformContainers:
             block_start_on_remove,
         )
 
-    
     # pylint: disable=too-many-arguments
     @staticmethod
     def __adjust_for_list_end(
