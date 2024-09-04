@@ -1293,6 +1293,7 @@ def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_lis
 def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_list_one_before_two_after_x():
     """
     Test case:  Html blocks preceeded by spaces and tabs.
+    BLAH-B
     """
 
     # Arrange
@@ -1328,13 +1329,14 @@ def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_lis
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
 def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_list_one_before_two_after_y():
     """
     Test case:  Html blocks preceeded by spaces and tabs.
+    BLAH1
     """
 
     # Arrange
@@ -1370,7 +1372,7 @@ def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_lis
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
@@ -1587,9 +1589,11 @@ def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_lis
 
 
 @pytest.mark.gfm
+# @pytest.mark.skip
 def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_list_two_before_three_after():
     """
     Test case:  Html blocks preceeded by spaces and tabs.
+    BLAH-A
     """
 
     # Arrange
@@ -1625,7 +1629,7 @@ def test_whitespaces_html_with_tabs_before_within_block_quote_ordered_double_lis
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm

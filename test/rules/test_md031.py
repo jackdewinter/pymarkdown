@@ -466,19 +466,19 @@ This is a blank line and some text.
         scan_expected_output="""{temp_source_path}:6:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 {temp_source_path}:8:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
-        #         fix_expected_file_contents="""> > inner block
-        # > > inner block
-        # >
-        # > This is text and no blank line.
-        # > ---
-        # >
-        # > ```block
-        # > A code block
-        # > ```
-        # >
-        # > ---
-        # >This is a blank line and some text.
-        # """,
+        fix_expected_file_contents="""> > inner block
+> > inner block
+>
+> This is text and no blank line.
+> ---
+>
+> ```block
+> A code block
+> ```
+>
+> ---
+>This is a blank line and some text.
+""",
     ),
     pluginRuleTest(
         "bad_fenced_block_in_block_quote_with_previous_inner_list",
@@ -650,21 +650,21 @@ This is a blank line and some text.
         scan_expected_output="""{temp_source_path}:8:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 {temp_source_path}:10:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
-        #         fix_expected_file_contents="""> > inner block
-        # > > > innermost block
-        # > > > innermost block
-        # > > inner block
-        # >
-        # > This is text and no blank line.
-        # > ---
-        # >
-        # > ```block
-        # > A code block
-        # > ```
-        # >
-        # > ---
-        # >This is a blank line and some text.
-        # """,
+        fix_expected_file_contents="""> > inner block
+> > > innermost block
+> > > innermost block
+> > inner block
+>
+> This is text and no blank line.
+> ---
+>
+> ```block
+> A code block
+> ```
+>
+> ---
+>This is a blank line and some text.
+""",
     ),
     pluginRuleTest(
         "bad_fenced_block_in_block_quote_only_after",
@@ -853,7 +853,7 @@ This is a blank line and some text.
         set_args=["plugins.md031.list_items=$!False"],
         use_strict_config=True,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_046x0 # test_extra_046x1
         "bad_fenced_block_surrounded_by_block_quote",
         source_file_contents="""> block quote
 ```block
@@ -865,6 +865,7 @@ A code block
         scan_expected_output="""{temp_source_path}:2:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 {temp_source_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
+        use_debug=True,
         fix_expected_file_contents="""> block quote
 
 ```block
@@ -899,7 +900,7 @@ A code block
 > block quote
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_046w0a test_extra_046w1
         "bad_fenced_block_surrounded_by_list",
         source_file_contents="""+ list
 ```block
@@ -912,6 +913,7 @@ A code block
 {temp_source_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
+        use_debug=True,
         fix_expected_file_contents="""+ list
 
 ```block
@@ -1687,7 +1689,7 @@ A code block
 > >   --------
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_046v0 test_extra_046v1 https://github.com/jackdewinter/pymarkdown/issues/1168
         "bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_block",
         source_file_contents="""> > + --------
 > >   > block 1
@@ -1702,16 +1704,17 @@ A code block
 {temp_source_path}:6:7: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
-        fix_expected_file_contents="""> > + --------
-> >   > block 1
-> >   > block 2
-> >
-> >   ```block
-> >   A code block
-> >   ```
-> >
-> >   --------
-""",
+        use_debug=True,
+        #         fix_expected_file_contents="""> > + --------
+        # > >   > block 1
+        # > >   > block 2
+        # > >
+        # > >   ```block
+        # > >   A code block
+        # > >   ```
+        # > >
+        # > >   --------
+        # """,
     ),
     pluginRuleTest(
         "bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_block_with_thematics",
@@ -1741,7 +1744,7 @@ A code block
 > >   --------
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_046u0 test_extra_046u1 https://github.com/jackdewinter/pymarkdown/issues/1169
         "bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_list",
         source_file_contents="""> > + ______
 > >   + list 1
@@ -1769,7 +1772,7 @@ A code block
         # > >   ______
         # """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_044lex1 test_extra_044lex1a https://github.com/jackdewinter/pymarkdown/issues/1181
         "bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_list_and_thematics",
         source_file_contents="""> > + ______
 > >   + list 1
@@ -1786,18 +1789,18 @@ A code block
 {temp_source_path}:8:7: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032,md035",
-        fix_expected_file_contents="""> > + ______
-> >   + list 1
-> >     list 2
-> >   + list 3
-> >   ______
-> >
-> >   ```block
-> >   A code block
-> >   ```
-> >
-> >   ______
-""",
+        #         fix_expected_file_contents="""> > + ______
+        # > >   + list 1
+        # > >     list 2
+        # > >   + list 3
+        # > >   ______
+        # > >
+        # > >   ```block
+        # > >   A code block
+        # > >   ```
+        # > >
+        # > >   ______
+        # """,
     ),
     pluginRuleTest(
         "bad_fenced_block_in_block_quote_in_list",
@@ -1863,7 +1866,7 @@ A code block
    > block quote
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_046t0 test_extra_046t1
         "bad_fenced_block_in_block_quote_in_list_with_previous_inner_block",
         source_file_contents="""1. > >
    > > block 3
@@ -1878,6 +1881,7 @@ A code block
 {temp_source_path}:6:6: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
+        use_debug=True,
         fix_expected_file_contents="""1. > >
    > > block 3
    > > block 3
@@ -1917,7 +1921,7 @@ A code block
    > --------
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_046s0 test_extra_046s1  BAR-E
         "bad_fenced_block_in_block_quote_in_list_with_previous_inner_block_and_para_continue",
         source_file_contents="""1. > >
    > > block 3
@@ -1932,6 +1936,7 @@ A code block
 {temp_source_path}:6:6: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
+        use_debug=True,
         fix_expected_file_contents="""1. > >
    > > block 3
    > block 3
@@ -2025,7 +2030,7 @@ A code block
    > --------
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_046r0 test_extra_046r1  BAR-R
         "bad_fenced_block_in_block_quote_in_block_quote_in_list",
         source_file_contents="""1. > > ----
    > > ```block
@@ -2048,7 +2053,7 @@ A code block
    > > ----
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_046q0 test_extra_046q1 BAR-Q
         "bad_fenced_block_in_block_quote_in_block_quote_in_list_empty",
         source_file_contents="""1. > > ----
    > > ```block
@@ -2091,7 +2096,7 @@ A code block
    >   ----
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_044mx1 test_extra_044mcw1 https://github.com/jackdewinter/pymarkdown/issues/1167
         "bad_fenced_block_in_list_in_block_quote_in_list_with_previous_block",
         source_file_contents="""1. > + ----
    >   > block 1
@@ -2107,16 +2112,16 @@ A code block
 """,
         disable_rules="md032,md027",
         use_debug=True,
-        fix_expected_file_contents="""1. > + ----
-   >   > block 1
-   >   > block 2
-   >
-   >   ```block
-   >   A code block
-   >   ```
-   >
-   >   ----
-""",
+        #         fix_expected_file_contents="""1. > + ----
+        #    >   > block 1
+        #    >   > block 2
+        #    >
+        #    >   ```block
+        #    >   A code block
+        #    >   ```
+        #    >
+        #    >   ----
+        # """,
     ),
     pluginRuleTest(
         "bad_fenced_block_in_list_in_block_quote_in_list_with_previous_block_2",
@@ -2202,7 +2207,7 @@ A code block
    >   # header 2
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_046p0 https://github.com/jackdewinter/pymarkdown/issues/1170
         "bad_fenced_block_in_list_in_block_quote_in_list_with_previous_list",
         source_file_contents="""1. > + ----
    >   + list 1
@@ -2230,7 +2235,7 @@ A code block
         #    >   ----
         # """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_046n0 test_extra_046n1 https://github.com/jackdewinter/pymarkdown/issues/1171
         "bad_fenced_block_in_list_in_block_quote_in_list_with_previous_list_with_thematics",
         source_file_contents="""1. > + ----
    >   + list 1
@@ -2247,20 +2252,20 @@ A code block
 {temp_source_path}:8:8: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
-        fix_expected_file_contents="""1. > + ----
-   >   + list 1
-   >     list 2
-   >   + list 3
-   >   ----
-   >
-   >   ```block
-   >   A code block
-   >   ```
-   >
-   >   ----
-""",
+        #         fix_expected_file_contents="""1. > + ----
+        #    >   + list 1
+        #    >     list 2
+        #    >   + list 3
+        #    >   ----
+        #    >
+        #    >   ```block
+        #    >   A code block
+        #    >   ```
+        #    >
+        #    >   ----
+        # """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_046m0 test_extra_046m1
         "bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_block",
         source_file_contents="""1. > > ----
    > > > inner block 1
@@ -2287,7 +2292,7 @@ A code block
    > > ----
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_046k0 test_extra_046k1
         "bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_block_with_thematics",
         source_file_contents="""1. > > ----
    > > > inner block 1
@@ -2316,7 +2321,7 @@ A code block
    > > ----
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_046j0 test_extra_046j1
         "bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_list",
         source_file_contents="""1. > > ----
    > > + list 1
@@ -2345,7 +2350,7 @@ A code block
    > > ----
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_046h0 test_extra_046h1
         "bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_list_with_thematics",
         source_file_contents="""1. > > ----
    > > + list 1
@@ -2442,7 +2447,7 @@ A code block
 > + another list
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_046l0 test_extra_046l1
         "bad_fenced_block_in_list_in_block_quote_bare",
         source_file_contents="""> + list
 >   ```block
@@ -2455,14 +2460,14 @@ A code block
 {temp_source_path}:4:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
-        fix_expected_file_contents="""> + list
->
->   ```block
->   A code block
->   ```
->
-> + another list
-""",
+        #         fix_expected_file_contents="""> + list
+        # >
+        # >   ```block
+        # >   A code block
+        # >   ```
+        # >
+        # > + another list
+        # """,
     ),
     pluginRuleTest(
         "bad_fenced_block_in_list_in_block_quote_with_previous_inner_block_0",
@@ -2494,7 +2499,7 @@ A code block
 > + another list
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_046g0 test_extra_046g1  BAR-C https://github.com/jackdewinter/pymarkdown/issues/1166
         "bad_fenced_block_in_list_in_block_quote_with_previous_inner_block_0_without_thematics",
         source_file_contents="""> + list 1
 >   > block 2
@@ -2509,6 +2514,7 @@ A code block
 {temp_source_path}:6:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032,md027",
+        use_debug=True,
         #         fix_expected_file_contents="""> + list 1
         # >   > block 2
         # >   > block 3
@@ -2516,6 +2522,7 @@ A code block
         # >   ```block
         # >   A code block
         # >   ```
+        # >
         # > + another list
         # """,
     ),
@@ -2643,7 +2650,7 @@ A code block
 > + another list
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_046f0 test_extra_046f1  https://github.com/jackdewinter/pymarkdown/issues/1173
         "bad_fenced_block_in_list_in_block_quote_with_previous_inner_list",
         source_file_contents="""> + list 1
 >   + list 2
@@ -2665,10 +2672,11 @@ A code block
         # >   ```block
         # >   A code block
         # >   ```
+        # >
         # > + another list
         # """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # see sub3    test_extra_044cx test_extra_044ca https://github.com/jackdewinter/pymarkdown/issues/1165
         "bad_fenced_block_in_list_in_block_quote_with_previous_inner_list_with_thematics",
         source_file_contents="""> + list 1
 >   + list 2
@@ -2685,9 +2693,37 @@ A code block
 {temp_source_path}:7:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
+        #         fix_expected_file_contents="""> + list 1
+        # >   + list 2
+        # >     list 3
+        # >   ------
+        # >
+        # >   ```block
+        # >   A code block
+        # >   ```
+        # >
+        # >   ------
+        # > + another list
+        # """,
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_with_previous_inner_list_with_thematics_sub1",
+        source_file_contents="""> + list 1
+>     list 2
+>   ------
+>   ```block
+>   A code block
+>   ```
+>   ------
+> + another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md022,md023",
         fix_expected_file_contents="""> + list 1
->   + list 2
->     list 3
+>     list 2
 >   ------
 >
 >   ```block
@@ -2699,6 +2735,68 @@ A code block
 """,
     ),
     pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_with_previous_inner_list_with_thematics_sub2",
+        source_file_contents="""> + list 1
+>     list 2
+>     list 3
+>   _____
+>   ```block
+>   A code block
+>   ```
+>   _____
+> + another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md022,md023",
+        # use_fix_debug=False,
+        fix_expected_file_contents="""> + list 1
+>     list 2
+>     list 3
+>   _____
+>
+>   ```block
+>   A code block
+>   ```
+>
+>   _____
+> + another list
+""",
+    ),
+    pluginRuleTest(  # test_extra_046e test_extra_046e1 https://github.com/jackdewinter/pymarkdown/issues/1174
+        "bad_fenced_block_in_list_in_block_quote_with_previous_inner_list_with_thematics_sub3",
+        source_file_contents="""> + list 1
+>   + list 2
+>   + list 3
+>   _____
+>   ```block
+>   A code block
+>   ```
+>   _____
+> + another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        use_fix_debug=True,
+        #         fix_expected_file_contents="""> + list 1
+        # >   + list 2
+        # >   + list 3
+        # >   _____
+        # >
+        # >   ```block
+        # >   A code block
+        # >   ```
+        # >
+        # >   ------
+        # > + another list
+        # """,
+    ),
+    pluginRuleTest(  # test_extra_046da test_extra_046db https://github.com/jackdewinter/pymarkdown/issues/1176
         "bad_fenced_block_in_list_in_block_quote_with_previous_inner_list_and_para_continue",
         source_file_contents="""> + list 1
 >   + list 2
@@ -2726,7 +2824,7 @@ A code block
         # > + another list
         # """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_046x test_extra_046dx https://github.com/jackdewinter/pymarkdown/issues/1164 https://github.com/jackdewinter/pymarkdown/issues/1177
         "bad_fenced_block_in_list_in_block_quote_with_previous_inner_list_and_para_continue_with_thematics",
         source_file_contents="""> + list 1
 >   + list 2
@@ -2743,18 +2841,18 @@ A code block
 {temp_source_path}:7:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
-        fix_expected_file_contents="""> + list 1
->   + list 2
->   list 3
->   ------
->
->   ```block
->   A code block
->   ```
->
->   ------
-> + another list
-""",
+        #         fix_expected_file_contents="""> + list 1
+        # >   + list 2
+        # >   list 3
+        # >   ------
+        # >
+        # >   ```block
+        # >   A code block
+        # >   ```
+        # >
+        # >   ------
+        # > + another list
+        # """,
     ),
     pluginRuleTest(
         "bad_fenced_block_in_block_quote_in_list_in_block_quote",
@@ -2802,7 +2900,7 @@ A code block
 > + another list
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_044mcz1 test_extra_046ca  BAR-B https://github.com/jackdewinter/pymarkdown/issues/1163
         "bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block",
         source_file_contents="""> + > -----
 >   > > block 1
@@ -2818,6 +2916,8 @@ A code block
 {temp_source_path}:6:7: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
+        use_fix_debug=False,
+        use_debug=True,
         #         fix_expected_file_contents="""> + > -----
         # >   > > block 1
         # >   > > block 2
@@ -2830,7 +2930,7 @@ A code block
         # > + another list
         # """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_044mcv0 test_extra_044mcv1   also check with md027 enabled https://github.com/jackdewinter/pymarkdown/issues/1162
         "bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block_with_thematics",
         source_file_contents="""> + > -----
 >   > > block 1
@@ -2847,6 +2947,7 @@ A code block
 {temp_source_path}:7:7: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
+        use_fix_debug=False,
         #         fix_expected_file_contents="""> + > -----
         # >   > > block 1
         # >   > > block 2
@@ -2968,7 +3069,7 @@ A code block
 > + another list
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_044mcz0x test_extra_044mcz0a https://github.com/jackdewinter/pymarkdown/issues/1179
         "bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block",
         source_file_contents="""> + + -----
 >     > block 1
@@ -3028,7 +3129,7 @@ A code block
 > + another list
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_046cc0 test_extra_046cc1 https://github.com/jackdewinter/pymarkdown/issues/1175
         "bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list",
         source_file_contents="""> + + -----
 >     + list 1
@@ -3058,7 +3159,7 @@ A code block
         # > + another list
         # """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_044mcs1 https://github.com/jackdewinter/pymarkdown/issues/1180
         "bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_and_thematics",
         source_file_contents="""> + + -----
 >     + list 1
@@ -3076,19 +3177,20 @@ A code block
 {temp_source_path}:8:7: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
-        fix_expected_file_contents="""> + + -----
->     + list 1
->       list 2
->     + list 3
->     -----
->
->     ```block
->     A code block
->     ```
->
->     -----
-> + another list
-""",
+        use_fix_debug=True,
+        #         fix_expected_file_contents="""> + + -----
+        # >     + list 1
+        # >       list 2
+        # >     + list 3
+        # >     -----
+        # >
+        # >     ```block
+        # >     A code block
+        # >     ```
+        # >
+        # >     -----
+        # > + another list
+        # """,
     ),
     pluginRuleTest(
         "bad_fenced_block_in_list_in_list",

@@ -675,7 +675,6 @@ class BlockQuoteCountHelper:
     ) -> Tuple[
         List[MarkdownToken],
         Optional[RequeueLineInfo],
-        Optional[int],
         bool,
         BlockQuoteData,
     ]:
@@ -719,12 +718,11 @@ class BlockQuoteCountHelper:
                 requeue_reset=True,
             )
             if requeue_line_info:
-                return [], requeue_line_info, None, False, block_quote_data
+                return [], requeue_line_info, False, block_quote_data
 
             POGGER.debug("esal>>__calculate_stack_hard_limit(delta)")
             (
                 stack_hard_limit,
-                extra_consumed_whitespace,
                 force_list_continuation,
             ) = BlockQuoteCountHelper.__calculate_stack_hard_limit(
                 parser_state,
@@ -760,7 +758,6 @@ class BlockQuoteCountHelper:
             POGGER.debug("esal>>__calculate_stack_hard_limit(no delta)")
             (
                 stack_hard_limit,
-                extra_consumed_whitespace,
                 force_list_continuation,
             ) = BlockQuoteCountHelper.__calculate_stack_hard_limit(
                 parser_state, position_marker, True, False, False, block_quote_data
@@ -770,7 +767,6 @@ class BlockQuoteCountHelper:
         return (
             container_level_tokens,
             None,
-            extra_consumed_whitespace,
             force_list_continuation,
             block_quote_data,
         )
@@ -786,7 +782,7 @@ class BlockQuoteCountHelper:
         stack_increase_needed: bool,
         stack_decrease_needed: bool,
         block_quote_data: BlockQuoteData,
-    ) -> Tuple[Optional[int], Optional[int], bool]:
+    ) -> Tuple[Optional[int], bool]:
         POGGER.debug(">>__calculate_stack_hard_limit>>")
         POGGER.debug("original_line_to_parse>>:$:", parser_state.original_line_to_parse)
         POGGER.debug(
@@ -873,7 +869,7 @@ class BlockQuoteCountHelper:
             extra_consumed_whitespace,
         )
         POGGER.debug("force_list_continuation=$", force_list_continuation)
-        return stack_hard_limit, extra_consumed_whitespace, force_list_continuation
+        return stack_hard_limit, force_list_continuation
 
     # pylint: enable=too-many-arguments
 

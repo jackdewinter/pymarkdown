@@ -8,6 +8,7 @@ from typing import List, Optional, Tuple, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
+from pymarkdown.general.tab_helper import TabHelper
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
@@ -23,7 +24,7 @@ class MarkdownChangeRecord:
     Class to keep track of changes.
     """
 
-    item_a: bool
+    is_container_start: bool
     item_b: int
     item_c: MarkdownToken
     item_d: Optional[EndMarkdownToken]
@@ -103,12 +104,9 @@ class TransformContainers:
         )
         while container_stack[-1].is_new_list_item:
             del container_stack[-1]
-        assert str(container_stack[-1]) == str(
-            current_end_token.start_markdown_token
-        ), (
-            ParserHelper.make_value_visible(container_stack[-1])
-            + "=="
-            + ParserHelper.make_value_visible(current_end_token.start_markdown_token)
+
+        MarkdownToken.assert_tokens_are_same_except_for_line_number(
+            container_stack[-1], current_end_token.start_markdown_token
         )
         del container_stack[-1]
         record_item = MarkdownChangeRecord(
@@ -126,7 +124,7 @@ class TransformContainers:
             pre_container_text = transformed_data[: record_item.item_b]
             container_text = transformed_data[record_item.item_b :]
             adjusted_text = TransformContainers.__apply_container_transformation(
-                container_text, container_records, actual_tokens
+                container_text, container_records, actual_tokens, []
             )
             POGGER.debug(f"pre>:{pre_container_text}:<")
             POGGER.debug(f"adj>:{adjusted_text}:<")
@@ -134,7 +132,7 @@ class TransformContainers:
             POGGER.debug(f"trn>:{transformed_data}:<")
         return transformed_data
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __apply_line_transformation(
         did_move_ahead: bool,
@@ -144,15 +142,21 @@ class TransformContainers:
         container_line: str,
         actual_tokens: List[MarkdownToken],
         removed_tokens: List[MarkdownToken],
+        removed_token_indices: List[int],
         base_line_number: int,
         delta_line: int,
         is_in_multiline_paragraph: bool,
     ) -> str:
+
+        container_line_old = container_line
+        token_stack_copy = token_stack[:]
+        removed_tokens_copy = removed_tokens[:]
+        container_token_indices_copy = container_token_indices[:]
+        removed_token_indices_copy = removed_token_indices[:]
         (
             last_container_token_index,
             applied_leading_spaces_to_start_of_container_line,
             container_line,
-            was_abrupt_block_quote_end,
             did_adjust_due_to_block_quote_start,
         ) = TransformContainers.__apply_primary_transformation(
             did_move_ahead,
@@ -163,12 +167,13 @@ class TransformContainers:
             actual_tokens,
         )
 
-        container_line = TransformContainers.__adjust_for_list(
+        container_line, block_me = TransformContainers.__adjust_for_list(
             token_stack,
             applied_leading_spaces_to_start_of_container_line,
             container_token_indices,
             container_line,
             removed_tokens,
+            removed_token_indices,
             current_changed_record,
         )
         container_line = TransformContainers.__adjust_for_block_quote(
@@ -179,6 +184,9 @@ class TransformContainers:
             base_line_number + delta_line,
             did_adjust_due_to_block_quote_start,
             is_in_multiline_paragraph,
+            removed_tokens,
+            removed_token_indices,
+            container_line_old,
         )
 
         TransformContainers.__adjust_state_for_element(
@@ -187,12 +195,256 @@ class TransformContainers:
             did_move_ahead,
             current_changed_record,
             last_container_token_index,
-            was_abrupt_block_quote_end,
+            removed_tokens,
+            removed_token_indices,
+            block_me,
         )
 
+        container_token_indices_copy_length = len(container_token_indices_copy)
+        container_token_indices_length = len(container_token_indices)
+        if container_token_indices_copy_length > container_token_indices_length:
+            assert (
+                container_token_indices_copy_length
+                == container_token_indices_length + 1
+            )
+            assert token_stack_copy[-1].is_new_list_item
+        for next_index in range(container_token_indices_length):
+            delta = (
+                container_token_indices[next_index]
+                - container_token_indices_copy[next_index]
+            )
+            if delta > 1:
+                container_token_indices[next_index] = (
+                    container_token_indices_copy[next_index] + 1
+                )
+
+        TransformContainers.__apply_line_transformation_check(
+            container_line_old,
+            container_line,
+            removed_token_indices,
+            container_token_indices,
+            token_stack_copy,
+            container_token_indices_copy,
+            removed_tokens_copy,
+            removed_token_indices_copy,
+        )
         return container_line
 
+    # pylint: enable=too-many-arguments, too-many-locals
+
+    @staticmethod
+    def __apply_line_transformation_check_loop(
+        token_stack_copy: List[MarkdownToken],
+        search_index: int,
+        container_token_indices_copy: List[int],
+        prefix_text_parts: List[str],
+        container_line_old: str,
+    ) -> str:
+        stack_token_copy = token_stack_copy[search_index]
+        stack_token_copy_spaces = (
+            cast(BlockQuoteMarkdownToken, stack_token_copy).bleading_spaces
+            if stack_token_copy.is_block_quote_start
+            else cast(ListStartMarkdownToken, stack_token_copy).leading_spaces
+        )
+        assert stack_token_copy_spaces is not None
+        split_stack_token_copy_spaces = stack_token_copy_spaces.split("\n")
+        indent_text = split_stack_token_copy_spaces[
+            container_token_indices_copy[search_index]
+        ]
+        if (
+            indent_text
+            and indent_text[-1] == ParserLogger.blah_sequence
+            and len(prefix_text_parts) == 1
+            and container_line_old.startswith(prefix_text_parts[0])
+        ):
+            container_line_old = container_line_old[len(prefix_text_parts[0]) :]
+            indent_text = indent_text[:-1]
+            prefix_text_parts.insert(0, indent_text)
+        else:
+            prefix_text_parts.append(indent_text)
+        return container_line_old
+
+    @staticmethod
+    def __apply_line_transformation_check_removed(
+        removed_tokens_copy: List[MarkdownToken],
+        removed_token_indices: List[int],
+        removed_token_indices_copy: List[int],
+        prefix_text_parts: List[str],
+    ) -> None:
+        if (removed_token_indices[-1] - removed_token_indices_copy[-1]) > 0:
+            removed_leading_spaces = (
+                cast(BlockQuoteMarkdownToken, removed_tokens_copy[-1]).bleading_spaces
+                if removed_tokens_copy[-1].is_block_quote_start
+                else cast(
+                    ListStartMarkdownToken, removed_tokens_copy[-1]
+                ).leading_spaces
+            )
+            assert removed_leading_spaces is not None
+            split_removed_leading_spaces = removed_leading_spaces.split("\n")
+            prefix_text_parts.append(
+                split_removed_leading_spaces[removed_token_indices_copy[-1]]
+            )
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __apply_line_transformation_check(
+        container_line_old: str,
+        container_line: str,
+        removed_token_indices: List[int],
+        container_token_indices: List[int],
+        token_stack_copy: List[MarkdownToken],
+        container_token_indices_copy: List[int],
+        removed_tokens_copy: List[MarkdownToken],
+        removed_token_indices_copy: List[int],
+    ) -> None:
+        if container_line_old == container_line or not removed_tokens_copy:
+            return
+        prefix_text_parts: List[str] = []
+
+        TransformContainers.__apply_line_transformation_check_removed(
+            removed_tokens_copy,
+            removed_token_indices,
+            removed_token_indices_copy,
+            prefix_text_parts,
+        )
+        start_index = len(token_stack_copy) - 1
+        if token_stack_copy[start_index].is_new_list_item:
+            start_index -= 1
+        for search_index in range(start_index, -1, -1):
+            if (
+                container_token_indices_copy[search_index]
+                != container_token_indices[search_index]
+            ):
+                container_line_old = (
+                    TransformContainers.__apply_line_transformation_check_loop(
+                        token_stack_copy,
+                        search_index,
+                        container_token_indices_copy,
+                        prefix_text_parts,
+                        container_line_old,
+                    )
+                )
+        constructed_prefix_text = "".join(prefix_text_parts[::-1])
+
+        # kludge_flag - these SHOULD always match up, but until we do
+        # allow for a relief valve
+        detabified_constructed_line = TabHelper.detabify_string(
+            constructed_prefix_text + container_line_old
+        )
+        detabified_container_line = TabHelper.detabify_string(container_line)
+        if detabified_constructed_line != detabified_container_line:
+            kludge_flag = True
+            assert (
+                kludge_flag or detabified_constructed_line == detabified_container_line
+            ), f"-->{detabified_constructed_line}=={detabified_container_line}<--"
+
     # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __abcd(
+        current_changed_record: Optional[MarkdownChangeRecord],
+        actual_tokens: List[MarkdownToken],
+        removed_tokens: List[MarkdownToken],
+        removed_token_indices: List[int],
+        container_stack: List[MarkdownToken],
+        container_token_indices: List[int],
+    ) -> Optional[str]:
+        prefix = None
+        assert current_changed_record is not None
+        token_to_match = (
+            current_changed_record.item_c
+            if current_changed_record.is_container_start
+            else current_changed_record.item_d
+        )
+        token_index = 0
+        while (
+            token_index < len(actual_tokens)
+            and actual_tokens[token_index] != token_to_match
+        ):
+            token_index += 1
+
+        while token_index < len(actual_tokens) and (
+            actual_tokens[token_index].is_block_quote_end
+            or actual_tokens[token_index].is_list_end
+        ):
+            token_index += 1
+        assert token_index != len(actual_tokens)
+        while removed_tokens:
+            do_check = True
+            if removed_tokens[0].is_list_start:
+                current_leading_spaces = cast(
+                    ListStartMarkdownToken, removed_tokens[0]
+                ).leading_spaces
+            else:
+                bq_token = cast(BlockQuoteMarkdownToken, removed_tokens[0])
+                current_leading_spaces = bq_token.bleading_spaces
+                do_check = bq_token.weird_kludge_five
+            if do_check:
+                split_space_index = (
+                    len(current_leading_spaces.split("\n"))
+                    if current_leading_spaces is not None
+                    else 0
+                )
+                if split_space_index != removed_token_indices[0]:
+                    break
+            del removed_tokens[0]
+            del removed_token_indices[0]
+        keep_going = len(removed_tokens) > 1
+        if keep_going:
+            prefix = TransformContainers.__abcd_final(
+                container_stack,
+                container_token_indices,
+                removed_tokens,
+                removed_token_indices,
+                prefix,
+            )
+
+        keep_going = len(removed_tokens) <= 1
+        assert keep_going
+        return prefix
+
+    # pylint: enable=too-many-arguments
+
+    @staticmethod
+    def __abcd_final(
+        container_stack: List[MarkdownToken],
+        container_token_indices: List[int],
+        removed_tokens: List[MarkdownToken],
+        removed_token_indices: List[int],
+        prefix: Optional[str],
+    ) -> Optional[str]:
+        container_stack_copy = container_stack[:]
+        container_indices_copy = container_token_indices[:]
+        container_stack_copy.extend(removed_tokens[::-1])
+        container_indices_copy.extend(removed_token_indices[::-1])
+
+        if container_stack_copy[-1].is_block_quote_start:
+            bq_spaces = cast(
+                BlockQuoteMarkdownToken, container_stack_copy[-1]
+            ).bleading_spaces
+            assert bq_spaces is not None
+            bq_split_spaces = bq_spaces.split("\n")
+            assert container_indices_copy[-1] == len(bq_split_spaces) - 1
+            prefix = bq_split_spaces[container_indices_copy[-1]]
+            del removed_tokens[0]
+            del removed_token_indices[0]
+            if container_stack_copy[-2].is_list_start:
+                list_spaces = cast(
+                    ListStartMarkdownToken, container_stack_copy[-2]
+                ).leading_spaces
+                assert list_spaces is not None
+                list_split_spaces = list_spaces.split("\n")
+                assert container_indices_copy[-1] == len(list_split_spaces) - 1
+                prefix += list_split_spaces[container_indices_copy[-2]]
+                del removed_tokens[0]
+                del removed_token_indices[0]
+        else:
+            del removed_tokens[0]
+            del removed_token_indices[0]
+            del removed_tokens[0]
+            del removed_token_indices[0]
+        return prefix
 
     # pylint: disable=too-many-locals
     @staticmethod
@@ -200,6 +452,7 @@ class TransformContainers:
         container_text: str,
         container_records: List[MarkdownChangeRecord],
         actual_tokens: List[MarkdownToken],
+        token_stack: List[MarkdownToken],
     ) -> str:
         # POGGER.debug(
         #     f">>incoming>>:{ParserHelper.make_value_visible(container_text)}:<<"
@@ -209,7 +462,7 @@ class TransformContainers:
         #     f">>container_records>>{ParserHelper.make_value_visible(container_records)}"
         # )
 
-        token_stack: List[MarkdownToken] = []
+        token_stack = []
         container_token_indices: List[int] = []
         (
             base_line_number,
@@ -234,7 +487,7 @@ class TransformContainers:
         )
 
         is_in_multiline_paragraph = False
-        for container_line in split_container_text:  # pragma: no cover
+        for _, container_line in enumerate(split_container_text):  # pragma: no cover
             container_line_length = len(container_line)
             # POGGER.debug(
             #     ParserHelper.newline_character
@@ -258,6 +511,7 @@ class TransformContainers:
                 did_move_ahead,
                 current_changed_record,
                 removed_tokens,
+                removed_token_indices,
             ) = TransformContainers.__move_to_current_record(
                 old_record_index,
                 container_records,
@@ -271,7 +525,70 @@ class TransformContainers:
                 transformed_parts.append(container_line)
                 break
 
-            container_line = TransformContainers.__apply_line_transformation(
+            container_line = TransformContainers.__apply_container_transformation_inner(
+                container_line,
+                actual_tokens,
+                did_move_ahead,
+                token_stack,
+                container_token_indices,
+                removed_tokens,
+                removed_token_indices,
+                current_changed_record,
+                base_line_number,
+                delta_line,
+                is_in_multiline_paragraph,
+            )
+
+            TransformContainers.__apply_container_transformation_removed(
+                removed_tokens, removed_token_indices
+            )
+
+            is_in_multiline_paragraph = (
+                not is_para_end_in_line
+                if is_in_multiline_paragraph
+                else is_para_start_in_line and not is_para_end_in_line
+            )
+
+            transformed_parts.append(container_line)
+            container_text_index += container_line_length + 1
+            delta_line += 1
+
+        # POGGER.debug(
+        #     "\n<<transformed<<" + ParserHelper.make_value_visible(transformed_parts)
+        # )
+        return ParserHelper.newline_character.join(transformed_parts)
+
+    # pylint: enable=too-many-locals
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __apply_container_transformation_inner(
+        container_line: str,
+        actual_tokens: List[MarkdownToken],
+        did_move_ahead: bool,
+        token_stack: List[MarkdownToken],
+        container_token_indices: List[int],
+        removed_tokens: List[MarkdownToken],
+        removed_token_indices: List[int],
+        current_changed_record: Optional[MarkdownChangeRecord],
+        base_line_number: int,
+        delta_line: int,
+        is_in_multiline_paragraph: bool,
+    ) -> str:
+        prefix_to_use = None
+        if len(removed_tokens) > 1 and current_changed_record:
+            prefix_to_use = TransformContainers.__abcd(
+                current_changed_record,
+                actual_tokens,
+                removed_tokens,
+                removed_token_indices,
+                token_stack,
+                container_token_indices,
+            )
+        return (
+            prefix_to_use + container_line
+            if prefix_to_use is not None
+            else TransformContainers.__apply_line_transformation(
                 did_move_ahead,
                 token_stack,
                 container_token_indices,
@@ -279,28 +596,45 @@ class TransformContainers:
                 container_line,
                 actual_tokens,
                 removed_tokens,
+                removed_token_indices,
                 base_line_number,
                 delta_line,
                 is_in_multiline_paragraph,
             )
-
-            if is_in_multiline_paragraph:
-                is_in_multiline_paragraph = not is_para_end_in_line
-            else:
-                is_in_multiline_paragraph = (
-                    is_para_start_in_line and not is_para_end_in_line
-                )
-
-            transformed_parts.append(container_line)
-            container_text_index += container_line_length + 1
-            delta_line += 1
-
-        POGGER.debug(
-            "\n<<transformed<<" + ParserHelper.make_value_visible(transformed_parts)
         )
-        return ParserHelper.newline_character.join(transformed_parts)
 
-    # pylint: enable=too-many-locals
+    # pylint: enable=too-many-arguments
+
+    @staticmethod
+    def __apply_container_transformation_removed(
+        removed_tokens: List[MarkdownToken], removed_token_indices: List[int]
+    ) -> None:
+        if removed_tokens:
+            last_removed_token = removed_tokens[-1]
+            last_removed_token_index = removed_token_indices[-1]
+
+            if last_removed_token.is_block_quote_start:
+                last_removed_token_leading_spaces = cast(
+                    BlockQuoteMarkdownToken, last_removed_token
+                ).bleading_spaces
+            else:
+                last_removed_token_leading_spaces = cast(
+                    ListStartMarkdownToken, last_removed_token
+                ).leading_spaces
+            calc_index = (
+                len(last_removed_token_leading_spaces.split("\n"))
+                if last_removed_token_leading_spaces is not None
+                else 0
+            )
+            if last_removed_token_index < calc_index and (
+                last_removed_token_index + 1 != calc_index
+                or (
+                    last_removed_token_leading_spaces is not None
+                    and last_removed_token_leading_spaces.split("\n")[-1] != ""
+                )
+            ):
+                fred = calc_index > -1
+                assert fred
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -311,7 +645,13 @@ class TransformContainers:
         token_stack: List[MarkdownToken],
         container_token_indices: List[int],
         container_line_length: int,
-    ) -> Tuple[int, bool, Optional[MarkdownChangeRecord], List[MarkdownToken]]:
+    ) -> Tuple[
+        int,
+        bool,
+        Optional[MarkdownChangeRecord],
+        List[MarkdownToken],
+        List[int],
+    ]:
         record_index, current_changed_record, did_move_ahead = (
             old_record_index,
             None,
@@ -320,21 +660,17 @@ class TransformContainers:
 
         POGGER.debug(f"({container_text_index})")
         POGGER.debug(
-            "("
-            + str(record_index + 1)
-            + "):"
-            + ParserHelper.make_value_visible(container_records[1])
+            f"({record_index + 1}):{ParserHelper.make_value_visible(container_records[1])}"
         )
         while record_index + 1 < len(container_records) and container_records[
             record_index + 1
         ].item_b <= (container_text_index + container_line_length):
             record_index += 1
         POGGER.debug(
-            "("
-            + str(record_index + 1)
-            + "):"
-            + ParserHelper.make_value_visible(container_records[1])
+            f"({str(record_index + 1)}):{ParserHelper.make_value_visible(container_records[1])}"
         )
+        removed_token_indices: List[int] = []
+        added_tokens: List[MarkdownToken] = []
         removed_tokens: List[MarkdownToken] = []
         while old_record_index != record_index:
             (
@@ -347,15 +683,24 @@ class TransformContainers:
                 token_stack,
                 container_token_indices,
                 removed_tokens,
+                removed_token_indices,
+                added_tokens,
             )
 
         POGGER.debug(
             f"   removed_tokens={ParserHelper.make_value_visible(removed_tokens)}"
         )
-        return record_index, did_move_ahead, current_changed_record, removed_tokens
+        return (
+            record_index,
+            did_move_ahead,
+            current_changed_record,
+            removed_tokens,
+            removed_token_indices,
+        )
 
     # pylint: enable=too-many-arguments
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __manage_records(
         container_records: List[MarkdownChangeRecord],
@@ -363,6 +708,8 @@ class TransformContainers:
         token_stack: List[MarkdownToken],
         container_token_indices: List[int],
         removed_tokens: List[MarkdownToken],
+        removed_token_indices: List[int],
+        added_tokens: List[MarkdownToken],
     ) -> Tuple[int, bool, MarkdownChangeRecord]:
         did_move_ahead, current_changed_record = (
             True,
@@ -374,29 +721,18 @@ class TransformContainers:
             + ")-->"
             + ParserHelper.make_value_visible(current_changed_record)
         )
-        if current_changed_record.item_a:
+        if current_changed_record.is_container_start:
+            added_tokens.append(current_changed_record.item_c)
             token_stack.append(current_changed_record.item_c)
             container_token_indices.append(0)
         else:
-            POGGER.debug(f"   -->{ParserHelper.make_value_visible(token_stack)}")
-            POGGER.debug(
-                f"   -->{ParserHelper.make_value_visible(container_token_indices)}"
+            TransformContainers.__manage_records_check(
+                token_stack,
+                container_token_indices,
+                removed_tokens,
+                removed_token_indices,
+                current_changed_record,
             )
-
-            if token_stack[-1].is_new_list_item:
-                removed_tokens.append(token_stack[-1])
-                del token_stack[-1]
-                del container_token_indices[-1]
-
-            assert str(current_changed_record.item_c) == str(token_stack[-1]), (
-                "end:"
-                + ParserHelper.make_value_visible(current_changed_record.item_c)
-                + "!="
-                + ParserHelper.make_value_visible(token_stack[-1])
-            )
-            removed_tokens.append(token_stack[-1])
-            del token_stack[-1]
-            del container_token_indices[-1]
 
         POGGER.debug(
             "   -->current_changed_recordx>"
@@ -409,6 +745,59 @@ class TransformContainers:
         old_record_index += 1
         return old_record_index, did_move_ahead, current_changed_record
 
+    # pylint: enable=too-many-arguments
+
+    @staticmethod
+    def __manage_records_check(
+        token_stack: List[MarkdownToken],
+        container_token_indices: List[int],
+        removed_tokens: List[MarkdownToken],
+        removed_token_indices: List[int],
+        current_changed_record: Optional[MarkdownChangeRecord],
+    ) -> None:
+        POGGER.debug(f"   -->{ParserHelper.make_value_visible(token_stack)}")
+        POGGER.debug(
+            f"   -->{ParserHelper.make_value_visible(container_token_indices)}"
+        )
+
+        if token_stack[-1].is_new_list_item:
+            removed_tokens.append(token_stack[-1])
+            del token_stack[-1]
+            del container_token_indices[-1]
+
+        assert current_changed_record is not None
+        MarkdownToken.assert_tokens_are_same_except_for_line_number(
+            current_changed_record.item_c, token_stack[-1]
+        )
+
+        top_of_stack_token = token_stack[-1]
+        removed_tokens.append(token_stack[-1])
+        del token_stack[-1]
+        top_of_stack_index = container_token_indices[-1]
+        removed_token_indices.append(top_of_stack_index)
+        del container_token_indices[-1]
+
+        if top_of_stack_token.is_block_quote_start:
+            top_of_stack_bq_token = cast(BlockQuoteMarkdownToken, top_of_stack_token)
+            top_of_stack_leading_spaces = top_of_stack_bq_token.bleading_spaces
+        else:
+            top_of_stack_list_token = cast(ListStartMarkdownToken, top_of_stack_token)
+            top_of_stack_leading_spaces = top_of_stack_list_token.leading_spaces
+        top_of_stack_split_leading_spaces = (
+            len(top_of_stack_leading_spaces.split("\n"))
+            if top_of_stack_leading_spaces is not None
+            else 0
+        )
+        if top_of_stack_index < top_of_stack_split_leading_spaces and (
+            top_of_stack_index + 1 != top_of_stack_split_leading_spaces
+            or (
+                top_of_stack_leading_spaces is not None
+                and top_of_stack_leading_spaces.split("\n")[-1] != ""
+            )
+        ):
+            fred = top_of_stack_token is not None
+            assert fred
+
     # pylint: disable=too-many-arguments,too-many-boolean-expressions
     @staticmethod
     def __adjust_state_for_element(
@@ -417,15 +806,18 @@ class TransformContainers:
         did_move_ahead: bool,
         current_changed_record: Optional[MarkdownChangeRecord],
         last_container_token_index: int,
-        was_abrupt_block_quote_end: bool,
+        removed_tokens: List[MarkdownToken],
+        removed_token_indices: List[int],
+        block_me: bool,
     ) -> None:
-        if was_abrupt_block_quote_end:
-            return
         # POGGER.debug(f" -->{ParserHelper.make_value_visible(token_stack)}")
         # POGGER.debug(f" -->{ParserHelper.make_value_visible(container_token_indices)}")
         did_change_to_list_token = (
             did_move_ahead
-            and (current_changed_record is not None and current_changed_record.item_a)
+            and (
+                current_changed_record is not None
+                and current_changed_record.is_container_start
+            )
             and (token_stack[-1].is_list_start or token_stack[-1].is_new_list_item)
         )
 
@@ -467,7 +859,14 @@ class TransformContainers:
 
         # May need earlier if both new item and start of new list on same line
         if not did_change_to_list_token:
-            container_token_indices[-1] = last_container_token_index + 1
+            TransformContainers.__adjust_state_for_element_inner(
+                token_stack,
+                container_token_indices,
+                removed_tokens,
+                removed_token_indices,
+                block_me,
+                last_container_token_index,
+            )
         elif token_stack[-1].is_new_list_item:
             del token_stack[-1]
             del container_token_indices[-1]
@@ -475,6 +874,129 @@ class TransformContainers:
         POGGER.debug(f" -->{ParserHelper.make_value_visible(container_token_indices)}")
 
     # pylint: enable=too-many-arguments,too-many-boolean-expressions
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __adjust_state_for_element_inner(
+        token_stack: List[MarkdownToken],
+        container_token_indices: List[int],
+        removed_tokens: List[MarkdownToken],
+        removed_token_indices: List[int],
+        block_me: bool,
+        last_container_token_index: int,
+    ) -> None:
+        previous_token = None
+        if removed_tokens and removed_tokens[-1].is_block_quote_start:
+            nested_block_start_index = len(removed_tokens) - 1
+
+            previous_token = removed_tokens[nested_block_start_index]
+            assert previous_token.is_block_quote_start
+            previous_bq_token = cast(BlockQuoteMarkdownToken, previous_token)
+            assert previous_bq_token.bleading_spaces is not None
+            dd = previous_bq_token.bleading_spaces.split("\n")
+            inner_token_index = removed_token_indices[-1]
+            if inner_token_index >= len(dd):
+                previous_token = None
+            else:
+                removed_token_indices[-1] += 1
+        if previous_token is None:
+            if not block_me:
+                container_token_indices[-1] = last_container_token_index + 1
+            current_block_quote_token_index = len(container_token_indices) - 1
+            if token_stack[current_block_quote_token_index].is_block_quote_start:
+                TransformContainers.__adjust_state_for_element_inner_block_quote(
+                    token_stack,
+                    container_token_indices,
+                    current_block_quote_token_index,
+                )
+
+    # pylint: enable=too-many-arguments
+
+    @staticmethod
+    def __adjust_state_for_element_inner_block_quote(
+        token_stack: List[MarkdownToken],
+        container_token_indices: List[int],
+        current_block_quote_token_index: int,
+    ) -> None:
+        previous_block_quote_token_index = current_block_quote_token_index - 1
+        while (
+            previous_block_quote_token_index >= 0
+            and not token_stack[previous_block_quote_token_index].is_block_quote_start
+        ):
+            previous_block_quote_token_index -= 1
+        if (
+            previous_block_quote_token_index >= 0
+            and token_stack[previous_block_quote_token_index].line_number
+            == token_stack[current_block_quote_token_index].line_number
+            and not cast(
+                BlockQuoteMarkdownToken, token_stack[current_block_quote_token_index]
+            ).weird_kludge_three
+            and container_token_indices[current_block_quote_token_index] == 1
+        ):
+            container_token_indices[previous_block_quote_token_index] += 1
+        elif (
+            previous_block_quote_token_index >= 0
+            and container_token_indices[current_block_quote_token_index] == 1
+            and token_stack[previous_block_quote_token_index].line_number
+            != token_stack[current_block_quote_token_index].line_number
+        ):
+            TransformContainers.__adjust_state_for_element_inner_part_1(
+                token_stack,
+                container_token_indices,
+                previous_block_quote_token_index,
+                current_block_quote_token_index,
+            )
+
+    # pylint: disable=too-many-locals
+    @staticmethod
+    def __adjust_state_for_element_inner_part_1(
+        token_stack: List[MarkdownToken],
+        container_token_indices: List[int],
+        previous_block_quote_token_index: int,
+        current_block_quote_token_index: int,
+    ) -> None:
+        rt_previous_token = cast(
+            BlockQuoteMarkdownToken, token_stack[previous_block_quote_token_index]
+        )
+        assert rt_previous_token.bleading_spaces is not None
+        rt_previous = rt_previous_token.bleading_spaces.split("\n")
+        # rt_current = token_stack[current_block_quote_token_index].bleading_spaces.split(
+        #     "\n"
+        # )
+        # tp_current = rt_current[0]
+        ci_prev = container_token_indices[previous_block_quote_token_index]
+        if (
+            ci_prev < len(rt_previous)
+            and token_stack[current_block_quote_token_index].is_block_quote_start
+            and cast(
+                BlockQuoteMarkdownToken, token_stack[current_block_quote_token_index]
+            ).weird_kludge_four
+            is not None
+        ):
+            # tp_previous = rt_previous[ci_prev]
+            fff = cast(
+                BlockQuoteMarkdownToken, token_stack[current_block_quote_token_index]
+            ).weird_kludge_four
+            assert fff is not None
+
+            prev_line = token_stack[previous_block_quote_token_index].line_number
+            par_line = fff[0]
+            prev_col = token_stack[previous_block_quote_token_index].column_number
+            par_col = fff[1]
+            prev_cti = container_token_indices[previous_block_quote_token_index]
+            par_cti = fff[2]
+            prev_leading = rt_previous[prev_cti]
+            par_leading = fff[3]
+
+            if (
+                prev_line == par_line
+                and prev_col == par_col
+                and prev_cti == par_cti
+                and prev_leading == par_leading
+            ):
+                container_token_indices[previous_block_quote_token_index] += 1
+
+    # pylint: enable=too-many-locals
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -486,6 +1008,9 @@ class TransformContainers:
         line_number: int,
         did_adjust_due_to_block_quote_start: bool,
         is_in_multiline_paragraph: bool,
+        removed_tokens: List[MarkdownToken],
+        removed_token_indices: List[int],
+        container_line_old: str,
     ) -> str:
         if not (len(token_stack) > 1 and token_stack[-1].is_block_quote_start):
             return container_line
@@ -496,31 +1021,33 @@ class TransformContainers:
         POGGER.debug(f" nested_list_start_index={nested_list_start_index}")
         if nested_list_start_index == -1:
             POGGER.debug(" nope")
-        elif (
+            return container_line
+        if (
             nested_list_start_index == len(token_stack) - 2
             and nested_list_start_index > 0
             and token_stack[-1].line_number == line_number
             and token_stack[nested_list_start_index - 1].is_block_quote_start
             and token_stack[-1].line_number != token_stack[-2].line_number
         ):
-            container_line = TransformContainers.__adjust_for_block_quote_same_line(
+            return TransformContainers.__adjust_for_block_quote_same_line(
                 container_line,
                 nested_list_start_index,
                 token_stack,
                 container_token_indices,
             )
-        else:
-            container_line = TransformContainers.__adjust_for_block_quote_previous_line(
-                container_line,
-                nested_list_start_index,
-                token_stack,
-                container_token_indices,
-                line_number,
-                applied_leading_spaces_to_start_of_container_line,
-                did_adjust_due_to_block_quote_start,
-                is_in_multiline_paragraph,
-            )
-        return container_line
+        return TransformContainers.__adjust_for_block_quote_previous_line(
+            container_line,
+            nested_list_start_index,
+            token_stack,
+            container_token_indices,
+            line_number,
+            applied_leading_spaces_to_start_of_container_line,
+            did_adjust_due_to_block_quote_start,
+            is_in_multiline_paragraph,
+            removed_tokens,
+            removed_token_indices,
+            container_line_old,
+        )
 
     # pylint: enable=too-many-arguments
 
@@ -532,13 +1059,70 @@ class TransformContainers:
         container_token_indices: List[int],
         container_line: str,
         removed_tokens: List[MarkdownToken],
+        removed_token_indices: List[int],
         current_changed_record: Optional[MarkdownChangeRecord],
-    ) -> str:
+    ) -> Tuple[str, bool]:
+        block_me = False
         if (
-            len(token_stack) > 1
+            token_stack
             and token_stack[-1].is_list_start
             or token_stack[-1].is_new_list_item
         ):
+            (
+                previous_token,
+                inner_token_index,
+                nested_block_start_index,
+                block_start_on_remove,
+            ) = TransformContainers.__adjust_for_list_adjust(
+                token_stack,
+                container_token_indices,
+                removed_tokens,
+                removed_token_indices,
+                applied_leading_spaces_to_start_of_container_line,
+            )
+            if previous_token:
+                container_line, block_me = TransformContainers.__adjust_for_list_end(
+                    container_line,
+                    token_stack,
+                    removed_tokens,
+                    removed_token_indices,
+                    applied_leading_spaces_to_start_of_container_line,
+                    previous_token,
+                    container_token_indices,
+                    inner_token_index,
+                    nested_block_start_index,
+                    current_changed_record,
+                    block_start_on_remove,
+                )
+        return container_line, block_me
+
+    # pylint: enable=too-many-arguments
+
+    @staticmethod
+    def __adjust_for_list_adjust(
+        token_stack: List[MarkdownToken],
+        container_token_indices: List[int],
+        removed_tokens: List[MarkdownToken],
+        removed_token_indices: List[int],
+        applied_leading_spaces_to_start_of_container_line: bool,
+    ) -> Tuple[Optional[MarkdownToken], int, int, bool]:
+        block_start_on_remove = False
+        inner_token_index = nested_block_start_index = -1
+        previous_token = None
+        if removed_tokens and removed_tokens[-1].is_block_quote_start:
+            nested_block_start_index = len(removed_tokens) - 1
+            block_start_on_remove = True
+
+            previous_token = removed_tokens[nested_block_start_index]
+            assert previous_token.is_block_quote_start
+            previous_bq_token = cast(BlockQuoteMarkdownToken, previous_token)
+            assert previous_bq_token.bleading_spaces is not None
+            dd = previous_bq_token.bleading_spaces.split("\n")
+            inner_token_index = removed_token_indices[-1]
+            if inner_token_index >= len(dd):
+                previous_token = None
+        if previous_token is None:
+            block_start_on_remove = False
             nested_block_start_index = (
                 TransformContainers.__find_last_block_quote_on_stack(token_stack)
             )
@@ -549,29 +1133,19 @@ class TransformContainers:
                     f"previous={ParserHelper.make_value_visible(previous_token)}"
                 )
                 POGGER.debug(
-                    " applied_leading_spaces_to_start_of_container_line->"
-                    + str(applied_leading_spaces_to_start_of_container_line)
+                    f" applied_leading_spaces_to_start_of_container_line->{applied_leading_spaces_to_start_of_container_line}"
                 )
                 inner_token_index = container_token_indices[nested_block_start_index]
-                POGGER.debug(
-                    f"applied:{applied_leading_spaces_to_start_of_container_line} or "
-                    + f"end.line:{token_stack[-1].line_number} != prev.line:{previous_token.line_number}"
-                )
-
-                container_line = TransformContainers.__adjust_for_list_end(
-                    container_line,
-                    token_stack,
-                    removed_tokens,
-                    applied_leading_spaces_to_start_of_container_line,
-                    previous_token,
-                    container_token_indices,
-                    inner_token_index,
-                    nested_block_start_index,
-                    current_changed_record,
-                )
-        return container_line
-
-    # pylint: enable=too-many-arguments
+                # POGGER.debug(
+                #     f"applied:{applied_leading_spaces_to_start_of_container_line} or "
+                #     + f"end.line:{token_stack[-1].line_number} != prev.line:{previous_token.line_number}"
+                # )
+        return (
+            previous_token,
+            inner_token_index,
+            nested_block_start_index,
+            block_start_on_remove,
+        )
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -579,13 +1153,16 @@ class TransformContainers:
         container_line: str,
         token_stack: List[MarkdownToken],
         removed_tokens: List[MarkdownToken],
+        removed_token_indices: List[int],
         applied_leading_spaces_to_start_of_container_line: bool,
         previous_token: MarkdownToken,
         container_token_indices: List[int],
         inner_token_index: int,
         nested_block_start_index: int,
         current_changed_record: Optional[MarkdownChangeRecord],
-    ) -> str:
+        block_start_on_remove: bool,
+    ) -> Tuple[str, bool]:
+        block_me = False
         if TransformContainers.__adjust_for_list_check(
             token_stack,
             removed_tokens,
@@ -593,26 +1170,12 @@ class TransformContainers:
             previous_token,
             container_line,
         ):
-            previous_block_token = cast(BlockQuoteMarkdownToken, previous_token)
-            assert (
-                previous_block_token.bleading_spaces is not None
-            ), "Bleading spaces must be defined by this point."
-            split_leading_spaces = previous_block_token.bleading_spaces.split(
-                ParserHelper.newline_character
+            container_line = TransformContainers.__adjust_for_list_end_part_2(
+                container_line,
+                previous_token,
+                inner_token_index,
+                current_changed_record,
             )
-            POGGER.debug(
-                f"inner_token_index={inner_token_index} < len(split)={len(split_leading_spaces)}"
-            )
-            if inner_token_index < len(split_leading_spaces):
-                POGGER.debug(
-                    f" adj-->container_line>:{ParserHelper.make_value_visible(container_line)}:<"
-                )
-                container_line = (
-                    split_leading_spaces[inner_token_index] + container_line
-                )
-                POGGER.debug(
-                    f" adj-->container_line>:{ParserHelper.make_value_visible(container_line)}:<"
-                )
 
         check_end_data = current_changed_record is not None and (
             current_changed_record.item_d is None
@@ -626,16 +1189,178 @@ class TransformContainers:
             or not removed_tokens[-1].is_block_quote_start
             or check_end_data
         ):
-            container_token_indices[nested_block_start_index] = inner_token_index + 1
+            TransformContainers.__adjust_for_list_end_part_3(
+                block_start_on_remove,
+                token_stack,
+                container_token_indices,
+                removed_token_indices,
+                nested_block_start_index,
+                inner_token_index,
+            )
+
         if (
             removed_tokens
             and current_changed_record
             and current_changed_record.item_d is not None
         ):
-            container_token_indices[-1] += 1
-        return container_line
+            container_line, block_me = TransformContainers.__adjust_for_list_end_part_4(
+                container_line,
+                block_me,
+                token_stack,
+                container_token_indices,
+                removed_tokens,
+                removed_token_indices,
+            )
+        return container_line, block_me
 
     # pylint: enable=too-many-arguments
+
+    @staticmethod
+    def __adjust_for_list_end_part_2(
+        container_line: str,
+        previous_token: MarkdownToken,
+        inner_token_index: int,
+        current_changed_record: Optional[MarkdownChangeRecord],
+    ) -> str:
+        previous_block_token = cast(BlockQuoteMarkdownToken, previous_token)
+        assert (
+            previous_block_token.bleading_spaces is not None
+        ), "Bleading spaces must be defined by this point."
+        split_leading_spaces = previous_block_token.bleading_spaces.split(
+            ParserHelper.newline_character
+        )
+        POGGER.debug(
+            f"inner_token_index={inner_token_index} < len(split)={len(split_leading_spaces)}"
+        )
+        if inner_token_index < len(split_leading_spaces):
+            POGGER.debug(
+                f" adj-->container_line>:{ParserHelper.make_value_visible(container_line)}:<"
+            )
+            token_leading_spaces = split_leading_spaces[inner_token_index]
+            if (
+                current_changed_record
+                and not current_changed_record.is_container_start
+                and current_changed_record.item_d is not None
+                and current_changed_record.item_d.extra_end_data is not None
+            ):
+                token_end_data = current_changed_record.item_d.extra_end_data
+                assert token_end_data.startswith(
+                    token_leading_spaces
+                ) and container_line.startswith(token_end_data)
+                token_leading_spaces = ""
+
+            container_line = token_leading_spaces + container_line
+            POGGER.debug(
+                f" adj-->container_line>:{ParserHelper.make_value_visible(container_line)}:<"
+            )
+        return container_line
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __adjust_for_list_end_part_3(
+        block_start_on_remove: bool,
+        token_stack: List[MarkdownToken],
+        container_token_indices: List[int],
+        removed_token_indices: List[int],
+        nested_block_start_index: int,
+        inner_token_index: int,
+    ) -> None:
+        if block_start_on_remove:
+            old_index_value = removed_token_indices[nested_block_start_index]
+            removed_token_indices[nested_block_start_index] = inner_token_index + 1
+        else:
+            old_index_value = container_token_indices[nested_block_start_index]
+            container_token_indices[nested_block_start_index] = inner_token_index + 1
+        ## This is a guess...
+        if (
+            not block_start_on_remove
+            and not old_index_value
+            and nested_block_start_index
+        ):
+            assert token_stack[nested_block_start_index].is_block_quote_start
+            new_start_index = nested_block_start_index - 1
+            while (
+                new_start_index >= 0
+                and not token_stack[new_start_index].is_block_quote_start
+            ):
+                new_start_index -= 1
+            if new_start_index >= 0:
+                container_token_indices[new_start_index] += 1
+
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __adjust_for_list_end_part_4(
+        container_line: str,
+        block_me: bool,
+        token_stack: List[MarkdownToken],
+        container_token_indices: List[int],
+        removed_tokens: List[MarkdownToken],
+        removed_token_indices: List[int],
+    ) -> Tuple[str, bool]:
+        do_it = True
+        if token_stack[-1].is_list_start and removed_tokens[-1].is_list_start:
+            removed_list_token = cast(ListStartMarkdownToken, removed_tokens[-1])
+            assert removed_list_token.leading_spaces is not None
+            removed_token_split_spaces = removed_list_token.leading_spaces.split("\n")
+            removed_token_index = removed_token_indices[-1]
+            assert removed_token_index < len(removed_token_split_spaces)
+            removed_token_indices[-1] += 1
+            do_it = False
+            block_me = True
+        if do_it:
+            if (
+                removed_tokens[-1].is_block_quote_start
+                and token_stack[-1].is_list_start
+            ):
+                container_line = TransformContainers.__adjust_for_list_end_part_4_inner(
+                    container_line,
+                    token_stack,
+                    container_token_indices,
+                    removed_tokens,
+                    removed_token_indices,
+                )
+            container_token_indices[-1] += 1
+        return container_line, block_me
+
+    # pylint: enable=too-many-arguments
+
+    @staticmethod
+    def __adjust_for_list_end_part_4_inner(
+        container_line: str,
+        token_stack: List[MarkdownToken],
+        container_token_indices: List[int],
+        removed_tokens: List[MarkdownToken],
+        removed_token_indices: List[int],
+    ) -> str:
+        removed_block_quote_token = cast(BlockQuoteMarkdownToken, removed_tokens[-1])
+        assert removed_block_quote_token.bleading_spaces is not None
+        list_token = cast(ListStartMarkdownToken, token_stack[-1])
+        assert list_token.leading_spaces is not None
+        split_leading_spaces = list_token.leading_spaces.split("\n")
+        removed_split_leading_spaces = removed_block_quote_token.bleading_spaces.split(
+            "\n"
+        )
+        if removed_token_indices[-1] < len(removed_split_leading_spaces):
+            leading_space_to_use = removed_split_leading_spaces[
+                removed_token_indices[-1]
+            ]
+            leading_index_to_use = split_leading_spaces[container_token_indices[-1]]
+        else:
+            leading_space_to_use = None
+        if (
+            leading_space_to_use is not None
+            and leading_index_to_use.endswith(ParserLogger.blah_sequence)
+            and container_line.startswith(leading_space_to_use)
+        ):
+            container_line = (
+                leading_space_to_use
+                + leading_index_to_use[:-1]
+                + container_line[len(leading_space_to_use) :]
+            )
+        return container_line
+
     @staticmethod
     def __adjust_for_list_check(
         token_stack: List[MarkdownToken],
@@ -672,7 +1397,7 @@ class TransformContainers:
             )
             POGGER.debug(f"new_list_item_adjust:{new_list_item_adjust}")
 
-            if new_list_item_adjust:
+            if new_list_item_adjust and container_line:
                 new_list_item_adjust = TransformContainers.__look_for_container_prefix(
                     token_stack, container_line
                 )
@@ -741,7 +1466,11 @@ class TransformContainers:
         applied_leading_spaces_to_start_of_container_line: bool,
         did_adjust_due_to_block_quote_start: bool,
         is_in_multiline_paragraph: bool,
+        removed_tokens: List[MarkdownToken],
+        removed_token_indices: List[int],
+        container_line_old: str,
     ) -> str:
+        previous_cl = container_line
         previous_token = token_stack[nested_list_start_index]
         # POGGER.debug(f"nested_list_start_index->{nested_list_start_index}")
         # POGGER.debug(f" yes->{ParserHelper.make_value_visible(previous_token)}")
@@ -753,48 +1482,118 @@ class TransformContainers:
             token_stack[-1].line_number != previous_token.line_number
             or line_number != previous_token.line_number
         ):
-            POGGER.debug("different line as list start")
-            is_special_case = not (
-                did_adjust_due_to_block_quote_start and not is_in_multiline_paragraph
-            )
-            container_line_change_required = (
-                not applied_leading_spaces_to_start_of_container_line
-                or (
-                    applied_leading_spaces_to_start_of_container_line
-                    and is_special_case
-                )
-            )
-            container_line = TransformContainers.__adjust(
+            container_line = TransformContainers.__adjust_for_block_quote_previous_line_nudge_different(
+                container_line,
                 nested_list_start_index,
                 token_stack,
                 container_token_indices,
-                container_line,
-                False,
-                apply_change_to_container_line=container_line_change_required,
+                did_adjust_due_to_block_quote_start,
+                is_in_multiline_paragraph,
+                applied_leading_spaces_to_start_of_container_line,
+                removed_tokens,
+                removed_token_indices,
             )
         else:
             POGGER.debug("same line as list start")
-            if nested_list_start_index > 0:
-                next_level_index = nested_list_start_index - 1
-                pre_previous_token = token_stack[next_level_index]
-                # POGGER.debug(
-                #     f" pre_previous_token->{ParserHelper.make_value_visible(pre_previous_token)}"
-                # )
-                if pre_previous_token.is_block_quote_start:
-                    # sourcery skip: move-assign
-                    different_line_prefix = TransformContainers.__adjust(
-                        next_level_index,
-                        token_stack,
-                        container_token_indices,
-                        "",
-                        False,
-                    )
-                    # POGGER.debug(f"different_line_prefix>:{different_line_prefix}:<")
-                    if pre_previous_token.line_number != previous_token.line_number:
-                        container_line = different_line_prefix + container_line
+            container_line = (
+                TransformContainers.__adjust_for_block_quote_previous_line_nudge_same(
+                    container_line,
+                    nested_list_start_index,
+                    token_stack,
+                    container_token_indices,
+                    previous_token,
+                )
+            )
+        container_line = (
+            TransformContainers.__adjust_for_block_quote_previous_line_nudge(
+                container_line, previous_cl, container_line_old
+            )
+        )
         return container_line
 
     # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __adjust_for_block_quote_previous_line_nudge_different(
+        container_line: str,
+        nested_list_start_index: int,
+        token_stack: List[MarkdownToken],
+        container_token_indices: List[int],
+        did_adjust_due_to_block_quote_start: bool,
+        is_in_multiline_paragraph: bool,
+        applied_leading_spaces_to_start_of_container_line: bool,
+        removed_tokens: List[MarkdownToken],
+        removed_token_indices: List[int],
+    ) -> str:
+        POGGER.debug("different line as list start")
+        is_special_case = not (
+            did_adjust_due_to_block_quote_start and not is_in_multiline_paragraph
+        )
+        container_line_change_required = (
+            not applied_leading_spaces_to_start_of_container_line
+            or (applied_leading_spaces_to_start_of_container_line and is_special_case)
+        )
+        if removed_tokens and removed_tokens[0].is_list_start:
+            removed_list_token = cast(ListStartMarkdownToken, removed_tokens[0])
+            if removed_list_token.leading_spaces is not None:
+                removed_tokens_spaces = removed_list_token.leading_spaces.split("\n")
+                if removed_token_indices[0] < len(removed_tokens_spaces):
+                    nested_list_start_index = 0
+                    token_stack = removed_tokens
+                    container_token_indices = removed_token_indices
+        return TransformContainers.__adjust(
+            nested_list_start_index,
+            token_stack,
+            container_token_indices,
+            container_line,
+            False,
+            apply_change_to_container_line=container_line_change_required,
+        )
+
+    # pylint: enable=too-many-arguments
+
+    @staticmethod
+    def __adjust_for_block_quote_previous_line_nudge_same(
+        container_line: str,
+        nested_list_start_index: int,
+        token_stack: List[MarkdownToken],
+        container_token_indices: List[int],
+        previous_token: MarkdownToken,
+    ) -> str:
+        if nested_list_start_index > 0:
+            next_level_index = nested_list_start_index - 1
+            pre_previous_token = token_stack[next_level_index]
+            # POGGER.debug(
+            #     f" pre_previous_token->{ParserHelper.make_value_visible(pre_previous_token)}"
+            # )
+            if pre_previous_token.is_block_quote_start:
+                # sourcery skip: move-assign
+                different_line_prefix = TransformContainers.__adjust(
+                    next_level_index,
+                    token_stack,
+                    container_token_indices,
+                    "",
+                    False,
+                )
+                # POGGER.debug(f"different_line_prefix>:{different_line_prefix}:<")
+                if pre_previous_token.line_number != previous_token.line_number:
+                    container_line = different_line_prefix + container_line
+        return container_line
+
+    @staticmethod
+    def __adjust_for_block_quote_previous_line_nudge(
+        container_line: str, previous_cl: str, container_line_old: str
+    ) -> str:
+        if previous_cl != container_line and container_line.endswith(previous_cl):
+            adj_container_line = container_line[: -len(previous_cl)]
+            if adj_container_line[-1] == ParserLogger.blah_sequence:
+                assert previous_cl.endswith(container_line_old)
+                adj_container_line = adj_container_line[:-1]
+                prefix = previous_cl[: -len(container_line_old)]
+                suffix = previous_cl[-len(container_line_old) :]
+                container_line = prefix + adj_container_line + suffix
+        return container_line
 
     @staticmethod
     def __adjust_for_block_quote_same_line(
@@ -832,7 +1631,7 @@ class TransformContainers:
         current_changed_record: Optional[MarkdownChangeRecord],
         container_line: str,
         actual_tokens: List[MarkdownToken],
-    ) -> Tuple[int, bool, str, bool, bool]:
+    ) -> Tuple[int, bool, str, bool]:
         POGGER.debug(
             f" -->did_move_ahead>{ParserHelper.make_value_visible(did_move_ahead)}"
         )
@@ -870,7 +1669,7 @@ class TransformContainers:
             (
                 not did_move_ahead
                 or current_changed_record is None
-                or not current_changed_record.item_a
+                or not current_changed_record.is_container_start
             )
             and not is_list_start_after_two_block_starts
             and not was_abrupt_block_quote_end
@@ -880,7 +1679,9 @@ class TransformContainers:
         if applied_leading_spaces_to_start_of_container_line:
             container_line, did_adjust_due_to_block_quote_start = (
                 TransformContainers.__apply_primary_transformation_adjust_container_line(
-                    token_stack, last_container_token_index, container_line
+                    token_stack,
+                    last_container_token_index,
+                    container_line,
                 )
             )
         else:
@@ -889,7 +1690,6 @@ class TransformContainers:
             last_container_token_index,
             applied_leading_spaces_to_start_of_container_line,
             container_line,
-            was_abrupt_block_quote_end,
             did_adjust_due_to_block_quote_start,
         )
 
@@ -1005,6 +1805,9 @@ class TransformContainers:
                 else previous_block_token.bleading_spaces
             )
         else:
+            if previous_token.is_new_list_item:
+                previous_token = token_stack[nested_list_start_index - 1]
+                assert previous_token.is_list_start
             previous_list_token = cast(ListStartMarkdownToken, previous_token)
             leading_spaces = (
                 ""

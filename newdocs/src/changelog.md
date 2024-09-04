@@ -10,7 +10,38 @@
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
-- None
+- [Issue 1141](https://github.com/jackdewinter/pymarkdown/issues/1141)
+    - fixed assert issue (test_extra_044mcv0)
+- [Issue 1142](https://github.com/jackdewinter/pymarkdown/issues/1142)
+    - fixed assert issue (test_extra_044lc)
+- [Issue 1143](https://github.com/jackdewinter/pymarkdown/issues/1143)
+    - fixed indent issue (test_extra_044ldb0)
+- [Issue 1144](https://github.com/jackdewinter/pymarkdown/issues/1144)
+    - fixed parsing issue (test_extra_044ldb1)
+- [Issue 1145](https://github.com/jackdewinter/pymarkdown/issues/1145)
+    - fixed indent issue (test_extra_044mx60)
+- [Issue 1146](https://github.com/jackdewinter/pymarkdown/issues/1146)
+    - fixed indent issue (test_extra_044lex1)
+- [Issue 1147](https://github.com/jackdewinter/pymarkdown/issues/1147)
+    - fixed indent issue (test_extra_044mcx)
+- [Issue 1148](https://github.com/jackdewinter/pymarkdown/issues/1148)
+    - fixed parsing issue (test_extra_044ldb1)
+- [Issue 1149](https://github.com/jackdewinter/pymarkdown/issues/1149)
+    - fixed parsing issue (test_extra_044mcz0)
+- [Issue 1150](https://github.com/jackdewinter/pymarkdown/issues/1150)
+    - fixed indent issue (test_extra_044lex3)
+- [Issue 1151](https://github.com/jackdewinter/pymarkdown/issues/1151)
+    - fixed assert issue with untested path (test_extra_044ldg)
+- [Issue 1152](https://github.com/jackdewinter/pymarkdown/issues/1152)
+    - fixed indent issue (test_extra_044mcs0)
+- [Issue 1153](https://github.com/jackdewinter/pymarkdown/issues/1153)
+    - fixed indent issue (test_extra_044mcu0)
+- [Issue 1154](https://github.com/jackdewinter/pymarkdown/issues/1154)
+    - fixed indent issue (test_extra_044mx31)
+- [Issue 1155](https://github.com/jackdewinter/pymarkdown/issues/1155)
+    - fixed indent issue (test_extra_044lde)
+- [Issue 1156](https://github.com/jackdewinter/pymarkdown/issues/1156)
+    - fixed indent issue (test_extra_044ldb0)
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
