@@ -856,6 +856,9 @@ class TokenizedMarkdown:
         POGGER.debug("list_stack_index>>$", list_stack_index)
         POGGER.debug("block_stack_index>>$", block_stack_index)
         if list_stack_index > 0 and list_stack_index > block_stack_index:
+
+            TokenizedMarkdown.__handle_blank_line_bravo(parser_state, block_stack_index)
+
             list_token = cast(
                 ListStartMarkdownToken,
                 parser_state.token_stack[list_stack_index].matching_markdown_token,
@@ -875,6 +878,52 @@ class TokenizedMarkdown:
         POGGER.debug("hbl>>new_tokens>>$", new_tokens)
 
         return new_tokens, None
+
+    @staticmethod
+    def __handle_blank_line_bravo(
+        parser_state: ParserState, block_stack_index: int
+    ) -> None:
+        search_index = 0
+        next_index = block_stack_index - 1
+        while next_index > 0:
+            if parser_state.token_stack[next_index].is_list:
+                search_index = next_index
+                break
+            next_index -= 1
+        if search_index:
+            found_markdown_token = parser_state.token_stack[
+                next_index
+            ].matching_markdown_token
+            assert found_markdown_token is not None
+            block_copy_token = next(
+                (
+                    j
+                    for j in parser_state.block_copy
+                    if (
+                        j is not None
+                        and j.line_number == found_markdown_token.line_number
+                        and j.column_number == found_markdown_token.column_number
+                    )
+                ),
+                None,
+            )
+            if block_copy_token is not None:
+                assert found_markdown_token.is_list_start
+                found_markdown_list_token = cast(
+                    ListStartMarkdownToken, found_markdown_token
+                )
+                found_markdown_token_leading_spaces = (
+                    found_markdown_list_token.leading_spaces
+                )
+                assert block_copy_token.is_list_start
+                block_copy_list_token = cast(ListStartMarkdownToken, block_copy_token)
+                block_copy_token_leading_spaces = block_copy_list_token.leading_spaces
+                are_same = (
+                    found_markdown_token_leading_spaces
+                    == block_copy_token_leading_spaces
+                )
+                assert not are_same
+                found_markdown_list_token.remove_last_leading_space()
 
     @staticmethod
     def __handle_blank_line_token_stack(

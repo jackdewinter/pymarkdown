@@ -203,7 +203,9 @@ class LeafBlockHelper:
         list_markdown_token = cast(
             ListStartMarkdownToken, list_stack_token.matching_markdown_token
         )
+        POGGER.debug("__handle_leaf_start_adjust>>list_token>>$", list_markdown_token)
         list_markdown_token.add_leading_spaces(used_indent)
+        POGGER.debug("__handle_leaf_start_adjust>>list_token>>$", list_markdown_token)
 
     # pylint: enable=too-many-arguments
 
@@ -340,9 +342,8 @@ class LeafBlockHelper:
                     indent_delta = (
                         inner_list_token.indent_level - position_marker.index_indent
                     )
-                    # assert False
-                    if indent_delta <= len(extracted_whitespace):
-                        best_indent = indent_delta
+                    # NOTE: this assert should be triggered by a currently disabled test
+                    assert indent_delta > len(extracted_whitespace)
                     new_stack_index += 1
                 new_whitespace = (
                     extracted_whitespace[best_indent:]

@@ -17,11 +17,7 @@ from pymarkdown.general.tab_helper import TabHelper
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
-from pymarkdown.tokens.stack_token import (
-    BlockQuoteStackToken,
-    ListStackToken,
-    StackToken,
-)
+from pymarkdown.tokens.stack_token import BlockQuoteStackToken, ListStackToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -70,7 +66,6 @@ class BlockQuoteNonFencedHelper:
         (
             container_level_tokens,
             requeue_line_info,
-            extra_consumed_whitespace,
             force_list_continuation,
             block_quote_data,
         ) = BlockQuoteCountHelper.ensure_stack_at_level(
@@ -131,7 +126,7 @@ class BlockQuoteNonFencedHelper:
             container_start_bq_count,
             block_quote_data,
             original_start_index,
-            extra_consumed_whitespace,
+            # extra_consumed_whitespace,
             container_level_tokens,
             original_line,
         )
@@ -152,7 +147,7 @@ class BlockQuoteNonFencedHelper:
 
     # pylint: enable=too-many-arguments, too-many-locals
 
-    # pylint: disable=too-many-arguments,too-many-locals
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __handle_non_fenced_code_section_no_requeue(
         parser_state: ParserState,
@@ -163,7 +158,7 @@ class BlockQuoteNonFencedHelper:
         container_start_bq_count: int,
         block_quote_data: BlockQuoteData,
         original_start_index: int,
-        extra_consumed_whitespace: Optional[int],
+        # extra_consumed_whitespace: Optional[int],
         container_level_tokens: List[MarkdownToken],
         original_line: str,
     ) -> Tuple[str, int, str, bool, List[MarkdownToken]]:
@@ -193,7 +188,7 @@ class BlockQuoteNonFencedHelper:
             found_bq_stack_token,
             removed_text,
             original_start_index,
-            extra_consumed_whitespace,
+            # extra_consumed_whitespace,
             container_level_tokens,
             original_line,
             is_not_blank_line,
@@ -224,9 +219,9 @@ class BlockQuoteNonFencedHelper:
             leaf_tokens,
         )
 
-    # pylint: enable=too-many-arguments,too-many-locals
+    # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments,too-many-locals
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __do_block_quote_leading_spaces_adjustments(
         parser_state: ParserState,
@@ -237,7 +232,6 @@ class BlockQuoteNonFencedHelper:
         found_bq_stack_token: BlockQuoteStackToken,
         removed_text: str,
         original_start_index: int,
-        extra_consumed_whitespace: Optional[int],
         container_level_tokens: List[MarkdownToken],
         original_line: str,
         is_not_blank_line: bool,
@@ -250,7 +244,7 @@ class BlockQuoteNonFencedHelper:
         original_start_index = BlockQuoteNonFencedHelper.__block_quote_start_adjust(
             parser_state, original_start_index, container_level_tokens
         )
-        original_removed_text = removed_text
+        # original_removed_text = removed_text
         adjusted_removed_text = (
             removed_text[original_start_index:]
             if container_start_bq_count and original_start_index
@@ -280,14 +274,7 @@ class BlockQuoteNonFencedHelper:
         POGGER.debug("dbqlsa>>found_bq_stack_token>>$", found_bq_stack_token)
 
         POGGER.debug("dbqlsa>>adjusted_removed_text>>:$:<<", adjusted_removed_text)
-        special_case, adjusted_removed_text = BlockQuoteNonFencedHelper.__adjust_2(
-            parser_state,
-            found_bq_stack_token,
-            original_removed_text,
-            adjusted_removed_text,
-            extra_consumed_whitespace,
-            tabbed_removed_text,
-        )
+        special_case = False
         POGGER.debug("dbqlsa>>adjusted_removed_text>>:$:<<", adjusted_removed_text)
         POGGER.debug("dbqlsa>>special_case>>$", special_case)
 
@@ -303,7 +290,7 @@ class BlockQuoteNonFencedHelper:
             text_removed_by_container,
         )
 
-    # pylint: enable=too-many-arguments,too-many-locals
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __handle_normal_blank_line(
@@ -489,6 +476,70 @@ class BlockQuoteNonFencedHelper:
                     original_start_index -= indent_delta
         return original_start_index
 
+    @staticmethod
+    def __do_block_quote_leading_spaces_adjustments_adjust_bleading_part_1(
+        parser_state: ParserState,
+        stack_index: int,
+        block_quote_token: BlockQuoteMarkdownToken,
+    ) -> None:
+        previous_stack_token = parser_state.token_stack[stack_index - 1]
+        if previous_stack_token.is_block_quote:
+            previous_markdown_token = cast(
+                BlockQuoteMarkdownToken, previous_stack_token.matching_markdown_token
+            )
+            assert previous_markdown_token is not None
+            if (
+                previous_markdown_token.line_number == block_quote_token.line_number
+                and previous_markdown_token.bleading_spaces == ""
+            ):
+                block_quote_token.weird_kludge_three = True
+            if block_quote_token.leading_text_index == 1:
+                assert previous_markdown_token.bleading_spaces is not None
+                split_bleading_spaces = previous_markdown_token.bleading_spaces.split(
+                    "\n"
+                )
+                block_quote_token.weird_kludge_four = (
+                    previous_markdown_token.line_number,
+                    previous_markdown_token.column_number,
+                    previous_markdown_token.leading_text_index - 1,
+                    split_bleading_spaces[
+                        previous_markdown_token.leading_text_index - 1
+                    ],
+                )
+
+    @staticmethod
+    def __do_block_quote_leading_spaces_adjustments_adjust_bleading_part_2(
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        stack_index: int,
+        found_bq_stack_token: BlockQuoteStackToken,
+    ) -> None:
+        assert parser_state.token_stack[stack_index] == found_bq_stack_token
+        found_list_stack_index = 0
+        for search_index in range(stack_index, 0, -1):
+            if (
+                parser_state.token_stack[search_index].is_list
+                and not found_list_stack_index
+            ):
+                found_list_stack_index = search_index
+        if found_list_stack_index:
+            list_token = cast(
+                ListStartMarkdownToken,
+                parser_state.token_stack[
+                    found_list_stack_index
+                ].matching_markdown_token,
+            )
+            if position_marker.line_number != list_token.line_number:
+                POGGER.debug(
+                    "__do_block_quote_leading_spaces_adjustments_adjust_bleading>>list_token>>$",
+                    list_token,
+                )
+                list_token.add_leading_spaces("")
+                POGGER.debug(
+                    "__do_block_quote_leading_spaces_adjustments_adjust_bleading>>list_token>>$",
+                    list_token,
+                )
+
     # pylint: disable=too-many-arguments
     @staticmethod
     def __do_block_quote_leading_spaces_adjustments_adjust_bleading(
@@ -523,34 +574,40 @@ class BlockQuoteNonFencedHelper:
             adjusted_removed_text,
         )
 
+        POGGER.debug(
+            "__do_block_quote_leading_spaces_adjustments_adjust_bleading>>block_token>>$",
+            block_quote_token,
+        )
         block_quote_token.add_bleading_spaces(
             adjusted_removed_text,
             special_case,
             tabbed_removed_text,
         )
+        POGGER.debug(
+            "__do_block_quote_leading_spaces_adjustments_adjust_bleading>>block_token>>$",
+            block_quote_token,
+        )
+
+        # This checks to see if, when the first line of a block quote is encountered, if the
+        # inner block quote exists and its bleading spaces are blank. If so, then the current
+        # block quote was arrived at through group of block quotes together, not on building
+        # on the inner block quote. If that was the case, the inner block quote would have at
+        # least the bleading space from processing that block quote.  This does not mean anything
+        # to the parser, but when reconstructing the Markdown, this is an important distinction.
         block_quote_token.leading_text_index += 1
+        if stack_index > 1:
+            BlockQuoteNonFencedHelper.__do_block_quote_leading_spaces_adjustments_adjust_bleading_part_1(
+                parser_state, stack_index, block_quote_token
+            )
+
         POGGER.debug("dbqlsa>>last_block_token>>$", block_quote_token)
         POGGER.debug(
             "dbqlsa>>leading_text_index>>$", block_quote_token.leading_text_index
         )
         if not is_not_blank_line:
-            assert parser_state.token_stack[stack_index] == found_bq_stack_token
-            found_list_stack_index = 0
-            for search_index in range(stack_index, 0, -1):
-                if (
-                    parser_state.token_stack[search_index].is_list
-                    and not found_list_stack_index
-                ):
-                    found_list_stack_index = search_index
-            if found_list_stack_index:
-                list_token = cast(
-                    ListStartMarkdownToken,
-                    parser_state.token_stack[
-                        found_list_stack_index
-                    ].matching_markdown_token,
-                )
-                if position_marker.line_number != list_token.line_number:
-                    list_token.add_leading_spaces("")
+            BlockQuoteNonFencedHelper.__do_block_quote_leading_spaces_adjustments_adjust_bleading_part_2(
+                parser_state, position_marker, stack_index, found_bq_stack_token
+            )
 
         POGGER.debug("__hbqs>>bq>>$", block_quote_token)
 
@@ -593,131 +650,6 @@ class BlockQuoteNonFencedHelper:
                     : len(text_removed_by_container)
                 ]
         return adjusted_removed_text
-
-    # pylint: disable=too-many-arguments
-    @staticmethod
-    def __adjust_2(
-        parser_state: ParserState,
-        found_bq_stack_token: StackToken,
-        original_removed_text: str,
-        adjusted_removed_text: str,
-        extra_consumed_whitespace: Optional[int],
-        tabbed_removed_text: Optional[str],
-    ) -> Tuple[bool, str]:
-        POGGER.debug("original_removed_text>>:$:", original_removed_text)
-        POGGER.debug("extra_consumed_whitespace>>:$:", extra_consumed_whitespace)
-        POGGER.debug("parser_state.block_copy>>$", parser_state.block_copy)
-        special_case = False
-        olad = adjusted_removed_text
-        if parser_state.block_copy and found_bq_stack_token:
-            POGGER.debug("parser_state.block_copy>>search")
-            if original_token := BlockQuoteNonFencedHelper.__find_original_token(
-                parser_state, found_bq_stack_token
-            ):
-                original_block_quote_token = cast(
-                    BlockQuoteMarkdownToken, original_token
-                )
-                assert (
-                    found_bq_stack_token.matching_markdown_token is not None
-                ), "Block quote stack tokens always have matching markdown tokens."
-                POGGER.debug("original_token>>$", original_block_quote_token)
-                assert (
-                    original_block_quote_token.bleading_spaces is not None
-                ), "Block quote markdown tokens always have bleading spaces."
-                POGGER.debug(
-                    "original_token.bleading_spaces>>:$:<<",
-                    original_block_quote_token.bleading_spaces,
-                )
-                block_quote_markdown_token = cast(
-                    BlockQuoteMarkdownToken,
-                    found_bq_stack_token.matching_markdown_token,
-                )
-                assert (
-                    block_quote_markdown_token.bleading_spaces is not None
-                ), "Block quote markdown tokens always have bleading spaces."
-                current_leading_spaces = block_quote_markdown_token.bleading_spaces
-                POGGER.debug("found_bq_stack_token.ls>>:$:<<", current_leading_spaces)
-                assert current_leading_spaces.startswith(
-                    original_block_quote_token.bleading_spaces
-                ), "The bleading spaces for nested block quotes must be related."
-                (
-                    special_case,
-                    adjusted_removed_text,
-                ) = BlockQuoteNonFencedHelper.__adjust_2_fix_leading_spaces(
-                    special_case,
-                    adjusted_removed_text,
-                    original_removed_text,
-                    original_block_quote_token.bleading_spaces,
-                    current_leading_spaces,
-                    extra_consumed_whitespace,
-                )
-
-        if tabbed_removed_text:
-            assert olad == adjusted_removed_text, "Verify that the adjustment worked."
-        return special_case, adjusted_removed_text
-
-    # pylint: enable=too-many-arguments
-
-    # pylint: disable=too-many-arguments
-    @staticmethod
-    def __adjust_2_fix_leading_spaces(
-        special_case: bool,
-        adjusted_removed_text: str,
-        original_removed_text: str,
-        original_block_quote_bleading_spaces: str,
-        current_leading_spaces: str,
-        extra_consumed_whitespace: Optional[int],
-    ) -> Tuple[bool, str]:
-        POGGER.debug("original_removed_text>>:$:", original_removed_text)
-        POGGER.debug("adjusted_removed_text>>:$:", adjusted_removed_text)
-        assert len(current_leading_spaces) <= len(original_block_quote_bleading_spaces)
-        _ = extra_consumed_whitespace
-        # if len(current_leading_spaces) > len(original_block_quote_bleading_spaces):
-        #     current_leading_spaces = current_leading_spaces[
-        #         len(original_block_quote_bleading_spaces) :
-        #     ]
-        #     POGGER.debug("current_leading_spaces>>:$:", current_leading_spaces)
-        #     assert (
-        #         current_leading_spaces[0] == "\n"
-        #     ), "In these cases, the leading spaces will always start with a \n."
-        #     current_leading_spaces = current_leading_spaces[1:]
-        #     POGGER.debug(
-        #         "current_leading_spaces>>:$:($)",
-        #         current_leading_spaces,
-        #         len(current_leading_spaces),
-        #     )
-        #     special_case = True
-        #     if not extra_consumed_whitespace:
-        #         extra_consumed_whitespace = 0
-        #     adjusted_removed_text = original_removed_text[
-        #         len(current_leading_spaces) - extra_consumed_whitespace :
-        #     ]
-        return special_case, adjusted_removed_text
-
-    # pylint: enable=too-many-arguments
-
-    @staticmethod
-    def __find_original_token(
-        parser_state: ParserState, found_bq_stack_token: StackToken
-    ) -> Optional[MarkdownToken]:
-        original_token = None
-        for block_copy_token in parser_state.block_copy:
-            if not block_copy_token:
-                continue
-
-            assert (
-                found_bq_stack_token.matching_markdown_token is not None
-            ), "Block quote stack tokens always have a matching markdown token."
-
-            if (
-                found_bq_stack_token.matching_markdown_token.line_number
-                == block_copy_token.line_number
-                and found_bq_stack_token.matching_markdown_token.column_number
-                == block_copy_token.column_number
-            ):
-                original_token = block_copy_token
-                break
-        return original_token
 
 
 # pylint: enable=too-few-public-methods

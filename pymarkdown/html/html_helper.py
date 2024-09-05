@@ -631,14 +631,16 @@ class HtmlHelper:
         # POGGER.debug("split_tab=$", split_tab)
         old_split_tab = split_tab
         did_adjust_block_quote = False
-        split_tab, extracted_whitespace = ContainerHelper.reduce_containers_if_required(
-            parser_state,
-            position_marker,
-            block_quote_data,
-            new_tokens,
-            split_tab,
-            extracted_whitespace,
-            grab_bag,
+        split_tab, extracted_whitespace, whitespace_prefix = (
+            ContainerHelper.reduce_containers_if_required(
+                parser_state,
+                position_marker,
+                block_quote_data,
+                new_tokens,
+                split_tab,
+                extracted_whitespace,
+                grab_bag,
+            )
         )
         if split_tab:
             TabHelper.adjust_block_quote_indent_for_tab(
@@ -651,6 +653,9 @@ class HtmlHelper:
             POGGER.debug("did_adjust_block_quote=$", did_adjust_block_quote)
         POGGER.debug("split_tab=$", split_tab)
         did_adjust_block_quote = split_tab != old_split_tab or did_adjust_block_quote
+
+        if whitespace_prefix:
+            extracted_whitespace = whitespace_prefix + extracted_whitespace
 
         new_token = HtmlBlockMarkdownToken(position_marker, extracted_whitespace)
         new_tokens.append(new_token)

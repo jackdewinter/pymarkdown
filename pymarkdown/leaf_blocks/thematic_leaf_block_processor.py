@@ -125,18 +125,18 @@ class ThematicLeafBlockProcessor:
                 until_this_index=best_stack_index,
             )
             new_tokens.extend(closed_tokens)
-            if parser_state.token_stack[-1].is_list:
-                list_token = cast(
-                    ListStartMarkdownToken,
-                    parser_state.token_stack[-1].matching_markdown_token,
-                )
-                assert ">" in grab_bag.text_removed_by_container
-                bq_start_index = grab_bag.text_removed_by_container.rindex(">")
-                assert bq_start_index != len(grab_bag.text_removed_by_container) - 1
-                real_indent_delta = len(grab_bag.text_removed_by_container) - (
-                    bq_start_index + 2
-                )
-                list_token.add_leading_spaces(" " * real_indent_delta)
+            # if parser_state.token_stack[-1].is_list:
+            #     list_token = cast(
+            #         ListStartMarkdownToken,
+            #         parser_state.token_stack[-1].matching_markdown_token,
+            #     )
+            #     assert ">" in grab_bag.text_removed_by_container
+            #     bq_start_index = grab_bag.text_removed_by_container.rindex(">")
+            #     assert bq_start_index != len(grab_bag.text_removed_by_container) - 1
+            #     # real_indent_delta = len(grab_bag.text_removed_by_container) - (
+            #     #     bq_start_index + 2
+            #     # )
+            #     # list_token.add_leading_spaces(" " * real_indent_delta)
 
     @staticmethod
     def __handle_existing_paragraph(
@@ -184,7 +184,13 @@ class ThematicLeafBlockProcessor:
                     last_list_markdown_token.remove_last_leading_space()
                 )
                 assert leading_space_to_move is not None
+                POGGER.debug(
+                    "__handle_special_case>>list_token>>$", inner_list_markdown_token
+                )
                 inner_list_markdown_token.add_leading_spaces(leading_space_to_move)
+                POGGER.debug(
+                    "__handle_special_case>>list_token>>$", inner_list_markdown_token
+                )
 
     @staticmethod
     def parse_thematic_break(
@@ -299,7 +305,7 @@ class ThematicLeafBlockProcessor:
                 token_text,
             )
         else:
-            split_tab, extracted_whitespace = (
+            split_tab, extracted_whitespace, whitespace_prefix = (
                 ContainerHelper.reduce_containers_if_required(
                     parser_state,
                     position_marker,

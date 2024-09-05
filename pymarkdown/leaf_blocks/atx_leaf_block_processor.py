@@ -411,14 +411,16 @@ class AtxLeafBlockProcessor:
 
         new_tokens, _ = parser_state.close_open_blocks_fn(parser_state)
         POGGER.debug("new_tokens>:$:<", new_tokens)
-        split_tab, extracted_whitespace = ContainerHelper.reduce_containers_if_required(
-            parser_state,
-            position_marker,
-            block_quote_data,
-            new_tokens,
-            split_tab,
-            extracted_whitespace,
-            grab_bag,
+        split_tab, extracted_whitespace, _ = (
+            ContainerHelper.reduce_containers_if_required(
+                parser_state,
+                position_marker,
+                block_quote_data,
+                new_tokens,
+                split_tab,
+                extracted_whitespace,
+                grab_bag,
+            )
         )
         if split_tab:
             POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
