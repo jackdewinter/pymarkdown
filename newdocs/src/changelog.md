@@ -10,6 +10,38 @@
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
+- None
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+- None
+
+## Version 0.9.23 - Date: 2024-09-04
+
+This release continued our focus on enabling fixing for Rule Md031
+and uncovering any issues with the more deeply nested container cases.
+And our luck held out, with most of the issues being related to the
+fixing algorithms. As mentioned in the last release, our detection
+rules rely on accurate parsing of the Markdown documents, with the
+only real way to verify that being to reconstitute the Markdown
+documents from our internal parsed format.
+
+We continue to try different combinations of containers elements
+and leaf elements, verifying that the correct HTML and the correct
+Markdown is created from our parsed format.  The good news is that
+the largest percentage of issues deal with how we represent and
+reconstitute that whitespace.  And we are diligently working to detect
+any issues with that process and to 
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Added
+
+- None
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
 - [Issue 1141](https://github.com/jackdewinter/pymarkdown/issues/1141)
     - fixed assert issue (test_extra_044mcv0)
 - [Issue 1142](https://github.com/jackdewinter/pymarkdown/issues/1142)
