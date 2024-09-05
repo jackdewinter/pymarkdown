@@ -21,18 +21,24 @@
 
 This release continued our focus on enabling fixing for Rule Md031
 and uncovering any issues with the more deeply nested container cases.
-And our luck held out, with most of the issues being related to the
+And our luck held out, with the majority of the issues being related to the
 fixing algorithms. As mentioned in the last release, our detection
 rules rely on accurate parsing of the Markdown documents, with the
-only real way to verify that being to reconstitute the Markdown
+only truthful way to verify that being to reconstitute the Markdown
 documents from our internal parsed format.
 
 We continue to try different combinations of containers elements
-and leaf elements, verifying that the correct HTML and the correct
-Markdown is created from our parsed format.  The good news is that
+and leaf elements, verifying that PyMarkdown creates the correct HTML
+and the correct Markdown from our parsed format.  The good news is that
 the largest percentage of issues deal with how we represent and
 reconstitute that whitespace.  And we are diligently working to detect
-any issues with that process and to 
+any issues with that process and to fix them.
+
+That is where you, the users, come in.  If you are scanning any Markdown
+documents and the results seem off, please file an issue.  If you are
+starting to use our fix mode on your Markdown documents and there are
+issues, please file an issue. We appreciate any help that we can get
+to improve the project for everyone!
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Added
