@@ -1744,7 +1744,7 @@ A code block
 > >   --------
 """,
     ),
-    pluginRuleTest(  # test_extra_046u0 test_extra_046u1 https://github.com/jackdewinter/pymarkdown/issues/1169
+    pluginRuleTest(  # test_extra_046u0 test_extra_046u1
         "bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_list",
         source_file_contents="""> > + ______
 > >   + list 1
@@ -2207,7 +2207,7 @@ A code block
    >   # header 2
 """,
     ),
-    pluginRuleTest(  # test_extra_046p0 https://github.com/jackdewinter/pymarkdown/issues/1170
+    pluginRuleTest(  # test_extra_046p0 test_extra_046p1
         "bad_fenced_block_in_list_in_block_quote_in_list_with_previous_list",
         source_file_contents="""1. > + ----
    >   + list 1
@@ -2796,7 +2796,7 @@ A code block
         # > + another list
         # """,
     ),
-    pluginRuleTest(  # test_extra_046da test_extra_046db https://github.com/jackdewinter/pymarkdown/issues/1176
+    pluginRuleTest(  # test_extra_046da test_extra_046db
         "bad_fenced_block_in_list_in_block_quote_with_previous_inner_list_and_para_continue",
         source_file_contents="""> + list 1
 >   + list 2
@@ -3129,7 +3129,7 @@ A code block
 > + another list
 """,
     ),
-    pluginRuleTest(  # test_extra_046cc0 test_extra_046cc1 https://github.com/jackdewinter/pymarkdown/issues/1175
+    pluginRuleTest(  # test_extra_046cc0 test_extra_046cc1
         "bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list",
         source_file_contents="""> + + -----
 >     + list 1
