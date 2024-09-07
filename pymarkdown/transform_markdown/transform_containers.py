@@ -172,6 +172,7 @@ class TransformContainers:
             applied_leading_spaces_to_start_of_container_line,
             container_token_indices,
             container_line,
+            container_line_old,
             removed_tokens,
             removed_token_indices,
             current_changed_record,
@@ -1058,6 +1059,7 @@ class TransformContainers:
         applied_leading_spaces_to_start_of_container_line: bool,
         container_token_indices: List[int],
         container_line: str,
+        container_line_old: str,
         removed_tokens: List[MarkdownToken],
         removed_token_indices: List[int],
         current_changed_record: Optional[MarkdownChangeRecord],
@@ -1073,7 +1075,10 @@ class TransformContainers:
                 inner_token_index,
                 nested_block_start_index,
                 block_start_on_remove,
+                container_line,
             ) = TransformContainers.__adjust_for_list_adjust(
+                container_line,
+                container_line_old,
                 token_stack,
                 container_token_indices,
                 removed_tokens,
@@ -1099,28 +1104,86 @@ class TransformContainers:
     # pylint: enable=too-many-arguments
 
     @staticmethod
+    def __adjust_for_list_adjust_block_quote(
+        removed_tokens: List[MarkdownToken], removed_token_indices: List[int]
+    ) -> Tuple[int, bool, Optional[MarkdownToken], int]:
+        nested_block_start_index = len(removed_tokens) - 1
+        block_start_on_remove = True
+
+        previous_token: Optional[MarkdownToken] = removed_tokens[
+            nested_block_start_index
+        ]
+        assert previous_token is not None
+        assert previous_token.is_block_quote_start
+        previous_bq_token = cast(BlockQuoteMarkdownToken, previous_token)
+        assert previous_bq_token.bleading_spaces is not None
+        dd = previous_bq_token.bleading_spaces.split("\n")
+        inner_token_index = removed_token_indices[-1]
+        if inner_token_index >= len(dd):
+            previous_token = None
+        return (
+            nested_block_start_index,
+            block_start_on_remove,
+            previous_token,
+            inner_token_index,
+        )
+
+    @staticmethod
+    def __adjust_for_list_adjust_list(
+        removed_tokens: List[MarkdownToken],
+        removed_token_indices: List[int],
+        container_line: str,
+        container_line_old: str,
+    ) -> str:
+        removed_list_token = cast(ListStartMarkdownToken, removed_tokens[-1])
+        if removed_list_token.leading_spaces is not None:
+            split_list_leading_spaces = removed_list_token.leading_spaces.split("\n")
+            if removed_token_indices[-1] < len(split_list_leading_spaces):
+                if removed_leading_spaces := split_list_leading_spaces[
+                    removed_token_indices[-1]
+                ]:
+                    assert container_line.endswith(container_line_old)
+                    actual_leading_spaces = container_line[: -len(container_line_old)]
+
+                    _, ex_ws = ParserHelper.extract_spaces_verified(container_line, 0)
+                    if (
+                        "\t" not in ex_ws
+                        and not actual_leading_spaces
+                        and removed_leading_spaces != actual_leading_spaces
+                    ):
+                        container_line = removed_leading_spaces + container_line
+        return container_line
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
     def __adjust_for_list_adjust(
+        container_line: str,
+        container_line_old: str,
         token_stack: List[MarkdownToken],
         container_token_indices: List[int],
         removed_tokens: List[MarkdownToken],
         removed_token_indices: List[int],
         applied_leading_spaces_to_start_of_container_line: bool,
-    ) -> Tuple[Optional[MarkdownToken], int, int, bool]:
+    ) -> Tuple[Optional[MarkdownToken], int, int, bool, str]:
         block_start_on_remove = False
         inner_token_index = nested_block_start_index = -1
         previous_token = None
         if removed_tokens and removed_tokens[-1].is_block_quote_start:
-            nested_block_start_index = len(removed_tokens) - 1
-            block_start_on_remove = True
-
-            previous_token = removed_tokens[nested_block_start_index]
-            assert previous_token.is_block_quote_start
-            previous_bq_token = cast(BlockQuoteMarkdownToken, previous_token)
-            assert previous_bq_token.bleading_spaces is not None
-            dd = previous_bq_token.bleading_spaces.split("\n")
-            inner_token_index = removed_token_indices[-1]
-            if inner_token_index >= len(dd):
-                previous_token = None
+            (
+                nested_block_start_index,
+                block_start_on_remove,
+                previous_token,
+                inner_token_index,
+            ) = TransformContainers.__adjust_for_list_adjust_block_quote(
+                removed_tokens, removed_token_indices
+            )
+        elif removed_tokens and removed_tokens[-1].is_list_start:
+            container_line = TransformContainers.__adjust_for_list_adjust_list(
+                removed_tokens,
+                removed_token_indices,
+                container_line,
+                container_line_old,
+            )
         if previous_token is None:
             block_start_on_remove = False
             nested_block_start_index = (
@@ -1145,7 +1208,10 @@ class TransformContainers:
             inner_token_index,
             nested_block_start_index,
             block_start_on_remove,
+            container_line,
         )
+
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -1342,15 +1408,16 @@ class TransformContainers:
         removed_split_leading_spaces = removed_block_quote_token.bleading_spaces.split(
             "\n"
         )
+        leading_space_to_use = None
+        leading_index_to_use = None
         if removed_token_indices[-1] < len(removed_split_leading_spaces):
             leading_space_to_use = removed_split_leading_spaces[
                 removed_token_indices[-1]
             ]
             leading_index_to_use = split_leading_spaces[container_token_indices[-1]]
-        else:
-            leading_space_to_use = None
         if (
             leading_space_to_use is not None
+            and leading_index_to_use is not None
             and leading_index_to_use.endswith(ParserLogger.blah_sequence)
             and container_line.startswith(leading_space_to_use)
         ):
