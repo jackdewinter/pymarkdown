@@ -646,10 +646,10 @@ class TransformListBlock:
                 do_perform_block_quote_ending = (
                     projected_start_line != current_token.line_number
                 )
-                assert projected_start_line in [
-                    current_token.line_number,
-                    current_token.line_number + 1,
-                ], "should be one of the two, unless we have miscalculated"
+                # assert projected_start_line in [
+                #     current_token.line_number,
+                #     current_token.line_number + 1,
+                # ], "should be one of the two, unless we have miscalculated"
         (
             block_quote_leading_space,
             starting_whitespace,

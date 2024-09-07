@@ -489,9 +489,11 @@ class ContainerBlockNonLeafProcessor:
             and extracted_whitespace_length - container_x_used_indent >= 4
         ):
             return
+        POGGER.debug("__special_list_block_block>>list_token>>$", list_token)
         list_token.add_leading_spaces(
             grab_bag.extracted_whitespace[:container_x_used_indent]
         )
+        POGGER.debug("__special_list_block_block>>list_token>>$", list_token)
         (
             grab_bag.do_skip_containers_before_leaf_blocks,
             grab_bag.did_indent_processing,
@@ -603,12 +605,14 @@ class ContainerBlockNonLeafProcessor:
                     ListStartMarkdownToken,
                     parser_state.token_stack[ind].matching_markdown_token,
                 )
+                POGGER.debug("__handle_leading_whitespace>>list_token>>$", list_token)
                 list_token.add_leading_spaces(
                     position_marker.text_to_parse[
                         block_quote_end_index : grab_bag.indent_already_processed
                         + extra_indent
                     ]
                 )
+                POGGER.debug("__handle_leading_whitespace>>list_token>>$", list_token)
 
     @staticmethod
     def __handle_leading_whitespace_loop(
@@ -777,7 +781,15 @@ class ContainerBlockNonLeafProcessor:
             )
             assert list_token is not None
             if list_token.line_number != block_leaf_tokens[-1].line_number:
+                POGGER.debug(
+                    "__get_block_start_index_handle_blank_line>>list_token>>$",
+                    list_token,
+                )
                 list_token.add_leading_spaces("")
+                POGGER.debug(
+                    "__get_block_start_index_handle_blank_line>>list_token>>$",
+                    list_token,
+                )
 
     @staticmethod
     def __process_list_in_progress(

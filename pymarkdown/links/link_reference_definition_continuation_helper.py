@@ -407,7 +407,13 @@ class LinkReferenceDefinitionContinuationHelper:
             if split_tabs_list[0]:
                 prefix_to_add = prefix_to_add[:-1]
             del split_tabs_list[0]
+            POGGER.debug(
+                "__xx_multiple_fix_leading_spaces>>block_token>>$", block_quote_token
+            )
             block_quote_token.add_bleading_spaces(prefix_to_add, is_first)
+            POGGER.debug(
+                "__xx_multiple_fix_leading_spaces>>block_token>>$", block_quote_token
+            )
             is_first = False
 
     # pylint: disable=too-many-arguments

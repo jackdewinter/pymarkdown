@@ -16,6 +16,7 @@ from pymarkdown.application_file_scanner import ApplicationFileScanner
 from pymarkdown.extensions.pragma_token import PragmaToken
 from pymarkdown.general.bad_tokenization_error import BadTokenizationError
 from pymarkdown.general.main_presentation import MainPresentation
+from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.source_providers import FileSourceProvider
 from pymarkdown.general.tokenized_markdown import TokenizedMarkdown
@@ -392,11 +393,13 @@ class FileScanHelper:
     ) -> Tuple[bool, bool, int]:
         keep_processing = False
         collect_list = []
+        fix_list = []
         for fix_level, level_list in plugins_by_fix_level.items():
             if fix_level == minimum_fix_level:
                 fix_list = level_list[:]
             elif fix_level > minimum_fix_level:
                 collect_list.extend(level_list)
+        assert fix_list is not None
 
         (
             did_anything_get_fixed_this_time,
@@ -702,9 +705,24 @@ class FileScanHelper:
                 fixed_token_indices,
                 replaced_token_indices,
             )
+
+        # did_fix = False
         for next_replace_index in replace_tokens_list:
             did_any_tokens_get_fixed = True
+            # if fix_debug and not did_fix:
+            #     did_fix = True
+            #     print("BEFORE-XXX-----")
+            #     for i,j in enumerate(actual_tokens):
+            #         print(f" {i:02}:{ParserHelper.make_value_visible(j)}")
+            #     print("BEFORE-XXX-----")
+            # if fix_debug:
+            #     print(f" {ParserHelper.make_value_visible(next_replace_index)}")
             self.__apply_replacement_fix(context, next_replace_index, actual_tokens)
+        # if did_fix and fix_debug:
+        #     print("AFTER-XXX-----")
+        #     for i,j in enumerate(actual_tokens):
+        #         print(f" {i:02}:{ParserHelper.make_value_visible(j)}")
+        #     print("AFTER-XXX-----")
         return did_any_tokens_get_fixed
 
     # pylint: enable=too-many-arguments
@@ -729,7 +747,8 @@ class FileScanHelper:
             print("--")
         for token_instance, requested_fixes in context.get_fix_token_map().items():
             if fix_debug:
-                print(f"BEFORE:{str(token_instance)}:{str(requested_fixes)}")
+                print(f"APPLY:{ParserHelper.make_value_visible(requested_fixes)}")
+                print(f"BEFORE:{ParserHelper.make_value_visible(token_instance)}")
             self.__apply_token_fix(
                 context, token_instance, requested_fixes, actual_tokens
             )
@@ -738,7 +757,7 @@ class FileScanHelper:
                 i.plugin_id for i in requested_fixes
             ]
             if fix_debug:
-                print(f" AFTER:{str(token_instance)}:{str(requested_fixes)}")
+                print(f" AFTER:{ParserHelper.make_value_visible(token_instance)}")
         if fix_debug:
             print("--")
         did_any_tokens_get_fixed = self.__xx(

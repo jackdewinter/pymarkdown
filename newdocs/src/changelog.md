@@ -10,7 +10,81 @@
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
+- [Issue 1169](https://github.com/jackdewinter/pymarkdown/issues/1169)
+- [Issue 1170](https://github.com/jackdewinter/pymarkdown/issues/1170)
+- [Issue 1173](https://github.com/jackdewinter/pymarkdown/issues/1173)
+- [Issue 1175](https://github.com/jackdewinter/pymarkdown/issues/1175)
+- [Issue 1176](https://github.com/jackdewinter/pymarkdown/issues/1176)
+    - fixed issue with extra leading space item being added
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
 - None
+
+## Version 0.9.23 - Date: 2024-09-04
+
+This release continued our focus on enabling fixing for Rule Md031
+and uncovering any issues with the more deeply nested container cases.
+And our luck held out, with the majority of the issues being related to the
+fixing algorithms. As mentioned in the last release, our detection
+rules rely on accurate parsing of the Markdown documents, with the
+only truthful way to verify that being to reconstitute the Markdown
+documents from our internal parsed format.
+
+We continue to try different combinations of containers elements
+and leaf elements, verifying that PyMarkdown creates the correct HTML
+and the correct Markdown from our parsed format.  The good news is that
+the largest percentage of issues deal with how we represent and
+reconstitute that whitespace.  And we are diligently working to detect
+any issues with that process and to fix them.
+
+That is where you, the users, come in.  If you are scanning any Markdown
+documents and the results seem off, please file an issue.  If you are
+starting to use our fix mode on your Markdown documents and there are
+issues, please file an issue. We appreciate any help that we can get
+to improve the project for everyone!
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Added
+
+- None
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
+- [Issue 1141](https://github.com/jackdewinter/pymarkdown/issues/1141)
+    - fixed assert issue (test_extra_044mcv0)
+- [Issue 1142](https://github.com/jackdewinter/pymarkdown/issues/1142)
+    - fixed assert issue (test_extra_044lc)
+- [Issue 1143](https://github.com/jackdewinter/pymarkdown/issues/1143)
+    - fixed indent issue (test_extra_044ldb0)
+- [Issue 1144](https://github.com/jackdewinter/pymarkdown/issues/1144)
+    - fixed parsing issue (test_extra_044ldb1)
+- [Issue 1145](https://github.com/jackdewinter/pymarkdown/issues/1145)
+    - fixed indent issue (test_extra_044mx60)
+- [Issue 1146](https://github.com/jackdewinter/pymarkdown/issues/1146)
+    - fixed indent issue (test_extra_044lex1)
+- [Issue 1147](https://github.com/jackdewinter/pymarkdown/issues/1147)
+    - fixed indent issue (test_extra_044mcx)
+- [Issue 1148](https://github.com/jackdewinter/pymarkdown/issues/1148)
+    - fixed parsing issue (test_extra_044ldb1)
+- [Issue 1149](https://github.com/jackdewinter/pymarkdown/issues/1149)
+    - fixed parsing issue (test_extra_044mcz0)
+- [Issue 1150](https://github.com/jackdewinter/pymarkdown/issues/1150)
+    - fixed indent issue (test_extra_044lex3)
+- [Issue 1151](https://github.com/jackdewinter/pymarkdown/issues/1151)
+    - fixed assert issue with untested path (test_extra_044ldg)
+- [Issue 1152](https://github.com/jackdewinter/pymarkdown/issues/1152)
+    - fixed indent issue (test_extra_044mcs0)
+- [Issue 1153](https://github.com/jackdewinter/pymarkdown/issues/1153)
+    - fixed indent issue (test_extra_044mcu0)
+- [Issue 1154](https://github.com/jackdewinter/pymarkdown/issues/1154)
+    - fixed indent issue (test_extra_044mx31)
+- [Issue 1155](https://github.com/jackdewinter/pymarkdown/issues/1155)
+    - fixed indent issue (test_extra_044lde)
+- [Issue 1156](https://github.com/jackdewinter/pymarkdown/issues/1156)
+    - fixed indent issue (test_extra_044ldb0)
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed

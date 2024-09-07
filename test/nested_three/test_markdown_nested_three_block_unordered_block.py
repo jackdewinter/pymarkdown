@@ -695,9 +695,9 @@ def test_nested_three_block_unordered_block_skip():
 >     item"""
     expected_tokens = [
         "[block-quote(1,1)::> ]",
-        "[ulist(1,3):+::4::]",
+        "[ulist(1,3):+::4::  þ]",
         "[block-quote(1,5)::> \n> ]",
-        "[para(1,7):\n    ]",
+        "[para(1,7):\n  ]",
         "[text(1,7):list\nitem::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
@@ -734,10 +734,10 @@ def test_nested_three_block_nl_unordered_nl_block_skip():
     expected_tokens = [
         "[block-quote(1,1)::>\n> \n> ]",
         "[BLANK(1,2):]",
-        "[ulist(2,3):+::4::\n]",
+        "[ulist(2,3):+::4::\n  þ]",
         "[BLANK(2,4):]",
         "[block-quote(3,3)::> \n> ]",
-        "[para(3,7):\n    ]",
+        "[para(3,7):\n  ]",
         "[text(3,7):list\nitem::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
@@ -903,12 +903,12 @@ def test_nested_three_block_text_nl_unordered_text_nl_block_skip():
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
-        "[ulist(2,3):+::4::\n]",
+        "[ulist(2,3):+::4::\n  þ]",
         "[para(2,5):]",
         "[text(2,5):def:]",
         "[end-para:::True]",
         "[block-quote(3,5)::> \n> ]",
-        "[para(3,7):\n    ]",
+        "[para(3,7):\n  ]",
         "[text(3,7):list\nitem::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
@@ -1673,9 +1673,9 @@ def test_nested_three_block_max_unordered_max_block_max_no_bq2():
    >           item"""
     expected_tokens = [
         "[block-quote(1,4):   :   > ]",
-        "[ulist(1,9):+::13:   :]",
+        "[ulist(1,9):+::13:   :        þ]",
         "[block-quote(1,14)::> \n   > ]",
-        "[para(1,16):\n          ]",
+        "[para(1,16):\n  ]",
         "[text(1,16):list\nitem::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
@@ -1742,7 +1742,7 @@ def test_nested_three_block_max_unordered_max_block_max_no_bq2_with_li():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_unordered_max_block_max_empty_no_bq2():
+def test_nested_three_block_max_unordered_max_block_max_empty_no_bq2_x():
     """
     Verify that a nesting of block quote, unordered list, block quote, with
     the maximum number of spaces allowed, and no text on the first line, works properly,

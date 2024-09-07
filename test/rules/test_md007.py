@@ -668,6 +668,25 @@ scanTests = [
 """,
     ),
     pluginRuleTest(
+        "bad_xxx",
+        source_file_contents="""> > + --------
+> >   > block 1
+> >   > block 2
+> >\a
+> >  ```block
+> >   A code block
+> >   ```
+> >\a
+> >  --------
+> >\a
+""".replace(
+            "\a", " "
+        ),
+        disable_rules="md004,md027,md023,md009",
+        scan_expected_return_code=0,
+        scan_expected_output="",
+    ),
+    pluginRuleTest(
         "mix_md007_md004",
         source_file_contents=""" + first
    * second

@@ -507,7 +507,16 @@ class TabHelper:
         #     "parser_state=:$:",
         #     block_quote_token,
         # )
+
+        LOGGER.debug(
+            "__adjust_block_quote_indent_for_tab_block_quote>>block_token>>%s",
+            str(block_quote_token),
+        )
         block_quote_token.add_bleading_spaces(last_block_quote_leading_space)
+        LOGGER.debug(
+            "__adjust_block_quote_indent_for_tab_block_quote>>block_token>>%s",
+            str(block_quote_token),
+        )
         # POGGER.debug(
         #     "parser_state=:$:",
         #     block_quote_token,

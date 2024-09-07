@@ -7,6 +7,7 @@ from typing import List, Optional, Union
 
 from typing_extensions import override
 
+from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.plugin_manager.bad_plugin_fix_error import BadPluginFixError
 from pymarkdown.plugin_manager.plugin_modify_context import PluginModifyContext
@@ -143,13 +144,6 @@ class MarkdownToken:
         Returns whether the current token is a leaf block element.
         """
         return self.__token_class == MarkdownTokenClass.LEAF_BLOCK
-
-    # @property
-    # def is_inline(self) -> bool:
-    #     """
-    #     Returns whether the current token is an inline block element.
-    #     """
-    #     return self.__token_class == MarkdownTokenClass.INLINE_BLOCK
 
     @property
     def extra_data(self) -> Optional[str]:
@@ -605,7 +599,8 @@ class MarkdownToken:
             raise BadPluginFixError(
                 f"Token '{self.__token_name}' can only be modified during the token pass in fix mode."
             )
-        self.__line_number += adjust_delta
+        if self.__line_number:
+            self.__line_number += adjust_delta
 
     def modify_token(
         self,
@@ -653,6 +648,31 @@ class MarkdownToken:
             line_number=line_number,
             column_number=column_number,
         )
+
+    @staticmethod
+    def assert_tokens_are_same_except_for_line_number(
+        token1: "MarkdownToken", token2: "MarkdownToken"
+    ) -> None:
+        """This assert function is needed as fixes to existing markdown tokens that
+        have a open/close pairing may result in the open token being replaced with
+        a new token that only differs by line number.
+        """
+
+        if str(token1) != str(token2):
+
+            token1_visible = ParserHelper.make_value_visible(token1)
+            token1_visible_first_index = token1_visible.index("(")
+            token1_visible_second_index = token1_visible.index(
+                ",", token1_visible_first_index
+            )
+            last_part = token1_visible[token1_visible_second_index:]
+            first_part = token1_visible[: token1_visible_first_index + 1]
+            fixed_token_text = f"{first_part}{token2.line_number}{last_part}"
+            token2_visible = ParserHelper.make_value_visible(token2)
+
+            assert (
+                fixed_token_text == token2_visible
+            ), f"{ParserHelper.make_value_visible(token1)}=={ParserHelper.make_value_visible(token2)}"
 
 
 # pylint: enable=too-many-public-methods,too-many-instance-attributes

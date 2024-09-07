@@ -138,16 +138,20 @@ class ContainerBlockLeafProcessor:
             ), "No leaf tokens should be present at this point."
             return
 
-        orig_text_removed_by_container = grab_bag.text_removed_by_container
-
-        adjust_token: Optional[ListStartMarkdownToken] = (
-            ContainerBlockLeafProcessor.__adjust_for_inner_list_container(
-                parser_state,
-                last_block_index,
-                last_list_index,
-                position_marker.line_number,
-            )
+        (
+            adjust_token,
+            position_marker,
+            extracted_leaf_whitespace,
+            grab_bag.text_removed_by_container,
+        ) = ContainerBlockLeafProcessor.__adjust_for_inner_list_container(
+            parser_state,
+            last_block_index,
+            last_list_index,
+            position_marker,
+            grab_bag.text_removed_by_container,
+            extracted_leaf_whitespace,
         )
+        orig_text_removed_by_container = grab_bag.text_removed_by_container
 
         # POGGER.debug("position_marker.text>>:$:<<", position_marker.text_to_parse)
         # POGGER.debug("position_marker.index>>:$:<<", position_marker.index_number)
@@ -417,12 +421,67 @@ class ContainerBlockLeafProcessor:
                 )
 
     @staticmethod
+    def __xx1(
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        text_removed_by_container: str,
+        extracted_leaf_whitespace: str,
+    ) -> Tuple[PositionMarker, str, str, str]:
+        stack_index = 1
+        removed_text_copy = text_removed_by_container[:]
+        removed_text_copy_bq_count = removed_text_copy.count(">")
+        bq_count = 0
+        while bq_count < removed_text_copy_bq_count:
+            if parser_state.token_stack[stack_index].is_block_quote:
+                bq_count += 1
+            stack_index += 1
+        last_bq_char_index = removed_text_copy.rindex(">")
+        last_bq_char_index += 1
+        assert removed_text_copy[last_bq_char_index] == " "
+        last_bq_char_index += 1
+        assert last_bq_char_index == len(removed_text_copy)
+
+        ws_to_use = 0
+        dd = parser_state.token_stack[stack_index].matching_markdown_token
+        assert dd is not None
+        assert dd.is_list_start
+        dd_list = cast(ListStartMarkdownToken, dd)
+        indent_delta = dd_list.indent_level - len(removed_text_copy)
+        if len(extracted_leaf_whitespace) >= indent_delta:
+            ws_to_use += indent_delta
+
+        if ws_to_use:
+            ex_space = (
+                extracted_leaf_whitespace[:ws_to_use] + ParserLogger.blah_sequence
+            )
+            extracted_leaf_whitespace = extracted_leaf_whitespace[ws_to_use:]
+            new_position_marker = PositionMarker(
+                line_number=position_marker.line_number,
+                index_number=position_marker.index_number,
+                text_to_parse=position_marker.text_to_parse[ws_to_use:],
+                index_indent=position_marker.index_indent + ws_to_use,
+            )
+            position_marker = new_position_marker
+            text_removed_by_container += ex_space
+        else:
+            ex_space = ""
+        return (
+            position_marker,
+            extracted_leaf_whitespace,
+            text_removed_by_container,
+            ex_space,
+        )
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
     def __adjust_for_inner_list_container(
         parser_state: ParserState,
         last_block_index: int,
         last_list_index: int,
-        current_line_number: int,
-    ) -> Optional[ListStartMarkdownToken]:
+        position_marker: PositionMarker,
+        text_removed_by_container: Optional[str],
+        extracted_leaf_whitespace: str,
+    ) -> Tuple[Optional[ListStartMarkdownToken], PositionMarker, str, Optional[str]]:
         POGGER.debug("??? adjust_for_inner_list_container")
         if last_block_index > 0 and 0 < last_list_index < last_block_index:
             POGGER.debug("yes adjust_for_inner_list_container")
@@ -430,18 +489,50 @@ class ContainerBlockLeafProcessor:
                 ListStartMarkdownToken,
                 parser_state.token_stack[last_list_index].matching_markdown_token,
             )
-            if list_token.line_number != current_line_number:
+            if list_token.line_number != position_marker.line_number:
                 POGGER.debug("plt-a>>last_block_token>>$", list_token)
 
-                list_token.add_leading_spaces("")
+                ex_space = ""
+                if text_removed_by_container is not None and text_removed_by_container:
+                    lt_indent = list_token.indent_level
+                    orig_ws_len = len(text_removed_by_container)
+                    if orig_ws_len < lt_indent and extracted_leaf_whitespace:
+
+                        (
+                            position_marker,
+                            extracted_leaf_whitespace,
+                            text_removed_by_container,
+                            ex_space,
+                        ) = ContainerBlockLeafProcessor.__xx1(
+                            parser_state,
+                            position_marker,
+                            text_removed_by_container,
+                            extracted_leaf_whitespace,
+                        )
+
                 POGGER.debug(
-                    "plt-a>>last_block_token>>$",
-                    list_token,
+                    "__adjust_for_inner_list_container>>list_token>>$", list_token
                 )
-                return list_token
+                list_token.add_leading_spaces(ex_space)
+                POGGER.debug(
+                    "__adjust_for_inner_list_container>>list_token>>$", list_token
+                )
+                return (
+                    list_token,
+                    position_marker,
+                    extracted_leaf_whitespace,
+                    text_removed_by_container,
+                )
         else:
             POGGER.debug("not adjust_for_inner_list_container")
-        return None
+        return (
+            None,
+            position_marker,
+            extracted_leaf_whitespace,
+            text_removed_by_container,
+        )
+
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __adjust_for_list_container_after_block_quote_special_special(
@@ -469,7 +560,16 @@ class ContainerBlockLeafProcessor:
                 last_leading_space[0] == "\n"
             ), "Removed leading space must start with \\n."
             last_leading_space = last_leading_space[1:]
+
+            POGGER.debug(
+                "__adjust_for_list_container_after_block_quote_special_special>>block_token>>$",
+                xx_block_quote_token,
+            )
             xx_block_quote_token.add_bleading_spaces(">")
+            POGGER.debug(
+                "__adjust_for_list_container_after_block_quote_special_special>>block_token>>$",
+                xx_block_quote_token,
+            )
         else:
             orig_prefix = adj_original[removed_text_length:]
             orig_suffix = adj_original[:removed_text_length]
@@ -622,7 +722,15 @@ class ContainerBlockLeafProcessor:
                 grab_bag,
             )
 
+            POGGER.debug(
+                "__adjust_for_list_container_after_block_quote>>list_token>>$",
+                list_token,
+            )
             list_token.add_leading_spaces(new_ex)
+            POGGER.debug(
+                "__adjust_for_list_container_after_block_quote>>list_token>>$",
+                list_token,
+            )
             actual_removed_leading_space = extracted_leaf_whitespace
 
             if not grab_bag.container_depth and not xposition_marker.index_indent:
@@ -932,7 +1040,13 @@ class ContainerBlockLeafProcessor:
             POGGER.debug(
                 "plt-c>>leading_text_index>>$", last_block_token.leading_text_index
             )
+            POGGER.debug(
+                "__post_leaf_block_adjustment>>block_token>>$", last_block_token
+            )
             last_block_token.add_bleading_spaces("")
+            POGGER.debug(
+                "__post_leaf_block_adjustment>>block_token>>$", last_block_token
+            )
             last_block_token.leading_text_index += 1
             POGGER.debug("plt-c>>last_block_token>>$", last_block_token)
             POGGER.debug(

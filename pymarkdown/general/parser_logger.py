@@ -30,6 +30,7 @@ class ParserLogger:
 
     start_range_sequence = "\u8268"
     end_range_sequence = "\u8269"
+    blah_sequence = "\u00fe"
 
     __global_count = 0
 
