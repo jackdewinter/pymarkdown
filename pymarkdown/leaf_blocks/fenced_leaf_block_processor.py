@@ -434,7 +434,7 @@ class FencedLeafBlockProcessor:
                 old_top_of_stack,
                 new_tokens,
                 alt_removed_chars_at_start=removed_char_length,
-                original_line=original_line
+                original_line=original_line,
             )
         return new_tokens
 

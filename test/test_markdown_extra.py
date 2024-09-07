@@ -13612,6 +13612,7 @@ list 3</li>
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
 def test_extra_046f0a():
     """
@@ -13627,7 +13628,29 @@ def test_extra_046f0a():
 > ```
 > + another list
 """
-    expected_tokens = ['[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> ]', '[ulist(1,3):+::4:]', '[para(1,5):]', '[text(1,5):list 1:]', '[end-para:::True]', '[ulist(2,5):+::6:  :    \n]', '[para(2,7):\n]', '[text(2,7):list 2\nlist 3::\n]', '[end-para:::False]', '[end-ulist:::True]', '[end-ulist:::True]', '[fcode-block(4,3):`:3:block:::::]', '[text(5,3):A code block:]', '[end-fcode-block:::3:False]', '[ulist(7,3):+::4::]', '[para(7,5):]', '[text(7,5):another list:]', '[end-para:::True]', '[BLANK(8,1):]', '[end-ulist:::True]', '[end-block-quote:::True]']
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4:]",
+        "[para(1,5):]",
+        "[text(1,5):list 1:]",
+        "[end-para:::True]",
+        "[ulist(2,5):+::6:  :    \n]",
+        "[para(2,7):\n]",
+        "[text(2,7):list 2\nlist 3::\n]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+        "[fcode-block(4,3):`:3:block:::::]",
+        "[text(5,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[ulist(7,3):+::4::]",
+        "[para(7,5):]",
+        "[text(7,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(8,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
     expected_gfm = """<blockquote>
 <ul>
 <li>list 1

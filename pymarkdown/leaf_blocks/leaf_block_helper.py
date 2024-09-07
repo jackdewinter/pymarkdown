@@ -212,8 +212,9 @@ class LeafBlockHelper:
 
     # pylint: enable=too-many-arguments
 
+    # pylint: disable=too-many-locals
     @staticmethod
-    def __detect_list_already_added_to(parser_state) -> bool:
+    def __detect_list_already_added_to(parser_state: ParserState) -> bool:
 
         assert len(parser_state.block_copy) == len(parser_state.copy_of_token_stack) - 1
         copy_stack_index = len(parser_state.copy_of_token_stack) - 1
@@ -224,30 +225,57 @@ class LeafBlockHelper:
         ):
             copy_stack_index -= 1
         stack_index = len(parser_state.token_stack) - 1
-        assert parser_state.token_stack[stack_index].is_list or parser_state.token_stack[stack_index].is_block_quote
+        assert (
+            parser_state.token_stack[stack_index].is_list
+            or parser_state.token_stack[stack_index].is_block_quote
+        )
         # while (
         #     stack_index > 0
         #     and not parser_state.token_stack[stack_index].is_list
         #     and not parser_state.token_stack[stack_index].is_block_quote
         # ):
         #     stack_index -= 1
-        bb_line = parser_state.token_stack[stack_index].matching_markdown_token.line_number
-        bb_column = parser_state.token_stack[stack_index].matching_markdown_token.column_number
-        aa_line = parser_state.copy_of_token_stack[copy_stack_index].matching_markdown_token.line_number
-        aa_column = parser_state.copy_of_token_stack[copy_stack_index].matching_markdown_token.column_number
+        token_stack_markdown_token = parser_state.token_stack[
+            stack_index
+        ].matching_markdown_token
+        assert token_stack_markdown_token is not None
+        bb_line = token_stack_markdown_token.line_number
+        bb_column = token_stack_markdown_token.column_number
+        assert (
+            parser_state.copy_of_token_stack[copy_stack_index].matching_markdown_token
+            is not None
+        )
+
+        copy_of_token_stack_markdown_token = parser_state.copy_of_token_stack[
+            copy_stack_index
+        ].matching_markdown_token
+        assert copy_of_token_stack_markdown_token is not None
+        aa_line = copy_of_token_stack_markdown_token.line_number
+        aa_column = copy_of_token_stack_markdown_token.column_number
         new_stack_index = copy_stack_index
         while new_stack_index > 0 and bb_line != aa_line and bb_column != aa_column:
             new_stack_index -= 1
-            aa_line = parser_state.copy_of_token_stack[new_stack_index].matching_markdown_token.line_number
-            aa_column = parser_state.copy_of_token_stack[new_stack_index].matching_markdown_token.column_number
+            copy_of_token_stack_markdown_token = parser_state.copy_of_token_stack[
+                new_stack_index
+            ].matching_markdown_token
+            assert copy_of_token_stack_markdown_token is not None
+            aa_line = copy_of_token_stack_markdown_token.line_number
+            aa_column = copy_of_token_stack_markdown_token.column_number
 
-        original_removed_tokens = []
-        removed_tokens = []
+        original_removed_tokens: List[ListStartMarkdownToken] = []
+        removed_tokens: List[ListStartMarkdownToken] = []
         add_index = new_stack_index + 1
         while add_index <= copy_stack_index:
-            original_removed_tokens.append(parser_state.copy_of_token_stack[add_index].matching_markdown_token)
-            removed_tokens.append(parser_state.block_copy[add_index-1])
-            add_index+=1
+            original_token = parser_state.copy_of_token_stack[
+                add_index
+            ].matching_markdown_token
+            assert original_token is not None and original_token.is_list_start
+            original_removed_tokens.append(cast(ListStartMarkdownToken, original_token))
+
+            current_token = parser_state.block_copy[add_index - 1]
+            assert current_token is not None and current_token.is_list_start
+            removed_tokens.append(cast(ListStartMarkdownToken, current_token))
+            add_index += 1
 
         if original_removed_tokens:
             assert len(original_removed_tokens) == 1
@@ -255,9 +283,15 @@ class LeafBlockHelper:
 
             original_leading_spaces = original_removed_tokens[0].leading_spaces
             current_leading_spaces = removed_tokens[0].leading_spaces
-            if original_leading_spaces and current_leading_spaces and original_leading_spaces != current_leading_spaces:
+            if (
+                original_leading_spaces
+                and current_leading_spaces
+                and original_leading_spaces != current_leading_spaces
+            ):
                 return True
         return False
+
+    # pylint: enable=too-many-locals
 
     # pylint: disable=too-many-arguments
     @staticmethod
