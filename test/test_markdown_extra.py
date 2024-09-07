@@ -13077,12 +13077,10 @@ block 2</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_046cc0():
     """
     TBD
     bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list
-    https://github.com/jackdewinter/pymarkdown/issues/1175
     """
 
     # Arrange
@@ -13099,7 +13097,7 @@ def test_extra_046cc0():
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> \n> \n> ]",
         "[ulist(1,3):+::4::]",
-        "[ulist(1,5):+::6:  :      \n    \n    \n    ]",
+        "[ulist(1,5):+::6:  :    \n    \n    ]",
         "[tbreak(1,7):-::-----]",
         "[ulist(2,7):+::8:    :      \n    ]",
         "[para(2,9):\n]",
@@ -13294,12 +13292,10 @@ list 3</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_046da():
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_with_previous_inner_list_and_para_continue
-    https://github.com/jackdewinter/pymarkdown/issues/1176
     """
 
     # Arrange
@@ -13314,7 +13310,7 @@ def test_extra_046da():
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> \n> ]",
-        "[ulist(1,3):+::4::    \n  \n  \n  \n]",
+        "[ulist(1,3):+::4::  \n  \n  \n]",
         "[para(1,5):]",
         "[text(1,5):list 1:]",
         "[end-para:::True]",
@@ -13562,12 +13558,10 @@ def test_extra_046e1():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_046f0():
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_with_previous_inner_list
-    https://github.com/jackdewinter/pymarkdown/issues/1173
     """
 
     # Arrange
@@ -13581,7 +13575,7 @@ def test_extra_046f0():
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> ]",
-        "[ulist(1,3):+::4::    \n  \n  \n]",
+        "[ulist(1,3):+::4::  \n  \n]",
         "[para(1,5):]",
         "[text(1,5):list 1:]",
         "[end-para:::True]",
@@ -13611,6 +13605,64 @@ list 3</li>
 <pre><code class="language-block">A code block
 </code></pre>
 </li>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_046f0a():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """> + list 1
+>   + list 2
+>     list 3
+> ```block
+> A code block
+> ```
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4:]",
+        "[para(1,5):]",
+        "[text(1,5):list 1:]",
+        "[end-para:::True]",
+        "[ulist(2,5):+::6:  :    \n]",
+        "[para(2,7):\n]",
+        "[text(2,7):list 2\nlist 3::\n]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+        "[fcode-block(4,3):`:3:block:::::]",
+        "[text(5,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[ulist(7,3):+::4::]",
+        "[para(7,5):]",
+        "[text(7,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(8,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>list 1
+<ul>
+<li>list 2
+list 3</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+<ul>
 <li>another list</li>
 </ul>
 </blockquote>"""
@@ -14543,12 +14595,10 @@ list 2</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_046p0():
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_in_list_with_previous_list
-    https://github.com/jackdewinter/pymarkdown/issues/1170
     """
 
     # Arrange
@@ -14564,7 +14614,7 @@ def test_extra_046p0():
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
         "[block-quote(1,4):   :   > \n   > \n   > \n   > \n   > \n   > \n   > \n   > ]",
-        "[ulist(1,6):+::7::       \n  \n  \n  \n]",
+        "[ulist(1,6):+::7::  \n  \n  \n]",
         "[tbreak(1,8):-::----]",
         "[ulist(2,8):+::9:  :    \n  ]",
         "[para(2,10):\n]",
@@ -15067,12 +15117,10 @@ block 3</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_046u0():
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_list
-    https://github.com/jackdewinter/pymarkdown/issues/1169
     """
 
     # Arrange
@@ -15088,7 +15136,7 @@ def test_extra_046u0():
     expected_tokens = [
         "[block-quote(1,1)::]",
         "[block-quote(1,3)::> > \n> > \n> > \n> > \n> > \n> > \n> > \n> > ]",
-        "[ulist(1,5):+::6::      \n  \n  \n  \n]",
+        "[ulist(1,5):+::6::  \n  \n  \n]",
         "[tbreak(1,7):_::______]",
         "[ulist(2,7):+::8:  :    \n  ]",
         "[para(2,9):\n]",

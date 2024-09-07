@@ -10,7 +10,12 @@
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
-- None
+- [Issue 1169](https://github.com/jackdewinter/pymarkdown/issues/1169)
+- [Issue 1170](https://github.com/jackdewinter/pymarkdown/issues/1170)
+- [Issue 1173](https://github.com/jackdewinter/pymarkdown/issues/1173)
+- [Issue 1175](https://github.com/jackdewinter/pymarkdown/issues/1175)
+- [Issue 1176](https://github.com/jackdewinter/pymarkdown/issues/1176)
+    - fixed issue with extra leading space item being added
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed

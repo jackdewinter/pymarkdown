@@ -393,11 +393,13 @@ class FileScanHelper:
     ) -> Tuple[bool, bool, int]:
         keep_processing = False
         collect_list = []
+        fix_list = []
         for fix_level, level_list in plugins_by_fix_level.items():
             if fix_level == minimum_fix_level:
                 fix_list = level_list[:]
             elif fix_level > minimum_fix_level:
                 collect_list.extend(level_list)
+        assert fix_list is not None
 
         (
             did_anything_get_fixed_this_time,
