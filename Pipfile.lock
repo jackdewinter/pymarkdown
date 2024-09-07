@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "9de49ddae4f7d24903fdc4afaa6b5f2370708e14e4c038be5d2045d81fc48997"
+            "sha256": "0aea4f287fe45553dd0cd77ae2956c2765b0e93e35ffdd2c70d6b115c7d129f5"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -752,11 +752,11 @@
         },
         "flake8": {
             "hashes": [
-                "sha256:33f96621059e65eec474169085dc92bf26e7b2d47366b70be2f67ab80dc25132",
-                "sha256:a6dfbb75e03252917f2473ea9653f7cd799c3064e54d4c8140044c5c065f53c3"
+                "sha256:049d058491e228e03e67b390f311bbf88fce2dbaa8fa673e7aea87b7198b8d38",
+                "sha256:597477df7860daa5aa0fdd84bf5208a043ab96b8e96ab708770ae0364dd03213"
             ],
             "index": "pypi",
-            "version": "==7.0.0"
+            "version": "==7.1.1"
         },
         "flake8-bandit": {
             "hashes": [
@@ -1114,11 +1114,11 @@
         },
         "pycodestyle": {
             "hashes": [
-                "sha256:41ba0e7afc9752dfb53ced5489e89f8186be00e599e712660695b7a75ff2663f",
-                "sha256:44fe31000b2d866f2e41841b18528a505fbd7fef9017b04eff4e2648a0fadc67"
+                "sha256:46f0fb92069a7c28ab7bb558f05bfc0110dac69a0cd23c61ea0040283a9d78b3",
+                "sha256:6838eae08bbce4f6accd5d5572075c63626a15ee3e6f842df996bf62f6d73521"
             ],
             "markers": "python_version >= '3.8'",
-            "version": "==2.11.1"
+            "version": "==2.12.1"
         },
         "pyflakes": {
             "hashes": [
@@ -1349,12 +1349,12 @@
         },
         "sourcery": {
             "hashes": [
-                "sha256:3c2d9dcff285a46151365fa1a1121ac9e2e90a9e162a5c41153a977ee71ca12d",
-                "sha256:82be73f15624b82aa099c9f2034d7f133e9a5fd36b291e0c800d0173a2079dfb",
-                "sha256:e4bb317a8ccf8089d40b5400c434a5afc3487e645297904dfa0f7f6580318911"
+                "sha256:2cd894548564a3ec2723fb6cc681f29c497c213cba6dcf20bdd9bd54105868df",
+                "sha256:819686fffdc102d0b5522f9eacda698374f66b6bf21f7422ff74148601e0b7bf",
+                "sha256:b3cea663a84b2c3007a05d72a2d13ff5d813cc695a5515c58dd16b6849ce9488"
             ],
             "index": "pypi",
-            "version": "==1.16.0"
+            "version": "==1.12.0"
         },
         "stevedore": {
             "hashes": [
