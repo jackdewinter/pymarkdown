@@ -922,6 +922,7 @@ def __validate_new_line_apply_delta(container_block_stack, delta, init_ws):
 def __validate_new_line_new_list_item(container_block_stack, current_token):
     print(">>__vnl->li-ish")
     assert container_block_stack[-1] == current_token
+    init_ws = -100
     if len(container_block_stack) > 1:
         init_ws = len(current_token.extracted_whitespace)
     delta = -1
