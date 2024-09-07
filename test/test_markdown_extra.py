@@ -6287,7 +6287,6 @@ list 3</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_044ca():
     """
     TBD
@@ -9342,12 +9341,10 @@ list 2</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_044lex1a():
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_list_and_thematics
-    https://github.com/jackdewinter/pymarkdown/issues/1181
     """
 
     # Arrange
@@ -9742,7 +9739,6 @@ list 2</li>
 
 
 @pytest.mark.gfm
-# @pytest.mark.skip
 def test_extra_044lex5x():
     """
     TBD
@@ -9867,7 +9863,6 @@ list 2
 
 
 @pytest.mark.gfm
-# @pytest.mark.skip
 def test_extra_044lex5b():
     """
     TBD
@@ -11240,12 +11235,10 @@ list 2</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_044mcs1():
     """
     TBD
     bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_and_thematics
-    https://github.com/jackdewinter/pymarkdown/issues/1180
     """
 
     # Arrange
@@ -12446,7 +12439,6 @@ block 2</p>
 
 
 @pytest.mark.gfm
-# @pytest.mark.skip
 def test_extra_044mcz4():
     """
     TBD
@@ -12876,12 +12868,10 @@ list 2</h2>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_046b():
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_with_previous_inner_list_with_thematics_sub3
-    https://github.com/jackdewinter/pymarkdown/issues/1178
     """
 
     # Arrange
@@ -13221,12 +13211,10 @@ list 2</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_046dx():
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_with_previous_inner_list_and_para_continue_with_thematics
-    https://github.com/jackdewinter/pymarkdown/issues/1177
     """
 
     # Arrange
@@ -13483,12 +13471,10 @@ def test_extra_046e():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_046e1():
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_with_previous_inner_list_with_thematics_sub3
-    https://github.com/jackdewinter/pymarkdown/issues/1174
     """
 
     # Arrange
@@ -14522,12 +14508,10 @@ list 2</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_046n1():
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_in_list_with_previous_list_with_thematics
-    https://github.com/jackdewinter/pymarkdown/issues/1171
     """
 
     # Arrange
