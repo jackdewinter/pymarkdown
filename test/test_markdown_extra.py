@@ -12189,12 +12189,10 @@ block 2</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_044mcz0a():
     """
     TBD
     bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block
-    https://github.com/jackdewinter/pymarkdown/issues/1179
     """
 
     # Arrange
@@ -13658,12 +13656,10 @@ list 3</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_046f1():
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_with_previous_inner_list
-    https://github.com/jackdewinter/pymarkdown/issues/1173
     """
 
     # Arrange
@@ -13827,6 +13823,66 @@ def test_extra_046g1():
 <blockquote>
 <p>block 2
 block 3</p>
+</blockquote>
+<pre><code class="language-block">A code block
+</code></pre>
+</li>
+<li>
+<p>another list</p>
+</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_046g2():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """> + list 1
+>   > block 2
+>
+>   ```block
+>   A code block
+>   ```
+>
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n>\n> ]",
+        "[ulist(1,3):+::4::\n\n  \n  \n  \n\n]",
+        "[para(1,5):]",
+        "[text(1,5):list 1:]",
+        "[end-para:::True]",
+        "[block-quote(2,5)::> \n>]",
+        "[para(2,7):]",
+        "[text(2,7):block 2:]",
+        "[end-para:::True]",
+        "[BLANK(3,2):]",
+        "[end-block-quote:::True]",
+        "[fcode-block(4,5):`:3:block:::::]",
+        "[text(5,1):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(7,2):]",
+        "[li(8,3):4::]",
+        "[para(8,5):]",
+        "[text(8,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(9,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<p>list 1</p>
+<blockquote>
+<p>block 2</p>
 </blockquote>
 <pre><code class="language-block">A code block
 </code></pre>
@@ -14271,12 +14327,10 @@ def test_extra_046l0():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_046l1():
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_bare
-    https://github.com/jackdewinter/pymarkdown/issues/1172
     """
 
     # Arrange
@@ -14321,7 +14375,7 @@ def test_extra_046l1():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm

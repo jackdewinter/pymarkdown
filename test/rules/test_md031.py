@@ -2650,7 +2650,7 @@ A code block
 > + another list
 """,
     ),
-    pluginRuleTest(  # test_extra_046f0 test_extra_046f1  https://github.com/jackdewinter/pymarkdown/issues/1173
+    pluginRuleTest(  # test_extra_046f0 test_extra_046f1
         "bad_fenced_block_in_list_in_block_quote_with_previous_inner_list",
         source_file_contents="""> + list 1
 >   + list 2
@@ -3069,7 +3069,7 @@ A code block
 > + another list
 """,
     ),
-    pluginRuleTest(  # test_extra_044mcz0x test_extra_044mcz0a https://github.com/jackdewinter/pymarkdown/issues/1179
+    pluginRuleTest(  # test_extra_044mcz0x test_extra_044mcz0a
         "bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block",
         source_file_contents="""> + + -----
 >     > block 1
