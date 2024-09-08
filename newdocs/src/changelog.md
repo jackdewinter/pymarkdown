@@ -15,7 +15,21 @@
 - [Issue 1173](https://github.com/jackdewinter/pymarkdown/issues/1173)
 - [Issue 1175](https://github.com/jackdewinter/pymarkdown/issues/1175)
 - [Issue 1176](https://github.com/jackdewinter/pymarkdown/issues/1176)
-    - fixed issue with extra leading space item being added
+    - fixed parser issue with extra leading space item being added
+- [Issue 1164](https://github.com/jackdewinter/pymarkdown/issues/1164)
+- [Issue 1165](https://github.com/jackdewinter/pymarkdown/issues/1165)
+- [Issue 1171](https://github.com/jackdewinter/pymarkdown/issues/1171)
+- [Issue 1174](https://github.com/jackdewinter/pymarkdown/issues/1174)
+- [Issue 1177](https://github.com/jackdewinter/pymarkdown/issues/1177)
+- [Issue 1178](https://github.com/jackdewinter/pymarkdown/issues/1178)
+- [Issue 1180](https://github.com/jackdewinter/pymarkdown/issues/1180)
+- [Issue 1181](https://github.com/jackdewinter/pymarkdown/issues/1181)
+    - fixed rehydrator issue with extra leading space item being added
+- [Issue 1172](https://github.com/jackdewinter/pymarkdown/issues/1172)
+- [Issue 1173](https://github.com/jackdewinter/pymarkdown/issues/1173)
+- [Issue 1179](https://github.com/jackdewinter/pymarkdown/issues/1179)
+    - fixed rehydrator issue with reyhdrating after bqs with remove token being
+      blank line
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed

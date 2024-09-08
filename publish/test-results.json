@@ -1620,10 +1620,10 @@
         },
         {
             "name": "test.test_markdown_extra",
-            "totalTests": 310,
+            "totalTests": 311,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 4,
+            "skippedTests": 1,
             "elapsedTimeInMilliseconds": 0
         },
         {

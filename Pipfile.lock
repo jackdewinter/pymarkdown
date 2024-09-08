@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "0aea4f287fe45553dd0cd77ae2956c2765b0e93e35ffdd2c70d6b115c7d129f5"
+            "sha256": "472a8d36dfd69c208eb6d3add00d44f63831d6072cae46479566b1ce9b77e6b3"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -1349,12 +1349,12 @@
         },
         "sourcery": {
             "hashes": [
-                "sha256:2cd894548564a3ec2723fb6cc681f29c497c213cba6dcf20bdd9bd54105868df",
-                "sha256:819686fffdc102d0b5522f9eacda698374f66b6bf21f7422ff74148601e0b7bf",
-                "sha256:b3cea663a84b2c3007a05d72a2d13ff5d813cc695a5515c58dd16b6849ce9488"
+                "sha256:18f7d962d9820a8124aa928afb406d92565c2503ee86bac46e23bdd75b58272b",
+                "sha256:ac5d5db1eff47735a9b2328d5ae0bc444a84c96ffbc8a01f9ebe81f48b7bfaf8",
+                "sha256:c45d0e293a6b4f42b77c2dc9cd9184a0b76373a3234171956bd13f05aaed4298"
             ],
             "index": "pypi",
-            "version": "==1.12.0"
+            "version": "==1.22.0"
         },
         "stevedore": {
             "hashes": [
@@ -1438,11 +1438,11 @@
         },
         "virtualenv": {
             "hashes": [
-                "sha256:4c43a2a236279d9ea36a0d76f98d84bd6ca94ac4e0f4a3b9d46d05e10fea542a",
-                "sha256:8cc4a31139e796e9a7de2cd5cf2489de1217193116a8fd42328f1bd65f434589"
+                "sha256:48f2695d9809277003f30776d155615ffc11328e6a0a8c1f0ec80188d7874a55",
+                "sha256:c17f4e0f3e6036e9f26700446f85c76ab11df65ff6d8a9cbfad9f71aabfcf23c"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==20.26.3"
+            "version": "==20.26.4"
         },
         "watchdog": {
             "hashes": [
