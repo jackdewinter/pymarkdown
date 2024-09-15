@@ -4,6 +4,7 @@ Module to provide tests related to the MD027 rule.
 
 import os
 from test.rules.utils import (
+    calculate_fix_tests,
     execute_fix_test,
     execute_scan_test,
     id_test_plug_rule_fn,
@@ -436,10 +437,6 @@ scanTests = [
 """,
     ),
 ]
-fixTests = []
-for i in scanTests:
-    if i.fix_expected_file_contents:
-        fixTests.append(i)
 
 
 @pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
@@ -450,7 +447,9 @@ def test_md027_scan(test: pluginRuleTest) -> None:
     execute_scan_test(test, "md027")
 
 
-@pytest.mark.parametrize("test", fixTests, ids=id_test_plug_rule_fn)
+@pytest.mark.parametrize(
+    "test", calculate_fix_tests(scanTests), ids=id_test_plug_rule_fn
+)
 def test_md027_fix(test: pluginRuleTest) -> None:
     """
     Execute a parameterized fix test for plugin md001.

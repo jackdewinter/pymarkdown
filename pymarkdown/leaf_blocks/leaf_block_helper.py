@@ -170,11 +170,14 @@ class LeafBlockHelper:
         removed_chars_at_start: int,
     ) -> None:
         if LeafBlockHelper.__detect_list_already_added_to(parser_state):
+            POGGER.debug("__handle_leaf_start_adjust->__detect_list_already_added_to")
             return
 
         if delay_tab_match:
+            POGGER.debug("__handle_leaf_start_adjust->delay_tab_match")
             used_indent = ""
         else:
+            POGGER.debug("__handle_leaf_start_adjust->tab_match")
             leading_chars_at_start = ""
             if alt_removed_chars_at_start is not None:
                 indent_count = alt_removed_chars_at_start
@@ -343,6 +346,7 @@ class LeafBlockHelper:
             html_tokens.extend(tokens_from_close)
             is_remaining_list_token = parser_state.token_stack[-1].is_list
 
+        POGGER.debug("is_remaining_list_token=$", is_remaining_list_token)
         if is_remaining_list_token:
             assert parser_state.token_stack[
                 -1
@@ -356,6 +360,9 @@ class LeafBlockHelper:
             # assert not delta_indent
 
             POGGER.debug(">>delay_tab_match>>$>>", delay_tab_match)
+            POGGER.debug(
+                ">>adjust_with_leading_spaces>>$>>", adjust_with_leading_spaces
+            )
             if adjust_with_leading_spaces:
                 LeafBlockHelper.__handle_leaf_start_adjust(
                     parser_state,
@@ -428,6 +435,8 @@ class LeafBlockHelper:
                     )
                     # NOTE: this assert should be triggered by a currently disabled test
                     assert indent_delta > len(extracted_whitespace)
+                    # if not indent_delta > len(extracted_whitespace):
+                    #     break
                     new_stack_index += 1
                 new_whitespace = (
                     extracted_whitespace[best_indent:]

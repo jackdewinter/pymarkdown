@@ -123,6 +123,9 @@ class FencedLeafBlockProcessor:
             position_marker.text_to_parse,
             position_marker.index_number,
         )
+        POGGER.debug(
+            "parse_fenced_code_block:extracted_whitespace-->$<--", extracted_whitespace
+        )
         new_tokens: List[MarkdownToken] = []
         (
             is_fence_start,
@@ -183,6 +186,7 @@ class FencedLeafBlockProcessor:
                     grab_bag.indent_used_by_list,
                 )
             )
+            POGGER.debug("parse_fenced_code_block:already in-->$", extracted_whitespace)
         return new_tokens, extracted_whitespace
 
     # pylint: enable=too-many-arguments
@@ -238,6 +242,7 @@ class FencedLeafBlockProcessor:
         # POGGER.debug("original_line:$:", original_line)
         only_spaces_after_fence = True
         split_tab = False
+        split_tab_whitespace: Optional[str] = None
         if ParserHelper.tab_character in original_line:
             (
                 after_fence_index,

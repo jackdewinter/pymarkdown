@@ -15,7 +15,7 @@
         },
         "pymarkdown/application_logging.py": {},
         "pymarkdown/block_quotes/block_quote_count_helper.py": {
-            "too-many-arguments": 8
+            "too-many-arguments": 7
         },
         "pymarkdown/block_quotes/block_quote_data.py": {},
         "pymarkdown/block_quotes/block_quote_non_fenced_helper.py": {
@@ -39,6 +39,7 @@
         },
         "pymarkdown/container_blocks/container_block_nested_processor.py": {
             "too-few-public-methods": 1,
+            "too-many-locals": 1,
             "too-many-arguments": 1
         },
         "pymarkdown/container_blocks/container_block_non_leaf_processor.py": {},
@@ -97,8 +98,8 @@
             "protected-access": 1
         },
         "pymarkdown/file_scan_helper.py": {
-            "too-many-arguments": 9,
-            "too-many-locals": 6
+            "too-many-arguments": 10,
+            "too-many-locals": 5
         },
         "pymarkdown/general/__init__.py": {},
         "pymarkdown/general/bad_tokenization_error.py": {},

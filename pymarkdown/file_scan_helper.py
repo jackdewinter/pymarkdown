@@ -676,7 +676,13 @@ class FileScanHelper:
     ) -> None:
         start_index = actual_tokens.index(next_replacement.start_token)
         end_index = actual_tokens.index(next_replacement.end_token)
-        index_delta = end_index - start_index + 1
+        actual_start_index = start_index
+        while (
+            actual_start_index < end_index
+            and actual_tokens[actual_start_index].is_end_token
+        ):
+            actual_start_index += 1
+        index_delta = end_index - actual_start_index + 1
 
         new_tokens = actual_tokens[:start_index]
         new_tokens.extend(next_replacement.replacement_tokens)
@@ -689,8 +695,9 @@ class FileScanHelper:
         actual_tokens.extend(new_tokens)
 
     # pylint: disable=too-many-arguments
-    def __xx(
+    def __apply_replacements(
         self,
+        fix_debug: bool,
         context: PluginScanContext,
         did_any_tokens_get_fixed: bool,
         replace_tokens_list: List[ReplaceTokensRecord],
@@ -707,6 +714,11 @@ class FileScanHelper:
             )
 
         # did_fix = False
+        if fix_debug:
+            print("TOKENS-----")
+            for i, j in enumerate(actual_tokens):
+                print(f" {i:02}:{ParserHelper.make_value_visible(j)}")
+            print("TOKENS-----")
         for next_replace_index in replace_tokens_list:
             did_any_tokens_get_fixed = True
             # if fix_debug and not did_fix:
@@ -718,16 +730,16 @@ class FileScanHelper:
             # if fix_debug:
             #     print(f" {ParserHelper.make_value_visible(next_replace_index)}")
             self.__apply_replacement_fix(context, next_replace_index, actual_tokens)
-        # if did_fix and fix_debug:
-        #     print("AFTER-XXX-----")
-        #     for i,j in enumerate(actual_tokens):
-        #         print(f" {i:02}:{ParserHelper.make_value_visible(j)}")
-        #     print("AFTER-XXX-----")
+        if fix_debug:
+            print("TOKENS-----")
+            for i, j in enumerate(actual_tokens):
+                print(f" {i:02}:{ParserHelper.make_value_visible(j)}")
+            print("TOKENS-----")
         return did_any_tokens_get_fixed
 
     # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments,too-many-locals
+    # pylint: disable=too-many-arguments
     def __process_file_fix_tokens_apply_fixes(
         self,
         context: PluginScanContext,
@@ -739,6 +751,36 @@ class FileScanHelper:
         replace_tokens_list: List[ReplaceTokensRecord],
     ) -> Tuple[str, List[MarkdownToken], bool]:
 
+        did_any_tokens_get_fixed = self.__process_file_fix_tokens_apply_fixes_inner(
+            context, fix_debug, actual_tokens, replace_tokens_list, fix_token_map
+        )
+
+        transformer = TransformToMarkdown()
+        markdown_from_tokens = transformer.transform(actual_tokens)
+
+        if fix_debug:
+            print(f"MARKDOWN:{ParserHelper.make_value_visible(markdown_from_tokens)}")
+        with tempfile.NamedTemporaryFile() as temp_output:
+            temporary_file_name = temp_output.name
+        with open(temporary_file_name, "wt", encoding="utf-8") as source_file:
+            source_file.write(markdown_from_tokens)
+            next_file = temporary_file_name
+            actual_tokens.clear()
+
+        self.__print_file_in_debug_mode(fix_debug, fix_file_debug, temporary_file_name)
+        return next_file, actual_tokens, did_any_tokens_get_fixed
+
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments
+    def __process_file_fix_tokens_apply_fixes_inner(
+        self,
+        context: PluginScanContext,
+        fix_debug: bool,
+        actual_tokens: List[MarkdownToken],
+        replace_tokens_list: List[ReplaceTokensRecord],
+        fix_token_map: Dict[MarkdownToken, List[FixTokenRecord]],
+    ) -> bool:
         fixed_token_indices: Dict[int, List[str]] = {}
         replaced_token_indices: Dict[int, str] = {}
 
@@ -760,7 +802,8 @@ class FileScanHelper:
                 print(f" AFTER:{ParserHelper.make_value_visible(token_instance)}")
         if fix_debug:
             print("--")
-        did_any_tokens_get_fixed = self.__xx(
+        did_any_tokens_get_fixed = self.__apply_replacements(
+            fix_debug,
             context,
             did_any_tokens_get_fixed,
             replace_tokens_list,
@@ -772,21 +815,9 @@ class FileScanHelper:
             print("--")
 
         did_any_tokens_get_fixed = did_any_tokens_get_fixed or bool(fix_token_map)
+        return did_any_tokens_get_fixed
 
-        transformer = TransformToMarkdown()
-        markdown_from_tokens = transformer.transform(actual_tokens)
-
-        with tempfile.NamedTemporaryFile() as temp_output:
-            temporary_file_name = temp_output.name
-        with open(temporary_file_name, "wt", encoding="utf-8") as source_file:
-            source_file.write(markdown_from_tokens)
-            next_file = temporary_file_name
-            actual_tokens.clear()
-
-        self.__print_file_in_debug_mode(fix_debug, fix_file_debug, temporary_file_name)
-        return next_file, actual_tokens, did_any_tokens_get_fixed
-
-    # pylint: enable=too-many-arguments,too-many-locals
+    # pylint: enable=too-many-arguments
 
     def __print_file_in_debug_mode(
         self, fix_debug: bool, fix_file_debug: bool, next_file: str

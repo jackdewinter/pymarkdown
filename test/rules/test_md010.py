@@ -4,6 +4,7 @@ Module to provide tests related to the MD010 rule.
 
 import os
 from test.rules.utils import (
+    calculate_fix_tests,
     execute_configuration_test,
     execute_fix_test,
     execute_query_configuration_test,
@@ -64,13 +65,13 @@ a   bb  ccc ddd
     pluginRuleTest(
         "bad_simple_text_with_tab_fix_and_debug",
         source_file_name=f"{source_path}bad_simple_text_with_tab.md",
-        use_fix_debug=True,
         source_file_contents="""before-tab\tafter-tab
 before-tab\tafter-tab
 before-tab\tafter-tab\tafter-another
 a\tbb\tccc\tddd
 """,
         scan_expected_return_code=1,
+        use_fix_debug=True,
         scan_expected_output="""{temp_source_path}:1:11: MD010: Hard tabs [Column: 11] (no-hard-tabs)
 {temp_source_path}:2:11: MD010: Hard tabs [Column: 11] (no-hard-tabs)
 {temp_source_path}:3:11: MD010: Hard tabs [Column: 11] (no-hard-tabs)
@@ -610,10 +611,6 @@ a line of text  with    tabs
 """,
     ),
 ]
-fixTests = []
-for i in scanTests:
-    if i.fix_expected_file_contents:
-        fixTests.append(i)
 
 
 @pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
@@ -624,7 +621,9 @@ def test_md010_scan(test: pluginRuleTest) -> None:
     execute_scan_test(test, "md010")
 
 
-@pytest.mark.parametrize("test", fixTests, ids=id_test_plug_rule_fn)
+@pytest.mark.parametrize(
+    "test", calculate_fix_tests(scanTests), ids=id_test_plug_rule_fn
+)
 def test_md010_fix(test: pluginRuleTest) -> None:
     """
     Execute a parameterized fix test for plugin md001.

@@ -5,6 +5,7 @@ Module to provide tests related to the MD005 rule.
 import os
 from test.rules.utils import (
     build_fix_and_clash_lists,
+    calculate_fix_tests,
     execute_fix_test,
     execute_query_configuration_test,
     execute_scan_test,
@@ -944,7 +945,9 @@ def test_md005_scan(test: pluginRuleTest) -> None:
     execute_scan_test(test, "md005")
 
 
-@pytest.mark.parametrize("test", fixTests, ids=id_test_plug_rule_fn)
+@pytest.mark.parametrize(
+    "test", calculate_fix_tests(scanTests), ids=id_test_plug_rule_fn
+)
 def test_md005_fix(test: pluginRuleTest) -> None:
     """
     Execute a parameterized fix test for plugin md001.

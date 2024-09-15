@@ -2009,7 +2009,7 @@ def test_nested_three_unordered_block_ordered_with_blank_fenced_bc():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
