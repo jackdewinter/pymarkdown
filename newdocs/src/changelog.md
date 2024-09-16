@@ -30,6 +30,12 @@
 - [Issue 1179](https://github.com/jackdewinter/pymarkdown/issues/1179)
     - fixed rehydrator issue with reyhdrating after bqs with remove token being
       blank line
+- [Issue 1202](https://github.com/jackdewinter/pymarkdown/issues/1202)
+    - fixed rehydrator issue with paragraph continues
+- [Issue 1203](https://github.com/jackdewinter/pymarkdown/issues/1203)
+    - parser issue with fenced code block closing right away
+- [Issue 1204](https://github.com/jackdewinter/pymarkdown/issues/1204)
+    - rehydration/fix issue with blank lines causing off by one error
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed

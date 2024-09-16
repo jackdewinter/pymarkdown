@@ -496,8 +496,10 @@ def test_nested_three_block_max_block_max_ordered_max_empty_with_space_drop_orde
     """
 
     # Arrange
-    source_markdown = """   >    >    1. 
-   >    >    item"""
+    source_markdown = """   >    >    1.\a
+   >    >    item""".replace(
+        "\a", " "
+    )
     expected_tokens = [
         "[block-quote(1,4):   :   > ]",
         "[block-quote(1,9)::   >    > \n   >    > ]",

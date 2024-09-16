@@ -62,7 +62,7 @@ def test_nested_three_block_nl_ordered_nl_block_x():
         "[BLANK(1,2):]",
         "[olist(2,3):.:1:5::\n]",
         "[BLANK(2,5):]",
-        "[block-quote(3,4)::> \n>    > ]",
+        "[block-quote(3,6)::> \n>    > ]",
         "[para(3,8):\n]",
         "[text(3,8):list\nitem::\n]",
         "[end-para:::True]",
@@ -192,7 +192,7 @@ def test_nested_three_block_nl_ordered_nl_block_no_bq3():
         "[BLANK(1,2):]",
         "[olist(2,3):.:1:5::\n]",
         "[BLANK(2,5):]",
-        "[block-quote(3,4)::> \n]",
+        "[block-quote(3,6)::> \n]",
         "[para(3,8):\n     ]",
         "[text(3,8):list\n\a>\a&gt;\a item::\n]",
         "[end-para:::True]",
@@ -451,7 +451,7 @@ def test_nested_three_block_skip_nl_ordered_nl_block():
         "[BLANK(1,2):]",
         "[olist(2,3):.:1:5::\n]",
         "[BLANK(2,5):]",
-        "[block-quote(3,4)::> \n]",
+        "[block-quote(3,6)::> \n]",
         "[para(3,8):\n     ]",
         "[text(3,8):list\n\a>\a&gt;\a item::\n]",
         "[end-para:::True]",
@@ -736,7 +736,7 @@ def test_nested_three_block_nl_ordered_nl_block_skip():
         "[BLANK(1,2):]",
         "[olist(2,3):.:1:5::\n   þ]",
         "[BLANK(2,5):]",
-        "[block-quote(3,4)::> \n> ]",
+        "[block-quote(3,6)::> \n> ]",
         "[para(3,8):\n  ]",
         "[text(3,8):list\nitem::\n]",
         "[end-para:::True]",
@@ -863,7 +863,7 @@ def test_nested_three_block_nl_ordered_nl_block_skip_no_bq3():
         "[BLANK(1,2):]",
         "[olist(2,3):.:1:5::\n]",
         "[BLANK(2,5):]",
-        "[block-quote(3,4)::> \n]",
+        "[block-quote(3,6)::> \n]",
         "[para(3,8):\n       ]",
         "[text(3,8):list\nitem::\n]",
         "[end-para:::True]",
@@ -1114,7 +1114,7 @@ def test_nested_three_block_skip_nl_ordered_nl_block_skip():
         "[BLANK(1,2):]",
         "[olist(2,3):.:1:5::\n]",
         "[BLANK(2,5):]",
-        "[block-quote(3,4)::> \n]",
+        "[block-quote(3,6)::> \n]",
         "[para(3,8):\n       ]",
         "[text(3,8):list\nitem::\n]",
         "[end-para:::True]",
@@ -1773,7 +1773,7 @@ item</li>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm

@@ -2749,7 +2749,7 @@ that</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6283,7 +6283,7 @@ list 3</li>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6352,7 +6352,7 @@ list 3</li>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -9735,7 +9735,7 @@ list 2</li>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -9916,7 +9916,7 @@ def test_extra_044lex5b():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -10087,7 +10087,7 @@ block 2</p>
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -10539,7 +10539,7 @@ def test_extra_044mb():
 
 
 @pytest.mark.gfm
-def test_extra_044mcx():
+def test_extra_044mcxx():
     """
     TBD
     """
@@ -10572,7 +10572,40 @@ this</li>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_extra_044mcxa():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """+  list
+  this
++ that
+"""
+    expected_tokens = [
+        "[ulist(1,1):+::3::\n]",
+        "[para(1,4):\n  ]",
+        "[text(1,4):list\nthis::\n]",
+        "[end-para:::True]",
+        "[li(3,1):2::]",
+        "[para(3,3):]",
+        "[text(3,3):that:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>list
+this</li>
+<li>that</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
@@ -10720,7 +10753,7 @@ this</li>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
@@ -10896,7 +10929,7 @@ def test_extra_044mcp():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -11306,7 +11339,7 @@ list 2</li>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -12185,7 +12218,7 @@ block 2</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -12251,7 +12284,7 @@ block 2</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -12311,7 +12344,7 @@ block 2</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -12497,7 +12530,7 @@ block 2</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -12561,7 +12594,7 @@ block 2</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -12625,7 +12658,7 @@ block 2</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -12688,7 +12721,7 @@ block 2</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -12749,7 +12782,7 @@ block 2</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -12811,7 +12844,7 @@ list 3</li>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -12862,7 +12895,7 @@ list 2</h2>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -12935,7 +12968,7 @@ def test_extra_046b():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -13205,7 +13238,283 @@ list 2</li>
 </blockquote>"""
 
     # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+
+
+@pytest.mark.gfm
+def test_extra_046cc2():
+    """
+    TBD
+    bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_sub1
+    """
+
+    # Arrange
+    source_markdown = """> +
+>   + -----
+>     + list 1
+>       list 2
+>     + list 3
+>     ```block
+>     A code block
+>     ```
+>     -----
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4::]",
+        "[BLANK(1,4):]",
+        "[ulist(2,5):+::6:  :    \n    \n    ]",
+        "[tbreak(2,7):-::-----]",
+        "[ulist(3,7):+::8:    :      \n    ]",
+        "[para(3,9):\n]",
+        "[text(3,9):list 1\nlist 2::\n]",
+        "[end-para:::True]",
+        "[li(5,7):8:    :]",
+        "[para(5,9):]",
+        "[text(5,9):list 3:]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[fcode-block(6,7):`:3:block:::::]",
+        "[text(7,5):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(9,7):-::-----]",
+        "[end-ulist:::True]",
+        "[li(10,3):4::]",
+        "[para(10,5):]",
+        "[text(10,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(11,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<ul>
+<li>
+<hr />
+<ul>
+<li>list 1
+list 2</li>
+<li>list 3</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+</ul>
+</li>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_extra_046cc3():
+    """
+    TBD
+    bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_sub1
+    """
+
+    # Arrange
+    source_markdown = """> +
+>   + -----
+>     + list 1
+>       list 2
+>     + list 3
+>
+>     ```block
+>     A code block
+>     ```
+>
+>     -----
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n>\n> \n> \n> \n>\n> \n> ]",
+        "[ulist(1,3):+::4::]",
+        "[BLANK(1,4):]",
+        "[ulist(2,5):+::6:  :    \n    \n\n    ]",
+        "[tbreak(2,7):-::-----]",
+        "[ulist(3,7):+::8:    :      \n\n    ]",
+        "[para(3,9):\n]",
+        "[text(3,9):list 1\nlist 2::\n]",
+        "[end-para:::True]",
+        "[li(5,7):8:    :]",
+        "[para(5,9):]",
+        "[text(5,9):list 3:]",
+        "[end-para:::True]",
+        "[BLANK(6,2):]",
+        "[end-ulist:::True]",
+        "[fcode-block(7,7):`:3:block:::::]",
+        "[text(8,5):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(10,2):]",
+        "[tbreak(11,7):-::-----]",
+        "[end-ulist:::True]",
+        "[li(12,3):4::]",
+        "[para(12,5):]",
+        "[text(12,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(13,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<ul>
+<li>
+<hr />
+<ul>
+<li>list 1
+list 2</li>
+<li>list 3</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+</ul>
+</li>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+
+
+@pytest.mark.gfm
+def test_extra_046cc4():
+    """
+    TBD
+    bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_sub2
+    """
+
+    # Arrange
+    source_markdown = """> +
+>   + -----
+>     + list 1
+>       list 2
+>     ```block
+>     A code block
+>     ```
+>     -----
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4::]",
+        "[BLANK(1,4):]",
+        "[ulist(2,5):+::6:  :    \n    \n    ]",
+        "[tbreak(2,7):-::-----]",
+        "[ulist(3,7):+::8:    :      \n    ]",
+        "[para(3,9):\n]",
+        "[text(3,9):list 1\nlist 2::\n]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[fcode-block(5,7):`:3:block:::::]",
+        "[text(6,5):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(8,7):-::-----]",
+        "[end-ulist:::True]",
+        "[li(9,3):4::]",
+        "[para(9,5):]",
+        "[text(9,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(10,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<ul>
+<li>
+<hr />
+<ul>
+<li>list 1
+list 2</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+</ul>
+</li>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_046cc5():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """> +
+>   + list 1
+>     list 2
+>   + list 3
+>   ```block
+>   A code block
+>   ```
+>   -----
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4::  \n  \n  \n]",
+        "[BLANK(1,4):]",
+        "[ulist(2,5):+::6:  :    \n  ]",
+        "[para(2,7):\n]",
+        "[text(2,7):list 1\nlist 2::\n]",
+        "[end-para:::True]",
+        "[li(4,5):6:  :]",
+        "[para(4,7):]",
+        "[text(4,7):list 3:]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[fcode-block(5,5):`:3:block:::::]",
+        "[text(6,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(8,5):-::-----]",
+        "[li(9,3):4::]",
+        "[para(9,5):]",
+        "[text(9,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(10,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<ul>
+<li>list 1
+list 2</li>
+<li>list 3</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
@@ -13894,7 +14203,7 @@ def test_extra_046g2():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
@@ -14375,7 +14684,7 @@ def test_extra_046l1():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -15573,6 +15882,378 @@ A code block
 <blockquote>
 <p>block quote</p>
 </blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_047a0():
+    """
+    TBD
+    bad_fenced_block_in_list_in_list_with_previous_inner_list
+    """
+
+    # Arrange
+    source_markdown = """+ + list 1
++ + + list 2.1
+      list 2.2
+    ```block
+    A code block
+    ```
+  + another list
+"""
+    expected_tokens = [
+        "[ulist(1,1):+::2:]",
+        "[ulist(1,3):+::4:  ]",
+        "[para(1,5):]",
+        "[text(1,5):list 1:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[li(2,1):2::]",
+        "[ulist(2,3):+::4:  :    \n    \n    \n]",
+        "[ulist(2,5):+::6:    :      \n]",
+        "[para(2,7):\n]",
+        "[text(2,7):list 2.1\nlist 2.2::\n]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[fcode-block(4,5):`:3:block:::::]",
+        "[text(5,5):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[li(7,3):4:  :]",
+        "[para(7,5):]",
+        "[text(7,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(8,1):]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<ul>
+<li>list 1</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>
+<ul>
+<li>list 2.1
+list 2.2</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+</li>
+<li>another list</li>
+</ul>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_047a1():
+    """
+    TBD
+    bad_fenced_block_in_list_in_list_with_previous_inner_list
+    """
+
+    # Arrange
+    source_markdown = """+ + list 1
++ + + list 2.1
+      list 2.2
+
+    ```block
+    A code block
+    ```
+
+  + another list
+"""
+    expected_tokens = [
+        "[ulist(1,1):+::2:]",
+        "[ulist(1,3):+::4:  ]",
+        "[para(1,5):]",
+        "[text(1,5):list 1:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[li(2,1):2::]",
+        "[ulist(2,3):+::4:  :    \n    \n    \n\n]",
+        "[ulist(2,5):+::6:    :      \n]",
+        "[para(2,7):\n]",
+        "[text(2,7):list 2.1\nlist 2.2::\n]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+        "[fcode-block(5,5):`:3:block:::::]",
+        "[text(6,5):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(8,1):]",
+        "[li(9,3):4:  :]",
+        "[para(9,5):]",
+        "[text(9,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(10,1):]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<ul>
+<li>list 1</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>
+<ul>
+<li>list 2.1
+list 2.2</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+</li>
+<li>
+<p>another list</p>
+</li>
+</ul>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_047b0():
+    """
+    TBD
+    bad_fenced_block_in_list_with_previous_inner_list
+    """
+
+    # Arrange
+    source_markdown = """+ list
+  + inner list
+    couple of lines
+  ```block
+  A code block
+  ```
++ another list
+"""
+    expected_tokens = [
+        "[ulist(1,1):+::2::  \n  \n  \n]",
+        "[para(1,3):]",
+        "[text(1,3):list:]",
+        "[end-para:::True]",
+        "[ulist(2,3):+::4:  :    ]",
+        "[para(2,5):\n]",
+        "[text(2,5):inner list\ncouple of lines::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[fcode-block(4,3):`:3:block:::::]",
+        "[text(5,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[li(7,1):2::]",
+        "[para(7,3):]",
+        "[text(7,3):another list:]",
+        "[end-para:::True]",
+        "[BLANK(8,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>list
+<ul>
+<li>inner list
+couple of lines</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+</li>
+<li>another list</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_047b1():
+    """
+    TBD
+    bad_fenced_block_in_list_with_previous_inner_list
+    """
+
+    # Arrange
+    source_markdown = """+ list
+  + inner list
+    couple of lines
+
+  ```block
+  A code block
+  ```
+
++ another list
+"""
+    expected_tokens = [
+        "[ulist(1,1):+::2::  \n  \n  \n\n]",
+        "[para(1,3):]",
+        "[text(1,3):list:]",
+        "[end-para:::True]",
+        "[ulist(2,3):+::4:  :    \n]",
+        "[para(2,5):\n]",
+        "[text(2,5):inner list\ncouple of lines::\n]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+        "[fcode-block(5,3):`:3:block:::::]",
+        "[text(6,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(8,1):]",
+        "[li(9,1):2::]",
+        "[para(9,3):]",
+        "[text(9,3):another list:]",
+        "[end-para:::True]",
+        "[BLANK(10,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>list</p>
+<ul>
+<li>inner list
+couple of lines</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+</li>
+<li>
+<p>another list</p>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_047c0():
+    """
+    TBD
+    bad_fenced_block_in_list_with_previous_inner_list_with_thematics
+    """
+
+    # Arrange
+    source_markdown = """+ list
+  + inner list
+    couple of lines
+  -----
+  ```block
+  A code block
+  ```
+  -----
++ another list
+"""
+    expected_tokens = [
+        "[ulist(1,1):+::2::  \n  \n  \n  \n  \n]",
+        "[para(1,3):]",
+        "[text(1,3):list:]",
+        "[end-para:::True]",
+        "[ulist(2,3):+::4:  :    ]",
+        "[para(2,5):\n]",
+        "[text(2,5):inner list\ncouple of lines::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[tbreak(4,3):-::-----]",
+        "[fcode-block(5,3):`:3:block:::::]",
+        "[text(6,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(8,3):-::-----]",
+        "[li(9,1):2::]",
+        "[para(9,3):]",
+        "[text(9,3):another list:]",
+        "[end-para:::True]",
+        "[BLANK(10,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>list
+<ul>
+<li>inner list
+couple of lines</li>
+</ul>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+<li>another list</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_047c1():
+    """
+    TBD
+    bad_fenced_block_in_list_in_list
+    """
+
+    # Arrange
+    source_markdown = """+ list
+  + inner list
+    couple of lines
+  -----
+
+  ```block
+  A code block
+  ```
+
+  -----
++ another list
+"""
+    expected_tokens = [
+        "[ulist(1,1):+::2::  \n\n  \n  \n  \n\n  \n]",
+        "[para(1,3):]",
+        "[text(1,3):list:]",
+        "[end-para:::True]",
+        "[ulist(2,3):+::4:  :    ]",
+        "[para(2,5):\n]",
+        "[text(2,5):inner list\ncouple of lines::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[tbreak(4,3):-::-----]",
+        "[BLANK(5,1):]",
+        "[fcode-block(6,3):`:3:block:::::]",
+        "[text(7,1):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(9,1):]",
+        "[tbreak(10,3):-::-----]",
+        "[li(11,1):2::]",
+        "[para(11,3):]",
+        "[text(11,3):another list:]",
+        "[end-para:::True]",
+        "[BLANK(12,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>list</p>
+<ul>
+<li>inner list
+couple of lines</li>
+</ul>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+<li>
+<p>another list</p>
+</li>
+</ul>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
