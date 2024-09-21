@@ -51,6 +51,7 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
         self.weird_kludge_three: bool = False
         self.weird_kludge_four: Optional[Tuple[int, int, int, str]] = None
         self.weird_kludge_five = False
+        self.weird_kludge_six = False
 
     # pylint: disable=protected-access
     @staticmethod

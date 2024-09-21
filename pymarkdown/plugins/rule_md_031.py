@@ -31,6 +31,7 @@ class ClosedContainerAdjustments:
 
     adjustment: int = 0
     count: int = 0
+    count2: int = 0
 
 
 @dataclass(frozen=True)
@@ -159,9 +160,14 @@ class RuleMd031(RulePlugin):
             token_line_number = setext_token.original_line_number
         else:
             token_line_number = token.line_number
+
         leading_space_insert_index = (
             token_line_number - block_quote_token.line_number
-        ) - self.__closed_container_adjustments[-1].adjustment
+        ) - (
+            self.__closed_container_adjustments[-1].adjustment
+            - self.__closed_container_adjustments[-1].count2
+        )
+
         former_item_leading_space = split_leading_space[
             leading_space_insert_index
         ].rstrip()
@@ -205,7 +211,7 @@ class RuleMd031(RulePlugin):
             container_index -= 1
         if container_index >= 0:
 
-            block_quote_index, index, ss = self.__xxxx(
+            block_quote_index, index, ss = self.__fix_spacing_list_prefix(
                 token, container_index, initial_index
             )
 
@@ -225,45 +231,53 @@ class RuleMd031(RulePlugin):
             and not self.__removed_container_token_stack.is_block_quote_start
             # and container_index
         ):
-            removed_list_token = cast(
-                ListStartMarkdownToken, self.__removed_container_token_stack
-            )
-            assert removed_list_token.leading_spaces is not None
-            split_spaces = removed_list_token.leading_spaces.split("\n")
-            split_spaces.append("")
-            self.register_fix_token_request(
-                context,
-                self.__removed_container_token_stack,
-                "next_token",
-                "leading_spaces",
-                "\n".join(split_spaces),
-            )
-            # xx = len(self.__closed_container_adjustments) - 1
-            # while xx >= 0 and not self.__container_token_stack[xx].is_list_start:
-            #     xx -= 1
-            # assert xx >= 0
-            # if xx > 0:
-            #     self.__closed_container_adjustments[xx].adjustment += 1
+            self.__fix_spacing_list_remove_list(context)
         else:
-            if self.__closed_container_adjustments[-1].adjustment:
-                adjust = 1
-            else:
-                adjust = self.__calculate_adjust(initial_index, container_index)
-            if token.is_setext_heading:
-                setext_token = cast(SetextHeadingMarkdownToken, token)
-                token_line_number = setext_token.original_line_number
-            else:
-                token_line_number = token.line_number
-            index = (
-                token_line_number
-                - self.__container_token_stack[initial_index].line_number
-            )
-            index -= self.__closed_container_adjustments[-1].adjustment
-            self.__container_adjustments[initial_index].append(
-                PendingContainerAdjustment(index - adjust, "")
+            self.__fix_spacing_list_not_remove_list(
+                initial_index, container_index, token
             )
 
-    def __xxxx(
+    def __fix_spacing_list_remove_list(self, context: PluginScanContext) -> None:
+        removed_list_token = cast(
+            ListStartMarkdownToken, self.__removed_container_token_stack
+        )
+        assert removed_list_token.leading_spaces is not None
+        split_spaces = removed_list_token.leading_spaces.split("\n")
+        split_spaces_length = len(split_spaces)
+        if split_spaces_length > 1:
+            split_spaces.insert(split_spaces_length - 1, "")
+        else:
+            split_spaces.append("")
+        assert self.__removed_container_token_stack is not None
+        self.register_fix_token_request(
+            context,
+            self.__removed_container_token_stack,
+            "next_token",
+            "leading_spaces",
+            "\n".join(split_spaces),
+        )
+
+    def __fix_spacing_list_not_remove_list(
+        self, initial_index: int, container_index: int, token: MarkdownToken
+    ) -> None:
+        if self.__closed_container_adjustments[-1].adjustment:
+            adjust = 2 if container_index >= 0 else 1
+        else:
+            adjust = self.__calculate_adjust(initial_index, container_index)
+        if token.is_setext_heading:
+            setext_token = cast(SetextHeadingMarkdownToken, token)
+            token_line_number = setext_token.original_line_number
+        else:
+            token_line_number = token.line_number
+        index = (
+            token_line_number - self.__container_token_stack[initial_index].line_number
+        )
+        index -= self.__closed_container_adjustments[-1].adjustment
+        self.__container_adjustments[initial_index].append(
+            PendingContainerAdjustment(index - adjust, "")
+        )
+
+    def __fix_spacing_list_prefix(
         self,
         token: MarkdownToken,
         container_index: int,
@@ -522,6 +536,13 @@ class RuleMd031(RulePlugin):
                     stack_index
                 ].adjustment += line_number_delta
                 self.__closed_container_adjustments[stack_index].count += 1
+                if (
+                    self.__container_token_stack[-1].is_block_quote_start
+                    and cast(
+                        BlockQuoteMarkdownToken, self.__container_token_stack[-1]
+                    ).weird_kludge_six
+                ):
+                    self.__closed_container_adjustments[stack_index].count2 += 1
                 break
 
     def __process_pending_container_end_list(self, token: MarkdownToken) -> None:

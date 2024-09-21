@@ -574,6 +574,10 @@ class BlockQuoteNonFencedHelper:
             adjusted_removed_text,
         )
 
+        if not block_quote_token.weird_kludge_five:
+            BlockQuoteNonFencedHelper.__do_block_quote_leading_spaces_adjustments_adjust_bleading_kludge(
+                parser_state, block_quote_token, stack_index, adjusted_removed_text
+            )
         POGGER.debug(
             "__do_block_quote_leading_spaces_adjustments_adjust_bleading>>block_token>>$",
             block_quote_token,
@@ -612,6 +616,42 @@ class BlockQuoteNonFencedHelper:
         POGGER.debug("__hbqs>>bq>>$", block_quote_token)
 
     # pylint: enable=too-many-arguments
+
+    @staticmethod
+    def __do_block_quote_leading_spaces_adjustments_adjust_bleading_kludge(
+        parser_state: ParserState,
+        block_quote_token: BlockQuoteMarkdownToken,
+        stack_index: int,
+        adjusted_removed_text: str,
+    ) -> None:
+
+        assert block_quote_token.leading_text_index == 0
+        search_index = stack_index - 1
+        while (
+            search_index > 0
+            and not parser_state.token_stack[search_index].is_block_quote
+        ):
+            search_index -= 1
+        if search_index and search_index + 1 == stack_index:
+            search_token = parser_state.token_stack[
+                search_index
+            ].matching_markdown_token
+            assert search_token is not None
+            if search_token.line_number != block_quote_token.line_number:
+                found_token = parser_state.token_stack[
+                    search_index
+                ].matching_markdown_token
+                assert found_token is not None
+                bq_token = cast(BlockQuoteMarkdownToken, found_token)
+                assert bq_token.bleading_spaces is not None
+                split_spaces = bq_token.bleading_spaces.split("\n")
+                if len(split_spaces) > 1:
+                    last_split_space = split_spaces[-1]
+                    if (
+                        adjusted_removed_text != last_split_space
+                        and adjusted_removed_text.startswith(last_split_space)
+                    ):
+                        block_quote_token.weird_kludge_six = True
 
     @staticmethod
     def __check_for_kludge(
