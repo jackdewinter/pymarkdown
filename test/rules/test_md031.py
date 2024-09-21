@@ -1098,6 +1098,8 @@ A code block
 {temp_source_path}:6:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
+        # use_fix_debug=True,
+        # use_debug=True,
         fix_expected_file_contents="""+ list
   + inner list
     couple of lines
@@ -1126,6 +1128,7 @@ A code block
 {temp_source_path}:7:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
+        # use_fix_debug=True,
         fix_expected_file_contents="""+ list
   + inner list
     couple of lines
