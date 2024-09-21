@@ -268,23 +268,14 @@ class RuleMd031(RulePlugin):
             setext_token = cast(SetextHeadingMarkdownToken, token)
             token_line_number = setext_token.original_line_number
         else:
-            if self.__closed_container_adjustments[-1].adjustment:
-                adjust = 1
-            else:
-                adjust = self.__calculate_adjust(initial_index, container_index)
-            if token.is_setext_heading:
-                setext_token = cast(SetextHeadingMarkdownToken, token)
-                token_line_number = setext_token.original_line_number
-            else:
-                token_line_number = token.line_number
-            index = (
-                token_line_number
-                - self.__container_token_stack[initial_index].line_number
-            )
-            index -= self.__closed_container_adjustments[-1].adjustment
-            self.__container_adjustments[initial_index].append(
-                PendingContainerAdjustment(index - adjust, "")
-            )
+            token_line_number = token.line_number
+        index = (
+            token_line_number - self.__container_token_stack[initial_index].line_number
+        )
+        index -= self.__closed_container_adjustments[-1].adjustment
+        self.__container_adjustments[initial_index].append(
+            PendingContainerAdjustment(index - adjust, "")
+        )
 
     def __fix_spacing_list_prefix(
         self,
