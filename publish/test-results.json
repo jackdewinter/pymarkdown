@@ -1300,10 +1300,10 @@
         },
         {
             "name": "test.rules.test_md027",
-            "totalTests": 115,
+            "totalTests": 117,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 1,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -1364,10 +1364,10 @@
         },
         {
             "name": "test.rules.test_md031",
-            "totalTests": 286,
+            "totalTests": 288,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 22,
+            "skippedTests": 9,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -1620,7 +1620,7 @@
         },
         {
             "name": "test.test_markdown_extra",
-            "totalTests": 322,
+            "totalTests": 325,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 1,

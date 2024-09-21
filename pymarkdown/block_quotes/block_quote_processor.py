@@ -703,7 +703,9 @@ class BlockQuoteProcessor:
         assert character_after_block_quote == " ", "below covered in disabled test"
         # if character_after_block_quote == " ":
         last_block_quote_index += 1
-        # character_after_block_quote = parser_state.original_line_to_parse[last_block_quote_index]
+        #     character_after_block_quote = parser_state.original_line_to_parse[
+        #         last_block_quote_index
+        #     ]
 
         text_removed_by_container = parser_state.original_line_to_parse[
             :last_block_quote_index

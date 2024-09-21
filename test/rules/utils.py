@@ -49,6 +49,7 @@ class pluginRuleTest:
     fix_expected_error: str = ""
     add_plugin_path: str = ""
     is_mix_test: bool = True
+    mark_scan_as_skipped: bool = False
     mark_fix_as_skipped: bool = False
 
 
@@ -157,6 +158,13 @@ def execute_scan_test(test: pluginRuleTest, host_rule_id: str):
             disabled_rules.sort()
             found_rules.sort()
             assert_if_lists_different(disabled_rules, found_rules)
+
+
+def calculate_scan_tests(scanTests: List[pluginRuleTest]) -> List[pluginRuleTest]:
+    return [
+        (pytest.param(i, marks=pytest.mark.skip) if i.mark_scan_as_skipped else i)
+        for i in scanTests
+    ]
 
 
 def calculate_fix_tests(scanTests: List[pluginRuleTest]) -> List[pluginRuleTest]:
