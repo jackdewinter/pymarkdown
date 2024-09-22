@@ -321,12 +321,17 @@ class RuleMd031(RulePlugin):
         return block_quote_index, index, None
 
     def __calculate_adjust(self, initial_index: int, container_index: int) -> int:
-        if (
-            initial_index >= 2
-            and not container_index
-            and self.__closed_container_adjustments[-1].adjustment
-        ):
-            return 1
+        assert (
+            initial_index < 2
+            or container_index
+            or not self.__closed_container_adjustments[-1].adjustment
+        )
+        # if (
+        #     initial_index >= 2
+        #     and not container_index
+        #     and self.__closed_container_adjustments[-1].adjustment
+        # ):
+        #     return 1
         return (
             0
             if initial_index >= 1
@@ -351,11 +356,12 @@ class RuleMd031(RulePlugin):
                 removed_list_token = cast(
                     ListStartMarkdownToken, self.__removed_container_token_stack
                 )
-                if removed_list_token.leading_spaces is not None:
-                    split_spaces = removed_list_token.leading_spaces.split("\n")
-                    split_spaces.append("")
-                else:
-                    split_spaces = [""]
+                assert removed_list_token.leading_spaces is None
+                # if removed_list_token.leading_spaces is not None:
+                #     split_spaces = removed_list_token.leading_spaces.split("\n")
+                #     split_spaces.append("")
+                # else:
+                split_spaces = [""]
                 self.register_fix_token_request(
                     context,
                     self.__removed_container_token_stack,
