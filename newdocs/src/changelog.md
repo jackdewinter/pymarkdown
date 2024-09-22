@@ -7,6 +7,7 @@
 
 - [Issue 1212](https://github.com/jackdewinter/pymarkdown/issues/1212)
     - added cases to Md031 for SetExt
+    - added extra test cases and resolution to other cases
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
