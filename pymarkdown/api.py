@@ -4,6 +4,8 @@ of using a command line.
 """
 
 import argparse
+import os
+import tempfile
 from dataclasses import dataclass
 from typing import Any, List, Optional
 
@@ -255,7 +257,7 @@ class PyMarkdownApi:
             )
 
         if return_code != 0:
-            self.__generate_exception(this_presentation)
+            self.__generate_scan_exception(this_presentation)
         return PyMarkdownListPathResult(this_presentation.pso[0].split("\n"))
 
     def scan_path(
@@ -296,6 +298,44 @@ class PyMarkdownApi:
             )
         return self.__handle_scan_results(return_code, this_presentation)
 
+    def fix_path(
+        self,
+        path_to_scan: str,
+        recurse_if_directory: bool = False,
+        alternate_extensions: Any = None,
+    ) -> "PyMarkdownFixResult":
+        """
+        Scan the provided path for markdown files to fix.
+        """
+        self.__verify_string_argument_not_empty("path_to_scan", path_to_scan)
+
+        scan_arguments = self.__build_common_arguments("fix")
+        if recurse_if_directory:
+            scan_arguments.append("--recurse")
+        if alternate_extensions:
+            self.__verify_string_argument_alternate_extensions(
+                "alternate_extensions", alternate_extensions
+            )
+            scan_arguments.append("-ae")
+            scan_arguments.append(alternate_extensions)
+        scan_arguments.append(path_to_scan)
+
+        this_presentation = _ApiPresentation()
+        scanner_instance = PyMarkdownLint(
+            presentation=this_presentation,
+            show_stack_trace=self.__enable_stack_trace,
+            inherit_logging=self.__inherit_logging,
+        )
+        return_code = 0
+        try:
+            scanner_instance.main(scan_arguments)
+        except SystemExit as this_exception:
+            # https://github.com/python/typeshed/issues/8513#issue-1333671093
+            return_code = (
+                int(this_exception.code) if isinstance(this_exception.code, int) else 99
+            )
+        return self.__handle_fix_results(return_code, this_presentation)
+
     def __handle_scan_results(
         self, return_code: int, this_presentation: "_ApiPresentation"
     ) -> "PyMarkdownScanPathResult":
@@ -303,10 +343,20 @@ class PyMarkdownApi:
             not this_presentation.pso
         ), "should not display for scan_path, but for ext ops and plugin ops"
         if return_code != 0:
-            self.__generate_exception(this_presentation)
+            self.__generate_scan_exception(this_presentation)
         return PyMarkdownScanPathResult(
             this_presentation.scan_failures, this_presentation.pragma_errors
         )
+
+    def __handle_fix_results(
+        self, return_code: int, this_presentation: "_ApiPresentation"
+    ) -> "PyMarkdownFixResult":
+        assert (
+            not this_presentation.pso
+        ), "should not display for scan_path, but for ext ops and plugin ops"
+        if return_code not in [0, 3]:
+            raise PyMarkdownApiException(this_presentation.pse[-1].strip("\n"))
+        return PyMarkdownFixResult(this_presentation.files_fixed)
 
     def scan_string(
         self,
@@ -336,7 +386,50 @@ class PyMarkdownApi:
             )
         return self.__handle_scan_results(return_code, this_presentation)
 
-    def __generate_exception(self, this_presentation: "_ApiPresentation") -> None:
+    def fix_string(
+        self,
+        string_to_scan: str,
+    ) -> "PyMarkdownFixStringResult":
+        """
+        Scan a string passed into the API.
+        """
+        self.__verify_string_argument_not_empty("string_to_scan", string_to_scan)
+
+        try:
+            with tempfile.NamedTemporaryFile(
+                "wt", suffix=".md", encoding="utf-8", delete=False
+            ) as temp_file:
+                temp_file.write(string_to_scan)
+
+            scan_arguments = self.__build_common_arguments("fix")
+            scan_arguments.append(temp_file.name)
+
+            this_presentation = _ApiPresentation()
+            scanner_instance = PyMarkdownLint(
+                presentation=this_presentation,
+                show_stack_trace=self.__enable_stack_trace,
+                inherit_logging=self.__inherit_logging,
+            )
+            return_code = 0
+            try:
+                scanner_instance.main(scan_arguments)
+            except SystemExit as this_exception:
+                # https://github.com/python/typeshed/issues/8513#issue-1333671093
+                return_code = (
+                    int(this_exception.code)
+                    if isinstance(this_exception.code, int)
+                    else 99
+                )
+            fix_result = self.__handle_fix_results(return_code, this_presentation)
+            with open(temp_file.name, "rt", encoding="utf-8") as fixed_file:
+                return PyMarkdownFixStringResult(
+                    bool(fix_result.files_fixed), fixed_file.read()
+                )
+        finally:
+            if os.path.isfile(temp_file.name):  # pragma: no cover
+                os.remove(temp_file.name)
+
+    def __generate_scan_exception(self, this_presentation: "_ApiPresentation") -> None:
         if not this_presentation.pse:
             return
         last_error_text = this_presentation.pse[-1]
@@ -492,6 +585,32 @@ class PyMarkdownScanPathResult:
 
 
 @dataclass(frozen=True)
+class PyMarkdownFixResult:
+    """
+    Result for the fix_path function.
+    """
+
+    files_fixed: List[str]
+    """
+    List of zero or more files that were fixed.
+    """
+
+
+@dataclass(frozen=True)
+class PyMarkdownFixStringResult:
+    """
+    Result for the fix_string function.
+    """
+
+    was_fixed: bool
+    """
+    Whether the file was fixed.
+    """
+
+    fixed_file: str
+
+
+@dataclass(frozen=True)
 class PyMarkdownListPathResult:
     """
     Result for the list_path function.
@@ -556,6 +675,7 @@ class _ApiPresentation(MainPresentation):
         self.pse: List[str] = []
         self.pragma_errors: List[PyMarkdownPragmaError] = []
         self.scan_failures: List[PyMarkdownScanFailure] = []
+        self.files_fixed: List[str] = []
 
     def print_system_output(self, output_string: str) -> None:
         """
@@ -607,3 +727,9 @@ class _ApiPresentation(MainPresentation):
             extra_error_information=scan_failure.extra_error_information,
         )
         self.scan_failures.append(local_copy)
+
+    def print_fix_message(self, file_fixed: str) -> None:
+        """
+        Print a message indicating that a given file has been fixed.
+        """
+        self.files_fixed.append(file_fixed)
