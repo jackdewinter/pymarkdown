@@ -39,6 +39,12 @@ Classes
     `enable_strict_configuration(self) ‑> api.PyMarkdownApi`
     :   Enable strict configuration for any requested properties, either through configuration files or manual setting.
 
+    `fix_path(self, path_to_scan: str, recurse_if_directory: bool = False, alternate_extensions: Any = None) ‑> api.PyMarkdownFixResult`
+    :   Scan the provided path for markdown files to fix.
+
+    `fix_string(self, string_to_scan: str) ‑> api.PyMarkdownFixStringResult`
+    :   Scan a string passed into the API.
+
     `list_path(self, path_to_scan: str, recurse_if_directory: bool = False, alternate_extensions: str = '') ‑> api.PyMarkdownListPathResult`
     :   List any files found when scanning the specified path for eligible markdown files.
 
@@ -132,6 +138,25 @@ Classes
     * api.PyMarkdownApiException
     * builtins.Exception
     * builtins.BaseException
+
+`PyMarkdownFixResult(files_fixed: List[str])`
+:   Result for the fix_path function.
+
+    ### Class variables
+
+    `files_fixed: List[str]`
+    :   List of zero or more files that were fixed.
+
+`PyMarkdownFixStringResult(was_fixed: bool, fixed_file: str)`
+:   Result for the fix_string function.
+
+    ### Class variables
+
+    `fixed_file: str`
+    :
+
+    `was_fixed: bool`
+    :   Whether the file was fixed.
 
 `PyMarkdownListPathResult(matching_files: List[str])`
 :   Result for the list_path function.
