@@ -396,7 +396,7 @@ class PyMarkdownApi:
         self.__verify_string_argument_not_empty("string_to_scan", string_to_scan)
 
         try:
-            with tempfile.TemporaryFile(
+            with tempfile.NamedTemporaryFile(
                 "wt", suffix=".md", encoding="utf-8", delete=False
             ) as temp_file:
                 temp_file.write(string_to_scan)
