@@ -16846,12 +16846,13 @@ abc
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
-def test_extra_047f6():  # https://github.com/jackdewinter/pymarkdown/issues/1213
+def test_extra_047f6x():  # https://github.com/jackdewinter/pymarkdown/issues/1213
     """
     TBD
     bad_fenced_block_in_block_quote_with_previous_inner_blocks
+
+    Note: temporary fix in __abcd_final( in transform containers.
     """
 
     # Arrange
@@ -16875,15 +16876,13 @@ def test_extra_047f6():  # https://github.com/jackdewinter/pymarkdown/issues/121
         "[text(2,7):innermost block\ninnermost block\ninner block::\n\n]",
         "[end-para:::False]",
         "[end-block-quote::> :True]",
-        "[fcode-block(5,3):`:3:block:::::]",
-        "[end-fcode-block::::True]",
         "[end-block-quote:::True]",
-        "[para(6,3):]",
+        "[fcode-block(5,3):`:3:block:::::]",
         "[text(6,3):A code block:]",
-        "[end-para:::False]",
-        "[fcode-block(7,3):`:3::::::]",
-        "[text(8,3):This is a blank line and some text.:]",
-        "[end-fcode-block::::True]",
+        "[end-fcode-block:::3:False]",
+        "[para(8,2):]",
+        "[text(8,2):This is a blank line and some text.:]",
+        "[end-para:::True]",
         "[end-block-quote:::True]",
         "[BLANK(9,1):]",
     ]
@@ -16898,6 +16897,189 @@ inner block</p>
 </blockquote>
 <pre><code class="language-block">A code block
 </code></pre>
+<p>This is a blank line and some text.</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_047f6a():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """> > inner block
+> > > innermost block
+> > > innermost block
+> > inner block
+> > ```block
+> > A code block
+> > ```
+>This is a blank line and some text.
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::>\n]",
+        "[block-quote(1,3)::> > \n> > \n> > ]",
+        "[para(1,5):]",
+        "[text(1,5):inner block:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > > \n> > > \n> > \n> > ]",
+        "[para(2,7):\n\n]",
+        "[text(2,7):innermost block\ninnermost block\ninner block::\n\n]",
+        "[end-para:::False]",
+        "[end-block-quote::> > :True]",
+        "[fcode-block(5,5):`:3:block:::::]",
+        "[text(6,5):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[end-block-quote:::True]",
+        "[para(8,2):]",
+        "[text(8,2):This is a blank line and some text.:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(9,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<blockquote>
+<p>inner block</p>
+<blockquote>
+<p>innermost block
+innermost block
+inner block</p>
+</blockquote>
+<pre><code class="language-block">A code block
+</code></pre>
+</blockquote>
+<p>This is a blank line and some text.</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_047f6b():
+    """
+    TBD
+    bad_fenced_block_in_block_quote_with_previous_inner_blocks_with_thematics
+    """
+
+    # Arrange
+    source_markdown = """> > inner block
+> > > innermost block
+> > > innermost block
+> > inner block
+> ___
+> ```block
+> A code block
+> ```
+> ___
+>This is a blank line and some text.
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n>\n]",
+        "[block-quote(1,3)::> > ]",
+        "[para(1,5):]",
+        "[text(1,5):inner block:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > > \n> > > \n> > \n> ]",
+        "[para(2,7):\n\n]",
+        "[text(2,7):innermost block\ninnermost block\ninner block::\n\n]",
+        "[end-para:::False]",
+        "[end-block-quote::> :True]",
+        "[end-block-quote:::True]",
+        "[tbreak(5,3):_::___]",
+        "[fcode-block(6,3):`:3:block:::::]",
+        "[text(7,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(9,3):_::___]",
+        "[para(10,2):]",
+        "[text(10,2):This is a blank line and some text.:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(11,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<blockquote>
+<p>inner block</p>
+<blockquote>
+<p>innermost block
+innermost block
+inner block</p>
+</blockquote>
+</blockquote>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+<p>This is a blank line and some text.</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_047f6c():
+    """
+    TBD
+    bad_fenced_block_in_block_quote_with_previous_inner_blocks_with_thematics
+    """
+
+    # Arrange
+    source_markdown = """> > inner block
+> > > innermost block
+> > > innermost block
+> > inner block
+> ___
+>
+> ```block
+> A code block
+> ```
+>
+> ___
+>This is a blank line and some text.
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::>\n> \n> \n> \n>\n> \n>\n]",
+        "[block-quote(1,3)::> > ]",
+        "[para(1,5):]",
+        "[text(1,5):inner block:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > > \n> > > \n> > \n> ]",
+        "[para(2,7):\n\n]",
+        "[text(2,7):innermost block\ninnermost block\ninner block::\n\n]",
+        "[end-para:::False]",
+        "[end-block-quote::> :True]",
+        "[end-block-quote:::True]",
+        "[tbreak(5,3):_::___]",
+        "[BLANK(6,2):]",
+        "[fcode-block(7,3):`:3:block:::::]",
+        "[text(8,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(10,2):]",
+        "[tbreak(11,3):_::___]",
+        "[para(12,2):]",
+        "[text(12,2):This is a blank line and some text.:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(13,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<blockquote>
+<p>inner block</p>
+<blockquote>
+<p>innermost block
+innermost block
+inner block</p>
+</blockquote>
+</blockquote>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
 <p>This is a blank line and some text.</p>
 </blockquote>"""
 
