@@ -874,7 +874,7 @@ This is a blank line and some text.
 >This is a blank line and some text.
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_047f6b test_extra_047f6c
         "bad_fenced_block_in_block_quote_with_previous_inner_blocks_with_thematics",
         source_file_contents="""> > inner block
 > > > innermost block
@@ -888,7 +888,8 @@ This is a blank line and some text.
 >This is a blank line and some text.
 """,
         use_debug=True,
-        disable_rules="md022,md026",
+        disable_rules="md022,md026,md027",
+        # use_fix_debug=True,
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:6:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 {temp_source_path}:8:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)

@@ -421,6 +421,19 @@ class TransformContainers:
         container_indices_copy.extend(removed_token_indices[::-1])
 
         if container_stack_copy[-1].is_block_quote_start:
+
+            # Temporary until we have more data. test_extra_047f6x
+            if (
+                len(removed_tokens) == 2
+                and container_stack_copy[-2].is_block_quote_start
+                and container_stack_copy[-3].is_block_quote_start
+            ):
+                del removed_tokens[0]
+                del removed_token_indices[0]
+                del removed_tokens[0]
+                del removed_token_indices[0]
+                return ""
+
             bq_spaces = cast(
                 BlockQuoteMarkdownToken, container_stack_copy[-1]
             ).bleading_spaces

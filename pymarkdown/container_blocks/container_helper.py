@@ -79,6 +79,26 @@ class ContainerHelper:
                 extracted_whitespace = ""
         return did_once, extracted_whitespace, whitespace_prefix
 
+    @staticmethod
+    def __xx(parser_state: ParserState, extra_bqs: int) -> List[MarkdownToken]:
+        until_index = len(parser_state.token_stack) - 1
+        needed_bqs = extra_bqs
+        while (
+            until_index > 0
+            and needed_bqs > 0
+            and parser_state.token_stack[until_index].is_block_quote
+        ):
+            until_index -= 1
+            needed_bqs -= 1
+        x_tokens, _ = parser_state.close_open_blocks_fn(
+            parser_state,
+            include_block_quotes=True,
+            was_forced=True,
+            until_this_index=until_index + 1,
+        )
+        POGGER.debug("x_tokens>>:$:<", x_tokens)
+        return x_tokens
+
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __reduce_containers_if_required_bq(
@@ -88,15 +108,13 @@ class ContainerHelper:
         split_tab: bool,
         extracted_whitespace: str,
         grab_bag: ContainerGrabBag,
+        extra_bqs: int,
     ) -> Tuple[bool, str, Optional[str]]:
-        x_tokens, _ = parser_state.close_open_blocks_fn(
-            parser_state,
-            include_block_quotes=True,
-            was_forced=True,
-            until_this_index=len(parser_state.token_stack) - 1,
-        )
-        POGGER.debug("x_tokens>>:$:<", x_tokens)
-        assert len(x_tokens) == 1, "Should have generated only one token."
+        x_tokens = ContainerHelper.__xx(parser_state, extra_bqs)
+        assert (
+            len(x_tokens) == extra_bqs
+        ), "Should have generated the requested number of tokens."
+
         first_new_token = cast(EndMarkdownToken, x_tokens[0])
 
         did_reduce_list, extracted_whitespace, whitespace_prefix = (
@@ -154,10 +172,10 @@ class ContainerHelper:
             first_new_token.set_extra_end_data(last_newline_part)
 
         new_tokens.extend(x_tokens)
-        xx = ContainerHelper.__handle_whitespace_prefix(
+        new_whitespace_prefix = ContainerHelper.__handle_whitespace_prefix(
             parser_state, whitespace_prefix, last_newline_part
         )
-        return split_tab, extracted_whitespace, xx
+        return split_tab, extracted_whitespace, new_whitespace_prefix
 
     # pylint: enable=too-many-arguments, too-many-locals
 
@@ -165,7 +183,7 @@ class ContainerHelper:
     def __handle_whitespace_prefix(
         parser_state: ParserState, whitespace_prefix: str, last_newline_part: str
     ) -> Optional[str]:
-        xx = None
+        new_whitespace_prefix = None
         if whitespace_prefix:
             indent_level = 0
             stack_index = len(parser_state.token_stack) - 1
@@ -185,8 +203,8 @@ class ContainerHelper:
                 last_split_bleading_spaces = len(split_bleading_spaces[-1])
                 indent_level += last_split_bleading_spaces
                 stack_index -= 1
-            xx = last_newline_part[indent_level:]
-        return xx
+            new_whitespace_prefix = last_newline_part[indent_level:]
+        return new_whitespace_prefix
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -227,6 +245,7 @@ class ContainerHelper:
                     split_tab,
                     extracted_whitespace,
                     grab_bag,
+                    block_quote_data.stack_count - block_quote_data.current_count,
                 )
             )
 
