@@ -11680,7 +11680,6 @@ block 2</p>
 @pytest.mark.gfm
 def test_extra_044mcv1():
     """
-    BAR-A
     bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block_with_thematics
     """
 

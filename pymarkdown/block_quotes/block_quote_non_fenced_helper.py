@@ -632,26 +632,23 @@ class BlockQuoteNonFencedHelper:
             and not parser_state.token_stack[search_index].is_block_quote
         ):
             search_index -= 1
-        if search_index and search_index + 1 == stack_index:
+        if search_index:  # and search_index + 1 == stack_index:
             search_token = parser_state.token_stack[
                 search_index
             ].matching_markdown_token
             assert search_token is not None
-            if search_token.line_number != block_quote_token.line_number:
-                found_token = parser_state.token_stack[
-                    search_index
-                ].matching_markdown_token
-                assert found_token is not None
-                bq_token = cast(BlockQuoteMarkdownToken, found_token)
-                assert bq_token.bleading_spaces is not None
-                split_spaces = bq_token.bleading_spaces.split("\n")
-                if len(split_spaces) > 1:
-                    last_split_space = split_spaces[-1]
-                    if (
-                        adjusted_removed_text != last_split_space
-                        and adjusted_removed_text.startswith(last_split_space)
-                    ):
-                        block_quote_token.weird_kludge_six = True
+            found_token = parser_state.token_stack[search_index].matching_markdown_token
+            assert found_token is not None
+            bq_token = cast(BlockQuoteMarkdownToken, found_token)
+            assert bq_token.bleading_spaces is not None
+            split_spaces = bq_token.bleading_spaces.split("\n")
+            if len(split_spaces) > 1:
+                last_split_space = split_spaces[-1]
+                if (
+                    adjusted_removed_text != last_split_space
+                    and adjusted_removed_text.startswith(last_split_space)
+                ):
+                    block_quote_token.weird_kludge_six = True
 
     @staticmethod
     def __check_for_kludge(

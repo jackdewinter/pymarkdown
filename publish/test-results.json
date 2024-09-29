@@ -1300,10 +1300,10 @@
         },
         {
             "name": "test.rules.test_md027",
-            "totalTests": 117,
+            "totalTests": 118,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 1,
+            "skippedTests": 0,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -1364,7 +1364,7 @@
         },
         {
             "name": "test.rules.test_md031",
-            "totalTests": 372,
+            "totalTests": 373,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 13,

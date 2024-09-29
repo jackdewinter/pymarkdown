@@ -38,11 +38,13 @@
     - parser issue with fenced code block closing right away
 - [Issue 1204](https://github.com/jackdewinter/pymarkdown/issues/1204)
     - rehydration/fix issue with blank lines causing off by one error
+- [Issue 1209](https://github.com/jackdewinter/pymarkdown/issues/1209)
+    - detection code for MD027 was not using the right container index
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
-- None
+- Started to pull common code from MD031 for use in Md027
 
 ## Version 0.9.23 - Date: 2024-09-04
 

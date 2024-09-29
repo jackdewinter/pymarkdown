@@ -253,6 +253,7 @@ scanTests = [
 >    * this is level 2
 """,
         scan_expected_return_code=1,
+        use_debug=True,
         scan_expected_output=(
             "{temp_source_path}:4:6: MD007: Unordered list indentation [Expected: 2, Actual=3] (ul-indent)"
         ),

@@ -8,6 +8,9 @@ from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.plugin_details import PluginDetailsV2
 from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
+from pymarkdown.plugins.utils.leading_space_index_tracker import (
+    LeadingSpaceIndexTracker,
+)
 from pymarkdown.plugins.utils.list_tracker import ListTracker
 from pymarkdown.tokens.blank_line_markdown_token import BlankLineMarkdownToken
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
@@ -51,6 +54,7 @@ class RuleMd027(RulePlugin):
         self.__last_token: Optional[MarkdownToken] = None
         # self.__debug_on = False
         self.__list_tracker = ListTracker()
+        self.__leading_space_index_tracker = LeadingSpaceIndexTracker()
 
         self.__delayed_bleading_fixes: Dict[
             MarkdownToken, List[Tuple[int, str, bool, BlankLineMarkdownToken]]
@@ -87,6 +91,7 @@ class RuleMd027(RulePlugin):
         self.__have_incremented_for_this_line = False
         self.__last_token = None
         self.__list_tracker.starting_new_file()
+        self.__leading_space_index_tracker.clear()
 
     # pylint: disable=too-many-arguments
     def __report_issue(
@@ -322,6 +327,13 @@ class RuleMd027(RulePlugin):
 
     # pylint: enable=too-many-arguments
 
+    def __process_pending_container_end_tokens(
+        self, context: PluginScanContext, token: MarkdownToken
+    ) -> None:
+        _ = context
+        while self.__leading_space_index_tracker.have_any_registered_container_ends():
+            self.__leading_space_index_tracker.process_container_end(token)
+
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
@@ -334,6 +346,9 @@ class RuleMd027(RulePlugin):
             and not token.is_blank_line
         ):
             self.__have_incremented_for_this_line = False
+
+        if not token.is_end_token or token.is_end_of_stream:
+            self.__process_pending_container_end_tokens(context, token)
 
         num_container_tokens = len(
             [i for i in self.__container_tokens if i.is_block_quote_start]
@@ -349,12 +364,16 @@ class RuleMd027(RulePlugin):
         #     if self.__container_tokens:
         #         print(f"self.__container_tokens>{ParserHelper.make_value_visible(self.__container_tokens)}")
         if token.is_block_quote_start:
+            self.__leading_space_index_tracker.open_container(token)
             self.__handle_block_quote_start(token)
         elif token.is_block_quote_end:
+            self.__leading_space_index_tracker.register_container_end(token)
             self.__handle_block_quote_end(context, token, num_container_tokens)
         elif token.is_list_start:
+            self.__leading_space_index_tracker.open_container(token)
             self.__handle_list_start(context, token, num_container_tokens)
         elif token.is_list_end:
+            self.__leading_space_index_tracker.register_container_end(token)
             self.__handle_list_end(context, token)
         elif token.is_new_list_item:
             self.__handle_new_list_item(context, token, num_container_tokens)
@@ -362,6 +381,8 @@ class RuleMd027(RulePlugin):
             self.__list_tracker.next_token(token)
             if num_container_tokens:
                 self.__handle_within_block_quotes(context, token)
+
+        self.__leading_space_index_tracker.track_since_last_non_end_token(token)
 
         self.__last_token = token
 
@@ -643,7 +664,7 @@ class RuleMd027(RulePlugin):
         if scoped_token is not None and scoped_token.is_block_quote_start:
 
             self.__handle_blank_line_inner(
-                scoped_token, delayed_bq_index, blank_line_token
+                scoped_token, delayed_bq_index, blank_line_token, token
             )
 
         if blank_line_token.extracted_whitespace:
@@ -660,6 +681,7 @@ class RuleMd027(RulePlugin):
         scoped_token: MarkdownToken,
         delayed_bq_index: int,
         blank_line_token: BlankLineMarkdownToken,
+        token: MarkdownToken,
     ) -> None:
         scoped_block_quote_token = cast(BlockQuoteMarkdownToken, scoped_token)
         assert scoped_block_quote_token.bleading_spaces is not None
@@ -667,16 +689,28 @@ class RuleMd027(RulePlugin):
             ParserHelper.newline_character
         )
 
+        container_index = (
+            self.__leading_space_index_tracker.get_container_stack_size() - 1
+        )
+        if self.__leading_space_index_tracker.get_container_stack_item(
+            container_index
+        ).is_block_quote_start:
+            block_quote_index = self.__leading_space_index_tracker.get_tokens_block_quote_bleading_space_index(
+                token
+            )
+        else:
+            block_quote_index = delayed_bq_index
+
         # If we are closing other containers, can cause issues. So do not fire.
         is_end_with_other_closed_containers = (
-            delayed_bq_index == len(split_leading_spaces) - 1
+            block_quote_index == len(split_leading_spaces) - 1
             and self.__delayed_blank_line_with_list_end
         )
 
         # If we have matching nested block quotes, and then a blank line, we need to prevent
         # the firing.
         is_special_case = (
-            delayed_bq_index == 0
+            block_quote_index == 0
             and len(split_leading_spaces) == 1
             and blank_line_token.line_number != scoped_block_quote_token.line_number
         )
@@ -684,14 +718,15 @@ class RuleMd027(RulePlugin):
         assert (
             not is_special_case
             and not is_end_with_other_closed_containers
-            and delayed_bq_index < len(split_leading_spaces)
+            and block_quote_index < len(split_leading_spaces)
         )
-        specific_block_quote_prefix = split_leading_spaces[delayed_bq_index]
+
+        specific_block_quote_prefix = split_leading_spaces[block_quote_index]
         mod_specific_block_quote_prefix = specific_block_quote_prefix.rstrip(" ")
         if mod_specific_block_quote_prefix != specific_block_quote_prefix:
             self.__register_blank_line(
                 scoped_block_quote_token,
-                delayed_bq_index,
+                block_quote_index,
                 mod_specific_block_quote_prefix,
                 bool(blank_line_token.extracted_whitespace),
                 blank_line_token,

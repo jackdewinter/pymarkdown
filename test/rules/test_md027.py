@@ -741,11 +741,10 @@ scanTests = [
 """,
         disable_rules="",
         scan_expected_return_code=1,
-        # use_debug=True,
         scan_expected_output="""{temp_source_path}:5:7: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 {temp_source_path}:7:7: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)""",
     ),
-    pluginRuleTest(  # https://github.com/jackdewinter/pymarkdown/issues/1209
+    pluginRuleTest(
         "md031_final_bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block_with_thematics",
         source_file_contents="""> + > -----
 >   > > block 1
@@ -760,8 +759,6 @@ scanTests = [
 > + another list""",
         disable_rules="md047,md032",
         scan_expected_return_code=0,
-        # use_debug=True,
-        mark_scan_as_skipped=True,
         scan_expected_output="""""",
     ),
     pluginRuleTest(
@@ -776,7 +773,6 @@ scanTests = [
 """,
         disable_rules="md007,md009,md012,md030,md031",
         scan_expected_return_code=0,
-        # use_debug=True,
         scan_expected_output="",
     ),
     pluginRuleTest(
@@ -789,6 +785,24 @@ scanTests = [
 >     A code block
 >     ```
 >     -----
+> + another list
+""",
+        disable_rules="md007,md009,md012,md030,md031",
+        scan_expected_return_code=0,
+        # use_debug=True,
+        scan_expected_output="",
+    ),
+    pluginRuleTest(
+        "md031_final_bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_blockx",
+        source_file_contents="""> + > -----
+>   > > block 1
+>   > > block 2
+>   >
+>   > ```block
+>   > A code block
+>   > ```
+>   >
+>   > -----
 > + another list
 """,
         disable_rules="md007,md009,md012,md030,md031",
