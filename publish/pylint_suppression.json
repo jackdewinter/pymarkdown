@@ -354,6 +354,7 @@
         "pymarkdown/plugins/rule_pml_100.py": {},
         "pymarkdown/plugins/rule_pml_101.py": {},
         "pymarkdown/plugins/utils/container_token_manager.py": {},
+        "pymarkdown/plugins/utils/leading_space_index_tracker.py": {},
         "pymarkdown/plugins/utils/list_tracker.py": {},
         "pymarkdown/return_code_helper.py": {},
         "pymarkdown/tokens/atx_heading_markdown_token.py": {
