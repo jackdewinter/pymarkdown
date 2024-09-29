@@ -40,6 +40,8 @@
     - rehydration/fix issue with blank lines causing off by one error
 - [Issue 1209](https://github.com/jackdewinter/pymarkdown/issues/1209)
     - detection code for MD027 was not using the right container index
+- [Issue 1217](https://github.com/jackdewinter/pymarkdown/issues/1217)
+    - fixed issue with nested list starts not being accounted for properly
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
