@@ -48,7 +48,6 @@
 - [Issue 1168](https://github.com/jackdewinter/pymarkdown/issues/1168)
     - fixed issue with more deeply nested
 
-
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
