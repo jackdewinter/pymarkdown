@@ -43,6 +43,11 @@
 - [Issue 1217](https://github.com/jackdewinter/pymarkdown/issues/1217)
     - fixed issue with some list starts not being accounted for properly when
       grouped together on same line
+- [Issue 1166](https://github.com/jackdewinter/pymarkdown/issues/1166)
+- [Issue 1167](https://github.com/jackdewinter/pymarkdown/issues/1167)
+- [Issue 1168](https://github.com/jackdewinter/pymarkdown/issues/1168)
+    - fixed issue with more deeply nested
+
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
