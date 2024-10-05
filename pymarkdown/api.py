@@ -1,6 +1,11 @@
 """
-Module to provide for an API to directly communicate with PyMarkdown instead
-of using a command line.
+Create a new instance of the `PyMarkdownApi` class.
+
+#### Parameters
+
+- *inherit_logging* - If True, will inherit the logging settings
+    from the calling application.  If False, will use the `log_*`
+    functions to specify the logging properties.
 """
 
 import argparse
@@ -42,6 +47,9 @@ class PyMarkdownApi:
     def application_version(self) -> str:
         """
         Report on the application version.
+
+        #### Returns
+        - A `str` with the current application version.
         """
         return PyMarkdownLint().application_version
 
@@ -49,12 +57,18 @@ class PyMarkdownApi:
     def interface_version(self) -> int:
         """
         Report on the interface version.
+
+        #### Returns
+        - An `int` with the current plugin interface version.
         """
         return PyMarkdownApi.__INTERFACE_VERSION
 
     def enable_stack_trace(self) -> "PyMarkdownApi":
         """
         Enable the reporting of stack traces for any exceptions caught by the API.
+
+        #### Returns
+        - An instance of `PyMarkdownApi` to allow for function chaining.
         """
         self.__enable_stack_trace = True
         return self
@@ -62,36 +76,82 @@ class PyMarkdownApi:
     def log_debug_and_above(self) -> "PyMarkdownApi":
         """
         Enable logging for the DEBUG level and above.
+
+        #### Exceptions
+        - `PyMarkdownApiNotSupportedException` if invoked after *inherit_logging* was set
+          when creating the `PyMarkdownApi` instance.
+
+        #### Returns
+        - An instance of `PyMarkdownApi` to allow for function chaining.
         """
         return self.log(ApplicationLogging.log_level_debug)
 
     def log_info_and_above(self) -> "PyMarkdownApi":
         """
         Enable logging for the INFO level and above.
+
+        #### Exceptions
+        - `PyMarkdownApiNotSupportedException` if invoked after *inherit_logging* was set
+          when creating the `PyMarkdownApi` instance.
+
+        #### Returns
+        - An instance of `PyMarkdownApi` to allow for function chaining.
         """
         return self.log(ApplicationLogging.log_level_info)
 
     def log_warning_and_above(self) -> "PyMarkdownApi":
         """
         Enable logging for the WARN level and above.
+
+        #### Exceptions
+        - `PyMarkdownApiNotSupportedException` if invoked after *inherit_logging* was set
+          when creating the `PyMarkdownApi` instance.
+
+        #### Returns
+        - An instance of `PyMarkdownApi` to allow for function chaining.
         """
         return self.log(ApplicationLogging.log_level_warning)
 
     def log_error_and_above(self) -> "PyMarkdownApi":
         """
         Enable logging for the ERROR level and above.
+
+        #### Exceptions
+        - `PyMarkdownApiNotSupportedException` if invoked after *inherit_logging* was set
+          when creating the `PyMarkdownApi` instance.
+
+        #### Returns
+        - An instance of `PyMarkdownApi` to allow for function chaining.
         """
         return self.log(ApplicationLogging.log_level_error)
 
     def log_critical_and_above(self) -> "PyMarkdownApi":
         """
         Enable logging for the CRITICAL level and above.
+
+        #### Exceptions
+        - `PyMarkdownApiNotSupportedException` if invoked after *inherit_logging* was set
+          when creating the `PyMarkdownApi` instance.
+
+        #### Returns
+        - An instance of `PyMarkdownApi` to allow for function chaining.
         """
         return self.log(ApplicationLogging.log_level_critical)
 
     def log(self, log_level: str) -> "PyMarkdownApi":
         """
         Set the logging level using a string value.
+
+        #### Parameters
+        - *log_level* - One of "CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG".
+
+        #### Exceptions
+        - `PyMarkdownApiArgumentException` if *log_level* is not one of the allowed values.
+        - `PyMarkdownApiNotSupportedException` if invoked after *inherit_logging* was set
+          when creating the `PyMarkdownApi` instance.
+
+        #### Returns
+        - An instance of `PyMarkdownApi` to allow for function chaining.
         """
         if not ApplicationLogging.is_valid_log_level_type(log_level):
             log_levels_in_order = ",".join(ApplicationLogging.get_valid_log_levels())
@@ -111,6 +171,17 @@ class PyMarkdownApi:
     def log_to_file(self, log_file_path: str) -> "PyMarkdownApi":
         """
         Set a file to log any results to.
+
+        #### Parameters
+        - *log_file_path* - Path to the file to write the logs to.
+
+        #### Exceptions
+        - `PyMarkdownApiArgumentException` if *log_file_path* is empty.
+        - `PyMarkdownApiNotSupportedException` if invoked after *inherit_logging* was set
+          when creating the `PyMarkdownApi` instance.
+
+        #### Returns
+        - An instance of `PyMarkdownApi` to allow for function chaining.
         """
         self.__verify_string_argument_not_empty("log_file_path", log_file_path)
 
@@ -125,6 +196,15 @@ class PyMarkdownApi:
     def add_plugin_path(self, path_to_plugin: str) -> "PyMarkdownApi":
         """
         Add a plugin path that points to a directory with plugins or a single plugin.
+
+        #### Parameters
+        - *path_to_plugin* - Path to an additional plugin to load.
+
+        #### Exceptions
+        - `PyMarkdownApiArgumentException` if *path_to_plugin* is empty.
+
+        #### Returns
+        - An instance of `PyMarkdownApi` to allow for function chaining.
         """
         self.__verify_string_argument_not_empty("path_to_plugin", path_to_plugin)
 
@@ -134,6 +214,15 @@ class PyMarkdownApi:
     def configuration_file_path(self, path_to_config_file: str) -> "PyMarkdownApi":
         """
         Set the path to the configuration file to use.
+
+        #### Parameters
+        - *path_to_config_file* - Path to the configuration file to use.
+
+        #### Exceptions
+        - `PyMarkdownApiArgumentException` if *path_to_config_file* is empty.
+
+        #### Returns
+        - An instance of `PyMarkdownApi` to allow for function chaining.
         """
         self.__verify_string_argument_not_empty(
             "path_to_config_file", path_to_config_file
@@ -147,6 +236,17 @@ class PyMarkdownApi:
     ) -> "PyMarkdownApi":
         """
         Set a named configuration property to a given boolean value.
+
+        #### Parameters
+        - *property_name* - Full hierarchical name of the property to set.
+        - *property_value* - `True` or `False` boolean value to set the property to.
+
+        #### Exceptions
+        - `PyMarkdownApiArgumentException` if *property_name* is empty or if
+          *property_value* is not a `bool` value.
+
+        #### Returns
+        - An instance of `PyMarkdownApi` to allow for function chaining.
         """
         self.__verify_string_argument_not_empty("property_name", property_name)
         if not isinstance(property_value, bool):
@@ -163,6 +263,17 @@ class PyMarkdownApi:
     ) -> "PyMarkdownApi":
         """
         Set a named configuration property to a given integer value.
+
+        #### Parameters
+        - *property_name* - Full hierarchical name of the property to set.
+        - *property_value* - Integer value to set the property to.
+
+        #### Exceptions
+        - `PyMarkdownApiArgumentException` if *property_name* is empty or if
+          *property_value* is not an `int` value.
+
+        #### Returns
+        - An instance of `PyMarkdownApi` to allow for function chaining.
         """
         self.__verify_string_argument_not_empty("property_name", property_name)
         if not isinstance(property_value, int):
@@ -179,6 +290,17 @@ class PyMarkdownApi:
     ) -> "PyMarkdownApi":
         """
         Set a named configuration property to a given string value.
+
+        #### Parameters
+        - *property_name* - Full hierarchical name of the property to set.
+        - *property_value* - String value to set the property to.
+
+        #### Exceptions
+        - `PyMarkdownApiArgumentException` if *property_name* is empty or if
+          *property_value* is not a `str` value.
+
+        #### Returns
+        - An instance of `PyMarkdownApi` to allow for function chaining.
         """
         self.__verify_string_argument_not_empty("property_name", property_name)
         if not isinstance(property_value, str):
@@ -193,7 +315,18 @@ class PyMarkdownApi:
     def set_property(self, property_name: str, property_value: Any) -> "PyMarkdownApi":
         """
         Set a named configuration property to a given value.  Whatever is passed in as
-        the property_value parameter is traslated into a string.
+        the property_value parameter is translated into a string.
+
+        #### Parameters
+        - *property_name* - Full hierarchical name of the property to set.
+        - *property_value* - Value to set the property to after applying a string
+          transformation to the value.
+
+        #### Exceptions
+        - `PyMarkdownApiArgumentException` if *property_name* is empty.
+
+        #### Returns
+        - An instance of `PyMarkdownApi` to allow for function chaining.
         """
         self.__verify_string_argument_not_empty("property_name", property_name)
 
@@ -203,13 +336,25 @@ class PyMarkdownApi:
     def enable_strict_configuration(self) -> "PyMarkdownApi":
         """
         Enable strict configuration for any requested properties, either through configuration files or manual setting.
+
+        #### Returns
+        - An instance of `PyMarkdownApi` to allow for function chaining.
         """
         self.__enable_strict_configuration = True
         return self
 
     def disable_rule_by_identifier(self, rule_identifier: str) -> "PyMarkdownApi":
         """
-        Disable a given rule by its identifier.
+        Disable a single rule by one of its identifiers.
+
+        #### Parameters
+        - *rule_identifier* - Identifier for the rule to disable.
+
+        #### Exceptions
+        - `PyMarkdownApiArgumentException` if *rule_identifier* is empty.
+
+        #### Returns
+        - An instance of `PyMarkdownApi` to allow for function chaining.
         """
         self.__verify_string_argument_not_empty("rule_identifier", rule_identifier)
 
@@ -218,7 +363,16 @@ class PyMarkdownApi:
 
     def enable_rule_by_identifier(self, rule_identifier: str) -> "PyMarkdownApi":
         """
-        Enable a given rule by its identifier.
+        Enable a single rule by one of its identifiers.
+
+        #### Parameters
+        - *rule_identifier* - Identifier for the rule to disable.
+
+        #### Exceptions
+        - `PyMarkdownApiArgumentException` if *rule_identifier* is empty.
+
+        #### Returns
+        - An instance of `PyMarkdownApi` to allow for function chaining.
         """
         self.__verify_string_argument_not_empty("rule_identifier", rule_identifier)
 
@@ -232,7 +386,28 @@ class PyMarkdownApi:
         alternate_extensions: str = "",
     ) -> "PyMarkdownListPathResult":
         """
-        List any files found when scanning the specified path for eligible markdown files.
+        List any eligible files found when scanning the specified path for eligible markdown files.
+
+        #### Parameters
+        - *path_to_scan* - If *path_to_scan* is a directory, scan within that directory for
+          eligible Markdown files.  If *path_to_scan* is a file, determine if the file is
+          an eligible Markdown file.
+        - *recurse_if_directory* - If *path_to_scan* is a directory and *recurse_if_directory*
+          if `True`, also scan any directories within the specified directory.
+        - *alternate_extensions* - Optionally specify one or more comma-separated file
+          extensions.  Files with these file extensions are also considered to be eligible
+          files to scan.
+
+        #### Exceptions
+        - `PyMarkdownApiArgumentException` if *path_to_scan* is empty or if *alternate_extensions*
+          does not contain a valid list of file extensions.  Valid file extensions start with a single
+          period character and are followed by one or more ASCII alphanumeric characters.
+        - `PyMarkdownApiNoFilesFoundException` if no eligible files were found.
+        - `PyMarkdownApiException` if some other error was found.
+
+        #### Returns
+        - An instance of `PyMarkdownListPathResult` containing eligible Markdown files
+          that would normally be scanned.
         """
         self.__verify_string_argument_not_empty("path_to_scan", path_to_scan)
 
@@ -267,20 +442,35 @@ class PyMarkdownApi:
         alternate_extensions: Any = None,
     ) -> "PyMarkdownScanPathResult":
         """
-        Scan the provided path for markdown files to scan.
+        Scan any eligible Markdown files found on the provided path.
+
+        #### Parameters
+        - *path_to_scan* - If *path_to_scan* is a directory, scan within that directory for
+          eligible Markdown files.  If *path_to_scan* is a file, determine if the file is
+          an eligible Markdown file.
+        - *recurse_if_directory* - If *path_to_scan* is a directory and *recurse_if_directory*
+          if `True`, also scan any directories within the specified directory.
+        - *alternate_extensions* - Optionally specify one or more comma-separated file
+          extensions.  Files with these file extensions are also considered to be eligible
+          files to scan.
+
+        #### Exceptions
+        - `PyMarkdownApiArgumentException` if *path_to_scan* is empty or if *alternate_extensions*
+          does not contain a valid list of file extensions.  Valid file extensions start with a single
+          period character and are followed by one or more ASCII alphanumeric characters.
+        - `PyMarkdownApiNoFilesFoundException` if no eligible files were found.
+        - `PyMarkdownApiException` if some other error was found.
+
+        #### Returns
+        - An instance of `PyMarkdownScanPathResult` containing any scan failures or pragma errors
+          encountered when scanning the eligible files on the provided path.
         """
         self.__verify_string_argument_not_empty("path_to_scan", path_to_scan)
 
         scan_arguments = self.__build_common_arguments("scan")
-        if recurse_if_directory:
-            scan_arguments.append("--recurse")
-        if alternate_extensions:
-            self.__verify_string_argument_alternate_extensions(
-                "alternate_extensions", alternate_extensions
-            )
-            scan_arguments.append("-ae")
-            scan_arguments.append(alternate_extensions)
-        scan_arguments.append(path_to_scan)
+        self.__add_common_scan_arguments(
+            scan_arguments, path_to_scan, recurse_if_directory, alternate_extensions
+        )
 
         this_presentation = _ApiPresentation()
         scanner_instance = PyMarkdownLint(
@@ -305,20 +495,35 @@ class PyMarkdownApi:
         alternate_extensions: Any = None,
     ) -> "PyMarkdownFixResult":
         """
-        Scan the provided path for markdown files to fix.
+        Fix any eligible Markdown files found on the provided path that have scan failures that
+        can be automatically fixed.
+
+        #### Parameters
+        - *path_to_scan* - If *path_to_scan* is a directory, scan within that directory for
+          eligible Markdown files.  If *path_to_scan* is a file, determine if the file is
+          an eligible Markdown file.
+        - *recurse_if_directory* - If *path_to_scan* is a directory and *recurse_if_directory*
+          if `True`, also scan any directories within the specified directory.
+        - *alternate_extensions* - Optionally specify one or more comma-separated file
+          extensions.  Files with these file extensions are also considered to be eligible
+          files to scan.
+
+        #### Exceptions
+        - `PyMarkdownApiArgumentException` if *path_to_scan* is empty or if *alternate_extensions*
+          does not contain a valid list of file extensions.  Valid file extensions start with a single
+          period character and are followed by one or more ASCII alphanumeric characters.
+        - `PyMarkdownApiNoFilesFoundException` if no eligible files were found.
+        - `PyMarkdownApiException` if some other error was found.
+
+        #### Returns
+        - An instance of `PyMarkdownFixResult` containing the path to any files that were fixed.
         """
         self.__verify_string_argument_not_empty("path_to_scan", path_to_scan)
 
         scan_arguments = self.__build_common_arguments("fix")
-        if recurse_if_directory:
-            scan_arguments.append("--recurse")
-        if alternate_extensions:
-            self.__verify_string_argument_alternate_extensions(
-                "alternate_extensions", alternate_extensions
-            )
-            scan_arguments.append("-ae")
-            scan_arguments.append(alternate_extensions)
-        scan_arguments.append(path_to_scan)
+        self.__add_common_scan_arguments(
+            scan_arguments, path_to_scan, recurse_if_directory, alternate_extensions
+        )
 
         this_presentation = _ApiPresentation()
         scanner_instance = PyMarkdownLint(

@@ -184,7 +184,6 @@ def test_api_scan_for_non_markdown_file_with_alternate_extensions():
 
 
 @pytest.mark.timeout(30)
-@pytest.mark.skip
 def test_api_scan_recursive_for_directory():
     """
     Test to make sure that scanning a directory gives predictable results.
@@ -244,7 +243,7 @@ def test_api_scan_recursive_for_directory():
     for i in scan_result.scan_failures:
         itemized_scan_failures = itemized_scan_failures + "\n" + str(i)
     print(itemized_scan_failures)
-    assert len(scan_result.scan_failures) == 71
+    assert len(scan_result.scan_failures) == 99
 
     scan_failures = []
     for i in scan_result.scan_failures:
