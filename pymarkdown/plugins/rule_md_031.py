@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from typing import List, Optional, Tuple, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.plugin_manager.plugin_details import (
     PluginDetails,
@@ -52,6 +53,9 @@ class RuleMd031(RulePlugin):
         self.__container_adjustments: List[List[PendingContainerAdjustment]] = []
         self.__fix_count = 0
         self.__removed_container_stack_token: Optional[MarkdownToken] = None
+        self.__removed_container_adjustments: Optional[
+            List[PendingContainerAdjustment]
+        ] = None
 
         self.__leading_space_index_tracker = LeadingSpaceIndexTracker()
 
@@ -96,6 +100,8 @@ class RuleMd031(RulePlugin):
         self.__container_adjustments = []
         self.__fix_count = 0
         self.__leading_space_index_tracker.clear()
+        self.__removed_container_adjustments = None
+        self.__removed_container_stack_token = None
 
     def __fix_spacing_special_case(
         self, context: PluginScanContext, token: MarkdownToken
@@ -179,9 +185,137 @@ class RuleMd031(RulePlugin):
                 PendingContainerAdjustment(leading_space_insert_index, "")
             )
 
+    def __fix_spacing_list_special(
+        self,
+        context: PluginScanContext,
+        list_token_mod_index: int,
+        previous_block_quote_index: int,
+    ) -> None:
+        end_adj = self.__removed_container_adjustments
+        assert not end_adj
+
+        outer_block_quote_token = cast(
+            BlockQuoteMarkdownToken, self.__removed_container_stack_token
+        )
+        assert outer_block_quote_token.bleading_spaces is not None
+        assert (
+            outer_block_quote_token.bleading_spaces[-1] == " "
+            and outer_block_quote_token.bleading_spaces[-2] == ">"
+        )
+        stripped_bleading_spaces = outer_block_quote_token.bleading_spaces[:-1]
+        self.register_fix_token_request(
+            context,
+            outer_block_quote_token,
+            "next_token",
+            "bleading_spaces",
+            stripped_bleading_spaces,
+        )
+
+        current_list_token = (
+            self.__leading_space_index_tracker.get_container_stack_item(-1)
+        )
+        inner_block_quote_token = (
+            self.__leading_space_index_tracker.get_container_stack_item(
+                previous_block_quote_index
+            )
+        )
+        adjusted_indent_level = cast(
+            ListStartMarkdownToken, current_list_token
+        ).indent_level - (inner_block_quote_token.column_number + 1)
+
+        self.__container_adjustments[-1].append(
+            PendingContainerAdjustment(list_token_mod_index, "")
+        )
+        self.__container_adjustments[-1].append(
+            PendingContainerAdjustment(
+                list_token_mod_index, " " * adjusted_indent_level, do_insert=False
+            )
+        )
+
+        leading_space_to_insert = "> "
+        remaining_index = previous_block_quote_index - 1
+        if remaining_index >= 0:
+            assert remaining_index == 0
+            container_stack_token = (
+                self.__leading_space_index_tracker.get_container_stack_item(
+                    remaining_index
+                )
+            )
+            if container_stack_token.is_list_start:
+                list_start_token = cast(ListStartMarkdownToken, container_stack_token)
+                leading_space_to_insert = (
+                    " " * list_start_token.indent_level
+                ) + leading_space_to_insert
+            else:
+                # block_quote_token = cast(BlockQuoteMarkdownToken, container_stack_token)
+                leading_space_to_insert = f"> {leading_space_to_insert}"
+        block_quote_mod_index = (
+            outer_block_quote_token.line_number
+            - inner_block_quote_token.line_number
+            + 1
+        )
+        self.__container_adjustments[previous_block_quote_index].append(
+            PendingContainerAdjustment(block_quote_mod_index, leading_space_to_insert)
+        )
+
+    def __fix_spacing_list_detect_special(
+        self, token: MarkdownToken
+    ) -> Tuple[bool, int, int]:
+        if (
+            self.__removed_container_stack_token
+            and self.__removed_container_stack_token.is_block_quote_start
+        ):
+
+            initial_index = (
+                self.__leading_space_index_tracker.get_container_stack_size() - 1
+            )
+
+            list_token = self.__leading_space_index_tracker.get_container_stack_item(
+                initial_index
+            )
+            assert list_token.is_list_start
+            leading_spaces = cast(ListStartMarkdownToken, list_token).leading_spaces
+            assert leading_spaces is not None
+            split_spaces = leading_spaces.split("\n")
+
+            # last_closed_container_info = (
+            #     self.__leading_space_index_tracker.get_closed_container_info(-1)
+            # )
+
+            # if last_closed_container_info.adjustment:
+            adjust = 1
+            # else:
+            #     adjust = self.__calculate_adjust(initial_index, container_index)
+            index = (
+                LeadingSpaceIndexTracker.calculate_token_line_number(token)
+                - self.__leading_space_index_tracker.get_container_stack_item(
+                    initial_index
+                ).line_number
+            )
+            # index -= last_closed_container_info.adjustment
+            index -= adjust
+            selected_leading_space = split_spaces[index]
+            if selected_leading_space.endswith(ParserLogger.blah_sequence):
+                stack_index = initial_index - 1
+                while (
+                    stack_index >= 0
+                    and not self.__leading_space_index_tracker.get_container_stack_item(
+                        stack_index
+                    ).is_block_quote_start
+                ):
+                    stack_index -= 1
+                assert stack_index >= 0
+                return True, stack_index, index
+        return False, -1, -1
+
     def __fix_spacing_list(
         self, context: PluginScanContext, token: MarkdownToken
-    ) -> None:
+    ) -> bool:
+        is_special, stack_index, index = self.__fix_spacing_list_detect_special(token)
+        if is_special:
+            self.__fix_spacing_list_special(context, index, stack_index)
+            return True
+
         initial_index = container_index = (
             self.__leading_space_index_tracker.get_container_stack_size() - 1
         )
@@ -219,6 +353,7 @@ class RuleMd031(RulePlugin):
             self.__fix_spacing_list_not_remove_list(
                 initial_index, container_index, token
             )
+        return False
 
     def __fix_spacing_list_remove_list(self, context: PluginScanContext) -> None:
         removed_list_token = cast(
@@ -329,6 +464,7 @@ class RuleMd031(RulePlugin):
     def __fix_spacing(
         self, context: PluginScanContext, token: MarkdownToken, special_case: bool
     ) -> None:
+        did_special_list_fix = False
         if special_case:
             self.__fix_spacing_special_case(context, token)
             return
@@ -338,7 +474,7 @@ class RuleMd031(RulePlugin):
             ).is_block_quote_start:
                 self.__fix_spacing_block_quote(token)
             else:
-                self.__fix_spacing_list(context, token)
+                did_special_list_fix = self.__fix_spacing_list(context, token)
         elif self.__removed_container_stack_token:
             if self.__removed_container_stack_token.is_list_start:
                 removed_list_token = cast(
@@ -370,6 +506,22 @@ class RuleMd031(RulePlugin):
                     column_delta=1,
                 ),
                 self.__last_token,
+                new_token,
+            ]
+            self.register_replace_tokens_request(
+                context, self.__last_token, token, replacement_tokens
+            )
+        elif did_special_list_fix:
+            assert self.__last_token and self.__last_token.is_block_quote_end
+            new_end_token = cast(EndMarkdownToken, copy.copy(self.__last_token))
+            new_end_token.set_extra_end_data(None)
+            replacement_tokens = [
+                BlankLineMarkdownToken(
+                    extracted_whitespace="",
+                    position_marker=PositionMarker(new_token.line_number - 1, 0, ""),
+                    column_delta=1,
+                ),
+                new_end_token,
                 new_token,
             ]
             self.register_replace_tokens_request(
@@ -502,16 +654,15 @@ class RuleMd031(RulePlugin):
             split_spaces = list_token.leading_spaces.split("\n")
 
         for next_container_adjustment in next_container_adjustment_list[::-1]:
-            # this may be due to a commented out test
-            assert next_container_adjustment.do_insert
-            split_spaces.insert(
-                next_container_adjustment.insert_index,
-                next_container_adjustment.leading_space_to_insert,
-            )
-            # else:
-            #     split_spaces[next_container_adjustment.insert_index] = (
-            #         next_container_adjustment.leading_space_to_insert
-            #     )
+            if next_container_adjustment.do_insert:
+                split_spaces.insert(
+                    next_container_adjustment.insert_index,
+                    next_container_adjustment.leading_space_to_insert,
+                )
+            else:
+                split_spaces[next_container_adjustment.insert_index] = (
+                    next_container_adjustment.leading_space_to_insert
+                )
 
         self.register_fix_token_request(
             context,
@@ -534,6 +685,7 @@ class RuleMd031(RulePlugin):
             self.__removed_container_stack_token = (
                 self.__leading_space_index_tracker.process_container_end(token)
             )
+            self.__removed_container_adjustments = self.__container_adjustments[-1]
             del self.__container_adjustments[-1]
 
     def __calculate_special_case(
@@ -592,6 +744,7 @@ class RuleMd031(RulePlugin):
         self.__second_last_token = self.__last_token
         self.__last_token = token
         self.__removed_container_stack_token = None
+        self.__removed_container_adjustments = None
 
 
 # pylint: enable=too-many-instance-attributes

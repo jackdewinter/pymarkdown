@@ -26,6 +26,14 @@ class PyMarkdownApi:
     __INTERFACE_VERSION = 1
 
     def __init__(self, inherit_logging: bool = False) -> None:
+        """
+        Create a new instance of the `PyMarkdownApi` class.
+
+        ## Parameters
+        - *inherit_logging* - If True, will inherit the logging settings
+          from the calling application.  If False, will use the `log_*`
+          functions to specify the logging properties.
+        """
         self.__inherit_logging = inherit_logging
 
         self.__log_level = ApplicationLogging.log_level_warning
@@ -42,6 +50,9 @@ class PyMarkdownApi:
     def application_version(self) -> str:
         """
         Report on the application version.
+
+        ## Returns
+        - A `str` with the current application version.
         """
         return PyMarkdownLint().application_version
 
@@ -49,12 +60,18 @@ class PyMarkdownApi:
     def interface_version(self) -> int:
         """
         Report on the interface version.
+
+        ## Returns
+        - An `int` with the current plugin interface version.
         """
         return PyMarkdownApi.__INTERFACE_VERSION
 
     def enable_stack_trace(self) -> "PyMarkdownApi":
         """
         Enable the reporting of stack traces for any exceptions caught by the API.
+
+        ## Returns
+        - An instance of `PyMarkdownApi` to allow for function chaining.
         """
         self.__enable_stack_trace = True
         return self
@@ -62,36 +79,82 @@ class PyMarkdownApi:
     def log_debug_and_above(self) -> "PyMarkdownApi":
         """
         Enable logging for the DEBUG level and above.
+
+        ## Exceptions
+        - `PyMarkdownApiNotSupportedException` if invoked after *inherit_logging* was set
+          when creating the `PyMarkdownApi` instance.
+
+        ## Returns
+        - An instance of `PyMarkdownApi` to allow for function chaining.
         """
         return self.log(ApplicationLogging.log_level_debug)
 
     def log_info_and_above(self) -> "PyMarkdownApi":
         """
         Enable logging for the INFO level and above.
+
+        ## Exceptions
+        - `PyMarkdownApiNotSupportedException` if invoked after *inherit_logging* was set
+          when creating the `PyMarkdownApi` instance.
+
+        ## Returns
+        - An instance of `PyMarkdownApi` to allow for function chaining.
         """
         return self.log(ApplicationLogging.log_level_info)
 
     def log_warning_and_above(self) -> "PyMarkdownApi":
         """
         Enable logging for the WARN level and above.
+
+        ## Exceptions
+        - `PyMarkdownApiNotSupportedException` if invoked after *inherit_logging* was set
+          when creating the `PyMarkdownApi` instance.
+
+        ## Returns
+        - An instance of `PyMarkdownApi` to allow for function chaining.
         """
         return self.log(ApplicationLogging.log_level_warning)
 
     def log_error_and_above(self) -> "PyMarkdownApi":
         """
         Enable logging for the ERROR level and above.
+
+        ## Exceptions
+        - `PyMarkdownApiNotSupportedException` if invoked after *inherit_logging* was set
+          when creating the `PyMarkdownApi` instance.
+
+        ## Returns
+        - An instance of `PyMarkdownApi` to allow for function chaining.
         """
         return self.log(ApplicationLogging.log_level_error)
 
     def log_critical_and_above(self) -> "PyMarkdownApi":
         """
         Enable logging for the CRITICAL level and above.
+
+        ## Exceptions
+        - `PyMarkdownApiNotSupportedException` if invoked after *inherit_logging* was set
+          when creating the `PyMarkdownApi` instance.
+
+        ## Returns
+        - An instance of `PyMarkdownApi` to allow for function chaining.
         """
         return self.log(ApplicationLogging.log_level_critical)
 
     def log(self, log_level: str) -> "PyMarkdownApi":
         """
         Set the logging level using a string value.
+
+        ## Parameters
+        - *log_level* - One of "CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG".
+
+        ## Exceptions
+        - `PyMarkdownApiArgumentException` if *log_level* is not one of the allowed values.
+        - `PyMarkdownApiNotSupportedException` if invoked after *inherit_logging* was set
+          when creating the `PyMarkdownApi` instance.
+
+        ## Returns
+        - An instance of `PyMarkdownApi` to allow for function chaining.
         """
         if not ApplicationLogging.is_valid_log_level_type(log_level):
             log_levels_in_order = ",".join(ApplicationLogging.get_valid_log_levels())
@@ -111,6 +174,16 @@ class PyMarkdownApi:
     def log_to_file(self, log_file_path: str) -> "PyMarkdownApi":
         """
         Set a file to log any results to.
+
+        ## Parameters
+        - *log_file_path* - Path to the file to write the logs to.
+
+        ## Exceptions
+        - `PyMarkdownApiNotSupportedException` if invoked after *inherit_logging* was set
+          when creating the `PyMarkdownApi` instance.
+
+        ## Returns
+        - An instance of `PyMarkdownApi` to allow for function chaining.
         """
         self.__verify_string_argument_not_empty("log_file_path", log_file_path)
 
