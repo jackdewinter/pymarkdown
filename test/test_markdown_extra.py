@@ -17360,6 +17360,128 @@ list 2.2</li>
 
 
 @pytest.mark.gfm
+def test_extra_047h0():
+    """
+    TBD
+    bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_block_with_thematics
+    """
+
+    # Arrange
+    source_markdown = """> > + --------
+> >   > block 1
+> >   > block 2
+> >   --------
+> >   ```block
+> >   A code block
+> >   ```
+> >   --------
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::]",
+        "[block-quote(1,3)::> > \n> > \n> > \n> > \n> > \n> > ]",
+        "[ulist(1,5):+::6::\n\n  þ\n  \n  \n  \n  \n]",
+        "[tbreak(1,7):-::--------]",
+        "[block-quote(2,7)::> \n> >   > \n> > ]",
+        "[para(2,9):\n]",
+        "[text(2,9):block 1\nblock 2::\n]",
+        "[end-para:::False]",
+        "[end-block-quote::> > :True]",
+        "[tbreak(4,7):-::--------]",
+        "[fcode-block(5,7):`:3:block:::::]",
+        "[text(6,1):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(8,7):-::--------]",
+        "[BLANK(9,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<blockquote>
+<ul>
+<li>
+<hr />
+<blockquote>
+<p>block 1
+block 2</p>
+</blockquote>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+</ul>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_047h1():
+    """
+    TBD
+    bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_block_with_thematics
+    """
+
+    # Arrange
+    source_markdown = """> > + --------
+> >   > block 1
+> >   > block 2
+> >   --------
+> >
+> >   ```block
+> >   A code block
+> >   ```
+> >
+> >   --------
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::]",
+        "[block-quote(1,3)::> > \n> > \n> >\n> > \n> > \n> > \n> >\n> > ]",
+        "[ulist(1,5):+::6::\n\n  þ\n\n  \n  \n  \n\n  \n]",
+        "[tbreak(1,7):-::--------]",
+        "[block-quote(2,7)::> \n> >   > \n> > ]",
+        "[para(2,9):\n]",
+        "[text(2,9):block 1\nblock 2::\n]",
+        "[end-para:::False]",
+        "[end-block-quote::> > :True]",
+        "[tbreak(4,7):-::--------]",
+        "[BLANK(5,4):]",
+        "[fcode-block(6,7):`:3:block:::::]",
+        "[text(7,1):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(9,4):]",
+        "[tbreak(10,7):-::--------]",
+        "[BLANK(11,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<blockquote>
+<ul>
+<li>
+<hr />
+<blockquote>
+<p>block 1
+block 2</p>
+</blockquote>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+</ul>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_extra_999():
     """
     Temporary test to keep coverage up while consistency checks disabled.

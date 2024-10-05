@@ -276,8 +276,9 @@ class FileScanHelper:
     def __process_file_fix_rescan(
         self, fix_debug: bool, fix_nolog_rescan: bool, next_file_two: str
     ) -> List[MarkdownToken]:
-        if fix_debug:
-            print(f"scan: {next_file_two}")
+        _ = fix_debug
+        # if fix_debug:
+        #     print(f"scan: {next_file_two}")
         POGGER.info("Rescanning file '$' before line-by-line fixes.", next_file_two)
         source_provider = FileSourceProvider(next_file_two)
 
@@ -727,8 +728,8 @@ class FileScanHelper:
             #     for i,j in enumerate(actual_tokens):
             #         print(f" {i:02}:{ParserHelper.make_value_visible(j)}")
             #     print("BEFORE-XXX-----")
-            # if fix_debug:
-            #     print(f" {ParserHelper.make_value_visible(next_replace_index)}")
+            if fix_debug:
+                print(f" {ParserHelper.make_value_visible(next_replace_index)}")
             self.__apply_replacement_fix(context, next_replace_index, actual_tokens)
         if fix_debug:
             print("TOKENS-----")
