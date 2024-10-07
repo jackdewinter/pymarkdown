@@ -38,16 +38,25 @@ with open(expected_file_path, encoding="utf-8") as file_to_parse:
 if file_as_lines[1][0] != "=":
     print("BAD5")
     sys.exit(1)
-file_as_lines[0] = "# " + file_as_lines[0]
+file_as_lines[0] = f"# {file_as_lines[0]}"
 file_as_lines[1] = "\n"
 
-rt = file_as_lines.index("#### Parameters\n")
-file_as_lines.insert(rt, "<!-- pyml disable-next-line header-increment-->")
+# rt = file_as_lines.index("#### Parameters\n")
+# file_as_lines.insert(rt, "<!-- pyml disable-next-line header-increment-->\n")
 
 rt = file_as_lines.index("Classes\n")
 assert rt != -1
-file_as_lines[rt] = "## " + file_as_lines[rt]
+file_as_lines[rt] = f"## {file_as_lines[rt]}"
 del file_as_lines[rt + 1]
+
+for j, i in enumerate(file_as_lines):
+    x = i
+    if x and x[-1] == "\n":
+        x = x[:-1]
+    y = x.rstrip()
+    if y != x:
+        # print(f"{j}>{x}<>{y}<")
+        file_as_lines[j] = f"{y}\n"
 
 # If the file does not end in a newline, add one...
 if file_as_lines[-1]:
