@@ -89,6 +89,8 @@ to improve the project for everyone!
 ### Changed
 
 - Started to pull common code from MD031 for use in Md027
+- [Issue 1226](https://github.com/jackdewinter/pymarkdown/issues/1226)
+    - improved API documentation
 
 ## Version 0.9.23 - Date: 2024-09-04
 

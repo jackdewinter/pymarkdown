@@ -1,15 +1,14 @@
 # API Support
 
-While most people using the PyMarkdown application use it via the
-command line, we understand that a subsection of our users want a programming interface
-to interact with.  For these users, our team provides a Python API with an
-auto-generated [API Listing](api/pymarkdownapi.md) of that API.  Our team created
-this API Support document to augment the API Listing,
-providing easy-to-follow examples that illustrate how our team envisions the
-use of those APIs.
+While most users interact with the PyMarkdown application via the command line,
+we understand that some of our users want to use a application programming interface
+(API).  For these users, our team provides a Python API with an auto-generated
+[API Listing](api/pymarkdownapi.md) of that API.  Our team created this API Support
+document to augment the API Listing, providing easy-to-follow examples that
+illustrate how our team envisions the use of those APIs.
 
-Currently, only the equivalent of the `scan` and `scan --list` commands are
-presented through this API, as they were the ones most requested. If you need
+Currently, only the equivalent of the `scan`, `scan --list`, and `fix` commands
+are presented through this API, as they were the ones most requested. If you need
 any other APIs to expose the command line functionality of PyMarkdown, please
 follow our [feature request process](./usual.md).
 
@@ -346,6 +345,14 @@ followed, or an invalid value is used.
 The bulk of the above sections refers to the `scan_path` function, as that is the
 function used to scan Markdown files.  But the API has other functions that are
 useful.
+
+### fix_path
+
+This function is like the `scan_path` function, except that it uses the powerful
+PyMarkdown parser to determine if a fix can be applied to a scan failure and, if
+so, fixes the scan failure.  Note that not all scan failures can be automatically
+fixes, as mentioned in the [Fix Mode - Failure Correction](./user-guide.md#failure-correction-or-fix-mode)
+documentation.
 
 ### scan_string
 

@@ -63,7 +63,7 @@
             "totalTests": 24,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 1,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -1364,10 +1364,10 @@
         },
         {
             "name": "test.rules.test_md031",
-            "totalTests": 377,
+            "totalTests": 379,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 5,
+            "skippedTests": 1,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -1620,7 +1620,7 @@
         },
         {
             "name": "test.test_markdown_extra",
-            "totalTests": 340,
+            "totalTests": 342,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 1,
