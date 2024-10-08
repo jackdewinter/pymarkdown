@@ -320,7 +320,7 @@ the `main.yml` file.
         uses: actions/checkout@v4
 
       - name: Setup Python 3.8
-        uses: actions/setup-python@v5.1.0
+        uses: actions/setup-python@v5.2.0
         with:
           python-version: 3.8
 

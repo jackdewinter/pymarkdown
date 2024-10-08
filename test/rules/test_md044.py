@@ -4,6 +4,7 @@ Module to provide tests related to the MD044 rule.
 
 import os
 from test.rules.utils import (
+    calculate_fix_tests,
     execute_configuration_test,
     execute_fix_test,
     execute_query_configuration_test,
@@ -942,10 +943,6 @@ is bad
 """,
     ),
 ]
-fixTests = []
-for i in scanTests:
-    if i.fix_expected_file_contents:
-        fixTests.append(i)
 
 
 @pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
@@ -956,7 +953,9 @@ def test_md044_scan(test: pluginRuleTest) -> None:
     execute_scan_test(test, "md044")
 
 
-@pytest.mark.parametrize("test", fixTests, ids=id_test_plug_rule_fn)
+@pytest.mark.parametrize(
+    "test", calculate_fix_tests(scanTests), ids=id_test_plug_rule_fn
+)
 def test_md044_fix(test: pluginRuleTest) -> None:
     """
     Execute a parameterized fix test for plugin md001.

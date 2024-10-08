@@ -4,6 +4,7 @@ Module to provide tests related to the MD001 rule.
 
 import os
 from test.rules.utils import (
+    calculate_fix_tests,
     execute_configuration_test,
     execute_fix_test,
     execute_query_configuration_test,
@@ -159,10 +160,6 @@ kick in if there is a title field in the front matter.
 """,
     ),
 ]
-fixTests = []
-for i in scanTests:
-    if i.fix_expected_file_contents:
-        fixTests.append(i)
 
 
 @pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
@@ -173,7 +170,9 @@ def test_md001_scan(test: pluginRuleTest) -> None:
     execute_scan_test(test, "md001")
 
 
-@pytest.mark.parametrize("test", fixTests, ids=id_test_plug_rule_fn)
+@pytest.mark.parametrize(
+    "test", calculate_fix_tests(scanTests), ids=id_test_plug_rule_fn
+)
 def test_md001_fix(test: pluginRuleTest) -> None:
     """
     Execute a parameterized fix test for plugin md001.

@@ -254,10 +254,7 @@ class TransformNewListItem:
             split_leading_spaces = found_block_quote_token.bleading_spaces.split(
                 ParserHelper.newline_character
             )
-            leading_space = (
-                split_leading_spaces[line_number_delta - 1]
-                or split_leading_spaces[line_number_delta]
-            )
+            leading_space = split_leading_spaces[line_number_delta]
 
             POGGER.debug(f"rnli->leading_space>:{leading_space}:")
             adjustment_since_newline = len(leading_space)

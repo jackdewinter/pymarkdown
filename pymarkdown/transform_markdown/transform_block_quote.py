@@ -144,15 +144,9 @@ class TransformBlockQuote:
         return token_stack_index
 
     @staticmethod
-    def rehydrate_block_quote_end(
-        context: MarkdownTransformContext,
+    def __rehydrate_block_quote_end_calc(
         current_token: MarkdownToken,
-        actual_tokens: List[MarkdownToken],
-        token_index: int,
-    ) -> str:
-        POGGER.debug(">>__rehydrate_block_quote_end")
-        _ = current_token
-
+    ) -> Tuple[BlockQuoteMarkdownToken, Optional[str], int, List[str]]:
         current_end_token = cast(EndMarkdownToken, current_token)
         current_start_token = cast(
             BlockQuoteMarkdownToken, current_end_token.start_markdown_token
@@ -166,6 +160,7 @@ class TransformBlockQuote:
             f"current_end_token_extra>:{ParserHelper.make_value_visible(current_end_token_extra)}:<"
         )
         start_leading_index = current_start_token.leading_text_index
+
         assert (
             current_start_token.bleading_spaces is not None
         ), "Bleading spaces should be defined by now."
@@ -178,6 +173,31 @@ class TransformBlockQuote:
         POGGER.debug(
             f"split_start_leading>>:{ParserHelper.make_value_visible(split_start_leading)}:<"
         )
+
+        return (
+            current_start_token,
+            current_end_token_extra,
+            start_leading_index,
+            split_start_leading,
+        )
+
+    @staticmethod
+    def rehydrate_block_quote_end(
+        context: MarkdownTransformContext,
+        current_token: MarkdownToken,
+        actual_tokens: List[MarkdownToken],
+        token_index: int,
+    ) -> str:
+        POGGER.debug(">>__rehydrate_block_quote_end")
+        _ = current_token
+
+        (
+            current_start_token,
+            current_end_token_extra,
+            start_leading_index,
+            split_start_leading,
+        ) = TransformBlockQuote.__rehydrate_block_quote_end_calc(current_token)
+
         adjusted_end_string = (
             current_end_token_extra
             if start_leading_index + 1 < len(split_start_leading)
@@ -202,8 +222,9 @@ class TransformBlockQuote:
             indent_adjust = (
                 actual_tokens[search_index].line_number
                 - current_start_token.line_number
-                - 0
             )
+            if actual_tokens[token_index - 1].is_blank_line:
+                indent_adjust -= 1
 
             for indent_index in range(len(context.container_token_indents) - 1, -1, -1):
                 if context.container_token_stack[indent_index].is_block_quote_start:

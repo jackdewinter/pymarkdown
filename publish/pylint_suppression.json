@@ -15,13 +15,13 @@
         },
         "pymarkdown/application_logging.py": {},
         "pymarkdown/block_quotes/block_quote_count_helper.py": {
-            "too-many-arguments": 8
+            "too-many-arguments": 7
         },
         "pymarkdown/block_quotes/block_quote_data.py": {},
         "pymarkdown/block_quotes/block_quote_non_fenced_helper.py": {
             "too-few-public-methods": 1,
-            "too-many-arguments": 7,
-            "too-many-locals": 3
+            "too-many-arguments": 5,
+            "too-many-locals": 1
         },
         "pymarkdown/block_quotes/block_quote_processor.py": {
             "too-many-arguments": 7,
@@ -32,13 +32,14 @@
         },
         "pymarkdown/container_blocks/container_block_leaf_processor.py": {
             "too-few-public-methods": 1,
-            "too-many-arguments": 9,
+            "too-many-arguments": 10,
             "chained-comparison": 2,
             "too-many-boolean-expressions": 1,
             "too-many-locals": 2
         },
         "pymarkdown/container_blocks/container_block_nested_processor.py": {
             "too-few-public-methods": 1,
+            "too-many-locals": 1,
             "too-many-arguments": 1
         },
         "pymarkdown/container_blocks/container_block_non_leaf_processor.py": {},
@@ -54,7 +55,8 @@
         },
         "pymarkdown/container_blocks/container_helper.py": {
             "too-few-public-methods": 1,
-            "too-many-arguments": 2
+            "too-many-arguments": 2,
+            "too-many-locals": 1
         },
         "pymarkdown/container_blocks/container_indices.py": {},
         "pymarkdown/container_blocks/parse_block_pass_properties.py": {},
@@ -96,8 +98,8 @@
             "protected-access": 1
         },
         "pymarkdown/file_scan_helper.py": {
-            "too-many-arguments": 9,
-            "too-many-locals": 6
+            "too-many-arguments": 10,
+            "too-many-locals": 5
         },
         "pymarkdown/general/__init__.py": {},
         "pymarkdown/general/bad_tokenization_error.py": {},
@@ -178,7 +180,8 @@
             "too-many-locals": 2
         },
         "pymarkdown/leaf_blocks/leaf_block_helper.py": {
-            "too-many-arguments": 3
+            "too-many-arguments": 3,
+            "too-many-locals": 1
         },
         "pymarkdown/leaf_blocks/leaf_block_processor.py": {
             "too-many-arguments": 2
@@ -351,6 +354,7 @@
         "pymarkdown/plugins/rule_pml_100.py": {},
         "pymarkdown/plugins/rule_pml_101.py": {},
         "pymarkdown/plugins/utils/container_token_manager.py": {},
+        "pymarkdown/plugins/utils/leading_space_index_tracker.py": {},
         "pymarkdown/plugins/utils/list_tracker.py": {},
         "pymarkdown/return_code_helper.py": {},
         "pymarkdown/tokens/atx_heading_markdown_token.py": {
@@ -360,6 +364,7 @@
             "protected-access": 1
         },
         "pymarkdown/tokens/block_quote_markdown_token.py": {
+            "too-many-instance-attributes": 1,
             "protected-access": 1
         },
         "pymarkdown/tokens/container_markdown_token.py": {
@@ -482,8 +487,8 @@
         "pymarkdown/transform_markdown/transform_block_quote.py": {},
         "pymarkdown/transform_markdown/transform_containers.py": {
             "too-few-public-methods": 1,
-            "too-many-arguments": 10,
-            "too-many-locals": 1,
+            "too-many-arguments": 19,
+            "too-many-locals": 3,
             "too-many-boolean-expressions": 2
         },
         "pymarkdown/transform_markdown/transform_list_block.py": {
@@ -500,11 +505,11 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-instance-attributes": 25,
+        "too-many-instance-attributes": 26,
         "too-many-public-methods": 4,
         "too-few-public-methods": 39,
-        "too-many-arguments": 245,
-        "too-many-locals": 48,
+        "too-many-arguments": 253,
+        "too-many-locals": 50,
         "chained-comparison": 2,
         "too-many-boolean-expressions": 3,
         "protected-access": 25,

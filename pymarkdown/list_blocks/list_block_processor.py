@@ -490,7 +490,13 @@ class ListBlockProcessor:
                 ListStartMarkdownToken,
                 parser_state.token_stack[ind].matching_markdown_token,
             )
+            POGGER.debug(
+                "__list_in_process_update_containers>>list_token>>$", list_token
+            )
             list_token.add_leading_spaces(used_indent)
+            POGGER.debug(
+                "__list_in_process_update_containers>>list_token>>$", list_token
+            )
         else:
             stack_index = parser_state.find_last_list_block_on_stack()
             need_to_add_leading_spaces = False
@@ -515,7 +521,13 @@ class ListBlockProcessor:
                     ListStartMarkdownToken,
                     parser_state.token_stack[stack_index].matching_markdown_token,
                 )
+                POGGER.debug(
+                    "__list_in_process_update_containers2>>list_token>>$", list_token
+                )
                 list_token.add_leading_spaces("")
+                POGGER.debug(
+                    "__list_in_process_update_containers2>>list_token>>$", list_token
+                )
 
     # pylint: disable=too-many-locals
     @staticmethod

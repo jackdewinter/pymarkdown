@@ -1785,7 +1785,6 @@ def test_nested_three_unordered_block_ordered_with_blank_fenced_a():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_block_ordered_with_blank_fenced_bx():
     """
     TBD - from https://github.com/jackdewinter/pymarkdown/issues/731
@@ -1802,7 +1801,7 @@ def test_nested_three_unordered_block_ordered_with_blank_fenced_bx():
 """
 
     expected_tokens = [
-        "[ulist(1,1):-::2::\n  \n  \n  \n]",
+        "[ulist(1,1):-::2::  \n  \n  \n]",
         "[para(1,3):]",
         "[text(1,3):Test List:]",
         "[end-para:::True]",
@@ -1955,7 +1954,6 @@ def test_nested_three_unordered_block_ordered_with_blank_fenced_bb():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_block_ordered_with_blank_fenced_bc():
     """
     TBD - from https://github.com/jackdewinter/pymarkdown/issues/731
@@ -2015,7 +2013,6 @@ def test_nested_three_unordered_block_ordered_with_blank_fenced_bc():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_block_ordered_with_blank_fenced_bdx():
     """
     TBD - from https://github.com/jackdewinter/pymarkdown/issues/731
@@ -2196,7 +2193,7 @@ abc</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
+# @pytest.mark.skip
 def test_nested_three_unordered_block_ordered_with_blank_fenced_be():
     """
     TBD - from https://github.com/jackdewinter/pymarkdown/issues/731
@@ -2266,7 +2263,6 @@ abc
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_block_ordered_with_blank_fenced_bf():
     """
     TBD - from https://github.com/jackdewinter/pymarkdown/issues/731
@@ -2414,7 +2410,6 @@ block
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_block_ordered_with_blank_fenced_c1():
     """
     TBD - from https://github.com/jackdewinter/pymarkdown/issues/731
@@ -2432,7 +2427,7 @@ def test_nested_three_unordered_block_ordered_with_blank_fenced_c1():
 """
 
     expected_tokens = [
-        "[ulist(1,1):-::2::\n  \n  \n  \n  \n]",
+        "[ulist(1,1):-::2::  \n  \n  \n  \n]",
         "[para(1,3):]",
         "[text(1,3):Test List:]",
         "[end-para:::True]",

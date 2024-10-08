@@ -10,7 +10,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_ordered():
+def test_nested_three_block_block_ordered_x():
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -298,7 +298,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_nl_ordered_no_bq1():
+def test_nested_three_block_nl_block_nl_ordered_no_bq1_x():
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -1794,7 +1794,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_nl_ordered_no_bq1():
+def test_nested_three_block_skip_nl_block_nl_ordered_no_bq1_x():
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.

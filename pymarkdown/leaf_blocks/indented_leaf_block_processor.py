@@ -272,8 +272,16 @@ class IndentedLeafBlockProcessor:
                 if split_tab
                 else original_line[: -(len(fex_space))]
             )
+            POGGER.debug(
+                "__parse_indented_code_block_with_tab_list>>list_token>>$",
+                last_list_token,
+            )
             last_list_token.remove_last_leading_space()
             last_list_token.add_leading_spaces(xx_dd)
+            POGGER.debug(
+                "__parse_indented_code_block_with_tab_list>>list_token>>$",
+                last_list_token,
+            )
         return None, ex_part, xx_left_over, False
 
     # pylint: enable=too-many-locals

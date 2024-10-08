@@ -4,6 +4,7 @@ Module to provide tests related to the MD047 rule.
 
 import os
 from test.rules.utils import (
+    calculate_fix_tests,
     execute_fix_test,
     execute_query_configuration_test,
     execute_scan_test,
@@ -58,7 +59,6 @@ The line after this line is blank, but contains two spaces.
     pluginRuleTest(
         "bad_end_with_no_blank_line_fix_and_debug",
         source_file_name=f"{source_path}end_with_no_blank_line.md",
-        use_fix_debug=True,
         source_file_contents="""# This is a test
 
 The line after this line should be blank.""",
@@ -69,6 +69,7 @@ The line after this line should be blank.""",
 
 The line after this line should be blank.
 """,
+        use_fix_debug=True,
         fix_expected_output="""md009-before:# This is a test:
 md010-before:# This is a test:
 md047-before:# This is a test:
@@ -138,10 +139,6 @@ a line of text
 """,
     ),
 ]
-fixTests = []
-for i in scanTests:
-    if i.fix_expected_file_contents:
-        fixTests.append(i)
 
 
 @pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
@@ -152,7 +149,9 @@ def test_md047_scan(test: pluginRuleTest) -> None:
     execute_scan_test(test, "md047")
 
 
-@pytest.mark.parametrize("test", fixTests, ids=id_test_plug_rule_fn)
+@pytest.mark.parametrize(
+    "test", calculate_fix_tests(scanTests), ids=id_test_plug_rule_fn
+)
 def test_md047_fix(test: pluginRuleTest) -> None:
     """
     Execute a parameterized fix test for plugin md001.

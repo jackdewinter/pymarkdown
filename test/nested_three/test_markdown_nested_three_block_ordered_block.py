@@ -62,7 +62,7 @@ def test_nested_three_block_nl_ordered_nl_block_x():
         "[BLANK(1,2):]",
         "[olist(2,3):.:1:5::\n]",
         "[BLANK(2,5):]",
-        "[block-quote(3,4)::> \n>    > ]",
+        "[block-quote(3,6)::> \n>    > ]",
         "[para(3,8):\n]",
         "[text(3,8):list\nitem::\n]",
         "[end-para:::True]",
@@ -192,7 +192,7 @@ def test_nested_three_block_nl_ordered_nl_block_no_bq3():
         "[BLANK(1,2):]",
         "[olist(2,3):.:1:5::\n]",
         "[BLANK(2,5):]",
-        "[block-quote(3,4)::> \n]",
+        "[block-quote(3,6)::> \n]",
         "[para(3,8):\n     ]",
         "[text(3,8):list\n\a>\a&gt;\a item::\n]",
         "[end-para:::True]",
@@ -451,7 +451,7 @@ def test_nested_three_block_skip_nl_ordered_nl_block():
         "[BLANK(1,2):]",
         "[olist(2,3):.:1:5::\n]",
         "[BLANK(2,5):]",
-        "[block-quote(3,4)::> \n]",
+        "[block-quote(3,6)::> \n]",
         "[para(3,8):\n     ]",
         "[text(3,8):list\n\a>\a&gt;\a item::\n]",
         "[end-para:::True]",
@@ -695,9 +695,9 @@ def test_nested_three_block_ordered_block_skip():
 >       item"""
     expected_tokens = [
         "[block-quote(1,1)::> ]",
-        "[olist(1,3):.:1:5::]",
+        "[olist(1,3):.:1:5::   þ]",
         "[block-quote(1,6)::> \n> ]",
-        "[para(1,8):\n      ]",
+        "[para(1,8):\n   ]",
         "[text(1,8):list\nitem::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
@@ -734,10 +734,10 @@ def test_nested_three_block_nl_ordered_nl_block_skip():
     expected_tokens = [
         "[block-quote(1,1)::>\n> \n> ]",
         "[BLANK(1,2):]",
-        "[olist(2,3):.:1:5::\n]",
+        "[olist(2,3):.:1:5::\n   þ]",
         "[BLANK(2,5):]",
-        "[block-quote(3,4)::> \n> ]",
-        "[para(3,8):\n     ]",
+        "[block-quote(3,6)::> \n> ]",
+        "[para(3,8):\n  ]",
         "[text(3,8):list\nitem::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
@@ -863,7 +863,7 @@ def test_nested_three_block_nl_ordered_nl_block_skip_no_bq3():
         "[BLANK(1,2):]",
         "[olist(2,3):.:1:5::\n]",
         "[BLANK(2,5):]",
-        "[block-quote(3,4)::> \n]",
+        "[block-quote(3,6)::> \n]",
         "[para(3,8):\n       ]",
         "[text(3,8):list\nitem::\n]",
         "[end-para:::True]",
@@ -903,12 +903,12 @@ def test_nested_three_block_text_nl_ordered_text_nl_block_skip():
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
-        "[olist(2,3):.:1:5::\n]",
+        "[olist(2,3):.:1:5::\n   þ]",
         "[para(2,6):]",
         "[text(2,6):def:]",
         "[end-para:::True]",
         "[block-quote(3,6)::> \n> ]",
-        "[para(3,8):\n     ]",
+        "[para(3,8):\n  ]",
         "[text(3,8):list\nitem::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
@@ -1114,7 +1114,7 @@ def test_nested_three_block_skip_nl_ordered_nl_block_skip():
         "[BLANK(1,2):]",
         "[olist(2,3):.:1:5::\n]",
         "[BLANK(2,5):]",
-        "[block-quote(3,4)::> \n]",
+        "[block-quote(3,6)::> \n]",
         "[para(3,8):\n       ]",
         "[text(3,8):list\nitem::\n]",
         "[end-para:::True]",
@@ -1672,9 +1672,9 @@ def test_nested_three_block_max_ordered_max_block_max_no_bq2():
    >            item"""
     expected_tokens = [
         "[block-quote(1,4):   :   > ]",
-        "[olist(1,9):.:1:14:   :]",
+        "[olist(1,9):.:1:14:   :         þ]",
         "[block-quote(1,15)::> \n   > ]",
-        "[para(1,17):\n           ]",
+        "[para(1,17):\n  ]",
         "[text(1,17):list\nitem::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
@@ -1741,7 +1741,7 @@ def test_nested_three_block_max_ordered_max_block_max_no_bq2_with_li():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_ordered_max_block_max_empty_no_bq2():
+def test_nested_three_block_max_ordered_max_block_max_empty_no_bq2_x():
     """
     Verify that a nesting of block quote, ordered list, block quote, with
     the maximum number of spaces allowed, and no text on the first line, works properly,

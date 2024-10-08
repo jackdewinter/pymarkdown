@@ -4,6 +4,8 @@ Module to provide tests related to the MD027 rule.
 
 import os
 from test.rules.utils import (
+    calculate_fix_tests,
+    calculate_scan_tests,
     execute_fix_test,
     execute_query_configuration_test,
     execute_scan_test,
@@ -726,6 +728,40 @@ scanTests = [
         scan_expected_output="",
     ),
     pluginRuleTest(
+        "md031_orig_bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block_with_thematics",
+        source_file_contents="""> + > -----
+>   > > block 1
+>   > > block 2
+>   > -----
+>   > ```block
+>   > A code block
+>   > ```
+>   > -----
+> + another list
+""",
+        disable_rules="",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:7: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:7: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)""",
+    ),
+    pluginRuleTest(
+        "md031_final_bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block_with_thematics",
+        source_file_contents="""> + > -----
+>   > > block 1
+>   > > block 2
+>   > -----
+>   >
+>   > ```block
+>   > A code block
+>   > ```
+>   >
+>   > -----
+> + another list""",
+        disable_rules="md047,md032",
+        scan_expected_return_code=0,
+        scan_expected_output="""""",
+    ),
+    pluginRuleTest(
         "bad_fenced_block_in_list_in_block_quote_in_list_with_previous_block",
         source_file_contents="""1. > + ----
    >   > block 1
@@ -737,7 +773,6 @@ scanTests = [
 """,
         disable_rules="md007,md009,md012,md030,md031",
         scan_expected_return_code=0,
-        # use_debug=True,
         scan_expected_output="",
     ),
     pluginRuleTest(
@@ -750,6 +785,24 @@ scanTests = [
 >     A code block
 >     ```
 >     -----
+> + another list
+""",
+        disable_rules="md007,md009,md012,md030,md031",
+        scan_expected_return_code=0,
+        # use_debug=True,
+        scan_expected_output="",
+    ),
+    pluginRuleTest(
+        "md031_final_bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_blockx",
+        source_file_contents="""> + > -----
+>   > > block 1
+>   > > block 2
+>   >
+>   > ```block
+>   > A code block
+>   > ```
+>   >
+>   > -----
 > + another list
 """,
         disable_rules="md007,md009,md012,md030,md031",
@@ -845,13 +898,11 @@ scanTests = [
 """,
     ),
 ]
-fixTests = []
-for i in scanTests:
-    if i.fix_expected_file_contents:
-        fixTests.append(i)
 
 
-@pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
+@pytest.mark.parametrize(
+    "test", calculate_scan_tests(scanTests), ids=id_test_plug_rule_fn
+)
 def test_md027_scan(test: pluginRuleTest) -> None:
     """
     Execute a parameterized scan test for plugin md001.
@@ -859,7 +910,9 @@ def test_md027_scan(test: pluginRuleTest) -> None:
     execute_scan_test(test, "md027")
 
 
-@pytest.mark.parametrize("test", fixTests, ids=id_test_plug_rule_fn)
+@pytest.mark.parametrize(
+    "test", calculate_fix_tests(scanTests), ids=id_test_plug_rule_fn
+)
 def test_md027_fix(test: pluginRuleTest) -> None:
     """
     Execute a parameterized fix test for plugin md001.

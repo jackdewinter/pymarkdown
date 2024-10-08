@@ -3,7 +3,7 @@ Module to provide for an encapsulation of the block quote element.
 """
 
 import logging
-from typing import Dict, Optional, Union
+from typing import Dict, Optional, Tuple, Union
 
 from typing_extensions import override
 
@@ -21,6 +21,8 @@ from pymarkdown.transform_markdown.markdown_transform_context import (
 )
 
 POGGER = ParserLogger(logging.getLogger(__name__))
+
+# pylint: disable=too-many-instance-attributes
 
 
 class BlockQuoteMarkdownToken(ContainerMarkdownToken):
@@ -46,6 +48,10 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
         self.__compose_extra_data_field()
         self.weird_kludge_one: Optional[int] = None
         self.weird_kludge_two: Optional[int] = None
+        self.weird_kludge_three: bool = False
+        self.weird_kludge_four: Optional[Tuple[int, int, int, str]] = None
+        self.weird_kludge_five = False
+        self.weird_kludge_six = False
 
     # pylint: disable=protected-access
     @staticmethod
@@ -101,6 +107,7 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
                 else leading_spaces_to_add
             )
         )
+        self.weird_kludge_five = True
         POGGER.debug(
             "__leading_spaces>>:$:<<",
             self.__leading_spaces,
@@ -126,6 +133,7 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
         if last_separator_index == -1:
             extracted_text = self.__leading_spaces
             self.__leading_spaces = ""
+            self.weird_kludge_five = False
         else:
             extracted_text = self.__leading_spaces[last_separator_index:]
             self.__leading_spaces = self.__leading_spaces[:last_separator_index]
@@ -235,3 +243,6 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
             self.__compose_extra_data_field()
             return True
         return super()._modify_token(field_name, field_value)
+
+
+# pylint: enable=too-many-instance-attributes

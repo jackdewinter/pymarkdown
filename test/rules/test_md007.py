@@ -4,6 +4,7 @@ Module to provide tests related to the MD007 rule.
 
 import os
 from test.rules.utils import (
+    calculate_fix_tests,
     execute_configuration_test,
     execute_fix_test,
     execute_query_configuration_test,
@@ -252,6 +253,7 @@ scanTests = [
 >    * this is level 2
 """,
         scan_expected_return_code=1,
+        use_debug=True,
         scan_expected_output=(
             "{temp_source_path}:4:6: MD007: Unordered list indentation [Expected: 2, Actual=3] (ul-indent)"
         ),
@@ -668,6 +670,25 @@ scanTests = [
 """,
     ),
     pluginRuleTest(
+        "bad_xxx",
+        source_file_contents="""> > + --------
+> >   > block 1
+> >   > block 2
+> >\a
+> >  ```block
+> >   A code block
+> >   ```
+> >\a
+> >  --------
+> >\a
+""".replace(
+            "\a", " "
+        ),
+        disable_rules="md004,md027,md023,md009",
+        scan_expected_return_code=0,
+        scan_expected_output="",
+    ),
+    pluginRuleTest(
         "mix_md007_md004",
         source_file_contents=""" + first
    * second
@@ -840,10 +861,6 @@ scanTests = [
 """,
     ),
 ]
-fixTests = []
-for i in scanTests:
-    if i.fix_expected_file_contents:
-        fixTests.append(i)
 
 
 @pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
@@ -854,7 +871,9 @@ def test_md007_scan(test: pluginRuleTest) -> None:
     execute_scan_test(test, "md007")
 
 
-@pytest.mark.parametrize("test", fixTests, ids=id_test_plug_rule_fn)
+@pytest.mark.parametrize(
+    "test", calculate_fix_tests(scanTests), ids=id_test_plug_rule_fn
+)
 def test_md007_fix(test: pluginRuleTest) -> None:
     """
     Execute a parameterized fix test for plugin md001.

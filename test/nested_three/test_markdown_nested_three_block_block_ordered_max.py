@@ -496,8 +496,10 @@ def test_nested_three_block_max_block_max_ordered_max_empty_with_space_drop_orde
     """
 
     # Arrange
-    source_markdown = """   >    >    1. 
-   >    >    item"""
+    source_markdown = """   >    >    1.\a
+   >    >    item""".replace(
+        "\a", " "
+    )
     expected_tokens = [
         "[block-quote(1,4):   :   > ]",
         "[block-quote(1,9)::   >    > \n   >    > ]",
@@ -560,7 +562,7 @@ def test_nested_three_block_max_block_max_ordered_max_empty_drop_ordered_no_item
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_drop_ordered_block():
+def test_nested_three_block_max_block_max_ordered_max_empty_drop_ordered_block_x():
     """
     Verify that a nesting of block quote, block quote, ordered list, and
     no text on the first line, with
@@ -2330,7 +2332,7 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_with_li():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_with_li_and_nl():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_with_li_and_nl_x():
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,

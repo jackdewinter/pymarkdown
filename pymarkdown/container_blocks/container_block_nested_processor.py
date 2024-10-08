@@ -18,6 +18,8 @@ from pymarkdown.general.parser_state import ParserState
 from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.list_blocks.list_block_starts_helper import ListBlockStartsHelper
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
+from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
+from pymarkdown.tokens.setext_heading_markdown_token import SetextHeadingMarkdownToken
 from pymarkdown.tokens.stack_token import ListStackToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
@@ -64,6 +66,13 @@ class ContainerBlockNestedProcessor:
                 "__handle_nested_container_blocks>nested_container_starts>>:$:<<",
                 nested_container_starts,
             )
+
+            if (
+                len(grab_bag.container_tokens) == 1
+                and grab_bag.container_tokens[0].is_block_quote_end
+            ):
+                parser_state.token_document.extend(grab_bag.container_tokens)
+                grab_bag.container_tokens.clear()
 
             grab_bag.adj_line_to_parse = position_marker.text_to_parse
 
@@ -506,6 +515,7 @@ class ContainerBlockNestedProcessor:
             ), "The nested list start cannot be None."
         return False
 
+    # pylint: disable=too-many-locals
     @staticmethod
     def __calculate_initial_list_adjustments(
         parser_state: ParserState,
@@ -525,9 +535,11 @@ class ContainerBlockNestedProcessor:
             "parser_state.nested_list_start.matching_markdown_token>>$<<",
             parser_state.nested_list_start.matching_markdown_token,
         )
-        list_start_token_index = parser_state.token_document.index(
-            parser_state.nested_list_start.matching_markdown_token
+        mmt_list = cast(
+            ListStartMarkdownToken,
+            parser_state.nested_list_start.matching_markdown_token,
         )
+        list_start_token_index = parser_state.token_document.index(mmt_list)
         POGGER.debug(
             "list_start_token_index>>$<<",
             list_start_token_index,
@@ -540,14 +552,27 @@ class ContainerBlockNestedProcessor:
                 "token_after_list_start>>$<<",
                 token_after_list_start,
             )
+            if token_after_list_start.is_setext_heading:
+                setext_token_after_list_start = cast(
+                    SetextHeadingMarkdownToken, token_after_list_start
+                )
+                line_number = setext_token_after_list_start.original_line_number
+                column_number = setext_token_after_list_start.original_column_number
+            else:
+                line_number = token_after_list_start.line_number
+                column_number = token_after_list_start.column_number
             assert (
-                parser_state.nested_list_start.matching_markdown_token.line_number
-                == token_after_list_start.line_number
+                mmt_list.line_number == line_number
             ), "Token after the list start must have the same line number as the list start."
-            column_number_delta = (
-                token_after_list_start.column_number
-                - parser_state.nested_list_start.matching_markdown_token.column_number
+
+            total_list_start = (
+                mmt_list.list_start_content + mmt_list.list_start_sequence
             )
+            column_number_delta = column_number - mmt_list.column_number
+            if token_after_list_start.is_blank_line and column_number_delta == len(
+                total_list_start
+            ):
+                column_number_delta += 1
         else:
             column_number_delta = 0
         POGGER.debug(
@@ -570,6 +595,8 @@ class ContainerBlockNestedProcessor:
         indent_level = column_number_delta + end_container_indices.block_index
 
         return start_index, indent_level, indent_was_adjusted, indent_level_delta
+
+    # pylint: enable=too-many-locals
 
     # pylint: disable=too-many-arguments
     @staticmethod

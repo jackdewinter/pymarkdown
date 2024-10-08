@@ -6,7 +6,7 @@ container modules.
 """
 
 import logging
-from typing import List, Tuple, cast
+from typing import List, Optional, Tuple, cast
 
 from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
 from pymarkdown.container_blocks.container_grab_bag import ContainerGrabBag
@@ -14,6 +14,7 @@ from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.parser_state import ParserState
 from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
+from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.tokens.stack_token import ListStackToken
 
@@ -36,6 +37,7 @@ class ContainerHelper:
     ) -> Tuple[bool, str, str]:
         did_once = False
         whitespace_prefix = ""
+        # list_indent_level = None
         if parser_state.token_stack[-1].is_list:
             search_index = len(parser_state.token_stack)
             leading_space_length = (
@@ -77,7 +79,27 @@ class ContainerHelper:
                 extracted_whitespace = ""
         return did_once, extracted_whitespace, whitespace_prefix
 
-    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __xx(parser_state: ParserState, extra_bqs: int) -> List[MarkdownToken]:
+        until_index = len(parser_state.token_stack) - 1
+        needed_bqs = extra_bqs
+        while (
+            until_index > 0
+            and needed_bqs > 0
+            and parser_state.token_stack[until_index].is_block_quote
+        ):
+            until_index -= 1
+            needed_bqs -= 1
+        x_tokens, _ = parser_state.close_open_blocks_fn(
+            parser_state,
+            include_block_quotes=True,
+            was_forced=True,
+            until_this_index=until_index + 1,
+        )
+        POGGER.debug("x_tokens>>:$:<", x_tokens)
+        return x_tokens
+
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __reduce_containers_if_required_bq(
         parser_state: ParserState,
@@ -86,15 +108,13 @@ class ContainerHelper:
         split_tab: bool,
         extracted_whitespace: str,
         grab_bag: ContainerGrabBag,
-    ) -> Tuple[bool, str]:
-        x_tokens, _ = parser_state.close_open_blocks_fn(
-            parser_state,
-            include_block_quotes=True,
-            was_forced=True,
-            until_this_index=len(parser_state.token_stack) - 1,
-        )
-        POGGER.debug("x_tokens>>:$:<", x_tokens)
-        assert len(x_tokens) == 1, "Should have generated only one token."
+        extra_bqs: int,
+    ) -> Tuple[bool, str, Optional[str]]:
+        x_tokens = ContainerHelper.__xx(parser_state, extra_bqs)
+        assert (
+            len(x_tokens) == extra_bqs
+        ), "Should have generated the requested number of tokens."
+
         first_new_token = cast(EndMarkdownToken, x_tokens[0])
 
         did_reduce_list, extracted_whitespace, whitespace_prefix = (
@@ -125,18 +145,18 @@ class ContainerHelper:
         last_newline_part = matching_start_token.bleading_spaces[
             last_newline_index + 1 :
         ]
-        POGGER.debug("last_newline_part>>:$:<", last_newline_part)
+        # POGGER.debug("last_newline_part>>:$:<", last_newline_part)
         if split_tab:
             assert last_newline_part.endswith(
                 " "
             ), "Bleading space part must end with a space character."
             last_newline_part = last_newline_part[:-1]
-            POGGER.debug("last_newline_part>>:$:<", last_newline_part)
+            # POGGER.debug("last_newline_part>>:$:<", last_newline_part)
             split_tab = False
-        POGGER.debug("split_tab>>:$:<", split_tab)
+        # POGGER.debug("split_tab>>:$:<", split_tab)
         last_newline_part += whitespace_prefix
 
-        POGGER.debug("extra_end_data>>:$:<", first_new_token.extra_end_data)
+        # POGGER.debug("extra_end_data>>:$:<", first_new_token.extra_end_data)
         assert (
             first_new_token.extra_end_data is None
         ), "Extra data must be defined by this point."
@@ -152,9 +172,39 @@ class ContainerHelper:
             first_new_token.set_extra_end_data(last_newline_part)
 
         new_tokens.extend(x_tokens)
-        return split_tab, extracted_whitespace
+        new_whitespace_prefix = ContainerHelper.__handle_whitespace_prefix(
+            parser_state, whitespace_prefix, last_newline_part
+        )
+        return split_tab, extracted_whitespace, new_whitespace_prefix
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
+
+    @staticmethod
+    def __handle_whitespace_prefix(
+        parser_state: ParserState, whitespace_prefix: str, last_newline_part: str
+    ) -> Optional[str]:
+        new_whitespace_prefix = None
+        if whitespace_prefix:
+            indent_level = 0
+            stack_index = len(parser_state.token_stack) - 1
+            while stack_index > 0:
+                if parser_state.token_stack[stack_index].is_list:
+                    indent_level += cast(
+                        ListStartMarkdownToken,
+                        parser_state.token_stack[stack_index].matching_markdown_token,
+                    ).indent_level
+                    break
+                bleading_spaces = cast(
+                    BlockQuoteMarkdownToken,
+                    parser_state.token_stack[stack_index].matching_markdown_token,
+                ).bleading_spaces
+                assert bleading_spaces is not None
+                split_bleading_spaces = bleading_spaces.split("\n")
+                last_split_bleading_spaces = len(split_bleading_spaces[-1])
+                indent_level += last_split_bleading_spaces
+                stack_index -= 1
+            new_whitespace_prefix = last_newline_part[indent_level:]
+        return new_whitespace_prefix
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -166,7 +216,7 @@ class ContainerHelper:
         split_tab: bool,
         extracted_whitespace: str,
         grab_bag: ContainerGrabBag,
-    ) -> Tuple[bool, str]:
+    ) -> Tuple[bool, str, Optional[str]]:
         """
         Given a drop in the current count of block quotes versus what is actually
         specified, reduce the containers.
@@ -181,12 +231,13 @@ class ContainerHelper:
         POGGER.debug("parser_state.token_stack[-1]>>:$:<", parser_state.token_stack[-1])
 
         # TODO While? needs to take lists into account as well
+        whitespace_prefix: Optional[str] = None
         if (
             block_quote_data.current_count >= 0
             and block_quote_data.stack_count > block_quote_data.current_count
             and parser_state.token_stack[-1].is_block_quote
         ):
-            split_tab, extracted_whitespace = (
+            split_tab, extracted_whitespace, whitespace_prefix = (
                 ContainerHelper.__reduce_containers_if_required_bq(
                     parser_state,
                     position_marker,
@@ -194,10 +245,11 @@ class ContainerHelper:
                     split_tab,
                     extracted_whitespace,
                     grab_bag,
+                    block_quote_data.stack_count - block_quote_data.current_count,
                 )
             )
 
-        return split_tab, extracted_whitespace
+        return split_tab, extracted_whitespace, whitespace_prefix
 
     # pylint: enable=too-many-arguments
 
