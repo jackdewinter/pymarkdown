@@ -890,25 +890,26 @@ This is a blank line and some text.
 > This is a blank line and some text.
 """,
     ),
-    pluginRuleTest(  # test_extra_047f6 https://github.com/jackdewinter/pymarkdown/issues/1213
+    pluginRuleTest(  # test_extra_047f6 test_extra_047f6d https://github.com/jackdewinter/pymarkdown/issues/1213
         "bad_fenced_block_in_block_quote_with_previous_inner_blocks",
         source_file_contents="""> > inner block
 > > > innermost block
 > > > innermost block
+> > _____
 > > inner block
 > ```block
 > A code block
 > ```
 >This is a blank line and some text.
 """,
-        mark_fix_as_skipped=True,
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:5:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
-{temp_source_path}:7:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+        scan_expected_output="""{temp_source_path}:6:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:8:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         fix_expected_file_contents="""> > inner block
 > > > innermost block
 > > > innermost block
+> > _____
 > > inner block
 >
 > ```block
@@ -981,7 +982,7 @@ This is a blank line and some text.
 >This is a blank line and some text.
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_047f3
         "bad_fenced_block_in_block_quote_with_previous_inner_blocks_with_setext",
         source_file_contents="""> > inner block
 > > > innermost block
@@ -1934,7 +1935,7 @@ abc
 > > ```
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_044x test_extra_044a
         "bad_fenced_block_in_block_quote_in_block_quote_with_previous_inner_block_with_thematics",
         source_file_contents="""> > > block 3
 > > > block 3
@@ -2106,7 +2107,7 @@ abc
 > > --------
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_044lx test_nested_three_block_block_unordered_drop_list_after_new_list_and_text_with_thematic_and_fenced_with_blanks
         "bad_fenced_block_in_block_quote_in_block_quote_with_previous_inner_list_with_thematics",
         source_file_contents="""> > + block 3
 > >   block 3
@@ -2236,7 +2237,7 @@ abc
 > > > --------
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_044ma
         "bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_block_with_thematics",
         source_file_contents="""> > >
 > > > > fourth block 1
@@ -2326,7 +2327,7 @@ abc
 > > > --------
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_044mcy0
         "bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_list_with_thematics",
         source_file_contents="""> > >
 > > > + inner list 1
@@ -2449,6 +2450,7 @@ abc
 {temp_source_path}:6:7: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
+        use_debug=True,
         fix_expected_file_contents="""> > + --------
 > >   > block 1
 > >   > block 2
@@ -2985,7 +2987,7 @@ abc
    > > ----
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_044mx2
         "bad_fenced_block_in_list_in_block_quote_in_list",
         source_file_contents="""1. > + ----
    >   ```block
@@ -3090,7 +3092,7 @@ abc
    >   <!-- html -->
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_044mcw2
         "bad_fenced_block_in_list_in_block_quote_in_list_with_previous_block_4",
         source_file_contents="""1. > + ----
    >   > block 1
@@ -3482,7 +3484,7 @@ abc
 > + another list
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_044la0 test_extra_044la1
         "bad_fenced_block_in_list_in_block_quote_with_previous_inner_block_0",
         source_file_contents="""> + list 1
 >   > block 2
@@ -3932,7 +3934,7 @@ abc
 > + another list
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_044jax test_extra_044jaa
         "bad_fenced_block_in_block_quote_in_list_in_block_quote",
         source_file_contents="""> + > -----
 >   > ```block
@@ -3956,7 +3958,7 @@ abc
 > + another list
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_044jxx test_extra_044jxa
         "bad_fenced_block_in_block_quote_in_list_in_block_quote_empty",
         source_file_contents="""> + > -----
 >   > ```block
@@ -4007,7 +4009,7 @@ abc
 > + another list
 """,
     ),
-    pluginRuleTest(  # test_extra_047d0
+    pluginRuleTest(  # test_extra_047d0, test_extra_047d1
         "bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_blocks",
         source_file_contents="""> + > -----
 >   > > block 1
@@ -4155,7 +4157,7 @@ abc
 > + another list
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_044mcu0 test_extra_044mcu1
         "bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_and_thematics",
         source_file_contents="""> + > -----
 >   > + list 1
@@ -4299,7 +4301,7 @@ abc
 > + another list
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_044mct0 test_extra_044mct1
         "bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_with_thematics",
         source_file_contents="""> + + -----
 >     > block 1
@@ -4395,7 +4397,7 @@ abc
 > + another list
 """,
     ),
-    pluginRuleTest(  # test_extra_044mcs1
+    pluginRuleTest(  # test_extra_044mcs0 test_extra_044mcs1
         "bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_and_thematics",
         source_file_contents="""> + + -----
 >     + list 1
@@ -4533,7 +4535,7 @@ abc
     more text
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_044mcr0 test_extra_044mcr1
         "bad_fenced_block_in_list_in_list_with_previous_inner_block",
         source_file_contents="""+ + list 1
     > block 2.1
@@ -4905,7 +4907,7 @@ abc
   + another list
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_044lc
         "bad_fenced_block_in_block_quote_in_list_in_list_with_previous_block_and_thematics",
         source_file_contents="""+ + > -----
     > > block 1
@@ -5217,7 +5219,7 @@ abc
     + another list
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_044mcq0 test_extra_044mcq1
         "bad_fenced_block_in_list_in_list_in_list_with_previous_list_0",
         source_file_contents="""+ + + -----
       + list 1

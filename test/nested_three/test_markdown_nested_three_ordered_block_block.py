@@ -1940,3 +1940,945 @@ def test_nested_three_ordered_max_block_max_block_max_plus_one_no_bq3():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_ordered_block_block_drop_block_with_fenced():
+    """
+    Verify that a nesting of ordered list, block quote, block quote, with
+    the maximum number of spaces (plus one for the third) allowed, works properly,
+    with no block quote characters on the second line.
+
+    was: test_extra_046t0
+    refs: bad_fenced_block_in_block_quote_in_list_with_previous_inner_block
+    """
+    # Arrange
+    source_markdown = """1. > >
+   > > block 3
+   > > block 3
+   > ```block
+   > A code block
+   > ```
+   > --------
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n\n\n\n\n\n]",
+        "[block-quote(1,4):   :   > \n   > \n   > \n]",
+        "[block-quote(1,6):   :   > >\n   > > \n   > > \n   > ]",
+        "[BLANK(1,7):]",
+        "[para(2,8):\n]",
+        "[text(2,8):block 3\nblock 3::\n]",
+        "[end-para:::False]",
+        "[end-block-quote::   > :True]",
+        "[fcode-block(4,6):`:3:block:::::]",
+        "[text(5,6):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(7,6):-::--------]",
+        "[end-block-quote:::True]",
+        "[BLANK(8,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<blockquote>
+<blockquote>
+<p>block 3
+block 3</p>
+</blockquote>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</blockquote>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_ordered_block_block_drop_block_with_blanks_aroundfenced():
+    """
+    Verify that a nesting of ordered list, block quote, block quote, with
+    the maximum number of spaces (plus one for the third) allowed, works properly,
+    with no block quote characters on the second line.
+
+    was: test_extra_046t1
+    refs: bad_fenced_block_in_block_quote_in_list_with_previous_inner_block
+    """
+    # Arrange
+    source_markdown = """1. > >
+   > > block 3
+   > > block 3
+   >
+   > ```block
+   > A code block
+   > ```
+   >
+   > --------
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n\n\n\n\n\n\n\n\n]",
+        "[block-quote(1,4):   :   > \n   > \n   > \n   >\n   > \n]",
+        "[block-quote(1,6):   :   > >\n   > > \n   > > \n   >]",
+        "[BLANK(1,7):]",
+        "[para(2,8):\n]",
+        "[text(2,8):block 3\nblock 3::\n]",
+        "[end-para:::True]",
+        "[BLANK(4,5):]",
+        "[end-block-quote:::True]",
+        "[fcode-block(5,6):`:3:block:::::]",
+        "[text(6,6):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(8,5):]",
+        "[tbreak(9,6):-::--------]",
+        "[end-block-quote:::True]",
+        "[BLANK(10,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<blockquote>
+<blockquote>
+<p>block 3
+block 3</p>
+</blockquote>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</blockquote>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_ordered_block_block_nl_extra_block_single_line_drop_block_with_fenced():
+    """
+    Verify that a nesting of ordered list, block quote, block quote, with
+    the maximum number of spaces (plus one for the third) allowed, works properly,
+    with no block quote characters on the second line.
+
+    was: test_extra_046s0
+    refs: bad_fenced_block_in_block_quote_in_list_with_previous_inner_block_and_para_continue
+    """
+    # Arrange
+    source_markdown = """1. > >
+   > > block 3
+   > block 3
+   > ```block
+   > A code block
+   > ```
+   > --------
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n\n\n\n\n\n]",
+        "[block-quote(1,4):   :   > \n   > \n   > \n]",
+        "[block-quote(1,6):   :   > >\n   > > \n   > \n   > ]",
+        "[BLANK(1,7):]",
+        "[para(2,8):\n]",
+        "[text(2,8):block 3\nblock 3::\n]",
+        "[end-para:::False]",
+        "[end-block-quote::   > :True]",
+        "[fcode-block(4,6):`:3:block:::::]",
+        "[text(5,6):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(7,6):-::--------]",
+        "[end-block-quote:::True]",
+        "[BLANK(8,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<blockquote>
+<blockquote>
+<p>block 3
+block 3</p>
+</blockquote>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</blockquote>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_ordered_block_block_nl_extra_block_single_line_drop_block_with_blanks_around_fenced():
+    """
+    Verify that a nesting of ordered list, block quote, block quote, with
+    the maximum number of spaces (plus one for the third) allowed, works properly,
+    with no block quote characters on the second line.
+
+    was: test_extra_046s1
+    refs: bad_fenced_block_in_block_quote_in_list_with_previous_inner_block_and_para_continue
+    """
+    # Arrange
+    source_markdown = """1. > >
+   > > block 3
+   > block 3
+   >
+   > ```block
+   > A code block
+   > ```
+   >
+   > --------
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n\n\n\n\n\n\n\n\n]",
+        "[block-quote(1,4):   :   > \n   > \n   > \n   >\n   > \n]",
+        "[block-quote(1,6):   :   > >\n   > > \n   > \n   >]",
+        "[BLANK(1,7):]",
+        "[para(2,8):\n]",
+        "[text(2,8):block 3\nblock 3::\n]",
+        "[end-para:::True]",
+        "[BLANK(4,5):]",
+        "[end-block-quote:::True]",
+        "[fcode-block(5,6):`:3:block:::::]",
+        "[text(6,6):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(8,5):]",
+        "[tbreak(9,6):-::--------]",
+        "[end-block-quote:::True]",
+        "[BLANK(10,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<blockquote>
+<blockquote>
+<p>block 3
+block 3</p>
+</blockquote>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</blockquote>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_ordered_block_block_with_thematics_around_fenced():
+    """
+    Verify that a nesting of ordered list, block quote, block quote, with
+    the maximum number of spaces (plus one for the third) allowed, works properly,
+    with no block quote characters on the second line.
+
+    was: test_extra_046r0
+    refs: bad_fenced_block_in_block_quote_in_block_quote_in_list
+    """
+    # Arrange
+    source_markdown = """1. > > ----
+   > > ```block
+   > > A code block
+   > > ```
+   > > ----
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n\n\n\n]",
+        "[block-quote(1,4):   :]",
+        "[block-quote(1,6):   :   > > \n   > > \n   > > \n   > > \n   > > \n]",
+        "[tbreak(1,8):-::----]",
+        "[fcode-block(2,8):`:3:block:::::]",
+        "[text(3,8):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(5,8):-::----]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(6,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<blockquote>
+<blockquote>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</blockquote>
+</blockquote>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_ordered_block_block_with_thematics_around_blanks_around_fenced():
+    """
+    Verify that a nesting of ordered list, block quote, block quote, with
+    the maximum number of spaces (plus one for the third) allowed, works properly,
+    with no block quote characters on the second line.
+
+    was: test_extra_046r1
+    refs: bad_fenced_block_in_block_quote_in_block_quote_in_list
+    """
+    # Arrange
+    source_markdown = """1. > > ----
+   > >
+   > > ```block
+   > > A code block
+   > > ```
+   > >
+   > > ----
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n\n\n\n\n\n\n\n]",
+        "[block-quote(1,4):   :]",
+        "[block-quote(1,6):   :   > > \n   > >\n   > > \n   > > \n   > > \n   > >\n   > > \n]",
+        "[tbreak(1,8):-::----]",
+        "[BLANK(2,7):]",
+        "[fcode-block(3,8):`:3:block:::::]",
+        "[text(4,7):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(6,7):]",
+        "[tbreak(7,8):-::----]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(8,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<blockquote>
+<blockquote>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</blockquote>
+</blockquote>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_ordered_block_block_with_thematics_around_empty_fenced():
+    """
+    Verify that a nesting of ordered list, block quote, block quote, with
+    the maximum number of spaces (plus one for the third) allowed, works properly,
+    with no block quote characters on the second line.
+
+    was: test_extra_046q0
+    refs: bad_fenced_block_in_block_quote_in_block_quote_in_list_empty
+    """
+    # Arrange
+    source_markdown = """1. > > ----
+   > > ```block
+   > > ```
+   > > ----
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n\n\n]",
+        "[block-quote(1,4):   :]",
+        "[block-quote(1,6):   :   > > \n   > > \n   > > \n   > > \n]",
+        "[tbreak(1,8):-::----]",
+        "[fcode-block(2,8):`:3:block:::::]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(4,8):-::----]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(5,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<blockquote>
+<blockquote>
+<hr />
+<pre><code class="language-block"></code></pre>
+<hr />
+</blockquote>
+</blockquote>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_ordered_block_block_with_thematics_around_blanks_around_empty_fenced():
+    """
+    Verify that a nesting of ordered list, block quote, block quote, with
+    the maximum number of spaces (plus one for the third) allowed, works properly,
+    with no block quote characters on the second line.
+
+    was: test_extra_046q1
+    refs: bad_fenced_block_in_block_quote_in_block_quote_in_list_empty
+    """
+    # Arrange
+    source_markdown = """1. > > ----
+   > >
+   > > ```block
+   > > ```
+   > >
+   > > ----
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n\n\n\n\n\n\n]",
+        "[block-quote(1,4):   :]",
+        "[block-quote(1,6):   :   > > \n   > >\n   > > \n   > > \n   > >\n   > > \n]",
+        "[tbreak(1,8):-::----]",
+        "[BLANK(2,7):]",
+        "[fcode-block(3,8):`:3:block:::::]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(5,7):]",
+        "[tbreak(6,8):-::----]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(7,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<blockquote>
+<blockquote>
+<hr />
+<pre><code class="language-block"></code></pre>
+<hr />
+</blockquote>
+</blockquote>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_ordered_block_block_nl_extra_block_drop_block_with_fenced():
+    """
+    Verify that a nesting of ordered list, block quote, block quote, with
+    the maximum number of spaces (plus one for the third) allowed, works properly,
+    with no block quote characters on the second line.
+
+    was: test_extra_046m0
+    refs: bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_block
+    """
+    # Arrange
+    source_markdown = """1. > > ----
+   > > > inner block 1
+   > > > inner block 2
+   > > ```block
+   > > A code block
+   > > ```
+   > > ----
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n\n\n\n\n\n]",
+        "[block-quote(1,4):   :]",
+        "[block-quote(1,6):   :   > > \n   > > \n   > > \n   > > \n]",
+        "[tbreak(1,8):-::----]",
+        "[block-quote(2,4):   :   > > > \n   > > > \n   > > ]",
+        "[para(2,10):\n]",
+        "[text(2,10):inner block 1\ninner block 2::\n]",
+        "[end-para:::False]",
+        "[end-block-quote::   > > :True]",
+        "[fcode-block(4,8):`:3:block:::::]",
+        "[text(5,8):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(7,8):-::----]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(8,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<blockquote>
+<blockquote>
+<hr />
+<blockquote>
+<p>inner block 1
+inner block 2</p>
+</blockquote>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</blockquote>
+</blockquote>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_ordered_block_block_nl_extra_block_drop_block_with_blanks_around_fenced():
+    """
+    Verify that a nesting of ordered list, block quote, block quote, with
+    the maximum number of spaces (plus one for the third) allowed, works properly,
+    with no block quote characters on the second line.
+
+    was: test_extra_046m1
+    refs: bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_block
+    """
+    # Arrange
+    source_markdown = """1. > > ----
+   > > > inner block 1
+   > > > inner block 2
+   > >
+   > > ```block
+   > > A code block
+   > > ```
+   > >
+   > > ----
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n\n\n\n\n\n\n\n\n]",
+        "[block-quote(1,4):   :]",
+        "[block-quote(1,6):   :   > > \n   > > \n   > > \n   > > \n   > >\n   > > \n]",
+        "[tbreak(1,8):-::----]",
+        "[block-quote(2,4):   :   > > > \n   > > > \n   > >]",
+        "[para(2,10):\n]",
+        "[text(2,10):inner block 1\ninner block 2::\n]",
+        "[end-para:::True]",
+        "[BLANK(4,7):]",
+        "[end-block-quote:::True]",
+        "[fcode-block(5,8):`:3:block:::::]",
+        "[text(6,8):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(8,7):]",
+        "[tbreak(9,8):-::----]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(10,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<blockquote>
+<blockquote>
+<hr />
+<blockquote>
+<p>inner block 1
+inner block 2</p>
+</blockquote>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</blockquote>
+</blockquote>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_ordered_block_block_nl_extra_block_drop_block_with_thematics_around_fenced():
+    """
+    Verify that a nesting of ordered list, block quote, block quote, with
+    the maximum number of spaces (plus one for the third) allowed, works properly,
+    with no block quote characters on the second line.
+
+    was: test_extra_046k0
+    refs: bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_block_with_thematics
+    """
+    # Arrange
+    source_markdown = """1. > > ----
+   > > > inner block 1
+   > > > inner block 2
+   > > ----
+   > > ```block
+   > > A code block
+   > > ```
+   > > ----
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n\n\n\n\n\n\n]",
+        "[block-quote(1,4):   :]",
+        "[block-quote(1,6):   :   > > \n   > > \n   > > \n   > > \n   > > \n]",
+        "[tbreak(1,8):-::----]",
+        "[block-quote(2,4):   :   > > > \n   > > > \n   > > ]",
+        "[para(2,10):\n]",
+        "[text(2,10):inner block 1\ninner block 2::\n]",
+        "[end-para:::False]",
+        "[end-block-quote::   > > :True]",
+        "[tbreak(4,8):-::----]",
+        "[fcode-block(5,8):`:3:block:::::]",
+        "[text(6,8):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(8,8):-::----]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(9,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<blockquote>
+<blockquote>
+<hr />
+<blockquote>
+<p>inner block 1
+inner block 2</p>
+</blockquote>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</blockquote>
+</blockquote>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_ordered_block_block_nl_extra_block_drop_block_with_thematics_around_blanks_around_fenced():
+    """
+    Verify that a nesting of ordered list, block quote, block quote, with
+    the maximum number of spaces (plus one for the third) allowed, works properly,
+    with no block quote characters on the second line.
+
+    was: test_extra_046k1
+    refs: bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_block_with_thematics
+    """
+    # Arrange
+    source_markdown = """1. > > ----
+   > > > inner block 1
+   > > > inner block 2
+   > > ----
+   > >
+   > > ```block
+   > > A code block
+   > > ```
+   > >
+   > > ----
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n\n\n\n\n\n\n\n\n\n\n]",
+        "[block-quote(1,4):   :]",
+        "[block-quote(1,6):   :   > > \n   > >\n   > > \n   > > \n   > > \n   > >\n   > > \n]",
+        "[tbreak(1,8):-::----]",
+        "[block-quote(2,4):   :   > > > \n   > > > \n   > > ]",
+        "[para(2,10):\n]",
+        "[text(2,10):inner block 1\ninner block 2::\n]",
+        "[end-para:::False]",
+        "[end-block-quote::   > > :True]",
+        "[tbreak(4,8):-::----]",
+        "[BLANK(5,7):]",
+        "[fcode-block(6,8):`:3:block:::::]",
+        "[text(7,7):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(9,7):]",
+        "[tbreak(10,8):-::----]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(11,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<blockquote>
+<blockquote>
+<hr />
+<blockquote>
+<p>inner block 1
+inner block 2</p>
+</blockquote>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</blockquote>
+</blockquote>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_ordered_block_block_nl_extra_list_li_drop_list_with_fenced():
+    """
+    Verify that a nesting of ordered list, block quote, block quote, with
+    the maximum number of spaces (plus one for the third) allowed, works properly,
+    with no block quote characters on the second line.
+
+    was: test_extra_046j0
+    refs: bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_list
+    """
+    # Arrange
+    source_markdown = """1. > > ----
+   > > + list 1
+   > >   list 2
+   > > + list 3
+   > > ```block
+   > > A code block
+   > > ```
+   > > ----
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n\n\n]",
+        "[block-quote(1,4):   :]",
+        "[block-quote(1,6):   :   > > \n   > > \n   > > \n   > > \n   > > \n   > > \n   > > \n   > > \n]",
+        "[tbreak(1,8):-::----]",
+        "[ulist(2,8):+::9::  \n]",
+        "[para(2,10):\n]",
+        "[text(2,10):list 1\nlist 2::\n]",
+        "[end-para:::True]",
+        "[li(4,8):9::]",
+        "[para(4,10):]",
+        "[text(4,10):list 3:]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[fcode-block(5,8):`:3:block:::::]",
+        "[text(6,8):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(8,8):-::----]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(9,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<blockquote>
+<blockquote>
+<hr />
+<ul>
+<li>list 1
+list 2</li>
+<li>list 3</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</blockquote>
+</blockquote>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_ordered_block_block_nl_extra_list_li_drop_list_with_blanks_around_fenced():
+    """
+    Verify that a nesting of ordered list, block quote, block quote, with
+    the maximum number of spaces (plus one for the third) allowed, works properly,
+    with no block quote characters on the second line.
+
+    was: test_extra_046j1
+    refs: bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_list
+    """
+    # Arrange
+    source_markdown = """1. > > ----
+   > > + list 1
+   > >   list 2
+   > > + list 3
+   > >
+   > > ```block
+   > > A code block
+   > > ```
+   > >
+   > > ----
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n\n\n\n\n]",
+        "[block-quote(1,4):   :]",
+        "[block-quote(1,6):   :   > > \n   > > \n   > > \n   > > \n   > >\n   > > \n   > > \n   > > \n   > >\n   > > \n]",
+        "[tbreak(1,8):-::----]",
+        "[ulist(2,8):+::9::  \n\n]",
+        "[para(2,10):\n]",
+        "[text(2,10):list 1\nlist 2::\n]",
+        "[end-para:::True]",
+        "[li(4,8):9::]",
+        "[para(4,10):]",
+        "[text(4,10):list 3:]",
+        "[end-para:::True]",
+        "[BLANK(5,7):]",
+        "[end-ulist:::True]",
+        "[fcode-block(6,8):`:3:block:::::]",
+        "[text(7,8):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(9,7):]",
+        "[tbreak(10,8):-::----]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(11,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<blockquote>
+<blockquote>
+<hr />
+<ul>
+<li>list 1
+list 2</li>
+<li>list 3</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</blockquote>
+</blockquote>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_ordered_block_block_nl_extra_list_li_drop_list_with_thematics_around_fenced():
+    """
+    Verify that a nesting of ordered list, block quote, block quote, with
+    the maximum number of spaces (plus one for the third) allowed, works properly,
+    with no block quote characters on the second line.
+
+    was: test_extra_046h0
+    refs: bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_list_with_thematics
+    """
+    # Arrange
+    source_markdown = """1. > > ----
+   > > + list 1
+   > >   list 2
+   > > + list 3
+   > > ----
+   > > ```block
+   > > A code block
+   > > ```
+   > > ----
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n\n\n\n\n\n]",
+        "[block-quote(1,4):   :]",
+        "[block-quote(1,6):   :   > > \n   > > \n   > > \n   > > \n   > > \n   > > \n   > > \n   > > \n   > > \n]",
+        "[tbreak(1,8):-::----]",
+        "[ulist(2,8):+::9::  ]",
+        "[para(2,10):\n]",
+        "[text(2,10):list 1\nlist 2::\n]",
+        "[end-para:::True]",
+        "[li(4,8):9::]",
+        "[para(4,10):]",
+        "[text(4,10):list 3:]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[tbreak(5,8):-::----]",
+        "[fcode-block(6,8):`:3:block:::::]",
+        "[text(7,8):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(9,8):-::----]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(10,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<blockquote>
+<blockquote>
+<hr />
+<ul>
+<li>list 1
+list 2</li>
+<li>list 3</li>
+</ul>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</blockquote>
+</blockquote>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_ordered_block_block_nl_extra_list_li_drop_list_with_thematics_around_blanks_around_fenced():
+    """
+    Verify that a nesting of ordered list, block quote, block quote, with
+    the maximum number of spaces (plus one for the third) allowed, works properly,
+    with no block quote characters on the second line.
+
+    was: test_extra_046h1
+    refs: bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_list_with_thematics
+    """
+    # Arrange
+    source_markdown = """1. > > ----
+   > > + list 1
+   > >   list 2
+   > > + list 3
+   > > ----
+   > >
+   > > ```block
+   > > A code block
+   > > ```
+   > >
+   > > ----
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n\n\n\n\n\n\n\n\n\n]",
+        "[block-quote(1,4):   :]",
+        "[block-quote(1,6):   :   > > \n   > > \n   > > \n   > > \n   > > \n   > >\n   > > \n   > > \n   > > \n   > >\n   > > \n]",
+        "[tbreak(1,8):-::----]",
+        "[ulist(2,8):+::9::  ]",
+        "[para(2,10):\n]",
+        "[text(2,10):list 1\nlist 2::\n]",
+        "[end-para:::True]",
+        "[li(4,8):9::]",
+        "[para(4,10):]",
+        "[text(4,10):list 3:]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[tbreak(5,8):-::----]",
+        "[BLANK(6,7):]",
+        "[fcode-block(7,8):`:3:block:::::]",
+        "[text(8,8):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(10,7):]",
+        "[tbreak(11,8):-::----]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(12,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<blockquote>
+<blockquote>
+<hr />
+<ul>
+<li>list 1
+list 2</li>
+<li>list 3</li>
+</ul>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</blockquote>
+</blockquote>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

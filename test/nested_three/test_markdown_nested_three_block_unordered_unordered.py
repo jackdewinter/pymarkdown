@@ -1601,3 +1601,2291 @@ def test_nested_three_block_max_unordered_max_unordered_max_plus_one_no_bq1():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_unordered_nl_extra_block_drop_block_thematics_around_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, with
+    a new line and an extra block quote, drop the block quote, and then thematics around
+    a fenced block.
+
+    was: test_extra_044mct0
+    refs: bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_with_thematics
+    """
+
+    # Arrange
+    source_markdown = """> + + -----
+>     > block 1
+>     > block 2
+>     -----
+>     ```block
+>     A code block
+>     ```
+>     -----
+> + another list"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4:]",
+        "[ulist(1,5):+::6:  :\n\n  þ\n    \n    \n    \n    ]",
+        "[tbreak(1,7):-::-----]",
+        "[block-quote(2,7)::>     > \n>     > \n> ]",
+        "[para(2,9):\n]",
+        "[text(2,9):block 1\nblock 2::\n]",
+        "[end-para:::False]",
+        "[end-block-quote::>   :True]",
+        "[tbreak(4,7):-::-----]",
+        "[fcode-block(5,7):`:3:block:::::]",
+        "[text(6,1):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(8,7):-::-----]",
+        "[end-ulist:::True]",
+        "[li(9,3):4::]",
+        "[para(9,5):]",
+        "[text(9,5):another list:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<ul>
+<li>
+<hr />
+<blockquote>
+<p>block 1
+block 2</p>
+</blockquote>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+</ul>
+</li>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_unordered_nl_extra_block_drop_block__with_thematics_around_blanks_around_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, with
+    a new line and an extra block quote, drop the block quote, and then thematics around
+    a fenced block.
+
+    was: test_extra_044mct1
+    refs: bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_with_thematics
+    """
+    # Arrange
+    source_markdown = """> + + -----
+>     > block 1
+>     > block 2
+>     -----
+>
+>     ```block
+>     A code block
+>     ```
+>
+>     -----
+> + another list"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n>\n> \n> \n> \n>\n> \n> ]",
+        "[ulist(1,3):+::4:]",
+        "[ulist(1,5):+::6:  :\n\n  þ\n\n    \n    \n    \n\n    ]",
+        "[tbreak(1,7):-::-----]",
+        "[block-quote(2,7)::>     > \n>     > \n> ]",
+        "[para(2,9):\n]",
+        "[text(2,9):block 1\nblock 2::\n]",
+        "[end-para:::False]",
+        "[end-block-quote::>   :True]",
+        "[tbreak(4,7):-::-----]",
+        "[BLANK(5,2):]",
+        "[fcode-block(6,7):`:3:block:::::]",
+        "[text(7,1):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(9,2):]",
+        "[tbreak(10,7):-::-----]",
+        "[end-ulist:::True]",
+        "[li(11,3):4::]",
+        "[para(11,5):]",
+        "[text(11,5):another list:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<ul>
+<li>
+<hr />
+<blockquote>
+<p>block 1
+block 2</p>
+</blockquote>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+</ul>
+</li>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_unordered_nl_extra_list_li_drop_list_with_thematics_around_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, with
+    a new line and an extra list, drop the block list, and then thematics around
+    a fenced block.
+
+    was: test_extra_044mcs0
+    refs: bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_and_thematics
+    """
+    # Arrange
+    source_markdown = """> + + -----
+>     + list 1
+>       list 2
+>     + list 3
+>     -----
+>     ```block
+>     A code block
+>     ```
+>     -----
+> + another list"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4:]",
+        "[ulist(1,5):+::6:  :    \n    \n    \n    ]",
+        "[tbreak(1,7):-::-----]",
+        "[ulist(2,7):+::8:    :      \n    ]",
+        "[para(2,9):\n]",
+        "[text(2,9):list 1\nlist 2::\n]",
+        "[end-para:::True]",
+        "[li(4,7):8:    :]",
+        "[para(4,9):]",
+        "[text(4,9):list 3:]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[tbreak(5,7):-::-----]",
+        "[fcode-block(6,7):`:3:block:::::]",
+        "[text(7,5):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(9,7):-::-----]",
+        "[end-ulist:::True]",
+        "[li(10,3):4::]",
+        "[para(10,5):]",
+        "[text(10,5):another list:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<ul>
+<li>
+<hr />
+<ul>
+<li>list 1
+list 2</li>
+<li>list 3</li>
+</ul>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+</ul>
+</li>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_unordered_nl_extra_list_li_drop_list_with_thematics_around_blanks_around_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, with
+    a new line and an extra list, drop the block list, and then thematics around
+    blanks around a fenced block.
+
+    was: test_extra_044mcs1
+    refs: bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_and_thematics
+    """
+    # Arrange
+    source_markdown = """> + + -----
+>     + list 1
+>       list 2
+>     + list 3
+>     -----
+>
+>     ```block
+>     A code block
+>     ```
+>
+>     -----
+> + another list"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n>\n> \n> \n> \n>\n> \n> ]",
+        "[ulist(1,3):+::4:]",
+        "[ulist(1,5):+::6:  :\n    \n    \n    \n\n    ]",
+        "[tbreak(1,7):-::-----]",
+        "[ulist(2,7):+::8:    :      \n    ]",
+        "[para(2,9):\n]",
+        "[text(2,9):list 1\nlist 2::\n]",
+        "[end-para:::True]",
+        "[li(4,7):8:    :]",
+        "[para(4,9):]",
+        "[text(4,9):list 3:]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[tbreak(5,7):-::-----]",
+        "[BLANK(6,2):]",
+        "[fcode-block(7,7):`:3:block:::::]",
+        "[text(8,5):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(10,2):]",
+        "[tbreak(11,7):-::-----]",
+        "[end-ulist:::True]",
+        "[li(12,3):4::]",
+        "[para(12,5):]",
+        "[text(12,5):another list:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<ul>
+<li>
+<hr />
+<ul>
+<li>list 1
+list 2</li>
+<li>list 3</li>
+</ul>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+</ul>
+</li>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_unordered_nl_extra_block_drop_block_with_thematics_around_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, with
+    a new line and an extra block, drop the block, and then thematics around
+    a fenced block.
+
+    was: test_extra_044mcz0x
+    refs: bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block
+    """
+    # Arrange
+    source_markdown = """> + + -----
+>     > block 1
+>     > block 2
+>     ```block
+>     A code block
+>     ```
+>     -----
+> + another list"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4:]",
+        "[ulist(1,5):+::6:  :\n\n  þ\n    \n    \n    ]",
+        "[tbreak(1,7):-::-----]",
+        "[block-quote(2,7)::>     > \n>     > \n> ]",
+        "[para(2,9):\n]",
+        "[text(2,9):block 1\nblock 2::\n]",
+        "[end-para:::False]",
+        "[end-block-quote::>   :True]",
+        "[fcode-block(4,7):`:3:block:::::]",
+        "[text(5,1):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(7,7):-::-----]",
+        "[end-ulist:::True]",
+        "[li(8,3):4::]",
+        "[para(8,5):]",
+        "[text(8,5):another list:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<ul>
+<li>
+<hr />
+<blockquote>
+<p>block 1
+block 2</p>
+</blockquote>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+</ul>
+</li>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_unordered_nl_extra_block_drop_block_with_thematics_around_blanks_around_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, with
+    a new line and an extra block, drop the block, and then thematics around
+    blanks around a fenced block.
+
+    was: test_extra_044mcz0a
+    refs: bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block
+    """
+    # Arrange
+    source_markdown = """> + + -----
+>     > block 1
+>     > block 2
+>
+>     ```block
+>     A code block
+>     ```
+>
+>     -----
+> + another list"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n>\n> \n> ]",
+        "[ulist(1,3):+::4:]",
+        "[ulist(1,5):+::6:  :\n\n\n    \n    \n    \n\n    ]",
+        "[tbreak(1,7):-::-----]",
+        "[block-quote(2,7)::>     > \n>     > \n>]",
+        "[para(2,9):\n]",
+        "[text(2,9):block 1\nblock 2::\n]",
+        "[end-para:::True]",
+        "[BLANK(4,2):]",
+        "[end-block-quote:::True]",
+        "[fcode-block(5,7):`:3:block:::::]",
+        "[text(6,1):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(8,2):]",
+        "[tbreak(9,7):-::-----]",
+        "[end-ulist:::True]",
+        "[li(10,3):4::]",
+        "[para(10,5):]",
+        "[text(10,5):another list:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<ul>
+<li>
+<hr />
+<blockquote>
+<p>block 1
+block 2</p>
+</blockquote>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+</ul>
+</li>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_nl_unordered_drop_list_with_text_and_thematics_around_blanks_around_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, dropping
+    the new list, with text and thematics around fenced.
+
+    was: test_extra_046dx
+    refs: bad_fenced_block_in_list_in_block_quote_with_previous_inner_list_and_para_continue_with_thematics
+    """
+    # Arrange
+    source_markdown = """> + list 1
+>   + list 2
+>   list 3
+>   ------
+>
+>   ```block
+>   A code block
+>   ```
+>
+>   ------
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n>\n> \n> \n> \n>\n> \n> ]",
+        "[ulist(1,3):+::4::\n  \n  \n  \n\n  \n]",
+        "[para(1,5):]",
+        "[text(1,5):list 1:]",
+        "[end-para:::True]",
+        "[ulist(2,5):+::6:  :  \n  ]",
+        "[para(2,7):\n]",
+        "[text(2,7):list 2\nlist 3::\n]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[tbreak(4,5):-::------]",
+        "[BLANK(5,2):]",
+        "[fcode-block(6,5):`:3:block:::::]",
+        "[text(7,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(9,2):]",
+        "[tbreak(10,5):-::------]",
+        "[li(11,3):4::]",
+        "[para(11,5):]",
+        "[text(11,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(12,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<p>list 1</p>
+<ul>
+<li>list 2
+list 3</li>
+</ul>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+<li>
+<p>another list</p>
+</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_nl_unordered_drop_list_with_text_and_thematics_around_around_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, dropping
+    the new list, with text and thematics around fenced.
+
+    was: test_extra_046x
+    refs: bad_fenced_block_in_list_in_block_quote_with_previous_inner_list_and_para_continue_with_thematics
+    """
+    # Arrange
+    source_markdown = """> + list 1
+>   + list 2
+>   list 3
+>   ------
+>   ```block
+>   A code block
+>   ```
+>   ------
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4::  \n  \n  \n  \n]",
+        "[para(1,5):]",
+        "[text(1,5):list 1:]",
+        "[end-para:::True]",
+        "[ulist(2,5):+::6:  :  \n  ]",
+        "[para(2,7):\n]",
+        "[text(2,7):list 2\nlist 3::\n]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[tbreak(4,5):-::------]",
+        "[fcode-block(5,5):`:3:block:::::]",
+        "[text(6,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(8,5):-::------]",
+        "[li(9,3):4::]",
+        "[para(9,5):]",
+        "[text(9,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(10,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>list 1
+<ul>
+<li>list 2
+list 3</li>
+</ul>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_nl_unordered_li_drop_list_with_thematics_around_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, dropping
+    the new list, with thematics around fenced.
+
+    was: test_extra_046e0
+    refs: bad_fenced_block_in_list_in_block_quote_with_previous_inner_list_with_thematics_sub3
+    """
+    # Arrange
+    source_markdown = """> + list 1
+>   + list 2
+>   + list 3
+>   _____
+>   ```block
+>   A code block
+>   ```
+>   _____
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4::  \n  \n  \n  \n]",
+        "[para(1,5):]",
+        "[text(1,5):list 1:]",
+        "[end-para:::True]",
+        "[ulist(2,5):+::6:  :  ]",
+        "[para(2,7):]",
+        "[text(2,7):list 2:]",
+        "[end-para:::True]",
+        "[li(3,5):6:  :]",
+        "[para(3,7):]",
+        "[text(3,7):list 3:]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[tbreak(4,5):_::_____]",
+        "[fcode-block(5,5):`:3:block:::::]",
+        "[text(6,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(8,5):_::_____]",
+        "[li(9,3):4::]",
+        "[para(9,5):]",
+        "[text(9,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(10,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>list 1
+<ul>
+<li>list 2</li>
+<li>list 3</li>
+</ul>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_nl_unordered_li_drop_list_with_thematics_around_blanks_around_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, dropping
+    the new list, with thematics around fenced.
+
+    was: test_extra_046e1, test_extra_046b
+    refs: bad_fenced_block_in_list_in_block_quote_with_previous_inner_list_with_thematics_sub3
+    """
+    # Arrange
+    source_markdown = """> + list 1
+>   + list 2
+>   + list 3
+>   _____
+>
+>   ```block
+>   A code block
+>   ```
+>
+>   _____
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n>\n> \n> \n> \n>\n> \n> ]",
+        "[ulist(1,3):+::4::\n  \n  \n  \n\n  \n]",
+        "[para(1,5):]",
+        "[text(1,5):list 1:]",
+        "[end-para:::True]",
+        "[ulist(2,5):+::6:  :  ]",
+        "[para(2,7):]",
+        "[text(2,7):list 2:]",
+        "[end-para:::True]",
+        "[li(3,5):6:  :]",
+        "[para(3,7):]",
+        "[text(3,7):list 3:]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[tbreak(4,5):_::_____]",
+        "[BLANK(5,2):]",
+        "[fcode-block(6,5):`:3:block:::::]",
+        "[text(7,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(9,2):]",
+        "[tbreak(10,5):_::_____]",
+        "[li(11,3):4::]",
+        "[para(11,5):]",
+        "[text(11,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(12,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<p>list 1</p>
+<ul>
+<li>list 2</li>
+<li>list 3</li>
+</ul>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+<li>
+<p>another list</p>
+</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_nl_unordered_drop_list_with_thematics_around_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, dropping
+    the new list, with thematics around fenced.
+
+    was: test_extra_044cx
+    refs: bad_fenced_block_in_list_in_block_quote_with_previous_inner_list_with_thematics
+    """
+    # Arrange
+    source_markdown = """> + list 1
+>   + list 2
+>     list 3
+>   ------
+>   ```block
+>   A code block
+>   ```
+>   ------
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4::  \n  \n  \n  \n]",
+        "[para(1,5):]",
+        "[text(1,5):list 1:]",
+        "[end-para:::True]",
+        "[ulist(2,5):+::6:  :    \n  ]",
+        "[para(2,7):\n]",
+        "[text(2,7):list 2\nlist 3::\n]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[tbreak(4,5):-::------]",
+        "[fcode-block(5,5):`:3:block:::::]",
+        "[text(6,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(8,5):-::------]",
+        "[li(9,3):4::]",
+        "[para(9,5):]",
+        "[text(9,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(10,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>list 1
+<ul>
+<li>list 2
+list 3</li>
+</ul>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_nl_unordered_drop_list_with_thematics_around_blanks_around_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, dropping
+    the new list, with thematics around fenced.
+
+    was: test_extra_044ca
+    refs: bad_fenced_block_in_list_in_block_quote_with_previous_inner_list_with_thematics
+    """
+    # Arrange
+    source_markdown = """> + list 1
+>   + list 2
+>     list 3
+>   ------
+>
+>   ```block
+>   A code block
+>   ```
+>
+>   ------
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n>\n> \n> \n> \n>\n> \n> ]",
+        "[ulist(1,3):+::4::\n  \n  \n  \n\n  \n]",
+        "[para(1,5):]",
+        "[text(1,5):list 1:]",
+        "[end-para:::True]",
+        "[ulist(2,5):+::6:  :    \n  ]",
+        "[para(2,7):\n]",
+        "[text(2,7):list 2\nlist 3::\n]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[tbreak(4,5):-::------]",
+        "[BLANK(5,2):]",
+        "[fcode-block(6,5):`:3:block:::::]",
+        "[text(7,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(9,2):]",
+        "[tbreak(10,5):-::------]",
+        "[li(11,3):4::]",
+        "[para(11,5):]",
+        "[text(11,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(12,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<p>list 1</p>
+<ul>
+<li>list 2
+list 3</li>
+</ul>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+<li>
+<p>another list</p>
+</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_nl_unordered_drop_double_list_with_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, dropping
+    the new list, with thematics around fenced.
+
+    was: test_extra_046f0a
+    """
+    # Arrange
+    source_markdown = """> + list 1
+>   + list 2
+>     list 3
+> ```block
+> A code block
+> ```
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4:]",
+        "[para(1,5):]",
+        "[text(1,5):list 1:]",
+        "[end-para:::True]",
+        "[ulist(2,5):+::6:  :    \n]",
+        "[para(2,7):\n]",
+        "[text(2,7):list 2\nlist 3::\n]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+        "[fcode-block(4,3):`:3:block:::::]",
+        "[text(5,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[ulist(7,3):+::4::]",
+        "[para(7,5):]",
+        "[text(7,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(8,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>list 1
+<ul>
+<li>list 2
+list 3</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+<ul>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_nl_unordered_drop_list_with_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, dropping
+    the new list, with thematics around fenced.
+
+    was: test_extra_046f0
+    refs: bad_fenced_block_in_list_in_block_quote_with_previous_inner_list
+    """
+    # Arrange
+    source_markdown = """> + list 1
+>   + list 2
+>     list 3
+>   ```block
+>   A code block
+>   ```
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4::  \n  \n]",
+        "[para(1,5):]",
+        "[text(1,5):list 1:]",
+        "[end-para:::True]",
+        "[ulist(2,5):+::6:  :    \n  ]",
+        "[para(2,7):\n]",
+        "[text(2,7):list 2\nlist 3::\n]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[fcode-block(4,5):`:3:block:::::]",
+        "[text(5,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[li(7,3):4::]",
+        "[para(7,5):]",
+        "[text(7,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(8,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>list 1
+<ul>
+<li>list 2
+list 3</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+</li>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_nl_unordered_drop_list_with_blanks_around_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, dropping
+    the new list, with thematics around fenced.
+
+    was: test_extra_046f1
+    refs: bad_fenced_block_in_list_in_block_quote_with_previous_inner_list
+    """
+    # Arrange
+    source_markdown = """> + list 1
+>   + list 2
+>     list 3
+>
+>   ```block
+>   A code block
+>   ```
+>
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n>\n> \n> \n> \n>\n> ]",
+        "[ulist(1,3):+::4::  \n  \n\n]",
+        "[para(1,5):]",
+        "[text(1,5):list 1:]",
+        "[end-para:::True]",
+        "[ulist(2,5):+::6:  :    \n\n  ]",
+        "[para(2,7):\n]",
+        "[text(2,7):list 2\nlist 3::\n]",
+        "[end-para:::True]",
+        "[BLANK(4,2):]",
+        "[end-ulist:::True]",
+        "[fcode-block(5,5):`:3:block:::::]",
+        "[text(6,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(8,2):]",
+        "[li(9,3):4::]",
+        "[para(9,5):]",
+        "[text(9,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(10,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<p>list 1</p>
+<ul>
+<li>list 2
+list 3</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+</li>
+<li>
+<p>another list</p>
+</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_nl_unordered_para_cont_drop_list_with_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, dropping
+    the new list, with thematics around fenced.
+
+    was: test_extra_046da
+    refs: bad_fenced_block_in_list_in_block_quote_with_previous_inner_list_and_para_continue
+    """
+    # Arrange
+    source_markdown = """> + list 1
+>   + list 2
+>   list 3
+>   ```block
+>   A code block
+>   ```
+>   ------
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4::  \n  \n  \n]",
+        "[para(1,5):]",
+        "[text(1,5):list 1:]",
+        "[end-para:::True]",
+        "[ulist(2,5):+::6:  :  \n  ]",
+        "[para(2,7):\n]",
+        "[text(2,7):list 2\nlist 3::\n]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[fcode-block(4,5):`:3:block:::::]",
+        "[text(5,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(7,5):-::------]",
+        "[li(8,3):4::]",
+        "[para(8,5):]",
+        "[text(8,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(9,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>list 1
+<ul>
+<li>list 2
+list 3</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_nl_unordered_para_cont_drop_list_with_blanks_around_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, dropping
+    the new list, with thematics around fenced.
+
+    was: test_extra_046db
+    refs: bad_fenced_block_in_list_in_block_quote_with_previous_inner_list_and_para_continue
+    """
+    # Arrange
+    source_markdown = """> + list 1
+>   + list 2
+>   list 3
+>
+>   ```block
+>   A code block
+>   ```
+>
+>   ------
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n>\n> \n> \n> \n>\n> \n> ]",
+        "[ulist(1,3):+::4::  \n  \n\n  \n]",
+        "[para(1,5):]",
+        "[text(1,5):list 1:]",
+        "[end-para:::True]",
+        "[ulist(2,5):+::6:  :  \n\n  ]",
+        "[para(2,7):\n]",
+        "[text(2,7):list 2\nlist 3::\n]",
+        "[end-para:::True]",
+        "[BLANK(4,2):]",
+        "[end-ulist:::True]",
+        "[fcode-block(5,5):`:3:block:::::]",
+        "[text(6,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(8,2):]",
+        "[tbreak(9,5):-::------]",
+        "[li(10,3):4::]",
+        "[para(10,5):]",
+        "[text(10,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(11,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<p>list 1</p>
+<ul>
+<li>list 2
+list 3</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+<li>
+<p>another list</p>
+</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_unordered_extra_list_li_drop_list_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, dropping
+    the new list, with text and thematics around fenced.
+
+    was: test_extra_046cc0
+    refs: bad_fenced_block_in_list_in_block_quote_with_previous_inner_list_and_para_continue_with_thematics
+    """
+    # Arrange
+    source_markdown = """> + + -----
+>     + list 1
+>       list 2
+>     + list 3
+>     ```block
+>     A code block
+>     ```
+>     -----
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4::]",
+        "[ulist(1,5):+::6:  :    \n    \n    ]",
+        "[tbreak(1,7):-::-----]",
+        "[ulist(2,7):+::8:    :      \n    ]",
+        "[para(2,9):\n]",
+        "[text(2,9):list 1\nlist 2::\n]",
+        "[end-para:::True]",
+        "[li(4,7):8:    :]",
+        "[para(4,9):]",
+        "[text(4,9):list 3:]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[fcode-block(5,7):`:3:block:::::]",
+        "[text(6,5):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(8,7):-::-----]",
+        "[end-ulist:::True]",
+        "[li(9,3):4::]",
+        "[para(9,5):]",
+        "[text(9,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(10,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<ul>
+<li>
+<hr />
+<ul>
+<li>list 1
+list 2</li>
+<li>list 3</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+</ul>
+</li>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_unordered_extra_list_li_drop_list_blanks_around_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, dropping
+    the new list, with text and thematics around fenced.
+
+    was: test_extra_046cc1
+    refs: bad_fenced_block_in_list_in_block_quote_with_previous_inner_list_and_para_continue_with_thematics
+    """
+    # Arrange
+    source_markdown = """> + + -----
+>     + list 1
+>       list 2
+>     + list 3
+>
+>     ```block
+>     A code block
+>     ```
+>
+>     -----
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n>\n> \n> \n> \n>\n> \n> ]",
+        "[ulist(1,3):+::4::]",
+        "[ulist(1,5):+::6:  :    \n    \n\n    ]",
+        "[tbreak(1,7):-::-----]",
+        "[ulist(2,7):+::8:    :      \n\n    ]",
+        "[para(2,9):\n]",
+        "[text(2,9):list 1\nlist 2::\n]",
+        "[end-para:::True]",
+        "[li(4,7):8:    :]",
+        "[para(4,9):]",
+        "[text(4,9):list 3:]",
+        "[end-para:::True]",
+        "[BLANK(5,2):]",
+        "[end-ulist:::True]",
+        "[fcode-block(6,7):`:3:block:::::]",
+        "[text(7,5):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(9,2):]",
+        "[tbreak(10,7):-::-----]",
+        "[end-ulist:::True]",
+        "[li(11,3):4::]",
+        "[para(11,5):]",
+        "[text(11,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(12,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<ul>
+<li>
+<hr />
+<ul>
+<li>list 1
+list 2</li>
+<li>list 3</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+</ul>
+</li>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_nl_unordered_extra_list_li_drop_list_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, dropping
+    the new list, with text and thematics around fenced.
+
+    was: test_extra_046cc2
+    """
+    # Arrange
+    source_markdown = """> +
+>   + -----
+>     + list 1
+>       list 2
+>     + list 3
+>     ```block
+>     A code block
+>     ```
+>     -----
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4::]",
+        "[BLANK(1,4):]",
+        "[ulist(2,5):+::6:  :    \n    \n    ]",
+        "[tbreak(2,7):-::-----]",
+        "[ulist(3,7):+::8:    :      \n    ]",
+        "[para(3,9):\n]",
+        "[text(3,9):list 1\nlist 2::\n]",
+        "[end-para:::True]",
+        "[li(5,7):8:    :]",
+        "[para(5,9):]",
+        "[text(5,9):list 3:]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[fcode-block(6,7):`:3:block:::::]",
+        "[text(7,5):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(9,7):-::-----]",
+        "[end-ulist:::True]",
+        "[li(10,3):4::]",
+        "[para(10,5):]",
+        "[text(10,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(11,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<ul>
+<li>
+<hr />
+<ul>
+<li>list 1
+list 2</li>
+<li>list 3</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+</ul>
+</li>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_nl_unordered_extra_list_li_drop_list_blanks_around_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, dropping
+    the new list, with text and thematics around fenced.
+
+    was: test_extra_046cc3
+    """
+    # Arrange
+    source_markdown = """> +
+>   + -----
+>     + list 1
+>       list 2
+>     + list 3
+>
+>     ```block
+>     A code block
+>     ```
+>
+>     -----
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n>\n> \n> \n> \n>\n> \n> ]",
+        "[ulist(1,3):+::4::]",
+        "[BLANK(1,4):]",
+        "[ulist(2,5):+::6:  :    \n    \n\n    ]",
+        "[tbreak(2,7):-::-----]",
+        "[ulist(3,7):+::8:    :      \n\n    ]",
+        "[para(3,9):\n]",
+        "[text(3,9):list 1\nlist 2::\n]",
+        "[end-para:::True]",
+        "[li(5,7):8:    :]",
+        "[para(5,9):]",
+        "[text(5,9):list 3:]",
+        "[end-para:::True]",
+        "[BLANK(6,2):]",
+        "[end-ulist:::True]",
+        "[fcode-block(7,7):`:3:block:::::]",
+        "[text(8,5):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(10,2):]",
+        "[tbreak(11,7):-::-----]",
+        "[end-ulist:::True]",
+        "[li(12,3):4::]",
+        "[para(12,5):]",
+        "[text(12,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(13,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<ul>
+<li>
+<hr />
+<ul>
+<li>list 1
+list 2</li>
+<li>list 3</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+</ul>
+</li>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_nl_thematics_unordered_extra_list_drop_list_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, dropping
+    the new list, with text and thematics around fenced.
+
+    was: test_extra_046cc4
+    """
+    # Arrange
+    source_markdown = """> +
+>   + -----
+>     + list 1
+>       list 2
+>     ```block
+>     A code block
+>     ```
+>     -----
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4::]",
+        "[BLANK(1,4):]",
+        "[ulist(2,5):+::6:  :    \n    \n    ]",
+        "[tbreak(2,7):-::-----]",
+        "[ulist(3,7):+::8:    :      \n    ]",
+        "[para(3,9):\n]",
+        "[text(3,9):list 1\nlist 2::\n]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[fcode-block(5,7):`:3:block:::::]",
+        "[text(6,5):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(8,7):-::-----]",
+        "[end-ulist:::True]",
+        "[li(9,3):4::]",
+        "[para(9,5):]",
+        "[text(9,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(10,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<ul>
+<li>
+<hr />
+<ul>
+<li>list 1
+list 2</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+</ul>
+</li>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_nl_unordered_extra_list_drop_listx_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, dropping
+    the new list, with text and thematics around fenced.
+
+    was: test_extra_046cc5
+    """
+    # Arrange
+    source_markdown = """> +
+>   + list 1
+>     list 2
+>   + list 3
+>   ```block
+>   A code block
+>   ```
+>   -----
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4::  \n  \n  \n]",
+        "[BLANK(1,4):]",
+        "[ulist(2,5):+::6:  :    \n  ]",
+        "[para(2,7):\n]",
+        "[text(2,7):list 1\nlist 2::\n]",
+        "[end-para:::True]",
+        "[li(4,5):6:  :]",
+        "[para(4,7):]",
+        "[text(4,7):list 3:]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[fcode-block(5,5):`:3:block:::::]",
+        "[text(6,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(8,5):-::-----]",
+        "[li(9,3):4::]",
+        "[para(9,5):]",
+        "[text(9,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(10,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<ul>
+<li>list 1
+list 2</li>
+<li>list 3</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_unordered_extra_block_drop_block_headings_around_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, dropping
+    the new list, with text and thematics around fenced.
+
+    was: test_extra_044ldb0
+    """
+    # Arrange
+    source_markdown = """> + + -----
+>     > block 1
+>     > block 2
+>     # before
+>     ```block
+>     A code block
+>     ```
+>     # after
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4::]",
+        "[ulist(1,5):+::6:  :\n\n  þ\n    \n    \n    \n    ]",
+        "[tbreak(1,7):-::-----]",
+        "[block-quote(2,7)::>     > \n>     > \n> ]",
+        "[para(2,9):\n]",
+        "[text(2,9):block 1\nblock 2::\n]",
+        "[end-para:::False]",
+        "[end-block-quote::>   :True]",
+        "[atx(4,7):1:0:]",
+        "[text(4,9):before: ]",
+        "[end-atx::]",
+        "[fcode-block(5,7):`:3:block:::::]",
+        "[text(6,1):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[atx(8,7):1:0:]",
+        "[text(8,9):after: ]",
+        "[end-atx::]",
+        "[end-ulist:::True]",
+        "[li(9,3):4::]",
+        "[para(9,5):]",
+        "[text(9,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(10,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<ul>
+<li>
+<hr />
+<blockquote>
+<p>block 1
+block 2</p>
+</blockquote>
+<h1>before</h1>
+<pre><code class="language-block">A code block
+</code></pre>
+<h1>after</h1>
+</li>
+</ul>
+</li>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_unordered_extra_block_drop_block_html_around_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, dropping
+    the new list, with text and thematics around fenced.
+
+    was: test_extra_044ldb1
+    """
+    # Arrange
+    source_markdown = """> + + -----
+>     > block 1
+>     > block 2
+>     <!-- before -->
+>     ```block
+>     A code block
+>     ```
+>     <!-- after -->
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4::]",
+        "[ulist(1,5):+::6:  :\n\n  þ\n    \n    \n    \n    ]",
+        "[tbreak(1,7):-::-----]",
+        "[block-quote(2,7)::>     > \n>     > \n> ]",
+        "[para(2,9):\n]",
+        "[text(2,9):block 1\nblock 2::\n]",
+        "[end-para:::False]",
+        "[end-block-quote::>   :True]",
+        "[html-block(4,7)]",
+        "[text(4,7):<!-- before -->:]",
+        "[end-html-block:::False]",
+        "[fcode-block(5,7):`:3:block:::::]",
+        "[text(6,1):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[html-block(8,7)]",
+        "[text(8,7):<!-- after -->:]",
+        "[end-html-block:::False]",
+        "[end-ulist:::True]",
+        "[li(9,3):4::]",
+        "[para(9,5):]",
+        "[text(9,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(10,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<ul>
+<li>
+<hr />
+<blockquote>
+<p>block 1
+block 2</p>
+</blockquote>
+<!-- before -->
+<pre><code class="language-block">A code block
+</code></pre>
+<!-- after -->
+</li>
+</ul>
+</li>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_unordered_extra_block_with_extra_space_indent_drop_block_html_around_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, dropping
+    the new list, with text and thematics around fenced.
+
+    was: test_extra_044ldb1a
+    """
+    # Arrange
+    source_markdown = """> + + -----
+>     > block 1
+>     > block 2
+>    <!-- before -->
+>    ```block
+>    A code block
+>    ```
+>    <!-- after -->
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4::  \n  \n  \n  \n]",
+        "[ulist(1,5):+::6:  :\n\n  þ]",
+        "[tbreak(1,7):-::-----]",
+        "[block-quote(2,7)::>     > \n>     > \n> ]",
+        "[para(2,9):\n]",
+        "[text(2,9):block 1\nblock 2::\n]",
+        "[end-para:::False]",
+        "[end-block-quote:::True]",
+        "[end-ulist:::True]",
+        "[html-block(4,5)]",
+        "[text(4,6):<!-- before -->: ]",
+        "[end-html-block:::False]",
+        "[fcode-block(5,6):`:3:block:::: :]",
+        "[text(6,3):A code block:\a \a\x03\a]",
+        "[end-fcode-block: ::3:False]",
+        "[html-block(8,5)]",
+        "[text(8,6):<!-- after -->: ]",
+        "[end-html-block:::False]",
+        "[li(9,3):4::]",
+        "[para(9,5):]",
+        "[text(9,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(10,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<ul>
+<li>
+<hr />
+<blockquote>
+<p>block 1
+block 2</p>
+</blockquote>
+</li>
+</ul>
+ <!-- before -->
+<pre><code class="language-block">A code block
+</code></pre>
+ <!-- after -->
+</li>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_unordered_extra_block_drop_list_html_around_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, dropping
+    the new list, with text and thematics around fenced.
+
+    was: test_extra_044ldb1c
+    """
+    # Arrange
+    source_markdown = """> + + -----
+>     > block 1
+>     > block 2
+>   <!-- before -->
+>   ```block
+>   A code block
+>   ```
+>   <!-- after -->
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4::  \n  \n  \n  \n]",
+        "[ulist(1,5):+::6:  :\n\n  þ]",
+        "[tbreak(1,7):-::-----]",
+        "[block-quote(2,7)::>     > \n>     > \n> ]",
+        "[para(2,9):\n]",
+        "[text(2,9):block 1\nblock 2::\n]",
+        "[end-para:::False]",
+        "[end-block-quote:::True]",
+        "[end-ulist:::True]",
+        "[html-block(4,5)]",
+        "[text(4,5):<!-- before -->:]",
+        "[end-html-block:::False]",
+        "[fcode-block(5,5):`:3:block:::::]",
+        "[text(6,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[html-block(8,5)]",
+        "[text(8,5):<!-- after -->:]",
+        "[end-html-block:::False]",
+        "[li(9,3):4::]",
+        "[para(9,5):]",
+        "[text(9,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(10,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<ul>
+<li>
+<hr />
+<blockquote>
+<p>block 1
+block 2</p>
+</blockquote>
+</li>
+</ul>
+<!-- before -->
+<pre><code class="language-block">A code block
+</code></pre>
+<!-- after -->
+</li>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_unordered_extra_block_drop_list_extra_indent_html_around_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, dropping
+    the new list, with text and thematics around fenced.
+
+    was: test_extra_044ldb1d
+    """
+    # Arrange
+    source_markdown = """> + + -----
+>     > block 1
+>     > block 2
+>  <!-- before -->
+>  ```block
+>  A code block
+>  ```
+>  <!-- after -->
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4:]",
+        "[ulist(1,5):+::6:  :\n\n]",
+        "[tbreak(1,7):-::-----]",
+        "[block-quote(2,7)::>     > \n>     > \n> ]",
+        "[para(2,9):\n]",
+        "[text(2,9):block 1\nblock 2::\n]",
+        "[end-para:::False]",
+        "[end-block-quote:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+        "[html-block(4,3)]",
+        "[text(4,4):<!-- before -->: ]",
+        "[end-html-block:::False]",
+        "[fcode-block(5,4):`:3:block:::: :]",
+        "[text(6,3):A code block:\a \a\x03\a]",
+        "[end-fcode-block: ::3:False]",
+        "[html-block(8,3)]",
+        "[text(8,4):<!-- after -->: ]",
+        "[end-html-block:::False]",
+        "[ulist(9,3):+::4::]",
+        "[para(9,5):]",
+        "[text(9,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(10,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<ul>
+<li>
+<hr />
+<blockquote>
+<p>block 1
+block 2</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+ <!-- before -->
+<pre><code class="language-block">A code block
+</code></pre>
+ <!-- after -->
+<ul>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_unordered_extra_block_drop_block_drop_list_drop_list_html_around_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, dropping
+    the new list, with text and thematics around fenced.
+
+    was: test_extra_044ldb1e
+    """
+    # Arrange
+    source_markdown = """> + + -----
+>     > block 1
+>     > block 2
+> <!-- before -->
+> ```block
+> A code block
+> ```
+> <!-- after -->
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4:]",
+        "[ulist(1,5):+::6:  :\n\n]",
+        "[tbreak(1,7):-::-----]",
+        "[block-quote(2,7)::>     > \n>     > \n> ]",
+        "[para(2,9):\n]",
+        "[text(2,9):block 1\nblock 2::\n]",
+        "[end-para:::False]",
+        "[end-block-quote:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+        "[html-block(4,3)]",
+        "[text(4,3):<!-- before -->:]",
+        "[end-html-block:::False]",
+        "[fcode-block(5,3):`:3:block:::::]",
+        "[text(6,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[html-block(8,3)]",
+        "[text(8,3):<!-- after -->:]",
+        "[end-html-block:::False]",
+        "[ulist(9,3):+::4::]",
+        "[para(9,5):]",
+        "[text(9,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(10,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<ul>
+<li>
+<hr />
+<blockquote>
+<p>block 1
+block 2</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<!-- before -->
+<pre><code class="language-block">A code block
+</code></pre>
+<!-- after -->
+<ul>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_unordered_extra_block_drop_block_drop_list_thematics_around_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, dropping
+    the new list, with text and thematics around fenced.
+
+    was: test_extra_044ldc
+    """
+
+    # Arrange
+    source_markdown = """> + + -----
+>     > block 1
+>     > block 2
+>   -----
+>   ```block
+>   A code block
+>   ```
+>   -----
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4::  \n  \n  \n  \n]",
+        "[ulist(1,5):+::6:  :\n\n  \u00fe]",
+        "[tbreak(1,7):-::-----]",
+        "[block-quote(2,7)::>     > \n>     > \n> ]",
+        "[para(2,9):\n]",
+        "[text(2,9):block 1\nblock 2::\n]",
+        "[end-para:::False]",
+        "[end-block-quote:::True]",
+        "[end-ulist:::True]",
+        "[tbreak(4,5):-::-----]",
+        "[fcode-block(5,5):`:3:block:::::]",
+        "[text(6,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(8,5):-::-----]",
+        "[li(9,3):4::]",
+        "[para(9,5):]",
+        "[text(9,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(10,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<ul>
+<li>
+<hr />
+<blockquote>
+<p>block 1
+block 2</p>
+</blockquote>
+</li>
+</ul>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_unordered_extra_list_li_drop_list_thematics_around_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, dropping
+    the new list, with text and thematics around fenced.
+
+    was: test_extra_044lea
+    """
+    # Arrange
+    source_markdown = """> + + ______
+>     + list 1
+>       list 2
+>     + list 3
+>     ______
+>     ```block
+>     A code block
+>     ```
+>     ______
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4:]",
+        "[ulist(1,5):+::6:  :    \n    \n    \n    \n]",
+        "[tbreak(1,7):_::______]",
+        "[ulist(2,7):+::8:    :      \n    ]",
+        "[para(2,9):\n]",
+        "[text(2,9):list 1\nlist 2::\n]",
+        "[end-para:::True]",
+        "[li(4,7):8:    :]",
+        "[para(4,9):]",
+        "[text(4,9):list 3:]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[tbreak(5,7):_::______]",
+        "[fcode-block(6,7):`:3:block:::::]",
+        "[text(7,5):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(9,7):_::______]",
+        "[BLANK(10,1):]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<ul>
+<li>
+<hr />
+<ul>
+<li>list 1
+list 2</li>
+<li>list 3</li>
+</ul>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+</ul>
+</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_unordered_extra_block_drop_double_list_fenced():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, dropping
+    the new list, with text and thematics around fenced.
+
+    was: test_extra_044mcz5
+    """
+    # Arrange
+    source_markdown = """> + + -----
+>     > block 1
+>     > block 2
+> ```block
+> A code block
+> ```
+> -----
+> + another list"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4:]",
+        "[ulist(1,5):+::6:  :\n\n]",
+        "[tbreak(1,7):-::-----]",
+        "[block-quote(2,7)::>     > \n>     > \n> ]",
+        "[para(2,9):\n]",
+        "[text(2,9):block 1\nblock 2::\n]",
+        "[end-para:::False]",
+        "[end-block-quote:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+        "[fcode-block(4,3):`:3:block:::::]",
+        "[text(5,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(7,3):-::-----]",
+        "[ulist(8,3):+::4:]",
+        "[para(8,5):]",
+        "[text(8,5):another list:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<ul>
+<li>
+<hr />
+<blockquote>
+<p>block 1
+block 2</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+<ul>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_nested_three_block_unordered_unordered_extra_block_drop_double_list_fenced_squashed_against_block_quote():
+    """
+    Verify that a nesting of block quote, unordered list, unordered list, dropping
+    the new list, with text and thematics around fenced.
+
+    was: test_extra_044mcz6
+    """
+    # Arrange
+    source_markdown = """> + + -----
+>     > block 1
+>     > block 2
+>```block
+>A code block
+>```
+>-----
+> + another list"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n>\n>\n>\n> ]",
+        "[ulist(1,3):+::4:]",
+        "[ulist(1,5):+::6:  :\n\n]",
+        "[tbreak(1,7):-::-----]",
+        "[block-quote(2,7)::>     > \n>     > \n>]",
+        "[para(2,9):\n]",
+        "[text(2,9):block 1\nblock 2::\n]",
+        "[end-para:::False]",
+        "[end-block-quote:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+        "[fcode-block(4,2):`:3:block:::::]",
+        "[text(5,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(7,2):-::-----]",
+        "[ulist(8,3):+::4:]",
+        "[para(8,5):]",
+        "[text(8,5):another list:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<ul>
+<li>
+<hr />
+<blockquote>
+<p>block 1
+block 2</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+<ul>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

@@ -15,7 +15,9 @@
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
-- None
+- [Issue 1231)](https://github.com/jackdewinter/pymarkdown/issues/1231)
+    - Moved triple nested container tests into their own test_nested_three_*
+      files for better readability.
 
 ## Version 0.9.24 - Date: 2024-10-06
 
