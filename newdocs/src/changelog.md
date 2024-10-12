@@ -5,6 +5,43 @@
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
+- None
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
+- None
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+- None
+
+## Version 0.9.24 - Date: 2024-10-06
+
+This release continued our focus on enabling fixing for Rule Md031
+and uncovering any issues with the more deeply nested container cases.
+This has meant introducing a new helper class to assist in the tracking
+of a given line to the container tokens used to provide container-based
+indenting for that line.  This is very important for Rule Md031, and
+has already proveded to be useful in a partial rewrite of some of the
+logic for Md027.
+
+While we find the odd parsing error, those issues are now rare to find in container
+nesting of three container or less, especially compared to finding issues with our
+new fix logic. Still, we continue to try different combinations
+of containers elements and leaf elements, verifying that PyMarkdown creates the
+correct HTML and correct Markdown from our parsed format.
+
+That is where we still need our users to help us out.  If you are scanning any
+Markdown documents and the results seem off, please file an issue.  If you are
+starting to use our fix mode on your Markdown documents and there are
+issues, please file an issue. We appreciate any help that we can get
+to improve the project for everyone!
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Added
+
 - [Issue 1212](https://github.com/jackdewinter/pymarkdown/issues/1212)
     - added cases to Md031 for SetExt
     - added extra test cases and resolution to other cases
@@ -40,11 +77,20 @@
     - rehydration/fix issue with blank lines causing off by one error
 - [Issue 1209](https://github.com/jackdewinter/pymarkdown/issues/1209)
     - detection code for MD027 was not using the right container index
+- [Issue 1217](https://github.com/jackdewinter/pymarkdown/issues/1217)
+    - fixed issue with some list starts not being accounted for properly when
+      grouped together on same line
+- [Issue 1166](https://github.com/jackdewinter/pymarkdown/issues/1166)
+- [Issue 1167](https://github.com/jackdewinter/pymarkdown/issues/1167)
+- [Issue 1168](https://github.com/jackdewinter/pymarkdown/issues/1168)
+    - fixed issue with more deeply nested containers
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - Started to pull common code from MD031 for use in Md027
+- [Issue 1226](https://github.com/jackdewinter/pymarkdown/issues/1226)
+    - improved API documentation
 
 ## Version 0.9.23 - Date: 2024-09-04
 

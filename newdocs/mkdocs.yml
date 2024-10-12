@@ -12,6 +12,19 @@ plugins:
       handlers:
         python:
           paths: [..]
+          options:
+            docstring_style: google
+            docstring_section_style: list
+            members_order: source
+            show_source: false
+            group_by_category: false
+            show_symbol_type_heading: true
+            show_root_heading: true
+            show_root_full_path: true
+            show_category_heading: false
+            relative_crossrefs: true
+            signature_crossrefs: false
+
 nav:
   - "Introduction":
     - 'index.md'

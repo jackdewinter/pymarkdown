@@ -68,7 +68,7 @@ class LeadingSpaceIndexTracker:
         """
 
         if self.__container_token_stack[-1].is_block_quote_start:
-            self.__process_container_end_block_quote(token, self.__end_tokens)
+            self.__process_container_end_block_quote(token)
         else:
             self.__process_container_end_list(token)
 
@@ -121,9 +121,7 @@ class LeadingSpaceIndexTracker:
             return setext_token.original_line_number
         return token.line_number
 
-    def __process_container_end_block_quote(
-        self, token: MarkdownToken, end_tokens: List[EndMarkdownToken]
-    ) -> None:
+    def __process_container_end_block_quote(self, token: MarkdownToken) -> None:
         for stack_index in range(len(self.__container_token_stack) - 2, -1, -1):
             current_stack_token = self.__container_token_stack[stack_index]
             if current_stack_token.is_block_quote_start:
@@ -131,13 +129,9 @@ class LeadingSpaceIndexTracker:
                     LeadingSpaceIndexTracker.calculate_token_line_number(token)
                     - self.__container_token_stack[-1].line_number
                 )
-                if end_tokens[-1].extra_end_data is not None:
+                if self.__end_tokens[-1].extra_end_data is not None:
                     line_number_delta += 1
-                self.__closed_container_adjustments[
-                    stack_index
-                ].adjustment += line_number_delta
                 self.__closed_container_adjustments[stack_index].count += 1
-
                 does_current_container_have_weird_kludge_six = (
                     self.__container_token_stack[-1].is_block_quote_start
                     and cast(
@@ -165,6 +159,11 @@ class LeadingSpaceIndexTracker:
                     LeadingSpaceIndexTracker.calculate_token_line_number(token)
                     - self.__container_token_stack[-1].line_number
                 )
+                if (
+                    self.__end_tokens[-1].start_markdown_token.line_number
+                    == current_stack_token.line_number
+                ):
+                    line_number_delta -= 1
                 self.__closed_container_adjustments[
                     stack_index
                 ].adjustment += line_number_delta
