@@ -637,6 +637,29 @@ This is a blank line and some text.
 """,
     ),
     pluginRuleTest(
+        "bad_fenced_block_in_block_quote_with_previous_inner_block_double_drop",
+        source_file_contents="""> > inner block
+> > inner block
+```block
+A code block
+```
+This is a blank line and some text.
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        fix_expected_file_contents="""> > inner block
+> > inner block
+
+```block
+A code block
+```
+
+This is a blank line and some text.
+""",
+    ),
+    pluginRuleTest(
         "bad_fenced_block_in_block_quote_with_previous_inner_block_with_text",
         source_file_contents="""> > inner block
 > > inner block
@@ -667,7 +690,6 @@ This is a blank line and some text.
         "bad_fenced_block_in_block_quote_with_previous_inner_block_with_thematics",
         source_file_contents="""> > inner block
 > > inner block
->
 > ___
 > ```block
 > A code block
@@ -677,12 +699,11 @@ This is a blank line and some text.
 """,
         disable_rules="md022,md026",
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:5:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
-{temp_source_path}:7:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+        scan_expected_output="""{temp_source_path}:4:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         fix_expected_file_contents="""> > inner block
 > > inner block
->
 > ___
 >
 > ```block
@@ -691,6 +712,34 @@ This is a blank line and some text.
 >
 > ___
 >This is a blank line and some text.
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_with_previous_inner_block_double_drop_with_thematics",
+        source_file_contents="""> > inner block
+> > inner block
+___
+```block
+A code block
+```
+___
+This is a blank line and some text.
+""",
+        disable_rules="md022,md026",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        fix_expected_file_contents="""> > inner block
+> > inner block
+___
+
+```block
+A code block
+```
+
+___
+This is a blank line and some text.
 """,
     ),
     pluginRuleTest(
@@ -750,6 +799,31 @@ This is a blank line and some text.
 """,
     ),
     pluginRuleTest(
+        "bad_fenced_block_in_block_quote_with_previous_inner_list_double_drop",
+        source_file_contents="""> + inner list
+> + inner list
+```block
+A code block
+```
+This is a blank line and some text.
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        fix_expected_file_contents="""> + inner list
+> + inner list
+
+> ```block
+> A code block
+> ```
+
+> This is a blank line and some text.
+""",
+    ),
+    pluginRuleTest(
         "bad_fenced_block_in_block_quote_with_previous_inner_list_with_text",
         source_file_contents="""> + inner list
 > + inner list
@@ -802,6 +876,34 @@ This is a blank line and some text.
 >
 > ___
 >This is a blank line and some text.
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_with_previous_inner_list_double_drop_with_thematics",
+        source_file_contents="""> + inner list
+> + inner list
+___
+```block
+A code block
+```
+___
+This is a blank line and some text.
+""",
+        disable_rules="md022,md026,md032",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        fix_expected_file_contents="""> + inner list
+> + inner list
+___
+
+```block
+A code block
+```
+
+___
+This is a blank line and some text.
 """,
     ),
     pluginRuleTest(
@@ -1484,6 +1586,33 @@ abc
 """,
     ),
     pluginRuleTest(
+        "bad_fenced_block_in_list_with_previous_inner_block_double_drop",
+        source_file_contents="""+ list
+  > inner list
+  > couple of lines
+```block
+A code block
+```
+another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""+ list
+  > inner list
+  > couple of lines
+
+```block
+A code block
+```
+
+another list
+""",
+    ),
+    pluginRuleTest(
         "bad_fenced_block_in_list_with_previous_inner_block_with_thematics",
         source_file_contents="""+ list
   > inner list
@@ -1511,6 +1640,36 @@ abc
 
   -----
 + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_with_previous_inner_block_double_drop_with_thematics",
+        source_file_contents="""+ list
+  > inner list
+  > couple of lines
+-----
+```block
+A code block
+```
+-----
+another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""+ list
+  > inner list
+  > couple of lines
+-----
+
+```block
+A code block
+```
+
+-----
+another list
 """,
     ),
     pluginRuleTest(
@@ -1575,6 +1734,32 @@ abc
 + another list
 """,
     ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_with_previous_inner_list_double_drop",
+        source_file_contents="""+ list
+  + inner list
+    couple of lines
+```block
+A code block
+```
+another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""+ list
+  + inner list
+    couple of lines
+
+```block
+A code block
+```
+
+another list
+""",
+    ),
     pluginRuleTest(  # test_extra_047c0 test_extra_047c1
         "bad_fenced_block_in_list_with_previous_inner_list_with_thematics",
         source_file_contents="""+ list
@@ -1603,6 +1788,36 @@ abc
 
   -----
 + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_with_previous_inner_list_double_drop_with_thematics",
+        source_file_contents="""+ list
+  + inner list
+    couple of lines
+-----
+```block
+A code block
+```
+-----
+another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""+ list
+  + inner list
+    couple of lines
+-----
+
+```block
+A code block
+```
+
+-----
+another list
 """,
     ),
     pluginRuleTest(
@@ -1872,6 +2087,28 @@ abc
 """,
     ),
     pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_double_drop",
+        source_file_contents="""> > --------
+```block
+A code block
+```
+--------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:2:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""> > --------
+
+```block
+A code block
+```
+
+--------
+""",
+    ),
+    pluginRuleTest(
         "bad_fenced_block_in_block_quote_in_block_quote_empty",
         source_file_contents="""> > --------
 > > ```block
@@ -1935,6 +2172,59 @@ abc
 > > ```
 """,
     ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_double_drop_with_previous_inner_block",
+        source_file_contents="""> > > block 3
+> > > block 3
+> > > block 3
+> ```block
+> A code block
+> ```
+> text
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""> > > block 3
+> > > block 3
+> > > block 3
+>
+> ```block
+> A code block
+> ```
+>
+> text
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_triple_drop_with_previous_inner_block",
+        source_file_contents="""> > > block 3
+> > > block 3
+> > > block 3
+```block
+A code block
+```
+text
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""> > > block 3
+> > > block 3
+> > > block 3
+
+```block
+A code block
+```
+
+text
+""",
+    ),
     pluginRuleTest(  # test_extra_044x test_extra_044a
         "bad_fenced_block_in_block_quote_in_block_quote_with_previous_inner_block_with_thematics",
         source_file_contents="""> > > block 3
@@ -1961,6 +2251,62 @@ abc
 > > ```
 > >
 > > --------
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_with_previous_inner_block_double_drop_with_thematics",
+        source_file_contents="""> > > block 3
+> > > block 3
+> > > block 3
+> --------
+> ```block
+> A code block
+> ```
+> --------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""> > > block 3
+> > > block 3
+> > > block 3
+> --------
+>
+> ```block
+> A code block
+> ```
+>
+> --------
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_with_previous_inner_block_triple_drop_with_thematics",
+        source_file_contents="""> > > block 3
+> > > block 3
+> > > block 3
+--------
+```block
+A code block
+```
+--------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""> > > block 3
+> > > block 3
+> > > block 3
+--------
+
+```block
+A code block
+```
+
+--------
 """,
     ),
     pluginRuleTest(
@@ -2107,6 +2453,59 @@ abc
 > > --------
 """,
     ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_with_previous_inner_list_double_drop",
+        source_file_contents="""> > + block 3
+> >   block 3
+> > + block 3
+> ```block
+> A code block
+> ```
+> --------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_scan_as_skipped=True,
+        fix_expected_file_contents="""> > + block 3
+> >   block 3
+> > + block 3
+>
+> ```block
+> A code block
+> ```
+>
+> --------
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_with_previous_inner_list_triple_drop",
+        source_file_contents="""> > + block 3
+> >   block 3
+> > + block 3
+```block
+A code block
+```
+--------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""> > + block 3
+> >   block 3
+> > + block 3
+
+```block
+A code block
+```
+
+--------
+""",
+    ),
     pluginRuleTest(  # test_extra_044lx test_nested_three_block_block_unordered_drop_list_after_new_list_and_text_with_thematic_and_fenced_with_blanks
         "bad_fenced_block_in_block_quote_in_block_quote_with_previous_inner_list_with_thematics",
         source_file_contents="""> > + block 3
@@ -2237,6 +2636,86 @@ abc
 > > > --------
 """,
     ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_block_double_drop",
+        source_file_contents="""> > >
+> > > > fourth block 1
+> > > > fourth block 2
+> > ```block
+> > A code block
+> > ```
+> > --------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md027",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""> > >
+> > > > fourth block 1
+> > > > fourth block 2
+> >
+> > ```block
+> > A code block
+> > ```
+> >
+> > --------
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_block_triple_drop",
+        source_file_contents="""> > >
+> > > > fourth block 1
+> > > > fourth block 2
+> ```block
+> A code block
+> ```
+> --------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md027",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""> > >
+> > > > fourth block 1
+> > > > fourth block 2
+>
+> ```block
+> A code block
+> ```
+>
+> --------
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_block_quad_drop",
+        source_file_contents="""> > >
+> > > > fourth block 1
+> > > > fourth block 2
+```block
+A code block
+```
+--------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md027",
+        fix_expected_file_contents="""> > >
+> > > > fourth block 1
+> > > > fourth block 2
+
+```block
+A code block
+```
+
+--------
+""",
+    ),
     pluginRuleTest(  # test_extra_044ma
         "bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_block_with_thematics",
         source_file_contents="""> > >
@@ -2263,6 +2742,91 @@ abc
 > > > ```
 > > >
 > > > --------
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_block_double_drop_with_thematics",
+        source_file_contents="""> > >
+> > > > fourth block 1
+> > > > fourth block 2
+> > --------
+> > ```block
+> > A code block
+> > ```
+> > --------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md027",
+        fix_expected_file_contents="""> > >
+> > > > fourth block 1
+> > > > fourth block 2
+> > --------
+> >
+> > ```block
+> > A code block
+> > ```
+> >
+> > --------
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_block_triple_drop_with_thematics",
+        source_file_contents="""> > >
+> > > > fourth block 1
+> > > > fourth block 2
+> --------
+> ```block
+> A code block
+> ```
+> --------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md027",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""> > >
+> > > > fourth block 1
+> > > > fourth block 2
+> --------
+>
+> ```block
+> A code block
+> ```
+>
+> --------
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_block_quad_drop_with_thematics",
+        source_file_contents="""> > >
+> > > > fourth block 1
+> > > > fourth block 2
+--------
+```block
+A code block
+```
+--------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md027",
+        fix_expected_file_contents="""> > >
+> > > > fourth block 1
+> > > > fourth block 2
+--------
+
+```block
+A code block
+```
+
+--------
 """,
     ),
     pluginRuleTest(
@@ -2325,6 +2889,92 @@ abc
 > > > ```
 > > >
 > > > --------
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_list_double_drop",
+        source_file_contents="""> > >
+> > > + inner list 1
+> > >   inner list 2
+> > > + inner list 3
+> > ```block
+> > A code block
+> > ```
+> > --------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_scan_as_skipped=True,
+        fix_expected_file_contents="""> > >
+> > > + inner list 1
+> > >   inner list 2
+> > > + inner list 3
+> >
+> > ```block
+> > A code block
+> > ```
+> >
+> > --------
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_list_triple_drop",
+        source_file_contents="""> > >
+> > > + inner list 1
+> > >   inner list 2
+> > > + inner list 3
+> ```block
+> A code block
+> ```
+> --------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_scan_as_skipped=True,
+        fix_expected_file_contents="""> > >
+> > > + inner list 1
+> > >   inner list 2
+> > > + inner list 3
+>
+> ```block
+> A code block
+> ```
+>
+> --------
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_list_quad_drop",
+        source_file_contents="""> > >
+> > > + inner list 1
+> > >   inner list 2
+> > > + inner list 3
+```block
+A code block
+```
+--------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""> > >
+> > > + inner list 1
+> > >   inner list 2
+> > > + inner list 3
+
+```block
+A code block
+```
+
+--------
 """,
     ),
     pluginRuleTest(  # test_extra_044mcy0
@@ -2462,6 +3112,90 @@ abc
 > >   --------
 """,
     ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_block_double_drop",
+        source_file_contents="""> > + --------
+> >   > block 1
+> >   > block 2
+> > ```block
+> > A code block
+> > ```
+> > --------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        use_debug=True,
+        fix_expected_file_contents="""> > + --------
+> >   > block 1
+> >   > block 2
+> >
+> > ```block
+> > A code block
+> > ```
+> >
+> > --------
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_block_triple_drop",
+        source_file_contents="""> > + --------
+> >   > block 1
+> >   > block 2
+> ```block
+> A code block
+> ```
+> --------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        use_debug=True,
+        mark_scan_as_skipped=True,
+        fix_expected_file_contents="""> > + --------
+> >   > block 1
+> >   > block 2
+>
+> ```block
+> A code block
+> ```
+>
+> --------
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_block_quad_drop",
+        source_file_contents="""> > + --------
+> >   > block 1
+> >   > block 2
+```block
+A code block
+```
+--------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        use_debug=True,
+        mark_scan_as_skipped=True,
+        fix_expected_file_contents="""> > + --------
+> >   > block 1
+> >   > block 2
+
+```block
+A code block
+```
+
+--------
+""",
+    ),
     pluginRuleTest(  # test_extra_047h0 test_extra_047h1
         "bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_block_with_thematics",
         source_file_contents="""> > + --------
@@ -2488,6 +3222,92 @@ abc
 > >   ```
 > >
 > >   --------
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_block_double_drop_with_thematics",
+        source_file_contents="""> > + --------
+> >   > block 1
+> >   > block 2
+> > --------
+> > ```block
+> > A code block
+> > ```
+> > --------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""> > + --------
+> >   > block 1
+> >   > block 2
+> > --------
+> >
+> > ```block
+> > A code block
+> > ```
+> >
+> > --------
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_block_triple_drop_with_thematics",
+        source_file_contents="""> > + --------
+> >   > block 1
+> >   > block 2
+> --------
+> ```block
+> A code block
+> ```
+> --------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_scan_as_skipped=True,
+        fix_expected_file_contents="""> > + --------
+> >   > block 1
+> >   > block 2
+> > --------
+>
+> ```block
+> A code block
+> ```
+>
+> --------
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_block_quad_drop_with_thematics",
+        source_file_contents="""> > + --------
+> >   > block 1
+> >   > block 2
+--------
+```block
+A code block
+```
+--------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_scan_as_skipped=True,
+        fix_expected_file_contents="""> > + --------
+> >   > block 1
+> >   > block 2
+> > --------
+
+```block
+A code block
+```
+
+--------
 """,
     ),
     pluginRuleTest(
@@ -2552,6 +3372,92 @@ abc
 > >   ______
 """,
     ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_list_double_drop",
+        source_file_contents="""> > + ______
+> >   + list 1
+> >     list 2
+> >   + list 3
+> > ```block
+> > A code block
+> > ```
+> > ______
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md035",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""> > + ______
+> >   + list 1
+> >     list 2
+> >   + list 3
+> >
+> > ```block
+> > A code block
+> > ```
+> >
+> > ______
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_list_triple_drop",
+        source_file_contents="""> > + ______
+> >   + list 1
+> >     list 2
+> >   + list 3
+> ```block
+> A code block
+> ```
+> ______
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md035",
+        mark_scan_as_skipped=True,
+        fix_expected_file_contents="""> > + ______
+> >   + list 1
+> >     list 2
+> >   + list 3
+>
+> ```block
+> A code block
+> ```
+>
+> ______
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_list_quad_drop",
+        source_file_contents="""> > + ______
+> >   + list 1
+> >     list 2
+> >   + list 3
+```block
+A code block
+```
+______
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md035",
+        fix_expected_file_contents="""> > + ______
+> >   + list 1
+> >     list 2
+> >   + list 3
+
+```block
+A code block
+```
+
+______
+""",
+    ),
     pluginRuleTest(  # test_extra_044lex1 test_extra_044lex1a
         "bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_list_and_thematics",
         source_file_contents="""> > + ______
@@ -2580,6 +3486,97 @@ abc
 > >   ```
 > >
 > >   ______
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_list_double_drop_and_thematics",
+        source_file_contents="""> > + ______
+> >   + list 1
+> >     list 2
+> >   + list 3
+> > ______
+> > ```block
+> > A code block
+> > ```
+> > ______
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:8:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md035",
+        fix_expected_file_contents="""> > + ______
+> >   + list 1
+> >     list 2
+> >   + list 3
+> > ______
+> >
+> > ```block
+> > A code block
+> > ```
+> >
+> > ______
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_list_triple_drop_and_thematics",
+        source_file_contents="""> > + ______
+> >   + list 1
+> >     list 2
+> >   + list 3
+> ______
+> ```block
+> A code block
+> ```
+> ______
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:8:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md035",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""> > + ______
+> >   + list 1
+> >     list 2
+> >   + list 3
+> ______
+>
+> ```block
+> A code block
+> ```
+>
+> ______
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_list_quad_drop_and_thematics",
+        source_file_contents="""> > + ______
+> >   + list 1
+> >     list 2
+> >   + list 3
+______
+```block
+A code block
+```
+______
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:8:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md035",
+        fix_expected_file_contents="""> > + ______
+> >   + list 1
+> >     list 2
+> >   + list 3
+______
+
+```block
+A code block
+```
+
+______
 """,
     ),
     pluginRuleTest(
@@ -2709,6 +3706,59 @@ abc
 """,
     ),
     pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_with_previous_inner_block_double_drop",
+        source_file_contents="""1. > >
+   > > block 3
+   > > block 3
+   ```block
+   A code block
+   ```
+   --------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:4: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:4: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""1. > >
+   > > block 3
+   > > block 3
+
+   ```block
+   A code block
+   ```
+
+   --------
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_with_previous_inner_block_triple_drop",
+        source_file_contents="""1. > >
+   > > block 3
+   > > block 3
+```block
+A code block
+```
+--------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""1. > >
+   > > block 3
+   > > block 3
+
+```block
+A code block
+```
+
+--------
+""",
+    ),
+    pluginRuleTest(
         "bad_fenced_block_in_block_quote_in_list_with_previous_inner_block_with_thematics",
         source_file_contents="""1. > >
    > > block 3
@@ -2734,6 +3784,62 @@ abc
    > ```
    >
    > --------
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_with_previous_inner_block_double_drop_with_thematics",
+        source_file_contents="""1. > >
+   > > block 3
+   > > block 3
+   --------
+   ```block
+   A code block
+   ```
+   --------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:4: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:4: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""1. > >
+   > > block 3
+   > > block 3
+   --------
+
+   ```block
+   A code block
+   ```
+
+   --------
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_with_previous_inner_block_triple_drop_with_thematics",
+        source_file_contents="""1. > >
+   > > block 3
+   > > block 3
+--------
+```block
+A code block
+```
+--------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""1. > >
+   > > block 3
+   > > block 3
+--------
+
+```block
+A code block
+```
+
+--------
 """,
     ),
     pluginRuleTest(
@@ -2884,6 +3990,59 @@ abc
 """,
     ),
     pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_with_previous_inner_list_double_drop",
+        source_file_contents="""1. > +
+   >   list 3
+   > + list 3
+   ```block
+   A code block
+   ```
+   --------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:4: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:4: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""1. > +
+   >   list 3
+   > + list 3
+
+   ```block
+   A code block
+   ```
+
+   --------
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_with_previous_inner_list_triple_drop",
+        source_file_contents="""1. > +
+   >   list 3
+   > + list 3
+```block
+A code block
+```
+--------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""1. > +
+   >   list 3
+   > + list 3
+
+```block
+A code block
+```
+
+--------
+""",
+    ),
+    pluginRuleTest(
         "bad_fenced_block_in_block_quote_in_list_with_previous_inner_list_with_thematics",
         source_file_contents="""1. > +
    >   list 3
@@ -2909,6 +4068,62 @@ abc
    > ```
    >
    > --------
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_with_previous_inner_list_double_drop_with_thematics",
+        source_file_contents="""1. > +
+   >   list 3
+   > + list 3
+   --------
+   ```block
+   A code block
+   ```
+   --------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:4: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:4: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""1. > +
+   >   list 3
+   > + list 3
+   --------
+
+   ```block
+   A code block
+   ```
+
+   --------
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_with_previous_inner_list_triple_drop_with_thematics",
+        source_file_contents="""1. > +
+   >   list 3
+   > + list 3
+--------
+```block
+A code block
+```
+--------
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""1. > +
+   >   list 3
+   > + list 3
+--------
+
+```block
+A code block
+```
+
+--------
 """,
     ),
     pluginRuleTest(
@@ -2987,6 +4202,219 @@ abc
    > > ----
 """,
     ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_inner_block",
+        source_file_contents="""1. > > ----
+   > > > block 1
+   > > > block 2
+   > > ```block
+   > > A code block
+   > > ```
+   > > ----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:8: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:8: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""1. > > ----
+   > > > block 1
+   > > > block 2
+   > >
+   > > ```block
+   > > A code block
+   > > ```
+   > >
+   > > ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_inner_block_double_drop",
+        source_file_contents="""1. > > ----
+   > > > block 1
+   > > > block 2
+   > ```block
+   > A code block
+   > ```
+   > ----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:6: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:6: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""1. > > ----
+   > > > block 1
+   > > > block 2
+   >
+   > ```block
+   > A code block
+   > ```
+   >
+   > ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_inner_block_triple_drop",
+        source_file_contents="""1. > > ----
+   > > > block 1
+   > > > block 2
+   ```block
+   A code block
+   ```
+   ----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:4: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:4: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""1. > > ----
+   > > > block 1
+   > > > block 2
+
+   ```block
+   A code block
+   ```
+
+   ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_inner_block_quad_drop",
+        source_file_contents="""1. > > ----
+   > > > block 1
+   > > > block 2
+```block
+A code block
+```
+----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""1. > > ----
+   > > > block 1
+   > > > block 2
+
+```block
+A code block
+```
+
+----
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_inner_list",
+        source_file_contents="""1. > > ----
+   > > + block 1
+   > >   block 2
+   > > ```block
+   > > A code block
+   > > ```
+   > > ----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:8: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:8: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""1. > > ----
+   > > + block 1
+   > >   block 2
+   > >
+   > > ```block
+   > > A code block
+   > > ```
+   > >
+   > > ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_inner_list_double_drop",
+        source_file_contents="""1. > > ----
+   > > + block 1
+   > >   block 2
+   > ```block
+   > A code block
+   > ```
+   > ----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:6: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:6: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_scan_as_skipped=True,
+        fix_expected_file_contents="""1. > > ----
+   > > + block 1
+   > >   block 2
+   >
+   > ```block
+   > A code block
+   > ```
+   >
+   > ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_inner_list_triple_drop",
+        source_file_contents="""1. > > ----
+   > > + block 1
+   > >   block 2
+   ```block
+   A code block
+   ```
+   ----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:4: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:4: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""1. > > ----
+   > > + block 1
+   > >   block 2
+
+   ```block
+   A code block
+   ```
+
+   ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_inner_list_quad_drop",
+        source_file_contents="""1. > > ----
+   > > + block 1
+   > >   block 2
+```block
+A code block
+```
+----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""1. > > ----
+   > > + block 1
+   > >   block 2
+
+```block
+A code block
+```
+
+----
+""",
+    ),
     pluginRuleTest(  # test_extra_044mx2
         "bad_fenced_block_in_list_in_block_quote_in_list",
         source_file_contents="""1. > + ----
@@ -3034,6 +4462,90 @@ abc
    >   ```
    >
    >   ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_in_list_with_previous_block_double_drop",
+        source_file_contents="""1. > + ----
+   >   > block 1
+   >   > block 2
+   > ```block
+   > A code block
+   > ```
+   > ----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:6: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:6: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md027",
+        use_debug=True,
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""1. > + ----
+   >   > block 1
+   >   > block 2
+   >
+   > ```block
+   > A code block
+   > ```
+   >
+   > ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_in_list_with_previous_block_triple_drop",
+        source_file_contents="""1. > + ----
+   >   > block 1
+   >   > block 2
+   ```block
+   A code block
+   ```
+   ----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:4: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:4: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md027",
+        use_debug=True,
+        mark_scan_as_skipped=True,
+        fix_expected_file_contents="""1. > + ----
+   >   > block 1
+   >   > block 2
+
+   ```block
+   A code block
+   ```
+
+   ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_in_list_with_previous_block_quad_drop",
+        source_file_contents="""1. > + ----
+   >   > block 1
+   >   > block 2
+```block
+A code block
+```
+----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md027",
+        use_debug=True,
+        mark_scan_as_skipped=True,
+        fix_expected_file_contents="""1. > + ----
+   >   > block 1
+   >   > block 2
+
+```block
+A code block
+```
+
+----
 """,
     ),
     pluginRuleTest(
@@ -3148,6 +4660,92 @@ abc
    >   ----
 """,
     ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_in_list_with_previous_list_double_drop",
+        source_file_contents="""1. > + ----
+   >   + list 1
+   >     list 2
+   >   + list 3
+   > ```block
+   > A code block
+   > ```
+   > ----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:6: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:6: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""1. > + ----
+   >   + list 1
+   >     list 2
+   >   + list 3
+   >
+   > ```block
+   > A code block
+   > ```
+   >
+   > ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_in_list_with_previous_list_triple_drop",
+        source_file_contents="""1. > + ----
+   >   + list 1
+   >     list 2
+   >   + list 3
+   ```block
+   A code block
+   ```
+   ----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:4: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:4: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""1. > + ----
+   >   + list 1
+   >     list 2
+   >   + list 3
+
+   ```block
+   A code block
+   ```
+
+   ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_in_list_with_previous_list_quad_drop",
+        source_file_contents="""1. > + ----
+   >   + list 1
+   >     list 2
+   >   + list 3
+```block
+A code block
+```
+----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""1. > + ----
+   >   + list 1
+   >     list 2
+   >   + list 3
+
+```block
+A code block
+```
+
+----
+""",
+    ),
     pluginRuleTest(  # test_extra_046n0 test_extra_046n1
         "bad_fenced_block_in_list_in_block_quote_in_list_with_previous_list_with_thematics",
         source_file_contents="""1. > + ----
@@ -3176,6 +4774,99 @@ abc
    >   ```
    >
    >   ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_in_list_with_previous_list_double_drop_with_thematics",
+        source_file_contents="""1. > + ----
+   >   + list 1
+   >     list 2
+   >   + list 3
+   > ----
+   > ```block
+   > A code block
+   > ```
+   > ----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:6: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:8:6: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_scan_as_skipped=True,
+        fix_expected_file_contents="""1. > + ----
+   >   + list 1
+   >     list 2
+   >   + list 3
+   > ----
+   >
+   > ```block
+   > A code block
+   > ```
+   >
+   > ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_in_list_with_previous_list_triple_drop_with_thematics",
+        source_file_contents="""1. > + ----
+   >   + list 1
+   >     list 2
+   >   + list 3
+   ----
+   ```block
+   A code block
+   ```
+   ----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:4: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:8:4: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""1. > + ----
+   >   + list 1
+   >     list 2
+   >   + list 3
+   > ----
+
+   ```block
+   A code block
+   ```
+
+   ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_in_list_with_previous_list_quad_drop_with_thematics",
+        source_file_contents="""1. > + ----
+   >   + list 1
+   >     list 2
+   >   + list 3
+----
+```block
+A code block
+```
+----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:8:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""1. > + ----
+   >   + list 1
+   >     list 2
+   >   + list 3
+   > ----
+
+```block
+A code block
+```
+
+----
 """,
     ),
     pluginRuleTest(
@@ -3240,6 +4931,86 @@ abc
    > > ----
 """,
     ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_block_double_drop",
+        source_file_contents="""1. > > ----
+   > > > inner block 1
+   > > > inner block 2
+   > ```block
+   > A code block
+   > ```
+   > ----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:6: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:6: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""1. > > ----
+   > > > inner block 1
+   > > > inner block 2
+   >
+   > ```block
+   > A code block
+   > ```
+   >
+   > ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_block_triple_drop",
+        source_file_contents="""1. > > ----
+   > > > inner block 1
+   > > > inner block 2
+   ```block
+   A code block
+   ```
+   ----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:4: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:4: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""1. > > ----
+   > > > inner block 1
+   > > > inner block 2
+
+   ```block
+   A code block
+   ```
+
+   ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_block_quad_drop",
+        source_file_contents="""1. > > ----
+   > > > inner block 1
+   > > > inner block 2
+```block
+A code block
+```
+----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""1. > > ----
+   > > > inner block 1
+   > > > inner block 2
+
+```block
+A code block
+```
+
+----
+""",
+    ),
     pluginRuleTest(  # test_extra_046k0 test_extra_046k1
         "bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_block_with_thematics",
         source_file_contents="""1. > > ----
@@ -3266,6 +5037,92 @@ abc
    > > ```
    > >
    > > ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_block_double_drop_with_thematics",
+        source_file_contents="""1. > > ----
+   > > > inner block 1
+   > > > inner block 2
+   > ----
+   > ```block
+   > A code block
+   > ```
+   > ----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:6: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:6: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""1. > > ----
+   > > > inner block 1
+   > > > inner block 2
+   > ----
+   >
+   > ```block
+   > A code block
+   > ```
+   >
+   > ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_block_triple_drop_with_thematics",
+        source_file_contents="""1. > > ----
+   > > > inner block 1
+   > > > inner block 2
+   ----
+   ```block
+   A code block
+   ```
+   ----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:4: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:4: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""1. > > ----
+   > > > inner block 1
+   > > > inner block 2
+   > ----
+
+   ```block
+   A code block
+   ```
+
+   ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_block_quad_drop_with_thematics",
+        source_file_contents="""1. > > ----
+   > > > inner block 1
+   > > > inner block 2
+----
+```block
+A code block
+```
+----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""1. > > ----
+   > > > inner block 1
+   > > > inner block 2
+   > ----
+
+```block
+A code block
+```
+
+----
 """,
     ),
     pluginRuleTest(
@@ -3330,6 +5187,93 @@ abc
    > > ----
 """,
     ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_list_double_drop",
+        source_file_contents="""1. > > ----
+   > > + list 1
+   > >   list 2
+   > > + list 3
+   > ```block
+   > A code block
+   > ```
+   > ----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:6: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:6: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_scan_as_skipped=True,
+        fix_expected_file_contents="""1. > > ----
+   > > + list 1
+   > >   list 2
+   > > + list 3
+   >
+   > ```block
+   > A code block
+   > ```
+   >
+   > ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_list_triple_drop",
+        source_file_contents="""1. > > ----
+   > > + list 1
+   > >   list 2
+   > > + list 3
+   ```block
+   A code block
+   ```
+   ----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:4: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:4: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""1. > > ----
+   > > + list 1
+   > >   list 2
+   > > + list 3
+
+   ```block
+   A code block
+   ```
+
+   ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_list_quad_drop",
+        source_file_contents="""1. > > ----
+   > > + list 1
+   > >   list 2
+   > > + list 3
+```block
+A code block
+```
+----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""1. > > ----
+   > > + list 1
+   > >   list 2
+   > > + list 3
+
+```block
+A code block
+```
+
+----
+""",
+    ),
     pluginRuleTest(  # test_extra_046h0 test_extra_046h1
         "bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_list_with_thematics",
         source_file_contents="""1. > > ----
@@ -3358,6 +5302,98 @@ abc
    > > ```
    > >
    > > ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_list_double_drop_with_thematics",
+        source_file_contents="""1. > > ----
+   > > + list 1
+   > >   list 2
+   > > + list 3
+   > ----
+   > ```block
+   > A code block
+   > ```
+   > ----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:6: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:8:6: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md027",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""1. > > ----
+   > > + list 1
+   > >   list 2
+   > > + list 3
+   > ----
+   >
+   > ```block
+   > A code block
+   > ```
+   >
+   > ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_list_triple_drop_with_thematics",
+        source_file_contents="""1. > > ----
+   > > + list 1
+   > >   list 2
+   > > + list 3
+   ----
+   ```block
+   A code block
+   ```
+   ----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:4: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:8:4: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""1. > > ----
+   > > + list 1
+   > >   list 2
+   > > + list 3
+   ----
+
+   ```block
+   A code block
+   ```
+
+   ----
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_list_quad_drop_with_thematics",
+        source_file_contents="""1. > > ----
+   > > + list 1
+   > >   list 2
+   > > + list 3
+----
+```block
+A code block
+```
+----
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:8:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""1. > > ----
+   > > + list 1
+   > >   list 2
+   > > + list 3
+----
+
+```block
+A code block
+```
+
+----
 """,
     ),
     pluginRuleTest(
@@ -3514,6 +5550,67 @@ abc
 > + another list
 """,
     ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_with_previous_inner_block_double_drop",
+        source_file_contents="""> + list 1
+>   > block 2
+>   > block 3
+> ------
+> ```block
+> A code block
+> ```
+> ------
+> another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md027",
+        fix_expected_file_contents="""> + list 1
+>   > block 2
+>   > block 3
+> ------
+>
+> ```block
+> A code block
+> ```
+>
+> ------
+> another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_with_previous_inner_block_triple_drop",
+        source_file_contents="""> + list 1
+>   > block 2
+>   > block 3
+------
+```block
+A code block
+```
+------
+another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md027",
+        mark_scan_as_skipped=True,
+        fix_expected_file_contents="""> + list 1
+>   > block 2
+>   > block 3
+------
+
+```block
+A code block
+```
+
+------
+another list
+""",
+    ),
     pluginRuleTest(  # test_extra_046g0 test_extra_046g1
         "bad_fenced_block_in_list_in_block_quote_with_previous_inner_block_0_without_thematics",
         source_file_contents="""> + list 1
@@ -3538,6 +5635,60 @@ abc
 >   ```
 >
 > + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_with_previous_inner_block_double_drop_without_thematics",
+        source_file_contents="""> + list 1
+>   > block 2
+>   > block 3
+> ```block
+> A code block
+> ```
+> another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md027",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""> + list 1
+>   > block 2
+>   > block 3
+>
+> ```block
+> A code block
+> ```
+>
+> another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_with_previous_inner_block_triple_drop_without_thematics",
+        source_file_contents="""> + list 1
+>   > block 2
+>   > block 3
+```block
+A code block
+```
+another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md027",
+        mark_scan_as_skipped=True,
+        fix_expected_file_contents="""> + list 1
+>   > block 2
+>   > block 3
+
+```block
+A code block
+```
+
+another list
 """,
     ),
     pluginRuleTest(
@@ -3690,6 +5841,59 @@ abc
 > + another list
 """,
     ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_with_previous_inner_list_double_drop",
+        source_file_contents="""> + list 1
+>   + list 2
+>     list 3
+> ```block
+> A code block
+> ```
+> another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""> + list 1
+>   + list 2
+>     list 3
+>
+> ```block
+> A code block
+> ```
+>
+> another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_with_previous_inner_list_triple_drop",
+        source_file_contents="""> + list 1
+>   + list 2
+>     list 3
+```block
+A code block
+```
+another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""> + list 1
+>   + list 2
+>     list 3
+
+```block
+A code block
+```
+
+another list
+""",
+    ),
     pluginRuleTest(  # see sub3    test_extra_044cx test_extra_044ca
         "bad_fenced_block_in_list_in_block_quote_with_previous_inner_list_with_thematics",
         source_file_contents="""> + list 1
@@ -3718,6 +5922,66 @@ abc
 >
 >   ------
 > + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_with_previous_inner_list_double_drop_with_thematics",
+        source_file_contents="""> + list 1
+>   + list 2
+>     list 3
+> ------
+> ```block
+> A code block
+> ```
+> ------
+> + another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""> + list 1
+>   + list 2
+>     list 3
+> ------
+>
+> ```block
+> A code block
+> ```
+>
+> ------
+> + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_block_quote_with_previous_inner_list_triple_drop_with_thematics",
+        source_file_contents="""> + list 1
+>   + list 2
+>     list 3
+------
+```block
+A code block
+```
+------
+another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""> + list 1
+>   + list 2
+>     list 3
+------
+
+```block
+A code block
+```
+
+------
+another list
 """,
     ),
     pluginRuleTest(
@@ -4009,6 +6273,96 @@ abc
 > + another list
 """,
     ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_blockx_double_drop",
+        source_file_contents="""> + > -----
+>   > > block 1
+>   > > block 2
+>   ```block
+>   A code block
+>   ```
+>   -----
+> + another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md027",
+        use_debug=True,
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""> + > -----
+>   > > block 1
+>   > > block 2
+>
+>   ```block
+>   A code block
+>   ```
+>
+>   -----
+> + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_blockx_triple_drop",
+        source_file_contents="""> + > -----
+>   > > block 1
+>   > > block 2
+> ```block
+> A code block
+> ```
+> -----
+> another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md027,md007,md023",
+        use_debug=True,
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""> + > -----
+>   > > block 1
+>   > > block 2
+>
+> ```block
+> A code block
+> ```
+>
+> -----
+> another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_blockx_quad_drop",
+        source_file_contents="""> + > -----
+>   > > block 1
+>   > > block 2
+```block
+A code block
+```
+-----
+another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md027",
+        use_debug=True,
+        mark_scan_as_skipped=True,
+        fix_expected_file_contents="""> + > -----
+>   > > block 1
+>   > > block 2
+
+```block
+A code block
+```
+
+-----
+another list
+""",
+    ),
     pluginRuleTest(  # test_extra_047d0, test_extra_047d1
         "bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_blocks",
         source_file_contents="""> + > -----
@@ -4071,6 +6425,99 @@ abc
 >   >
 >   > -----
 > + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block_double_drop_with_thematics",
+        source_file_contents="""> + > -----
+>   > > block 1
+>   > > block 2
+>   -----
+>   ```block
+>   A code block
+>   ```
+>   -----
+> + another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md027",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""> + > -----
+>   > > block 1
+>   > > block 2
+>   -----
+>
+>   ```block
+>   A code block
+>   ```
+>
+>   -----
+> + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block_triple_drop_with_thematics",
+        source_file_contents="""> + > -----
+>   > > block 1
+>   > > block 2
+> -----
+> ```block
+> A code block
+> ```
+> -----
+> another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md027",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""> + > -----
+>   > > block 1
+>   > > block 2
+> -----
+>
+> ```block
+> A code block
+> ```
+>
+> -----
+> another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block_quad_drop_with_thematics",
+        source_file_contents="""> + > -----
+>   > > block 1
+>   > > block 2
+-----
+```block
+A code block
+```
+-----
+another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md027",
+        mark_scan_as_skipped=True,
+        fix_expected_file_contents="""> + > -----
+>   > > block 1
+>   > > block 2
+-----
+
+```block
+A code block
+```
+
+-----
+another list
 """,
     ),
     pluginRuleTest(  # test_extra_044mcv0 test_extra_044mcv1
@@ -4157,6 +6604,99 @@ abc
 > + another list
 """,
     ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_double_drop",
+        source_file_contents="""> + > -----
+>   > + list 1
+>   >   list 2
+>   > + list 3
+>   ```block
+>   A code block
+>   ```
+>   -----
+> + another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_scan_as_skipped=True,
+        fix_expected_file_contents="""> + > -----
+>   > + list 1
+>   >   list 2
+>   > + list 3
+>
+>   ```block
+>   A code block
+>   ```
+>
+>   -----
+> + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_triple_drop",
+        source_file_contents="""> + > -----
+>   > + list 1
+>   >   list 2
+>   > + list 3
+> ```block
+> A code block
+> ```
+> -----
+> another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_scan_as_skipped=True,
+        fix_expected_file_contents="""> + > -----
+>   > + list 1
+>   >   list 2
+>   > + list 3
+>
+> ```block
+> A code block
+> ```
+>
+> -----
+> another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_quad_drop",
+        source_file_contents="""> + > -----
+>   > + list 1
+>   >   list 2
+>   > + list 3
+```block
+A code block
+```
+-----
+another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_scan_as_skipped=True,
+        fix_expected_file_contents="""> + > -----
+>   > + list 1
+>   >   list 2
+>   > + list 3
+
+```block
+A code block
+```
+
+-----
+another list
+""",
+    ),
     pluginRuleTest(  # test_extra_044mcu0 test_extra_044mcu1
         "bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_and_thematics",
         source_file_contents="""> + > -----
@@ -4187,6 +6727,105 @@ abc
 >   >
 >   > -----
 > + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_double_drop_and_thematics",
+        source_file_contents="""> + > -----
+>   > + list 1
+>   >   list 2
+>   > + list 3
+>   -----
+>   ```block
+>   A code block
+>   ```
+>   -----
+> + another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:8:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md027",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""> + > -----
+>   > + list 1
+>   >   list 2
+>   > + list 3
+>   -----
+>
+>   ```block
+>   A code block
+>   ```
+>
+>   -----
+> + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_triple_drop_and_thematics",
+        source_file_contents="""> + > -----
+>   > + list 1
+>   >   list 2
+>   > + list 3
+> -----
+> ```block
+> A code block
+> ```
+> -----
+> another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:8:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""> + > -----
+>   > + list 1
+>   >   list 2
+>   > + list 3
+> -----
+>
+> ```block
+> A code block
+> ```
+>
+> -----
+> another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_quad_drop_and_thematics",
+        source_file_contents="""> + > -----
+>   > + list 1
+>   >   list 2
+>   > + list 3
+-----
+```block
+A code block
+```
+-----
+another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:8:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_scan_as_skipped=True,
+        fix_expected_file_contents="""> + > -----
+>   > + list 1
+>   >   list 2
+>   > + list 3
+-----
+
+```block
+A code block
+```
+
+-----
+another list
 """,
     ),
     pluginRuleTest(
@@ -4301,6 +6940,93 @@ abc
 > + another list
 """,
     ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_double_drop",
+        source_file_contents="""> + + -----
+>     > block 1
+>     > block 2
+>   ```block
+>   A code block
+>   ```
+>   -----
+> + another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md027",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""> + + -----
+>     > block 1
+>     > block 2
+>
+>   ```block
+>   A code block
+>   ```
+>
+>   -----
+> + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_triple_drop",
+        source_file_contents="""> + + -----
+>     > block 1
+>     > block 2
+> ```block
+> A code block
+> ```
+> -----
+> another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md027",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""> + + -----
+>     > block 1
+>     > block 2
+>
+> ```block
+> A code block
+> ```
+>
+> -----
+> another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_quad_drop",
+        source_file_contents="""> + + -----
+>     > block 1
+>     > block 2
+```block
+A code block
+```
+-----
+another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md027",
+        mark_scan_as_skipped=True,
+        fix_expected_file_contents="""> + + -----
+>     > block 1
+>     > block 2
+
+```block
+A code block
+```
+
+-----
+another list
+""",
+    ),
     pluginRuleTest(  # test_extra_044mct0 test_extra_044mct1
         "bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_with_thematics",
         source_file_contents="""> + + -----
@@ -4329,6 +7055,99 @@ abc
 >
 >     -----
 > + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_double_drop_with_thematics",
+        source_file_contents="""> + + -----
+>     > block 1
+>     > block 2
+>   -----
+>   ```block
+>   A code block
+>   ```
+>   -----
+> + another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md027",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""> + + -----
+>     > block 1
+>     > block 2
+>   -----
+>
+>   ```block
+>   A code block
+>   ```
+>
+>   -----
+> + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_triple_drop_with_thematics",
+        source_file_contents="""> + + -----
+>     > block 1
+>     > block 2
+> -----
+> ```block
+> A code block
+> ```
+> -----
+> another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md027",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""> + + -----
+>     > block 1
+>     > block 2
+> -----
+>
+> ```block
+> A code block
+> ```
+>
+> -----
+> another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_quad_drop_with_thematics",
+        source_file_contents="""> + + -----
+>     > block 1
+>     > block 2
+-----
+```block
+A code block
+```
+-----
+another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md027",
+        mark_scan_as_skipped=True,
+        fix_expected_file_contents="""> + + -----
+>     > block 1
+>     > block 2
+-----
+
+```block
+A code block
+```
+
+-----
+another list
 """,
     ),
     pluginRuleTest(
@@ -4397,6 +7216,98 @@ abc
 > + another list
 """,
     ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_double_drop",
+        source_file_contents="""> + + -----
+>     + list 1
+>       list 2
+>     + list 3
+>   ```block
+>   A code block
+>   ```
+>   -----
+> + another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""> + + -----
+>     + list 1
+>       list 2
+>     + list 3
+>
+>   ```block
+>   A code block
+>   ```
+>
+>   -----
+> + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_triple_drop",
+        source_file_contents="""> + + -----
+>     + list 1
+>       list 2
+>     + list 3
+> ```block
+> A code block
+> ```
+> -----
+> another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""> + + -----
+>     + list 1
+>       list 2
+>     + list 3
+>
+> ```block
+> A code block
+> ```
+>
+> -----
+> another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_quad_drop",
+        source_file_contents="""> + + -----
+>     + list 1
+>       list 2
+>     + list 3
+```block
+A code block
+```
+-----
+another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""> + + -----
+>     + list 1
+>       list 2
+>     + list 3
+
+```block
+A code block
+```
+
+-----
+another list
+""",
+    ),
     pluginRuleTest(  # test_extra_044mcs0 test_extra_044mcs1
         "bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_and_thematics",
         source_file_contents="""> + + -----
@@ -4427,6 +7338,103 @@ abc
 >
 >     -----
 > + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_double_drop_and_thematics",
+        source_file_contents="""> + + -----
+>     + list 1
+>       list 2
+>     + list 3
+>   -----
+>   ```block
+>   A code block
+>   ```
+>   -----
+> + another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:8:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""> + + -----
+>     + list 1
+>       list 2
+>     + list 3
+>   -----
+>
+>   ```block
+>   A code block
+>   ```
+>
+>   -----
+> + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_triple_drop_and_thematics",
+        source_file_contents="""> + + -----
+>     + list 1
+>       list 2
+>     + list 3
+> -----
+> ```block
+> A code block
+> ```
+> -----
+> another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:8:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""> + + -----
+>     + list 1
+>       list 2
+>     + list 3
+> -----
+>
+> ```block
+> A code block
+> ```
+>
+> -----
+> another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_quad_drop_and_thematics",
+        source_file_contents="""> + + -----
+>     + list 1
+>       list 2
+>     + list 3
+-----
+```block
+A code block
+```
+-----
+another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:8:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""> + + -----
+>     + list 1
+>       list 2
+>     + list 3
+-----
+
+```block
+A code block
+```
+
+-----
+another list
 """,
     ),
     pluginRuleTest(
@@ -4562,6 +7570,59 @@ abc
 """,
     ),
     pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_with_previous_inner_block_double_drop",
+        source_file_contents="""+ + list 1
+    > block 2.1
+    > block 2.2
+  ```block
+  A code block
+  ```
+  another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""+ + list 1
+    > block 2.1
+    > block 2.2
+
+  ```block
+  A code block
+  ```
+
+  another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_with_previous_inner_block_triple_drop",
+        source_file_contents="""+ + list 1
+    > block 2.1
+    > block 2.2
+```block
+A code block
+```
+another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""+ + list 1
+    > block 2.1
+    > block 2.2
+
+```block
+A code block
+```
+
+another list
+""",
+    ),
+    pluginRuleTest(
         "bad_fenced_block_in_list_in_list_with_previous_inner_block_with_thematics",
         source_file_contents="""+ + list 1
     > block 2.1
@@ -4587,6 +7648,68 @@ abc
     ```
 
   + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_with_previous_inner_block_double_drop_with_thematics",
+        source_file_contents="""+ + list 1
+    > block 2.1
+    > block 2.2
+  ----
+  ```block
+  A code block
+  ```
+  ----
+  another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""+ + list 1
+    > block 2.1
+    > block 2.2
+  ----
+
+  ```block
+  A code block
+  ```
+
+  ----
+  another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_with_previous_inner_block_triple_drop_with_thematics",
+        source_file_contents="""+ + list 1
+    > block 2.1
+    > block 2.2
+----
+```block
+A code block
+```
+----
+  another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""+ + list 1
+    > block 2.1
+    > block 2.2
+----
+
+```block
+A code block
+```
+
+----
+another list
 """,
     ),
     pluginRuleTest(
@@ -4651,6 +7774,59 @@ abc
   + another list
 """,
     ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_with_previous_inner_list_double_drop",
+        source_file_contents="""+ + list 1
++ + + list 2.1
+      list 2.2
+  ```block
+  A code block
+  ```
+  another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""+ + list 1
++ + + list 2.1
+      list 2.2
+
+  ```block
+  A code block
+  ```
+
+  another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_with_previous_inner_list_triple_drop",
+        source_file_contents="""+ + list 1
++ + + list 2.1
+      list 2.2
+```block
+A code block
+```
+another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""+ + list 1
++ + + list 2.1
+      list 2.2
+
+```block
+A code block
+```
+
+another list
+""",
+    ),
     pluginRuleTest(  # test_extra_047g0 test_extra_047g1
         "bad_fenced_block_in_list_in_list_with_previous_inner_list_with_thematics",
         source_file_contents="""+ + list 1
@@ -4677,6 +7853,64 @@ abc
     ```
 
   + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_with_previous_inner_list_double_drop_with_thematics",
+        source_file_contents="""+ + list 1
++ + + list 2.1
+      list 2.2
+  ----
+  ```block
+  A code block
+  ```
+  another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""+ + list 1
++ + + list 2.1
+      list 2.2
+  ----
+
+  ```block
+  A code block
+  ```
+
+  another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_with_previous_inner_list_triple_drop_with_thematics",
+        source_file_contents="""+ + list 1
++ + + list 2.1
+      list 2.2
+----
+```block
+A code block
+```
+----
+another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""+ + list 1
++ + + list 2.1
+      list 2.2
+----
+
+```block
+A code block
+```
+
+----
+another list
 """,
     ),
     pluginRuleTest(  # test_extra_047g2 test_extra_047g3
@@ -4907,6 +8141,91 @@ abc
   + another list
 """,
     ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_in_list_with_previous_block_double_drop",
+        source_file_contents="""+ + > -----
+    > > block 1
+    > > block 2
+    ```block
+    A code block
+    ```
+    -----
+  + another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""+ + > -----
+    > > block 1
+    > > block 2
+
+    ```block
+    A code block
+    ```
+
+    -----
+  + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_in_list_with_previous_block_triple_drop",
+        source_file_contents="""+ + > -----
+    > > block 1
+    > > block 2
+  ```block
+  A code block
+  ```
+  -----
+  another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""+ + > -----
+    > > block 1
+    > > block 2
+
+  ```block
+  A code block
+  ```
+
+  -----
+  another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_in_list_with_previous_block_quad_drop",
+        source_file_contents="""+ + > -----
+    > > block 1
+    > > block 2
+```block
+A code block
+```
+-----
+another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""+ + > -----
+    > > block 1
+    > > block 2
+
+```block
+A code block
+```
+
+-----
+another list
+""",
+    ),
     pluginRuleTest(  # test_extra_044lc
         "bad_fenced_block_in_block_quote_in_list_in_list_with_previous_block_and_thematics",
         source_file_contents="""+ + > -----
@@ -4935,6 +8254,97 @@ abc
     >
     > -----
   + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_in_list_with_previous_block_double_drop_and_thematics",
+        source_file_contents="""+ + > -----
+    > > block 1
+    > > block 2
+    -----
+    ```block
+    A code block
+    ```
+    -----
+  + another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""+ + > -----
+    > > block 1
+    > > block 2
+    -----
+
+    ```block
+    A code block
+    ```
+
+    -----
+  + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_in_list_with_previous_block_triple_drop_and_thematics",
+        source_file_contents="""+ + > -----
+    > > block 1
+    > > block 2
+  -----
+  ```block
+  A code block
+  ```
+  -----
+  another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""+ + > -----
+    > > block 1
+    > > block 2
+  -----
+
+  ```block
+  A code block
+  ```
+
+  -----
+  another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_in_list_with_previous_block_quad_drop_and_thematics",
+        source_file_contents="""+ + > -----
+    > > block 1
+    > > block 2
+-----
+```block
+A code block
+```
+-----
+another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""+ + > -----
+    > > block 1
+    > > block 2
+-----
+
+```block
+A code block
+```
+
+-----
+another list
 """,
     ),
     pluginRuleTest(
@@ -5004,6 +8414,98 @@ abc
 """,
     ),
     pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_in_list_with_previous_list_double_drop",
+        source_file_contents="""+ + > -----
+    > + list 1
+    >   list 2
+    > + list 3
+    ```block
+    A code block
+    ```
+    -----
+  + another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_scan_as_skipped=True,
+        fix_expected_file_contents="""+ + > -----
+    > + list 1
+    >   list 2
+    > + list 3
+
+    ```block
+    A code block
+    ```
+
+    -----
+  + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_in_list_with_previous_list_triple_drop",
+        source_file_contents="""+ + > -----
+    > + list 1
+    >   list 2
+    > + list 3
+  ```block
+  A code block
+  ```
+  -----
+  another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""+ + > -----
+    > + list 1
+    >   list 2
+    > + list 3
+
+  ```block
+  A code block
+  ```
+
+  -----
+  another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_in_list_with_previous_list_quad_drop",
+        source_file_contents="""+ + > -----
+    > + list 1
+    >   list 2
+    > + list 3
+```block
+A code block
+```
+-----
+another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""+ + > -----
+    > + list 1
+    >   list 2
+    > + list 3
+
+```block
+A code block
+```
+
+-----
+another list
+""",
+    ),
+    pluginRuleTest(
         "bad_fenced_block_in_block_quote_in_list_in_list_with_previous_list_and_thematics",
         source_file_contents="""+ + > -----
     > + list 1
@@ -5033,6 +8535,104 @@ abc
     >
     > -----
   + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_in_list_with_previous_list_double_drop_and_thematics",
+        source_file_contents="""+ + > -----
+    > + list 1
+    >   list 2
+    > + list 3
+    -----
+    ```block
+    A code block
+    ```
+    -----
+  + another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:8:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""+ + > -----
+    > + list 1
+    >   list 2
+    > + list 3
+    -----
+
+    ```block
+    A code block
+    ```
+
+    -----
+  + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_in_list_with_previous_list_triple_drop_and_thematics",
+        source_file_contents="""+ + > -----
+    > + list 1
+    >   list 2
+    > + list 3
+  -----
+  ```block
+  A code block
+  ```
+  -----
+  another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:8:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""+ + > -----
+    > + list 1
+    >   list 2
+    > + list 3
+  -----
+
+  ```block
+  A code block
+  ```
+
+  -----
+  another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_block_quote_in_list_in_list_with_previous_list_quad_drop_and_thematics",
+        source_file_contents="""+ + > -----
+    > + list 1
+    >   list 2
+    > + list 3
+-----
+```block
+A code block
+```
+-----
+another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:8:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""+ + > -----
+    > + list 1
+    >   list 2
+    > + list 3
+-----
+
+```block
+A code block
+```
+
+-----
+another list
 """,
     ),
     pluginRuleTest(
@@ -5126,6 +8726,92 @@ abc
 """,
     ),
     pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_in_list_with_previous_block_double_drop",
+        source_file_contents="""+ + + -----
+      > block 1
+      > block 2
+    ```block
+    A code block
+    ```
+    -----
+  + another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032,md027",
+        mark_scan_as_skipped=True,
+        fix_expected_file_contents="""+ + + -----
+      > block 1
+      > block 2
+
+    ```block
+    A code block
+    ```
+
+    -----
+  + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_in_list_with_previous_block_triple_drop",
+        source_file_contents="""+ + + -----
+      > block 1
+      > block 2
+  ```block
+  A code block
+  ```
+  -----
+  another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""+ + + -----
+      > block 1
+      > block 2
+
+  ```block
+  A code block
+  ```
+
+  -----
+  another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_in_list_with_previous_block_quad_drop",
+        source_file_contents="""+ + + -----
+      > block 1
+      > block 2
+```block
+A code block
+```
+-----
+another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:6:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""+ + + -----
+      > block 1
+      > block 2
+
+```block
+A code block
+```
+
+-----
+another list
+""",
+    ),
+    pluginRuleTest(
         "bad_fenced_block_in_list_in_list_in_list_with_previous_block_with_thematics",
         source_file_contents="""+ + + -----
       > block 1
@@ -5153,6 +8839,98 @@ abc
 
       -----
   + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_in_list_with_previous_block_double_drop_with_thematics",
+        source_file_contents="""+ + + -----
+      > block 1
+      > block 2
+    -----
+    ```block
+    A code block
+    ```
+    -----
+  + another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""+ + + -----
+      > block 1
+      > block 2
+    -----
+
+    ```block
+    A code block
+    ```
+
+    -----
+  + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_in_list_with_previous_block_triple_drop_with_thematics",
+        source_file_contents="""+ + + -----
+      > block 1
+      > block 2
+  -----
+  ```block
+  A code block
+  ```
+  -----
+  another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""+ + + -----
+      > block 1
+      > block 2
+  -----
+
+  ```block
+  A code block
+  ```
+
+  -----
+  another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_in_list_with_previous_block_quad_drop_with_thematics",
+        source_file_contents="""+ + + -----
+      > block 1
+      > block 2
+-----
+```block
+A code block
+```
+-----
+another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""+ + + -----
+      > block 1
+      > block 2
+-----
+
+```block
+A code block
+```
+
+-----
+another list
 """,
     ),
     pluginRuleTest(
@@ -5200,6 +8978,7 @@ abc
       ```block
       A code block
       ```
+      ----
     + another list
 """,
         scan_expected_return_code=1,
@@ -5216,7 +8995,98 @@ abc
       A code block
       ```
 
+      ----
     + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_in_list_with_previous_inner_list_double_drop_with_thematics",
+        source_file_contents="""+ + + list 1
++ + + + list 2.1
+        list 2.2
+    ----
+    ```block
+    A code block
+    ```
+    ----
+    another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""+ + + list 1
++ + + + list 2.1
+        list 2.2
+    ----
+
+    ```block
+    A code block
+    ```
+
+    ----
+    another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_in_list_with_previous_inner_list_triple_drop_with_thematics",
+        source_file_contents="""+ + + list 1
++ + + + list 2.1
+        list 2.2
+  ----
+  ```block
+  A code block
+  ```
+  ----
+  another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""+ + + list 1
++ + + + list 2.1
+        list 2.2
+  ----
+
+  ```block
+  A code block
+  ```
+
+  ----
+  another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_in_list_with_previous_inner_list_quad_drop_with_thematics",
+        source_file_contents="""+ + + list 1
++ + + + list 2.1
+        list 2.2
+----
+```block
+A code block
+```
+----
+another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""+ + + list 1
++ + + + list 2.1
+        list 2.2
+----
+
+```block
+A code block
+```
+
+----
+another list
 """,
     ),
     pluginRuleTest(  # test_extra_044mcq0 test_extra_044mcq1
@@ -5249,6 +9119,92 @@ abc
 
       -----
   + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_in_list_with_previous_list_double_drop",
+        source_file_contents="""+ + + -----
+      + list 1
+        list 2
+      + list 3
+    ```block
+    A code block
+    ```
+  + another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""+ + + -----
+      + list 1
+        list 2
+      + list 3
+
+    ```block
+    A code block
+    ```
+
+  + another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_in_list_with_previous_list_triple_drop",
+        source_file_contents="""+ + + -----
+      + list 1
+        list 2
+      + list 3
+  ```block
+  A code block
+  ```
+  another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""+ + + -----
+      + list 1
+        list 2
+      + list 3
+
+  ```block
+  A code block
+  ```
+
+  another list
+""",
+    ),
+    pluginRuleTest(
+        "bad_fenced_block_in_list_in_list_in_list_with_previous_list_quad_drop",
+        source_file_contents="""+ + + -----
+      + list 1
+        list 2
+      + list 3
+```block
+A code block
+```
+another list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+{temp_source_path}:7:1: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
+""",
+        disable_rules="md032",
+        fix_expected_file_contents="""+ + + -----
+      + list 1
+        list 2
+      + list 3
+
+```block
+A code block
+```
+
+another list
 """,
     ),
     pluginRuleTest(
