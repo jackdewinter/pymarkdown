@@ -6245,8 +6245,6 @@ def test_extra_044mb():
         "[para(2,5):]",
         "[text(2,5):fourth block 1:]",
         "[end-para:::True]",
-        "[BLANK(4,1):]",
-        "[end-ulist:::True]",
         "[end-block-quote:::True]",
         "[end-block-quote:::True]",
         "[BLANK(3,1):]",
