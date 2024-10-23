@@ -83,16 +83,14 @@ class ContainerHelper:
     def __xx(parser_state: ParserState, extra_bqs: int) -> List[MarkdownToken]:
         until_index = len(parser_state.token_stack) - 1
         needed_bqs = extra_bqs
-        while (
-            until_index > 0
-            and needed_bqs > 0
-            and parser_state.token_stack[until_index].is_block_quote
-        ):
+        while until_index > 0 and needed_bqs > 0:
+            if parser_state.token_stack[until_index].is_block_quote:
+                needed_bqs -= 1
             until_index -= 1
-            needed_bqs -= 1
         x_tokens, _ = parser_state.close_open_blocks_fn(
             parser_state,
             include_block_quotes=True,
+            include_lists=True,
             was_forced=True,
             until_this_index=until_index + 1,
         )
@@ -111,9 +109,10 @@ class ContainerHelper:
         extra_bqs: int,
     ) -> Tuple[bool, str, Optional[str]]:
         x_tokens = ContainerHelper.__xx(parser_state, extra_bqs)
+        count_block_quotes = sum(bool(i.is_block_quote_end) for i in x_tokens)
         assert (
-            len(x_tokens) == extra_bqs
-        ), "Should have generated the requested number of tokens."
+            count_block_quotes == extra_bqs
+        ), "Should have generated the requested number of block quote tokens."
 
         first_new_token = cast(EndMarkdownToken, x_tokens[0])
 

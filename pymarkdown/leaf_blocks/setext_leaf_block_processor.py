@@ -130,6 +130,7 @@ class SetextLeafBlockProcessor:
                 ex_ws_l,
                 split_tab_with_block_quote_suffix,
                 extra_whitespace_prefix,
+                block_quote_data,
             )
         else:
             POGGER.debug(
@@ -150,6 +151,7 @@ class SetextLeafBlockProcessor:
         ex_ws_l: int,
         split_tab_with_block_quote_suffix: bool,
         extra_whitespace_prefix: Optional[str],
+        block_quote_data: BlockQuoteData,
     ) -> Tuple[int, int, str]:
         _, collected_to_index = ParserHelper.collect_while_character_verified(
             line_to_parse,
@@ -189,6 +191,7 @@ class SetextLeafBlockProcessor:
                     extra_whitespace_prefix,
                     old_top_of_stack,
                     new_tokens,
+                    block_quote_data,
                 )
         return collected_to_index, after_whitespace_index, extra_whitespace_after_setext
 
@@ -203,6 +206,7 @@ class SetextLeafBlockProcessor:
         extra_whitespace_prefix: Optional[str],
         old_top_of_stack: StackToken,
         new_tokens: List[MarkdownToken],
+        block_quote_data: BlockQuoteData,
     ) -> None:
         POGGER.debug("parser_state.token_stack[-1]>>:$:<", parser_state.token_stack[-1])
         POGGER.debug("parser_state.token_stack>>:$:<", parser_state.token_stack)
@@ -221,6 +225,7 @@ class SetextLeafBlockProcessor:
             position_marker.index_indent,
             old_top_of_stack,
             new_tokens,
+            block_quote_data,
             was_token_already_added_to_stack=False,
             delay_tab_match=True,
         )

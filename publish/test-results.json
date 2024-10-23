@@ -1364,10 +1364,10 @@
         },
         {
             "name": "test.rules.test_md031",
-            "totalTests": 379,
+            "totalTests": 653,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 84,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -1620,10 +1620,10 @@
         },
         {
             "name": "test.test_markdown_extra",
-            "totalTests": 177,
+            "totalTests": 203,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 1,
+            "skippedTests": 2,
             "elapsedTimeInMilliseconds": 0
         },
         {

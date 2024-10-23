@@ -341,7 +341,32 @@ class TransformContainers:
 
     # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __abcd_inner(
+        removed_tokens: List[MarkdownToken], removed_token_indices: List[int]
+    ) -> bool:
+        do_check = True
+        if removed_tokens[0].is_list_start:
+            current_leading_spaces = cast(
+                ListStartMarkdownToken, removed_tokens[0]
+            ).leading_spaces
+        else:
+            bq_token = cast(BlockQuoteMarkdownToken, removed_tokens[0])
+            current_leading_spaces = bq_token.bleading_spaces
+            do_check = bq_token.weird_kludge_five
+        if do_check:
+            split_space_index = (
+                len(current_leading_spaces.split("\n"))
+                if current_leading_spaces is not None
+                else 0
+            )
+            if split_space_index != removed_token_indices[0]:
+                return True
+        del removed_tokens[0]
+        del removed_token_indices[0]
+        return False
+
+    # pylint: disable=too-many-arguments, too-many-boolean-expressions
     @staticmethod
     def __abcd(
         current_changed_record: Optional[MarkdownChangeRecord],
@@ -352,6 +377,17 @@ class TransformContainers:
         container_token_indices: List[int],
     ) -> Optional[str]:
         prefix = None
+
+        if (
+            len(container_stack) == 1
+            and len(removed_tokens) == 3
+            and container_stack[0].is_block_quote_start
+            and removed_tokens[0].is_block_quote_start
+            and removed_tokens[1].is_list_start
+            and removed_tokens[2].is_block_quote_start
+        ):
+            return ""
+
         assert current_changed_record is not None
         token_to_match = (
             current_changed_record.item_c
@@ -371,26 +407,10 @@ class TransformContainers:
         ):
             token_index += 1
         assert token_index != len(actual_tokens)
-        while removed_tokens:
-            do_check = True
-            if removed_tokens[0].is_list_start:
-                current_leading_spaces = cast(
-                    ListStartMarkdownToken, removed_tokens[0]
-                ).leading_spaces
-            else:
-                bq_token = cast(BlockQuoteMarkdownToken, removed_tokens[0])
-                current_leading_spaces = bq_token.bleading_spaces
-                do_check = bq_token.weird_kludge_five
-            if do_check:
-                split_space_index = (
-                    len(current_leading_spaces.split("\n"))
-                    if current_leading_spaces is not None
-                    else 0
-                )
-                if split_space_index != removed_token_indices[0]:
-                    break
-            del removed_tokens[0]
-            del removed_token_indices[0]
+        while removed_tokens and not TransformContainers.__abcd_inner(
+            removed_tokens, removed_token_indices
+        ):
+            pass
         keep_going = len(removed_tokens) > 1
         if keep_going:
             prefix = TransformContainers.__abcd_final(
@@ -398,14 +418,45 @@ class TransformContainers:
                 container_token_indices,
                 removed_tokens,
                 removed_token_indices,
-                prefix,
             )
 
         keep_going = len(removed_tokens) <= 1
         assert keep_going
         return prefix
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-boolean-expressions
+
+    @staticmethod
+    def __abcd_final_list(
+        removed_tokens: List[MarkdownToken], removed_token_indices: List[int]
+    ) -> Optional[str]:
+        removed_list_token = cast(ListStartMarkdownToken, removed_tokens[0])
+        assert removed_list_token.leading_spaces is not None
+        split_leading_spaces = removed_list_token.leading_spaces.split("\n")
+        # TODO figure out way to do this properly here instead of relying on
+        # prefix is None for most cases
+        possible_prefix = None
+        if (
+            removed_token_indices[0] < len(split_leading_spaces)
+            and split_leading_spaces[removed_token_indices[0]]
+        ):
+            possible_prefix = split_leading_spaces[removed_token_indices[0]]
+        del removed_tokens[0]
+        del removed_token_indices[0]
+
+        prefix = None
+        if removed_tokens[0].is_block_quote_start:
+            removed_block_quote_token = cast(BlockQuoteMarkdownToken, removed_tokens[0])
+            assert removed_block_quote_token.bleading_spaces is not None
+            split_bleading_spaces = removed_block_quote_token.bleading_spaces.split(
+                "\n"
+            )
+            assert removed_token_indices[0] < len(split_bleading_spaces)
+            prefix = "" if possible_prefix is None else possible_prefix
+            prefix = f"{split_bleading_spaces[removed_token_indices[0]]}{prefix}"
+        del removed_tokens[0]
+        del removed_token_indices[0]
+        return prefix
 
     @staticmethod
     def __abcd_final(
@@ -413,13 +464,13 @@ class TransformContainers:
         container_token_indices: List[int],
         removed_tokens: List[MarkdownToken],
         removed_token_indices: List[int],
-        prefix: Optional[str],
     ) -> Optional[str]:
         container_stack_copy = container_stack[:]
         container_indices_copy = container_token_indices[:]
         container_stack_copy.extend(removed_tokens[::-1])
         container_indices_copy.extend(removed_token_indices[::-1])
 
+        prefix = None
         if container_stack_copy[-1].is_block_quote_start:
 
             # Temporary until we have more data. test_extra_047f6x
@@ -454,10 +505,9 @@ class TransformContainers:
                 del removed_tokens[0]
                 del removed_token_indices[0]
         else:
-            del removed_tokens[0]
-            del removed_token_indices[0]
-            del removed_tokens[0]
-            del removed_token_indices[0]
+            prefix = TransformContainers.__abcd_final_list(
+                removed_tokens, removed_token_indices
+            )
         return prefix
 
     # pylint: disable=too-many-locals
@@ -1357,14 +1407,18 @@ class TransformContainers:
             and nested_block_start_index
         ):
             assert token_stack[nested_block_start_index].is_block_quote_start
-            new_start_index = nested_block_start_index - 1
-            while (
-                new_start_index >= 0
-                and not token_stack[new_start_index].is_block_quote_start
-            ):
-                new_start_index -= 1
-            if new_start_index >= 0:
-                container_token_indices[new_start_index] += 1
+            block_quote_token = cast(
+                BlockQuoteMarkdownToken, token_stack[nested_block_start_index]
+            )
+            if not block_quote_token.weird_kludge_three:
+                new_start_index = nested_block_start_index - 1
+                while (
+                    new_start_index >= 0
+                    and not token_stack[new_start_index].is_block_quote_start
+                ):
+                    new_start_index -= 1
+                if new_start_index >= 0:
+                    container_token_indices[new_start_index] += 1
 
     # pylint: enable=too-many-arguments
 

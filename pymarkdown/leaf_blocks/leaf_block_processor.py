@@ -79,6 +79,7 @@ class LeafBlockProcessor:
                 extracted_whitespace,
                 original_line,
                 index_indent,
+                skip_whitespace_check=True,
             )
             POGGER.debug(
                 "is_paragraph_ending_leaf_block_start>>is_fenced_code_block>>$",
@@ -141,6 +142,7 @@ class LeafBlockProcessor:
                     position_marker.index_indent,
                     old_top_of_stack,
                     html_tokens,
+                    grab_bag.block_quote_data,
                     alt_removed_chars_at_start=alt_removed_chars_at_start,
                     is_html=True,
                     original_line=grab_bag.original_line,

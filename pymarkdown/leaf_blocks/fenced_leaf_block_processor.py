@@ -438,6 +438,7 @@ class FencedLeafBlockProcessor:
                 position_marker.index_indent,
                 old_top_of_stack,
                 new_tokens,
+                block_quote_data,
                 alt_removed_chars_at_start=removed_char_length,
                 original_line=original_line,
             )
