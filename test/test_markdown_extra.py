@@ -6245,6 +6245,8 @@ def test_extra_044mb():
         "[para(2,5):]",
         "[text(2,5):fourth block 1:]",
         "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
         "[end-block-quote:::True]",
         "[end-block-quote:::True]",
         "[BLANK(3,1):]",
@@ -6256,7 +6258,7 @@ def test_extra_044mb():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
@@ -6437,7 +6439,7 @@ this</li>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
@@ -6518,6 +6520,7 @@ this</li>
 def test_extra_046a():
     """
     TBD
+    bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block
     """
 
     # Arrange
