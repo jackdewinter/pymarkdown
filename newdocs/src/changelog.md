@@ -10,7 +10,13 @@
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
-- None
+- [Issue 1233](https://github.com/jackdewinter/pymarkdown/issues/1233)
+- [Issue 1234](https://github.com/jackdewinter/pymarkdown/issues/1234)
+- [Issue 1235](https://github.com/jackdewinter/pymarkdown/issues/1235)
+    - Adding new "drop_x" tests and resolve any scan issues with them.
+- [Issue 1243](https://github.com/jackdewinter/pymarkdown/issues/1243)
+    - Handling leading spaces in `__fix_spacing` function now that data
+      is present.
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
