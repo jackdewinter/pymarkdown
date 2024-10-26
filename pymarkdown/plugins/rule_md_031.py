@@ -359,7 +359,8 @@ class RuleMd031(RulePlugin):
         removed_list_token = cast(
             ListStartMarkdownToken, self.__removed_container_stack_token
         )
-        assert removed_list_token.leading_spaces is not None
+        if removed_list_token.leading_spaces is None:
+            return
         split_spaces = removed_list_token.leading_spaces.split("\n")
         split_spaces_length = len(split_spaces)
         if split_spaces_length > 1:
@@ -461,6 +462,40 @@ class RuleMd031(RulePlugin):
             else 1
         )
 
+    def __fix_spacing_one_container(
+        self, context: PluginScanContext, token: MarkdownToken
+    ) -> bool:
+        did_special_list_fix = False
+        if self.__leading_space_index_tracker.get_container_stack_item(
+            -1
+        ).is_block_quote_start:
+            self.__fix_spacing_block_quote(token)
+        else:
+            did_special_list_fix = self.__fix_spacing_list(context, token)
+        return did_special_list_fix
+
+    def __fix_spacing_removed_container(
+        self, context: PluginScanContext, token: MarkdownToken
+    ) -> None:
+        _ = token
+        assert self.__removed_container_stack_token is not None
+        if self.__removed_container_stack_token.is_list_start:
+            removed_list_token = cast(
+                ListStartMarkdownToken, self.__removed_container_stack_token
+            )
+            if removed_list_token.leading_spaces is not None:
+                split_spaces = removed_list_token.leading_spaces.split("\n")
+                split_spaces.append("")
+            else:
+                split_spaces = [""]
+            self.register_fix_token_request(
+                context,
+                self.__removed_container_stack_token,
+                "next_token",
+                "leading_spaces",
+                "\n".join(split_spaces),
+            )
+
     def __fix_spacing(
         self, context: PluginScanContext, token: MarkdownToken, special_case: bool
     ) -> None:
@@ -469,30 +504,9 @@ class RuleMd031(RulePlugin):
             self.__fix_spacing_special_case(context, token)
             return
         if self.__leading_space_index_tracker.in_at_least_one_container():
-            if self.__leading_space_index_tracker.get_container_stack_item(
-                -1
-            ).is_block_quote_start:
-                self.__fix_spacing_block_quote(token)
-            else:
-                did_special_list_fix = self.__fix_spacing_list(context, token)
+            did_special_list_fix = self.__fix_spacing_one_container(context, token)
         elif self.__removed_container_stack_token:
-            if self.__removed_container_stack_token.is_list_start:
-                removed_list_token = cast(
-                    ListStartMarkdownToken, self.__removed_container_stack_token
-                )
-                assert removed_list_token.leading_spaces is None
-                # if removed_list_token.leading_spaces is not None:
-                #     split_spaces = removed_list_token.leading_spaces.split("\n")
-                #     split_spaces.append("")
-                # else:
-                split_spaces = [""]
-                self.register_fix_token_request(
-                    context,
-                    self.__removed_container_stack_token,
-                    "next_token",
-                    "leading_spaces",
-                    "\n".join(split_spaces),
-                )
+            self.__fix_spacing_removed_container(context, token)
 
         new_token = copy.deepcopy(token)
         self.__fix_count += 1

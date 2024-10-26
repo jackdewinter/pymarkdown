@@ -5,12 +5,24 @@
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
-- None
+- [Issue 1233](https://github.com/jackdewinter/pymarkdown/issues/1233)
+- [Issue 1234](https://github.com/jackdewinter/pymarkdown/issues/1234)
+- [Issue 1235](https://github.com/jackdewinter/pymarkdown/issues/1235)
+    - Adding more comprehensive "drop X" tests where multiple levels of
+      containers are involved, and then dropping one or more of those
+      containers in a single line.
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
-- None
+- [Issue 1233](https://github.com/jackdewinter/pymarkdown/issues/1233)
+- [Issue 1234](https://github.com/jackdewinter/pymarkdown/issues/1234)
+- [Issue 1235](https://github.com/jackdewinter/pymarkdown/issues/1235)
+    - Adding new "drop_x" tests and resolve any scan issues with them.
+- [Issue 1243](https://github.com/jackdewinter/pymarkdown/issues/1243)
+- [Issue 1245](https://github.com/jackdewinter/pymarkdown/issues/1245)
+    - Handling leading spaces in `__fix_spacing` function now that data
+      is present.
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
