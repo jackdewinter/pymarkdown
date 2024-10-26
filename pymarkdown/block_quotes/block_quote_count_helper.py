@@ -328,7 +328,9 @@ class BlockQuoteCountHelper:
         )
         assert parser_state.original_line_to_parse is not None
         if (
-            parser_state.original_line_to_parse[
+            embedded_list_stack_token.indent_level
+            >= len(parser_state.original_line_to_parse)
+            or parser_state.original_line_to_parse[
                 start_index : embedded_list_stack_token.indent_level
             ].strip()
             or parser_state.original_line_to_parse[

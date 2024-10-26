@@ -9100,6 +9100,150 @@ another list</li>
 
 
 @pytest.mark.gfm
+def test_extra_050b0():
+    """
+    TBD
+    bad_fenced_block_in_list_in_list_in_list_with_previous_list_double_drop
+    """
+
+    # Arrange
+    source_markdown = """+ + + -----
+      + list 1
+        list 2
+      + list 3
+    ```block
+    A code block
+    ```
+  + another list
+"""
+    expected_tokens = [
+        "[ulist(1,1):+::2:]",
+        "[ulist(1,3):+::4:  :    \n    \n    \n]",
+        "[ulist(1,5):+::6:    ]",
+        "[tbreak(1,7):-::-----]",
+        "[ulist(2,7):+::8:      :        ]",
+        "[para(2,9):\n]",
+        "[text(2,9):list 1\nlist 2::\n]",
+        "[end-para:::True]",
+        "[li(4,7):8:      :]",
+        "[para(4,9):]",
+        "[text(4,9):list 3:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+        "[fcode-block(5,5):`:3:block:::::]",
+        "[text(6,5):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[li(8,3):4:  :]",
+        "[para(8,5):]",
+        "[text(8,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(9,1):]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<hr />
+<ul>
+<li>list 1
+list 2</li>
+<li>list 3</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+</li>
+<li>another list</li>
+</ul>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_extra_050b1():
+    """
+    TBD
+    bad_fenced_block_in_list_in_list_in_list_with_previous_list_double_drop
+    """
+
+    # Arrange
+    source_markdown = """+ + + -----
+      + list 1
+        list 2
+      + list 3
+
+    ```block
+    A code block
+    ```
+
+  + another list
+"""
+    expected_tokens = [
+        "[ulist(1,1):+::2:]",
+        "[ulist(1,3):+::4:  :    \n    \n    \n\n]",
+        "[ulist(1,5):+::6:    ]",
+        "[tbreak(1,7):-::-----]",
+        "[ulist(2,7):+::8:      :        \n]",
+        "[para(2,9):\n]",
+        "[text(2,9):list 1\nlist 2::\n]",
+        "[end-para:::True]",
+        "[li(4,7):8:      :]",
+        "[para(4,9):]",
+        "[text(4,9):list 3:]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+        "[fcode-block(6,5):`:3:block:::::]",
+        "[text(7,5):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(9,1):]",
+        "[li(10,3):4:  :]",
+        "[para(10,5):]",
+        "[text(10,5):another list:]",
+        "[end-para:::True]",
+        "[BLANK(11,1):]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<hr />
+<ul>
+<li>list 1
+list 2</li>
+<li>list 3</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+</li>
+<li>
+<p>another list</p>
+</li>
+</ul>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
 def test_extra_999():
     """
     Temporary test to keep coverage up while consistency checks disabled.
@@ -9157,29 +9301,15 @@ def test_extra_999():
 # bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_block_double_drop
 # bad_fenced_block_in_block_quote_in_block_quote_double_drop_with_previous_inner_block
 # bad_fenced_block_in_block_quote_with_previous_inner_list_double_drop
-
 # bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_block_triple_drop_with_thematics
 # bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_block_quad_drop_with_thematics
 # bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_list_double_drop
 # bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_list_triple_drop
 # bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_list_triple_drop
 # bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_inner_list_double_drop
+# bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block_double_drop_with_thematics
 
 # Assert
-
-# bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block_double_drop_with_thematics
-#   File "c:\enlistments\pymarkdown\pymarkdown\block_quotes\block_quote_count_helper.py", line 334, in __xx_part_two
-#     or parser_state.original_line_to_parse[
-# IndexError: string index out of range
-
-# bad_fenced_block_in_list_in_list_in_list_with_previous_list_double_drop
-# bad_fenced_block_in_list_in_list_in_list_with_previous_list_triple_drop
-# bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_double_drop
-# bad_fenced_block_in_list_in_list_in_list_with_previous_block_triple_drop
-# bad_fenced_block_in_list_in_list_with_previous_inner_list_double_drop
-#   File "C:\enlistments\pymarkdown\pymarkdown\plugins\rule_md_031.py", line 362, in __fix_spacing_list_remove_list
-#     assert removed_list_token.leading_spaces is not None
-# AssertionError
 
 # bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block_triple_drop_with_thematics
 # bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_block_triple_drop
@@ -9200,29 +9330,23 @@ def test_extra_999():
 #     assert container_indices_copy[-1] == len(list_split_spaces) - 1
 # AssertionError
 
+# (probably bad regen after fix)
+# bad_fenced_block_in_list_in_list_with_previous_inner_block_double_drop
+# bad_fenced_block_in_block_quote_in_list_in_list_with_previous_list_triple_drop
+# bad_fenced_block_in_block_quote_in_list_in_list_with_previous_block_triple_drop
 # bad_fenced_block_in_list_in_list_in_list_with_previous_block_double_drop_with_thematics
 # bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_block_triple_drop
+# bad_fenced_block_in_list_in_list_in_list_with_previous_list_double_drop
+# bad_fenced_block_in_list_in_list_in_list_with_previous_list_triple_drop
+# bad_fenced_block_in_list_in_list_in_list_with_previous_block_triple_drop
+# bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_double_drop
 #   File "c:\enlistments\pymarkdown\pymarkdown\tokens\markdown_token.py", line 599, in adjust_line_number
 #     raise BadPluginFixError(
 # pymarkdown.plugin_manager.bad_plugin_fix_error.BadPluginFixError: Token 'fcode-block' can only be modified during the token pass in fix mode.
 
+# (probably bad regen after fix)
 # bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_blockx_double_drop
 # bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_triple_drop_and_thematics
 #   File "c:\enlistments\pymarkdown\pymarkdown\block_quotes\block_quote_processor.py", line 698, in __handle_existing_block_quote_fenced_special_part_two
 #     assert sd == ">"
 # AssertionError
-
-# bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_triple_drop
-# bad_fenced_block_in_list_in_block_quote_in_list_with_previous_list_double_drop
-# bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_list_double_drop
-# bad_fenced_block_in_list_in_block_quote_with_previous_inner_list_double_drop
-#   File "c:\enlistments\pymarkdown\pymarkdown\transform_markdown\transform_containers.py", line 1861, in __apply_primary_transformation_adjust_container_line
-#     assert (
-# AssertionError: Leading spaces must be defined by this point.
-
-# bad_fenced_block_in_list_in_list_with_previous_inner_block_double_drop
-# bad_fenced_block_in_block_quote_in_list_in_list_with_previous_list_triple_drop
-# bad_fenced_block_in_block_quote_in_list_in_list_with_previous_block_triple_drop
-#   File "c:\enlistments\pymarkdown\pymarkdown\tokens\markdown_token.py", line 599, in adjust_line_number
-#     raise BadPluginFixError(
-# pymarkdown.plugin_manager.bad_plugin_fix_error.BadPluginFixError: Token 'fcode-block' can only be modified during the token pass in fix mode.

@@ -3391,8 +3391,6 @@ A code block
 {temp_source_path}:7:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032,md035",
-        mark_fix_as_skipped=skip_fix_asserts,
-        use_debug=True,
         fix_expected_file_contents="""> > + ______
 > >   + list 1
 > >     list 2
@@ -4678,8 +4676,6 @@ A code block
 {temp_source_path}:7:6: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
-        mark_fix_as_skipped=skip_fix_asserts,
-        use_debug=True,
         fix_expected_file_contents="""1. > + ----
    >   + list 1
    >     list 2
@@ -5854,8 +5850,6 @@ another list
 {temp_source_path}:6:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
-        mark_fix_as_skipped=skip_fix_asserts,
-        use_debug=True,
         fix_expected_file_contents="""> + list 1
 >   + list 2
 >     list 3
@@ -7260,8 +7254,6 @@ another list
 {temp_source_path}:7:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
-        mark_fix_as_skipped=skip_fix_asserts,
-        use_debug=True,
         fix_expected_file_contents="""> + + -----
 >     + list 1
 >       list 2
@@ -7787,8 +7779,6 @@ another list
 {temp_source_path}:6:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
-        mark_fix_as_skipped=skip_fix_asserts,
-        use_debug=True,
         fix_expected_file_contents="""+ + list 1
 + + + list 2.1
       list 2.2
@@ -9125,7 +9115,7 @@ another list
   + another list
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_050b0 test_extra_050b1
         "bad_fenced_block_in_list_in_list_in_list_with_previous_list_double_drop",
         source_file_contents="""+ + + -----
       + list 1

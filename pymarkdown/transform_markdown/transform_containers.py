@@ -1435,11 +1435,15 @@ class TransformContainers:
         do_it = True
         if token_stack[-1].is_list_start and removed_tokens[-1].is_list_start:
             removed_list_token = cast(ListStartMarkdownToken, removed_tokens[-1])
-            assert removed_list_token.leading_spaces is not None
-            removed_token_split_spaces = removed_list_token.leading_spaces.split("\n")
             removed_token_index = removed_token_indices[-1]
-            assert removed_token_index < len(removed_token_split_spaces)
-            removed_token_indices[-1] += 1
+            if removed_list_token.leading_spaces is None:
+                assert removed_token_index == 0
+            else:
+                removed_token_split_spaces = removed_list_token.leading_spaces.split(
+                    "\n"
+                )
+                assert removed_token_index < len(removed_token_split_spaces)
+                removed_token_indices[-1] += 1
             do_it = False
             block_me = True
         if do_it:
@@ -1858,13 +1862,14 @@ class TransformContainers:
                 if token_stack[-1].is_new_list_item
                 else cast(ListStartMarkdownToken, token_stack[-1])
             )
-            assert (
-                prev_list_token.leading_spaces is not None
-            ), "Leading spaces must be defined by this point."
-            split_leading_spaces = prev_list_token.leading_spaces.split(
-                ParserHelper.newline_character
-            )
-        if last_container_token_index < len(split_leading_spaces):
+            split_leading_spaces = None
+            if prev_list_token.leading_spaces is not None:
+                split_leading_spaces = prev_list_token.leading_spaces.split(
+                    ParserHelper.newline_character
+                )
+        if split_leading_spaces is not None and last_container_token_index < len(
+            split_leading_spaces
+        ):
             POGGER.debug(f" -->{ParserHelper.make_value_visible(split_leading_spaces)}")
             POGGER.debug(
                 f" primary-->container_line>:{ParserHelper.make_value_visible(container_line)}:<"

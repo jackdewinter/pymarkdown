@@ -359,7 +359,8 @@ class RuleMd031(RulePlugin):
         removed_list_token = cast(
             ListStartMarkdownToken, self.__removed_container_stack_token
         )
-        assert removed_list_token.leading_spaces is not None
+        if removed_list_token.leading_spaces is None:
+            return
         split_spaces = removed_list_token.leading_spaces.split("\n")
         split_spaces_length = len(split_spaces)
         if split_spaces_length > 1:
