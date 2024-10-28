@@ -56,6 +56,7 @@ class RuleMd031(RulePlugin):
         self.__removed_container_adjustments: Optional[
             List[PendingContainerAdjustment]
         ] = None
+        self.__last_end_container_tokens: List[MarkdownToken] = []
 
         self.__leading_space_index_tracker = LeadingSpaceIndexTracker()
 
@@ -513,17 +514,26 @@ class RuleMd031(RulePlugin):
         new_token.adjust_line_number(context, self.__fix_count)
         assert self.__last_token is not None
         if token.is_fenced_code_block and self.__last_token.is_list_end:
+            end_container_index = len(self.__last_end_container_tokens) - 1
+            while (
+                end_container_index >= 0
+                and self.__last_end_container_tokens[end_container_index].is_list_end
+            ):
+                end_container_index -= 1
+            first_token = self.__last_end_container_tokens[end_container_index + 1]
             replacement_tokens: List[MarkdownToken] = [
                 BlankLineMarkdownToken(
                     extracted_whitespace="",
                     position_marker=PositionMarker(new_token.line_number - 1, 0, ""),
                     column_delta=1,
-                ),
-                self.__last_token,
-                new_token,
+                )
             ]
+            replacement_tokens.extend(
+                self.__last_end_container_tokens[end_container_index + 1 :]
+            )
+            replacement_tokens.append(new_token)
             self.register_replace_tokens_request(
-                context, self.__last_token, token, replacement_tokens
+                context, first_token, token, replacement_tokens
             )
         elif did_special_list_fix:
             assert self.__last_token and self.__last_token.is_block_quote_end
@@ -754,6 +764,11 @@ class RuleMd031(RulePlugin):
             and not token.is_list_start
         ):
             self.__last_non_end_token = token
+
+        if token.is_block_quote_end or token.is_list_end:
+            self.__last_end_container_tokens.append(token)
+        else:
+            self.__last_end_container_tokens.clear()
 
         self.__second_last_token = self.__last_token
         self.__last_token = token

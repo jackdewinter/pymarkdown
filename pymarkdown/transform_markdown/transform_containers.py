@@ -427,8 +427,54 @@ class TransformContainers:
     # pylint: enable=too-many-arguments, too-many-boolean-expressions
 
     @staticmethod
+    def __abcd_final_list_second_half(
+        removed_tokens: List[MarkdownToken],
+        removed_token_indices: List[int],
+        container_stack: List[MarkdownToken],
+        possible_prefix: Optional[str],
+    ) -> Optional[str]:
+        container_stack_copy: List[MarkdownToken] = container_stack[:]
+        container_stack_copy.extend(removed_tokens[::-1])
+        is_only_list_starts_on_stack = not any(
+            i.is_block_quote_start for i in container_stack_copy
+        )
+
+        prefix = None
+        if is_only_list_starts_on_stack and possible_prefix is not None:
+            prefix = possible_prefix
+            token_index = len(removed_tokens) - 1
+            while token_index >= 0:
+                list_token = cast(ListStartMarkdownToken, removed_tokens[token_index])
+                assert list_token.leading_spaces is None
+                assert removed_token_indices[token_index] == 0
+                token_index -= 1
+                del removed_tokens[0]
+                del removed_token_indices[0]
+
+            list_token = cast(ListStartMarkdownToken, container_stack[-1])
+            current_indent_level = list_token.indent_level if container_stack else 0
+            prefix = " " * current_indent_level
+        else:
+            if removed_tokens[0].is_block_quote_start:
+                removed_block_quote_token = cast(
+                    BlockQuoteMarkdownToken, removed_tokens[0]
+                )
+                assert removed_block_quote_token.bleading_spaces is not None
+                split_bleading_spaces = removed_block_quote_token.bleading_spaces.split(
+                    "\n"
+                )
+                assert removed_token_indices[0] < len(split_bleading_spaces)
+                prefix = "" if possible_prefix is None else possible_prefix
+                prefix = f"{split_bleading_spaces[removed_token_indices[0]]}{prefix}"
+            del removed_tokens[0]
+            del removed_token_indices[0]
+        return prefix
+
+    @staticmethod
     def __abcd_final_list(
-        removed_tokens: List[MarkdownToken], removed_token_indices: List[int]
+        removed_tokens: List[MarkdownToken],
+        removed_token_indices: List[int],
+        container_stack: List[MarkdownToken],
     ) -> Optional[str]:
         removed_list_token = cast(ListStartMarkdownToken, removed_tokens[0])
         assert removed_list_token.leading_spaces is not None
@@ -437,26 +483,17 @@ class TransformContainers:
         # prefix is None for most cases
         possible_prefix = None
         if (
-            removed_token_indices[0] < len(split_leading_spaces)
-            and split_leading_spaces[removed_token_indices[0]]
+            removed_token_indices[0]
+            < len(split_leading_spaces)
+            # and split_leading_spaces[removed_token_indices[0]]
         ):
             possible_prefix = split_leading_spaces[removed_token_indices[0]]
         del removed_tokens[0]
         del removed_token_indices[0]
 
-        prefix = None
-        if removed_tokens[0].is_block_quote_start:
-            removed_block_quote_token = cast(BlockQuoteMarkdownToken, removed_tokens[0])
-            assert removed_block_quote_token.bleading_spaces is not None
-            split_bleading_spaces = removed_block_quote_token.bleading_spaces.split(
-                "\n"
-            )
-            assert removed_token_indices[0] < len(split_bleading_spaces)
-            prefix = "" if possible_prefix is None else possible_prefix
-            prefix = f"{split_bleading_spaces[removed_token_indices[0]]}{prefix}"
-        del removed_tokens[0]
-        del removed_token_indices[0]
-        return prefix
+        return TransformContainers.__abcd_final_list_second_half(
+            removed_tokens, removed_token_indices, container_stack, possible_prefix
+        )
 
     @staticmethod
     def __abcd_final(
@@ -506,7 +543,7 @@ class TransformContainers:
                 del removed_token_indices[0]
         else:
             prefix = TransformContainers.__abcd_final_list(
-                removed_tokens, removed_token_indices
+                removed_tokens, removed_token_indices, container_stack
             )
         return prefix
 

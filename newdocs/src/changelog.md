@@ -23,6 +23,10 @@
 - [Issue 1245](https://github.com/jackdewinter/pymarkdown/issues/1245)
     - Handling leading spaces in `__fix_spacing` function now that data
       is present.
+- [Issue 1247](https://github.com/jackdewinter/pymarkdown/issues/1247)
+    - In 3+ drop cases with only lists and no block quotes, indent is
+      not calculated properly on rehydrate.  This in turn causes the
+      fixed text to be wrong.
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
