@@ -27,6 +27,9 @@
     - In 3+ drop cases with only lists and no block quotes, indent is
       not calculated properly on rehydrate.  This in turn causes the
       fixed text to be wrong.
+- [Issue 1250](https://github.com/jackdewinter/pymarkdown/issues/1250)
+    - Batch of fixes for cases when Md031 is trying to properly space
+      a fenced code block after dropping 2 containers.
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed

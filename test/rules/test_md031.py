@@ -2174,7 +2174,7 @@ A code block
 > > ```
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_050g0 test_extra_050g1
         "bad_fenced_block_in_block_quote_in_block_quote_double_drop_with_previous_inner_block",
         source_file_contents="""> > > block 3
 > > > block 3
@@ -2189,6 +2189,7 @@ A code block
 {temp_source_path}:6:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
+        use_fix_debug=True,
         mark_fix_as_skipped=skip_fix_bad_markdown,
         fix_expected_file_contents="""> > > block 3
 > > > block 3
@@ -2455,7 +2456,7 @@ A code block
 > > --------
 """,
     ),
-    pluginRuleTest(  # test_extra_049l0
+    pluginRuleTest(  # test_extra_049l0 test_extra_050h0 test_extra_050h1
         "bad_fenced_block_in_block_quote_in_block_quote_with_previous_inner_list_double_drop",
         source_file_contents="""> > + block 3
 > >   block 3
@@ -2470,7 +2471,8 @@ A code block
 {temp_source_path}:6:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
-        mark_fix_as_skipped=skip_fix_bad_markdown,
+        # mark_fix_as_skipped=skip_fix_bad_markdown,
+        # use_fix_debug=True,
         fix_expected_file_contents="""> > + block 3
 > >   block 3
 > > + block 3
@@ -4465,7 +4467,7 @@ A code block
    >   ----
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_050e0 test_extra_050e1
         "bad_fenced_block_in_list_in_block_quote_in_list_with_previous_block_double_drop",
         source_file_contents="""1. > + ----
    >   > block 1
@@ -4480,8 +4482,6 @@ A code block
 {temp_source_path}:6:6: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032,md027",
-        use_debug=True,
-        mark_fix_as_skipped=skip_fix_bad_markdown,
         fix_expected_file_contents="""1. > + ----
    >   > block 1
    >   > block 2
@@ -4689,7 +4689,7 @@ A code block
    > ----
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_050f0 test_extra_050f1
         "bad_fenced_block_in_list_in_block_quote_in_list_with_previous_list_triple_drop",
         source_file_contents="""1. > + ----
    >   + list 1
@@ -6932,7 +6932,7 @@ another list
 > + another list
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_050d0 test_extra_050d1
         "bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_double_drop",
         source_file_contents="""> + + -----
 >     > block 1
