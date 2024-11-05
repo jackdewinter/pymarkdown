@@ -1367,7 +1367,7 @@
             "totalTests": 653,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 61,
+            "skippedTests": 59,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -1620,7 +1620,7 @@
         },
         {
             "name": "test.test_markdown_extra",
-            "totalTests": 210,
+            "totalTests": 220,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 3,
