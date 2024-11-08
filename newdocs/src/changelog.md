@@ -5,6 +5,23 @@
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
+None
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
+None
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+None
+
+## Version 0.9.25 - Date: 2024-11-07
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Added
+
 - [Issue 1233](https://github.com/jackdewinter/pymarkdown/issues/1233)
 - [Issue 1234](https://github.com/jackdewinter/pymarkdown/issues/1234)
 - [Issue 1235](https://github.com/jackdewinter/pymarkdown/issues/1235)
@@ -16,7 +33,7 @@
 ### Fixed
 
 - [Issue 1208](https://github.com/jackdewinter/pymarkdown/issues/1208)
-    - fixed issue with blank lines separated with pragmas not being
+    - Fixed issue with blank lines separated with pragmas not being
       understood properly.
 - [Issue 1233](https://github.com/jackdewinter/pymarkdown/issues/1233)
 - [Issue 1234](https://github.com/jackdewinter/pymarkdown/issues/1234)
