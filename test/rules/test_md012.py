@@ -130,7 +130,7 @@ def test_md012_scan(test: pluginRuleTest) -> None:
     """
     Execute a parameterized scan test for plugin md001.
     """
-    execute_scan_test(test, "md007")
+    execute_scan_test(test, "md012")
 
 
 # Fix?
