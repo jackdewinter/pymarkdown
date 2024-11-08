@@ -3,370 +3,146 @@ Module to provide tests related to the MD012 rule.
 """
 
 import os
-from test.markdown_scanner import MarkdownScanner
-from test.rules.utils import execute_query_configuration_test, pluginQueryConfigTest
+from test.rules.utils import (
+    execute_configuration_test,
+    execute_query_configuration_test,
+    execute_scan_test,
+    id_test_plug_rule_fn,
+    pluginConfigErrorTest,
+    pluginQueryConfigTest,
+    pluginRuleTest,
+)
 
 import pytest
 
+source_path = os.path.join("test", "resources", "rules", "md012") + os.sep
 
-@pytest.mark.rules
-def test_md012_bad_configuration_maximum():
+configTests = [
+    pluginConfigErrorTest(
+        "bad_configuration_maximum",
+        use_strict_config=True,
+        set_args=["plugins.md012.maximum=$#-2"],
+        expected_error="""BadPluginError encountered while configuring plugins:
+The value for property 'plugins.md012.maximum' is not valid: Allowable values are any non-negative integers.""",
+    ),
+]
+
+scanTests = [
+    pluginRuleTest(
+        "good_simple_paragraphs_single_blanks",
+        source_file_name=f"{source_path}good_simple_paragraphs_single_blanks.md",
+    ),
+    pluginRuleTest(
+        "bad_simple_paragraphs_double_blanks",
+        source_file_name=f"{source_path}good_simple_paragraphs_double_blanks.md",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+    ),
+    pluginRuleTest(
+        "good_simple_paragraphs_double_blanks",
+        source_file_name=f"{source_path}good_simple_paragraphs_double_blanks.md",
+        set_args=["plugins.md012.maximum=$#2"],
+    ),
+    pluginRuleTest(
+        "good_simple_paragraphs_triple_blanks",
+        source_file_name=f"{source_path}good_simple_paragraphs_triple_blanks.md",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+    ),
+    pluginRuleTest(
+        "bad_double_blanks_at_end",
+        source_file_name=f"{source_path}bad_double_blanks_at_end.md",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+    ),
+    pluginRuleTest(
+        "bad_multiple_blanks_in_block_quote",
+        source_file_name=f"{source_path}bad_multiple_blanks_in_block_quote.md",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+    ),
+    pluginRuleTest(
+        "bad_multiple_blanks_in_list",
+        source_file_name=f"{source_path}bad_multiple_blanks_in_list.md",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="md009",
+    ),
+    pluginRuleTest(
+        "good_multiple_blanks_in_fenced",
+        source_file_name=f"{source_path}good_multiple_blanks_in_fenced.md",
+        scan_expected_return_code=0,
+    ),
+    pluginRuleTest(
+        "good_multiple_blanks_in_indented",
+        source_file_name=f"{source_path}good_multiple_blanks_in_indented.md",
+        scan_expected_return_code=0,
+    ),
+    pluginRuleTest(
+        "bad_multiple_blanks_in_html",
+        source_file_name=f"{source_path}bad_multiple_blanks_in_html.md",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+    ),
+    pluginRuleTest(
+        "good_blanks_around_single_pragma",
+        source_file_contents="""Some markdown here
+
+<!--pyml disable-num-lines 5 md013-->
+
+My 10 lines
+""",
+        scan_expected_return_code=0,
+    ),
+    pluginRuleTest(
+        "bad_blanks_double_around_single_pragma",
+        source_file_contents="""Some markdown here
+
+
+<!--pyml disable-num-lines 5 md013-->
+
+
+My 10 lines
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)
+{temp_source_path}:6:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+    ),
+    pluginRuleTest(
+        "bad_blanks_double_within_pragmas",
+        source_file_contents="""Some markdown here
+
+<!--pyml disable-num-lines 5 md013-->
+
+
+<!--pyml disable-num-lines 5 md013-->
+
+My 10 lines
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+    ),
+]
+
+
+@pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
+def test_md012_scan(test: pluginRuleTest) -> None:
     """
-    Test to verify that a configuration error is thrown when supplying the
-    maximum value with an integer that is negative.
+    Execute a parameterized scan test for plugin md001.
     """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md012", "good_simple_paragraphs_single_blanks.md"
-    )
-    supplied_arguments = [
-        "--set",
-        "plugins.md012.maximum=$#-2",
-        "--strict-config",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 1
-    expected_output = ""
-    expected_error = (
-        "BadPluginError encountered while configuring plugins:\n"
-        + "The value for property 'plugins.md012.maximum' is not valid: Allowable values are any non-negative integers."
-    )
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
+    execute_scan_test(test, "md012")
 
 
-@pytest.mark.rules
-def test_md012_good_simple_paragraphs_single_blanks():
+# Fix?
+
+
+@pytest.mark.parametrize("test", configTests, ids=id_test_plug_rule_fn)
+def test_md012_config(test: pluginRuleTest) -> None:
     """
-    Test to make sure this rule does not trigger with a document that
-    contains only paragraphs with a single blank line between them.
+    Execute a parameterized fix test for plugin md001.
     """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md012", "good_simple_paragraphs_single_blanks.md"
-    )
-    supplied_arguments = [
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md012_bad_simple_paragraphs_double_blanks():
-    """
-    Test to make sure this rule does trigger with a document that
-    contains only paragraphs with two blank lines between them.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md012", "good_simple_paragraphs_double_blanks.md"
-    )
-    supplied_arguments = [
-        # "--log-level", "DEBUG",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 1
-    expected_output = (
-        f"{source_path}:3:1: "
-        + "MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)"
-    )
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md012_good_simple_paragraphs_double_blanks():
-    """
-    Test to make sure this rule does not trigger with a document that
-    contains only paragraphs with two blank lines between them and
-    the configuration to make that correct.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md012", "good_simple_paragraphs_double_blanks.md"
-    )
-    supplied_arguments = [
-        "--set",
-        "plugins.md012.maximum=$#2",
-        "--strict-config",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md012_good_simple_paragraphs_triple_blanks():
-    """
-    Test to make sure this rule does trigger with a document that
-    contains only paragraphs with three blank lines between them.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md012", "good_simple_paragraphs_triple_blanks.md"
-    )
-    supplied_arguments = [
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 1
-    expected_output = (
-        f"{source_path}:4:1: "
-        + "MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)"
-    )
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md012_bad_double_blanks_at_end():
-    """
-    Test to make sure this rule does trigger with a document that
-    contains a paragraph followed by two blank lines.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md012", "bad_double_blanks_at_end.md"
-    )
-    supplied_arguments = [
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 1
-    expected_output = (
-        f"{source_path}:3:1: "
-        + "MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)"
-    )
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md012_bad_multiple_blanks_in_block_quote():
-    """
-    Test to make sure this rule does not trigger with a document that
-    contains two paragraphs separated by two blank lines, all within a block quote.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md012", "bad_multiple_blanks_in_block_quote.md"
-    )
-    supplied_arguments = [
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 1
-    expected_output = (
-        f"{source_path}:3:2: "
-        + "MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)"
-    )
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md012_bad_multiple_blanks_in_list():
-    """
-    Test to make sure this rule does trigger with a document that
-    contains a paragraph followed by two blank lines, in a list item.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md012", "bad_multiple_blanks_in_list.md"
-    )
-    supplied_arguments = [
-        "--disable-rules",
-        "md009",
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 1
-    expected_output = (
-        f"{source_path}:3:1: "
-        + "MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)"
-    )
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md012_good_multiple_blanks_in_fenced():
-    """
-    Test to make sure this rule does not trigger with a document that
-    contains a two blank lines within a fenced code block.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md012", "good_multiple_blanks_in_fenced.md"
-    )
-    supplied_arguments = [
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md012_good_multiple_blanks_in_indented():
-    """
-    Test to make sure this rule does not trigger with a document that
-    contains a two blank lines within a indented code block.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md012", "good_multiple_blanks_in_indented.md"
-    )
-    supplied_arguments = [
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md012_bad_multiple_blanks_in_html():
-    """
-    Test to make sure this rule does not trigger with a document that
-    contains a two blank lines within a HTML block.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    source_path = os.path.join(
-        "test", "resources", "rules", "md012", "bad_multiple_blanks_in_html.md"
-    )
-    supplied_arguments = [
-        "scan",
-        source_path,
-    ]
-
-    expected_return_code = 1
-    expected_output = (
-        f"{source_path}:3:1: "
-        + "MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)"
-    )
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+    execute_configuration_test(
+        test, f"{source_path}good_simple_paragraphs_single_blanks.md"
     )
 
 

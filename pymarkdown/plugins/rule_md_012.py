@@ -87,6 +87,12 @@ class RuleMd012(RulePlugin):
         Event that a new token is being processed.
         """
         if token.is_blank_line:
+            if (
+                self.__last_blank_line is not None
+                and (token.line_number - self.__last_blank_line.line_number) != 1
+            ):
+                self.__check_for_excess_blank_lines(context)
+                self.__blank_line_count = 0
             self.__last_blank_line = token
             self.__blank_line_count += 1
         else:

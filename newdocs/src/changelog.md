@@ -15,6 +15,9 @@
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
+- [Issue 1208](https://github.com/jackdewinter/pymarkdown/issues/1208)
+    - fixed issue with blank lines separated with pragmas not being
+      understood properly.
 - [Issue 1233](https://github.com/jackdewinter/pymarkdown/issues/1233)
 - [Issue 1234](https://github.com/jackdewinter/pymarkdown/issues/1234)
 - [Issue 1235](https://github.com/jackdewinter/pymarkdown/issues/1235)
