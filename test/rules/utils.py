@@ -51,6 +51,7 @@ class pluginRuleTest:
     is_mix_test: bool = True
     mark_scan_as_skipped: bool = False
     mark_fix_as_skipped: bool = False
+    notes: str = ""
 
 
 def id_test_plug_rule_fn(val: Any) -> str:

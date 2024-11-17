@@ -361,18 +361,24 @@ class PragmaToken(MarkdownToken):
     def __init__(self, pragma_lines: Dict[int, str]) -> None:
         self.__pragma_lines = pragma_lines
 
-        serialized_pragmas = "".join(
-            f";{next_line_number}:{pragma_lines[next_line_number]}"
-            for next_line_number in pragma_lines
-        )
-
         MarkdownToken.__init__(
             self,
             MarkdownToken._token_pragma,
             MarkdownTokenClass.SPECIAL,
             is_extension=True,
-            extra_data=serialized_pragmas[1:],
+            extra_data="",
         )
+        self.__compose_extra_data_field()
+
+    def __compose_extra_data_field(self) -> None:
+        """
+        Compose the object's self.extra_data field from the local object's variables.
+        """
+        serialized_pragmas = "".join(
+            f";{next_line_number}:{self.__pragma_lines[next_line_number]}"
+            for next_line_number in self.__pragma_lines
+        )
+        self._set_extra_data(serialized_pragmas[1:])
 
     @staticmethod
     def get_markdown_token_type() -> str:
@@ -387,6 +393,15 @@ class PragmaToken(MarkdownToken):
         Returns the pragma lines for the document.
         """
         return self.__pragma_lines
+
+    def adjust_pragma_line_number(
+        self, initial_line_number: int, new_line_number: int
+    ) -> None:
+        """Perform an adjustment to the line number of a given pragma."""
+        old_pragma = self.__pragma_lines[initial_line_number]
+        del self.__pragma_lines[initial_line_number]
+        self.__pragma_lines[new_line_number] = old_pragma
+        self.__compose_extra_data_field()
 
     def register_for_markdown_transform(
         self,

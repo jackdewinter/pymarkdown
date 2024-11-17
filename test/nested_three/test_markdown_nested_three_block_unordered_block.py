@@ -2346,7 +2346,7 @@ def test_nested_three_block_unordered_block_fenced_empty_with_thematics():
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):+::4::\n\n\n]",
+        "[ulist(1,3):+::4::\n\n]",
         "[block-quote(1,5)::> \n>   > \n>   > \n>   > ]",
         "[tbreak(1,7):-::-----]",
         "[fcode-block(2,7):`:3:block:::::]",
@@ -2357,9 +2357,9 @@ def test_nested_three_block_unordered_block_fenced_empty_with_thematics():
         "[para(5,5):]",
         "[text(5,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(6,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(6,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -2399,7 +2399,7 @@ def test_nested_three_block_unordered_block_fenced_empty_with_blanks_with_themat
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):+::4::\n\n\n\n\n]",
+        "[ulist(1,3):+::4::\n\n\n\n]",
         "[block-quote(1,5)::> \n>   >\n>   > \n>   > \n>   >\n>   > ]",
         "[tbreak(1,7):-::-----]",
         "[BLANK(2,6):]",
@@ -2412,9 +2412,9 @@ def test_nested_three_block_unordered_block_fenced_empty_with_blanks_with_themat
         "[para(7,5):]",
         "[text(7,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(8,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(8,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -2453,7 +2453,7 @@ def test_nested_three_block_unordered_block_fenced_with_thematics():
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):+::4::\n\n\n\n]",
+        "[ulist(1,3):+::4::\n\n\n]",
         "[block-quote(1,5)::> \n>   > \n>   > \n>   > \n>   > ]",
         "[tbreak(1,7):-::-----]",
         "[fcode-block(2,7):`:3:block:::::]",
@@ -2465,9 +2465,9 @@ def test_nested_three_block_unordered_block_fenced_with_thematics():
         "[para(6,5):]",
         "[text(6,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(7,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(7,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -2509,7 +2509,7 @@ def test_nested_three_block_unordered_block_fenced_with_blanks_with_thematics():
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):+::4::\n\n\n\n\n\n]",
+        "[ulist(1,3):+::4::\n\n\n\n\n]",
         "[block-quote(1,5)::> \n>   >\n>   > \n>   > \n>   > \n>   >\n>   > ]",
         "[tbreak(1,7):-::-----]",
         "[BLANK(2,6):]",
@@ -2523,9 +2523,9 @@ def test_nested_three_block_unordered_block_fenced_with_blanks_with_thematics():
         "[para(8,5):]",
         "[text(8,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(9,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(9,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -2565,7 +2565,7 @@ def test_nested_three_block_unordered_block_fenced_with_text_before_with_themati
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):+::4::\n\n\n\n\n]",
+        "[ulist(1,3):+::4::\n\n\n\n]",
         "[block-quote(1,5)::> \n>   > \n>   > \n>   > \n>   > \n>   > ]",
         "[tbreak(1,7):-::-----]",
         "[para(2,7):]",
@@ -2580,9 +2580,9 @@ def test_nested_three_block_unordered_block_fenced_with_text_before_with_themati
         "[para(7,5):]",
         "[text(7,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(8,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(8,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -2625,7 +2625,7 @@ def test_nested_three_block_unordered_block_fenced_with_blanks_with_text_before_
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):+::4::\n\n\n\n\n\n\n]",
+        "[ulist(1,3):+::4::\n\n\n\n\n\n]",
         "[block-quote(1,5)::> \n>   > \n>   >\n>   > \n>   > \n>   > \n>   >\n>   > ]",
         "[tbreak(1,7):-::-----]",
         "[para(2,7):]",
@@ -2642,9 +2642,9 @@ def test_nested_three_block_unordered_block_fenced_with_blanks_with_text_before_
         "[para(9,5):]",
         "[text(9,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(10,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(10,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -2685,7 +2685,7 @@ def test_nested_three_block_unordered_block_fenced_with_text_after_with_thematic
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):+::4::\n\n\n\n\n]",
+        "[ulist(1,3):+::4::\n\n\n\n]",
         "[block-quote(1,5)::> \n>   > \n>   > \n>   > \n>   > \n>   > ]",
         "[tbreak(1,7):-::-----]",
         "[fcode-block(2,7):`:3:block:::::]",
@@ -2700,9 +2700,9 @@ def test_nested_three_block_unordered_block_fenced_with_text_after_with_thematic
         "[para(7,5):]",
         "[text(7,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(8,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(8,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -2745,7 +2745,7 @@ def test_nested_three_block_unordered_block_fenced_with_blanks_with_text_after_w
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):+::4::\n\n\n\n\n\n\n]",
+        "[ulist(1,3):+::4::\n\n\n\n\n\n]",
         "[block-quote(1,5)::> \n>   >\n>   > \n>   > \n>   > \n>   >\n>   > \n>   > ]",
         "[tbreak(1,7):-::-----]",
         "[BLANK(2,6):]",
@@ -2762,9 +2762,9 @@ def test_nested_three_block_unordered_block_fenced_with_blanks_with_text_after_w
         "[para(9,5):]",
         "[text(9,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(10,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(10,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -2804,7 +2804,7 @@ def test_nested_three_block_unordered_block_fenced_multiline_with_thematics():
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):+::4::\n\n\n\n\n]",
+        "[ulist(1,3):+::4::\n\n\n\n]",
         "[block-quote(1,5)::> \n>   > \n>   > \n>   > \n>   > \n>   > ]",
         "[tbreak(1,7):-::-----]",
         "[fcode-block(2,7):`:3:block:::::]",
@@ -2816,9 +2816,9 @@ def test_nested_three_block_unordered_block_fenced_multiline_with_thematics():
         "[para(7,5):]",
         "[text(7,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(8,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(8,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -2857,7 +2857,7 @@ def test_nested_three_block_unordered_block_thematics_around_text_lines():
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):+::4::\n\n\n\n]",
+        "[ulist(1,3):+::4::\n\n\n]",
         "[block-quote(1,5)::> \n>   > \n>   > \n>   > \n>   > ]",
         "[tbreak(1,7):-::-----]",
         "[para(2,7):\n\n]",
@@ -2869,9 +2869,9 @@ def test_nested_three_block_unordered_block_thematics_around_text_lines():
         "[para(6,5):]",
         "[text(6,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(7,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(7,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -2913,7 +2913,7 @@ def test_nested_three_block_unordered_block_thematics_around_blanks_around_text_
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):+::4::\n\n\n\n\n\n]",
+        "[ulist(1,3):+::4::\n\n\n\n\n]",
         "[block-quote(1,5)::> \n>   > \n>   > \n>   > \n>   > \n>   > \n>   > ]",
         "[tbreak(1,7):-::-----]",
         "[BLANK(2,7):]",
@@ -2927,9 +2927,9 @@ def test_nested_three_block_unordered_block_thematics_around_blanks_around_text_
         "[para(8,5):]",
         "[text(8,5):more:]",
         "[end-para:::True]",
-        "[BLANK(9,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(9,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -2968,7 +2968,7 @@ def test_nested_three_block_unordered_block_thematics_around_text_lines_with_tex
 """
     expected_tokens = [
         "[block-quote(1,1)::> ]",
-        "[ulist(1,3):+::4::\n\n\n\n\n]",
+        "[ulist(1,3):+::4::\n\n\n\n]",
         "[block-quote(1,5)::> \n>   > \n>   > \n>   > \n>   > \n>   > \n]",
         "[tbreak(1,7):-::-----]",
         "[para(2,7):\n\n]",
@@ -2979,9 +2979,9 @@ def test_nested_three_block_unordered_block_thematics_around_text_lines_with_tex
         "[text(6,7):more:]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
-        "[BLANK(7,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(7,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -3024,7 +3024,7 @@ def test_nested_three_block_unordered_nl_block_drop_block_thematics_around_fence
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> ]",
-        "[ulist(1,3):+::4::\n\n  þ\n  \n  \n  \n  \n]",
+        "[ulist(1,3):+::4::\n\n  þ\n  \n  \n  \n  ]",
         "[para(1,5):]",
         "[text(1,5):list 1:]",
         "[end-para:::True]",
@@ -3042,9 +3042,9 @@ def test_nested_three_block_unordered_nl_block_drop_block_thematics_around_fence
         "[para(9,5):]",
         "[text(9,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(10,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(10,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -3090,7 +3090,7 @@ def test_nested_three_block_unordered_nl_block_drop_block_thematics_around_blank
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n>\n> \n> \n> \n>\n> \n> ]",
-        "[ulist(1,3):+::4::\n\n  þ\n\n  \n  \n  \n\n  \n]",
+        "[ulist(1,3):+::4::\n\n  þ\n\n  \n  \n  \n\n  ]",
         "[para(1,5):]",
         "[text(1,5):list 1:]",
         "[end-para:::True]",
@@ -3110,9 +3110,9 @@ def test_nested_three_block_unordered_nl_block_drop_block_thematics_around_blank
         "[para(11,5):]",
         "[text(11,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(12,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(12,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -3306,7 +3306,7 @@ def test_nested_three_block_unordered_block_extra_block_single_line_drop_block_t
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):+::4::\n\n\n\n\n\n]",
+        "[ulist(1,3):+::4::\n\n\n\n\n]",
         "[block-quote(1,5)::> \n>   > \n>   > \n>   > \n>   > \n>   > ]",
         "[tbreak(1,7):-::-----]",
         "[block-quote(2,7)::>   > > \n>   > ]",
@@ -3324,9 +3324,9 @@ def test_nested_three_block_unordered_block_extra_block_single_line_drop_block_t
         "[para(8,5):]",
         "[text(8,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(9,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(9,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -3569,7 +3569,7 @@ def test_nested_three_block_unordered_block_extra_block_drop_block_with_blanks_a
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):+::4::\n\n\n\n\n\n\n\n]",
+        "[ulist(1,3):+::4::\n\n\n\n\n\n\n]",
         "[block-quote(1,5)::> \n>   > \n>   > \n>   > \n>   >\n>   > ]",
         "[tbreak(1,7):-::-----]",
         "[block-quote(2,7)::>   > > \n>   > > \n>   >\n>   > ]",
@@ -3588,9 +3588,9 @@ def test_nested_three_block_unordered_block_extra_block_drop_block_with_blanks_a
         "[para(10,5):]",
         "[text(10,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(11,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(11,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -3831,7 +3831,7 @@ def test_nested_three_block_unordered_block_extra_block_drop_block_extra_block_d
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):+::4::\n\n\n\n\n\n\n\n\n]",
+        "[ulist(1,3):+::4::\n\n\n\n\n\n\n\n]",
         "[block-quote(1,5)::> \n>   > \n>   > \n>   > \n>   > \n>   > ]",
         "[tbreak(1,7):-::-----]",
         "[block-quote(2,7)::>   > > \n>   > > \n>   > ]",
@@ -3854,9 +3854,9 @@ def test_nested_three_block_unordered_block_extra_block_drop_block_extra_block_d
         "[para(11,5):]",
         "[text(11,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(12,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(12,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -3911,7 +3911,7 @@ def test_nested_three_block_unordered_block_extra_block_drop_block_extra_block_d
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):+::4::\n\n\n\n\n\n\n\n\n\n\n]",
+        "[ulist(1,3):+::4::\n\n\n\n\n\n\n\n\n\n]",
         "[block-quote(1,5)::> \n>   > \n>   > \n>   > \n>   > \n>   >\n>   > ]",
         "[tbreak(1,7):-::-----]",
         "[block-quote(2,7)::>   > > \n>   > > \n>   > ]",
@@ -3936,9 +3936,9 @@ def test_nested_three_block_unordered_block_extra_block_drop_block_extra_block_d
         "[para(13,5):]",
         "[text(13,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(14,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(14,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -3987,7 +3987,7 @@ def test_nested_three_block_unordered_nl_block_drop_block_with_fenced():
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> \n> \n> ]",
-        "[ulist(1,3):+::4::\n\n  þ\n  \n  \n]",
+        "[ulist(1,3):+::4::\n\n  þ\n  \n  ]",
         "[para(1,5):]",
         "[text(1,5):list 1:]",
         "[end-para:::True]",
@@ -4003,9 +4003,9 @@ def test_nested_three_block_unordered_nl_block_drop_block_with_fenced():
         "[para(7,5):]",
         "[text(7,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(8,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(8,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -4047,7 +4047,7 @@ def test_nested_three_block_unordered_nl_block_drop_block_with_blanks_around_fen
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> \n> \n> \n>\n> ]",
-        "[ulist(1,3):+::4::\n\n\n  \n  \n  \n\n]",
+        "[ulist(1,3):+::4::\n\n\n  \n  \n  \n]",
         "[para(1,5):]",
         "[text(1,5):list 1:]",
         "[end-para:::True]",
@@ -4065,9 +4065,9 @@ def test_nested_three_block_unordered_nl_block_drop_block_with_blanks_around_fen
         "[para(9,5):]",
         "[text(9,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(10,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(10,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -4109,7 +4109,7 @@ def test_nested_three_block_unordered_block_thematics_around_text_and_fenced():
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):+::4::\n\n\n\n\n]",
+        "[ulist(1,3):+::4::\n\n\n\n]",
         "[block-quote(1,5)::> \n>   > \n>   > \n>   > \n>   > \n>   > ]",
         "[tbreak(1,7):-::-----]",
         "[para(2,7):]",
@@ -4124,9 +4124,9 @@ def test_nested_three_block_unordered_block_thematics_around_text_and_fenced():
         "[para(7,5):]",
         "[text(7,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(8,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(8,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -4168,7 +4168,7 @@ def test_nested_three_block_unordered_block_thematics_around_text_and_blanks_aro
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):+::4::\n\n\n\n\n\n\n]",
+        "[ulist(1,3):+::4::\n\n\n\n\n\n]",
         "[block-quote(1,5)::> \n>   > \n>   >\n>   > \n>   > \n>   > \n>   >\n>   > ]",
         "[tbreak(1,7):-::-----]",
         "[para(2,7):]",
@@ -4185,9 +4185,9 @@ def test_nested_three_block_unordered_block_thematics_around_text_and_blanks_aro
         "[para(9,5):]",
         "[text(9,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(10,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(10,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -4222,7 +4222,7 @@ def test_nested_three_block_unordered_block_thematic_drop_block_and_list_with_te
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):+::4::]",
+        "[ulist(1,3):+::4:]",
         "[block-quote(1,5)::> ]",
         "[tbreak(1,7):-::-----]",
         "[end-block-quote:::True]",
@@ -4230,9 +4230,9 @@ def test_nested_three_block_unordered_block_thematic_drop_block_and_list_with_te
         "[para(2,5):]",
         "[text(2,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(3,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(3,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -4264,7 +4264,7 @@ def test_nested_three_block_unordered_block_thematic_nl_text_drop_block_and_list
 """
     expected_tokens = [
         "[block-quote(1,1)::> ]",
-        "[ulist(1,3):+::4::\n]",
+        "[ulist(1,3):+::4::]",
         "[block-quote(1,5)::> \n>   > \n> ]",
         "[tbreak(1,7):-::-----]",
         "[para(2,7):]",
@@ -4275,9 +4275,9 @@ def test_nested_three_block_unordered_block_thematic_nl_text_drop_block_and_list
         "[para(3,5):]",
         "[text(3,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(4,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(4,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -4310,7 +4310,7 @@ def test_nested_three_block_unordered_block_thematic_nl_fenced_with_drop_block_l
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):+::4::\n]",
+        "[ulist(1,3):+::4::]",
         "[block-quote(1,5)::> \n>   > ]",
         "[tbreak(1,7):-::-----]",
         "[fcode-block(2,7):`:3:block:::::]",
@@ -4320,9 +4320,9 @@ def test_nested_three_block_unordered_block_thematic_nl_fenced_with_drop_block_l
         "[para(3,5):]",
         "[text(3,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(4,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(4,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -4356,7 +4356,7 @@ def test_nested_three_block_unordered_block_fenced_with_drop_right_after():
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):+::4::\n\n]",
+        "[ulist(1,3):+::4::\n]",
         "[block-quote(1,5)::> \n>   > \n>   > ]",
         "[fcode-block(1,7):`:3:block:::::]",
         "[text(2,7):abc:]",
@@ -4366,9 +4366,9 @@ def test_nested_three_block_unordered_block_fenced_with_drop_right_after():
         "[para(4,5):]",
         "[text(4,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(5,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(5,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -4401,7 +4401,7 @@ def test_nested_three_block_unordered_block_empty_fenced_with_drop_right_after()
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):+::4::\n]",
+        "[ulist(1,3):+::4::]",
         "[block-quote(1,5)::> \n>   > ]",
         "[fcode-block(1,7):`:3:block:::::]",
         "[end-fcode-block:::3:False]",
@@ -4410,9 +4410,9 @@ def test_nested_three_block_unordered_block_empty_fenced_with_drop_right_after()
         "[para(3,5):]",
         "[text(3,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(4,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(4,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -4453,7 +4453,7 @@ def test_nested_three_block_unordered_block_thematics_around_blanks_around_text_
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> \n> \n> ]",
-        "[ulist(1,3):+::4::\n\n\n\n\n\n  \n\n]",
+        "[ulist(1,3):+::4::\n\n\n\n\n\n  \n]",
         "[block-quote(1,5)::> \n>   > \n>   > \n>   > \n>   > \n>   > \n>   > ]",
         "[tbreak(1,7):-::-----]",
         "[BLANK(2,7):]",
@@ -4480,9 +4480,9 @@ def test_nested_three_block_unordered_block_thematics_around_blanks_around_text_
         "[para(12,5):]",
         "[text(12,5):more:]",
         "[end-para:::True]",
-        "[BLANK(13,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(13,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -4527,7 +4527,7 @@ def test_nested_three_block_unordered_block_thematics_around_blank_drop_block_li
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> ]",
-        "[ulist(1,3):+::4::\n\n  \n]",
+        "[ulist(1,3):+::4::\n\n  ]",
         "[block-quote(1,5)::> \n>   > \n>   > ]",
         "[tbreak(1,7):-::-----]",
         "[BLANK(2,7):]",
@@ -4537,9 +4537,9 @@ def test_nested_three_block_unordered_block_thematics_around_blank_drop_block_li
         "[para(4,5):\n]",
         "[text(4,5):more\nthis is more::\n]",
         "[end-para:::True]",
-        "[BLANK(6,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(6,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -4575,7 +4575,7 @@ def test_nested_three_block_unordered_block_thematics_around_blank_drop_block_li
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):+::4::\n\n\n\n]",
+        "[ulist(1,3):+::4::\n\n\n]",
         "[block-quote(1,5)::> \n>   > \n>   > ]",
         "[tbreak(1,7):-::-----]",
         "[BLANK(2,7):]",
@@ -4587,9 +4587,9 @@ def test_nested_three_block_unordered_block_thematics_around_blank_drop_block_li
         "[text(4,7):more\nthis is more::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
-        "[BLANK(6,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(6,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -4633,7 +4633,7 @@ def test_nested_three_block_unordered_nl_block_drop_block_headings_around_fenced
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> ]",
-        "[ulist(1,3):+::4::\n\n  þ\n  \n  \n  \n  \n]",
+        "[ulist(1,3):+::4::\n\n  þ\n  \n  \n  \n  ]",
         "[para(1,5):]",
         "[text(1,5):list 1:]",
         "[end-para:::True]",
@@ -4655,9 +4655,9 @@ def test_nested_three_block_unordered_nl_block_drop_block_headings_around_fenced
         "[para(9,5):]",
         "[text(9,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(10,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(10,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -4701,7 +4701,7 @@ def test_nested_three_block_unordered_nl_block_drop_block_blank_thematics_around
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> \n> ]",
-        "[ulist(1,3):+::4::]",
+        "[ulist(1,3):+::4:]",
         "[ulist(1,5):+::6:  :\n\n\n    \n    \n    \n    \n    ]",
         "[tbreak(1,7):-::-----]",
         "[block-quote(2,7)::>     > \n>     > \n>]",
@@ -4720,9 +4720,9 @@ def test_nested_three_block_unordered_nl_block_drop_block_blank_thematics_around
         "[para(10,5):]",
         "[text(10,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(11,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(11,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -4770,7 +4770,7 @@ def test_nested_three_block_unordered_extra_block_with_no_space_after_drop_block
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):+::4::\n\n\n\n\n\n\n]",
+        "[ulist(1,3):+::4::\n\n\n\n\n\n]",
         "[block-quote(1,5)::> \n>   > \n>   > \n>   > \n>   > \n>   > ]",
         "[tbreak(1,7):-::-----]",
         "[block-quote(2,7)::>   > >\n>   > >\n>   > ]",
@@ -4788,9 +4788,9 @@ def test_nested_three_block_unordered_extra_block_with_no_space_after_drop_block
         "[para(9,5):]",
         "[text(9,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(10,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(10,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -4837,7 +4837,7 @@ def test_nested_three_block_unordered_extra_block_drop_block_thematic_extra_bloc
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):+::4::\n\n\n\n\n\n\n\n]",
+        "[ulist(1,3):+::4::\n\n\n\n\n\n\n]",
         "[block-quote(1,5)::> \n>   > \n>   > \n>   > \n>   > \n>   > \n>   > ]",
         "[tbreak(1,7):-::-----]",
         "[block-quote(2,7)::>   > > \n>   > ]",
@@ -4861,9 +4861,9 @@ def test_nested_three_block_unordered_extra_block_drop_block_thematic_extra_bloc
         "[para(10,5):]",
         "[text(10,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(11,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(11,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -4911,7 +4911,7 @@ def test_nested_three_block_unordered_extra_list_drop_list_thematics_around_fenc
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):+::4::\n\n\n\n\n]",
+        "[ulist(1,3):+::4::\n\n\n\n]",
         "[block-quote(1,5)::> \n>   > \n>   > \n>   > \n>   > \n>   > \n>   > ]",
         "[tbreak(1,7):-::-----]",
         "[ulist(2,7):+::8:]",
@@ -4929,9 +4929,9 @@ def test_nested_three_block_unordered_extra_list_drop_list_thematics_around_fenc
         "[para(8,5):]",
         "[text(8,5):another list:]",
         "[end-para:::True]",
-        "[BLANK(9,1):]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(9,1):]",
     ]
     expected_gfm = """<blockquote>
 <ul>

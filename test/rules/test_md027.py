@@ -282,6 +282,39 @@ scanTests = [
 """,
     ),
     pluginRuleTest(
+        "bad_single_block_quote_space_top",
+        # disable_rules=__plugin_disable_md028,
+        source_file_contents=""">  this is text
+>
+> within a block quote
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+""",
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""> this is text
+
+> within a block quote
+""",
+    ),
+    pluginRuleTest(
+        "bad_single_block_quote_space_bottom",
+        # disable_rules=__plugin_disable_md028,
+        source_file_contents="""> this is text
+>
+>  within a block quote
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+""",
+        mark_scan_as_skipped=True,
+        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""> this is text
+
+> within a block quote
+""",
+    ),
+    pluginRuleTest(
         "bad_misalligned_double_quote",
         source_file_name=f"{source_path}bad_misalligned_double_quote.md",
         source_file_contents="""> > this is text
@@ -680,7 +713,6 @@ scanTests = [
 > > --------
 """,
         disable_rules="md007,md009,md012,md030",
-        scan_expected_return_code=0,
         # use_debug=True,
         scan_expected_output="",
     ),
@@ -697,7 +729,6 @@ scanTests = [
 > + another list
 """,
         disable_rules="md007,md009,md012,md030,md031",
-        scan_expected_return_code=0,
         # use_debug=True,
         scan_expected_output="",
     ),
@@ -713,7 +744,6 @@ scanTests = [
 > > > --------
 """,
         disable_rules="md007,md009,md012,md030,md031",
-        scan_expected_return_code=0,
         # use_debug=True,
         scan_expected_output="",
     ),
@@ -723,7 +753,6 @@ scanTests = [
 > > fourth block 1
 """,
         disable_rules="",
-        scan_expected_return_code=0,
         # use_debug=True,
         scan_expected_output="",
     ),
@@ -758,7 +787,6 @@ scanTests = [
 >   > -----
 > + another list""",
         disable_rules="md047,md032",
-        scan_expected_return_code=0,
         scan_expected_output="""""",
     ),
     pluginRuleTest(
@@ -772,7 +800,6 @@ scanTests = [
    >   ----
 """,
         disable_rules="md007,md009,md012,md030,md031",
-        scan_expected_return_code=0,
         scan_expected_output="",
     ),
     pluginRuleTest(
@@ -788,7 +815,6 @@ scanTests = [
 > + another list
 """,
         disable_rules="md007,md009,md012,md030,md031",
-        scan_expected_return_code=0,
         # use_debug=True,
         scan_expected_output="",
     ),
@@ -806,9 +832,20 @@ scanTests = [
 > + another list
 """,
         disable_rules="md007,md009,md012,md030,md031",
-        scan_expected_return_code=0,
         # use_debug=True,
         scan_expected_output="",
+    ),
+    pluginRuleTest(  # test_extra_051b2
+        "md012_bad_in_list_in_block_quote_with_double_blanks_at_start",
+        source_file_contents="""> 1.
+>
+>    fred2
+> 1. barney
+""",
+        # disable_rules="md007,md009,md012,md030,md031",
+        # use_debug=True,
+        scan_expected_output="",
+        mark_scan_as_skipped=True,
     ),
     pluginRuleTest(
         "mix_md027_md007",

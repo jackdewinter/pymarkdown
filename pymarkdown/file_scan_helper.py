@@ -683,14 +683,30 @@ class FileScanHelper:
             and actual_tokens[actual_start_index].is_end_token
         ):
             actual_start_index += 1
-        index_delta = end_index - actual_start_index + 1
+        line_number_delta_1 = (
+            next_replacement.end_token.line_number
+            - actual_tokens[actual_start_index].line_number
+        ) + 1
+        line_number_delta_2 = (
+            next_replacement.replacement_tokens[-1].line_number
+            - next_replacement.replacement_tokens[0].line_number
+        ) + 1
+        line_number_delta = line_number_delta_2 - line_number_delta_1
 
         new_tokens = actual_tokens[:start_index]
         new_tokens.extend(next_replacement.replacement_tokens)
         end_tokens = actual_tokens[end_index + 1 :]
         for next_token in end_tokens:
-            next_token.adjust_line_number(context, index_delta)
+            next_token.adjust_line_number(context, line_number_delta)
         new_tokens.extend(end_tokens)
+
+        if new_tokens[-1].is_pragma:
+            pragma_token = cast(PragmaToken, new_tokens[-1])
+            for pragma_line_number in sorted(pragma_token.pragma_lines.keys())[::-1]:
+                if pragma_line_number > next_replacement.end_token.line_number:
+                    pragma_token.adjust_pragma_line_number(
+                        pragma_line_number, pragma_line_number + line_number_delta
+                    )
 
         actual_tokens.clear()
         actual_tokens.extend(new_tokens)

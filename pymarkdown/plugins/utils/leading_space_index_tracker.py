@@ -173,11 +173,17 @@ class LeadingSpaceIndexTracker:
                 ].adjustment += line_number_delta
                 break
 
-    def get_tokens_block_quote_bleading_space_index(self, token: MarkdownToken) -> int:
+    def get_tokens_block_quote_bleading_space_index(
+        self, token: MarkdownToken, alternate_index: int = -1
+    ) -> int:
         """
         Get the index of the token within the contain block quote's bleading_spaces string.
         """
-        container_index = self.get_container_stack_size() - 1
+        container_index = (
+            self.get_container_stack_size() - 1
+            if alternate_index < 0
+            else alternate_index
+        )
         assert self.__container_token_stack[container_index].is_block_quote_start
         block_quote_token = cast(
             BlockQuoteMarkdownToken, self.__container_token_stack[container_index]
@@ -191,3 +197,42 @@ class LeadingSpaceIndexTracker:
             LeadingSpaceIndexTracker.calculate_token_line_number(token)
             - block_quote_token.line_number
         ) - (last_closed_container_info.adjustment - last_closed_container_info.count2)
+
+    def get_tokens_list_leading_space_index(
+        self, token: MarkdownToken, alternate_index: int = -1
+    ) -> int:
+
+        initial_index = self.get_container_stack_size() - 1
+        container_index = alternate_index
+        last_closed_container_info = self.get_closed_container_info(-1)
+
+        assert not last_closed_container_info.adjustment
+        # if last_closed_container_info.adjustment:
+        #     adjust = 2 if container_index >= 0 else 1
+        # else:
+        adjust = self.__calculate_adjust(initial_index, container_index)
+        # endif
+
+        index = (
+            LeadingSpaceIndexTracker.calculate_token_line_number(token)
+            - self.get_container_stack_item(initial_index).line_number
+        )
+        index -= last_closed_container_info.adjustment
+        index -= adjust
+        return index
+
+    def __calculate_adjust(self, initial_index: int, container_index: int) -> int:
+
+        last_closed_container_info = self.get_closed_container_info(-1)
+        assert (
+            initial_index < 2
+            or container_index
+            or not last_closed_container_info.adjustment
+        )
+        return (
+            0
+            if initial_index >= 1
+            and not container_index
+            and last_closed_container_info.adjustment
+            else 1
+        )

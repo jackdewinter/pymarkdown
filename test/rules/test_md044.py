@@ -355,7 +355,6 @@ is a ParaGraph` contained.
 """,
         set_args=["plugins.md044.names=ParaGraph"],
         use_strict_config=True,
-        use_debug=True,
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:1:4: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)
 {temp_source_path}:1:41: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)
@@ -369,7 +368,6 @@ is a ParaGraph` contained.
 """,
         set_args=["plugins.md044.names=ParaGraph"],
         use_strict_config=True,
-        use_debug=True,
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:1:4: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)
 {temp_source_path}:1:26: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)
@@ -385,7 +383,6 @@ is a ParaGraph` contained.
 """,
         set_args=["plugins.md044.names=ParaGraph"],
         use_strict_config=True,
-        use_debug=True,
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:1:4: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)
 {temp_source_path}:1:29: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)
@@ -601,7 +598,6 @@ ParaGraph title"
     ),
     pluginRuleTest(
         "bad_collapsed_link",
-        use_debug=True,
         source_file_contents="""this is a
 [collapsed
 paragraph][]
@@ -710,7 +706,6 @@ big ParaGraph title"
     ),
     pluginRuleTest(
         "bad_shortcut_link",
-        use_debug=True,
         source_file_contents="""this is a
 [another
 paragraph]
@@ -737,7 +732,6 @@ ParaGraph]: /url "a ParaGraph title"
     ),
     pluginRuleTest(
         "bad_shortcut_link_no_title",
-        use_debug=True,
         source_file_contents="""this is a
 [another
 paragraph]
@@ -763,7 +757,6 @@ ParaGraph]: /url
     ),
     pluginRuleTest(
         "bad_shortcut_link_backslash",
-        use_debug=True,
         source_file_contents="""this is a
 [paragraph \\! paragraph]
 link
@@ -789,7 +782,6 @@ link
     ),
     pluginRuleTest(
         "bad_shortcut_link_reference",
-        use_debug=True,
         source_file_contents="""this is a
 [paragraph &amp; paragraph]
 link

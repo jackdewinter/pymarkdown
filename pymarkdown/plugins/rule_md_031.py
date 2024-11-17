@@ -626,15 +626,18 @@ class RuleMd031(RulePlugin):
             #         found_block_quote_token = token_at_index
             #         break
             #     last_stack_token_index -= 1
-            if (
+
+            # assert was if
+            assert (
                 found_block_quote_token
                 and len(self.__x1) == 2
                 and self.__x1[0].is_list_start
                 and self.__x1[1].is_block_quote_start
-            ):
-                did_process_removals = upgrade_kludge = (
-                    self.__apply_tailing_block_quote_fix(1, context)
-                )
+            )
+            did_process_removals = upgrade_kludge = (
+                self.__apply_tailing_block_quote_fix(1, context)
+            )
+            # endif
         return did_process_removals, upgrade_kludge
 
     def __apply_tailing_block_quote_fix(

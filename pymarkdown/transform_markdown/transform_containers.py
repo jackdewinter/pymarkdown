@@ -1398,27 +1398,28 @@ class TransformContainers:
         POGGER.debug(
             f"inner_token_index={inner_token_index} < len(split)={len(split_leading_spaces)}"
         )
-        if inner_token_index < len(split_leading_spaces):
-            POGGER.debug(
-                f" adj-->container_line>:{ParserHelper.make_value_visible(container_line)}:<"
-            )
-            token_leading_spaces = split_leading_spaces[inner_token_index]
-            if (
-                current_changed_record
-                and not current_changed_record.is_container_start
-                and current_changed_record.item_d is not None
-                and current_changed_record.item_d.extra_end_data is not None
-            ):
-                token_end_data = current_changed_record.item_d.extra_end_data
-                assert token_end_data.startswith(
-                    token_leading_spaces
-                ) and container_line.startswith(token_end_data)
-                token_leading_spaces = ""
+        # following assert was if to return
+        assert inner_token_index < len(split_leading_spaces)
+        POGGER.debug(
+            f" adj-->container_line>:{ParserHelper.make_value_visible(container_line)}:<"
+        )
+        token_leading_spaces = split_leading_spaces[inner_token_index]
+        if (
+            current_changed_record
+            and not current_changed_record.is_container_start
+            and current_changed_record.item_d is not None
+            and current_changed_record.item_d.extra_end_data is not None
+        ):
+            token_end_data = current_changed_record.item_d.extra_end_data
+            assert token_end_data.startswith(
+                token_leading_spaces
+            ) and container_line.startswith(token_end_data)
+            token_leading_spaces = ""
 
-            container_line = token_leading_spaces + container_line
-            POGGER.debug(
-                f" adj-->container_line>:{ParserHelper.make_value_visible(container_line)}:<"
-            )
+        container_line = token_leading_spaces + container_line
+        POGGER.debug(
+            f" adj-->container_line>:{ParserHelper.make_value_visible(container_line)}:<"
+        )
         return container_line
 
     # pylint: disable=too-many-arguments
@@ -1473,14 +1474,14 @@ class TransformContainers:
         if token_stack[-1].is_list_start and removed_tokens[-1].is_list_start:
             removed_list_token = cast(ListStartMarkdownToken, removed_tokens[-1])
             removed_token_index = removed_token_indices[-1]
-            if removed_list_token.leading_spaces is None:
-                assert removed_token_index == 0
-            else:
-                removed_token_split_spaces = removed_list_token.leading_spaces.split(
-                    "\n"
-                )
-                assert removed_token_index < len(removed_token_split_spaces)
-                removed_token_indices[-1] += 1
+            assert removed_list_token.leading_spaces is not None
+            # if removed_list_token.leading_spaces is None:
+            #     assert removed_token_index == 0
+            # else:
+            removed_token_split_spaces = removed_list_token.leading_spaces.split("\n")
+            assert removed_token_index < len(removed_token_split_spaces)
+            removed_token_indices[-1] += 1
+            # end else
             do_it = False
             block_me = True
         if do_it:
@@ -1900,10 +1901,11 @@ class TransformContainers:
                 else cast(ListStartMarkdownToken, token_stack[-1])
             )
             split_leading_spaces = None
-            if prev_list_token.leading_spaces is not None:
-                split_leading_spaces = prev_list_token.leading_spaces.split(
-                    ParserHelper.newline_character
-                )
+            # following assert was if over next line
+            assert prev_list_token.leading_spaces is not None
+            split_leading_spaces = prev_list_token.leading_spaces.split(
+                ParserHelper.newline_character
+            )
         if split_leading_spaces is not None and last_container_token_index < len(
             split_leading_spaces
         ):

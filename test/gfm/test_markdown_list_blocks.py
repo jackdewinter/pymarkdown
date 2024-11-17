@@ -2715,15 +2715,15 @@ continued here.
     expected_tokens = [
         "[BLANK(1,1):]",
         "[block-quote(2,1)::> ]",
-        "[olist(2,3):.:1:5::\n\n]",
+        "[olist(2,3):.:1:5::\n]",
         "[block-quote(2,6)::> \n\n]",
         "[para(2,8):\n]",
         "[text(2,8):Blockquote\ncontinued here.::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
-        "[BLANK(4,1):]",
         "[end-olist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(4,1):]",
     ]
     expected_gfm = """<blockquote>
 <ol>
@@ -2900,15 +2900,15 @@ def test_list_blocks_271ax():
 """
     expected_tokens = [
         "[block-quote(1,1)::> ]",
-        "[olist(1,3):.:1:5::\n]",
+        "[olist(1,3):.:1:5::]",
         "[block-quote(1,6)::> \n> \n]",
         "[para(1,8):\n]",
         "[text(1,8):Blockquote\ncontinued here.::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
-        "[BLANK(3,1):]",
         "[end-olist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(3,1):]",
     ]
     expected_gfm = """<blockquote>
 <ol>
@@ -2938,15 +2938,15 @@ def test_list_blocks_271aa():
 not here"""
     expected_tokens = [
         "[block-quote(1,1)::> ]",
-        "[olist(1,3):.:1:5::\n]",
+        "[olist(1,3):.:1:5::]",
         "[block-quote(1,6)::> \n> \n]",
         "[para(1,8):\n]",
         "[text(1,8):Blockquote\ncontinued here.::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
-        "[BLANK(3,1):]",
         "[end-olist:::True]",
         "[end-block-quote:::True]",
+        "[BLANK(3,1):]",
         "[para(4,1):]",
         "[text(4,1):not here:]",
         "[end-para:::True]",
