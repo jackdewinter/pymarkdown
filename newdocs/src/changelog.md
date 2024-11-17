@@ -5,12 +5,15 @@
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
-None
+- [Issue 810](https://github.com/jackdewinter/pymarkdown/issues/810)
+    - Added fix for Rule Md012
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
-None
+- [Issue 1259](https://github.com/jackdewinter/pymarkdown/issues/1259)
+    - Fixed asserts and bad parsing from cases where containers are
+      added and then a "raw" blank line removes all containers
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
