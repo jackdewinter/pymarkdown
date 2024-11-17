@@ -955,29 +955,6 @@ def test_md005_fix(test: pluginRuleTest) -> None:
     execute_fix_test(test)
 
 
-@pytest.mark.rules
-@pytest.mark.skip
-def test_md005_bad_ordered_right_unordered_fix():
-    """
-    Test to make sure this rule does trigger with a document that
-    is only level 1 unordered lists starting with dash and the
-    configuration is also set to asterisk.
-    """
-
-    # see "bad_ordered_right_unordered_x"
-
-
-@pytest.mark.rules
-@pytest.mark.skip
-def test_md005_bad_unordered_ordered_right_fix():
-    """
-    Test to make sure this rule does trigger with a document that
-    is only level 1 unordered lists starting with dash and the
-    configuration is also set to asterisk.
-    """
-    # see "bad_ordered_right_unordered_x"
-
-
 def test_md005_query_config():
     config_test = pluginQueryConfigTest(
         "md005",

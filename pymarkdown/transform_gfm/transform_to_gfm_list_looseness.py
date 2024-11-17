@@ -187,7 +187,7 @@ class TransformToGfmListLooseness:
     @staticmethod
     def __handle_block_quote_end_calc(
         actual_tokens: List[MarkdownToken], search_index: int, current_token_index: int
-    ) -> Tuple[bool, bool]:
+    ) -> bool:
         stop_me = TransformToGfmListLooseness.__is_token_loose(
             actual_tokens, search_index + 1, True
         )
@@ -201,11 +201,7 @@ class TransformToGfmListLooseness:
             block_quote_spaces_count = len(next_token.bleading_spaces.split("\n"))  # type: ignore
             end_block_quote_line = next_token.line_number + block_quote_spaces_count
             stop_me = not blank_token.line_number < end_block_quote_line
-
-        is_loose = stop_me
-        if stop_me:
-            POGGER.debug("!!!LOOSE-look back at end!!!")
-        return is_loose, stop_me
+        return stop_me
 
     @staticmethod
     def __handle_block_quote_end(
@@ -235,12 +231,10 @@ class TransformToGfmListLooseness:
                 new_index < len(actual_tokens) and actual_tokens[new_index].is_end_token
             ) and actual_tokens[new_index].is_list_end
             if not keep_checking:
-                (
-                    is_loose,
-                    stop_me,
-                ) = TransformToGfmListLooseness.__handle_block_quote_end_calc(
+                (stop_me) = TransformToGfmListLooseness.__handle_block_quote_end_calc(
                     actual_tokens, search_index, current_token_index
                 )
+                is_loose = stop_me
         return stop_me, is_loose, stack_count
 
     @staticmethod

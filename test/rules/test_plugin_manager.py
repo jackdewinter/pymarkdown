@@ -1294,7 +1294,7 @@ def test_markdown_with_plugins_list_only():
   md009   no-trailing-spaces              True       True       0.6.0    Yes
   md010   no-hard-tabs                    True       True       0.6.0    Yes
   md011   no-reversed-links               True       True       0.5.0    No
-  md012   no-multiple-blanks              True       True       0.6.0    No
+  md012   no-multiple-blanks              True       True       0.7.0    Yes
   md013   line-length                     True       True       0.6.0    No
   md014   commands-show-output            True       True       0.5.0    No
   md018   no-missing-space-atx            True       True       0.5.0    No
@@ -1378,7 +1378,7 @@ def test_markdown_with_plugins_list_only_all():
   md009   no-trailing-spaces              True       True       0.6.0    Yes
   md010   no-hard-tabs                    True       True       0.6.0    Yes
   md011   no-reversed-links               True       True       0.5.0    No
-  md012   no-multiple-blanks              True       True       0.6.0    No
+  md012   no-multiple-blanks              True       True       0.7.0    Yes
   md013   line-length                     True       True       0.6.0    No
   md014   commands-show-output            True       True       0.5.0    No
   md018   no-missing-space-atx            True       True       0.5.0    No

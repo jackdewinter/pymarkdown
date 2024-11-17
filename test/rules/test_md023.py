@@ -247,7 +247,6 @@ Long Heading
         "bad_improper_indent_setext_in_list_item",
         source_file_name=f"{source_path}improper_indent_setext_in_list_item.md",
         enable_rules=plugin_enable_this_rule,
-        use_debug=True,
         disable_rules=__plugin_disable_md005_md030_md032,
         source_file_contents="""- Some text
 
@@ -419,7 +418,6 @@ Long Heading
 """,
         enable_rules=plugin_enable_this_rule,
         disable_rules="md010,md027,md030",
-        use_debug=True,
     ),
     pluginRuleTest(
         "bad_atx_unordered_list_with_tab_second",
@@ -513,7 +511,6 @@ Long Heading
         enable_rules=plugin_enable_this_rule,
         disable_rules="md010,md027",
         scan_expected_return_code=1,
-        use_debug=True,
         scan_expected_output="""{temp_source_path}:2:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
         fix_expected_file_contents="""+ heading 1
@@ -559,7 +556,6 @@ Long Heading
         enable_rules=plugin_enable_this_rule,
         disable_rules="md010,md027,md022,md024",
         scan_expected_return_code=1,
-        use_debug=True,
         scan_expected_output="""{temp_source_path}:5:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
         fix_expected_file_contents="""
@@ -599,7 +595,6 @@ Long Heading
     #         enable_rules=plugin_enable_this_rule,
     #         disable_rules="md010,md027,md022,md024",
     #         scan_expected_return_code=1,
-    #         use_debug=True,
     #         scan_expected_output="""{temp_source_path}:5:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
     # """,
     #         fix_expected_file_contents="""
@@ -903,7 +898,6 @@ Long Heading
         ),
         enable_rules=plugin_enable_this_rule,
         disable_rules="md009,md010,md027",
-        # use_debug=True,
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:7:4: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
@@ -930,7 +924,6 @@ Long Heading
         ),
         enable_rules=plugin_enable_this_rule,
         disable_rules="md009,md010,md027",
-        use_debug=True,
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:5:4: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
@@ -956,7 +949,6 @@ Long Heading
         ),
         enable_rules=plugin_enable_this_rule,
         disable_rules="md009,md010,md027",
-        use_debug=True,
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:6:4: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
@@ -984,7 +976,6 @@ Long Heading
         ),
         enable_rules=plugin_enable_this_rule,
         disable_rules="md009,md010,md027",
-        use_debug=True,
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:7:4: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
@@ -1020,7 +1011,6 @@ Long Heading
         enable_rules=plugin_enable_this_rule,
         disable_rules="md010,md027,md022,md024",
         scan_expected_return_code=1,
-        use_debug=True,
         scan_expected_output="""{temp_source_path}:5:5: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
 """,
         fix_expected_file_contents="""
@@ -1190,7 +1180,6 @@ Long Heading
     # """,
     #         enable_rules=plugin_enable_this_rule,
     #         disable_rules="md007,md010,md022,md024,md025,md027,md030",
-    #         use_debug=True,
     #         scan_expected_return_code=1,
     #         scan_expected_output="""{temp_source_path}:3:9: MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)
     # """,

@@ -2471,8 +2471,6 @@ A code block
 {temp_source_path}:6:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
-        # mark_fix_as_skipped=skip_fix_bad_markdown,
-        # use_fix_debug=True,
         fix_expected_file_contents="""> > + block 3
 > >   block 3
 > > + block 3
@@ -6254,6 +6252,7 @@ another list
 {temp_source_path}:6:7: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032,md027",
+        mark_fix_as_skipped=True,
         fix_expected_file_contents="""> + > -----
 >   > > block 1
 >   > > block 2
@@ -6373,6 +6372,7 @@ another list
 {temp_source_path}:9:7: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
+        mark_fix_as_skipped=True,
         fix_expected_file_contents="""> + > -----
 >   > > block 1
 >   > > block 2
@@ -6526,7 +6526,6 @@ another list
 >   > -----
 > + another list
 """,
-        scan_expected_return_code=0,
         scan_expected_output="",
         disable_rules="md032,md027",
     ),

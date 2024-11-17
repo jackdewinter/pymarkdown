@@ -837,6 +837,9 @@ class TokenizedMarkdown:
             TokenizedMarkdown.__handle_blank_line_in_block_quote(
                 parser_state, new_tokens
             )
+            new_tokens = TokenizedMarkdown.__handle_blank_line_close_first_quote(
+                parser_state, new_tokens
+            )
 
         if force_default_handling or new_tokens is None:
             POGGER.debug("hbl>>default blank handling-->cob")
@@ -895,7 +898,7 @@ class TokenizedMarkdown:
                 next_index
             ].matching_markdown_token
             assert found_markdown_token is not None
-            block_copy_token = next(
+            block_copy_token = next(  # pragma: no cover
                 (
                     j
                     for j in parser_state.block_copy
@@ -907,23 +910,24 @@ class TokenizedMarkdown:
                 ),
                 None,
             )
-            if block_copy_token is not None:
-                assert found_markdown_token.is_list_start
-                found_markdown_list_token = cast(
-                    ListStartMarkdownToken, found_markdown_token
-                )
-                found_markdown_token_leading_spaces = (
-                    found_markdown_list_token.leading_spaces
-                )
-                assert block_copy_token.is_list_start
-                block_copy_list_token = cast(ListStartMarkdownToken, block_copy_token)
-                block_copy_token_leading_spaces = block_copy_list_token.leading_spaces
-                are_same = (
-                    found_markdown_token_leading_spaces
-                    == block_copy_token_leading_spaces
-                )
-                assert not are_same
-                found_markdown_list_token.remove_last_leading_space()
+
+            # assert on next line was if statement with rest of function in if block
+            assert block_copy_token is not None
+            assert found_markdown_token.is_list_start
+            found_markdown_list_token = cast(
+                ListStartMarkdownToken, found_markdown_token
+            )
+            found_markdown_token_leading_spaces = (
+                found_markdown_list_token.leading_spaces
+            )
+            assert block_copy_token.is_list_start
+            block_copy_list_token = cast(ListStartMarkdownToken, block_copy_token)
+            block_copy_token_leading_spaces = block_copy_list_token.leading_spaces
+            are_same = (
+                found_markdown_token_leading_spaces == block_copy_token_leading_spaces
+            )
+            assert not are_same
+            found_markdown_list_token.remove_last_leading_space()
 
     @staticmethod
     def __handle_blank_line_token_stack(
@@ -986,10 +990,43 @@ class TokenizedMarkdown:
         return new_tokens, force_default_handling, requeue_line_info
 
     @staticmethod
+    def __handle_blank_line_close_first_quote(
+        parser_state: ParserState, new_tokens: Optional[List[MarkdownToken]]
+    ) -> Optional[List[MarkdownToken]]:
+
+        stack_index = 1
+        while (
+            stack_index < len(parser_state.token_stack)
+            and not parser_state.token_stack[stack_index].is_block_quote
+        ):
+            stack_index += 1
+
+        close_tokens, _ = parser_state.close_open_blocks_fn(
+            parser_state,
+            include_block_quotes=True,
+            include_lists=True,
+            until_this_index=stack_index,
+            was_forced=True,
+        )
+        POGGER.debug("close_tokens>>$", close_tokens)
+        if new_tokens is not None:
+            new_tokens.extend(close_tokens)
+        elif close_tokens:
+            new_tokens = close_tokens
+        return new_tokens
+
+    @staticmethod
     def __handle_blank_line_in_block_quote(
         parser_state: ParserState, new_tokens: Optional[List[MarkdownToken]]
     ) -> None:
+        assert new_tokens is None or len(new_tokens) <= 1
+        if new_tokens:
+            assert len(new_tokens) == 1
+            if new_tokens[0].is_list_end:
+                return
         stack_index = parser_state.find_last_container_on_stack()
+        if parser_state.token_stack[stack_index].is_list:
+            return
         POGGER.debug_with_visible_whitespace("new_tokens>>$", new_tokens)
         POGGER.debug("stack_index>>$", stack_index)
         if new_tokens and stack_index > 0:

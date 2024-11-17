@@ -226,11 +226,23 @@ scanTests = [
     pluginRuleTest(
         "good_block_quote_fenced",
         source_file_name=f"{source_path}good_block_quote_fenced.md",
+        source_file_contents="""> this is text
+> ```code
+> this is a fenced block
+> ```
+> a real test
+""",
         disable_rules=__plugin_disable_md031,
     ),
     pluginRuleTest(
         "good_block_quote_fenced_middle",
         source_file_name=f"{source_path}good_block_quote_fenced_middle.md",
+        source_file_contents="""> this is text
+> ```code
+>  this is a fenced block
+> ```
+> a real test
+""",
         disable_rules=__plugin_disable_md031,
     ),
     pluginRuleTest(

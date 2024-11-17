@@ -21,7 +21,6 @@ scanTests = [
     pluginRuleTest(
         "good_valid_emphasis",
         source_file_name=f"{source_path}good_valid_emphasis.md",
-        use_debug=True,
     ),
     pluginRuleTest(
         "bad_surrounding_emphasis",
@@ -121,14 +120,12 @@ this text *is* in italics
         "good_surrounding_emphasis_short_with_mixed",
         source_file_contents="""this * text _ is * in _ italics
 """,
-        scan_expected_return_code=0,
         scan_expected_output="",
     ),
     pluginRuleTest(
         "good_surrounding_emphasis_short_with_other_mixed",
         source_file_contents="""this _ text * is _ in * italics
 """,
-        scan_expected_return_code=0,
         scan_expected_output="",
     ),
     pluginRuleTest(
@@ -274,7 +271,6 @@ this text __ is __ in bold
 ---
 """,
         scan_expected_return_code=1,
-        use_debug=True,
         scan_expected_output="""{temp_source_path}:1:12: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
 {temp_source_path}:1:15: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
 {temp_source_path}:4:12: MD037: Spaces inside emphasis markers (no-space-in-emphasis)
