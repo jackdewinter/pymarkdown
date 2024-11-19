@@ -14,6 +14,9 @@
 - [Issue 1259](https://github.com/jackdewinter/pymarkdown/issues/1259)
     - Fixed asserts and bad parsing from cases where containers are
       added and then a "raw" blank line removes all containers
+- [Issue 1263](https://github.com/jackdewinter/pymarkdown/issues/1263)
+    - Fixed issue where a new unordered list between two block quotes
+      was not being recognized properly.
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed

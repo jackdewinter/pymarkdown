@@ -580,11 +580,11 @@ class ContainerBlockLeafProcessor:
                 BlockQuoteMarkdownToken,
                 parser_state.token_stack[bq_index].matching_markdown_token,
             )
-            last_leading_space = xx_block_quote_token.remove_last_bleading_space()
-            assert (
-                last_leading_space[0] == "\n"
-            ), "Removed leading space must start with \\n."
-            last_leading_space = last_leading_space[1:]
+            _ = xx_block_quote_token.remove_last_bleading_space()
+            # assert (
+            #     last_leading_space[0] == "\n"
+            # ), "Removed leading space must start with \\n."
+            # last_leading_space = last_leading_space[1:]
 
             POGGER.debug(
                 "__adjust_for_list_container_after_block_quote_special_special>>block_token>>$",

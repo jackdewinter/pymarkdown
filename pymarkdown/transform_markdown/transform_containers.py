@@ -1034,7 +1034,11 @@ class TransformContainers:
             ).weird_kludge_three
             and container_token_indices[current_block_quote_token_index] == 1
         ):
-            container_token_indices[previous_block_quote_token_index] += 1
+            previous_block_quote_token = cast(
+                BlockQuoteMarkdownToken, token_stack[previous_block_quote_token_index]
+            )
+            if not previous_block_quote_token.weird_kludge_seven:
+                container_token_indices[previous_block_quote_token_index] += 1
         elif (
             previous_block_quote_token_index >= 0
             and container_token_indices[current_block_quote_token_index] == 1
@@ -1398,7 +1402,6 @@ class TransformContainers:
         POGGER.debug(
             f"inner_token_index={inner_token_index} < len(split)={len(split_leading_spaces)}"
         )
-        # following assert was if to return
         assert inner_token_index < len(split_leading_spaces)
         POGGER.debug(
             f" adj-->container_line>:{ParserHelper.make_value_visible(container_line)}:<"
@@ -1994,9 +1997,7 @@ class TransformContainers:
             )
         split_leading_spaces = leading_spaces.split(ParserHelper.newline_character)
         inner_token_index = container_token_indices[nested_list_start_index]
-        assert inner_token_index < len(
-            split_leading_spaces
-        ), "Index must be within the string."
+        assert inner_token_index < len(split_leading_spaces)
         POGGER.debug(
             f"inner_index->{str(container_token_indices[nested_list_start_index])}"
         )
