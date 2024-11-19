@@ -351,7 +351,7 @@ class ListBlockPreListHelper:
             current_last_block_token,
         )
         current_last_block_token.add_bleading_spaces(
-            removed_leading_spaces, skip_adding_newline=True
+            removed_leading_spaces, skip_adding_newline=False
         )
         POGGER.debug(
             "__handle_list_nesting_all_conditionals>>block_token>>$",

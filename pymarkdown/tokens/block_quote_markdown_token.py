@@ -52,6 +52,7 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
         self.weird_kludge_four: Optional[Tuple[int, int, int, str]] = None
         self.weird_kludge_five = False
         self.weird_kludge_six = False
+        self.weird_kludge_seven = False
 
     # pylint: disable=protected-access
     @staticmethod
@@ -135,7 +136,7 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
             self.__leading_spaces = ""
             self.weird_kludge_five = False
         else:
-            extracted_text = self.__leading_spaces[last_separator_index:]
+            extracted_text = self.__leading_spaces[last_separator_index + 1 :]
             self.__leading_spaces = self.__leading_spaces[:last_separator_index]
         self.leading_text_index -= 1
         self.__compose_extra_data_field()
