@@ -283,7 +283,6 @@ scanTests = [
     ),
     pluginRuleTest(
         "bad_single_block_quote_space_top",
-        # disable_rules=__plugin_disable_md028,
         source_file_contents=""">  this is text
 >
 > within a block quote
@@ -291,24 +290,51 @@ scanTests = [
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:1:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
 """,
-        mark_fix_as_skipped=True,
+        fix_expected_file_contents="""> this is text
+>
+> within a block quote
+""",
+    ),
+    pluginRuleTest(  # test_extra_051d
+        "bad_single_block_quote_space_bottom",
+        source_file_contents="""> this is text
+>
+>  within a block quote
+""",
+        use_debug=True,
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+""",
+        fix_expected_file_contents="""> this is text
+>
+> within a block quote
+""",
+    ),
+    pluginRuleTest(
+        "bad_double_block_quote_space_top",
+        source_file_contents=""">  this is text
+
+> within a block quote
+""",
+        disable_rules="md028",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+""",
         fix_expected_file_contents="""> this is text
 
 > within a block quote
 """,
     ),
     pluginRuleTest(
-        "bad_single_block_quote_space_bottom",
-        # disable_rules=__plugin_disable_md028,
+        "bad_double_block_quote_space_bottom",
         source_file_contents="""> this is text
->
+
 >  within a block quote
 """,
+        disable_rules="md028",
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
 """,
-        mark_scan_as_skipped=True,
-        mark_fix_as_skipped=True,
         fix_expected_file_contents="""> this is text
 
 > within a block quote
@@ -832,7 +858,6 @@ scanTests = [
 > + another list
 """,
         disable_rules="md007,md009,md012,md030,md031",
-        # use_debug=True,
         scan_expected_output="",
     ),
     pluginRuleTest(  # test_extra_051b2
@@ -842,10 +867,13 @@ scanTests = [
 >    fred2
 > 1. barney
 """,
-        # disable_rules="md007,md009,md012,md030,md031",
-        # use_debug=True,
-        scan_expected_output="",
-        mark_scan_as_skipped=True,
+        scan_expected_return_code=1,
+        scan_expected_output="{temp_source_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)",
+        fix_expected_file_contents="""> 1.
+>
+> fred2
+> 1. barney
+""",
     ),
     pluginRuleTest(
         "mix_md027_md007",
