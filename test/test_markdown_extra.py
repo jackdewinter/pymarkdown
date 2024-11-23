@@ -10203,6 +10203,9 @@ def test_extra_051a2():
     """
     TBD
     bad_in_list_in_block_quote_with_double_blanks_at_start
+
+    Note: If there was any paragraph text one line 1, the list would be held open.
+          Without that, it is just text indented with 3 spaces.
     """
 
     # Arrange
@@ -12149,6 +12152,39 @@ def test_extra_051cfa():
 <ul>
 <li>barney</li>
 </ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_extra_051d():
+    """
+    TBD
+    bad_single_block_quote_space_bottom
+    """
+
+    # Arrange
+    source_markdown = """> this is text
+>
+>  within a block quote
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n>\n> \n]",
+        "[para(1,3):]",
+        "[text(1,3):this is text:]",
+        "[end-para:::True]",
+        "[BLANK(2,2):]",
+        "[para(3,4): ]",
+        "[text(3,4):within a block quote:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<p>this is text</p>
+<p>within a block quote</p>
 </blockquote>"""
 
     # Act & Assert

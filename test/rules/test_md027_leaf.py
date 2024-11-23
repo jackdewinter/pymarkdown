@@ -222,6 +222,12 @@ scanTests = [
     pluginRuleTest(
         "good_block_quote_html_last",
         source_file_name=f"{source_path}good_block_quote_html_last.md",
+        source_file_contents="""> this is text
+> <!--
+> this is a comment
+>  -->
+> a real test
+""",
     ),
     pluginRuleTest(
         "good_block_quote_fenced",
@@ -300,6 +306,14 @@ scanTests = [
     pluginRuleTest(
         "good_block_quote_indented_last",
         source_file_name=f"{source_path}good_block_quote_indented_last.md",
+        source_file_contents="""> this is text
+>
+>     this is
+>     an
+>      indented block
+>
+> a real test
+""",
     ),
     pluginRuleTest(
         "good_block_quote_lrd",

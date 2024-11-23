@@ -17,6 +17,9 @@
 - [Issue 1263](https://github.com/jackdewinter/pymarkdown/issues/1263)
     - Fixed issue where a new unordered list between two block quotes
       was not being recognized properly.
+- [Issue 1270](https://github.com/jackdewinter/pymarkdown/issues/1270)
+    - Fixed issue with Md027 not reporting line numbers properly within
+      anything except the first paragraph.
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
