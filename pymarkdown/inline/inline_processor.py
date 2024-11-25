@@ -14,6 +14,9 @@ from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.inline.inline_handler_helper import InlineHandlerHelper
 from pymarkdown.inline.inline_helper import InlineHelper
 from pymarkdown.inline.inline_text_block_helper import InlineTextBlockHelper
+from pymarkdown.plugins.utils.leading_space_index_tracker import (
+    LeadingSpaceIndexTracker,
+)
 from pymarkdown.tokens.atx_heading_markdown_token import AtxHeadingMarkdownToken
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
@@ -69,13 +72,35 @@ class InlineProcessor:
             else:
                 POGGER.info("-->not bq-")
 
+        lsi_tracker = LeadingSpaceIndexTracker()
+        token = coalesced_results[0]
+        if token.is_block_quote_start or token.is_list_start:
+            lsi_tracker.open_container(token)
+        # if token.is_block_quote_end or token.is_list_end:
+        assert not (token.is_block_quote_end or token.is_list_end)
+        # lsi_tracker.register_container_end(token)
+        # elif
+        lsi_tracker.track_since_last_non_end_token(token)
         for coalesce_index in range(1, len(coalesced_results)):
+
+            token = coalesced_results[coalesce_index]
+
+            if not token.is_end_token or token.is_end_of_stream:
+                while lsi_tracker.have_any_registered_container_ends():
+                    lsi_tracker.process_container_end(token)
+            if token.is_block_quote_start or token.is_list_start:
+                lsi_tracker.open_container(token)
+            elif token.is_block_quote_end or token.is_list_end:
+                lsi_tracker.register_container_end(token)
+            lsi_tracker.track_since_last_non_end_token(token)
+
             InlineProcessor.__process_next_coalesce_item(
                 coalesced_results,
                 coalesce_index,
                 coalesced_list,
                 coalesced_stack,
                 parse_properties,
+                lsi_tracker,
             )
         return coalesced_list
 
@@ -131,6 +156,7 @@ class InlineProcessor:
         coalesced_list: List[MarkdownToken],
         coalesced_stack: List[MarkdownToken],
         parse_properties: ParseBlockPassProperties,
+        lsi_tracker: LeadingSpaceIndexTracker,
     ) -> None:
         POGGER.info("coalesced_results:$<", coalesced_list[-1])
         POGGER.info("coalesced_stack:$<", coalesced_stack)
@@ -140,6 +166,7 @@ class InlineProcessor:
                 POGGER.info(
                     "$-->last->block->$", i, block_quote_token.leading_text_index
                 )
+
         if coalesced_results[coalesce_index].is_text and (
             coalesced_list[-1].is_paragraph
             or coalesced_list[-1].is_setext_heading
@@ -148,7 +175,11 @@ class InlineProcessor:
         ):
             if coalesced_list[-1].is_code_block:
                 processed_tokens = InlineProcessor.__parse_code_block(
-                    coalesced_results, coalesce_index, coalesced_list, coalesced_stack
+                    coalesced_results,
+                    coalesce_index,
+                    coalesced_list,
+                    coalesced_stack,
+                    lsi_tracker,
                 )
             elif coalesced_list[-1].is_setext_heading:
                 processed_tokens = InlineProcessor.__parse_setext_heading(
@@ -291,11 +322,60 @@ class InlineProcessor:
         return processed_tokens
 
     @staticmethod
+    def __parse_code_block_coalesced(
+        coalesced_stack: List[MarkdownToken],
+        lsi_tracker: LeadingSpaceIndexTracker,
+        text_token: TextMarkdownToken,
+    ) -> int:
+        new_column_number = 1
+        if coalesced_stack[-1].is_block_quote_start:
+            block_quote_token = cast(BlockQuoteMarkdownToken, coalesced_stack[-1])
+            assert block_quote_token.bleading_spaces, "Bleading spaces must be defined."
+            split_leading_spaces = block_quote_token.bleading_spaces.split(
+                ParserHelper.newline_character
+            )
+            split_index = lsi_tracker.get_tokens_block_quote_bleading_space_index(
+                text_token
+            )
+        else:
+            list_token = cast(ListStartMarkdownToken, coalesced_stack[-1])
+            assert (
+                list_token.leading_spaces is not None
+            ), "Leading spaces must be defined."
+            split_leading_spaces = list_token.leading_spaces.split(
+                ParserHelper.newline_character
+            )
+            split_index = lsi_tracker.get_tokens_list_leading_space_index(text_token)
+        if split_index < len(split_leading_spaces):
+            new_column_number += len(split_leading_spaces[split_index])
+        if coalesced_stack[-1].is_list_start:
+            stack_index = len(coalesced_stack) - 2
+            while stack_index >= 0 and coalesced_stack[stack_index].is_list_start:
+                stack_index -= 1
+            if stack_index >= 0:
+                assert coalesced_stack[stack_index].is_block_quote_start
+                block_quote_token = cast(
+                    BlockQuoteMarkdownToken, coalesced_stack[stack_index]
+                )
+                assert (
+                    block_quote_token.bleading_spaces
+                ), "Bleading spaces must be defined."
+                split_leading_spaces = block_quote_token.bleading_spaces.split(
+                    ParserHelper.newline_character
+                )
+                split_index = lsi_tracker.get_tokens_list_leading_space_index(
+                    text_token
+                )
+                new_column_number += len(split_leading_spaces[split_index])
+        return new_column_number
+
+    @staticmethod
     def __parse_code_block(
         coalesced_results: List[MarkdownToken],
         coalesce_index: int,
         coalesced_list: List[MarkdownToken],
         coalesced_stack: List[MarkdownToken],
+        lsi_tracker: LeadingSpaceIndexTracker,
     ) -> List[MarkdownToken]:
         assert coalesced_results[
             coalesce_index
@@ -303,34 +383,15 @@ class InlineProcessor:
         text_token = cast(TextMarkdownToken, coalesced_results[coalesce_index])
         encoded_text = InlineHelper.append_text("", text_token.token_text)
         if coalesced_list[-1].is_fenced_code_block:
-            line_number_delta, new_column_number = 1, 1
+            line_number_delta = 1
 
             # POGGER.info("coalesced_stack:$<", coalesced_stack)
             if coalesced_stack:
-                if coalesced_stack[-1].is_block_quote_start:
-                    block_quote_token = cast(
-                        BlockQuoteMarkdownToken, coalesced_stack[-1]
-                    )
-                    assert (
-                        block_quote_token.bleading_spaces
-                    ), "Bleading spaces must be defined."
-                    split_leading_spaces = block_quote_token.bleading_spaces.split(
-                        ParserHelper.newline_character
-                    )
-                else:
-                    list_token = cast(ListStartMarkdownToken, coalesced_stack[-1])
-                    assert (
-                        list_token.leading_spaces is not None
-                    ), "Leading spaces must be defined."
-                    split_leading_spaces = list_token.leading_spaces.split(
-                        ParserHelper.newline_character
-                    )
-                new_column_number += (
-                    (len(split_leading_spaces[1]))
-                    if len(split_leading_spaces) >= 2
-                    else (len(split_leading_spaces[0]))
+                new_column_number = InlineProcessor.__parse_code_block_coalesced(
+                    coalesced_stack, lsi_tracker, text_token
                 )
             else:
+                new_column_number = 1
                 leading_whitespace = text_token.extracted_whitespace
                 # POGGER.debug(">>$<<", text_token)
                 assert (

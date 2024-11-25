@@ -576,26 +576,28 @@ class RuleMd031(RulePlugin):
         self.register_replace_tokens_request(context, token, token, replacement_tokens)
 
     def __calc_kludge_one(self, at_least_one_container: bool) -> bool:
-        is_kludge_one = False
-        if at_least_one_container:
-            last_stack_token = (
-                self.__leading_space_index_tracker.get_container_stack_item(-1)
-            )
-            if last_stack_token.is_list_start and self.__x1[-1].is_block_quote_start:
-                is_kludge_one = not any(i.is_block_quote_start for i in self.__x1[:-1])
-        return is_kludge_one
+        if not at_least_one_container:
+            return False
+        last_stack_token = self.__leading_space_index_tracker.get_container_stack_item(
+            -1
+        )
+        return (
+            not any(i.is_block_quote_start for i in self.__x1[:-1])
+            if last_stack_token.is_list_start and self.__x1[-1].is_block_quote_start
+            else False
+        )
 
-    def __calc_2(self, context: PluginScanContext, did_process_removals: bool) -> bool:
+    # def __calc_2(self, context: PluginScanContext, did_process_removals: bool) -> bool:
 
-        # This will most likely need rewriting for deeper nestings.
-        if (
-            not did_process_removals
-            and len(self.__x1) == 2
-            and self.__x1[0].is_block_quote_start
-            and self.__x1[1].is_list_start
-        ):
-            did_process_removals = self.__apply_tailing_block_quote_fix(0, context)
-        return did_process_removals
+    # This will most likely need rewriting for deeper nestings.
+    # if (
+    #     not did_process_removals
+    #     and len(self.__x1) == 2
+    #     and self.__x1[0].is_block_quote_start
+    #     and self.__x1[1].is_list_start
+    # ):
+    #     did_process_removals = self.__apply_tailing_block_quote_fix(0, context)
+    # return did_process_removals
 
     def __calc_3(
         self,
@@ -683,7 +685,7 @@ class RuleMd031(RulePlugin):
                 or not at_least_one_container
             )
 
-            did_process_removals = self.__calc_2(context, did_process_removals)
+            # did_process_removals = self.__calc_2(context, did_process_removals)
             did_process_removals, upgrade_kludge = self.__calc_3(
                 context, did_process_removals, at_least_one_container, upgrade_kludge
             )

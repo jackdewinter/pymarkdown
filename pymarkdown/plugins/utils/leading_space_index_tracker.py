@@ -206,11 +206,11 @@ class LeadingSpaceIndexTracker:
         container_index = alternate_index
         last_closed_container_info = self.get_closed_container_info(-1)
 
-        assert not last_closed_container_info.adjustment
-        # if last_closed_container_info.adjustment:
-        #     adjust = 2 if container_index >= 0 else 1
-        # else:
-        adjust = self.__calculate_adjust(initial_index, container_index)
+        # assert not last_closed_container_info.adjustment
+        if last_closed_container_info.adjustment:
+            adjust = 2 if container_index >= 0 else 1
+        else:
+            adjust = self.__calculate_adjust(initial_index, container_index)
         # endif
 
         index = (
