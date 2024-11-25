@@ -1958,7 +1958,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_repea
         "[text(1,3):abc\ndef::\n]",
         "[end-para:::False]",
         "[fcode-block(3,5):`:3:python::::\t:]",
-        "[text(4,3):ghi:\a\t\a\x03\a]",
+        "[text(4,2):ghi:\a\t\a\x03\a]",
         "[end-fcode-block::::True]",
         "[end-block-quote:::True]",
     ]
@@ -1991,7 +1991,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_repea
         "[text(1,3):abc\ndef::\n]",
         "[end-para:::False]",
         "[fcode-block(3,5):`:3:python::::\t:]",
-        "[text(4,3):ghi:\a\t\a\x03\a]",
+        "[text(4,2):ghi:\a\t\a\x03\a]",
         "[end-fcode-block:\t::3:False]",
         "[end-block-quote:::True]",
     ]

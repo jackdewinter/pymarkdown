@@ -20,6 +20,10 @@
 - [Issue 1270](https://github.com/jackdewinter/pymarkdown/issues/1270)
     - Fixed issue with Md027 not reporting line numbers properly within
       anything except the first paragraph.
+- [Issue 1272](https://github.com/jackdewinter/pymarkdown/issues/1272)
+    - Parsing of the FCB in certain cases was off, as was the text token
+      containing the code block's text. Resulted in the columns being
+      reported being indented less than expected.
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed

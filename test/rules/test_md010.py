@@ -235,8 +235,8 @@ code	block
         disable_rules=__plugin_disable_md031_md040,
         source_file_contents="""+ this is text
 
-  ```text	def
-+ this contains	a tab
+  ```text\tdef
++ this contains\ta tab
   ```
 """,
         scan_expected_return_code=1,

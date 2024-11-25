@@ -263,6 +263,11 @@ class RuleMd012(RulePlugin):
         if token.is_block_quote_end or token.is_list_end:
             self.__process_pending_container_end_fixes(context, token)
 
+        if not token.is_end_token or token.is_end_of_stream:
+            while (
+                self.__leading_space_index_tracker.have_any_registered_container_ends()
+            ):
+                self.__leading_space_index_tracker.process_container_end(token)
         if token.is_block_quote_start or token.is_list_start:
             self.__leading_space_index_tracker.open_container(token)
         elif token.is_block_quote_end or token.is_list_end:

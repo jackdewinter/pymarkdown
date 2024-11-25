@@ -1523,7 +1523,7 @@ def test_extra_018x():
         "[text(1,6):list\nthis::\n]",
         "[end-para:::False]",
         "[fcode-block(3,6):`:3:html:::::]",
-        "[text(4,4):\a<\a&lt;\ahtml\a>\a&gt;\a:]",
+        "[text(4,6):\a<\a&lt;\ahtml\a>\a&gt;\a:]",
         "[end-fcode-block:::3:False]",
         "[li(6,3):5::1]",
         "[para(6,6):]",
@@ -1569,7 +1569,7 @@ def test_extra_018a():
         "[text(1,6):list\nthis::\n]",
         "[end-para:::False]",
         "[fcode-block(3,7):`:3:html:::: :]",
-        "[text(4,4):\a<\a&lt;\ahtml\a>\a&gt;\a:]",
+        "[text(4,6):\a<\a&lt;\ahtml\a>\a&gt;\a:]",
         "[end-fcode-block:::3:False]",
         "[li(6,3):5::1]",
         "[para(6,6):]",
@@ -1615,7 +1615,7 @@ def test_extra_018b():
         "[text(1,6):list\nthis::\n]",
         "[end-para:::False]",
         "[fcode-block(3,6):`:3:html:::::]",
-        "[text(4,4):\a<\a&lt;\ahtml\a>\a&gt;\a: ]",
+        "[text(4,6):\a<\a&lt;\ahtml\a>\a&gt;\a: ]",
         "[end-fcode-block:::3:False]",
         "[li(6,3):5::1]",
         "[para(6,6):]",
@@ -1661,7 +1661,7 @@ def test_extra_018c():
         "[text(1,6):list\nthis::\n]",
         "[end-para:::False]",
         "[fcode-block(3,6):`:3:html:::::]",
-        "[text(4,4):\a<\a&lt;\ahtml\a>\a&gt;\a:]",
+        "[text(4,6):\a<\a&lt;\ahtml\a>\a&gt;\a:]",
         "[end-fcode-block: ::3:False]",
         "[li(6,3):5::1]",
         "[para(6,6):]",
@@ -3447,6 +3447,9 @@ def test_extra_026a():
 def test_extra_026b():
     """
     TBD
+    note: this may look weird.  the ordered list has an indent of 3, with a single
+          space before fenced code block.  therefore, the text within the fcb starts
+          at column 4, with its first character being "special" space.
     """
 
     # Arrange
@@ -6538,7 +6541,7 @@ def test_extra_046a():
         "[text(1,5):list 1\nlist 2::\n]",
         "[end-setext::]",
         "[fcode-block(4,5):`:3:block:::::]",
-        "[text(5,3):A code block:]",
+        "[text(5,5):A code block:]",
         "[end-fcode-block:::3:False]",
         "[tbreak(7,5):-::------]",
         "[li(8,3):4::]",
@@ -6647,7 +6650,7 @@ def test_extra_046l0():
         "[text(1,5):list:]",
         "[end-para:::False]",
         "[fcode-block(2,5):`:3:block:::::]",
-        "[text(3,3):A code block:]",
+        "[text(3,5):A code block:]",
         "[end-fcode-block:::3:False]",
         "[li(5,3):4::]",
         "[para(5,5):]",
@@ -6695,7 +6698,7 @@ def test_extra_046l1():
         "[end-para:::True]",
         "[BLANK(2,2):]",
         "[fcode-block(3,5):`:3:block:::::]",
-        "[text(4,3):A code block:]",
+        "[text(4,5):A code block:]",
         "[end-fcode-block:::3:False]",
         "[BLANK(6,2):]",
         "[li(7,3):4::]",
@@ -7105,7 +7108,7 @@ def test_extra_047c1():
         "[tbreak(4,3):-::-----]",
         "[BLANK(5,1):]",
         "[fcode-block(6,3):`:3:block:::::]",
-        "[text(7,1):A code block:]",
+        "[text(7,3):A code block:]",
         "[end-fcode-block:::3:False]",
         "[BLANK(9,1):]",
         "[tbreak(10,3):-::-----]",
@@ -8749,8 +8752,8 @@ def test_extra_049l7():
         "[end-para:::False]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
-        "[fcode-block(5,3):`:3:block:::::]",
-        "[text(6,3):A code block:]",
+        "[fcode-block(5,5):`:3:block:::::]",
+        "[text(6,5):A code block:]",
         "[end-fcode-block:::3:False]",
         "[tbreak(8,5):-::-----]",
         "[li(9,3):4::]",
@@ -8781,7 +8784,7 @@ list 2</li>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
@@ -9545,7 +9548,7 @@ def test_extra_050d0():
         "[end-block-quote:::True]",
         "[end-ulist:::True]",
         "[fcode-block(4,5):`:3:block:::::]",
-        "[text(5,3):A code block:]",
+        "[text(5,5):A code block:]",
         "[end-fcode-block:::3:False]",
         "[tbreak(7,5):-::-----]",
         "[li(8,3):4::]",
@@ -9612,7 +9615,7 @@ def test_extra_050d1():
         "[end-block-quote:::True]",
         "[end-ulist:::True]",
         "[fcode-block(5,5):`:3:block:::::]",
-        "[text(6,3):A code block:]",
+        "[text(6,5):A code block:]",
         "[end-fcode-block:::3:False]",
         "[BLANK(8,2):]",
         "[tbreak(9,5):-::-----]",
@@ -12186,6 +12189,52 @@ def test_extra_051d():
 <p>this is text</p>
 <p>within a block quote</p>
 </blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_extra_051e():
+    """
+    TBD
+    bad_unordered_list_fall_off_after_fenced_open
+    """
+
+    # Arrange
+    source_markdown = """+ this is text
+
+  ```text\tdef
++ this contains\ta tab
+  ```
+"""
+    expected_tokens = [
+        "[ulist(1,1):+::2::\n  \n  \n]",
+        "[para(1,3):]",
+        "[text(1,3):this is text:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[fcode-block(3,3):`:3:text::\tdef:::]",
+        "[end-fcode-block::::True]",
+        "[li(4,1):2::]",
+        "[para(4,3):]",
+        "[text(4,3):this contains\ta tab:]",
+        "[end-para:::False]",
+        "[fcode-block(5,3):`:3::::::]",
+        "[text(6,1)::]",
+        "[end-fcode-block::::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>this is text</p>
+<pre><code class="language-text"></code></pre>
+</li>
+<li>
+<p>this contains\ta tab</p>
+<pre><code></code></pre>
+</li>
+</ul>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
