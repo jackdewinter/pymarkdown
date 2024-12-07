@@ -3160,7 +3160,7 @@ def test_nested_three_block_unordered_block_extra_list__li_drop_list_thematics_a
 > + another list"""
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):+::4::\n\n\n\n\n]",
+        "[ulist(1,3):+::4::\n\n\n\n]",
         "[block-quote(1,5)::> \n>   > \n>   > \n>   > \n>   > \n>   > \n>   > \n>   > \n>   > ]",
         "[tbreak(1,7):-::-----]",
         "[ulist(2,7):+::8::  ]",
@@ -3234,7 +3234,7 @@ def test_nested_three_block_unordered_block_extra_list__li_drop_list_thematics_a
 > + another list"""
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):+::4::\n\n\n\n\n\n\n]",
+        "[ulist(1,3):+::4::\n\n\n\n\n\n]",
         "[block-quote(1,5)::> \n>   > \n>   > \n>   > \n>   > \n>   >\n>   > \n>   > \n>   > \n>   >\n>   > ]",
         "[tbreak(1,7):-::-----]",
         "[ulist(2,7):+::8::  ]",

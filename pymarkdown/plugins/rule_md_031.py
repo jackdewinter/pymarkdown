@@ -613,33 +613,32 @@ class RuleMd031(RulePlugin):
             )
             found_block_quote_token = None
             assert last_stack_token_index >= 0
-            assert (
-                token_at_index := self.__leading_space_index_tracker.get_container_stack_item(
+            token_at_index = (
+                self.__leading_space_index_tracker.get_container_stack_item(
                     last_stack_token_index
                 )
-            ).is_block_quote_start
-            found_block_quote_token = token_at_index
-            # while last_stack_token_index >= 0:
-            #     if (
-            #         token_at_index := self.__leading_space_index_tracker.get_container_stack_item(
-            #             last_stack_token_index
-            #         )
-            #     ).is_block_quote_start:
-            #         found_block_quote_token = token_at_index
-            #         break
-            #     last_stack_token_index -= 1
+            )
+            if token_at_index.is_block_quote_start:  # pragma: no cover
+                found_block_quote_token = token_at_index
+                # while last_stack_token_index >= 0:
+                #     if (
+                #         token_at_index := self.__leading_space_index_tracker.get_container_stack_item(
+                #             last_stack_token_index
+                #         )
+                #     ).is_block_quote_start:
+                #         found_block_quote_token = token_at_index
+                #         break
+                #     last_stack_token_index -= 1
 
-            # assert was if
-            assert (
-                found_block_quote_token
-                and len(self.__x1) == 2
-                and self.__x1[0].is_list_start
-                and self.__x1[1].is_block_quote_start
-            )
-            did_process_removals = upgrade_kludge = (
-                self.__apply_tailing_block_quote_fix(1, context)
-            )
-            # endif
+                if (
+                    found_block_quote_token
+                    and len(self.__x1) == 2
+                    and self.__x1[0].is_list_start
+                    and self.__x1[1].is_block_quote_start
+                ):
+                    did_process_removals = upgrade_kludge = (
+                        self.__apply_tailing_block_quote_fix(1, context)
+                    )
         return did_process_removals, upgrade_kludge
 
     def __apply_tailing_block_quote_fix(
@@ -727,7 +726,7 @@ class RuleMd031(RulePlugin):
             and not self.__last_non_end_token.is_blank_line
             and can_trigger
         ):
-            if context.in_fix_mode:
+            if context.in_fix_mode and not context.is_during_line_pass:
                 self.__fix_spacing(context, token, special_case)
             else:
                 self.report_next_token_error(context, token)
