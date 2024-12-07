@@ -146,6 +146,7 @@ class TransformContainers:
         base_line_number: int,
         delta_line: int,
         is_in_multiline_paragraph: bool,
+        ort: List[MarkdownToken],
     ) -> str:
 
         container_line_old = container_line
@@ -176,6 +177,7 @@ class TransformContainers:
             removed_tokens,
             removed_token_indices,
             current_changed_record,
+            ort,
         )
         container_line = TransformContainers.__adjust_for_block_quote(
             token_stack,
@@ -375,9 +377,8 @@ class TransformContainers:
         removed_token_indices: List[int],
         container_stack: List[MarkdownToken],
         container_token_indices: List[int],
+        container_line: str,
     ) -> Optional[str]:
-        prefix = None
-
         if (
             len(container_stack) == 1
             and len(removed_tokens) == 3
@@ -411,20 +412,63 @@ class TransformContainers:
             removed_tokens, removed_token_indices
         ):
             pass
-        keep_going = len(removed_tokens) > 1
-        if keep_going:
+        prefix = None
+        if len(removed_tokens) > 1:
             prefix = TransformContainers.__abcd_final(
                 container_stack,
                 container_token_indices,
                 removed_tokens,
                 removed_token_indices,
             )
-
-        keep_going = len(removed_tokens) <= 1
-        assert keep_going
+        if len(removed_tokens) > 1:
+            prefix = TransformContainers.__abcd_remaining(
+                removed_tokens, removed_token_indices, container_line, prefix
+            )
         return prefix
 
     # pylint: enable=too-many-arguments, too-many-boolean-expressions
+
+    @staticmethod
+    def __abcd_remaining(
+        removed_tokens: List[MarkdownToken],
+        removed_token_indices: List[int],
+        container_line: str,
+        prefix: Optional[str],
+    ) -> Optional[str]:
+        assert prefix is not None
+        while removed_tokens:
+            if removed_tokens[0].is_block_quote_start:
+                bq_token = cast(BlockQuoteMarkdownToken, removed_tokens[0])
+                assert bq_token.bleading_spaces is not None
+                current_leading_spaces = bq_token.bleading_spaces.split("\n")
+                do_check = bq_token.weird_kludge_five
+                x = len(current_leading_spaces) if do_check else 0
+            else:
+                list_token = cast(ListStartMarkdownToken, removed_tokens[0])
+                assert list_token.leading_spaces is not None
+                # if list_token.leading_spaces is None:
+                #     x = 0
+                # else:
+                current_leading_spaces = list_token.leading_spaces.split("\n")
+                x = len(current_leading_spaces)
+                # endif
+
+            assert (
+                x == removed_token_indices[0]
+                or removed_token_indices[0] + 1 == x
+                and current_leading_spaces[removed_token_indices[0]] == ""
+            )
+            # if x != removed_token_indices[0] and (
+            #     removed_token_indices[0] + 1 != x
+            #     or current_leading_spaces[removed_token_indices[0]] != ""
+            # ):
+            #     break
+            del removed_tokens[0]
+            del removed_token_indices[0]
+        assert not removed_tokens
+        if container_line.startswith(prefix):
+            prefix = ""
+        return prefix
 
     @staticmethod
     def __abcd_final_list_second_half(
@@ -463,9 +507,11 @@ class TransformContainers:
                 split_bleading_spaces = removed_block_quote_token.bleading_spaces.split(
                     "\n"
                 )
-                assert removed_token_indices[0] < len(split_bleading_spaces)
-                prefix = "" if possible_prefix is None else possible_prefix
-                prefix = f"{split_bleading_spaces[removed_token_indices[0]]}{prefix}"
+                if removed_token_indices[0] < len(split_bleading_spaces):
+                    prefix = "" if possible_prefix is None else possible_prefix
+                    prefix = (
+                        f"{split_bleading_spaces[removed_token_indices[0]]}{prefix}"
+                    )
             del removed_tokens[0]
             del removed_token_indices[0]
         return prefix
@@ -537,7 +583,7 @@ class TransformContainers:
                 ).leading_spaces
                 assert list_spaces is not None
                 list_split_spaces = list_spaces.split("\n")
-                assert container_indices_copy[-1] == len(list_split_spaces) - 1
+                assert container_indices_copy[-2] == len(list_split_spaces) - 1
                 prefix += list_split_spaces[container_indices_copy[-2]]
                 del removed_tokens[0]
                 del removed_token_indices[0]
@@ -677,6 +723,7 @@ class TransformContainers:
         is_in_multiline_paragraph: bool,
     ) -> str:
         prefix_to_use = None
+        ort = removed_tokens[:]
         if len(removed_tokens) > 1 and current_changed_record:
             prefix_to_use = TransformContainers.__abcd(
                 current_changed_record,
@@ -685,6 +732,7 @@ class TransformContainers:
                 removed_token_indices,
                 token_stack,
                 container_token_indices,
+                container_line,
             )
         return (
             prefix_to_use + container_line
@@ -701,6 +749,7 @@ class TransformContainers:
                 base_line_number,
                 delta_line,
                 is_in_multiline_paragraph,
+                ort,
             )
         )
 
@@ -1167,6 +1216,7 @@ class TransformContainers:
         removed_tokens: List[MarkdownToken],
         removed_token_indices: List[int],
         current_changed_record: Optional[MarkdownChangeRecord],
+        ort: List[MarkdownToken],
     ) -> Tuple[str, bool]:
         block_me = False
         if (
@@ -1203,6 +1253,14 @@ class TransformContainers:
                     current_changed_record,
                     block_start_on_remove,
                 )
+            elif (
+                len(ort) == 2
+                and len(removed_tokens) == 1
+                and ort[0].is_block_quote_start
+                and ort[1] == removed_tokens[0]
+                and ort[1].is_list_start
+            ):
+                block_me = True
         return container_line, block_me
 
     # pylint: enable=too-many-arguments
@@ -1600,13 +1658,15 @@ class TransformContainers:
         )
         is_tracking = True
         while stack_index < end_stack_index and is_tracking:
-            if token_stack[stack_index].is_block_quote_start:  # pragma: no cover
-                is_tracking = ParserHelper.is_character_at_index(
-                    container_line, container_lindex_index, ">"
-                )
-                container_lindex_index, _ = ParserHelper.collect_while_spaces_verified(
-                    container_line, container_lindex_index + 1
-                )
+            # was if
+            assert token_stack[stack_index].is_block_quote_start
+            is_tracking = ParserHelper.is_character_at_index(
+                container_line, container_lindex_index, ">"
+            )
+            container_lindex_index, _ = ParserHelper.collect_while_spaces_verified(
+                container_line, container_lindex_index + 1
+            )
+            # endif
             stack_index += 1
         assert is_tracking
         list_token = cast(ListStartMarkdownToken, token_stack[end_stack_index])
@@ -1909,6 +1969,7 @@ class TransformContainers:
             split_leading_spaces = prev_list_token.leading_spaces.split(
                 ParserHelper.newline_character
             )
+            # endif
         if split_leading_spaces is not None and last_container_token_index < len(
             split_leading_spaces
         ):

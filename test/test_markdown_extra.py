@@ -8925,11 +8925,11 @@ list 2</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
+# @pytest.mark.skip
 def test_extra_049l4x():
     """
     TBD
-    bad_fenced_block_in_list_in_list_in_list_with_previous_block_double_drop
+    preventing bad_fenced_block_in_list_in_list_in_list_with_previous_block_double_drop
     """
 
     # Arrange
@@ -9046,7 +9046,6 @@ def test_extra_049l4a():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_050a0():
     """
     TBD
@@ -12241,6 +12240,528 @@ def test_extra_051e():
 
 
 @pytest.mark.gfm
+def test_extra_051f0():
+    """
+    TBD
+    bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_double_drop_and_thematics
+    """
+
+    # Arrange
+    source_markdown = """> + > -----
+>   > + list 1
+>   >   list 2
+>   > + list 3
+>   -----
+>   ```block
+>   A code block
+>   ```
+>   -----
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4::  þ\n  \n  \n  \n  ]",
+        "[block-quote(1,5)::> \n>   > \n>   > \n>   > \n> ]",
+        "[tbreak(1,7):-::-----]",
+        "[ulist(2,7):+::8::  ]",
+        "[para(2,9):\n]",
+        "[text(2,9):list 1\nlist 2::\n]",
+        "[end-para:::True]",
+        "[li(4,7):8::]",
+        "[para(4,9):]",
+        "[text(4,9):list 3:]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[end-block-quote::> :True]",
+        "[tbreak(5,3):-::-----]",
+        "[fcode-block(6,5):`:3:block:::::]",
+        "[text(7,5):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(9,5):-::-----]",
+        "[li(10,3):4::]",
+        "[para(10,5):]",
+        "[text(10,5):another list:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(11,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<blockquote>
+<hr />
+<ul>
+<li>list 1
+list 2</li>
+<li>list 3</li>
+</ul>
+</blockquote>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_extra_051f1():
+    """
+    TBD
+    bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_double_drop_and_thematics
+    """
+
+    # Arrange
+    source_markdown = """> + > -----
+>   > + list 1
+>   >   list 2
+>   > + list 3
+>   -----
+>
+>   ```block
+>   A code block
+>   ```
+>   -----
+>
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n>\n> \n> \n> \n> \n>\n> ]",
+        "[ulist(1,3):+::4::  þ\n\n  \n  \n  \n  \n]",
+        "[block-quote(1,5)::> \n>   > \n>   > \n>   > \n> ]",
+        "[tbreak(1,7):-::-----]",
+        "[ulist(2,7):+::8::  ]",
+        "[para(2,9):\n]",
+        "[text(2,9):list 1\nlist 2::\n]",
+        "[end-para:::True]",
+        "[li(4,7):8::]",
+        "[para(4,9):]",
+        "[text(4,9):list 3:]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[end-block-quote::> :True]",
+        "[tbreak(5,3):-::-----]",
+        "[BLANK(6,2):]",
+        "[fcode-block(7,5):`:3:block:::::]",
+        "[text(8,5):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(10,5):-::-----]",
+        "[BLANK(11,2):]",
+        "[li(12,3):4::]",
+        "[para(12,5):]",
+        "[text(12,5):another list:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(13,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<blockquote>
+<hr />
+<ul>
+<li>list 1
+list 2</li>
+<li>list 3</li>
+</ul>
+</blockquote>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+<li>
+<p>another list</p>
+</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_extra_051g0():
+    """
+    TBD
+    bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_triple_drop_and_thematics
+    """
+
+    # Arrange
+    source_markdown = """> + > -----
+>   > + list 1
+>   >   list 2
+>   > + list 3
+> -----
+> ```block
+> A code block
+> ```
+> -----
+> another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n]",
+        "[ulist(1,3):+::4::]",
+        "[block-quote(1,5)::> \n>   > \n>   > \n>   > \n> ]",
+        "[tbreak(1,7):-::-----]",
+        "[ulist(2,7):+::8::  ]",
+        "[para(2,9):\n]",
+        "[text(2,9):list 1\nlist 2::\n]",
+        "[end-para:::True]",
+        "[li(4,7):8::]",
+        "[para(4,9):]",
+        "[text(4,9):list 3:]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[end-ulist:::True]",
+        "[tbreak(5,3):-::-----]",
+        "[fcode-block(6,3):`:3:block:::::]",
+        "[text(7,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(9,3):-::-----]",
+        "[para(10,3):]",
+        "[text(10,3):another list:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(11,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<blockquote>
+<hr />
+<ul>
+<li>list 1
+list 2</li>
+<li>list 3</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+<p>another list</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_extra_051g1():
+    """
+    TBD
+    bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_triple_drop_and_thematics
+    """
+
+    # Arrange
+    source_markdown = """> + > -----
+>   > + list 1
+>   >   list 2
+>   > + list 3
+> -----
+>
+> ```block
+> A code block
+> ```
+>
+> -----
+> another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n>\n> \n> \n> \n>\n> \n> \n]",
+        "[ulist(1,3):+::4::]",
+        "[block-quote(1,5)::> \n>   > \n>   > \n>   > \n> ]",
+        "[tbreak(1,7):-::-----]",
+        "[ulist(2,7):+::8::  ]",
+        "[para(2,9):\n]",
+        "[text(2,9):list 1\nlist 2::\n]",
+        "[end-para:::True]",
+        "[li(4,7):8::]",
+        "[para(4,9):]",
+        "[text(4,9):list 3:]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[end-ulist:::True]",
+        "[tbreak(5,3):-::-----]",
+        "[BLANK(6,2):]",
+        "[fcode-block(7,3):`:3:block:::::]",
+        "[text(8,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(10,2):]",
+        "[tbreak(11,3):-::-----]",
+        "[para(12,3):]",
+        "[text(12,3):another list:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(13,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<blockquote>
+<hr />
+<ul>
+<li>list 1
+list 2</li>
+<li>list 3</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+<p>another list</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_extra_051h0():
+    """
+    TBD
+    bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_block_triple_drop
+    """
+
+    # Arrange
+    source_markdown = """> > >
+> > > > fourth block 1
+> > > > fourth block 2
+> ```block
+> A code block
+> ```
+> --------
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n]",
+        "[block-quote(1,3)::]",
+        "[block-quote(1,5)::> > >]",
+        "[BLANK(1,6):]",
+        "[block-quote(2,1)::> > > > \n> > > > \n> ]",
+        "[para(2,9):\n]",
+        "[text(2,9):fourth block 1\nfourth block 2::\n]",
+        "[end-para:::False]",
+        "[end-block-quote::> :True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[fcode-block(4,3):`:3:block:::::]",
+        "[text(5,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(7,3):-::--------]",
+        "[end-block-quote:::True]",
+        "[BLANK(8,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>fourth block 1
+fourth block 2</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_extra_051h1():
+    """
+    TBD
+    bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_block_triple_drop
+    """
+
+    # Arrange
+    source_markdown = """> > >
+> > > > fourth block 1
+> > > > fourth block 2
+>
+> ```block
+> A code block
+> ```
+>
+> --------
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n>\n> \n]",
+        "[block-quote(1,3)::]",
+        "[block-quote(1,5)::> > >]",
+        "[BLANK(1,6):]",
+        "[block-quote(2,1)::> > > > \n> > > > \n>]",
+        "[para(2,9):\n]",
+        "[text(2,9):fourth block 1\nfourth block 2::\n]",
+        "[end-para:::True]",
+        "[BLANK(4,2):]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[fcode-block(5,3):`:3:block:::::]",
+        "[text(6,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(8,2):]",
+        "[tbreak(9,3):-::--------]",
+        "[end-block-quote:::True]",
+        "[BLANK(10,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>fourth block 1
+fourth block 2</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_extra_051j0():
+    """
+    TBD
+    bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_block_triple_drop_with_thematics
+    """
+
+    # Arrange
+    source_markdown = """> > >
+> > > > fourth block 1
+> > > > fourth block 2
+> --------
+> ```block
+> A code block
+> ```
+> --------
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n]",
+        "[block-quote(1,3)::]",
+        "[block-quote(1,5)::> > >]",
+        "[BLANK(1,6):]",
+        "[block-quote(2,1)::> > > > \n> > > > \n> ]",
+        "[para(2,9):\n]",
+        "[text(2,9):fourth block 1\nfourth block 2::\n]",
+        "[end-para:::False]",
+        "[end-block-quote::> :True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[tbreak(4,3):-::--------]",
+        "[fcode-block(5,3):`:3:block:::::]",
+        "[text(6,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(8,3):-::--------]",
+        "[end-block-quote:::True]",
+        "[BLANK(9,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>fourth block 1
+fourth block 2</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_extra_051k0():
+    """
+    TBD
+    bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block_triple_drop_with_thematics
+    """
+
+    # Arrange
+    source_markdown = """> + > -----
+>   > > block 1
+>   > > block 2
+> -----
+> ```block
+> A code block
+> ```
+> -----
+> another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n]",
+        "[ulist(1,3):+::4::\n\n]",
+        "[block-quote(1,5)::> \n>   > ]",
+        "[tbreak(1,7):-::-----]",
+        "[block-quote(2,7)::>   > > \n>   > > \n> ]",
+        "[para(2,9):\n]",
+        "[text(2,9):block 1\nblock 2::\n]",
+        "[end-para:::False]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[end-ulist:::True]",
+        "[tbreak(4,3):-::-----]",
+        "[fcode-block(5,3):`:3:block:::::]",
+        "[text(6,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(8,3):-::-----]",
+        "[para(9,3):]",
+        "[text(9,3):another list:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(10,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<blockquote>
+<hr />
+<blockquote>
+<p>block 1
+block 2</p>
+</blockquote>
+</blockquote>
+</li>
+</ul>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+<p>another list</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
 def test_extra_999():
     """
     Temporary test to keep coverage up while consistency checks disabled.
@@ -12262,91 +12783,73 @@ def test_extra_999():
     ParserHelper.count_newlines_in_texts("text")
 
 
-# bad parsing
-# bad_fenced_block_in_list_in_list_in_list_with_previous_block_double_drop
-
-
-# Fix
-# bad_fenced_block_in_list_in_list_in_list_with_previous_block_triple_drop_with_thematics
-
-# bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_double_drop
-# test_extra_050d0 test_extra_050d1
-# - need to work with split lines
-
-# Bad fix
-# bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_double_drop_and_thematics
-# bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_double_drop_with_thematics
-# bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_triple_drop
-# bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_triple_drop_with_thematics
-# bad_fenced_block_in_list_in_list_with_previous_inner_block_double_drop_with_thematics
-# bad_fenced_block_in_block_quote_in_list_in_list_with_previous_list_triple_drop_and_thematics
-# bad_fenced_block_in_list_in_block_quote_in_list_with_previous_block_double_drop
-# bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_block_double_drop
-# bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_block_quad_drop_with_thematics
-# bad_fenced_block_in_block_quote_in_list_in_list_with_previous_block_triple_drop_and_thematics
-# bad_fenced_block_in_list_in_list_with_previous_inner_block_triple_drop_with_thematics
 # bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_blockx_triple_drop
-# bad_fenced_block_in_block_quote_in_list_in_list_with_previous_list_double_drop_and_thematics
-# bad_fenced_block_in_list_in_block_quote_with_previous_inner_block_double_drop_without_thematics
-# bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_list_triple_drop_with_thematics
-# bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_list_double_drop_with_thematics
-# bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_list_triple_drop
-# bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_block_triple_drop_with_thematics
-# bad_fenced_block_in_list_in_block_quote_in_list_with_previous_list_quad_drop_with_thematics
-# bad_fenced_block_in_list_in_block_quote_in_list_with_previous_list_triple_drop_with_thematics
-# bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_inner_list_triple_drop
-# bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_inner_block_double_drop
-# bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_list_triple_drop_and_thematics
-# bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_block_double_drop
-# bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_block_double_drop
-# bad_fenced_block_in_block_quote_in_block_quote_double_drop_with_previous_inner_block
-# bad_fenced_block_in_block_quote_with_previous_inner_list_double_drop
-# bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_block_triple_drop_with_thematics
-# bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_block_quad_drop_with_thematics
-# bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_list_double_drop
-# bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_list_triple_drop
-# bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_list_triple_drop
-# bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_inner_list_double_drop
-# bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block_double_drop_with_thematics
+#   File "C:\enlistments\pymarkdown\pymarkdown\plugins\rule_md_027.py", line 718, in __handle_blank_line_inner
+#     assert (
+# AssertionError
 
-# Assert
 
 # bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block_triple_drop_with_thematics
-# bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_block_triple_drop
-# bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_block_triple_drop_with_thematics
+# k0
 #   File "c:\enlistments\pymarkdown\pymarkdown\transform_markdown\transform_containers.py", line 424, in __abcd
 #     assert keep_going
 # AssertionError
 
-# bad_fenced_block_in_list_in_block_quote_in_list_with_previous_block_triple_drop
-# bad_fenced_block_in_list_in_block_quote_in_list_with_previous_block_quad_drop
-#   File "c:\enlistments\pymarkdown\pymarkdown\transform_markdown\transform_containers.py", line 454, in __abcd_final_list
-#     assert removed_token_indices[0] < len(split_bleading_spaces)
-# AssertionError
 
-
-# bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_double_drop_and_thematics
-#   File "c:\enlistments\pymarkdown\pymarkdown\transform_markdown\transform_containers.py", line 503, in __abcd_final
-#     assert container_indices_copy[-1] == len(list_split_spaces) - 1
-# AssertionError
-
-# (probably bad regen after fix)
-# bad_fenced_block_in_list_in_list_with_previous_inner_block_double_drop
-# bad_fenced_block_in_block_quote_in_list_in_list_with_previous_list_triple_drop
-# bad_fenced_block_in_block_quote_in_list_in_list_with_previous_block_triple_drop
-# bad_fenced_block_in_list_in_list_in_list_with_previous_block_double_drop_with_thematics
-# bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_block_triple_drop
-# bad_fenced_block_in_list_in_list_in_list_with_previous_list_double_drop
-# bad_fenced_block_in_list_in_list_in_list_with_previous_list_triple_drop
-# bad_fenced_block_in_list_in_list_in_list_with_previous_block_triple_drop
-# bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_double_drop
-#   File "c:\enlistments\pymarkdown\pymarkdown\tokens\markdown_token.py", line 599, in adjust_line_number
-#     raise BadPluginFixError(
-# pymarkdown.plugin_manager.bad_plugin_fix_error.BadPluginFixError: Token 'fcode-block' can only be modified during the token pass in fix mode.
-
-# (probably bad regen after fix)
+# (occurs after fix, probably bad regen)
 # bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_blockx_double_drop
-# bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_triple_drop_and_thematics
 #   File "c:\enlistments\pymarkdown\pymarkdown\block_quotes\block_quote_processor.py", line 698, in __handle_existing_block_quote_fenced_special_part_two
 #     assert sd == ">"
 # AssertionError
+
+
+# Bad fix
+# bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_block_triple_drop
+
+
+# bad_fenced_block_in_block_quote_in_list_in_list_with_previous_list_triple_drop
+# bad_fenced_block_in_block_quote_in_list_in_list_with_previous_list_triple_drop_and_thematics
+# bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_block_double_drop
+# bad_fenced_block_in_block_quote_in_list_in_list_with_previous_block_triple_drop
+# bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_block_double_drop
+# bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_block_quad_drop_with_thematics
+# bad_fenced_block_in_block_quote_in_list_in_list_with_previous_block_triple_drop_and_thematics
+# bad_fenced_block_in_block_quote_in_list_in_list_with_previous_list_double_drop_and_thematics
+# bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_list_triple_drop_with_thematics
+# bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_list_double_drop_with_thematics
+# bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_block_triple_drop_with_thematics
+# bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block_double_drop_with_thematics
+# bad_fenced_block_in_block_quote_with_previous_inner_list_double_drop
+# bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_inner_block_double_drop
+# bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_block_double_drop
+# bad_fenced_block_in_block_quote_in_block_quote_double_drop_with_previous_inner_block
+# bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_double_drop_and_thematics
+# bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_list_triple_drop
+# bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_inner_list_triple_drop
+# bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_list_triple_drop
+
+# bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_block_double_drop
+# bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_block_triple_drop
+# bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_block_triple_drop_with_thematics
+# bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_block_quad_drop_with_thematics
+# bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_list_triple_drop
+# bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_list_triple_drop_and_thematics
+# bad_fenced_block_in_list_in_block_quote_in_list_with_previous_block_double_drop
+# bad_fenced_block_in_list_in_block_quote_in_list_with_previous_block_triple_drop
+# bad_fenced_block_in_list_in_block_quote_in_list_with_previous_list_triple_drop_with_thematics
+# bad_fenced_block_in_list_in_block_quote_in_list_with_previous_list_quad_drop_with_thematics
+# bad_fenced_block_in_list_in_block_quote_with_previous_inner_block_double_drop_without_thematics
+# bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_double_drop
+# bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_double_drop_with_thematics
+# bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_triple_drop
+# bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_triple_drop_with_thematics
+# bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_double_drop
+# bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_double_drop_and_thematics
+# bad_fenced_block_in_list_in_list_in_list_with_previous_block_double_drop
+# bad_fenced_block_in_list_in_list_in_list_with_previous_block_double_drop_with_thematics
+# bad_fenced_block_in_list_in_list_in_list_with_previous_block_triple_drop
+# bad_fenced_block_in_list_in_list_in_list_with_previous_list_double_drop
+# bad_fenced_block_in_list_in_list_in_list_with_previous_list_triple_drop
+# bad_fenced_block_in_list_in_list_with_previous_inner_block_double_drop
+# bad_fenced_block_in_list_in_list_with_previous_inner_block_double_drop_with_thematics
+# bad_fenced_block_in_list_in_list_with_previous_inner_block_triple_drop_with_thematics

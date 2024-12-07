@@ -189,6 +189,8 @@ class ThematicLeafBlockProcessor:
                         "__handle_special_case>>list_token>>$",
                         inner_list_markdown_token,
                     )
+                    if leading_space_to_move:
+                        leading_space_to_move += ParserLogger.blah_sequence
                     inner_list_markdown_token.add_leading_spaces(leading_space_to_move)
                     POGGER.debug(
                         "__handle_special_case>>list_token>>$",

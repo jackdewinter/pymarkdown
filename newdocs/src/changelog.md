@@ -24,6 +24,9 @@
     - Parsing of the FCB in certain cases was off, as was the text token
       containing the code block's text. Resulted in the columns being
       reported being indented less than expected.
+- [Issue 1274](https://github.com/jackdewinter/pymarkdown/issues/1274)
+    - Fixed remaining assert issues, leaving fixes that produce valid
+      Markdown, but not the intended Markdown.
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed

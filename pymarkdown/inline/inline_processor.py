@@ -41,6 +41,31 @@ class InlineProcessor:
         InlineHandlerHelper.initialize(extension_manager)
 
     @staticmethod
+    def __parse_inline_tracker_start(
+        lsi_tracker: LeadingSpaceIndexTracker, token: MarkdownToken
+    ) -> None:
+        if token.is_block_quote_start or token.is_list_start:
+            lsi_tracker.open_container(token)
+        # if token.is_block_quote_end or token.is_list_end:
+        assert not (token.is_block_quote_end or token.is_list_end)
+        # lsi_tracker.register_container_end(token)
+        # elif
+        lsi_tracker.track_since_last_non_end_token(token)
+
+    @staticmethod
+    def __parse_inline_tracker_per_token(
+        lsi_tracker: LeadingSpaceIndexTracker, token: MarkdownToken
+    ) -> None:
+        if not token.is_end_token or token.is_end_of_stream:
+            while lsi_tracker.have_any_registered_container_ends():
+                lsi_tracker.process_container_end(token)
+        if token.is_block_quote_start or token.is_list_start:
+            lsi_tracker.open_container(token)
+        elif token.is_block_quote_end or token.is_list_end:
+            lsi_tracker.register_container_end(token)
+        lsi_tracker.track_since_last_non_end_token(token)
+
+    @staticmethod
     def parse_inline(
         coalesced_results: List[MarkdownToken],
         parse_properties: ParseBlockPassProperties,
@@ -72,27 +97,13 @@ class InlineProcessor:
             else:
                 POGGER.info("-->not bq-")
 
-        lsi_tracker = LeadingSpaceIndexTracker()
         token = coalesced_results[0]
-        if token.is_block_quote_start or token.is_list_start:
-            lsi_tracker.open_container(token)
-        # if token.is_block_quote_end or token.is_list_end:
-        assert not (token.is_block_quote_end or token.is_list_end)
-        # lsi_tracker.register_container_end(token)
-        # elif
-        lsi_tracker.track_since_last_non_end_token(token)
+        lsi_tracker = LeadingSpaceIndexTracker()
+        InlineProcessor.__parse_inline_tracker_start(lsi_tracker, token)
         for coalesce_index in range(1, len(coalesced_results)):
 
             token = coalesced_results[coalesce_index]
-
-            if not token.is_end_token or token.is_end_of_stream:
-                while lsi_tracker.have_any_registered_container_ends():
-                    lsi_tracker.process_container_end(token)
-            if token.is_block_quote_start or token.is_list_start:
-                lsi_tracker.open_container(token)
-            elif token.is_block_quote_end or token.is_list_end:
-                lsi_tracker.register_container_end(token)
-            lsi_tracker.track_since_last_non_end_token(token)
+            InlineProcessor.__parse_inline_tracker_per_token(lsi_tracker, token)
 
             InlineProcessor.__process_next_coalesce_item(
                 coalesced_results,
@@ -404,8 +415,7 @@ class InlineProcessor:
                 leading_whitespace = ParserHelper.remove_all_from_text(
                     leading_whitespace
                 )
-                # POGGER.info("leading_whitespace:$<", leading_whitespace)
-                new_column_number += len(leading_whitespace)
+                new_column_number = 1 + len(leading_whitespace)
         else:
             line_number_delta, new_column_number = (
                 0,

@@ -2766,7 +2766,7 @@ def test_nested_three_ordered_block_block_nl_extra_list_li_drop_list_with_themat
    > > ----
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::\n\n\n\n\n\n]",
+        "[olist(1,1):.:1:3::\n\n\n\n\n]",
         "[block-quote(1,4):   :]",
         "[block-quote(1,6):   :   > > \n   > > \n   > > \n   > > \n   > > \n   > > \n   > > \n   > > \n   > > \n]",
         "[tbreak(1,8):-::----]",
@@ -2836,7 +2836,7 @@ def test_nested_three_ordered_block_block_nl_extra_list_li_drop_list_with_themat
    > > ----
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::\n\n\n\n\n\n\n\n\n\n]",
+        "[olist(1,1):.:1:3::\n\n\n\n\n\n\n\n\n]",
         "[block-quote(1,4):   :]",
         "[block-quote(1,6):   :   > > \n   > > \n   > > \n   > > \n   > > \n   > >\n   > > \n   > > \n   > > \n   > >\n   > > \n]",
         "[tbreak(1,8):-::----]",
