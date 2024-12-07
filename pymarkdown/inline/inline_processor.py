@@ -402,6 +402,7 @@ class InlineProcessor:
                     coalesced_stack, lsi_tracker, text_token
                 )
             else:
+                new_column_number = 1
                 leading_whitespace = text_token.extracted_whitespace
                 # POGGER.debug(">>$<<", text_token)
                 assert (
