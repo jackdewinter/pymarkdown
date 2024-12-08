@@ -33,7 +33,8 @@
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
-None
+- [Issue 1258](https://github.com/jackdewinter/pymarkdown/issues/1258)
+    - Moved twine package into dev section
 
 ## Version 0.9.25 - Date: 2024-11-07
 
