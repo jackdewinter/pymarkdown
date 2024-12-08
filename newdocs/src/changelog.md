@@ -28,7 +28,7 @@
     - Fixed remaining assert issues, leaving fixes that produce valid
       Markdown, but not the intended Markdown.
 - [Issue 1267](https://github.com/jackdewinter/pymarkdown/issues/1267)
-    - Fixed reported issue with task lists creating an error in Md018
+    - Fixed reported issue with task lists creating an error in Md018.
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
