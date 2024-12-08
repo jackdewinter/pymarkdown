@@ -26,7 +26,7 @@ from pymarkdown.transform_markdown.transform_to_markdown import TransformToMarkd
 # from test.verify_line_and_column_numbers import verify_line_and_column_numbers
 
 
-# pylint: disable=too-many-arguments
+# pylint: disable=too-many-arguments, too-many-locals
 def act_and_assert(
     source_markdown,
     expected_gfm,
@@ -40,6 +40,13 @@ def act_and_assert(
     """
     Act and assert on the expected behavior of parsing the source_markdown.
     """
+
+    keep_directory = os.getenv("PTEST_KEEP_DIRECTORY", None)
+    if keep_directory and os.path.isdir(keep_directory):
+        with tempfile.NamedTemporaryFile(
+            "wt", encoding="utf-8", dir=keep_directory, suffix=".md", delete=False
+        ) as temp_file:
+            temp_file.write(source_markdown)
 
     # Arrange
     logging.getLogger().setLevel(logging.DEBUG if show_debug else logging.WARNING)
@@ -80,7 +87,7 @@ def act_and_assert(
         )
 
 
-# pylint: enable=too-many-arguments
+# pylint: enable=too-many-arguments, too-many-locals
 
 
 def read_contents_of_text_file(source_path: str) -> str:
