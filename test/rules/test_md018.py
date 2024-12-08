@@ -5,6 +5,7 @@ Module to provide tests related to the MD018 rule.
 import os
 from test.markdown_scanner import MarkdownScanner
 from test.rules.utils import execute_query_configuration_test, pluginQueryConfigTest
+from test.utils import create_temporary_configuration_file
 
 import pytest
 
@@ -1037,6 +1038,48 @@ def test_md018_bad_single_paragraph_with_whitespace():
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md018_issue_1267():
+    """
+    Test to make sure this rule handles having a task list as part of the document.
+    Reported as Issue 1267, ran up against guard code.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_file_contents = """---
+title: abc
+---
+
+- [ ] abc
+"""
+
+    with create_temporary_configuration_file(
+        source_file_contents, file_name_suffix=".md"
+    ) as source_path:
+        supplied_arguments = [
+            "--disable-rules",
+            "md022",
+            "--set",
+            "extensions.markdown-task-list-items.enabled=$!True",
+            "--stack-trace",
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 0
+        expected_output = ""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
