@@ -1,5 +1,6 @@
 @echo off
 setlocal EnableDelayedExpansion
+set OLDDIR=%CD%
 pushd %~dp0
 
 rem Required to make sure coverage is written to the right areas.
@@ -34,6 +35,7 @@ if "%1" == "-h" (
 	echo     -m                Enabled multi-core testing.
 	echo     -f                Produce a full report for the tests instead of a 'changes only' report.
 	echo     -p                Publish project summaries instead of running tests.
+	echo     -d                Capture test cases in the specified existing directory.
 	echo     -k [keyword]      Execute only the tests matching the specified keyword.
     GOTO real_end
 ) else if "%1" == "-p" (
@@ -52,6 +54,13 @@ if "%1" == "-h" (
 	set PTEST_KEYWORD=%2
 	if not defined PTEST_KEYWORD (
 		echo Option -k requires a keyword argument to follow it.
+		goto error_end
+	)
+	shift
+) else if "%1" == "-d" (
+	set PTEST_KEEP_DIRECTORY=%2
+	if not defined PTEST_KEEP_DIRECTORY (
+		echo Option -d requires a keyword argument to follow it.
 		goto error_end
 	)
 	shift
@@ -86,6 +95,25 @@ if defined PTEST_MULTI_CORE_ARGS (
 		set CORES_TO_USE=1
 	)
 	set PTEST_MULTI_CORE_ARGS=-n !CORES_TO_USE! --dist loadscope
+)
+
+if defined PTEST_KEEP_DIRECTORY (
+	if not exist %PTEST_KEEP_DIRECTORY%\nul (
+		echo.
+		echo {Path specified by the -d option is not an existing directory.}
+		goto error_end
+	) else (
+		pushd %OLDDIR%
+		cd
+		cd !PTEST_KEEP_DIRECTORY!
+		FOR /F "tokens=* USEBACKQ" %%F IN (`cd`) DO (
+			SET my_var=%%F
+		)		
+		set "PTEST_KEEP_DIRECTORY=!my_var!"
+		popd
+
+		erase !PTEST_KEEP_DIRECTORY!\*.md
+	)
 )
 
 rem Enter main part of script.
