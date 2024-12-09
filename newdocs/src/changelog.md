@@ -17,7 +17,7 @@
 
 - [Issue 1259](https://github.com/jackdewinter/pymarkdown/issues/1259)
     - Fixed asserts and bad parsing from cases where containers are
-      added and then a "raw" blank line removes all containers
+      added and then a "raw" blank line removes all containers.
 - [Issue 1263](https://github.com/jackdewinter/pymarkdown/issues/1263)
     - Fixed issue where a new unordered list between two block quotes
       was not being recognized properly.
@@ -33,6 +33,9 @@
       Markdown, but not the intended Markdown.
 - [Issue 1267](https://github.com/jackdewinter/pymarkdown/issues/1267)
     - Fixed reported issue with task lists creating an error in Md018.
+- [Issue 1268](https://github.com/jackdewinter/pymarkdown/issues/1268)
+    - Fixed issue with Md022 and pragmas, similar to
+      [Issue 1208](https://github.com/jackdewinter/pymarkdown/issues/1208).
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed

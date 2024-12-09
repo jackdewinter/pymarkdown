@@ -14,6 +14,8 @@ from pymarkdown.plugin_manager.plugin_scan_context import PluginScanContext
 from pymarkdown.plugin_manager.rule_plugin import RulePlugin
 from pymarkdown.tokens.markdown_token import MarkdownToken
 
+# pylint: disable=too-many-instance-attributes
+
 
 class RuleMd022(RulePlugin):
     """
@@ -30,6 +32,7 @@ class RuleMd022(RulePlugin):
         self.__lines_above = 0
         self.__lines_below = 0
         self.__start_heading_blank_line_count = -1
+        self.__last_blank_line: Optional[MarkdownToken] = None
 
     def get_details(self) -> PluginDetails:
         """
@@ -82,13 +85,7 @@ class RuleMd022(RulePlugin):
         self.__did_above_line_count_match = False
         self.__start_heading_token = None
         self.__did_heading_end = False
-
-    # def completed_file(self, context: PluginScanContext) -> None:
-    #     """
-    #     Event that the file being currently scanned is now completed.
-    #     """
-    #     if (self.__blank_line_count != -1) and self.__blank_line_count >= 0:
-    #         self.perform_close_check(context, None)
+        self.__last_blank_line = None
 
     def __next_token_heading_start(self, token: MarkdownToken) -> None:
         # print(">>token.is_setext_heading or token.is_atx_heading>>")
@@ -119,6 +116,16 @@ class RuleMd022(RulePlugin):
         # print(">>self.__blank_line_count>>" + str(self.__blank_line_count))
         if (self.__blank_line_count != -1) and self.__blank_line_count >= 0:
             self.perform_close_check(context, token)
+        elif (
+            self.__blank_line_count == -1
+            and token.is_blank_line
+            and self.__last_blank_line is not None
+        ):
+            blank_line_number_delta = (
+                token.line_number - self.__last_blank_line.line_number
+            )
+            if blank_line_number_delta != 1:
+                self.__blank_line_count = 0
 
         if (
             token.is_blank_line
@@ -133,9 +140,10 @@ class RuleMd022(RulePlugin):
         elif token.is_end_token:
             self.__next_token_heading_end(token)
         # print(">>self.__blank_line_count>>" + str(self.__blank_line_count))
+        self.__last_blank_line = token if token.is_blank_line else None
 
     def perform_close_check(
-        self, context: PluginScanContext, token: Optional[MarkdownToken]
+        self, context: PluginScanContext, token: MarkdownToken
     ) -> None:
         """
         Perform any state checks necessary upon closing the heading context.  Also
@@ -143,13 +151,23 @@ class RuleMd022(RulePlugin):
         document is handled properly.
         """
 
+        is_eligible_blank_line = token.is_blank_line
+        is_simple_blank_line = True
+        if is_eligible_blank_line and self.__last_blank_line is not None:
+            line_number_delta = token.line_number - self.__last_blank_line.line_number
+            is_simple_blank_line = line_number_delta == 1
+            is_eligible_blank_line = is_simple_blank_line
+
         if (self.__start_heading_token and self.__did_heading_end) and (
-            not token or (not token.is_blank_line and not token.is_block_quote_end)
+            (not is_eligible_blank_line and not token.is_block_quote_end)
         ):
             did_end_match = self.__blank_line_count == self.__lines_below
             # print(">>END: did_end_match>>" + str(did_end_match))
             self.report_any_match_failures(context, did_end_match)
             self.__start_heading_token = None
+
+        if token.is_blank_line and not is_simple_blank_line:
+            self.__blank_line_count = 0
 
     def report_any_match_failures(
         self, context: PluginScanContext, did_end_match: bool
@@ -177,3 +195,6 @@ class RuleMd022(RulePlugin):
                 extra_error_information=extra_info,
                 use_original_position=self.__start_heading_token.is_setext_heading,
             )
+
+
+# pylint: enable=too-many-instance-attributes

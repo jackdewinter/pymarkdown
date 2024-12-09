@@ -307,7 +307,9 @@
             "too-many-arguments": 1
         },
         "pymarkdown/plugins/rule_md_021.py": {},
-        "pymarkdown/plugins/rule_md_022.py": {},
+        "pymarkdown/plugins/rule_md_022.py": {
+            "too-many-instance-attributes": 1
+        },
         "pymarkdown/plugins/rule_md_023.py": {
             "too-many-arguments": 1
         },
@@ -505,7 +507,7 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-instance-attributes": 26,
+        "too-many-instance-attributes": 27,
         "too-many-public-methods": 4,
         "too-few-public-methods": 39,
         "too-many-arguments": 253,
