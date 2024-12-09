@@ -32,7 +32,7 @@ setuptools = "==75.3.0"
 snakeviz = "==2.2.0"
 sourcery = "==1.24.0"
 types-pyyaml = "*"
-twine = "<5.1"
+twine = "<6.1"
 
 [packages]
 columnar = ">=1.4.0"
