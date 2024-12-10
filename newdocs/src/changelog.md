@@ -5,10 +5,27 @@
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
+None
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
+None
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+None
+
+## Version 0.9.26 - Date: 2024-12-09
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Added
+
 - [Issue 810](https://github.com/jackdewinter/pymarkdown/issues/810)
-    - Added fix for Rule Md012
+    - Added fix mode for Rule Md012
 - [Issue 1280](https://github.com/jackdewinter/pymarkdown/issues/1280)
-    - Added capability to save all single Markdown documents in
+    - Added testing capability to save all single Markdown documents in
       a specified directory, then scanning them one at a time with
       PyMarkdown and each of the extensions enabled.
 
