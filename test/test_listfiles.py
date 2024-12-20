@@ -8,7 +8,9 @@ from test.markdown_scanner import MarkdownScanner
 
 if sys.version_info < (3, 13):
     ARGPARSE_X = "optional arguments:"
-    ALT_EXTENSIONS_X = "-ae ALTERNATE_EXTENSIONS, --alternate-extensions ALTERNATE_EXTENSIONS"
+    ALT_EXTENSIONS_X = (
+        "-ae ALTERNATE_EXTENSIONS, --alternate-extensions ALTERNATE_EXTENSIONS"
+    )
 else:
     ARGPARSE_X = "options:"
     ALT_EXTENSIONS_X = "-ae, --alternate-extensions ALTERNATE_EXTENSIONS"
@@ -39,7 +41,11 @@ positional arguments:
   {ALT_EXTENSIONS_X}
                         provide an alternate set of file extensions to match
                         against
-""".replace("{ARGPARSE_X}", ARGPARSE_X).replace("{ALT_EXTENSIONS_X}", ALT_EXTENSIONS_X)
+""".replace(
+        "{ARGPARSE_X}", ARGPARSE_X
+    ).replace(
+        "{ALT_EXTENSIONS_X}", ALT_EXTENSIONS_X
+    )
     expected_error = ""
 
     # Act

@@ -10,7 +10,9 @@ from pymarkdown.application_file_scanner import ApplicationFileScanner
 
 if sys.version_info < (3, 13):
     ARGPARSE_X = "optional arguments:"
-    ALT_EXTENSIONS_X = "-ae ALTERNATE_EXTENSIONS, --alternate-extensions ALTERNATE_EXTENSIONS"
+    ALT_EXTENSIONS_X = (
+        "-ae ALTERNATE_EXTENSIONS, --alternate-extensions ALTERNATE_EXTENSIONS"
+    )
 else:
     ARGPARSE_X = "options:"
     ALT_EXTENSIONS_X = "-ae, --alternate-extensions ALTERNATE_EXTENSIONS"
@@ -37,7 +39,11 @@ positional arguments:
                         matching files
   {ALT_EXTENSIONS_X}
                         provide an alternate set of file extensions to match
-                        against""".replace("{ARGPARSE_X}", ARGPARSE_X).replace("{ALT_EXTENSIONS_X}", ALT_EXTENSIONS_X)
+                        against""".replace(
+        "{ARGPARSE_X}", ARGPARSE_X
+    ).replace(
+        "{ALT_EXTENSIONS_X}", ALT_EXTENSIONS_X
+    )
     parser = argparse.ArgumentParser(description="Lint any found files.", prog="pytest")
 
     # Act
@@ -88,7 +94,11 @@ positional arguments:
                         matching files
   {ALT_EXTENSIONS_X}
                         provide an alternate set of file extensions to match
-                        against""".replace("{ARGPARSE_X}", ARGPARSE_X).replace("{ALT_EXTENSIONS_X}", ALT_EXTENSIONS_X)
+                        against""".replace(
+        "{ARGPARSE_X}", ARGPARSE_X
+    ).replace(
+        "{ALT_EXTENSIONS_X}", ALT_EXTENSIONS_X
+    )
     parser = argparse.ArgumentParser(description="Lint any found files.", prog="pytest")
 
     # Act
@@ -122,7 +132,11 @@ positional arguments:
                         matching files
   {ALT_EXTENSIONS_X}
                         provide an alternate set of file extensions to match
-                        against""".replace("{ARGPARSE_X}", ARGPARSE_X).replace("{ALT_EXTENSIONS_X}", ALT_EXTENSIONS_X)
+                        against""".replace(
+        "{ARGPARSE_X}", ARGPARSE_X
+    ).replace(
+        "{ALT_EXTENSIONS_X}", ALT_EXTENSIONS_X
+    )
     parser = argparse.ArgumentParser(description="Lint any found files.", prog="pytest")
 
     # Act
@@ -154,7 +168,11 @@ positional arguments:
                         matching files
   {ALT_EXTENSIONS_X}
                         provide an alternate set of file extensions to match
-                        against""".replace("{ARGPARSE_X}", ARGPARSE_X).replace("{ALT_EXTENSIONS_X}", ALT_EXTENSIONS_X)
+                        against""".replace(
+        "{ARGPARSE_X}", ARGPARSE_X
+    ).replace(
+        "{ALT_EXTENSIONS_X}", ALT_EXTENSIONS_X
+    )
     parser = argparse.ArgumentParser(description="Lint any found files.", prog="pytest")
 
     # Act
@@ -186,7 +204,11 @@ positional arguments:
                         and exit
   {ALT_EXTENSIONS_X}
                         provide an alternate set of file extensions to match
-                        against""".replace("{ARGPARSE_X}", ARGPARSE_X).replace("{ALT_EXTENSIONS_X}", ALT_EXTENSIONS_X)
+                        against""".replace(
+        "{ARGPARSE_X}", ARGPARSE_X
+    ).replace(
+        "{ALT_EXTENSIONS_X}", ALT_EXTENSIONS_X
+    )
     parser = argparse.ArgumentParser(description="Lint any found files.", prog="pytest")
 
     # Act
@@ -217,7 +239,9 @@ positional arguments:
   -l, --list-files  list any eligible files found on the specified paths and
                     exit
   -r, --recurse     recursively traverse any found directories for matching
-                    files""".replace("{ARGPARSE_X}", ARGPARSE_X)
+                    files""".replace(
+        "{ARGPARSE_X}", ARGPARSE_X
+    )
     parser = argparse.ArgumentParser(description="Lint any found files.", prog="pytest")
 
     # Act

@@ -37,7 +37,8 @@ def test_markdown_with_no_parameters():
     supplied_arguments = []
 
     expected_return_code = 2
-    expected_output = """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
+    expected_output = (
+        """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
                [--continue-on-error]
@@ -79,7 +80,14 @@ positional arguments:
   --log-file LOG_FILE   destination file for log messages
   --return-code-scheme {default,minimal}
                         scheme to choose for selecting the application return
-                        code""".replace("{ARGPARSE_X}", ARGPARSE_X).replace("{ENABLE_RULES_X}", ENABLE_RULES_X).replace("{DISABLE_RULES_X}", DISABLE_RULES_X).replace("{CONFIG_FILE_X}", CONFIG_FILE_X).replace("{SET_CONFIG_X}", SET_CONFIG_X)
+                        code""".replace(
+            "{ARGPARSE_X}", ARGPARSE_X
+        )
+        .replace("{ENABLE_RULES_X}", ENABLE_RULES_X)
+        .replace("{DISABLE_RULES_X}", DISABLE_RULES_X)
+        .replace("{CONFIG_FILE_X}", CONFIG_FILE_X)
+        .replace("{SET_CONFIG_X}", SET_CONFIG_X)
+    )
     expected_error = ""
 
     # Act
@@ -102,7 +110,8 @@ def test_markdown_with_no_parameters_through_module():
     supplied_arguments = []
 
     expected_return_code = 2
-    expected_output = """usage: __main.py__ [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
+    expected_output = (
+        """usage: __main.py__ [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                    [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                    [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
                    [--continue-on-error]
@@ -145,7 +154,14 @@ positional arguments:
   --log-file LOG_FILE   destination file for log messages
   --return-code-scheme {default,minimal}
                         scheme to choose for selecting the application return
-                        code""".replace("{ARGPARSE_X}", ARGPARSE_X).replace("{ENABLE_RULES_X}", ENABLE_RULES_X).replace("{DISABLE_RULES_X}", DISABLE_RULES_X).replace("{CONFIG_FILE_X}", CONFIG_FILE_X).replace("{SET_CONFIG_X}", SET_CONFIG_X)
+                        code""".replace(
+            "{ARGPARSE_X}", ARGPARSE_X
+        )
+        .replace("{ENABLE_RULES_X}", ENABLE_RULES_X)
+        .replace("{DISABLE_RULES_X}", DISABLE_RULES_X)
+        .replace("{CONFIG_FILE_X}", CONFIG_FILE_X)
+        .replace("{SET_CONFIG_X}", SET_CONFIG_X)
+    )
     expected_error = ""
 
     # Act
@@ -168,7 +184,8 @@ def test_markdown_with_no_parameters_through_main():
     supplied_arguments = []
 
     expected_return_code = 2
-    expected_output = """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
+    expected_output = (
+        """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
                [--continue-on-error]
@@ -210,7 +227,14 @@ positional arguments:
   --log-file LOG_FILE   destination file for log messages
   --return-code-scheme {default,minimal}
                         scheme to choose for selecting the application return
-                        code""".replace("{ARGPARSE_X}", ARGPARSE_X).replace("{ENABLE_RULES_X}", ENABLE_RULES_X).replace("{DISABLE_RULES_X}", DISABLE_RULES_X).replace("{CONFIG_FILE_X}", CONFIG_FILE_X).replace("{SET_CONFIG_X}", SET_CONFIG_X)
+                        code""".replace(
+            "{ARGPARSE_X}", ARGPARSE_X
+        )
+        .replace("{ENABLE_RULES_X}", ENABLE_RULES_X)
+        .replace("{DISABLE_RULES_X}", DISABLE_RULES_X)
+        .replace("{CONFIG_FILE_X}", CONFIG_FILE_X)
+        .replace("{SET_CONFIG_X}", SET_CONFIG_X)
+    )
     expected_error = ""
 
     # Act
@@ -232,7 +256,8 @@ def test_markdown_with_dash_h():
     supplied_arguments = ["-h"]
 
     expected_return_code = 0
-    expected_output = """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
+    expected_output = (
+        """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
                [--continue-on-error]
@@ -274,7 +299,14 @@ positional arguments:
   --log-file LOG_FILE   destination file for log messages
   --return-code-scheme {default,minimal}
                         scheme to choose for selecting the application return
-                        code""".replace("{ARGPARSE_X}", ARGPARSE_X).replace("{ENABLE_RULES_X}", ENABLE_RULES_X).replace("{DISABLE_RULES_X}", DISABLE_RULES_X).replace("{CONFIG_FILE_X}", CONFIG_FILE_X).replace("{SET_CONFIG_X}", SET_CONFIG_X)
+                        code""".replace(
+            "{ARGPARSE_X}", ARGPARSE_X
+        )
+        .replace("{ENABLE_RULES_X}", ENABLE_RULES_X)
+        .replace("{DISABLE_RULES_X}", DISABLE_RULES_X)
+        .replace("{CONFIG_FILE_X}", CONFIG_FILE_X)
+        .replace("{SET_CONFIG_X}", SET_CONFIG_X)
+    )
     expected_error = ""
 
     # Act
