@@ -3,7 +3,15 @@ Module to provide tests related to the "-l" option.
 """
 
 import os
+import sys
 from test.markdown_scanner import MarkdownScanner
+
+if sys.version_info < (3, 13):
+    ARGPARSE_X = "optional arguments:"
+    ALT_EXTENSIONS_X = "-ae ALTERNATE_EXTENSIONS, --alternate-extensions ALTERNATE_EXTENSIONS"
+else:
+    ARGPARSE_X = "options:"
+    ALT_EXTENSIONS_X = "-ae, --alternate-extensions ALTERNATE_EXTENSIONS"
 
 
 def test_markdown_with_dash_h():
@@ -22,16 +30,16 @@ positional arguments:
   path                  one or more paths to examine for eligible Markdown
                         files
 
-optional arguments:
+{ARGPARSE_X}
   -h, --help            show this help message and exit
   -l, --list-files      list any eligible Markdown files found on the
                         specified paths and exit
   -r, --recurse         recursively traverse any found directories for
                         matching files
-  -ae ALTERNATE_EXTENSIONS, --alternate-extensions ALTERNATE_EXTENSIONS
+  {ALT_EXTENSIONS_X}
                         provide an alternate set of file extensions to match
                         against
-"""
+""".replace("{ARGPARSE_X}", ARGPARSE_X).replace("{ALT_EXTENSIONS_X}", ALT_EXTENSIONS_X)
     expected_error = ""
 
     # Act

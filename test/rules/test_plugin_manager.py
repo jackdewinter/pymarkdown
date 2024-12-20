@@ -3,6 +3,7 @@ Module to provide tests related to the plugin manager for the scanner.
 """
 
 import os
+import sys
 from test.markdown_scanner import MarkdownScanner
 from test.utils import (
     assert_file_is_as_expected,
@@ -12,6 +13,11 @@ from test.utils import (
 )
 
 # pylint: disable=too-many-lines
+
+if sys.version_info < (3, 13):
+    ARGPARSE_X = "optional arguments:"
+else:
+    ARGPARSE_X = "options:"
 
 
 def test_markdown_with_plugins_only():
@@ -33,9 +39,9 @@ positional arguments:
     list       list the available plugins
     info       information on a specific plugin
 
-optional arguments:
+{ARGPARSE_X}
   -h, --help   show this help message and exit
-"""
+""".replace("{ARGPARSE_X}", ARGPARSE_X)
     expected_error = ""
 
     # Act
