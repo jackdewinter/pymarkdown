@@ -35,8 +35,8 @@ jobs:
 
       - name: Sync With Repository
         run: |
-          # python_version = "3.13"
-          pipenv update -d
+          pipenv lock --clear --python ${{ env.default-python-version }}
+          pipenv sync -d
           pipenv graph
 
       - name: Execute Pre-Commit
@@ -68,7 +68,8 @@ jobs:
 
       - name: Sync With Repository
         run: |
-          pipenv update -d
+          pipenv lock --clear --python ${{ env.default-python-version }}
+          pipenv sync -d
           pipenv graph
 
       - name: Execute PyMarkdown on NewDocs
@@ -106,7 +107,8 @@ jobs:
 
       - name: Sync With Repository
         run: |
-          pipenv update -d
+          pipenv lock --clear --python ${{ env.default-python-version }}
+          pipenv sync -d
           pipenv graph
           pipenv uninstall pytest-html
 
@@ -156,7 +158,9 @@ jobs:
 
       - name: Sync With Repository
         run: |
-          pipenv update -d
+          rm Pipfile.lock
+          pipenv lock --clear --python ${{ matrix.python }}
+          pipenv sync -d
           pipenv graph
           pipenv uninstall pytest-html
 
@@ -203,7 +207,8 @@ jobs:
 
       - name: Sync With Repository
         run: |
-          pipenv update -d
+          pipenv lock --clear --python ${{ env.default-python-version }}
+          pipenv sync -d
           pipenv graph
 
       - name: Pyroma
