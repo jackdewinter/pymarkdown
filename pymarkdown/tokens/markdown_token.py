@@ -804,5 +804,6 @@ class EndMarkdownToken(MarkdownToken):
             return True
         if field_name == "extra_end_data" and isinstance(field_value, str):
             self.__extra_end_data = field_value
+            self.__compose_data_field()
             return True
         return False

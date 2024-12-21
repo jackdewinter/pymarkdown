@@ -10,7 +10,7 @@ on:
 
 env:
   project-name: pymarkdown
-  default-python-version: 3.8
+  default-python-version: 3.13
 
 jobs:
 
@@ -35,41 +35,13 @@ jobs:
 
       - name: Sync With Repository
         run: |
-          pipenv update -d
+          pipenv lock --clear --python ${{ env.default-python-version }}
+          pipenv sync -d
           pipenv graph
-
-      - name: Execute Black
-        run: |
-          pipenv run black .
-
-      - name: Execute ISort
-        run: |
-          pipenv run isort .
 
       - name: Execute Pre-Commit
         run: |
           pipenv run pre-commit run --all
-
-      - name: Execute Flake8
-        run: pipenv run flake8 --exclude dist,build
-
-      - name: Execute Bandit
-        run: |
-          pipenv run bandit --configfile bandit.yaml -q -r ${{ github.workspace }}/${{ env.project-name }}
-
-      - name: Execute PyLint on Source
-        run: |
-          pipenv run pylint ${{github.workspace}}/pymarkdown
-          pipenv run pylint ${{github.workspace}}/pymarkdown/extensions
-          pipenv run pylint ${{github.workspace}}/pymarkdown/extension_manager
-          pipenv run pylint ${{github.workspace}}/pymarkdown/plugins
-          pipenv run pylint ${{github.workspace}}/pymarkdown/plugin_manager
-
-      - name: Execute PyLint on Tests
-        run: pipenv run pylint ${{github.workspace}}/test
-
-      - name: Execute MyPy
-        run: pipenv run mypy --strict ${{ env.project-name }} stubs
 
       - name: Execute PyMarkdown on Current Docs
         run: pipenv run python ${{github.workspace}}/main.py --config ${{github.workspace}}/clean.json scan ${{github.workspace}} ${{github.workspace}}/docs
@@ -78,6 +50,7 @@ jobs:
 
     name: Document Quality Analysis
     runs-on: ubuntu-latest
+    needs: [ lint ]
 
     steps:
 
@@ -95,7 +68,8 @@ jobs:
 
       - name: Sync With Repository
         run: |
-          pipenv update -d
+          pipenv lock --clear --python ${{ env.default-python-version }}
+          pipenv sync -d
           pipenv graph
 
       - name: Execute PyMarkdown on NewDocs
@@ -112,10 +86,10 @@ jobs:
     name: Scenario Tests
     strategy:
       matrix:
-        # python: ["3.8", "3.9", "3.10"]
-        python: ["3.8"]
+        python: ["3.13"]
         platform: [windows-latest, ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.platform }}
+    needs: [ lint ]
 
     steps:
 
@@ -133,7 +107,8 @@ jobs:
 
       - name: Sync With Repository
         run: |
-          pipenv update -d
+          pipenv lock --clear --python ${{ env.default-python-version }}
+          pipenv sync -d
           pipenv graph
           pipenv uninstall pytest-html
 
@@ -156,6 +131,41 @@ jobs:
           file: ./report/coverage.xml
           name: ${{ matrix.python }} - ${{ matrix.platform }}
           fail_ci_if_error: true
+
+  expanded-scenario-tests:
+
+    name: Scenario Tests
+    strategy:
+      matrix:
+        python: ["3.9", "3.10", "3.11", "3.12"]
+        platform: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.platform }}
+    needs: [ scenario-tests ]
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python ${{ matrix.python }}
+        uses: actions/setup-python@v5.2.0
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install PipEnv
+        run: |
+          pip install pipenv==2023.12.1
+
+      - name: Sync With Repository
+        run: |
+          rm Pipfile.lock
+          pipenv lock --clear --python ${{ matrix.python }}
+          pipenv sync -d
+          pipenv graph
+          pipenv uninstall pytest-html
+
+      - name: Execute Tests
+        run: pipenv run pytest --cov-fail-under=90 --cov --cov-branch --cov-report xml:report/coverage.xml
 
   packaging:
 
@@ -180,7 +190,8 @@ jobs:
 
       - name: Sync With Repository
         run: |
-          pipenv update -d
+          pipenv lock --clear --python ${{ env.default-python-version }}
+          pipenv sync -d
           pipenv graph
 
       - name: Pyroma
