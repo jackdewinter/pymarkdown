@@ -8,7 +8,7 @@ from test.utils import assert_that_exception_is_raised, compare_expected_to_actu
 
 from pymarkdown.application_file_scanner import ApplicationFileScanner
 
-if sys.version_info < (3, 13):
+if sys.version_info < (3, 11):
     ARGPARSE_X = "optional arguments:"
     ALT_EXTENSIONS_X = (
         "-ae ALTERNATE_EXTENSIONS, --alternate-extensions ALTERNATE_EXTENSIONS"

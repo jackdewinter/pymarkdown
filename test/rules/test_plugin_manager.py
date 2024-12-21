@@ -16,7 +16,7 @@ import pytest
 
 # pylint: disable=too-many-lines
 
-if sys.version_info < (3, 13):
+if sys.version_info < (3, 11):
     ARGPARSE_X = "optional arguments:"
 else:
     ARGPARSE_X = "options:"

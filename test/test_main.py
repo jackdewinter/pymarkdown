@@ -13,7 +13,7 @@ from pymarkdown.general.parser_logger import ParserLogger
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
-if sys.version_info < (3, 13):
+if sys.version_info < (3, 11):
     ARGPARSE_X = "optional arguments:"
     ENABLE_RULES_X = "-e ENABLE_RULES, --enable-rules ENABLE_RULES"
     DISABLE_RULES_X = "-d DISABLE_RULES, --disable-rules DISABLE_RULES"
