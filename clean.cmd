@@ -149,38 +149,6 @@ if defined MY_MYPY (
 	goto executeMyPy
 )
 
-echo {Creating extensions.md summary file...}
-pipenv run python newdocs\generate_extensions_file.py
-if ERRORLEVEL 1 (
-	echo.
-	echo {Creation of extensions.md summary file failed.}
-	goto error_end
-)
-
-echo {Creating rules.md summary file...}
-pipenv run python newdocs\generate_rules_file.py
-if ERRORLEVEL 1 (
-	echo.
-	echo {Creation of rules.md summary file failed.}
-	goto error_end
-)
-
-echo {Executing black formatter on Python code.}
-pipenv run black %MY_VERBOSE% .
-if ERRORLEVEL 1 (
-	echo.
-	echo {Executing black formatter on Python code failed.}
-	goto error_end
-)
-
-echo {Executing import sorter on Python code.}
-pipenv run isort %MY_VERBOSE% .
-if ERRORLEVEL 1 (
-	echo.
-	echo {Executing import sorter on Python code failed.}
-	goto error_end
-)
-
 echo {Executing pre-commit hooks on Python code.}
 set PRE_COMMIT_FLAGS=
 if defined MY_PUBLISH (
@@ -231,53 +199,7 @@ if not defined MY_SOURCERY (
 	)
 )
 
-echo {Executing flake8 static analyzer on Python code.}
-pipenv run flake8 -j 4 --exclude dist,build %MY_VERBOSE%
-if ERRORLEVEL 1 (
-	echo.
-	echo {Executing static analyzer on Python code failed.}
-	goto error_end
-)
-
-echo {Executing bandit security analyzer on Python code.}
-pipenv run bandit --configfile bandit.yaml -q -r %PYTHON_MODULE_NAME%
-if ERRORLEVEL 1 (
-	echo.
-	echo {Executing security analyzer on Python code failed.}
-	goto error_end
-)
-
-echo {Executing pylint static analyzer on Python source code.}
-set TEST_EXECUTION_FAILED=
-pipenv run pylint -j 1 --recursive=y %MY_VERBOSE% %PYTHON_MODULE_NAME%
-if ERRORLEVEL 1 (
-	echo.
-	echo {Executing pylint static analyzer on Python source code failed.}
-	goto error_end
-)
-
-:executeMyPy
-echo {Executing mypy static analyzer on Python source code.}
-pipenv run mypy --strict %PYTHON_MODULE_NAME% stubs
-if ERRORLEVEL 1 (
-	echo.
-	echo {Executing mypy static analyzer on Python source code failed.}
-	goto error_end
-)
-rem pipenv run stubgen --output stubs -p columnar
-rem pipenv run stubgen --output stubs -p wcwidth
-if defined MY_MYPY (
-	goto good_end
-)
-
-echo {Scanning documentation to ensure its compliance.}
-call scan_docs.cmd
-if ERRORLEVEL 1 (
-	echo.
-	echo {Scanning of documentation failed.}
-	goto error_end
-)
-
+@REM TODO Make this repeatable in GitHub
 echo {Executing pylint utils analyzer on Python source code to verify suppressions and document them.}
 pipenv run python ..\pylint_utils\main.py --config setup.cfg --recurse -r publish\pylint_suppression.json %PYTHON_MODULE_NAME%
 if ERRORLEVEL 1 (
@@ -285,14 +207,6 @@ if ERRORLEVEL 1 (
 	echo {Executing reporting of pylint suppressions in Python source code failed.}
 	goto error_end
 )
-
-echo {Executing pylint static analyzer on test Python code.}
-pipenv run pylint -j 1 --ignore test\resources --recursive=y %MY_VERBOSE% test
-if ERRORLEVEL 1 (
-	echo.
-	echo {Executing pylint static analyzer on test Python code failed.}
-	goto error_end
-)	
 
 git diff --name-only --staged > %CLEAN_TEMPFILE%
 set ALL_FILES=

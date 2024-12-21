@@ -4,13 +4,8 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-black = "==24.8.0"
 coverage = "==7.6.1"
-flake8 = "==7.1.1"
-flake8-bugbear = "==24.8.19"
-flake8-bandit = "==4.1.1"
 importlib-metadata = "==8.0.0"
-isort = "==5.13.2"
 mkdocs = "==1.6.1"
 mkdocstrings = "0.26.1"
 mkdocstrings-python = "1.11.1"
@@ -40,7 +35,7 @@ application-properties = ">=0.8.2"
 typing-extensions = ">=4.7.0"
 
 [requires]
-python_version = "3.8"
+python_version = "3.9"
 
 [pipenv]
 allow_prereleases = true

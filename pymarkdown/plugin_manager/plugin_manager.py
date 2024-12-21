@@ -9,7 +9,7 @@ import os
 import re
 import sys
 from io import TextIOWrapper
-from typing import Any, Dict, List, Optional, Pattern, Set, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 from application_properties import ApplicationProperties, ApplicationPropertiesFacade
 from columnar import columnar
@@ -200,7 +200,7 @@ class PluginManager:
         next_plugin_id: str,
         args: argparse.Namespace,
         show_rows: List[List[str]],
-        list_re: Optional[Pattern[str]],
+        list_re: Optional[re.Pattern[str]],
     ) -> None:
         # if next_plugin_id.startswith("md9"):
         #     continue
@@ -247,7 +247,7 @@ class PluginManager:
 
     def __show_row_if_matches(
         self,
-        list_re: Optional[Pattern[str]],
+        list_re: Optional[re.Pattern[str]],
         next_plugin_id: str,
         next_plugin: FoundPlugin,
         show_rows: List[List[str]],

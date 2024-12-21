@@ -59,7 +59,7 @@ The PyMarkdown project has the following advantages:
 
 ## What Are The Minimum Requirements?
 
-This project required Python 3.8 or later to function.
+This project required Python 3.9 or later to function.
 
 ## What Linting Checks Does PyMarkdown Release With?
 

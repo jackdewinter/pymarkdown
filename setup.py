@@ -32,7 +32,7 @@ PROJECT_URLS = {
 
 PACKAGE_NAME = "pymarkdownlnt"
 SEMANTIC_VERSION = get_semantic_version()
-MINIMUM_PYTHON_VERSION = "3.8.0"
+MINIMUM_PYTHON_VERSION = "3.9.0"
 
 ONE_LINE_DESCRIPTION = "A GitHub Flavored Markdown compliant Markdown linter."
 LONG_DESCRIPTION = load_readme_file()
@@ -42,10 +42,11 @@ KEYWORDS = ["markdown", "linter", "markdown linter"]
 PROJECT_CLASSIFIERS = [
     "Development Status :: 4 - Beta",
     "Environment :: Console",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Natural Language :: English",

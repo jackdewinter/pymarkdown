@@ -1,8 +1,32 @@
 repos:
+  - repo: https://github.com/ambv/black
+    rev: 24.8.0
+    hooks:
+      - id: black
+        name: "Format: Black"
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        name: "Format: ISort"
   - repo: local
     hooks:
       - id: generate-docs
-        name: Generate API docs
+        name: "Docs:   Generate Rules File"
+        language: system
+        entry: pipenv run python newdocs/generate_rules_file.py
+        pass_filenames: false
+  - repo: local
+    hooks:
+      - id: generate-docs
+        name: "Docs:   Generate Extensions File"
+        language: system
+        entry: pipenv run python newdocs/generate_extensions_file.py
+        pass_filenames: false
+  - repo: local
+    hooks:
+      - id: generate-docs
+        name: "Docs:   Generate API docs"
         language: system
         entry: pipenv run python utils/correct_pdoc_issues.py
         pass_filenames: false
@@ -10,6 +34,7 @@ repos:
     rev: v0.9.18
     hooks:
       - id: pymarkdown
+        name: "Scan:   PyMarkdown (Old Documentation)"
         pass_filenames: false
         args:
           - --config
@@ -21,6 +46,7 @@ repos:
     rev: v0.9.18
     hooks:
       - id: pymarkdown
+        name: "Scan:   PyMarkdown (New Documentation)"
         pass_filenames: false
         args:
           - --config
@@ -30,7 +56,96 @@ repos:
   - repo: local
     hooks:
       - id: verify-install-requirements
-        name: Verify Install Requirements Match
+        name: "Scan:   Verify Install Requirements Match"
         language: system
         entry: pipenv run python utils/verify_install_requirements.py
         pass_filenames: false
+  - repo: https://github.com/pycqa/flake8
+    rev: '7.1.1'
+    hooks:
+    - id: flake8
+      name: "Scan:   Flake8"
+      args: ["-j","4", "--exclude", "dist,build" ]
+      additional_dependencies: ["flake8-bugbear==24.8.19", "flake8-bandit==4.1.1"]
+  # - repo: https://github.com/sourcery-ai/sourcery
+  #   rev: v1.27.0
+  #   hooks:
+  #     - id: sourcery
+  #       # The best way to use Sourcery in a pre-commit hook:
+  #       # * review only changed lines:
+  #       # * omit the summary
+  #       args: ["--diff=git diff main","--no-summary"]  
+  #       pass_filenames: false
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.8.0
+    hooks:
+    - id: bandit
+      name: "Scan:   Bandit"
+      args: [--configfile,bandit.yaml,-q,-r,"./pymarkdown"]
+      pass_filenames: false
+  - repo: local
+    hooks:
+    - id: pylint
+      name: "Scan:   PyLint"
+      entry: pylint
+      language: system
+      types: [python]
+      require_serial: true
+      args:
+        [
+          "-j=1",
+          "--recursive=y",
+          "-rn", # Only display messages
+          "-sn", # Don't display the score
+          "pymarkdown"
+        ]
+      pass_filenames: false
+  - repo: local
+    hooks:
+    - id: pylint
+      name: "Scan:   PyLint (test)"
+      entry: pylint
+      language: system
+      types: [python]
+      require_serial: true
+      args:
+        [
+          "-j=1",
+          "--ignore",
+          "test/resources",
+          "--recursive=y",
+          "-rn", # Only display messages
+          "-sn", # Don't display the score
+          "test"
+        ]
+      pass_filenames: false
+  # - repo: local
+  #   hooks:
+  #   - id: xxpylint
+  #     name: "Scan:   xxx"
+  #     entry: pipenv run python ..\pylint_utils\main.py --config setup.cfg --recurse -r publish\pylint_suppression.json pymarkdown
+  #     language: system
+  #     types: [python]
+  #     require_serial: true
+  #     args:
+  #       [
+  #       ]
+  #     pass_filenames: false
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.13.0
+    hooks:
+    - id: mypy
+      name: "Scan:   MyPy"
+      args: [--strict, pymarkdown, stubs]
+      additional_dependencies: [
+          "application_properties==0.8.2",
+          "types-pyyaml"
+      ]
+      pass_filenames: false
+  # - repo: local
+  #   hooks:
+  #   - id: xxx
+  #     name: "Scan:   PTest"
+  #     entry: ptest.cmd -a -m -c
+  #     language: system
+  #     pass_filenames: false
