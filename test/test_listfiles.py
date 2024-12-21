@@ -8,11 +8,13 @@ from test.markdown_scanner import MarkdownScanner
 
 if sys.version_info < (3, 11):
     ARGPARSE_X = "optional arguments:"
+else:
+    ARGPARSE_X = "options:"
+if sys.version_info < (3, 13):
     ALT_EXTENSIONS_X = (
         "-ae ALTERNATE_EXTENSIONS, --alternate-extensions ALTERNATE_EXTENSIONS"
     )
 else:
-    ARGPARSE_X = "options:"
     ALT_EXTENSIONS_X = "-ae, --alternate-extensions ALTERNATE_EXTENSIONS"
 
 
