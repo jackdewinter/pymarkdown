@@ -13,7 +13,7 @@ from pymarkdown.general.parser_logger import ParserLogger
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
-if sys.version_info < (3, 11):
+if sys.version_info < (3, 10):
     ARGPARSE_X = "optional arguments:"
 else:
     ARGPARSE_X = "options:"

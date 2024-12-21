@@ -8,7 +8,7 @@ from test.utils import assert_that_exception_is_raised, compare_expected_to_actu
 
 from pymarkdown.application_file_scanner import ApplicationFileScanner
 
-if sys.version_info < (3, 11):
+if sys.version_info < (3, 10):
     ARGPARSE_X = "optional arguments:"
 else:
     ARGPARSE_X = "options:"

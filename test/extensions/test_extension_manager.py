@@ -10,7 +10,7 @@ from test.utils import write_temporary_configuration
 # pylint: disable=too-many-lines
 
 
-if sys.version_info < (3, 11):
+if sys.version_info < (3, 10):
     ARGPARSE_X = "optional arguments:"
 else:
     ARGPARSE_X = "options:"

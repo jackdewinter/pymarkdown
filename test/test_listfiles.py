@@ -6,7 +6,7 @@ import os
 import sys
 from test.markdown_scanner import MarkdownScanner
 
-if sys.version_info < (3, 11):
+if sys.version_info < (3, 10):
     ARGPARSE_X = "optional arguments:"
 else:
     ARGPARSE_X = "options:"
