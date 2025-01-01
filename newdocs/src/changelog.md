@@ -10,7 +10,8 @@ None
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
-None
+- [Issue 1297](https://github.com/jackdewinter/pymarkdown/issues/1297)
+    - Fixed some Md031 fix tests, organized others.
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
