@@ -10,12 +10,14 @@ None
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
-None
+- [Issue 1297](https://github.com/jackdewinter/pymarkdown/issues/1297)
+    - Fixed some Md031 fix tests, organized others.
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
-None
+- [Issue 1290](https://github.com/jackdewinter/pymarkdown/issues/1290)
+    - Upgraded tests to support Python 3.9 to 3.13
 
 ## Version 0.9.26 - Date: 2024-12-09
 

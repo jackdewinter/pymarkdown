@@ -3,7 +3,7 @@ Module to work with the rules to keep track of the current container "leading sp
 """
 
 from dataclasses import dataclass
-from typing import List, cast
+from typing import List, Tuple, cast
 
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
@@ -30,6 +30,7 @@ class LeadingSpaceIndexTracker:
         self.__closed_container_adjustments: List[ClosedContainerAdjustments] = []
         self.__container_token_stack: List[MarkdownToken] = []
         self.__end_tokens: List[EndMarkdownToken] = []
+        self.__real_end_tokens: List[EndMarkdownToken] = []
         self.__since_last_non_end_token: List[MarkdownToken] = []
 
     def clear(self) -> None:
@@ -39,6 +40,7 @@ class LeadingSpaceIndexTracker:
         self.__closed_container_adjustments.clear()
         self.__container_token_stack.clear()
         self.__end_tokens.clear()
+        self.__real_end_tokens.clear()
 
     def open_container(self, token: MarkdownToken) -> None:
         """
@@ -55,6 +57,7 @@ class LeadingSpaceIndexTracker:
         """
         assert token.is_block_quote_end or token.is_list_end
         self.__end_tokens.append(cast(EndMarkdownToken, token))
+        self.__real_end_tokens.append(cast(EndMarkdownToken, token))
 
     def have_any_registered_container_ends(self) -> bool:
         """
@@ -62,7 +65,9 @@ class LeadingSpaceIndexTracker:
         """
         return bool(self.__end_tokens)
 
-    def process_container_end(self, token: MarkdownToken) -> MarkdownToken:
+    def process_container_end(
+        self, token: MarkdownToken
+    ) -> Tuple[MarkdownToken, EndMarkdownToken]:
         """
         Process a registered container end.
         """
@@ -73,11 +78,13 @@ class LeadingSpaceIndexTracker:
             self.__process_container_end_list(token)
 
         del self.__closed_container_adjustments[-1]
+        end_token = self.__real_end_tokens[0]
+        del self.__real_end_tokens[0]
         del self.__end_tokens[-1]
 
         last_token_on_stack = self.__container_token_stack[-1]
         del self.__container_token_stack[-1]
-        return last_token_on_stack
+        return last_token_on_stack, end_token
 
     def track_since_last_non_end_token(self, token: MarkdownToken) -> None:
         """
