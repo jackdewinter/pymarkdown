@@ -419,6 +419,7 @@ class TransformContainers:
                 container_token_indices,
                 removed_tokens,
                 removed_token_indices,
+                container_line,
             )
         if len(removed_tokens) > 1:
             prefix = TransformContainers.__abcd_remaining(
@@ -476,6 +477,7 @@ class TransformContainers:
         removed_token_indices: List[int],
         container_stack: List[MarkdownToken],
         possible_prefix: Optional[str],
+        container_line: str,
     ) -> Optional[str]:
         container_stack_copy: List[MarkdownToken] = container_stack[:]
         container_stack_copy.extend(removed_tokens[::-1])
@@ -500,6 +502,64 @@ class TransformContainers:
             prefix = " " * current_indent_level
         else:
             if removed_tokens[0].is_block_quote_start:
+                prefix = TransformContainers.__abcd_final_list_second_half_with_second_block_quote(
+                    removed_tokens, removed_token_indices, possible_prefix
+                )
+            else:
+                # if here, first and second removed tokens are lists.
+                prefix = (
+                    TransformContainers.__abcd_final_list_second_half_with_second_list(
+                        removed_tokens,
+                        removed_token_indices,
+                        possible_prefix,
+                        container_line,
+                        prefix,
+                    )
+                )
+
+            del removed_tokens[0]
+            del removed_token_indices[0]
+        return prefix
+
+    @staticmethod
+    def __abcd_final_list_second_half_with_second_block_quote(
+        removed_tokens: List[MarkdownToken],
+        removed_token_indices: List[int],
+        possible_prefix: Optional[str],
+    ) -> Optional[str]:
+        removed_block_quote_token = cast(BlockQuoteMarkdownToken, removed_tokens[0])
+        assert removed_block_quote_token.bleading_spaces is not None
+        split_bleading_spaces = removed_block_quote_token.bleading_spaces.split("\n")
+        if removed_token_indices[0] < len(split_bleading_spaces):
+            prefix = "" if possible_prefix is None else possible_prefix
+            return f"{split_bleading_spaces[removed_token_indices[0]]}{prefix}"
+        return possible_prefix
+
+    @staticmethod
+    def __abcd_final_list_second_half_with_second_list(
+        removed_tokens: List[MarkdownToken],
+        removed_token_indices: List[int],
+        possible_prefix: Optional[str],
+        container_line: str,
+        prefix: Optional[str],
+    ) -> Optional[str]:
+        # sourcery skip: equality-identity, inline-variable, move-assign-in-block, remove-assert-true
+        removed_list_token = cast(ListStartMarkdownToken, removed_tokens[0])
+
+        assert removed_list_token.leading_spaces is None
+        # if removed_list_token.leading_spaces is None:
+        y = 0
+        # else:
+        #     assert removed_list_token.leading_spaces is not None
+        #     y = len(removed_list_token.leading_spaces.split("\n"))
+        # endif
+        x = removed_token_indices[0]
+        assert y == 0
+        assert x == 0
+        if len(removed_tokens) >= 2:
+            del removed_tokens[0]
+            del removed_token_indices[0]
+            if removed_tokens[0].is_block_quote_start:
                 removed_block_quote_token = cast(
                     BlockQuoteMarkdownToken, removed_tokens[0]
                 )
@@ -507,13 +567,13 @@ class TransformContainers:
                 split_bleading_spaces = removed_block_quote_token.bleading_spaces.split(
                     "\n"
                 )
-                if removed_token_indices[0] < len(split_bleading_spaces):
-                    prefix = "" if possible_prefix is None else possible_prefix
-                    prefix = (
-                        f"{split_bleading_spaces[removed_token_indices[0]]}{prefix}"
-                    )
-            del removed_tokens[0]
-            del removed_token_indices[0]
+                assert removed_token_indices[0] < len(split_bleading_spaces)
+                # if removed_token_indices[0] < len(split_bleading_spaces):
+                prefix = "" if possible_prefix is None else possible_prefix
+                prefix = f"{split_bleading_spaces[removed_token_indices[0]]}{prefix}"
+                if container_line.startswith(prefix):
+                    prefix = ""
+                # endif
         return prefix
 
     @staticmethod
@@ -521,6 +581,7 @@ class TransformContainers:
         removed_tokens: List[MarkdownToken],
         removed_token_indices: List[int],
         container_stack: List[MarkdownToken],
+        container_line: str,
     ) -> Optional[str]:
         removed_list_token = cast(ListStartMarkdownToken, removed_tokens[0])
         assert removed_list_token.leading_spaces is not None
@@ -538,7 +599,11 @@ class TransformContainers:
         del removed_token_indices[0]
 
         return TransformContainers.__abcd_final_list_second_half(
-            removed_tokens, removed_token_indices, container_stack, possible_prefix
+            removed_tokens,
+            removed_token_indices,
+            container_stack,
+            possible_prefix,
+            container_line,
         )
 
     @staticmethod
@@ -547,6 +612,7 @@ class TransformContainers:
         container_token_indices: List[int],
         removed_tokens: List[MarkdownToken],
         removed_token_indices: List[int],
+        container_line: str,
     ) -> Optional[str]:
         container_stack_copy = container_stack[:]
         container_indices_copy = container_token_indices[:]
@@ -578,20 +644,60 @@ class TransformContainers:
             del removed_tokens[0]
             del removed_token_indices[0]
             if container_stack_copy[-2].is_list_start:
-                list_spaces = cast(
-                    ListStartMarkdownToken, container_stack_copy[-2]
-                ).leading_spaces
-                assert list_spaces is not None
-                list_split_spaces = list_spaces.split("\n")
-                assert container_indices_copy[-2] == len(list_split_spaces) - 1
-                prefix += list_split_spaces[container_indices_copy[-2]]
-                del removed_tokens[0]
-                del removed_token_indices[0]
+                prefix = TransformContainers.__abcd_final_inner_list(
+                    container_stack_copy,
+                    container_indices_copy,
+                    container_token_indices,
+                    removed_tokens,
+                    removed_token_indices,
+                    prefix,
+                )
         else:
             prefix = TransformContainers.__abcd_final_list(
-                removed_tokens, removed_token_indices, container_stack
+                removed_tokens, removed_token_indices, container_stack, container_line
             )
         return prefix
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __abcd_final_inner_list(
+        container_stack_copy: List[MarkdownToken],
+        container_indices_copy: List[int],
+        container_token_indices: List[int],
+        removed_tokens: List[MarkdownToken],
+        removed_token_indices: List[int],
+        prefix: str,
+    ) -> Optional[str]:
+        list_spaces = cast(
+            ListStartMarkdownToken, container_stack_copy[-2]
+        ).leading_spaces
+        assert list_spaces is not None
+        list_split_spaces = list_spaces.split("\n")
+        if container_indices_copy[-2] == len(list_split_spaces) - 1:
+            prefix += list_split_spaces[container_indices_copy[-2]]
+        else:
+            start_index = len(container_indices_copy) - 3
+            while (
+                start_index >= 0 and not container_stack_copy[start_index].is_list_start
+            ):
+                start_index -= 1
+            assert start_index >= 0
+            list_token = cast(ListStartMarkdownToken, container_stack_copy[start_index])
+            leading_spaces_index = container_indices_copy[start_index]
+            assert list_token.leading_spaces is not None
+            list_split_spaces = list_token.leading_spaces.split("\n")
+            prefix += list_split_spaces[leading_spaces_index]
+
+            assert start_index < len(container_stack_copy)
+            # if start_index < len(container_stack_copy):
+            container_token_indices[start_index] += 1
+            # endif
+        del removed_tokens[0]
+        del removed_token_indices[0]
+
+        return prefix
+
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-locals
     @staticmethod

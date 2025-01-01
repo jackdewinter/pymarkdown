@@ -15,7 +15,8 @@ None
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
-None
+- [Issue 1290](https://github.com/jackdewinter/pymarkdown/issues/1290)
+    - Upgraded tests to support Python 3.9 to 3.13
 
 ## Version 0.9.26 - Date: 2024-12-09
 
