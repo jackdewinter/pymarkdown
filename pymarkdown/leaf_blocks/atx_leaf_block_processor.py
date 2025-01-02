@@ -187,6 +187,7 @@ class AtxLeafBlockProcessor:
             extracted_whitespace_at_start,
             extracted_whitespace_at_end,
             extracted_whitespace_before_end,
+            block_quote_data,
         )
         return new_tokens
 
@@ -208,6 +209,7 @@ class AtxLeafBlockProcessor:
         extracted_whitespace_at_start: str,
         extracted_whitespace_at_end: str,
         extracted_whitespace_before_end: str,
+        block_quote_data: BlockQuoteData,
     ) -> List[MarkdownToken]:
         start_token = AtxHeadingMarkdownToken(
             hash_count,
@@ -222,6 +224,7 @@ class AtxLeafBlockProcessor:
             position_marker.index_indent,
             old_top_of_stack,
             new_tokens,
+            block_quote_data,
             was_token_already_added_to_stack=False,
             delay_tab_match=delay_tab_match,
         )

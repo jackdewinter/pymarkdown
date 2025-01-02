@@ -257,7 +257,6 @@ ___
 > >   ______
 """,
         disable_rules="md031,md032",
-        scan_expected_return_code=0,
         scan_expected_output="",
     ),
 ]

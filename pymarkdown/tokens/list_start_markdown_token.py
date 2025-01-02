@@ -179,7 +179,7 @@ class ListStartMarkdownToken(ContainerMarkdownToken):
             extracted_text = self.__leading_spaces
             self.__leading_spaces = None
         else:
-            extracted_text = self.__leading_spaces[last_separator_index:]
+            extracted_text = self.__leading_spaces[last_separator_index + 1 :]
             self.__leading_spaces = self.__leading_spaces[:last_separator_index]
         self.__compose_extra_data_field()
         return extracted_text

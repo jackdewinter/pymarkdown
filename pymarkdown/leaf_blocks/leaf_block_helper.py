@@ -5,6 +5,7 @@ Module to provide helpers for the processing of leaf blocks.
 import logging
 from typing import List, Optional, Tuple, cast
 
+from pymarkdown.block_quotes.block_quote_data import BlockQuoteData
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.parser_state import ParserState
@@ -30,6 +31,7 @@ class LeafBlockHelper:
         removed_chars_at_start: int,
         old_top_of_stack_token: StackToken,
         html_tokens: List[MarkdownToken],
+        block_quote_data: BlockQuoteData,
         was_token_already_added_to_stack: bool = True,
         delay_tab_match: bool = False,
         alt_removed_chars_at_start: Optional[int] = None,
@@ -83,6 +85,7 @@ class LeafBlockHelper:
             delay_tab_match,
             alt_removed_chars_at_start,
             is_html,
+            block_quote_data,
             original_line,
         )
 
@@ -280,21 +283,64 @@ class LeafBlockHelper:
             removed_tokens.append(cast(ListStartMarkdownToken, current_token))
             add_index += 1
 
-        if original_removed_tokens:
-            assert len(original_removed_tokens) == 1
-            assert original_removed_tokens[0].is_list_start
+        assert original_removed_tokens
+        assert len(original_removed_tokens) == 1
+        assert original_removed_tokens[0].is_list_start
 
-            original_leading_spaces = original_removed_tokens[0].leading_spaces
-            current_leading_spaces = removed_tokens[0].leading_spaces
-            if (
+        original_leading_spaces = original_removed_tokens[0].leading_spaces
+        current_leading_spaces = removed_tokens[0].leading_spaces
+        return bool(
+            (
                 original_leading_spaces
                 and current_leading_spaces
                 and original_leading_spaces != current_leading_spaces
-            ):
-                return True
-        return False
+            )
+        )
 
     # pylint: enable=too-many-locals
+
+    @staticmethod
+    def __handle_leaf_start_inner(
+        parser_state: ParserState,
+        removed_chars_at_start: int,
+        ws_count: int,
+        html_tokens: List[MarkdownToken],
+        stack_delta: int,
+    ) -> Tuple[Optional[ListStackToken], int]:
+        assert parser_state.token_stack[
+            -1
+        ].is_list, "Token at the end of the stack must be a list token."
+        list_stack_token = cast(ListStackToken, parser_state.token_stack[-1])
+
+        POGGER.debug(">>removed_chars_at_start>>$>>", removed_chars_at_start)
+        POGGER.debug(">>stack indent>>$>>", list_stack_token.indent_level)
+        if (removed_chars_at_start + ws_count) >= list_stack_token.indent_level:
+            return None, stack_delta
+        tokens_from_close, _ = parser_state.close_open_blocks_fn(
+            parser_state,
+            until_this_index=(len(parser_state.token_stack) - 1),
+            include_lists=True,
+        )
+        POGGER.debug(
+            ">>correct_for_leaf_block_start_in_list>>tokens_from_close>>$>>",
+            tokens_from_close,
+        )
+        html_tokens.extend(tokens_from_close)
+        remaining_stack_index = len(parser_state.token_stack) - 1
+        while (
+            stack_delta > 0
+            and parser_state.token_stack[remaining_stack_index].is_block_quote
+        ):
+            stack_delta -= 1
+            remaining_stack_index -= 1
+        if remaining_stack_index != len(parser_state.token_stack) - 1:
+            tokens_from_close, _ = parser_state.close_open_blocks_fn(
+                parser_state,
+                until_this_index=remaining_stack_index + 1,
+                include_block_quotes=True,
+            )
+            html_tokens.extend(tokens_from_close)
+        return list_stack_token, stack_delta
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -305,6 +351,7 @@ class LeafBlockHelper:
         delay_tab_match: bool,
         alt_removed_chars_at_start: Optional[int],
         is_html: bool,
+        block_quote_data: BlockQuoteData,
         original_line: Optional[str] = None,
     ) -> None:
         POGGER.debug(
@@ -320,30 +367,17 @@ class LeafBlockHelper:
             parser_state.original_line_to_parse[removed_chars_at_start:], 0
         )
 
+        stack_delta = block_quote_data.stack_count - block_quote_data.current_count
+
         adjust_with_leading_spaces = False
         is_remaining_list_token = True
         while is_remaining_list_token:
-            assert parser_state.token_stack[
-                -1
-            ].is_list, "Token at the end of the stack must be a list token."
-            list_stack_token = cast(ListStackToken, parser_state.token_stack[-1])
-
-            POGGER.debug(">>removed_chars_at_start>>$>>", removed_chars_at_start)
-            POGGER.debug(">>stack indent>>$>>", list_stack_token.indent_level)
-            if (removed_chars_at_start + ws_count) >= list_stack_token.indent_level:
-                break  # pragma: no cover
-
-            tokens_from_close, _ = parser_state.close_open_blocks_fn(
-                parser_state,
-                until_this_index=(len(parser_state.token_stack) - 1),
-                include_lists=True,
+            list_stack_token, stack_delta = LeafBlockHelper.__handle_leaf_start_inner(
+                parser_state, removed_chars_at_start, ws_count, html_tokens, stack_delta
             )
+            if list_stack_token is None:
+                break
             adjust_with_leading_spaces = True
-            POGGER.debug(
-                ">>correct_for_leaf_block_start_in_list>>tokens_from_close>>$>>",
-                tokens_from_close,
-            )
-            html_tokens.extend(tokens_from_close)
             is_remaining_list_token = parser_state.token_stack[-1].is_list
 
         POGGER.debug("is_remaining_list_token=$", is_remaining_list_token)

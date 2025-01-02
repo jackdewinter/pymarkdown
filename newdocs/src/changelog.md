@@ -5,17 +5,103 @@
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
-- None
+None
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
-- None
+- [Issue 1297](https://github.com/jackdewinter/pymarkdown/issues/1297)
+    - Fixed some Md031 fix tests, organized others.
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
-- None
+- [Issue 1290](https://github.com/jackdewinter/pymarkdown/issues/1290)
+    - Upgraded tests to support Python 3.9 to 3.13
+
+## Version 0.9.26 - Date: 2024-12-09
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Added
+
+- [Issue 810](https://github.com/jackdewinter/pymarkdown/issues/810)
+    - Added fix mode for Rule Md012
+- [Issue 1280](https://github.com/jackdewinter/pymarkdown/issues/1280)
+    - Added testing capability to save all single Markdown documents in
+      a specified directory, then scanning them one at a time with
+      PyMarkdown and each of the extensions enabled.
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
+- [Issue 1259](https://github.com/jackdewinter/pymarkdown/issues/1259)
+    - Fixed asserts and bad parsing from cases where containers are
+      added and then a "raw" blank line removes all containers.
+- [Issue 1263](https://github.com/jackdewinter/pymarkdown/issues/1263)
+    - Fixed issue where a new unordered list between two block quotes
+      was not being recognized properly.
+- [Issue 1270](https://github.com/jackdewinter/pymarkdown/issues/1270)
+    - Fixed issue with Md027 not reporting line numbers properly within
+      anything except the first paragraph.
+- [Issue 1272](https://github.com/jackdewinter/pymarkdown/issues/1272)
+    - Parsing of the FCB in certain cases was off, as was the text token
+      containing the code block's text. Resulted in the columns being
+      reported being indented less than expected.
+- [Issue 1274](https://github.com/jackdewinter/pymarkdown/issues/1274)
+    - Fixed remaining assert issues, leaving fixes that produce valid
+      Markdown, but not the intended Markdown.
+- [Issue 1267](https://github.com/jackdewinter/pymarkdown/issues/1267)
+    - Fixed reported issue with task lists creating an error in Md018.
+- [Issue 1268](https://github.com/jackdewinter/pymarkdown/issues/1268)
+    - Fixed issue with Md022 and pragmas, similar to
+      [Issue 1208](https://github.com/jackdewinter/pymarkdown/issues/1208).
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+- [Issue 1258](https://github.com/jackdewinter/pymarkdown/issues/1258)
+    - Moved twine package into dev section
+
+## Version 0.9.25 - Date: 2024-11-07
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Added
+
+- [Issue 1233](https://github.com/jackdewinter/pymarkdown/issues/1233)
+- [Issue 1234](https://github.com/jackdewinter/pymarkdown/issues/1234)
+- [Issue 1235](https://github.com/jackdewinter/pymarkdown/issues/1235)
+    - Adding more comprehensive "drop X" tests where multiple levels of
+      containers are involved, and then dropping one or more of those
+      containers in a single line.
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
+- [Issue 1208](https://github.com/jackdewinter/pymarkdown/issues/1208)
+    - Fixed issue with blank lines separated with pragmas not being
+      understood properly.
+- [Issue 1233](https://github.com/jackdewinter/pymarkdown/issues/1233)
+- [Issue 1234](https://github.com/jackdewinter/pymarkdown/issues/1234)
+- [Issue 1235](https://github.com/jackdewinter/pymarkdown/issues/1235)
+    - Adding new "drop_x" tests and resolve any scan issues with them.
+- [Issue 1243](https://github.com/jackdewinter/pymarkdown/issues/1243)
+- [Issue 1245](https://github.com/jackdewinter/pymarkdown/issues/1245)
+    - Handling leading spaces in `__fix_spacing` function now that data
+      is present.
+- [Issue 1247](https://github.com/jackdewinter/pymarkdown/issues/1247)
+    - In 3+ drop cases with only lists and no block quotes, indent is
+      not calculated properly on rehydrate.  This in turn causes the
+      fixed text to be wrong.
+- [Issue 1250](https://github.com/jackdewinter/pymarkdown/issues/1250)
+    - Batch of fixes for cases when Md031 is trying to properly space
+      a fenced code block after dropping 2 containers.
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+- [Issue 1231)](https://github.com/jackdewinter/pymarkdown/issues/1231)
+    - Moved triple nested container tests into their own test_nested_three_*
+      files for better readability.
 
 ## Version 0.9.24 - Date: 2024-10-06
 

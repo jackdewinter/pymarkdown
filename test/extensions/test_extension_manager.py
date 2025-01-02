@@ -3,10 +3,17 @@ Module to provide tests related to the extension manager for the scanner.
 """
 
 import os
+import sys
 from test.markdown_scanner import MarkdownScanner
 from test.utils import write_temporary_configuration
 
 # pylint: disable=too-many-lines
+
+
+if sys.version_info < (3, 10):
+    ARGPARSE_X = "optional arguments:"
+else:
+    ARGPARSE_X = "options:"
 
 
 def test_markdown_with_extensions_only():
@@ -29,9 +36,11 @@ positional arguments:
     list       list the available extensions
     info       information on a specific extension
 
-optional arguments:
+{ARGPARSE_X}
   -h, --help   show this help message and exit
-"""
+""".replace(
+        "{ARGPARSE_X}", ARGPARSE_X
+    )
     expected_error = ""
 
     # Act

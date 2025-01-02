@@ -328,7 +328,9 @@ class BlockQuoteCountHelper:
         )
         assert parser_state.original_line_to_parse is not None
         if (
-            parser_state.original_line_to_parse[
+            embedded_list_stack_token.indent_level
+            >= len(parser_state.original_line_to_parse)
+            or parser_state.original_line_to_parse[
                 start_index : embedded_list_stack_token.indent_level
             ].strip()
             or parser_state.original_line_to_parse[
@@ -387,8 +389,20 @@ class BlockQuoteCountHelper:
                     BlockQuoteCountHelper.__block_quote_character, start_index
                 )
                 POGGER.debug("+1>>next_bq_index:$:", next_bq_index)
-                if next_bq_index != -1 and (next_bq_index - start_index) <= 3:
-                    continue_processing, start_index = True, next_bq_index
+                index_delta = next_bq_index - start_index
+                if next_bq_index != -1 and index_delta <= 3:
+                    final_index, _ = ParserHelper.collect_while_spaces(
+                        adjusted_line, start_index
+                    )
+                    if final_index == next_bq_index:
+                        continue_processing, start_index = True, next_bq_index
+                    else:
+                        cast(
+                            BlockQuoteMarkdownToken,
+                            parser_state.token_stack[
+                                final_stack_index
+                            ].matching_markdown_token,
+                        ).weird_kludge_seven = True
         return continue_processing, start_index
 
     @staticmethod

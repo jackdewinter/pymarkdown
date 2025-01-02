@@ -33,9 +33,17 @@ class MarkdownToken:
     extra_data_separator = ":"
 
     _end_token_prefix = "end-"
+
     _token_pragma = "pragma"
-    _token_task_list = "task-list"
     _token_end_of_stream = "end-of-stream"
+
+    _token_task_list = "task-list"
+    _token_front_matter = "front-matter"
+
+    _token_block_quote = "block-quote"
+    _token_unordered_list_start = "ulist"
+    _token_ordered_list_start = "olist"
+    _token_new_list_item = "li"
 
     _token_paragraph = "para"
     _token_blank_line = "BLANK"
@@ -46,13 +54,7 @@ class MarkdownToken:
     _token_html_block = "html-block"
     _token_fenced_code_block = "fcode-block"
     _token_indented_code_block = "icode-block"
-    _token_block_quote = "block-quote"
     _token_text = "text"
-    _token_front_matter = "front-matter"
-
-    _token_unordered_list_start = "ulist"
-    _token_ordered_list_start = "olist"
-    _token_new_list_item = "li"
 
     _token_inline_code_span = "icode-span"
     _token_inline_hard_break = "hard-break"
@@ -379,6 +381,13 @@ class MarkdownToken:
         Returns whether the current token is the front matter element.
         """
         return self.token_name == MarkdownToken._token_front_matter
+
+    @property
+    def is_task_list(self) -> bool:
+        """
+        Returns whether the current token is the task list element.
+        """
+        return self.token_name == MarkdownToken._token_task_list
 
     @property
     def is_text(self) -> bool:
@@ -795,5 +804,6 @@ class EndMarkdownToken(MarkdownToken):
             return True
         if field_name == "extra_end_data" and isinstance(field_value, str):
             self.__extra_end_data = field_value
+            self.__compose_data_field()
             return True
         return False

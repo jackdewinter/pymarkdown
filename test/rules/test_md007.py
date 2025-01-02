@@ -253,7 +253,6 @@ scanTests = [
 >    * this is level 2
 """,
         scan_expected_return_code=1,
-        use_debug=True,
         scan_expected_output=(
             "{temp_source_path}:4:6: MD007: Unordered list indentation [Expected: 2, Actual=3] (ul-indent)"
         ),
@@ -546,7 +545,6 @@ scanTests = [
       next line 3
 """,
         disable_rules="md004",
-        scan_expected_return_code=0,
     ),
     pluginRuleTest(
         "bad_all_indent_with_extra_lines",
@@ -685,7 +683,6 @@ scanTests = [
             "\a", " "
         ),
         disable_rules="md004,md027,md023,md009",
-        scan_expected_return_code=0,
         scan_expected_output="",
     ),
     pluginRuleTest(

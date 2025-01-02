@@ -144,6 +144,7 @@ class StartOfLineTokenParser:
                 token.is_inline_emphasis
                 or token.is_inline_emphasis_end
                 or token.is_inline_autolink
+                or token.is_task_list
             )
         self.__delayed_line = None
 

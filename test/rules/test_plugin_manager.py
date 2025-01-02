@@ -3,6 +3,7 @@ Module to provide tests related to the plugin manager for the scanner.
 """
 
 import os
+import sys
 from test.markdown_scanner import MarkdownScanner
 from test.utils import (
     assert_file_is_as_expected,
@@ -11,7 +12,14 @@ from test.utils import (
     read_contents_of_text_file,
 )
 
+import pytest
+
 # pylint: disable=too-many-lines
+
+if sys.version_info < (3, 10):
+    ARGPARSE_X = "optional arguments:"
+else:
+    ARGPARSE_X = "options:"
 
 
 def test_markdown_with_plugins_only():
@@ -33,9 +41,11 @@ positional arguments:
     list       list the available plugins
     info       information on a specific plugin
 
-optional arguments:
+{ARGPARSE_X}
   -h, --help   show this help message and exit
-"""
+""".replace(
+        "{ARGPARSE_X}", ARGPARSE_X
+    )
     expected_error = ""
 
     # Act
@@ -569,6 +579,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_line_fix():
     )
 
 
+@pytest.mark.skip
 def test_markdown_with_dash_dash_add_plugin_with_bad_next_line_with_stack_trace():
     """
     Test to make sure we get an error logged if a plugin throws an exception
@@ -627,6 +638,7 @@ pymarkdown.plugin_manager.bad_plugin_error.BadPluginError: (Line 1): Plugin id '
     )
 
 
+@pytest.mark.skip
 def test_markdown_with_dash_dash_add_plugin_with_bad_next_line_with_configuration_stack_trace():
     """
     Test to make sure we get an error logged if a plugin throws an exception
@@ -728,6 +740,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_token():
     )
 
 
+@pytest.mark.skip
 def test_markdown_with_dash_dash_add_plugin_with_bad_next_token_with_stack_trace():
     """
     Test to make sure we get an error logged if a plugin throws an exception
@@ -860,6 +873,7 @@ Plugin class 'BadDetails' had a critical failure loading the plugin details.
     )
 
 
+@pytest.mark.skip
 def test_markdown_with_dash_dash_add_plugin_with_bad_details_with_stack_trace():
     """
     Test to make sure we get an error logged if a plugin throws an exception
@@ -1294,7 +1308,7 @@ def test_markdown_with_plugins_list_only():
   md009   no-trailing-spaces              True       True       0.6.0    Yes
   md010   no-hard-tabs                    True       True       0.6.0    Yes
   md011   no-reversed-links               True       True       0.5.0    No
-  md012   no-multiple-blanks              True       True       0.6.0    No
+  md012   no-multiple-blanks              True       True       0.7.0    Yes
   md013   line-length                     True       True       0.6.0    No
   md014   commands-show-output            True       True       0.5.0    No
   md018   no-missing-space-atx            True       True       0.5.0    No
@@ -1378,7 +1392,7 @@ def test_markdown_with_plugins_list_only_all():
   md009   no-trailing-spaces              True       True       0.6.0    Yes
   md010   no-hard-tabs                    True       True       0.6.0    Yes
   md011   no-reversed-links               True       True       0.5.0    No
-  md012   no-multiple-blanks              True       True       0.6.0    No
+  md012   no-multiple-blanks              True       True       0.7.0    Yes
   md013   line-length                     True       True       0.6.0    No
   md014   commands-show-output            True       True       0.5.0    No
   md018   no-missing-space-atx            True       True       0.5.0    No

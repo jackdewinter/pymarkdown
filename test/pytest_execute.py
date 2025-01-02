@@ -7,6 +7,7 @@ import io
 import logging
 import os
 import sys
+import tempfile
 import traceback
 from abc import ABC, abstractmethod
 
@@ -247,7 +248,7 @@ class InProcessExecution(ABC):
             del trace_back
         return 1
 
-    # pylint: disable=broad-except, too-many-arguments
+    # pylint: disable=broad-except, too-many-arguments, too-many-locals, too-many-branches
     def invoke_main(
         self,
         arguments=None,
@@ -259,6 +260,24 @@ class InProcessExecution(ABC):
         """
         Invoke the mainline so that we can capture results.
         """
+
+        keep_directory = os.getenv("PTEST_KEEP_DIRECTORY", None)
+        if keep_directory and os.path.isdir(keep_directory):
+            if (
+                len(arguments) >= 2
+                and arguments[-2] == "scan"
+                and os.path.isfile(arguments[-1])
+            ):
+                with tempfile.NamedTemporaryFile(
+                    "wt",
+                    encoding="utf-8",
+                    dir=keep_directory,
+                    suffix=".md",
+                    delete=False,
+                ) as temp_file:
+                    with open(arguments[-1], "rt", encoding="utf-8") as fixed_file:
+                        temp_file.write(fixed_file.read())
+
         if suppress_first_line_heading_rule:
             new_arguments = arguments.copy() if arguments else []
             if "--disable-rules" not in new_arguments:
@@ -305,4 +324,4 @@ class InProcessExecution(ABC):
 
         return InProcessResult(returncode, std_output, std_error)
 
-    # pylint: enable=broad-except, too-many-arguments
+    # pylint: enable=broad-except, too-many-arguments, too-many-locals, too-many-branches

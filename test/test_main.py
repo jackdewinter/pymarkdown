@@ -5,12 +5,29 @@ Module to provide tests related to the basic parts of the scanner.
 import logging
 import os
 import runpy
+import sys
 from test.markdown_scanner import MarkdownScanner
 from test.patches.patch_builtin_open import path_builtin_open_with_exception
 
 from pymarkdown.general.parser_logger import ParserLogger
 
 POGGER = ParserLogger(logging.getLogger(__name__))
+
+if sys.version_info < (3, 10):
+    ARGPARSE_X = "optional arguments:"
+else:
+    ARGPARSE_X = "options:"
+
+if sys.version_info < (3, 13):
+    ENABLE_RULES_X = "-e ENABLE_RULES, --enable-rules ENABLE_RULES"
+    DISABLE_RULES_X = "-d DISABLE_RULES, --disable-rules DISABLE_RULES"
+    CONFIG_FILE_X = "--config CONFIGURATION_FILE, -c CONFIGURATION_FILE"
+    SET_CONFIG_X = "--set SET_CONFIGURATION, -s SET_CONFIGURATION"
+else:
+    ENABLE_RULES_X = "-e, --enable-rules ENABLE_RULES"
+    DISABLE_RULES_X = "-d, --disable-rules DISABLE_RULES"
+    CONFIG_FILE_X = "--config, -c CONFIGURATION_FILE"
+    SET_CONFIG_X = "--set, -s SET_CONFIGURATION"
 
 
 def test_markdown_with_no_parameters():
@@ -23,7 +40,8 @@ def test_markdown_with_no_parameters():
     supplied_arguments = []
 
     expected_return_code = 2
-    expected_output = """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
+    expected_output = (
+        """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
                [--continue-on-error]
@@ -42,17 +60,17 @@ positional arguments:
     scan-stdin          scan the standard input as a Markdown file
     version             version of the application
 
-optional arguments:
+{ARGPARSE_X}
   -h, --help            show this help message and exit
-  -e ENABLE_RULES, --enable-rules ENABLE_RULES
+  {ENABLE_RULES_X}
                         comma separated list of rules to enable
-  -d DISABLE_RULES, --disable-rules DISABLE_RULES
+  {DISABLE_RULES_X}
                         comma separated list of rules to disable
   --add-plugin ADD_PLUGIN
                         path to a plugin containing a new rule to apply
-  --config CONFIGURATION_FILE, -c CONFIGURATION_FILE
+  {CONFIG_FILE_X}
                         path to the configuration file to use
-  --set SET_CONFIGURATION, -s SET_CONFIGURATION
+  {SET_CONFIG_X}
                         manually set an individual configuration property
   --strict-config       throw an error if configuration is bad, instead of
                         assuming default
@@ -65,7 +83,14 @@ optional arguments:
   --log-file LOG_FILE   destination file for log messages
   --return-code-scheme {default,minimal}
                         scheme to choose for selecting the application return
-                        code"""
+                        code""".replace(
+            "{ARGPARSE_X}", ARGPARSE_X
+        )
+        .replace("{ENABLE_RULES_X}", ENABLE_RULES_X)
+        .replace("{DISABLE_RULES_X}", DISABLE_RULES_X)
+        .replace("{CONFIG_FILE_X}", CONFIG_FILE_X)
+        .replace("{SET_CONFIG_X}", SET_CONFIG_X)
+    )
     expected_error = ""
 
     # Act
@@ -88,7 +113,8 @@ def test_markdown_with_no_parameters_through_module():
     supplied_arguments = []
 
     expected_return_code = 2
-    expected_output = """usage: __main.py__ [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
+    expected_output = (
+        """usage: __main.py__ [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                    [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                    [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
                    [--continue-on-error]
@@ -108,17 +134,17 @@ positional arguments:
     scan-stdin          scan the standard input as a Markdown file
     version             version of the application
 
-optional arguments:
+{ARGPARSE_X}
   -h, --help            show this help message and exit
-  -e ENABLE_RULES, --enable-rules ENABLE_RULES
+  {ENABLE_RULES_X}
                         comma separated list of rules to enable
-  -d DISABLE_RULES, --disable-rules DISABLE_RULES
+  {DISABLE_RULES_X}
                         comma separated list of rules to disable
   --add-plugin ADD_PLUGIN
                         path to a plugin containing a new rule to apply
-  --config CONFIGURATION_FILE, -c CONFIGURATION_FILE
+  {CONFIG_FILE_X}
                         path to the configuration file to use
-  --set SET_CONFIGURATION, -s SET_CONFIGURATION
+  {SET_CONFIG_X}
                         manually set an individual configuration property
   --strict-config       throw an error if configuration is bad, instead of
                         assuming default
@@ -131,7 +157,14 @@ optional arguments:
   --log-file LOG_FILE   destination file for log messages
   --return-code-scheme {default,minimal}
                         scheme to choose for selecting the application return
-                        code"""
+                        code""".replace(
+            "{ARGPARSE_X}", ARGPARSE_X
+        )
+        .replace("{ENABLE_RULES_X}", ENABLE_RULES_X)
+        .replace("{DISABLE_RULES_X}", DISABLE_RULES_X)
+        .replace("{CONFIG_FILE_X}", CONFIG_FILE_X)
+        .replace("{SET_CONFIG_X}", SET_CONFIG_X)
+    )
     expected_error = ""
 
     # Act
@@ -154,7 +187,8 @@ def test_markdown_with_no_parameters_through_main():
     supplied_arguments = []
 
     expected_return_code = 2
-    expected_output = """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
+    expected_output = (
+        """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
                [--continue-on-error]
@@ -173,17 +207,17 @@ positional arguments:
     scan-stdin          scan the standard input as a Markdown file
     version             version of the application
 
-optional arguments:
+{ARGPARSE_X}
   -h, --help            show this help message and exit
-  -e ENABLE_RULES, --enable-rules ENABLE_RULES
+  {ENABLE_RULES_X}
                         comma separated list of rules to enable
-  -d DISABLE_RULES, --disable-rules DISABLE_RULES
+  {DISABLE_RULES_X}
                         comma separated list of rules to disable
   --add-plugin ADD_PLUGIN
                         path to a plugin containing a new rule to apply
-  --config CONFIGURATION_FILE, -c CONFIGURATION_FILE
+  {CONFIG_FILE_X}
                         path to the configuration file to use
-  --set SET_CONFIGURATION, -s SET_CONFIGURATION
+  {SET_CONFIG_X}
                         manually set an individual configuration property
   --strict-config       throw an error if configuration is bad, instead of
                         assuming default
@@ -196,7 +230,14 @@ optional arguments:
   --log-file LOG_FILE   destination file for log messages
   --return-code-scheme {default,minimal}
                         scheme to choose for selecting the application return
-                        code"""
+                        code""".replace(
+            "{ARGPARSE_X}", ARGPARSE_X
+        )
+        .replace("{ENABLE_RULES_X}", ENABLE_RULES_X)
+        .replace("{DISABLE_RULES_X}", DISABLE_RULES_X)
+        .replace("{CONFIG_FILE_X}", CONFIG_FILE_X)
+        .replace("{SET_CONFIG_X}", SET_CONFIG_X)
+    )
     expected_error = ""
 
     # Act
@@ -218,7 +259,8 @@ def test_markdown_with_dash_h():
     supplied_arguments = ["-h"]
 
     expected_return_code = 0
-    expected_output = """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
+    expected_output = (
+        """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
                [--continue-on-error]
@@ -237,17 +279,17 @@ positional arguments:
     scan-stdin          scan the standard input as a Markdown file
     version             version of the application
 
-optional arguments:
+{ARGPARSE_X}
   -h, --help            show this help message and exit
-  -e ENABLE_RULES, --enable-rules ENABLE_RULES
+  {ENABLE_RULES_X}
                         comma separated list of rules to enable
-  -d DISABLE_RULES, --disable-rules DISABLE_RULES
+  {DISABLE_RULES_X}
                         comma separated list of rules to disable
   --add-plugin ADD_PLUGIN
                         path to a plugin containing a new rule to apply
-  --config CONFIGURATION_FILE, -c CONFIGURATION_FILE
+  {CONFIG_FILE_X}
                         path to the configuration file to use
-  --set SET_CONFIGURATION, -s SET_CONFIGURATION
+  {SET_CONFIG_X}
                         manually set an individual configuration property
   --strict-config       throw an error if configuration is bad, instead of
                         assuming default
@@ -260,7 +302,14 @@ optional arguments:
   --log-file LOG_FILE   destination file for log messages
   --return-code-scheme {default,minimal}
                         scheme to choose for selecting the application return
-                        code"""
+                        code""".replace(
+            "{ARGPARSE_X}", ARGPARSE_X
+        )
+        .replace("{ENABLE_RULES_X}", ENABLE_RULES_X)
+        .replace("{DISABLE_RULES_X}", DISABLE_RULES_X)
+        .replace("{CONFIG_FILE_X}", CONFIG_FILE_X)
+        .replace("{SET_CONFIG_X}", SET_CONFIG_X)
+    )
     expected_error = ""
 
     # Act

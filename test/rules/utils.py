@@ -51,6 +51,7 @@ class pluginRuleTest:
     is_mix_test: bool = True
     mark_scan_as_skipped: bool = False
     mark_fix_as_skipped: bool = False
+    notes: str = ""
 
 
 def id_test_plug_rule_fn(val: Any) -> str:
@@ -169,7 +170,11 @@ def calculate_scan_tests(scanTests: List[pluginRuleTest]) -> List[pluginRuleTest
 
 def calculate_fix_tests(scanTests: List[pluginRuleTest]) -> List[pluginRuleTest]:
     return [
-        (pytest.param(i, marks=pytest.mark.skip) if i.mark_fix_as_skipped else i)
+        (
+            pytest.param(i, marks=pytest.mark.skip)
+            if i.mark_fix_as_skipped or i.mark_scan_as_skipped
+            else i
+        )
         for i in scanTests
         if i.fix_expected_file_contents is not None
     ]

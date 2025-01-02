@@ -566,7 +566,7 @@ class LinkDefinitionStackToken(StackToken):
         """
 
         return (
-            f"{ParserHelper.newline_character.join(self.continuation_lines) }"
+            f"{ParserHelper.newline_character.join(self.continuation_lines)}"
             + f"{ParserHelper.newline_character}{join_suffix}"
             if self.continuation_lines
             else join_suffix

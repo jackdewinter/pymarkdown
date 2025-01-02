@@ -39,10 +39,14 @@ class ContainerHelper:
         whitespace_prefix = ""
         # list_indent_level = None
         if parser_state.token_stack[-1].is_list:
+            # leading_space_length = (
+            #     len(extracted_whitespace) + position_marker.index_indent
+            # )
+            assert parser_state.original_line_to_parse is not None
+            leading_space_length = parser_state.original_line_to_parse.index(
+                position_marker.text_to_parse
+            ) + len(extracted_whitespace)
             search_index = len(parser_state.token_stack)
-            leading_space_length = (
-                len(extracted_whitespace) + position_marker.index_indent
-            )
             while parser_state.token_stack[search_index - 1].is_list:
                 list_token = cast(
                     ListStackToken, parser_state.token_stack[search_index - 1]
@@ -69,30 +73,22 @@ class ContainerHelper:
             new_tokens.extend(container_level_tokens)
 
             indent_delta = list_token.indent_level - position_marker.index_indent
-            if len(extracted_whitespace) > indent_delta:
-                whitespace_prefix = extracted_whitespace[:indent_delta]
-                extracted_whitespace = extracted_whitespace[indent_delta:]
-
-            # Covered by test_extra_044mcz3, currently disabled.
-            else:
-                whitespace_prefix = extracted_whitespace
-                extracted_whitespace = ""
+            whitespace_prefix = extracted_whitespace[:indent_delta]
+            extracted_whitespace = extracted_whitespace[indent_delta:]
         return did_once, extracted_whitespace, whitespace_prefix
 
     @staticmethod
     def __xx(parser_state: ParserState, extra_bqs: int) -> List[MarkdownToken]:
         until_index = len(parser_state.token_stack) - 1
         needed_bqs = extra_bqs
-        while (
-            until_index > 0
-            and needed_bqs > 0
-            and parser_state.token_stack[until_index].is_block_quote
-        ):
+        while until_index > 0 and needed_bqs > 0:
+            if parser_state.token_stack[until_index].is_block_quote:
+                needed_bqs -= 1
             until_index -= 1
-            needed_bqs -= 1
         x_tokens, _ = parser_state.close_open_blocks_fn(
             parser_state,
             include_block_quotes=True,
+            include_lists=True,
             was_forced=True,
             until_this_index=until_index + 1,
         )
@@ -111,9 +107,10 @@ class ContainerHelper:
         extra_bqs: int,
     ) -> Tuple[bool, str, Optional[str]]:
         x_tokens = ContainerHelper.__xx(parser_state, extra_bqs)
+        count_block_quotes = sum(bool(i.is_block_quote_end) for i in x_tokens)
         assert (
-            len(x_tokens) == extra_bqs
-        ), "Should have generated the requested number of tokens."
+            count_block_quotes == extra_bqs
+        ), "Should have generated the requested number of block quote tokens."
 
         first_new_token = cast(EndMarkdownToken, x_tokens[0])
 
@@ -183,28 +180,28 @@ class ContainerHelper:
     def __handle_whitespace_prefix(
         parser_state: ParserState, whitespace_prefix: str, last_newline_part: str
     ) -> Optional[str]:
-        new_whitespace_prefix = None
-        if whitespace_prefix:
-            indent_level = 0
-            stack_index = len(parser_state.token_stack) - 1
-            while stack_index > 0:
-                if parser_state.token_stack[stack_index].is_list:
-                    indent_level += cast(
-                        ListStartMarkdownToken,
-                        parser_state.token_stack[stack_index].matching_markdown_token,
-                    ).indent_level
-                    break
-                bleading_spaces = cast(
-                    BlockQuoteMarkdownToken,
+        if not whitespace_prefix:
+            return None
+
+        indent_level = 0
+        stack_index = len(parser_state.token_stack) - 1
+        while stack_index > 0:
+            if parser_state.token_stack[stack_index].is_list:
+                indent_level += cast(
+                    ListStartMarkdownToken,
                     parser_state.token_stack[stack_index].matching_markdown_token,
-                ).bleading_spaces
-                assert bleading_spaces is not None
-                split_bleading_spaces = bleading_spaces.split("\n")
-                last_split_bleading_spaces = len(split_bleading_spaces[-1])
-                indent_level += last_split_bleading_spaces
-                stack_index -= 1
-            new_whitespace_prefix = last_newline_part[indent_level:]
-        return new_whitespace_prefix
+                ).indent_level
+                break
+            bleading_spaces = cast(
+                BlockQuoteMarkdownToken,
+                parser_state.token_stack[stack_index].matching_markdown_token,
+            ).bleading_spaces
+            assert bleading_spaces is not None
+            split_bleading_spaces = bleading_spaces.split("\n")
+            last_split_bleading_spaces = len(split_bleading_spaces[-1])
+            indent_level += last_split_bleading_spaces
+            stack_index -= 1
+        return last_newline_part[indent_level:]
 
     # pylint: disable=too-many-arguments
     @staticmethod

@@ -619,7 +619,7 @@ def test_paragraph_series_n_bq_t_nl_bq_fb_nl_with_bq():
         "[text(1,3):uvw:]",
         "[end-para:::False]",
         "[fcode-block(2,3):`:3::::::]",
-        "[text(3,3):\ndef\n:]",
+        "[text(3,2):\ndef\n:]",
         "[end-fcode-block:::3:False]",
         "[end-block-quote:::True]",
     ]

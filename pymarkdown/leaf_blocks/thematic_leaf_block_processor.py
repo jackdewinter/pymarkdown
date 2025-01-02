@@ -176,21 +176,26 @@ class ThematicLeafBlockProcessor:
                 last_list_markdown_token = cast(
                     ListStartMarkdownToken, list_end_token.start_markdown_token
                 )
-                inner_list_markdown_token = cast(
-                    ListStartMarkdownToken,
-                    parser_state.token_stack[stack_index].matching_markdown_token,
-                )
-                leading_space_to_move = (
-                    last_list_markdown_token.remove_last_leading_space()
-                )
-                assert leading_space_to_move is not None
-                POGGER.debug(
-                    "__handle_special_case>>list_token>>$", inner_list_markdown_token
-                )
-                inner_list_markdown_token.add_leading_spaces(leading_space_to_move)
-                POGGER.debug(
-                    "__handle_special_case>>list_token>>$", inner_list_markdown_token
-                )
+                if last_list_markdown_token.leading_spaces is not None:
+                    inner_list_markdown_token = cast(
+                        ListStartMarkdownToken,
+                        parser_state.token_stack[stack_index].matching_markdown_token,
+                    )
+                    leading_space_to_move = (
+                        last_list_markdown_token.remove_last_leading_space()
+                    )
+                    assert leading_space_to_move is not None
+                    POGGER.debug(
+                        "__handle_special_case>>list_token>>$",
+                        inner_list_markdown_token,
+                    )
+                    if leading_space_to_move:
+                        leading_space_to_move += ParserLogger.blah_sequence
+                    inner_list_markdown_token.add_leading_spaces(leading_space_to_move)
+                    POGGER.debug(
+                        "__handle_special_case>>list_token>>$",
+                        inner_list_markdown_token,
+                    )
 
     @staticmethod
     def parse_thematic_break(
@@ -303,6 +308,7 @@ class ThematicLeafBlockProcessor:
                 new_tokens,
                 start_char,
                 token_text,
+                block_quote_data,
             )
         else:
             split_tab, extracted_whitespace, whitespace_prefix = (
@@ -330,6 +336,7 @@ class ThematicLeafBlockProcessor:
         new_tokens: List[MarkdownToken],
         start_char: str,
         token_text: str,
+        block_quote_data: BlockQuoteData,
     ) -> None:
         POGGER.debug("parser_state.token_stack[-1]>>:$:<", parser_state.token_stack[-1])
         POGGER.debug("parser_state.token_stack>>:$:<", parser_state.token_stack)
@@ -350,6 +357,7 @@ class ThematicLeafBlockProcessor:
             position_marker.index_indent,
             old_top_of_stack,
             new_tokens,
+            block_quote_data,
             was_token_already_added_to_stack=False,
             delay_tab_match=True,
         )

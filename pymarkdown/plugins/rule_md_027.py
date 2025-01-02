@@ -1157,8 +1157,9 @@ class RuleMd027(RulePlugin):
             )
             # if self.__debug_on:
             #     print(f"para>>>{scoped_block_quote_token}")
+            delta_x = paragraph_token.line_number - scoped_block_quote_token.line_number
 
-            for line_number_delta, next_line in enumerate(
+            for paragraph_start_line_number_delta, next_line in enumerate(
                 paragraph_token.extracted_whitespace.split(
                     ParserHelper.newline_character
                 )
@@ -1174,7 +1175,8 @@ class RuleMd027(RulePlugin):
                         )
                     )
                     line_index = (
-                        self.__bq_line_index[num_container_tokens] + line_number_delta
+                        self.__bq_line_index[num_container_tokens]
+                        + paragraph_start_line_number_delta
                     )
                     calculated_column_number = len(split_leading_spaces[line_index]) + 1
                     # if self.__debug_on:
@@ -1185,7 +1187,7 @@ class RuleMd027(RulePlugin):
                     keep_going = self.__report_issue(
                         context,
                         scoped_block_quote_token,
-                        line_number_delta=line_number_delta,
+                        line_number_delta=paragraph_start_line_number_delta + delta_x,
                         column_number_delta=-calculated_column_number,
                         alternate_token=paragraph_token,
                     )

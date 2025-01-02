@@ -392,8 +392,8 @@ class LinkReferenceDefinitionContinuationHelper:
         for _ in link_def_token.continuation_lines:
             last_leading_space = block_quote_token.remove_last_bleading_space()
             POGGER.debug("last_leading_space>:$:<", last_leading_space)
-            if last_leading_space[0] == "\n":
-                last_leading_space = last_leading_space[1:]
+            # if last_leading_space[0] == "\n":
+            #     last_leading_space = last_leading_space[1:]
             leading_spaces.append(last_leading_space)
         assert len(split_tabs_list) == len(
             leading_spaces

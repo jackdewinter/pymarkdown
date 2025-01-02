@@ -266,8 +266,8 @@ class RuleMd007(RulePlugin):
                 elif container_base_column:
                     container_base_column += 1
                 extra_error_information = (
-                    f"Expected: {calculated_column_number+container_base_column}, "
-                    + f"Actual={adjusted_column_number+container_base_column}"
+                    f"Expected: {calculated_column_number + container_base_column}, "
+                    + f"Actual={adjusted_column_number + container_base_column}"
                 )
                 self.report_next_token_error(
                     context, token, extra_error_information=extra_error_information

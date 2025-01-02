@@ -282,6 +282,65 @@ scanTests = [
 """,
     ),
     pluginRuleTest(
+        "bad_single_block_quote_space_top",
+        source_file_contents=""">  this is text
+>
+> within a block quote
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+""",
+        fix_expected_file_contents="""> this is text
+>
+> within a block quote
+""",
+    ),
+    pluginRuleTest(  # test_extra_051d
+        "bad_single_block_quote_space_bottom",
+        source_file_contents="""> this is text
+>
+>  within a block quote
+""",
+        use_debug=True,
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+""",
+        fix_expected_file_contents="""> this is text
+>
+> within a block quote
+""",
+    ),
+    pluginRuleTest(
+        "bad_double_block_quote_space_top",
+        source_file_contents=""">  this is text
+
+> within a block quote
+""",
+        disable_rules="md028",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+""",
+        fix_expected_file_contents="""> this is text
+
+> within a block quote
+""",
+    ),
+    pluginRuleTest(
+        "bad_double_block_quote_space_bottom",
+        source_file_contents="""> this is text
+
+>  within a block quote
+""",
+        disable_rules="md028",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)
+""",
+        fix_expected_file_contents="""> this is text
+
+> within a block quote
+""",
+    ),
+    pluginRuleTest(
         "bad_misalligned_double_quote",
         source_file_name=f"{source_path}bad_misalligned_double_quote.md",
         source_file_contents="""> > this is text
@@ -366,7 +425,7 @@ scanTests = [
         "good_indented_code_block_in_block_quote",
         source_file_name=f"{source_path}good_indented_code_block_in_block_quote.md",
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_044mca
         "bad_block_quote_misindented_unordered_list_first",
         source_file_name=f"{source_path}bad_block_quote_misindented_unordered_list_first.md",
         disable_rules=__plugin_disable_md005_md007,
@@ -398,7 +457,7 @@ scanTests = [
 > 1. that
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_044mca
         "bad_block_quote_misindented_unordered_list_last",
         source_file_name=f"{source_path}bad_block_quote_misindented_unordered_list_last.md",
         disable_rules=__plugin_disable_md005_md007,
@@ -598,7 +657,7 @@ scanTests = [
 >      * this is level 3
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_044mcxx
         "good_block_quote_unordered_list_text_first",
         source_file_name=f"{source_path}bad_block_quote_unordered_list_text_first.md",
         source_file_contents="""> +  list
@@ -680,7 +739,6 @@ scanTests = [
 > > --------
 """,
         disable_rules="md007,md009,md012,md030",
-        scan_expected_return_code=0,
         # use_debug=True,
         scan_expected_output="",
     ),
@@ -697,7 +755,6 @@ scanTests = [
 > + another list
 """,
         disable_rules="md007,md009,md012,md030,md031",
-        scan_expected_return_code=0,
         # use_debug=True,
         scan_expected_output="",
     ),
@@ -713,17 +770,15 @@ scanTests = [
 > > > --------
 """,
         disable_rules="md007,md009,md012,md030,md031",
-        scan_expected_return_code=0,
         # use_debug=True,
         scan_expected_output="",
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_044mb
         "bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_block_x",
         source_file_contents=""">
 > > fourth block 1
 """,
         disable_rules="",
-        scan_expected_return_code=0,
         # use_debug=True,
         scan_expected_output="",
     ),
@@ -758,7 +813,6 @@ scanTests = [
 >   > -----
 > + another list""",
         disable_rules="md047,md032",
-        scan_expected_return_code=0,
         scan_expected_output="""""",
     ),
     pluginRuleTest(
@@ -772,7 +826,6 @@ scanTests = [
    >   ----
 """,
         disable_rules="md007,md009,md012,md030,md031",
-        scan_expected_return_code=0,
         scan_expected_output="",
     ),
     pluginRuleTest(
@@ -788,7 +841,6 @@ scanTests = [
 > + another list
 """,
         disable_rules="md007,md009,md012,md030,md031",
-        scan_expected_return_code=0,
         # use_debug=True,
         scan_expected_output="",
     ),
@@ -806,9 +858,22 @@ scanTests = [
 > + another list
 """,
         disable_rules="md007,md009,md012,md030,md031",
-        scan_expected_return_code=0,
-        # use_debug=True,
         scan_expected_output="",
+    ),
+    pluginRuleTest(  # test_extra_051b2
+        "md012_bad_in_list_in_block_quote_with_double_blanks_at_start",
+        source_file_contents="""> 1.
+>
+>    fred2
+> 1. barney
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="{temp_source_path}:3:3: MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)",
+        fix_expected_file_contents="""> 1.
+>
+> fred2
+> 1. barney
+""",
     ),
     pluginRuleTest(
         "mix_md027_md007",
