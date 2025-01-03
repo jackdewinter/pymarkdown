@@ -47,6 +47,7 @@ class PluginManager:
     __name_regex = re.compile("^[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$")
     __filter_regex = re.compile("^[a-zA-Z0-9-]+$")
     __version_regex = re.compile("^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$")
+    __disable_rules_wildcard = "*"
 
     def __init__(
         self,
@@ -561,11 +562,14 @@ class PluginManager:
             LOGGER.debug(
                 "Disabled on command line: %s", str(command_line_disabled_rules)
             )
-            for next_identifier in plugin_object.plugin_identifiers:
-                if next_identifier in command_line_disabled_rules:
-                    new_value = False
-                    LOGGER.debug("Plugin is disabled from command line.")
-                    break
+            if PluginManager.__disable_rules_wildcard in command_line_disabled_rules:
+                new_value = False
+            else:
+                for next_identifier in plugin_object.plugin_identifiers:
+                    if next_identifier in command_line_disabled_rules:
+                        new_value = False
+                        LOGGER.debug("Plugin is disabled from command line.")
+                        break
         if new_value is None and command_line_enabled_rules:
             LOGGER.debug("Enabled on command line: %s", str(command_line_enabled_rules))
             for next_identifier in plugin_object.plugin_identifiers:
