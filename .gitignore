@@ -10,3 +10,4 @@ dist/
 pymarkdownlnt.egg-info/
 p0.prof
 ff/
+.pycache/

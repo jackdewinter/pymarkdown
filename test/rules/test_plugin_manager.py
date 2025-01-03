@@ -1449,6 +1449,89 @@ def test_markdown_with_plugins_list_only_all():
     )
 
 
+def test_markdown_with_plugins_list_after_disable_all_rules():
+    """
+    Test to make sure that `plugins list` lists all plugins after disabling all rules.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = ["--disable-rules", "*", "plugins", "list"]
+
+    expected_return_code = 0
+    expected_output = """
+  ID      NAMES                           ENABLED    ENABLED    VERSION  FIX
+                                          (DEFAULT)  (CURRENT)
+
+  md001   heading-increment, header-incr  True       False      0.6.0    Yes
+          ement
+  md002   first-heading-h1, first-header  False      False      0.6.0    No
+          -h1
+  md003   heading-style, header-style     True       False      0.6.0    No
+  md004   ul-style                        True       False      0.6.0    Yes
+  md005   list-indent                     True       False      0.5.1    Yes
+  md006   ul-start-left                   False      False      0.5.1    Yes
+  md007   ul-indent                       True       False      0.6.0    Yes
+  md009   no-trailing-spaces              True       False      0.6.0    Yes
+  md010   no-hard-tabs                    True       False      0.6.0    Yes
+  md011   no-reversed-links               True       False      0.5.0    No
+  md012   no-multiple-blanks              True       False      0.7.0    Yes
+  md013   line-length                     True       False      0.6.0    No
+  md014   commands-show-output            True       False      0.5.0    No
+  md018   no-missing-space-atx            True       False      0.5.0    No
+  md019   no-multiple-space-atx           True       False      0.5.1    Yes
+  md020   no-missing-space-closed-atx     True       False      0.5.0    No
+  md021   no-multiple-space-closed-atx    True       False      0.5.1    Yes
+  md022   blanks-around-headings, blanks  True       False      0.6.0    No
+          -around-headers
+  md023   heading-start-left, header-sta  True       False      0.5.2    Yes
+          rt-left
+  md024   no-duplicate-heading, no-dupli  True       False      0.6.0    No
+          cate-header
+  md025   single-title, single-h1         True       False      0.6.0    No
+  md026   no-trailing-punctuation         True       False      0.6.0    No
+  md027   no-multiple-space-blockquote    True       False      0.5.1    Yes
+  md028   no-blanks-blockquote            True       False      0.5.0    No
+  md029   ol-prefix                       True       False      0.6.0    Yes
+  md030   list-marker-space               True       False      0.6.0    Yes
+  md031   blanks-around-fences            True       False      0.7.0    Yes
+  md032   blanks-around-lists             True       False      0.5.0    No
+  md033   no-inline-html                  True       False      0.6.0    No
+  md034   no-bare-urls                    True       False      0.5.0    No
+  md035   hr-style                        True       False      0.6.0    Yes
+  md036   no-emphasis-as-heading, no-emp  True       False      0.6.0    No
+          hasis-as-header
+  md037   no-space-in-emphasis            True       False      0.5.1    Yes
+  md038   no-space-in-code                True       False      0.5.1    Yes
+  md039   no-space-in-links               True       False      0.5.2    Yes
+  md040   fenced-code-language            True       False      0.5.0    No
+  md041   first-line-heading, first-line  True       False      0.6.0    No
+          -h1
+  md042   no-empty-links                  True       False      0.5.0    No
+  md043   required-headings, required-he  True       False      0.6.0    No
+          aders
+  md044   proper-names                    True       False      0.7.0    Yes
+  md045   no-alt-text                     True       False      0.5.0    No
+  md046   code-block-style                True       False      0.7.0    Yes
+  md047   single-trailing-newline         True       False      0.5.1    Yes
+  md048   code-fence-style                True       False      0.6.0    Yes
+  pml100  disallowed-html                 False      False      0.6.0    No
+  pml101  list-anchored-indent            False      False      0.6.0    No
+  
+"""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments, suppress_first_line_heading_rule=False
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
 def test_markdown_with_plugins_list_and_filter_by_id_ends_with_nine():
     """
     Test to make sure that `plugins list` lists all plugins with the specified id filter.

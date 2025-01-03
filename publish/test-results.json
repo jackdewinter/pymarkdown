@@ -1508,7 +1508,7 @@
         },
         {
             "name": "test.rules.test_plugin_manager",
-            "totalTests": 57,
+            "totalTests": 58,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 4,
