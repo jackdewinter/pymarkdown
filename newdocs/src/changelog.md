@@ -5,7 +5,8 @@
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
-None
+- [Issue 1299](https://github.com/jackdewinter/pymarkdown/issues/1299)
+    - adding scripts to capture performance numbers to enable tuning
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
