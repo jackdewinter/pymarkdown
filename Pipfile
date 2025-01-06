@@ -4,7 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-coverage = "==7.6.1"
+coverage = "==7.6.10"
 importlib-metadata = "==8.5.0"
 mkdocs = "==1.6.1"
 mkdocstrings = "0.27.0"
