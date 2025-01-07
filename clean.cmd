@@ -137,6 +137,7 @@ goto error_end
 if defined RESET_PIPFILE (
 	echo {Syncing python packages with new PipEnv 'Pipfile'.}
 	erase Pipfile.lock
+	pipenv lock
 	pipenv update -d
 	if ERRORLEVEL 1 (
 		echo.

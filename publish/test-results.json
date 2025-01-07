@@ -1367,7 +1367,7 @@
             "totalTests": 653,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 56,
+            "skippedTests": 30,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -1508,10 +1508,10 @@
         },
         {
             "name": "test.rules.test_plugin_manager",
-            "totalTests": 57,
+            "totalTests": 58,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 4,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -1620,10 +1620,10 @@
         },
         {
             "name": "test.test_markdown_extra",
-            "totalTests": 271,
+            "totalTests": 315,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 1,
+            "skippedTests": 11,
             "elapsedTimeInMilliseconds": 0
         },
         {

@@ -20,7 +20,7 @@ from pymarkdown.tokens.fenced_code_block_markdown_token import (
     FencedCodeBlockMarkdownToken,
 )
 from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
-from pymarkdown.tokens.markdown_token import MarkdownToken
+from pymarkdown.tokens.markdown_token import EndMarkdownToken, MarkdownToken
 from pymarkdown.tokens.stack_token import (
     FencedCodeBlockStackToken,
     ListStackToken,
@@ -423,6 +423,41 @@ class FencedLeafBlockProcessor:
         new_tokens.clear()
         new_tokens.extend(adjusted_token_list)
 
+    # pylint: disable=too-many-boolean-expressions
+    @staticmethod
+    def __process_fenced_start_kludge(
+        parser_state: ParserState,
+        position_marker: PositionMarker,
+        new_tokens: List[MarkdownToken],
+    ) -> None:
+        if (
+            len(parser_state.token_stack) == 3
+            and parser_state.token_stack[-2].is_list
+            and len(new_tokens) == 4
+            and new_tokens[-2].is_block_quote_end
+            and new_tokens[-3].is_list_end
+            and new_tokens[-4].is_block_quote_end
+        ):
+            list_end_token = cast(EndMarkdownToken, new_tokens[-3])
+            list_start_token = cast(
+                ListStartMarkdownToken, list_end_token.start_markdown_token
+            )
+            assert list_start_token.leading_spaces is not None
+            leading_space_split = list_start_token.leading_spaces.split("\n")
+            assert len(leading_space_split) >= 2
+
+            # Looks a bit weird, but we need to adjust the second last leading space.
+            POGGER.debug("__process_fenced_start>>list_token>>$", list_start_token)
+            last_leading_space = list_start_token.remove_last_leading_space()
+            assert last_leading_space is not None
+            list_start_token.remove_last_leading_space()
+            POGGER.debug("__process_fenced_start>>list_token>>$", list_start_token)
+            list_start_token.add_leading_spaces(" " * position_marker.index_indent)
+            list_start_token.add_leading_spaces(last_leading_space)
+            POGGER.debug("__process_fenced_start>>list_token>>$", list_start_token)
+
+    # pylint: enable=too-many-boolean-expressions
+
     # pylint: disable=too-many-arguments
     @staticmethod
     def __process_fenced_start(
@@ -469,6 +504,9 @@ class FencedLeafBlockProcessor:
             POGGER.debug(
                 "StackToken>start_markdown_token-->$<<",
                 parser_state.token_stack[-1].matching_markdown_token,
+            )
+            FencedLeafBlockProcessor.__process_fenced_start_kludge(
+                parser_state, position_marker, new_tokens
             )
 
             removed_char_length = (
