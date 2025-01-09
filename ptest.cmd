@@ -4,7 +4,7 @@ set OLDDIR=%CD%
 pushd %~dp0
 
 rem Required to make sure coverage is written to the right areas.
-set COVERAGE_FILE=build/.coverage
+@REM set COVERAGE_FILE=build/.coverage
 set "PROJECT_DIRECTORY=%cd%"
 set PYTHONPATH=%PROJECT_DIRECTORY%
 
