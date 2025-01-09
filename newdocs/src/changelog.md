@@ -5,8 +5,28 @@
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
+- None
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
+- None
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+- None
+
+## Version 0.9.27 - Date: 2025-01-09
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Added
+
 - [Issue 1299](https://github.com/jackdewinter/pymarkdown/issues/1299)
     - adding scripts to capture performance numbers to enable tuning
+- [Issue 35](https://github.com/jackdewinter/pymarkdown/issues/35)
+    - added bash scripts to compliment most of the Windows .cmd scripts,
+      including the clean.cmd being complimented by clean.sh
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
