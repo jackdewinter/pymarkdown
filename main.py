@@ -2,10 +2,8 @@
 Module to provide for a simple bootstrap for the project.
 """
 
-import cProfile
-import os
+import contextlib
 
-from pymarkdown.main import PyMarkdownLint
 
 class Main:
     """
@@ -16,7 +14,7 @@ class Main:
         """
         Main entrance point.
         """
-        try:
+        with contextlib.suppress(KeyboardInterrupt):
             import cProfile
             import os
 
@@ -32,8 +30,6 @@ class Main:
                 )
             else:
                 PyMarkdownLint().main()
-        except KeyboardInterrupt:
-            pass
 
 
 if __name__ == "__main__":
