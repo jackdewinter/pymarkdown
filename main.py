@@ -2,11 +2,6 @@
 Module to provide for a simple bootstrap for the project.
 """
 
-import cProfile
-import os
-
-from pymarkdown.main import PyMarkdownLint
-
 
 class Main:
     """
@@ -17,16 +12,24 @@ class Main:
         """
         Main entrance point.
         """
-        performance_run_indicator = (
-            os.getenv("PYMARKDOWNLINT__PERFRUN", "0").strip().lower()
-        )
-        if performance_run_indicator in ("1", "true"):
-            cProfile.run(
-                "from pymarkdown.main import PyMarkdownLint; PyMarkdownLint().main()",
-                "p0.prof",
+        try:
+            import cProfile
+            import os
+
+            from pymarkdown.main import PyMarkdownLint
+
+            performance_run_indicator = (
+                os.getenv("PYMARKDOWNLINT__PERFRUN", "0").strip().lower()
             )
-        else:
-            PyMarkdownLint().main()
+            if performance_run_indicator in ("1", "true"):
+                cProfile.run(
+                    "from pymarkdown.main import PyMarkdownLint; PyMarkdownLint().main()",
+                    "p0.prof",
+                )
+            else:
+                PyMarkdownLint().main()
+        except KeyboardInterrupt:
+            pass
 
 
 if __name__ == "__main__":

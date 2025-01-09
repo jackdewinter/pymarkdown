@@ -1,1 +1,0 @@
-pipenv run python -m cProfile -o p0.prof main.py scan -r --list C:\enlistments\blog-content\website\content

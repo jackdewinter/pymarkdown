@@ -1,1 +1,0 @@
-pipenv run python -m cProfile -o p0.prof main.py --stack-trace -d MD018,MD020 C:\old\enlistments\blog-content\website\content\articles\SoftwareQuality/linter-16.md
