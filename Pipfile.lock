@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "f8cabf48cdabe934e3c310f05e8f6005542f948bdbe2bef6ac72c5222a3e4719"
+            "sha256": "ade9d3a495dddcda8893053ed92f27b67cae7e4348d59b1c98688a0c79e9e6b7"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -880,12 +880,12 @@
         },
         "pylint-utils": {
             "hashes": [
-                "sha256:11e5176da7d86d478a9b020f71ebe2a9863934d39bec8256771ec6db75639471",
-                "sha256:6bed97505c5bfd2f9163a27c1a9046838716f1fb5bb59a7ce40e6d86c186cfe1"
+                "sha256:38349d7c52c3ca36a98ca79bdea7c41e96b72f2f3bbb537edb044b79fdcd0818",
+                "sha256:fc06c66cc29e0b30c513641015349822282b84cfc180fcec30ae7b765a7cc368"
             ],
             "index": "pypi",
             "markers": "python_full_version >= '3.8.0'",
-            "version": "==0.5.0"
+            "version": "==0.5.1"
         },
         "pymdown-extensions": {
             "hashes": [
@@ -1167,10 +1167,10 @@
         },
         "trove-classifiers": {
             "hashes": [
-                "sha256:0fd08ab2b517ee22f2a539dcdab772ccee4e744eff61ba819846a5fac913d285",
-                "sha256:969b4ea1ef4e5e91b0398b60ae3a5e94027a50a65d5410badc920b2fc3de7ebb"
+                "sha256:9824eb16f7df1b1cc1c217c52ce56c76869d6263da2067f8eadc45122a731cfc",
+                "sha256:be2c7d25e46cd39d5c7151acd389584df3919f61890f5f163c8ee2090ff71e7f"
             ],
-            "version": "==2025.1.7.14"
+            "version": "==2025.1.10.15"
         },
         "twine": {
             "hashes": [

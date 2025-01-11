@@ -200,9 +200,9 @@ if not defined MY_SOURCERY (
 	)
 )
 
-@REM TODO Make this repeatable in GitHub
 echo {Executing pylint utils analyzer on Python source code to verify suppressions and document them.}
-pipenv run python ..\pylint_utils\main.py --config setup.cfg --recurse -r publish\pylint_suppression.json %PYTHON_MODULE_NAME%
+echo pipenv run pylint_utils --config setup.cfg --recurse -r publish\pylint_suppression.json %PYTHON_MODULE_NAME%
+pipenv run pylint_utils --config setup.cfg --recurse -r publish\pylint_suppression.json %PYTHON_MODULE_NAME%
 if ERRORLEVEL 1 (
 	echo.
 	echo {Executing reporting of pylint suppressions in Python source code failed.}
@@ -230,7 +230,7 @@ if "%ALL_FILES%" == "" (
 	echo {Not executing pylint suppression checker on Python source code. No eligible Python files staged.}
 ) else (
 	echo {Executing pylint suppression checker on Python source code.}
-	pipenv run python ..\pylint_utils\main.py -s %ALL_FILES%
+	pipenv run pylint_utils -s %ALL_FILES%
 	if ERRORLEVEL 1 (
 		echo.
 		echo {Executing reporting of unused pylint suppressions in modified Python source code failed.}

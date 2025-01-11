@@ -329,7 +329,6 @@ execute_sourcery() {
 
 find_unused_pylint_suppressions() {
 
-    # TODO: Make this repeatable in GitHub
     SCAN_FILES=
     git diff --name-only --staged > "$TEMP_FILE"
     while IFS= read -r line; do
@@ -343,7 +342,7 @@ find_unused_pylint_suppressions() {
         verbose_echo "{Not executing pylint suppression checker on Python source code. No eligible Python files staged.}"
     else
         verbose_echo "{Executing pylint suppression checker on Python source code.}"
-        if ! pipenv run python $SCRIPT_DIR/../pylint_utils/main.py -s $SCAN_FILES ; then
+        if ! pipenv run pylint_utils -s $SCAN_FILES ; then
             complete_process 1 "{Executing reporting of unused pylint suppressions in modified Python source code failed.}"
         fi
     fi
@@ -366,10 +365,9 @@ publish_analysis_results_if_requested() {
 
 analyze_pylint_suppressions() {
 
-    # TODO: Make this repeatable in GitHub
     echo ""
     verbose_echo "{Executing pylint utils analyzer on Python source code to verify suppressions and document them.}"
-    if ! pipenv run python $SCRIPT_DIR/../pylint_utils/main.py --config $SCRIPT_DIR/setup.cfg --recurse -r $SCRIPT_DIR/publish/pylint_suppression.json $PYTHON_MODULE_NAME ; then
+    if ! pipenv run pylint_utils --recurse -r $SCRIPT_DIR/publish/pylint_suppression.json $PYTHON_MODULE_NAME ; then
         complete_process 1 "{Executing reporting of pylint suppressions in Python source code failed.}"
     fi
 }
