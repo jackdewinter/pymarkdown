@@ -96,7 +96,9 @@ class RuleMd020(RulePlugin):
             assert self.__last_atx_token is not None
             if self.__is_in_normal_atx and self.__last_atx_token.is_text:
                 text_token = cast(TextMarkdownToken, self.__last_atx_token)
-                if text_token.token_text.endswith("#"):
+                if text_token.token_text.endswith(
+                    "#"
+                ) and not text_token.token_text.endswith("\\\b#"):
                     regex_match = re.search(r"\#+$", text_token.token_text)
                     assert regex_match is not None
                     self.report_next_token_error(

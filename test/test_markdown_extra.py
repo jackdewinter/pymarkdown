@@ -15732,7 +15732,64 @@ list 2</li>
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
-    # assert False
+
+
+@pytest.mark.gfm
+def test_extra_053a0():
+    """
+    TBD
+    issue-1302
+    """
+
+    # Arrange
+    source_markdown = """## Intro to C\\#
+
+Emits MD020 warning.
+"""
+    expected_tokens = [
+        "[atx(1,1):2:0:]",
+        "[text(1,4):Intro to C\\\b#: ]",
+        "[end-atx::]",
+        "[BLANK(2,1):]",
+        "[para(3,1):]",
+        "[text(3,1):Emits MD020 warning.:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<h2>Intro to C#</h2>
+<p>Emits MD020 warning.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_extra_053a1():
+    """
+    TBD
+    issue-1302
+    """
+
+    # Arrange
+    source_markdown = """## Intro to C&#35;
+
+Emits MD020 warning.
+"""
+    expected_tokens = [
+        "[atx(1,1):2:0:]",
+        "[text(1,4):Intro to C\a&#35;\a#\a: ]",
+        "[end-atx::]",
+        "[BLANK(2,1):]",
+        "[para(3,1):]",
+        "[text(3,1):Emits MD020 warning.:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<h2>Intro to C#</h2>
+<p>Emits MD020 warning.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm

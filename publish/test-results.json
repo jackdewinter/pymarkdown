@@ -1244,7 +1244,7 @@
         },
         {
             "name": "test.rules.test_md020",
-            "totalTests": 36,
+            "totalTests": 40,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1620,7 +1620,7 @@
         },
         {
             "name": "test.test_markdown_extra",
-            "totalTests": 315,
+            "totalTests": 317,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 11,
