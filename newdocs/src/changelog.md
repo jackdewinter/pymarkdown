@@ -10,7 +10,9 @@
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
-- None
+- [Issue 1302](https://github.com/jackdewinter/pymarkdown/issues/1302)
+    - reported issue where `C\#` at the end of a header was triggering
+      rule Md020 for no spaces between end mark of an Atx Heading
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
