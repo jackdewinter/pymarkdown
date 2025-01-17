@@ -628,20 +628,20 @@ The first change was adding this element at the same level as the `args` element
 This specifically tells Pre-Commit that it should send any files that match that
 regular expression to PyMarkdown.  For those not fluent in "regex": `.*` = any character
 any number of times; `\.` = a `.` character (escaped), `qmd` = the characters themselves,
-and `$` anchors the expression to the end of the string.  In short, look for any filenames
-that explicitly end with the characters `.qmd`.
+and `$` anchors the expression to the end of the string.  In short, look for any
+filenames that explicitly end with the characters `.qmd`.
 
 But that was only half of the solution.  Through research, we found that Pre-Commit
 processes the `type` filter on eligible files before applying any `files` or `exclude`
-filters.  Following that discovery, we determined that we needed to override the `types`
-element we setup in our PyMarkdown hook.  This forces Pre-Commit to collect all
-ligible paths, filter that list down to paths that represent files, and then apply
-our existing `qmd` file filter to end up with our desired list of Quarto files. Therefore,
-we needed to add this element at the same level as the `files` element:
+filters.  Following that discovery, we determined that we needed to override the
+`types` element we setup in our PyMarkdown hook.  This forces Pre-Commit to collect
+all ligible paths, filter that list down to paths that represent files, and then
+apply our existing `qmd` file filter to end up with our desired list of Quarto files.
+Therefore, we needed to add this element at the same level as the `files` element:
 
 ```yaml
       types: [file]
 ```
 
-We crossed our fingers, and everything worked!  We proceeded to run more thorough tests
-on this configuration to be sure, but everything worked out.
+We crossed our fingers, and everything worked!  We proceeded to run more thorough
+tests on this configuration to be sure, but everything worked out.
