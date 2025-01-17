@@ -5,7 +5,9 @@
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
-- None
+- [Issue 1289](https://github.com/jackdewinter/pymarkdown/issues/1289)
+    - added documentation under Pre-Commit for how to write the configuration file
+      for Pre-Commit if an alternate extension is needed for the files being scanned
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed

@@ -252,6 +252,7 @@ main.py scan: error: argument -ae/--alternate-extensions: Extension '' must star
         expected_output, expected_error, expected_return_code
     )
 
+
 def test_markdown_with_dash_ae_xxx1():
     """
     Test to make sure
@@ -259,9 +260,7 @@ def test_markdown_with_dash_ae_xxx1():
 
     # Arrange
     scanner = MarkdownScanner()
-    directory_to_scan = os.path.join(
-        "test", "resources", "test-directory-1"
-    )
+    directory_to_scan = os.path.join("test", "resources", "test-directory-1")
     supplied_arguments = [
         "scan",
         "-l",
@@ -281,6 +280,7 @@ def test_markdown_with_dash_ae_xxx1():
         expected_output, expected_error, expected_return_code
     )
 
+
 def test_markdown_with_dash_ae_xxx2():
     """
     Test to make sure
@@ -288,9 +288,7 @@ def test_markdown_with_dash_ae_xxx2():
 
     # Arrange
     scanner = MarkdownScanner()
-    directory_to_scan = os.path.join(
-        "test", "resources", "test-directory-1"
-    )
+    directory_to_scan = os.path.join("test", "resources", "test-directory-1")
     supplied_arguments = [
         "scan",
         "-l",
