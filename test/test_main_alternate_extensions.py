@@ -251,3 +251,61 @@ main.py scan: error: argument -ae/--alternate-extensions: Extension '' must star
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+def test_markdown_with_dash_ae_xxx1():
+    """
+    Test to make sure
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    directory_to_scan = os.path.join(
+        "test", "resources", "test-directory-1"
+    )
+    supplied_arguments = [
+        "scan",
+        "-l",
+        "--alternate-extension=.qmd",
+        f"{directory_to_scan}/*",
+    ]
+
+    expected_return_code = 0
+    expected_output = f"{directory_to_scan}{os.sep}test.qmd"
+    expected_error = f"Provided file path '{directory_to_scan}{os.sep}README.md' is not a valid file. Skipping."
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+def test_markdown_with_dash_ae_xxx2():
+    """
+    Test to make sure
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    directory_to_scan = os.path.join(
+        "test", "resources", "test-directory-1"
+    )
+    supplied_arguments = [
+        "scan",
+        "-l",
+        "--alternate-extension=.qmd",
+        f"{directory_to_scan}/",
+    ]
+
+    expected_return_code = 0
+    expected_output = f"{directory_to_scan}{os.sep}test.qmd"
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
