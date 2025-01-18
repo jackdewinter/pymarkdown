@@ -1564,7 +1564,7 @@
         },
         {
             "name": "test.test_main_alternate_extensions",
-            "totalTests": 8,
+            "totalTests": 10,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,

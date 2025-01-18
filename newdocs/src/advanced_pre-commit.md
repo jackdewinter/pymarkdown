@@ -535,3 +535,113 @@ through [MkDocs](https://www.mkdocs.org/user-guide/writing-your-docs/#meta-data)
 and hosting it on [ReadTheDocs](https://pymarkdown.readthedocs.io/en/latest/).
 As MkDocs has extra requirements, it makes sense that we have a separate
 configuration file and scan specifically for that directory.
+
+## Things To Watch Out For
+
+In responding to user issues, we believe that how Pre-Commit
+interacts with the PyMarkdown linter may not be intuitive.  Here are the behaviors
+that initially caused us to be confused, and our process for how we worked through
+these issues.
+
+### Scanning Markdown Files with Alternate Extensions From Pre-Commit
+
+This issue was brought to us by a user wanting to apply our PyMarkdown linter to
+`.qmd` files using Pre-Commit.  With helpful pointers from our user, our research
+verified
+that [Quarto](https://quarto.org/docs/get-started/hello/vscode.html) uses Markdown
+files with the `.qmd` extension.  Quarto then interprets these files to produce
+the requested output in a variety of formats.  Given that Quarto files appear to
+be plain Markdown files, following our documentation to instruct the PyMarkdown
+linter to scan Quarto files should be easy.
+
+We started out with basic tests first by placing the user's example `test.qmd`
+file and `README.md` file into a test directory, scanning the directory using the
+PyMarkdown command line to establish a known baseline.  After we verified that the
+`test.qmd` file was being scanned and not the `README.md` file, we introduced simple
+issues that we knew PyMarkdown can detect to both files.  As we predicted, PyMarkdown
+detected the issues in the `test.qmd` files but not the `README.md` file.
+
+With that simple test completed and passing, we took an independent approach to verify
+our user's findings.  We started with the example provided in the section
+[Pointing To PyMarkdown](#pointing-to-pymarkdown):
+
+```yaml
+  - repo: https://github.com/jackdewinter/pymarkdown
+    rev: main
+    hooks:
+      - id: pymarkdown
+```
+
+Using that example as a base, we applied the logic from the
+[Hook Argument Breakdown](#hook-argument-breakdown)
+section, specifically the [--alternate-extensions or -ae](./user-guide.md#--alternate-extensions-or--ae)
+flag of the `scan` action, and added the `args` element to produce:
+
+```yaml
+  - repo: https://github.com/jackdewinter/pymarkdown
+    rev: main
+    hooks:
+      - id: pymarkdown
+        args:
+          - scan
+          - --alternate-extension=.qmd
+```
+
+Placing that content into a `.pre-commit-config.yaml` file located in the same directory
+as the other two files, we then executed Pre-Commit in that directory.  Using our
+independent approach, we ended up at the same location as our user, with this response:
+
+```text
+Provided file path 'README.md' is not a valid file. Skipping.
+```
+
+After scratching our heads for a while, we remembered that in the
+[Creating New Hooks](https://pre-commit.com/#creating-new-hooks)
+section of the Pre-Commit homepage, we needed to setup the `.pre-commit-hooks.yaml`
+file as follows:
+
+```yaml
+- id: pymarkdown
+  name: PyMarkdown
+  description: "PyMarkdown - GitHub Flavored Markdown and CommonMark Compliant Linter"
+  language: python
+  language_version: python3
+  entry: pymarkdown
+  args: [scan]
+  types: [markdown]
+```
+
+This configuration specifically tells Pre-Commit to only pass files that it identifies
+as `markdown` to the PyMarkdown scanner. Pre-Commit does this by using the [identify](https://github.com/pre-commit/identify)
+package which defines `markdown` files by their `md` extension.  This means that
+unless we provide something to override that configuration, Pre-Commit will only
+pass files in the repository that have a `md` extension to PyMarkdown.
+
+Therefore, to address this problem, our solution included two connected changes
+to tell Pre-Commit to pass files with the `.qmd` extension to PyMarkdown.
+The first change was adding this element at the same level as the `args` element:
+
+```yaml
+      files: .*\.qmd$
+```
+
+This specifically tells Pre-Commit that it should send any files that match that
+regular expression to PyMarkdown.  For those not fluent in "regex": `.*` = any character
+any number of times; `\.` = a `.` character (escaped), `qmd` = the characters themselves,
+and `$` anchors the expression to the end of the string.  In short, look for any
+filenames that explicitly end with the characters `.qmd`.
+
+But that was only half of the solution.  Through research, we found that Pre-Commit
+processes the `type` filter on eligible files before applying any `files` or `exclude`
+filters.  Following that discovery, we determined that we needed to override the
+`types` element we setup in our PyMarkdown hook.  This forces Pre-Commit to collect
+all ligible paths, filter that list down to paths that represent files, and then
+apply our existing `qmd` file filter to end up with our desired list of Quarto files.
+Therefore, we needed to add this element at the same level as the `files` element:
+
+```yaml
+      types: [file]
+```
+
+We crossed our fingers, and everything worked!  We proceeded to run more thorough
+tests on this configuration to be sure, but everything worked out.
