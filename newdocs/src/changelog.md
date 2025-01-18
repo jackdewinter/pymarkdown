@@ -8,6 +8,8 @@
 - [Issue 1289](https://github.com/jackdewinter/pymarkdown/issues/1289)
     - added documentation under Pre-Commit for how to write the configuration file
       for Pre-Commit if an alternate extension is needed for the files being scanned
+- [Issue 1318](https://github.com/jackdewinter/pymarkdown/issues/1318)
+    - ported perf_*.cmd scripts to perf_.sh scripts
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
