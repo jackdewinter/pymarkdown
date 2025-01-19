@@ -9,6 +9,11 @@ repos:
     hooks:
       - id: isort
         name: "Format: ISort"
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.10.0-2
+    hooks:
+      - id: shfmt
+        name: "Format: ShFmt"
   - repo: local
     hooks:
       - id: generate-docs
@@ -142,10 +147,7 @@ repos:
           "types-pyyaml"
       ]
       pass_filenames: false
-  # - repo: local
+  # - repo: https://github.com/koalaman/shellcheck-precommit
+  #   rev: v0.10.0
   #   hooks:
-  #   - id: xxx
-  #     name: "Scan:   PTest"
-  #     entry: ptest.cmd -a -m -c
-  #     language: system
-  #     pass_filenames: false
+  #   -   id: shellcheck
