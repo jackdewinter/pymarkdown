@@ -10,6 +10,8 @@
       for Pre-Commit if an alternate extension is needed for the files being scanned
 - [Issue 1318](https://github.com/jackdewinter/pymarkdown/issues/1318)
     - ported perf_*.cmd scripts to perf_.sh scripts
+- [Issue 1320](https://github.com/jackdewinter/pymarkdown/issues/1320)
+    - added ShFmt .sh formatter to PreCommit
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
