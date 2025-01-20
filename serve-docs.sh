@@ -11,7 +11,7 @@ SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 # Give the user hints on how the script can be used.
 show_usage() {
 	echo "Usage:"
-	echo "  $SCRIPT_NAME [flags]"
+	echo "  ${SCRIPT_NAME} [flags]"
 	echo ""
 	echo "Summary:"
 	echo "  Create a webserver hosting for the documentation from the project's 'newdocs' directory."
@@ -31,7 +31,7 @@ parse_command_line() {
 	DEBUG_MODE=0
 	PARAMS=()
 	while (("$#")); do
-		case "$1" in
+		case "${1}" in
 		-v | --verbose)
 			VERBOSE_ARGS=--verbose
 			shift
@@ -44,17 +44,17 @@ parse_command_line() {
 			show_usage
 			;;
 		-*) # unsupported flags
-			echo "Error: Unsupported flag $1" >&2
+			echo "Error: Unsupported flag ${1}" >&2
 			show_usage
 			;;
 		*) # preserve positional arguments
-			PARAMS+=("$1")
+			PARAMS+=("${1}")
 			shift
 			;;
 		esac
 	done
 
-	if [[ $DEBUG_MODE -ne 0 ]]; then
+	if [[ ${DEBUG_MODE} -ne 0 ]]; then
 		set -x
 	fi
 }
@@ -63,6 +63,6 @@ parse_command_line() {
 parse_command_line "$@"
 
 # Main body of the script.
-pipenv run mkdocs serve --config-file $SCRIPT_DIR/newdocs/mkdocs.yml $VERBOSE_ARGS
+pipenv run mkdocs serve --config-file "${SCRIPT_DIR}/newdocs/mkdocs.yml" ${VERBOSE_ARGS}
 
 exit 1
