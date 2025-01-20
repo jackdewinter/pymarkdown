@@ -147,7 +147,10 @@ repos:
           "types-pyyaml"
       ]
       pass_filenames: false
-  # - repo: https://github.com/koalaman/shellcheck-precommit
-  #   rev: v0.10.0
-  #   hooks:
-  #   -   id: shellcheck
+  - repo: https://github.com/koalaman/shellcheck-precommit
+    rev: v0.10.0
+    hooks:
+    - id: shellcheck
+      name: "Scan:   Shellcheck"
+      args: ["-o","require-variable-braces"]
+

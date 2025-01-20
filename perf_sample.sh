@@ -7,66 +7,63 @@ set -uo pipefail
 # Set up any project based local script variables.
 SCRIPT_NAME=$(basename -- "${BASH_SOURCE[0]}")
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
-TEMP_FILE=$(mktemp /tmp/$SCRIPT_NAME.XXXXXXXXX)
-TEMP_PERF_OUTPUT=$(mktemp /tmp/$SCRIPT_NAME.XXXXXXXXX)
+TEMP_FILE=$(mktemp /tmp/"${SCRIPT_NAME}".XXXXXXXXX)
+TEMP_PERF_OUTPUT=$(mktemp /tmp/"${SCRIPT_NAME}".XXXXXXXXX)
 
 SCRIPT_TITLE="Profiling application constructed sample file"
 
 TEST_FILE_DIRECTORY="${SCRIPT_DIR}/build/ptest"
 
 # Perform any cleanup required by the script.
+# shellcheck disable=SC2317  # Unreachable code
 cleanup_function() {
 
 	# If the temp file was used, get rid of it.
-	if [ -f "$TEMP_FILE" ]; then
-		rm "$TEMP_FILE"
+	if [ -f "${TEMP_FILE}" ]; then
+		rm "${TEMP_FILE}"
 	fi
-	if [ -f "$TEMP_PERF_OUTPUT" ]; then
-		rm "$TEMP_PERF_OUTPUT"
+	if [ -f "${TEMP_PERF_OUTPUT}" ]; then
+		rm "${TEMP_PERF_OUTPUT}"
 	fi
 
 	# Restore the current directory.
-	if [ "$DID_PUSHD" -eq 1 ]; then
-		popd >/dev/null 2>&1 || exit
-	fi
+	popd >/dev/null 2>&1 || exit
 }
 
 # Start the main part of the script off with a title.
 start_process() {
-	if [ "$VERBOSE_MODE" -ne 0 ]; then
+	if [ "${VERBOSE_MODE}" -ne 0 ]; then
 		echo "Saving current directory prior to execution."
 	fi
-	if ! pushd . >"$TEMP_FILE" 2>&1; then
-		cat "$TEMP_FILE"
+	if ! pushd "${SCRIPT_DIR}" >"${TEMP_FILE}" 2>&1; then
+		cat "${TEMP_FILE}"
 		complete_process 1 "Script cannot save the current directory before proceeding."
 	fi
-	DID_PUSHD=1
-
 	trap cleanup_function EXIT
 
-	if [ "$VERBOSE_MODE" -ne 0 ]; then
-		echo "$SCRIPT_TITLE..."
+	if [ "${VERBOSE_MODE}" -ne 0 ]; then
+		echo "${SCRIPT_TITLE}..."
 	fi
 }
 
 # Simple function to stop the process with information about why it stopped.
 complete_process() {
-	local SCRIPT_RETURN_CODE=$1
+	local SCRIPT_RETURN_CODE=${1}
 	local COMPLETE_REASON=${2:-}
 
-	if [ -n "$COMPLETE_REASON" ]; then
-		echo "$COMPLETE_REASON"
+	if [ -n "${COMPLETE_REASON}" ]; then
+		echo "${COMPLETE_REASON}"
 	fi
 
-	if [ "$SCRIPT_RETURN_CODE" -ne 0 ]; then
-		echo "$SCRIPT_TITLE failed."
+	if [ "${SCRIPT_RETURN_CODE}" -ne 0 ]; then
+		echo "${SCRIPT_TITLE} failed."
 	else
-		if [ "$VERBOSE_MODE" -ne 0 ]; then
-			echo "$SCRIPT_TITLE succeeded."
+		if [ "${VERBOSE_MODE}" -ne 0 ]; then
+			echo "${SCRIPT_TITLE} succeeded."
 		fi
 	fi
 
-	exit "$SCRIPT_RETURN_CODE"
+	exit "${SCRIPT_RETURN_CODE}"
 }
 
 # Give the user hints on how the script can be used.
@@ -74,7 +71,7 @@ show_usage() {
 	local SCRIPT_NAME=$0
 
 	echo "Usage:"
-	echo "  $(basename "$SCRIPT_NAME") [flags]"
+	echo "  $(basename "${SCRIPT_NAME}") [flags]"
 	echo ""
 	echo "Summary:"
 	echo "  Executes a scan of a constructed document, capturing timing measurements."
@@ -107,22 +104,22 @@ parse_command_line() {
 		case "$1" in
 		-c | --csv-file)
 			if [ -z "${2:-}" ]; then
-				echo "Error: Argument $1 must be followed by the file to write to." >&2
+				echo "Error: Argument ${1} must be followed by the file to write to." >&2
 				show_usage
 			fi
-			CSV_OUTPUT=$2
+			CSV_OUTPUT=${2}
 			shift
 			shift
 			;;
 		-r | --repeats)
 			if [ -z "${2:-}" ]; then
-				echo "Error: Argument $1 must be followed by the number of repititions to use." >&2
+				echo "Error: Argument ${1} must be followed by the number of repititions to use." >&2
 				show_usage
 			fi
-			NUM_REPEATS=$2
-			if ! [[ $NUM_REPEATS =~ ^[1-9][0-9]*$ ]]; then
+			NUM_REPEATS=${2}
+			if ! [[ ${NUM_REPEATS} =~ ^[1-9][0-9]*$ ]]; then
 				echo "${NUM} is not an integer"
-				echo "Error: Argument $1 is not followed by a valid number: ${NUM_REPEATS}" >&2
+				echo "Error: Argument ${1} is not followed by a valid number: ${NUM_REPEATS}" >&2
 				show_usage
 			fi
 			shift
@@ -152,17 +149,17 @@ parse_command_line() {
 			show_usage
 			;;
 		-*) # unsupported flags
-			echo "Error: Unsupported flag $1" >&2
+			echo "Error: Unsupported flag ${1}" >&2
 			show_usage
 			;;
 		*) # preserve positional arguments
-			PARAMS+=("$1")
+			PARAMS+=("${1}")
 			shift
 			;;
 		esac
 	done
 
-	if [[ $DEBUG_MODE -ne 0 ]]; then
+	if [[ ${DEBUG_MODE} -ne 0 ]]; then
 		set -x
 	fi
 }
@@ -171,11 +168,11 @@ parse_command_line() {
 BASH_EXEC=${BASH}
 if [[ ${MSYSTEM:-} =~ ^MINGW(64|32)$ ]]; then
 	WINPID=$(ps -p $$ | awk 'NR ==2{print $4}')
-	if [[ -z $WINPID ]]; then
+	if [[ -z ${WINPID} ]]; then
 		echo "Cannot get Windows PID for Bash shell."
 		exit 1
 	fi
-	BASH_EXEC="$(wmic process where "ProcessID=$WINPID" get ExecutablePath | sed -n 2p | sed 's/\\/\\\\/g')"
+	BASH_EXEC="$(wmic process where "ProcessID=${WINPID}" get ExecutablePath | sed -n 2p | sed 's/\\/\\\\/g')"
 fi
 
 # Parse any command line values.
@@ -193,16 +190,16 @@ if ! mkdir -p "${TEST_FILE_DIRECTORY}" >"${TEMP_FILE}" 2>&1; then
 	cat "${TEMP_FILE}"
 	complete_process 1 "{Creating test report directory failed.}"
 fi
-rm -r "${TEST_FILE_DIRECTORY}"/* >/dev/null 2>&1
+rm -r "${TEST_FILE_DIRECTORY:?}"/* >/dev/null 2>&1
 
 # Create a composite document with NUM_REPEATS copies of the source document.
 echo "Creating single document with ${NUM_REPEATS} copies of '${SINGLE_TEST_SOURCE_FILE}'."
-for i in $(seq ${NUM_REPEATS}); do
+for _ in $(seq "${NUM_REPEATS}"); do
 	cat "${SINGLE_TEST_SOURCE_FILE}" >>"${SINGLE_TEST_DESTINATION_FILE}"
 done
 
 # Remove any __pycache__ related files unless asked not to.
-if [[ $NO_CLEAR_MODE -eq 0 ]]; then
+if [[ ${NO_CLEAR_MODE} -eq 0 ]]; then
 	echo "Resetting Python caches..."
 	PYTHONPYCACHEPREFIX="${SCRIPT_DIR}"/.pycache
 	rm -r "${PYTHONPYCACHEPREFIX}" >/dev/null 2>&1
@@ -220,7 +217,7 @@ if [[ $NO_CLEAR_MODE -eq 0 ]]; then
 		cat "${TEMP_FILE}"
 		complete_process 1 "{Pre-compilation of project failed.}"
 	fi
-	if ! python -OO -c "import subprocess; subprocess.run(['${BASH_EXEC}','run.sh','scan','$SINGLE_TEST_SOURCE_FILE'])" >"${TEMP_FILE}" 2>&1; then
+	if ! python -OO -c "import subprocess; subprocess.run(['${BASH_EXEC}','run.sh','scan','${SINGLE_TEST_SOURCE_FILE}'])" >"${TEMP_FILE}" 2>&1; then
 		cat "${TEMP_FILE}"
 		complete_process 1 "{Pre-measurement pass of project failed.}"
 	fi
@@ -229,7 +226,7 @@ else
 fi
 
 NO_RULES_ARGS=
-if [[ $NO_RULES_MODE -ne 0 ]]; then
+if [[ ${NO_RULES_MODE} -ne 0 ]]; then
 	NO_RULES_ARGS="'--disable-rules','*',"
 fi
 
@@ -238,7 +235,7 @@ python -OO -c "import subprocess,os,time; \
     my_env = os.environ.copy();\
     my_env['PYMARKDOWNLINT__PERFRUN'] = '1';\
     start_time = time.time();\
-    subprocess.run(['${BASH_EXEC}','run.sh',${NO_RULES_ARGS}'scan','$SINGLE_TEST_DESTINATION_FILE'], env=my_env);\
+    subprocess.run(['${BASH_EXEC}','run.sh',${NO_RULES_ARGS}'scan','${SINGLE_TEST_DESTINATION_FILE}'], env=my_env);\
     value = time.time() - start_time;\
     print(f'{value:.3f}');\
     " >"${TEMP_PERF_OUTPUT}" 2>&1
@@ -247,18 +244,18 @@ echo "Document scanning completed."
 EXECUTION_TIME=$(tail -n 1 "${TEMP_PERF_OUTPUT}")
 LINES_IN_PROF_OUTPUT=$(sed -n '$=' "${TEMP_PERF_OUTPUT}")
 
-if [[ -n $CSV_OUTPUT ]]; then
-	echo "${NUM_REPEATS},${LINES_IN_PROF_OUTPUT},$EXECUTION_TIME" >>"$CSV_OUTPUT"
+if [[ -n ${CSV_OUTPUT} ]]; then
+	echo "${NUM_REPEATS},${LINES_IN_PROF_OUTPUT},${EXECUTION_TIME}" >>"${CSV_OUTPUT}"
 else
 	echo ""
 	echo "Repeats in File: ${NUM_REPEATS}"
-	echo "Lines in output: $LINES_IN_PROF_OUTPUT"
-	echo "Execution time:  $EXECUTION_TIME"
+	echo "Lines in output: ${LINES_IN_PROF_OUTPUT}"
+	echo "Execution time:  ${EXECUTION_TIME}"
 	echo ""
 fi
 
 # If in view mode, use SnakeViz to visualize.
-if [[ $VIEW_MODE -ne 0 ]]; then
+if [[ ${VIEW_MODE} -ne 0 ]]; then
 	echo ""
 	echo "Starting SnakeViz to view performance profile..."
 	pipenv run snakeviz p0.prof
