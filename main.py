@@ -3,6 +3,7 @@ Module to provide for a simple bootstrap for the project.
 """
 
 import contextlib
+import sys
 
 
 class Main:
@@ -19,6 +20,8 @@ class Main:
             import os
 
             from pymarkdown.main import PyMarkdownLint
+
+            print(sys.argv)
 
             performance_run_indicator = (
                 os.getenv("PYMARKDOWNLINT__PERFRUN", "0").strip().lower()

@@ -28,11 +28,16 @@ snakeviz = "==2.2.2"
 sourcery = "==1.28.0"
 types-pyyaml = "*"
 twine = "<5.1"
+streamlit = "*"
+pandas = "*"
+pandas-datareader = "*"
+altair = "*"
 
 [packages]
 columnar = ">=1.4.0"
 application-properties = ">=0.8.2"
 typing-extensions = ">=4.7.0"
+altair = {extras = ["all"], version = "*"}
 
 [requires]
 python_version = "3.9"

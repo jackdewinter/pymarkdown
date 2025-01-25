@@ -220,7 +220,7 @@ set_test_variables() {
 # Execute the tests themselves.
 execute_tests() {
 
-	local pytest_args=
+	local pytest_args=()
 	TEST_EXECUTION_SUCCEEDED=1
 
 	# Setup the args to reflect the mode in which the tests are to be invoked.
@@ -230,7 +230,7 @@ execute_tests() {
 		pytest_args=(--strict-markers -ra --junitxml="${TEST_RESULTS_XML_PATH}" --html=report/report.html)
 		if [[ ${COVERAGE_MODE} -ne 0 ]]; then
 			echo "{Executing full test suite with coverage...}"
-			pytest_args=("${pytest_args[@]}" --cov --cov-branch --cov-report xml:"${TEST_COVERAGE_XML_PATH}" --cov-report html:report/coverage)
+			pytest_args+=(--cov --cov-branch --cov-report xml:"${TEST_COVERAGE_XML_PATH}" --cov-report html:report/coverage)
 		else
 			echo "{Executing full test suite...}"
 		fi
@@ -269,7 +269,7 @@ summarize_test_executions() {
 	PYSCAN_REPORT_OPTIONS=(--junit "${TEST_RESULTS_XML_PATH}")
 	if [[ ${COVERAGE_MODE} -ne 0 ]]; then
 		if [[ ${TEST_EXECUTION_SUCCEEDED} -ne 0 ]]; then
-			PYSCAN_REPORT_OPTIONS=("${PYSCAN_REPORT_OPTIONS[@]}" --cobertura "${TEST_COVERAGE_XML_PATH}")
+			PYSCAN_REPORT_OPTIONS+=(--cobertura "${TEST_COVERAGE_XML_PATH}")
 		else
 			echo "{Coverage was specified, but one or more tests failed.  Skipping reporting of coverage.}"
 		fi
