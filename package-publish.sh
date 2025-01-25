@@ -7,7 +7,7 @@ set -uo pipefail
 # Set up any project based local script variables.
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 
-if ! python utils/packaging.py "${SCRIPT_DIR}/dist"; then
+if ! python utils/verify_package_release.py "${SCRIPT_DIR}/dist"; then
 	echo "Validation of 'dist' package directory failed.  Run 'package-release.sh' before trying again."
 	exit 1
 fi

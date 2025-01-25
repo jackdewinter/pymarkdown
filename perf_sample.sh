@@ -227,7 +227,7 @@ fi
 
 NO_RULES_ARGS=
 if [[ ${NO_RULES_MODE} -ne 0 ]]; then
-	NO_RULES_ARGS="'--disable-rules','*',"
+	NO_RULES_ARGS="'--','-d','\\*',"
 fi
 
 echo "Scanning created document..."

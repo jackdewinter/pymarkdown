@@ -14,6 +14,8 @@
     - added `ShFmt` .sh formatter to Pre-Commit configuration
 - [Issue 1322](https://github.com/jackdewinter/pymarkdown/issues/1322)
     - added `Shellcheck` .sh scanner to Pre-Commit configuration
+- [Issue 1327](https://github.com/jackdewinter/pymarkdown/issues/1327)
+    - added simple mechanism to log and view performance measurements
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed

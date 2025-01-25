@@ -209,23 +209,26 @@ parse_command_line "$@"
 # Clean entrance into the script.
 start_process
 
-# Determine whether the CSV file will be written to and make sure that the directory exists.
+# Determine whether the output files will be written to and make sure that the directory exists.
 if [[ -n ${TEST_SERIES_TAG} ]]; then
-	DEST_FILE="build/series-${TEST_SERIES_TAG}.csv"
+	DEST_CSV_FILE="build/series-${TEST_SERIES_TAG}.csv"
+	DEST_STATS_FILE="build/series-${TEST_SERIES_TAG}.json"
 else
-	DEST_FILE=build/series.csv
+	DEST_CSV_FILE=build/series.csv
+	DEST_STATS_FILE="build/series.json"
 fi
+RAW_PROFILE_FILE="${SCRIPT_DIR}/p0.prof"
 
-if ! mkdir -p "$(dirname "${DEST_FILE}")" >"${TEMP_FILE}" 2>&1; then
+if ! mkdir -p "$(dirname "${DEST_CSV_FILE}")" >"${TEMP_FILE}" 2>&1; then
 	cat "${TEMP_FILE}"
 	complete_process 1 "{Creating test report directory failed.}"
 fi
-rm "${DEST_FILE}" >/dev/null 2>&1
+rm "${DEST_CSV_FILE}" >/dev/null 2>&1
 
 # Set up so we can pass the '--no-rules' argument to the perf_sample.sh script.
-PERF_SAMPLE_ARGS=
+PERF_SAMPLE_ARGS=()
 if [[ ${NO_RULES_MODE} -ne 0 ]]; then
-	PERF_SAMPLE_ARGS="--no-rules "
+	PERF_SAMPLE_ARGS=("--no-rules")
 fi
 
 # If asked to only clear the python cache for the first sample, do so before
@@ -235,7 +238,7 @@ if [[ ${ONLY_FIRST} -ne 0 ]]; then
 		cat "${TEMP_FILE}"
 		complete_process 1 "Executing warmup run before series failed."
 	fi
-	PERF_SAMPLE_ARGS="${PERF_SAMPLE_ARGS} --no-clear-cache"
+	PERF_SAMPLE_ARGS+=("--no-clear-cache")
 fi
 
 # Repeat the samples NUM_COUNT times.
@@ -249,7 +252,7 @@ for i in $(seq "${NUM_COUNT}"); do
 		for REPEAT_COUNT in "${repeat_array[@]}"; do
 
 			echo "  Repeat Count: ${REPEAT_COUNT}"
-			if ! "${SCRIPT_DIR}/perf_sample.sh" "${PERF_SAMPLE_ARGS}" --repeats "${REPEAT_COUNT}" -c "${DEST_FILE}" >"${TEMP_FILE}" 2>&1; then
+			if ! "${SCRIPT_DIR}/perf_sample.sh" "${PERF_SAMPLE_ARGS[@]}" --repeats "${REPEAT_COUNT}" -c "${DEST_CSV_FILE}" >"${TEMP_FILE}" 2>&1; then
 				cat "${TEMP_FILE}"
 				complete_process 1 "Executing profile run for ${REPEAT_COUNT} repeats failed."
 			fi
@@ -262,7 +265,7 @@ for i in $(seq "${NUM_COUNT}"); do
 		while [ "${REPEAT_COUNT}" -le "${NUM_MAXIMUM}" ]; do
 
 			echo "  Repeat Count: ${REPEAT_COUNT}"
-			if ! "${SCRIPT_DIR}/perf_sample.sh" "${PERF_SAMPLE_ARGS}" --repeats "${REPEAT_COUNT}" -c "${DEST_FILE}" >"${TEMP_FILE}" 2>&1; then
+			if ! "${SCRIPT_DIR}/perf_sample.sh" "${PERF_SAMPLE_ARGS[@]}" --repeats "${REPEAT_COUNT}" -c "${DEST_CSV_FILE}" >"${TEMP_FILE}" 2>&1; then
 				cat "${TEMP_FILE}"
 				complete_process 1 "Executing profile run for ${REPEAT_COUNT} repeats failed."
 			fi
@@ -272,7 +275,19 @@ for i in $(seq "${NUM_COUNT}"); do
 	fi
 done
 
+echo "Generating performance statistics for last sample with ${REPEAT_COUNT} repeats."
+if ! pipenv run python -c "import pstats; p = pstats.Stats('p0.prof'); p.sort_stats('tottime'), p.print_stats(20);" >"${TEMP_FILE}"; then
+	cat "${TEMP_FILE}"
+	complete_process 1 "Generating raw performance statistics failed."
+fi
+if ! pipenv run python utils/summarize_profile.py "${TEMP_FILE}" >"${DEST_STATS_FILE}"; then
+	cat "${TEMP_FILE}"
+	complete_process 1 "Generating curated performance statistics failed."
+fi
+
 echo ""
-echo "CSV file '${DEST_FILE}' written with sample timings."
+echo "CSV file '${DEST_CSV_FILE}' written with sample timings."
+echo "RAW performance file located at '${RAW_PROFILE_FILE}'."
+echo "JSON file '${DEST_STATS_FILE}' written with sample timings."
 
 complete_process 0
