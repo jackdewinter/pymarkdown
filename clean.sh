@@ -348,7 +348,7 @@ find_unused_pylint_suppressions() {
 		fi
 	done <"${TEMP_FILE}"
 
-	echo ""
+	verbose_echo ""
 	if [[ -z ${SCAN_FILES[*]} ]]; then
 		verbose_echo "{Not executing pylint suppression checker on Python source code. No eligible Python files staged.}"
 	else
