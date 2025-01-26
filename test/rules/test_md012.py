@@ -306,6 +306,25 @@ My 10 lines
 1. barney
 """,
     ),
+    pluginRuleTest(
+        "bad_in_list_with_new_list_with_double_blanks_at_middle",
+        source_file_contents="""1. betty
+1. fred
+
+
+   fred2
+1. barney
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:4:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="md009",
+        fix_expected_file_contents="""1. betty
+1. fred
+
+   fred2
+1. barney
+""",
+    ),
     pluginRuleTest(  # test_extra_051a1
         "bad_in_list_with_double_blanks_at_start",
         source_file_contents="""1.
@@ -329,6 +348,36 @@ My 10 lines
         fix_expected_file_contents="""1. fred
 
 1. barney
+""",
+    ),
+    pluginRuleTest(
+        "bad_in_list_with_newlist_with_double_blanks_at_end",
+        source_file_contents="""1. fred
+1. barney
+
+
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        disable_rules="md009",
+        fix_expected_file_contents="""1. fred
+1. barney
+""",
+    ),
+    pluginRuleTest(
+        "bad_in_list_with_double_newlist_with_double_blanks_at_end",
+        source_file_contents="""1. fred
+1. barney
+1. betty
+
+
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        disable_rules="md009",
+        fix_expected_file_contents="""1. fred
+1. barney
+1. betty
 """,
     ),
     pluginRuleTest(
@@ -540,24 +589,39 @@ My 10 lines
         source_file_contents="""+ 1.
 
      fred2
-+ 1. barney
+  1. barney
 """,
         scan_expected_return_code=0,
         disable_rules="md009",
     ),
     pluginRuleTest(
-        "bad_in_list_in_list_with_double_blanks_at_end",
+        "bad_in_list_in_list_with_newlist_with_double_blanks_at_end",
         source_file_contents="""+ 1. fred
+  1. barney
 
 
-+ 1. barney
 """,
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:3:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        scan_expected_output="""{temp_source_path}:5:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
         disable_rules="md009",
         fix_expected_file_contents="""+ 1. fred
+  1. barney
+""",
+    ),
+    pluginRuleTest(
+        "bad_in_list_in_list_with_double_newlist_with_double_blanks_at_end",
+        source_file_contents="""+ 1. fred
+  1. barney
+  1. betty
 
-+ 1. barney
+
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:6:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
+        disable_rules="md009",
+        fix_expected_file_contents="""+ 1. fred
+  1. barney
+  1. betty
 """,
     ),
     pluginRuleTest(
@@ -613,7 +677,6 @@ My 10 lines
         scan_expected_return_code=1,
         scan_expected_output="""{temp_source_path}:4:2: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 3] (no-multiple-blanks)""",
         disable_rules="md009",
-        # use_fix_debug=True,
         fix_expected_file_contents="""> 1. fred
 >
 >    fred2
@@ -666,6 +729,187 @@ My 10 lines
 >
 >    fred3
 > 1. barney
+""",
+    ),
+    pluginRuleTest(
+        "issue-1326-a",
+        source_file_contents="""# z
+
+z
+
+
+
+
+<div class="grid cards" markdown>
+
+-   z
+
+-   z
+
+
+-   z
+</div>
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:7:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 4] (no-multiple-blanks)
+{temp_source_path}:14:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="md030,md032,md033",
+        fix_expected_file_contents="""# z
+
+z
+
+<div class="grid cards" markdown>
+
+-   z
+
+-   z
+
+-   z
+</div>
+""",
+    ),
+    pluginRuleTest(
+        "issue-1326-b",
+        source_file_contents="""# z
+
+z
+
+
+
+
+<div class="grid cards" markdown>
+
+-   z
+
+
+-   z
+
+-   z
+</div>
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:7:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 4] (no-multiple-blanks)
+{temp_source_path}:12:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="md030,md032,md033",
+        fix_expected_file_contents="""# z
+
+z
+
+<div class="grid cards" markdown>
+
+-   z
+
+-   z
+
+-   z
+</div>
+""",
+    ),
+    pluginRuleTest(
+        "issue-1326-c",
+        source_file_contents="""# z
+
+z
+
+<div class="grid cards" markdown>
+
+-   z
+
+
+-   z
+
+-   z
+</div>
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:9:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="md030,md032,md033",
+        fix_expected_file_contents="""# z
+
+z
+
+<div class="grid cards" markdown>
+
+-   z
+
+-   z
+
+-   z
+</div>
+""",
+    ),
+    pluginRuleTest(
+        "issue-1326-d",
+        source_file_contents="""# z
+
+z
+
+
+
+
+<div class="grid cards" markdown>
+
+-   z
+
+-   z
+
+-   z
+
+
+</div>
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:7:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 4] (no-multiple-blanks)
+{temp_source_path}:16:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="md030,md032,md033",
+        fix_expected_file_contents="""# z
+
+z
+
+<div class="grid cards" markdown>
+
+-   z
+
+-   z
+
+-   z
+
+</div>
+""",
+    ),
+    pluginRuleTest(
+        "issue-1326-e",
+        source_file_contents="""# z
+
+z
+
+<div class="grid cards" markdown>
+
+-   z
+
+-   z
+
+-   z
+
+
+</div>
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:13:1: MD012: Multiple consecutive blank lines [Expected: 1, Actual: 2] (no-multiple-blanks)""",
+        disable_rules="md030,md032,md033",
+        fix_expected_file_contents="""# z
+
+z
+
+<div class="grid cards" markdown>
+
+-   z
+
+-   z
+
+-   z
+
+</div>
 """,
     ),
 ]

@@ -19,6 +19,7 @@ class ClosedContainerAdjustments:
     adjustment: int = 0
     count: int = 0
     count2: int = 0
+    list_nudge_count: int = 0
 
 
 class LeadingSpaceIndexTracker:
@@ -49,6 +50,14 @@ class LeadingSpaceIndexTracker:
         assert token.is_block_quote_start or token.is_list_start
         self.__container_token_stack.append(token)
         self.__closed_container_adjustments.append(ClosedContainerAdjustments())
+
+    def nudge_list_container(self, token: MarkdownToken) -> None:
+        assert token.is_new_list_item
+        assert (
+            self.__container_token_stack
+            and self.__container_token_stack[-1].is_list_start
+        )
+        self.__closed_container_adjustments[-1].list_nudge_count += 1
 
     def register_container_end(self, token: MarkdownToken) -> None:
         """
@@ -224,7 +233,10 @@ class LeadingSpaceIndexTracker:
             LeadingSpaceIndexTracker.calculate_token_line_number(token)
             - self.get_container_stack_item(initial_index).line_number
         )
-        index -= last_closed_container_info.adjustment
+        index -= (
+            last_closed_container_info.adjustment
+            + last_closed_container_info.list_nudge_count
+        )
         index -= adjust
         return index
 

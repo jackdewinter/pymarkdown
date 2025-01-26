@@ -272,4 +272,6 @@ class RuleMd012(RulePlugin):
             self.__leading_space_index_tracker.open_container(token)
         elif token.is_block_quote_end or token.is_list_end:
             self.__leading_space_index_tracker.register_container_end(token)
+        elif token.is_new_list_item:
+            self.__leading_space_index_tracker.nudge_list_container(token)
         self.__leading_space_index_tracker.track_since_last_non_end_token(token)
