@@ -15793,6 +15793,88 @@ Emits MD020 warning.
 
 
 @pytest.mark.gfm
+def test_extra_053b0():
+    """
+    TBD
+    issue-1326
+    """
+
+    # Arrange
+    source_markdown = """# z
+
+z
+
+
+
+
+<div class="grid cards" markdown>
+
+-   z
+
+-   z
+
+
+-   z
+</div>
+"""
+    expected_tokens = [
+        "[atx(1,1):1:0:]",
+        "[text(1,3):z: ]",
+        "[end-atx::]",
+        "[BLANK(2,1):]",
+        "[para(3,1):]",
+        "[text(3,1):z:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[BLANK(5,1):]",
+        "[BLANK(6,1):]",
+        "[BLANK(7,1):]",
+        "[html-block(8,1)]",
+        '[text(8,1):<div class="grid cards" markdown>:]',
+        "[end-html-block:::False]",
+        "[BLANK(9,1):]",
+        "[ulist(10,1):-::4::\n\n]",
+        "[para(10,5):]",
+        "[text(10,5):z:]",
+        "[end-para:::True]",
+        "[BLANK(11,1):]",
+        "[li(12,1):4::]",
+        "[para(12,5):]",
+        "[text(12,5):z:]",
+        "[end-para:::True]",
+        "[BLANK(13,1):]",
+        "[BLANK(14,1):]",
+        "[li(15,1):4::]",
+        "[para(15,5):]",
+        "[text(15,5):z:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[html-block(16,1)]",
+        "[text(16,1):</div>:]",
+        "[end-html-block:::False]",
+        "[BLANK(17,1):]",
+    ]
+    expected_gfm = """<h1>z</h1>
+<p>z</p>
+<div class="grid cards" markdown>
+<ul>
+<li>
+<p>z</p>
+</li>
+<li>
+<p>z</p>
+</li>
+<li>
+<p>z</p>
+</li>
+</ul>
+</div>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
 def test_extra_999():
     """
     Temporary test to keep coverage up while consistency checks disabled.

@@ -23,6 +23,9 @@
 - [Issue 1302](https://github.com/jackdewinter/pymarkdown/issues/1302)
     - reported issue where `C\#` at the end of a header was triggering
       rule Md020 for no spaces between end mark of an Atx Heading
+- [Issue 1326](https://github.com/jackdewinter/pymarkdown/issues/1326)
+    - fix mode for MD012 not properly handling double lines in lists after
+      new list indicators
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
