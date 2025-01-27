@@ -128,16 +128,26 @@ class RuleMd037(RulePlugin):
     def __check(
         self,
         context: PluginScanContext,
-        elibible_before: EligibleEmphasis,
+        eligible_before: EligibleEmphasis,
         eligible_after: EligibleEmphasis,
     ) -> None:
-        if elibible_before.character_after == " ":
+        before_surrounded = (
+            eligible_before.character_before == " "
+            and eligible_before.character_after == " "
+        )
+        after_surrounded = (
+            eligible_after.character_before == " "
+            and eligible_after.character_after == " "
+        )
+
+        if before_surrounded and eligible_after.character_after == " ":
             if context.in_fix_mode:
-                assert elibible_before.text_token is not None
-                self.__fix(elibible_before.text_token, elibible_before, True)
+                assert eligible_before.text_token is not None
+                self.__fix(eligible_before.text_token, eligible_before, True)
             else:
-                self.__report(context, elibible_before, eligible_after.found_length)
-        if eligible_after.character_before == " ":
+                self.__report(context, eligible_before, eligible_after.found_length)
+
+        if after_surrounded and eligible_before.character_before == " ":
             if context.in_fix_mode:
                 assert eligible_after.text_token is not None
                 self.__fix(eligible_after.text_token, eligible_after, False)
@@ -254,14 +264,26 @@ class RuleMd037(RulePlugin):
         )
         if character_before == "\a" and character_after == "\a":
             return None, start_index
-        return (
-            EligibleEmphasis(
-                emphasis_character,
-                start_index,
-                found_length,
-                character_before,
-                character_after,
-                text_token,
-            ),
-            start_index,
+        is_before = (
+            ParserHelper.is_character_at_index_whitespace(character_before, 0)
+            if character_before
+            else False
         )
+        is_after = (
+            ParserHelper.is_character_at_index_whitespace(character_after, 0)
+            if character_after
+            else False
+        )
+        if is_before or is_after:
+            return (
+                EligibleEmphasis(
+                    emphasis_character,
+                    start_index,
+                    found_length,
+                    character_before,
+                    character_after,
+                    text_token,
+                ),
+                start_index,
+            )
+        return None, start_index
