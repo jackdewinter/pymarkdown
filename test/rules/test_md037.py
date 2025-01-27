@@ -490,6 +490,24 @@ this text __is__ in bold
         fix_expected_file_contents="""abc *<http://google.com>* ghi
 """,
     ),
+    pluginRuleTest(
+        "issue-1288-a",
+        source_file_contents="""{{< include _a.qmd >}}
+{{< include _b.qmd >}}
+""",
+    ),
+    pluginRuleTest(
+        "issue-1288-b",
+        source_file_contents="""{{< include _a_.qmd >}}
+{{< include _b.qmd >}}
+""",
+    ),
+    pluginRuleTest(
+        "issue-1288-c",
+        source_file_contents="""{{< include _ a_.qmd >}}
+{{< include _b.qmd >}}
+""",
+    ),
 ]
 
 

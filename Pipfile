@@ -31,13 +31,12 @@ twine = "<5.1"
 streamlit = "*"
 pandas = "*"
 pandas-datareader = "*"
-altair = "*"
+altair = {extras = ["all"], version = "*"}
 
 [packages]
 columnar = ">=1.4.0"
 application-properties = ">=0.8.2"
 typing-extensions = ">=4.7.0"
-altair = {extras = ["all"], version = "*"}
 
 [requires]
 python_version = "3.9"

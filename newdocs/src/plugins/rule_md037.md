@@ -26,8 +26,9 @@ Spaces inside emphasis markers.
 The primary reason for enabling this rule is to try and detect cases
 where the author probably meant to specify emphasis on a word or
 series of words.  Most parsers will not detect emphasized text if
-there is whitespace on both sides of the emphasis characters, so
-this rule specifically looks for instances where that happens.
+there is whitespace on either side of the emphasis characters.
+Therefore, this rule check for cases where at least one of a pair of eligible
+emphasis characters are surrounded by whitespace characters.
 
 Note that this rule does not currently manage cases of nested emphasis,
 such as `***` for combining an italics emphasis with a bold emphasis.
@@ -36,12 +37,25 @@ such as `***` for combining an italics emphasis with a bold emphasis.
 
 ### Failure Scenarios
 
-This rule triggers if a pair of matching emphasis characters occur
+This rule triggers if matching emphasis characters occur
 within the same paragraph with Unicode whitespace around either of the emphasis
-characters.
+characters.  The obvious case is:
 
 ```Markdown
 this is ** not some ** bold text
+```
+
+However, this rule also triggers if only one of the two ends has emphasis
+characters surrounding them, producing:
+
+```Markdown
+this is ** not some** bold text
+```
+
+and
+
+```Markdown
+this is **not some ** bold text
 ```
 
 ### Correct Scenarios
