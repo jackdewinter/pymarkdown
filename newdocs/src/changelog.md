@@ -26,6 +26,10 @@
 - [Issue 1326](https://github.com/jackdewinter/pymarkdown/issues/1326)
     - fix mode for MD012 not properly handling double lines in lists after
       new list indicators
+- [Issue 1288](https://github.com/jackdewinter/pymarkdown/issues/1288)
+    - rule Md037 and documentation updated to properly ensure that at
+      least one of the two ends has spaces on both sides of the emphasis
+      sequence
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
