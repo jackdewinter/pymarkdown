@@ -99,6 +99,7 @@ configuration item.
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `names`   | `string` | None | Comma-separated list of proper nouns to preserve capitalization on.** |
 | `code_blocks` | `boolean` | `True` | Search in Fenced Code Block elements and Indented Code Block elements. |
+| `code_spans` | `boolean` | `True` | Search in Inline Code Span elements. |
 
 ** The comma-separated list of items is a string with a format of `{item},...,{item}`.
 Any leading or trailing space characters surrounding the `{item}` are trimmed during
