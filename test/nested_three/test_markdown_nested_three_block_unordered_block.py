@@ -3491,7 +3491,7 @@ def test_nested_three_block_unordered_block_extra_block_drop_block_with_fenced_c
     a new block quote, dropping that block, and a fenced block.
 
     Was: test_extra_044mcz1
-    refs: bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_blockx
+    refs: bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_blockx_x
     """
     # Arrange
     source_markdown = """> + > -----
@@ -3553,7 +3553,7 @@ def test_nested_three_block_unordered_block_extra_block_drop_block_with_blanks_a
     a new block quote, dropping that block, and a fenced block.
 
     Was: test_extra_046ca
-    refs: bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_blockx
+    refs: bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_blockx_x
     """
     # Arrange
     source_markdown = """> + > -----

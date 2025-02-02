@@ -16001,11 +16001,10 @@ def test_extra_999():
 # Expected:+ + + -----\n      > block 1\n      > block 2\n    -----\n\n    ```block\n    A code block\n    ```\n\n    -----\n  + another list\n:
 #   Actual:+ + + -----\n      > block 1\n      > block 2\n-----\n\n    ```block\n    A code block\n    ```\n\n    -----\n+ another list\n:
 
-# SNAFU1
-# bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_blockx
-# File "c:\enlistments\pymarkdown\pymarkdown\transform_markdown\transform_containers.py", line 2061, in __adjust
-# assert inner_token_index < len(split_leading_spaces)
-#        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+# NONCOMP9
+# bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block_double_drop_with_thematics
+# Expected:> + > -----\n>   > > block 1\n>   > > block 2\n>   -----\n>\n>   ```block\n>   A code block\n>   ```\n>\n>   -----\n> + another list\n:
+#   Actual:> + > -----\n>   > > block 1\n>   > > block 2\n> > -----\n> \n> ```block\n>   A code block\n>```\n> \n> -----\n> + another list\n:
 
 # SNAFU2
 # bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_blockx_double_drop
@@ -16023,19 +16022,8 @@ def test_extra_999():
 #            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 # AssertionError
 
-# SNAFU4
-# bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_blocks
-# File "c:\enlistments\pymarkdown\pymarkdown\transform_markdown\transform_containers.py", line 2061, in __adjust
-# assert inner_token_index < len(split_leading_spaces)
-#        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-# SNAFU5
-# bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block_double_drop_with_thematics
-# Expected:> + > -----\n>   > > block 1\n>   > > block 2\n>   -----\n>\n>   ```block\n>   A code block\n>   ```\n>\n>   -----\n> + another list\n:
-#   Actual:> + > -----\n>   > > block 1\n>   > > block 2\n> > -----\n> \n> ```block\n>   A code block\n>```\n> \n> -----\n> + another list\n:
-
 # SNAFU6
-# bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_double_drop
+# bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_double_drop_x
 #   File "C:\enlistments\pymarkdown\pymarkdown\plugins\rule_md_031.py", line 394, in __fix_spacing_list_detect_special
 #     selected_leading_space = split_spaces[index]
 #                              ~~~~~~~~~~~~^^^^^^^

@@ -30,6 +30,8 @@
     - rule Md037 and documentation updated to properly ensure that at
       least one of the two ends has spaces on both sides of the emphasis
       sequence
+- [Issue 1334](https://github.com/jackdewinter/pymarkdown/issues/1334)
+    - fixed SNAFU1 for MD031 fix mode, assert
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
