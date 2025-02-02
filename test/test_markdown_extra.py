@@ -16001,12 +16001,6 @@ def test_extra_999():
 # Expected:+ + + -----\n      > block 1\n      > block 2\n    -----\n\n    ```block\n    A code block\n    ```\n\n    -----\n  + another list\n:
 #   Actual:+ + + -----\n      > block 1\n      > block 2\n-----\n\n    ```block\n    A code block\n    ```\n\n    -----\n+ another list\n:
 
-# SNAFU1
-# bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_blockx
-# File "c:\enlistments\pymarkdown\pymarkdown\transform_markdown\transform_containers.py", line 2061, in __adjust
-# assert inner_token_index < len(split_leading_spaces)
-#        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
 # SNAFU2
 # bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_blockx_double_drop
 #   File "c:\enlistments\pymarkdown\pymarkdown\block_quotes\block_quote_processor.py", line 698, in __handle_existing_block_quote_fenced_special_part_two

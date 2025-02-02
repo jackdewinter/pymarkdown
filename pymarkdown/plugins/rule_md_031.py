@@ -141,11 +141,37 @@ class RuleMd031(RulePlugin):
         new_token = copy.deepcopy(token)
         self.__fix_count += 1
         new_token.adjust_line_number(context, self.__fix_count)
+        xx = self.__last_token
+
+        # because this is the special handling, from __calculate_special_case, we know that
+        # we must have 2 block quotes.
+        gh = self.__leading_space_index_tracker.get_container_stack_size() - 3
+        while gh >= 0:
+            dd = self.__leading_space_index_tracker.get_container_stack_item(gh)
+            if dd.is_list_start:
+                self.__container_adjustments[gh].append(
+                    PendingContainerAdjustment(0, "")
+                )
+                assert self.__last_token.is_end_token
+                xy = cast(EndMarkdownToken, self.__last_token)
+                xx = EndMarkdownToken(
+                    xy.type_name,
+                    xy.extracted_whitespace,
+                    "",
+                    xy.start_markdown_token,
+                    xy.was_forced,
+                    xy.line_number,
+                    xy.column_number,
+                )
+                break
+            gh -= 1
+
         replacement_tokens = [
             BlankLineMarkdownToken(
-                extracted_whitespace="", position_marker=PositionMarker(0, 0, "")
+                extracted_whitespace="",
+                position_marker=PositionMarker(new_token.line_number - 1, 0, ""),
             ),
-            self.__last_token,
+            xx,
             new_token,
         ]
         self.register_replace_tokens_request(
