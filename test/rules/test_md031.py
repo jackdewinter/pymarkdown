@@ -6346,8 +6346,6 @@ another list
 {temp_source_path}:9:7: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
-        use_debug=True,
-        mark_fix_as_skipped=skip_fix_bad_markdown,
         fix_expected_file_contents="""> + > -----
 >   > > block 1
 >   > > block 2
@@ -6569,7 +6567,7 @@ another list
 """,
     ),
     pluginRuleTest(  # test_extra_049l7
-        "bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_double_drop",
+        "bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_double_drop_x",
         source_file_contents="""> + > -----
 >   > + list 1
 >   >   list 2
