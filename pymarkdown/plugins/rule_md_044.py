@@ -48,6 +48,7 @@ class RuleMd044(RulePlugin):
         super().__init__()
         self.__proper_name_list: List[str] = []
         self.__check_in_code_blocks: bool = False
+        self.__check_in_code_spans: bool = False
         self.__is_in_code_block: bool = False
         self.__names: str = ""
         self.__replacement_items: List[FoundReplacement] = []
@@ -81,6 +82,9 @@ class RuleMd044(RulePlugin):
         self.__check_in_code_blocks = self.plugin_configuration.get_boolean_property(
             "code_blocks", default_value=True
         )
+        self.__check_in_code_spans = self.plugin_configuration.get_boolean_property(
+            "code_spans", default_value=True
+        )
         self.__proper_name_list = []
         self.__names = self.plugin_configuration.get_string_property(
             "names",
@@ -108,6 +112,7 @@ class RuleMd044(RulePlugin):
         """
         return [
             QueryConfigItem("code_blocks", self.__check_in_code_blocks),
+            QueryConfigItem("code_spans", self.__check_in_code_spans),
             QueryConfigItem("names", self.__names),
         ]
 
@@ -464,6 +469,8 @@ class RuleMd044(RulePlugin):
     def __handle_inline_code_span(
         self, context: PluginScanContext, token: MarkdownToken
     ) -> None:
+        if not self.__check_in_code_spans:
+            return
         code_span_token = cast(InlineCodeSpanMarkdownToken, token)
         same_line_offset = -(
             len(code_span_token.extracted_start_backticks)

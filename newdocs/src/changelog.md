@@ -34,7 +34,9 @@
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
-- None
+- [Issue 1277](https://github.com/jackdewinter/pymarkdown/issues/1277)
+    - Rule Md044 changed to add a `code_spans` exclusion as a compliment
+      to the `code_blocks` exclusion.
 
 ## Version 0.9.27 - Date: 2025-01-09
 

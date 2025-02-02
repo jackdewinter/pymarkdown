@@ -330,6 +330,22 @@ yes, `a ParaGraph is` contained.
 """,
     ),
     pluginRuleTest(
+        "bad_code_span_text_with_code_blocks_disabled",
+        source_file_contents="""# This section contains a paragraph
+
+yes, `a paragraph is` contained.
+""",
+        set_args=["plugins.md044.names=ParaGraph", "plugins.md044.code_spans=$!False"],
+        use_strict_config=True,
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:1:27: MD044: Proper names should have the correct capitalization [Expected: ParaGraph; Actual: paragraph] (proper-names)
+""",
+        fix_expected_file_contents="""# This section contains a ParaGraph
+
+yes, `a paragraph is` contained.
+""",
+    ),
+    pluginRuleTest(
         "bad_code_span_text_multiple_lines",
         source_file_contents="""# This section contains a paragraph
 
@@ -983,6 +999,7 @@ def test_md044_query_config():
   CONFIGURATION ITEM  TYPE     VALUE
 
   code_blocks         boolean  True
+  code_spans          boolean  True
   names               string   ""
 
 """,

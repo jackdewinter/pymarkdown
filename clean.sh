@@ -343,7 +343,7 @@ find_unused_pylint_suppressions() {
 	SCAN_FILES=()
 	git diff --name-only --staged >"${TEMP_FILE}"
 	while IFS= read -r line; do
-		if [[ ${line} == *.py ]] && [[ ${line} != "pytest_execute.py" ]]; then
+		if [[ ${line} == *.py ]] && [[ ${line} != "pytest_execute.py" ]] && [[ -f ${line} ]]; then
 			SCAN_FILES+=("${line}")
 		fi
 	done <"${TEMP_FILE}"
