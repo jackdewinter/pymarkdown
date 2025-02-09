@@ -8913,10 +8913,10 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_049l7():
+def test_extra_049l7a():
     """
     TBD
-    bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_double_drop
+    bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_double_drop_x
     """
 
     # Arrange
@@ -8981,7 +8981,81 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_049l8():
+def test_extra_049l7b():
+    """
+    TBD
+    bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_double_drop_x
+    """
+
+    # Arrange
+    source_markdown = """> + > -----
+>   > + list 1
+>   >   list 2
+>   > + list 3
+>
+>   ```block
+>   A code block
+>   ```
+>
+>   -----
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n>\n> \n> ]",
+        "[ulist(1,3):+::4::  \n  \n  \n\n  ]",
+        "[block-quote(1,5)::> \n>   > \n>   > \n>   > \n>]",
+        "[tbreak(1,7):-::-----]",
+        "[ulist(2,7):+::8::  \n]",
+        "[para(2,9):\n]",
+        "[text(2,9):list 1\nlist 2::\n]",
+        "[end-para:::True]",
+        "[li(4,7):8::]",
+        "[para(4,9):]",
+        "[text(4,9):list 3:]",
+        "[end-para:::True]",
+        "[BLANK(5,2):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[fcode-block(6,5):`:3:block:::::]",
+        "[text(7,5):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(9,2):]",
+        "[tbreak(10,5):-::-----]",
+        "[li(11,3):4::]",
+        "[para(11,5):]",
+        "[text(11,5):another list:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(12,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<blockquote>
+<hr />
+<ul>
+<li>list 1
+list 2</li>
+<li>list 3</li>
+</ul>
+</blockquote>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+<li>
+<p>another list</p>
+</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_extra_049l8a():
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_triple_drop
@@ -9045,6 +9119,143 @@ list 2</li>
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_049l8b():
+    """
+    TBD
+    bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_triple_drop
+    """
+
+    # Arrange
+    source_markdown = """> + > -----
+>   > + list 1
+>   >   list 2
+>   > + list 3
+>
+> ```block
+> A code block
+> ```
+>
+> -----
+> another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n>\n> \n> \n]",
+        "[ulist(1,3):+::4:]",
+        "[block-quote(1,5)::> \n>   > \n>   > \n>   > \n>]",
+        "[tbreak(1,7):-::-----]",
+        "[ulist(2,7):+::8::  \n]",
+        "[para(2,9):\n]",
+        "[text(2,9):list 1\nlist 2::\n]",
+        "[end-para:::True]",
+        "[li(4,7):8::]",
+        "[para(4,9):]",
+        "[text(4,9):list 3:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[end-ulist:::False]",
+        "[BLANK(5,2):]",
+        "[fcode-block(6,3):`:3:block:::::]",
+        "[text(7,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(9,2):]",
+        "[tbreak(10,3):-::-----]",
+        "[para(11,3):]",
+        "[text(11,3):another list:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(12,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<blockquote>
+<hr />
+<ul>
+<li>list 1
+list 2</li>
+<li>list 3</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+<p>another list</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_extra_049l8c():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """> + > -----
+>   > + list 1
+>   >   list 2
+>   >   list 3
+>
+> ```block
+> A code block
+> ```
+>
+> -----
+> another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n>\n> \n> \n]",
+        "[ulist(1,3):+::4:]",
+        "[block-quote(1,5)::> \n>   > \n>   > \n>   > \n>]",
+        "[tbreak(1,7):-::-----]",
+        "[ulist(2,7):+::8::  \n  \n]",
+        "[para(2,9):\n\n]",
+        "[text(2,9):list 1\nlist 2\nlist 3::\n\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[end-ulist:::False]",
+        "[BLANK(5,2):]",
+        "[fcode-block(6,3):`:3:block:::::]",
+        "[text(7,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(9,2):]",
+        "[tbreak(10,3):-::-----]",
+        "[para(11,3):]",
+        "[text(11,3):another list:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(12,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<blockquote>
+<hr />
+<ul>
+<li>list 1
+list 2
+list 3</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+<p>another list</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
@@ -15896,14 +16107,14 @@ def test_extra_999():
     ParserHelper.count_newlines_in_texts("text")
 
 
+# FOOBAR2 bad_fenced_block_in_list_in_block_quote_in_list_with_previous_block_double_drop
+# SNAFU3 bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_blockx_triple_drop
+
+
 # FOOBAR1 bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_list_triple_drop_and_thematics
 # Expected:> > + ______\n> >   + list 1\n> >     list 2\n> >   + list 3\n> ______\n>\n> ```block\n> A code block\n> ```\n>\n> ______\n:
 #   Actual:> > + ______\n> >   + list 1\n> >     list 2\n> >   + list 3\n> ______\n> \n>```block\n> A code block\n> ```\n> \n>______\n:
 # -> bq and list
-
-# FOOBAR2 bad_fenced_block_in_list_in_block_quote_in_list_with_previous_block_double_drop
-# Expected:1. > + ----\n   >   > block 1\n   >   > block 2\n   >\n   > ```block\n   > A code block\n   > ```\n   >\n   > ----\n:
-#   Actual:1. > + ----\n   >   > block 1\n   >   > block 2\n   >\n   > ```block\n   > A code block\n   >```\n   >\n   > ----\n:
 
 # FOOBAR3 bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_list_double_drop_with_thematics
 # Expected:1. > > ----\n   > > + list 1\n   > >   list 2\n   > > + list 3\n   > ----\n   >\n   > ```block\n   > A code block\n   > ```\n   >\n   > ----\n:
@@ -15959,7 +16170,9 @@ def test_extra_999():
 #   Actual:+ + + -----\n      + list 1\n        list 2\n      + list 3\n\n  ```block\n  A code block\n```\n  \n  another list\n:
 
 # FOOBAR14
-# bad_fenced_block_in_block_quote_in_list_with_previous_inner_list_double_drop
+# # bad_fenced_block_in_block_quote_in_list_with_previous_inner_list_double_drop
+# Expected:1. > +\n   >   list 3\n   > + list 3\n\n   ```block\n   A code block\n   ```\n\n   --------\n:
+#   Actual:1. > +\n   >   list 3\n   > + list 3\n   \n   ```block\nA code block\n   ```\n   \n--------\n:
 
 # NONCOMP1
 # bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_double_drop
@@ -16013,18 +16226,12 @@ def test_extra_999():
 #            ^^^^^^^^^
 # AssertionError
 
-# SNAFU3
-# bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_blockx_triple_drop
-# SNAFU7
-# bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_triple_dropx
-#   File "C:\enlistments\pymarkdown\pymarkdown\plugins\rule_md_031.py", line 949, in __process_pending_container_end_tokens
-#     assert xx.start_markdown_token == self.__removed_container_stack_token
-#            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-# AssertionError
-
-# SNAFU6
+# SNAFU8
 # bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_double_drop_x
-#   File "C:\enlistments\pymarkdown\pymarkdown\plugins\rule_md_031.py", line 394, in __fix_spacing_list_detect_special
+#   File "C:\enlistments\pymarkdown\pymarkdown\plugins\rule_md_031.py", line 463, in __fix_spacing_list_detect_special
 #     selected_leading_space = split_spaces[index]
-#                              ~~~~~~~~~~~~^^^^^^^
-# IndexError: list index out of range
+
+# SNAFU9
+# bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_double_drop
+#   File "c:\enlistments\pymarkdown\pymarkdown\transform_markdown\transform_list_block.py", line 773, in __rehydrate_list_start_deep
+#     block_quote_leading_space = split_leading_spaces[line_number_delta]
