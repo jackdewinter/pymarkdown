@@ -75,7 +75,7 @@ class LeadingSpaceIndexTracker:
         return bool(self.__end_tokens)
 
     def process_container_end(
-        self, token: MarkdownToken
+        self, token: MarkdownToken, kludge: bool = False
     ) -> Tuple[MarkdownToken, EndMarkdownToken]:
         """
         Process a registered container end.
@@ -84,7 +84,7 @@ class LeadingSpaceIndexTracker:
         if self.__container_token_stack[-1].is_block_quote_start:
             self.__process_container_end_block_quote(token)
         else:
-            self.__process_container_end_list(token)
+            self.__process_container_end_list(token, kludge)
 
         del self.__closed_container_adjustments[-1]
         end_token = self.__real_end_tokens[0]
@@ -102,6 +102,9 @@ class LeadingSpaceIndexTracker:
         if not token.is_end_token:
             self.__since_last_non_end_token.clear()
         self.__since_last_non_end_token.append(token)
+
+    def since_last_non_end_token(self) -> List[MarkdownToken]:
+        return self.__since_last_non_end_token[:]
 
     def get_closed_container_info(self, index: int) -> ClosedContainerAdjustments:
         """
@@ -171,8 +174,28 @@ class LeadingSpaceIndexTracker:
                     self.__closed_container_adjustments[stack_index].count2 += 1
                 break
 
-    def __process_container_end_list(self, token: MarkdownToken) -> None:
-        for stack_index in range(len(self.__container_token_stack) - 2, -1, -1):
+    def __process_container_end_list(self, token: MarkdownToken, kludge: bool) -> None:
+
+        if kludge:
+            x = len(self.__container_token_stack)
+            ## If
+            assert len(self.__container_token_stack) >= 2
+            # if len(self.__container_token_stack) >= 2:
+            kludge = not self.__container_token_stack[x - 2].is_list_start
+            # endif
+        if kludge:
+            has_any_block_quotes = False
+            x = 0
+            while (
+                not has_any_block_quotes
+                and x < len(self.__container_token_stack)
+                and not self.__container_token_stack[x].is_block_quote_start
+            ):
+                x += 1
+            kludge = x != len(self.__container_token_stack)
+
+        g = 1 if kludge else 2
+        for stack_index in range(len(self.__container_token_stack) - g, -1, -1):
             current_stack_token = self.__container_token_stack[stack_index]
             if current_stack_token.is_list_start:
                 line_number_delta = (

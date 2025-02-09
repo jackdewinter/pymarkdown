@@ -478,6 +478,51 @@ class ContainerBlockNestedProcessor:
         )
 
     @staticmethod
+    def __adjust_line_2_a(
+        parser_state: ParserState, grab_bag: ContainerGrabBag
+    ) -> None:
+        POGGER.debug("\n\nBOOM\n\n")
+        POGGER.debug("parser_state.token_stack=$", parser_state.token_stack)
+        POGGER.debug("parser_state.token_document=$", parser_state.token_document)
+        POGGER.debug("container_level_tokens=$", grab_bag.container_tokens)
+
+        ending_blank_line_tokens = []
+        while parser_state.token_document[-1].is_blank_line:
+            ending_blank_line_tokens.append(parser_state.token_document[-1])
+            del parser_state.token_document[-1]
+
+        x_tokens, _ = parser_state.close_open_blocks_fn(
+            parser_state,
+            include_lists=True,
+        )
+        # test_extra_049l8b - if ct and xt at all end-li and end-bq, empty ct.
+        are_x_tokens_all_container_end_tokens = False
+        if x_tokens:
+            are_x_tokens_all_container_end_tokens = all(
+                (x.is_list_end or x.is_block_quote_end) for x in x_tokens
+            )
+        are_container_tokens_all_container_end_tokens = False
+        if grab_bag.container_tokens:
+            are_container_tokens_all_container_end_tokens = all(
+                (x.is_list_end or x.is_block_quote_end)
+                for x in grab_bag.container_tokens
+            )
+
+        if (
+            are_x_tokens_all_container_end_tokens
+            and are_container_tokens_all_container_end_tokens
+        ):
+            parser_state.token_document.extend(grab_bag.container_tokens)
+            grab_bag.clear_container_tokens()
+        parser_state.token_document.extend(x_tokens)
+
+        parser_state.token_document.extend(ending_blank_line_tokens)
+
+        POGGER.debug("parser_state.token_stack=$", parser_state.token_stack)
+        POGGER.debug("parser_state.token_document=$", parser_state.token_document)
+        POGGER.debug("container_level_tokens=$", grab_bag.container_tokens)
+
+    @staticmethod
     def __adjust_line_2(
         parser_state: ParserState,
         indent_level: int,
@@ -485,24 +530,19 @@ class ContainerBlockNestedProcessor:
         indent_was_adjusted: bool,
         grab_bag: ContainerGrabBag,
     ) -> bool:
+        """
+        Handle the case where the document currently ends with blank lines, but there
+        are end list and end block quote tokens that need to be processed ahead of the
+        blank line.  This occurs because the blank line forced the end container tokens
+        to occur, and just needs to be rearranged to make sense.
+        """
+
         if (
             parser_state.token_document[-1].is_blank_line
             and (grab_bag.end_container_indices.block_index + grab_bag.start_index)
             < indent_level
         ):
-            POGGER.debug("\n\nBOOM\n\n")
-
-            y_tokens = []
-            while parser_state.token_document[-1].is_blank_line:
-                y_tokens.append(parser_state.token_document[-1])
-                del parser_state.token_document[-1]
-
-            x_tokens, _ = parser_state.close_open_blocks_fn(
-                parser_state,
-                include_lists=True,
-            )
-            parser_state.token_document.extend(x_tokens)
-            parser_state.token_document.extend(y_tokens)
+            ContainerBlockNestedProcessor.__adjust_line_2_a(parser_state, grab_bag)
         elif (
             not nested_container_starts.block_index
             and grab_bag.adj_line_to_parse
