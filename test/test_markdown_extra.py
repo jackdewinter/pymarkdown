@@ -8916,7 +8916,7 @@ list 2</li>
 def test_extra_049l7a():
     """
     TBD
-    bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_double_drop
+    bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_double_drop_x
     """
 
     # Arrange
@@ -8984,7 +8984,7 @@ list 2</li>
 def test_extra_049l7b():
     """
     TBD
-    bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_double_drop
+    bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_double_drop_x
     """
 
     # Arrange
@@ -16107,14 +16107,14 @@ def test_extra_999():
     ParserHelper.count_newlines_in_texts("text")
 
 
+# FOOBAR2 bad_fenced_block_in_list_in_block_quote_in_list_with_previous_block_double_drop
+# SNAFU3 bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_blockx_triple_drop
+
+
 # FOOBAR1 bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_list_triple_drop_and_thematics
 # Expected:> > + ______\n> >   + list 1\n> >     list 2\n> >   + list 3\n> ______\n>\n> ```block\n> A code block\n> ```\n>\n> ______\n:
 #   Actual:> > + ______\n> >   + list 1\n> >     list 2\n> >   + list 3\n> ______\n> \n>```block\n> A code block\n> ```\n> \n>______\n:
 # -> bq and list
-
-# FOOBAR2 bad_fenced_block_in_list_in_block_quote_in_list_with_previous_block_double_drop
-# Expected:1. > + ----\n   >   > block 1\n   >   > block 2\n   >\n   > ```block\n   > A code block\n   > ```\n   >\n   > ----\n:
-#   Actual:1. > + ----\n   >   > block 1\n   >   > block 2\n   >\n   > ```block\n   > A code block\n   >```\n   >\n   > ----\n:
 
 # FOOBAR3 bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_list_double_drop_with_thematics
 # Expected:1. > > ----\n   > > + list 1\n   > >   list 2\n   > > + list 3\n   > ----\n   >\n   > ```block\n   > A code block\n   > ```\n   >\n   > ----\n:
@@ -16170,7 +16170,9 @@ def test_extra_999():
 #   Actual:+ + + -----\n      + list 1\n        list 2\n      + list 3\n\n  ```block\n  A code block\n```\n  \n  another list\n:
 
 # FOOBAR14
-# bad_fenced_block_in_block_quote_in_list_with_previous_inner_list_double_drop
+# # bad_fenced_block_in_block_quote_in_list_with_previous_inner_list_double_drop
+# Expected:1. > +\n   >   list 3\n   > + list 3\n\n   ```block\n   A code block\n   ```\n\n   --------\n:
+#   Actual:1. > +\n   >   list 3\n   > + list 3\n   \n   ```block\nA code block\n   ```\n   \n--------\n:
 
 # NONCOMP1
 # bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_double_drop
@@ -16224,9 +16226,12 @@ def test_extra_999():
 #            ^^^^^^^^^
 # AssertionError
 
-# SNAFU3
-# bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_blockx_triple_drop
-#   File "C:\enlistments\pymarkdown\pymarkdown\plugins\rule_md_031.py", line 949, in __process_pending_container_end_tokens
-#     assert xx.start_markdown_token == self.__removed_container_stack_token
-#            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-# AssertionError
+# SNAFU8
+# bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_double_drop_x
+#   File "C:\enlistments\pymarkdown\pymarkdown\plugins\rule_md_031.py", line 463, in __fix_spacing_list_detect_special
+#     selected_leading_space = split_spaces[index]
+
+# SNAFU9
+# bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_double_drop
+#   File "c:\enlistments\pymarkdown\pymarkdown\transform_markdown\transform_list_block.py", line 773, in __rehydrate_list_start_deep
+#     block_quote_leading_space = split_leading_spaces[line_number_delta]
