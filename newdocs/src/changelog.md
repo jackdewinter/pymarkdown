@@ -34,6 +34,8 @@
     - fixed SNAFU1 for MD031 fix mode, assert
 - [Issue 1344](https://github.com/jackdewinter/pymarkdown/issues/1344)
     - fixed SNAFU6 for MD031 fix mode, assert
+- [Issue 1346](https://github.com/jackdewinter/pymarkdown/issues/1346)
+    - fixed SNAFU8 for MD031 fix mode, assert
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed

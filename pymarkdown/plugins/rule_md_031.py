@@ -134,9 +134,7 @@ class RuleMd031(RulePlugin):
         self.__x4.clear()
         self.__x5.clear()
 
-    def __fix_spacing_special_case(
-        self, context: PluginScanContext, token: MarkdownToken
-    ) -> None:
+    def __xabc(self, context: PluginScanContext, token: MarkdownToken) -> None:
         assert (
             self.__last_token is not None
         ), "Special case means at least a block token."
@@ -182,6 +180,11 @@ class RuleMd031(RulePlugin):
             context, self.__last_token, token, replacement_tokens
         )
 
+    def __fix_spacing_special_case(
+        self, context: PluginScanContext, token: MarkdownToken
+    ) -> None:
+
+        self.__xabc(context, token)
         end_token = cast(EndMarkdownToken, self.__last_token)
         block_quote_start_token = cast(
             BlockQuoteMarkdownToken, end_token.start_markdown_token
@@ -193,6 +196,96 @@ class RuleMd031(RulePlugin):
         self.__container_adjustments[-1].append(
             PendingContainerAdjustment(
                 len(split_bleading_spaces) - 1, split_bleading_spaces[-1].rstrip()
+            )
+        )
+
+    def __fix_spacing_special_case2(
+        self, context: PluginScanContext, token: MarkdownToken
+    ) -> None:
+        """
+        This is another special case where we have to do things long-form.
+        """
+        assert (
+            self.__last_token is not None
+        ), "Special case means at least a block token."
+        assert (
+            self.__last_token is not None
+        ), "Special case means at least a block token."
+        new_token = copy.deepcopy(token)
+        self.__fix_count += 1
+        new_token.adjust_line_number(context, self.__fix_count)
+
+        assert self.__second_last_token is not None
+        replacement_tokens = [
+            BlankLineMarkdownToken(
+                extracted_whitespace="",
+                position_marker=PositionMarker(new_token.line_number - 1, 0, ""),
+            ),
+            self.__second_last_token,
+            self.__last_token,
+            new_token,
+        ]
+        self.register_replace_tokens_request(
+            context, self.__second_last_token, token, replacement_tokens
+        )
+
+        end_token = cast(EndMarkdownToken, self.__second_last_token)
+        stack_token = self.__leading_space_index_tracker.get_container_stack_item(-1)
+        assert stack_token == end_token.start_markdown_token
+        list_start_token = cast(ListStartMarkdownToken, stack_token)
+        assert (
+            list_start_token.leading_spaces is not None
+        ), "At least one line should have been processed."
+        split_leading_spaces = list_start_token.leading_spaces.split("\n")
+        self.__container_adjustments[-1].append(
+            PendingContainerAdjustment(
+                len(split_leading_spaces) - 1,
+                split_leading_spaces[-1].rstrip(),
+                do_insert=False,
+            )
+        )
+
+        end_token = cast(EndMarkdownToken, self.__last_token)
+        stack_token = self.__leading_space_index_tracker.get_container_stack_item(-2)
+        assert stack_token == end_token.start_markdown_token
+        block_quote_start_token = cast(
+            BlockQuoteMarkdownToken, end_token.start_markdown_token
+        )
+        assert (
+            block_quote_start_token.bleading_spaces is not None
+        ), "At least one line should have been processed."
+        split_bleading_spaces = block_quote_start_token.bleading_spaces.split("\n")
+        self.__container_adjustments[-2].append(
+            PendingContainerAdjustment(
+                len(split_bleading_spaces) - 1,
+                split_bleading_spaces[-1].rstrip(),
+                do_insert=False,
+            )
+        )
+
+        stack_token = self.__leading_space_index_tracker.get_container_stack_item(-3)
+        list_start_token = cast(ListStartMarkdownToken, stack_token)
+        assert (
+            list_start_token.leading_spaces is not None
+        ), "At least one line should have been processed."
+        split_leading_spaces = list_start_token.leading_spaces.split("\n")
+        self.__container_adjustments[-3].append(
+            PendingContainerAdjustment(
+                len(split_bleading_spaces) - 1, split_leading_spaces[-1]
+            )
+        )
+
+        stack_token = self.__leading_space_index_tracker.get_container_stack_item(-4)
+        block_quote_start_token = cast(BlockQuoteMarkdownToken, stack_token)
+        assert (
+            block_quote_start_token.bleading_spaces is not None
+        ), "At least one line should have been processed."
+        split_bleading_spaces = block_quote_start_token.bleading_spaces.split("\n")
+        self.__container_adjustments[-4].append(
+            PendingContainerAdjustment(
+                len(split_bleading_spaces) - 1,
+                split_bleading_spaces[-1],
+                do_special=True,
             )
         )
 
@@ -459,8 +552,10 @@ class RuleMd031(RulePlugin):
             # index -= last_closed_container_info.adjustment
             index -= adjust
             # SNAFU6?
-            # xx =self.__leading_space_index_tracker.get_tokens_list_leading_space_index(token)
-            selected_leading_space = split_spaces[index]
+            xx = self.__leading_space_index_tracker.get_tokens_list_leading_space_index(
+                token
+            )
+            selected_leading_space = split_spaces[xx]
             if selected_leading_space.endswith(ParserLogger.blah_sequence):
                 stack_index = initial_index - 1
                 while (
@@ -471,7 +566,7 @@ class RuleMd031(RulePlugin):
                 ):
                     stack_index -= 1
                 assert stack_index >= 0
-                return True, stack_index, index
+                return True, stack_index, xx
         return False, -1, -1
 
     def __fix_spacing_list(
@@ -881,10 +976,17 @@ class RuleMd031(RulePlugin):
         )
 
     def __fix_spacing(
-        self, context: PluginScanContext, token: MarkdownToken, special_case: bool
+        self,
+        context: PluginScanContext,
+        token: MarkdownToken,
+        special_case: bool,
+        special_case_2: bool,
     ) -> None:
         if special_case:
             self.__fix_spacing_special_case(context, token)
+            return
+        if special_case_2:
+            self.__fix_spacing_special_case2(context, token)
             return
         at_least_one_container = (
             self.__leading_space_index_tracker.in_at_least_one_container()
@@ -930,7 +1032,11 @@ class RuleMd031(RulePlugin):
             self.__fix_spacing_with_else(context, token, new_token)
 
     def __handle_fenced_code_block(
-        self, context: PluginScanContext, token: MarkdownToken, special_case: bool
+        self,
+        context: PluginScanContext,
+        token: MarkdownToken,
+        special_case: bool,
+        special_case_2: bool,
     ) -> None:
 
         can_trigger = (
@@ -947,7 +1053,7 @@ class RuleMd031(RulePlugin):
             and can_trigger
         ):
             if context.in_fix_mode and not context.is_during_line_pass:
-                self.__fix_spacing(context, token, special_case)
+                self.__fix_spacing(context, token, special_case, special_case_2)
             else:
                 self.report_next_token_error(context, token)
 
@@ -1002,7 +1108,7 @@ class RuleMd031(RulePlugin):
             and can_trigger
         ):
             if context.in_fix_mode:
-                self.__fix_spacing(context, token, False)
+                self.__fix_spacing(context, token, False, False)
             else:
                 assert self.__last_non_end_token
                 line_number_delta, column_number_delta = self.__calculate_end_deltas()
@@ -1119,13 +1225,9 @@ class RuleMd031(RulePlugin):
             del self.__container_x[-1]
             is_first = False
 
-    def __calculate_special_case(
-        self, context: PluginScanContext, token: MarkdownToken
-    ) -> bool:
+    def __calculate_special_case(self) -> bool:
         return bool(
-            context.in_fix_mode
-            and token.is_fenced_code_block
-            and self.__leading_space_index_tracker.get_container_stack_size() >= 2
+            self.__leading_space_index_tracker.get_container_stack_size() >= 2
             and self.__leading_space_index_tracker.get_container_stack_item(
                 -1
             ).is_block_quote_start
@@ -1138,14 +1240,43 @@ class RuleMd031(RulePlugin):
             and self.__second_last_token.is_paragraph_end
         )
 
+    def __calculate_specials(
+        self, context: PluginScanContext, token: MarkdownToken
+    ) -> Tuple[bool, bool]:
+
+        special_case = False
+        special_case_2 = False
+        if context.in_fix_mode and token.is_fenced_code_block:
+            special_case = self.__calculate_special_case()
+            if not special_case:
+                special_case_2 = (
+                    len(self.__x5) >= 3
+                    and self.__x5[-1].is_block_quote_end
+                    and self.__x5[-2].is_list_end
+                    and self.__x5[-3].is_paragraph_end
+                )
+                if special_case_2:
+                    special_case_2 = (
+                        self.__leading_space_index_tracker.get_container_stack_size()
+                        >= 4
+                        and self.__leading_space_index_tracker.get_container_stack_item(
+                            -3
+                        ).is_list_start
+                        and self.__leading_space_index_tracker.get_container_stack_item(
+                            -4
+                        ).is_block_quote_start
+                    )
+
+        return special_case, special_case_2
+
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """
         Event that a new token is being processed.
         """
 
-        special_case = self.__calculate_special_case(context, token)
+        special_case, special_case_2 = self.__calculate_specials(context, token)
         if not token.is_end_token or token.is_end_of_stream:
-            if not special_case:
+            if not (special_case or special_case_2):
                 self.__process_pending_container_end_tokens(context, token)
             if self.__end_fenced_code_block_token:
                 self.__handle_end_fenced_code_block(context, token)
@@ -1157,8 +1288,10 @@ class RuleMd031(RulePlugin):
         elif token.is_block_quote_end or token.is_list_end:
             self.__leading_space_index_tracker.register_container_end(token)
         elif token.is_fenced_code_block:
-            self.__handle_fenced_code_block(context, token, special_case)
-            if special_case:
+            self.__handle_fenced_code_block(
+                context, token, special_case, special_case_2
+            )
+            if special_case or special_case_2:
                 self.__process_pending_container_end_tokens(context, token)
         elif token.is_fenced_code_block_end:
             self.__end_fenced_code_block_token = cast(EndMarkdownToken, token)
