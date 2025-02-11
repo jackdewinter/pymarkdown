@@ -16226,11 +16226,6 @@ def test_extra_999():
 #            ^^^^^^^^^
 # AssertionError
 
-# SNAFU8
-# bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_double_drop_x
-#   File "C:\enlistments\pymarkdown\pymarkdown\plugins\rule_md_031.py", line 463, in __fix_spacing_list_detect_special
-#     selected_leading_space = split_spaces[index]
-
 # SNAFU9
 # bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_double_drop
 #   File "c:\enlistments\pymarkdown\pymarkdown\transform_markdown\transform_list_block.py", line 773, in __rehydrate_list_start_deep
