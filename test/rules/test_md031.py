@@ -6580,8 +6580,6 @@ another list
 """,
         disable_rules="md032,md027",
         use_debug=True,
-        # use_fix_debug=True,
-        # mark_fix_as_skipped=skip_fix_bad_markdown,
         fix_expected_file_contents="""> + > -----
 >   > + list 1
 >   >   list 2
