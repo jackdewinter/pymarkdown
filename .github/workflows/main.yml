@@ -209,34 +209,54 @@ jobs:
       - name: Upload Package
         uses: actions/upload-artifact@v4
         with:
-          name: my-artifact
+          name: python-package-dist
           path: ${{github.workspace}}/dist/
 
-      - name: Initiating Integration Tests
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: |
-          ACTION_SHA=
-          if [ "${{ github.event_name }}" == "pull_request" ] ; then
-            ACTION_SHA=${{ github.event.pull_request.head.sha }}
-          elif [ "${{ github.event_name }}" == "push" ] ; then
-            ACTION_SHA=${{ github.event.head_commit.id }}
-          else
-            echo "$GITHUB_CONTEXT"
-            ACTION_SHA=$GITHUB_SHA
-          fi
-          ACTION_RUN_ID=${{ github.run_id }}
-          ACCESS_TOKEN=${{ secrets.INTER_PROJECT_ACCESS_TOKEN }}
-          if [ -z "$ACCESS_TOKEN" ] ; then
-            echo "Secret 'INTER_PROJECT_ACCESS_TOKEN' has not been set to a non-empty value."
-            exit 1
-          else
-            echo "SHA=$ACTION_SHA"
-            echo "RUN_ID=$ACTION_RUN_ID"
-            echo '{"event_type": "request-integration", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'", "ref":"'"$GITHUB_REF"'", "sha": "'"$ACTION_SHA"'", "run_id" : "'"$ACTION_RUN_ID"'" }}'
+  publish-to-testpypi:
+    name: Publish Python 🐍 distribution 📦 to TestPyPI
+    needs: [packaging]
+    runs-on: ubuntu-latest
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/pymarkdownlnt
+    permissions:
+      id-token: write  # IMPORTANT: mandatory for trusted publishing
+    steps:
+    - name: Download all the dists
+      uses: actions/download-artifact@v4
+      with:
+        name: python-package-distributions
+        path: dist/
+    - name: Publish distribution 📦 to TestPyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        repository-url: https://test.pypi.org/legacy/
+        
+      # - name: Initiating Integration Tests
+      #   env:
+      #     GITHUB_CONTEXT: ${{ toJson(github) }}
+      #   run: |
+      #     ACTION_SHA=
+      #     if [ "${{ github.event_name }}" == "pull_request" ] ; then
+      #       ACTION_SHA=${{ github.event.pull_request.head.sha }}
+      #     elif [ "${{ github.event_name }}" == "push" ] ; then
+      #       ACTION_SHA=${{ github.event.head_commit.id }}
+      #     else
+      #       echo "$GITHUB_CONTEXT"
+      #       ACTION_SHA=$GITHUB_SHA
+      #     fi
+      #     ACTION_RUN_ID=${{ github.run_id }}
+      #     ACCESS_TOKEN=${{ secrets.INTER_PROJECT_ACCESS_TOKEN }}
+      #     if [ -z "$ACCESS_TOKEN" ] ; then
+      #       echo "Secret 'INTER_PROJECT_ACCESS_TOKEN' has not been set to a non-empty value."
+      #       exit 1
+      #     else
+      #       echo "SHA=$ACTION_SHA"
+      #       echo "RUN_ID=$ACTION_RUN_ID"
+      #       echo '{"event_type": "request-integration", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'", "ref":"'"$GITHUB_REF"'", "sha": "'"$ACTION_SHA"'", "run_id" : "'"$ACTION_RUN_ID"'" }}'
 
-            curl -X POST https://api.github.com/repos/jackdewinter/pymarkdown_test/dispatches \
-              -H 'Accept: application/vnd.github.everest-preview+json' \
-              -u '${{ secrets.INTER_PROJECT_ACCESS_TOKEN }}' \
-              --data '{"event_type": "request-integration", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'", "ref":"'"$GITHUB_REF"'", "sha": "'"$ACTION_SHA"'", "run_id" : "'"$ACTION_RUN_ID"'" }}'
-          fi
+      #       curl -X POST https://api.github.com/repos/jackdewinter/pymarkdown_test/dispatches \
+      #         -H 'Accept: application/vnd.github.everest-preview+json' \
+      #         -u '${{ secrets.INTER_PROJECT_ACCESS_TOKEN }}' \
+      #         --data '{"event_type": "request-integration", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'", "ref":"'"$GITHUB_REF"'", "sha": "'"$ACTION_SHA"'", "run_id" : "'"$ACTION_RUN_ID"'" }}'
+      #     fi
