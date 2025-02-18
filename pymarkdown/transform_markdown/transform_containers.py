@@ -378,7 +378,7 @@ class TransformContainers:
         container_stack: List[MarkdownToken],
         container_token_indices: List[int],
         container_line: str,
-    ) -> Optional[str]:
+    ) -> Tuple[Optional[str], str]:
         if (
             len(container_stack) == 1
             and len(removed_tokens) == 3
@@ -387,9 +387,36 @@ class TransformContainers:
             and removed_tokens[1].is_list_start
             and removed_tokens[2].is_block_quote_start
         ):
-            return ""
+            return "", container_line
 
         assert current_changed_record is not None
+        TransformContainers.__xyz(
+            current_changed_record, actual_tokens, removed_tokens, removed_token_indices
+        )
+        prefix = None
+        if len(removed_tokens) > 1:
+            prefix, container_line = TransformContainers.__abcd_final(
+                container_stack,
+                container_token_indices,
+                removed_tokens,
+                removed_token_indices,
+                container_line,
+            )
+        if len(removed_tokens) > 1:
+            prefix = TransformContainers.__abcd_remaining(
+                removed_tokens, removed_token_indices, container_line, prefix
+            )
+        return prefix, container_line
+
+    # pylint: enable=too-many-arguments, too-many-boolean-expressions
+
+    @staticmethod
+    def __xyz(
+        current_changed_record: MarkdownChangeRecord,
+        actual_tokens: List[MarkdownToken],
+        removed_tokens: List[MarkdownToken],
+        removed_token_indices: List[int],
+    ) -> None:
         token_to_match = (
             current_changed_record.item_c
             if current_changed_record.is_container_start
@@ -412,22 +439,6 @@ class TransformContainers:
             removed_tokens, removed_token_indices
         ):
             pass
-        prefix = None
-        if len(removed_tokens) > 1:
-            prefix = TransformContainers.__abcd_final(
-                container_stack,
-                container_token_indices,
-                removed_tokens,
-                removed_token_indices,
-                container_line,
-            )
-        if len(removed_tokens) > 1:
-            prefix = TransformContainers.__abcd_remaining(
-                removed_tokens, removed_token_indices, container_line, prefix
-            )
-        return prefix
-
-    # pylint: enable=too-many-arguments, too-many-boolean-expressions
 
     @staticmethod
     def __abcd_remaining(
@@ -613,7 +624,7 @@ class TransformContainers:
         removed_tokens: List[MarkdownToken],
         removed_token_indices: List[int],
         container_line: str,
-    ) -> Optional[str]:
+    ) -> Tuple[Optional[str], str]:
         container_stack_copy = container_stack[:]
         container_indices_copy = container_token_indices[:]
         container_stack_copy.extend(removed_tokens[::-1])
@@ -632,7 +643,7 @@ class TransformContainers:
                 del removed_token_indices[0]
                 del removed_tokens[0]
                 del removed_token_indices[0]
-                return ""
+                return "", container_line
 
             bq_spaces = cast(
                 BlockQuoteMarkdownToken, container_stack_copy[-1]
@@ -652,11 +663,51 @@ class TransformContainers:
                     removed_token_indices,
                     prefix,
                 )
+            else:
+                container_line, prefix = (
+                    TransformContainers.__abcd_final_list_block_quote(
+                        container_stack,
+                        container_stack_copy,
+                        container_token_indices,
+                        container_line,
+                        prefix,
+                    )
+                )
         else:
             prefix = TransformContainers.__abcd_final_list(
                 removed_tokens, removed_token_indices, container_stack, container_line
             )
-        return prefix
+        return prefix, container_line
+
+    @staticmethod
+    def __abcd_final_list_block_quote(
+        container_stack: List[MarkdownToken],
+        container_stack_copy: List[MarkdownToken],
+        container_token_indices: List[int],
+        container_line: str,
+        prefix: str,
+    ) -> Tuple[str, str]:
+        stack_index = len(container_stack_copy) - 3
+        while (
+            stack_index >= 0 and container_stack_copy[stack_index].is_block_quote_start
+        ):
+            stack_index -= 1
+        if (
+            stack_index >= 0
+            and container_stack_copy[stack_index].is_list_start
+            and stack_index < len(container_stack)
+        ):
+            stack_token = container_stack[stack_index]
+            list_token = cast(ListStartMarkdownToken, stack_token)
+            assert list_token.leading_spaces is not None
+            split_spaces = list_token.leading_spaces.split("\n")
+            specific_split_space = split_spaces[container_token_indices[stack_index]]
+            if specific_split_space.endswith(ParserLogger.blah_sequence):
+                assert container_line.startswith(prefix)
+                container_line = container_line[len(prefix) :]
+                prefix += specific_split_space[:-1]
+                # assert False
+        return container_line, prefix
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -831,7 +882,7 @@ class TransformContainers:
         prefix_to_use = None
         ort = removed_tokens[:]
         if len(removed_tokens) > 1 and current_changed_record:
-            prefix_to_use = TransformContainers.__abcd(
+            prefix_to_use, container_line = TransformContainers.__abcd(
                 current_changed_record,
                 actual_tokens,
                 removed_tokens,

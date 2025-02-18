@@ -775,21 +775,56 @@ class ContainerBlockNonLeafProcessor:
             and parser_state.token_stack[stack_index - 1].is_block_quote
             and parser_state.token_stack[stack_index - 2].is_list
         ):
+            list_stack_index = stack_index - 2
             list_token = cast(
                 ListStartMarkdownToken,
-                parser_state.token_stack[stack_index - 2].matching_markdown_token,
+                parser_state.token_stack[list_stack_index].matching_markdown_token,
             )
             assert list_token is not None
+
             if list_token.line_number != block_leaf_tokens[-1].line_number:
-                POGGER.debug(
-                    "__get_block_start_index_handle_blank_line>>list_token>>$",
-                    list_token,
+                ContainerBlockNonLeafProcessor.__sdf(
+                    parser_state, grab_bag, list_stack_index, list_token
                 )
-                list_token.add_leading_spaces("")
-                POGGER.debug(
-                    "__get_block_start_index_handle_blank_line>>list_token>>$",
-                    list_token,
-                )
+
+    @staticmethod
+    def __sdf(
+        parser_state: ParserState,
+        grab_bag: ContainerGrabBag,
+        list_stack_index: int,
+        list_token: ListStartMarkdownToken,
+    ) -> None:
+        # do_add_leading_space = True
+        # # for i in range(len(parser_state.block_copy)):
+        # #     j = parser_state.block_copy[i]
+        # #     if j.line_number == list_token.line_number and j.column_number == list_token.column_number:
+        # #         break
+        # # fg = parser_state.block_copy[i]
+        # # fgg = fg.leading_spaces.count("\n") if fg.leading_spaces else 0
+        # # list_tokeng = list_token.leading_spaces.count("\n")
+        # # ww = (fgg == list_tokeng)
+        # if do_add_leading_space:
+        bq_count = grab_bag.block_quote_data.current_count
+        last_active_block_quote_index = 0
+        while bq_count > 0 and last_active_block_quote_index < len(
+            parser_state.block_copy
+        ):
+            next_token = parser_state.block_copy[last_active_block_quote_index]
+            assert next_token is not None
+            if next_token.is_block_quote_start:
+                bq_count -= 1
+            last_active_block_quote_index += 1
+        do_add_leading_space = list_stack_index < last_active_block_quote_index
+        if do_add_leading_space:
+            POGGER.debug(
+                "__get_block_start_index_handle_blank_line>>list_token>>$",
+                list_token,
+            )
+            list_token.add_leading_spaces("")
+            POGGER.debug(
+                "__get_block_start_index_handle_blank_line>>list_token>>$",
+                list_token,
+            )
 
     @staticmethod
     def __process_list_in_progress(
