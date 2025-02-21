@@ -1387,6 +1387,7 @@ class TransformContainers:
                 nested_block_start_index,
                 block_start_on_remove,
                 container_line,
+                block_me,
             ) = TransformContainers.__adjust_for_list_adjust(
                 container_line,
                 container_line_old,
@@ -1453,11 +1454,17 @@ class TransformContainers:
         removed_token_indices: List[int],
         container_line: str,
         container_line_old: str,
-    ) -> str:
+    ) -> Tuple[str, bool]:
+        block_me = False
         removed_list_token = cast(ListStartMarkdownToken, removed_tokens[-1])
         if removed_list_token.leading_spaces is not None:
             split_list_leading_spaces = removed_list_token.leading_spaces.split("\n")
-            if removed_token_indices[-1] < len(split_list_leading_spaces):
+            if (
+                removed_token_indices[-1] == 0
+                and removed_list_token.leading_spaces == ""
+            ):
+                block_me = True
+            elif removed_token_indices[-1] < len(split_list_leading_spaces):
                 if removed_leading_spaces := split_list_leading_spaces[
                     removed_token_indices[-1]
                 ]:
@@ -1471,7 +1478,7 @@ class TransformContainers:
                         and removed_leading_spaces != actual_leading_spaces
                     ):
                         container_line = removed_leading_spaces + container_line
-        return container_line
+        return container_line, block_me
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -1483,10 +1490,11 @@ class TransformContainers:
         removed_tokens: List[MarkdownToken],
         removed_token_indices: List[int],
         applied_leading_spaces_to_start_of_container_line: bool,
-    ) -> Tuple[Optional[MarkdownToken], int, int, bool, str]:
+    ) -> Tuple[Optional[MarkdownToken], int, int, bool, str, bool]:
         block_start_on_remove = False
         inner_token_index = nested_block_start_index = -1
         previous_token = None
+        block_me = False
         if removed_tokens and removed_tokens[-1].is_block_quote_start:
             (
                 nested_block_start_index,
@@ -1497,11 +1505,13 @@ class TransformContainers:
                 removed_tokens, removed_token_indices
             )
         elif removed_tokens and removed_tokens[-1].is_list_start:
-            container_line = TransformContainers.__adjust_for_list_adjust_list(
-                removed_tokens,
-                removed_token_indices,
-                container_line,
-                container_line_old,
+            container_line, block_me = (
+                TransformContainers.__adjust_for_list_adjust_list(
+                    removed_tokens,
+                    removed_token_indices,
+                    container_line,
+                    container_line_old,
+                )
             )
         if previous_token is None:
             block_start_on_remove = False
@@ -1528,6 +1538,7 @@ class TransformContainers:
             nested_block_start_index,
             block_start_on_remove,
             container_line,
+            block_me,
         )
 
     # pylint: enable=too-many-arguments

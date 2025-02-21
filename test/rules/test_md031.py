@@ -8438,7 +8438,7 @@ another list
   + another list
 """,
     ),
-    pluginRuleTest(  # test_extra_052r0 NONCOMP6
+    pluginRuleTest(  # test_extra_052r0 test_extra_052r1 NONCOMP6
         "bad_fenced_block_in_block_quote_in_list_in_list_with_previous_list_triple_drop",
         source_file_contents="""+ + > -----
     > + list 1
