@@ -10,7 +10,7 @@ repos:
       - id: isort
         name: "Format: ISort"
   - repo: https://github.com/scop/pre-commit-shfmt
-    rev: v3.10.0-2
+    rev: v3.10.0-1
     hooks:
       - id: shfmt
         name: "Format: ShFmt"
@@ -124,18 +124,6 @@ repos:
           "test"
         ]
       pass_filenames: false
-  # - repo: local
-  #   hooks:
-  #   - id: xxpylint
-  #     name: "Scan:   xxx"
-  #     entry: pipenv run python ..\pylint_utils\main.py --config setup.cfg --recurse -r publish\pylint_suppression.json pymarkdown
-  #     language: system
-  #     types: [python]
-  #     require_serial: true
-  #     args:
-  #       [
-  #       ]
-  #     pass_filenames: false
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.13.0
     hooks:

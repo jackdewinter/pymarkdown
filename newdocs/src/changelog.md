@@ -10,7 +10,10 @@
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
-- None
+- [Issue 1352](https://github.com/jackdewinter/pymarkdown/issues/1352)
+    - Fixed parsing and rehydration issues, as precursor to tackling Md031 fix issue
+- [Issue 1356](https://github.com/jackdewinter/pymarkdown/issues/1356)
+    - Fixed rehydration error with test test_extra_052r0.
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
