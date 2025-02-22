@@ -679,6 +679,7 @@ class TransformContainers:
             )
         return prefix, container_line
 
+    # pylint: disable=chained-comparison
     @staticmethod
     def __abcd_final_list_block_quote(
         container_stack: List[MarkdownToken],
@@ -707,7 +708,11 @@ class TransformContainers:
                 container_line = container_line[len(prefix) :]
                 prefix += specific_split_space[:-1]
                 # assert False
+                assert stack_index < len(container_stack)
+                container_token_indices[stack_index] += 1
         return container_line, prefix
+
+    # pylint: enable=chained-comparison
 
     # pylint: disable=too-many-arguments
     @staticmethod

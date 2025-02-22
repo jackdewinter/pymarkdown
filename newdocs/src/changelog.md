@@ -14,6 +14,8 @@
     - Fixed parsing and rehydration issues, as precursor to tackling Md031 fix issue
 - [Issue 1356](https://github.com/jackdewinter/pymarkdown/issues/1356)
     - Fixed rehydration error with test test_extra_052r0.
+- [Issue 1358](https://github.com/jackdewinter/pymarkdown/issues/1358)
+    - Fixed rehydration error with test test_extra_053d1.
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
