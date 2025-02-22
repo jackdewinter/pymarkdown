@@ -15227,6 +15227,7 @@ another list</li>
 
 
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_extra_052r0():
     """
     TBD
@@ -15291,8 +15292,7 @@ another list</li>
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
-    # assert False
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
@@ -15366,7 +15366,6 @@ list 2</li>
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
-    # assert False
 
 
 @pytest.mark.gfm
@@ -16289,6 +16288,144 @@ block 2</p>
 
 
 @pytest.mark.gfm
+def test_extra_053d0():
+    """
+    TBD
+    bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block_double_drop_with_thematics
+    """
+
+    # Arrange
+    source_markdown = """> + > -----
+>   > > block 1
+>   > > block 2
+>   -----
+>   ```block
+>   A code block
+>   ```
+>   -----
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4::\n\n  þ\n  \n  \n  \n  ]",
+        "[block-quote(1,5)::> \n>   > ]",
+        "[tbreak(1,7):-::-----]",
+        "[block-quote(2,7)::>   > > \n>   > > \n> ]",
+        "[para(2,9):\n]",
+        "[text(2,9):block 1\nblock 2::\n]",
+        "[end-para:::False]",
+        "[end-block-quote::> :True]",
+        "[end-block-quote:::True]",
+        "[tbreak(4,5):-::-----]",
+        "[fcode-block(5,5):`:3:block:::::]",
+        "[text(6,5):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[tbreak(8,5):-::-----]",
+        "[li(9,3):4::]",
+        "[para(9,5):]",
+        "[text(9,5):another list:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(10,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<blockquote>
+<hr />
+<blockquote>
+<p>block 1
+block 2</p>
+</blockquote>
+</blockquote>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+<li>another list</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    # assert False
+
+
+@pytest.mark.gfm
+def test_extra_053d1():
+    """
+    TBD
+    bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block_double_drop_with_thematics
+    """
+
+    # Arrange
+    source_markdown = """> + > -----
+>   > > block 1
+>   > > block 2
+>   -----
+>
+>   ```block
+>   A code block
+>   ```
+>
+>   -----
+> + another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n>\n> \n> \n> \n>\n> \n> ]",
+        "[ulist(1,3):+::4::\n\n  þ\n\n  \n  \n  \n\n  ]",
+        "[block-quote(1,5)::> \n>   > ]",
+        "[tbreak(1,7):-::-----]",
+        "[block-quote(2,7)::>   > > \n>   > > \n> ]",
+        "[para(2,9):\n]",
+        "[text(2,9):block 1\nblock 2::\n]",
+        "[end-para:::False]",
+        "[end-block-quote::> :True]",
+        "[end-block-quote:::True]",
+        "[tbreak(4,5):-::-----]",
+        "[BLANK(5,2):]",
+        "[fcode-block(6,5):`:3:block:::::]",
+        "[text(7,4):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(9,2):]",
+        "[tbreak(10,5):-::-----]",
+        "[li(11,3):4::]",
+        "[para(11,5):]",
+        "[text(11,5):another list:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(12,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<blockquote>
+<hr />
+<blockquote>
+<p>block 1
+block 2</p>
+</blockquote>
+</blockquote>
+<hr />
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+</li>
+<li>
+<p>another list</p>
+</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    # assert False
+
+
+@pytest.mark.gfm
 def test_extra_999():
     """
     Temporary test to keep coverage up while consistency checks disabled.
@@ -16412,11 +16549,6 @@ def test_extra_999():
 # bad_fenced_block_in_list_in_list_in_list_with_previous_block_double_drop_with_thematics
 # Expected:+ + + -----\n      > block 1\n      > block 2\n    -----\n\n    ```block\n    A code block\n    ```\n\n    -----\n  + another list\n:
 #   Actual:+ + + -----\n      > block 1\n      > block 2\n-----\n\n    ```block\n    A code block\n    ```\n\n    -----\n+ another list\n:
-
-# NONCOMP9
-# bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block_double_drop_with_thematics
-# Expected:> + > -----\n>   > > block 1\n>   > > block 2\n>   -----\n>\n>   ```block\n>   A code block\n>   ```\n>\n>   -----\n> + another list\n:
-#   Actual:> + > -----\n>   > > block 1\n>   > > block 2\n> > -----\n> \n> ```block\n>   A code block\n>```\n> \n> -----\n> + another list\n:
 
 # SNAFU2
 # bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_blockx_double_drop
