@@ -110,6 +110,7 @@ class ContainerGrabBag:
         self.__text_removed_by_container: Optional[str] = None
         self.__extracted_whitespace: Optional[str] = None
         self.__adj_ws: Optional[str] = None
+        self.__bogus: Optional[str] = None
 
         # Others
         self.__block_quote_data = BlockQuoteData(-1, -1)
@@ -197,6 +198,7 @@ class ContainerGrabBag:
         )
         self.__log_read_write_value("extracted_whitespace", self.__extracted_whitespace)
         self.__log_read_write_value("adj_ws", self.__adj_ws)
+        self.__log_read_write_value("bogus", self.__bogus)
 
         # Others
         self.__log_read_write_value("block_quote_data", self.__block_quote_data)
@@ -625,6 +627,22 @@ class ContainerGrabBag:
         if value != self.__adj_ws:
             self.__log_read_write_value("adj_ws", value)
             self.__adj_ws = value
+
+    @property
+    def bogus(self) -> Optional[str]:
+        """
+        Xxx
+        """
+        return self.__bogus
+
+    @bogus.setter
+    def bogus(self, value: Optional[str]) -> None:
+        """
+        xxx
+        """
+        if value != self.__bogus:
+            self.__log_read_write_value("bogus", value)
+            self.__bogus = value
 
     @property
     def removed_chars_at_start_of_line(self) -> Optional[int]:

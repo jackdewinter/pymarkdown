@@ -707,7 +707,6 @@ class TransformContainers:
                 assert container_line.startswith(prefix)
                 container_line = container_line[len(prefix) :]
                 prefix += specific_split_space[:-1]
-                # assert False
                 assert stack_index < len(container_stack)
                 container_token_indices[stack_index] += 1
         return container_line, prefix
@@ -1475,6 +1474,8 @@ class TransformContainers:
                 ]:
                     assert container_line.endswith(container_line_old)
                     actual_leading_spaces = container_line[: -len(container_line_old)]
+
+                    block_me = True
 
                     _, ex_ws = ParserHelper.extract_spaces_verified(container_line, 0)
                     if (

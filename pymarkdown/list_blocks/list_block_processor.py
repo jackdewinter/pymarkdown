@@ -464,6 +464,7 @@ class ListBlockProcessor:
         grab_bag.extracted_whitespace = extracted_whitespace
 
     # pylint: enable=too-many-arguments
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __list_in_process_update_containers(
         parser_state: ParserState,
@@ -471,6 +472,7 @@ class ListBlockProcessor:
         used_indent: Optional[str],
         was_paragraph_continuation: bool,
         start_index: int,
+        grab_bag: ContainerGrabBag,
     ) -> None:
         stack_index = parser_state.find_last_list_block_on_stack()
         if stack_index > 0:
@@ -517,17 +519,33 @@ class ListBlockProcessor:
                     or stack_index != last_container_index
                 )
             if need_to_add_leading_spaces:
-                list_token = cast(
-                    ListStartMarkdownToken,
-                    parser_state.token_stack[stack_index].matching_markdown_token,
+                ListBlockProcessor.__list_in_process_update_containers_part_2(
+                    parser_state, stack_index, consumed_text, grab_bag
                 )
-                POGGER.debug(
-                    "__list_in_process_update_containers2>>list_token>>$", list_token
-                )
-                list_token.add_leading_spaces("")
-                POGGER.debug(
-                    "__list_in_process_update_containers2>>list_token>>$", list_token
-                )
+
+    # pylint: enable=too-many-arguments
+
+    @staticmethod
+    def __list_in_process_update_containers_part_2(
+        parser_state: ParserState,
+        stack_index: int,
+        consumed_text: str,
+        grab_bag: ContainerGrabBag,
+    ) -> None:
+        list_stack_token = cast(ListStackToken, parser_state.token_stack[stack_index])
+        list_token = cast(
+            ListStartMarkdownToken,
+            parser_state.token_stack[stack_index].matching_markdown_token,
+        )
+        if lists_new_list_token := list_stack_token.last_new_list_token:
+            lists_indent_level = lists_new_list_token.indent_level
+        else:
+            lists_indent_level = list_token.indent_level
+        assert not consumed_text or len(consumed_text) < lists_indent_level
+        grab_bag.bogus = consumed_text
+        POGGER.debug("__list_in_process_update_containers2>>list_token>>$", list_token)
+        list_token.add_leading_spaces("")
+        POGGER.debug("__list_in_process_update_containers2>>list_token>>$", list_token)
 
     # pylint: disable=too-many-locals
     @staticmethod
@@ -622,7 +640,12 @@ class ListBlockProcessor:
                 grab_bag.was_paragraph_continuation = False
                 return []
         ListBlockProcessor.__list_in_process_update_containers(
-            parser_state, ind, used_indent, was_paragraph_continuation, start_index
+            parser_state,
+            ind,
+            used_indent,
+            was_paragraph_continuation,
+            start_index,
+            grab_bag,
         )
 
         grab_bag.line_to_parse = line_to_parse

@@ -927,7 +927,15 @@ class TokenizedMarkdown:
                 found_markdown_token_leading_spaces == block_copy_token_leading_spaces
             )
             assert not are_same
+            POGGER.debug(
+                "__handle_blank_line_bravo>>found_markdown_list_token>>$",
+                found_markdown_list_token,
+            )
             found_markdown_list_token.remove_last_leading_space()
+            POGGER.debug(
+                "__handle_blank_line_bravo>>found_markdown_list_token>>$",
+                found_markdown_list_token,
+            )
 
     @staticmethod
     def __handle_blank_line_token_stack(
