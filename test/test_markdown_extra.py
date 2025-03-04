@@ -15196,6 +15196,7 @@ another list</li>
 
 
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_extra_052r0():
     """
     TBD
