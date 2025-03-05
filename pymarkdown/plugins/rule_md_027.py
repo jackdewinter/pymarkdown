@@ -450,7 +450,6 @@ class RuleMd027(RulePlugin):
                 did_trigger = delayed_list_item[2]
                 if not did_trigger:
                     blank_token = delayed_list_item[3]
-                    # assert False
                     self.report_next_token_error(
                         context,
                         blank_token,

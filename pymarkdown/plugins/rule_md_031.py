@@ -320,7 +320,6 @@ class RuleMd031(RulePlugin):
             apply_rstrip = False
             delayed_container_x_adjustment = -1
         elif len(self.__x1) >= 2 and self.__x1[0].is_block_quote_start:
-            # assert False
             self.__apply_tailing_block_quote_fix(0, context)
         return apply_rstrip, delayed_container_x_adjustment
 

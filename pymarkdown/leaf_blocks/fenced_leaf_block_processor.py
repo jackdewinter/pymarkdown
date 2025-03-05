@@ -448,9 +448,25 @@ class FencedLeafBlockProcessor:
 
             # Looks a bit weird, but we need to adjust the second last leading space.
             POGGER.debug("__process_fenced_start>>list_token>>$", list_start_token)
+            POGGER.debug(
+                "__process_fenced_start_kludge>>list_start_token>>$",
+                list_start_token,
+            )
             last_leading_space = list_start_token.remove_last_leading_space()
+            POGGER.debug(
+                "__process_fenced_start_kludge>>list_start_token>>$",
+                list_start_token,
+            )
             assert last_leading_space is not None
+            POGGER.debug(
+                "__process_fenced_start_kludge>>list_start_token>>$",
+                list_start_token,
+            )
             list_start_token.remove_last_leading_space()
+            POGGER.debug(
+                "__process_fenced_start_kludge>>list_start_token>>$",
+                list_start_token,
+            )
             POGGER.debug("__process_fenced_start>>list_token>>$", list_start_token)
             list_start_token.add_leading_spaces(" " * position_marker.index_indent)
             list_start_token.add_leading_spaces(last_leading_space)
@@ -613,7 +629,15 @@ class FencedLeafBlockProcessor:
                 list_markdown_token = cast(
                     ListStartMarkdownToken, list_stack_token.matching_markdown_token
                 )
+                POGGER.debug(
+                    "__parse_fenced_code_block_already_in_with_tab>>list_markdown_token>>$",
+                    list_markdown_token,
+                )
                 list_markdown_token.remove_last_leading_space()
+                POGGER.debug(
+                    "__parse_fenced_code_block_already_in_with_tab>>list_markdown_token>>$",
+                    list_markdown_token,
+                )
             else:
                 ex_space, ex_space_index, split_tab = TabHelper.find_tabified_string(
                     original_line,

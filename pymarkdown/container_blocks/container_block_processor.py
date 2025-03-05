@@ -144,6 +144,7 @@ class ContainerBlockProcessor:
         assert (
             grab_bag.extracted_whitespace is not None
         ), "Must have whitespace by this point."
+        grab_bag.bogus = None
         if (
             not grab_bag.container_depth
             and len(grab_bag.extracted_whitespace) >= 4

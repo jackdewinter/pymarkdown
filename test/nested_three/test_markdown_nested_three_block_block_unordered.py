@@ -1827,7 +1827,6 @@ def test_nested_three_block_max_block_max_unordered_max_no_bq2_with_li():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
-    # assert False
 
 
 @pytest.mark.gfm

@@ -16,6 +16,9 @@
     - Fixed rehydration error with test test_extra_052r0.
 - [Issue 1358](https://github.com/jackdewinter/pymarkdown/issues/1358)
     - Fixed rehydration error with test test_extra_053d1.
+- [Issue 1364](https://github.com/jackdewinter/pymarkdown/issues/1364)
+    - Fixed parsing error and rehydration error related to multiple drop
+      container scenarios involving the remaining containers being lists.
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
