@@ -273,10 +273,18 @@ class IndentedLeafBlockProcessor:
                 else original_line[: -(len(fex_space))]
             )
             POGGER.debug(
-                "__parse_indented_code_block_with_tab_list>>list_token>>$",
+                "__parse_indented_code_block_with_tab_list>>last_list_token>>$",
                 last_list_token,
             )
             last_list_token.remove_last_leading_space()
+            POGGER.debug(
+                "__parse_indented_code_block_with_tab_list>>last_list_token>>$",
+                last_list_token,
+            )
+            POGGER.debug(
+                "__parse_indented_code_block_with_tab_list>>list_token>>$",
+                last_list_token,
+            )
             last_list_token.add_leading_spaces(xx_dd)
             POGGER.debug(
                 "__parse_indented_code_block_with_tab_list>>list_token>>$",

@@ -181,8 +181,16 @@ class ThematicLeafBlockProcessor:
                         ListStartMarkdownToken,
                         parser_state.token_stack[stack_index].matching_markdown_token,
                     )
+                    POGGER.debug(
+                        "__handle_special_case>>last_list_markdown_token>>$",
+                        last_list_markdown_token,
+                    )
                     leading_space_to_move = (
                         last_list_markdown_token.remove_last_leading_space()
+                    )
+                    POGGER.debug(
+                        "__handle_special_case>>last_list_markdown_token>>$",
+                        last_list_markdown_token,
                     )
                     assert leading_space_to_move is not None
                     POGGER.debug(

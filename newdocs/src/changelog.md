@@ -5,6 +5,31 @@
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
+- None
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
+- [Issue 1352](https://github.com/jackdewinter/pymarkdown/issues/1352)
+    - Fixed parsing and rehydration issues, as precursor to tackling Md031 fix issue
+- [Issue 1356](https://github.com/jackdewinter/pymarkdown/issues/1356)
+    - Fixed rehydration error with test test_extra_052r0.
+- [Issue 1358](https://github.com/jackdewinter/pymarkdown/issues/1358)
+    - Fixed rehydration error with test test_extra_053d1.
+- [Issue 1364](https://github.com/jackdewinter/pymarkdown/issues/1364)
+    - Fixed parsing error and rehydration error related to multiple drop
+      container scenarios involving the remaining containers being lists.
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+- None
+
+## Version 0.9.28 - Date: 2025-02-10
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Added
+
 - [Issue 1289](https://github.com/jackdewinter/pymarkdown/issues/1289)
     - added documentation under Pre-Commit for how to write the configuration file
       for Pre-Commit if an alternate extension is needed for the files being scanned

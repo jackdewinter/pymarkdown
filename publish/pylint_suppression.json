@@ -237,7 +237,7 @@
             "too-many-arguments": 3
         },
         "pymarkdown/list_blocks/list_block_processor.py": {
-            "too-many-arguments": 9,
+            "too-many-arguments": 10,
             "too-many-locals": 4
         },
         "pymarkdown/list_blocks/list_block_starts_helper.py": {
@@ -492,7 +492,8 @@
             "too-few-public-methods": 1,
             "too-many-arguments": 20,
             "too-many-locals": 3,
-            "too-many-boolean-expressions": 3
+            "too-many-boolean-expressions": 3,
+            "chained-comparison": 1
         },
         "pymarkdown/transform_markdown/transform_list_block.py": {
             "too-many-arguments": 4
@@ -511,9 +512,9 @@
         "too-many-instance-attributes": 27,
         "too-many-public-methods": 4,
         "too-few-public-methods": 39,
-        "too-many-arguments": 254,
+        "too-many-arguments": 255,
         "too-many-locals": 50,
-        "chained-comparison": 2,
+        "chained-comparison": 3,
         "too-many-boolean-expressions": 5,
         "protected-access": 25,
         "deprecated-decorator": 3,

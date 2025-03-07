@@ -214,17 +214,65 @@ class ContainerBlockLeafProcessor:
             grab_bag,
         )
 
-        if (
-            adjust_token is not None
-            and grab_bag.leaf_tokens
-            and grab_bag.leaf_tokens[0].is_end_token
-        ) and grab_bag.leaf_tokens[0].is_block_quote_end:
-            adjust_token.remove_last_leading_space()
+        ContainerBlockLeafProcessor.__process_leaf_tokens_adjust(adjust_token, grab_bag)
+
         ContainerBlockLeafProcessor.__post_leaf_block_adjustment(
             parser_state,
             orig_text_removed_by_container,
             position_marker.line_number,
         )
+
+    @staticmethod
+    def __process_leaf_tokens_adjust(
+        adjust_token: Optional[ListStartMarkdownToken], grab_bag: ContainerGrabBag
+    ) -> None:
+        if (
+            adjust_token is not None
+            and grab_bag.leaf_tokens
+            and grab_bag.leaf_tokens[0].is_end_token
+        ) and grab_bag.leaf_tokens[0].is_block_quote_end:
+            POGGER.debug(
+                "__process_leaf_tokens>>adjust_token>>$",
+                adjust_token,
+            )
+            adjust_token.remove_last_leading_space()
+            POGGER.debug(
+                "__process_leaf_tokens>>adjust_token>>$",
+                adjust_token,
+            )
+
+            token_index = 1
+            end_container_count = 0
+            end_list_count = 0
+            while token_index < len(grab_bag.leaf_tokens):
+                if (
+                    grab_bag.leaf_tokens[token_index].is_block_quote_end
+                    or grab_bag.leaf_tokens[token_index].is_list_end
+                ):
+                    end_container_count += 1
+                if grab_bag.leaf_tokens[token_index].is_list_end:
+                    end_list_count += 1
+                token_index += 1
+            if end_container_count != 0 and token_index != 0 and grab_bag.bogus:
+                POGGER.debug(
+                    "__process_leaf_tokens>>adjust_token>>$",
+                    adjust_token,
+                )
+                adjust_token.remove_last_leading_space()
+                POGGER.debug(
+                    "__process_leaf_tokens>>adjust_token>>$",
+                    adjust_token,
+                )
+
+                POGGER.debug(
+                    "__process_leaf_tokens>>adjust_token>>$",
+                    adjust_token,
+                )
+                adjust_token.add_leading_spaces(grab_bag.bogus)
+                POGGER.debug(
+                    "__process_leaf_tokens>>adjust_token>>$",
+                    adjust_token,
+                )
 
     @staticmethod
     def __parse_line_for_leaf_blocks(

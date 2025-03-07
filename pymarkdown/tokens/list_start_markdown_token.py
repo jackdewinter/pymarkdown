@@ -174,6 +174,7 @@ class ListStartMarkdownToken(ContainerMarkdownToken):
         assert (
             self.__leading_spaces is not None
         ), "Leading spaces must be defined by now."
+        POGGER.debug("__leading_spaces>>:$:<<", self.__leading_spaces)
         last_separator_index = self.__leading_spaces.rfind("\n")
         if last_separator_index == -1:
             extracted_text = self.__leading_spaces
@@ -182,6 +183,7 @@ class ListStartMarkdownToken(ContainerMarkdownToken):
             extracted_text = self.__leading_spaces[last_separator_index + 1 :]
             self.__leading_spaces = self.__leading_spaces[:last_separator_index]
         self.__compose_extra_data_field()
+        POGGER.debug("__leading_spaces>>:$:<<", self.__leading_spaces)
         return extracted_text
 
     def add_leading_spaces(self, ws_add: str) -> None:

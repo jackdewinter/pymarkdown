@@ -2193,7 +2193,6 @@ abc</li>
 
 
 @pytest.mark.gfm
-# @pytest.mark.skip
 def test_nested_three_unordered_block_ordered_with_blank_fenced_be():
     """
     TBD - from https://github.com/jackdewinter/pymarkdown/issues/731

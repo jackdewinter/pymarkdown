@@ -3521,7 +3521,7 @@ ______
 {temp_source_path}:8:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032,md035",
-        use_fix_debug=True,
+        # use_fix_debug=True,
         mark_fix_as_skipped=skip_fix_bad_markdown,
         fix_expected_file_contents="""> > + ______
 > >   + list 1
@@ -4460,7 +4460,6 @@ A code block
 {temp_source_path}:6:6: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032,md027",
-        use_debug=True,
         fix_expected_file_contents="""1. > + ----
    >   > block 1
    >   > block 2
@@ -5289,7 +5288,7 @@ A code block
 """,
         disable_rules="md032",
         mark_fix_as_skipped=skip_fix_bad_markdown,
-        use_fix_debug=True,
+        # use_fix_debug=True,
         fix_expected_file_contents="""1. > > ----
    > > + list 1
    > >   list 2
@@ -5321,7 +5320,7 @@ A code block
 """,
         disable_rules="md032",
         mark_fix_as_skipped=skip_fix_bad_markdown,
-        use_fix_debug=True,
+        # use_fix_debug=True,
         fix_expected_file_contents="""1. > > ----
    > > + list 1
    > >   list 2
@@ -6237,7 +6236,7 @@ another list
 > + another list
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_053c0 test_extra_053c1
         "bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_blockx_double_drop",
         source_file_contents="""> + > -----
 >   > > block 1
@@ -6254,6 +6253,7 @@ another list
 """,
         disable_rules="md032",
         use_debug=True,
+        # xxx
         mark_fix_as_skipped=skip_fix_bad_markdown,
         fix_expected_file_contents="""> + > -----
 >   > > block 1
@@ -6387,7 +6387,7 @@ another list
 > + another list
 """,
     ),
-    pluginRuleTest(
+    pluginRuleTest(  # test_extra_053d0 test_extra_053d1
         "bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block_double_drop_with_thematics",
         source_file_contents="""> + > -----
 >   > > block 1
@@ -6404,8 +6404,6 @@ another list
 {temp_source_path}:7:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
-        mark_fix_as_skipped=skip_fix_bad_markdown,
-        use_debug=True,
         fix_expected_file_contents="""> + > -----
 >   > > block 1
 >   > > block 2
@@ -6735,7 +6733,7 @@ another list
 """,
         disable_rules="md032,md027",
         mark_fix_as_skipped=skip_fix_bad_markdown,
-        use_fix_debug=True,
+        # use_fix_debug=True,
         use_debug=True,
         fix_expected_file_contents="""> + > -----
 >   > + list 1
@@ -6946,8 +6944,9 @@ another list
 """,
         disable_rules="md032",
         use_debug=True,
+        # xxx
         mark_fix_as_skipped=skip_fix_bad_markdown,
-        use_fix_debug=True,
+        # use_fix_debug=True,
         fix_expected_file_contents="""> + + -----
 >     > block 1
 >     > block 2
@@ -7065,7 +7064,7 @@ another list
 """,
         disable_rules="md032,md027",
         use_debug=True,
-        use_fix_debug=True,
+        # use_fix_debug=True,
         mark_fix_as_skipped=skip_fix_bad_markdown,
         fix_expected_file_contents="""> + + -----
 >     > block 1
@@ -7098,7 +7097,7 @@ another list
 """,
         disable_rules="md032",
         mark_fix_as_skipped=skip_fix_bad_markdown,
-        use_fix_debug=True,
+        # use_fix_debug=True,
         fix_expected_file_contents="""> + + -----
 >     > block 1
 >     > block 2
@@ -7578,7 +7577,7 @@ another list
 """,
         disable_rules="md032",
         mark_fix_as_skipped=skip_fix_bad_markdown,
-        use_fix_debug=True,
+        # use_fix_debug=True,
         use_debug=True,
         fix_expected_file_contents="""+ + list 1
     > block 2.1
@@ -8437,7 +8436,7 @@ another list
   + another list
 """,
     ),
-    pluginRuleTest(  # test_extra_052r0 NONCOMP6
+    pluginRuleTest(  # test_extra_052r0 test_extra_052r1 NONCOMP6
         "bad_fenced_block_in_block_quote_in_list_in_list_with_previous_list_triple_drop",
         source_file_contents="""+ + > -----
     > + list 1
@@ -8456,6 +8455,7 @@ another list
         disable_rules="md032",
         mark_fix_as_skipped=skip_fix_bad_markdown,
         use_debug=True,
+        use_fix_debug=True,
         fix_expected_file_contents="""+ + > -----
     > + list 1
     >   list 2
@@ -8550,7 +8550,7 @@ another list
 """,
         disable_rules="md032",
         mark_fix_as_skipped=skip_fix_bad_markdown,
-        use_fix_debug=True,
+        # use_fix_debug=True,
         fix_expected_file_contents="""+ + > -----
     > + list 1
     >   list 2
@@ -9136,7 +9136,7 @@ another list
 """,
         disable_rules="md032",
         mark_fix_as_skipped=skip_fix_bad_markdown,
-        use_fix_debug=True,
+        # use_fix_debug=True,
         use_debug=True,
         fix_expected_file_contents="""+ + + -----
       + list 1
