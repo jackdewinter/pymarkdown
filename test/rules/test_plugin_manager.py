@@ -1304,7 +1304,7 @@ def test_markdown_with_plugins_list_only():
   md004   ul-style                        True       True       0.6.0    Yes
   md005   list-indent                     True       True       0.5.1    Yes
   md006   ul-start-left                   False      False      0.5.1    Yes
-  md007   ul-indent                       True       True       0.6.0    Yes
+  md007   ul-indent                       True       True       0.6.1    Yes
   md009   no-trailing-spaces              True       True       0.6.0    Yes
   md010   no-hard-tabs                    True       True       0.6.0    Yes
   md011   no-reversed-links               True       True       0.5.0    No
@@ -1388,7 +1388,7 @@ def test_markdown_with_plugins_list_only_all():
   md004   ul-style                        True       True       0.6.0    Yes
   md005   list-indent                     True       True       0.5.1    Yes
   md006   ul-start-left                   False      False      0.5.1    Yes
-  md007   ul-indent                       True       True       0.6.0    Yes
+  md007   ul-indent                       True       True       0.6.1    Yes
   md009   no-trailing-spaces              True       True       0.6.0    Yes
   md010   no-hard-tabs                    True       True       0.6.0    Yes
   md011   no-reversed-links               True       True       0.5.0    No
@@ -1471,7 +1471,7 @@ def test_markdown_with_plugins_list_after_disable_all_rules():
   md004   ul-style                        True       False      0.6.0    Yes
   md005   list-indent                     True       False      0.5.1    Yes
   md006   ul-start-left                   False      False      0.5.1    Yes
-  md007   ul-indent                       True       False      0.6.0    Yes
+  md007   ul-indent                       True       False      0.6.1    Yes
   md009   no-trailing-spaces              True       False      0.6.0    Yes
   md010   no-hard-tabs                    True       False      0.6.0    Yes
   md011   no-reversed-links               True       False      0.5.0    No
