@@ -216,9 +216,10 @@ jobs:
     name: Publish Python 🐍 distribution 📦 to TestPyPI
     needs: [packaging]
     runs-on: ubuntu-latest
-    environment:
-      name: testpypi
-      url: https://test.pypi.org/p/pymarkdownlnt
+    environment: pypi
+      # name: pypi
+      # url: https://test.pypi.org/p/pymarkdownlnt
+      # https://pypi.org/p/
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
     steps:
