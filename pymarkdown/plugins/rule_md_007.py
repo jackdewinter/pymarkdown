@@ -40,7 +40,7 @@ class RuleMd007(RulePlugin):
             plugin_id="MD007",
             plugin_enabled_by_default=True,
             plugin_description="Unordered list indentation",
-            plugin_version="0.6.0",
+            plugin_version="0.6.1",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md007.md",
             plugin_configuration="indent,start_indented",
             plugin_supports_fix=True,
@@ -106,7 +106,12 @@ class RuleMd007(RulePlugin):
                 ListStartMarkdownToken,
                 self.__container_manager.container_token_stack[stack_index],
             )
-            container_base_column += list_token.indent_level
+            current_indent_level = (
+                list_token.last_new_list_token.indent_level
+                if list_token.last_new_list_token is not None
+                else list_token.indent_level
+            )
+            container_base_column += current_indent_level
         ignore_list_starts = True
         return ignore_list_starts, container_base_column
 

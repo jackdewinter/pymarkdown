@@ -19,6 +19,8 @@
 - [Issue 1364](https://github.com/jackdewinter/pymarkdown/issues/1364)
     - Fixed parsing error and rehydration error related to multiple drop
       container scenarios involving the remaining containers being lists.
+- [Issue 1357](https://github.com/jackdewinter/pymarkdown/issues/1357)
+    - Fixed issue with rule Md007 and nested lists
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed

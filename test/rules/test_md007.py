@@ -686,6 +686,89 @@ scanTests = [
         scan_expected_output="",
     ),
     pluginRuleTest(
+        "issue-1357-a",
+        source_file_contents="""1. numbered list
+2. numbered list
+3. numbered list
+4. numbered list
+5. numbered list
+6. numbered list
+7. numbered list
+8. numbered list
+9. numbered list
+10. numbered list
+
+    - sub list item at double digit text level
+    - sub lite item at double digit text level
+
+11. numbered list
+""",
+        disable_rules="md004,md027,md023,md009",
+        scan_expected_output="",
+    ),
+    pluginRuleTest(
+        "issue-1357-b",
+        source_file_contents="""> 1. numbered list
+> 2. numbered list
+> 3. numbered list
+> 4. numbered list
+> 5. numbered list
+> 6. numbered list
+> 7. numbered list
+> 8. numbered list
+> 9. numbered list
+> 10. numbered list
+> 
+>     - sub list item at double digit text level
+>     - sub lite item at double digit text level
+> 
+> 11. numbered list
+""",
+        disable_rules="md004,md027,md023,md009",
+        scan_expected_output="",
+    ),
+    pluginRuleTest(
+        "issue-1357-c",
+        source_file_contents="""- > 1. numbered list
+  > 2. numbered list
+  > 3. numbered list
+  > 4. numbered list
+  > 5. numbered list
+  > 6. numbered list
+  > 7. numbered list
+  > 8. numbered list
+  > 9. numbered list
+  > 10. numbered list
+  > 
+  >     - sub list item at double digit text level
+  >     - sub lite item at double digit text level
+  > 
+  > 11. numbered list
+""",
+        disable_rules="md004,md027,md023,md009",
+        scan_expected_output="",
+    ),
+    pluginRuleTest(
+        "issue-1357-d",
+        source_file_contents="""1. numbered list
+2. numbered list
+3. numbered list
+4. numbered list
+5. numbered list
+6. numbered list
+7. numbered list
+8. numbered list
+   - sub lite item at double digit text level
+9. numbered list
+   - sub lite item at double digit text level
+10. numbered list
+    - sub lite item at double digit text level
+11. numbered list
+""",
+        disable_rules="md004,md027,md023,md009,md005",
+        scan_expected_output="",
+    ),
+    pluginRuleTest(
         "mix_md007_md004",
         source_file_contents=""" + first
    * second
