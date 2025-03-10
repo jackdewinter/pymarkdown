@@ -15134,6 +15134,73 @@ another list</li>
 
 
 @pytest.mark.gfm
+def test_extra_052p1():
+    """
+    TBD
+    bad_fenced_block_in_block_quote_in_list_in_list_with_previous_block_triple_drop
+    """
+
+    # Arrange
+    source_markdown = """+ + > -----
+    > > block 1
+    > > block 2
+
+  ```block
+  A code block
+  ```
+
+  -----
+  another list
+"""
+    expected_tokens = [
+        "[ulist(1,1):+::2::  \n  \n  \n\n  \n  \n]",
+        "[ulist(1,3):+::4:  :\n\n]",
+        "[block-quote(1,5):    :    > ]",
+        "[tbreak(1,7):-::-----]",
+        "[block-quote(2,5):    :    > > \n    > > \n]",
+        "[para(2,9):\n]",
+        "[text(2,9):block 1\nblock 2::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+        "[fcode-block(5,3):`:3:block:::::]",
+        "[text(6,3):A code block:]",
+        "[end-fcode-block:::3:False]",
+        "[BLANK(8,1):]",
+        "[tbreak(9,3):-::-----]",
+        "[para(10,3):]",
+        "[text(10,3):another list:]",
+        "[end-para:::True]",
+        "[BLANK(11,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<ul>
+<li>
+<blockquote>
+<hr />
+<blockquote>
+<p>block 1
+block 2</p>
+</blockquote>
+</blockquote>
+</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+<hr />
+<p>another list</p>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
 def test_extra_052q0():
     """
     TBD
@@ -15196,7 +15263,7 @@ another list</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
+# @pytest.mark.skip
 def test_extra_052r0():
     """
     TBD
@@ -16404,37 +16471,6 @@ def test_extra_999():
     assert new_front_matter.is_extension
 
     ParserHelper.count_newlines_in_texts("text")
-
-
-# NONCOMP3
-# bad_fenced_block_in_list_in_list_with_previous_inner_block_double_drop_with_thematics
-# Expected:+ + list 1\n    > block 2.1\n    > block 2.2\n  ----\n\n  ```block\n  A code block\n  ```\n\n  ----\n  another list\n:
-#   Actual:+ + list 1\n    > block 2.1\n    > block 2.2\n----\n\n  ```block\n  A code block\n  ```\n\n  ----\n  another list\n:
-
-# NONCOMP4
-# bad_fenced_block_in_block_quote_in_list_in_list_with_previous_block_triple_drop
-# Expected:+ + > -----\n    > > block 1\n    > > block 2\n\n  ```block\n  A code block\n  ```\n\n  -----\n  another list\n:
-#   Actual:+ + > -----\n    > > block 1\n    > > block 2\n\n  ```block\n  A code block\n```\n  \n  -----\nanother list\n:
-
-# NONCOMP5
-# bad_fenced_block_in_block_quote_in_list_in_list_with_previous_block_triple_drop_and_thematics
-# Expected:+ + > -----\n    > > block 1\n    > > block 2\n  -----\n\n  ```block\n  A code block\n  ```\n\n  -----\n  another list\n:
-#   Actual:+ + > -----\n    > > block 1\n    > > block 2\n-----\n  \n  ```block\n  A code block\n```\n  \n  -----\nanother list\n:
-
-# NONCOMP6
-# bad_fenced_block_in_block_quote_in_list_in_list_with_previous_list_triple_drop
-# Expected:+ + > -----\n    > + list 1\n    >   list 2\n    > + list 3\n\n  ```block\n  A code block\n  ```\n\n  -----\n  another list\n:
-#   Actual:+ + > -----\n    > + list 1\n    >   list 2\n    > + list 3\n\n  ```block\n  A code block\n```\n  \n  -----\nanother list\n:
-
-# NONCOMP7
-# bad_fenced_block_in_block_quote_in_list_in_list_with_previous_list_triple_drop_and_thematics
-# Expected:+ + > -----\n    > + list 1\n    >   list 2\n    > + list 3\n  -----\n\n  ```block\n  A code block\n  ```\n\n  -----\n  another list\n:
-#   Actual:+ + > -----\n    > + list 1\n    >   list 2\n    > + list 3\n-----\n  \n  ```block\n  A code block\n```\n  \n  -----\nanother list\n:
-
-# NONCOMP8
-# bad_fenced_block_in_list_in_list_in_list_with_previous_block_double_drop_with_thematics
-# Expected:+ + + -----\n      > block 1\n      > block 2\n    -----\n\n    ```block\n    A code block\n    ```\n\n    -----\n  + another list\n:
-#   Actual:+ + + -----\n      > block 1\n      > block 2\n-----\n\n    ```block\n    A code block\n    ```\n\n    -----\n+ another list\n:
 
 
 # FOOBAR1 bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_list_triple_drop_and_thematics
