@@ -7661,7 +7661,6 @@ another list
 {temp_source_path}:7:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
-        mark_fix_as_skipped=skip_fix_bad_markdown,
         fix_expected_file_contents="""+ + list 1
     > block 2.1
     > block 2.2
@@ -8161,7 +8160,7 @@ another list
   + another list
 """,
     ),
-    pluginRuleTest(  # test_extra_052p0 NONCOMP4
+    pluginRuleTest(  # test_extra_052p0 test_extra_052p1 NONCOMP4
         "bad_fenced_block_in_block_quote_in_list_in_list_with_previous_block_triple_drop",
         source_file_contents="""+ + > -----
     > > block 1
@@ -8177,7 +8176,6 @@ another list
 {temp_source_path}:6:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
-        mark_fix_as_skipped=skip_fix_bad_markdown,
         use_debug=True,
         fix_expected_file_contents="""+ + > -----
     > > block 1
@@ -8296,7 +8294,6 @@ another list
 {temp_source_path}:7:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
-        mark_fix_as_skipped=skip_fix_bad_markdown,
         fix_expected_file_contents="""+ + > -----
     > > block 1
     > > block 2
@@ -8453,9 +8450,7 @@ another list
 {temp_source_path}:7:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
-        mark_fix_as_skipped=skip_fix_bad_markdown,
         use_debug=True,
-        use_fix_debug=True,
         fix_expected_file_contents="""+ + > -----
     > + list 1
     >   list 2
@@ -8550,7 +8545,6 @@ another list
 """,
         disable_rules="md032",
         mark_fix_as_skipped=skip_fix_bad_markdown,
-        # use_fix_debug=True,
         fix_expected_file_contents="""+ + > -----
     > + list 1
     >   list 2
@@ -8583,7 +8577,6 @@ another list
 {temp_source_path}:8:3: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
-        mark_fix_as_skipped=skip_fix_bad_markdown,
         fix_expected_file_contents="""+ + > -----
     > + list 1
     >   list 2
@@ -8856,7 +8849,6 @@ another list
 {temp_source_path}:7:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
         disable_rules="md032",
-        mark_fix_as_skipped=skip_fix_bad_markdown,
         use_debug=True,
         fix_expected_file_contents="""+ + + -----
       > block 1
@@ -9305,6 +9297,32 @@ another list
 
   ```
 """,
+    ),
+    pluginRuleTest(
+        "issue-1366-a",
+        source_file_contents="""1. Start a list
+1. Try about 12 times to get GitHub to have a code block inside the list
+
+        watch -n 2 kubectl get pods --all-namespaces --field-selector=status.phase=Pending
+
+1. This should be element 3 of the list 🤞
+""",
+        scan_expected_return_code=0,
+        scan_expected_output="",
+        disable_rules="md010,md040",
+    ),
+    pluginRuleTest(
+        "issue-1366-b",
+        source_file_contents="""1. Start a list
+1. Try about 12 times to get GitHub to have a code block inside the list
+
+    ```shell
+    watch -n 2 kubectl get pods --all-namespaces --field-selector=status.phase=Pending
+    ```
+
+1. This should be element 3 of the list 🤞
+""",
+        scan_expected_return_code=0,
     ),
 ]
 
