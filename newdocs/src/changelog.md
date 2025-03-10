@@ -21,6 +21,8 @@
       container scenarios involving the remaining containers being lists.
 - [Issue 1357](https://github.com/jackdewinter/pymarkdown/issues/1357)
     - Fixed issue with rule Md007 and nested lists
+- [Issue 1371](https://github.com/jackdewinter/pymarkdown/issues/1371)
+    - Fixed Md031 fix issues related to issue 1364 fixes.
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
