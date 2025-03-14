@@ -490,9 +490,9 @@
         "pymarkdown/transform_markdown/transform_block_quote.py": {},
         "pymarkdown/transform_markdown/transform_containers.py": {
             "too-few-public-methods": 1,
-            "too-many-arguments": 20,
+            "too-many-arguments": 21,
             "too-many-locals": 3,
-            "too-many-boolean-expressions": 3,
+            "too-many-boolean-expressions": 4,
             "chained-comparison": 1
         },
         "pymarkdown/transform_markdown/transform_list_block.py": {
@@ -512,10 +512,10 @@
         "too-many-instance-attributes": 27,
         "too-many-public-methods": 4,
         "too-few-public-methods": 39,
-        "too-many-arguments": 255,
+        "too-many-arguments": 256,
         "too-many-locals": 50,
         "chained-comparison": 3,
-        "too-many-boolean-expressions": 5,
+        "too-many-boolean-expressions": 6,
         "protected-access": 25,
         "deprecated-decorator": 3,
         "broad-exception-caught": 3,

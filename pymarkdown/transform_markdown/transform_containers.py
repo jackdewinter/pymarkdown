@@ -482,6 +482,7 @@ class TransformContainers:
             prefix = ""
         return prefix
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __abcd_final_list_second_half(
         removed_tokens: List[MarkdownToken],
@@ -489,6 +490,7 @@ class TransformContainers:
         container_stack: List[MarkdownToken],
         possible_prefix: Optional[str],
         container_line: str,
+        kludge_beta: bool,
     ) -> Optional[str]:
         container_stack_copy: List[MarkdownToken] = container_stack[:]
         container_stack_copy.extend(removed_tokens[::-1])
@@ -497,7 +499,9 @@ class TransformContainers:
         )
 
         prefix = None
-        if is_only_list_starts_on_stack and possible_prefix is not None:
+        if kludge_beta:
+            prefix = possible_prefix
+        elif is_only_list_starts_on_stack and possible_prefix is not None:
             prefix = possible_prefix
             token_index = len(removed_tokens) - 1
             while token_index >= 0:
@@ -531,6 +535,8 @@ class TransformContainers:
             del removed_tokens[0]
             del removed_token_indices[0]
         return prefix
+
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __abcd_final_list_second_half_with_second_block_quote(
@@ -587,13 +593,16 @@ class TransformContainers:
                 # endif
         return prefix
 
+    # pylint: disable=too-many-boolean-expressions
     @staticmethod
     def __abcd_final_list(
         removed_tokens: List[MarkdownToken],
         removed_token_indices: List[int],
         container_stack: List[MarkdownToken],
         container_line: str,
+        container_token_indices: List[int],
     ) -> Optional[str]:
+        kludge_beta = False
         removed_list_token = cast(ListStartMarkdownToken, removed_tokens[0])
         assert removed_list_token.leading_spaces is not None
         split_leading_spaces = removed_list_token.leading_spaces.split("\n")
@@ -606,6 +615,22 @@ class TransformContainers:
             # and split_leading_spaces[removed_token_indices[0]]
         ):
             possible_prefix = split_leading_spaces[removed_token_indices[0]]
+
+            if (
+                len(removed_tokens) == 2
+                and removed_tokens[0].is_list_start
+                and removed_tokens[1].is_list_start
+                and len(container_stack) == 2
+                and container_stack[0].is_block_quote_start
+                and container_stack[1].is_list_start
+            ):
+                xxxx = cast(BlockQuoteMarkdownToken, container_stack[0])
+                assert xxxx.bleading_spaces is not None
+                split_x = xxxx.bleading_spaces.split("\n")
+                zx = container_token_indices[0]
+                possible_prefix = split_x[zx] + possible_prefix
+                container_token_indices[0] += 1
+                kludge_beta = True
         del removed_tokens[0]
         del removed_token_indices[0]
 
@@ -615,7 +640,10 @@ class TransformContainers:
             container_stack,
             possible_prefix,
             container_line,
+            kludge_beta,
         )
+
+    # pylint: enable=too-many-boolean-expressions
 
     @staticmethod
     def __abcd_final(
@@ -675,7 +703,11 @@ class TransformContainers:
                 )
         else:
             prefix = TransformContainers.__abcd_final_list(
-                removed_tokens, removed_token_indices, container_stack, container_line
+                removed_tokens,
+                removed_token_indices,
+                container_stack,
+                container_line,
+                container_token_indices,
             )
         return prefix, container_line
 
