@@ -10,6 +10,25 @@
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
+- [Issue 1379](https://github.com/jackdewinter/pymarkdown/issues/1379)
+    - Fixed rehydration issues for test_extra_052l\* and test_extra_052m\*
+    - Precursor for addressing the fix mode Md031 tests
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+- None
+
+## Version 0.9.29 - Date: 2025-03-10
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Added
+
+- None
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
 - [Issue 1352](https://github.com/jackdewinter/pymarkdown/issues/1352)
     - Fixed parsing and rehydration issues, as precursor to tackling Md031 fix issue
 - [Issue 1356](https://github.com/jackdewinter/pymarkdown/issues/1356)
