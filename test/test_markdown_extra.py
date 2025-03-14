@@ -14640,7 +14640,6 @@ block 2</p>
     act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_extra_052l0():
     """
@@ -14711,7 +14710,6 @@ list 2</li>
     act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_extra_052l1():
     """
@@ -14788,7 +14786,6 @@ list 2</li>
     act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_extra_052m0():
     """
@@ -14862,7 +14859,6 @@ list 2</li>
     act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_extra_052m1():
     """
@@ -16473,6 +16469,17 @@ def test_extra_999():
     ParserHelper.count_newlines_in_texts("text")
 
 
+# NONCOMP1
+# bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_double_drop
+# Expected:> + + -----\n>     + list 1\n>       list 2\n>     + list 3\n>\n>   ```block\n>   A code block\n>   ```\n>\n>   -----\n> + another list\n:
+#   Actual:> + + -----\n>     + list 1\n>       list 2\n>     + list 3\n> \n> ```block\n> A code block\n> ```\n>  \n> -----\n> + another list\n:
+
+# NONCOMP2
+# bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_double_drop_and_thematics
+# Expected:> + + -----\n>     + list 1\n>       list 2\n>     + list 3\n>   -----\n>\n>   ```block\n>   A code block\n>   ```\n>\n>   -----\n> + another list\n:
+#   Actual:> + + -----\n>     + list 1\n>       list 2\n>     + list 3\n> -----\n>\n> ```block\n>   A code block\n> ```\n>\n> -----\n> + another list\n:
+
+
 # FOOBAR1 bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_list_triple_drop_and_thematics
 # Expected:> > + ______\n> >   + list 1\n> >     list 2\n> >   + list 3\n> ______\n>\n> ```block\n> A code block\n> ```\n>\n> ______\n:
 #   Actual:> > + ______\n> >   + list 1\n> >     list 2\n> >   + list 3\n> ______\n> \n>```block\n> A code block\n> ```\n> \n>______\n:
@@ -16535,16 +16542,6 @@ def test_extra_999():
 # # bad_fenced_block_in_block_quote_in_list_with_previous_inner_list_double_drop
 # Expected:1. > +\n   >   list 3\n   > + list 3\n\n   ```block\n   A code block\n   ```\n\n   --------\n:
 #   Actual:1. > +\n   >   list 3\n   > + list 3\n   \n   ```block\nA code block\n   ```\n   \n--------\n:
-
-# NONCOMP1
-# bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_double_drop
-# Expected:> + + -----\n>     + list 1\n>       list 2\n>     + list 3\n>\n>   ```block\n>   A code block\n>   ```\n>\n>   -----\n> + another list\n:
-#   Actual:> + + -----\n>     + list 1\n>       list 2\n>     + list 3\n> \n> ```block\n> A code block\n> ```\n>  \n> -----\n> + another list\n:
-
-# NONCOMP2
-# bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_double_drop_and_thematics
-# Expected:> + + -----\n>     + list 1\n>       list 2\n>     + list 3\n>   -----\n>\n>   ```block\n>   A code block\n>   ```\n>\n>   -----\n> + another list\n:
-#   Actual:> + + -----\n>     + list 1\n>       list 2\n>     + list 3\n> -----\n>\n> ```block\n>   A code block\n> ```\n>\n> -----\n> + another list\n:
 
 # SNAFU2
 # bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_blockx_double_drop
