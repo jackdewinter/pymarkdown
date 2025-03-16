@@ -7208,7 +7208,7 @@ another list
 """,
     ),
     pluginRuleTest(  # test_extra_052l0 test_extra_052l01 NONCOMP1
-        "bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_double_drop",
+        "bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_double_drop_x",
         source_file_contents="""> + + -----
 >     + list 1
 >       list 2
@@ -7223,8 +7223,7 @@ another list
         scan_expected_output="""{temp_source_path}:5:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 {temp_source_path}:7:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
-        disable_rules="md032",
-        mark_fix_as_skipped=skip_fix_bad_markdown,
+        disable_rules="md032,md027",
         use_debug=True,
         fix_expected_file_contents="""> + + -----
 >     + list 1
@@ -7348,9 +7347,8 @@ another list
         scan_expected_output="""{temp_source_path}:6:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 {temp_source_path}:8:5: MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)
 """,
-        disable_rules="md032",
+        disable_rules="md032,md027",
         use_debug=True,
-        mark_fix_as_skipped=skip_fix_bad_markdown,
         fix_expected_file_contents="""> + + -----
 >     + list 1
 >       list 2

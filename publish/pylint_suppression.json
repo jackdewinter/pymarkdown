@@ -329,7 +329,8 @@
             "too-many-instance-attributes": 1
         },
         "pymarkdown/plugins/rule_md_031.py": {
-            "too-many-instance-attributes": 1
+            "too-many-instance-attributes": 1,
+            "too-many-boolean-expressions": 1
         },
         "pymarkdown/plugins/rule_md_032.py": {},
         "pymarkdown/plugins/rule_md_033.py": {},
@@ -515,7 +516,7 @@
         "too-many-arguments": 256,
         "too-many-locals": 50,
         "chained-comparison": 3,
-        "too-many-boolean-expressions": 6,
+        "too-many-boolean-expressions": 7,
         "protected-access": 25,
         "deprecated-decorator": 3,
         "broad-exception-caught": 3,

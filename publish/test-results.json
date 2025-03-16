@@ -1156,10 +1156,10 @@
         },
         {
             "name": "test.rules.test_md005",
-            "totalTests": 94,
+            "totalTests": 93,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 1,
+            "skippedTests": 0,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -1367,7 +1367,7 @@
             "totalTests": 657,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 17,
+            "skippedTests": 15,
             "elapsedTimeInMilliseconds": 0
         },
         {
