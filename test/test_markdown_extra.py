@@ -14856,7 +14856,7 @@ list 2</li>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
@@ -14935,7 +14935,7 @@ list 2</li>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
@@ -16467,17 +16467,6 @@ def test_extra_999():
     assert new_front_matter.is_extension
 
     ParserHelper.count_newlines_in_texts("text")
-
-
-# NONCOMP1
-# bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_double_drop
-# Expected:> + + -----\n>     + list 1\n>       list 2\n>     + list 3\n>\n>   ```block\n>   A code block\n>   ```\n>\n>   -----\n> + another list\n:
-#   Actual:> + + -----\n>     + list 1\n>       list 2\n>     + list 3\n> \n> ```block\n> A code block\n> ```\n>  \n> -----\n> + another list\n:
-
-# NONCOMP2
-# bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_double_drop_and_thematics
-# Expected:> + + -----\n>     + list 1\n>       list 2\n>     + list 3\n>   -----\n>\n>   ```block\n>   A code block\n>   ```\n>\n>   -----\n> + another list\n:
-#   Actual:> + + -----\n>     + list 1\n>       list 2\n>     + list 3\n> -----\n>\n> ```block\n>   A code block\n> ```\n>\n> -----\n> + another list\n:
 
 
 # FOOBAR1 bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_list_triple_drop_and_thematics

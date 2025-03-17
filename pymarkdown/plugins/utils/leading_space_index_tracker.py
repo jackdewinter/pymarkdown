@@ -51,13 +51,18 @@ class LeadingSpaceIndexTracker:
         self.__container_token_stack.append(token)
         self.__closed_container_adjustments.append(ClosedContainerAdjustments())
 
-    def nudge_list_container(self, token: MarkdownToken) -> None:
-        assert token.is_new_list_item
-        assert (
-            self.__container_token_stack
-            and self.__container_token_stack[-1].is_list_start
-        )
-        self.__closed_container_adjustments[-1].list_nudge_count += 1
+    def nudge_list_container(
+        self, token: MarkdownToken, nudge_positive: bool = True
+    ) -> None:
+        if nudge_positive:
+            assert token.is_new_list_item
+            assert (
+                self.__container_token_stack
+                and self.__container_token_stack[-1].is_list_start
+            )
+            self.__closed_container_adjustments[-1].list_nudge_count += 1
+        else:
+            self.__closed_container_adjustments[-1].list_nudge_count -= 1
 
     def register_container_end(self, token: MarkdownToken) -> None:
         """

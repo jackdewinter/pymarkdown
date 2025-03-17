@@ -13,6 +13,8 @@
 - [Issue 1379](https://github.com/jackdewinter/pymarkdown/issues/1379)
     - Fixed rehydration issues for test_extra_052l\* and test_extra_052m\*
     - Precursor for addressing the fix mode Md031 tests
+- [Issue 1380](https://github.com/jackdewinter/pymarkdown/issues/1380)
+    - Fixing the 2 Md031 tests now unblocked from Issue 1379
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
