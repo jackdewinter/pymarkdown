@@ -117,6 +117,7 @@ class BlockQuoteNonFencedHelper:
             text_removed_by_container,
             did_blank,
             leaf_tokens,
+            requeue_line_info,
         ) = BlockQuoteNonFencedHelper.__handle_non_fenced_code_section_no_requeue(
             parser_state,
             position_marker,
@@ -141,7 +142,7 @@ class BlockQuoteNonFencedHelper:
             last_block_quote_index,
             text_removed_by_container,
             avoid_block_starts,
-            None,
+            requeue_line_info,
             force_list_continuation,
         )
 
@@ -161,7 +162,7 @@ class BlockQuoteNonFencedHelper:
         # extra_consumed_whitespace: Optional[int],
         container_level_tokens: List[MarkdownToken],
         original_line: str,
-    ) -> Tuple[str, int, str, bool, List[MarkdownToken]]:
+    ) -> Tuple[str, int, str, bool, List[MarkdownToken], Optional[RequeueLineInfo]]:
         (
             line_to_parse,
             stack_index,
@@ -197,19 +198,15 @@ class BlockQuoteNonFencedHelper:
         POGGER.debug("text_removed_by_container=[$]", removed_text)
         POGGER.debug("removed_text=[$]", removed_text)
         if is_not_blank_line:
-            return (
-                line_to_parse,
-                start_index,
+            return (line_to_parse, start_index, removed_text, False, [], None)
+        did_blank, leaf_tokens, requeue_line_info = (
+            BlockQuoteNonFencedHelper.__handle_normal_blank_line(
+                parser_state,
+                block_quote_data,
+                position_marker,
                 removed_text,
-                False,
-                [],
+                line_to_parse,
             )
-        did_blank, leaf_tokens = BlockQuoteNonFencedHelper.__handle_normal_blank_line(
-            parser_state,
-            block_quote_data,
-            position_marker,
-            removed_text,
-            line_to_parse,
         )
         return (
             line_to_parse,
@@ -217,6 +214,7 @@ class BlockQuoteNonFencedHelper:
             removed_text,
             did_blank,
             leaf_tokens,
+            requeue_line_info,
         )
 
     # pylint: enable=too-many-arguments
@@ -299,7 +297,7 @@ class BlockQuoteNonFencedHelper:
         position_marker: PositionMarker,
         text_removed_by_container: str,
         line_to_parse: str,
-    ) -> Tuple[bool, List[MarkdownToken]]:
+    ) -> Tuple[bool, List[MarkdownToken], Optional[RequeueLineInfo]]:
         POGGER.debug("call __handle_block_quote_section>>handle_blank_line")
 
         POGGER.debug(
@@ -322,11 +320,11 @@ class BlockQuoteNonFencedHelper:
             leaf_tokens is not None
         ), "Handling of blank lines always produces tokens."
         POGGER.debug("handle_block_quote_section>>leaf_tokens>>$", leaf_tokens)
-        assert not (
-            requeue_line_info and requeue_line_info.lines_to_requeue
-        ), "No handling of requeuing available here."
+        # assert not (
+        #     requeue_line_info and requeue_line_info.lines_to_requeue
+        # ), "No handling of requeuing available here."
 
-        return True, leaf_tokens
+        return True, leaf_tokens, requeue_line_info
 
     # pylint: disable=too-many-arguments
     @staticmethod

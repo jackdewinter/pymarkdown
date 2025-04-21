@@ -634,11 +634,10 @@ class ContainerBlockNonLeafProcessor:
         # )
         inner_token = parser_state.token_stack[i].matching_markdown_token
         if inner_token is None:
-            assert parser_state.token_stack[
-                i
-            ].was_link_definition_started, (
-                "If there is no matching stack token, this must be a link definition."
-            )
+            assert (
+                parser_state.token_stack[i].was_link_definition_started
+                or parser_state.token_stack[i].was_table_block_started
+            ), "If there is no matching stack token, this must be a link definition or table."
             return True, 0, remaining_whitespace
         if inner_token.is_block_quote_start:
             start_bq_index = remaining_whitespace.find(">")
@@ -743,7 +742,7 @@ class ContainerBlockNonLeafProcessor:
         if grab_bag.requeue_line_info:
             POGGER.debug(">>requeuing lines after looking for block start. returning.")
 
-        if grab_bag.did_blank:
+        if grab_bag.did_blank and not grab_bag.requeue_line_info:
             ContainerBlockNonLeafProcessor.__get_block_start_index_handle_blank_line(
                 parser_state, grab_bag, block_leaf_tokens
             )

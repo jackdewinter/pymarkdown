@@ -117,6 +117,17 @@ class LinkReferenceDefinitionParseHelper:
     # pylint: enable=too-many-locals
 
     @staticmethod
+    def is_link_reference_definition(
+        parser_state: ParserState,
+        line_to_parse: str,
+        start_index: int,
+        extracted_whitespace: str,
+    ) -> bool:
+        return LinkReferenceDefinitionParseHelper.__is_link_reference_definition(
+            parser_state, line_to_parse, start_index, extracted_whitespace
+        )
+
+    @staticmethod
     def __is_link_reference_definition(
         parser_state: ParserState,
         line_to_parse: str,

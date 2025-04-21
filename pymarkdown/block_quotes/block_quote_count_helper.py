@@ -21,6 +21,7 @@ from pymarkdown.tokens.stack_token import (
     LinkDefinitionStackToken,
     ListStackToken,
     ParagraphStackToken,
+    TableBlockStackToken,
 )
 
 # pylint: disable=too-many-lines
@@ -725,6 +726,7 @@ class BlockQuoteCountHelper:
                     IndentedCodeBlockStackToken,
                     LinkDefinitionStackToken,
                     HtmlBlockStackToken,
+                    TableBlockStackToken,
                 ],
                 was_forced=True,
                 caller_can_handle_requeue=True,

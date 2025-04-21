@@ -1241,7 +1241,7 @@ def test_link_reference_definitions_185():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_185a():
+def test_link_reference_definitions_185ax():
     """
     Test case 185a:  variation of 185 with Atx Heading between
     """
@@ -1262,6 +1262,39 @@ def test_link_reference_definitions_185a():
         "[end-para:::True]",
     ]
     expected_gfm = """<h1>Abc</h1>
+<p><a href="/url">foo</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_185aa():
+    """
+    Test case 185a:  variation of 185 with Atx Heading between
+    """
+
+    # Arrange
+    source_markdown = """[foo]: /url
+'start of
+# Abc
+[foo]"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::foo:: :/url:::::]",
+        "[para(2,1):]",
+        "[text(2,1):'start of:]",
+        "[end-para:::False]",
+        "[atx(3,1):1:0:]",
+        "[text(3,3):Abc: ]",
+        "[end-atx::]",
+        "[para(4,1):]",
+        "[link(4,1):shortcut:/url:::::foo:False::::]",
+        "[text(4,2):foo:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>'start of</p>
+<h1>Abc</h1>
 <p><a href="/url">foo</a></p>"""
 
     # Act & Assert
@@ -1861,6 +1894,40 @@ def test_link_reference_definitions_extra_02ba():
 <blockquote>
 <p>/url</p>
 </blockquote>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_02bc():
+    """
+    Test case extra 02b:  variation of 2 within different block quote
+    """
+
+    # Arrange
+    source_markdown = """> [foo]:
+>> [foo]:
+>> # abc"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):[foo]::]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::>> ]",
+        "[para(2,4):]",
+        "[text(2,4):/url:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>[foo]:</p>
+<blockquote>
+<p>/url</p>
 </blockquote>
 </blockquote>"""
 

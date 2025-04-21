@@ -1104,6 +1104,51 @@ foo"""
 
 
 @pytest.mark.gfm
+def test_html_blocks_144b():
+    """
+    Test case 144a:  Variation of 144 to add extra paragraph
+    """
+
+    # Arrange
+    source_markdown = """# some heading
+
+- <div>
+- foo
+
+foo"""
+    expected_tokens = [
+        "[atx(1,1):1:0:]",
+        "[text(1,3):some heading: ]",
+        "[end-atx::]",
+        "[BLANK(2,1):]",
+        "[ulist(3,1):-::2::]",
+        "[html-block(3,3)]",
+        "[text(3,3):<div>:]",
+        "[end-html-block:::True]",
+        "[li(4,1):2::]",
+        "[para(4,3):]",
+        "[text(4,3):foo:]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+        "[para(6,1):]",
+        "[text(6,1):foo:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<h1>some heading</h1>
+<ul>
+<li>
+<div>
+</li>
+<li>foo</li>
+</ul>
+<p>foo</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_html_blocks_145():
     """
     Test case 145:  (part 1) The end tag can occur on the same line as the start tag:

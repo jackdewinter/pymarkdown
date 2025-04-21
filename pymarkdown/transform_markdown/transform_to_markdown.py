@@ -112,8 +112,6 @@ class TransformToMarkdown:
 
     def __get_token_type_info(self, token_type: type) -> Tuple[str, MarkdownTokenClass]:
         current_token_type = token_type
-        token_name = None
-        token_class = None
         assert (
             "get_markdown_token_type" in token_type.__dict__
         ), "Must be present in dictionary."
@@ -128,6 +126,7 @@ class TransformToMarkdown:
             new_bases = list(current_token_type.__bases__)
             assert len(new_bases) == 1, "Only one."
             current_token_type = new_bases[0]
+
         if current_token_type == ContainerMarkdownToken:
             token_class = MarkdownTokenClass.CONTAINER_BLOCK
         elif current_token_type == LeafMarkdownToken:
@@ -154,11 +153,11 @@ class TransformToMarkdown:
         """
         type_name, type_class = self.__get_token_type_info(token_type)
 
-        assert type_class in [
+        assert type_class in (
             MarkdownTokenClass.LEAF_BLOCK,
             MarkdownTokenClass.INLINE_BLOCK,
             MarkdownTokenClass.SPECIAL,
-        ], "Must be one of three classes."
+        ), "Must be one of three classes."
 
         self.start_token_handlers[type_name] = start_token_handler
         if end_token_handler:
@@ -303,29 +302,32 @@ class TransformToMarkdown:
             )
 
             if next_line_number == 1:
-                if transformed_data:
-                    transformed_data = (
+
+                transformed_data = (
+                    (
                         f"{detabified_pragma}"
                         + f"{ParserHelper.newline_character}{transformed_data}"
                     )
-                else:
-                    transformed_data = detabified_pragma
+                    if transformed_data
+                    else detabified_pragma
+                )
             else:
                 nth_index = ParserHelper.find_nth_occurrence(
                     transformed_data,
                     ParserHelper.newline_character,
                     next_line_number - 1,
                 )
-                if nth_index == -1:
-                    transformed_data = (
+                transformed_data = (
+                    (
                         f"{transformed_data}{ParserHelper.newline_character}"
                         + f"{detabified_pragma}"
                     )
-                else:
-                    transformed_data = (
+                    if nth_index == -1
+                    else (
                         f"{transformed_data[:nth_index]}{ParserHelper.newline_character}"
                         + f"{detabified_pragma}{transformed_data[nth_index:]}"
                     )
+                )
         return transformed_data
 
     # pylint: disable=too-many-arguments
@@ -340,10 +342,7 @@ class TransformToMarkdown:
     ) -> Tuple[str, Optional[PragmaToken]]:
         pragma_token: Optional[PragmaToken] = None
         if current_token.token_name in self.start_container_token_handlers:
-            start_container_handler_fn = self.start_container_token_handlers[
-                current_token.token_name
-            ]
-            new_data = start_container_handler_fn(
+            new_data = self.start_container_token_handlers[current_token.token_name](
                 self.context,
                 current_token,
                 previous_token,
@@ -352,8 +351,9 @@ class TransformToMarkdown:
             )
 
         elif current_token.token_name in self.start_token_handlers:
-            start_handler_fn = self.start_token_handlers[current_token.token_name]
-            new_data = start_handler_fn(self.context, current_token, previous_token)
+            new_data = self.start_token_handlers[current_token.token_name](
+                self.context, current_token, previous_token
+            )
 
         elif current_token.is_pragma:
             new_data = ""

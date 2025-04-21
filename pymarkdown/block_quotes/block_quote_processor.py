@@ -504,7 +504,7 @@ class BlockQuoteProcessor:
             was_forced=True,
         )
         parser_state.token_document.extend(container_level_tokens)
-        return -1, RequeueLineInfo([position_marker.text_to_parse], False)
+        return -1, RequeueLineInfo([position_marker.text_to_parse], False, False)
 
     # pylint: disable=too-many-arguments
     @staticmethod

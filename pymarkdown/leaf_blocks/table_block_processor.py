@@ -1,36 +1,23 @@
-"""
-Module to helper with the parsing of link reference definitions.
-"""
-
-import logging
 from typing import List, Optional, Tuple, cast
 
+from pymarkdown.container_blocks.container_grab_bag import POGGER
 from pymarkdown.general.parser_helper import ParserHelper
-from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.parser_state import ParserState
 from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.general.requeue_line_info import RequeueLineInfo
-from pymarkdown.links.link_reference_definition_continuation_helper import (
-    LinkReferenceDefinitionContinuationHelper,
+from pymarkdown.leaf_blocks.table_block_continuation_helper import (
+    TableBlockContinuationHelper,
 )
-from pymarkdown.links.link_reference_definition_parse_helper import (
-    LinkReferenceDefinitionParseHelper,
-)
-from pymarkdown.links.link_reference_tuple import LinkReferenceDefinitionTuple
+from pymarkdown.leaf_blocks.table_block_parse_helper import TableParseHelper
+from pymarkdown.leaf_blocks.table_block_tuple import TableTuple
 from pymarkdown.tokens.markdown_token import MarkdownToken
-from pymarkdown.tokens.stack_token import LinkDefinitionStackToken
-
-POGGER = ParserLogger(logging.getLogger(__name__))
+from pymarkdown.tokens.stack_token import TableBlockStackToken
 
 
-class LinkReferenceDefinitionHelper:
-    """
-    Class to helper with the parsing of link reference definitions.
-    """
+class TableBlockHelper:
 
-    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
-    def process_link_reference_definition(
+    def process_table_rows(
         parser_state: ParserState,
         position_marker: PositionMarker,
         remaining_line_to_parse: str,
@@ -42,8 +29,9 @@ class LinkReferenceDefinitionHelper:
         process_mode: int,
     ) -> Tuple[bool, bool, bool, Optional[RequeueLineInfo], List[MarkdownToken]]:
         """
-        Process a link deference definition.  Note, this requires a lot of work to
-        handle properly because of partial definitions across lines.
+        Process a table row.  Note, this requires a lot of work to
+        handle properly because it is not until a new line that we
+        can determine if the table is correctly formed.
         """
         line_to_parse = position_marker.text_to_parse
         start_index: int = position_marker.index_number
@@ -59,7 +47,7 @@ class LinkReferenceDefinitionHelper:
             remaining_line_to_parse,
             start_index,
             is_blank_line,
-        ) = LinkReferenceDefinitionHelper.__handle_link_reference_definition_init(
+        ) = TableBlockHelper.__handle_table_rows_init(
             remaining_line_to_parse,
             line_to_parse,
             start_index,
@@ -69,13 +57,13 @@ class LinkReferenceDefinitionHelper:
 
         (
             was_started,
-            lrd_stack_token,
+            table_stack_token,
             original_stack_depth,
             original_document_depth,
             line_to_parse,
             extracted_whitespace,
             start_index,
-        ) = LinkReferenceDefinitionHelper.__handle_link_reference_definition_started(
+        ) = TableBlockHelper.__handle_table_rows_started(
             parser_state,
             original_stack_depth,
             original_document_depth,
@@ -87,12 +75,12 @@ class LinkReferenceDefinitionHelper:
         line_to_parse_size = len(line_to_parse)
 
         (
-            did_complete_lrd,
-            end_lrd_index,
-            parsed_lrd_tuple,
+            did_complete_table,
+            end_table_index,
+            parsed_table_tuple,
             is_blank_line,
             line_to_parse,
-        ) = LinkReferenceDefinitionHelper.__handle_link_reference_definition_processing(
+        ) = TableBlockHelper.__handle_table_rows_processing(
             parser_state,
             line_to_parse,
             start_index,
@@ -105,10 +93,11 @@ class LinkReferenceDefinitionHelper:
             unmodified_line_to_parse,
         )
         (
-            did_pause_lrd,
-            force_ignore_first_as_lrd,
+            did_pause_table,
+            force_ignore_first_as_table,
             new_tokens,
-        ) = LinkReferenceDefinitionContinuationHelper.determine_continue_or_stop(
+            did_remove_stack_token,
+        ) = TableBlockContinuationHelper.determine_continue_or_stop(
             parser_state,
             position_marker,
             was_started,
@@ -117,44 +106,45 @@ class LinkReferenceDefinitionHelper:
             unmodified_line_to_parse,
             original_stack_depth,
             original_document_depth,
-            end_lrd_index,
+            end_table_index,
             line_to_parse_size,
             is_blank_line,
-            did_complete_lrd,
-            parsed_lrd_tuple,
+            did_complete_table,
+            parsed_table_tuple,
             lines_to_requeue,
             process_mode,
         )
         if lines_to_requeue:
             assert (
-                lrd_stack_token is not None
+                table_stack_token is not None
             ), "Stack token is created before determining requeue, therefore it must be declared."
-            LinkReferenceDefinitionHelper.__prepare_for_requeue(
+            TableBlockHelper.__prepare_for_requeue(
                 parser_state,
-                lrd_stack_token,
-                did_complete_lrd,
+                table_stack_token,
+                did_complete_table,
                 original_stack_depth,
                 original_document_depth,
                 lines_to_requeue,
+                did_remove_stack_token,
             )
+            force_ignore_first_as_table = True  # TODO check this
             requeue_line_info = RequeueLineInfo(
-                lines_to_requeue, force_ignore_first_as_lrd, False
+                lines_to_requeue, False, force_ignore_first_as_table
             )
+            parser_state.abc(requeue_line_info, table_stack_token)
         else:
             requeue_line_info = None
 
         return (
-            did_complete_lrd or end_lrd_index != -1,
-            did_complete_lrd,
-            did_pause_lrd,
+            did_complete_table or end_table_index != -1,
+            did_complete_table,
+            did_pause_table,
             requeue_line_info,
             new_tokens,
         )
 
-    # pylint: enable=too-many-arguments, too-many-locals
-
     @staticmethod
-    def __handle_link_reference_definition_init(
+    def __handle_table_rows_init(
         remaining_line_to_parse: str,
         line_to_parse: str,
         start_index: int,
@@ -190,35 +180,32 @@ class LinkReferenceDefinitionHelper:
             is_blank_line,
         )
 
-    # pylint: disable=too-many-arguments
     @staticmethod
-    def __handle_link_reference_definition_started(
+    def __handle_table_rows_started(
         parser_state: ParserState,
         original_stack_depth: int,
         original_document_depth: int,
         line_to_parse: str,
         extracted_whitespace: str,
         start_index: int,
-    ) -> Tuple[bool, Optional[LinkDefinitionStackToken], int, int, str, str, int]:
-        lrd_stack_token: Optional[LinkDefinitionStackToken] = None
+    ) -> Tuple[bool, Optional[TableBlockStackToken], int, int, str, str, int]:
+        table_stack_token: Optional[TableBlockStackToken] = None
 
-        if was_started := parser_state.token_stack[-1].was_link_definition_started:
-            lrd_stack_token = cast(
-                LinkDefinitionStackToken, parser_state.token_stack[-1]
-            )
+        if was_started := parser_state.token_stack[-1].was_table_block_started:
+            table_stack_token = cast(TableBlockStackToken, parser_state.token_stack[-1])
             assert (
-                lrd_stack_token.original_stack_depth is not None
-                and lrd_stack_token.original_document_depth is not None
+                table_stack_token.original_stack_depth is not None
+                and table_stack_token.original_document_depth is not None
             ), "stack and document depth must both be defined."
             original_stack_depth, original_document_depth = (
-                lrd_stack_token.original_stack_depth,
-                lrd_stack_token.original_document_depth,
+                table_stack_token.original_stack_depth,
+                table_stack_token.original_document_depth,
             )
             POGGER.debug(
                 ">>continuation_lines>>$<<",
-                lrd_stack_token.continuation_lines,
+                table_stack_token.continuation_lines,
             )
-            line_to_parse = lrd_stack_token.add_joined_lines_before_suffix(
+            line_to_parse = table_stack_token.add_joined_lines_before_suffix(
                 line_to_parse
             )
             (
@@ -229,7 +216,7 @@ class LinkReferenceDefinitionHelper:
             POGGER.debug(">>line_to_parse>>$<<", line_to_parse)
         return (
             was_started,
-            lrd_stack_token,
+            table_stack_token,
             original_stack_depth,
             original_document_depth,
             line_to_parse,
@@ -237,11 +224,8 @@ class LinkReferenceDefinitionHelper:
             start_index,
         )
 
-    # pylint: enable=too-many-arguments
-
-    # pylint: disable=too-many-arguments
     @staticmethod
-    def __handle_link_reference_definition_processing(
+    def __handle_table_rows_processing(
         parser_state: ParserState,
         line_to_parse: str,
         start_index: int,
@@ -252,127 +236,128 @@ class LinkReferenceDefinitionHelper:
         remaining_line_to_parse: str,
         lines_to_requeue: List[str],
         unmodified_line_to_parse: str,
-    ) -> Tuple[bool, int, Optional[LinkReferenceDefinitionTuple], bool, str]:
+    ) -> Tuple[bool, int, Optional[TableTuple], bool, str]:
         if was_started:
-            POGGER.debug(">>parse_link_reference_definition>>was_started")
+            POGGER.debug(">>parse_table>>was_started")
 
             (
-                did_complete_lrd,
-                end_lrd_index,
-                parsed_lrd_tuple,
-            ) = LinkReferenceDefinitionParseHelper.parse_link_reference_definition(
+                did_complete_table,
+                end_table_index,
+                parsed_table_tuple,
+            ) = TableParseHelper.parse_table(
                 parser_state,
                 line_to_parse,
                 start_index,
                 extracted_whitespace,
                 is_blank_line,
+                remaining_line_to_parse,
+                was_started,
             )
             POGGER.debug(
-                ">>parse_link_reference_definition>>was_started>>did_complete_lrd>>$"
-                + ">>end_lrd_index>>$>>len(line_to_parse)>>$",
-                did_complete_lrd,
-                end_lrd_index,
+                ">>parse_table>>was_started>>did_complete_table>>$"
+                + ">>end_table_index>>$>>len(line_to_parse)>>$",
+                did_complete_table,
+                end_table_index,
                 line_to_parse_size,
             )
 
             if not (
-                did_complete_lrd
+                did_complete_table
                 or (
                     not is_blank_line
-                    and not did_complete_lrd
-                    and (end_lrd_index == line_to_parse_size)
+                    and not did_complete_table
+                    and (end_table_index == line_to_parse_size)
                 )
             ):
-                POGGER.debug(
-                    ">>parse_link_reference_definition>>was_started>>GOT HARD FAILURE"
-                )
+                POGGER.debug(">>parse_table>>was_started>>GOT HARD FAILURE")
                 (
                     is_blank_line,
                     line_to_parse,
-                    did_complete_lrd,
-                    end_lrd_index,
-                    parsed_lrd_tuple,
-                ) = LinkReferenceDefinitionHelper.__process_lrd_hard_failure(
+                    did_complete_table,
+                    end_table_index,
+                    parsed_table_tuple,
+                ) = TableBlockHelper.__process_table_hard_failure(
                     parser_state,
                     remaining_line_to_parse,
                     lines_to_requeue,
                     unmodified_line_to_parse,
+                    was_started,
                 )
         else:
             (
-                did_complete_lrd,
-                end_lrd_index,
-                parsed_lrd_tuple,
-            ) = LinkReferenceDefinitionParseHelper.parse_link_reference_definition(
+                did_complete_table,
+                end_table_index,
+                parsed_table_tuple,
+            ) = TableParseHelper.parse_table(
                 parser_state,
                 line_to_parse,
                 start_index,
                 extracted_whitespace,
                 is_blank_line,
+                remaining_line_to_parse,
+                was_started,
             )
             POGGER.debug(
-                ">>parse_link_reference_definition>>did_complete_lrd>>$>>end_lrd_index>>$>>len(line_to_parse)>>$",
-                did_complete_lrd,
-                end_lrd_index,
+                ">>parse_table>>did_complete_table>>$>>end_table_index>>$>>len(line_to_parse)>>$",
+                did_complete_table,
+                end_table_index,
                 line_to_parse_size,
             )
         return (
-            did_complete_lrd,
-            end_lrd_index,
-            parsed_lrd_tuple,
+            did_complete_table,
+            end_table_index,
+            parsed_table_tuple,
             is_blank_line,
             line_to_parse,
         )
 
-    # pylint: enable=too-many-arguments
-
     @staticmethod
     def __prepare_for_requeue_reset_markdown_token(
-        parser_state: ParserState, lrd_stack_token: LinkDefinitionStackToken
+        parser_state: ParserState, table_stack_token: TableBlockStackToken
     ) -> None:
         assert (
-            lrd_stack_token.last_block_quote_markdown_token_index is not None
+            table_stack_token.last_block_quote_markdown_token_index is not None
         ), "Index must be defined by now."
         POGGER.debug(
             ">>XXXXXX>>last_block_quote_markdown_token_index:$:",
-            lrd_stack_token.last_block_quote_markdown_token_index,
+            table_stack_token.last_block_quote_markdown_token_index,
         )
         POGGER.debug(
             ">>XXXXXX>>st-now:$:",
             parser_state.token_document[
-                lrd_stack_token.last_block_quote_markdown_token_index
+                table_stack_token.last_block_quote_markdown_token_index
             ],
         )
 
         del parser_state.token_document[
-            lrd_stack_token.last_block_quote_markdown_token_index
+            table_stack_token.last_block_quote_markdown_token_index
         ]
         assert (
-            lrd_stack_token.copy_of_last_block_quote_markdown_token is not None
+            table_stack_token.copy_of_last_block_quote_markdown_token is not None
         ), "Token must be defined by now."
         parser_state.token_document.insert(
-            lrd_stack_token.last_block_quote_markdown_token_index,
-            lrd_stack_token.copy_of_last_block_quote_markdown_token,
+            table_stack_token.last_block_quote_markdown_token_index,
+            table_stack_token.copy_of_last_block_quote_markdown_token,
         )
         assert (
-            lrd_stack_token.last_block_quote_stack_token is not None
+            table_stack_token.last_block_quote_stack_token is not None
         ), "Token must be defined by now."
         POGGER.debug(
             "last_block_quote_stack_token>:$:<",
-            lrd_stack_token.last_block_quote_stack_token,
+            table_stack_token.last_block_quote_stack_token,
         )
-        lrd_stack_token.last_block_quote_stack_token.reset_matching_markdown_token(
-            lrd_stack_token.copy_of_last_block_quote_markdown_token
+        table_stack_token.last_block_quote_stack_token.reset_matching_markdown_token(
+            table_stack_token.copy_of_last_block_quote_markdown_token
         )
         POGGER.debug(
             "last_block_quote_stack_token>:$:<",
-            lrd_stack_token.last_block_quote_stack_token,
+            table_stack_token.last_block_quote_stack_token,
         )
 
     @staticmethod
     def __prepare_for_requeue_reset_document_and_stack(
         parser_state: ParserState,
-        lrd_stack_token: LinkDefinitionStackToken,
+        table_stack_token: TableBlockStackToken,
         original_stack_depth: int,
         original_document_depth: int,
     ) -> None:
@@ -383,20 +368,22 @@ class LinkReferenceDefinitionHelper:
             ">>XXXXXX>>copy_of_token_stack:$:", parser_state.copy_of_token_stack
         )
         POGGER.debug(
-            ">>lrd_stack_token>>copy_of_token_stack:$:",
-            lrd_stack_token.copy_of_token_stack,
+            ">>table_stack_token>>copy_of_token_stack:$:",
+            table_stack_token.copy_of_token_stack,
         )
+        # assert len(parser_state.token_stack) >= original_stack_depth
         if len(parser_state.token_stack) >= original_stack_depth:
             while len(parser_state.token_stack) > original_stack_depth:
+                if parser_state.token_stack[-1].is_block_quote:
+                    break
                 del parser_state.token_stack[-1]
         else:
             while len(parser_state.token_stack):
-                # assert False
                 del parser_state.token_stack[-1]
             assert (
-                lrd_stack_token.copy_of_token_stack is not None
+                table_stack_token.copy_of_token_stack is not None
             ), "Token must be defined by now."
-            parser_state.token_stack.extend(lrd_stack_token.copy_of_token_stack)
+            parser_state.token_stack.extend(table_stack_token.copy_of_token_stack)
         POGGER.debug(">>XXXXXX>>token_stack(after):$:", parser_state.token_stack)
 
         POGGER.debug(">>XXXXXX>>original_document_depth:$:", original_document_depth)
@@ -406,18 +393,20 @@ class LinkReferenceDefinitionHelper:
         )
         POGGER.debug(">>XXXXXX>>token_document(before):$:", parser_state.token_document)
         while len(parser_state.token_document) > original_document_depth:
+            if parser_state.token_document[-1].is_block_quote_start:
+                break
             del parser_state.token_document[-1]
         POGGER.debug(">>XXXXXX>>token_document(after):$:", parser_state.token_document)
 
-    # pylint: disable=too-many-arguments
     @staticmethod
     def __prepare_for_requeue(
         parser_state: ParserState,
-        lrd_stack_token: LinkDefinitionStackToken,
-        did_complete_lrd: bool,
+        table_stack_token: TableBlockStackToken,
+        did_complete_table: bool,
         original_stack_depth: int,
         original_document_depth: int,
         lines_to_requeue: List[str],
+        did_remove_stack_token: bool,
     ) -> None:
         # This works because in most cases, we add things.  However, in cases like
         # an indented code block, we process the "is it indented enough" and close
@@ -429,34 +418,33 @@ class LinkReferenceDefinitionHelper:
         POGGER.debug("lines_to_requeue:$:", lines_to_requeue)
         POGGER.debug(
             ">>XXXXXX>>copy_of_last_block_quote_markdown_token:$:",
-            lrd_stack_token.copy_of_last_block_quote_markdown_token,
+            table_stack_token.copy_of_last_block_quote_markdown_token,
         )
-        if not did_complete_lrd:
-            if lrd_stack_token.copy_of_last_block_quote_markdown_token:
-                LinkReferenceDefinitionHelper.__prepare_for_requeue_reset_markdown_token(
-                    parser_state, lrd_stack_token
+        if not did_complete_table:
+            if table_stack_token.copy_of_last_block_quote_markdown_token:
+                TableBlockHelper.__prepare_for_requeue_reset_markdown_token(
+                    parser_state, table_stack_token
                 )
-            LinkReferenceDefinitionHelper.__prepare_for_requeue_reset_document_and_stack(
+            TableBlockHelper.__prepare_for_requeue_reset_document_and_stack(
                 parser_state,
-                lrd_stack_token,
+                table_stack_token,
                 original_stack_depth,
                 original_document_depth,
             )
 
-    # pylint: enable=too-many-arguments
-
     @staticmethod
-    def __process_lrd_hard_failure(
+    def __process_table_hard_failure(
         parser_state: ParserState,
         remaining_line_to_parse: str,
         lines_to_requeue: List[str],
         unmodified_line_to_parse: str,
+        was_started: bool,
     ) -> Tuple[
         bool,
         str,
         bool,
         int,
-        Optional[LinkReferenceDefinitionTuple],
+        Optional[TableTuple],
     ]:
         """
         In cases of a hard failure, we have had continuations to the original line
@@ -466,128 +454,101 @@ class LinkReferenceDefinitionHelper:
         (
             is_blank_line,
             line_to_parse,
-            did_complete_lrd,
-            end_lrd_index,
-            parsed_lrd_tuple,
+            did_complete_table,
+            end_table_index,
+            parsed_table_tuple,
         ) = (None, None, None, None, None)
-        link_ref_stack_token = cast(
-            LinkDefinitionStackToken, parser_state.token_stack[-1]
-        )
+        table_stack_token = cast(TableBlockStackToken, parser_state.token_stack[-1])
 
         POGGER.debug(">>remaining_line_to_parse>>add>:$<<", remaining_line_to_parse)
         POGGER.debug(">>unmodified_line_to_parse>>add>:$<<", unmodified_line_to_parse)
         assert unmodified_line_to_parse.endswith(
             remaining_line_to_parse
         ), "Current line must end with the remaining text."
-        link_ref_stack_token.add_continuation_line(remaining_line_to_parse)
-        link_ref_stack_token.add_unmodified_line(unmodified_line_to_parse)
-        while link_ref_stack_token.continuation_lines:
-            POGGER.debug(
-                "continuation_lines>>$<<",
-                ParserHelper.make_whitespace_visible(
-                    str(link_ref_stack_token.continuation_lines)
-                ),
-            )
-            POGGER.debug(
-                "unmodified_lines>>$<<",
-                ParserHelper.make_whitespace_visible(
-                    str(link_ref_stack_token.unmodified_lines)
-                ),
-            )
+        table_stack_token.add_continuation_line(remaining_line_to_parse)
+        table_stack_token.add_unmodified_line(unmodified_line_to_parse)
 
-            lines_to_requeue.append(link_ref_stack_token.unmodified_lines[-1])
-            POGGER.debug(
-                ">>continuation_line>>$",
-                link_ref_stack_token.continuation_lines[-1],
-            )
-            POGGER.debug(
-                ">>unmodified_line>>$",
-                link_ref_stack_token.unmodified_lines[-1],
-            )
-            del link_ref_stack_token.continuation_lines[-1]
-            del link_ref_stack_token.unmodified_lines[-1]
-            POGGER.debug(
-                ">>lines_to_requeue>>$>>",
-                lines_to_requeue,
-            )
-            POGGER.debug(
-                ">>continuation_lines>>$<<",
-                link_ref_stack_token.continuation_lines,
-            )
-            POGGER.debug(
-                ">>unmodified_lines>>$<<",
-                link_ref_stack_token.unmodified_lines,
-            )
-            (
-                is_blank_line,
-                line_to_parse,
-            ) = True, link_ref_stack_token.add_joined_lines_before_suffix("")
-            line_to_parse = line_to_parse[:-1]
-            start_index, extracted_whitespace = ParserHelper.extract_spaces_verified(
-                line_to_parse, 0
-            )
-            POGGER.debug(">>line_to_parse>>$<<", line_to_parse)
-            (
-                did_complete_lrd,
-                end_lrd_index,
-                parsed_lrd_tuple,
-            ) = LinkReferenceDefinitionParseHelper.parse_link_reference_definition(
-                parser_state,
-                line_to_parse,
-                start_index,
-                extracted_whitespace,
-                is_blank_line,
-            )
-            POGGER.debug(
-                ">>parse_link_reference_definition>>was_started>>did_complete_lrd>>$"
-                + ">>end_lrd_index>>$>>len(line_to_parse)>>$",
-                did_complete_lrd,
-                end_lrd_index,
-                len(line_to_parse),
-            )
-            if did_complete_lrd:
-                break
+        try_again = len(table_stack_token.continuation_lines) > 2
+        if not try_again:
+            is_blank_line = False
+            line_to_parse = remaining_line_to_parse
+            did_complete_table = False
+            end_table_index = -1
+        xdf = 2 if len(table_stack_token.continuation_lines) == 2 else 1
+        while xdf:
+
+            lines_to_requeue.append(table_stack_token.unmodified_lines[-1])
+            del table_stack_token.continuation_lines[-1]
+            del table_stack_token.unmodified_lines[-1]
+
+            if try_again:
+                (
+                    is_blank_line,
+                    line_to_parse,
+                ) = True, table_stack_token.add_joined_lines_before_suffix("")
+                line_to_parse = line_to_parse[:-1]
+                start_index, extracted_whitespace = (
+                    ParserHelper.extract_spaces_verified(line_to_parse, 0)
+                )
+                (
+                    did_complete_table,
+                    end_table_index,
+                    parsed_table_tuple,
+                ) = TableParseHelper.parse_table(
+                    parser_state,
+                    line_to_parse,
+                    start_index,
+                    extracted_whitespace,
+                    is_blank_line,
+                    None,
+                    was_started,
+                )
+            xdf -= 1
+        # is_blank_line ??? True
+        # line_to_parse ???
+        # did_complete_table False
+        # end_table_index -1
+        # parser_table_tuple None
         assert is_blank_line is not None, "while loop must have executed at least once."
         assert line_to_parse is not None, "while loop must have executed at least once."
         assert (
-            did_complete_lrd is not None
+            did_complete_table is not None
         ), "while loop must have executed at least once."
-        assert end_lrd_index is not None, "while loop must have executed at least once."
+        assert (
+            end_table_index is not None
+        ), "while loop must have executed at least once."
         return (
             is_blank_line,
             line_to_parse,
-            did_complete_lrd,
-            end_lrd_index,
-            parsed_lrd_tuple,
+            did_complete_table,
+            end_table_index,
+            parsed_table_tuple,
         )
 
-    # pylint: disable=too-many-arguments
     @staticmethod
-    def handle_link_reference_definition_leaf_block(
+    def handle_table_leaf_block(
         parser_state: ParserState,
         outer_processed: bool,
         position_marker: PositionMarker,
         leaf_token_whitespace: str,
         remaining_line_to_parse: str,
-        ignore_link_definition_start: bool,
+        ignore_table_start: bool,
         pre_tokens: List[MarkdownToken],
         original_line: str,
+        requeue_line_info: Optional[RequeueLineInfo],
     ) -> Tuple[bool, Optional[RequeueLineInfo]]:
-        """
-        Take care of the processing for link reference definitions.
-        """
         POGGER.debug(
-            "handle_link_reference_definition>>pre_tokens>>$<<",
+            "handle_table_leaf_block>>pre_tokens>>$<<",
             pre_tokens,
         )
 
         if (
-            not outer_processed
-            and not ignore_link_definition_start
-            and not parser_state.token_stack[-1].was_table_block_started
+            parser_state.parse_properties.is_tables_enabled
+            and not outer_processed
+            and not ignore_table_start
         ):
             POGGER.debug(
-                "plflb-process_link_reference_definition>>outer_processed>>$",
+                "handle_table_leaf_block>>outer_processed>>$",
                 position_marker.text_to_parse[position_marker.index_number :],
             )
             assert (
@@ -595,11 +556,11 @@ class LinkReferenceDefinitionHelper:
             ), "Original line must be defined by now."
             (
                 outer_processed,
-                _,  # did_complete_lrd,
-                _,  # did_pause_lrd,
+                _,  # did_complete_table,
+                _,  # did_pause_table,
                 requeue_line_info,
                 new_tokens,
-            ) = LinkReferenceDefinitionHelper.process_link_reference_definition(
+            ) = TableBlockHelper.process_table_rows(
                 parser_state,
                 position_marker,
                 remaining_line_to_parse,
@@ -613,22 +574,20 @@ class LinkReferenceDefinitionHelper:
             if requeue_line_info:
                 outer_processed = True
                 POGGER.debug(
-                    "plflb-process_link_reference_definition>>outer_processed>>$<lines_to_requeue<$<$",
+                    "handle_table_leaf_block>>outer_processed>>$<lines_to_requeue<$<$",
                     outer_processed,
                     requeue_line_info.lines_to_requeue,
                     len(requeue_line_info.lines_to_requeue),
                 )
             else:
                 POGGER.debug(
-                    "plflb-process_link_reference_definition>>outer_processed>>$<lines_to_requeue<(None)",
+                    "handle_table_leaf_block>>outer_processed>>$<lines_to_requeue<(None)",
                     outer_processed,
                 )
         else:
-            requeue_line_info, new_tokens = None, []
+            requeue_line_info, new_tokens = requeue_line_info, []
 
-        POGGER.debug("handle_link_reference_definition>>pre_tokens>>$<<", pre_tokens)
+        POGGER.debug("handle_table_leaf_block>>pre_tokens>>$<<", pre_tokens)
         pre_tokens.extend(new_tokens)
-        POGGER.debug("handle_link_reference_definition>>pre_tokens>>$<<", pre_tokens)
+        POGGER.debug("handle_table_leaf_block>>pre_tokens>>$<<", pre_tokens)
         return outer_processed, requeue_line_info
-
-    # pylint: enable=too-many-arguments

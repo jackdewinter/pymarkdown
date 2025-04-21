@@ -35,6 +35,7 @@ from pymarkdown.leaf_blocks.leaf_block_helper import LeafBlockHelper
 from pymarkdown.leaf_blocks.leaf_block_processor_paragraph import (
     LeafBlockProcessorParagraph,
 )
+from pymarkdown.leaf_blocks.table_block_processor import TableBlockHelper
 from pymarkdown.links.link_parse_helper import LinkParseHelper
 from pymarkdown.links.link_reference_definition_helper import (
     LinkReferenceDefinitionHelper,
@@ -193,7 +194,8 @@ class TokenizedMarkdown:
                 did_started_close,
                 keep_on_going,
                 ignore_link_definition_start,
-            ) = (first_line_in_document is None, False, True, False)
+                ignore_table_start,
+            ) = (first_line_in_document is None, False, True, False, False)
             next_line_in_document = first_line_in_document
             while keep_on_going:
                 (
@@ -201,6 +203,7 @@ class TokenizedMarkdown:
                     did_start_close,
                     did_started_close,
                     ignore_link_definition_start,
+                    ignore_table_start,
                     requeue,
                     line_number,
                     next_line_in_document,
@@ -211,6 +214,7 @@ class TokenizedMarkdown:
                     did_start_close,
                     did_started_close,
                     ignore_link_definition_start,
+                    ignore_table_start,
                 )
         except AssertionError as this_exception:
             error_message = f"A project assertion failed on line {line_number} of the current document."
@@ -234,7 +238,8 @@ class TokenizedMarkdown:
         did_start_close: bool,
         did_started_close: bool,
         ignore_link_definition_start: bool,
-    ) -> Tuple[bool, bool, bool, bool, List[str], int, Optional[str]]:
+        ignore_table_start: bool,
+    ) -> Tuple[bool, bool, bool, bool, bool, List[str], int, Optional[str]]:
         POGGER.debug("next-line>>$", next_line_in_document)
         POGGER.debug("stack>>$", self.__token_stack)
         POGGER.debug("current_block>>$", self.__token_stack[-1])
@@ -274,6 +279,7 @@ class TokenizedMarkdown:
                 position_marker,
                 next_line_in_document,
                 ignore_link_definition_start,
+                ignore_table_start,
             )
             assert tfl is not None, "Markdown token list cannot be empty."
             tokens_from_line = tfl
@@ -282,6 +288,7 @@ class TokenizedMarkdown:
             (
                 line_number,
                 ignore_link_definition_start,
+                ignore_table_start,
                 next_line_in_document,
                 did_start_close,
                 did_started_close,
@@ -298,6 +305,7 @@ class TokenizedMarkdown:
             did_start_close,
             did_started_close,
             ignore_link_definition_start,
+            ignore_table_start,
             requeue,
             line_number,
             next_line_in_document,
@@ -313,6 +321,8 @@ class TokenizedMarkdown:
         was_link_definition_started_before_close = self.__token_stack[
             -1
         ].was_link_definition_started
+        was_table_started_before_close = self.__token_stack[-1].was_table_block_started
+
         (
             tokens_from_line,
             requeue_line_info,
@@ -332,7 +342,8 @@ class TokenizedMarkdown:
         if keep_on_going:
             assert (
                 was_link_definition_started_before_close
-            ), "LRD parsing must not have been started."
+                or was_table_started_before_close
+            ), "LRD parsing or Table parsing must have been started."
             assert (
                 requeue_line_info is not None
                 and not requeue_line_info.lines_to_requeue[0]
@@ -351,12 +362,14 @@ class TokenizedMarkdown:
             requeue_line_info,
         )
 
+    # pylint: disable=too-many-arguments
     def __main_pass_did_not_start_close(
         self,
         parser_state: ParserState,
         position_marker: PositionMarker,
         next_line_in_document: str,
         ignore_link_definition_start: bool,
+        ignore_table_start: bool,
     ) -> Tuple[Optional[List[MarkdownToken]], Optional[RequeueLineInfo]]:
         POGGER.debug(">>>>$", self.__tokenized_document)
 
@@ -389,6 +402,7 @@ class TokenizedMarkdown:
                 parser_state,
                 position_marker,
                 ignore_link_definition_start,
+                ignore_table_start,
                 self.__parse_properties,
                 0,
             )
@@ -396,6 +410,8 @@ class TokenizedMarkdown:
         POGGER.debug("<<<<$", self.__tokenized_document)
 
         return tokens_from_line, requeue_line_info
+
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     def __main_pass_keep_on_going(
@@ -406,12 +422,11 @@ class TokenizedMarkdown:
         tokens_from_line: List[MarkdownToken],
         did_start_close: bool,
         did_started_close: bool,
-    ) -> Tuple[int, bool, Optional[str], bool, bool]:
-        (
-            line_number,
-            ignore_link_definition_start,
-        ) = TokenizedMarkdown.__handle_parse_increment_line(
-            line_number, requeue_line_info, requeue
+    ) -> Tuple[int, bool, bool, Optional[str], bool, bool]:
+        (line_number, ignore_link_definition_start, ignore_table_start) = (
+            TokenizedMarkdown.__handle_parse_increment_line(
+                line_number, requeue_line_info, requeue
+            )
         )
 
         POGGER.debug(
@@ -438,6 +453,7 @@ class TokenizedMarkdown:
         return (
             line_number,
             ignore_link_definition_start,
+            ignore_table_start,
             next_line_in_document,
             did_start_close,
             did_started_close,
@@ -450,7 +466,7 @@ class TokenizedMarkdown:
         line_number: int,
         requeue_line_info: Optional[RequeueLineInfo],
         requeue: List[str],
-    ) -> Tuple[int, bool]:
+    ) -> Tuple[int, bool, bool]:
         if requeue_line_info:
             number_of_lines_to_requeue = len(requeue_line_info.lines_to_requeue)
             POGGER.debug("\n\n---lines_to_requeue>>$", number_of_lines_to_requeue)
@@ -459,12 +475,14 @@ class TokenizedMarkdown:
             for i in requeue_line_info.lines_to_requeue:
                 requeue.insert(0, i)
             ignore_link_definition_start = requeue_line_info.force_ignore_first_as_lrd
+            ignore_table_start = requeue_line_info.force_ignore_first_as_table
         else:
             ignore_link_definition_start = False
+            ignore_table_start = False
             line_number += 1
         POGGER.debug("line_number>>$\n---", line_number)
 
-        return line_number, ignore_link_definition_start
+        return line_number, ignore_link_definition_start, ignore_table_start
 
     def __determine_next_line_to_process(
         self, requeue: List[str], did_start_close: bool, did_started_close: bool
@@ -561,10 +579,9 @@ class TokenizedMarkdown:
                 include_block_quotes,
                 only_these_blocks,
             )
+            new_tokens.extend(adjusted_tokens)
             if not can_continue:
                 break
-
-            new_tokens.extend(adjusted_tokens)
 
         POGGER.debug("cob-end>>$", parser_state.token_stack)
         POGGER.debug("cob-end>>$", parser_state.token_document)
@@ -636,6 +653,14 @@ class TokenizedMarkdown:
                     adjusted_tokens,
                     requeue_line_info,
                 ) = TokenizedMarkdown.__close_open_blocks_lrd(
+                    parser_state, caller_can_handle_requeue
+                )
+            elif parser_state.token_stack[-1].was_table_block_started:
+                (
+                    can_continue,
+                    adjusted_tokens,
+                    requeue_line_info,
+                ) = TokenizedMarkdown.__close_open_blocks_table(
                     parser_state, caller_can_handle_requeue
                 )
             else:
@@ -751,6 +776,49 @@ class TokenizedMarkdown:
         return can_continue, adjusted_tokens, requeue_line_info
 
     @staticmethod
+    def __close_open_blocks_table(
+        parser_state: ParserState, caller_can_handle_requeue: bool
+    ) -> Tuple[bool, List[MarkdownToken], Optional[RequeueLineInfo]]:
+        POGGER.debug("cob->process_table>>stopping table")
+        empty_position_marker = PositionMarker(-1, 0, "")
+        (
+            outer_processed,
+            did_complete_table,
+            did_pause_table,
+            requeue_line_info,
+            adjusted_tokens,
+        ) = TableBlockHelper.process_table_rows(
+            parser_state, empty_position_marker, "", "", "", 0, 0, "", 1
+        )
+
+        POGGER.debug("BOOOM: caller_can_handle_requeue=$", caller_can_handle_requeue)
+        can_continue = not (
+            caller_can_handle_requeue
+            and requeue_line_info
+            and requeue_line_info.lines_to_requeue
+        )
+        if not can_continue:
+            POGGER.debug("BOOOM-->break")
+        else:
+            assert not (
+                requeue_line_info and requeue_line_info.lines_to_requeue
+            ), "Cannot requeue at this point."
+            POGGER.debug(
+                "cob->process_table>>outer_processed>>$",
+                outer_processed,
+            )
+            POGGER.debug(
+                "cob->process_table>>did_complete_table>>$",
+                did_complete_table,
+            )
+            POGGER.debug(
+                "cob->process_table>>adjusted_tokens>>$",
+                adjusted_tokens,
+            )
+            assert not did_pause_table, "Table parsing must not be paused."
+        return can_continue, adjusted_tokens, requeue_line_info
+
+    @staticmethod
     def __remove_top_element_from_stack(
         parser_state: ParserState, was_forced: bool
     ) -> List[MarkdownToken]:
@@ -816,6 +884,8 @@ class TokenizedMarkdown:
         """
         Handle the processing of a blank line.
         """
+        assert position_marker is not None
+        parser_state.mark_start_information(position_marker)
 
         (
             close_only_these_blocks,
@@ -874,9 +944,6 @@ class TokenizedMarkdown:
         assert non_whitespace_index == len(
             input_line
         ), "Index must be set to the end of the line, since processing has completed."
-        # assert not (
-        #     requeue_line_info and requeue_line_info.force_ignore_first_as_lrd
-        # ), "TOoDO: huh?"
         new_tokens.append(BlankLineMarkdownToken(extracted_whitespace, position_marker))
         POGGER.debug("hbl>>new_tokens>>$", new_tokens)
 
@@ -954,10 +1021,12 @@ class TokenizedMarkdown:
 
         requeue_line_info: Optional[RequeueLineInfo] = None
         new_tokens: Optional[List[MarkdownToken]] = None
-        force_default_handling: bool = parser_state.token_stack[
-            -1
-        ].was_link_definition_started
-        if force_default_handling:
+        force_default_handling = False
+        last_stack_token = None
+
+        if parser_state.token_stack[-1].was_link_definition_started:
+            force_default_handling = True
+            last_stack_token = parser_state.token_stack[-1]
             POGGER.debug(
                 "hbl>>process_link_reference_definition>>stopping link definition"
             )
@@ -975,6 +1044,24 @@ class TokenizedMarkdown:
             POGGER.debug(
                 "hbl<<process_link_reference_definition>>stopping link definition"
             )
+        elif parser_state.token_stack[-1].was_table_block_started:
+            force_default_handling = True
+            last_stack_token = parser_state.token_stack[-1]
+            POGGER.debug("hbl>>process_table>>stopping table")
+            unmod = parser_state.original_line_to_parse
+            assert unmod is not None
+            empty_position_marker = PositionMarker(-1, 0, "")
+            (
+                _,
+                _,
+                did_pause_lrd,
+                requeue_line_info,
+                new_tokens,
+            ) = TableBlockHelper.process_table_rows(
+                parser_state, empty_position_marker, "", "", unmod, 0, 0, "", 2
+            )
+            assert not did_pause_lrd, "Table parsing must not be paused."
+            POGGER.debug("hbl<<process_table>>stopping table")
         elif parser_state.token_stack[-1].is_code_block:
             if parser_state.count_of_block_quotes_on_stack():
                 POGGER.debug("hbl>>code block within block quote")
@@ -995,6 +1082,10 @@ class TokenizedMarkdown:
                 parser_state, until_this_index=in_index, include_lists=True
             )
             POGGER.debug("hbl<<double blank in list")
+
+        if requeue_line_info and last_stack_token is not None:
+            parser_state.abc(requeue_line_info, last_stack_token)
+
         return new_tokens, force_default_handling, requeue_line_info
 
     @staticmethod
@@ -1027,10 +1118,10 @@ class TokenizedMarkdown:
     def __handle_blank_line_in_block_quote(
         parser_state: ParserState, new_tokens: Optional[List[MarkdownToken]]
     ) -> None:
-        assert new_tokens is None or len(new_tokens) <= 1
+        # assert not new_tokens or (new_tokens and not new_tokens[-1].is_link_reference_definition)
+        # assert new_tokens is None or len(new_tokens) <= 1
         if new_tokens:
-            assert len(new_tokens) == 1
-            if new_tokens[0].is_list_end:
+            if len(new_tokens) == 1 and new_tokens[0].is_list_end:
                 return
         stack_index = parser_state.find_last_container_on_stack()
         if parser_state.token_stack[stack_index].is_list:
@@ -1042,6 +1133,7 @@ class TokenizedMarkdown:
             assert (
                 new_tokens[-1].is_html_block_end
                 or new_tokens[-1].is_link_reference_definition
+                or new_tokens[-1].is_table_end
             ) and stack_index == (
                 len(parser_state.token_stack) - 1
             ), "If here, must be in the right context."

@@ -1431,7 +1431,7 @@ def test_inline_links_extra_03c():
 2.  [Bishop - Pattern Recognition and Machine Learning,
     p. 474ff.](http://users.isr.ist.utl.pt/~wurmd/Livros/school/Bishop%20-%20Pattern%20Recognition%20And%20Machine%20Learning%20-%20Springer%20%202006.pdf)"""
     expected_tokens = [
-        "[olist(1,1):.:1:4::    \n    \n    ]",
+        "[olist(1,1):.:1:4::    \n    ]",
         "[para(1,5):\n]",
         "[link(1,5):inline:https://scikit-learn.org/stable/modules/mixture.html:::::Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture\nmodels:False::::]",
         "[text(1,6):Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture\nmodels::\n]",
@@ -1468,7 +1468,7 @@ def test_inline_links_extra_03d():
 - [Bishop - Pattern Recognition and Machine Learning,
   p. 474ff.](http://users.isr.ist.utl.pt/~wurmd/Livros/school/Bishop%20-%20Pattern%20Recognition%20And%20Machine%20Learning%20-%20Springer%20%202006.pdf)"""
     expected_tokens = [
-        "[ulist(1,1):-::2::  \n  \n  ]",
+        "[ulist(1,1):-::2::  \n  ]",
         "[para(1,3):\n  ]",
         "[link(1,3):inline:https://scikit-learn.org/stable/modules/mixture.html:::::Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture\nmodels:False::::]",
         "[text(1,4):Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture\nmodels::\n]",
@@ -1505,7 +1505,7 @@ def test_inline_links_extra_03e():
 - [Bishop - Pattern Recognition and Machine Learning,
   p. 474ff.](http://users.isr.ist.utl.pt/~wurmd/Livros/school/Bishop%20-%20Pattern%20Recognition%20And%20Machine%20Learning%20-%20Springer%20%202006.pdf)"""
     expected_tokens = [
-        "[ulist(1,1):-::2::  \n  \n  ]",
+        "[ulist(1,1):-::2::  \n  ]",
         "[para(1,3):\n  ]",
         "[link(1,3):inline:https://scikit-learn.org/stable/modules/mixture.html:::::Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture\nmodels:False::::]",
         "[text(1,4):Scikit-learn: Machine Learning in {P}ython} - Gaussian mixture\nmodels::\n]",

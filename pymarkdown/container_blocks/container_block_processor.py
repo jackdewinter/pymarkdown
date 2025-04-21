@@ -88,6 +88,7 @@ class ContainerBlockProcessor:
         parser_state: ParserState,
         position_marker: PositionMarker,
         ignore_link_definition_start: bool,
+        ignore_table_start: bool,
         parser_properties: ParseBlockPassProperties,
         container_start_bq_count: int,
         container_depth: int = 0,
@@ -119,6 +120,7 @@ class ContainerBlockProcessor:
             container_start_bq_count,
             parser_properties,
             ignore_link_definition_start,
+            ignore_table_start,
             (
                 original_line
                 if original_line is not None

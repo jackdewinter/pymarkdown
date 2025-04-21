@@ -183,6 +183,8 @@ class InlineProcessor:
             or coalesced_list[-1].is_setext_heading
             or coalesced_list[-1].is_atx_heading
             or coalesced_list[-1].is_code_block
+            or coalesced_list[-1].is_table_header_item
+            or coalesced_list[-1].is_table_row_item
         ):
             if coalesced_list[-1].is_code_block:
                 processed_tokens = InlineProcessor.__parse_code_block(
@@ -198,6 +200,17 @@ class InlineProcessor:
                 )
             elif coalesced_list[-1].is_atx_heading:
                 processed_tokens = InlineProcessor.__parse_atx_heading(
+                    coalesced_results,
+                    coalesce_index,
+                    coalesced_stack,
+                    coalesced_list,
+                    parse_properties,
+                )
+            elif (
+                coalesced_list[-1].is_table_header_item
+                or coalesced_list[-1].is_table_row_item
+            ):
+                processed_tokens = InlineProcessor.__parse_table_header_item(
                     coalesced_results,
                     coalesce_index,
                     coalesced_stack,
@@ -301,6 +314,48 @@ class InlineProcessor:
                 + atx_token.hash_count
             ),
             tabified_text=text_token.tabified_text,
+        )
+
+    @staticmethod
+    def __parse_table_header_item(
+        coalesced_results: List[MarkdownToken],
+        coalesce_index: int,
+        coalesced_stack: List[MarkdownToken],
+        coalesced_list: List[MarkdownToken],
+        parse_properties: ParseBlockPassProperties,
+    ) -> List[MarkdownToken]:
+        assert coalesced_results[
+            coalesce_index
+        ].is_text, "Coalesced tokens must be text."
+        text_token = cast(TextMarkdownToken, coalesced_results[coalesce_index])
+        POGGER.debug("table_header>>$<<", text_token)
+        POGGER.debug(
+            "table_header-text>>$<<",
+            text_token.token_text,
+        )
+        POGGER.debug(
+            "table_header-ws>>$<<",
+            text_token.extracted_whitespace,
+        )
+
+        # assert coalesced_list[
+        #     -1
+        # ].is_atx_heading, "Final coalseced token must be an ATX token."
+        # atx_token = cast(AtxHeadingMarkdownToken, coalesced_list[-1])
+        POGGER.debug(">>text_token>>$", text_token)
+        return InlineTextBlockHelper.process_inline_text_block(
+            parse_properties,
+            text_token.token_text,
+            coalesced_stack,
+            text_token.extracted_whitespace,
+            line_number=text_token.line_number,
+            column_number=(
+                text_token.column_number
+                + len(text_token.extracted_whitespace)
+                # + atx_token.hash_count
+            ),
+            tabified_text=text_token.tabified_text,
+            is_in_table=True,
         )
 
     @staticmethod

@@ -34,6 +34,7 @@ class ParseForContainerBlocksProtocol(Protocol):
         parser_state: ParserState,
         position_marker: PositionMarker,
         ignore_link_definition_start: bool,
+        ignore_table_start: bool,
         parser_properties: ParseBlockPassProperties,
         container_start_bq_count: int,
         container_depth: int,
@@ -73,6 +74,7 @@ class ContainerGrabBag:
         container_start_bq_count: int,
         parser_properties: ParseBlockPassProperties,
         ignore_link_definition_start: bool,
+        ignore_table_start: bool,
         original_line: str,
         recurse_fn: ParseForContainerBlocksProtocol,
     ) -> None:
@@ -127,6 +129,7 @@ class ContainerGrabBag:
         self.__container_start_bq_count = container_start_bq_count
         self.__parser_properties = parser_properties
         self.__do_ignore_link_definition_start = ignore_link_definition_start
+        self.__do_ignore_table_start = ignore_table_start
         self.__original_line = original_line
         self.__is_para_continue = (
             bool(
@@ -224,6 +227,9 @@ class ContainerGrabBag:
         self.__log_read_only_value(
             "do_ignore_link_definition_start", self.__do_ignore_link_definition_start
         )
+        self.__log_read_only_value(
+            "do_ignore_table_start", self.__do_ignore_table_start
+        )
         self.__log_read_only_value("original_line", self.__original_line)
         self.__log_read_only_value("is_para_continue", self.__is_para_continue)
 
@@ -291,6 +297,13 @@ class ContainerGrabBag:
         Xxx
         """
         return self.__do_ignore_link_definition_start
+
+    @property
+    def do_ignore_table_start(self) -> bool:
+        """
+        Xxx
+        """
+        return self.__do_ignore_table_start
 
     @property
     def do_force_list_continuation(self) -> bool:

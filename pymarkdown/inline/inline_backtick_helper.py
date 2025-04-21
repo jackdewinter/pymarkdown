@@ -159,6 +159,7 @@ class InlineBacktickHelper:
                     extracted_start_backticks,
                     leading_whitespace,
                     trailing_whitespace,
+                    inline_request.is_in_table,
                     inline_request.line_number,
                     new_column_number,
                 )

@@ -24,6 +24,7 @@ from pymarkdown.leaf_blocks.leaf_block_processor_paragraph import (
     LeafBlockProcessorParagraph,
 )
 from pymarkdown.leaf_blocks.setext_leaf_block_processor import SetextLeafBlockProcessor
+from pymarkdown.leaf_blocks.table_block_processor import TableBlockHelper
 from pymarkdown.leaf_blocks.thematic_leaf_block_processor import (
     ThematicLeafBlockProcessor,
 )
@@ -84,11 +85,15 @@ class ContainerBlockLeafProcessor:
         POGGER.debug("index_indent>>:$:<", newer_position_marker.index_indent)
         parser_state.mark_for_leaf_processing(grab_bag.container_tokens)
 
+        top_of_stack = parser_state.token_stack[-1]
         ContainerBlockLeafProcessor.__process_leaf_tokens(
             parser_state,
             newer_position_marker,
             grab_bag,
         )
+        if grab_bag.requeue_line_info:
+            parser_state.abc(grab_bag.requeue_line_info, top_of_stack)
+
         parser_state.clear_after_leaf_processing()
 
         grab_bag.extend_container_tokens_with_leaf_tokens()
@@ -410,6 +415,7 @@ class ContainerBlockLeafProcessor:
             grab_bag.do_ignore_link_definition_start
             or parser_state.token_stack[-1].is_html_block
         )
+        ignore_table_start = grab_bag.do_ignore_table_start
 
         (
             outer_processed,
@@ -423,6 +429,21 @@ class ContainerBlockLeafProcessor:
             ignore_lrd_start,
             pre_tokens,
             grab_bag.original_line,
+        )
+
+        (
+            outer_processed,
+            grab_bag.requeue_line_info,
+        ) = TableBlockHelper.handle_table_leaf_block(
+            parser_state,
+            outer_processed,
+            position_marker,
+            leaf_token_whitespace,
+            remaining_line_to_parse,
+            ignore_table_start,
+            pre_tokens,
+            grab_bag.original_line,
+            grab_bag.requeue_line_info,
         )
 
         outer_processed = LeafBlockProcessor.handle_html_block(
