@@ -113,7 +113,8 @@
         "pymarkdown/general/parser_state.py": {
             "too-few-public-methods": 2,
             "too-many-arguments": 2,
-            "too-many-instance-attributes": 1
+            "too-many-instance-attributes": 1,
+            "too-many-public-methods": 1
         },
         "pymarkdown/general/position_marker.py": {},
         "pymarkdown/general/requeue_line_info.py": {},
@@ -124,7 +125,7 @@
             "too-many-arguments": 2
         },
         "pymarkdown/general/tokenized_markdown.py": {
-            "too-many-arguments": 5
+            "too-many-arguments": 6
         },
         "pymarkdown/html/html_helper.py": {
             "too-many-arguments": 4,
@@ -195,6 +196,14 @@
             "too-few-public-methods": 1,
             "too-many-arguments": 3
         },
+        "pymarkdown/leaf_blocks/table_block_continuation_helper.py": {
+            "too-few-public-methods": 1,
+            "too-many-arguments": 2,
+            "too-many-locals": 2
+        },
+        "pymarkdown/leaf_blocks/table_block_parse_helper.py": {},
+        "pymarkdown/leaf_blocks/table_block_processor.py": {},
+        "pymarkdown/leaf_blocks/table_block_tuple.py": {},
         "pymarkdown/leaf_blocks/thematic_leaf_block_processor.py": {},
         "pymarkdown/links/link_create_helper.py": {
             "too-few-public-methods": 2,
@@ -455,6 +464,9 @@
             "too-many-arguments": 3,
             "too-many-instance-attributes": 1
         },
+        "pymarkdown/tokens/table_markdown_tokens.py": {
+            "protected-access": 6
+        },
         "pymarkdown/tokens/text_markdown_token.py": {
             "too-many-arguments": 1,
             "protected-access": 1
@@ -511,13 +523,13 @@
     },
     "disables-by-name": {
         "too-many-instance-attributes": 27,
-        "too-many-public-methods": 4,
-        "too-few-public-methods": 39,
-        "too-many-arguments": 256,
-        "too-many-locals": 50,
+        "too-many-public-methods": 5,
+        "too-few-public-methods": 40,
+        "too-many-arguments": 259,
+        "too-many-locals": 52,
         "chained-comparison": 3,
         "too-many-boolean-expressions": 7,
-        "protected-access": 25,
+        "protected-access": 31,
         "deprecated-decorator": 3,
         "broad-exception-caught": 3,
         "too-many-return-statements": 1

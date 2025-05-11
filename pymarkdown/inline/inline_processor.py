@@ -178,6 +178,28 @@ class InlineProcessor:
                     "$-->last->block->$", i, block_quote_token.leading_text_index
                 )
 
+        InlineProcessor.__process_next_coalesce_item_inner(
+            coalesced_list,
+            coalesced_results,
+            coalesce_index,
+            coalesced_stack,
+            parse_properties,
+            lsi_tracker,
+        )
+
+        InlineProcessor.__adjust_stack(
+            coalesced_results, coalesced_stack, coalesce_index
+        )
+
+    @staticmethod
+    def __process_next_coalesce_item_inner(
+        coalesced_list: List[MarkdownToken],
+        coalesced_results: List[MarkdownToken],
+        coalesce_index: int,
+        coalesced_stack: List[MarkdownToken],
+        parse_properties: ParseBlockPassProperties,
+        lsi_tracker: LeadingSpaceIndexTracker,
+    ) -> None:
         if coalesced_results[coalesce_index].is_text and (
             coalesced_list[-1].is_paragraph
             or coalesced_list[-1].is_setext_heading
@@ -228,10 +250,6 @@ class InlineProcessor:
             coalesced_list.extend(processed_tokens)
         else:
             coalesced_list.append(coalesced_results[coalesce_index])
-
-        InlineProcessor.__adjust_stack(
-            coalesced_results, coalesced_stack, coalesce_index
-        )
 
     @staticmethod
     def __parse_paragraph(

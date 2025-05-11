@@ -373,9 +373,10 @@ class TableBlockHelper:
         )
         # assert len(parser_state.token_stack) >= original_stack_depth
         if len(parser_state.token_stack) >= original_stack_depth:
-            while len(parser_state.token_stack) > original_stack_depth:
-                if parser_state.token_stack[-1].is_block_quote:
-                    break
+            while (
+                len(parser_state.token_stack) > original_stack_depth
+                and not parser_state.token_stack[-1].is_block_quote
+            ):
                 del parser_state.token_stack[-1]
         else:
             while len(parser_state.token_stack):
@@ -392,9 +393,10 @@ class TableBlockHelper:
             len(parser_state.token_document),
         )
         POGGER.debug(">>XXXXXX>>token_document(before):$:", parser_state.token_document)
-        while len(parser_state.token_document) > original_document_depth:
-            if parser_state.token_document[-1].is_block_quote_start:
-                break
+        while (
+            len(parser_state.token_document) > original_document_depth
+            and not parser_state.token_document[-1].is_block_quote_start
+        ):
             del parser_state.token_document[-1]
         POGGER.debug(">>XXXXXX>>token_document(after):$:", parser_state.token_document)
 

@@ -76,8 +76,7 @@ class TableParseHelper:
             )
             is_leaf_block_start = is_lrd_start
 
-        did_start = not is_leaf_block_start
-        return did_start
+        return not is_leaf_block_start
 
     @staticmethod
     def parse_table(
@@ -105,7 +104,9 @@ class TableParseHelper:
             POGGER.debug("BAIL")
             return False, -1, None
 
-        xxxx = TableParseHelper.__table_column_separator_character + "\n"
+        column_separator_characters = (
+            TableParseHelper.__table_column_separator_character + "\n"
+        )
         # multiple lines
 
         xyz: List[TableRow] = []
@@ -113,35 +114,14 @@ class TableParseHelper:
 
         while start_index < len(line_to_parse):
 
-            did_start_with_separator = False
-            if ParserHelper.is_character_at_index(
-                line_to_parse,
-                start_index,
-                TableParseHelper.__table_column_separator_character,
-            ):
-                new_index = start_index + 1
-                did_start_with_separator = True
-            else:
-                new_index = start_index
-
-            tr_columns, trailing_whitespace, pre_h, new_index = (
-                TableParseHelper.__parse_table_3(line_to_parse, xxxx, new_index)
-            )
-
-            tr = TableRow(
-                extracted_whitespace,
-                trailing_whitespace,
-                columns=tr_columns,
-                end_of_row=None,
-                did_start_with_separator=did_start_with_separator,
-            )
-            xyz.append(tr)
-
-            start_index = new_index
-
-            (start_index, extracted_whitespace) = ParserHelper.extract_spaces_verified(
-                line_to_parse,
-                new_index,
+            new_index, start_index, extracted_whitespace = (
+                TableParseHelper.__parse_table_4(
+                    line_to_parse,
+                    start_index,
+                    column_separator_characters,
+                    xyz,
+                    extracted_whitespace,
+                )
             )
 
             if len(xyz) == 2:
@@ -156,78 +136,195 @@ class TableParseHelper:
             return keep_going, new_index, None
 
     @staticmethod
-    def __parse_table_3(
-        line_to_parse: str, xxxx: str, new_index: int
-    ) -> Tuple[List[TableColumn], str, str, int]:
-        tr_columns = []
-        trailing_whitespace = ""
-        pre_h = ""
-        while new_index < len(line_to_parse):
-            g, h = ParserHelper.collect_until_one_of_characters(
-                line_to_parse, new_index, xxxx
+    def __parse_table_4(
+        line_to_parse: str,
+        start_index: int,
+        column_separator_characters: str,
+        xyz: List[TableRow],
+        extracted_whitespace: str,
+    ) -> Tuple[int, int, str]:
+        did_start_with_separator = False
+        if ParserHelper.is_character_at_index(
+            line_to_parse,
+            start_index,
+            TableParseHelper.__table_column_separator_character,
+        ):
+            new_index = start_index + 1
+            did_start_with_separator = True
+        else:
+            new_index = start_index
+
+        tr_columns, trailing_whitespace, pre_h, new_index = (
+            TableParseHelper.__parse_table_3(
+                line_to_parse, column_separator_characters, new_index
             )
-            assert g is not None
-            assert h is not None
-            if g >= len(line_to_parse):
-                a, _ = ParserHelper.collect_while_spaces(h, 0)
-                if a == len(h):
-                    trailing_whitespace = h
-                else:
-                    tr_columns.append(TableColumn(f"{pre_h}{h}", is_last=True))
-                new_index = len(line_to_parse)
-                continue
-            if g > 0 and line_to_parse[g] == "|" and line_to_parse[g - 1] == "\\":
-                # f1, f2 = ParserHelper.collect_backwards_while_character(line_to_parse, g, "\\")
-                # if f1 % 2 == 1:
-                pre_h += f"{h}|"
-                new_index = g + 1
-                if new_index >= len(line_to_parse):
-                    h = f"{pre_h}|"
-                    pre_h = ""
-                    a, _ = ParserHelper.collect_while_spaces(h, 0)
-                    assert a != len(h)
-                    tr_columns.append(TableColumn(h, is_last=True))
-                continue
-            new_index = g + 1
-            if line_to_parse[g] == "\n":
-                h = f"{pre_h}{h}"
-                if h:
-                    a, _ = ParserHelper.collect_while_spaces(h, 0)
-                    if a == len(h):
-                        trailing_whitespace = h
-                    else:
-                        tr_columns.append(TableColumn(h, is_last=True))
-                break
-            tr_columns.append(TableColumn(f"{pre_h}{h}|"))
-            pre_h = ""
-        return tr_columns, trailing_whitespace, pre_h, new_index
+        )
+
+        tr = TableRow(
+            extracted_whitespace,
+            trailing_whitespace,
+            columns=tr_columns,
+            end_of_row=None,
+            did_start_with_separator=did_start_with_separator,
+        )
+        xyz.append(tr)
+
+        start_index = new_index
+
+        (start_index, extracted_whitespace) = ParserHelper.extract_spaces_verified(
+            line_to_parse,
+            new_index,
+        )
+        return new_index, start_index, extracted_whitespace
 
     @staticmethod
-    def __parse_table_2(xyz: List[TableRow], col_as: List[Optional[str]]) -> bool:
-        if len(xyz[0].columns) != len(xyz[1].columns):
+    def __parse_table_3a(
+        tr_columns: List[TableColumn],
+        extracted_sep_text: str,
+        trailing_whitespace: str,
+        previous_extracted_sep_text: str,
+        line_to_parse: str,
+    ) -> Tuple[str, int]:
+        first_non_matching_index, _ = ParserHelper.collect_while_spaces(
+            extracted_sep_text, 0
+        )
+        if first_non_matching_index == len(extracted_sep_text):
+            trailing_whitespace = extracted_sep_text
+        else:
+            tr_columns.append(
+                TableColumn(
+                    f"{previous_extracted_sep_text}{extracted_sep_text}", is_last=True
+                )
+            )
+        new_index = len(line_to_parse)
+        return trailing_whitespace, new_index
+
+    @staticmethod
+    def __parse_table_3b(
+        tr_columns: List[TableColumn],
+        extracted_sep_text: str,
+        after_sep_index: int,
+        previous_extracted_sep_text: str,
+        line_to_parse: str,
+    ) -> Tuple[str, int]:
+        previous_extracted_sep_text += f"{extracted_sep_text}|"
+        new_index = after_sep_index + 1
+        if new_index >= len(line_to_parse):
+            extracted_sep_text = f"{previous_extracted_sep_text}|"
+            previous_extracted_sep_text = ""
+            first_non_matching_index, _ = ParserHelper.collect_while_spaces(
+                extracted_sep_text, 0
+            )
+            assert first_non_matching_index != len(extracted_sep_text)
+            tr_columns.append(TableColumn(extracted_sep_text, is_last=True))
+        return previous_extracted_sep_text, new_index
+
+    @staticmethod
+    def __parse_table_3c(
+        previous_extracted_sep_text: str,
+        extracted_sep_text: str,
+        tr_columns: List[TableColumn],
+        trailing_whitespace: str,
+    ) -> Tuple[str, str]:
+        extracted_sep_text = f"{previous_extracted_sep_text}{extracted_sep_text}"
+        if extracted_sep_text:
+            first_non_matching_index, _ = ParserHelper.collect_while_spaces(
+                extracted_sep_text, 0
+            )
+            if first_non_matching_index == len(extracted_sep_text):
+                trailing_whitespace = extracted_sep_text
+            else:
+                tr_columns.append(TableColumn(extracted_sep_text, is_last=True))
+        return extracted_sep_text, trailing_whitespace
+
+    @staticmethod
+    def __parse_table_3(
+        line_to_parse: str, column_separator_characters: str, new_index: int
+    ) -> Tuple[List[TableColumn], str, str, int]:
+        tr_columns: List[TableColumn] = []
+        trailing_whitespace = ""
+        previous_extracted_sep_text = ""
+        while new_index < len(line_to_parse):
+            after_sep_index, extracted_sep_text = (
+                ParserHelper.collect_until_one_of_characters(
+                    line_to_parse, new_index, column_separator_characters
+                )
+            )
+            assert after_sep_index is not None
+            assert extracted_sep_text is not None
+            if after_sep_index >= len(line_to_parse):
+                trailing_whitespace, new_index = TableParseHelper.__parse_table_3a(
+                    tr_columns,
+                    extracted_sep_text,
+                    trailing_whitespace,
+                    previous_extracted_sep_text,
+                    line_to_parse,
+                )
+                continue
+            if (
+                after_sep_index > 0
+                and line_to_parse[after_sep_index] == "|"
+                and line_to_parse[after_sep_index - 1] == "\\"
+            ):
+                previous_extracted_sep_text, new_index = (
+                    TableParseHelper.__parse_table_3b(
+                        tr_columns,
+                        extracted_sep_text,
+                        after_sep_index,
+                        previous_extracted_sep_text,
+                        line_to_parse,
+                    )
+                )
+                continue
+            new_index = after_sep_index + 1
+            if line_to_parse[after_sep_index] == "\n":
+                extracted_sep_text, trailing_whitespace = (
+                    TableParseHelper.__parse_table_3c(
+                        previous_extracted_sep_text,
+                        extracted_sep_text,
+                        tr_columns,
+                        trailing_whitespace,
+                    )
+                )
+                break
+            tr_columns.append(
+                TableColumn(f"{previous_extracted_sep_text}{extracted_sep_text}|")
+            )
+            previous_extracted_sep_text = ""
+        return tr_columns, trailing_whitespace, previous_extracted_sep_text, new_index
+
+    @staticmethod
+    def __parse_table_2(
+        table_rows: List[TableRow], col_as: List[Optional[str]]
+    ) -> bool:
+        if len(table_rows[0].columns) != len(table_rows[1].columns):
             return False
-        for ix in xyz[1].columns:
-            i = ix.text
-            x_index = 0
-            x_lead = x_trail = False
-            if ParserHelper.is_character_at_index(i, x_index, ":"):
-                x_lead = True
-                x_index += 1
-            ii, ij = ParserHelper.collect_while_character(i, x_index, "-")
-            assert ii is not None
-            assert ij is not None
-            if ii and ij <= len(i):
-                if ParserHelper.is_character_at_index(i, ij, ":"):
-                    x_trail = True
-                    ij += 1
-                is_complete = len(i) == ij
+        for next_column in table_rows[1].columns:
+            column_text = next_column.text
+            text_index = 0
+            has_lead = has_trail = False
+            if ParserHelper.is_character_at_index(column_text, text_index, ":"):
+                has_lead = True
+                text_index += 1
+            dashes_collected, dashes_new_index = ParserHelper.collect_while_character(
+                column_text, text_index, "-"
+            )
+            assert dashes_collected is not None
+            assert dashes_new_index is not None
+            if dashes_collected and dashes_new_index <= len(column_text):
+                if ParserHelper.is_character_at_index(
+                    column_text, dashes_new_index, ":"
+                ):
+                    has_trail = True
+                    dashes_new_index += 1
+                is_complete = len(column_text) == dashes_new_index
                 if is_complete:
-                    f1 = None
-                    if x_lead:
-                        f1 = "center" if x_trail else "left"
-                    elif x_trail:
-                        f1 = "right"
-                    col_as.append(f1)
+                    column_alignment = None
+                    if has_lead:
+                        column_alignment = "center" if has_trail else "left"
+                    elif has_trail:
+                        column_alignment = "right"
+                    col_as.append(column_alignment)
             else:
                 is_complete = False
             if not is_complete:

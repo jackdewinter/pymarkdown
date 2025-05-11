@@ -1,3 +1,6 @@
+"""Module to help with the continuation or stopping of a table block.
+"""
+
 import copy
 from typing import List, Optional, Tuple, cast
 
@@ -19,9 +22,13 @@ from pymarkdown.tokens.table_markdown_tokens import (
 )
 from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 
+# pylint: disable=too-few-public-methods
+
 
 class TableBlockContinuationHelper:
+    """Class to help with the continuation or stopping of a table block."""
 
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def determine_continue_or_stop(
         parser_state: ParserState,
@@ -43,6 +50,9 @@ class TableBlockContinuationHelper:
         """
         Determine whether to continue with the processing of the table.
         """
+        # TODO leave in until testing of tables with tabs is complete.
+        _ = (process_mode, extracted_whitespace)
+
         if did_pause_table := (
             end_table_index >= 0
             and end_table_index == line_to_parse_size
@@ -54,7 +64,6 @@ class TableBlockContinuationHelper:
                 position_marker,
                 was_started,
                 remaining_line_to_parse,
-                extracted_whitespace,
                 unmodified_line_to_parse,
                 original_stack_depth,
                 original_document_depth,
@@ -65,12 +74,13 @@ class TableBlockContinuationHelper:
                 did_complete_table,
                 parsed_table_tuple,
                 lines_to_requeue,
-                process_mode,
                 did_pause_table,
             )
 
         POGGER.debug(">>parse_table>>other")
         return did_pause_table, False, [], False
+
+    # pylint: enable=too-many-arguments, too-many-locals
 
     @staticmethod
     def __stop_table_continuation(
@@ -78,7 +88,6 @@ class TableBlockContinuationHelper:
         did_complete_table: bool,
         parsed_table_tuple: Optional[TableTuple],
         lines_to_requeue: List[str],
-        process_mode: int,
         did_pause_table: bool,
     ) -> Tuple[bool, bool, List[MarkdownToken], bool]:
         """
@@ -176,64 +185,8 @@ class TableBlockContinuationHelper:
             )
 
             if len(parsed_table_tuple.xyz) > 2:
-                start_body_token = TableMarkdownBodyToken(
-                    position_marker=table_stack_token.start_position_marker
-                )
-                new_tokens.append(start_body_token)
-
-                for next_row_index in range(2, len(parsed_table_tuple.xyz)):
-                    x = parsed_table_tuple.xyz[next_row_index]
-
-                    abc = x.columns[: len(parsed_table_tuple.col_as)]
-                    if abc_after := x.columns[len(parsed_table_tuple.col_as) :]:
-                        aaa: List[str] = []
-                        for ii in abc_after:
-                            aaa.extend(
-                                (ii.leading_whitespace, ii.text, ii.trailing_whitespace)
-                            )
-                        aaa_string = "".join(aaa)
-                    else:
-                        aaa_string = ""
-                    delta = len(parsed_table_tuple.col_as) - len(abc)
-
-                    start_row_token = TableMarkdownRowToken(
-                        x.extracted_whitespace,
-                        x.trailing_whitespace,
-                        x.did_start_with_separator,
-                        delta,
-                        position_marker=table_stack_token.start_position_marker,
-                    )
-                    new_tokens.append(start_row_token)
-
-                    for next_column_index, next_column in enumerate(abc):
-                        start_row_item_token = TableMarkdownRowItemToken(
-                            next_column.leading_whitespace,
-                            parsed_table_tuple.col_as[next_column_index],
-                            position_marker=table_stack_token.start_position_marker,
-                        )
-
-                        new_tokens.extend(
-                            (
-                                start_row_item_token,
-                                TextMarkdownToken(
-                                    next_column.text,
-                                    "",
-                                    position_marker=table_stack_token.start_position_marker,
-                                ),
-                                start_row_item_token.generate_close_markdown_token_from_markdown_token(
-                                    next_column.trailing_whitespace, ""
-                                ),
-                            )
-                        )
-                    new_tokens.append(
-                        start_row_token.generate_close_markdown_token_from_markdown_token(
-                            aaa_string, ""
-                        )
-                    )
-                new_tokens.append(
-                    start_body_token.generate_close_markdown_token_from_markdown_token(
-                        "", ""
-                    )
+                TableBlockContinuationHelper.__stop_table_continuation_body(
+                    new_tokens, table_stack_token, parsed_table_tuple
                 )
 
             new_tokens.append(
@@ -248,23 +201,93 @@ class TableBlockContinuationHelper:
             #         parsed_table_tuple.link_info.line_destination_whitespace
             #     ),
             # )
-            POGGER.debug(">>new_tokens>>$", new_tokens)
-            del parser_state.token_stack[-1]
-            if parser_state.token_stack[-1].is_paragraph:
-                tokens_from_close, _ = parser_state.close_open_blocks_fn(
-                    parser_state,
-                    until_this_index=(len(parser_state.token_stack) - 1),
-                )
-                assert len(tokens_from_close) == 1, "Only one token should be returned."
-                new_tokens.insert(0, tokens_from_close[0])
+            TableBlockContinuationHelper.__stop_table_continuation_end(
+                parser_state, new_tokens
+            )
             return did_pause_table, len(lines_to_requeue) > 1, new_tokens, False
 
         del parser_state.token_stack[-1]
         return did_pause_table, True, [], True
 
-    # pylint: enable=too-many-arguments
+    @staticmethod
+    def __stop_table_continuation_end(
+        parser_state: ParserState, new_tokens: List[MarkdownToken]
+    ) -> None:
+        POGGER.debug(">>new_tokens>>$", new_tokens)
+        del parser_state.token_stack[-1]
+        if parser_state.token_stack[-1].is_paragraph:
+            tokens_from_close, _ = parser_state.close_open_blocks_fn(
+                parser_state,
+                until_this_index=(len(parser_state.token_stack) - 1),
+            )
+            assert len(tokens_from_close) == 1, "Only one token should be returned."
+            new_tokens.insert(0, tokens_from_close[0])
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-locals
+    @staticmethod
+    def __stop_table_continuation_body(
+        new_tokens: List[MarkdownToken],
+        table_stack_token: TableBlockStackToken,
+        parsed_table_tuple: TableTuple,
+    ) -> None:
+        start_body_token = TableMarkdownBodyToken(
+            position_marker=table_stack_token.start_position_marker
+        )
+        new_tokens.append(start_body_token)
+
+        for next_row_index in range(2, len(parsed_table_tuple.xyz)):
+            x = parsed_table_tuple.xyz[next_row_index]
+
+            abc = x.columns[: len(parsed_table_tuple.col_as)]
+            if abc_after := x.columns[len(parsed_table_tuple.col_as) :]:
+                aaa: List[str] = []
+                for ii in abc_after:
+                    aaa.extend((ii.leading_whitespace, ii.text, ii.trailing_whitespace))
+                aaa_string = "".join(aaa)
+            else:
+                aaa_string = ""
+            delta = len(parsed_table_tuple.col_as) - len(abc)
+
+            start_row_token = TableMarkdownRowToken(
+                x.extracted_whitespace,
+                x.trailing_whitespace,
+                x.did_start_with_separator,
+                delta,
+                position_marker=table_stack_token.start_position_marker,
+            )
+            new_tokens.append(start_row_token)
+
+            for next_column_index, next_column in enumerate(abc):
+                start_row_item_token = TableMarkdownRowItemToken(
+                    next_column.leading_whitespace,
+                    parsed_table_tuple.col_as[next_column_index],
+                    position_marker=table_stack_token.start_position_marker,
+                )
+
+                new_tokens.extend(
+                    (
+                        start_row_item_token,
+                        TextMarkdownToken(
+                            next_column.text,
+                            "",
+                            position_marker=table_stack_token.start_position_marker,
+                        ),
+                        start_row_item_token.generate_close_markdown_token_from_markdown_token(
+                            next_column.trailing_whitespace, ""
+                        ),
+                    )
+                )
+            new_tokens.append(
+                start_row_token.generate_close_markdown_token_from_markdown_token(
+                    aaa_string, ""
+                )
+            )
+        new_tokens.append(
+            start_body_token.generate_close_markdown_token_from_markdown_token("", "")
+        )
+
+    # pylint: enable=too-many-locals
+
     # @staticmethod
     # def __stop_table_continuation_with_tab(
     #     parser_state: ParserState,
@@ -313,8 +336,6 @@ class TableBlockContinuationHelper:
     #         )
 
     #     return extracted_whitespace, parsed_table_tuple
-
-    # pylint: enable=too-many-arguments
 
     # @staticmethod
     # def __stop_table_continuation_with_tab_single(
@@ -509,7 +530,6 @@ class TableBlockContinuationHelper:
         position_marker: PositionMarker,
         was_started: bool,
         remaining_line_to_parse: str,
-        extracted_whitespace: str,
         unmodified_line_to_parse: str,
         original_stack_depth: int,
         original_document_depth: int,
@@ -574,3 +594,6 @@ class TableBlockContinuationHelper:
         new_token.add_unmodified_line(unmodified_line_to_parse)
 
     # pylint: enable=too-many-arguments
+
+
+# pylint: enable=too-few-public-methods

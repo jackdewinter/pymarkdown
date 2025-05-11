@@ -1012,17 +1012,64 @@ class TokenizedMarkdown:
             is_processing_list,
             in_index,
         ) = LeafBlockProcessorParagraph.check_for_list_in_process(parser_state)
-        POGGER.debug(
-            "hbl>>is_processing_list>>$>>in_index>>$>>last_stack>>$",
-            is_processing_list,
-            in_index,
-            parser_state.token_stack[-1],
-        )
+        # POGGER.debug(
+        #     "hbl>>is_processing_list>>$>>in_index>>$>>last_stack>>$",
+        #     is_processing_list,
+        #     in_index,
+        #     parser_state.token_stack[-1],
+        # )
 
         requeue_line_info: Optional[RequeueLineInfo] = None
         new_tokens: Optional[List[MarkdownToken]] = None
         force_default_handling = False
         last_stack_token = None
+
+        force_default_handling, last_stack_token, requeue_line_info, new_tokens = (
+            TokenizedMarkdown.__handle_blank_line_token_stack_multiline_block(
+                parser_state
+            )
+        )
+        if not force_default_handling:
+            if parser_state.token_stack[-1].is_code_block:
+                if parser_state.count_of_block_quotes_on_stack():
+                    POGGER.debug("hbl>>code block within block quote")
+                else:
+                    POGGER.debug("hbl>>code block")
+                    new_tokens = []
+            elif parser_state.token_stack[-1].is_html_block:
+                POGGER.debug("hbl>>check_blank_html_block_end")
+                new_tokens = HtmlHelper.check_blank_html_block_end(parser_state)
+                POGGER.debug("hbl<<check_blank_html_block_end")
+            elif (
+                is_processing_list
+                and parser_state.token_document[-1].is_blank_line
+                and parser_state.token_document[-2].is_list_start
+            ):
+                POGGER.debug("hbl>>double blank in list")
+                new_tokens, _ = TokenizedMarkdown.__close_open_blocks(
+                    parser_state, until_this_index=in_index, include_lists=True
+                )
+                POGGER.debug("hbl<<double blank in list")
+
+        if requeue_line_info and last_stack_token is not None:
+            parser_state.abc(requeue_line_info, last_stack_token)
+
+        return new_tokens, force_default_handling, requeue_line_info
+
+    @staticmethod
+    def __handle_blank_line_token_stack_multiline_block(
+        parser_state: ParserState,
+    ) -> Tuple[
+        bool,
+        Optional[StackToken],
+        Optional[RequeueLineInfo],
+        Optional[List[MarkdownToken]],
+    ]:
+
+        force_default_handling = False
+        last_stack_token = None
+        requeue_line_info: Optional[RequeueLineInfo] = None
+        new_tokens: Optional[List[MarkdownToken]] = None
 
         if parser_state.token_stack[-1].was_link_definition_started:
             force_default_handling = True
@@ -1062,31 +1109,7 @@ class TokenizedMarkdown:
             )
             assert not did_pause_lrd, "Table parsing must not be paused."
             POGGER.debug("hbl<<process_table>>stopping table")
-        elif parser_state.token_stack[-1].is_code_block:
-            if parser_state.count_of_block_quotes_on_stack():
-                POGGER.debug("hbl>>code block within block quote")
-            else:
-                POGGER.debug("hbl>>code block")
-                new_tokens = []
-        elif parser_state.token_stack[-1].is_html_block:
-            POGGER.debug("hbl>>check_blank_html_block_end")
-            new_tokens = HtmlHelper.check_blank_html_block_end(parser_state)
-            POGGER.debug("hbl<<check_blank_html_block_end")
-        elif (
-            is_processing_list
-            and parser_state.token_document[-1].is_blank_line
-            and parser_state.token_document[-2].is_list_start
-        ):
-            POGGER.debug("hbl>>double blank in list")
-            new_tokens, _ = TokenizedMarkdown.__close_open_blocks(
-                parser_state, until_this_index=in_index, include_lists=True
-            )
-            POGGER.debug("hbl<<double blank in list")
-
-        if requeue_line_info and last_stack_token is not None:
-            parser_state.abc(requeue_line_info, last_stack_token)
-
-        return new_tokens, force_default_handling, requeue_line_info
+        return force_default_handling, last_stack_token, requeue_line_info, new_tokens
 
     @staticmethod
     def __handle_blank_line_close_first_quote(
@@ -1120,9 +1143,8 @@ class TokenizedMarkdown:
     ) -> None:
         # assert not new_tokens or (new_tokens and not new_tokens[-1].is_link_reference_definition)
         # assert new_tokens is None or len(new_tokens) <= 1
-        if new_tokens:
-            if len(new_tokens) == 1 and new_tokens[0].is_list_end:
-                return
+        if new_tokens and len(new_tokens) == 1 and new_tokens[0].is_list_end:
+            return
         stack_index = parser_state.find_last_container_on_stack()
         if parser_state.token_stack[stack_index].is_list:
             return
