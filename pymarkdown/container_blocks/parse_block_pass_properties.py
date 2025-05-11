@@ -26,11 +26,13 @@ class ParseBlockPassProperties:
             self.__pragmas_enabled,
             self.__disallow_raw_html_enabled,
             self.__task_lists_enabled,
+            self.__tables_enabled,
         ) = (
             extension_manager.is_front_matter_enabled,
             extension_manager.is_linter_pragmas_enabled,
             extension_manager.is_disallow_raw_html_enabled,
             extension_manager.is_task_list_items_enabled,
+            extension_manager.is_tables_enabled,
         )
         self.pragma_lines: Dict[int, str] = {}
 
@@ -74,3 +76,10 @@ class ParseBlockPassProperties:
         Returns whether task lists are enabled.
         """
         return self.__task_lists_enabled
+
+    @property
+    def is_tables_enabled(self) -> bool:
+        """
+        Returns whether tables are enabled.
+        """
+        return self.__tables_enabled

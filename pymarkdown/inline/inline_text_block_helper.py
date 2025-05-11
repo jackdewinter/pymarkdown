@@ -72,6 +72,7 @@ class InlineTextBlockHelper:
         column_number: int = 0,
         para_owner: Optional[ParagraphMarkdownToken] = None,
         tabified_text: Optional[str] = None,
+        is_in_table: bool = False,
     ) -> List[MarkdownToken]:
         """
         Process a text block for any inline items.
@@ -138,6 +139,7 @@ class InlineTextBlockHelper:
                 split_para_space,
                 tabified_text,
                 newlines_encountered,
+                is_in_table,
                 para_space,
             )
             if adj_newlines:
@@ -184,6 +186,7 @@ class InlineTextBlockHelper:
         split_para_space: Optional[List[str]],
         tabified_text: Optional[str],
         newlines_encountered: int,
+        is_in_table: bool,
         para_space: Optional[str] = None,
     ) -> Tuple[
         int,
@@ -221,6 +224,7 @@ class InlineTextBlockHelper:
             coalesced_stack,
             current_string,
             whitespace_to_recombine,
+            is_in_table,
             para_space,
         )
 
@@ -357,6 +361,7 @@ class InlineTextBlockHelper:
         coalesced_stack: List[MarkdownToken],
         current_string: str,
         whitespace_to_recombine: Optional[str],
+        is_in_table: bool,
         para_space: Optional[str] = None,
     ) -> Tuple[bool, str, int, Optional[MarkdownToken], Optional[str], InlineRequest]:
         (
@@ -397,6 +402,7 @@ class InlineTextBlockHelper:
             parse_properties,
             last_container_token,
             whitespace_to_recombine,
+            is_in_table,
             para_space,
         )
         return (

@@ -268,6 +268,7 @@ class ContainerBlockNestedProcessor:
             parser_state,
             position_marker,
             False,
+            False,
             grab_bag.parser_properties,
             grab_bag.block_quote_data.current_count,
             new_container_depth,

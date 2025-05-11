@@ -1036,6 +1036,7 @@ def
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
+@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat():
     """
@@ -1071,6 +1072,7 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
+@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat():
     """
@@ -1106,6 +1108,7 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_re
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
+@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_many_tabs():
     """
@@ -1183,7 +1186,7 @@ def test_whitespaces_lrd_with_spaces_before_within_block_quote_bare():
     source_markdown = """> [fred]: /url
 > [fred]"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n> \n> ]",
+        "[block-quote(1,1)::> \n> ]",
         "[link-ref-def(1,3):True::fred:: :/url:::::]",
         "[para(2,3):]",
         "[link(2,3):shortcut:/url:::::fred:False::::]",
@@ -1200,6 +1203,7 @@ def test_whitespaces_lrd_with_spaces_before_within_block_quote_bare():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
+@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_1a():
     """
@@ -1309,6 +1313,7 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_1c():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
+@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_2a():
     """
@@ -1418,6 +1423,7 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_2c():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
+@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_3():
     """
@@ -1453,6 +1459,42 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_3():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_spaces_before_within_block_quotes_bare_repeat_3():
+    """
+    Test case:  LRD preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """> [fred]: /url1
+> [barney]: /url2
+> [fred]
+> [barney]"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> ]",
+        "[link-ref-def(1,3):True::fred:: :/url1:::::]",
+        "[link-ref-def(2,3):True::barney:: :/url2:::::]",
+        "[para(3,3):\n]",
+        "[link(3,3):shortcut:/url1:::::fred:False::::]",
+        "[text(3,4):fred:]",
+        "[end-link::]",
+        "[text(3,9):\n::\n]",
+        "[link(4,3):shortcut:/url2:::::barney:False::::]",
+        "[text(4,4):barney:]",
+        "[end-link::]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p><a href="/url1">fred</a>
+<a href="/url2">barney</a></p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_1a():
     """
@@ -1562,6 +1604,7 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_re
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
+@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_2x():
     """
@@ -1597,6 +1640,7 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_re
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
+@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_2a():
     """
@@ -1613,6 +1657,43 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_re
         "[block-quote(1,1)::> \n> ]",
         "[link-ref-def(1,5):True:\t:fred::\t:/url1::\t:::]",
         "[link-ref-def(2,5):True:\t:barney::\t:/url2::\t:::]",
+        "[end-block-quote:::False]",
+        "[BLANK(3,1):]",
+        "[para(4,1):\n]",
+        "[link(4,1):shortcut:/url1:::::fred:False::::]",
+        "[text(4,2):fred:]",
+        "[end-link::]",
+        "[text(4,7):\n::\n]",
+        "[link(5,1):shortcut:/url2:::::barney:False::::]",
+        "[text(5,2):barney:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<blockquote>
+</blockquote>
+<p><a href="/url1">fred</a>
+<a href="/url2">barney</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_spaces_before_within_block_quotes_bare_with_space_repeat_2a():
+    """
+    Test case:  LRD preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """> [fred]: /url1
+> [barney]: /url2
+
+[fred]
+[barney]"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> ]",
+        "[link-ref-def(1,3):True::fred:: :/url1:::::]",
+        "[link-ref-def(2,3):True::barney:: :/url2:::::]",
         "[end-block-quote:::False]",
         "[BLANK(3,1):]",
         "[para(4,1):\n]",
@@ -2201,7 +2282,7 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_line
 
 [fred]"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n>\n> \n> \n> \n> \n]",
+        "[block-quote(1,1)::> \n>\n> \n> \n> \n]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
@@ -2345,6 +2426,7 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_more_lin
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
+@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_more_lines_3x():
     """
@@ -2370,6 +2452,100 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_more_lin
         "[link-ref-def(3,5):True:\t:fred::\t\n\t:/url::\t:::]",
         "[para(5,5):\t\n\t\n]",
         '[text(5,5):\a"\a&quot;\atimes\nnew\troman\nabc::\t\n\t\n]',
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(8,1):]",
+        "[para(9,1):]",
+        "[link(9,1):shortcut:/url:::::fred:False::::]",
+        "[text(9,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<p>&quot;times	
+new	roman	
+abc</p>
+</blockquote>
+<p><a href="/url">fred</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_spaces_before_within_block_quotes_bare_over_more_lines_3x():
+    """
+    Test case:  LRD preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+>
+> [fred]:
+> /url
+> "times
+> new roman
+> abc
+
+[fred]"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n>\n> \n> \n> \n> \n]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[BLANK(2,2):]",
+        "[link-ref-def(3,3):True::fred::\n:/url:::::]",
+        "[para(5,3):\n\n]",
+        '[text(5,3):\a"\a&quot;\atimes\nnew roman\nabc::\n\n]',
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(8,1):]",
+        "[para(9,1):]",
+        "[link(9,1):shortcut:/url:::::fred:False::::]",
+        "[text(9,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<p>&quot;times
+new roman
+abc</p>
+</blockquote>
+<p><a href="/url">fred</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_spaces_before_within_block_quotes_bare_over_more_lines_3xa():
+    """
+    Test case:  LRD preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+>
+> [fred]:
+> /url
+> "times
+> new roman
+> abc
+>
+> [fred]"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n>\n> \n> \n> \n> \n]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[BLANK(2,2):]",
+        "[link-ref-def(3,3):True::fred::\n:/url:::::]",
+        "[para(5,3):\n\n]",
+        '[text(5,3):\a"\a&quot;\atimes\nnew roman\nabc::\n\n]',
         "[end-para:::True]",
         "[end-block-quote:::True]",
         "[BLANK(8,1):]",

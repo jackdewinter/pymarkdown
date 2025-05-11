@@ -108,8 +108,8 @@ class LeadingSpaceIndexTracker:
             self.__since_last_non_end_token.clear()
         self.__since_last_non_end_token.append(token)
 
-    def since_last_non_end_token(self) -> List[MarkdownToken]:
-        return self.__since_last_non_end_token[:]
+    # def since_last_non_end_token(self) -> List[MarkdownToken]:
+    #     return self.__since_last_non_end_token[:]
 
     def get_closed_container_info(self, index: int) -> ClosedContainerAdjustments:
         """

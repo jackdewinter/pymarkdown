@@ -17,6 +17,7 @@ def test_inline_code_span_markdown_token_modify_with_bad_name():
         extracted_start_backticks="`",
         leading_whitespace="",
         trailing_whitespace="",
+        is_in_table=False,
         line_number=1,
         column_number=1,
     )

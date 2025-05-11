@@ -40,6 +40,7 @@ class StackToken:
     _stack_indented_code = "icode-block"
     _stack_paragraph = "para"
     _stack_link_definition = "linkdef"
+    _stack_table_rows = "table-rows"
 
     def __init__(
         self,
@@ -195,6 +196,13 @@ class StackToken:
         Is this stack token a link definition started token?
         """
         return self.type_name == self._stack_link_definition
+
+    @property
+    def was_table_block_started(self) -> bool:
+        """
+        Is this stack token a table block token?
+        """
+        return self.type_name == self._stack_table_rows
 
 
 class DocumentStackToken(StackToken):
@@ -500,6 +508,11 @@ class LinkDefinitionStackToken(StackToken):
             BlockQuoteMarkdownToken
         ] = None
         self.copy_of_token_stack: Optional[List[StackToken]] = None
+
+        self.x1_token: Optional[MarkdownToken] = None
+        self.copy_of_x1_token: Optional[MarkdownToken] = None
+        self.x1_token_index: Optional[int] = None
+
         self.__continuation_lines: List[str] = []
         self.__unmodified_lines: List[str] = []
         # self.__original_lines: List[str] = []
@@ -574,3 +587,75 @@ class LinkDefinitionStackToken(StackToken):
 
 
 # pylint: enable=too-many-instance-attributes
+
+
+class TableBlockStackToken(StackToken):
+    """
+    Class to provide for a stack token for a possible table block.
+    """
+
+    def __init__(self, position_marker: PositionMarker) -> None:
+        (self.__start_position_marker,) = (position_marker,)
+        self.original_stack_depth: Optional[int] = None
+        self.original_document_depth: Optional[int] = None
+        self.last_block_quote_stack_token: Optional[StackToken] = None
+        self.last_block_quote_markdown_token_index: Optional[int] = None
+        self.copy_of_last_block_quote_markdown_token: Optional[
+            BlockQuoteMarkdownToken
+        ] = None
+        self.copy_of_token_stack: Optional[List[StackToken]] = None
+
+        self.x1_token: Optional[MarkdownToken] = None
+        self.copy_of_x1_token: Optional[MarkdownToken] = None
+        self.x1_token_index: Optional[int] = None
+
+        self.__continuation_lines: List[str] = []
+        self.__unmodified_lines: List[str] = []
+        StackToken.__init__(self, StackToken._stack_table_rows)
+
+    @property
+    def continuation_lines(self) -> List[str]:
+        """
+        Returns the continuation lines associated with this stack token.
+        """
+        return self.__continuation_lines
+
+    @property
+    def unmodified_lines(self) -> List[str]:
+        """
+        Returns the unmodified continuation lines associated with this stack token.
+        """
+        return self.__unmodified_lines
+
+    @property
+    def start_position_marker(self) -> PositionMarker:
+        """
+        Returns the start position associated with this stack token.
+        """
+        return self.__start_position_marker
+
+    def add_continuation_line(self, new_line: str) -> None:
+        """
+        Add the line to the collection of lines to keep as "continuations".
+        """
+        self.__continuation_lines.append(new_line)
+
+    def add_unmodified_line(self, new_line: str) -> None:
+        """
+        Add the line to the collection of lines to keep as "umodified line".
+        These are the same as the continuation_lines values, just with the exact
+        text that was presented to the parser.
+        """
+        self.__unmodified_lines.append(new_line)
+
+    def add_joined_lines_before_suffix(self, join_suffix: str) -> str:
+        """
+        Grab the continuation lines as a single line.
+        """
+
+        return (
+            f"{ParserHelper.newline_character.join(self.continuation_lines)}"
+            + f"{ParserHelper.newline_character}{join_suffix}"
+            if self.continuation_lines
+            else join_suffix
+        )

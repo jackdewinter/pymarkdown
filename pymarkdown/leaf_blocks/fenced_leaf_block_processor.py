@@ -1099,7 +1099,10 @@ class FencedLeafBlockProcessor:
         """
         Take care of the processing for fenced code blocks.
         """
-        if parser_state.token_stack[-1].was_link_definition_started:
+        if (
+            parser_state.token_stack[-1].was_link_definition_started
+            or parser_state.token_stack[-1].was_table_block_started
+        ):
             return False
 
         POGGER.debug(">>__handle_fenced_code_block>>start")

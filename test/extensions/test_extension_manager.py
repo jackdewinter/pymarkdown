@@ -76,6 +76,7 @@ def test_markdown_with_extensions_list_only():
   olinks                 olinks
   markdown-strikethroug  Markdown Strikethroug  False      False      0.5.0
   h                      h
+  markdown-tables        Markdown Tables        False      False      0.1.0
   markdown-task-list-it  Markdown Task List It  False      False      0.5.0
   ems                    ems
 """
@@ -115,7 +116,7 @@ def test_markdown_with_extensions_list_only_all():
   olinks                 olinks
   markdown-strikethroug  Markdown Strikethroug  False      False      0.5.0
   h                      h
-  markdown-tables        Markdown Tables        False      False      0.0.0
+  markdown-tables        Markdown Tables        False      False      0.1.0
   markdown-task-list-it  Markdown Task List It  False      False      0.5.0
   ems                    ems
 """

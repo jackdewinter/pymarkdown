@@ -55,6 +55,12 @@ class MarkdownToken:
     _token_fenced_code_block = "fcode-block"
     _token_indented_code_block = "icode-block"
     _token_text = "text"
+    _token_table_main = "table"
+    _token_table_header = "table-header"
+    _token_table_header_item = "table-header-item"
+    _token_table_body = "table-body"
+    _token_table_row = "table-row"
+    _token_table_row_item = "table-row-item"
 
     _token_inline_code_span = "icode-span"
     _token_inline_hard_break = "hard-break"
@@ -436,6 +442,31 @@ class MarkdownToken:
             self.token_name
             == MarkdownToken._end_token_prefix + MarkdownToken._token_atx_heading
         )
+
+    # @property
+    # def is_table(self) -> bool:
+    #     return (
+    #         self.token_name
+    #         == self.token_name == MarkdownToken._token_table_main
+    #     )
+
+    @property
+    def is_table_end(self) -> bool:
+        return (
+            self.token_name
+            == self.token_name
+            == MarkdownToken._end_token_prefix + MarkdownToken._token_table_main
+        )
+
+    @property
+    def is_table_header_item(self) -> bool:
+        return (
+            self.token_name == self.token_name == MarkdownToken._token_table_header_item
+        )
+
+    @property
+    def is_table_row_item(self) -> bool:
+        return self.token_name == self.token_name == MarkdownToken._token_table_row_item
 
     @property
     def is_code_block(self) -> bool:

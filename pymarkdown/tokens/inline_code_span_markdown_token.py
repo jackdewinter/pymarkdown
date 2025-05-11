@@ -30,6 +30,7 @@ class InlineCodeSpanMarkdownToken(InlineMarkdownToken):
         extracted_start_backticks: str,
         leading_whitespace: str,
         trailing_whitespace: str,
+        is_in_table: bool,
         line_number: int,
         column_number: int,
     ) -> None:
@@ -38,11 +39,13 @@ class InlineCodeSpanMarkdownToken(InlineMarkdownToken):
             self.__extracted_start_backticks,
             self.__leading_whitespace,
             self.__trailing_whitespace,
+            self.is_in_table,
         ) = (
             span_text,
             extracted_start_backticks,
             leading_whitespace,
             trailing_whitespace,
+            is_in_table,
         )
         InlineMarkdownToken.__init__(
             self,
@@ -210,11 +213,32 @@ class InlineCodeSpanMarkdownToken(InlineMarkdownToken):
         _ = transform_state
 
         code_span_token = cast(InlineCodeSpanMarkdownToken, next_token)
+        span_text = code_span_token.span_text
+        if code_span_token.is_in_table and "\\" in span_text and "|" in span_text:
+            new_span_text = ""
+            span_index = 0
+            while span_index < len(span_text):
+                next_bar_index, before_bar_text = ParserHelper.collect_until_character(
+                    span_text, span_index, "|"
+                )
+                assert next_bar_index is not None
+                assert before_bar_text is not None
+                if next_bar_index < len(span_text):
+                    assert (
+                        before_bar_text and before_bar_text[-1] == "\\"
+                    )  # for it to be in a code span within a table, it has to be escaped
+                    before_bar_text = before_bar_text[:-1]
+                    new_span_text = f"{new_span_text}{before_bar_text}|"
+                else:
+                    new_span_text = f"{new_span_text}{before_bar_text}"
+                span_index = next_bar_index + 1
+            span_text = new_span_text
+
         return "".join(
             [
                 output_html,
                 "<code>",
-                ParserHelper.resolve_all_from_text(code_span_token.span_text),
+                ParserHelper.resolve_all_from_text(span_text),
                 "</code>",
             ]
         )

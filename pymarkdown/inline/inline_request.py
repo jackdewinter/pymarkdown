@@ -33,6 +33,7 @@ class InlineRequest:
     parse_properties: Optional[ParseBlockPassProperties] = None
     last_container_token: Optional[MarkdownToken] = None
     whitespace_to_recombine: Optional[str] = None
+    is_in_table: bool = False
     para_space: Optional[str] = None
 
 

@@ -16447,6 +16447,42 @@ block 2</p>
     act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_extra_054x():
+    """
+    Test case extra 02:  variation of 1 with html block started in list item
+
+    test_tables_extension_extra_in_block_quote_header_line_only
+    """
+
+    # Arrange
+    source_markdown = """> [abc]: /url 'abc
+>
+> some text
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::\n]",
+        "[para(1,3):]",
+        "[text(1,3):| foo | bar |:]",
+        "[end-para:::True]",
+        "[li(2,1):2::]",
+        "[para(2,3):\n]",
+        "[text(2,3):some text\nsome other text::\n]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>| foo | bar |</li>
+<li>some text
+some other text</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 @pytest.mark.gfm
 def test_extra_999():
     """

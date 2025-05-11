@@ -621,7 +621,6 @@ class ContainerBlockNonLeafProcessor:
         remaining_whitespace: str,
         grab_bag: ContainerGrabBag,
     ) -> Tuple[bool, int, str]:
-        found_stack_index = 0
         # POGGER.debug(
         #     "$>remaining_whitespace:$:($)",
         #     i,
@@ -632,29 +631,12 @@ class ContainerBlockNonLeafProcessor:
         # POGGER.debug(
         #     "$>token:$:", i, parser_state.token_stack[i].matching_markdown_token
         # )
-        inner_token = parser_state.token_stack[i].matching_markdown_token
-        if inner_token is None:
-            assert parser_state.token_stack[
-                i
-            ].was_link_definition_started, (
-                "If there is no matching stack token, this must be a link definition."
+        inner_token, xx, found_stack_index, remaining_whitespace = (
+            ContainerBlockNonLeafProcessor.__handle_leading_whitespace_loop_a(
+                parser_state, i, remaining_whitespace
             )
-            return True, 0, remaining_whitespace
-        if inner_token.is_block_quote_start:
-            start_bq_index = remaining_whitespace.find(">")
-            if start_bq_index < 0 or start_bq_index >= 4:
-                # POGGER.debug("1-->$>start_bq_index:$:", i, start_bq_index)
-                # POGGER.debug("$>remaining_whitespace:$:", i, remaining_whitespace)
-                if len(remaining_whitespace) >= 4:
-                    found_stack_index = i
-                return True, found_stack_index, remaining_whitespace
-            raise AssertionError()
-        if not inner_token.is_list_start:
-            # POGGER.debug("2-->")
-            if len(remaining_whitespace) >= 4:
-                found_stack_index = (
-                    i + 1 if parser_state.token_stack[i].is_indented_code_block else i
-                )
+        )
+        if xx:
             return True, found_stack_index, remaining_whitespace
         list_token = cast(ListStartMarkdownToken, inner_token)
         assert (
@@ -674,6 +656,35 @@ class ContainerBlockNonLeafProcessor:
         remaining_whitespace = remaining_whitespace[remaining_indent:]
         grab_bag.indent_already_processed = list_token.indent_level
         return False, found_stack_index, remaining_whitespace
+
+    @staticmethod
+    def __handle_leading_whitespace_loop_a(
+        parser_state: ParserState, i: int, remaining_whitespace: str
+    ) -> Tuple[Optional[MarkdownToken], bool, int, str]:
+        found_stack_index = 0
+        if (inner_token := parser_state.token_stack[i].matching_markdown_token) is None:
+            assert (
+                parser_state.token_stack[i].was_link_definition_started
+                or parser_state.token_stack[i].was_table_block_started
+            ), "If there is no matching stack token, this must be a link definition or table."
+            return inner_token, True, 0, remaining_whitespace
+        if inner_token.is_block_quote_start:
+            start_bq_index = remaining_whitespace.find(">")
+            if start_bq_index < 0 or start_bq_index >= 4:
+                # POGGER.debug("1-->$>start_bq_index:$:", i, start_bq_index)
+                # POGGER.debug("$>remaining_whitespace:$:", i, remaining_whitespace)
+                if len(remaining_whitespace) >= 4:
+                    found_stack_index = i
+                return inner_token, True, found_stack_index, remaining_whitespace
+            raise AssertionError()
+        if not inner_token.is_list_start:
+            # POGGER.debug("2-->")
+            if len(remaining_whitespace) >= 4:
+                found_stack_index = (
+                    i + 1 if parser_state.token_stack[i].is_indented_code_block else i
+                )
+            return inner_token, True, found_stack_index, remaining_whitespace
+        return inner_token, False, found_stack_index, remaining_whitespace
 
     @staticmethod
     def __process_lazy_lines(
@@ -743,7 +754,7 @@ class ContainerBlockNonLeafProcessor:
         if grab_bag.requeue_line_info:
             POGGER.debug(">>requeuing lines after looking for block start. returning.")
 
-        if grab_bag.did_blank:
+        if grab_bag.did_blank and not grab_bag.requeue_line_info:
             ContainerBlockNonLeafProcessor.__get_block_start_index_handle_blank_line(
                 parser_state, grab_bag, block_leaf_tokens
             )

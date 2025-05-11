@@ -33,6 +33,14 @@ from pymarkdown.tokens.ordered_list_start_markdown_token import (
 from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
 from pymarkdown.tokens.raw_html_markdown_token import RawHtmlMarkdownToken
 from pymarkdown.tokens.setext_heading_markdown_token import SetextHeadingMarkdownToken
+from pymarkdown.tokens.table_markdown_tokens import (
+    TableMarkdownBodyToken,
+    TableMarkdownHeaderItemToken,
+    TableMarkdownHeaderToken,
+    TableMarkdownRowItemToken,
+    TableMarkdownRowToken,
+    TableMarkdownToken,
+)
 from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 from pymarkdown.tokens.thematic_break_markdown_token import ThematicBreakMarkdownToken
 from pymarkdown.tokens.unordered_list_start_markdown_token import (
@@ -71,6 +79,12 @@ class TokenTypes:
         FencedCodeBlockMarkdownToken,
         IndentedCodeBlockMarkdownToken,
         ParagraphMarkdownToken,
+        TableMarkdownToken,
+        TableMarkdownHeaderToken,
+        TableMarkdownHeaderItemToken,
+        TableMarkdownBodyToken,
+        TableMarkdownRowToken,
+        TableMarkdownRowItemToken,
     ]
 
     __CONTAINER_TOKEN_TYPES: List[type] = [

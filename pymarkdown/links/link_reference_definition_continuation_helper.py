@@ -255,11 +255,11 @@ class LinkReferenceDefinitionContinuationHelper:
         POGGER.debug(
             "block_quote_token.leading_spaces>:$:<", block_quote_token.bleading_spaces
         )
-        if process_mode == 1:
-            block_quote_token.remove_last_bleading_space()
-        else:
-            for _ in lines_to_requeue:
-                block_quote_token.remove_last_bleading_space()
+        # if process_mode == 1:
+        #     block_quote_token.remove_last_bleading_space()
+        # else:
+        #     for _ in lines_to_requeue:
+        #         block_quote_token.remove_last_bleading_space()
 
         if split_tab:
             TabHelper.adjust_block_quote_indent_for_tab(parser_state)
@@ -450,6 +450,10 @@ class LinkReferenceDefinitionContinuationHelper:
                 parser_state.copy_of_last_block_quote_markdown_token
             )
             new_token.copy_of_token_stack = parser_state.copy_of_token_stack
+
+            new_token.x1_token = parser_state.x1_token
+            new_token.copy_of_x1_token = parser_state.copy_of_x1_token
+            new_token.x1_token_index = parser_state.x1_token_index
         else:
             new_token = cast(LinkDefinitionStackToken, parser_state.token_stack[-1])
 
