@@ -15,6 +15,8 @@
     - Precursor for addressing the fix mode Md031 tests
 - [Issue 1380](https://github.com/jackdewinter/pymarkdown/issues/1380)
     - Fixing the 2 Md031 tests now unblocked from Issue 1379
+- [Issue 1387](https://github.com/jackdewinter/pymarkdown/issues/1387)
+    - Fixed Md005 not firing properly within alternating ordered and unordered list
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
