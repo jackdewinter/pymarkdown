@@ -6,6 +6,7 @@ import os
 from test.rules.utils import (
     build_fix_and_clash_lists,
     calculate_fix_tests,
+    calculate_scan_tests,
     execute_fix_test,
     execute_query_configuration_test,
     execute_scan_test,
@@ -414,7 +415,43 @@ scanTests = [
 """,
     ),
     pluginRuleTest(
-        "bad_ordered_right_unordered_x",
+        "bad_ordered_right_unordered_x_0",
+        disable_rules=__plugin_disable_md007_md029,
+        source_file_contents=""" 1. Item 1
+    + Item 1a
+    + Item 1b
+ 9. Item 2
+    + Item 2a
+    + Item 2b
+""",
+        scan_expected_return_code=0,
+        scan_expected_output="",
+    ),
+    pluginRuleTest(
+        "bad_ordered_right_unordered_x_1",
+        disable_rules=__plugin_disable_md007_md029,
+        source_file_contents=""" 1. Item 1
+    + Item 1a
+    + Item 1b
+ 9. Item 2
+     + Item 2a
+     + Item 2b
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:5:6: MD005: Inconsistent indentation for list items at the same level [Expected: 4; Actual: 5] (list-indent)
+{temp_source_path}:6:6: MD005: Inconsistent indentation for list items at the same level [Expected: 4; Actual: 5] (list-indent)
+""",
+        fix_expected_file_contents=""" 1. Item 1
+    + Item 1a
+    + Item 1b
+ 9. Item 2
+    + Item 2a
+    + Item 2b
+""",
+        mark_fix_as_skipped=True,
+    ),
+    pluginRuleTest(
+        "bad_ordered_right_unordered_x_2",
         disable_rules=__plugin_disable_md007_md029,
         source_file_contents=""" 1. Item 1
     + Item 1a
@@ -423,17 +460,8 @@ scanTests = [
      + Item 2a
      + Item 2b
 """,
-        scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:5:6: MD005: Inconsistent indentation for list items at the same level [Expected: 4; Actual: 5] (list-indent)
-{temp_source_path}:6:6: MD005: Inconsistent indentation for list items at the same level [Expected: 4; Actual: 5] (list-indent)
-""",
-        #         fix_expected_file_contents=""" 1. Item 1
-        #     + Item 1a
-        #     + Item 1b
-        #  10. Item 2
-        #      + Item 2a
-        #      + Item 2b
-        # """,
+        scan_expected_return_code=0,
+        scan_expected_output="",
     ),
     pluginRuleTest(
         "bad_unordered_ordered_left_x",
@@ -782,6 +810,208 @@ scanTests = [
 """,
     ),
     pluginRuleTest(
+        "issue-1357",
+        source_file_contents="""1. numbered list
+2. numbered list
+3. numbered list
+4. numbered list
+5. numbered list
+6. numbered list
+7. numbered list
+8. numbered list
+   - sub lite item at double digit text level
+9. numbered list
+   - sub lite item at double digit text level
+10. numbered list
+    - sub lite item at double digit text level
+11. numbered list
+""",
+        scan_expected_return_code=0,
+    ),
+    pluginRuleTest(
+        "issue-1387-a",
+        source_file_contents="""1. numbered list
+2. numbered list
+3. numbered list
+4. numbered list
+5. numbered list
+6. numbered list
+7. numbered list
+8. numbered list
+9. numbered list
+
+   - sub list item at double digit text level
+
+10. numbered list
+
+    - sub lite item at double digit text level
+
+11. numbered list
+""",
+        scan_expected_return_code=0,
+    ),
+    pluginRuleTest(
+        "issue-1387-b",
+        source_file_contents="""1. numbered list
+2. numbered list
+3. numbered list
+4. numbered list
+5. numbered list
+6. numbered list
+7. numbered list
+8. numbered list
+9. numbered list
+10. numbered list
+
+    - sub list item at double digit text level
+    - sub lite item at double digit text level
+
+11. numbered list
+""",
+        scan_expected_return_code=0,
+    ),
+    pluginRuleTest(
+        "issue-1387-c",
+        source_file_contents="""1. numbered list
+2. numbered list
+3. numbered list
+4. numbered list
+5. numbered list
+6. numbered list
+7. numbered list
+8. numbered list
+9. numbered list
+   - sub list item at double digit text level
+   - sub lite item at double digit text level
+10. numbered list
+    - sub list item at double digit text level
+    - sub lite item at double digit text level
+11. numbered list
+""",
+        scan_expected_return_code=0,
+    ),
+    pluginRuleTest(
+        "issue-1387-d",
+        source_file_contents="""1. numbered list
+2. numbered list
+3. numbered list
+4. numbered list
+5. numbered list
+6. numbered list
+7. numbered list
+8. numbered list
+   - sub list item at double digit text level
+   - sub lite item at double digit text level
+9. numbered list
+   - sub list item at double digit text level
+   - sub lite item at double digit text level
+10. numbered list
+    - sub list item at double digit text level
+    - sub lite item at double digit text level
+11. numbered list
+""",
+        scan_expected_return_code=0,
+    ),
+    pluginRuleTest(
+        "issue-1387-e",
+        source_file_contents="""1. numbered list
+2. numbered list
+3. numbered list
+4. numbered list
+5. numbered list
+6. numbered list
+7. numbered list
+8. numbered list
+   - sub list item at double digit text level
+9. numbered list
+   - sub list item at double digit text level
+10. numbered list
+    - sub list item at double digit text level
+    - sub lite item at double digit text level
+11. numbered list
+""",
+        scan_expected_return_code=0,
+    ),
+    pluginRuleTest(
+        "issue-1387-f",
+        source_file_contents="""1. numbered list
+2. numbered list
+3. numbered list
+4. numbered list
+5. numbered list
+6. numbered list
+7. numbered list
+8. numbered list
+9. numbered list
+10. numbered list
+
+    - sub list item at double digit text level
+    - sub lite item at double digit text level
+    - sub lite item at double digit text level
+
+11. numbered list
+""",
+        scan_expected_return_code=0,
+    ),
+    pluginRuleTest(
+        "issue-1387-g",
+        disable_rules=__plugin_disable_md007,
+        source_file_contents="""1. numbered list
+2. numbered list
+3. numbered list
+4. numbered list
+5. numbered list
+6. numbered list
+7. numbered list
+8. numbered list
+9. numbered list
+10. numbered list
+     - sub list item at double digit text level
+     - sub lite item at double digit text level
+11. numbered list
+""",
+        scan_expected_return_code=0,
+    ),
+    pluginRuleTest(
+        "issue-1387-h",
+        disable_rules=__plugin_disable_md007,
+        source_file_contents="""1. numbered list
+2. numbered list
+3. numbered list
+4. numbered list
+5. numbered list
+6. numbered list
+7. numbered list
+8. numbered list
+9. numbered list
+   - sub list item at double digit text level
+   - sub lite item at double digit text level
+10. numbered list
+     - sub list item at double digit text level
+     - sub lite item at double digit text level
+11. numbered list
+""",
+        scan_expected_return_code=1,
+        scan_expected_output="""{temp_source_path}:13:6: MD005: Inconsistent indentation for list items at the same level [Expected: 3; Actual: 5] (list-indent)
+{temp_source_path}:14:6: MD005: Inconsistent indentation for list items at the same level [Expected: 3; Actual: 5] (list-indent)""",
+        fix_expected_file_contents="""1. numbered list
+2. numbered list
+3. numbered list
+4. numbered list
+5. numbered list
+6. numbered list
+7. numbered list
+8. numbered list
+9. numbered list
+   - sub list item at double digit text level
+   - sub lite item at double digit text level
+10. numbered list
+    - sub list item at double digit text level
+    - sub lite item at double digit text level
+11. numbered list
+""",
+    ),
+    pluginRuleTest(
         "mix_md005_md007_only_md005_1",
         disable_rules=__plugin_disable_md007,
         source_file_contents=""" + first
@@ -937,7 +1167,9 @@ scanTests = [
 fixTests, clashTests = build_fix_and_clash_lists(scanTests)
 
 
-@pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
+@pytest.mark.parametrize(
+    "test", calculate_scan_tests(scanTests), ids=id_test_plug_rule_fn
+)
 def test_md005_scan(test: pluginRuleTest) -> None:
     """
     Execute a parameterized scan test for plugin md001.
