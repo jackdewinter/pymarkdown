@@ -79,6 +79,7 @@ class RuleMd005(RulePlugin):
         ] = {}
         self.__unordered_list_indents: Dict[int, int] = {}
         self.__unordered_current_indents: Dict[int, int] = {}
+        self.__unordered_did_first: Dict[int, bool] = {}
         self.__ordered_list_starts: Dict[int, OrderedListStartMarkdownToken] = {}
         self.__ordered_tokens: Dict[int, List[MarkdownToken]] = {}
         self.__ordered_list_alignment: Dict[int, OrderedListAlignment] = {}
@@ -113,6 +114,7 @@ class RuleMd005(RulePlugin):
         self.__leading_space_adjustments = {}
         self.__unordered_list_indents = {}
         self.__unordered_current_indents = {}
+        self.__unordered_did_first = {}
         self.__ordered_list_starts = {}
         self.__ordered_tokens = {}
         self.__ordered_list_alignment = {}
@@ -135,6 +137,8 @@ class RuleMd005(RulePlugin):
             expected_indent = self.__unordered_list_indents[list_level]
             expected_indent = self.__unordered_current_indents[list_level]
             delta_indent = list_token.indent_level - expected_indent
+            # if delta is not None:
+            #     delta_indent += delta
         else:
             expected_indent = base_token.indent_level - len(
                 base_token.list_start_content
@@ -370,6 +374,28 @@ class RuleMd005(RulePlugin):
                     )
                     break
 
+    def __calculate_indent_level(self, list_level: int) -> int:
+
+        list_indent = self.__unordered_list_indents[list_level]
+        did_first = self.__unordered_did_first[list_level]
+        indent_level = list_level
+        while not did_first and indent_level > 0:
+            if self.__list_stack[indent_level - 1].is_ordered_list_start:
+                ordered_list_items = self.__ordered_tokens[indent_level]
+                if len(ordered_list_items) > 1:
+                    first_item = cast(
+                        OrderedListStartMarkdownToken, ordered_list_items[0]
+                    )
+                    delta = len(
+                        cast(
+                            OrderedListStartMarkdownToken, ordered_list_items[-1]
+                        ).list_start_content
+                    ) - len(first_item.list_start_content)
+                    list_indent += delta
+                break
+            indent_level -= 1
+        return list_indent
+
     def __handle_unordered_list_start(
         self, context: PluginScanContext, token: UnorderedListStartMarkdownToken
     ) -> None:
@@ -378,10 +404,14 @@ class RuleMd005(RulePlugin):
         list_level = len(self.__list_stack)
         self.__line_count[list_level] = 0
 
+        did_first = False
         if list_level not in self.__unordered_list_indents:
             self.__unordered_list_indents[list_level] = token.indent_level
+            did_first = True
         self.__unordered_current_indents[list_level] = token.indent_level
-        if self.__unordered_list_indents[list_level] != token.indent_level:
+        self.__unordered_did_first[list_level] = did_first
+
+        if self.__calculate_indent_level(list_level) != token.indent_level:
             # if self.__debug:
             #     print("ri3")
             self.__report_issue(
@@ -485,18 +515,15 @@ class RuleMd005(RulePlugin):
         self.__handle_leading_space_adjustments(context, token, False)
 
         if self.__list_stack[-1].is_unordered_list_start:
-            if (
-                self.__unordered_list_indents[len(self.__list_stack)]
-                != token.indent_level
-            ):
-                # if self.__debug:
-                #     print("ri4")
-                #     print("token.indent_level=" + str(token.indent_level))
-                #     print("un_li=" + ParserHelper.make_value_visible(self.__unordered_list_indents))
+            list_level = len(self.__list_stack)
+            xx = self.__calculate_indent_level(list_level)
+            if xx != token.indent_level:
+                delta_indent = token.indent_level - xx if context.in_fix_mode else None
                 self.__report_issue(
                     context,
                     token,
                     self.__unordered_list_indents[len(self.__list_stack)] - 2,
+                    delta_indent,
                 )
         else:
             self.__ordered_tokens[len(self.__list_stack)].append(token)
@@ -535,6 +562,7 @@ class RuleMd005(RulePlugin):
             self.__unordered_list_indents = {}
             self.__unordered_current_indents = {}
             self.__ordered_list_starts = {}
+            self.__unordered_did_first = {}
 
     def __count_newlines_in_token(self, current_token: MarkdownToken) -> int:
         newlines_in_text_token = 0
