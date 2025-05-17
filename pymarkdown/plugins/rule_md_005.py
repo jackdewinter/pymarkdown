@@ -99,7 +99,7 @@ class RuleMd005(RulePlugin):
             plugin_id="MD005",
             plugin_enabled_by_default=True,
             plugin_description="Inconsistent indentation for list items at the same level",
-            plugin_version="0.5.1",
+            plugin_version="0.5.2",
             plugin_url="https://pymarkdown.readthedocs.io/en/latest/plugins/rule_md005.md",
             plugin_supports_fix=True,
             plugin_fix_level=2,
