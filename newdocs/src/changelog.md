@@ -5,7 +5,8 @@
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
-- None
+- [Issue 1396](https://github.com/jackdewinter/pymarkdown/issues/1396)
+    - Support for specific rule enablement.
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed

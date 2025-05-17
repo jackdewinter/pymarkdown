@@ -990,6 +990,36 @@ configuration value
 can be used in a comparable manner, specifying one or more paths using a comma-separated
 string containing the paths.
 
+### General Plugin Settings
+
+<!--- pyml disable-next-line no-emphasis-as-heading-->
+**Available: Version 0.9.30**
+
+<!--- pyml disable-num-lines 4 line-length-->
+| Key | Command Line | Type | Description |
+| -- | -- | -- |-- |
+| `plugins.selectively_enable_rules` | -- | Boolean | Specify whether to enable selective enable mode. |
+
+In certain cases, it is necessary or desired to produce a minimal set of rules to
+be applied against a set of Markdown documents.  That is where the `selectively_enable_rules`
+configuration setting and the selective enable mode for rules is required.  Available
+through both [command line](#exception-selective-enabling-of-rules) and configuration
+settings, setting this value to `True` disables all rules while allowing for rules
+to be selectively enabled.
+
+For example, to instruct the PyMardown linter to only apply rule Md007 to a series
+of documents, specify the following configuration:
+
+```text
+plugins.selectively_enable_rules: True
+plugins.Md007.enabled: True
+```
+
+Regardless of the default settings for the available rules in the system, that configuration
+will disabled all of them, with the exception of Rule Md007 which will be enabled.
+For more information on this, refer to the section on the
+[Selective Enabling of Rules](#exception-selective-enabling-of-rules).
+
 ### Rule Plugin Settings
 
 <!--- pyml disable-num-lines 4 line-length-->
@@ -1077,6 +1107,54 @@ split setting.  As such, the scope of this issue was solely focused on the
 command line.  Since we believe that users will disabling plugins more often
 than enabling plugins, we decided that command line disables would have
 priority over command line enables.
+
+#### Exception: Selective Enabling of Rules
+
+<!--- pyml disable-next-line no-emphasis-as-heading-->
+**Available: Version 0.9.30**
+
+Suggested by a user in [Issue 1396](https://github.com/jackdewinter/pymarkdown/issues/1396),
+the PyMarkdown linter now supports the blanket disabling of all rules.  As mentioned
+above, the disabling of a specific rule at a given level will cause that rule to
+be forcibly disabled for that level and any lower levels, regardless of any enabling
+done at the same level or lower.  Selectively enabling rules presents an interesting
+twist to that pattern.
+
+When selectively enabling items with any system, the enabling mechanism disables
+every instance of the specific thing while presenting the user the ability to enable
+a specified subset of those things. A popular example is an internet firewall, where
+any incoming communication into a system is disabled unless someone has specifically
+opened a way through the firewall. If you do not follow the proscribed method to
+cross the firewall, your traffic bounces off the firewall.
+
+Previously exposed for testing purposes, the PyMarkdown linter now provides the
+ability to selectively enable rules using a command line like:
+
+```bash
+pymarkdown -e Md041 -d * scan .
+```
+
+This command line instructs the application to disable all rules, enabling only
+Rule Md041. There are various uses for this mechanism, but the simplest one to
+explain is the onboarding of a team to using the PyMarkdown linter.  Enabling the
+full scanning of a set of Markdown documents without using a measured approach
+can be daunting and overwhelming to a team. By using the selective enablement of
+rules, that team can iteratively go onboard sets of rules until the complete
+set of desired rules is in place.
+
+##### Configuration Layers Matter
+
+Selective enablement of rules is implemented at both the command line and general
+configuration levels [(see General Plugin Settings)](#general-plugin-settings).
+At the command line level, only command line enable arguments can activate a rule.
+At the general configuration level, rules can be enabled either through the configuration
+file or command line arguments.
+
+Command line enablement takes precedence over general configuration, meaning if
+a rule is enabled at the command line, it overrides any conflicting settings in
+the general configuration. This precedence can be visualized as a layered approach:
+if the command line layer provides a definitive setting, the general configuration
+layer is not consulted.
 
 ### Multiple Identifiers For The Same Rule Plugin
 

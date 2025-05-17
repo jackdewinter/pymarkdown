@@ -1159,7 +1159,7 @@
             "totalTests": 106,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 1,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -1508,7 +1508,7 @@
         },
         {
             "name": "test.rules.test_plugin_manager",
-            "totalTests": 58,
+            "totalTests": 60,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 4,
