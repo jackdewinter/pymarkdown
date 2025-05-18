@@ -14,8 +14,10 @@ if sys.version_info < (3, 13):
     ALT_EXTENSIONS_X = (
         "-ae ALTERNATE_EXTENSIONS, --alternate-extensions ALTERNATE_EXTENSIONS"
     )
+    EXCLUSIONS_X = "-e PATH_EXCLUSIONS, --exclude PATH_EXCLUSIONS"
 else:
     ALT_EXTENSIONS_X = "-ae, --alternate-extensions ALTERNATE_EXTENSIONS"
+    EXCLUSIONS_X = "-e, --exclude PATH_EXCLUSIONS"
 
 
 def test_markdown_with_dash_h():
@@ -28,7 +30,9 @@ def test_markdown_with_dash_h():
     supplied_arguments = ["scan", "-h"]
 
     expected_return_code = 0
-    expected_output = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS] path [path ...]
+    expected_output = f"""usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
+                    [-e PATH_EXCLUSIONS]
+                    path [path ...]
 
 positional arguments:
   path                  one or more paths to examine for eligible Markdown
@@ -43,11 +47,10 @@ positional arguments:
   {ALT_EXTENSIONS_X}
                         provide an alternate set of file extensions to match
                         against
-""".replace(
-        "{ARGPARSE_X}", ARGPARSE_X
-    ).replace(
-        "{ALT_EXTENSIONS_X}", ALT_EXTENSIONS_X
-    )
+  {EXCLUSIONS_X}
+                        one or more paths to exclude from the search. Can be a
+                        glob pattern.
+"""
     expected_error = ""
 
     # Act
@@ -73,7 +76,9 @@ def test_markdown_with_dash_l_only():
 
     expected_return_code = 2
     expected_output = ""
-    expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS] path [path ...]
+    expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
+                    [-e PATH_EXCLUSIONS]
+                    path [path ...]
 main.py scan: error: the following arguments are required: path
 """
 
@@ -161,6 +166,118 @@ def test_markdown_with_dash_l_on_md_directory():
         "{source_path}", source_path
     )
     expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments, cwd=scanner.resource_directory
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_l_on_md_directory_with_explicit_file_exclude():
+    """
+    Test to make sure we get no paths if '-l' is supplied with a path with a
+    single file and and exclude that matches the file is also supplied.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = f"simple{os.sep}"
+    supplied_arguments = ["scan", "-e", f"simple{os.sep}simple.md", "-l", source_path]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = "No matching files found."
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments, cwd=scanner.resource_directory
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_l_on_md_directory_with_explicit_multiple_file_exclude():
+    """
+    Test to make sure we get no paths if '-l' is supplied with a path with a
+    single file and and exclude that matches the file is also supplied.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = f"simple{os.sep}"
+    supplied_arguments = [
+        "scan",
+        "-e",
+        f"simple{os.sep}simple.md",
+        "-e",
+        f"simple{os.sep}README.md",
+        "-l",
+        source_path,
+    ]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = "No matching files found."
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments, cwd=scanner.resource_directory
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_l_on_md_directory_with_explicit_directory_exclude_no_ending_slash():
+    """
+    Test to make sure we get no paths if '-l' is supplied with a path with a
+    single file and and exclude that matches the directory that file is in is also supplied.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = f"simple{os.sep}"
+    supplied_arguments = ["scan", "-e", "simple", "-l", source_path]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = "No matching files found."
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments, cwd=scanner.resource_directory
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_l_on_md_directory_with_explicit_directory_exclude_with_ending_slash():
+    """
+    Test to make sure we get no paths if '-l' is supplied with a path with a
+    single file and and exclude that matches the directory that file is in is also supplied.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = f"simple{os.sep}"
+    supplied_arguments = ["scan", "-e", f"simple{os.sep}", "-l", source_path]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = "No matching files found."
 
     # Act
     execute_results = scanner.invoke_main(
@@ -327,6 +444,306 @@ def test_markdown_with_dash_l_on_globbed_files():
     # Act
     execute_results = scanner.invoke_main(
         arguments=supplied_arguments, cwd=scanner.resource_directory
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_l_on_globbed_files_with_ignored_recursion():
+    """
+    Test to make sure we get a list of valid paths if '-l' is supplied
+    with a globbed file path that works.  Because a globbed path is
+    used, the recursion flag is ignored.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = "complex" + os.sep
+    supplied_arguments = ["scan", "-l", "-r", f"{source_path}*.md"]
+
+    expected_return_code = 0
+    expected_output = """{source_path}README.md
+{source_path}one.md
+{source_path}two.md""".replace(
+        "{source_path}", source_path
+    )
+
+    expected_error = """"""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments, cwd=scanner.resource_directory
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion():
+    """
+    Test to make sure we get a list of valid paths if '-l' is supplied
+    with a globbed file path that includes the ** for recursion.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = "complex"
+    supplied_arguments = ["scan", "-l", f"**{os.sep}*.md"]
+
+    expected_return_code = 0
+    expected_output = f"""README.md
+dir_one{os.sep}README.md
+dir_one{os.sep}one_one.md
+dir_two{os.sep}README.md
+dir_two{os.sep}dir_two_one{os.sep}README.md
+dir_two{os.sep}dir_two_one{os.sep}two_one_one.md
+dir_two{os.sep}two_one.md
+one.md
+two.md"""
+
+    expected_error = """"""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments,
+        cwd=os.path.join(scanner.resource_directory, source_path),
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_and_exclude_single_file():
+    """
+    Test to make sure we get a list of valid paths if '-l' is supplied
+    with a globbed file path that includes the ** for recursion.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = "complex"
+    supplied_arguments = [
+        "scan",
+        "-l",
+        "-e",
+        f"dir_one{os.sep}README.md",
+        f"**{os.sep}*.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = f"""README.md
+dir_one{os.sep}one_one.md
+dir_two{os.sep}README.md
+dir_two{os.sep}dir_two_one{os.sep}README.md
+dir_two{os.sep}dir_two_one{os.sep}two_one_one.md
+dir_two{os.sep}two_one.md
+one.md
+two.md"""
+
+    expected_error = """"""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments,
+        cwd=os.path.join(scanner.resource_directory, source_path),
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_and_exclude_single_directory():
+    """
+    Test to make sure we get a list of valid paths if '-l' is supplied
+    with a globbed file path that includes the ** for recursion.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = "complex"
+    supplied_arguments = ["scan", "-l", "-e", "dir_one", f"**{os.sep}*.md"]
+
+    expected_return_code = 0
+    expected_output = f"""README.md
+dir_two{os.sep}README.md
+dir_two{os.sep}dir_two_one{os.sep}README.md
+dir_two{os.sep}dir_two_one{os.sep}two_one_one.md
+dir_two{os.sep}two_one.md
+one.md
+two.md"""
+
+    expected_error = """"""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments,
+        cwd=os.path.join(scanner.resource_directory, source_path),
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_and_exclude_single_asterisk_files():
+    """
+    Test to make sure we get a list of valid paths if '-l' is supplied
+    with a globbed file path that includes the ** for recursion.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = "complex"
+    supplied_arguments = ["scan", "-l", "-e", f"dir_one{os.sep}one*", f"**{os.sep}*.md"]
+
+    expected_return_code = 0
+    expected_output = f"""README.md
+dir_one{os.sep}README.md
+dir_two{os.sep}README.md
+dir_two{os.sep}dir_two_one{os.sep}README.md
+dir_two{os.sep}dir_two_one{os.sep}two_one_one.md
+dir_two{os.sep}two_one.md
+one.md
+two.md"""
+
+    expected_error = """"""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments,
+        cwd=os.path.join(scanner.resource_directory, source_path),
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_and_exclude_double_asterisk_files():
+    """
+    Test to make sure we get a list of valid paths if '-l' is supplied
+    with a globbed file path that includes the ** for recursion.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = "complex"
+    supplied_arguments = ["scan", "-l", "-e", f"**{os.sep}README.md", f"**{os.sep}*.md"]
+
+    expected_return_code = 0
+    expected_output = f"""dir_one{os.sep}one_one.md
+dir_two{os.sep}dir_two_one{os.sep}two_one_one.md
+dir_two{os.sep}two_one.md
+one.md
+two.md"""
+
+    expected_error = """"""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments,
+        cwd=os.path.join(scanner.resource_directory, source_path),
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_with_mutually_exclusive_exclude_directory():
+    """
+    Test to make sure we get a list of valid paths if '-l' is supplied
+    with a globbed file path that includes the ** for recursion.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = "complex"
+    supplied_arguments = ["scan", "-l", "-e", "dir_two", f"**{os.sep}one.md"]
+
+    expected_return_code = 0
+    expected_output = """one.md"""
+
+    expected_error = """"""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments,
+        cwd=os.path.join(scanner.resource_directory, source_path),
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_with_mutually_exclusive_exclude_file():
+    """
+    Test to make sure we get a list of valid paths if '-l' is supplied
+    with a globbed file path that includes the ** for recursion.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = "complex"
+    supplied_arguments = ["scan", "-l", "-e", "README.md", f"**{os.sep}one.md"]
+
+    expected_return_code = 0
+    expected_output = """one.md"""
+
+    expected_error = """"""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments,
+        cwd=os.path.join(scanner.resource_directory, source_path),
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_with_mutually_exclusive_exclude():
+    """
+    Test to make sure we get a list of valid paths if '-l' is supplied
+    with a globbed file path that includes the ** for recursion.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = "complex"
+    supplied_arguments = [
+        "scan",
+        "-l",
+        "-e",
+        f"**{os.sep}README.md",
+        f"**{os.sep}one.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = """one.md"""
+
+    expected_error = """"""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments,
+        cwd=os.path.join(scanner.resource_directory, source_path),
     )
 
     # Assert

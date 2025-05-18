@@ -117,7 +117,9 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_no_period():
 
     expected_return_code = 2
     expected_output = ""
-    expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS] path [path ...]
+    expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
+                    [-e PATH_EXCLUSIONS]
+                    path [path ...]
 main.py scan: error: argument -ae/--alternate-extensions: Extension 'md' must start with a period."""
 
     # Act
@@ -148,7 +150,9 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_no_alphanum():
 
     expected_return_code = 2
     expected_output = ""
-    expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS] path [path ...]
+    expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
+                    [-e PATH_EXCLUSIONS]
+                    path [path ...]
 main.py scan: error: argument -ae/--alternate-extensions: Extension '.*' must only contain alphanumeric characters after the period."""
 
     # Act
@@ -179,7 +183,9 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_only_period():
 
     expected_return_code = 2
     expected_output = ""
-    expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS] path [path ...]
+    expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
+                    [-e PATH_EXCLUSIONS]
+                    path [path ...]
 main.py scan: error: argument -ae/--alternate-extensions: Extension '.' must have at least one character after the period."""
 
     # Act
@@ -210,7 +216,9 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_semicolon_as_sep():
 
     expected_return_code = 2
     expected_output = ""
-    expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS] path [path ...]
+    expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
+                    [-e PATH_EXCLUSIONS]
+                    path [path ...]
 main.py scan: error: argument -ae/--alternate-extensions: Extension '.md;.txt' must only contain alphanumeric characters after the period."""
 
     # Act
@@ -241,7 +249,9 @@ def test_markdown_with_dash_ae_with_invalid_file_extension_empty():
 
     expected_return_code = 2
     expected_output = ""
-    expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS] path [path ...]
+    expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
+                    [-e PATH_EXCLUSIONS]
+                    path [path ...]
 main.py scan: error: argument -ae/--alternate-extensions: Extension '' must start with a period."""
 
     # Act

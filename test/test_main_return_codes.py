@@ -125,7 +125,9 @@ def test_markdown_return_code_default_command_line_error():
 
     expected_return_code = 2
     expected_output = ""
-    expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS] path [path ...]
+    expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
+                    [-e PATH_EXCLUSIONS]
+                    path [path ...]
 main.py scan: error: the following arguments are required: path
 """
 
@@ -348,7 +350,9 @@ def test_markdown_return_code_minimal_command_line_error():
 
     expected_return_code = 2
     expected_output = ""
-    expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS] path [path ...]
+    expected_error = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
+                    [-e PATH_EXCLUSIONS]
+                    path [path ...]
 main.py scan: error: the following arguments are required: path
 """
 
