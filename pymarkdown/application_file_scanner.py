@@ -44,6 +44,7 @@ class ApplicationFileScanner:
         """
         return ApplicationFileScanner.determine_files_to_scan(
             args.paths,
+            args.path_exclusions,
             args.recurse_directories,
             args.alternate_extensions,
             args.list_files,
@@ -55,6 +56,7 @@ class ApplicationFileScanner:
     @staticmethod
     def determine_files_to_scan(
         eligible_paths: List[str],
+        paths_to_exclude: List[str],
         recurse_directories: bool,
         eligible_extensions: str,
         only_list_files: bool,
@@ -69,31 +71,23 @@ class ApplicationFileScanner:
         did_error_scanning_files = False
         files_to_parse: Set[str] = set()
         for next_path in eligible_paths:
-            if "*" in next_path or "?" in next_path:
-                globbed_paths = glob.glob(next_path)
-                if not globbed_paths:
-                    handle_error(
-                        f"Provided glob path '{next_path}' did not match any files."
-                    )
-                    did_error_scanning_files = True
-                    break
-                for next_globbed_path in globbed_paths:
-                    ApplicationFileScanner.__process_next_path(
-                        next_globbed_path,
-                        files_to_parse,
-                        recurse_directories,
-                        split_eligible_extensions,
-                        handle_error,
-                    )
-            elif not ApplicationFileScanner.__process_next_path(
-                next_path,
-                files_to_parse,
-                recurse_directories,
-                split_eligible_extensions,
-                handle_error,
-            ):
-                did_error_scanning_files = True
+            did_error_scanning_files = (
+                ApplicationFileScanner.__process_next_eligible_path(
+                    next_path,
+                    files_to_parse,
+                    recurse_directories,
+                    split_eligible_extensions,
+                    handle_error,
+                )
+            )
+            if did_error_scanning_files:
                 break
+
+        if paths_to_exclude:
+            for next_path in paths_to_exclude:
+                ApplicationFileScanner.__process_next_exclude_path(
+                    files_to_parse, next_path
+                )
 
         sorted_files_to_parse = sorted(files_to_parse)
         LOGGER.info("Number of files found: %d", len(sorted_files_to_parse))
@@ -103,6 +97,71 @@ class ApplicationFileScanner:
         return sorted_files_to_parse, did_error_scanning_files, did_only_list_files
 
     # pylint: enable=too-many-arguments
+
+    @staticmethod
+    def __process_next_exclude_path(eligible_paths: Set[str], next_path: str) -> None:
+        if "*" in next_path or "?" in next_path:
+            globbed_paths = glob.glob(next_path, recursive=True)
+            for next_globbed_path in globbed_paths:
+                LOGGER.debug(
+                    "Provided globbed path '%s' includes the file '%s'. Removing from list if present.",
+                    next_path,
+                    next_globbed_path,
+                )
+                if next_globbed_path in eligible_paths:
+                    eligible_paths.remove(next_globbed_path)
+        elif os.path.exists(next_path):
+            if os.path.isdir(next_path):
+                if not next_path.endswith(os.sep):
+                    next_path += os.sep
+                paths_to_remove = {x for x in eligible_paths if x.startswith(next_path)}
+                for path in paths_to_remove:
+                    LOGGER.debug(
+                        "Provided path '%s' is a directory. Removing '%s' from list if present.",
+                        next_path,
+                        path,
+                    )
+                    eligible_paths.remove(path)
+            elif os.path.isfile(next_path) and next_path in eligible_paths:
+                LOGGER.debug(
+                    "Provided exclude path '%s' is a file. Removing from list if present.",
+                    next_path,
+                )
+                eligible_paths.remove(next_path)
+
+    @staticmethod
+    def __process_next_eligible_path(
+        next_path: str,
+        files_to_parse: Set[str],
+        recurse_directories: bool,
+        split_eligible_extensions: List[str],
+        handle_error: ApplicationFileScannerOutputProtocol,
+    ) -> bool:
+        did_error_scanning_files = False
+        if "*" in next_path or "?" in next_path:
+            globbed_paths = glob.glob(next_path, recursive=True)
+            if not globbed_paths:
+                handle_error(
+                    f"Provided glob path '{next_path}' did not match any files."
+                )
+                did_error_scanning_files = True
+            for next_globbed_path in globbed_paths:
+                ApplicationFileScanner.__process_next_path(
+                    next_globbed_path,
+                    files_to_parse,
+                    recurse_directories,
+                    split_eligible_extensions,
+                    handle_error,
+                )
+        elif not ApplicationFileScanner.__process_next_path(
+            next_path,
+            files_to_parse,
+            recurse_directories,
+            split_eligible_extensions,
+            handle_error,
+        ):
+            did_error_scanning_files = True
+        return did_error_scanning_files
 
     @staticmethod
     def __process_next_path(
@@ -192,6 +251,7 @@ class ApplicationFileScanner:
         show_list_files: bool = True,
         show_recurse_directories: bool = True,
         show_alternate_extensions: bool = True,
+        show_exclusions: bool = True,
     ) -> None:
         """
         Add a set of default command line arguments to an argparse styled command line.
@@ -237,6 +297,16 @@ class ApplicationFileScanner:
                 default=extension_to_look_for,
                 type=ApplicationFileScanner.is_valid_comma_separated_extension_list,
                 help="provide an alternate set of file extensions to match against",
+            )
+
+        if show_exclusions:
+            parser_to_add_to.add_argument(
+                "-e",
+                "--exclude",
+                dest="path_exclusions",
+                action="append",
+                type=str,
+                help="one or more paths to exclude from the search. Can be a glob pattern.",
             )
 
         parser_to_add_to.add_argument(

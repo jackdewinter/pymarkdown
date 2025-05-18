@@ -1532,7 +1532,7 @@
         },
         {
             "name": "test.test_application_file_scanner",
-            "totalTests": 7,
+            "totalTests": 8,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1548,7 +1548,7 @@
         },
         {
             "name": "test.test_listfiles",
-            "totalTests": 13,
+            "totalTests": 26,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,

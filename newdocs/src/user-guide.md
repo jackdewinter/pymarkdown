@@ -342,7 +342,9 @@ As far as the command line interface for scanning goes, we have tried to make
 the advanced options easy to understand.
 
 ```txt
-usage: pymarkdown scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS] path [path ...]
+usage: pymarkdown scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
+          [-e PATH_EXCLUSIONS]
+          path [path ...]
 
 positional arguments:
   path                  one or more paths to examine for eligible Markdown files
@@ -353,6 +355,9 @@ optional arguments:
   -r, --recurse         recursively traverse any found directories for matching files
   -ae ALTERNATE_EXTENSIONS, --alternate-extensions ALTERNATE_EXTENSIONS
                         provide an alternate set of file extensions to match against
+  -e, --exclude PATH_EXCLUSIONS
+                        one or more paths to exclude from the search. Can be a
+                        glob pattern.
 ```
 
 ##### --list-files or -l
@@ -385,6 +390,27 @@ set of filename extensions to be replaced with a comma-separated list
 of filename extensions.  Note that each filename extension must start with a `.`
 character,
 followed by one or more alphanumeric characters.
+
+##### -e, --exclude PATH_EXCLUSIONS
+
+<!--- pyml disable-next-line no-emphasis-as-heading-->
+**Available: Version 0.9.30**
+
+The `-e` or `--exclude` arguments instruct PyMarkdown to exclude any of the specified
+paths when evaluating what files to scan. This argument must be specified multiples
+times to specify multiple paths to ignore, one argument for each path. This is
+primarily because the exclude paths may include character sequences that make a
+comma-separated list unfeasible.
+
+These exclude paths are evaluated using algorithms that are like the ones
+described in the `path` section below, with the exception
+that exclude paths that do not match are ignored. After the path algorithm creates
+the complete list of files to scan, the exclude path algorithm removes any paths
+from that list that match any one of the evaluated exclude paths.
+
+Note that the `-l` or `--list-files` argument can be helpful in debugging any
+issues that arrive in evaluating exclude paths and (include) paths when calling
+PyMarkdown.
 
 ##### path
 
