@@ -14,8 +14,10 @@ if sys.version_info < (3, 13):
     ALT_EXTENSIONS_X = (
         "-ae ALTERNATE_EXTENSIONS, --alternate-extensions ALTERNATE_EXTENSIONS"
     )
+    EXCLUSIONS_X = "-e PATH_EXCLUSIONS, --exclude PATH_EXCLUSIONS"
 else:
     ALT_EXTENSIONS_X = "-ae, --alternate-extensions ALTERNATE_EXTENSIONS"
+    EXCLUSIONS_X = "-e, --exclude PATH_EXCLUSIONS"
 
 
 def test_markdown_with_dash_h():
@@ -28,7 +30,7 @@ def test_markdown_with_dash_h():
     supplied_arguments = ["scan", "-h"]
 
     expected_return_code = 0
-    expected_output = """usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
+    expected_output = f"""usage: main.py scan [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS]
                     [-e PATH_EXCLUSIONS]
                     path [path ...]
 
@@ -45,14 +47,10 @@ positional arguments:
   {ALT_EXTENSIONS_X}
                         provide an alternate set of file extensions to match
                         against
-  -e, --exclude PATH_EXCLUSIONS
+  {EXCLUSIONS_X}
                         one or more paths to exclude from the search. Can be a
                         glob pattern.
-""".replace(
-        "{ARGPARSE_X}", ARGPARSE_X
-    ).replace(
-        "{ALT_EXTENSIONS_X}", ALT_EXTENSIONS_X
-    )
+"""
     expected_error = ""
 
     # Act

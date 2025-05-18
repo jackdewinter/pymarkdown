@@ -16,8 +16,10 @@ if sys.version_info < (3, 13):
     ALT_EXTENSIONS_X = (
         "-ae ALTERNATE_EXTENSIONS, --alternate-extensions ALTERNATE_EXTENSIONS"
     )
+    EXCLUSIONS_X = "-e PATH_EXCLUSIONS, --exclude PATH_EXCLUSIONS"
 else:
     ALT_EXTENSIONS_X = "-ae, --alternate-extensions ALTERNATE_EXTENSIONS"
+    EXCLUSIONS_X = "-e, --exclude PATH_EXCLUSIONS"
 
 
 def test_application_file_scanner_args_no_changes():
@@ -26,7 +28,7 @@ def test_application_file_scanner_args_no_changes():
     """
 
     # Arrange
-    expected_output = """usage: pytest [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS] [-e PATH_EXCLUSIONS]
+    expected_output = f"""usage: pytest [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS] [-e PATH_EXCLUSIONS]
               path [path ...]
 
 Lint any found files.
@@ -43,13 +45,9 @@ positional arguments:
   {ALT_EXTENSIONS_X}
                         provide an alternate set of file extensions to match
                         against
-  -e, --exclude PATH_EXCLUSIONS
+  {EXCLUSIONS_X}
                         one or more paths to exclude from the search. Can be a
-                        glob pattern.""".replace(
-        "{ARGPARSE_X}", ARGPARSE_X
-    ).replace(
-        "{ALT_EXTENSIONS_X}", ALT_EXTENSIONS_X
-    )
+                        glob pattern."""
     parser = argparse.ArgumentParser(description="Lint any found files.", prog="pytest")
 
     # Act
@@ -85,7 +83,7 @@ def test_application_file_scanner_args_with_file_type_name():
     """
 
     # Arrange
-    expected_output = """usage: pytest [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS] [-e PATH_EXCLUSIONS]
+    expected_output = f"""usage: pytest [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS] [-e PATH_EXCLUSIONS]
               path [path ...]
 
 Lint any found files.
@@ -102,13 +100,9 @@ positional arguments:
   {ALT_EXTENSIONS_X}
                         provide an alternate set of file extensions to match
                         against
-  -e, --exclude PATH_EXCLUSIONS
+  {EXCLUSIONS_X}
                         one or more paths to exclude from the search. Can be a
-                        glob pattern.""".replace(
-        "{ARGPARSE_X}", ARGPARSE_X
-    ).replace(
-        "{ALT_EXTENSIONS_X}", ALT_EXTENSIONS_X
-    )
+                        glob pattern."""
     parser = argparse.ArgumentParser(description="Lint any found files.", prog="pytest")
 
     # Act
@@ -127,7 +121,7 @@ def test_application_file_scanner_args_with_empty_file_type_name():
     """
 
     # Arrange
-    expected_output = """usage: pytest [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS] [-e PATH_EXCLUSIONS]
+    expected_output = f"""usage: pytest [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS] [-e PATH_EXCLUSIONS]
               path [path ...]
 
 Lint any found files.
@@ -144,13 +138,9 @@ positional arguments:
   {ALT_EXTENSIONS_X}
                         provide an alternate set of file extensions to match
                         against
-  -e, --exclude PATH_EXCLUSIONS
+  {EXCLUSIONS_X}
                         one or more paths to exclude from the search. Can be a
-                        glob pattern.""".replace(
-        "{ARGPARSE_X}", ARGPARSE_X
-    ).replace(
-        "{ALT_EXTENSIONS_X}", ALT_EXTENSIONS_X
-    )
+                        glob pattern."""
     parser = argparse.ArgumentParser(description="Lint any found files.", prog="pytest")
 
     # Act
@@ -169,7 +159,7 @@ def test_application_file_scanner_args_without_list_files():
     """
 
     # Arrange
-    expected_output = """usage: pytest [-h] [-r] [-ae ALTERNATE_EXTENSIONS] [-e PATH_EXCLUSIONS]
+    expected_output = f"""usage: pytest [-h] [-r] [-ae ALTERNATE_EXTENSIONS] [-e PATH_EXCLUSIONS]
               path [path ...]
 
 Lint any found files.
@@ -184,13 +174,9 @@ positional arguments:
   {ALT_EXTENSIONS_X}
                         provide an alternate set of file extensions to match
                         against
-  -e, --exclude PATH_EXCLUSIONS
+  {EXCLUSIONS_X}
                         one or more paths to exclude from the search. Can be a
-                        glob pattern.""".replace(
-        "{ARGPARSE_X}", ARGPARSE_X
-    ).replace(
-        "{ALT_EXTENSIONS_X}", ALT_EXTENSIONS_X
-    )
+                        glob pattern."""
     parser = argparse.ArgumentParser(description="Lint any found files.", prog="pytest")
 
     # Act
@@ -209,7 +195,7 @@ def test_application_file_scanner_args_without_recurse_directories():
     """
 
     # Arrange
-    expected_output = """usage: pytest [-h] [-l] [-ae ALTERNATE_EXTENSIONS] [-e PATH_EXCLUSIONS]
+    expected_output = f"""usage: pytest [-h] [-l] [-ae ALTERNATE_EXTENSIONS] [-e PATH_EXCLUSIONS]
               path [path ...]
 
 Lint any found files.
@@ -224,13 +210,9 @@ positional arguments:
   {ALT_EXTENSIONS_X}
                         provide an alternate set of file extensions to match
                         against
-  -e, --exclude PATH_EXCLUSIONS
+  {EXCLUSIONS_X}
                         one or more paths to exclude from the search. Can be a
-                        glob pattern.""".replace(
-        "{ARGPARSE_X}", ARGPARSE_X
-    ).replace(
-        "{ALT_EXTENSIONS_X}", ALT_EXTENSIONS_X
-    )
+                        glob pattern."""
     parser = argparse.ArgumentParser(description="Lint any found files.", prog="pytest")
 
     # Act
@@ -249,7 +231,7 @@ def test_application_file_scanner_args_without_alternate_extensions():
     """
 
     # Arrange
-    expected_output = """usage: pytest [-h] [-l] [-r] [-e PATH_EXCLUSIONS] path [path ...]
+    expected_output = f"""usage: pytest [-h] [-l] [-r] [-e PATH_EXCLUSIONS] path [path ...]
 
 Lint any found files.
 
@@ -262,11 +244,9 @@ positional arguments:
                         and exit
   -r, --recurse         recursively traverse any found directories for
                         matching files
-  -e, --exclude PATH_EXCLUSIONS
+  {EXCLUSIONS_X}
                         one or more paths to exclude from the search. Can be a
-                        glob pattern.""".replace(
-        "{ARGPARSE_X}", ARGPARSE_X
-    )
+                        glob pattern."""
     parser = argparse.ArgumentParser(description="Lint any found files.", prog="pytest")
 
     # Act
