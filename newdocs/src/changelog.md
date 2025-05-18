@@ -8,6 +8,8 @@
 - [Issue 1396](https://github.com/jackdewinter/pymarkdown/issues/1396)
     - Support for specific rule enablement
     - Disabling of all rules and then selective enabling
+- [Issue 1401](https://github.com/jackdewinter/pymarkdown/issues/1401)
+    - Ability to exclude files from the command line
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
@@ -19,6 +21,8 @@
     - Fixing the 2 Md031 tests now unblocked from Issue 1379
 - [Issue 1387](https://github.com/jackdewinter/pymarkdown/issues/1387)
     - Fixed Md005 not firing properly within alternating ordered and unordered list
+- [Issue 1401](https://github.com/jackdewinter/pymarkdown/issues/1401)
+    - Fixed a small issue with the `**` glob characters not working properly
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
