@@ -47,6 +47,7 @@ class RuleMd011(RulePlugin):
         self.__line_index = 1
         self.__leaf_token_index = 0
 
+    # pylint: disable=too-many-boolean-expressions
     def next_line(self, context: PluginScanContext, line: str) -> None:
         """
         Event that a new line is being processed.
@@ -59,7 +60,8 @@ class RuleMd011(RulePlugin):
             self.__leaf_token_index += 1
 
         if (
-            not self.__leaf_tokens[self.__leaf_token_index].is_code_block
+            self.__leaf_token_index < len(self.__leaf_tokens)
+            and not self.__leaf_tokens[self.__leaf_token_index].is_code_block
             and not self.__leaf_tokens[self.__leaf_token_index].is_html_block
             and line
             and "(" in line
@@ -75,6 +77,8 @@ class RuleMd011(RulePlugin):
                 )
 
         self.__line_index += 1
+
+    # pylint: enable=too-many-boolean-expressions
 
     def next_token(self, context: PluginScanContext, token: MarkdownToken) -> None:
         """

@@ -3,6 +3,7 @@ Module to provide for linter instructions that can be embedded within the docume
 """
 
 import logging
+from dataclasses import dataclass
 from typing import Dict, List, Optional, Set, Tuple
 
 from application_properties import ApplicationPropertiesFacade
@@ -29,6 +30,14 @@ from pymarkdown.transform_markdown.markdown_transform_context import (
 )
 
 POGGER = ParserLogger(logging.getLogger(__name__))
+
+
+@dataclass
+class GeneralPragmaDisableStart:
+    """Data class to hold the start of a general pragma disable."""
+
+    rule_id: str
+    start_line: int
 
 
 # pylint: disable=too-few-public-methods
@@ -130,7 +139,7 @@ class PragmaExtension(ParserExtension):
         POGGER.debug("pragma not extracted - >$<", line_to_parse)
         return False
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def compile_single_pragma(
         scan_file: str,
@@ -139,6 +148,8 @@ class PragmaExtension(ParserExtension):
         all_ids: Dict[str, FoundPlugin],
         document_pragmas: Dict[int, Set[str]],
         document_pragma_ranges: List[Tuple[int, int, Set[str]]],
+        general_pragma_ranges: List[Tuple[int, int, str]],
+        active_general_pragmas: Dict[str, GeneralPragmaDisableStart],
         log_pragma_failure: LogPragmaFailureProtocol,
     ) -> None:
         """
@@ -171,6 +182,29 @@ class PragmaExtension(ParserExtension):
                 actual_line_number,
                 "Inline configuration specified without command.",
             )
+        elif command == "disable":
+            PragmaExtension.__handle_general_disable(
+                command_data,
+                after_command_index,
+                scan_file,
+                actual_line_number,
+                log_pragma_failure,
+                all_ids,
+                command,
+                active_general_pragmas,
+            )
+        elif command == "enable":
+            PragmaExtension.__handle_general_enable(
+                command_data,
+                after_command_index,
+                scan_file,
+                actual_line_number,
+                log_pragma_failure,
+                all_ids,
+                command,
+                active_general_pragmas,
+                general_pragma_ranges,
+            )
         elif command == "disable-next-line":
             PragmaExtension.__handle_disable_next_line(
                 command_data,
@@ -200,6 +234,97 @@ class PragmaExtension(ParserExtension):
                 f"Inline configuration command '{command}' not understood.",
             )
 
+    # pylint: enable=too-many-arguments, too-many-locals
+
+    @staticmethod
+    def end(
+        active_general_pragmas: Dict[str, GeneralPragmaDisableStart],
+        general_pragma_ranges: List[Tuple[int, int, str]],
+    ) -> None:
+        """
+        End the pragma extension compilation.
+        """
+        general_pragma_ranges.extend(
+            (i.start_line, 9999, i.rule_id) for _, i in active_general_pragmas.items()
+        )
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __handle_general_disable(
+        command_data: str,
+        after_command_index: int,
+        scan_file: str,
+        actual_line_number: int,
+        log_pragma_failure: LogPragmaFailureProtocol,
+        all_ids: Dict[str, FoundPlugin],
+        command: str,
+        active_general_pragmas: Dict[str, GeneralPragmaDisableStart],
+    ) -> None:
+        if processed_ids := PragmaExtension.__parse_rules_to_exclude(
+            command_data,
+            after_command_index,
+            scan_file,
+            actual_line_number,
+            command,
+            log_pragma_failure,
+            all_ids,
+        ):
+            for next_rule_id in processed_ids:
+                if next_rule_id in active_general_pragmas:
+                    POGGER.debug(
+                        "File $:line $: General pragma $ already disabled. Ignoring.",
+                        scan_file,
+                        actual_line_number,
+                        next_rule_id,
+                    )
+                else:
+                    active_general_pragmas[next_rule_id] = GeneralPragmaDisableStart(
+                        next_rule_id, actual_line_number
+                    )
+
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __handle_general_enable(
+        command_data: str,
+        after_command_index: int,
+        scan_file: str,
+        actual_line_number: int,
+        log_pragma_failure: LogPragmaFailureProtocol,
+        all_ids: Dict[str, FoundPlugin],
+        command: str,
+        active_general_pragmas: Dict[str, GeneralPragmaDisableStart],
+        general_pragma_ranges: List[Tuple[int, int, str]],
+    ) -> None:
+        if processed_ids := PragmaExtension.__parse_rules_to_exclude(
+            command_data,
+            after_command_index,
+            scan_file,
+            actual_line_number,
+            command,
+            log_pragma_failure,
+            all_ids,
+        ):
+            for next_rule_id in processed_ids:
+                if next_rule_id in active_general_pragmas:
+                    disable_record = active_general_pragmas[next_rule_id]
+                    general_pragma_ranges.append(
+                        (
+                            disable_record.start_line,
+                            actual_line_number,
+                            disable_record.rule_id,
+                        )
+                    )
+                    del active_general_pragmas[next_rule_id]
+                else:
+                    POGGER.debug(
+                        "File $:line $: General pragma $ already enabled. Ignoring.",
+                        scan_file,
+                        actual_line_number,
+                        next_rule_id,
+                    )
+
     # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
@@ -214,7 +339,28 @@ class PragmaExtension(ParserExtension):
         all_ids: Dict[str, FoundPlugin],
         command: str,
     ) -> None:
-        ids_to_disable = command_data[after_command_index:].split(",")
+        if processed_ids := PragmaExtension.__parse_rules_to_exclude(
+            command_data,
+            after_command_index,
+            scan_file,
+            actual_line_number,
+            command,
+            log_pragma_failure,
+            all_ids,
+        ):
+            document_pragmas[actual_line_number + 1] = processed_ids
+
+    @staticmethod
+    def __parse_rules_to_exclude(
+        command_data: str,
+        after_number_index: int,
+        scan_file: str,
+        actual_line_number: int,
+        command: str,
+        log_pragma_failure: LogPragmaFailureProtocol,
+        all_ids: Dict[str, FoundPlugin],
+    ) -> Set[str]:
+        ids_to_disable = command_data[after_number_index:].split(",")
         processed_ids = set()
         for next_id in ids_to_disable:
             next_id = next_id.strip(" ").lower()
@@ -233,9 +379,7 @@ class PragmaExtension(ParserExtension):
                     actual_line_number,
                     f"Inline configuration command '{command}' unable to find a plugin with the id '{next_id}'.",
                 )
-
-        if processed_ids:
-            document_pragmas[actual_line_number + 1] = processed_ids
+        return processed_ids
 
     # pylint: enable=too-many-arguments
     # pylint: disable=too-many-arguments
@@ -289,7 +433,7 @@ class PragmaExtension(ParserExtension):
 
     # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments, too-many-locals
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __handle_disable_num_lines(
         command_data: str,
@@ -316,27 +460,15 @@ class PragmaExtension(ParserExtension):
         if not is_ok:
             return
 
-        ids_to_disable = command_data[after_number_index:].split(",")
-        processed_ids = set()
-        for next_id in ids_to_disable:
-            next_id = next_id.strip(" ").lower()
-            if not next_id:
-                log_pragma_failure(
-                    scan_file,
-                    actual_line_number,
-                    f"Inline configuration command '{command}' specified a plugin with a blank id.",
-                )
-            elif next_id in all_ids:
-                normalized_id = all_ids[next_id].plugin_id
-                processed_ids.add(normalized_id)
-            else:
-                log_pragma_failure(
-                    scan_file,
-                    actual_line_number,
-                    f"Inline configuration command '{command}' unable to find a plugin with the id '{next_id}'.",
-                )
-
-        if processed_ids:
+        if processed_ids := PragmaExtension.__parse_rules_to_exclude(
+            command_data,
+            after_number_index,
+            scan_file,
+            actual_line_number,
+            command,
+            log_pragma_failure,
+            all_ids,
+        ):
             assert count_value is not None
             pragma_tuple = (
                 actual_line_number + 1,
@@ -345,7 +477,7 @@ class PragmaExtension(ParserExtension):
             )
             document_pragma_ranges.append(pragma_tuple)
 
-    # pylint: enable=too-many-arguments, too-many-locals
+    # pylint: enable=too-many-arguments
 
 
 class PragmaToken(MarkdownToken):

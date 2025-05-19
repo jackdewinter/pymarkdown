@@ -268,7 +268,7 @@
         },
         {
             "name": "test.extensions.test_markdown_pragmas",
-            "totalTests": 32,
+            "totalTests": 39,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,

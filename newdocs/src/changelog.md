@@ -10,6 +10,8 @@
     - Disabling of all rules and then selective enabling
 - [Issue 1401](https://github.com/jackdewinter/pymarkdown/issues/1401)
     - Ability to exclude files from the command line
+- [Issue 1403](https://github.com/jackdewinter/pymarkdown/issues/1403)
+    - Added `disable` and `enable` for pragmas
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed

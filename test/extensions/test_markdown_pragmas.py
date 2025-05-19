@@ -1143,3 +1143,236 @@ def test_pragmas_disable_num_line_multiple_enabled_one_pragmad_one_not():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.gfm
+def test_pragmas_disable_without_enabled():
+    """
+    Test the case where we specify a 'disable' pragma with a valid id to disable but without a balancing enable.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "pragmas",
+        "atx_heading_with_multiple_spaces_disable_without_enable.md",
+    )
+    supplied_arguments = [
+        "scan",
+        source_path,
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.gfm
+def test_pragmas_disable_with_enabled():
+    """
+    Test the case where we specify a 'disable' pragma with a valid id to disable but without a balancing enable.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "pragmas",
+        "atx_heading_with_multiple_spaces_disable_with_enable.md",
+    )
+    supplied_arguments = [
+        "scan",
+        source_path,
+    ]
+
+    expected_return_code = 1
+    expected_output = f"""{source_path}:11:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
+{source_path}:12:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
+{source_path}:13:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)"""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.gfm
+def test_pragmas_enable_with_no_disable():
+    """
+    Test the case where we specify a 'disable' pragma with a valid id to disable but without a balancing enable.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "pragmas",
+        "atx_heading_with_multiple_spaces_enable_with_no_disable.md",
+    )
+    supplied_arguments = [
+        "scan",
+        source_path,
+    ]
+
+    expected_return_code = 1
+    expected_output = f"""{source_path}:5:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
+{source_path}:6:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
+{source_path}:7:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
+{source_path}:9:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
+{source_path}:10:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
+{source_path}:11:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)"""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.gfm
+def test_pragmas_double_disable_with_enable():
+    """
+    Test the case where we specify a 'disable' pragma with a valid id to disable but without a balancing enable.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "pragmas",
+        "atx_heading_with_multiple_spaces_double_disable_with_enable.md",
+    )
+    supplied_arguments = [
+        "scan",
+        source_path,
+    ]
+
+    expected_return_code = 1
+    expected_output = f"""{source_path}:12:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
+{source_path}:13:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)
+{source_path}:14:1: MD013: Line length [Expected: 80, Actual: 85] (line-length)"""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.gfm
+def test_pragmas_multiple_disable_enable_blocks():
+    """
+    Test the case where we specify a 'disable' pragma with a valid id to disable but without a balancing enable.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "pragmas",
+        "atx_heading_with_multiple_spaces_multiple_disable_enable_blocks.md",
+    )
+    supplied_arguments = [
+        "scan",
+        source_path,
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.gfm
+def test_pragmas_multiple_disable_with_no_rules():
+    """
+    Test the case where we specify a 'disable' pragma with a valid id to disable but without a balancing enable.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "pragmas",
+        "atx_heading_with_multiple_spaces_multiple_disable_with_no_rules.md",
+    )
+    supplied_arguments = [
+        "scan",
+        source_path,
+    ]
+
+    expected_return_code = 1
+    expected_output = f"""{source_path}:1:21: MD047: Each file should end with a single newline character. (single-trailing-newline)"""
+    expected_error = f"""{source_path}:1:1: INLINE: Inline configuration command 'disable' specified a plugin with a blank id."""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.gfm
+def test_pragmas_multiple_enable_with_no_rules():
+    """
+    Test the case where we specify a 'disable' pragma with a valid id to disable but without a balancing enable.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test",
+        "resources",
+        "pragmas",
+        "atx_heading_with_multiple_spaces_multiple_enable_with_no_rules.md",
+    )
+    supplied_arguments = [
+        "scan",
+        source_path,
+    ]
+
+    expected_return_code = 1
+    expected_output = f"""{source_path}:1:20: MD047: Each file should end with a single newline character. (single-trailing-newline)"""
+    expected_error = f"""{source_path}:1:1: INLINE: Inline configuration command 'enable' specified a plugin with a blank id."""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
