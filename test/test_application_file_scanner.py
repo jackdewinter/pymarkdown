@@ -265,7 +265,7 @@ def test_application_file_scanner_args_without_exclusions():
     """
 
     # Arrange
-    expected_output = """usage: pytest [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS] path [path ...]
+    expected_output = f"""usage: pytest [-h] [-l] [-r] [-ae ALTERNATE_EXTENSIONS] path [path ...]
 
 Lint any found files.
 
@@ -278,11 +278,9 @@ positional arguments:
                         and exit
   -r, --recurse         recursively traverse any found directories for
                         matching files
-  -ae, --alternate-extensions ALTERNATE_EXTENSIONS
+  {ALT_EXTENSIONS_X}
                         provide an alternate set of file extensions to match
-                        against""".replace(
-        "{ARGPARSE_X}", ARGPARSE_X
-    )
+                        against"""
     parser = argparse.ArgumentParser(description="Lint any found files.", prog="pytest")
 
     # Act
