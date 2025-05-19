@@ -121,7 +121,8 @@ class RuleMd009(RulePlugin):
             self.__inline_token_index += 1
 
         if (
-            not self.__leaf_tokens[self.__leaf_token_index].is_code_block
+            self.__leaf_token_index < len(self.__leaf_tokens)
+            and not self.__leaf_tokens[self.__leaf_token_index].is_code_block
             and line
             and line[-1] == " "
         ):

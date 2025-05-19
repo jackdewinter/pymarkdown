@@ -91,7 +91,7 @@
         "pymarkdown/extensions/markdown_tables.py": {},
         "pymarkdown/extensions/pragma_token.py": {
             "too-few-public-methods": 1,
-            "too-many-arguments": 4,
+            "too-many-arguments": 6,
             "too-many-locals": 1
         },
         "pymarkdown/extensions/task_list_items.py": {
@@ -303,7 +303,9 @@
             "too-many-arguments": 1
         },
         "pymarkdown/plugins/rule_md_010.py": {},
-        "pymarkdown/plugins/rule_md_011.py": {},
+        "pymarkdown/plugins/rule_md_011.py": {
+            "too-many-boolean-expressions": 1
+        },
         "pymarkdown/plugins/rule_md_012.py": {},
         "pymarkdown/plugins/rule_md_013.py": {
             "too-many-instance-attributes": 1
@@ -525,10 +527,10 @@
         "too-many-instance-attributes": 27,
         "too-many-public-methods": 5,
         "too-few-public-methods": 40,
-        "too-many-arguments": 259,
+        "too-many-arguments": 261,
         "too-many-locals": 52,
         "chained-comparison": 3,
-        "too-many-boolean-expressions": 7,
+        "too-many-boolean-expressions": 8,
         "protected-access": 31,
         "deprecated-decorator": 3,
         "broad-exception-caught": 3,

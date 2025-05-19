@@ -234,9 +234,11 @@ of the Markdown document.
 
 #### Available Commands
 
-The two commands currently in place are the `disable-next-line` command
+Previously, the two active commands currently were the `disable-next-line` command
 and the `disable-num-lines` command. By keeping things simple, our team
-hopes to keep pragmas understandable and their implementation simple.
+hopes to keep pragmas understandable and their implementation simple. However,
+because of user requests, starting in version 0.9.30 we now support the `disable`
+and `enable` commands.
 
 ##### Disable-next-line Command
 
@@ -285,3 +287,83 @@ some paragraph
 #  My Bad Atx Heading
 some other paragraph
 ```
+
+##### Disable Command and Enable Command
+
+<!--- pyml disable-next-line no-emphasis-as-heading-->
+**Available: Version 0.9.30**
+
+Introduced due to user requests, the `disable` and `enable` commands are used to
+define a range within which a rule is disabled.  Typically, the commands are paired
+in the following fashion:
+
+```Markdown
+<!-- pyml disable line-length-->
+| Column 1  | Column 2  | Column 3  | Column 4  | Column 5  | Column 6  | Column 7  |
+| ---       | ---       | ---       | ---       | ---       | ---       | ---       |
+| data      | data      | data      | data      | data      | data      | data      |
+<!-- pyml enable line-length-->
+```
+
+As with the `disable-next-line` and `disable-num-lines` commands, a command separated
+list of rule identifiers can be specified for these commands. A command to enable
+a rule that has not been disabled will be ignored, as will a command to disable
+a rule that has already been disabled.
+
+In addition, the enabling or disabling of rules does not have to be done together.
+Consider this example:
+
+```markdown
+<!-- pyml disable md019,line-length-->
+##  Header with double spaces
+
+This is a simple document with a table, which is not yet supported.
+
+<!-- pyml disable line-length-->
+| Column 1  | Column 2  | Column 3  | Column 4  | Column 5  | Column 6  | Column 7  |
+| ---       | ---       | ---       | ---       | ---       | ---       | ---       |
+| data      | data      | data      | data      | data      | data      | data      |
+<!-- pyml enable line-length-->
+```
+
+In this example, the rule Md019 is disabled for the entire document along with the
+`line-length` rule.  Note that the rule id is used for one rule whereas the rule
+name is used for the second rule.  As both are identifiers, both are valid to enable
+and disabled the rules. Also note that the `line-length` rule is disabled on
+line 1 and line 6. In this case, the disable on line 6 was probably added as part
+of a pattern to surround possible tables with a `disable`/`enable` block.  Since
+the disable is repeated, there is not negative affect.  Finally, note that only
+the `line-length` rule is enabled on line 10. While this closes the `line-length`
+disable block, it does not affect the disable block for rule Md019.  This is
+allowed as a disable block does not have to be terminated.  The effect is that
+rule Md019 is disabled from line 1 to the end of the document.
+
+##### Important Notes
+
+There are three important concepts that are important to stress when
+using these commands.  The first concept is that these commands are applied after
+the `disable-next-line` and `disable-num-lines` commands are applied.
+The second concept is that these commands can only disable a rule, not enable it.
+The third concept is that the `disable` commands and `enable` commands do not stack.
+
+The `disable-next-line` and `disable-num-lines` commands are specific in which
+Markdown lines they apply to, either the next line or the specified number of lines.
+To honor this sense of specificity, the `disable` and `enabled` commands are applied
+after those two commands.  This ensures that the more specific disables have priority
+and presents a predictable pattern to the user.
+
+Similarly, the `disable-next-line` and `disable-num-lines` commands were
+originally created to suppress an enable rule for a small portion of the Markdown
+document. The driving factor for that decision was to keep the algorithms for deciding
+if a rule was enabled or not simple.  A rule is enabled or disabled through configuration,
+with the `disable-next-line` and `disable-num-lines` commands providing *temporary*
+relief from the constraints of specific rules.  To keep the system from getting
+complex, the `disable` and `enabled` commands retain that philosophy by only allowing
+for rules to be disabled in blocks but not enabled.
+
+Finally, the `disable` and `enabled` commands do not stack.  If two `disable` commands are
+present in a Markdown document for the same rule, the first command is applied and
+the second command is ignored.  Similarly, if an `enable` command is present and there
+is no "active" `disable` command for that rule, the `enable` command is ignored.
+These commands are not meant to be complex, and this is one way in which their
+simplicity can be maintained.

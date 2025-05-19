@@ -14,7 +14,10 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 from application_properties import ApplicationProperties, ApplicationPropertiesFacade
 from columnar import columnar
 
-from pymarkdown.extensions.pragma_token import PragmaExtension
+from pymarkdown.extensions.pragma_token import (
+    GeneralPragmaDisableStart,
+    PragmaExtension,
+)
 from pymarkdown.general.main_presentation import MainPresentation
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.bad_plugin_error import BadPluginError
@@ -65,6 +68,7 @@ class PluginManager:
 
         self.__document_pragmas: Dict[int, Set[str]] = {}
         self.__document_pragma_ranges: List[Tuple[int, int, Set[str]]]
+        self.__general_pragma_ranges: List[Tuple[int, int, str]]
 
         self.__registered_plugins: List[FoundPlugin] = []
         self.__enabled_plugins: List[FoundPlugin] = []
@@ -393,6 +397,11 @@ class PluginManager:
                 if i <= scan_failure.line_number <= j and rule_id in k:
                     return
 
+        if self.__general_pragma_ranges:
+            for i, j, m in self.__general_pragma_ranges:
+                if i <= scan_failure.line_number <= j and rule_id == m:
+                    return
+
         extra_info = (
             f" [{scan_failure.extra_error_information}]"
             if scan_failure.extra_error_information
@@ -426,6 +435,8 @@ class PluginManager:
         Go through the list of extracted pragmas and compile them.
         """
 
+        active_general_pragmas: Dict[str, GeneralPragmaDisableStart] = {}
+
         for next_line_number in pragma_lines:
             PragmaExtension.compile_single_pragma(
                 scan_file,
@@ -434,8 +445,11 @@ class PluginManager:
                 self.__all_ids,
                 self.__document_pragmas,
                 self.__document_pragma_ranges,
+                self.__general_pragma_ranges,
+                active_general_pragmas,
                 self.log_pragma_failure,
             )
+        PragmaExtension.end(active_general_pragmas, self.__general_pragma_ranges)
 
     @property
     def enabled_plugins(self) -> List[FoundPlugin]:
@@ -987,6 +1001,7 @@ class PluginManager:
         """
         self.__document_pragmas = {}
         self.__document_pragma_ranges = []
+        self.__general_pragma_ranges = []
 
         for next_plugin in self.__enabled_plugins_for_starting_new_file:
             if constraint_id_list and next_plugin.plugin_id not in constraint_id_list:
