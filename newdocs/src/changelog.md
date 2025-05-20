@@ -5,6 +5,23 @@
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
+- None
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
+- None
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+- None
+
+## Version 0.9.30 - Date: 2025-04-19
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Added
+
 - [Issue 1396](https://github.com/jackdewinter/pymarkdown/issues/1396)
     - Support for specific rule enablement
     - Disabling of all rules and then selective enabling
