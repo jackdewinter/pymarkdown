@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Python ${{ env.default-python-version }}
-        uses: actions/setup-python@v5.3.0
+        uses: actions/setup-python@v5.6.0
         with:
           python-version: ${{ env.default-python-version }}
 
@@ -58,7 +58,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Python ${{ env.default-python-version }}
-        uses: actions/setup-python@v5.3.0
+        uses: actions/setup-python@v5.6.0
         with:
           python-version: ${{ env.default-python-version }}
 
@@ -97,7 +97,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Python ${{ matrix.python }}
-        uses: actions/setup-python@v5.3.0
+        uses: actions/setup-python@v5.6.0
         with:
           python-version: ${{ matrix.python }}
 
@@ -148,7 +148,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Python ${{ matrix.python }}
-        uses: actions/setup-python@v5.3.0
+        uses: actions/setup-python@v5.6.0
         with:
           python-version: ${{ matrix.python }}
 
@@ -180,7 +180,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Python ${{ env.default-python-version }}
-        uses: actions/setup-python@v5.3.0
+        uses: actions/setup-python@v5.6.0
         with:
           python-version: ${{ env.default-python-version }}
 
