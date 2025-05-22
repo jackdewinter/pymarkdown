@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "636aa23cdb7958f14dfd2c8a4b7f32b9d0488bc95a6c49bc5e13b7b47f972a20"
+            "sha256": "75f06a60bab048a440692bc9a5b3d673dc1e96dfd337000fa8efc5805c74d34b"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -2013,12 +2013,12 @@
         },
         "sourcery": {
             "hashes": [
-                "sha256:a1f22a15d1731f14c283ec24f66d1efb143fe26ecc78e22a98d4ce76c463a969",
-                "sha256:b4a3c8d60ce1b912565082c33a1427a04b347d32bfeac0d706319cfff30706dd",
-                "sha256:ede0daff5ef75fc0a584f5c044c9bfa591905fa4ea6b7ec86210cdea149c6821"
+                "sha256:0841295f6903a6c682164fae3da6a06c5905a33444a7cf5494b8f752e7ec10dd",
+                "sha256:14f676cfbc8ca19c7496d92ad4e05b1b8a677eba61722712f5ad0c8f17c40989",
+                "sha256:df05bd6fd2df270c05afc57b4b2cb8a09420ead0215218a7822cdb906f4ba91b"
             ],
             "index": "pypi",
-            "version": "==1.28.0"
+            "version": "==1.36.0"
         },
         "stack-data": {
             "hashes": [
