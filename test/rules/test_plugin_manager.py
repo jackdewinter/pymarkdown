@@ -579,7 +579,6 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_line_fix():
     )
 
 
-@pytest.mark.skip
 def test_markdown_with_dash_dash_add_plugin_with_bad_next_line_with_stack_trace():
     """
     Test to make sure we get an error logged if a plugin throws an exception
@@ -631,14 +630,13 @@ The above exception was the direct cause of the following exception:
 Traceback (most recent call last):
 """,
             """, in next_line
-    raise BadPluginError(
-pymarkdown.plugin_manager.bad_plugin_error.BadPluginError: (Line 1): Plugin id 'MDE003' had a critical failure during the 'next_line' action.
+    raise BadPluginError(""",
+    """pymarkdown.plugin_manager.bad_plugin_error.BadPluginError: (Line 1): Plugin id 'MDE003' had a critical failure during the 'next_line' action.
 """,
         ],
     )
 
 
-@pytest.mark.skip
 def test_markdown_with_dash_dash_add_plugin_with_bad_next_line_with_configuration_stack_trace():
     """
     Test to make sure we get an error logged if a plugin throws an exception
@@ -692,8 +690,7 @@ The above exception was the direct cause of the following exception:
 Traceback (most recent call last):
 """,
             """, in next_line
-    raise BadPluginError(
-pymarkdown.plugin_manager.bad_plugin_error.BadPluginError: (Line 1): Plugin id 'MDE003' had a critical failure during the 'next_line' action.
+    raise BadPluginError(""","""pymarkdown.plugin_manager.bad_plugin_error.BadPluginError: (Line 1): Plugin id 'MDE003' had a critical failure during the 'next_line' action.
 """,
         ],
     )
@@ -740,7 +737,6 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_token():
     )
 
 
-@pytest.mark.skip
 def test_markdown_with_dash_dash_add_plugin_with_bad_next_token_with_stack_trace():
     """
     Test to make sure we get an error logged if a plugin throws an exception
@@ -795,7 +791,7 @@ The above exception was the direct cause of the following exception:
 Traceback (most recent call last):
 """,
             """, in next_token
-    raise BadPluginError(
+    raise BadPluginError(""","""
 pymarkdown.plugin_manager.bad_plugin_error.BadPluginError: (1,1): Plugin id 'MDE003' had a critical failure during the 'next_token' action.
 """,
         ],
@@ -873,7 +869,6 @@ Plugin class 'BadDetails' had a critical failure loading the plugin details.
     )
 
 
-@pytest.mark.skip
 def test_markdown_with_dash_dash_add_plugin_with_bad_details_with_stack_trace():
     """
     Test to make sure we get an error logged if a plugin throws an exception
@@ -917,8 +912,7 @@ The above exception was the direct cause of the following exception:
 
 Traceback (most recent call last):
 """,
-            """    raise BadPluginError(
-pymarkdown.plugin_manager.bad_plugin_error.BadPluginError: Plugin class 'BadDetails' had a critical failure loading the plugin details.""",
+            """    raise BadPluginError(""","""pymarkdown.plugin_manager.bad_plugin_error.BadPluginError: Plugin class 'BadDetails' had a critical failure loading the plugin details.""",
         ],
     )
 

@@ -1,0 +1,17 @@
+default_context:
+    project_name: "application_properties"
+    project_version: "0.8.2"
+    project_src_additional_path: "" # , stubs
+    project_src_dependencies: "tomli, types-PyYAML"
+    pypi_package_name: "application_properties"
+    github_organization: "jackdewinter"
+    github_project_name: "application_properties"
+    one_line_setup_description : "A simple, easy to use, unified manner of accessing program properties."
+    setup_development_status" : "4 - Beta"
+    setup_intended_audience : "\"Intended Audience :: Developers\","
+    setup_additional_classifier : "\"Topic :: Software Development :: Libraries :: Application Frameworks\","
+    setup_keywords : "\"properties\""
+    setup_package_modules : "\"application_properties\""
+    setup_package_data : "\"\": [\"*.typed\"]"
+    rtd_site_name : "Application Properties"
+    rtd_deploy_name : "application_properties"
