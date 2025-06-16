@@ -23,7 +23,7 @@
 ### Added
 
 - [Issue 1427](https://github.com/jackdewinter/pymarkdown/issues/1427)
-    - Adhering to project templates.
+    - Adhering to project templates across various projects.
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
