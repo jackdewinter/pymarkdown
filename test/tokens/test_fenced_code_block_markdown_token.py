@@ -6,7 +6,7 @@ from pymarkdown.tokens.fenced_code_block_markdown_token import (
 )
 
 
-def test_fenced_code_block_markdown_token_modify_with_bad_name():
+def test_fenced_code_block_markdown_token_modify_with_bad_name() -> None:
     """
     Test to make sure that try to change this token with a bad name fails.
     """
@@ -22,7 +22,7 @@ def test_fenced_code_block_markdown_token_modify_with_bad_name():
         pre_text_after_extracted_text="",
         extracted_whitespace="",
         extracted_whitespace_before_info_string=" ",
-        position_marker=PositionMarker(1, 1, 1),
+        position_marker=PositionMarker(1, 1, "", 1),
     )
 
     # Act

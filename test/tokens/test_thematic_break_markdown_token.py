@@ -4,7 +4,7 @@ from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.tokens.thematic_break_markdown_token import ThematicBreakMarkdownToken
 
 
-def test_text_markdown_token_modify_with_bad_name():
+def test_text_markdown_token_modify_with_bad_name() -> None:
     """
     Test to make sure that try to change this token with a bad name fails.
     """
@@ -15,7 +15,7 @@ def test_text_markdown_token_modify_with_bad_name():
         start_character="*",
         extracted_whitespace="",
         rest_of_line="***",
-        position_marker=PositionMarker(1, 1, 1),
+        position_marker=PositionMarker(1, 1, "", 1),
     )
 
     # Act

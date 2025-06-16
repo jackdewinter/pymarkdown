@@ -10,7 +10,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ol_nl_fb():
+def test_paragraph_series_m_fb_ol_nl_fb() -> None:
     """
     Test case:  Ordered list newline fenced block
     was:        test_list_blocks_256jx
@@ -42,7 +42,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ol_nl_all_i3_fb():
+def test_paragraph_series_m_fb_ol_nl_all_i3_fb() -> None:
     """
     Test case:  Ordered list newline (all indented) fenced block
     """
@@ -74,7 +74,7 @@ def test_paragraph_series_m_fb_ol_nl_all_i3_fb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ol_nl_i2_fb():
+def test_paragraph_series_m_fb_ol_nl_i2_fb() -> None:
     """
     Test case:  Ordered list newline indent of 2 fenced block
     was:        test_list_blocks_256jxa
@@ -106,7 +106,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ol_nl_i3_fb():
+def test_paragraph_series_m_fb_ol_nl_i3_fb() -> None:
     """
     Test case:  Ordered list newline indent of 2 fenced block
     was:        test_list_blocks_256jxb
@@ -144,7 +144,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ol_t_nl_fb():
+def test_paragraph_series_m_fb_ol_t_nl_fb() -> None:
     """
     Test case:  Ordered list text newline fenced block
     was:        test_list_blocks_256ja
@@ -178,7 +178,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ol_t_nl_all_i4_fb():
+def test_paragraph_series_m_fb_ol_t_nl_all_i4_fb() -> None:
     """
     Test case:  Ordered list text newline (all indented) fenced block
     """
@@ -212,7 +212,7 @@ def test_paragraph_series_m_fb_ol_t_nl_all_i4_fb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ol_t_nl_i2_fb():
+def test_paragraph_series_m_fb_ol_t_nl_i2_fb() -> None:
     """
     Test case:  Ordered list text newline indent of 2 fenced block
     was:        test_list_blocks_256jaa
@@ -246,7 +246,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ol_t_nl_i3_fb():
+def test_paragraph_series_m_fb_ol_t_nl_i3_fb() -> None:
     """
     Test case:  Ordered list text newline indent of 3 fenced block
     was:        test_list_blocks_256jab
@@ -280,7 +280,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ol_ol_nl_fb():
+def test_paragraph_series_m_fb_ol_ol_nl_fb() -> None:
     """
     Test case:  Ordered list x2 newline fenced block
     """
@@ -317,7 +317,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ol_ol_nl_all_i6_fb():
+def test_paragraph_series_m_fb_ol_ol_nl_all_i6_fb() -> None:
     """
     Test case:  Ordered list x2 newline fenced block
     """
@@ -355,7 +355,7 @@ def test_paragraph_series_m_fb_ol_ol_nl_all_i6_fb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ol_ol_t_nl_fb():
+def test_paragraph_series_m_fb_ol_ol_t_nl_fb() -> None:
     """
     Test case:  Ordered list x2 text newline fenced block
     was:        test_list_blocks_256jb
@@ -395,7 +395,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ol_ol_t_nl_all_i6_fb():
+def test_paragraph_series_m_fb_ol_ol_t_nl_all_i6_fb() -> None:
     """
     Test case:  Ordered list x2 text newline fenced block
     """
@@ -435,7 +435,7 @@ def test_paragraph_series_m_fb_ol_ol_t_nl_all_i6_fb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ol_nl_i3_ol_nl_fb():
+def test_paragraph_series_m_fb_ol_nl_i3_ol_nl_fb() -> None:
     """
     Test case:  Ordered list newline indent of 3 ordered list newline fenced block
     """
@@ -474,7 +474,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ol_t_nl_i3_ol_nl_fb():
+def test_paragraph_series_m_fb_ol_t_nl_i3_ol_nl_fb() -> None:
     """
     Test case:  Ordered list text newline indent of 3 ordered list newline fenced block
     """
@@ -509,7 +509,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ul_t_nl_i2_ul_nl_fb():
+def test_paragraph_series_m_fb_ul_t_nl_i2_ul_nl_fb() -> None:
     """
     Test case:  Unordered list text newline indent of 2 unordered list newline fenced block
     """
@@ -545,7 +545,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ul_t_nl_i2_ulb_nl_fb():
+def test_paragraph_series_m_fb_ul_t_nl_i2_ulb_nl_fb() -> None:
     """
     Test case:  Unordered list text newline indent of 2 unordered list (b) newline fenced block
     """
@@ -580,7 +580,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ol_nl_i3_ol_t_nl_fb():
+def test_paragraph_series_m_fb_ol_nl_i3_ol_t_nl_fb() -> None:
     """
     Test case:  Ordered list newline indent of 3 ordered list text newline fenced block
     was:        test_list_blocks_256jc
@@ -622,7 +622,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ol_t_nl_i3_ol_t_nl_fb():
+def test_paragraph_series_m_fb_ol_t_nl_i3_ol_t_nl_fb() -> None:
     """
     Test case:  Ordered list text newline indent of 3 ordered list text newline fenced block
     """
@@ -665,7 +665,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ol_nl_i3_ol_nl_i2_fb():
+def test_paragraph_series_m_fb_ol_nl_i3_ol_nl_i2_fb() -> None:
     """
     Test case:  Ordered list newline indent of 3 ordered list newline indent of 2 fenced block
     """
@@ -704,7 +704,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ol_t_nl_i3_ol_nl_i2_fb():
+def test_paragraph_series_m_fb_ol_t_nl_i3_ol_nl_i2_fb() -> None:
     """
     Test case:  Ordered list text newline indent of 3 ordered list newline indent of 2 fenced block
     """
@@ -739,7 +739,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ul_t_nl_i2_ul_nl_i1_fb():
+def test_paragraph_series_m_fb_ul_t_nl_i2_ul_nl_i1_fb() -> None:
     """
     Test case:  Unordered list text newline indent of 2 unordered list newline indent of 1 fenced block
     """
@@ -775,7 +775,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ul_t_nl_i2_ulb_nl_i1_fb():
+def test_paragraph_series_m_fb_ul_t_nl_i2_ulb_nl_i1_fb() -> None:
     """
     Test case:  Unordered list text newline indent of 2 unordered list newline indent of 1 fenced block
     """
@@ -810,7 +810,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ol_nl_i3_ol_t_nl_i2_fb():
+def test_paragraph_series_m_fb_ol_nl_i3_ol_t_nl_i2_fb() -> None:
     """
     Test case:  Ordered list newline indent of 3 ordered list text newline indent of 2 fenced block
     was:        test_list_blocks_256jd
@@ -852,7 +852,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ol_t_nl_i3_ol_t_nl_i2_fb():
+def test_paragraph_series_m_fb_ol_t_nl_i3_ol_t_nl_i2_fb() -> None:
     """
     Test case:  Ordered list text newline indent of 3 ordered list text newline indent of 2 fenced block
     """
@@ -895,7 +895,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ol_nl_i3_ol_nl_i3_fb():
+def test_paragraph_series_m_fb_ol_nl_i3_ol_nl_i3_fb() -> None:
     """
     Test case:  Ordered list newline indent of 3 ordered list newline indent of 3 fenced block
     """
@@ -939,7 +939,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ol_t_nl_i3_ol_nl_i3_fb():
+def test_paragraph_series_m_fb_ol_t_nl_i3_ol_nl_i3_fb() -> None:
     """
     Test case:  Ordered list text newline indent of 3 ordered list newline indent of 3 fenced block
     """
@@ -980,7 +980,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ul_t_nl_i2_ul_nl_i2_fb():
+def test_paragraph_series_m_fb_ul_t_nl_i2_ul_nl_i2_fb() -> None:
     """
     Test case:  Unordered list text newline indent of 3 unordered list newline indent of 3 fenced block
     """
@@ -1021,7 +1021,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ul_t_nl_i2_ulb_nl_i2_fb():
+def test_paragraph_series_m_fb_ul_t_nl_i2_ulb_nl_i2_fb() -> None:
     """
     Test case:  Unordered list text newline indent of 3 unordered list (b) newline indent of 3 fenced block
     """
@@ -1062,7 +1062,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ol_nl_i3_ol_t_nl_i3_fb():
+def test_paragraph_series_m_fb_ol_nl_i3_ol_t_nl_i3_fb() -> None:
     """
     Test case:  Ordered list newline indent of 3 ordered list text newline indent of 3 fenced block
     was:        test_list_blocks_256je
@@ -1109,7 +1109,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_fb_ol_t_nl_i3_ol_t_nl_i3_fb():
+def test_paragraph_series_m_fb_ol_t_nl_i3_ol_t_nl_i3_fb() -> None:
     """
     Test case:  Ordered list text newline indent of 3 ordered list text newline indent of 3 fenced block
     """

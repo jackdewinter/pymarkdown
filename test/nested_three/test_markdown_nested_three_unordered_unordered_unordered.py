@@ -10,7 +10,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_unordered_unordered():
+def test_nested_three_unordered_unordered_unordered() -> None:
     """
     Verify that a nesting of unordered list, unordered list, unordered list works
     properly.
@@ -48,7 +48,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_nl_unordered_nl_unordered():
+def test_nested_three_unordered_nl_unordered_nl_unordered() -> None:
     """
     Verify that a nesting of unordered list, new line, unordered list, new line, unordered list works.
     properly.
@@ -90,7 +90,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_text_nl_unordered_text_nl_unordered():
+def test_nested_three_unordered_text_nl_unordered_text_nl_unordered() -> None:
     """
     Verify that a nesting of unordered list, text, new line, unordered list, tex, new line, unordered list works.
     properly.
@@ -136,7 +136,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_max_unordered_max_unordered_max():
+def test_nested_three_unordered_max_unordered_max_unordered_max() -> None:
     """
     Verify that a nesting of unordered list, unordered list, unordered list, with
     the maximum number of spaces allowed, works properly.
@@ -174,7 +174,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_max_unordered_max_unordered_max_with_li1():
+def test_nested_three_unordered_max_unordered_max_unordered_max_with_li1() -> None:
     """
     Verify that a nesting of unordered list, unordered list, unordered list, with
     the maximum number of spaces allowed, works properly, with a list item.
@@ -219,7 +219,7 @@ def test_nested_three_unordered_max_unordered_max_unordered_max_with_li1():
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_max_unordered_max_unordered_max_with_li2():
+def test_nested_three_unordered_max_unordered_max_unordered_max_with_li2() -> None:
     """
     Verify that a nesting of unordered list, unordered list, unordered list, with
     the maximum number of spaces allowed, works properly, with a list item.
@@ -264,7 +264,7 @@ def test_nested_three_unordered_max_unordered_max_unordered_max_with_li2():
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_max_unordered_max_unordered_max_with_li3():
+def test_nested_three_unordered_max_unordered_max_unordered_max_with_li3() -> None:
     """
     Verify that a nesting of unordered list, unordered list, unordered list, with
     the maximum number of spaces allowed, works properly, with a list item.
@@ -306,7 +306,7 @@ def test_nested_three_unordered_max_unordered_max_unordered_max_with_li3():
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_max_unordered_max_unordered_max_with_li4():
+def test_nested_three_unordered_max_unordered_max_unordered_max_with_li4() -> None:
     """
     Verify that a nesting of unordered list, unordered list, unordered list, with
     the maximum number of spaces allowed, works properly, with a list item.
@@ -354,7 +354,7 @@ def test_nested_three_unordered_max_unordered_max_unordered_max_with_li4():
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_max_unordered_max_unordered_max_with_li5():
+def test_nested_three_unordered_max_unordered_max_unordered_max_with_li5() -> None:
     """
     Verify that a nesting of unordered list, unordered list, unordered list, with
     the maximum number of spaces allowed, works properly, with a list item.
@@ -399,7 +399,7 @@ def test_nested_three_unordered_max_unordered_max_unordered_max_with_li5():
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_max_unordered_max_unordered_max_with_li6():
+def test_nested_three_unordered_max_unordered_max_unordered_max_with_li6() -> None:
     """
     Verify that a nesting of unordered list, unordered list, unordered list, with
     the maximum number of spaces allowed, works properly, with a list item.
@@ -450,7 +450,7 @@ def test_nested_three_unordered_max_unordered_max_unordered_max_with_li6():
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_max_unordered_max_unordered_max_with_li7():
+def test_nested_three_unordered_max_unordered_max_unordered_max_with_li7() -> None:
     """
     Verify that a nesting of unordered list, unordered list, unordered list, with
     the maximum number of spaces allowed, works properly, with a list item.
@@ -504,7 +504,7 @@ def test_nested_three_unordered_max_unordered_max_unordered_max_with_li7():
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_max_unordered_max_unordered_max_empty():
+def test_nested_three_unordered_max_unordered_max_unordered_max_empty() -> None:
     """
     Verify that a nesting of unordered list, unordered list, unordered list, with
     the maximum number of spaces allowed, and no text on the first line,
@@ -543,7 +543,9 @@ def test_nested_three_unordered_max_unordered_max_unordered_max_empty():
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_max_unordered_max_unordered_max_empty_with_li1():
+def test_nested_three_unordered_max_unordered_max_unordered_max_empty_with_li1() -> (
+    None
+):
     """
     Verify that a nesting of unordered list, unordered list, unordered list, with
     the maximum number of spaces allowed, and no text on the first line,
@@ -587,7 +589,9 @@ def test_nested_three_unordered_max_unordered_max_unordered_max_empty_with_li1()
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_max_unordered_max_unordered_max_empty_with_li2():
+def test_nested_three_unordered_max_unordered_max_unordered_max_empty_with_li2() -> (
+    None
+):
     """
     Verify that a nesting of unordered list, unordered list, unordered list, with
     the maximum number of spaces allowed, and no text on the first line,
@@ -631,7 +635,9 @@ def test_nested_three_unordered_max_unordered_max_unordered_max_empty_with_li2()
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_max_unordered_max_unordered_max_empty_with_li3():
+def test_nested_three_unordered_max_unordered_max_unordered_max_empty_with_li3() -> (
+    None
+):
     """
     Verify that a nesting of unordered list, unordered list, unordered list, with
     the maximum number of spaces allowed, and no text on the first line,
@@ -672,7 +678,9 @@ def test_nested_three_unordered_max_unordered_max_unordered_max_empty_with_li3()
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_max_unordered_max_unordered_max_empty_with_li4():
+def test_nested_three_unordered_max_unordered_max_unordered_max_empty_with_li4() -> (
+    None
+):
     """
     Verify that a nesting of unordered list, unordered list, unordered list, with
     the maximum number of spaces allowed, and no text on the first line,
@@ -719,7 +727,9 @@ def test_nested_three_unordered_max_unordered_max_unordered_max_empty_with_li4()
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_max_unordered_max_unordered_max_empty_with_li5():
+def test_nested_three_unordered_max_unordered_max_unordered_max_empty_with_li5() -> (
+    None
+):
     """
     Verify that a nesting of unordered list, unordered list, unordered list, with
     the maximum number of spaces allowed, and no text on the first line,
@@ -763,7 +773,9 @@ def test_nested_three_unordered_max_unordered_max_unordered_max_empty_with_li5()
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_max_unordered_max_unordered_max_empty_with_li6():
+def test_nested_three_unordered_max_unordered_max_unordered_max_empty_with_li6() -> (
+    None
+):
     """
     Verify that a nesting of unordered list, unordered list, unordered list, with
     the maximum number of spaces allowed, and no text on the first line,
@@ -813,7 +825,9 @@ def test_nested_three_unordered_max_unordered_max_unordered_max_empty_with_li6()
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_max_unordered_max_unordered_max_empty_with_li7():
+def test_nested_three_unordered_max_unordered_max_unordered_max_empty_with_li7() -> (
+    None
+):
     """
     Verify that a nesting of unordered list, unordered list, unordered list, with
     the maximum number of spaces allowed, and no text on the first line,
@@ -866,7 +880,7 @@ def test_nested_three_unordered_max_unordered_max_unordered_max_empty_with_li7()
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_max_plus_one_unordered_max_unordered_max():
+def test_nested_three_unordered_max_plus_one_unordered_max_unordered_max() -> None:
     """
     Verify that a nesting of unordered list, ordered list, unordered list, with
     the maximum number of spaces (plus one for the first) allowed, works properly.
@@ -889,7 +903,7 @@ def test_nested_three_unordered_max_plus_one_unordered_max_unordered_max():
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_max_unordered_max_plus_one_unordered_max():
+def test_nested_three_unordered_max_unordered_max_plus_one_unordered_max() -> None:
     """
     Verify that a nesting of unordered list, unordered list, unordered list, with
     the maximum number of spaces (plus one for the second) allowed, works properly.
@@ -918,7 +932,7 @@ def test_nested_three_unordered_max_unordered_max_plus_one_unordered_max():
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_max_unordered_max_unordered_max_plus_one():
+def test_nested_three_unordered_max_unordered_max_unordered_max_plus_one() -> None:
     """
     Verify that a nesting of unordered list, unordered list, unordered list, with
     the maximum number of spaces (plus one for the third) allowed, works properly.
@@ -953,7 +967,9 @@ def test_nested_three_unordered_max_unordered_max_unordered_max_plus_one():
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_unordered_unordered_nl_list_with_li_drop_list_with_thematics_around_fenced():
+def test_nested_three_unordered_unordered_unordered_nl_list_with_li_drop_list_with_thematics_around_fenced() -> (
+    None
+):
     """
     Verify that a nesting of unordered list, unordered list, unordered list, with
     a new line and a new unordered list, a list item, then drop the list, and then
@@ -1029,7 +1045,9 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_unordered_unordered_nl_list_with_li_drop_list_with_thematics_around_blanks_around_fenced():
+def test_nested_three_unordered_unordered_unordered_nl_list_with_li_drop_list_with_thematics_around_blanks_around_fenced() -> (
+    None
+):
     """
     Verify that a nesting of unordered list, unordered list, unordered list, with
     a new line and a new unordered list, a list item, then drop the list, and then
@@ -1109,7 +1127,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_unordered_nl_unordered_drop_list_with_fenced():
+def test_nested_three_unordered_unordered_nl_unordered_drop_list_with_fenced() -> None:
     """
     Verify that a nesting of unordered list, unordered list, unordered list, with
     a new line and a new unordered list, a list item, then drop the list, and then
@@ -1178,7 +1196,9 @@ list 2.2</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_unordered_nl_unordered_drop_list_with_blanks_around_fenced():
+def test_nested_three_unordered_unordered_nl_unordered_drop_list_with_blanks_around_fenced() -> (
+    None
+):
     """
     Verify that a nesting of unordered list, unordered list, unordered list, with
     a new line and a new unordered list, a list item, then drop the list, and then
@@ -1253,7 +1273,9 @@ list 2.2</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_unordered_nl_li_li_unordered_drop_list_with_thematics_then_fenced():
+def test_nested_three_unordered_unordered_nl_li_li_unordered_drop_list_with_thematics_then_fenced() -> (
+    None
+):
     """
     Verify that a nesting of unordered list, unordered list, unordered list, with
     a new line and a new unordered list, a list item, then drop the list, and then
@@ -1325,7 +1347,9 @@ list 2.2</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_unordered_nl_li_liunordered_drop_list_with_thematics_then_blanks_around_fenced():
+def test_nested_three_unordered_unordered_nl_li_liunordered_drop_list_with_thematics_then_blanks_around_fenced() -> (
+    None
+):
     """
     Verify that a nesting of unordered list, unordered list, unordered list, with
     a new line and a new unordered list, a list item, then drop the list, and then
@@ -1403,7 +1427,9 @@ list 2.2</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_unordered_nl_unordered_drop_list_with_thematics_then_fenced():
+def test_nested_three_unordered_unordered_nl_unordered_drop_list_with_thematics_then_fenced() -> (
+    None
+):
     """
     Verify that a nesting of unordered list, unordered list, unordered list, with
     a new line and a new unordered list, a list item, then drop the list, and then
@@ -1467,7 +1493,9 @@ list 2.2</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_unordered_unordered_nl_unordered_drop_list_with_thematics_then_blanks_around_fenced():
+def test_nested_three_unordered_unordered_nl_unordered_drop_list_with_thematics_then_blanks_around_fenced() -> (
+    None
+):
     """
     Verify that a nesting of unordered list, unordered list, unordered list, with
     a new line and a new unordered list, a list item, then drop the list, and then

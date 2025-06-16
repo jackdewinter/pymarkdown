@@ -218,7 +218,7 @@ class PyMarkdownLint:
 
     def __initialize_plugins_and_extensions(self, args: argparse.Namespace) -> None:
         self.__initialize_plugins(args)
-        self.__initialize_extensions(args)
+        self.__initialize_extensions()
 
         if args.primary_subparser == PluginManager.argparse_subparser_name():
             ReturnCodeHelper.exit_application(
@@ -279,10 +279,9 @@ class PyMarkdownLint:
     # pylint: enable=broad-exception-caught
 
     # pylint: disable=broad-exception-caught
-    def __initialize_extensions(self, args: argparse.Namespace) -> None:
+    def __initialize_extensions(self) -> None:
         try:
             self.__extensions.initialize(
-                args,
                 self.__properties,
             )
             self.__extensions.apply_configuration()

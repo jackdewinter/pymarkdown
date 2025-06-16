@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_emphasis_469():
+def test_emphasis_469() -> None:
     """
     Test case 469:  (part 1) Rule 13 implies that if you want emphasis nested directly inside emphasis, you must use different delimiters:
     """
@@ -29,7 +29,7 @@ def test_emphasis_469():
 
 
 @pytest.mark.gfm
-def test_emphasis_470():
+def test_emphasis_470() -> None:
     """
     Test case 470:  (part 2) Rule 13 implies that if you want emphasis nested directly inside emphasis, you must use different delimiters:
     """
@@ -52,7 +52,7 @@ def test_emphasis_470():
 
 
 @pytest.mark.gfm
-def test_emphasis_471():
+def test_emphasis_471() -> None:
     """
     Test case 471:  (part 3) Rule 13 implies that if you want emphasis nested directly inside emphasis, you must use different delimiters:
     """
@@ -73,7 +73,7 @@ def test_emphasis_471():
 
 
 @pytest.mark.gfm
-def test_emphasis_472():
+def test_emphasis_472() -> None:
     """
     Test case 472:  (part 4) Rule 13 implies that if you want emphasis nested directly inside emphasis, you must use different delimiters:
     """
@@ -96,7 +96,7 @@ def test_emphasis_472():
 
 
 @pytest.mark.gfm
-def test_emphasis_473():
+def test_emphasis_473() -> None:
     """
     Test case 473:  (part 1) However, strong emphasis within strong emphasis is possible without switching delimiters:
     """
@@ -119,7 +119,7 @@ def test_emphasis_473():
 
 
 @pytest.mark.gfm
-def test_emphasis_474():
+def test_emphasis_474() -> None:
     """
     Test case 474:  (part 2) However, strong emphasis within strong emphasis is possible without switching delimiters:
     """
@@ -142,7 +142,7 @@ def test_emphasis_474():
 
 
 @pytest.mark.gfm
-def test_emphasis_475():
+def test_emphasis_475() -> None:
     """
     Test case 475:  Rule 13 can be applied to arbitrarily long sequences of delimiters:
     """

@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_image_link_580x():
+def test_image_link_580x() -> None:
     """
     Test case 580:  (part 1) Syntax for images is like the syntax for links, with one difference
     """
@@ -27,7 +27,7 @@ def test_image_link_580x():
 
 
 @pytest.mark.gfm
-def test_image_link_580a():
+def test_image_link_580a() -> None:
     """
     Test case 580a:  variation of 580 with apostrophes instead of quotation marks
     """
@@ -46,7 +46,7 @@ def test_image_link_580a():
 
 
 @pytest.mark.gfm
-def test_image_link_580b():
+def test_image_link_580b() -> None:
     """
     Test case 580b:  variation of 580 with parentheses instead of quotation marks
     """
@@ -65,7 +65,7 @@ def test_image_link_580b():
 
 
 @pytest.mark.gfm
-def test_image_link_580c():
+def test_image_link_580c() -> None:
     """
     Test case 580c:  variation of 580 with angle brackets around url
     """
@@ -84,7 +84,7 @@ def test_image_link_580c():
 
 
 @pytest.mark.gfm
-def test_image_link_580d():
+def test_image_link_580d() -> None:
     """
     Test case 580f:  variation of 580 with angle brackets around url and parentheses
         around title
@@ -106,7 +106,7 @@ def test_image_link_580d():
 
 
 @pytest.mark.gfm
-def test_image_link_580e():
+def test_image_link_580e() -> None:
     """
     Test case 580e:  variation of 580 with text after
     """
@@ -126,7 +126,7 @@ def test_image_link_580e():
 
 
 @pytest.mark.gfm
-def test_image_link_581():
+def test_image_link_581() -> None:
     """
     Test case 581:  (part 2) Syntax for images is like the syntax for links, with one difference
     """
@@ -153,7 +153,7 @@ def test_image_link_581():
 
 
 @pytest.mark.gfm
-def test_image_link_582():
+def test_image_link_582() -> None:
     """
     Test case 582:  (part 3) Syntax for images is like the syntax for links, with one difference
     """
@@ -172,7 +172,7 @@ def test_image_link_582():
 
 
 @pytest.mark.gfm
-def test_image_link_583():
+def test_image_link_583() -> None:
     """
     Test case 583:  (part 4) Syntax for images is like the syntax for links, with one difference
     """
@@ -191,7 +191,7 @@ def test_image_link_583():
 
 
 @pytest.mark.gfm
-def test_image_link_584():
+def test_image_link_584() -> None:
     """
     Test case 584:  (part 1) Only the plain string content is rendered, without formatting.
     """
@@ -218,7 +218,7 @@ def test_image_link_584():
 
 
 @pytest.mark.gfm
-def test_image_link_585():
+def test_image_link_585() -> None:
     """
     Test case 585:  (part 2) Only the plain string content is rendered, without formatting.
     """
@@ -245,7 +245,7 @@ def test_image_link_585():
 
 
 @pytest.mark.gfm
-def test_image_link_586():
+def test_image_link_586() -> None:
     """
     Test case 586:  (part 3) Only the plain string content is rendered, without formatting.
     """
@@ -264,7 +264,7 @@ def test_image_link_586():
 
 
 @pytest.mark.gfm
-def test_image_link_587():
+def test_image_link_587() -> None:
     """
     Test case 587:  (part 4) Only the plain string content is rendered, without formatting.
     """
@@ -286,7 +286,7 @@ def test_image_link_587():
 
 
 @pytest.mark.gfm
-def test_image_link_588():
+def test_image_link_588() -> None:
     """
     Test case 588:  (part 5) Only the plain string content is rendered, without formatting.
     """
@@ -305,7 +305,7 @@ def test_image_link_588():
 
 
 @pytest.mark.gfm
-def test_image_link_589():
+def test_image_link_589() -> None:
     """
     Test case 589:  (part 6) Only the plain string content is rendered, without formatting.
     """
@@ -324,7 +324,7 @@ def test_image_link_589():
 
 
 @pytest.mark.gfm
-def test_image_link_590():
+def test_image_link_590() -> None:
     """
     Test case 590:  (part 1) Reference-style:
     """
@@ -347,7 +347,7 @@ def test_image_link_590():
 
 
 @pytest.mark.gfm
-def test_image_link_591():
+def test_image_link_591() -> None:
     """
     Test case 591:  (part 2) Reference-style:
     """
@@ -370,7 +370,7 @@ def test_image_link_591():
 
 
 @pytest.mark.gfm
-def test_image_link_592():
+def test_image_link_592() -> None:
     """
     Test case 592:  (part 1) Collapsed:
     """
@@ -395,7 +395,7 @@ def test_image_link_592():
 
 
 @pytest.mark.gfm
-def test_image_link_592a():
+def test_image_link_592a() -> None:
     """
     Test case 592a:  variation of 592 with extra space after
     """
@@ -422,7 +422,7 @@ def test_image_link_592a():
 
 
 @pytest.mark.gfm
-def test_image_link_592b():
+def test_image_link_592b() -> None:
     """
     Test case 592a:  variation of 592 with extra space and text after
     """
@@ -450,7 +450,7 @@ def test_image_link_592b():
 
 
 @pytest.mark.gfm
-def test_image_link_593():
+def test_image_link_593() -> None:
     """
     Test case 593:  (part 2) Collapsed:
     """
@@ -475,7 +475,7 @@ def test_image_link_593():
 
 
 @pytest.mark.gfm
-def test_image_link_594():
+def test_image_link_594() -> None:
     """
     Test case 594:  The labels are case-insensitive:
     """
@@ -500,7 +500,7 @@ def test_image_link_594():
 
 
 @pytest.mark.gfm
-def test_image_link_595():
+def test_image_link_595() -> None:
     """
     Test case 595:  As with reference links, whitespace is not allowed between the two sets of brackets:
     """
@@ -530,7 +530,7 @@ def test_image_link_595():
 
 
 @pytest.mark.gfm
-def test_image_link_596():
+def test_image_link_596() -> None:
     """
     Test case 596:  (part 1) Shortcut
     """
@@ -555,7 +555,7 @@ def test_image_link_596():
 
 
 @pytest.mark.gfm
-def test_image_link_597():
+def test_image_link_597() -> None:
     """
     Test case 597:  (part 2) Shortcut
     """
@@ -580,7 +580,7 @@ def test_image_link_597():
 
 
 @pytest.mark.gfm
-def test_image_link_598():
+def test_image_link_598() -> None:
     """
     Test case 598:  The link labels are case-insensitive:
     """
@@ -608,7 +608,7 @@ def test_image_link_598():
 
 
 @pytest.mark.gfm
-def test_image_link_599():
+def test_image_link_599() -> None:
     """
     Test case 599:  If you just want a literal ! followed by bracketed text, you can backslash-escape the opening [:
     """
@@ -633,7 +633,7 @@ def test_image_link_599():
 
 
 @pytest.mark.gfm
-def test_image_link_600():
+def test_image_link_600() -> None:
     """
     Test case 600:  If you just want a literal ! followed by bracketed text, you can backslash-escape the opening [:
     """
@@ -658,7 +658,7 @@ def test_image_link_600():
 
 
 @pytest.mark.gfm
-def test_image_link_601():
+def test_image_link_601() -> None:
     """
     Test case 601:  If you want a link after a literal !, backslash-escape the !:
     """
@@ -686,7 +686,7 @@ def test_image_link_601():
 
 
 @pytest.mark.gfm
-def test_image_link_extra_01():
+def test_image_link_extra_01() -> None:
     """
     Test case extra 01:  shortcut with newline in label
     """

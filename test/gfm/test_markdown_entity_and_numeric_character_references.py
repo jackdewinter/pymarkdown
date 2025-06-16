@@ -16,7 +16,7 @@ from pymarkdown.general.tokenized_markdown import TokenizedMarkdown
 
 
 @pytest.mark.gfm
-def test_character_references_321():
+def test_character_references_321() -> None:
     """
     Test case 321:  Entity references consist of & + any of the valid HTML5 entity names + ;. The document https://html.spec.whatwg.org/multipage/entities.json is used as an authoritative source for the valid entity references and their corresponding code points.
     """
@@ -39,7 +39,7 @@ def test_character_references_321():
 
 
 @pytest.mark.gfm
-def test_character_references_321a():
+def test_character_references_321a() -> None:
     """
     Test case 321a:  variation on 321 to show it must be case sensitive
     """
@@ -58,7 +58,7 @@ def test_character_references_321a():
 
 
 @pytest.mark.gfm
-def test_character_references_322():
+def test_character_references_322() -> None:
     """
     Test case 322:  Decimal numeric character references consist of &# + a string of 1–7 arabic digits + ;. A numeric character reference is parsed as the corresponding Unicode character. Invalid Unicode code points will be replaced by the REPLACEMENT CHARACTER (U+FFFD). For security reasons, the code point U+0000 will also be replaced by U+FFFD.
     """
@@ -77,7 +77,7 @@ def test_character_references_322():
 
 
 @pytest.mark.gfm
-def test_character_references_323():
+def test_character_references_323() -> None:
     """
     Test case 323:  Hexadecimal numeric character references consist of &# + either X or x + a string of 1-6 hexadecimal digits + ;. They too are parsed as the corresponding Unicode character (this time specified with a hexadecimal numeral instead of decimal).
     """
@@ -96,7 +96,7 @@ def test_character_references_323():
 
 
 @pytest.mark.gfm
-def test_character_references_323a():
+def test_character_references_323a() -> None:
     """
     Test case 323a:  variation on 323 with code point 0
     """
@@ -115,7 +115,7 @@ def test_character_references_323a():
 
 
 @pytest.mark.gfm
-def test_character_references_324():
+def test_character_references_324() -> None:
     """
     Test case 324:  Here are some nonentities:
     """
@@ -140,7 +140,7 @@ def test_character_references_324():
 
 
 @pytest.mark.gfm
-def test_character_references_324a():
+def test_character_references_324a() -> None:
     """
     Test case 324a:  variation of 324 with a "bad" reference
     """
@@ -159,7 +159,7 @@ def test_character_references_324a():
 
 
 @pytest.mark.gfm
-def test_character_references_325():
+def test_character_references_325() -> None:
     """
     Test case 325:  Although HTML5 does accept some entity references without a trailing semicolon (such as &copy), these are not recognized here, because it makes the grammar too ambiguous:
     """
@@ -178,7 +178,7 @@ def test_character_references_325():
 
 
 @pytest.mark.gfm
-def test_character_references_326():
+def test_character_references_326() -> None:
     """
     Test case 326:  Strings that are not on the list of HTML5 named entities are not recognized as entity references either:
     """
@@ -197,7 +197,7 @@ def test_character_references_326():
 
 
 @pytest.mark.gfm
-def test_character_references_327():
+def test_character_references_327() -> None:
     """
     Test case 327:  (part 1) Entity and numeric character references are recognized in any context besides code spans or code blocks, including URLs, link titles, and fenced code block info strings:
     """
@@ -216,7 +216,7 @@ def test_character_references_327():
 
 
 @pytest.mark.gfm
-def test_character_references_328():
+def test_character_references_328() -> None:
     """
     Test case 328:  (part 2) Entity and numeric character references are recognized in any context besides code spans or code blocks, including URLs, link titles, and fenced code block info strings:
     """
@@ -237,7 +237,7 @@ def test_character_references_328():
 
 
 @pytest.mark.gfm
-def test_character_references_328a():
+def test_character_references_328a() -> None:
     """
     Test case 328a:  variation of 328 with references in the link label as well
     """
@@ -258,7 +258,7 @@ def test_character_references_328a():
 
 
 @pytest.mark.gfm
-def test_character_references_329():
+def test_character_references_329() -> None:
     """
     Test case 329:  (part 3) Entity and numeric character references are recognized in any context besides code spans or code blocks, including URLs, link titles, and fenced code block info strings:
     """
@@ -283,7 +283,7 @@ def test_character_references_329():
 
 
 @pytest.mark.gfm
-def test_character_references_330():
+def test_character_references_330() -> None:
     """
     Test case 330:  (part 4) Entity and numeric character references are recognized in any context besides code spans or code blocks, including URLs, link titles, and fenced code block info strings:
     """
@@ -307,7 +307,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_character_references_331():
+def test_character_references_331() -> None:
     """
     Test case 331:  (part 1) Entity and numeric character references are treated as literal text in code spans and code blocks:
     """
@@ -326,7 +326,7 @@ def test_character_references_331():
 
 
 @pytest.mark.gfm
-def test_character_references_332():
+def test_character_references_332() -> None:
     """
     Test case 332:  (part 2) Entity and numeric character references are treated as literal text in code spans and code blocks:
     """
@@ -346,7 +346,7 @@ def test_character_references_332():
 
 
 @pytest.mark.gfm
-def test_character_references_333():
+def test_character_references_333() -> None:
     """
     Test case 333:  (part 1) Entity and numeric character references cannot be used in place of symbols indicating structure in CommonMark documents.
     """
@@ -370,7 +370,7 @@ def test_character_references_333():
 
 
 @pytest.mark.gfm
-def test_character_references_334():
+def test_character_references_334() -> None:
     """
     Test case 334:  (part 2) Entity and numeric character references cannot be used in place of symbols indicating structure in CommonMark documents.
     """
@@ -400,7 +400,7 @@ def test_character_references_334():
 
 
 @pytest.mark.gfm
-def test_character_references_335():
+def test_character_references_335() -> None:
     """
     Test case 335:  (part 3) Entity and numeric character references cannot be used in place of symbols indicating structure in CommonMark documents.
     """
@@ -421,7 +421,7 @@ bar</p>"""
 
 
 @pytest.mark.gfm
-def test_character_references_335a():
+def test_character_references_335a() -> None:
     """
     Test case 335a:  variation of 335 with extra lines
     """
@@ -444,7 +444,7 @@ def test_character_references_335a():
 
 
 @pytest.mark.gfm
-def test_character_references_335b():
+def test_character_references_335b() -> None:
     """
     Test case 335a:  variation of 335 with extra lines
     """
@@ -467,7 +467,7 @@ bar""".replace(
 
 
 @pytest.mark.gfm
-def test_character_references_335c():
+def test_character_references_335c() -> None:
     """
     Test case 335a:  variation of 335 with extra lines
     """
@@ -490,7 +490,7 @@ bar&#10;""".replace(
 
 
 @pytest.mark.gfm
-def test_character_references_336():
+def test_character_references_336() -> None:
     """
     Test case 336:  (part 4) Entity and numeric character references cannot be used in place of symbols indicating structure in CommonMark documents.
     """
@@ -509,7 +509,7 @@ def test_character_references_336():
 
 
 @pytest.mark.gfm
-def test_character_references_336a():
+def test_character_references_336a() -> None:
     """
     Test case 336a:  variation of 336 with reference inside of an Atx Heading
     """
@@ -528,7 +528,7 @@ def test_character_references_336a():
 
 
 @pytest.mark.gfm
-def test_character_references_336b():
+def test_character_references_336b() -> None:
     """
     Test case 336b:  variation of 336 with reference inside of an SetExt Heading
     """
@@ -548,7 +548,7 @@ def test_character_references_336b():
 
 
 @pytest.mark.gfm
-def test_character_references_336c():
+def test_character_references_336c() -> None:
     """
     Test case 336c:  variation of 336 with reference inside of an indented code block
     """
@@ -568,7 +568,7 @@ def test_character_references_336c():
 
 
 @pytest.mark.gfm
-def test_character_references_336d():
+def test_character_references_336d() -> None:
     """
     Test case 336d:  variation of 336 with reference inside of a fenced code block
     """
@@ -590,7 +590,7 @@ F&ouml;o
 
 
 @pytest.mark.gfm
-def test_character_references_336e():
+def test_character_references_336e() -> None:
     """
     Test case 336e:  variation of 336 with reference inside of a HTML block
     """
@@ -613,7 +613,7 @@ F&ouml;o
 
 
 @pytest.mark.gfm
-def test_character_references_337():
+def test_character_references_337() -> None:
     """
     Test case 337:  (part 5) Entity and numeric character references cannot be used in place of symbols indicating structure in CommonMark documents.
     """
@@ -632,7 +632,7 @@ def test_character_references_337():
 
 
 @pytest.mark.gfm
-def test_character_references_extra_01():
+def test_character_references_extra_01() -> None:
     """
     Test case extra 1:  various
     """
@@ -651,7 +651,7 @@ def test_character_references_extra_01():
 
 
 @pytest.mark.gfm
-def test_character_references_extra_02():
+def test_character_references_extra_02() -> None:
     """
     Test case extra 2:  various
     """
@@ -670,7 +670,7 @@ def test_character_references_extra_02():
 
 
 @pytest.mark.gfm
-def test_character_references_extra_03():
+def test_character_references_extra_03() -> None:
     """
     Test case extra 3:  various
     """
@@ -689,7 +689,7 @@ def test_character_references_extra_03():
 
 
 @pytest.mark.gfm
-def test_character_references_extra_04():
+def test_character_references_extra_04() -> None:
     """
     Test case extra 3:  entity with newline before end
     """
@@ -709,7 +709,7 @@ def test_character_references_extra_04():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-def test_missing_entities_json_file():
+def test_missing_entities_json_file() -> None:
     """
     Test the entities.json not being present in the specified directory.
     """
@@ -731,11 +731,11 @@ def test_missing_entities_json_file():
         BadTokenizationError,
         expected_output,
         TokenizedMarkdown,
-        resource_path=alternate_resource_directory,
+        alternate_resource_directory,
     )
 
 
-def test_bad_entities_json_file():
+def test_bad_entities_json_file() -> None:
     """
     Test the entities.json not being a valid json file in the specified directory.
     """

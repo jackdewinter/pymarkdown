@@ -601,7 +601,7 @@ def test_pml100(test: Pml100Test) -> None:
         "--strict-config",
         "scan-stdin",
     ]
-    new_args = []
+    new_args: List[str] = []
     for next_argument in test.args:
         new_args.extend(
             [
@@ -664,7 +664,7 @@ def test_pml100_errors(test: ErrorPml100Test) -> None:
         "--strict-config",
         "scan-stdin",
     ]
-    new_args = []
+    new_args: List[str] = []
     for next_argument in test.args:
         new_args.extend(
             [
@@ -688,7 +688,7 @@ def test_pml100_errors(test: ErrorPml100Test) -> None:
     )
 
 
-def test_pml100_query_config():
+def test_pml100_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "pml100",
         """

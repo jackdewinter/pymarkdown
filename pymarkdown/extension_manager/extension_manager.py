@@ -63,7 +63,6 @@ class ExtensionManager:
 
     def initialize(
         self,
-        args: argparse.Namespace,
         properties: ApplicationProperties,
     ) -> None:
         """
@@ -71,7 +70,6 @@ class ExtensionManager:
         """
 
         self.__properties = properties
-        _ = args
 
         all_extensions: List[ParserExtension] = [
             FrontMatterExtension(),

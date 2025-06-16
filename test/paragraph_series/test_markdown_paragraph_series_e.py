@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_paragraph_series_e_cs():
+def test_paragraph_series_e_cs() -> None:
     """
     Test case:  Paragraph with code span with newline inside
     was:        test_paragraph_extra_43
@@ -31,7 +31,7 @@ span`a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_series_e_rh():
+def test_paragraph_series_e_rh() -> None:
     """
     Test case:  Paragraph with raw HTML with newline inside
     was:        test_paragraph_extra_44
@@ -54,7 +54,7 @@ html='cool'>a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_series_e_ua():
+def test_paragraph_series_e_ua() -> None:
     """
     Test case:  Paragraph with URI autolink with newline inside, renders invalid
     was:        test_paragraph_extra_45
@@ -74,7 +74,7 @@ def test_paragraph_series_e_ua():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_e_ea():
+def test_paragraph_series_e_ea() -> None:
     """
     Test case:  Paragraph with email autolink with newline inside, renders invalid
     was:        test_paragraph_extra_46
@@ -94,7 +94,7 @@ def test_paragraph_series_e_ea():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_e_em():
+def test_paragraph_series_e_em() -> None:
     """
     Test case:  Paragraph with emphasis with newline inside
     was:        test_paragraph_extra_46b

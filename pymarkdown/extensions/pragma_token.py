@@ -46,7 +46,7 @@ class LogPragmaFailureProtocol(Protocol):
     Protocol to specify a function that allows failures to be reported.
     """
 
-    def __call__(
+    def __call__(  # noqa: E704
         self, scan_file: str, line_number: int, pragma_error: str
     ) -> None: ...  # pragma: no cover
 

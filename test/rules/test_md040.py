@@ -10,7 +10,7 @@ import pytest
 
 
 @pytest.mark.rules
-def test_md040_good_fenced_block_with_language():
+def test_md040_good_fenced_block_with_language() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a fenced code block with language specified.
@@ -40,7 +40,7 @@ def test_md040_good_fenced_block_with_language():
 
 
 @pytest.mark.rules
-def test_md040_good_fenced_block_with_space_before_language():
+def test_md040_good_fenced_block_with_space_before_language() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a fenced code block with language specified after a space.
@@ -74,7 +74,7 @@ def test_md040_good_fenced_block_with_space_before_language():
 
 
 @pytest.mark.rules
-def test_md040_bad_fenced_block_with_no_language():
+def test_md040_bad_fenced_block_with_no_language() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a fenced code block with no language specified.
@@ -107,7 +107,7 @@ def test_md040_bad_fenced_block_with_no_language():
 
 
 @pytest.mark.rules
-def test_md040_bad_fenced_block_with_whitespace():
+def test_md040_bad_fenced_block_with_whitespace() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a fenced code block with only whitespace specified.
@@ -139,7 +139,7 @@ def test_md040_bad_fenced_block_with_whitespace():
     )
 
 
-def test_md040_query_config():
+def test_md040_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md040",
         """

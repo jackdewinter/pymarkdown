@@ -7,6 +7,8 @@ import os
 import tempfile
 from test.markdown_scanner import MarkdownScanner
 
+from pytest import LogCaptureFixture
+
 from pymarkdown.application_logging import ApplicationLogging
 from pymarkdown.container_blocks.container_indices import ContainerIndices
 from pymarkdown.general.parser_logger import ParserLogger
@@ -22,7 +24,7 @@ from .utils import (
 POGGER = ParserLogger(logging.getLogger(__name__))
 
 
-def test_markdown_with_dash_dash_log_level_debug(caplog):
+def test_markdown_with_dash_dash_log_level_debug(caplog: LogCaptureFixture) -> None:
     """
     Test to make sure we get the right effect if the `--log-level` flag
     is set for debug.
@@ -61,7 +63,7 @@ def test_markdown_with_dash_dash_log_level_debug(caplog):
     assert f"Provided path '{source_path}' is a valid file. Adding." in caplog.text
 
 
-def test_markdown_with_dash_dash_log_level_info(caplog):
+def test_markdown_with_dash_dash_log_level_info(caplog: LogCaptureFixture) -> None:
     """
     Test to make sure we get the right effect if the `--log-level` flag
     is set for info.
@@ -100,7 +102,7 @@ def test_markdown_with_dash_dash_log_level_info(caplog):
     assert f"Provided path '{source_path}' is a valid file. Adding." not in caplog.text
 
 
-def test_markdown_with_dash_dash_log_level_invalid(caplog):
+def test_markdown_with_dash_dash_log_level_invalid(caplog: LogCaptureFixture) -> None:
     """
     Test to make sure we get the right effect if the `--log-level` flag
     is set for an invalid log level.
@@ -155,7 +157,7 @@ main.py: error: argument --log-level: invalid validate_log_level_type value: 'in
     )
 
 
-def test_markdown_with_dash_dash_log_level_info_with_file():
+def test_markdown_with_dash_dash_log_level_info_with_file() -> None:
     # sourcery skip: extract-method
     """
     Test to make sure we get the right effect if the `--log-level` flag
@@ -204,7 +206,7 @@ def test_markdown_with_dash_dash_log_level_info_with_file():
         )
 
 
-def test_markdown_with_dash_dash_log_level_info_with_file_as_directory():
+def test_markdown_with_dash_dash_log_level_info_with_file_as_directory() -> None:
     """
     Test to make sure we get the right effect if a directory is specified
     as the file to log to.
@@ -242,7 +244,7 @@ def test_markdown_with_dash_dash_log_level_info_with_file_as_directory():
         )
 
 
-def test_markdown_logger_stack_token_normal_output():
+def test_markdown_logger_stack_token_normal_output() -> None:
     """
     Test for normal output of the stack token for debug output.
     """
@@ -257,7 +259,7 @@ def test_markdown_logger_stack_token_normal_output():
     assert stack_token_string == "StackToken(type)"
 
 
-def test_markdown_logger_stack_token_extra_output():
+def test_markdown_logger_stack_token_extra_output() -> None:
     """
     Test for extra output of the stack token for debug output.
     """
@@ -272,7 +274,7 @@ def test_markdown_logger_stack_token_extra_output():
     assert stack_token_string == "StackToken(type:abc)"
 
 
-def test_markdown_logger_container_indices():
+def test_markdown_logger_container_indices() -> None:
     """
     Test for ContainerIndices class for output
     """
@@ -290,7 +292,7 @@ def test_markdown_logger_container_indices():
     )
 
 
-def test_markdown_logger_active():
+def test_markdown_logger_active() -> None:
     """
     Since calls to it are commented out most of the time,
     test the debug_with_visible_whitespace function manually.
@@ -324,7 +326,7 @@ def test_markdown_logger_active():
     assert file_as_lines[1] == ""
 
 
-def test_markdown_logger_inactive():
+def test_markdown_logger_inactive() -> None:
     """
     Since calls to it are commented out most of the time,
     test the debug_with_visible_whitespace function manually.
@@ -352,7 +354,7 @@ def test_markdown_logger_inactive():
     assert not file_contents
 
 
-def test_markdown_logger_arg_list_not_out_of_sync():
+def test_markdown_logger_arg_list_not_out_of_sync() -> None:
     """
     Since calls to it are commented out most of the time,
     test the debug_with_visible_whitespace function manually.
@@ -364,7 +366,7 @@ def test_markdown_logger_arg_list_not_out_of_sync():
     new_logger.debug_with_visible_whitespace("one sub $ and one in list", " 1 ")
 
 
-def test_markdown_logger_arg_list_not_out_of_sync_with_debug():
+def test_markdown_logger_arg_list_not_out_of_sync_with_debug() -> None:
     """
     Since calls to it are commented out most of the time,
     test the debug_with_visible_whitespace function manually.
@@ -377,7 +379,7 @@ def test_markdown_logger_arg_list_not_out_of_sync_with_debug():
 
 
 # pylint: disable=broad-exception-caught
-def test_markdown_logger_arg_list_out_of_sync():
+def test_markdown_logger_arg_list_out_of_sync() -> None:
     """
     Test to verify that if we don't have the same number of
     $ characters in the string as arguments in the list, an
@@ -402,7 +404,7 @@ def test_markdown_logger_arg_list_out_of_sync():
 # pylint: enable=broad-exception-caught
 
 
-def test_markdown_logger_translate_log_level_valid():
+def test_markdown_logger_translate_log_level_valid() -> None:
     """
     Test to make sure that we can translate a valid logging level to its numeric counterpart.
     """
@@ -417,7 +419,7 @@ def test_markdown_logger_translate_log_level_valid():
     assert log_level == logging.DEBUG
 
 
-def test_markdown_logger_translate_log_level_invalid():
+def test_markdown_logger_translate_log_level_invalid() -> None:
     """
     Test to make sure that we can translate an invalid logging level to NOTSET
     to indicate it was bad.
@@ -433,7 +435,7 @@ def test_markdown_logger_translate_log_level_invalid():
     assert log_level == logging.NOTSET
 
 
-def test_markdown_fix_with_no_rescan_log_debug(caplog):
+def test_markdown_fix_with_no_rescan_log_debug(caplog: LogCaptureFixture) -> None:
     """
     Test that is a mirror of test_md005_bad_unordered_list_single_level_fix with
     slight changes to test logging.
@@ -494,7 +496,7 @@ def test_markdown_fix_with_no_rescan_log_debug(caplog):
         assert "Restoring log level to DEBUG." in caplog.text
 
 
-def test_markdown_fix_with_no_rescan_log_info(caplog):
+def test_markdown_fix_with_no_rescan_log_info(caplog: LogCaptureFixture) -> None:
     """
     Test that is a mirror of test_md005_bad_unordered_list_single_level_fix with
     slight changes to test logging.
@@ -552,7 +554,7 @@ def test_markdown_fix_with_no_rescan_log_info(caplog):
         assert "Restoring log level to INFO." in caplog.text
 
 
-def test_markdown_fix_with_no_rescan_log_warn(caplog):
+def test_markdown_fix_with_no_rescan_log_warn(caplog: LogCaptureFixture) -> None:
     """
     Test that is a mirror of test_md005_bad_unordered_list_single_level_fix with
     slight changes to test logging.

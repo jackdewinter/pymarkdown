@@ -7,7 +7,7 @@ from test.markdown_scanner import MarkdownScanner
 from test.utils import create_temporary_configuration_file
 
 
-def test_exception_handling_no_exception():
+def test_exception_handling_no_exception() -> None:
     """
     Test to validate normal operations of scanning files without any plugin exception being thrown.
     """
@@ -53,7 +53,7 @@ This triggers several rules:
             )
 
 
-def test_exception_handling_scan_with_plugin_exception_and_no_flag():
+def test_exception_handling_scan_with_plugin_exception_and_no_flag() -> None:
     """
     Test to validate normal operations of scanning files with a simple plugin exception being thrown.
     """
@@ -117,7 +117,7 @@ BadPluginError encountered while scanning '{file_name_2}':
                 )
 
 
-def test_exception_handling_scan_with_plugin_exception_and_flag():
+def test_exception_handling_scan_with_plugin_exception_and_flag() -> None:
     """
     Test to validate normal operations of scanning files with a simple plugin exception being thrown.
     """
@@ -183,7 +183,7 @@ throw_exception
                 )
 
 
-def test_exception_handling_scan_with_tokenization_exception_and_no_flag():
+def test_exception_handling_scan_with_tokenization_exception_and_no_flag() -> None:
     """
     Test to validate normal operations of scanning files with a simple tokenization exception being thrown.
     """
@@ -243,7 +243,7 @@ Unexpected Error(BadTokenizationError): An unhandled error occurred processing t
                 )
 
 
-def test_exception_handling_scan_with_tokenization_exception_and_flag():
+def test_exception_handling_scan_with_tokenization_exception_and_flag() -> None:
     """
     Test to validate normal operations of scanning files with a simple tokenization exception being thrown.
     """
@@ -306,7 +306,7 @@ test: assert
                 )
 
 
-def test_exception_handling_fix_with_plugin_exception_and_no_flag():
+def test_exception_handling_fix_with_plugin_exception_and_no_flag() -> None:
     """
     Test to validate normal operations of scanning files with a simple plugin exception being thrown.
     """
@@ -367,7 +367,7 @@ BadPluginError encountered while scanning '{file_name_2}':
                 )
 
 
-def test_exception_handling_fix_with_plugin_exception_and_flag():
+def test_exception_handling_fix_with_plugin_exception_and_flag() -> None:
     """
     Test to validate normal operations of scanning files with a simple plugin exception being thrown.
     """
@@ -427,7 +427,7 @@ Fixed: {file_name_3}
                 )
 
 
-def test_exception_handling_fix_with_tokenization_exception_and_no_flag():
+def test_exception_handling_fix_with_tokenization_exception_and_no_flag() -> None:
     """
     Test to validate normal operations of scanning files with a simple tokenization exception being thrown.
     """
@@ -484,7 +484,7 @@ Unexpected Error(BadTokenizationError): An unhandled error occurred processing t
                 )
 
 
-def test_exception_handling_fix_with_tokenization_exception_and_flag():
+def test_exception_handling_fix_with_tokenization_exception_and_flag() -> None:
     """
     Test to validate normal operations of scanning files with a simple tokenization exception being thrown.
     """

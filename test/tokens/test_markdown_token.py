@@ -18,7 +18,7 @@ class __NotSupportedToken(MarkdownToken):
         )
 
 
-def test_modify_markdown_token_no_modify_method():
+def test_modify_markdown_token_no_modify_method() -> None:
     """
     Test to make sure that try to change this token with a bad name fails.
     """
@@ -36,7 +36,7 @@ def test_modify_markdown_token_no_modify_method():
     assert not did_modify
 
 
-def test_modify_markdown_token_not_in_fix_mode():
+def test_modify_markdown_token_not_in_fix_mode() -> None:
     """
     Test to make sure that try to change this token while not reporting that we are in fix mode.
     """
@@ -57,7 +57,7 @@ def test_modify_markdown_token_not_in_fix_mode():
     )
 
 
-def test_modify_markdown_token_not_in_fix_mode_during_line_pass():
+def test_modify_markdown_token_not_in_fix_mode_during_line_pass() -> None:
     """
     Test to make sure that try to change this token while reporting that we are in fix mode, but not in token fix mode.
     """
@@ -83,7 +83,7 @@ def test_modify_markdown_token_not_in_fix_mode_during_line_pass():
     )
 
 
-def test_adjust_line_number_not_in_fix_mode():
+def test_adjust_line_number_not_in_fix_mode() -> None:
     """
     Test to make sure that try to change this token while not reporting that we are in fix mode.
     """
@@ -103,7 +103,7 @@ def test_adjust_line_number_not_in_fix_mode():
     )
 
 
-def test_adjust_line_number_not_in_fix_mode_during_line_pass():
+def test_adjust_line_number_not_in_fix_mode_during_line_pass() -> None:
     """
     Test to make sure that try to change this token while reporting that we are in fix mode, but not in token fix mode.
     """

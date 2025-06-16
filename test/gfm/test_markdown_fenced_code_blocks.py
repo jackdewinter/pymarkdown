@@ -9,7 +9,7 @@ import pytest
 
 # pylint: disable=too-many-lines
 @pytest.mark.gfm
-def test_fenced_code_blocks_089():
+def test_fenced_code_blocks_089() -> None:
     """
     Test case 089:  Simple example with backticks
     """
@@ -33,7 +33,7 @@ def test_fenced_code_blocks_089():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_090():
+def test_fenced_code_blocks_090() -> None:
     """
     Test case 090:  Simple example with tildes
     """
@@ -57,7 +57,7 @@ def test_fenced_code_blocks_090():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_091():
+def test_fenced_code_blocks_091() -> None:
     """
     Test case 091:  Fewer than three backticks is not enough:
     """
@@ -78,7 +78,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_092():
+def test_fenced_code_blocks_092() -> None:
     """
     Test case 092:  (part a) The closing code fence must use the same character as the opening fence:
     """
@@ -102,7 +102,7 @@ aaa
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_093():
+def test_fenced_code_blocks_093() -> None:
     """
     Test case 093:  (part b) The closing code fence must use the same character as the opening fence:
     """
@@ -126,7 +126,7 @@ aaa
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_094():
+def test_fenced_code_blocks_094() -> None:
     """
     Test case 094:  (part a) The closing code fence must be at least as long as the opening fence:
     """
@@ -150,7 +150,7 @@ aaa
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_095():
+def test_fenced_code_blocks_095() -> None:
     """
     Test case 095:  (part b) The closing code fence must be at least as long as the opening fence:
     """
@@ -174,7 +174,7 @@ aaa
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_096():
+def test_fenced_code_blocks_096() -> None:
     """
     Test case 096:  (part a) Unclosed code blocks are closed by the end of the
                     document (or the enclosing block quote or list item):
@@ -190,7 +190,7 @@ def test_fenced_code_blocks_096():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_096a():
+def test_fenced_code_blocks_096a() -> None:
     """
     Test case 096a:  variation of 96 with a trailing blank line
     """
@@ -210,7 +210,7 @@ def test_fenced_code_blocks_096a():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_096b():
+def test_fenced_code_blocks_096b() -> None:
     """
     Test case 096b:  variation of 96 with a pair of trailing blank lines
     """
@@ -231,7 +231,7 @@ def test_fenced_code_blocks_096b():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_096c():
+def test_fenced_code_blocks_096c() -> None:
     """
     Test case 096c:  variation of 96 with a trio of trailing blank lines
     """
@@ -255,7 +255,7 @@ def test_fenced_code_blocks_096c():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_096d():
+def test_fenced_code_blocks_096d() -> None:
     """
     Test case 096c:  variation of 96 with a trio of trailing blank lines
         that have varying levels of space
@@ -284,7 +284,7 @@ def test_fenced_code_blocks_096d():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_096e():
+def test_fenced_code_blocks_096e() -> None:
     """
     Test case 096e:  variation of 96 with a simple line followed by
         a blank line with spaces
@@ -311,7 +311,7 @@ abc
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_096f():
+def test_fenced_code_blocks_096f() -> None:
     """
     Test case 096f:  variation of 96 with a simple line followed by
         a blank line
@@ -336,7 +336,7 @@ abc
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_097():
+def test_fenced_code_blocks_097() -> None:
     """
     Test case 097:  (part b) Unclosed code blocks are closed by the end of the
                     document (or the enclosing block quote or list item):
@@ -362,7 +362,7 @@ aaa
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_098x():
+def test_fenced_code_blocks_098x() -> None:
     """
     Test case 098:  (part c) Unclosed code blocks are closed by the end of the
                     document (or the enclosing block quote or list item):
@@ -395,7 +395,7 @@ bbb"""
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_098a():
+def test_fenced_code_blocks_098a() -> None:
     """
     Test case 098a:  variation of 98 with no space between the block quote
         and the text on the second line
@@ -428,7 +428,7 @@ bbb"""
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_098b():
+def test_fenced_code_blocks_098b() -> None:
     """
     Test case 098b:  variation of 98 with extra block quote on the second line
     """
@@ -460,7 +460,7 @@ bbb"""
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_098c():
+def test_fenced_code_blocks_098c() -> None:
     """
     Test case 098c:  variation of 98 with no block quote on the second line
     """
@@ -494,7 +494,7 @@ bbb"""
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_099x():
+def test_fenced_code_blocks_099x() -> None:
     """
     Test case 099:  A code block can have all empty lines as its content:
     """
@@ -522,7 +522,7 @@ def test_fenced_code_blocks_099x():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_099a():
+def test_fenced_code_blocks_099a() -> None:
     """
     Test case 099a:  variation of 99 with extra blank line within
     """
@@ -552,7 +552,7 @@ def test_fenced_code_blocks_099a():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_099b():
+def test_fenced_code_blocks_099b() -> None:
     """
     Test case 099b:  variation of 99 with extra blank lines with various spaces within
     """
@@ -586,7 +586,7 @@ def test_fenced_code_blocks_099b():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_099c():
+def test_fenced_code_blocks_099c() -> None:
     """
     Test case 099c:  variation of 99 with prefix and suffix text lines
     """
@@ -620,7 +620,7 @@ z
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_099d():
+def test_fenced_code_blocks_099d() -> None:
     """
     Test case 099d:  variation of 99 with prefix and suffix text lines
         and only a single blank line with spaces
@@ -651,7 +651,7 @@ z
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_099e():
+def test_fenced_code_blocks_099e() -> None:
     """
     Test case 099e:  variation of 99 with blank lines with spaces
     """
@@ -681,7 +681,7 @@ def test_fenced_code_blocks_099e():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_099f():
+def test_fenced_code_blocks_099f() -> None:
     """
     Test case 099e:  variation of 99 with blank lines with spaces
         and the middle line with text
@@ -716,7 +716,7 @@ def test_fenced_code_blocks_099f():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_099g():
+def test_fenced_code_blocks_099g() -> None:
     """
     Test case 099g:  variation of 99, more combinations
     """
@@ -754,7 +754,7 @@ z
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_099h():
+def test_fenced_code_blocks_099h() -> None:
     """
     Test case 099h:  variation of 99, more combinations
     """
@@ -780,7 +780,7 @@ aaa
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_099i():
+def test_fenced_code_blocks_099i() -> None:
     """
     Test case 099i:  variation of 99, more combinations
     """
@@ -808,7 +808,7 @@ aaa
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_099j():
+def test_fenced_code_blocks_099j() -> None:
     """
     Test case 099j:  variation of 99, more combinations
     """
@@ -844,7 +844,7 @@ aaa
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_099ja():
+def test_fenced_code_blocks_099ja() -> None:
     """
     Test case 099ja:  variation of 99, more combinations
     """
@@ -882,7 +882,7 @@ aaa
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_099k():
+def test_fenced_code_blocks_099k() -> None:
     """
     Test case 099k:  variation of 99, more combinations
     """
@@ -924,7 +924,7 @@ def test_fenced_code_blocks_099k():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_099l():
+def test_fenced_code_blocks_099l() -> None:
     """
     Test case 099l:  variation of 99, more combinations
     """
@@ -970,7 +970,7 @@ z
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_100():
+def test_fenced_code_blocks_100() -> None:
     """
     Test case 100:  A code block can be empty:
     """
@@ -986,7 +986,7 @@ def test_fenced_code_blocks_100():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_101():
+def test_fenced_code_blocks_101() -> None:
     """
     Test case 101:  (part a)  Fences can be indented. If the opening fence is indented,
                     content lines will have equivalent opening indentation removed,
@@ -1012,7 +1012,7 @@ aaa
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_102():
+def test_fenced_code_blocks_102() -> None:
     """
     Test case 102:  (part b)  Fences can be indented. If the opening fence is
                     indented, content lines will have equivalent opening indentation
@@ -1040,7 +1040,7 @@ aaa
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_103():
+def test_fenced_code_blocks_103() -> None:
     """
     Test case 103:  (part c)  Fences can be indented. If the opening fence is indented,
                     content lines will have equivalent opening indentation removed,
@@ -1068,7 +1068,7 @@ aaa
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_104():
+def test_fenced_code_blocks_104() -> None:
     """
     Test case 104:  Four spaces indentation produces an indented code block:
     """
@@ -1092,7 +1092,7 @@ aaa
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_105():
+def test_fenced_code_blocks_105() -> None:
     """
     Test case 105:  (part a) Closing fences may be indented by 0-3 spaces, and
                     their indentation need not match that of the opening fence:
@@ -1115,7 +1115,7 @@ aaa
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_106():
+def test_fenced_code_blocks_106() -> None:
     """
     Test case 106:  (part b) Closing fences may be indented by 0-3 spaces, and
                     their indentation need not match that of the opening fence:
@@ -1138,7 +1138,7 @@ aaa
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_107():
+def test_fenced_code_blocks_107() -> None:
     """
     Test case 107:  This is not a closing fence, because it is indented 4 spaces:
     """
@@ -1161,7 +1161,7 @@ aaa
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_108():
+def test_fenced_code_blocks_108() -> None:
     """
     Test case 108:  (part a) Code fences (opening and closing) cannot contain internal spaces:
     """
@@ -1184,7 +1184,7 @@ aaa</p>"""
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_109():
+def test_fenced_code_blocks_109() -> None:
     """
     Test case 109:  (part b) Code fences (opening and closing) cannot contain internal spaces:
     """
@@ -1207,7 +1207,7 @@ aaa
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_110():
+def test_fenced_code_blocks_110() -> None:
     """
     Test case 110:  Fenced code blocks can interrupt paragraphs, and can be followed
                     directly by paragraphs, without a blank line between:
@@ -1240,7 +1240,7 @@ baz"""
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_111():
+def test_fenced_code_blocks_111() -> None:
     """
     Test case 111:  Other blocks can also occur before and after fenced code blocks without an intervening blank line:
     """
@@ -1273,7 +1273,7 @@ bar
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_112():
+def test_fenced_code_blocks_112() -> None:
     """
     Test case 112:  (part a) An info string can be provided after the opening code fence.
     """
@@ -1299,7 +1299,7 @@ end
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_113():
+def test_fenced_code_blocks_113() -> None:
     """
     Test case 113:  (part b) An info string can be provided after the opening code fence.
     """
@@ -1325,7 +1325,7 @@ end
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_114():
+def test_fenced_code_blocks_114() -> None:
     """
     Test case 114:  (part c) An info string can be provided after the opening code fence.
     """
@@ -1341,7 +1341,7 @@ def test_fenced_code_blocks_114():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_115():
+def test_fenced_code_blocks_115() -> None:
     """
     Test case 115:  Info strings for backtick code blocks cannot contain backticks:
     """
@@ -1364,7 +1364,7 @@ foo</p>"""
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_116():
+def test_fenced_code_blocks_116() -> None:
     """
     Test case 116:  Info strings for tilde code blocks can contain backticks and tildes:
     """
@@ -1386,7 +1386,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_117():
+def test_fenced_code_blocks_117() -> None:
     """
     Test case 117:  Closing code fences cannot have info strings:
     """
@@ -1408,7 +1408,7 @@ def test_fenced_code_blocks_117():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_extra_01x():
+def test_fenced_code_blocks_extra_01x() -> None:
     """
     Test case extra 01:  start a "list block" within a fenced code block
     """
@@ -1434,7 +1434,7 @@ some other text
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_extra_01a():
+def test_fenced_code_blocks_extra_01a() -> None:
     """
     Test case extra 01:  "start" a "link reference defintion" within a fenced code block
     """
@@ -1460,7 +1460,7 @@ def test_fenced_code_blocks_extra_01a():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_extra_02x():
+def test_fenced_code_blocks_extra_02x() -> None:
     """
     Test case extra 02:  start a fenced code block in a list item,
          starting a new list item without closing the block
@@ -1499,7 +1499,7 @@ some other text</li>
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_extra_02a():
+def test_fenced_code_blocks_extra_02a() -> None:
     """
     Test case extra 02:  variation of 2 with LRD instead of text in second list item
 
@@ -1540,7 +1540,7 @@ def test_fenced_code_blocks_extra_02a():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_extra_03x():
+def test_fenced_code_blocks_extra_03x() -> None:
     """
     Test case extra 03:  variation of 1 where list already opened but no new list item
 
@@ -1580,7 +1580,7 @@ some other text
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_extra_03a():
+def test_fenced_code_blocks_extra_03a() -> None:
     """
     Test case extra 03:  variation of 3 with LRD instead of text in second list item
     """
@@ -1618,7 +1618,7 @@ def test_fenced_code_blocks_extra_03a():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_extra_04x():
+def test_fenced_code_blocks_extra_04x() -> None:
     """
     Test case extra 04:  start a "block quote" within a fenced code block
     """
@@ -1644,7 +1644,7 @@ some other text
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_extra_04a():
+def test_fenced_code_blocks_extra_04a() -> None:
     """
     Test case extra 04:  variation of 4 with LRD instead of text in second line
     """
@@ -1670,7 +1670,7 @@ def test_fenced_code_blocks_extra_04a():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_extra_05x():
+def test_fenced_code_blocks_extra_05x() -> None:
     """
     Test case extra 05:  variation of 4 where block quote already opened
     """
@@ -1706,7 +1706,7 @@ some other text
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_extra_05a():
+def test_fenced_code_blocks_extra_05a() -> None:
     """
     Test case extra 05:  variation of 5 with LRD instead of text in second line
 
@@ -1742,7 +1742,7 @@ def test_fenced_code_blocks_extra_05a():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_extra_06x():
+def test_fenced_code_blocks_extra_06x() -> None:
     """
     Test case extra 06:  variation of 4 where block already opened but
                          no block quote line start character
@@ -1778,7 +1778,7 @@ some other text</p>
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_extra_06a():
+def test_fenced_code_blocks_extra_06a() -> None:
     """
     Test case extra 06a:  variation of 6 with LRD instead of text in second line
     """
@@ -1807,7 +1807,7 @@ def test_fenced_code_blocks_extra_06a():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_extra_07():
+def test_fenced_code_blocks_extra_07() -> None:
     """
     Test case extra 07:  mixed "block quotes" and "list blocks"
     """
@@ -1835,7 +1835,7 @@ def test_fenced_code_blocks_extra_07():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_extra_08x():
+def test_fenced_code_blocks_extra_08x() -> None:
     """
     Test case extra 08:  capturing text and newlines alike
     """
@@ -1861,7 +1861,7 @@ def
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_extra_08a():
+def test_fenced_code_blocks_extra_08a() -> None:
     """
     Test case extra 08:  variation of 8 with extra newlines
     """
@@ -1889,7 +1889,7 @@ def
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_extra_08b():
+def test_fenced_code_blocks_extra_08b() -> None:
     """
     Test case extra 08:  variation of 8 with close fence and extra tex
     """
@@ -1929,7 +1929,7 @@ def
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_extra_08c():
+def test_fenced_code_blocks_extra_08c() -> None:
     """
     Test case extra 08:  variation of 8b with trailing spaces
     """
@@ -1961,7 +1961,7 @@ def
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_extra_09x():
+def test_fenced_code_blocks_extra_09x() -> None:
     """
     Test case extra 09
     """
@@ -1995,7 +1995,7 @@ def test_fenced_code_blocks_extra_09x():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_extra_09a():
+def test_fenced_code_blocks_extra_09a() -> None:
     """
     Test case extra 09
     """
@@ -2029,7 +2029,7 @@ def test_fenced_code_blocks_extra_09a():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_extra_09b():
+def test_fenced_code_blocks_extra_09b() -> None:
     """
     Test case extra 09
     """
@@ -2062,7 +2062,7 @@ def test_fenced_code_blocks_extra_09b():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_extra_09c():
+def test_fenced_code_blocks_extra_09c() -> None:
     """
     Test case extra 09
     """
@@ -2104,7 +2104,7 @@ def test_fenced_code_blocks_extra_09c():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_extra_09d():
+def test_fenced_code_blocks_extra_09d() -> None:
     """
     Test case extra 09
     """
@@ -2146,7 +2146,7 @@ def test_fenced_code_blocks_extra_09d():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_extra_09e():
+def test_fenced_code_blocks_extra_09e() -> None:
     """
     Test case extra 09
     """
@@ -2180,7 +2180,7 @@ def test_fenced_code_blocks_extra_09e():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_extra_09f():
+def test_fenced_code_blocks_extra_09f() -> None:
     """
     Test case extra 09
     """
@@ -2214,7 +2214,7 @@ def test_fenced_code_blocks_extra_09f():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_extra_10x():
+def test_fenced_code_blocks_extra_10x() -> None:
     """
     Test case extra 10
     """
@@ -2248,7 +2248,7 @@ def test_fenced_code_blocks_extra_10x():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_extra_10a():
+def test_fenced_code_blocks_extra_10a() -> None:
     """
     Test case extra 10
     """

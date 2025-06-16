@@ -360,7 +360,7 @@ def test_md020_scan(test: pluginRuleTest) -> None:
     execute_scan_test(test, "md020")
 
 
-def test_md020_query_config():
+def test_md020_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md020",
         """

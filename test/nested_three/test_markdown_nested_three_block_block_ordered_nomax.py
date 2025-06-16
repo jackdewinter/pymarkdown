@@ -10,7 +10,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_ordered_x():
+def test_nested_three_block_block_ordered_x() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -44,7 +44,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_ordered_drop_ordered():
+def test_nested_three_block_block_ordered_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -78,7 +78,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_ordered_drop_ordered_block():
+def test_nested_three_block_block_ordered_drop_ordered_block() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -112,7 +112,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_ordered_drop_ordered_block_block():
+def test_nested_three_block_block_ordered_drop_ordered_block_block() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -146,7 +146,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_nl_ordered():
+def test_nested_three_block_nl_block_nl_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -184,7 +184,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_nl_ordered_drop_ordered():
+def test_nested_three_block_nl_block_nl_ordered_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -222,7 +222,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_nl_ordered_drop_ordered_block():
+def test_nested_three_block_nl_block_nl_ordered_drop_ordered_block() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -260,7 +260,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_nl_ordered_drop_ordered_block_block():
+def test_nested_three_block_nl_block_nl_ordered_drop_ordered_block_block() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -298,7 +298,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_nl_ordered_no_bq1_x():
+def test_nested_three_block_nl_block_nl_ordered_no_bq1_x() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -343,7 +343,7 @@ def test_nested_three_block_nl_block_nl_ordered_no_bq1_x():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_nl_ordered_no_bq1_drop_ordered():
+def test_nested_three_block_nl_block_nl_ordered_no_bq1_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -388,7 +388,7 @@ def test_nested_three_block_nl_block_nl_ordered_no_bq1_drop_ordered():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_nl_ordered_no_bq1_drop_ordered_block():
+def test_nested_three_block_nl_block_nl_ordered_no_bq1_drop_ordered_block() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -426,7 +426,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_nl_ordered_no_bq1_drop_ordered_block_block():
+def test_nested_three_block_nl_block_nl_ordered_no_bq1_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -464,7 +466,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_nl_ordered_no_bq2():
+def test_nested_three_block_nl_block_nl_ordered_no_bq2() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -509,7 +511,7 @@ def test_nested_three_block_nl_block_nl_ordered_no_bq2():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_nl_ordered_no_bq2_drop_ordered():
+def test_nested_three_block_nl_block_nl_ordered_no_bq2_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -554,7 +556,7 @@ def test_nested_three_block_nl_block_nl_ordered_no_bq2_drop_ordered():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_nl_ordered_no_bq2_drop_ordered_block():
+def test_nested_three_block_nl_block_nl_ordered_no_bq2_drop_ordered_block() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -592,7 +594,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_nl_ordered_no_bq2_drop_ordered_block_block():
+def test_nested_three_block_nl_block_nl_ordered_no_bq2_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -630,7 +634,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_nl_ordered_no_bq3():
+def test_nested_three_block_nl_block_nl_ordered_no_bq3() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -676,7 +680,7 @@ def test_nested_three_block_nl_block_nl_ordered_no_bq3():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_nl_ordered_no_bq3_drop_ordered():
+def test_nested_three_block_nl_block_nl_ordered_no_bq3_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -722,7 +726,7 @@ def test_nested_three_block_nl_block_nl_ordered_no_bq3_drop_ordered():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_nl_ordered_no_bq3_drop_ordered_block():
+def test_nested_three_block_nl_block_nl_ordered_no_bq3_drop_ordered_block() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -764,7 +768,9 @@ def test_nested_three_block_nl_block_nl_ordered_no_bq3_drop_ordered_block():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_nl_ordered_no_bq3_drop_ordered_block_block():
+def test_nested_three_block_nl_block_nl_ordered_no_bq3_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -802,7 +808,7 @@ item"""
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_text_nl_ordered():
+def test_nested_three_block_text_nl_block_text_nl_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -846,7 +852,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_text_nl_ordered_drop_ordered():
+def test_nested_three_block_text_nl_block_text_nl_ordered_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -890,7 +896,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_text_nl_ordered_drop_ordered_block():
+def test_nested_three_block_text_nl_block_text_nl_ordered_drop_ordered_block() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -934,7 +940,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_text_nl_ordered_drop_ordered_block_block():
+def test_nested_three_block_text_nl_block_text_nl_ordered_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -978,7 +986,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq1():
+def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq1() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -1029,7 +1037,7 @@ def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq1():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq1_drop_ordered():
+def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq1_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -1080,7 +1088,9 @@ def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq1_drop_ordered():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq1_drop_ordered_block():
+def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq1_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -1124,7 +1134,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq1_drop_ordered_block_block():
+def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq1_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -1168,7 +1180,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq2():
+def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq2() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -1219,7 +1231,7 @@ def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq2():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq2_drop_ordered():
+def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq2_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -1270,7 +1282,9 @@ def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq2_drop_ordered():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq2_drop_ordered_block():
+def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq2_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -1314,7 +1328,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq2_drop_ordered_block_block():
+def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq2_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -1358,7 +1374,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq3():
+def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq3() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -1395,7 +1411,7 @@ item</p>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq3_drop_ordered():
+def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq3_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -1432,7 +1448,9 @@ item</p>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq3_drop_ordered_block():
+def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq3_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -1469,7 +1487,9 @@ item</p>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq3_drop_ordered_block_block():
+def test_nested_three_block_text_nl_block_text_nl_ordered_no_bq3_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -1506,7 +1526,7 @@ item</p>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_block_ordered():
+def test_nested_three_block_skip_block_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -1540,7 +1560,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_block_ordered_drop_ordered():
+def test_nested_three_block_skip_block_ordered_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -1574,7 +1594,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_block_ordered_drop_ordered_block():
+def test_nested_three_block_skip_block_ordered_drop_ordered_block() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -1608,7 +1628,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_block_ordered_drop_ordered_block_block():
+def test_nested_three_block_skip_block_ordered_drop_ordered_block_block() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -1642,7 +1662,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_nl_ordered():
+def test_nested_three_block_skip_nl_block_nl_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -1680,7 +1700,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_nl_ordered_drop_ordered():
+def test_nested_three_block_skip_nl_block_nl_ordered_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -1718,7 +1738,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_nl_ordered_drop_ordered_block():
+def test_nested_three_block_skip_nl_block_nl_ordered_drop_ordered_block() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -1756,7 +1776,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_nl_ordered_drop_ordered_block_block():
+def test_nested_three_block_skip_nl_block_nl_ordered_drop_ordered_block_block() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -1794,7 +1814,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_nl_ordered_no_bq1_x():
+def test_nested_three_block_skip_nl_block_nl_ordered_no_bq1_x() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -1832,7 +1852,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_nl_ordered_no_bq1_drop_ordered():
+def test_nested_three_block_skip_nl_block_nl_ordered_no_bq1_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -1870,7 +1890,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_nl_ordered_no_bq1_drop_ordered_block():
+def test_nested_three_block_skip_nl_block_nl_ordered_no_bq1_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -1908,7 +1930,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_nl_ordered_no_bq1_drop_ordered_block_block():
+def test_nested_three_block_skip_nl_block_nl_ordered_no_bq1_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -1946,7 +1970,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_nl_ordered_no_bq2():
+def test_nested_three_block_skip_nl_block_nl_ordered_no_bq2() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -1984,7 +2008,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_nl_ordered_no_bq2_drop_ordered():
+def test_nested_three_block_skip_nl_block_nl_ordered_no_bq2_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -2022,7 +2046,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_nl_ordered_no_bq2_drop_ordered_block():
+def test_nested_three_block_skip_nl_block_nl_ordered_no_bq2_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -2060,7 +2086,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_nl_ordered_no_bq2_drop_ordered_block_block():
+def test_nested_three_block_skip_nl_block_nl_ordered_no_bq2_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -2098,7 +2126,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_nl_ordered_no_bq3():
+def test_nested_three_block_skip_nl_block_nl_ordered_no_bq3() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -2140,7 +2168,7 @@ def test_nested_three_block_skip_nl_block_nl_ordered_no_bq3():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_nl_ordered_no_bq3_drop_ordered():
+def test_nested_three_block_skip_nl_block_nl_ordered_no_bq3_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -2182,7 +2210,9 @@ def test_nested_three_block_skip_nl_block_nl_ordered_no_bq3_drop_ordered():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_nl_ordered_no_bq3_drop_ordered_block():
+def test_nested_three_block_skip_nl_block_nl_ordered_no_bq3_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -2220,7 +2250,9 @@ def test_nested_three_block_skip_nl_block_nl_ordered_no_bq3_drop_ordered_block()
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_nl_ordered_no_bq3_drop_ordered_block_block():
+def test_nested_three_block_skip_nl_block_nl_ordered_no_bq3_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -2258,7 +2290,7 @@ item"""
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_text_nl_ordered():
+def test_nested_three_block_skip_text_nl_block_text_nl_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -2302,7 +2334,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_text_nl_ordered_drop_ordered():
+def test_nested_three_block_skip_text_nl_block_text_nl_ordered_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -2346,7 +2378,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_text_nl_ordered_drop_ordered_block():
+def test_nested_three_block_skip_text_nl_block_text_nl_ordered_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -2390,7 +2424,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_text_nl_ordered_drop_ordered_block_block():
+def test_nested_three_block_skip_text_nl_block_text_nl_ordered_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -2434,7 +2470,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_text_nl_ordered_no_bq1():
+def test_nested_three_block_skip_text_nl_block_text_nl_ordered_no_bq1() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -2478,7 +2514,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_text_nl_ordered_no_bq1_drop_ordered():
+def test_nested_three_block_skip_text_nl_block_text_nl_ordered_no_bq1_drop_ordered() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -2522,7 +2560,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_text_nl_ordered_no_bq1_drop_ordered_block():
+def test_nested_three_block_skip_text_nl_block_text_nl_ordered_no_bq1_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -2566,7 +2606,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_text_nl_ordered_no_bq1_drop_ordered_block_block():
+def test_nested_three_block_skip_text_nl_block_text_nl_ordered_no_bq1_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -2610,7 +2652,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_text_nl_ordered_no_bq2():
+def test_nested_three_block_skip_text_nl_block_text_nl_ordered_no_bq2() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -2654,7 +2696,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_text_nl_ordered_no_bq2_drop_ordered():
+def test_nested_three_block_skip_text_nl_block_text_nl_ordered_no_bq2_drop_ordered() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -2698,7 +2742,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_text_nl_ordered_no_bq2_drop_ordered_block():
+def test_nested_three_block_skip_text_nl_block_text_nl_ordered_no_bq2_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -2742,7 +2788,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_text_nl_ordered_no_bq2_drop_ordered_block_block():
+def test_nested_three_block_skip_text_nl_block_text_nl_ordered_no_bq2_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -2786,7 +2834,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_text_nl_ordered_no_bq3():
+def test_nested_three_block_skip_text_nl_block_text_nl_ordered_no_bq3() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -2823,7 +2871,9 @@ item</p>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_text_nl_ordered_no_bq3_drop_ordered():
+def test_nested_three_block_skip_text_nl_block_text_nl_ordered_no_bq3_drop_ordered() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -2860,7 +2910,9 @@ item</p>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_text_nl_ordered_no_bq3_drop_ordered_block():
+def test_nested_three_block_skip_text_nl_block_text_nl_ordered_no_bq3_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -2897,7 +2949,9 @@ item</p>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_text_nl_ordered_no_bq3_drop_ordered_block_block():
+def test_nested_three_block_skip_text_nl_block_text_nl_ordered_no_bq3_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -2934,7 +2988,7 @@ item</p>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_skip_ordered():
+def test_nested_three_block_block_skip_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -2968,7 +3022,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_skip_ordered_drop_ordered():
+def test_nested_three_block_block_skip_ordered_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -3002,7 +3056,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_skip_ordered_drop_ordered_block():
+def test_nested_three_block_block_skip_ordered_drop_ordered_block() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -3036,7 +3090,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_skip_ordered_drop_ordered_block_block():
+def test_nested_three_block_block_skip_ordered_drop_ordered_block_block() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -3070,7 +3124,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_skip_nl_ordered():
+def test_nested_three_block_nl_block_skip_nl_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -3108,7 +3162,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_skip_nl_ordered_drop_ordered():
+def test_nested_three_block_nl_block_skip_nl_ordered_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -3146,7 +3200,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_skip_nl_ordered_drop_ordered_block():
+def test_nested_three_block_nl_block_skip_nl_ordered_drop_ordered_block() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -3184,7 +3238,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_skip_nl_ordered_drop_ordered_block_block():
+def test_nested_three_block_nl_block_skip_nl_ordered_drop_ordered_block_block() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -3222,7 +3276,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_skip_nl_ordered_no_bq1():
+def test_nested_three_block_nl_block_skip_nl_ordered_no_bq1() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -3260,7 +3314,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_skip_nl_ordered_no_bq1_drop_ordered_x():
+def test_nested_three_block_nl_block_skip_nl_ordered_no_bq1_drop_ordered_x() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -3298,7 +3352,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_skip_nl_ordered_no_bq1_drop_ordered_block():
+def test_nested_three_block_nl_block_skip_nl_ordered_no_bq1_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -3336,7 +3392,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_skip_nl_ordered_no_bq1_drop_ordered_block_block():
+def test_nested_three_block_nl_block_skip_nl_ordered_no_bq1_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -3374,7 +3432,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_skip_nl_ordered_no_bq2():
+def test_nested_three_block_nl_block_skip_nl_ordered_no_bq2() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -3412,7 +3470,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_skip_nl_ordered_no_bq2_drop_ordered_x():
+def test_nested_three_block_nl_block_skip_nl_ordered_no_bq2_drop_ordered_x() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -3450,7 +3508,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_skip_nl_ordered_no_bq2_drop_ordered_block():
+def test_nested_three_block_nl_block_skip_nl_ordered_no_bq2_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -3488,7 +3548,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_skip_nl_ordered_no_bq2_drop_ordered_block_block():
+def test_nested_three_block_nl_block_skip_nl_ordered_no_bq2_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -3526,7 +3588,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_skip_nl_ordered_no_bq3():
+def test_nested_three_block_nl_block_skip_nl_ordered_no_bq3() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -3569,7 +3631,7 @@ def test_nested_three_block_nl_block_skip_nl_ordered_no_bq3():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_skip_nl_ordered_no_bq3_drop_ordered():
+def test_nested_three_block_nl_block_skip_nl_ordered_no_bq3_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -3611,7 +3673,9 @@ def test_nested_three_block_nl_block_skip_nl_ordered_no_bq3_drop_ordered():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_skip_nl_ordered_no_bq3_drop_ordered_block():
+def test_nested_three_block_nl_block_skip_nl_ordered_no_bq3_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -3653,7 +3717,9 @@ def test_nested_three_block_nl_block_skip_nl_ordered_no_bq3_drop_ordered_block()
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_skip_nl_ordered_no_bq3_drop_ordered_block_block():
+def test_nested_three_block_nl_block_skip_nl_ordered_no_bq3_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -3691,7 +3757,7 @@ item"""
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_skip_text_nl_ordered():
+def test_nested_three_block_text_nl_block_skip_text_nl_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -3735,7 +3801,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_skip_text_nl_ordered_drop_ordered():
+def test_nested_three_block_text_nl_block_skip_text_nl_ordered_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -3779,7 +3845,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_skip_text_nl_ordered_drop_ordered_block():
+def test_nested_three_block_text_nl_block_skip_text_nl_ordered_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -3823,7 +3891,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_skip_text_nl_ordered_drop_ordered_block_block():
+def test_nested_three_block_text_nl_block_skip_text_nl_ordered_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -3867,7 +3937,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq1():
+def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq1() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -3911,7 +3981,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq1_drop_ordered_x():
+def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq1_drop_ordered_x() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -3955,7 +4027,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq1_drop_ordered_block():
+def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq1_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -3999,7 +4073,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq1_drop_ordered_block_block():
+def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq1_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -4043,7 +4119,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq2():
+def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq2() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -4087,7 +4163,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq2_drop_ordered_x():
+def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq2_drop_ordered_x() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -4131,7 +4209,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq2_drop_ordered_zzz():
+def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq2_drop_ordered_zzz() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -4161,7 +4241,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq2_drop_ordered_block():
+def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq2_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -4205,7 +4287,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq2_drop_ordered_block_block():
+def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq2_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -4249,7 +4333,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq3():
+def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq3() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -4286,7 +4370,9 @@ item</p>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq3_drop_ordered():
+def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq3_drop_ordered() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -4323,7 +4409,9 @@ item</p>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq3_drop_ordered_block():
+def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq3_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -4360,7 +4448,9 @@ item</p>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq3_drop_ordered_block_block():
+def test_nested_three_block_text_nl_block_skip_text_nl_ordered_no_bq3_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -4397,7 +4487,7 @@ item</p>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_block_skip_ordered():
+def test_nested_three_block_skip_block_skip_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -4431,7 +4521,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_block_skip_ordered_drop_ordered():
+def test_nested_three_block_skip_block_skip_ordered_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -4465,7 +4555,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_skip_nl_ordered():
+def test_nested_three_block_skip_nl_block_skip_nl_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -4503,7 +4593,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_skip_nl_ordered_drop_ordered():
+def test_nested_three_block_skip_nl_block_skip_nl_ordered_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -4541,7 +4631,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_skip_nl_ordered_no_bq1():
+def test_nested_three_block_skip_nl_block_skip_nl_ordered_no_bq1() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -4579,7 +4669,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_skip_nl_ordered_no_bq1_drop_ordered():
+def test_nested_three_block_skip_nl_block_skip_nl_ordered_no_bq1_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -4617,7 +4707,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_skip_nl_ordered_no_bq1_drop_ordered_block():
+def test_nested_three_block_skip_nl_block_skip_nl_ordered_no_bq1_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -4655,7 +4747,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_skip_nl_ordered_no_bq1_drop_ordered_block_block():
+def test_nested_three_block_skip_nl_block_skip_nl_ordered_no_bq1_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -4693,7 +4787,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_skip_nl_ordered_no_bq2():
+def test_nested_three_block_skip_nl_block_skip_nl_ordered_no_bq2() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -4731,7 +4825,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_skip_nl_ordered_no_bq2_drop_ordered():
+def test_nested_three_block_skip_nl_block_skip_nl_ordered_no_bq2_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -4769,7 +4863,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_skip_nl_ordered_no_bq2_drop_ordered_block():
+def test_nested_three_block_skip_nl_block_skip_nl_ordered_no_bq2_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -4807,7 +4903,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_skip_nl_ordered_no_bq2_drop_ordered_block_block():
+def test_nested_three_block_skip_nl_block_skip_nl_ordered_no_bq2_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -4845,7 +4943,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_skip_nl_ordered_no_bq3():
+def test_nested_three_block_skip_nl_block_skip_nl_ordered_no_bq3() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -4880,7 +4978,7 @@ def test_nested_three_block_skip_nl_block_skip_nl_ordered_no_bq3():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_skip_nl_ordered_no_bq3_drop_ordered():
+def test_nested_three_block_skip_nl_block_skip_nl_ordered_no_bq3_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -4915,7 +5013,9 @@ item
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_skip_nl_ordered_no_bq3_drop_ordered_block():
+def test_nested_three_block_skip_nl_block_skip_nl_ordered_no_bq3_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -4953,7 +5053,9 @@ def test_nested_three_block_skip_nl_block_skip_nl_ordered_no_bq3_drop_ordered_bl
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_skip_nl_ordered_no_bq3_drop_ordered_block_block():
+def test_nested_three_block_skip_nl_block_skip_nl_ordered_no_bq3_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -4991,7 +5093,7 @@ item"""
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered():
+def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -5035,7 +5137,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_drop_ordered():
+def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_drop_ordered() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -5079,7 +5183,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_drop_ordered_block():
+def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -5123,7 +5229,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_drop_ordered_block_block():
+def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -5167,7 +5275,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_no_bq1():
+def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_no_bq1() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -5211,7 +5319,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_no_bq1_drop_ordered():
+def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_no_bq1_drop_ordered() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -5255,7 +5365,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_no_bq1_drop_ordered_block():
+def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_no_bq1_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -5299,7 +5411,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_no_bq1_drop_ordered_block_block():
+def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_no_bq1_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -5343,7 +5457,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_no_bq2():
+def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_no_bq2() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -5387,7 +5501,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_no_bq2_drop_ordered():
+def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_no_bq2_drop_ordered() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -5431,7 +5547,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_no_bq2_drop_ordered_block():
+def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_no_bq2_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -5475,7 +5593,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_no_bq2_drop_ordered_block_block():
+def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_no_bq2_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -5519,7 +5639,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_no_bq3():
+def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_no_bq3() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -5556,7 +5676,9 @@ item</p>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_no_bq3_drop_ordered():
+def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_no_bq3_drop_ordered() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -5593,7 +5715,9 @@ item</p>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_no_bq3_drop_ordered_block():
+def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_no_bq3_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.
@@ -5630,7 +5754,9 @@ item</p>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_no_bq3_drop_ordered_block_block():
+def test_nested_three_block_skip_text_nl_block_skip_text_nl_ordered_no_bq3_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list works
     properly.

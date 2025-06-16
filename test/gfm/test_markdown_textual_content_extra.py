@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_textual_content_extra_1():
+def test_textual_content_extra_1() -> None:
     """
     Test case extra 1: special characters should be escaped
     """
@@ -27,7 +27,7 @@ def test_textual_content_extra_1():
 
 
 @pytest.mark.gfm
-def test_textual_content_extra_2():
+def test_textual_content_extra_2() -> None:
     """
     Test case extra 2: Alert character (\a or replacement character) by itself.
     """
@@ -46,7 +46,7 @@ def test_textual_content_extra_2():
 
 
 @pytest.mark.gfm
-def test_textual_content_extra_3():
+def test_textual_content_extra_3() -> None:
     """
     Test case extra 3: Multiple alert characters (\a or replacement character).
     """
@@ -65,7 +65,7 @@ def test_textual_content_extra_3():
 
 
 @pytest.mark.gfm
-def test_textual_content_extra_4():
+def test_textual_content_extra_4() -> None:
     """
     Test case extra 4: Multiple alert characters and actual replacements
     """
@@ -84,7 +84,7 @@ def test_textual_content_extra_4():
 
 
 @pytest.mark.gfm
-def test_textual_content_extra_5():
+def test_textual_content_extra_5() -> None:
     """
     Test case extra 5: Multiple alert characters and actual replacements in atx
     """
@@ -103,7 +103,7 @@ def test_textual_content_extra_5():
 
 
 @pytest.mark.gfm
-def test_textual_content_extra_6():
+def test_textual_content_extra_6() -> None:
     """
     Test case extra 6: Multiple alert characters and actual replacements in setext
     """
@@ -123,7 +123,7 @@ def test_textual_content_extra_6():
 
 
 @pytest.mark.gfm
-def test_textual_content_extra_7():
+def test_textual_content_extra_7() -> None:
     """
     Test case extra 7: Multiple alert characters and actual replacements
     """
@@ -142,7 +142,7 @@ def test_textual_content_extra_7():
 
 
 @pytest.mark.gfm
-def test_textual_content_extra_8():
+def test_textual_content_extra_8() -> None:
     """
     Test case extra 8: Single backspace should be escaped
     """
@@ -161,7 +161,7 @@ def test_textual_content_extra_8():
 
 
 @pytest.mark.gfm
-def test_textual_content_extra_9():
+def test_textual_content_extra_9() -> None:
     """
     Test case extra 9: Multiple backspace characters
     """
@@ -180,7 +180,7 @@ def test_textual_content_extra_9():
 
 
 @pytest.mark.gfm
-def test_textual_content_extra_10():
+def test_textual_content_extra_10() -> None:
     """
     Test case extra 10: Multiple backspace characters and actual backspaces
     """
@@ -199,7 +199,7 @@ def test_textual_content_extra_10():
 
 
 @pytest.mark.gfm
-def test_textual_content_extra_11():
+def test_textual_content_extra_11() -> None:
     """
     Test case extra 11: Multiple backspace characters and actual backspaces in atx
     """
@@ -218,7 +218,7 @@ def test_textual_content_extra_11():
 
 
 @pytest.mark.gfm
-def test_textual_content_extra_12():
+def test_textual_content_extra_12() -> None:
     """
     Test case extra 12: Multiple backspace characters and actual backspaces in setext
     """
@@ -238,7 +238,7 @@ def test_textual_content_extra_12():
 
 
 @pytest.mark.gfm
-def test_textual_content_extra_13():
+def test_textual_content_extra_13() -> None:
     """
     Test case extra 13: Multiple backslash characters and actual backspaces in link
     """
@@ -259,7 +259,7 @@ def test_textual_content_extra_13():
 
 
 @pytest.mark.gfm
-def test_textual_content_extra_14():
+def test_textual_content_extra_14() -> None:
     """
     Test case extra 14: Multiple backspace characters and actual backspaces in almost link
     """
@@ -278,7 +278,7 @@ def test_textual_content_extra_14():
 
 
 @pytest.mark.gfm
-def test_textual_content_extra_15():
+def test_textual_content_extra_15() -> None:
     """
     Test case extra 15: Backspace character and actual backspaces in link label
     """
@@ -299,7 +299,7 @@ def test_textual_content_extra_15():
 
 
 @pytest.mark.gfm
-def test_textual_content_extra_16():
+def test_textual_content_extra_16() -> None:
     """
     Test case extra 16: Backspace character and actual backspaces in link uri
     """
@@ -318,7 +318,7 @@ def test_textual_content_extra_16():
 
 
 @pytest.mark.gfm
-def test_textual_content_extra_17():
+def test_textual_content_extra_17() -> None:
     """
     Test case extra 17: Backspace character and actual backspaces in link title
     """
@@ -339,7 +339,7 @@ def test_textual_content_extra_17():
 
 
 @pytest.mark.gfm
-def test_textual_content_extra_18():
+def test_textual_content_extra_18() -> None:
     """
     Test case extra 18: Backspace character and actual backspaces in LRD
     """
@@ -368,7 +368,7 @@ def test_textual_content_extra_18():
 
 
 @pytest.mark.gfm
-def test_textual_content_extra_19():
+def test_textual_content_extra_19() -> None:
     """
     Test case extra 19: Backspace character and actual backspaces in fenced block info
     """
@@ -389,7 +389,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_textual_content_extra_20():
+def test_textual_content_extra_20() -> None:
     """
     Test case extra 20: Whitespace split character
     NOTE: Since this is only appears not-naturally in whitespace, cannot come
@@ -410,7 +410,7 @@ def test_textual_content_extra_20():
 
 
 @pytest.mark.gfm
-def test_textual_content_extra_21():
+def test_textual_content_extra_21() -> None:
     """
     Test case extra 21: NOOP character
     NOTE: Since this is only appears not-naturally in whitespace, cannot come
@@ -431,7 +431,7 @@ def test_textual_content_extra_21():
 
 
 @pytest.mark.gfm
-def test_textual_content_extra_23():
+def test_textual_content_extra_23() -> None:
     """
     Test case extra 23: Escape character
     """
@@ -450,7 +450,7 @@ def test_textual_content_extra_23():
 
 
 @pytest.mark.gfm
-def test_textual_content_extra_24():
+def test_textual_content_extra_24() -> None:
     """
     Test case extra 24: all special characters, one after the other
     """

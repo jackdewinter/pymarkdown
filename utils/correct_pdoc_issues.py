@@ -1,3 +1,7 @@
+"""
+This script is used to correct issues with the PDoc generated documentation.
+"""
+
 import os
 import subprocess
 import sys
@@ -9,7 +13,7 @@ os.remove(expected_file_path)
 # Run PDoc to cause the documentation to be generated.
 pdoc_args = ["pdoc", "-o", "docs", "--force", "pymarkdown/api.py"]
 run_result: subprocess.CompletedProcess = subprocess.run(
-    pdoc_args, stdout=subprocess.PIPE
+    pdoc_args, stdout=subprocess.PIPE, check=True
 )
 if run_result.returncode:
     print(f"PDoc returned non-zero error code ({run_result.returncode}).")

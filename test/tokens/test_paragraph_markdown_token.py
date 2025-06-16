@@ -4,7 +4,7 @@ from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
 
 
-def test_paragraph_markdown_token_modify_with_bad_name():
+def test_paragraph_markdown_token_modify_with_bad_name() -> None:
     """
     Test to make sure that try to change this token with a bad name fails.
     """

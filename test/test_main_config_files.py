@@ -20,7 +20,7 @@ this is a very long line
 """
 
 
-def test_markdown_with_config_no_config():
+def test_markdown_with_config_no_config() -> None:
     """
     Test to make sure that we have a baseline for the other configuration tests.
 
@@ -51,7 +51,7 @@ def test_markdown_with_config_no_config():
     )
 
 
-def test_markdown_with_config_general_command_line():
+def test_markdown_with_config_general_command_line() -> None:
     """
     Test to make sure that we can disable a rule from the command line without
     any configuration file.
@@ -85,7 +85,7 @@ def test_markdown_with_config_general_command_line():
     )
 
 
-def test_markdown_with_config_general_command_line_and_specific_command_line():
+def test_markdown_with_config_general_command_line_and_specific_command_line() -> None:
     """
     Test to make sure that we can disable a rule specifically and enable a
     rule through a configuration setting, with the disable winning as it is
@@ -119,7 +119,7 @@ def test_markdown_with_config_general_command_line_and_specific_command_line():
     )
 
 
-def test_markdown_with_config_json_configuration_file():
+def test_markdown_with_config_json_configuration_file() -> None:
     """
     Test to make sure that we can supply configuration via a JSON configuration file.
     """
@@ -157,7 +157,7 @@ def test_markdown_with_config_json_configuration_file():
     )
 
 
-def test_markdown_with_config_yaml_configuration_file():
+def test_markdown_with_config_yaml_configuration_file() -> None:
     """
     Test to make sure that we can supply configuration via a YAML configuration file.
     """
@@ -198,7 +198,7 @@ def test_markdown_with_config_yaml_configuration_file():
     )
 
 
-def test_markdown_with_config_default_yaml():
+def test_markdown_with_config_default_yaml() -> None:
     """
     Test to make sure that we can supply configuration via a YAML configuration file.
     """
@@ -237,7 +237,7 @@ def test_markdown_with_config_default_yaml():
     )
 
 
-def test_markdown_with_config_default_yml():
+def test_markdown_with_config_default_yml() -> None:
     """
     Test to make sure that we can supply configuration via a YML configuration file.
     """
@@ -276,7 +276,7 @@ def test_markdown_with_config_default_yml():
     )
 
 
-def test_markdown_with_config_default_json_beats_default_yaml():
+def test_markdown_with_config_default_json_beats_default_yaml() -> None:
     """
     Test to make sure that we can supply configuration via a YAML configuration file.
     """
@@ -324,7 +324,7 @@ def test_markdown_with_config_default_json_beats_default_yaml():
     )
 
 
-def test_markdown_with_config_bad_json_and_yaml_configuration_file():
+def test_markdown_with_config_bad_json_and_yaml_configuration_file() -> None:
     """
     Test to make sure that we error out properly with a file that is
     not JSON and is not YAML.xxx
@@ -362,7 +362,7 @@ bye
     )
 
 
-def test_markdown_with_config_specific_command_line_and_configuration_file():
+def test_markdown_with_config_specific_command_line_and_configuration_file() -> None:
     """
     Test to make sure that if a command line setting and a configuration
     file setting are applied, that the command line setting wins as it is
@@ -405,7 +405,9 @@ def test_markdown_with_config_specific_command_line_and_configuration_file():
     )
 
 
-def test_markdown_with_config_configuration_file_and_default_configuration_file():
+def test_markdown_with_config_configuration_file_and_default_configuration_file() -> (
+    None
+):
     """
     Test to make sure that any default configuration is overridden by an explicitly
     named configuration file.
@@ -453,7 +455,9 @@ def test_markdown_with_config_configuration_file_and_default_configuration_file(
     )
 
 
-def test_markdown_with_default_configuration_file_and_alternate_configuration_file():
+def test_markdown_with_default_configuration_file_and_alternate_configuration_file() -> (
+    None
+):
     """
     Test to make sure that a default configuration file takes precedence over a
     Python standard configuration file.
@@ -501,7 +505,7 @@ plugins.md004.enabled = true
     )
 
 
-def test_markdown_with_alternate_configuration_file():
+def test_markdown_with_alternate_configuration_file() -> None:
     """
     Test to make sure that we can load configuration from a Python standard
     configuration file.
@@ -540,7 +544,9 @@ plugins.md004.enabled = false
     )
 
 
-def test_markdown_with_pyproject_configuration_file_with_bad_log_file_value_type():
+def test_markdown_with_pyproject_configuration_file_with_bad_log_file_value_type() -> (
+    None
+):
     """
     Test to make sure that a standard python configuration file can be used and
     that an error with value types is reported.

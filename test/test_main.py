@@ -8,6 +8,9 @@ import runpy
 import sys
 from test.markdown_scanner import MarkdownScanner
 from test.patches.patch_builtin_open import path_builtin_open_with_exception
+from typing import List
+
+from pytest import LogCaptureFixture
 
 from pymarkdown.general.parser_logger import ParserLogger
 
@@ -30,14 +33,14 @@ else:
     SET_CONFIG_X = "--set, -s SET_CONFIGURATION"
 
 
-def test_markdown_with_no_parameters():
+def test_markdown_with_no_parameters() -> None:
     """
     Test to make sure we get the simple information if no parameters are supplied.
     """
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_arguments = []
+    supplied_arguments: List[str] = []
 
     expected_return_code = 2
     expected_output = (
@@ -102,7 +105,7 @@ positional arguments:
     )
 
 
-def test_markdown_with_no_parameters_through_module():
+def test_markdown_with_no_parameters_through_module() -> None:
     """
     Test to make sure we get the simple information if no parameters are supplied,
     but through the module interface.
@@ -110,7 +113,7 @@ def test_markdown_with_no_parameters_through_module():
 
     # Arrange
     scanner = MarkdownScanner(use_module=True)
-    supplied_arguments = []
+    supplied_arguments: List[str] = []
 
     expected_return_code = 2
     expected_output = (
@@ -176,7 +179,7 @@ positional arguments:
     )
 
 
-def test_markdown_with_no_parameters_through_main():
+def test_markdown_with_no_parameters_through_main() -> None:
     """
     Test to make sure we get the simple information if no parameters are supplied,
     but through the main interface.
@@ -184,7 +187,7 @@ def test_markdown_with_no_parameters_through_main():
 
     # Arrange
     scanner = MarkdownScanner(use_main=True)
-    supplied_arguments = []
+    supplied_arguments: List[str] = []
 
     expected_return_code = 2
     expected_output = (
@@ -249,7 +252,7 @@ positional arguments:
     )
 
 
-def test_markdown_with_dash_h():
+def test_markdown_with_dash_h() -> None:
     """
     Test to make sure we get help if '-h' is supplied.
     """
@@ -321,7 +324,7 @@ positional arguments:
     )
 
 
-def test_markdown_with_version():
+def test_markdown_with_version() -> None:
     """
     Test to make sure we get help if 'version' is supplied.
 
@@ -353,7 +356,7 @@ def test_markdown_with_version():
     )
 
 
-def test_markdown_with_direct_args(caplog):
+def test_markdown_with_direct_args(caplog: LogCaptureFixture) -> None:
     """
     Test to make sure we can specify the arguments directly.
 
@@ -385,7 +388,7 @@ No matching files found."""
     assert "Using direct arguments: [" in caplog.text
 
 
-def test_markdown_without_direct_args(caplog):
+def test_markdown_without_direct_args(caplog: LogCaptureFixture) -> None:
     """
     Test to make sure we can specify the arguments normally.
 
@@ -416,7 +419,7 @@ No matching files found."""
     assert "Using supplied command line arguments." in caplog.text
 
 
-def test_markdown_with_failure_during_file_scan():
+def test_markdown_with_failure_during_file_scan() -> None:
     """
     Test to make sure we get simulate a test scan exception.
     """
@@ -454,7 +457,7 @@ Named character entity map file '{source_path}' was not loaded (bob).
     )
 
 
-def test_markdown_with_dash_x_init():
+def test_markdown_with_dash_x_init() -> None:
     """
     Test to make sure we get simulate a test initialization exception if the
     `-x-init` flag is set.
@@ -496,7 +499,7 @@ def test_markdown_with_dash_x_init():
 # TODO add Markdown parsing of some binary file to cause the tokenizer to throw an exception?
 
 
-def test_markdown_with_multiple_errors_reported():
+def test_markdown_with_multiple_errors_reported() -> None:
     """
     Test to make sure we properly sort errors from files.
 

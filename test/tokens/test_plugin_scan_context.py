@@ -20,7 +20,7 @@ class __NotSupportedToken(MarkdownToken):
         )
 
 
-def test_plugin_scan_context_register_token_fix_no_map():
+def test_plugin_scan_context_register_token_fix_no_map() -> None:
     """
     Test to make sure to try and change this token while reporting that we are in fix mode, but not in token fix mode.
     """
@@ -43,7 +43,7 @@ def test_plugin_scan_context_register_token_fix_no_map():
     # Assert
 
 
-def test_plugin_scan_context_register_token_first_one():
+def test_plugin_scan_context_register_token_first_one() -> None:
     """
     Test to register the first record against a token for fixing.
     """
@@ -73,7 +73,7 @@ def test_plugin_scan_context_register_token_first_one():
     assert found_record_list[0].plugin_id == "ID001"
 
 
-def test_plugin_scan_context_register_token_second_one():
+def test_plugin_scan_context_register_token_second_one() -> None:
     """
     Test to register the second record against a token for fixing.
     """

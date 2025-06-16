@@ -10,7 +10,7 @@ import pytest
 
 
 @pytest.mark.rules
-def test_md032_good_list_surrounded():
+def test_md032_good_list_surrounded() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains lists surrounded by blank lines.
@@ -40,7 +40,7 @@ def test_md032_good_list_surrounded():
 
 
 @pytest.mark.rules
-def test_md032_good_list_at_start():
+def test_md032_good_list_at_start() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains lists surrounded by blank lines at the very start of the document.
@@ -70,7 +70,7 @@ def test_md032_good_list_at_start():
 
 
 @pytest.mark.rules
-def test_md032_good_list_at_end():
+def test_md032_good_list_at_end() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains lists surrounded by blank lines at the very end of the document.
@@ -102,7 +102,7 @@ def test_md032_good_list_at_end():
 
 
 @pytest.mark.rules
-def test_md032_bad_list_before():
+def test_md032_bad_list_before() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a list that does not have a blank line before it.
@@ -135,7 +135,7 @@ def test_md032_bad_list_before():
 
 
 @pytest.mark.rules
-def test_md032_bad_list_after():
+def test_md032_bad_list_after() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a list that does not have a blank line after it.
@@ -170,7 +170,7 @@ def test_md032_bad_list_after():
 
 
 @pytest.mark.rules
-def test_md032_bad_block_quote_list_block_quote():
+def test_md032_bad_block_quote_list_block_quote() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a list that has a block quote directly before and after it.
@@ -205,7 +205,7 @@ def test_md032_bad_block_quote_list_block_quote():
 
 
 @pytest.mark.rules
-def test_md032_bad_other_list_list_other_list():
+def test_md032_bad_other_list_list_other_list() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a list that has another list before and after it.
@@ -244,7 +244,7 @@ def test_md032_bad_other_list_list_other_list():
 
 
 @pytest.mark.rules
-def test_md032_good_list_within_list_surrounded():
+def test_md032_good_list_within_list_surrounded() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a 2-level list with blank lines before and after.
@@ -274,7 +274,7 @@ def test_md032_good_list_within_list_surrounded():
 
 
 @pytest.mark.rules
-def test_md032_good_list_within_block_quote_surrounded():
+def test_md032_good_list_within_block_quote_surrounded() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a list inside of a block quote surrounded by blank lines.
@@ -308,7 +308,7 @@ def test_md032_good_list_within_block_quote_surrounded():
 
 
 @pytest.mark.rules
-def test_md032_bad_list_within_block_quote_surrounded():
+def test_md032_bad_list_within_block_quote_surrounded() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a list within a block quote that is immediately after a text line
@@ -346,7 +346,7 @@ def test_md032_bad_list_within_block_quote_surrounded():
 
 
 @pytest.mark.rules
-def test_md032_good_nested_lists():
+def test_md032_good_nested_lists() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains nested lists with proper blank lines around.
@@ -376,7 +376,7 @@ def test_md032_good_nested_lists():
 
 
 @pytest.mark.rules
-def test_md032_good_list_levels_1_2_3_2_1():
+def test_md032_good_list_levels_1_2_3_2_1() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains deeper nested lists with proper blank lines around.
@@ -406,7 +406,7 @@ def test_md032_good_list_levels_1_2_3_2_1():
 
 
 @pytest.mark.rules
-def test_md032_good_list_levels_1_2_3_space_1():
+def test_md032_good_list_levels_1_2_3_space_1() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains more complex nested lists with proper blank lines around.
@@ -436,7 +436,7 @@ def test_md032_good_list_levels_1_2_3_space_1():
 
 
 @pytest.mark.rules
-def test_md032_good_list_levels_1_2_3_1():
+def test_md032_good_list_levels_1_2_3_1() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains nested lists with proper blank lines around.  With a 2 level
@@ -467,7 +467,7 @@ def test_md032_good_list_levels_1_2_3_1():
 
 
 @pytest.mark.rules
-def test_md032_bad_fenced_block_in_list_in_block_quote():
+def test_md032_bad_fenced_block_in_list_in_block_quote() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains lists on either side of a fenced code block with no blank lines.
@@ -507,7 +507,7 @@ def test_md032_bad_fenced_block_in_list_in_block_quote():
     )
 
 
-def test_md032_query_config():
+def test_md032_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md032",
         """

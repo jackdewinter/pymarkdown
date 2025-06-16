@@ -5,7 +5,7 @@ Tests for the find_nth_occurrence function.
 from pymarkdown.general.parser_helper import ParserHelper
 
 
-def test_get_replacement_indices_none():
+def test_get_replacement_indices_none() -> None:
     """
     TBD
     """
@@ -25,7 +25,7 @@ def test_get_replacement_indices_none():
     assert end_index == -1
 
 
-def test_get_replacement_indices_valid():
+def test_get_replacement_indices_valid() -> None:
     """
     TBD
     """
@@ -45,7 +45,7 @@ def test_get_replacement_indices_valid():
     assert end_index == 9
 
 
-def test_get_replacement_indices_only_start():
+def test_get_replacement_indices_only_start() -> None:
     """
     TBD
     """
@@ -65,7 +65,7 @@ def test_get_replacement_indices_only_start():
     assert end_index == -1
 
 
-def test_get_replacement_indices_only_start_and_middle():
+def test_get_replacement_indices_only_start_and_middle() -> None:
     """
     TBD
     """

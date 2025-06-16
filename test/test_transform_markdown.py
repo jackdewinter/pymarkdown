@@ -5,7 +5,7 @@ Test the top level transform functions.
 from test.utils import act_and_assert
 
 
-def test_transform_with_debug_on():
+def test_transform_with_debug_on() -> None:
     """
     Copy of test case 012 to test with debug logging.
     """
@@ -30,7 +30,7 @@ def test_transform_with_debug_on():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-def test_transform_with_debug_off():
+def test_transform_with_debug_off() -> None:
     """
     Copy of test case 012 to test with debug logging off.
     """

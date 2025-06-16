@@ -10,7 +10,7 @@ import pytest
 
 
 @pytest.mark.rules
-def test_md014_good_shell_example():
+def test_md014_good_shell_example() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a fenced block with a `shell` tag and no leading $.
@@ -40,7 +40,7 @@ def test_md014_good_shell_example():
 
 
 @pytest.mark.rules
-def test_md014_good_shell_example_some_output():
+def test_md014_good_shell_example_some_output() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a fenced block with a `shell` tag and mixed lines with leading $
@@ -71,7 +71,7 @@ def test_md014_good_shell_example_some_output():
 
 
 @pytest.mark.rules
-def test_md014_bad_shell_example():
+def test_md014_bad_shell_example() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a fenced block with a `shell` tag and only leading $.
@@ -104,7 +104,7 @@ def test_md014_bad_shell_example():
 
 
 @pytest.mark.rules
-def test_md014_bad_shell_example_with_leading_space():
+def test_md014_bad_shell_example_with_leading_space() -> None:
     """
     Test to make sure this rule not trigger with a document that
     contains a fenced block with a `shell` tag and only leading $
@@ -138,7 +138,7 @@ def test_md014_bad_shell_example_with_leading_space():
 
 
 @pytest.mark.rules
-def test_md014_bad_shell_example_indented():
+def test_md014_bad_shell_example_indented() -> None:
     """
     Test to make sure this rule not trigger with a document that
     contains an indented block with leading $ that looks like shell output.
@@ -170,7 +170,7 @@ def test_md014_bad_shell_example_indented():
     )
 
 
-def test_md014_query_config():
+def test_md014_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md014",
         """

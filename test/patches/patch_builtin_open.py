@@ -5,7 +5,7 @@ Module to patch the "builtin.open" function.
 import unittest.mock
 from contextlib import contextmanager
 from test.patches.patch_base import PatchBase
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, Generator, Tuple
 
 
 class PatchBuiltinOpen(PatchBase):
@@ -103,8 +103,11 @@ class PatchBuiltinOpen(PatchBase):
 
 @contextmanager
 def path_builtin_open_with_exception(
-    exception_path, file_mode, exception_to_throw, print_action_comments=False
-):
+    exception_path: str,
+    file_mode: str,
+    exception_to_throw: Exception,
+    print_action_comments: bool = False,
+) -> Generator[None, None, None]:
     """
     Patch the builtin.open function, registering an exception to be thrown.
     """

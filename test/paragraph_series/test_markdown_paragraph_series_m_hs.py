@@ -10,7 +10,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ol_nl_t_nl_hs():
+def test_paragraph_series_m_hs_ol_nl_t_nl_hs() -> None:
     """
     Test case:  Ordered list newline text new line setext heading
     was:        test_list_blocks_256hx
@@ -40,7 +40,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ol_nl_t_nl_all_hs():
+def test_paragraph_series_m_hs_ol_nl_t_nl_all_hs() -> None:
     """
     Test case:  Ordered list newline text new line setext heading
     """
@@ -70,7 +70,7 @@ def test_paragraph_series_m_hs_ol_nl_t_nl_all_hs():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ol_nl_i2_t_nl_hs():
+def test_paragraph_series_m_hs_ol_nl_i2_t_nl_hs() -> None:
     """
     Test case:  Ordered list newline indent of 2 text new line setext heading
     was:        test_list_blocks_256hxa
@@ -100,7 +100,7 @@ def test_paragraph_series_m_hs_ol_nl_i2_t_nl_hs():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ol_nl_i3_t_nl_hs():
+def test_paragraph_series_m_hs_ol_nl_i3_t_nl_hs() -> None:
     """
     Test case:  Ordered list newline indent of 3 text new line setext heading
     was:        test_list_blocks_256hxb
@@ -131,7 +131,7 @@ def test_paragraph_series_m_hs_ol_nl_i3_t_nl_hs():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ol_nl_i3_t_nl_i3_hs():
+def test_paragraph_series_m_hs_ol_nl_i3_t_nl_i3_hs() -> None:
     """
     Test case:  Ordered list newline indent of 3 text new line indent of 3 setext heading
     was:        test_list_blocks_256hxc
@@ -162,7 +162,7 @@ def test_paragraph_series_m_hs_ol_nl_i3_t_nl_i3_hs():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ol_t_nl_t_nl_hs():
+def test_paragraph_series_m_hs_ol_t_nl_t_nl_hs() -> None:
     """
     Test case:  Ordered list text newline text new line setext heading
     was:        test_list_blocks_256ha
@@ -193,7 +193,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ol_t_nl_t_nl_all_hs():
+def test_paragraph_series_m_hs_ol_t_nl_t_nl_all_hs() -> None:
     """
     Test case:  Ordered list text newline text new line setext heading
     """
@@ -223,7 +223,7 @@ foo</h2>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ol_t_nl_i2_t_nl_hs():
+def test_paragraph_series_m_hs_ol_t_nl_i2_t_nl_hs() -> None:
     """
     Test case:  Ordered list text newline indent of 2 text new line setext heading
     was:        test_list_blocks_256haa
@@ -254,7 +254,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ol_t_nl_i3_t_nl_hs():
+def test_paragraph_series_m_hs_ol_t_nl_i3_t_nl_hs() -> None:
     """
     Test case:  Ordered list text newline indent of 3 text new line setext heading
     was:        test_list_blocks_256hab
@@ -285,7 +285,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ol_t_nl_i3_t_nl_i3_hs():
+def test_paragraph_series_m_hs_ol_t_nl_i3_t_nl_i3_hs() -> None:
     """
     Test case:  Ordered list text newline indent of 3 text new line indent of 3 setext heading
     was:        test_list_blocks_256hac
@@ -316,7 +316,7 @@ foo</h2>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ol_ol_nl_t_nl_hs():
+def test_paragraph_series_m_hs_ol_ol_nl_t_nl_hs() -> None:
     """
     Test case:  Ordered list x2 text newline new line setext heading
     """
@@ -351,7 +351,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ol_ol_nl_t_nl_all_hs():
+def test_paragraph_series_m_hs_ol_ol_nl_t_nl_all_hs() -> None:
     """
     Test case:  Ordered list x2 text newline new line setext heading
     """
@@ -387,7 +387,7 @@ def test_paragraph_series_m_hs_ol_ol_nl_t_nl_all_hs():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ol_ol_t_nl_t_nl_hs():
+def test_paragraph_series_m_hs_ol_ol_t_nl_t_nl_hs() -> None:
     """
     Test case:  Ordered list x2 text newline text new line setext heading
     was:        test_list_blocks_256hb
@@ -424,7 +424,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ol_ol_t_nl_t_nl_all_hs():
+def test_paragraph_series_m_hs_ol_ol_t_nl_t_nl_all_hs() -> None:
     """
     Test case:  Ordered list x2 text newline text new line setext heading
     """
@@ -460,7 +460,7 @@ foo</h2>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ol_nl_i3_ol_nl_t_nl_hs():
+def test_paragraph_series_m_hs_ol_nl_i3_ol_nl_t_nl_hs() -> None:
     """
     Test case:  Ordered list newline indent of 3 ordered list new line text newline setext heading
     """
@@ -497,7 +497,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ol_t_nl_i3_ol_nl_t_nl_hs():
+def test_paragraph_series_m_hs_ol_t_nl_i3_ol_nl_t_nl_hs() -> None:
     """
     Test case:  Ordered list text newline indent of 3 ordered list new line text newline setext heading
     """
@@ -529,7 +529,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ul_t_nl_i2_ul_nl_t_nl_hs():
+def test_paragraph_series_m_hs_ul_t_nl_i2_ul_nl_t_nl_hs() -> None:
     """
     Test case:  Unordered list text newline indent of 2 unordered list new line text newline setext heading
     """
@@ -563,7 +563,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ul_t_nl_i2_ulb_nl_t_nl_hs():
+def test_paragraph_series_m_hs_ul_t_nl_i2_ulb_nl_t_nl_hs() -> None:
     """
     Test case:  Unordered list text newline indent of 2 unordered list (b) new line text newline setext heading
     """
@@ -595,7 +595,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ol_nl_i3_ol_t_nl_t_nl_hs():
+def test_paragraph_series_m_hs_ol_nl_i3_ol_t_nl_t_nl_hs() -> None:
     """
     Test case:  Ordered list newline indent of 3 ordered list text new line text newline setext heading
     """
@@ -633,7 +633,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ol_t_nl_i3_ol_t_nl_t_nl_hs():
+def test_paragraph_series_m_hs_ol_t_nl_i3_ol_t_nl_t_nl_hs() -> None:
     """
     Test case:  Ordered list text newline indent of 3 ordered list text new line text newline setext heading
     was:        test_list_blocks_256hc
@@ -674,7 +674,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ol_nl_i3_ol_nl_i2_t_nl_i2_hs():
+def test_paragraph_series_m_hs_ol_nl_i3_ol_nl_i2_t_nl_i2_hs() -> None:
     """
     Test case:  Ordered list newline indent of 3 ordered list new line indent of
                 2 text newline indent of 2 setext heading
@@ -712,7 +712,7 @@ def test_paragraph_series_m_hs_ol_nl_i3_ol_nl_i2_t_nl_i2_hs():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ol_t_nl_i3_ol_nl_i2_t_nl_i2_hs():
+def test_paragraph_series_m_hs_ol_t_nl_i3_ol_nl_i2_t_nl_i2_hs() -> None:
     """
     Test case:  Ordered list text newline indent of 3 ordered list new line indent
                 of 2 text newline indent of 2 setext heading
@@ -745,7 +745,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ul_t_nl_i2_ul_nl_i1_t_nl_i1_hs():
+def test_paragraph_series_m_hs_ul_t_nl_i2_ul_nl_i1_t_nl_i1_hs() -> None:
     """
     Test case:  Unordered list text newline indent of 2 unordered list new line
                 indent of 1 text newline indent of 1 setext heading
@@ -780,7 +780,7 @@ def test_paragraph_series_m_hs_ul_t_nl_i2_ul_nl_i1_t_nl_i1_hs():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ul_t_nl_i2_ulb_nl_i1_t_nl_i1_hs():
+def test_paragraph_series_m_hs_ul_t_nl_i2_ulb_nl_i1_t_nl_i1_hs() -> None:
     """
     Test case:  Unordered list text newline indent of 2 unordered list (b) new
                 line indent of 1 text newline indent of 1 setext heading
@@ -813,7 +813,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ol_nl_i3_ol_t_nl_i2_t_nl_i2_hs():
+def test_paragraph_series_m_hs_ol_nl_i3_ol_t_nl_i2_t_nl_i2_hs() -> None:
     """
     Test case:  Ordered list newline indent of 3 ordered list text new line indent
                 of 2 text newline indent of 2 setext heading
@@ -852,7 +852,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ol_t_nl_i3_ol_t_nl_i2_t_nl_i2_hs():
+def test_paragraph_series_m_hs_ol_t_nl_i3_ol_t_nl_i2_t_nl_i2_hs() -> None:
     """
     Test case:  Ordered list text newline indent of 3 ordered list text new line
                 indent of 2 text newline indent of 2 setext heading
@@ -894,7 +894,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ol_nl_i3_ol_nl_i3_t_nl_i3_hs():
+def test_paragraph_series_m_hs_ol_nl_i3_ol_nl_i3_t_nl_i3_hs() -> None:
     """
     Test case:  Ordered list newline indent of 3 ordered list new line indent
                 of 3 text newline indent of 3 setext heading
@@ -932,7 +932,7 @@ def test_paragraph_series_m_hs_ol_nl_i3_ol_nl_i3_t_nl_i3_hs():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ol_t_nl_i3_ol_nl_i3_t_nl_i3_hs():
+def test_paragraph_series_m_hs_ol_t_nl_i3_ol_nl_i3_t_nl_i3_hs() -> None:
     """
     Test case:  Ordered list text newline indent of 3 ordered list new line indent
                 of 3 text newline indent of 3 setext heading
@@ -965,7 +965,7 @@ foo</h2>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ul_t_nl_i2_ul_nl_i2_t_nl_i2_hs():
+def test_paragraph_series_m_hs_ul_t_nl_i2_ul_nl_i2_t_nl_i2_hs() -> None:
     """
     Test case:  Unordered list text newline indent of 2 unordered list new line
                 indent of 2 text newline indent of 2 setext heading
@@ -1000,7 +1000,7 @@ def test_paragraph_series_m_hs_ul_t_nl_i2_ul_nl_i2_t_nl_i2_hs():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ul_t_nl_i2_ulb_nl_i2_t_nl_i2_hs():
+def test_paragraph_series_m_hs_ul_t_nl_i2_ulb_nl_i2_t_nl_i2_hs() -> None:
     """
     Test case:  Unordered list text newline indent of 2 unordered list (b) new line
                 indent of 2 text newline indent of 2 setext heading
@@ -1033,7 +1033,7 @@ foo</h2>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ol_nl_i3_ol_t_nl_i3_t_nl_i3_hs():
+def test_paragraph_series_m_hs_ol_nl_i3_ol_t_nl_i3_t_nl_i3_hs() -> None:
     """
     Test case:  Ordered list newline indent of 3 ordered list text new line indent
                 of 3 text newline indent of 3 setext heading
@@ -1072,7 +1072,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_hs_ol_t_nl_i3_ol_t_nl_i3_t_nl_i3_hs():
+def test_paragraph_series_m_hs_ol_t_nl_i3_ol_t_nl_i3_t_nl_i3_hs() -> None:
     """
     Test case:  Ordered list text newline indent of 3 ordered list text new line
                 indent of 3 text newline indent of 3 setext heading

@@ -10,7 +10,7 @@ import pytest
 
 
 @pytest.mark.rules
-def test_md011_good_no_reversed():
+def test_md011_good_no_reversed() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains no reversed links.
@@ -40,7 +40,7 @@ def test_md011_good_no_reversed():
 
 
 @pytest.mark.rules
-def test_md011_bad_with_reversed():
+def test_md011_bad_with_reversed() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains at least one reversed link.
@@ -74,7 +74,7 @@ def test_md011_bad_with_reversed():
 
 
 @pytest.mark.rules
-def test_md011_good_markdown_footnote():
+def test_md011_good_markdown_footnote() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains what looks like a reversed link, but also looks like a footnote.
@@ -104,7 +104,7 @@ def test_md011_good_markdown_footnote():
 
 
 @pytest.mark.rules
-def test_md011_good_with_reversed_in_code_block():
+def test_md011_good_with_reversed_in_code_block() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a "reversed link" in a code block.
@@ -134,7 +134,7 @@ def test_md011_good_with_reversed_in_code_block():
 
 
 @pytest.mark.rules
-def test_md011_good_with_reversed_in_html_block():
+def test_md011_good_with_reversed_in_html_block() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a "reversed link" in a HTML block.
@@ -163,7 +163,7 @@ def test_md011_good_with_reversed_in_html_block():
     )
 
 
-def test_md011_query_config():
+def test_md011_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md011",
         """

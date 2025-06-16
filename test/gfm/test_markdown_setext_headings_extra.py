@@ -10,7 +10,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_01():
+def test_setext_headings_extra_01() -> None:
     """
     Test case extra 1:  SetExt heading starts with a backslash escape
     """
@@ -30,7 +30,7 @@ def test_setext_headings_extra_01():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_02():
+def test_setext_headings_extra_02() -> None:
     """
     Test case extra 2:  SetExt heading starts with a backslash as in a hard line break
     """
@@ -50,7 +50,7 @@ def test_setext_headings_extra_02():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_03():
+def test_setext_headings_extra_03() -> None:
     """
     Test case extra 3:  SetExt heading starts with 2+ spaces as in a hard line break
     """
@@ -68,7 +68,7 @@ def test_setext_headings_extra_03():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_04():
+def test_setext_headings_extra_04() -> None:
     """
     Test case extra 4:  SetExt heading string starting with a code span.
     """
@@ -89,7 +89,7 @@ def test_setext_headings_extra_04():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_05():
+def test_setext_headings_extra_05() -> None:
     """
     Test case extra 5:  SetExt heading string starting with a character reference.
     """
@@ -109,7 +109,7 @@ def test_setext_headings_extra_05():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_06():
+def test_setext_headings_extra_06() -> None:
     """
     Test case extra 6:  SetExt heading string starting with a raw html block.
     """
@@ -130,7 +130,7 @@ def test_setext_headings_extra_06():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_07():
+def test_setext_headings_extra_07() -> None:
     """
     Test case extra 7:  SetExt heading string starting with an URI autolink
     """
@@ -151,7 +151,7 @@ def test_setext_headings_extra_07():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_08():
+def test_setext_headings_extra_08() -> None:
     """
     Test case extra 8:  SetExt heading string starting with an email autolink
     """
@@ -174,7 +174,7 @@ def test_setext_headings_extra_08():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_09():
+def test_setext_headings_extra_09() -> None:
     """
     Test case extra 9:  SetExt heading string starting with an emphasis
     """
@@ -197,7 +197,7 @@ def test_setext_headings_extra_09():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_10():
+def test_setext_headings_extra_10() -> None:
     """
     Test case extra 10:  SetExt heading string starting with a link.  also see 183
     """
@@ -220,7 +220,7 @@ def test_setext_headings_extra_10():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_11():
+def test_setext_headings_extra_11() -> None:
     """
     Test case extra 11:  SetExt heading string starting with an image
     """
@@ -241,7 +241,7 @@ def test_setext_headings_extra_11():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_12():
+def test_setext_headings_extra_12() -> None:
     """
     Test case extra 12:  SetExt heading containing a backslash
     """
@@ -261,7 +261,7 @@ def test_setext_headings_extra_12():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_13():
+def test_setext_headings_extra_13() -> None:
     """
     Test case extra 13:  SetExt heading containing a code span.
     """
@@ -283,7 +283,7 @@ def test_setext_headings_extra_13():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_14():
+def test_setext_headings_extra_14() -> None:
     """
     Test case extra 14:  SetExt heading containing a character reference.
     """
@@ -303,7 +303,7 @@ def test_setext_headings_extra_14():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_15():
+def test_setext_headings_extra_15() -> None:
     """
     Test case extra 15:  SetExt heading containing a raw html block.
     """
@@ -325,7 +325,7 @@ def test_setext_headings_extra_15():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_16():
+def test_setext_headings_extra_16() -> None:
     """
     Test case extra 16:  SetExt heading containing an URI autolink
     """
@@ -347,7 +347,7 @@ def test_setext_headings_extra_16():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_17():
+def test_setext_headings_extra_17() -> None:
     """
     Test case extra 17:  SetExt heading containing an email autolink
     """
@@ -371,7 +371,7 @@ def test_setext_headings_extra_17():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_18():
+def test_setext_headings_extra_18() -> None:
     """
     Test case extra 18:  SetExt heading containing emphasis
     """
@@ -395,7 +395,7 @@ def test_setext_headings_extra_18():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_19():
+def test_setext_headings_extra_19() -> None:
     """
     Test case extra 19:  SetExt heading containing a link.
     """
@@ -419,7 +419,7 @@ def test_setext_headings_extra_19():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_20():
+def test_setext_headings_extra_20() -> None:
     """
     Test case extra 20:  SetExt heading containing an image
     """
@@ -443,7 +443,7 @@ def test_setext_headings_extra_20():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_21():
+def test_setext_headings_extra_21() -> None:
     """
     Test case extra 21:  SetExt headings ends with a backslash escape
     """
@@ -463,7 +463,7 @@ def test_setext_headings_extra_21():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_22():
+def test_setext_headings_extra_22() -> None:
     """
     Test case extra 22:  SetExt heading ends with a backslash as in a hard line break
     """
@@ -483,7 +483,7 @@ def test_setext_headings_extra_22():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_22a():
+def test_setext_headings_extra_22a() -> None:
     """
     Test case extra 22a:  variation on 22 with more text after the hard break
     """
@@ -506,7 +506,7 @@ another line
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_22b():
+def test_setext_headings_extra_22b() -> None:
     """
     Test case extra 22b:  variation on 22 with a soft line break
     """
@@ -527,7 +527,7 @@ another line
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_22c():
+def test_setext_headings_extra_22c() -> None:
     """
     Test case extra 22c:  variation on 22 with more spaces than needed for a hard break
     """
@@ -552,7 +552,7 @@ another line
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_22d():
+def test_setext_headings_extra_22d() -> None:
     """
     Test case extra 22d:  variation on 22c with next line indented
     """
@@ -577,7 +577,7 @@ def test_setext_headings_extra_22d():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_23():
+def test_setext_headings_extra_23() -> None:
     """
     Test case extra 23:  SetExt heading ends with 2+ spaces as in a hard line break, but not since end of paragraph
     """
@@ -599,7 +599,7 @@ def test_setext_headings_extra_23():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_23a():
+def test_setext_headings_extra_23a() -> None:
     """
     Test case extra 23a:  variation on 23, but with more text so hard break in scope
     """
@@ -624,7 +624,7 @@ woe is me
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_24():
+def test_setext_headings_extra_24() -> None:
     """
     Test case extra 24:  SetExt heading string ending with a code span.
     """
@@ -645,7 +645,7 @@ def test_setext_headings_extra_24():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_25():
+def test_setext_headings_extra_25() -> None:
     """
     Test case extra 25:  SetExt heading string ending with a character reference.
     """
@@ -665,7 +665,7 @@ def test_setext_headings_extra_25():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_26():
+def test_setext_headings_extra_26() -> None:
     """
     Test case extra 26:  SetExt heading string ending with a raw html block.
     """
@@ -686,7 +686,7 @@ def test_setext_headings_extra_26():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_27():
+def test_setext_headings_extra_27() -> None:
     """
     Test case extra 27:  SetExt heading string ending with an URI autolink
     """
@@ -709,7 +709,7 @@ def test_setext_headings_extra_27():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_28():
+def test_setext_headings_extra_28() -> None:
     """
     Test case extra 28:  SetExt heading string ending with an email autolink
     """
@@ -730,7 +730,7 @@ def test_setext_headings_extra_28():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_29():
+def test_setext_headings_extra_29() -> None:
     """
     Test case extra 29:  SetExt heading string ending with an emphasis
     """
@@ -753,7 +753,7 @@ def test_setext_headings_extra_29():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_30():
+def test_setext_headings_extra_30() -> None:
     """
     Test case extra 30:  SetExt heading string ending with a link.
     """
@@ -776,7 +776,7 @@ def test_setext_headings_extra_30():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_31():
+def test_setext_headings_extra_31() -> None:
     """
     Test case extra 31:  SetExt heading string ending with an image
     """
@@ -797,7 +797,7 @@ def test_setext_headings_extra_31():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_32():
+def test_setext_headings_extra_32() -> None:
     """
     Test case extra 32:  SetExt heading this is only a backslash escape
     """
@@ -817,7 +817,7 @@ def test_setext_headings_extra_32():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_33():
+def test_setext_headings_extra_33() -> None:
     """
     Test case extra 33:  SetExt heading this is only a backslash as in a hard line break, but not since end of paragraph
     """
@@ -837,7 +837,7 @@ def test_setext_headings_extra_33():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_34():
+def test_setext_headings_extra_34() -> None:
     """
     Test case extra 34:  SetExt heading this is only 2+ spaces as in a hard line break, but not since end of paragraph
     """
@@ -855,7 +855,7 @@ def test_setext_headings_extra_34():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_35():
+def test_setext_headings_extra_35() -> None:
     """
     Test case extra 35:  SetExt heading this is only a code span.
     """
@@ -875,7 +875,7 @@ def test_setext_headings_extra_35():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_36():
+def test_setext_headings_extra_36() -> None:
     """
     Test case extra 36:  SetExt heading this is only a character reference.
     """
@@ -895,7 +895,7 @@ def test_setext_headings_extra_36():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_37():
+def test_setext_headings_extra_37() -> None:
     """
     Test case extra 37:  SetExt heading this is only a raw html block.
     """
@@ -915,7 +915,7 @@ def test_setext_headings_extra_37():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_38():
+def test_setext_headings_extra_38() -> None:
     """
     Test case extra 38:  SetExt heading this is only an URI autolink
     """
@@ -937,7 +937,7 @@ def test_setext_headings_extra_38():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_39():
+def test_setext_headings_extra_39() -> None:
     """
     Test case extra 39:  SetExt heading this is only an email autolink
     """
@@ -957,7 +957,7 @@ def test_setext_headings_extra_39():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_40():
+def test_setext_headings_extra_40() -> None:
     """
     Test case extra 40:  SetExt heading this is only an emphasis
     """
@@ -979,7 +979,7 @@ def test_setext_headings_extra_40():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_41():
+def test_setext_headings_extra_41() -> None:
     """
     Test case extra 41:  SetExt heading this is only a link.
     """
@@ -1001,7 +1001,7 @@ def test_setext_headings_extra_41():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_42():
+def test_setext_headings_extra_42() -> None:
     """
     Test case extra 42:  SetExt heading this is only an image
     """
@@ -1021,7 +1021,7 @@ def test_setext_headings_extra_42():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_43():
+def test_setext_headings_extra_43() -> None:
     """
     Test case extra 43:  SetExt heading with code span with newline inside
     """
@@ -1044,7 +1044,7 @@ span`a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_44():
+def test_setext_headings_extra_44() -> None:
     """
     Test case extra 44:  SetExt heading with raw HTML with newline inside
     """
@@ -1067,7 +1067,7 @@ html='cool'>a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_45():
+def test_setext_headings_extra_45() -> None:
     """
     Test case extra 45:  SetExt heading with URI autolink with newline inside, renders invalid
     """
@@ -1088,7 +1088,7 @@ google.com>a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_46():
+def test_setext_headings_extra_46() -> None:
     """
     Test case extra 46:  SetExt heading with email autolink with newline inside, renders invalid
     """
@@ -1109,7 +1109,7 @@ def test_setext_headings_extra_46():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_47():
+def test_setext_headings_extra_47() -> None:
     """
     Test case extra 47:  SetExt heading with inline link with newline in label
     ??? repeat of 518 series?
@@ -1135,7 +1135,7 @@ o](/uri "testing")a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_48():
+def test_setext_headings_extra_48() -> None:
     """
     Test case extra 48:  SetExt heading with inline link with newline in pre-URI space
     """
@@ -1160,7 +1160,7 @@ def test_setext_headings_extra_48():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_48a():
+def test_setext_headings_extra_48a() -> None:
     """
     Test case extra 48a:  variation on 48, with whitespace
     """
@@ -1187,7 +1187,7 @@ def test_setext_headings_extra_48a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_48b():
+def test_setext_headings_extra_48b() -> None:
     """
     Test case extra 48b: variation on 48 with whitespace after newline
     """
@@ -1212,7 +1212,7 @@ def test_setext_headings_extra_48b():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_48c():
+def test_setext_headings_extra_48c() -> None:
     """
     Test case extra 48c:  variation on 48 with whitespace before and after newline
     """
@@ -1239,7 +1239,7 @@ def test_setext_headings_extra_48c():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_49():
+def test_setext_headings_extra_49() -> None:
     """
     Test case extra 49:  SetExt heading with inline link with newline in URI, invalidating it
     """
@@ -1260,7 +1260,7 @@ i "testing")a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_50x():
+def test_setext_headings_extra_50x() -> None:
     """
     Test case extra 50:  SetExt heading with inline link with newline in post-URI space
     """
@@ -1287,7 +1287,7 @@ def test_setext_headings_extra_50x():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_50a():
+def test_setext_headings_extra_50a() -> None:
     """
     Test case extra 50:  variation 50 with whitespace before newline
     """
@@ -1314,7 +1314,7 @@ def test_setext_headings_extra_50a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_50b():
+def test_setext_headings_extra_50b() -> None:
     """
     Test case extra 50:  variation with 50 with whitespace after newline
     """
@@ -1339,7 +1339,7 @@ def test_setext_headings_extra_50b():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_50c():
+def test_setext_headings_extra_50c() -> None:
     """
     Test case extra 50c:  variation of 50 with whitespace before and after newline
     """
@@ -1366,7 +1366,7 @@ def test_setext_headings_extra_50c():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_51():
+def test_setext_headings_extra_51() -> None:
     """
     Test case extra 51:  SetExt heading with inline link with newline in title
     """
@@ -1391,7 +1391,7 @@ ing")a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_52x():
+def test_setext_headings_extra_52x() -> None:
     """
     Test case extra 52:  SetExt heading with inline link with newline after title
     """
@@ -1416,7 +1416,7 @@ def test_setext_headings_extra_52x():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_52a():
+def test_setext_headings_extra_52a() -> None:
     """
     Test case extra 52:  variation of 52 with whitespace before newline
     """
@@ -1443,7 +1443,7 @@ def test_setext_headings_extra_52a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_52b():
+def test_setext_headings_extra_52b() -> None:
     """
     Test case extra 52b:  variation of 52 with whitespace after newline
     """
@@ -1468,7 +1468,7 @@ def test_setext_headings_extra_52b():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_52c():
+def test_setext_headings_extra_52c() -> None:
     """
     Test case extra 52c:  variation of 52 with whitespace before and after newline
     """
@@ -1495,7 +1495,7 @@ def test_setext_headings_extra_52c():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_53():
+def test_setext_headings_extra_53() -> None:
     """
     Test case extra 53:  SetExt heading with full link with newline in label
     """
@@ -1524,7 +1524,7 @@ bar][bar]a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_54():
+def test_setext_headings_extra_54() -> None:
     """
     Test case extra 54:  SetExt heading with full link with newline in reference
     """
@@ -1553,7 +1553,7 @@ r]a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_55():
+def test_setext_headings_extra_55() -> None:
     """
     Test case extra 55:  SetExt heading with shortcut link with newline in label
     """
@@ -1582,7 +1582,7 @@ r]a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_56():
+def test_setext_headings_extra_56() -> None:
     """
     Test case extra 56:  SetExt heading with collapsed link with newline in label
     """
@@ -1611,7 +1611,7 @@ r][]a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_57():
+def test_setext_headings_extra_57() -> None:
     """
     Test case extra 57:  SetExt heading with collapsed link with newline in label
     """
@@ -1640,7 +1640,7 @@ bar][]a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_58():
+def test_setext_headings_extra_58() -> None:
     """
     Test case extra 58:  SetExt heading with full link with newline in reference
     """
@@ -1669,7 +1669,7 @@ bar]a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_59():
+def test_setext_headings_extra_59() -> None:
     """
     Test case extra 59:  SetExt heading with inline image with newline between image chars, invalidating it.
     """
@@ -1694,7 +1694,7 @@ def test_setext_headings_extra_59():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_60():
+def test_setext_headings_extra_60() -> None:
     """
     Test case extra 60:  SetExt heading with inline link with newline in label but not title.
     """
@@ -1719,7 +1719,7 @@ o](/uri)a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_61():
+def test_setext_headings_extra_61() -> None:
     """
     Test case extra 61:  SetExt heading with inline image with newline in label
     """
@@ -1742,7 +1742,7 @@ o](/url "title")a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_62():
+def test_setext_headings_extra_62() -> None:
     """
     Test case extra 62:  SetExt heading with inline image with newline before URI
     """
@@ -1765,7 +1765,7 @@ def test_setext_headings_extra_62():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_62a():
+def test_setext_headings_extra_62a() -> None:
     """
     Test case extra 62a:  variation of 62 with whitespace before newline
     """
@@ -1790,7 +1790,7 @@ def test_setext_headings_extra_62a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_62b():
+def test_setext_headings_extra_62b() -> None:
     """
     Test case extra 62b:  variation of 62 with whitespace after newline
     """
@@ -1813,7 +1813,7 @@ def test_setext_headings_extra_62b():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_62c():
+def test_setext_headings_extra_62c() -> None:
     """
     Test case extra 62c: variation of 62 with whitespace before and after newline
     """
@@ -1838,7 +1838,7 @@ def test_setext_headings_extra_62c():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_63():
+def test_setext_headings_extra_63() -> None:
     """
     Test case extra 63:  SetExt heading with inline image with newline in the URI, invalidating it
     """
@@ -1859,7 +1859,7 @@ i "testing")a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_64x():
+def test_setext_headings_extra_64x() -> None:
     """
     Test case extra 64:  SetExt heading with inline image with newline after the URI
     """
@@ -1882,7 +1882,7 @@ def test_setext_headings_extra_64x():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_64a():
+def test_setext_headings_extra_64a() -> None:
     """
     Test case extra 64a: variation of 64 with whitespace before newline
     """
@@ -1907,7 +1907,7 @@ def test_setext_headings_extra_64a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_64b():
+def test_setext_headings_extra_64b() -> None:
     """
     Test case extra 64b:  variation of 64 with whitespace after newline
     """
@@ -1930,7 +1930,7 @@ def test_setext_headings_extra_64b():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_64c():
+def test_setext_headings_extra_64c() -> None:
     """
     Test case extra 64c:  variation of 64 with whitespace before and after newline
     """
@@ -1955,7 +1955,7 @@ def test_setext_headings_extra_64c():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_65():
+def test_setext_headings_extra_65() -> None:
     """
     Test case extra 65:  SetExt heading with inline image with newline after the URI and no text
     """
@@ -1978,7 +1978,7 @@ def test_setext_headings_extra_65():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_66():
+def test_setext_headings_extra_66() -> None:
     """
     Test case extra 66:  SetExt heading with inline image with newline in the title
     """
@@ -2001,7 +2001,7 @@ ing")a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_67():
+def test_setext_headings_extra_67() -> None:
     """
     Test case extra 67:  SetExt heading with inline image with newline after the title
     """
@@ -2024,7 +2024,7 @@ def test_setext_headings_extra_67():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_67a():
+def test_setext_headings_extra_67a() -> None:
     """
     Test case extra 67a: variation of  67 with whitespace before newline
     """
@@ -2049,7 +2049,7 @@ def test_setext_headings_extra_67a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_67b():
+def test_setext_headings_extra_67b() -> None:
     """
     Test case extra 67b:  variation of 67 with whitespace after newline
     """
@@ -2072,7 +2072,7 @@ def test_setext_headings_extra_67b():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_67c():
+def test_setext_headings_extra_67c() -> None:
     """
     Test case extra 67c:  variation of 67 with whitespace before and after newline
     """
@@ -2097,7 +2097,7 @@ def test_setext_headings_extra_67c():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_68x():
+def test_setext_headings_extra_68x() -> None:
     """
     Test case extra 68:  SetExt heading with link containing label with replacement
     """
@@ -2121,7 +2121,7 @@ def test_setext_headings_extra_68x():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_68a():
+def test_setext_headings_extra_68a() -> None:
     """
     Test case extra 68a:  variation of 68 without special characters
     """
@@ -2145,7 +2145,7 @@ def test_setext_headings_extra_68a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_68b():
+def test_setext_headings_extra_68b() -> None:
     """
     Test case extra 68b:  variation of 68 with newline before special characters
     """
@@ -2170,7 +2170,7 @@ def test_setext_headings_extra_68b():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_69():
+def test_setext_headings_extra_69() -> None:
     """
     Test case extra 69:  SetExt heading with link containing label with backslash
     """
@@ -2194,7 +2194,7 @@ def test_setext_headings_extra_69():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_69a():
+def test_setext_headings_extra_69a() -> None:
     """
     Test case extra 69a:  variation of 69 with newline before special characters
     """
@@ -2219,7 +2219,7 @@ def test_setext_headings_extra_69a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_70():
+def test_setext_headings_extra_70() -> None:
     """
     Test case extra 70:  SetExt heading with link containing uri with space
     """
@@ -2243,7 +2243,7 @@ def test_setext_headings_extra_70():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_70a():
+def test_setext_headings_extra_70a() -> None:
     """
     Test case extra 70a:  variation of 70 with newline before special characters, rendering it invalid
     """
@@ -2264,7 +2264,7 @@ def test_setext_headings_extra_70a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_71():
+def test_setext_headings_extra_71() -> None:
     """
     Test case extra 71:  SetExt heading with link containing title with replacement
     """
@@ -2288,7 +2288,7 @@ def test_setext_headings_extra_71():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_71a():
+def test_setext_headings_extra_71a() -> None:
     """
     Test case extra 71a:  variation of 71 with newline before special characters
     """
@@ -2313,7 +2313,7 @@ def test_setext_headings_extra_71a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_72():
+def test_setext_headings_extra_72() -> None:
     """
     Test case extra 72:  SetExt heading with link containing title with backslash
     """
@@ -2337,7 +2337,7 @@ def test_setext_headings_extra_72():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_72a():
+def test_setext_headings_extra_72a() -> None:
     """
     Test case extra 72a:  variation of 72 with newline before special characters
     """
@@ -2362,7 +2362,7 @@ def test_setext_headings_extra_72a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_73():
+def test_setext_headings_extra_73() -> None:
     """
     Test case extra 73:  SetExt heading with image containing label with replacement
     """
@@ -2384,7 +2384,7 @@ def test_setext_headings_extra_73():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_73a():
+def test_setext_headings_extra_73a() -> None:
     """
     Test case extra 73a:  variation of 73 without special characters
     """
@@ -2406,7 +2406,7 @@ def test_setext_headings_extra_73a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_73b():
+def test_setext_headings_extra_73b() -> None:
     """
     Test case extra 73b:  73 variation of with newline before special characters
     """
@@ -2429,7 +2429,7 @@ def test_setext_headings_extra_73b():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_74():
+def test_setext_headings_extra_74() -> None:
     """
     Test case extra 74:  SetExt heading with image containing label with backslash
     """
@@ -2451,7 +2451,7 @@ def test_setext_headings_extra_74():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_74a():
+def test_setext_headings_extra_74a() -> None:
     """
     Test case extra 74a:  variation of 74 with newline before special characters
     """
@@ -2474,7 +2474,7 @@ def test_setext_headings_extra_74a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_75():
+def test_setext_headings_extra_75() -> None:
     """
     Test case extra 75:  SetExt heading with image containing uri with space
     """
@@ -2496,7 +2496,7 @@ def test_setext_headings_extra_75():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_75a():
+def test_setext_headings_extra_75a() -> None:
     """
     Test case extra 75a:  variation of 75 with newline before special characters, invalidating it
     """
@@ -2517,7 +2517,7 @@ def test_setext_headings_extra_75a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_76():
+def test_setext_headings_extra_76() -> None:
     """
     Test case extra 76:  SetExt heading with image containing title with replacement
     """
@@ -2539,7 +2539,7 @@ def test_setext_headings_extra_76():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_76a():
+def test_setext_headings_extra_76a() -> None:
     """
     Test case extra 76a:  variation of 76 with newline before special characters
     """
@@ -2562,7 +2562,7 @@ def test_setext_headings_extra_76a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_77():
+def test_setext_headings_extra_77() -> None:
     """
     Test case extra 77:  SetExt heading with image containing title with backslash
     """
@@ -2584,7 +2584,7 @@ def test_setext_headings_extra_77():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_77a():
+def test_setext_headings_extra_77a() -> None:
     """
     Test case extra 77a:  variation of 77 with newline before special characters
     """
@@ -2608,7 +2608,7 @@ def test_setext_headings_extra_77a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_78():
+def test_setext_headings_extra_78() -> None:
     """
     Test case extra 78:  SetExt heading with full link with backslash in label
     """
@@ -2636,7 +2636,7 @@ def test_setext_headings_extra_78():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_78a():
+def test_setext_headings_extra_78a() -> None:
     """
     Test case extra 78a:  variation of 78 with newline before special chars
     """
@@ -2665,7 +2665,7 @@ def test_setext_headings_extra_78a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_79():
+def test_setext_headings_extra_79() -> None:
     """
     Test case extra 79:  SetExt heading with full link with replacement in label
     """
@@ -2693,7 +2693,7 @@ def test_setext_headings_extra_79():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_79a():
+def test_setext_headings_extra_79a() -> None:
     """
     Test case extra 79a:  variation of 79 with newline before special characters
     """
@@ -2722,7 +2722,7 @@ def test_setext_headings_extra_79a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_80():
+def test_setext_headings_extra_80() -> None:
     """
     Test case extra 80:  SetExt heading with full link with replacement in reference
     """
@@ -2750,7 +2750,7 @@ def test_setext_headings_extra_80():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_80a():
+def test_setext_headings_extra_80a() -> None:
     """
     Test case extra 80a:  variation of 80 with newline before special characters
     """
@@ -2780,7 +2780,7 @@ def test_setext_headings_extra_80a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_81():
+def test_setext_headings_extra_81() -> None:
     """
     Test case extra 81:  SetExt heading with full link with backspace in reference
     """
@@ -2808,7 +2808,7 @@ def test_setext_headings_extra_81():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_81a():
+def test_setext_headings_extra_81a() -> None:
     """
     Test case extra 81a:  variation of 81 with newline before special characters
     """
@@ -2838,7 +2838,7 @@ def test_setext_headings_extra_81a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_82():
+def test_setext_headings_extra_82() -> None:
     """
     Test case extra 82:  SetExt heading with shortcut link with replacement in label
     """
@@ -2866,7 +2866,7 @@ def test_setext_headings_extra_82():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_82a():
+def test_setext_headings_extra_82a() -> None:
     """
     Test case extra 82a:  variation of 82 with newline before special characters
     """
@@ -2896,7 +2896,7 @@ def test_setext_headings_extra_82a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_83():
+def test_setext_headings_extra_83() -> None:
     """
     Test case extra 83:  SetExt heading with shortcut link with backslash in label
     """
@@ -2924,7 +2924,7 @@ def test_setext_headings_extra_83():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_83a():
+def test_setext_headings_extra_83a() -> None:
     """
     Test case extra 83a:  variation of 83 with newline before special characters
     """
@@ -2954,7 +2954,7 @@ def test_setext_headings_extra_83a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_84x():
+def test_setext_headings_extra_84x() -> None:
     """
     Test case extra 84:  SetExt heading with collapsed link with replacement in label
     """
@@ -2982,7 +2982,7 @@ def test_setext_headings_extra_84x():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_84a():
+def test_setext_headings_extra_84a() -> None:
     """
     Test case extra 84a:  variation of 84 with newline before special characters
     """
@@ -3012,7 +3012,7 @@ def test_setext_headings_extra_84a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_85():
+def test_setext_headings_extra_85() -> None:
     """
     Test case extra 85:  SetExt heading with collapsed link with backslash in label
     """
@@ -3040,7 +3040,7 @@ def test_setext_headings_extra_85():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_85a():
+def test_setext_headings_extra_85a() -> None:
     """
     Test case extra 85a:  variation of 85 with newline before special characters
     """
@@ -3070,7 +3070,7 @@ def test_setext_headings_extra_85a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_86x():
+def test_setext_headings_extra_86x() -> None:
     """
     Test case extra 86:  SetExt heading with full link with replacement in label
     """
@@ -3098,7 +3098,7 @@ def test_setext_headings_extra_86x():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_86a():
+def test_setext_headings_extra_86a() -> None:
     """
     Test case extra 86a:  variation of 86 with newline before special characters
     """
@@ -3127,7 +3127,7 @@ def test_setext_headings_extra_86a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_87():
+def test_setext_headings_extra_87() -> None:
     """
     Test case extra 87:  SetExt heading with full link with backslash in label
     """
@@ -3155,7 +3155,7 @@ def test_setext_headings_extra_87():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_87a():
+def test_setext_headings_extra_87a() -> None:
     """
     Test case extra 87a:  variation of 87 with newline before special characters
     """
@@ -3184,7 +3184,7 @@ def test_setext_headings_extra_87a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_88x():
+def test_setext_headings_extra_88x() -> None:
     """
     Test case extra 88:  SetExt heading with full link with backslash in link
     """
@@ -3212,7 +3212,7 @@ def test_setext_headings_extra_88x():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_88a():
+def test_setext_headings_extra_88a() -> None:
     """
     Test case extra 88a:  variation of 88 with newline before special characters
     """
@@ -3242,7 +3242,7 @@ def test_setext_headings_extra_88a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_89x():
+def test_setext_headings_extra_89x() -> None:
     """
     Test case extra 89:  SetExt heading with full link with replacement in link
     """
@@ -3270,7 +3270,7 @@ def test_setext_headings_extra_89x():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_89a():
+def test_setext_headings_extra_89a() -> None:
     """
     Test case extra 88a:  variation of 88 with newline before special characters
     """
@@ -3300,7 +3300,7 @@ def test_setext_headings_extra_89a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_90x():
+def test_setext_headings_extra_90x() -> None:
     """
     Test case extra 90:  SetExt heading with full image with backslash in label
     """
@@ -3326,7 +3326,7 @@ def test_setext_headings_extra_90x():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_90a():
+def test_setext_headings_extra_90a() -> None:
     """
     Test case extra 90a:  variation of 90 with newline before special chars
     """
@@ -3353,7 +3353,7 @@ def test_setext_headings_extra_90a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_91x():
+def test_setext_headings_extra_91x() -> None:
     """
     Test case extra 91:  SetExt heading with full image with replacement in label
     """
@@ -3379,7 +3379,7 @@ def test_setext_headings_extra_91x():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_91a():
+def test_setext_headings_extra_91a() -> None:
     """
     Test case extra 91a:  variation of 91 with newline before special characters
     """
@@ -3406,7 +3406,7 @@ def test_setext_headings_extra_91a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_92x():
+def test_setext_headings_extra_92x() -> None:
     """
     Test case extra 92:  SetExt heading with full image with replacement in reference
     """
@@ -3432,7 +3432,7 @@ def test_setext_headings_extra_92x():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_92a():
+def test_setext_headings_extra_92a() -> None:
     """
     Test case extra 92a:  variation of 92 with newline before special characters
     """
@@ -3460,7 +3460,7 @@ def test_setext_headings_extra_92a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_93x():
+def test_setext_headings_extra_93x() -> None:
     """
     Test case extra 93:  SetExt heading with full image with backspace in reference
     """
@@ -3486,7 +3486,7 @@ def test_setext_headings_extra_93x():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_93a():
+def test_setext_headings_extra_93a() -> None:
     """
     Test case extra 93a:  variation of 93 with newline before special characters
     """
@@ -3514,7 +3514,7 @@ def test_setext_headings_extra_93a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_94x():
+def test_setext_headings_extra_94x() -> None:
     """
     Test case extra 94:  SetExt heading with shortcut image with replacement in label
     """
@@ -3540,7 +3540,7 @@ def test_setext_headings_extra_94x():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_94a():
+def test_setext_headings_extra_94a() -> None:
     """
     Test case extra 94a:  variation of 94 with newline before special characters
     """
@@ -3568,7 +3568,7 @@ def test_setext_headings_extra_94a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_95x():
+def test_setext_headings_extra_95x() -> None:
     """
     Test case extra 95:  SetExt heading with shortcut image with backslash in label
     """
@@ -3594,7 +3594,7 @@ def test_setext_headings_extra_95x():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_95a():
+def test_setext_headings_extra_95a() -> None:
     """
     Test case extra 95a:  variation of 95 with newline before special characters
     """
@@ -3622,7 +3622,7 @@ def test_setext_headings_extra_95a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_96x():
+def test_setext_headings_extra_96x() -> None:
     """
     Test case extra 96:  SetExt heading with collapsed image with replacement in label
     """
@@ -3648,7 +3648,7 @@ def test_setext_headings_extra_96x():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_96a():
+def test_setext_headings_extra_96a() -> None:
     """
     Test case extra 96a:  variation of 96 with newline before special characters
     """
@@ -3676,7 +3676,7 @@ def test_setext_headings_extra_96a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_97x():
+def test_setext_headings_extra_97x() -> None:
     """
     Test case extra 97:  SetExt heading with collapsed image with backslash in label
     """
@@ -3702,7 +3702,7 @@ def test_setext_headings_extra_97x():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_97a():
+def test_setext_headings_extra_97a() -> None:
     """
     Test case extra 97a:  variation of 97 with newline before special characters
     """
@@ -3730,7 +3730,7 @@ def test_setext_headings_extra_97a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_98x():
+def test_setext_headings_extra_98x() -> None:
     """
     Test case extra 98:  SetExt heading with full image with replacement in label
     """
@@ -3756,7 +3756,7 @@ def test_setext_headings_extra_98x():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_98a():
+def test_setext_headings_extra_98a() -> None:
     """
     Test case extra 98a:  variation of 98 with newline before special characters
     """
@@ -3783,7 +3783,7 @@ def test_setext_headings_extra_98a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_99x():
+def test_setext_headings_extra_99x() -> None:
     """
     Test case extra 99:  SetExt heading with full image with backslash in label
     """
@@ -3809,7 +3809,7 @@ def test_setext_headings_extra_99x():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_99a():
+def test_setext_headings_extra_99a() -> None:
     """
     Test case extra 99a:  variation of 99 with newline before special characters
     """
@@ -3836,7 +3836,7 @@ def test_setext_headings_extra_99a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_a0x():
+def test_setext_headings_extra_a0x() -> None:
     """
     Test case extra A0:  SetExt heading with full image with backslash in link
     """
@@ -3862,7 +3862,7 @@ def test_setext_headings_extra_a0x():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_a0a():
+def test_setext_headings_extra_a0a() -> None:
     """
     Test case extra A0a:  variation of A0 with newline before special characters
     """
@@ -3890,7 +3890,7 @@ def test_setext_headings_extra_a0a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_a1x():
+def test_setext_headings_extra_a1x() -> None:
     """
     Test case extra A1:  SetExt heading with full image with replacement in link
     """
@@ -3916,7 +3916,7 @@ def test_setext_headings_extra_a1x():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_a1a():
+def test_setext_headings_extra_a1a() -> None:
     """
     Test case extra A1a:  variation of A1 with newline before special characters
     """
@@ -3944,7 +3944,7 @@ def test_setext_headings_extra_a1a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_a2():
+def test_setext_headings_extra_a2() -> None:
     """
     Test case extra A2:  SetExt heading with full image with label newline in url link
     """
@@ -3967,7 +3967,7 @@ o](</my url>)a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_a3():
+def test_setext_headings_extra_a3() -> None:
     """
     Test case extra A3:  SetExt with inline link label text split over 2 lines
     """
@@ -3994,7 +3994,7 @@ nk](/uri "title" )
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_a4():
+def test_setext_headings_extra_a4() -> None:
     """
     Test case extra A4:  SetText with inline link label code span split over 2 lines
     """
@@ -4025,7 +4025,7 @@ fg`nk](/uri "title" )
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_a5():
+def test_setext_headings_extra_a5() -> None:
     """
     Test case extra A5:  SetExt with inline link label raw html split over 2 lines
     """
@@ -4056,7 +4056,7 @@ fg>nk](/uri "title" )
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_a6():
+def test_setext_headings_extra_a6() -> None:
     """
     Test case extra A6:  SetExt with inline link label text split over 2 lines
     """
@@ -4085,7 +4085,7 @@ nk][bar]a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_a7():
+def test_setext_headings_extra_a7() -> None:
     """
     Test case extra A7:  SetExt with full link label code span split over 2 lines
     """
@@ -4118,7 +4118,7 @@ fg`nk][bar]a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_a8():
+def test_setext_headings_extra_a8() -> None:
     """
     Test case extra A8:  SetExt with full link label raw html split over 2 lines
     """
@@ -4149,7 +4149,7 @@ fg>nk][bar]a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_a9():
+def test_setext_headings_extra_a9() -> None:
     """
     Test case extra A9:  SetExt with collapsed link label text split over 2 lines
     """
@@ -4178,7 +4178,7 @@ nk][]a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_b0():
+def test_setext_headings_extra_b0() -> None:
     """
     Test case extra b0:  SetExt with collapsed link label code span split over 2 lines
     """
@@ -4211,7 +4211,7 @@ fg`nk][]a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_b1():
+def test_setext_headings_extra_b1() -> None:
     """
     Test case extra b1:  SetExt with collapsed link label raw html split over 2 lines
     """
@@ -4242,7 +4242,7 @@ fg>nk][]a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_b2():
+def test_setext_headings_extra_b2() -> None:
     """
     Test case extra b2:  SetExt with shortcut link label text split over 2 lines
     """
@@ -4271,7 +4271,7 @@ nk]a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_b3():
+def test_setext_headings_extra_b3() -> None:
     """
     Test case extra b3:  Paragraph with shortcut link label code span split over 2 lines
     """
@@ -4304,7 +4304,7 @@ fg`nk]a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_b4():
+def test_setext_headings_extra_b4() -> None:
     """
     Test case extra b4:  SetExt with shortcut link label raw html split over 2 lines
     """
@@ -4335,7 +4335,7 @@ fg>nk]a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_b5():
+def test_setext_headings_extra_b5() -> None:
     """
     Test case extra b5:  SetExt with inline image label text split over 2 lines
     """
@@ -4362,7 +4362,7 @@ nk](/uri "title" )
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_b6():
+def test_setext_headings_extra_b6() -> None:
     """
     Test case extra b6:  SetExt with inline image label code span split over 2 lines
     """
@@ -4389,7 +4389,7 @@ fg`nk](/uri "title" )
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_b7():
+def test_setext_headings_extra_b7() -> None:
     """
     Test case extra b7:  SetExt with inline image label raw html split over 2 lines
     """
@@ -4416,7 +4416,7 @@ fg>nk](/uri "title" )
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_b8():
+def test_setext_headings_extra_b8() -> None:
     """
     Test case extra b8:  SetExt with inline image label text split over 2 lines
     """
@@ -4443,7 +4443,7 @@ nk][bar]a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_b9():
+def test_setext_headings_extra_b9() -> None:
     """
     Test case extra b9:  SetExt with full image label code span split over 2 lines
     """
@@ -4470,7 +4470,7 @@ fg`nk][bar]a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_c0():
+def test_setext_headings_extra_c0() -> None:
     """
     Test case extra c0:  SetExt with full image label raw html split over 2 lines
     """
@@ -4497,7 +4497,7 @@ fg>nk][bar]a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_c1():
+def test_setext_headings_extra_c1() -> None:
     """
     Test case extra c1:  SetExt with collapsed image label text split over 2 lines
     """
@@ -4524,7 +4524,7 @@ nk][]a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_c2():
+def test_setext_headings_extra_c2() -> None:
     """
     Test case extra c2:  SetExt with collapsed image label code span split over 2 lines
     """
@@ -4551,7 +4551,7 @@ fg`nk][]a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_c3():
+def test_setext_headings_extra_c3() -> None:
     """
     Test case extra c3:  SetExt with collapsed image label raw html split over 2 lines
     """
@@ -4578,7 +4578,7 @@ fg>nk][]a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_c4():
+def test_setext_headings_extra_c4() -> None:
     """
     Test case extra c4:  SetExt with shortcut image label text split over 2 lines
     """
@@ -4605,7 +4605,7 @@ nk]a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_c5():
+def test_setext_headings_extra_c5() -> None:
     """
     Test case extra c5:  SetExt with shortcut image label code span split over 2 lines
     """
@@ -4632,7 +4632,7 @@ fg`nk]a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_c6():
+def test_setext_headings_extra_c6() -> None:
     """
     Test case extra c6:  SetExt with shortcut image label raw html split over 2 lines
     """
@@ -4659,7 +4659,7 @@ fg>nk]a
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_c7():
+def test_setext_headings_extra_c7() -> None:
     """
     Test case extra c7:  SetExt with link split over 2 lines followed by text split over 2 lines
     """
@@ -4689,7 +4689,7 @@ b
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_c8():
+def test_setext_headings_extra_c8() -> None:
     """
     Test case extra c8:  SetExt with image split over 2 lines followed by text split over 2 lines
     """
@@ -4715,7 +4715,7 @@ b
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_c9():
+def test_setext_headings_extra_c9() -> None:
     """
     Test case extra c9:  SetExt with link split over 2 lines followed by code span split over 2 lines
     """
@@ -4745,7 +4745,7 @@ b`
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_d0():
+def test_setext_headings_extra_d0() -> None:
     """
     Test case extra d0:  SetExt with image split over 2 lines followed by code span split over 2 lines
     """
@@ -4771,7 +4771,7 @@ b`
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_d1():
+def test_setext_headings_extra_d1() -> None:
     """
     Test case extra d1:  SetExt with image split over 2 lines followed by raw html split over 2 lines
     """
@@ -4801,7 +4801,7 @@ b>
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_d2():
+def test_setext_headings_extra_d2() -> None:
     """
     Test case extra d2:  SetExt with image split over 2 lines followed by raw html split over 2 lines
     """
@@ -4827,7 +4827,7 @@ b>
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_d3():
+def test_setext_headings_extra_d3() -> None:
     """
     Test case extra d3:  SetExt with link split over 2 lines followed by emphasis split over 2 lines
     """
@@ -4859,7 +4859,7 @@ b*
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_d4():
+def test_setext_headings_extra_d4() -> None:
     """
     Test case extra d4:  SetExt with image split over 2 lines followed by emphasis split over 2 lines
     """
@@ -4887,7 +4887,7 @@ b*
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_d5():
+def test_setext_headings_extra_d5() -> None:
     """
     Test case extra d5:  SetExt with link split at the whitespaces
     """
@@ -4916,7 +4916,7 @@ def test_setext_headings_extra_d5():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_d6():
+def test_setext_headings_extra_d6() -> None:
     """
     Test case extra d6:  SetExt with image split at the whitespaces
     """
@@ -4943,7 +4943,7 @@ def test_setext_headings_extra_d6():
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_d7():
+def test_setext_headings_extra_d7() -> None:
     """
     Test case extra d7:  SetExt with link surrounded by emphasis
     """
@@ -4973,7 +4973,7 @@ def
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_d8():
+def test_setext_headings_extra_d8() -> None:
     """
     Test case extra d8:  SetExt with image surrounded by emphasis
     """
@@ -5001,7 +5001,7 @@ def
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_d9():
+def test_setext_headings_extra_d9() -> None:
     """
     Test case extra d9:  SetExt with emphasis inside of link label
     """
@@ -5031,7 +5031,7 @@ def
 
 
 @pytest.mark.gfm
-def test_setext_headings_extra_e0():
+def test_setext_headings_extra_e0() -> None:
     """
     Test case extra e0:  SetExt with emphasis inside of image label
     """

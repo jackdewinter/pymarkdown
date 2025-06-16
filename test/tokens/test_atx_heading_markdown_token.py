@@ -4,7 +4,7 @@ from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.tokens.atx_heading_markdown_token import AtxHeadingMarkdownToken
 
 
-def test_atx_heading_markdown_token_modify_with_bad_name():
+def test_atx_heading_markdown_token_modify_with_bad_name() -> None:
     """
     Test to make sure that try to change this token with a bad name fails.
     """
@@ -15,7 +15,7 @@ def test_atx_heading_markdown_token_modify_with_bad_name():
         hash_count=3,
         remove_trailing_count=2,
         extracted_whitespace="",
-        position_marker=PositionMarker(1, 1, 1),
+        position_marker=PositionMarker(1, 1, "", 1),
     )
 
     # Act
@@ -28,7 +28,7 @@ def test_atx_heading_markdown_token_modify_with_bad_name():
     assert original_token.extracted_whitespace == ""
 
 
-def test_atx_heading_markdown_token_modify_with_bad_hash_count_value_type():
+def test_atx_heading_markdown_token_modify_with_bad_hash_count_value_type() -> None:
     """
     Test to make sure that try to change this token with a bad hash_count value type fails.
     """
@@ -39,7 +39,7 @@ def test_atx_heading_markdown_token_modify_with_bad_hash_count_value_type():
         hash_count=3,
         remove_trailing_count=2,
         extracted_whitespace="",
-        position_marker=PositionMarker(1, 1, 1),
+        position_marker=PositionMarker(1, 1, "", 1),
     )
 
     # Act
@@ -52,7 +52,7 @@ def test_atx_heading_markdown_token_modify_with_bad_hash_count_value_type():
     assert original_token.extracted_whitespace == ""
 
 
-def test_atx_heading_markdown_token_modify_with_bad_low_hash_count_value():
+def test_atx_heading_markdown_token_modify_with_bad_low_hash_count_value() -> None:
     """
     Test to make sure that try to change this token with a low hash_count value fails.
     """
@@ -63,7 +63,7 @@ def test_atx_heading_markdown_token_modify_with_bad_low_hash_count_value():
         hash_count=3,
         remove_trailing_count=2,
         extracted_whitespace="",
-        position_marker=PositionMarker(1, 1, 1),
+        position_marker=PositionMarker(1, 1, "", 1),
     )
 
     # Act
@@ -76,7 +76,7 @@ def test_atx_heading_markdown_token_modify_with_bad_low_hash_count_value():
     assert original_token.extracted_whitespace == ""
 
 
-def test_atx_heading_markdown_token_modify_with_bad_high_hash_count_value():
+def test_atx_heading_markdown_token_modify_with_bad_high_hash_count_value() -> None:
     """
     Test to make sure that try to change this token with a high hash_count value fails.
     """
@@ -87,7 +87,7 @@ def test_atx_heading_markdown_token_modify_with_bad_high_hash_count_value():
         hash_count=3,
         remove_trailing_count=2,
         extracted_whitespace="",
-        position_marker=PositionMarker(1, 1, 1),
+        position_marker=PositionMarker(1, 1, "", 1),
     )
 
     # Act
@@ -100,7 +100,7 @@ def test_atx_heading_markdown_token_modify_with_bad_high_hash_count_value():
     assert original_token.extracted_whitespace == ""
 
 
-def test_atx_heading_markdown_token_modify_with_good_high_hash_count_value():
+def test_atx_heading_markdown_token_modify_with_good_high_hash_count_value() -> None:
     """
     Test to make sure that try to change this token with a good hash_count value succeeds.
     """
@@ -111,7 +111,7 @@ def test_atx_heading_markdown_token_modify_with_good_high_hash_count_value():
         hash_count=3,
         remove_trailing_count=2,
         extracted_whitespace="",
-        position_marker=PositionMarker(1, 1, 1),
+        position_marker=PositionMarker(1, 1, "", 1),
     )
 
     # Act

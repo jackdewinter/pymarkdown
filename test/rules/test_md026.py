@@ -11,7 +11,7 @@ import pytest
 
 
 @pytest.mark.rules
-def test_md026_good_ends_without_punctuation_atx():
+def test_md026_good_ends_without_punctuation_atx() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a Atx heading that does not end in punctuation.
@@ -41,7 +41,7 @@ def test_md026_good_ends_without_punctuation_atx():
 
 
 @pytest.mark.rules
-def test_md026_good_ends_with_entity_atx():
+def test_md026_good_ends_with_entity_atx() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a Atx heading that does end in punctuation, but in entity form.
@@ -71,7 +71,7 @@ def test_md026_good_ends_with_entity_atx():
 
 
 @pytest.mark.rules
-def test_md026_bad_ends_with_punctuation_atx():
+def test_md026_bad_ends_with_punctuation_atx() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a Atx heading that does end in punctuation.
@@ -104,7 +104,7 @@ def test_md026_bad_ends_with_punctuation_atx():
 
 
 @pytest.mark.rules
-def test_md026_good_ends_with_punctuation_then_inline_atx():
+def test_md026_good_ends_with_punctuation_then_inline_atx() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a Atx heading that ends in punctuation followed by emphasis.
@@ -138,7 +138,7 @@ def test_md026_good_ends_with_punctuation_then_inline_atx():
 
 
 @pytest.mark.rules
-def test_md026_good_ends_with_punctuation_atx_with_configuration():
+def test_md026_good_ends_with_punctuation_atx_with_configuration() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a Atx heading that does end in punctuation, but with configuration
@@ -175,7 +175,7 @@ def test_md026_good_ends_with_punctuation_atx_with_configuration():
 
 
 @pytest.mark.rules
-def test_md026_good_ends_without_punctuation_setext():
+def test_md026_good_ends_without_punctuation_setext() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a SetExt heading that does not end in punctuation.
@@ -205,7 +205,7 @@ def test_md026_good_ends_without_punctuation_setext():
 
 
 @pytest.mark.rules
-def test_md026_good_ends_with_entity_setext():
+def test_md026_good_ends_with_entity_setext() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a SetExt heading that does end in punctuation, but as an entity.
@@ -235,7 +235,7 @@ def test_md026_good_ends_with_entity_setext():
 
 
 @pytest.mark.rules
-def test_md026_bad_ends_with_punctuation_setext():
+def test_md026_bad_ends_with_punctuation_setext() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a SetExt heading that does end in punctuation.
@@ -268,7 +268,7 @@ def test_md026_bad_ends_with_punctuation_setext():
 
 
 @pytest.mark.rules
-def test_md026_bad_ends_with_punctuation_setext_multiline():
+def test_md026_bad_ends_with_punctuation_setext_multiline() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a SetExt heading that is multiline and does end in punctuation.
@@ -305,7 +305,7 @@ def test_md026_bad_ends_with_punctuation_setext_multiline():
 
 
 @pytest.mark.rules
-def test_md026_good_ends_with_punctuation_then_inline_setext():
+def test_md026_good_ends_with_punctuation_then_inline_setext() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a SetExt heading that does end in punctuation and then emphasis.
@@ -339,7 +339,7 @@ def test_md026_good_ends_with_punctuation_then_inline_setext():
 
 
 @pytest.mark.rules
-def test_md026_good_ends_with_punctuation_setext_with_configuration():
+def test_md026_good_ends_with_punctuation_setext_with_configuration() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a SetExt heading that does end in punctuation, but configuration to compensate for it.
@@ -374,7 +374,7 @@ def test_md026_good_ends_with_punctuation_setext_with_configuration():
         )
 
 
-def test_md026_query_config():
+def test_md026_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md026",
         """

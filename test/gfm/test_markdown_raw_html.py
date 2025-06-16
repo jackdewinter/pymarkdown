@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_raw_html_632():
+def test_raw_html_632() -> None:
     """
     Test case 632:  Here are some simple open tags:
     """
@@ -29,7 +29,7 @@ def test_raw_html_632():
 
 
 @pytest.mark.gfm
-def test_raw_html_632a():
+def test_raw_html_632a() -> None:
     """
     Test case 632a:  variation of 632 with text between tags
     """
@@ -54,7 +54,7 @@ def test_raw_html_632a():
 
 
 @pytest.mark.gfm
-def test_raw_html_633():
+def test_raw_html_633() -> None:
     """
     Test case 633:  Empty elements:
     """
@@ -74,7 +74,7 @@ def test_raw_html_633():
 
 
 @pytest.mark.gfm
-def test_raw_html_634():
+def test_raw_html_634() -> None:
     """
     Test case 634:  Whitespace is allowed:
     """
@@ -96,7 +96,7 @@ data="foo" ></p>"""
 
 
 @pytest.mark.gfm
-def test_raw_html_634a():
+def test_raw_html_634a() -> None:
     """
     Test case 634a:  variation of 634 in list
     """
@@ -123,7 +123,7 @@ data="foo" ><c></li>
 
 
 @pytest.mark.gfm
-def test_raw_html_634bx():
+def test_raw_html_634bx() -> None:
     """
     Test case 634b:  variation of 634 in block quote
     """
@@ -150,7 +150,7 @@ data="foo" ><c></p>
 
 
 @pytest.mark.gfm
-def test_raw_html_634ba():
+def test_raw_html_634ba() -> None:
     """
     Test case 634ba:  variation of 634 in block quote
     """
@@ -177,7 +177,7 @@ data="foo" ><c></p>
 
 
 @pytest.mark.gfm
-def test_raw_html_634bb():
+def test_raw_html_634bb() -> None:
     """
     Test case 634bb:  variation of 634 in block quote
     """
@@ -204,7 +204,7 @@ data="foo" ><c></p>
 
 
 @pytest.mark.gfm
-def test_raw_html_634c():
+def test_raw_html_634c() -> None:
     """
     Test case 634c:  variation of 634 in setext
     """
@@ -228,7 +228,7 @@ data="foo" ><c></h2>"""
 
 
 @pytest.mark.gfm
-def test_raw_html_634d():
+def test_raw_html_634d() -> None:
     """
     Test case 634c:  variation of 634 in atx
     """
@@ -255,7 +255,7 @@ data="foo" ><c>"""
 
 
 @pytest.mark.gfm
-def test_raw_html_635():
+def test_raw_html_635() -> None:
     """
     Test case 635:  With attributes:
     """
@@ -277,7 +277,7 @@ _boolean zoop:33=zoop:33 /></p>"""
 
 
 @pytest.mark.gfm
-def test_raw_html_636():
+def test_raw_html_636() -> None:
     """
     Test case 636:  Custom tag names can be used:
     """
@@ -297,7 +297,7 @@ def test_raw_html_636():
 
 
 @pytest.mark.gfm
-def test_raw_html_637():
+def test_raw_html_637() -> None:
     """
     Test case 637:  Illegal tag names, not parsed as HTML:
     """
@@ -316,7 +316,7 @@ def test_raw_html_637():
 
 
 @pytest.mark.gfm
-def test_raw_html_638():
+def test_raw_html_638() -> None:
     """
     Test case 638:  Illegal attribute names:
     """
@@ -335,7 +335,7 @@ def test_raw_html_638():
 
 
 @pytest.mark.gfm
-def test_raw_html_639():
+def test_raw_html_639() -> None:
     """
     Test case 639:  Illegal attribute values:
     """
@@ -354,7 +354,7 @@ def test_raw_html_639():
 
 
 @pytest.mark.gfm
-def test_raw_html_639a():
+def test_raw_html_639a() -> None:
     """
     Test case 639a:  Illegal attribute values:
     """
@@ -373,7 +373,7 @@ def test_raw_html_639a():
 
 
 @pytest.mark.gfm
-def test_raw_html_640():
+def test_raw_html_640() -> None:
     """
     Test case 640:  Illegal whitespace:
     """
@@ -398,7 +398,7 @@ bim!bop /&gt;</p>"""
 
 
 @pytest.mark.gfm
-def test_raw_html_641():
+def test_raw_html_641() -> None:
     """
     Test case 641:  Missing whitespace:
     """
@@ -417,7 +417,7 @@ def test_raw_html_641():
 
 
 @pytest.mark.gfm
-def test_raw_html_642():
+def test_raw_html_642() -> None:
     """
     Test case 642:  Closing tags:
     """
@@ -437,7 +437,7 @@ def test_raw_html_642():
 
 
 @pytest.mark.gfm
-def test_raw_html_642a():
+def test_raw_html_642a() -> None:
     """
     Test case 642a:  variation on 642 with a closing tag character without a valid closing tag name
     """
@@ -456,7 +456,7 @@ def test_raw_html_642a():
 
 
 @pytest.mark.gfm
-def test_raw_html_643():
+def test_raw_html_643() -> None:
     """
     Test case 643:  Illegal attributes in closing tag:
     """
@@ -475,7 +475,7 @@ def test_raw_html_643():
 
 
 @pytest.mark.gfm
-def test_raw_html_644():
+def test_raw_html_644() -> None:
     """
     Test case 644:  (part 1) Comments:
     """
@@ -497,7 +497,7 @@ comment - with hyphen --></p>"""
 
 
 @pytest.mark.gfm
-def test_raw_html_644a():
+def test_raw_html_644a() -> None:
     """
     Test case 644a:  variation of 644 with extra indent
     """
@@ -519,7 +519,7 @@ comment - with hyphen --></p>"""
 
 
 @pytest.mark.gfm
-def test_raw_html_644aa():
+def test_raw_html_644aa() -> None:
     """
     Test case 644a:  variation of 644 with extra indent and trailing text
     """
@@ -542,7 +542,7 @@ comment - with hyphen -->bar</p>"""
 
 
 @pytest.mark.gfm
-def test_raw_html_644b():
+def test_raw_html_644b() -> None:
     """
     Test case 644b:  variation of 644 with extra indent and trailing text
     """
@@ -567,7 +567,7 @@ bar</p>"""
 
 
 @pytest.mark.gfm
-def test_raw_html_644c():
+def test_raw_html_644c() -> None:
     """
     Test case 644c:  variation of 644 with comment text
     """
@@ -594,7 +594,7 @@ comment - with hyphen
 
 
 @pytest.mark.gfm
-def test_raw_html_645():
+def test_raw_html_645() -> None:
     """
     Test case 645:  (part 2) Comments:
     """
@@ -613,7 +613,7 @@ def test_raw_html_645():
 
 
 @pytest.mark.gfm
-def test_raw_html_646():
+def test_raw_html_646() -> None:
     """
     Test case 646:  Not comments:
     """
@@ -639,7 +639,7 @@ foo <!-- foo--->"""
 
 
 @pytest.mark.gfm
-def test_raw_html_646a():
+def test_raw_html_646a() -> None:
     """
     Test case 646a:  Not comments:
     """
@@ -658,7 +658,7 @@ def test_raw_html_646a():
 
 
 @pytest.mark.gfm
-def test_raw_html_647():
+def test_raw_html_647() -> None:
     """
     Test case 647:  Processing instructions:
     """
@@ -678,7 +678,7 @@ def test_raw_html_647():
 
 
 @pytest.mark.gfm
-def test_raw_html_648():
+def test_raw_html_648() -> None:
     """
     Test case 648:  Declarations:
     """
@@ -698,7 +698,7 @@ def test_raw_html_648():
 
 
 @pytest.mark.gfm
-def test_raw_html_648a():
+def test_raw_html_648a() -> None:
     """
     Test case 648a:  variation of 644 with shorter
     """
@@ -717,7 +717,7 @@ def test_raw_html_648a():
 
 
 @pytest.mark.gfm
-def test_raw_html_649():
+def test_raw_html_649() -> None:
     """
     Test case 649:  CDATA sections:
     """
@@ -737,7 +737,7 @@ def test_raw_html_649():
 
 
 @pytest.mark.gfm
-def test_raw_html_650():
+def test_raw_html_650() -> None:
     """
     Test case 650:  Entity and numeric character references are preserved in HTML attributes:
     """
@@ -757,7 +757,7 @@ def test_raw_html_650():
 
 
 @pytest.mark.gfm
-def test_raw_html_651():
+def test_raw_html_651() -> None:
     """
     Test case 651:  (part 1) Backslash escapes do not work in HTML attributes:
     """
@@ -777,7 +777,7 @@ def test_raw_html_651():
 
 
 @pytest.mark.gfm
-def test_raw_html_652():
+def test_raw_html_652() -> None:
     """
     Test case 652:  (part 2) Backslash escapes do not work in HTML attributes:
     """

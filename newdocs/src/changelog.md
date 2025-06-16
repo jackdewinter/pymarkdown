@@ -17,6 +17,24 @@
 
 - None
 
+## Version 0.9.31 - 2025-06-15
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Added
+
+- [Issue 1427](https://github.com/jackdewinter/pymarkdown/issues/1427)
+    - Adhering to project templates.
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
+- None
+
+<!--- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+- None
+
 ## Version 0.9.30 - Date: 2025-04-19
 
 <!--- pyml disable-next-line no-duplicate-heading-->

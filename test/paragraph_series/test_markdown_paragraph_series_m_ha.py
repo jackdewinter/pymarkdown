@@ -9,7 +9,7 @@ import pytest
 
 # pylint: disable=too-many-lines
 @pytest.mark.gfm
-def test_paragraph_series_m_ha_ol_nl_ha_t():
+def test_paragraph_series_m_ha_ol_nl_ha_t() -> None:
     """
     Test case:  Ordered list newline atx heading text
     was:        test_list_blocks_256g
@@ -38,7 +38,7 @@ def test_paragraph_series_m_ha_ol_nl_ha_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ha_ol_nl_i2_ha_t():
+def test_paragraph_series_m_ha_ol_nl_i2_ha_t() -> None:
     """
     Test case:  Ordered list newline indent of 2 atx heading text
     was:        test_list_blocks_256gxa
@@ -67,7 +67,7 @@ def test_paragraph_series_m_ha_ol_nl_i2_ha_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ha_ol_nl_i3_ha_t():
+def test_paragraph_series_m_ha_ol_nl_i3_ha_t() -> None:
     """
     Test case:  Ordered list newline indent of 3 atx heading text
     was:        test_list_blocks_256gxb
@@ -97,7 +97,7 @@ def test_paragraph_series_m_ha_ol_nl_i3_ha_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ha_ol_t_nl_ha_t():
+def test_paragraph_series_m_ha_ol_t_nl_ha_t() -> None:
     """
     Test case:  Ordered list text newline atx heading text
     was:        test_list_blocks_256ga
@@ -128,7 +128,7 @@ def test_paragraph_series_m_ha_ol_t_nl_ha_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ha_ol_t_nl_i2_ha_t():
+def test_paragraph_series_m_ha_ol_t_nl_i2_ha_t() -> None:
     """
     Test case:  Ordered list text newline indent of 2 atx heading text
     was:        test_list_blocks_256gaa
@@ -159,7 +159,7 @@ def test_paragraph_series_m_ha_ol_t_nl_i2_ha_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ha_ol_t_nl_i3_ha_t():
+def test_paragraph_series_m_ha_ol_t_nl_i3_ha_t() -> None:
     """
     Test case:  Ordered list text newline indent of 3 atx heading text
     was:        test_list_blocks_256gab
@@ -191,7 +191,7 @@ def test_paragraph_series_m_ha_ol_t_nl_i3_ha_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ha_ol_ol_nl_ha_t():
+def test_paragraph_series_m_ha_ol_ol_nl_ha_t() -> None:
     """
     Test case:  Ordered list x2 newline atx heading text
     """
@@ -225,7 +225,7 @@ def test_paragraph_series_m_ha_ol_ol_nl_ha_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ha_ol_ol_t_nl_ha_t():
+def test_paragraph_series_m_ha_ol_ol_t_nl_ha_t() -> None:
     """
     Test case:  Ordered list x2 text newline atx heading text
     was:        test_list_blocks_256gb
@@ -262,7 +262,7 @@ def test_paragraph_series_m_ha_ol_ol_t_nl_ha_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ha_ol_nl_ol_nl_ha_t():
+def test_paragraph_series_m_ha_ol_nl_ol_nl_ha_t() -> None:
     """
     Test case:  Ordered list newline ordered list new line atx heading text
     """
@@ -298,7 +298,7 @@ def test_paragraph_series_m_ha_ol_nl_ol_nl_ha_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ha_ol_t_nl_ol_nl_ha_t():
+def test_paragraph_series_m_ha_ol_t_nl_ol_nl_ha_t() -> None:
     """
     Test case:  Ordered list text newline ordered list new line atx heading text
     """
@@ -330,7 +330,7 @@ def test_paragraph_series_m_ha_ol_t_nl_ol_nl_ha_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ha_ul_t_nl_ul_nl_ha_t():
+def test_paragraph_series_m_ha_ul_t_nl_ul_nl_ha_t() -> None:
     """
     Test case:  Unordered list text newline unordered list new line atx heading text
     """
@@ -363,7 +363,7 @@ def test_paragraph_series_m_ha_ul_t_nl_ul_nl_ha_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ha_ul_t_nl_ulb_nl_ha_t():
+def test_paragraph_series_m_ha_ul_t_nl_ulb_nl_ha_t() -> None:
     """
     Test case:  Unordered list text newline unordered list (b) new line atx heading text
     """
@@ -395,7 +395,7 @@ def test_paragraph_series_m_ha_ul_t_nl_ulb_nl_ha_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ha_ol_nl_ol_t_nl_ha_t():
+def test_paragraph_series_m_ha_ol_nl_ol_t_nl_ha_t() -> None:
     """
     Test case:  Ordered list newline ordered list text new line atx heading text
     was:        test_list_blocks_256gc
@@ -434,7 +434,7 @@ def test_paragraph_series_m_ha_ol_nl_ol_t_nl_ha_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ha_ol_t_nl_ol_t_nl_ha_t():
+def test_paragraph_series_m_ha_ol_t_nl_ol_t_nl_ha_t() -> None:
     """
     Test case:  Ordered list text newline ordered list text new line atx heading text
     """
@@ -474,7 +474,7 @@ def test_paragraph_series_m_ha_ol_t_nl_ol_t_nl_ha_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ha_ol_nl_ol_nl_i2_ha_t():
+def test_paragraph_series_m_ha_ol_nl_ol_nl_i2_ha_t() -> None:
     """
     Test case:  Ordered list newline ordered list new line indent of 2 atx heading text
     """
@@ -510,7 +510,7 @@ def test_paragraph_series_m_ha_ol_nl_ol_nl_i2_ha_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ha_ol_t_nl_ol_nl_i2_ha_t():
+def test_paragraph_series_m_ha_ol_t_nl_ol_nl_i2_ha_t() -> None:
     """
     Test case:  Ordered list text newline ordered list new line indent of 2 atx heading text
     """
@@ -542,7 +542,7 @@ def test_paragraph_series_m_ha_ol_t_nl_ol_nl_i2_ha_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ha_ul_t_nl_ul_nl_i1_ha_t():
+def test_paragraph_series_m_ha_ul_t_nl_ul_nl_i1_ha_t() -> None:
     """
     Test case:  Unordered list text newline unordered list new line indent of 2 atx heading text
     """
@@ -575,7 +575,7 @@ def test_paragraph_series_m_ha_ul_t_nl_ul_nl_i1_ha_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ha_ul_t_nl_ulb_nl_i1_ha_t():
+def test_paragraph_series_m_ha_ul_t_nl_ulb_nl_i1_ha_t() -> None:
     """
     Test case:  Unordered list text newline unordered list (b) new line indent of 2 atx heading text
     """
@@ -607,7 +607,7 @@ def test_paragraph_series_m_ha_ul_t_nl_ulb_nl_i1_ha_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ha_ol_nl_ol_t_nl_i2_ha_t():
+def test_paragraph_series_m_ha_ol_nl_ol_t_nl_i2_ha_t() -> None:
     """
     Test case:  Ordered list newline ordered list text new line indent of 2 atx heading text
     was:        test_list_blocks_256gd
@@ -646,7 +646,7 @@ def test_paragraph_series_m_ha_ol_nl_ol_t_nl_i2_ha_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ha_ol_t_nl_ol_t_nl_i2_ha_t():
+def test_paragraph_series_m_ha_ol_t_nl_ol_t_nl_i2_ha_t() -> None:
     """
     Test case:  Ordered list text newline ordered list text new line indent of 2 atx heading text
     """
@@ -686,7 +686,7 @@ def test_paragraph_series_m_ha_ol_t_nl_ol_t_nl_i2_ha_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ha_ol_nl_ol_nl_i3_ha_t():
+def test_paragraph_series_m_ha_ol_nl_ol_nl_i3_ha_t() -> None:
     """
     Test case:  Ordered list newline ordered list new line indent of 3 atx heading text
     """
@@ -722,7 +722,7 @@ def test_paragraph_series_m_ha_ol_nl_ol_nl_i3_ha_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ha_ol_t_nl_ol_nl_i3_ha_t():
+def test_paragraph_series_m_ha_ol_t_nl_ol_nl_i3_ha_t() -> None:
     """
     Test case:  Ordered list text newline ordered list new line indent of 3 atx heading text
     """
@@ -755,7 +755,7 @@ def test_paragraph_series_m_ha_ol_t_nl_ol_nl_i3_ha_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ha_ul_t_nl_ul_nl_i2_ha_t():
+def test_paragraph_series_m_ha_ul_t_nl_ul_nl_i2_ha_t() -> None:
     """
     Test case:  Unordered list text newline unordered list new line indent of 2 atx heading text
     """
@@ -788,7 +788,7 @@ def test_paragraph_series_m_ha_ul_t_nl_ul_nl_i2_ha_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ha_ul_t_nl_ulb_nl_i2_ha_t():
+def test_paragraph_series_m_ha_ul_t_nl_ulb_nl_i2_ha_t() -> None:
     """
     Test case:  Unordered list text newline unordered list (b) new line indent of 2 atx heading text
     """
@@ -821,7 +821,7 @@ def test_paragraph_series_m_ha_ul_t_nl_ulb_nl_i2_ha_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ha_ol_nl_ol_t_nl_i3_ha_t():
+def test_paragraph_series_m_ha_ol_nl_ol_t_nl_i3_ha_t() -> None:
     """
     Test case:  Ordered list newline ordered list text new line indent of 3 atx heading text
     was:        test_list_blocks_256ge
@@ -860,7 +860,7 @@ def test_paragraph_series_m_ha_ol_nl_ol_t_nl_i3_ha_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ha_ol_t_nl_ol_t_nl_i3_ha_t():
+def test_paragraph_series_m_ha_ol_t_nl_ol_t_nl_i3_ha_t() -> None:
     """
     Test case:  Ordered list text newline ordered list text new line indent of 3 atx heading text
     """

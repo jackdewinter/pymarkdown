@@ -10,7 +10,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_i3_ol_nl_i4_t_ib():
+def test_paragraph_series_m_ib_i3_ol_nl_i4_t_ib() -> None:
     """
     Test case:  Indent of 3 ordered list newline indent of 4 text (indented block)
     was:        test_list_blocks_256ix
@@ -40,7 +40,7 @@ def test_paragraph_series_m_ib_i3_ol_nl_i4_t_ib():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_i3_ol_nl_i7_t_all_ib():
+def test_paragraph_series_m_ib_i3_ol_nl_i7_t_all_ib() -> None:
     """
     Test case:  Indent of 3 ordered list newline indent of 7 text (indented block)
     """
@@ -70,7 +70,7 @@ def test_paragraph_series_m_ib_i3_ol_nl_i7_t_all_ib():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_i3_ol_nl_i5_t_ib():
+def test_paragraph_series_m_ib_i3_ol_nl_i5_t_ib() -> None:
     """
     Test case:  Indent of 3 ordered list newline indent of 5 text (indented block)
     was:        test_list_blocks_256ixa
@@ -100,7 +100,7 @@ def test_paragraph_series_m_ib_i3_ol_nl_i5_t_ib():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_i3_ol_nl_i6_t_fb():
+def test_paragraph_series_m_ib_i3_ol_nl_i6_t_fb() -> None:
     """
     Test case:  Indent of 3 ordered list newline indent of 6 text (indented block)
     was:        test_list_blocks_256ixb
@@ -128,7 +128,7 @@ def test_paragraph_series_m_ib_i3_ol_nl_i6_t_fb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_i3_ol_t_nl_i4_t_ib():
+def test_paragraph_series_m_ib_i3_ol_t_nl_i4_t_ib() -> None:
     """
     Test case:  Indent of 3 ordered list text newline indent of 4 text (indented block)
     was:        test_list_blocks_256ia
@@ -156,7 +156,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_i3_ol_t_nl_i10_t_all_ib():
+def test_paragraph_series_m_ib_i3_ol_t_nl_i10_t_all_ib() -> None:
     """
     Test case:  Indent of 3 ordered list text newline indent of 4 text (indented block)
     """
@@ -183,7 +183,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_i3_ol_t_nl_nl_i10_t_all_ib():
+def test_paragraph_series_m_ib_i3_ol_t_nl_nl_i10_t_all_ib() -> None:
     """
     Test case:  Indent of 3 ordered list text newline indent of 4 text (indented block)
     """
@@ -218,7 +218,7 @@ def test_paragraph_series_m_ib_i3_ol_t_nl_nl_i10_t_all_ib():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_i3_ol_t_nl_i5_t_ib():
+def test_paragraph_series_m_ib_i3_ol_t_nl_i5_t_ib() -> None:
     """
     Test case:  Indent of 3 ordered list text newline indent of 5 text (indented block)
     was:        test_list_blocks_256iaa
@@ -246,7 +246,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_i3_ol_t_nl_i6_t_ib():
+def test_paragraph_series_m_ib_i3_ol_t_nl_i6_t_ib() -> None:
     """
     Test case:  Indent of 3 ordered list text newline indent of 6 text (indented block)
     was:        test_list_blocks_256iab
@@ -274,7 +274,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_ol_ol_nl_i4_t_ib():
+def test_paragraph_series_m_ib_ol_ol_nl_i4_t_ib() -> None:
     """
     Test case:  Ordered list x2 newline indent of 4 text (indented block)
     """
@@ -307,7 +307,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_ol_ol_nl_i10_t_all_ib():
+def test_paragraph_series_m_ib_ol_ol_nl_i10_t_all_ib() -> None:
     """
     Test case:  Ordered list x2 newline indent of 4 text (indented block)
     """
@@ -343,7 +343,7 @@ def test_paragraph_series_m_ib_ol_ol_nl_i10_t_all_ib():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_ol_ol_t_nl_i4_t_ib():
+def test_paragraph_series_m_ib_ol_ol_t_nl_i4_t_ib() -> None:
     """
     Test case:  Ordered list x2 text newline indent of 4 text (indented block)
     was:        test_list_blocks_256ib
@@ -377,7 +377,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_ol_ol_t_nl_i4_t_all_ib():
+def test_paragraph_series_m_ib_ol_ol_t_nl_i4_t_all_ib() -> None:
     """
     Test case:  Ordered list x2 text newline indent of 4 text (indented block)
     """
@@ -410,7 +410,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_ol_ol_t_nl_nl_i4_t_all_ib():
+def test_paragraph_series_m_ib_ol_ol_t_nl_nl_i4_t_all_ib() -> None:
     """
     Test case:  Ordered list x2 text newline newline indent of 4 text (indented block)
     """
@@ -451,7 +451,7 @@ def test_paragraph_series_m_ib_ol_ol_t_nl_nl_i4_t_all_ib():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_ol_nl_i3_ol_nl_i4_t_ib():
+def test_paragraph_series_m_ib_ol_nl_i3_ol_nl_i4_t_ib() -> None:
     """
     Test case:  Ordered list newline indent of 3 ordered list newline indent of 4 text (indented block)
     """
@@ -486,7 +486,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_ol_t_nl_i3_ol_nl_i4_t_ib():
+def test_paragraph_series_m_ib_ol_t_nl_i3_ol_nl_i4_t_ib() -> None:
     """
     Test case:  Ordered list text newline indent of 3 ordered list newline indent of 4 text (indented block)
     """
@@ -515,7 +515,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_ul_t_nl_i2_ul_nl_i4_t_ib():
+def test_paragraph_series_m_ib_ul_t_nl_i2_ul_nl_i4_t_ib() -> None:
     """
     Test case:  Unordered list text newline indent of 2 unordered list newline indent of 4 text (indented block)
     """
@@ -547,7 +547,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_ul_t_nl_i2_ulb_nl_i4_t_ib():
+def test_paragraph_series_m_ib_ul_t_nl_i2_ulb_nl_i4_t_ib() -> None:
     """
     Test case:  Unordered list text newline indent of 2 unordered list (b) newline indent of 4 text (indented block)
     """
@@ -576,7 +576,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_ol_nl_i3_ol_t_nl_i4_t_ib():
+def test_paragraph_series_m_ib_ol_nl_i3_ol_t_nl_i4_t_ib() -> None:
     """
     Test case:  Ordered list newline indent of 3 ordered list text newline indent of 4 text (indented block)
     was:        test_list_blocks_256ic
@@ -612,7 +612,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_ol_t_nl_i3_ol_t_nl_i4_t_ib():
+def test_paragraph_series_m_ib_ol_t_nl_i3_ol_t_nl_i4_t_ib() -> None:
     """
     Test case:  Ordered list text newline indent of 3 ordered list text newline indent of 4 text (indented block)
     """
@@ -649,7 +649,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_i3_ol_nl_i5_ol_nl_i4_t_ib():
+def test_paragraph_series_m_ib_i3_ol_nl_i5_ol_nl_i4_t_ib() -> None:
     """
     Test case:  Indent of 3 ordered list newline indent of 5 ordered list newline indent of 4 text (indented block)
     """
@@ -684,7 +684,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_i3_ol_t_nl_i5_ol_nl_i4_t_ib():
+def test_paragraph_series_m_ib_i3_ol_t_nl_i5_ol_nl_i4_t_ib() -> None:
     """
     Test case:  Indent of 3 ordered list text newline indent of 5 ordered list newline indent of 4 text (indented block)
     """
@@ -721,7 +721,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_i3_ol_nl_i5_ol_t_nl_i4__t_ib():
+def test_paragraph_series_m_ib_i3_ol_nl_i5_ol_t_nl_i4__t_ib() -> None:
     """
     Test case:  Indent of 3 ordered list newline indent of 5 ordered list text newline indent of 4 text (indented block)
     was:        test_list_blocks_256id
@@ -757,7 +757,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_i3_ol_t_nl_i5_ol_t_nl_i4_t_ib():
+def test_paragraph_series_m_ib_i3_ol_t_nl_i5_ol_t_nl_i4_t_ib() -> None:
     """
     Test case:  Indent of 3 ordered list text newline indent of 5 ordered list
                 text newline indent of 4 text (indented block)
@@ -795,7 +795,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_i1_ol_nl_i4_ol_nl_i4_t_ib():
+def test_paragraph_series_m_ib_i1_ol_nl_i4_ol_nl_i4_t_ib() -> None:
     """
     Test case:  Indent of 1 ordered list newline indent of 4 ordered list newline indent of 4 text (indented block)
     """
@@ -824,7 +824,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_i2_ul_nl_i4_ul_nl_i4_t_ib():
+def test_paragraph_series_m_ib_i2_ul_nl_i4_ul_nl_i4_t_ib() -> None:
     """
     Test case:  Indent of 2 unordered list newline indent of 4 unordered list newline indent of 4 text (indented block)
     """
@@ -856,7 +856,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_i2_ul_nl_i4_ulb_nl_i4_t_ib():
+def test_paragraph_series_m_ib_i2_ul_nl_i4_ulb_nl_i4_t_ib() -> None:
     """
     Test case:  Indent of 2 unordered list newline indent of 4 unordered list
                 (b) newline indent of 4 text (indented block)
@@ -886,7 +886,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_i1_ol_t_nl_i4_ol_nl_i4_t_ib():
+def test_paragraph_series_m_ib_i1_ol_t_nl_i4_ol_nl_i4_t_ib() -> None:
     """
     Test case:  Indent of 1 ordered list text newline indent of 4 ordered list newline indent of 4 text (indented block)
     """
@@ -915,7 +915,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_i2_ul_t_nl_i4_ul_nl_i4_t_ib():
+def test_paragraph_series_m_ib_i2_ul_t_nl_i4_ul_nl_i4_t_ib() -> None:
     """
     Test case:  Indent of 2 unordered list text newline indent of 4 unordered
                 list newline indent of 4 text (indented block)
@@ -948,7 +948,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_i2_ul_t_nl_i4_ulb_nl_i4_t_ib():
+def test_paragraph_series_m_ib_i2_ul_t_nl_i4_ulb_nl_i4_t_ib() -> None:
     """
     Test case:  Indent of 2 unordered list text newline indent of 4 unordered
                 list (b) newline indent of 4 text (indented block)
@@ -978,7 +978,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_i1_ol_nl_i4_ol_t_nl_i4_t_ib():
+def test_paragraph_series_m_ib_i1_ol_nl_i4_ol_t_nl_i4_t_ib() -> None:
     """
     Test case:  Indent of 1 ordered list newline indent of 4 ordered list text newline indent of 4 text (indented block)
     """
@@ -1013,7 +1013,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_ib_i1_ol_t_nl_i4_ol_t_nl_i4_t_ib():
+def test_paragraph_series_m_ib_i1_ol_t_nl_i4_ol_t_nl_i4_t_ib() -> None:
     """
     Test case:  Indent of 1 ordered list text newline indent of 4 ordered list text
                 newline indent of 4 text (indented block)

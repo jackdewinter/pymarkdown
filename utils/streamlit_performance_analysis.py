@@ -1,3 +1,7 @@
+"""
+Streamlit application to visualize performance data.
+"""
+
 import csv
 import json
 from typing import Any, Dict
@@ -8,10 +12,10 @@ import streamlit as st
 st.set_page_config(layout="wide")
 
 
-def load_tally_map(file_to_load: str) -> Dict[str, Any]:
+def __load_tally_map(file_to_load: str) -> Dict[str, Any]:
     tally_map = {}
-    with open(file_to_load, "r", encoding="utf-8") as requirement_file:
-        csv_reader = csv.reader(requirement_file)
+    with open(file_to_load, "r", encoding="utf-8") as requirement_filex:
+        csv_reader = csv.reader(requirement_filex)
         for next_row in csv_reader:
             num_repeats = next_row[0]
             test_duration = float(next_row[2])
@@ -32,17 +36,17 @@ def load_tally_map(file_to_load: str) -> Dict[str, Any]:
     }
 
     data_columns = ["repeats", "Complete Duration (s)"]
-    columnized_data = {i: [] for i in data_columns}
+    columnized_datax = {i: [] for i in data_columns}
     for next_aggregated_sample in average_tally_map.values():
-        columnized_data["repeats"].append(int(next_aggregated_sample["repeats"]))
-        columnized_data["Complete Duration (s)"].append(
+        columnized_datax["repeats"].append(int(next_aggregated_sample["repeats"]))
+        columnized_datax["Complete Duration (s)"].append(
             float(next_aggregated_sample["Complete Duration (s)"])
         )
-    return columnized_data
+    return columnized_datax
 
 
 if show_current := st.checkbox("Show current", value=True):
-    columnized_data = load_tally_map("build/series.csv")
+    columnized_data = __load_tally_map("build/series.csv")
     if show_source_table := st.checkbox("Show source table", value=True):
         st.table(columnized_data)
 
@@ -54,8 +58,8 @@ if show_current := st.checkbox("Show current", value=True):
     data = pd.DataFrame(gg)
     st.table(data)
 else:
-    columnized_data = load_tally_map("publish/perf-with-rules.csv")
-    columnized_data2 = load_tally_map("publish/perf-without-rules.csv")
+    columnized_data = __load_tally_map("publish/perf-with-rules.csv")
+    columnized_data2 = __load_tally_map("publish/perf-without-rules.csv")
 
     old_value = columnized_data["Complete Duration (s)"]
     del columnized_data["Complete Duration (s)"]

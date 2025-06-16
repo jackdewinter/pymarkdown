@@ -1,6 +1,5 @@
 # pylint: disable=missing-module-docstring
 # pylint: disable=missing-function-docstring
-# pylint: disable=invalid-name
 import timeit
 
 import pytest
@@ -8,7 +7,7 @@ import pytest
 from pymarkdown.general.parser_helper import ParserHelper
 
 
-def xtest_block_quotes_extra_perf1():
+def xtest_block_quotes_extra_perf1() -> None:
     n = 500
     ex = (
         "\n"
@@ -32,13 +31,13 @@ def xtest_block_quotes_extra_perf1():
     raise AssertionError("TBD")
 
 
-def bob1():
+def bob1() -> None:
     search_string = "1234567890z"
     search_for = "abcdefghijklmnopqrstuvwxyz"
     ParserHelper.index_any_of(search_string, search_for)
 
 
-def fred():  # sourcery skip: inline-immediately-returned-variable
+def fred() -> str:  # sourcery skip: inline-immediately-returned-variable
     f = "this is a test!"
     g = "1"
     h = "yyyyy"
@@ -47,7 +46,7 @@ def fred():  # sourcery skip: inline-immediately-returned-variable
     return i
 
 
-def barney():
+def barney() -> str:
     # sourcery skip: inline-immediately-returned-variable, inline-variable, simplify-fstring-formatting
     f = "this is a test!"
     g = "1"
@@ -57,7 +56,7 @@ def barney():
     return i
 
 
-def xtest_block_quotes_extra_perf3x():
+def xtest_block_quotes_extra_perf3x() -> None:
     # sourcery skip: inline-variable, simplify-fstring-formatting
     a = "a"
     b = 1
@@ -66,7 +65,7 @@ def xtest_block_quotes_extra_perf3x():
 
 
 @pytest.mark.timeout(120)
-def xtest_block_quotes_extra_perf3():
+def xtest_block_quotes_extra_perf3() -> None:
     assert fred() == barney()
     for _ in range(5):
         xx = timeit.timeit("barney()", globals=globals(), number=100)
@@ -84,4 +83,3 @@ def xtest_block_quotes_extra_perf3():
 
 # pylint: enable=missing-module-docstring
 # pylint: enable=missing-function-docstring
-# pylint: enable=invalid-name

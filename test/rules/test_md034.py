@@ -10,7 +10,7 @@ import pytest
 
 
 @pytest.mark.rules
-def test_md034_good_no_base_url():
+def test_md034_good_no_base_url() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains `http`, but no full urls.
@@ -40,7 +40,7 @@ def test_md034_good_no_base_url():
 
 
 @pytest.mark.rules
-def test_md034_good_no_url_marker():
+def test_md034_good_no_url_marker() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains `www.google.com`, but no full urls.
@@ -70,7 +70,7 @@ def test_md034_good_no_url_marker():
 
 
 @pytest.mark.rules
-def test_md034_bad_with_http_url():
+def test_md034_bad_with_http_url() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains http and https full urls.
@@ -103,7 +103,7 @@ def test_md034_bad_with_http_url():
 
 
 @pytest.mark.rules
-def test_md034_bad_with_ftp_url():
+def test_md034_bad_with_ftp_url() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains ftp and ftps full urls.
@@ -136,7 +136,7 @@ def test_md034_bad_with_ftp_url():
 
 
 @pytest.mark.rules
-def test_md034_bad_with_http_url_in_atx():
+def test_md034_bad_with_http_url_in_atx() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains http urls in Atx Headings.
@@ -166,7 +166,7 @@ def test_md034_bad_with_http_url_in_atx():
 
 
 @pytest.mark.rules
-def test_md034_bad_with_http_url_in_setext():
+def test_md034_bad_with_http_url_in_setext() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains http urls in SetExt Headings.
@@ -196,7 +196,7 @@ def test_md034_bad_with_http_url_in_setext():
 
 
 @pytest.mark.rules
-def test_md034_good_http_url_in_indented():
+def test_md034_good_http_url_in_indented() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains http urls in indented code blocks.
@@ -226,7 +226,7 @@ def test_md034_good_http_url_in_indented():
 
 
 @pytest.mark.rules
-def test_md034_good_http_url_in_fenced():
+def test_md034_good_http_url_in_fenced() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains http urls in Fenced code blocks.
@@ -256,7 +256,7 @@ def test_md034_good_http_url_in_fenced():
 
 
 @pytest.mark.rules
-def test_md034_good_http_url_in_html():
+def test_md034_good_http_url_in_html() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains http urls in HTML blocks.
@@ -286,7 +286,7 @@ def test_md034_good_http_url_in_html():
 
 
 @pytest.mark.rules
-def test_md034_good_http_url_in_inline_link():
+def test_md034_good_http_url_in_inline_link() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains http urls in inline links.
@@ -316,7 +316,7 @@ def test_md034_good_http_url_in_inline_link():
 
 
 @pytest.mark.rules
-def test_md034_good_http_url_in_full_link():
+def test_md034_good_http_url_in_full_link() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains http urls in full links.
@@ -346,7 +346,7 @@ def test_md034_good_http_url_in_full_link():
 
 
 @pytest.mark.rules
-def test_md034_bad_with_local_url():
+def test_md034_bad_with_local_url() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains http urls with a localhost.
@@ -376,7 +376,7 @@ def test_md034_bad_with_local_url():
 
 
 @pytest.mark.rules
-def test_md034_good_with_leading_character():
+def test_md034_good_with_leading_character() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains http urls with non-whitespace directly before it.
@@ -406,7 +406,7 @@ def test_md034_good_with_leading_character():
 
 
 @pytest.mark.rules
-def test_md034_good_only_url_marker():
+def test_md034_good_only_url_marker() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains http with nothing after it.
@@ -436,7 +436,7 @@ def test_md034_good_only_url_marker():
 
 
 @pytest.mark.rules
-def test_md034_good_only_url_marker_and_leading():
+def test_md034_good_only_url_marker_and_leading() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains http:// with nothing after it.
@@ -465,7 +465,7 @@ def test_md034_good_only_url_marker_and_leading():
     )
 
 
-def test_md034_query_config():
+def test_md034_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md034",
         """

@@ -119,7 +119,7 @@ if [[ ${VERBOSE_MODE} -ne 0 ]]; then
 fi
 
 echo "{Applying template.}"
-if ! pipenv run cookieslicer --output-directory . --source-directory /c/enlistments/template/libraries ${LIST_MODE} ${FORCE_MODE} ${GENERATE_MODE} --project-name "${PYTHON_MODULE_NAME}"; then
+if ! pipenv run cookieslicer --output-directory . --source-directory /c/enlistments/template/applications ${LIST_MODE} ${FORCE_MODE} ${GENERATE_MODE} --project-name "${PYTHON_MODULE_NAME}"; then
 	echo ""
 	echo "{Applying template to existing directory failed.}"
 	exit 1

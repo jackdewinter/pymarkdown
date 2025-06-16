@@ -29,7 +29,7 @@ class ParseForContainerBlocksProtocol(Protocol):
     """
 
     # pylint: disable=too-many-arguments
-    def __call__(
+    def __call__(  # noqa: E704
         self,
         parser_state: ParserState,
         position_marker: PositionMarker,

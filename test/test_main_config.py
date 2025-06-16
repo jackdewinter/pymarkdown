@@ -9,7 +9,7 @@ from test.markdown_scanner import MarkdownScanner
 from .utils import create_temporary_configuration_file, temporary_change_to_directory
 
 
-def test_markdown_with_dash_e_single_by_id_and_good_config():
+def test_markdown_with_dash_e_single_by_id_and_good_config() -> None:
     """
     Test to make sure we get enable a rule if '-e' is supplied and the id of the
     rule is provided. The test data for MD047 is used as it is a simple file that
@@ -65,7 +65,7 @@ MD999>>completed_file
         )
 
 
-def test_markdown_with_dash_e_single_by_id_and_bad_config():
+def test_markdown_with_dash_e_single_by_id_and_bad_config() -> None:
     """
     Test to make sure we get enable a rule if '-e' is supplied and the id of the
     rule is provided. The test data for MD047 is used as it is a simple file that
@@ -121,7 +121,7 @@ MD999>>completed_file
         )
 
 
-def test_markdown_with_dash_e_single_by_id_and_bad_config_file():
+def test_markdown_with_dash_e_single_by_id_and_bad_config_file() -> None:
     """
     Test to make sure we get an error if we provide a configuration file that is
     in a json format, but not valid.
@@ -162,7 +162,7 @@ def test_markdown_with_dash_e_single_by_id_and_bad_config_file():
         )
 
 
-def test_markdown_with_dash_e_single_by_id_and_non_json_config_file():
+def test_markdown_with_dash_e_single_by_id_and_non_json_config_file() -> None:
     """
     Test to make sure we get an error if we provide a configuration file that is
     not in a json format.
@@ -202,7 +202,7 @@ def test_markdown_with_dash_e_single_by_id_and_non_json_config_file():
         )
 
 
-def test_markdown_with_dash_e_single_by_id_and_non_present_config_file():
+def test_markdown_with_dash_e_single_by_id_and_non_present_config_file() -> None:
     """
     Test to make sure we get an error if we provide a configuration file that is
     not in a json format.
@@ -242,7 +242,7 @@ Specified configuration file `not-exists` does not exist."""
     )
 
 
-def test_markdown_with_dash_e_single_by_id_and_good_select_config():
+def test_markdown_with_dash_e_single_by_id_and_good_select_config() -> None:
     """
     Test to make sure we get enable a rule if '-e' is supplied and the id of the
     rule is provided. The test data for MD047 is used as it is a simple file that
@@ -301,7 +301,7 @@ MD999>>completed_file
         )
 
 
-def test_markdown_with_dash_e_single_by_id_and_bad_select_config():
+def test_markdown_with_dash_e_single_by_id_and_bad_select_config() -> None:
     """
     Test to make sure we get enable a rule if '-e' is supplied and the id of the
     rule is provided. The test data for MD047 is used as it is a simple file that
@@ -360,7 +360,9 @@ MD999>>completed_file
         )
 
 
-def test_markdown_with_dash_e_single_by_id_and_config_causing_config_exception():
+def test_markdown_with_dash_e_single_by_id_and_config_causing_config_exception() -> (
+    None
+):
     """
     Test to make sure if we tell the test plugin to throw an exception during the
     call to `initialize_from_config`, that it is handled properly.
@@ -402,7 +404,9 @@ Plugin id 'MD999' had a critical failure during the '__apply_configuration' acti
         )
 
 
-def test_markdown_with_dash_e_single_by_id_and_config_causing_next_token_exception():
+def test_markdown_with_dash_e_single_by_id_and_config_causing_next_token_exception() -> (
+    None
+):
     """
     Test to make sure if we tell the test plugin to throw an exception during the
     call to `next_token`, that it is handled properly.
@@ -448,7 +452,7 @@ MD999>>token:[atx(1,1):1:0:]
         )
 
 
-def test_markdown_with_bad_strict_config_type():
+def test_markdown_with_bad_strict_config_type() -> None:
     """
     Test to make sure that we can set the strict configuration mode from
     the configuration file, capturing any bad errors.
@@ -483,7 +487,7 @@ def test_markdown_with_bad_strict_config_type():
         )
 
 
-def test_markdown_with_good_strict_config_type():
+def test_markdown_with_good_strict_config_type() -> None:
     """
     Test to make sure that we can set the strict configuration mode from
     the configuration file, capturing any bad errors.
@@ -518,7 +522,7 @@ def test_markdown_with_good_strict_config_type():
         )
 
 
-def test_markdown_with_default_configuration_file_with_error():
+def test_markdown_with_default_configuration_file_with_error() -> None:
     """
     Test to make sure that a default configuration will be read and have the
     same errors as if it was specified on the command line.
@@ -560,7 +564,7 @@ def test_markdown_with_default_configuration_file_with_error():
             )
 
 
-def test_markdown_with_overlapping_configuration_files():
+def test_markdown_with_overlapping_configuration_files() -> None:
     """
     Test to make sure that information from a default configuration file and
     a specified configuration file give each other the right layering.
@@ -620,7 +624,7 @@ this is a very long line
                 )
 
 
-def test_markdown_with_pyproject_configuration_file_with_error():
+def test_markdown_with_pyproject_configuration_file_with_error() -> None:
     """
     Test to make sure that a pyproject configuration will be read and have the
     same errors as if it was specified on the command line.
@@ -664,7 +668,7 @@ a.c = "3"
             )
 
 
-def test_markdown_with_pyproject_direct_configuration_file_with_error():
+def test_markdown_with_pyproject_direct_configuration_file_with_error() -> None:
     """
     Test to make sure that a pyproject configuration will be read and have the
     same errors as if it was specified on the command line.

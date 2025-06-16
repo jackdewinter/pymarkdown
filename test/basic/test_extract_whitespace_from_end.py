@@ -5,7 +5,7 @@ Tests for the extract_whitespace_from_end function.
 from pymarkdown.general.parser_helper import ParserHelper
 
 
-def test_empty_string():
+def test_empty_string() -> None:
     """
     Make sure that an empty string is handled properly
     """
@@ -21,7 +21,7 @@ def test_empty_string():
     assert expected_output == actual_output
 
 
-def test_string_with_no_trailing_spaces():
+def test_string_with_no_trailing_spaces() -> None:
     """
     Make sure that a string with no trailing spaces is handled properly
     """
@@ -37,7 +37,7 @@ def test_string_with_no_trailing_spaces():
     assert expected_output == actual_output
 
 
-def test_string_with_some_trailing_spaces():
+def test_string_with_some_trailing_spaces() -> None:
     """
     Make sure that a string with some trailing spaces is handled properly
     """

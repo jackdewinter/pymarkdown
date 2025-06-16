@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_code_spans_338():
+def test_code_spans_338() -> None:
     """
     Test case 338:  This is a simple code span:
     """
@@ -27,7 +27,7 @@ def test_code_spans_338():
 
 
 @pytest.mark.gfm
-def test_code_spans_339():
+def test_code_spans_339() -> None:
     """
     Test case 339:  Here two backticks are used, because the code contains a backtick.
                     This example also illustrates stripping of a single leading
@@ -48,7 +48,7 @@ def test_code_spans_339():
 
 
 @pytest.mark.gfm
-def test_code_spans_340():
+def test_code_spans_340() -> None:
     """
     Test case 340:  This example shows the motivation for stripping leading and trailing spaces:
     """
@@ -67,7 +67,7 @@ def test_code_spans_340():
 
 
 @pytest.mark.gfm
-def test_code_spans_341():
+def test_code_spans_341() -> None:
     """
     Test case 341:  Note that only one space is stripped:
     """
@@ -86,7 +86,7 @@ def test_code_spans_341():
 
 
 @pytest.mark.gfm
-def test_code_spans_342():
+def test_code_spans_342() -> None:
     """
     Test case 342:  The stripping only happens if the space is on both sides of the string:
     """
@@ -105,7 +105,7 @@ def test_code_spans_342():
 
 
 @pytest.mark.gfm
-def test_code_spans_343():
+def test_code_spans_343() -> None:
     """
     Test case 343:  Only spaces, and not unicode whitespace in general, are stripped in this way:
     """
@@ -124,7 +124,7 @@ def test_code_spans_343():
 
 
 @pytest.mark.gfm
-def test_code_spans_343a():
+def test_code_spans_343a() -> None:
     """
     Test case 343:  variant
     """
@@ -143,7 +143,7 @@ def test_code_spans_343a():
 
 
 @pytest.mark.gfm
-def test_code_spans_344():
+def test_code_spans_344() -> None:
     """
     Test case 344:  No stripping occurs if the code span contains only spaces:
     """
@@ -166,7 +166,7 @@ def test_code_spans_344():
 
 
 @pytest.mark.gfm
-def test_code_spans_344a():
+def test_code_spans_344a() -> None:
     """
     Test case 344a:  variation of 344 with a whitespace string that is longer than 2.
     """
@@ -185,7 +185,7 @@ def test_code_spans_344a():
 
 
 @pytest.mark.gfm
-def test_code_spans_345():
+def test_code_spans_345() -> None:
     """
     Test case 345:  (part 1) Line endings are treated like spaces:
     """
@@ -210,7 +210,7 @@ baz
 
 
 @pytest.mark.gfm
-def test_code_spans_345a():
+def test_code_spans_345a() -> None:
     """
     Test case 345a:  variation of 345 with extra indentation
     """
@@ -235,7 +235,7 @@ baz
 
 
 @pytest.mark.gfm
-def test_code_spans_345b():
+def test_code_spans_345b() -> None:
     """
     Test case 345b:  variation of 345 over a single newline
     """
@@ -255,7 +255,7 @@ a code span``"""
 
 
 @pytest.mark.gfm
-def test_code_spans_346():
+def test_code_spans_346() -> None:
     """
     Test case 346:  (part 2) Line endings are treated like spaces:
     """
@@ -276,7 +276,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_code_spans_346ax():
+def test_code_spans_346ax() -> None:
     """
     Test case 346a:  variation of 346 within a list with no indentation
     """
@@ -303,7 +303,7 @@ foo\a
 
 
 @pytest.mark.gfm
-def test_code_spans_346aa():
+def test_code_spans_346aa() -> None:
     """
     Test case 346aa:  variation of 346a within a list with indentation
     """
@@ -330,7 +330,7 @@ def test_code_spans_346aa():
 
 
 @pytest.mark.gfm
-def test_code_spans_346bx():
+def test_code_spans_346bx() -> None:
     """
     Test case 346b:  variation of 346 within a block quote with no indentation
     """
@@ -355,7 +355,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_code_spans_346ba():
+def test_code_spans_346ba() -> None:
     """
     Test case 346ba:  variation of 346b within a block quote with
         block quotes indentation
@@ -383,7 +383,7 @@ def test_code_spans_346ba():
 
 
 @pytest.mark.gfm
-def test_code_spans_346bb():
+def test_code_spans_346bb() -> None:
     """
     Test case 346ba:  variation of 346b within a block quote with
         block quotes indentation
@@ -416,7 +416,7 @@ def test_code_spans_346bb():
 
 
 @pytest.mark.gfm
-def test_code_spans_346c():
+def test_code_spans_346c() -> None:
     """
     Test case 346c:  variation of 346 within a link label
     """
@@ -445,7 +445,7 @@ foo\a
 
 
 @pytest.mark.gfm
-def test_code_spans_346ca():
+def test_code_spans_346ca() -> None:
     """
     Test case 346c:  variation of 346c with extra space
     """
@@ -474,7 +474,7 @@ def test_code_spans_346ca():
 
 
 @pytest.mark.gfm
-def test_code_spans_346d():
+def test_code_spans_346d() -> None:
     """
     Test case 346:  variation of 346 within a setext heading
     """
@@ -498,7 +498,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_code_spans_347():
+def test_code_spans_347() -> None:
     """
     Test case 347:  Interior spaces are not collapsed:
     """
@@ -520,7 +520,7 @@ baz`""".replace(
 
 
 @pytest.mark.gfm
-def test_code_spans_348():
+def test_code_spans_348() -> None:
     """
     Test case 348:  Note that backslash escapes do not work in code spans. All backslashes are treated literally:
     """
@@ -540,7 +540,7 @@ def test_code_spans_348():
 
 
 @pytest.mark.gfm
-def test_code_spans_349():
+def test_code_spans_349() -> None:
     """
     Test case 349:  (part 1) Backslash escapes are never needed, because one can
                     always choose a string of n backtick characters as delimiters,
@@ -562,7 +562,7 @@ def test_code_spans_349():
 
 
 @pytest.mark.gfm
-def test_code_spans_350():
+def test_code_spans_350() -> None:
     """
     Test case 350:  (part 2) Backslash escapes are never needed, because one can
                     always choose a string of n backtick characters as delimiters,
@@ -584,7 +584,7 @@ def test_code_spans_350():
 
 
 @pytest.mark.gfm
-def test_code_spans_351():
+def test_code_spans_351() -> None:
     """
     Test case 351:  Code span backticks have higher precedence than any other inline
                     constructs except HTML tags and autolinks.
@@ -605,7 +605,7 @@ def test_code_spans_351():
 
 
 @pytest.mark.gfm
-def test_code_spans_352():
+def test_code_spans_352() -> None:
     """
     Test case 352:  And this is not parsed as a link:
     """
@@ -626,7 +626,7 @@ def test_code_spans_352():
 
 
 @pytest.mark.gfm
-def test_code_spans_353():
+def test_code_spans_353() -> None:
     """
     Test case 353:  Code spans, HTML tags, and autolinks have the same precedence. Thus, this is code:
     """
@@ -646,7 +646,7 @@ def test_code_spans_353():
 
 
 @pytest.mark.gfm
-def test_code_spans_354():
+def test_code_spans_354() -> None:
     """
     Test case 354:  But this is an HTML tag:
     """
@@ -666,7 +666,7 @@ def test_code_spans_354():
 
 
 @pytest.mark.gfm
-def test_code_spans_355():
+def test_code_spans_355() -> None:
     """
     Test case 355:  And this is code:
     """
@@ -686,7 +686,7 @@ def test_code_spans_355():
 
 
 @pytest.mark.gfm
-def test_code_spans_356():
+def test_code_spans_356() -> None:
     """
     Test case 356:  But this is an autolink:
     """
@@ -706,7 +706,7 @@ def test_code_spans_356():
 
 
 @pytest.mark.gfm
-def test_code_spans_357():
+def test_code_spans_357() -> None:
     """
     Test case 357:  (part 1) When a backtick string is not closed by a matching
                     backtick string, we just have literal backticks:
@@ -726,7 +726,7 @@ def test_code_spans_357():
 
 
 @pytest.mark.gfm
-def test_code_spans_358():
+def test_code_spans_358() -> None:
     """
     Test case 358:  (part 2) When a backtick string is not closed by a matching
                     backtick string, we just have literal backticks:
@@ -746,7 +746,7 @@ def test_code_spans_358():
 
 
 @pytest.mark.gfm
-def test_code_spans_359():
+def test_code_spans_359() -> None:
     """
     Test case 359:  The following case also illustrates the need for opening and
                     closing backtick strings to be equal in length:
@@ -767,7 +767,7 @@ def test_code_spans_359():
 
 
 @pytest.mark.gfm
-def test_code_spans_extra_01():
+def test_code_spans_extra_01() -> None:
     """
     Test case extra 01: test case with text before, during, and after
         the code span, which goes over two lines
@@ -792,7 +792,7 @@ foo</p>"""
 
 
 @pytest.mark.gfm
-def test_code_spans_extra_02():
+def test_code_spans_extra_02() -> None:
     """
     Test case 02:  Paragraph with single code span start and no space outside and inside
     """
@@ -813,7 +813,7 @@ def test_code_spans_extra_02():
 
 
 @pytest.mark.gfm
-def test_code_spans_extra_03():
+def test_code_spans_extra_03() -> None:
     """
     Test case 03:  Paragraph with double code span start and one space outside and inside
     """
@@ -834,7 +834,7 @@ def test_code_spans_extra_03():
 
 
 @pytest.mark.gfm
-def test_code_spans_extra_04():
+def test_code_spans_extra_04() -> None:
     """
     Test case 04:  Paragraph with triple code span start and three spaces outside and inside
     """

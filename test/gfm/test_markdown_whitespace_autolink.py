@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_whitespaces_autolink_uri_with_spaces():
+def test_whitespaces_autolink_uri_with_spaces() -> None:
     """
     Test case:  autolink_uri with spaces
     """
@@ -29,7 +29,7 @@ def test_whitespaces_autolink_uri_with_spaces():
 
 
 @pytest.mark.gfm
-def test_whitespaces_autolink_uri_with_tabs_inside():
+def test_whitespaces_autolink_uri_with_tabs_inside() -> None:
     """
     Test case:  autolink_uri with tabs
     """
@@ -50,7 +50,7 @@ def test_whitespaces_autolink_uri_with_tabs_inside():
 
 
 @pytest.mark.gfm
-def test_whitespaces_autolink_uri_with_tabs_outside():
+def test_whitespaces_autolink_uri_with_tabs_outside() -> None:
     """
     Test case:  autolink_uri with tabs
     """
@@ -71,7 +71,7 @@ def test_whitespaces_autolink_uri_with_tabs_outside():
 
 
 @pytest.mark.gfm
-def test_whitespaces_autolink_uri_with_form_feeds():
+def test_whitespaces_autolink_uri_with_form_feeds() -> None:
     """
     Test case: autolink_uri with form feeds
     """

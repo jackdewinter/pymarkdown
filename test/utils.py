@@ -11,6 +11,7 @@ import shutil
 import sys
 import tempfile
 from contextlib import contextmanager
+from typing import IO, Any, Dict, Generator, List, Optional, Union, cast
 
 from application_properties import ApplicationProperties
 
@@ -20,6 +21,7 @@ from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.tab_helper import TabHelper
 from pymarkdown.general.tokenized_markdown import TokenizedMarkdown
+from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_gfm.transform_to_gfm import TransformToGfm
 from pymarkdown.transform_markdown.transform_to_markdown import TransformToMarkdown
 
@@ -28,15 +30,15 @@ from pymarkdown.transform_markdown.transform_to_markdown import TransformToMarkd
 
 # pylint: disable=too-many-arguments, too-many-locals
 def act_and_assert(
-    source_markdown,
-    expected_gfm,
-    expected_tokens,
-    show_debug=False,
-    config_map=None,
-    disable_consistency_checks=False,
-    allow_alternate_markdown=False,
-    do_add_end_of_stream_token=False,
-):
+    source_markdown: str,
+    expected_gfm: str,
+    expected_tokens: List[str],
+    show_debug: bool = False,
+    config_map: Optional[Dict[str, Any]] = None,
+    disable_consistency_checks: bool = False,
+    allow_alternate_markdown: bool = False,
+    do_add_end_of_stream_token: bool = False,
+) -> None:
     """
     Act and assert on the expected behavior of parsing the source_markdown.
     """
@@ -60,7 +62,7 @@ def act_and_assert(
             test_properties.enable_strict_mode()
 
     extension_manager = ExtensionManager(MainPresentation())
-    extension_manager.initialize(None, test_properties)
+    extension_manager.initialize(test_properties)
     extension_manager.apply_configuration()
     tokenizer.apply_configuration(test_properties, extension_manager)
     transformer = TransformToGfm()
@@ -125,7 +127,9 @@ def assert_file_is_as_expected(source_path: str, expected_file_contents: str) ->
         raise AssertionError()
 
 
-def assert_if_lists_different(expected_tokens, actual_tokens):
+def assert_if_lists_different(
+    expected_tokens: List[Any], actual_tokens: List[Any]
+) -> None:
     """
     Compare two lists and make sure they are equal, asserting if not.
     """
@@ -159,7 +163,7 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
     print("---\nLists are equal.\n---")
 
 
-def assert_if_strings_different(expected_string, actual_string):
+def assert_if_strings_different(expected_string: str, actual_string: str) -> None:
     """
     Compare two strings and make sure they are equal, asserting if not.
     """
@@ -178,8 +182,10 @@ def assert_if_strings_different(expected_string, actual_string):
 
 
 def __assert_token_consistency(
-    source_markdown, actual_tokens, allow_alternate_markdown
-):
+    source_markdown: str,
+    actual_tokens: List[MarkdownToken],
+    allow_alternate_markdown: bool,
+) -> None:
     """
     Compare the markdown document against the tokens that are expected.
     """
@@ -190,8 +196,10 @@ def __assert_token_consistency(
 
 
 def __verify_markdown_roundtrip(
-    source_markdown, actual_tokens, allow_alternate_markdown
-):
+    source_markdown: str,
+    actual_tokens: List[MarkdownToken],
+    allow_alternate_markdown: bool,
+) -> None:
     """
     Verify that we can use the information in the tokens to do a round trip back
     to the original Markdown that created the token.
@@ -262,7 +270,7 @@ def copy_to_temporary_file(source_path: str) -> str:
 
 
 @contextmanager
-def copy_to_temp_file(file_to_copy):
+def copy_to_temp_file(file_to_copy: str) -> Generator[str, None, None]:
     """
     Context manager to copy a file to a temporary file, returning the name of the temporary file.
     """
@@ -276,11 +284,11 @@ def copy_to_temp_file(file_to_copy):
 
 
 def write_temporary_configuration(
-    supplied_configuration,
-    file_name=None,
-    directory=None,
-    file_name_prefix=None,
-    file_name_suffix=None,
+    supplied_configuration: Union[str, Dict[str, Any], None],
+    file_name: Optional[str] = None,
+    directory: Optional[str] = None,
+    file_name_prefix: Optional[str] = None,
+    file_name_suffix: Optional[str] = None,
 ) -> str:
     """
     Write the configuration as a temporary file that is kept around.
@@ -318,12 +326,12 @@ def write_temporary_configuration(
 
 @contextmanager
 def create_temporary_configuration_file(
-    supplied_configuration,
-    file_name=None,
-    directory=None,
-    file_name_suffix=None,
-    file_name_prefix=None,
-):
+    supplied_configuration: Union[str, Dict[str, Any]],
+    file_name: Optional[str] = None,
+    directory: Optional[str] = None,
+    file_name_suffix: Optional[str] = None,
+    file_name_prefix: Optional[str] = None,
+) -> Generator[str, None, None]:
     """
     Context manager to create a temporary configuration file.
     """
@@ -343,7 +351,9 @@ def create_temporary_configuration_file(
 
 
 @contextmanager
-def temporary_change_to_directory(path_to_change_to):
+def temporary_change_to_directory(
+    path_to_change_to: str,
+) -> Generator[None, None, None]:
     """
     Context manager to temporarily change to a given directory.
     """
@@ -356,7 +366,7 @@ def temporary_change_to_directory(path_to_change_to):
 
 
 @contextmanager
-def capture_stdout():
+def capture_stdout() -> Generator[io.StringIO, None, None]:
     """
     Context manager to capture stdout into a StringIO buffer.
     """
@@ -370,22 +380,25 @@ def capture_stdout():
 
 
 @contextmanager
-def create_temporary_file_for_reuse():
+def create_temporary_file_for_reuse() -> Generator[str, None, None]:
     """
     Create a temporary file and return its path name for reuse.
     """
+    log_pathxx = None
     try:
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
             log_pathxx = temp_file.name
 
         yield log_pathxx
     finally:
-        if os.path.exists(log_pathxx):
+        if log_pathxx and os.path.exists(log_pathxx):
             os.remove(log_pathxx)
 
 
 @contextmanager
-def capture_logging_changes_with_new_handler():
+def capture_logging_changes_with_new_handler() -> (
+    Generator[tuple[logging.StreamHandler[IO[str]], io.StringIO], None, None]
+):
     """
     Capture any simple logging changes to allow for logging to be more thoroughly tested.
     """
@@ -393,13 +406,15 @@ def capture_logging_changes_with_new_handler():
     log_output = io.StringIO()
     new_handler = logging.StreamHandler(log_output)
     try:
-        yield (new_handler, log_output)
+        yield (new_handler, log_output)  # type: ignore
     finally:
         logging.getLogger().setLevel(old_log_level)
         new_handler.close()
 
 
-def compare_expected_to_actual(expected_text, actual_text, xx_title="Text"):
+def compare_expected_to_actual(
+    expected_text: str, actual_text: str, xx_title: str = "Text"
+) -> None:
     """
     Compare the expected text to the actual text.
     """
@@ -411,7 +426,11 @@ def compare_expected_to_actual(expected_text, actual_text, xx_title="Text"):
 
 # pylint: disable=broad-exception-caught
 def assert_that_exception_is_raised(
-    type_of_exception: type, exception_output: str, function_to_test, *args, **kwargs
+    type_of_exception: type,
+    exception_output: str,
+    function_to_test: Any,
+    *args: Any,
+    **kwargs: Any,
 ) -> Exception:
     """
     Assert that the specified type of exception is thrown when the specified
@@ -430,7 +449,7 @@ def assert_that_exception_is_raised(
         ), f"Function execution did not raise the expected {type_of_exception}."
 
         text_to_compare = (
-            this_exception.reason
+            cast(str, this_exception.reason)
             if hasattr(this_exception, "reason")
             else str(this_exception)
         )
@@ -443,7 +462,11 @@ def assert_that_exception_is_raised(
 
 # pylint: disable=broad-exception-caught
 def assert_that_exception_is_raised2(
-    type_of_exception: type, exception_output: str, function_to_test, *args, **kwargs
+    type_of_exception: type,
+    exception_output: str,
+    function_to_test: Any,
+    *args: Any,
+    **kwargs: Any,
 ) -> Exception:
     """
     Assert that the specified type of exception is thrown when the specified
@@ -462,7 +485,7 @@ def assert_that_exception_is_raised2(
         ), f"Function execution did not raise the expected {type_of_exception}."
 
         text_to_compare = (
-            this_exception.reason
+            cast(str, this_exception.reason)
             if hasattr(this_exception, "reason")
             else str(this_exception)
         )

@@ -5,7 +5,7 @@ Module to provide for a local instance of an InProcessExecution class.
 import os
 import sys
 from test.pytest_execute import InProcessExecution
-from typing import Optional
+from typing import List, Optional
 
 from typing_extensions import override
 
@@ -39,6 +39,8 @@ class AlternateMainPresentation(MainPresentation):
         """
         print("[pse[" + error_string + "]]", file=sys.stderr)
 
+    # pylint: disable=useless-return
+
     def format_scan_error(
         self,
         next_file: str,
@@ -50,14 +52,14 @@ class AlternateMainPresentation(MainPresentation):
         Format a scan error for display.  Returning a value of None means that
         the function has handled any required output.
         """
-        scan_error = (
-            "[fse["
-            + super().format_scan_error(
-                next_file, this_exception, show_extended_information
-            )
-            + "]]"
+        dd = super().format_scan_error(
+            next_file, this_exception, show_extended_information
         )
+        scan_error = "[fse[" + (dd if dd else "") + "]]"
         self.print_system_error(scan_error)
+        return None
+
+    # pylint: enable=useless-return
 
     def print_pragma_failure(
         self, scan_file: str, line_number: int, pragma_error: str
@@ -85,8 +87,11 @@ class MarkdownScanner(InProcessExecution):
     """
 
     def __init__(
-        self, use_module=False, use_main=False, use_alternate_presentation=False
-    ):
+        self,
+        use_module: bool = False,
+        use_main: bool = False,
+        use_alternate_presentation: bool = False,
+    ) -> None:
         super().__init__()
         self.__use_main = use_main
         self.__use_alternate_presentation = use_alternate_presentation
@@ -98,7 +103,7 @@ class MarkdownScanner(InProcessExecution):
         self.resource_directory = resource_directory
 
     @override
-    def execute_main(self, direct_arguments=None):
+    def execute_main(self, direct_arguments: Optional[List[str]] = None) -> None:
         if self.__use_main:
             main()
         else:
@@ -112,5 +117,5 @@ class MarkdownScanner(InProcessExecution):
             )
 
     @override
-    def get_main_name(self):
+    def get_main_name(self) -> str:
         return self.__entry_point
