@@ -32,31 +32,31 @@
     {
         "python":"3.9",
         "platform":"ubuntu-latest",
-        "timeout":5,
+        "timeout":7,
         "runOn":"previous"
     },
     {
         "python":"3.10",
         "platform":"ubuntu-latest",
-        "timeout":5,
+        "timeout":7,
         "runOn":"previous"
     },
     {
         "python":"3.11",
         "platform":"ubuntu-latest",
-        "timeout":5,
+        "timeout":7,
         "runOn":"previous"
     },
     {
         "python":"3.12",
         "platform":"ubuntu-latest",
-        "timeout":5,
+        "timeout":7,
         "runOn":"previous"
     },
     {
         "python":"3.13",
         "platform":"ubuntu-latest",
-        "timeout":5,
+        "timeout":7,
         "runOn":"current"
     },
     {
