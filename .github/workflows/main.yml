@@ -99,6 +99,7 @@ jobs:
           grep -v '^sourcery' Pipfile > temp
           mv temp Pipfile
           cat Pipfile
+          rm Pipfile.lock
           pipenv lock --clear --python ${{ matrix.python }}
           pipenv sync -d
           pipenv graph
