@@ -29,13 +29,6 @@ setuptools = "==80.9.0"
 sourcery = "==1.35.0"
 twine = "==6.1.0"
 
-snakeviz = "==2.2.2"
-types-pyyaml = "*"
-streamlit = "*"
-pandas = "*"
-pandas-datareader = "*"
-altair = {extras = ["all"], version = "*"}
-
 [packages]
 columnar = ">=1.4.0"
 application-properties = ">=0.8.2"
