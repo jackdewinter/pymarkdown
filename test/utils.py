@@ -11,7 +11,7 @@ import shutil
 import sys
 import tempfile
 from contextlib import contextmanager
-from typing import IO, Any, Dict, Generator, List, Optional, Union, cast
+from typing import IO, TYPE_CHECKING, Any, Dict, Generator, List, Optional, Union, cast
 
 from application_properties import ApplicationProperties
 
@@ -394,10 +394,14 @@ def create_temporary_file_for_reuse() -> Generator[str, None, None]:
         if log_pathxx and os.path.exists(log_pathxx):
             os.remove(log_pathxx)
 
+if TYPE_CHECKING:
+    LOGHANDLER = logging.StreamHandler[IO[str]]
+else:
+    LOGHANDLER = logging.StreamHandler
 
 @contextmanager
 def capture_logging_changes_with_new_handler() -> (
-    Generator[tuple[logging.StreamHandler[IO[str]], io.StringIO], None, None]
+    Generator[tuple[LOGHANDLER, io.StringIO], None, None]
 ):
     """
     Capture any simple logging changes to allow for logging to be more thoroughly tested.
