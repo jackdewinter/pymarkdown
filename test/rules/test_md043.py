@@ -12,7 +12,7 @@ import pytest
 
 
 @pytest.mark.rules
-def test_md043_bad_configuration_headings():
+def test_md043_bad_configuration_headings() -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     headings value with an integer that is not a string.
@@ -52,7 +52,7 @@ def test_md043_bad_configuration_headings():
 
 
 @pytest.mark.rules
-def test_md043_bad_configuration_headings_dupicate_stars():
+def test_md043_bad_configuration_headings_dupicate_stars() -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     headings value with duplicate wildcards.
@@ -92,7 +92,7 @@ def test_md043_bad_configuration_headings_dupicate_stars():
 
 
 @pytest.mark.rules
-def test_md043_good_configuration_headings_empty():
+def test_md043_good_configuration_headings_empty() -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     headings value that is an empty string.
@@ -129,7 +129,7 @@ def test_md043_good_configuration_headings_empty():
 
 
 @pytest.mark.rules
-def test_md043_bad_configuration_headings_no_atx_start():
+def test_md043_bad_configuration_headings_no_atx_start() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains multiple headings and a pattern of one constant heading.
@@ -170,7 +170,7 @@ def test_md043_bad_configuration_headings_no_atx_start():
 
 
 @pytest.mark.rules
-def test_md043_bad_configuration_headings_too_many_hashes():
+def test_md043_bad_configuration_headings_too_many_hashes() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains multiple headings and a pattern of one bad level constant heading.
@@ -211,7 +211,7 @@ def test_md043_bad_configuration_headings_too_many_hashes():
 
 
 @pytest.mark.rules
-def test_md043_bad_configuration_headings_bad_whitespace():
+def test_md043_bad_configuration_headings_bad_whitespace() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains multiple headings and a pattern of one badly specified heading.
@@ -252,7 +252,7 @@ def test_md043_bad_configuration_headings_bad_whitespace():
 
 
 @pytest.mark.rules
-def test_md043_bad_configuration_headings_bad_text():
+def test_md043_bad_configuration_headings_bad_text() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains multiple headings and a pattern with no text.
@@ -293,7 +293,7 @@ def test_md043_bad_configuration_headings_bad_text():
 
 
 @pytest.mark.rules
-def test_md043_bad_configuration_headings_bad_text_2():
+def test_md043_bad_configuration_headings_bad_text_2() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains multiple headings and a pattern with no text.
@@ -334,7 +334,7 @@ def test_md043_bad_configuration_headings_bad_text_2():
 
 
 @pytest.mark.rules
-def test_md043_good_simple_headings_no_format():
+def test_md043_good_simple_headings_no_format() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains multiple headings and a default pattern.
@@ -368,7 +368,7 @@ def test_md043_good_simple_headings_no_format():
 
 
 @pytest.mark.rules
-def test_md043_good_single_heading_atx_with_single_rule():
+def test_md043_good_single_heading_atx_with_single_rule() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a single heading and a pattern of that one heading.
@@ -403,7 +403,7 @@ def test_md043_good_single_heading_atx_with_single_rule():
 
 
 @pytest.mark.rules
-def test_md043_bad_single_heading_atx_with_double_rule():
+def test_md043_bad_single_heading_atx_with_double_rule() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a single heading and a pattern of two headings.
@@ -442,7 +442,7 @@ def test_md043_bad_single_heading_atx_with_double_rule():
 
 
 @pytest.mark.rules
-def test_md043_bad_double_heading_atx_with_single_rule():
+def test_md043_bad_double_heading_atx_with_single_rule() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains two headings and a pattern of one heading.
@@ -481,7 +481,7 @@ def test_md043_bad_double_heading_atx_with_single_rule():
 
 
 @pytest.mark.rules
-def test_md043_good_double_heading_atx_with_double_rule():
+def test_md043_good_double_heading_atx_with_double_rule() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains two headings and a pattern of those two headings.
@@ -516,7 +516,7 @@ def test_md043_good_double_heading_atx_with_double_rule():
 
 
 @pytest.mark.rules
-def test_md043_good_double_heading_atx_with_double_rule_with_spaces_in_config():
+def test_md043_good_double_heading_atx_with_double_rule_with_spaces_in_config() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains two headings and a pattern of those two headings.
@@ -551,7 +551,7 @@ def test_md043_good_double_heading_atx_with_double_rule_with_spaces_in_config():
 
 
 @pytest.mark.rules
-def test_md043_bad_double_heading_atx_with_double_rule_bad_level():
+def test_md043_bad_double_heading_atx_with_double_rule_bad_level() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains two headings and a pattern with a bad level matching second heading.
@@ -590,7 +590,7 @@ def test_md043_bad_double_heading_atx_with_double_rule_bad_level():
 
 
 @pytest.mark.rules
-def test_md043_bad_double_heading_atx_with_double_rule_bad_text():
+def test_md043_bad_double_heading_atx_with_double_rule_bad_text() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains two headings and a pattern with a bad text matching second heading.
@@ -629,7 +629,7 @@ def test_md043_bad_double_heading_atx_with_double_rule_bad_text():
 
 
 @pytest.mark.rules
-def test_md043_good_double_heading_atx_second_has_emphasis():
+def test_md043_good_double_heading_atx_second_has_emphasis() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains two headings and a pattern with a bad text (emphasis) matching second heading.
@@ -672,7 +672,7 @@ def test_md043_good_double_heading_atx_second_has_emphasis():
 
 
 @pytest.mark.rules
-def test_md043_good_simple_headings_simple_format():
+def test_md043_good_simple_headings_simple_format() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains mixed headings and a pattern with those headings.
@@ -709,7 +709,7 @@ def test_md043_good_simple_headings_simple_format():
 
 
 @pytest.mark.rules
-def test_md043_good_double_heading_atx_with_double_rule_matching_1_star():
+def test_md043_good_double_heading_atx_with_double_rule_matching_1_star() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains two headings and a pattern with the first heading and a wildcard.
@@ -744,7 +744,7 @@ def test_md043_good_double_heading_atx_with_double_rule_matching_1_star():
 
 
 @pytest.mark.rules
-def test_md043_bad_double_heading_atx_with_double_rule_unmatching_1_star():
+def test_md043_bad_double_heading_atx_with_double_rule_unmatching_1_star() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains two headings and a pattern that does not match the first, followed by wildcard.
@@ -783,7 +783,7 @@ def test_md043_bad_double_heading_atx_with_double_rule_unmatching_1_star():
 
 
 @pytest.mark.rules
-def test_md043_good_double_heading_atx_with_double_rule_matching_star_2():
+def test_md043_good_double_heading_atx_with_double_rule_matching_star_2() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains two headings and a pattern with a wildcard and the second heading.
@@ -818,7 +818,7 @@ def test_md043_good_double_heading_atx_with_double_rule_matching_star_2():
 
 
 @pytest.mark.rules
-def test_md043_bad_double_heading_atx_with_double_rule_unmatching_star_2():
+def test_md043_bad_double_heading_atx_with_double_rule_unmatching_star_2() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains two headings and a pattern with a wildcard and a bad matching second.
@@ -857,7 +857,7 @@ def test_md043_bad_double_heading_atx_with_double_rule_unmatching_star_2():
 
 
 @pytest.mark.rules
-def test_md043_bad_double_heading_atx_unmatching_1_2_3_star():
+def test_md043_bad_double_heading_atx_unmatching_1_2_3_star() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains two headings and a pattern with three constant headings.
@@ -896,7 +896,7 @@ def test_md043_bad_double_heading_atx_unmatching_1_2_3_star():
 
 
 @pytest.mark.rules
-def test_md043_bad_double_heading_atx_unmatching_star_1_2_3():
+def test_md043_bad_double_heading_atx_unmatching_star_1_2_3() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains two headings and a pattern with a wildcard and three headings.
@@ -935,7 +935,7 @@ def test_md043_bad_double_heading_atx_unmatching_star_1_2_3():
 
 
 @pytest.mark.rules
-def test_md043_bad_double_heading_atx_matching_1_2_start_2_over():
+def test_md043_bad_double_heading_atx_matching_1_2_start_2_over() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains two headings and a pattern with two headings, a wildcard, and a matching heading.
@@ -974,7 +974,7 @@ def test_md043_bad_double_heading_atx_matching_1_2_start_2_over():
 
 
 @pytest.mark.rules
-def test_md043_good_simple_headings_rule_matching_1_star_2_3():
+def test_md043_good_simple_headings_rule_matching_1_star_2_3() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains headings and a pattern with a pattern of wildcards and matching headings.
@@ -1011,7 +1011,7 @@ def test_md043_good_simple_headings_rule_matching_1_star_2_3():
 
 
 @pytest.mark.rules
-def test_md043_good_good_simple_headings_1_star_3_star_3():
+def test_md043_good_good_simple_headings_1_star_3_star_3() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains headings and a pattern with a pattern of wildcards and matching headings.
@@ -1048,7 +1048,7 @@ def test_md043_good_good_simple_headings_1_star_3_star_3():
 
 
 @pytest.mark.rules
-def test_md043_bad_good_many_level_two_1_star_3_star_3():
+def test_md043_bad_good_many_level_two_1_star_3_star_3() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains headings and a pattern with a pattern of wildcards and matching headings.
@@ -1089,7 +1089,7 @@ def test_md043_bad_good_many_level_two_1_star_3_star_3():
 
 
 @pytest.mark.rules
-def test_md043_good_good_many_level_two_1_star_2_star_2_star_3():
+def test_md043_good_good_many_level_two_1_star_2_star_2_star_3() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains headings and a pattern with a pattern of wildcards and matching headings.
@@ -1126,7 +1126,7 @@ def test_md043_good_good_many_level_two_1_star_2_star_2_star_3():
 
 
 @pytest.mark.rules
-def test_md043_bad_good_many_level_two_1_star_2_star_2_star_3():
+def test_md043_bad_good_many_level_two_1_star_2_star_2_star_3() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains headings and a pattern with a pattern of wildcards and matching headings.
@@ -1167,7 +1167,7 @@ def test_md043_bad_good_many_level_two_1_star_2_star_2_star_3():
 
 
 @pytest.mark.rules
-def test_md043_good_good_simple_headings_two_1_star_3_2_star_3():
+def test_md043_good_good_simple_headings_two_1_star_3_2_star_3() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains headings and a pattern with a pattern of wildcards and matching headings.
@@ -1204,7 +1204,7 @@ def test_md043_good_good_simple_headings_two_1_star_3_2_star_3():
 
 
 @pytest.mark.rules
-def test_md043_bad_good_many_level_two_1_star_3_2_star_3():
+def test_md043_bad_good_many_level_two_1_star_3_2_star_3() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains headings and a pattern with a pattern of wildcards and matching headings.
@@ -1244,7 +1244,7 @@ def test_md043_bad_good_many_level_two_1_star_3_2_star_3():
     )
 
 
-def test_md043_query_config():
+def test_md043_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md043",
         """

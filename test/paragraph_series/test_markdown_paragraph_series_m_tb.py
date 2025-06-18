@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_tb_ol_nl_tb():
+def test_paragraph_series_m_tb_ol_nl_tb() -> None:
     """
     Test case:  Ordered list newline thematic break
     was:        test_list_blocks_256fx
@@ -35,7 +35,7 @@ def test_paragraph_series_m_tb_ol_nl_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_tb_ol_nl_i2_tb():
+def test_paragraph_series_m_tb_ol_nl_i2_tb() -> None:
     """
     Test case:  Ordered list new line indent of 2 thematic break
     was:        test_list_blocks_256fxa
@@ -62,7 +62,7 @@ def test_paragraph_series_m_tb_ol_nl_i2_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_tb_ol_nl_i3_tb():
+def test_paragraph_series_m_tb_ol_nl_i3_tb() -> None:
     """
     Test case:  Ordered list new line indent of 3 thematic break
     Test case:  Ordered list thematic break on next line after an indent of 3
@@ -91,7 +91,7 @@ def test_paragraph_series_m_tb_ol_nl_i3_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_tb_ol_t_nl_tb():
+def test_paragraph_series_m_tb_ol_t_nl_tb() -> None:
     """
     Test case:  Ordered list text new line thematic break
     was:        test_list_blocks_256fa
@@ -120,7 +120,7 @@ def test_paragraph_series_m_tb_ol_t_nl_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_tb_ol_t_nl_i2_tb():
+def test_paragraph_series_m_tb_ol_t_nl_i2_tb() -> None:
     """
     Test case:  Ordered list text newline indent of 2 thematic break
     was:        test_list_blocks_256faa
@@ -149,7 +149,7 @@ def test_paragraph_series_m_tb_ol_t_nl_i2_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_tb_ol_t_nl_i3_tb():
+def test_paragraph_series_m_tb_ol_t_nl_i3_tb() -> None:
     """
     Test case:  Ordered list text newline indent of 2 thematic break
     was:        test_list_blocks_256fab
@@ -178,7 +178,7 @@ def test_paragraph_series_m_tb_ol_t_nl_i3_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_tb_ol_ol_nl_tb():
+def test_paragraph_series_m_tb_ol_ol_nl_tb() -> None:
     """
     Test case:  Ordered list x2 new line thematic break
     """
@@ -210,7 +210,7 @@ def test_paragraph_series_m_tb_ol_ol_nl_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_tb_ol_ol_t_nl_tb():
+def test_paragraph_series_m_tb_ol_ol_t_nl_tb() -> None:
     """
     Test case:  Ordered list x2 text new line thematic break
     was:        test_list_blocks_256fb
@@ -245,7 +245,7 @@ def test_paragraph_series_m_tb_ol_ol_t_nl_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_tb_ol_nl_ol_nl_tb():
+def test_paragraph_series_m_tb_ol_nl_ol_nl_tb() -> None:
     """
     Test case:  Ordered list newline ordered list new line thematic break
     """
@@ -279,7 +279,7 @@ def test_paragraph_series_m_tb_ol_nl_ol_nl_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_tb_ol_t_nl_ol_nl_tb():
+def test_paragraph_series_m_tb_ol_t_nl_ol_nl_tb() -> None:
     """
     Test case:  Ordered list text newline ordered list new line thematic break
     """
@@ -309,7 +309,7 @@ def test_paragraph_series_m_tb_ol_t_nl_ol_nl_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_tb_ul_t_nl_ul_nl_tb():
+def test_paragraph_series_m_tb_ul_t_nl_ul_nl_tb() -> None:
     """
     Test case:  Unordered list text newline unordered list new line thematic break
     """
@@ -340,7 +340,7 @@ def test_paragraph_series_m_tb_ul_t_nl_ul_nl_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_tb_ul_t_nl_ulb_nl_tb():
+def test_paragraph_series_m_tb_ul_t_nl_ulb_nl_tb() -> None:
     """
     Test case:  Unordered list text newline unordered list (b) new line thematic break
     """
@@ -370,7 +370,7 @@ def test_paragraph_series_m_tb_ul_t_nl_ulb_nl_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_tb_ul_t_nl_ul_t_nl_ulb_nl_tb():
+def test_paragraph_series_m_tb_ul_t_nl_ul_t_nl_ulb_nl_tb() -> None:
     """
     Test case:  Unordered list text newline unordered list (b) new line thematic break
     """
@@ -406,7 +406,7 @@ def test_paragraph_series_m_tb_ul_t_nl_ul_t_nl_ulb_nl_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_tb_ul_t_nl_ul_t_nl_i3_ulb_nl_tb():
+def test_paragraph_series_m_tb_ul_t_nl_ul_t_nl_i3_ulb_nl_tb() -> None:
     """
     Test case:  Unordered list text newline unordered list (b) new line thematic break
     """
@@ -442,7 +442,7 @@ def test_paragraph_series_m_tb_ul_t_nl_ul_t_nl_i3_ulb_nl_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_tb_ul_t_nl_i3_ul_t_nl_ulb_nl_tb():
+def test_paragraph_series_m_tb_ul_t_nl_i3_ul_t_nl_ulb_nl_tb() -> None:
     """
     Test case:  Unordered list text newline unordered list (b) new line thematic break
     """
@@ -487,7 +487,7 @@ def test_paragraph_series_m_tb_ul_t_nl_i3_ul_t_nl_ulb_nl_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_tb_ol_nl_ol_t_nl_tb():
+def test_paragraph_series_m_tb_ol_nl_ol_t_nl_tb() -> None:
     """
     Test case:  Ordered list newline ordered list text new line thematic break
     was:        test_list_blocks_256fc
@@ -524,7 +524,7 @@ def test_paragraph_series_m_tb_ol_nl_ol_t_nl_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_tb_ol_t_nl_ol_t_nl_tb():
+def test_paragraph_series_m_tb_ol_t_nl_ol_t_nl_tb() -> None:
     """
     Test case:  Ordered list text newline ordered list text new line thematic break
     """
@@ -562,7 +562,7 @@ def test_paragraph_series_m_tb_ol_t_nl_ol_t_nl_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_tb_ol_nl_ol_nl_i2_tb():
+def test_paragraph_series_m_tb_ol_nl_ol_nl_i2_tb() -> None:
     """
     Test case:  Ordered list newline ordered list new line indent of 2 thematic break
     """
@@ -596,7 +596,7 @@ def test_paragraph_series_m_tb_ol_nl_ol_nl_i2_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_tb_ol_t_nl_ol_nl_i2_tb():
+def test_paragraph_series_m_tb_ol_t_nl_ol_nl_i2_tb() -> None:
     """
     Test case:  Ordered list text newline ordered list new line indent of 2 thematic break
     """
@@ -626,7 +626,7 @@ def test_paragraph_series_m_tb_ol_t_nl_ol_nl_i2_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_tb_ul_t_nl_ul_nl_i1_tb():
+def test_paragraph_series_m_tb_ul_t_nl_ul_nl_i1_tb() -> None:
     """
     Test case:  Unordered list text newline unordered list new line indent of 1 thematic break
     """
@@ -657,7 +657,7 @@ def test_paragraph_series_m_tb_ul_t_nl_ul_nl_i1_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_tb_ul_t_nl_ulb_nl_i1_tb():
+def test_paragraph_series_m_tb_ul_t_nl_ulb_nl_i1_tb() -> None:
     """
     Test case:  Unordered list text newline unordered list (b) new line indent of 1 thematic break
     """
@@ -687,7 +687,7 @@ def test_paragraph_series_m_tb_ul_t_nl_ulb_nl_i1_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_tb_ol_nl_ol_t_nl_i2_tb():
+def test_paragraph_series_m_tb_ol_nl_ol_t_nl_i2_tb() -> None:
     """
     Test case:  Ordered list newline ordered list text new line indent of 2 thematic break
     was:        test_list_blocks_256fd
@@ -724,7 +724,7 @@ def test_paragraph_series_m_tb_ol_nl_ol_t_nl_i2_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_tb_ol_t_nl_ol_t_nl_i2_tb():
+def test_paragraph_series_m_tb_ol_t_nl_ol_t_nl_i2_tb() -> None:
     """
     Test case:  Ordered list text newline ordered list text new line indent of 2 thematic break
     """
@@ -762,7 +762,7 @@ def test_paragraph_series_m_tb_ol_t_nl_ol_t_nl_i2_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_tb_ol_nl_ol_t_nl_i3_tb():
+def test_paragraph_series_m_tb_ol_nl_ol_t_nl_i3_tb() -> None:
     """
     Test case:  Ordered list newline ordered list text new line indent of 3 thematic break
     was:        test_list_blocks_256fe
@@ -799,7 +799,7 @@ def test_paragraph_series_m_tb_ol_nl_ol_t_nl_i3_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_tb_ol_t_nl_ol_t_nl_i3_tb():
+def test_paragraph_series_m_tb_ol_t_nl_ol_t_nl_i3_tb() -> None:
     """
     Test case:  Ordered list text newline ordered list text new line indent of 3 thematic break
     """
@@ -837,7 +837,7 @@ def test_paragraph_series_m_tb_ol_t_nl_ol_t_nl_i3_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_tb_ol_nl_ol_nl_i3_tb():
+def test_paragraph_series_m_tb_ol_nl_ol_nl_i3_tb() -> None:
     """
     Test case:  Ordered list newline ordered list new line indent of 3 thematic break
     """
@@ -871,7 +871,7 @@ def test_paragraph_series_m_tb_ol_nl_ol_nl_i3_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_tb_ol_t_nl_ol_nl_i3_tb():
+def test_paragraph_series_m_tb_ol_t_nl_ol_nl_i3_tb() -> None:
     """
     Test case:  Ordered list text newline ordered list new line indent of 3 thematic break
     """
@@ -901,7 +901,7 @@ def test_paragraph_series_m_tb_ol_t_nl_ol_nl_i3_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_tb_ul_t_nl_ul_nl_i2_tb():
+def test_paragraph_series_m_tb_ul_t_nl_ul_nl_i2_tb() -> None:
     """
     Test case:  Unordered list text newline unordered list new line indent of 3 thematic break
     """
@@ -932,7 +932,7 @@ def test_paragraph_series_m_tb_ul_t_nl_ul_nl_i2_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_m_tb_ul_t_nl_ulb_nl_i2_tb():
+def test_paragraph_series_m_tb_ul_t_nl_ulb_nl_i2_tb() -> None:
     """
     Test case:  Unordered list text newline unordered list (b) new line indent of 3 thematic break
     """

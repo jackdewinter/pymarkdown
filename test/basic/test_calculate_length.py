@@ -7,7 +7,7 @@ from test.utils import assert_that_exception_is_raised
 from pymarkdown.general.tab_helper import TabHelper
 
 
-def test_calculate_length_empty_string():
+def test_calculate_length_empty_string() -> None:
     """
     Make sure that an empty string is handled properly.
     """
@@ -23,7 +23,7 @@ def test_calculate_length_empty_string():
     assert expected_output == actual_output
 
 
-def test_calculate_length_single_space():
+def test_calculate_length_single_space() -> None:
     """
     Make sure that a string with a single space is handled properly.
     """
@@ -39,7 +39,7 @@ def test_calculate_length_single_space():
     assert expected_output == actual_output
 
 
-def test_calculate_length_multiple_spaces():
+def test_calculate_length_multiple_spaces() -> None:
     """
     Make sure that a string with multiple spaces is handled properly.
     """
@@ -56,7 +56,7 @@ def test_calculate_length_multiple_spaces():
         assert expected_output == actual_output
 
 
-def test_calculate_length_single_tab():
+def test_calculate_length_single_tab() -> None:
     """
     Make sure that a string with a single tab is handled properly.
     """
@@ -72,7 +72,7 @@ def test_calculate_length_single_tab():
     assert expected_output == actual_output
 
 
-def test_calculate_length_multiple_tabs():
+def test_calculate_length_multiple_tabs() -> None:
     """
     Make sure that a string with multiple tabs is handled properly.
     """
@@ -89,7 +89,7 @@ def test_calculate_length_multiple_tabs():
         assert expected_output == actual_output
 
 
-def test_calculate_length_space_then_tab():
+def test_calculate_length_space_then_tab() -> None:
     """
     Make sure that a string with a single space then a tab is handled properly.
     """
@@ -105,7 +105,7 @@ def test_calculate_length_space_then_tab():
     assert expected_output == actual_output
 
 
-def test_calculate_length_space_then_tab_twice():
+def test_calculate_length_space_then_tab_twice() -> None:
     """
     Make sure that a string with a single space then a tab (twice) is handled properly.
     """
@@ -122,7 +122,7 @@ def test_calculate_length_space_then_tab_twice():
     assert expected_output == actual_output
 
 
-def test_calculate_length_double_space_then_tab():
+def test_calculate_length_double_space_then_tab() -> None:
     """
     Make sure that a string with two spaces then a tab is handled properly.
     """
@@ -138,7 +138,7 @@ def test_calculate_length_double_space_then_tab():
     assert expected_output == actual_output
 
 
-def test_calculate_length_triple_space_then_tab():
+def test_calculate_length_triple_space_then_tab() -> None:
     """
     Make sure that a string with three spaces then a tab is handled properly.
     """
@@ -154,7 +154,7 @@ def test_calculate_length_triple_space_then_tab():
     assert expected_output == actual_output
 
 
-def test_calculate_length_tab_after_0_index_start():
+def test_calculate_length_tab_after_0_index_start() -> None:
     """
     Make sure that a string with a tab is handled properly after a start of 0.
     """
@@ -171,7 +171,7 @@ def test_calculate_length_tab_after_0_index_start():
     assert expected_output == actual_output
 
 
-def test_calculate_length_tab_after_1_index_start():
+def test_calculate_length_tab_after_1_index_start() -> None:
     """
     Make sure that a string with a tab is handled properly after a start of 1.
     Note that with a start of 1, a tab moves it to the next tab stop at 4, specifying
@@ -190,7 +190,7 @@ def test_calculate_length_tab_after_1_index_start():
     assert expected_output == actual_output
 
 
-def test_calculate_length_tab_after_2_index_start():
+def test_calculate_length_tab_after_2_index_start() -> None:
     """
     Make sure that a string with a tab is handled properly after a start of 2.
     Note that with a start of 2, a tab moves it to the next tab stop at 4, specifying
@@ -209,7 +209,7 @@ def test_calculate_length_tab_after_2_index_start():
     assert expected_output == actual_output
 
 
-def test_calculate_length_tab_after_3_index_start():
+def test_calculate_length_tab_after_3_index_start() -> None:
     """
     Make sure that a string with a tab is handled properly after a start of 3.
     Note that with a start of 3, a tab moves it to the next tab stop at 4, specifying
@@ -228,7 +228,7 @@ def test_calculate_length_tab_after_3_index_start():
     assert expected_output == actual_output
 
 
-def test_calculate_length_tab_after_4_index_start():
+def test_calculate_length_tab_after_4_index_start() -> None:
     """
     Make sure that a string with a tab is handled properly after a start of 4.
     Note that with a start of 4, a tab moves it to the next tab stop at 8, specifying
@@ -247,7 +247,7 @@ def test_calculate_length_tab_after_4_index_start():
     assert expected_output == actual_output
 
 
-def test_detabify_string_multiple_spaces():
+def test_detabify_string_multiple_spaces() -> None:
     """
     TBD
     """
@@ -263,7 +263,7 @@ def test_detabify_string_multiple_spaces():
         assert input_string == actual_output
 
 
-def test_detabify_string_single_tab():
+def test_detabify_string_single_tab() -> None:
     """
     TBD
     """
@@ -279,7 +279,7 @@ def test_detabify_string_single_tab():
     assert expected_output == actual_output
 
 
-def test_detabify_string_double_tab():
+def test_detabify_string_double_tab() -> None:
     """
     TBD
     """
@@ -295,7 +295,7 @@ def test_detabify_string_double_tab():
     assert expected_output == actual_output
 
 
-def test_detabify_string_double_tab_with_char_before_and_after():
+def test_detabify_string_double_tab_with_char_before_and_after() -> None:
     """
     TBD - tab stop starts at 2, moves it to 5, second tab stop normal of 4
     """
@@ -311,7 +311,7 @@ def test_detabify_string_double_tab_with_char_before_and_after():
     assert expected_output == actual_output
 
 
-def test_detabify_string_double_tab_with_two_chars_before_and_after():
+def test_detabify_string_double_tab_with_two_chars_before_and_after() -> None:
     """
     TBD - tab stop starts at 3, moves it to 5, second tab stop normal of 4
     """
@@ -327,7 +327,7 @@ def test_detabify_string_double_tab_with_two_chars_before_and_after():
     assert expected_output == actual_output
 
 
-def test_detabify_string_double_tab_with_three_chars_before_and_after():
+def test_detabify_string_double_tab_with_three_chars_before_and_after() -> None:
     """
     TBD - tab stop starts at 4, moves it to 5, second tab stop normal of 4
     """
@@ -343,7 +343,7 @@ def test_detabify_string_double_tab_with_three_chars_before_and_after():
     assert expected_output == actual_output
 
 
-def test_detabify_string_double_tab_with_four_chars_before_and_after():
+def test_detabify_string_double_tab_with_four_chars_before_and_after() -> None:
     """
     TBD - tab stop starts at 5, moves it to 9, second tab stop normal of 4
     """
@@ -359,7 +359,7 @@ def test_detabify_string_double_tab_with_four_chars_before_and_after():
     assert expected_output == actual_output
 
 
-def test_detabify_string_building_sequences():
+def test_detabify_string_building_sequences() -> None:
     """
     TBD - tab stop starts at 5, moves it to 9, second tab stop normal of 4
     """
@@ -375,7 +375,7 @@ def test_detabify_string_building_sequences():
     assert expected_output == actual_output
 
 
-def test_find_detabify_string_ex_bad():
+def test_find_detabify_string_ex_bad() -> None:
     """
     TBD - tab stop starts at 5, moves it to 9, second tab stop normal of 4
     """

@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_emphasis_457():
+def test_emphasis_457() -> None:
     """
     Test case 457:  (part 1) Rule 12
     """
@@ -23,7 +23,7 @@ def test_emphasis_457():
 
 
 @pytest.mark.gfm
-def test_emphasis_458():
+def test_emphasis_458() -> None:
     """
     Test case 458:  (part 2) Rule 12
     """
@@ -45,7 +45,7 @@ def test_emphasis_458():
 
 
 @pytest.mark.gfm
-def test_emphasis_459():
+def test_emphasis_459() -> None:
     """
     Test case 459:  (part 3) Rule 12
     """
@@ -67,7 +67,7 @@ def test_emphasis_459():
 
 
 @pytest.mark.gfm
-def test_emphasis_460():
+def test_emphasis_460() -> None:
     """
     Test case 460:  (part 4) Rule 12
     """
@@ -82,7 +82,7 @@ def test_emphasis_460():
 
 
 @pytest.mark.gfm
-def test_emphasis_461():
+def test_emphasis_461() -> None:
     """
     Test case 461:  (part 5) Rule 12
     """
@@ -104,7 +104,7 @@ def test_emphasis_461():
 
 
 @pytest.mark.gfm
-def test_emphasis_462():
+def test_emphasis_462() -> None:
     """
     Test case 462:  (part 6) Rule 12
     """
@@ -126,7 +126,7 @@ def test_emphasis_462():
 
 
 @pytest.mark.gfm
-def test_emphasis_463():
+def test_emphasis_463() -> None:
     """
     Test case 463:  (part 7) Rule 12
     """
@@ -148,7 +148,7 @@ def test_emphasis_463():
 
 
 @pytest.mark.gfm
-def test_emphasis_464():
+def test_emphasis_464() -> None:
     """
     Test case 464:  (part 1) Note that when delimiters do not match evenly, Rule 12 determines that the excess literal _ characters will appear outside of the emphasis, rather than inside it:
     """
@@ -170,7 +170,7 @@ def test_emphasis_464():
 
 
 @pytest.mark.gfm
-def test_emphasis_465():
+def test_emphasis_465() -> None:
     """
     Test case 465:  (part 2) Note that when delimiters do not match evenly, Rule 12 determines that the excess literal _ characters will appear outside of the emphasis, rather than inside it:
     """
@@ -192,7 +192,7 @@ def test_emphasis_465():
 
 
 @pytest.mark.gfm
-def test_emphasis_466():
+def test_emphasis_466() -> None:
     """
     Test case 466:  (part 3) Note that when delimiters do not match evenly, Rule 12 determines that the excess literal _ characters will appear outside of the emphasis, rather than inside it:
     """
@@ -214,7 +214,7 @@ def test_emphasis_466():
 
 
 @pytest.mark.gfm
-def test_emphasis_467():
+def test_emphasis_467() -> None:
     """
     Test case 467:  (part 4) Note that when delimiters do not match evenly, Rule 12 determines that the excess literal _ characters will appear outside of the emphasis, rather than inside it:
     """
@@ -236,7 +236,7 @@ def test_emphasis_467():
 
 
 @pytest.mark.gfm
-def test_emphasis_468():
+def test_emphasis_468() -> None:
     """
     Test case 468:  (part 5) Note that when delimiters do not match evenly, Rule 12 determines that the excess literal _ characters will appear outside of the emphasis, rather than inside it:
     """

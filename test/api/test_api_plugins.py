@@ -9,6 +9,7 @@ from test.utils import (
     capture_stdout,
     create_temporary_configuration_file,
 )
+from typing import cast
 
 from pymarkdown.api import (
     PyMarkdownApi,
@@ -18,7 +19,7 @@ from pymarkdown.api import (
 )
 
 
-def test_api_plugins_add_with_empty_path():
+def test_api_plugins_add_with_empty_path() -> None:
     """
     Test to make sure that an empty path to add is reported as an error.
     """
@@ -35,10 +36,13 @@ def test_api_plugins_add_with_empty_path():
         plugin_path,
     )
 
-    assert caught_exception.argument_name == "path_to_plugin"
+    assert (
+        cast(PyMarkdownApiArgumentException, caught_exception).argument_name
+        == "path_to_plugin"
+    )
 
 
-def test_api_plugins_enable_with_empty_id():
+def test_api_plugins_enable_with_empty_id() -> None:
     """
     Test to make sure that an empty identifier is raises an error.
     """
@@ -55,10 +59,13 @@ def test_api_plugins_enable_with_empty_id():
         enable_identifier,
     )
 
-    assert caught_exception.argument_name == "rule_identifier"
+    assert (
+        cast(PyMarkdownApiArgumentException, caught_exception).argument_name
+        == "rule_identifier"
+    )
 
 
-def test_api_plugins_disable_with_empty_id():
+def test_api_plugins_disable_with_empty_id() -> None:
     """
     Test to make sure that an empty identifier is raises an error.
     """
@@ -75,10 +82,13 @@ def test_api_plugins_disable_with_empty_id():
         enable_identifier,
     )
 
-    assert caught_exception.argument_name == "rule_identifier"
+    assert (
+        cast(PyMarkdownApiArgumentException, caught_exception).argument_name
+        == "rule_identifier"
+    )
 
 
-def test_api_plugins_add_with_bad_path():
+def test_api_plugins_add_with_bad_path() -> None:
     """
     Test to make sure that an empty path to add is reported as an error.
 
@@ -100,7 +110,7 @@ def test_api_plugins_add_with_bad_path():
     )
 
 
-def test_api_plugins_add_with_simple_plugin():
+def test_api_plugins_add_with_simple_plugin() -> None:
     """
     Test to make sure that a valid path causes a plugin to be loaded.
     Note that this plugin is a debug plugin, and outputs directly to stdout,
@@ -139,7 +149,7 @@ MD998>>completed_file
     )
 
 
-def test_api_plugins_add_with_simple_plugins_by_directory():
+def test_api_plugins_add_with_simple_plugins_by_directory() -> None:
     """
     Test to make sure that a valid path to a directory causes any
     plugins in that directory to be loaded.
@@ -179,7 +189,7 @@ MD998>>completed_file
     )
 
 
-def test_api_plugins_add_with_repeated_identifier():
+def test_api_plugins_add_with_repeated_identifier() -> None:
     """
     Test to make sure that a valid plugin with a bad identifier is handled.
 
@@ -203,7 +213,7 @@ def test_api_plugins_add_with_repeated_identifier():
     )
 
 
-def test_api_plugins_add_with_bad_starting_new_file():
+def test_api_plugins_add_with_bad_starting_new_file() -> None:
     """
     Test to make sure that we handle an exception thrown during the starting_new_file function.
 
@@ -229,7 +239,7 @@ def test_api_plugins_add_with_bad_starting_new_file():
     )
 
 
-def test_api_plugins_add_with_bad_next_token():
+def test_api_plugins_add_with_bad_next_token() -> None:
     """
     Test to make sure that we handle an exception thrown during the next_token function.
 
@@ -256,7 +266,7 @@ def test_api_plugins_add_with_bad_next_token():
     )
 
 
-def test_api_plugins_add_with_bad_next_token_and_stack_trace():
+def test_api_plugins_add_with_bad_next_token_and_stack_trace() -> None:
     """
     Test to make sure that we handle an exception thrown during the next_token function,
     along with a stack trace.
@@ -287,7 +297,7 @@ def test_api_plugins_add_with_bad_next_token_and_stack_trace():
     )
 
 
-def test_api_plugins_add_with_bad_load_due_to_configuration():
+def test_api_plugins_add_with_bad_load_due_to_configuration() -> None:
     """
     Test to make sure that we handle any exceptions raised during the configuration of plugins.
 
@@ -318,7 +328,7 @@ Plugin class 'BadStringDetailIsInt' returned an improperly typed value for field
         )
 
 
-def test_api_plugins_disable_multiple_enable_one():
+def test_api_plugins_disable_multiple_enable_one() -> None:
     """
     Test to make sure that we can disable multiple plugins if needed.
 

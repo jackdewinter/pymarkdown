@@ -7,7 +7,7 @@ from test.utils import act_and_assert
 config_map = {"extensions": {"markdown-strikethrough": {"enabled": True}}}
 
 
-def test_strikethrough_491_x():
+def test_strikethrough_491_x() -> None:
     """
     Test case 491:  Strikethrough text is any text wrapped in two tildes (~).
     """
@@ -34,7 +34,7 @@ def test_strikethrough_491_x():
     )
 
 
-def test_strikethrough_491_a():
+def test_strikethrough_491_a() -> None:
     """
     Test case 491:  Nothing happens if the configuration is not set.
     """
@@ -52,7 +52,7 @@ def test_strikethrough_491_a():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-def test_strikethrough_492_x():
+def test_strikethrough_492_x() -> None:
     """
     Test case 492:  As with regular emphasis delimiters, a new paragraph will cause strikethrough parsing to cease:
     """
@@ -78,7 +78,7 @@ new paragraph~~."""
     )
 
 
-def test_strikethrough_492_a():
+def test_strikethrough_492_a() -> None:
     """
     Test case 492:  Nothing STILL happens if the configuration is not set.
     """
@@ -102,7 +102,7 @@ new paragraph~~."""
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-def test_strikethrough_493_x():
+def test_strikethrough_493_x() -> None:
     """
     Test case 492:  As with regular emphasis delimiters, a new paragraph will cause strikethrough parsing to cease:
     """
@@ -122,7 +122,7 @@ def test_strikethrough_493_x():
     )
 
 
-def test_strikethrough_493_a():
+def test_strikethrough_493_a() -> None:
     """
     Test case 492:  Nothing STILL happens if the configuration is not set.
     """
@@ -140,7 +140,7 @@ def test_strikethrough_493_a():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-def test_strikethrough_493_b():
+def test_strikethrough_493_b() -> None:
     """
     Test case 492:  varient, allowing end to have less, still not valid
     """

@@ -9,7 +9,7 @@ import pytest
 
 # pylint: disable=too-many-lines
 @pytest.mark.gfm
-def test_reference_links_535():
+def test_reference_links_535() -> None:
     """
     Test case 535:  Here is a simple example:
     """
@@ -36,7 +36,7 @@ def test_reference_links_535():
 
 
 @pytest.mark.gfm
-def test_reference_links_535a():
+def test_reference_links_535a() -> None:
     """
     Test case 535a:  variation of 535 with trailing space
     """
@@ -65,7 +65,7 @@ def test_reference_links_535a():
 
 
 @pytest.mark.gfm
-def test_reference_links_535b():
+def test_reference_links_535b() -> None:
     """
     Test case 535b:  variation of 535 with trailing space and text
     """
@@ -93,7 +93,7 @@ def test_reference_links_535b():
 
 
 @pytest.mark.gfm
-def test_reference_links_536():
+def test_reference_links_536() -> None:
     """
     Test case 536:  (part 1) The link text may contain balanced brackets, but not unbalanced ones, unless they are escaped:
     """
@@ -118,7 +118,7 @@ def test_reference_links_536():
 
 
 @pytest.mark.gfm
-def test_reference_links_537():
+def test_reference_links_537() -> None:
     """
     Test case 537:  (part 2) The link text may contain balanced brackets, but not unbalanced ones, unless they are escaped:
     """
@@ -143,7 +143,7 @@ def test_reference_links_537():
 
 
 @pytest.mark.gfm
-def test_reference_links_538():
+def test_reference_links_538() -> None:
     """
     Test case 538:  (part 1) The link text may contain inline content:
     """
@@ -176,7 +176,7 @@ def test_reference_links_538():
 
 
 @pytest.mark.gfm
-def test_reference_links_539():
+def test_reference_links_539() -> None:
     """
     Test case 539:  (part 2) The link text may contain inline content:
     """
@@ -201,7 +201,7 @@ def test_reference_links_539():
 
 
 @pytest.mark.gfm
-def test_reference_links_540():
+def test_reference_links_540() -> None:
     """
     Test case 540:  (part 1) However, links may not contain other links, at any level of nesting.
     """
@@ -231,7 +231,7 @@ def test_reference_links_540():
 
 
 @pytest.mark.gfm
-def test_reference_links_541():
+def test_reference_links_541() -> None:
     """
     Test case 541:  (part 2) However, links may not contain other links, at any level of nesting.
     """
@@ -266,7 +266,7 @@ def test_reference_links_541():
 
 
 @pytest.mark.gfm
-def test_reference_links_542():
+def test_reference_links_542() -> None:
     """
     Test case 542:  (part 1) The following cases illustrate the precedence of link text grouping over emphasis grouping:
     """
@@ -292,7 +292,7 @@ def test_reference_links_542():
 
 
 @pytest.mark.gfm
-def test_reference_links_543():
+def test_reference_links_543() -> None:
     """
     Test case 543:  (part 2) The following cases illustrate the precedence of link text grouping over emphasis grouping:
     """
@@ -318,7 +318,7 @@ def test_reference_links_543():
 
 
 @pytest.mark.gfm
-def test_reference_links_544():
+def test_reference_links_544() -> None:
     """
     Test case 544:  (part 1) The following cases illustrate the precedence of link text grouping over emphasis grouping:
     """
@@ -342,7 +342,7 @@ def test_reference_links_544():
 
 
 @pytest.mark.gfm
-def test_reference_links_545():
+def test_reference_links_545() -> None:
     """
     Test case 545:  (part 2) The following cases illustrate the precedence of link text grouping over emphasis grouping:
     """
@@ -366,7 +366,7 @@ def test_reference_links_545():
 
 
 @pytest.mark.gfm
-def test_reference_links_546():
+def test_reference_links_546() -> None:
     """
     Test case 546:  (part 3) The following cases illustrate the precedence of link text grouping over emphasis grouping:
     """
@@ -390,7 +390,7 @@ def test_reference_links_546():
 
 
 @pytest.mark.gfm
-def test_reference_links_547():
+def test_reference_links_547() -> None:
     """
     Test case 547:  Matching is case-insensitive:
     """
@@ -417,7 +417,7 @@ def test_reference_links_547():
 
 
 @pytest.mark.gfm
-def test_reference_links_548():
+def test_reference_links_548() -> None:
     """
     Test case 548:  Unicode case fold is used:
     """
@@ -442,7 +442,7 @@ def test_reference_links_548():
 
 
 @pytest.mark.gfm
-def test_reference_links_549():
+def test_reference_links_549() -> None:
     """
     Test case 549:  Consecutive internal whitespace is treated as one space for purposes of determining matching:
     """
@@ -468,7 +468,7 @@ def test_reference_links_549():
 
 
 @pytest.mark.gfm
-def test_reference_links_549ax():
+def test_reference_links_549ax() -> None:
     """
     Test case 549:  variant
     """
@@ -493,7 +493,7 @@ def test_reference_links_549ax():
 
 
 @pytest.mark.gfm
-def test_reference_links_549aa():
+def test_reference_links_549aa() -> None:
     """
     Test case 549:  variant
     """
@@ -518,7 +518,7 @@ def test_reference_links_549aa():
 
 
 @pytest.mark.gfm
-def test_reference_links_549bx():
+def test_reference_links_549bx() -> None:
     """
     Test case 549:  variant
     """
@@ -543,7 +543,7 @@ def test_reference_links_549bx():
 
 
 @pytest.mark.gfm
-def test_reference_links_549ba():
+def test_reference_links_549ba() -> None:
     """
     Test case 549:  variant
     """
@@ -568,7 +568,7 @@ def test_reference_links_549ba():
 
 
 @pytest.mark.gfm
-def test_reference_links_549c():
+def test_reference_links_549c() -> None:
     """
     Test case 549:  variant
     """
@@ -591,7 +591,7 @@ def test_reference_links_549c():
 
 
 @pytest.mark.gfm
-def test_reference_links_549d():
+def test_reference_links_549d() -> None:
     """
     Test case 549:  variant
     """
@@ -614,7 +614,7 @@ def test_reference_links_549d():
 
 
 @pytest.mark.gfm
-def test_reference_links_549e():
+def test_reference_links_549e() -> None:
     """
     Test case 549:  variant
     """
@@ -637,7 +637,7 @@ def test_reference_links_549e():
 
 
 @pytest.mark.gfm
-def test_reference_links_550():
+def test_reference_links_550() -> None:
     """
     Test case 550:  (part 1) No whitespace is allowed between the link text and the link label:
     """
@@ -665,7 +665,7 @@ def test_reference_links_550():
 
 
 @pytest.mark.gfm
-def test_reference_links_551():
+def test_reference_links_551() -> None:
     """
     Test case 551:  (part 2) No whitespace is allowed between the link text and the link label:
     """
@@ -695,7 +695,7 @@ def test_reference_links_551():
 
 
 @pytest.mark.gfm
-def test_reference_links_552():
+def test_reference_links_552() -> None:
     """
     Test case 552:  When there are multiple matching link reference definitions, the first is used:
     """
@@ -724,7 +724,7 @@ def test_reference_links_552():
 
 
 @pytest.mark.gfm
-def test_reference_links_553():
+def test_reference_links_553() -> None:
     """
     Test case 553:  Note that matching is performed on normalized strings, not parsed inline content. So the following does not match, even though the labels define equivalent inline content:
     """
@@ -747,7 +747,7 @@ def test_reference_links_553():
 
 
 @pytest.mark.gfm
-def test_reference_links_554():
+def test_reference_links_554() -> None:
     """
     Test case 554:  (part 1) Link labels cannot contain brackets, unless they are backslash-escaped:
     """
@@ -773,7 +773,7 @@ def test_reference_links_554():
 
 
 @pytest.mark.gfm
-def test_reference_links_555():
+def test_reference_links_555() -> None:
     """
     Test case 555:  (part 2) Link labels cannot contain brackets, unless they are backslash-escaped:
     """
@@ -799,7 +799,7 @@ def test_reference_links_555():
 
 
 @pytest.mark.gfm
-def test_reference_links_556():
+def test_reference_links_556() -> None:
     """
     Test case 556:  (part 3) Link labels cannot contain brackets, unless they are backslash-escaped:
     """
@@ -825,7 +825,7 @@ def test_reference_links_556():
 
 
 @pytest.mark.gfm
-def test_reference_links_557():
+def test_reference_links_557() -> None:
     """
     Test case 557:  (part 4) Link labels cannot contain brackets, unless they are backslash-escaped:
     """
@@ -850,7 +850,7 @@ def test_reference_links_557():
 
 
 @pytest.mark.gfm
-def test_reference_links_558():
+def test_reference_links_558() -> None:
     """
     Test case 558:  Note that in this example ] is not backslash-escaped:
     """
@@ -875,7 +875,7 @@ def test_reference_links_558():
 
 
 @pytest.mark.gfm
-def test_reference_links_558a():
+def test_reference_links_558a() -> None:
     """
     Test case 558a:  variation of 558 with reference
     """
@@ -900,7 +900,7 @@ def test_reference_links_558a():
 
 
 @pytest.mark.gfm
-def test_reference_links_558b():
+def test_reference_links_558b() -> None:
     """
     Test case 558b:  variation of 558 with reference
     """
@@ -925,7 +925,7 @@ def test_reference_links_558b():
 
 
 @pytest.mark.gfm
-def test_reference_links_559():
+def test_reference_links_559() -> None:
     """
     Test case 559:  (part 1) A link label must contain at least one non-whitespace character:
     """
@@ -951,7 +951,7 @@ def test_reference_links_559():
 
 
 @pytest.mark.gfm
-def test_reference_links_560():
+def test_reference_links_560() -> None:
     """
     Test case 560:  (part 2) A link label must contain at least one non-whitespace character:
     """
@@ -981,7 +981,7 @@ def test_reference_links_560():
 
 
 @pytest.mark.gfm
-def test_reference_links_561():
+def test_reference_links_561() -> None:
     """
     Test case 561:  (part 1) Thus, [foo][] is equivalent to [foo][foo].
     """
@@ -1008,7 +1008,7 @@ def test_reference_links_561():
 
 
 @pytest.mark.gfm
-def test_reference_links_562():
+def test_reference_links_562() -> None:
     """
     Test case 562:  (part 2) Thus, [foo][] is equivalent to [foo][foo].
     """
@@ -1038,7 +1038,7 @@ def test_reference_links_562():
 
 
 @pytest.mark.gfm
-def test_reference_links_563():
+def test_reference_links_563() -> None:
     """
     Test case 563:  The link labels are case-insensitive:
     """
@@ -1065,7 +1065,7 @@ def test_reference_links_563():
 
 
 @pytest.mark.gfm
-def test_reference_links_564():
+def test_reference_links_564() -> None:
     """
     Test case 564:  As with full reference links, whitespace is not allowed between the two sets of brackets:
     """
@@ -1097,7 +1097,7 @@ def test_reference_links_564():
 
 
 @pytest.mark.gfm
-def test_reference_links_565():
+def test_reference_links_565() -> None:
     """
     Test case 565:  (part 1) A shortcut reference link consists of a link label that matches a link reference definition elsewhere in the document and is not followed by [] or a link label.
     """
@@ -1124,7 +1124,7 @@ def test_reference_links_565():
 
 
 @pytest.mark.gfm
-def test_reference_links_566():
+def test_reference_links_566() -> None:
     """
     Test case 566:  (part 2) A shortcut reference link consists of a link label that matches a link reference definition elsewhere in the document and is not followed by [] or a link label.
     """
@@ -1154,7 +1154,7 @@ def test_reference_links_566():
 
 
 @pytest.mark.gfm
-def test_reference_links_567():
+def test_reference_links_567() -> None:
     """
     Test case 567:  (part 3) A shortcut reference link consists of a link label that matches a link reference definition elsewhere in the document and is not followed by [] or a link label.
     """
@@ -1186,7 +1186,7 @@ def test_reference_links_567():
 
 
 @pytest.mark.gfm
-def test_reference_links_568():
+def test_reference_links_568() -> None:
     """
     Test case 568:  (part 4) A shortcut reference link consists of a link label that matches a link reference definition elsewhere in the document and is not followed by [] or a link label.
     """
@@ -1212,7 +1212,7 @@ def test_reference_links_568():
 
 
 @pytest.mark.gfm
-def test_reference_links_569():
+def test_reference_links_569() -> None:
     """
     Test case 569:  The link labels are case-insensitive:
     """
@@ -1239,7 +1239,7 @@ def test_reference_links_569():
 
 
 @pytest.mark.gfm
-def test_reference_links_570():
+def test_reference_links_570() -> None:
     """
     Test case 570:  A space after the link text should be preserved:
     """
@@ -1265,7 +1265,7 @@ def test_reference_links_570():
 
 
 @pytest.mark.gfm
-def test_reference_links_570a():
+def test_reference_links_570a() -> None:
     """
     Test case 570a:  variation of 570 to show how link inside of link doesn't work.
     """
@@ -1294,7 +1294,7 @@ def test_reference_links_570a():
 
 
 @pytest.mark.gfm
-def test_reference_links_571():
+def test_reference_links_571() -> None:
     """
     Test case 571:  If you just want bracketed text, you can backslash-escape the opening bracket to avoid links
     """
@@ -1319,7 +1319,7 @@ def test_reference_links_571():
 
 
 @pytest.mark.gfm
-def test_reference_links_572():
+def test_reference_links_572() -> None:
     """
     Test case 572:  Note that this is a link, because a link label ends with the first following closing bracket:
     """
@@ -1345,7 +1345,7 @@ def test_reference_links_572():
 
 
 @pytest.mark.gfm
-def test_reference_links_573():
+def test_reference_links_573() -> None:
     """
     Test case 573:  (part 1) Full and compact references take precedence over shortcut references:
     """
@@ -1372,7 +1372,7 @@ def test_reference_links_573():
 
 
 @pytest.mark.gfm
-def test_reference_links_574():
+def test_reference_links_574() -> None:
     """
     Test case 574:  (part 2) Full and compact references take precedence over shortcut references:
     """
@@ -1397,7 +1397,7 @@ def test_reference_links_574():
 
 
 @pytest.mark.gfm
-def test_reference_links_575():
+def test_reference_links_575() -> None:
     """
     Test case 575:  (part 1) Inline links also take precedence:
     """
@@ -1422,7 +1422,7 @@ def test_reference_links_575():
 
 
 @pytest.mark.gfm
-def test_reference_links_576():
+def test_reference_links_576() -> None:
     """
     Test case 576:  (part 2) Inline links also take precedence:
     """
@@ -1448,7 +1448,7 @@ def test_reference_links_576():
 
 
 @pytest.mark.gfm
-def test_reference_links_577():
+def test_reference_links_577() -> None:
     """
     Test case 577:  In the following case [bar][baz] is parsed as a reference, [foo] as normal text:
     """
@@ -1474,7 +1474,7 @@ def test_reference_links_577():
 
 
 @pytest.mark.gfm
-def test_reference_links_578():
+def test_reference_links_578() -> None:
     """
     Test case 578:  Here, though, [foo][bar] is parsed as a reference, since [bar] is defined:
     """
@@ -1504,7 +1504,7 @@ def test_reference_links_578():
 
 
 @pytest.mark.gfm
-def test_reference_links_579():
+def test_reference_links_579() -> None:
     """
     Test case 579:  Here [foo] is not parsed as a shortcut reference, because it is followed by a link label (even though [bar] is not defined):
     """
@@ -1532,7 +1532,7 @@ def test_reference_links_579():
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_01():
+def test_reference_links_extra_01() -> None:
     """
     Test case extra 01:  variation on 644
     """
@@ -1562,7 +1562,7 @@ comment - with hyphen --> bar</a></p>"""
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_02():
+def test_reference_links_extra_02() -> None:
     """
     Test case extra 02:  variation on 345
     """
@@ -1599,7 +1599,7 @@ baz
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03x():
+def test_reference_links_extra_03x() -> None:
     """
     Test case extra 03x:  variation on 558
     """
@@ -1624,7 +1624,7 @@ def test_reference_links_extra_03x():
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03xa():
+def test_reference_links_extra_03xa() -> None:
     """
     Test case extra 03xa:  variation of 3 with extra text in label
     """
@@ -1651,7 +1651,7 @@ def test_reference_links_extra_03xa():
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03xb():
+def test_reference_links_extra_03xb() -> None:
     """
     Test case extra 03xb:  variation of 3xa as image
     """
@@ -1674,7 +1674,7 @@ def test_reference_links_extra_03xb():
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03xc():
+def test_reference_links_extra_03xc() -> None:
     """
     Test case extra 03xc:  variation of 3xa with inner as image
     """
@@ -1703,7 +1703,7 @@ def test_reference_links_extra_03xc():
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03a():
+def test_reference_links_extra_03a() -> None:
     """
     Test case extra 03a:  variation of 3 with reference
     """
@@ -1728,7 +1728,7 @@ def test_reference_links_extra_03a():
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03aa():
+def test_reference_links_extra_03aa() -> None:
     """
     Test case extra 03aa:  variation of 3a with extra text
     """
@@ -1755,7 +1755,7 @@ def test_reference_links_extra_03aa():
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03ab():
+def test_reference_links_extra_03ab() -> None:
     """
     Test case extra 03ab:  variation of 3a with outer image
     """
@@ -1778,7 +1778,7 @@ def test_reference_links_extra_03ab():
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03ac():
+def test_reference_links_extra_03ac() -> None:
     """
     Test case extra 03ac:  variation of 3a with inner image
     """
@@ -1805,7 +1805,7 @@ def test_reference_links_extra_03ac():
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03b():
+def test_reference_links_extra_03b() -> None:
     """
     Test case extra 03b:  variation of 3 with copyright
     """
@@ -1830,7 +1830,7 @@ def test_reference_links_extra_03b():
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03ba():
+def test_reference_links_extra_03ba() -> None:
     """
     Test case extra 03ba:  variation of 3b with text
     """
@@ -1857,7 +1857,7 @@ def test_reference_links_extra_03ba():
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03bb():
+def test_reference_links_extra_03bb() -> None:
     """
     Test case extra 03bb:  variation of 3b with outer image
     """
@@ -1880,7 +1880,7 @@ def test_reference_links_extra_03bb():
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03bc():
+def test_reference_links_extra_03bc() -> None:
     """
     Test case extra 03bc:  variation of 3b with inner image
     """
@@ -1907,7 +1907,7 @@ def test_reference_links_extra_03bc():
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03c():
+def test_reference_links_extra_03c() -> None:
     """
     Test case extra 03c:  variation of 3 with code span
     """
@@ -1934,7 +1934,7 @@ def test_reference_links_extra_03c():
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03ca():
+def test_reference_links_extra_03ca() -> None:
     """
     Test case extra 03ca:  variation of 3c with text
     """
@@ -1963,7 +1963,7 @@ def test_reference_links_extra_03ca():
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03cb():
+def test_reference_links_extra_03cb() -> None:
     """
     Test case extra 03cb:  variation of 3c with outer image
     """
@@ -1986,7 +1986,7 @@ def test_reference_links_extra_03cb():
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03cc():
+def test_reference_links_extra_03cc() -> None:
     """
     Test case extra 03cc:  variation of 3c with inner image
     """
@@ -2015,7 +2015,7 @@ def test_reference_links_extra_03cc():
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03d():
+def test_reference_links_extra_03d() -> None:
     """
     Test case extra 03d:  variation of 3 with emphasis
     """
@@ -2044,7 +2044,7 @@ def test_reference_links_extra_03d():
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03da():
+def test_reference_links_extra_03da() -> None:
     """
     Test case extra 03da:  variation of 3d with text
     """
@@ -2075,7 +2075,7 @@ def test_reference_links_extra_03da():
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03db():
+def test_reference_links_extra_03db() -> None:
     """
     Test case extra 03db:  variation of 3d with outer image
     """
@@ -2098,7 +2098,7 @@ def test_reference_links_extra_03db():
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03dc():
+def test_reference_links_extra_03dc() -> None:
     """
     Test case extra 03dc:  variation of 3d with inner image
     """
@@ -2127,7 +2127,7 @@ def test_reference_links_extra_03dc():
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03e():
+def test_reference_links_extra_03e() -> None:
     """
     Test case extra 03e:  variation of 3 with autolink
     """
@@ -2154,7 +2154,7 @@ def test_reference_links_extra_03e():
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03ea():
+def test_reference_links_extra_03ea() -> None:
     """
     Test case extra 03ea:  variation of 3e with text
     """
@@ -2183,7 +2183,7 @@ def test_reference_links_extra_03ea():
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03eb():
+def test_reference_links_extra_03eb() -> None:
     """
     Test case extra 03eb:  variation of 3e with outer image
     """
@@ -2206,7 +2206,7 @@ def test_reference_links_extra_03eb():
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03ec():
+def test_reference_links_extra_03ec() -> None:
     """
     Test case extra 03ec:  variation of 3e with inner image
     """
@@ -2233,7 +2233,7 @@ def test_reference_links_extra_03ec():
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03f():
+def test_reference_links_extra_03f() -> None:
     """
     Test case extra 03f:  variation of 3 with raw html
     """
@@ -2260,7 +2260,7 @@ def test_reference_links_extra_03f():
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03fa():
+def test_reference_links_extra_03fa() -> None:
     """
     Test case extra 03fa:  variation of 3f with text
     """
@@ -2289,7 +2289,7 @@ def test_reference_links_extra_03fa():
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03fb():
+def test_reference_links_extra_03fb() -> None:
     """
     Test case extra 03fb:  variation of 3f with outer image
     """
@@ -2312,7 +2312,7 @@ def test_reference_links_extra_03fb():
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03fc():
+def test_reference_links_extra_03fc() -> None:
     """
     Test case extra 03fc:  variation of 3f with inner iage
     """
@@ -2339,7 +2339,7 @@ def test_reference_links_extra_03fc():
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03g():
+def test_reference_links_extra_03g() -> None:
     """
     Test case extra 03g:  variation of 3 with newline
     """
@@ -2366,7 +2366,7 @@ foo</a></p>"""
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03ga():
+def test_reference_links_extra_03ga() -> None:
     """
     Test case extra 03ga:  variation of 3g with text
     """
@@ -2398,7 +2398,7 @@ foo</a>yy](/uri1)</p>"""
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03gb():
+def test_reference_links_extra_03gb() -> None:
     """
     Test case extra 03gb:  variation of 3g with outer image
     """
@@ -2426,7 +2426,7 @@ fooyy" /></p>"""
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03gc():
+def test_reference_links_extra_03gc() -> None:
     """
     Test case extra 03gc:  variation of 3g with inner image
     """
@@ -2456,7 +2456,7 @@ foo" />yy</a></p>"""
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03hx():
+def test_reference_links_extra_03hx() -> None:
     """
     Test case extra 03h:  variation of 3 with backslash
     """
@@ -2490,7 +2490,7 @@ foo]</p>"""
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03hxa():
+def test_reference_links_extra_03hxa() -> None:
     """
     Test case extra 03hxa:  variation of 3h with newline
     """
@@ -2524,7 +2524,7 @@ foo]</p>"""
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03hy():
+def test_reference_links_extra_03hy() -> None:
     """
     Test case extra 03hy:  variation of 3h with multiple backslashes
     """
@@ -2558,7 +2558,7 @@ foo]</p>"""
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03hz():
+def test_reference_links_extra_03hz() -> None:
     """
     Test case extra 03hz:  variation of 3h with double backslash
     """
@@ -2586,7 +2586,7 @@ foo</a></p>"""
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03ha():
+def test_reference_links_extra_03ha() -> None:
     """
     Test case extra 03ha:  variation of 3h with text
     """
@@ -2620,7 +2620,7 @@ foo]yy]</p>"""
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03hb():
+def test_reference_links_extra_03hb() -> None:
     """
     Test case extra 03hb:  variation of 3h with outer image
     """
@@ -2654,7 +2654,7 @@ foo]yy]</p>"""
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03hc():
+def test_reference_links_extra_03hc() -> None:
     """
     Test case extra 03hc:  variation of 3h with inner image
     """
@@ -2688,7 +2688,7 @@ foo]yy]</p>"""
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03i():
+def test_reference_links_extra_03i() -> None:
     """
     Test case extra 03i:  variation of 3 with double space
     """
@@ -2720,7 +2720,7 @@ foo</a></p>"""
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03ia():
+def test_reference_links_extra_03ia() -> None:
     """
     Test case extra 03ia:  variation of 3i with text
     """
@@ -2754,7 +2754,7 @@ foo</a>yy]</p>"""
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03ib():
+def test_reference_links_extra_03ib() -> None:
     """
     Test case extra 03ib:  variation of 3i with outer image
     """
@@ -2788,7 +2788,7 @@ foo</a>yy]</p>"""
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03ic():
+def test_reference_links_extra_03ic() -> None:
     """
     Test case extra 03ic:  variation of 03 with inner image
     """
@@ -2818,7 +2818,7 @@ foo" />yy]</p>"""
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03jx():
+def test_reference_links_extra_03jx() -> None:
     """
     Test case extra 03j:  variation of 3 with double backslash
     """
@@ -2852,7 +2852,7 @@ abc</p>"""
 
 
 @pytest.mark.gfm
-def test_reference_links_extra_03ja():
+def test_reference_links_extra_03ja() -> None:
     """
     Test case extra 03ja:  variation of 3 with text
     """

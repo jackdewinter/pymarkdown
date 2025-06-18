@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_autolinks_602():
+def test_autolinks_602() -> None:
     """
     Test case 602:  (part 1) Here are some valid autolinks:
     """
@@ -27,7 +27,7 @@ def test_autolinks_602():
 
 
 @pytest.mark.gfm
-def test_autolinks_603():
+def test_autolinks_603() -> None:
     """
     Test case 603:  (part 2) Here are some valid autolinks:
     """
@@ -46,7 +46,7 @@ def test_autolinks_603():
 
 
 @pytest.mark.gfm
-def test_autolinks_604():
+def test_autolinks_604() -> None:
     """
     Test case 604:  (part 3) Here are some valid autolinks:
     """
@@ -67,7 +67,7 @@ def test_autolinks_604():
 
 
 @pytest.mark.gfm
-def test_autolinks_604a():
+def test_autolinks_604a() -> None:
     """
     Test case 604a:  variation of 604 that only has a root url
     """
@@ -86,7 +86,7 @@ def test_autolinks_604a():
 
 
 @pytest.mark.gfm
-def test_autolinks_604b():
+def test_autolinks_604b() -> None:
     """
     Test case 604b:  variation on 604 that has a weird scheme
     """
@@ -105,7 +105,7 @@ def test_autolinks_604b():
 
 
 @pytest.mark.gfm
-def test_autolinks_605():
+def test_autolinks_605() -> None:
     """
     Test case 605:  Uppercase is also fine
     """
@@ -124,7 +124,7 @@ def test_autolinks_605():
 
 
 @pytest.mark.gfm
-def test_autolinks_606():
+def test_autolinks_606() -> None:
     """
     Test case 606:  (part 1) Note that many strings that count as absolute URIs for purposes of this spec are not valid URIs, because their schemes are not registered or because of other problems with their syntax:
     """
@@ -143,7 +143,7 @@ def test_autolinks_606():
 
 
 @pytest.mark.gfm
-def test_autolinks_607():
+def test_autolinks_607() -> None:
     """
     Test case 607:  (part 2) Note that many strings that count as absolute URIs for purposes of this spec are not valid URIs, because their schemes are not registered or because of other problems with their syntax:
     """
@@ -164,7 +164,7 @@ def test_autolinks_607():
 
 
 @pytest.mark.gfm
-def test_autolinks_608():
+def test_autolinks_608() -> None:
     """
     Test case 608:  (part 3) Note that many strings that count as absolute URIs for purposes of this spec are not valid URIs, because their schemes are not registered or because of other problems with their syntax:
     """
@@ -183,7 +183,7 @@ def test_autolinks_608():
 
 
 @pytest.mark.gfm
-def test_autolinks_609():
+def test_autolinks_609() -> None:
     """
     Test case 609:  (part 4) Note that many strings that count as absolute URIs for purposes of this spec are not valid URIs, because their schemes are not registered or because of other problems with their syntax:
     """
@@ -202,7 +202,7 @@ def test_autolinks_609():
 
 
 @pytest.mark.gfm
-def test_autolinks_610():
+def test_autolinks_610() -> None:
     """
     Test case 610:  Spaces are not allowed in autolinks:
     """
@@ -221,7 +221,7 @@ def test_autolinks_610():
 
 
 @pytest.mark.gfm
-def test_autolinks_611():
+def test_autolinks_611() -> None:
     """
     Test case 611:  Backslash-escapes do not work inside autolinks:
     """
@@ -242,7 +242,7 @@ def test_autolinks_611():
 
 
 @pytest.mark.gfm
-def test_autolinks_611a():
+def test_autolinks_611a() -> None:
     """
     Test case 611a:  Variation on 611 that includes unicode characters.
     """
@@ -261,7 +261,7 @@ def test_autolinks_611a():
 
 
 @pytest.mark.gfm
-def test_autolinks_611b():
+def test_autolinks_611b() -> None:
     """
     Test case 611b:  Variation on 611 that includes every eligible character.
     """
@@ -280,7 +280,7 @@ def test_autolinks_611b():
 
 
 @pytest.mark.gfm
-def test_autolinks_612():
+def test_autolinks_612() -> None:
     """
     Test case 612:  (part 1) Examples of email autolinks:
     """
@@ -301,7 +301,7 @@ def test_autolinks_612():
 
 
 @pytest.mark.gfm
-def test_autolinks_613():
+def test_autolinks_613() -> None:
     """
     Test case 613:  (part 2) Examples of email autolinks:
     """
@@ -320,7 +320,7 @@ def test_autolinks_613():
 
 
 @pytest.mark.gfm
-def test_autolinks_613a():
+def test_autolinks_613a() -> None:
     """
     Test case 613a:  variation of 613 that is a minimal mail address
     """
@@ -335,7 +335,7 @@ def test_autolinks_613a():
 
 
 @pytest.mark.gfm
-def test_autolinks_614():
+def test_autolinks_614() -> None:
     """
     Test case 614:  Backslash-escapes do not work inside email autolinks:
     """
@@ -354,7 +354,7 @@ def test_autolinks_614():
 
 
 @pytest.mark.gfm
-def test_autolinks_615():
+def test_autolinks_615() -> None:
     """
     Test case 615:  (part 1) These are not autolinks:
     """
@@ -373,7 +373,7 @@ def test_autolinks_615():
 
 
 @pytest.mark.gfm
-def test_autolinks_616():
+def test_autolinks_616() -> None:
     """
     Test case 616:  (part 2) These are not autolinks:
     """
@@ -392,7 +392,7 @@ def test_autolinks_616():
 
 
 @pytest.mark.gfm
-def test_autolinks_617():
+def test_autolinks_617() -> None:
     """
     Test case 617:  (part 3) These are not autolinks:
     """
@@ -411,7 +411,7 @@ def test_autolinks_617():
 
 
 @pytest.mark.gfm
-def test_autolinks_618():
+def test_autolinks_618() -> None:
     """
     Test case 618:  (part 4) These are not autolinks:
     """
@@ -430,7 +430,7 @@ def test_autolinks_618():
 
 
 @pytest.mark.gfm
-def test_autolinks_619():
+def test_autolinks_619() -> None:
     """
     Test case 619:  (part 5) These are not autolinks:
     """
@@ -449,7 +449,7 @@ def test_autolinks_619():
 
 
 @pytest.mark.gfm
-def test_autolinks_620():
+def test_autolinks_620() -> None:
     """
     Test case 620:  (part 6) These are not autolinks:
     """
@@ -468,7 +468,7 @@ def test_autolinks_620():
 
 
 @pytest.mark.gfm
-def test_autolinks_620a():
+def test_autolinks_620a() -> None:
     """
     Test case 620a:  variation of 620 with not enough in the scheme part
     """
@@ -487,7 +487,7 @@ def test_autolinks_620a():
 
 
 @pytest.mark.gfm
-def test_autolinks_620b():
+def test_autolinks_620b() -> None:
     """
     Test case 620b:  variation of 620 with too much in the scheme part
     """
@@ -506,7 +506,7 @@ def test_autolinks_620b():
 
 
 @pytest.mark.gfm
-def test_autolinks_620c():
+def test_autolinks_620c() -> None:
     """
     Test case 620c:  variation of 620 with an illegal char in scheme
     """
@@ -525,7 +525,7 @@ def test_autolinks_620c():
 
 
 @pytest.mark.gfm
-def test_autolinks_620d():
+def test_autolinks_620d() -> None:
     """
     Test case 620d:  variation of 620 with no domain part
     """
@@ -544,7 +544,7 @@ def test_autolinks_620d():
 
 
 @pytest.mark.gfm
-def test_autolinks_620e():
+def test_autolinks_620e() -> None:
     """
     Test case 620e:  variation of 620 with no mailbox part
     """
@@ -563,7 +563,7 @@ def test_autolinks_620e():
 
 
 @pytest.mark.gfm
-def test_autolinks_extra_01():
+def test_autolinks_extra_01() -> None:
     """
     Test case extra_01: url autolink with newline before end, invalidating it
     """
@@ -584,7 +584,7 @@ bar.baz&gt;</p>"""
 
 
 @pytest.mark.gfm
-def test_autolinks_extra_02():
+def test_autolinks_extra_02() -> None:
     """
     Test case extra_02:email autolink with newline before end, invalidating it
     """

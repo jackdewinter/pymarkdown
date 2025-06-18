@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_161():
+def test_link_reference_definitions_161() -> None:
     """
     Test case 161:  (part 1) A link reference definition does not correspond to a structural element of a document.
     """
@@ -33,7 +33,7 @@ def test_link_reference_definitions_161():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_162():
+def test_link_reference_definitions_162() -> None:
     """
     Test case 162:  (part 2) A link reference definition does not correspond to a structural element of a document.
     """
@@ -62,7 +62,7 @@ def test_link_reference_definitions_162():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_163():
+def test_link_reference_definitions_163() -> None:
     """
     Test case 163:  (part 3) A link reference definition does not correspond to a structural element of a document.
     """
@@ -89,7 +89,7 @@ def test_link_reference_definitions_163():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_164():
+def test_link_reference_definitions_164() -> None:
     """
     Test case 164:  (part 4) A link reference definition does not correspond to a structural element of a document.
     """
@@ -116,7 +116,7 @@ def test_link_reference_definitions_164():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_165():
+def test_link_reference_definitions_165() -> None:
     """
     Test case 165:  The title may extend over multiple lines:
     """
@@ -149,7 +149,7 @@ line2
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_165a():
+def test_link_reference_definitions_165a() -> None:
     """
     Test case 165a:  variation of 165 to try and include a blank line
     """
@@ -187,7 +187,7 @@ bar]: /url 'title'
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_166():
+def test_link_reference_definitions_166() -> None:
     """
     Test case 166:  However, it may not contain a blank line:
     """
@@ -220,7 +220,7 @@ with blank line'
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_166a():
+def test_link_reference_definitions_166a() -> None:
     """
     Test case 166a:  variation of 166 to try and include a blank line
         in the title
@@ -247,7 +247,7 @@ with blank line
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_166b():
+def test_link_reference_definitions_166b() -> None:
     """
     Test case 166b:  variation of 166 to try and include a newline into the title
     """
@@ -277,7 +277,7 @@ with blank line
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_167():
+def test_link_reference_definitions_167() -> None:
     """
     Test case 167:  The title may be omitted:
     """
@@ -303,7 +303,7 @@ def test_link_reference_definitions_167():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_168():
+def test_link_reference_definitions_168() -> None:
     """
     Test case 168:  The link destination may not be omitted:
     """
@@ -329,7 +329,7 @@ def test_link_reference_definitions_168():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_169():
+def test_link_reference_definitions_169() -> None:
     """
     Test case 169:  However, an empty link destination may be specified using angle brackets:
     """
@@ -354,7 +354,7 @@ def test_link_reference_definitions_169():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_170():
+def test_link_reference_definitions_170() -> None:
     """
     Test case 170:  The title must be separated from the link destination by whitespace:
     """
@@ -382,7 +382,7 @@ def test_link_reference_definitions_170():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_171():
+def test_link_reference_definitions_171() -> None:
     """
     Test case 171:  Both title and destination can contain backslash escapes and literal backslashes:
     """
@@ -409,7 +409,7 @@ def test_link_reference_definitions_171():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_172():
+def test_link_reference_definitions_172() -> None:
     """
     Test case 172:  A link can come before its corresponding definition:
     """
@@ -434,7 +434,7 @@ def test_link_reference_definitions_172():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_173():
+def test_link_reference_definitions_173() -> None:
     """
     Test case 173:  If there are several matching definitions, the first one takes precedence:
     """
@@ -461,7 +461,7 @@ def test_link_reference_definitions_173():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_174():
+def test_link_reference_definitions_174() -> None:
     """
     Test case 174:  (part 1) As noted in the section on Links, matching of labels is case-insensitive (see matches).
     """
@@ -486,7 +486,7 @@ def test_link_reference_definitions_174():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_175():
+def test_link_reference_definitions_175() -> None:
     """
     Test case 175:  (part 2) As noted in the section on Links, matching of labels is case-insensitive (see matches).
     """
@@ -511,7 +511,7 @@ def test_link_reference_definitions_175():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_176():
+def test_link_reference_definitions_176() -> None:
     """
     Test case 176:  Here is a link reference definition with no corresponding
                     link. It contributes nothing to the document.
@@ -527,7 +527,7 @@ def test_link_reference_definitions_176():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_177():
+def test_link_reference_definitions_177() -> None:
     """
     Test case 177:  Here is another one:
     """
@@ -550,7 +550,7 @@ bar"""
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_178():
+def test_link_reference_definitions_178() -> None:
     """
     Test case 178:  This is not a link reference definition, because there are
                     non-whitespace characters after the title:
@@ -570,7 +570,7 @@ def test_link_reference_definitions_178():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_179():
+def test_link_reference_definitions_179() -> None:
     """
     Test case 179:  This is a link reference definition, but it has no title:
     """
@@ -591,7 +591,7 @@ def test_link_reference_definitions_179():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_180():
+def test_link_reference_definitions_180() -> None:
     """
     Test case 180:  This is not a link reference definition, because it is indented four spaces:
     """
@@ -618,7 +618,7 @@ def test_link_reference_definitions_180():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_181():
+def test_link_reference_definitions_181() -> None:
     """
     Test case 181:  This is not a link reference definition, because it occurs inside a code block:
     """
@@ -647,7 +647,7 @@ def test_link_reference_definitions_181():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_182():
+def test_link_reference_definitions_182() -> None:
     """
     Test case 182:  A link reference definition cannot interrupt a paragraph.
     """
@@ -675,7 +675,7 @@ def test_link_reference_definitions_182():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_183():
+def test_link_reference_definitions_183() -> None:
     """
     Test case 183:  (part 1) However, it can directly follow other block elements,
                     such as headings and thematic breaks, and it need not be followed
@@ -710,7 +710,7 @@ def test_link_reference_definitions_183():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_183a():
+def test_link_reference_definitions_183a() -> None:
     """
     Test case 183a:  variation of 183 with it following a thematic break
     """
@@ -740,7 +740,7 @@ def test_link_reference_definitions_183a():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_183b():
+def test_link_reference_definitions_183b() -> None:
     """
     Test case 183b:  variation of 183 with it following a SetExt Heading
     """
@@ -773,7 +773,7 @@ def test_link_reference_definitions_183b():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_183c():
+def test_link_reference_definitions_183c() -> None:
     """
     Test case 183a:  variation of 183 with it following an indented code block
     """
@@ -806,7 +806,7 @@ def test_link_reference_definitions_183c():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_183d():
+def test_link_reference_definitions_183d() -> None:
     """
     Test case 183d:  variation of 183 with it following a fenced code block
     """
@@ -841,7 +841,7 @@ indented code block
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_183e():
+def test_link_reference_definitions_183e() -> None:
     """
     Test case 183e:  variation of 183 with it following a HTML block
     """
@@ -877,7 +877,7 @@ def test_link_reference_definitions_183e():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_183f():
+def test_link_reference_definitions_183f() -> None:
     """
     Test case 183f:  variation of 183 with it following a block quote
     """
@@ -904,7 +904,7 @@ def test_link_reference_definitions_183f():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_183gx():
+def test_link_reference_definitions_183gx() -> None:
     """
     Test case 183g:  variation of 183 with it following a list
     """
@@ -938,7 +938,7 @@ def test_link_reference_definitions_183gx():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_183ga():
+def test_link_reference_definitions_183ga() -> None:
     """
     Test case 183ga:  variation of 183g with an improperly started LRD
     """
@@ -972,7 +972,7 @@ foo]: /url</li>
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_183gb():
+def test_link_reference_definitions_183gb() -> None:
     """
     Test case 183ga:  variation of 183g with an improperly indented LRD
     """
@@ -1006,7 +1006,7 @@ def test_link_reference_definitions_183gb():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_183gc():
+def test_link_reference_definitions_183gc() -> None:
     """
     Test case 183ga:  variation of 183g with an improperly started LRD
         within an ordered list
@@ -1041,7 +1041,7 @@ def test_link_reference_definitions_183gc():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_183gd():
+def test_link_reference_definitions_183gd() -> None:
     """
     Test case 183gd:  variation of 183g with an overly indented LRD
     """
@@ -1075,7 +1075,7 @@ def test_link_reference_definitions_183gd():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_183ge():
+def test_link_reference_definitions_183ge() -> None:
     """
     Test case 183ge:  variation of 183g with an improperly started LRD
     """
@@ -1113,7 +1113,7 @@ def test_link_reference_definitions_183ge():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_183gf():
+def test_link_reference_definitions_183gf() -> None:
     """
     Test case 183gf:  variation of 183g with no LRD
     """
@@ -1147,7 +1147,7 @@ items</li>
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_183gg():
+def test_link_reference_definitions_183gg() -> None:
     """
     Test case 183ga:  variation of 183g with a list before and a block quote after
     """
@@ -1182,7 +1182,7 @@ def test_link_reference_definitions_183gg():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_184():
+def test_link_reference_definitions_184() -> None:
     """
     Test case 184:  (part 2) However, it can directly follow other block elements,
                     such as headings and thematic breaks, and it need not be followed
@@ -1213,7 +1213,7 @@ bar
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_185():
+def test_link_reference_definitions_185() -> None:
     """
     Test case 185:  (part 3) However, it can directly follow other block elements,
                     such as headings and thematic breaks, and it need not be followed
@@ -1241,7 +1241,7 @@ def test_link_reference_definitions_185():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_185ax():
+def test_link_reference_definitions_185ax() -> None:
     """
     Test case 185a:  variation of 185 with Atx Heading between
     """
@@ -1269,7 +1269,7 @@ def test_link_reference_definitions_185ax():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_185aa():
+def test_link_reference_definitions_185aa() -> None:
     """
     Test case 185a:  variation of 185 with Atx Heading between
     """
@@ -1302,7 +1302,7 @@ def test_link_reference_definitions_185aa():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_185b():
+def test_link_reference_definitions_185b() -> None:
     """
     Test case 185b:  variation of 185 with fenced code block between
     """
@@ -1333,7 +1333,7 @@ my text
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_185c():
+def test_link_reference_definitions_185c() -> None:
     """
     Test case 185c:  variation of 185 with indented code block between
     """
@@ -1362,7 +1362,7 @@ def test_link_reference_definitions_185c():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_185d():
+def test_link_reference_definitions_185d() -> None:
     """
     Test case 185d:  variation of 185 with HTML Block between
     """
@@ -1394,7 +1394,7 @@ def test_link_reference_definitions_185d():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_185e():
+def test_link_reference_definitions_185e() -> None:
     """
     Test case 185a:  variation of 185 with Block Quote between
     """
@@ -1424,7 +1424,7 @@ def test_link_reference_definitions_185e():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_185fx():
+def test_link_reference_definitions_185fx() -> None:
     """
     Test case 185a:  variation of 185 with List between
     """
@@ -1454,7 +1454,7 @@ def test_link_reference_definitions_185fx():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_185fa():
+def test_link_reference_definitions_185fa() -> None:
     """
     Test case 185fa: variation of 185f with image
     """
@@ -1482,7 +1482,7 @@ def test_link_reference_definitions_185fa():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_186():
+def test_link_reference_definitions_186() -> None:
     """
     Test case 186:  Several link reference definitions can occur one after another, without intervening blank lines.
     """
@@ -1524,7 +1524,7 @@ def test_link_reference_definitions_186():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_187():
+def test_link_reference_definitions_187() -> None:
     """
     Test case 187:  Link reference definitions can occur inside block containers,
                     like lists and block quotations. They affect the entire document,
@@ -1555,7 +1555,7 @@ def test_link_reference_definitions_187():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_188():
+def test_link_reference_definitions_188() -> None:
     """
     Test case 188:  Whether something is a link reference definition is independent
                     of whether the link reference it defines is used in the document.
@@ -1571,7 +1571,7 @@ def test_link_reference_definitions_188():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_188a():
+def test_link_reference_definitions_188a() -> None:
     """
     Test case 188a: variation of 188 with only start
     """
@@ -1586,7 +1586,7 @@ def test_link_reference_definitions_188a():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_188b():
+def test_link_reference_definitions_188b() -> None:
     """
     Test case 188b: variation of 188 with only start and text
     """
@@ -1601,7 +1601,7 @@ def test_link_reference_definitions_188b():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_188c():
+def test_link_reference_definitions_188c() -> None:
     """
     Test case 188c: variation of 188 with only link label
     """
@@ -1616,7 +1616,7 @@ def test_link_reference_definitions_188c():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_188d():
+def test_link_reference_definitions_188d() -> None:
     """
     Test case 188d: variation of 188 with only link label and following colon
     """
@@ -1631,7 +1631,7 @@ def test_link_reference_definitions_188d():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_188e():
+def test_link_reference_definitions_188e() -> None:
     """
     Test case 188e: variation of 188 with only link label and url, and start of title
     """
@@ -1650,7 +1650,7 @@ def test_link_reference_definitions_188e():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_extra_01():
+def test_link_reference_definitions_extra_01() -> None:
     """
     Test case extra 01:  LRD within list item
 
@@ -1679,7 +1679,7 @@ def test_link_reference_definitions_extra_01():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_extra_01a():
+def test_link_reference_definitions_extra_01a() -> None:
     """
     Test case extra 01a:  variation on 1 with proper indent
     """
@@ -1701,7 +1701,7 @@ def test_link_reference_definitions_extra_01a():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_extra_01b():
+def test_link_reference_definitions_extra_01b() -> None:
     """
     Test case extra 01b:  variation on 1 with almost proper indent
 
@@ -1730,7 +1730,7 @@ def test_link_reference_definitions_extra_01b():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_extra_01c():
+def test_link_reference_definitions_extra_01c() -> None:
     """
     Test case extra 01c:  variation of 1 split across list items
     """
@@ -1759,7 +1759,7 @@ def test_link_reference_definitions_extra_01c():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_extra_01d():
+def test_link_reference_definitions_extra_01d() -> None:
     """
     Test case extra 01d:  variation of 1 split across ordered list items
     """
@@ -1788,7 +1788,7 @@ def test_link_reference_definitions_extra_01d():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_extra_02x():
+def test_link_reference_definitions_extra_02x() -> None:
     """
     Test case extra 02:  variation
     """
@@ -1813,7 +1813,7 @@ def test_link_reference_definitions_extra_02x():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_extra_02a():
+def test_link_reference_definitions_extra_02a() -> None:
     """
     Test case extra 02a:  variation of 2 within block quote
     """
@@ -1834,7 +1834,7 @@ def test_link_reference_definitions_extra_02a():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_extra_02bx():
+def test_link_reference_definitions_extra_02bx() -> None:
     """
     Test case extra 02b:  variation of 2 within different block quote
     """
@@ -1866,7 +1866,7 @@ def test_link_reference_definitions_extra_02bx():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_extra_02ba():
+def test_link_reference_definitions_extra_02ba() -> None:
     """
     Test case extra 02ba:  variation of 2 within different block quote
     """
@@ -1903,7 +1903,7 @@ def test_link_reference_definitions_extra_02ba():
 
 @pytest.mark.skip
 @pytest.mark.gfm
-def test_link_reference_definitions_extra_02bc():
+def test_link_reference_definitions_extra_02bc() -> None:
     """
     Test case extra 02b:  variation of 2 within different block quote
     """
@@ -1936,7 +1936,7 @@ def test_link_reference_definitions_extra_02bc():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_extra_02cx():
+def test_link_reference_definitions_extra_02cx() -> None:
     """
     Test case extra 02c:  variation of 2 within decreasing quote
     """
@@ -1965,7 +1965,7 @@ def test_link_reference_definitions_extra_02cx():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_extra_02ca():
+def test_link_reference_definitions_extra_02ca() -> None:
     """
     Test case extra 02c:  variation of 2 within more decreasing quote
     """

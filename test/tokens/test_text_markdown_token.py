@@ -3,7 +3,7 @@ from test.tokens.mock_plugin_modify_context import MockPluginModifyContext
 from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 
 
-def test_text_markdown_token_modify_with_bad_name():
+def test_text_markdown_token_modify_with_bad_name() -> None:
     """
     Test to make sure that try to change this token with a bad name fails.
     """

@@ -385,14 +385,14 @@ def test_md004_fix(test: pluginRuleTest) -> None:
 
 
 @pytest.mark.parametrize("test", configTests, ids=id_test_plug_rule_fn)
-def test_md004_config(test: pluginRuleTest) -> None:
+def test_md004_config(test: pluginConfigErrorTest) -> None:
     """
     Execute a parameterized fix test for plugin md001.
     """
     execute_configuration_test(test, f"{source_path}good_list_asterisk_single_level.md")
 
 
-def test_md004_query_config():
+def test_md004_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md004",
         """

@@ -10,7 +10,7 @@ import pytest
 
 
 @pytest.mark.rules
-def test_md025_bad_configuration_level():
+def test_md025_bad_configuration_level() -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     level value with a string that is not an integer.
@@ -46,7 +46,7 @@ def test_md025_bad_configuration_level():
 
 
 @pytest.mark.rules
-def test_md025_good_configuration_level():
+def test_md025_good_configuration_level() -> None:
     """
     Test to verify that a configuration error is not thrown when supplying the
     level value with an integer.
@@ -79,7 +79,7 @@ def test_md025_good_configuration_level():
 
 
 @pytest.mark.rules
-def test_md025_bad_configuration_level_bad():
+def test_md025_bad_configuration_level_bad() -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     level value an integer that is out of range.
@@ -115,7 +115,7 @@ def test_md025_bad_configuration_level_bad():
 
 
 @pytest.mark.rules
-def test_md025_bad_configuration_front_matter_title():
+def test_md025_bad_configuration_front_matter_title() -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     front_matter_title value with an integer that is not a string.
@@ -151,7 +151,7 @@ def test_md025_bad_configuration_front_matter_title():
 
 
 @pytest.mark.rules
-def test_md025_good_configuration_front_matter_title():
+def test_md025_good_configuration_front_matter_title() -> None:
     """
     Test to verify that a configuration error is not thrown when supplying the
     front_matter_title value with a valid string.
@@ -184,7 +184,7 @@ def test_md025_good_configuration_front_matter_title():
 
 
 @pytest.mark.rules
-def test_md025_bad_configuration_front_matter_title_bad():
+def test_md025_bad_configuration_front_matter_title_bad() -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     front_matter_title value with an invalid string.
@@ -220,7 +220,7 @@ def test_md025_bad_configuration_front_matter_title_bad():
 
 
 @pytest.mark.rules
-def test_md025_bad_configuration_front_matter_title_invalid():
+def test_md025_bad_configuration_front_matter_title_invalid() -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     front_matter_title value with an invalid string.
@@ -256,7 +256,7 @@ def test_md025_bad_configuration_front_matter_title_invalid():
 
 
 @pytest.mark.rules
-def test_md025_good_single_top_level_atx():
+def test_md025_good_single_top_level_atx() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a single top level Atx Heading.
@@ -286,7 +286,7 @@ def test_md025_good_single_top_level_atx():
 
 
 @pytest.mark.rules
-def test_md025_good_single_top_level_setext():
+def test_md025_good_single_top_level_setext() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a single top level SetExt Heading.
@@ -316,7 +316,7 @@ def test_md025_good_single_top_level_setext():
 
 
 @pytest.mark.rules
-def test_md025_bad_top_level_atx_top_level_atx():
+def test_md025_bad_top_level_atx_top_level_atx() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains two top level Atx Headings.
@@ -349,7 +349,7 @@ def test_md025_bad_top_level_atx_top_level_atx():
 
 
 @pytest.mark.rules
-def test_md025_bad_top_level_atx_top_level_setext():
+def test_md025_bad_top_level_atx_top_level_setext() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a top level Atx Heading and a top level SetExt Heading.
@@ -384,7 +384,7 @@ def test_md025_bad_top_level_atx_top_level_setext():
 
 
 @pytest.mark.rules
-def test_md025_bad_top_level_setext_top_level_setext():
+def test_md025_bad_top_level_setext_top_level_setext() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains two top level SetExt Headings.
@@ -421,7 +421,7 @@ def test_md025_bad_top_level_setext_top_level_setext():
 
 
 @pytest.mark.rules
-def test_md025_bad_top_level_setext_top_level_atx():
+def test_md025_bad_top_level_setext_top_level_atx() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a top level SetExt Heading and an top level Atx heading.
@@ -456,7 +456,7 @@ def test_md025_bad_top_level_setext_top_level_atx():
 
 
 @pytest.mark.rules
-def test_md025_good_front_matter_title():
+def test_md025_good_front_matter_title() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains only a front-matter title.
@@ -488,7 +488,7 @@ def test_md025_good_front_matter_title():
 
 
 @pytest.mark.rules
-def test_md025_bad_front_matter_title_top_level_atx():
+def test_md025_bad_front_matter_title_top_level_atx() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a front-matter title and a top level Atx Heading.
@@ -523,7 +523,7 @@ def test_md025_bad_front_matter_title_top_level_atx():
 
 
 @pytest.mark.rules
-def test_md025_bad_front_matter_title_top_level_setext():
+def test_md025_bad_front_matter_title_top_level_setext() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a front-matter title and a top level SetExt Heading.
@@ -561,7 +561,7 @@ def test_md025_bad_front_matter_title_top_level_setext():
     )
 
 
-def test_md025_query_config():
+def test_md025_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md025",
         """

@@ -9,7 +9,7 @@ import pytest
 
 # pylint: disable=too-many-lines
 @pytest.mark.gfm
-def test_inline_links_493x():
+def test_inline_links_493x() -> None:
     """
     Test case 493:  Here is a simple inline link:
     """
@@ -32,7 +32,7 @@ def test_inline_links_493x():
 
 
 @pytest.mark.gfm
-def test_inline_links_493a():
+def test_inline_links_493a() -> None:
     """
     Test case 493a:  variation of 493 with space after
     """
@@ -53,7 +53,7 @@ def test_inline_links_493a():
 
 
 @pytest.mark.gfm
-def test_inline_links_493b():
+def test_inline_links_493b() -> None:
     """
     Test case 493b:  variation of 493 with space and text after
     """
@@ -75,7 +75,7 @@ def test_inline_links_493b():
 
 
 @pytest.mark.gfm
-def test_inline_links_494():
+def test_inline_links_494() -> None:
     """
     Test case 494:  The title may be omitted:
     """
@@ -96,7 +96,7 @@ def test_inline_links_494():
 
 
 @pytest.mark.gfm
-def test_inline_links_495():
+def test_inline_links_495() -> None:
     """
     Test case 495:  (part 1) Both the title and the destination may be omitted:
     """
@@ -117,7 +117,7 @@ def test_inline_links_495():
 
 
 @pytest.mark.gfm
-def test_inline_links_496():
+def test_inline_links_496() -> None:
     """
     Test case 496:  (part 2) Both the title and the destination may be omitted:
     """
@@ -138,7 +138,7 @@ def test_inline_links_496():
 
 
 @pytest.mark.gfm
-def test_inline_links_497():
+def test_inline_links_497() -> None:
     """
     Test case 497:  (part 1) The destination can only contain spaces if it is enclosed in pointy brackets
     """
@@ -157,7 +157,7 @@ def test_inline_links_497():
 
 
 @pytest.mark.gfm
-def test_inline_links_497a():
+def test_inline_links_497a() -> None:
     """
     Test case 497a:  variation of 497 with no inline close and
         defined reference
@@ -184,7 +184,7 @@ def test_inline_links_497a():
 
 
 @pytest.mark.gfm
-def test_inline_links_498():
+def test_inline_links_498() -> None:
     """
     Test case 498:  (part 2) The destination can only contain spaces if it is enclosed in pointy brackets
     """
@@ -205,7 +205,7 @@ def test_inline_links_498():
 
 
 @pytest.mark.gfm
-def test_inline_links_499():
+def test_inline_links_499() -> None:
     """
     Test case 499:  (part 1) The destination cannot contain line breaks, even if enclosed in pointy brackets:
     """
@@ -226,7 +226,7 @@ bar)</p>"""
 
 
 @pytest.mark.gfm
-def test_inline_links_500():
+def test_inline_links_500() -> None:
     """
     Test case 500:  (part 2) The destination cannot contain line breaks, even if enclosed in pointy brackets:
     """
@@ -249,7 +249,7 @@ bar>)</p>"""
 
 
 @pytest.mark.gfm
-def test_inline_links_501():
+def test_inline_links_501() -> None:
     """
     Test case 501:  The destination can contain ) if it is enclosed in pointy brackets:
     """
@@ -270,7 +270,7 @@ def test_inline_links_501():
 
 
 @pytest.mark.gfm
-def test_inline_links_502():
+def test_inline_links_502() -> None:
     """
     Test case 502:  Pointy brackets that enclose links must be unescaped:
     """
@@ -289,7 +289,7 @@ def test_inline_links_502():
 
 
 @pytest.mark.gfm
-def test_inline_links_503():
+def test_inline_links_503() -> None:
     """
     Test case 503:  These are not links, because the opening pointy bracket is not matched properly:
     """
@@ -314,7 +314,7 @@ def test_inline_links_503():
 
 
 @pytest.mark.gfm
-def test_inline_links_504():
+def test_inline_links_504() -> None:
     """
     Test case 504:  Parentheses inside the link destination may be escaped:
     """
@@ -335,7 +335,7 @@ def test_inline_links_504():
 
 
 @pytest.mark.gfm
-def test_inline_links_505():
+def test_inline_links_505() -> None:
     """
     Test case 505:  Any number of parentheses are allowed without escaping, as long as they are balanced:
     """
@@ -356,7 +356,7 @@ def test_inline_links_505():
 
 
 @pytest.mark.gfm
-def test_inline_links_506():
+def test_inline_links_506() -> None:
     """
     Test case 506:  (part 1) However, if you have unbalanced parentheses, you need to escape or use the <...> form:
     """
@@ -377,7 +377,7 @@ def test_inline_links_506():
 
 
 @pytest.mark.gfm
-def test_inline_links_507():
+def test_inline_links_507() -> None:
     """
     Test case 507:  (part 2) However, if you have unbalanced parentheses, you need to escape or use the <...> form:
     """
@@ -398,7 +398,7 @@ def test_inline_links_507():
 
 
 @pytest.mark.gfm
-def test_inline_links_507b():
+def test_inline_links_507b() -> None:
     """
     Test case 507b:  variation of 507 without the angle brackets.
     """
@@ -417,7 +417,7 @@ def test_inline_links_507b():
 
 
 @pytest.mark.gfm
-def test_inline_links_507c():
+def test_inline_links_507c() -> None:
     """
     Test case 507c:  variation of 507 without the angle brackets, and more open
     """
@@ -436,7 +436,7 @@ def test_inline_links_507c():
 
 
 @pytest.mark.gfm
-def test_inline_links_508():
+def test_inline_links_508() -> None:
     """
     Test case 508:  Parentheses and other symbols can also be escaped, as usual in Markdown:
     """
@@ -457,7 +457,7 @@ def test_inline_links_508():
 
 
 @pytest.mark.gfm
-def test_inline_links_509():
+def test_inline_links_509() -> None:
     """
     Test case 509:  A link can contain fragment identifiers and queries:
     """
@@ -496,7 +496,7 @@ def test_inline_links_509():
 
 
 @pytest.mark.gfm
-def test_inline_links_510():
+def test_inline_links_510() -> None:
     """
     Test case 510:  Note that a backslash before a non-escapable character is just a backslash:
     """
@@ -517,7 +517,7 @@ def test_inline_links_510():
 
 
 @pytest.mark.gfm
-def test_inline_links_511():
+def test_inline_links_511() -> None:
     """
     Test case 511:  URL-escaping should be left alone inside the destination
     """
@@ -538,7 +538,7 @@ def test_inline_links_511():
 
 
 @pytest.mark.gfm
-def test_inline_links_512():
+def test_inline_links_512() -> None:
     """
     Test case 512:  Note that, because titles can often be parsed as destinations,
                     if you try to omit the destination and keep the title, you’ll
@@ -561,7 +561,7 @@ def test_inline_links_512():
 
 
 @pytest.mark.gfm
-def test_inline_links_513():
+def test_inline_links_513() -> None:
     """
     Test case 513:  Titles may be in single quotes, double quotes, or parentheses:
     """
@@ -594,7 +594,7 @@ def test_inline_links_513():
 
 
 @pytest.mark.gfm
-def test_inline_links_514():
+def test_inline_links_514() -> None:
     """
     Test case 514:  Backslash escapes and entity and numeric character references may be used in titles:
     """
@@ -615,7 +615,7 @@ def test_inline_links_514():
 
 
 @pytest.mark.gfm
-def test_inline_links_515():
+def test_inline_links_515() -> None:
     """
     Test case 515:  Titles must be separated from the link using a whitespace.
                     Other Unicode whitespace like non-breaking space doesn’t work.
@@ -637,7 +637,7 @@ def test_inline_links_515():
 
 
 @pytest.mark.gfm
-def test_inline_links_515b():
+def test_inline_links_515b() -> None:
     """
     Test case 515b:  variation of 515 to use normal space and remove closing quotes.
     """
@@ -656,7 +656,7 @@ def test_inline_links_515b():
 
 
 @pytest.mark.gfm
-def test_inline_links_515c():
+def test_inline_links_515c() -> None:
     """
     Test case 515c:  variation of 515 to use normal space and remove closing quotes.
     """
@@ -677,7 +677,7 @@ def test_inline_links_515c():
 
 
 @pytest.mark.gfm
-def test_inline_links_515d():
+def test_inline_links_515d() -> None:
     """
     Test case 515d:  variation of 515 to use normal space and remove closing quotes.
     """
@@ -696,7 +696,7 @@ def test_inline_links_515d():
 
 
 @pytest.mark.gfm
-def test_inline_links_515e():
+def test_inline_links_515e() -> None:
     """
     Test case 515e:  variation of 515 to use normal space and remove closing quotes.
     """
@@ -717,7 +717,7 @@ def test_inline_links_515e():
 
 
 @pytest.mark.gfm
-def test_inline_links_515f():
+def test_inline_links_515f() -> None:
     """
     Test case 515e:  variation of 515 to use normal space and remove closing quotes.
     """
@@ -739,7 +739,7 @@ def test_inline_links_515f():
 
 
 @pytest.mark.gfm
-def test_inline_links_515g():
+def test_inline_links_515g() -> None:
     """
     Test case 515e:  variation of 515 to use normal space and remove closing quotes.
     """
@@ -758,7 +758,7 @@ def test_inline_links_515g():
 
 
 @pytest.mark.gfm
-def test_inline_links_516():
+def test_inline_links_516() -> None:
     """
     Test case 516:  Nested balanced quotes are not allowed without escaping:
     """
@@ -777,7 +777,7 @@ def test_inline_links_516():
 
 
 @pytest.mark.gfm
-def test_inline_links_517():
+def test_inline_links_517() -> None:
     """
     Test case 517:  But it is easy to work around this by using a different quote type:
     """
@@ -800,7 +800,7 @@ def test_inline_links_517():
 
 
 @pytest.mark.gfm
-def test_inline_links_518():
+def test_inline_links_518() -> None:
     """
     Test case 518:  Whitespace is allowed around the destination and title:
     """
@@ -822,7 +822,7 @@ def test_inline_links_518():
 
 
 @pytest.mark.gfm
-def test_inline_links_519():
+def test_inline_links_519() -> None:
     """
     Test case 519:  But it is not allowed between the link text and the following parenthesis:
     """
@@ -841,7 +841,7 @@ def test_inline_links_519():
 
 
 @pytest.mark.gfm
-def test_inline_links_520():
+def test_inline_links_520() -> None:
     """
     Test case 520:  (part 1) The link text may contain balanced brackets, but not
                     unbalanced ones, unless they are escaped:
@@ -863,7 +863,7 @@ def test_inline_links_520():
 
 
 @pytest.mark.gfm
-def test_inline_links_521():
+def test_inline_links_521() -> None:
     """
     Test case 521:  (part 2) The link text may contain balanced brackets, but not
                     unbalanced ones, unless they are escaped:
@@ -883,7 +883,7 @@ def test_inline_links_521():
 
 
 @pytest.mark.gfm
-def test_inline_links_522():
+def test_inline_links_522() -> None:
     """
     Test case 522:  (part 3) The link text may contain balanced brackets, but not
                     unbalanced ones, unless they are escaped:
@@ -906,7 +906,7 @@ def test_inline_links_522():
 
 
 @pytest.mark.gfm
-def test_inline_links_523():
+def test_inline_links_523() -> None:
     """
     Test case 523:  (part 4) The link text may contain balanced brackets, but not
                     unbalanced ones, unless they are escaped:
@@ -928,7 +928,7 @@ def test_inline_links_523():
 
 
 @pytest.mark.gfm
-def test_inline_links_524():
+def test_inline_links_524() -> None:
     """
     Test case 524:  (part 1) The link text may contain inline content:
     """
@@ -957,7 +957,7 @@ def test_inline_links_524():
 
 
 @pytest.mark.gfm
-def test_inline_links_525():
+def test_inline_links_525() -> None:
     """
     Test case 525:  (part 2) The link text may contain inline content:
     """
@@ -978,7 +978,7 @@ def test_inline_links_525():
 
 
 @pytest.mark.gfm
-def test_inline_links_526():
+def test_inline_links_526() -> None:
     """
     Test case 526:  (part 1) However, links may not contain other links, at any level of nesting.
     """
@@ -1001,7 +1001,7 @@ def test_inline_links_526():
 
 
 @pytest.mark.gfm
-def test_inline_links_526a():
+def test_inline_links_526a() -> None:
     """
     Test case 526a:  variation of 526 to switch uris
     """
@@ -1024,7 +1024,7 @@ def test_inline_links_526a():
 
 
 @pytest.mark.gfm
-def test_inline_links_527():
+def test_inline_links_527() -> None:
     """
     Test case 527:  (part 2) However, links may not contain other links, at any level of nesting.
     """
@@ -1051,7 +1051,7 @@ def test_inline_links_527():
 
 
 @pytest.mark.gfm
-def test_inline_links_527a():
+def test_inline_links_527a() -> None:
     """
     Test case 527a:  variation of 527 to have multiple uris instead of one
     """
@@ -1080,7 +1080,7 @@ def test_inline_links_527a():
 
 
 @pytest.mark.gfm
-def test_inline_links_528():
+def test_inline_links_528() -> None:
     """
     Test case 528:  (part 3) However, links may not contain other links, at any level of nesting.
     """
@@ -1099,7 +1099,7 @@ def test_inline_links_528():
 
 
 @pytest.mark.gfm
-def test_inline_links_528a():
+def test_inline_links_528a() -> None:
     """
     Test case 528a:  variation of 528 to have multuple uris instead of one
     """
@@ -1118,7 +1118,7 @@ def test_inline_links_528a():
 
 
 @pytest.mark.gfm
-def test_inline_links_528b():
+def test_inline_links_528b() -> None:
     """
     Test case 528b:  variation of 528 to have a slightly different format
     """
@@ -1137,7 +1137,7 @@ def test_inline_links_528b():
 
 
 @pytest.mark.gfm
-def test_inline_links_528c():
+def test_inline_links_528c() -> None:
     """
     Test case 528c:  variation of 528 to have a slightly different format
     """
@@ -1156,7 +1156,7 @@ def test_inline_links_528c():
 
 
 @pytest.mark.gfm
-def test_inline_links_529():
+def test_inline_links_529() -> None:
     """
     Test case 529:  (part 1) These cases illustrate the precedence of link text grouping over emphasis grouping:
     """
@@ -1178,7 +1178,7 @@ def test_inline_links_529():
 
 
 @pytest.mark.gfm
-def test_inline_links_530():
+def test_inline_links_530() -> None:
     """
     Test case 530:  (part 2) These cases illustrate the precedence of link text grouping over emphasis grouping:
     """
@@ -1199,7 +1199,7 @@ def test_inline_links_530():
 
 
 @pytest.mark.gfm
-def test_inline_links_531():
+def test_inline_links_531() -> None:
     """
     Test case 531:  Note that brackets that aren’t part of links do not take precedence:
     """
@@ -1221,7 +1221,7 @@ def test_inline_links_531():
 
 
 @pytest.mark.gfm
-def test_inline_links_532():
+def test_inline_links_532() -> None:
     """
     Test case 532:  (part 1) These cases illustrate the precedence of HTML tags,
                     code spans, and autolinks over link grouping:
@@ -1242,7 +1242,7 @@ def test_inline_links_532():
 
 
 @pytest.mark.gfm
-def test_inline_links_533():
+def test_inline_links_533() -> None:
     """
     Test case 533:  (part 2) These cases illustrate the precedence of HTML tags,
                     code spans, and autolinks over link grouping:
@@ -1263,7 +1263,7 @@ def test_inline_links_533():
 
 
 @pytest.mark.gfm
-def test_inline_links_534():
+def test_inline_links_534() -> None:
     """
     Test case 534:  (part 3) These cases illustrate the precedence of HTML tags,
                     code spans, and autolinks over link grouping:
@@ -1284,7 +1284,7 @@ def test_inline_links_534():
 
 
 @pytest.mark.gfm
-def test_inline_links_extra_01():
+def test_inline_links_extra_01() -> None:
     """
     Test case extra 01:  variation on 644
     """
@@ -1309,7 +1309,7 @@ comment - with hyphen --> bar</a></p>"""
 
 
 @pytest.mark.gfm
-def test_inline_links_extra_02():
+def test_inline_links_extra_02() -> None:
     """
     Test case extra 02:  variation on 345
     """
@@ -1338,7 +1338,7 @@ baz
 
 
 @pytest.mark.gfm
-def test_inline_links_extra_03x():
+def test_inline_links_extra_03x() -> None:
     """
     Test case extra 03:  from https://github.com/jackdewinter/pymarkdown/issues/634
     """
@@ -1365,7 +1365,7 @@ models</a></li>
 
 
 @pytest.mark.gfm
-def test_inline_links_extra_03a():
+def test_inline_links_extra_03a() -> None:
     """
     Test case extra 03:  from https://github.com/jackdewinter/pymarkdown/issues/634
     """
@@ -1393,7 +1393,7 @@ models</a></li>
 
 
 @pytest.mark.gfm
-def test_inline_links_extra_03b():
+def test_inline_links_extra_03b() -> None:
     """
     Test case extra 03:  from https://github.com/jackdewinter/pymarkdown/issues/634
     """
@@ -1420,7 +1420,7 @@ models</a></li>
 
 
 @pytest.mark.gfm
-def test_inline_links_extra_03c():
+def test_inline_links_extra_03c() -> None:
     """
     Test case extra 03:  from https://github.com/jackdewinter/pymarkdown/issues/634
     """
@@ -1457,7 +1457,7 @@ p. 474ff.</a></li>
 
 
 @pytest.mark.gfm
-def test_inline_links_extra_03d():
+def test_inline_links_extra_03d() -> None:
     """
     Test case extra 03:  from https://github.com/jackdewinter/pymarkdown/issues/634
     """
@@ -1494,7 +1494,7 @@ p. 474ff.</a></li>
 
 
 @pytest.mark.gfm
-def test_inline_links_extra_03e():
+def test_inline_links_extra_03e() -> None:
     """
     Test case extra 03:  from https://github.com/jackdewinter/pymarkdown/issues/634
     """

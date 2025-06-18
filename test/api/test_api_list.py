@@ -4,6 +4,7 @@ Module for directly using PyMarkdown's list api.
 
 import os
 from test.utils import assert_if_lists_different, assert_that_exception_is_raised
+from typing import cast
 
 from pymarkdown.api import (
     PyMarkdownApi,
@@ -12,7 +13,7 @@ from pymarkdown.api import (
 )
 
 
-def test_api_list_bad_path_to_scan():
+def test_api_list_bad_path_to_scan() -> None:
     """
     Test to make sure that an empty path to scan is reported as an error.
     """
@@ -28,16 +29,19 @@ def test_api_list_bad_path_to_scan():
         PyMarkdownApi().list_path,
         source_path,
     )
-    assert caught_exception.argument_name == "path_to_scan"
+    assert (
+        cast(PyMarkdownApiArgumentException, caught_exception).argument_name
+        == "path_to_scan"
+    )
 
 
-def test_api_list_bad_alternate_extensions():
+def test_api_list_bad_alternate_extensions() -> None:
     """
     Test to make sure that a bad list of alternate extensions is reported as an error.
     """
 
     # Arrange
-    source_path = "something"
+    source_path: str = "something"
     alternate_extensions = "not-a-valid-extension"
     expected_output = "Parameter named 'alternate_extensions' is not a valid comma-separated list of extensions."
 
@@ -49,10 +53,13 @@ def test_api_list_bad_alternate_extensions():
         source_path,
         alternate_extensions=alternate_extensions,
     )
-    assert caught_exception.argument_name == "alternate_extensions"
+    assert (
+        cast(PyMarkdownApiArgumentException, caught_exception).argument_name
+        == "alternate_extensions"
+    )
 
 
-def test_api_list_single_file():
+def test_api_list_single_file() -> None:
     """
     Test to make sure that we can invoke a list of a file.
 
@@ -72,7 +79,7 @@ def test_api_list_single_file():
     assert_if_lists_different(list_result.matching_files, [source_path])
 
 
-def test_api_list_for_non_existant_file():
+def test_api_list_for_non_existant_file() -> None:
     """
     Test to make sure that listing for a non-existant path returns a
     reproducible result.
@@ -94,7 +101,7 @@ def test_api_list_for_non_existant_file():
     )
 
 
-def test_api_list_for_directory_without_markdown_files():
+def test_api_list_for_directory_without_markdown_files() -> None:
     """
     Test to make sure that listing for a path that does not contain
     any markdown files returns a reproducible result.
@@ -116,7 +123,7 @@ def test_api_list_for_directory_without_markdown_files():
     )
 
 
-def test_api_list_for_directory_with_markdown_files():
+def test_api_list_for_directory_with_markdown_files() -> None:
     """
     Test to make sure that listing for a path that does contain
     any markdown files returns a reproducible result.
@@ -136,7 +143,7 @@ def test_api_list_for_directory_with_markdown_files():
     assert_if_lists_different(list_result.matching_files, [expected_path])
 
 
-def test_api_list_for_non_matching_glob():
+def test_api_list_for_non_matching_glob() -> None:
     """
     Test to make sure that scanning for a glob that does not match
     anything produces a predictable result.
@@ -158,7 +165,7 @@ def test_api_list_for_non_matching_glob():
     )
 
 
-def test_api_list_for_non_markdown_file():
+def test_api_list_for_non_markdown_file() -> None:
     """
     Test to make sure that scanning for a file that does not have markdown
     extension produces reliable results.
@@ -183,7 +190,7 @@ def test_api_list_for_non_markdown_file():
     )
 
 
-def test_api_list_for_non_markdown_file_with_alternate_extensions():
+def test_api_list_for_non_markdown_file_with_alternate_extensions() -> None:
     """
     Test to make sure that scanning for a file that does not have markdown
     extension but with alternate extensions enabled produces reliable results.
@@ -206,7 +213,7 @@ def test_api_list_for_non_markdown_file_with_alternate_extensions():
     assert_if_lists_different(list_result.matching_files, [source_path])
 
 
-def test_api_list_for_markdown_file():
+def test_api_list_for_markdown_file() -> None:
     """
     Test to make sure that scanning for a file that does have markdown
     extension produces reliable results.
@@ -225,7 +232,7 @@ def test_api_list_for_markdown_file():
     assert_if_lists_different(list_result.matching_files, [source_path])
 
 
-def test_api_list_for_matching_globbed_markdown_file():
+def test_api_list_for_matching_globbed_markdown_file() -> None:
     """
     Test to make sure that scanning for files that match a given glob
     produces reliable results.
@@ -258,7 +265,7 @@ def test_api_list_for_matching_globbed_markdown_file():
     assert_if_lists_different(list_result.matching_files, expected_paths)
 
 
-def test_api_list_for_directory():
+def test_api_list_for_directory() -> None:
     """
     Test to make sure that scanning a directory gives predictable results.
 
@@ -293,7 +300,7 @@ def test_api_list_for_directory():
     assert_if_lists_different(list_result.matching_files, expected_paths)
 
 
-def test_api_list_recursive_for_directory():
+def test_api_list_recursive_for_directory() -> None:
     """
     Test to make sure that scanning a directory gives predictable results.
 

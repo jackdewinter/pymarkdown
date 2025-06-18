@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_whitespaces_code_span_with_spaces():
+def test_whitespaces_code_span_with_spaces() -> None:
     """
     Test case:  code span with spaces at the front and end
     """
@@ -29,7 +29,7 @@ def test_whitespaces_code_span_with_spaces():
 
 
 @pytest.mark.gfm
-def test_whitespaces_code_span_with_tabs_0x():
+def test_whitespaces_code_span_with_tabs_0x() -> None:
     """
     Test case:  code span with tabs at the front and end
     """
@@ -50,7 +50,7 @@ def test_whitespaces_code_span_with_tabs_0x():
 
 
 @pytest.mark.gfm
-def test_whitespaces_code_span_with_tabs_0a():
+def test_whitespaces_code_span_with_tabs_0a() -> None:
     """
     Test case:  code span with tabs at the front and end
     """
@@ -71,7 +71,7 @@ def test_whitespaces_code_span_with_tabs_0a():
 
 
 @pytest.mark.gfm
-def test_whitespaces_code_span_with_tabs_0b():
+def test_whitespaces_code_span_with_tabs_0b() -> None:
     """
     Test case:  code span with tabs at the front and end
     """
@@ -92,7 +92,7 @@ def test_whitespaces_code_span_with_tabs_0b():
 
 
 @pytest.mark.gfm
-def test_whitespaces_code_span_with_tabs_0c():
+def test_whitespaces_code_span_with_tabs_0c() -> None:
     """
     Test case:  code span with tabs at the front and end
     """
@@ -111,7 +111,7 @@ def test_whitespaces_code_span_with_tabs_0c():
 
 
 @pytest.mark.gfm
-def test_whitespaces_code_span_with_tabs_1():
+def test_whitespaces_code_span_with_tabs_1() -> None:
     """
     Test case:  code span with tabs at the front and end
     """
@@ -132,7 +132,7 @@ def test_whitespaces_code_span_with_tabs_1():
 
 
 @pytest.mark.gfm
-def test_whitespaces_code_span_with_tabs_2():
+def test_whitespaces_code_span_with_tabs_2() -> None:
     """
     Test case:  code span with tabs at the front and end
     """
@@ -153,7 +153,7 @@ def test_whitespaces_code_span_with_tabs_2():
 
 
 @pytest.mark.gfm
-def test_whitespaces_code_span_with_tabs_3():
+def test_whitespaces_code_span_with_tabs_3() -> None:
     """
     Test case:  code span with tabs at the front and end
     """
@@ -174,7 +174,7 @@ def test_whitespaces_code_span_with_tabs_3():
 
 
 @pytest.mark.gfm
-def test_whitespaces_code_span_with_tabs_4():
+def test_whitespaces_code_span_with_tabs_4() -> None:
     """
     Test case:  code span with tabs at the front and end
     """
@@ -195,7 +195,7 @@ def test_whitespaces_code_span_with_tabs_4():
 
 
 @pytest.mark.gfm
-def test_whitespaces_code_span_with_tabs_4a():
+def test_whitespaces_code_span_with_tabs_4a() -> None:
     """
     Test case:  code span with tabs at the front and end
     """
@@ -216,7 +216,7 @@ def test_whitespaces_code_span_with_tabs_4a():
 
 
 @pytest.mark.gfm
-def test_whitespaces_code_span_with_tabs_4b():
+def test_whitespaces_code_span_with_tabs_4b() -> None:
     """
     Test case:  code span with tabs at the front and end
     """
@@ -237,7 +237,7 @@ def test_whitespaces_code_span_with_tabs_4b():
 
 
 @pytest.mark.gfm
-def test_whitespaces_code_span_with_tabs_4c():
+def test_whitespaces_code_span_with_tabs_4c() -> None:
     """
     Test case:  code span with tabs at the front and end
     """
@@ -257,7 +257,7 @@ def test_whitespaces_code_span_with_tabs_4c():
 
 
 @pytest.mark.gfm
-def test_whitespaces_code_span_with_tabs_5():
+def test_whitespaces_code_span_with_tabs_5() -> None:
     """
     Test case:  code span with tabs at the front and end
     """
@@ -278,7 +278,7 @@ def test_whitespaces_code_span_with_tabs_5():
 
 
 @pytest.mark.gfm
-def test_whitespaces_code_span_with_tabs_5a():
+def test_whitespaces_code_span_with_tabs_5a() -> None:
     """
     Test case:  code span with tabs at the front and end
     """
@@ -299,7 +299,7 @@ def test_whitespaces_code_span_with_tabs_5a():
 
 
 @pytest.mark.gfm
-def test_whitespaces_code_span_with_tabs_5b():
+def test_whitespaces_code_span_with_tabs_5b() -> None:
     """
     Test case:  code span with tabs at the front and end
     """
@@ -320,7 +320,7 @@ def test_whitespaces_code_span_with_tabs_5b():
 
 
 @pytest.mark.gfm
-def test_whitespaces_code_span_with_tabs_5c():
+def test_whitespaces_code_span_with_tabs_5c() -> None:
     """
     Test case:  code span with tabs at the front and end
     """
@@ -339,7 +339,7 @@ def test_whitespaces_code_span_with_tabs_5c():
 
 
 @pytest.mark.gfm
-def test_whitespaces_code_span_with_tabs_6():
+def test_whitespaces_code_span_with_tabs_6() -> None:
     """
     Test case:  code span with tabs at the front and end
     """
@@ -362,7 +362,7 @@ def test_whitespaces_code_span_with_tabs_6():
 
 
 @pytest.mark.gfm
-def test_whitespaces_code_span_with_tabs_6a():
+def test_whitespaces_code_span_with_tabs_6a() -> None:
     """
     Test case:  code span with tabs at the front and end
     """
@@ -382,7 +382,7 @@ def test_whitespaces_code_span_with_tabs_6a():
 
 
 @pytest.mark.gfm
-def test_whitespaces_code_spans_with_form_feeds():
+def test_whitespaces_code_spans_with_form_feeds() -> None:
     """
     Test case: code span with form feeds at the front and end
     """

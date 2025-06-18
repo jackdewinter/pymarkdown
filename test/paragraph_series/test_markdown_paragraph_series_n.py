@@ -9,7 +9,7 @@ import pytest
 
 # pylint: disable=too-many-lines
 @pytest.mark.gfm
-def test_paragraph_series_n_bq_t_nl_bq_t():
+def test_paragraph_series_n_bq_t_nl_bq_t() -> None:
     """
     Test case:  Block Quote with text, newline, block quote, text
     """
@@ -34,7 +34,7 @@ xyz</p>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_bq_t_nl_i2_t():
+def test_paragraph_series_n_bq_t_nl_i2_t() -> None:
     """
     Test case:  Block Quote with text, newline, indent of 2, text
     """
@@ -59,7 +59,7 @@ xyz</p>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_t():
+def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_t() -> None:
     """
     Test case:  unordered list, text, newline, indent of 2, block Quote, text, newline,
                 indent of 2, block quote, text
@@ -101,7 +101,7 @@ xyz</p>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i4_t():
+def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i4_t() -> None:
     """
     Test case:  unordered list, text, newline, indent of 2, block Quote, text, newline,
                 indent of 4, text
@@ -143,7 +143,7 @@ xyz</p>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_bq_t_nl_bq_ha():
+def test_paragraph_series_n_bq_t_nl_bq_ha() -> None:
     """
     Test case:  Block Quote with text, newline, block quote, atx heading
     """
@@ -171,7 +171,7 @@ def test_paragraph_series_n_bq_t_nl_bq_ha():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_bq_t_nl_i2_ha():
+def test_paragraph_series_n_bq_t_nl_i2_ha() -> None:
     """
     Test case:  Block Quote with text, newline, proper indent for lazy, atx heading
     """
@@ -199,7 +199,7 @@ def test_paragraph_series_n_bq_t_nl_i2_ha():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_ha():
+def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_ha() -> None:
     """
     Test case:  Unordered list, text, newline, Indent of 2, Block Quote with text,
     newline, ident of 2, block quote, atx heading
@@ -244,7 +244,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_ha():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_ul_t_i2_bq_t_nl_i4_ha():
+def test_paragraph_series_n_ul_t_i2_bq_t_nl_i4_ha() -> None:
     """
     Test case:  Unordered list, text, newline, Indent of 2, Block Quote with text,
     newline, ident of 4, atx heading
@@ -289,7 +289,7 @@ def test_paragraph_series_n_ul_t_i2_bq_t_nl_i4_ha():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_bq_t_nl_bq_tb():
+def test_paragraph_series_n_bq_t_nl_bq_tb() -> None:
     """
     Test case:  Block quote, text, newline, block quote, thematic break
     """
@@ -313,7 +313,7 @@ def test_paragraph_series_n_bq_t_nl_bq_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_bq_t_nl_i2_tb():
+def test_paragraph_series_n_bq_t_nl_i2_tb() -> None:
     """
     Test case:  Block quote, text, newline, indent of 2, thematic break
     """
@@ -339,7 +339,7 @@ def test_paragraph_series_n_bq_t_nl_i2_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_tb():
+def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_tb() -> None:
     """
     Test case:  Unordered list, text, newline, ident of 2, block quote, text, newline,
                 indent of 2, block quote, thematic break
@@ -380,7 +380,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i4_tb():
+def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i4_tb() -> None:
     """
     Test case:  Unordered list, text, newline, ident of 2, block quote, text, newline,
                 indent of 4, thematic break
@@ -423,7 +423,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i4_tb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_bq_t_nl_bq_hb():
+def test_paragraph_series_n_bq_t_nl_bq_hb() -> None:
     """
     Test case:  Block quote, text, newline, block quote, html block
     """
@@ -451,7 +451,7 @@ def test_paragraph_series_n_bq_t_nl_bq_hb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_bq_t_nl_i2_hb():
+def test_paragraph_series_n_bq_t_nl_i2_hb() -> None:
     """
     Test case:  Block quote, text, newline, indent of 2, html block
     """
@@ -479,7 +479,7 @@ def test_paragraph_series_n_bq_t_nl_i2_hb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_hb():
+def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_hb() -> None:
     """
     Test case:  Unordered list, text, newline, ident of 2, block quote, text, newline,
                 indent of 2, block quote, html block
@@ -524,7 +524,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_hb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i4_hb():
+def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i4_hb() -> None:
     """
     Test case:  Unordered list, text, newline, ident of 2, block quote, text, newline,
                 indent of 4, html block
@@ -569,7 +569,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i4_hb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_bq_t_nl_bq_fb():
+def test_paragraph_series_n_bq_t_nl_bq_fb() -> None:
     """
     Test case:  Block quote, text, newline, block quote, fenced block
     """
@@ -600,7 +600,7 @@ def test_paragraph_series_n_bq_t_nl_bq_fb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_bq_t_nl_bq_fb_nl_with_bq():
+def test_paragraph_series_n_bq_t_nl_bq_fb_nl_with_bq() -> None:
     """
     Test case:  Block quote, text, newline, block quote, fenced block with newlines
                 prefaced by block quotes
@@ -636,7 +636,7 @@ def
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_bq_t_nl_bq_fb_nl_without_bq():
+def test_paragraph_series_n_bq_t_nl_bq_fb_nl_without_bq() -> None:
     """
     Test case:  Block quote, text, newline, block quote, fenced block with newlines
                 not prefaced by block quotes
@@ -685,7 +685,7 @@ def test_paragraph_series_n_bq_t_nl_bq_fb_nl_without_bq():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_bq_t_nl_i2_fb():
+def test_paragraph_series_n_bq_t_nl_i2_fb() -> None:
     """
     Test case:  Block quote, text, newline, indent of 2, fenced block
     """
@@ -716,7 +716,7 @@ def test_paragraph_series_n_bq_t_nl_i2_fb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_fb():
+def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_fb() -> None:
     """
     Test case:  Unordered list, text, newline, ident of 2, block quote, text, newline,
                 indent of 2, block quote, fenced block
@@ -764,7 +764,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_fb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i4_fb():
+def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i4_fb() -> None:
     """
     Test case:  Unordered list, text, newline, ident of 2, block quote, text, newline,
                 indent of 4, fenced block
@@ -812,7 +812,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i4_fb():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_bq_t_nl_bq_ib():
+def test_paragraph_series_n_bq_t_nl_bq_ib() -> None:
     """
     Test case:  Block quote, text, newline, block quote, indented block
     """
@@ -837,7 +837,7 @@ def</p>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_bq_i4_t_nl_bq_i4_t():
+def test_paragraph_series_n_bq_i4_t_nl_bq_i4_t() -> None:
     """
     Test case:  Block quote indent of 4 text newline block quote indent of 4 text
     """
@@ -863,7 +863,7 @@ bar
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_bq_i4_t_nl_bq_i3_t():
+def test_paragraph_series_n_bq_i4_t_nl_bq_i3_t() -> None:
     """
     Test case:  Block quote indent of 4 text newline block quote indent of 3 text
     """
@@ -892,7 +892,7 @@ def test_paragraph_series_n_bq_i4_t_nl_bq_i3_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_bq_i4_t_nl_nl_bq_i4_t():
+def test_paragraph_series_n_bq_i4_t_nl_nl_bq_i4_t() -> None:
     """
     Test case:  Block quote indent of 4 text newline newline block quote indent of 4 text
     """
@@ -928,7 +928,7 @@ def test_paragraph_series_n_bq_i4_t_nl_nl_bq_i4_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_bq_i4_t_nl_bq_nl_bq_i4_t():
+def test_paragraph_series_n_bq_i4_t_nl_bq_nl_bq_i4_t() -> None:
     """
     Test case:  Block quote indent of 4 text newline block quote newline block quote indent of 4 text
     """
@@ -964,7 +964,7 @@ def test_paragraph_series_n_bq_i4_t_nl_bq_nl_bq_i4_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_bq_t_nl_bq_nl_bq_ib():
+def test_paragraph_series_n_bq_t_nl_bq_nl_bq_ib() -> None:
     """
     Test case:  Block quote, text, newline, block quote, newline block quote, indented block
     """
@@ -995,7 +995,7 @@ def test_paragraph_series_n_bq_t_nl_bq_nl_bq_ib():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_bq_t_nl_i6_ib_x():
+def test_paragraph_series_n_bq_t_nl_i6_ib_x() -> None:
     """
     Test case:  Block quote, text, newline, indent of 6, indented block
     """
@@ -1020,7 +1020,7 @@ def</p>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_bq_t_nl_i6_ib_variation_1():
+def test_paragraph_series_n_bq_t_nl_i6_ib_variation_1() -> None:
     """
     Test case:  Block quote, text, newline, indent of 6, indented block
     """
@@ -1045,7 +1045,7 @@ def</p>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_bq_t_nl_nl_nl_i6_ib():
+def test_paragraph_series_n_bq_t_nl_nl_nl_i6_ib() -> None:
     """
     Test case:  Block quote, text, newline, newline, indent of 6, indented block
     """
@@ -1076,7 +1076,7 @@ def test_paragraph_series_n_bq_t_nl_nl_nl_i6_ib():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_ib():
+def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_ib() -> None:
     """
     Test case:  Unordered list, text, newline, ident of 2, block quote, text, newline,
                 indent of 2, block quote, indented block
@@ -1118,7 +1118,7 @@ def</p>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_bq_nl_i2_bq_ib():
+def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_bq_nl_i2_bq_ib() -> None:
     """
     Test case:  Unordered list, text, newline, ident of 2, block quote, text, newline,
                 block quote, newline, indent of 2, block quote, indented block
@@ -1166,7 +1166,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_bq_nl_i2_bq_ib():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i6_ib():
+def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i6_ib() -> None:
     """
     Test case:  Unordered list, text, newline, ident of 2, block quote, text, newline,
                 indent of 6, indented block
@@ -1208,7 +1208,7 @@ def</p>
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_nl_i6_ib():
+def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_nl_i6_ib() -> None:
     """
     Test case:  Unordered list, text, newline, ident of 2, block quote, text, newline,
                 newline, indent of 6, indented block

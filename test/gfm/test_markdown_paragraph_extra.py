@@ -10,7 +10,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_43a():
+def test_paragraph_extra_43a() -> None:
     """
     Test case extra 43a:  Paragraph with code span with newline inside
     """
@@ -31,7 +31,7 @@ def test_paragraph_extra_43a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_43b():
+def test_paragraph_extra_43b() -> None:
     """
     Test case extra 43b:  Paragraph with code span with newline inside
     """
@@ -52,7 +52,7 @@ def test_paragraph_extra_43b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_44a():
+def test_paragraph_extra_44a() -> None:
     """
     Test case extra 44a:  Paragraph with raw HTML with newline inside
     """
@@ -71,7 +71,7 @@ def test_paragraph_extra_44a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_44b():
+def test_paragraph_extra_44b() -> None:
     """
     Test case extra 44b:  Paragraph with raw HTML with newline inside
     """
@@ -90,7 +90,7 @@ def test_paragraph_extra_44b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_44c():
+def test_paragraph_extra_44c() -> None:
     """
     Test case extra 44c:  Paragraph with raw HTML with newline inside
     """
@@ -111,7 +111,7 @@ def test_paragraph_extra_44c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_45a():
+def test_paragraph_extra_45a() -> None:
     """
     Test case extra 45a:  Paragraph with URI autolink with newline inside, renders invalid
     """
@@ -132,7 +132,7 @@ def test_paragraph_extra_45a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_46a():
+def test_paragraph_extra_46a() -> None:
     """
     Test case extra 46a:  Paragraph with email autolink with newline inside, renders invalid
     """
@@ -151,7 +151,7 @@ def test_paragraph_extra_46a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_46c():
+def test_paragraph_extra_46c() -> None:
     """
     Test case extra 46c:  Paragraph with email autolink with newline inside, renders invalid
     """
@@ -174,7 +174,7 @@ def test_paragraph_extra_46c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_47():
+def test_paragraph_extra_47() -> None:
     """
     Test case extra 47:  Paragraph with inline link with newline in label and trailing character
     """
@@ -198,7 +198,7 @@ o](/uri "testing")a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_47a():
+def test_paragraph_extra_47a() -> None:
     """
     Test case extra 47a:  variation of 47 without trailing character
     """
@@ -221,7 +221,7 @@ o](/uri "testing")"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_48x():
+def test_paragraph_extra_48x() -> None:
     """
     Test case extra 48:  Paragraph with inline link with newline in pre-URI space and trailing character
     """
@@ -245,7 +245,7 @@ def test_paragraph_extra_48x():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_48a():
+def test_paragraph_extra_48a() -> None:
     """
     Test case extra 48a:  variation of 48 with whitespace before newline
     """
@@ -271,7 +271,7 @@ def test_paragraph_extra_48a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_48b():
+def test_paragraph_extra_48b() -> None:
     """
     Test case extra 48b:  variation of 48 with whitespace after newline
     """
@@ -295,7 +295,7 @@ def test_paragraph_extra_48b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_48ba():
+def test_paragraph_extra_48ba() -> None:
     """
     Test case extra 48ba:  variation of 48 with whitespace after newline
     """
@@ -318,7 +318,7 @@ def test_paragraph_extra_48ba():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_48c():
+def test_paragraph_extra_48c() -> None:
     """
     Test case extra 48c:  variation of 48 with whitespace before and after newline and trailing character
     """
@@ -344,7 +344,7 @@ def test_paragraph_extra_48c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_48ca():
+def test_paragraph_extra_48ca() -> None:
     """
     Test case extra 48ca:  variation of 48 with whitespace before and after newline
     """
@@ -369,7 +369,7 @@ def test_paragraph_extra_48ca():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_48d():
+def test_paragraph_extra_48d() -> None:
     """
     Test case extra 48d:  variation of 48 with inline link with newline in pre-URI space
     """
@@ -392,7 +392,7 @@ def test_paragraph_extra_48d():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_49():
+def test_paragraph_extra_49() -> None:
     """
     Test case extra 49:  Paragraph with inline link with newline in URI, invalidating it
     """
@@ -412,7 +412,7 @@ i "testing")a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_49a():
+def test_paragraph_extra_49a() -> None:
     """
     Test case extra 49a:  variation of 49 without trailing character
     """
@@ -432,7 +432,7 @@ i "testing")"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_50x():
+def test_paragraph_extra_50x() -> None:
     """
     Test case extra 50:  Paragraph with inline link with newline in post-URI space
     """
@@ -458,7 +458,7 @@ def test_paragraph_extra_50x():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_50a():
+def test_paragraph_extra_50a() -> None:
     """
     Test case extra 50a:  variation of 50 without extra whitepsace
     """
@@ -484,7 +484,7 @@ def test_paragraph_extra_50a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_50b():
+def test_paragraph_extra_50b() -> None:
     """
     Test case extra 50b:  variation of 50 without extra indent
     """
@@ -508,7 +508,7 @@ def test_paragraph_extra_50b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_50ba():
+def test_paragraph_extra_50ba() -> None:
     """
     Test case extra 50ba:  variation of 50b without trailing character
     """
@@ -531,7 +531,7 @@ def test_paragraph_extra_50ba():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_50c():
+def test_paragraph_extra_50c() -> None:
     """
     Test case extra 50c:  variation of 50 with extra whitespace
     """
@@ -557,7 +557,7 @@ def test_paragraph_extra_50c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_50ca():
+def test_paragraph_extra_50ca() -> None:
     """
     Test case extra 50ca:  variation of 50 with whitespace before and after newline
     """
@@ -582,7 +582,7 @@ def test_paragraph_extra_50ca():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_50d():
+def test_paragraph_extra_50d() -> None:
     """
     Test case extra 50d:  variation of 50 with Paragraph with inline link with newline in post-URI space
     """
@@ -607,7 +607,7 @@ def test_paragraph_extra_50d():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_51():
+def test_paragraph_extra_51() -> None:
     """
     Test case extra 51:  Paragraph with inline link with newline in title
     """
@@ -631,7 +631,7 @@ ing")a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_51a():
+def test_paragraph_extra_51a() -> None:
     """
     Test case extra 51a:  variation of 51 with uri in angle brackets
     """
@@ -655,7 +655,7 @@ ing")a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_51aa():
+def test_paragraph_extra_51aa() -> None:
     """
     Test case extra 51aa:  variation of 51a without trailing character
     """
@@ -678,7 +678,7 @@ ing")"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_51b():
+def test_paragraph_extra_51b() -> None:
     """
     Test case extra 51b:  variation of 51 with backslash in title
     """
@@ -702,7 +702,7 @@ ing")a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_51ba():
+def test_paragraph_extra_51ba() -> None:
     """
     Test case extra 51ba:  variation of 51b with no trailing character
     """
@@ -725,7 +725,7 @@ ing")"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_51c():
+def test_paragraph_extra_51c() -> None:
     """
     Test case extra 51c:  variation of 51 with leading character
     """
@@ -748,7 +748,7 @@ ing")"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_52x():
+def test_paragraph_extra_52x() -> None:
     """
     Test case extra 52:  variation of 51 with leading and trailing characters
     """
@@ -772,7 +772,7 @@ def test_paragraph_extra_52x():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_52a():
+def test_paragraph_extra_52a() -> None:
     """
     Test case extra 52a:  variation of 51 with extra whitespace
     """
@@ -798,7 +798,7 @@ def test_paragraph_extra_52a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_52aa():
+def test_paragraph_extra_52aa() -> None:
     """
     Test case extra 52aa:  variation of 52a with no trailing
     """
@@ -823,7 +823,7 @@ def test_paragraph_extra_52aa():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_52b():
+def test_paragraph_extra_52b() -> None:
     """
     Test case extra 52b:  variation of 52 with extra indent
     """
@@ -847,7 +847,7 @@ def test_paragraph_extra_52b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_52ba():
+def test_paragraph_extra_52ba() -> None:
     """
     Test case extra 52ba: variation of 52 with whitespace after newline
     """
@@ -870,7 +870,7 @@ def test_paragraph_extra_52ba():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_52c():
+def test_paragraph_extra_52c() -> None:
     """
     Test case extra 52c: variation of 52 with whitespace before and after newline
     """
@@ -896,7 +896,7 @@ def test_paragraph_extra_52c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_52ca():
+def test_paragraph_extra_52ca() -> None:
     """
     Test case extra 52ca: variation of 52 with whitespace before and after newline
     """
@@ -921,7 +921,7 @@ def test_paragraph_extra_52ca():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_52d():
+def test_paragraph_extra_52d() -> None:
     """
     Test case extra 52d:  variation of 52 with no trailing
     """
@@ -944,7 +944,7 @@ def test_paragraph_extra_52d():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_53():
+def test_paragraph_extra_53() -> None:
     """
     Test case extra 53:  Paragraph with full link with newline in label
     """
@@ -972,7 +972,7 @@ bar][bar]a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_53a():
+def test_paragraph_extra_53a() -> None:
     """
     Test case extra 53a:  variation of 55 with image
     """
@@ -998,7 +998,7 @@ bar][bar]a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_53aa():
+def test_paragraph_extra_53aa() -> None:
     """
     Test case extra 53aa:  variation of 55 with image and no trailing
     """
@@ -1023,7 +1023,7 @@ bar][bar]"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_53b():
+def test_paragraph_extra_53b() -> None:
     """
     Test case extra 53b:  variation of 53 with full link with newline in label
     """
@@ -1050,7 +1050,7 @@ a[foo&#xa;bar][bar]a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_53c():
+def test_paragraph_extra_53c() -> None:
     """
     Test case extra 53c:  Paragraph with full image with newline in label
     """
@@ -1075,7 +1075,7 @@ a![foo&#xa;bar][bar]a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_53d():
+def test_paragraph_extra_53d() -> None:
     """
     Test case extra 53d:  Paragraph with full link with newline in label
     """
@@ -1102,7 +1102,7 @@ bar][bar]"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_54():
+def test_paragraph_extra_54() -> None:
     """
     Test case extra 54:  Paragraph with full link with newline in reference
     """
@@ -1130,7 +1130,7 @@ r]a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_54a():
+def test_paragraph_extra_54a() -> None:
     """
     Test case extra 54a:  Paragraph with full image with newline in reference
     """
@@ -1156,7 +1156,7 @@ r]a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_54aa():
+def test_paragraph_extra_54aa() -> None:
     """
     Test case extra 54aa:  variation of 54a without trailing text
     """
@@ -1181,7 +1181,7 @@ r]"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_54b():
+def test_paragraph_extra_54b() -> None:
     """
     Test case extra 54b:  Paragraph with full link with newline in reference
     """
@@ -1208,7 +1208,7 @@ a[foo][ba&#xa;r]a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_54c():
+def test_paragraph_extra_54c() -> None:
     """
     Test case extra 54c:  Paragraph with full image with newline in reference
     """
@@ -1233,7 +1233,7 @@ a![foo][ba&#xa;r]a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_54d():
+def test_paragraph_extra_54d() -> None:
     """
     Test case extra 54d:  Paragraph with full link with newline in reference
     """
@@ -1260,7 +1260,7 @@ r]"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_55():
+def test_paragraph_extra_55() -> None:
     """
     Test case extra 55:  Paragraph with shortcut link with newline in label
     """
@@ -1288,7 +1288,7 @@ r]a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_55a():
+def test_paragraph_extra_55a() -> None:
     """
     Test case extra 55a:  Paragraph with shortcut image with newline in label
     """
@@ -1314,7 +1314,7 @@ r]a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_55aa():
+def test_paragraph_extra_55aa() -> None:
     """
     Test case extra 55aa:  variation of 55 without trailing text
     """
@@ -1339,7 +1339,7 @@ r]"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_55b():
+def test_paragraph_extra_55b() -> None:
     """
     Test case extra 55b:  Paragraph with shortcut link with newline in label
     """
@@ -1366,7 +1366,7 @@ a[ba&#xa;r]a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_55c():
+def test_paragraph_extra_55c() -> None:
     """
     Test case extra 55c:  Paragraph with shortcut image with newline in label
     """
@@ -1391,7 +1391,7 @@ a![ba&#xa;r]a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_55d():
+def test_paragraph_extra_55d() -> None:
     """
     Test case extra 55d:  Paragraph with shortcut link with newline in label
     """
@@ -1418,7 +1418,7 @@ r]"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_56():
+def test_paragraph_extra_56() -> None:
     """
     Test case extra 56:  Paragraph with collapsed link with newline in label
     """
@@ -1446,7 +1446,7 @@ r][]a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_56a():
+def test_paragraph_extra_56a() -> None:
     """
     Test case extra 56a:  Paragraph with collapsed image with newline in label
     """
@@ -1472,7 +1472,7 @@ r][]a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_56aa():
+def test_paragraph_extra_56aa() -> None:
     """
     Test case extra 56aa:  variation of 56a without trailing text
     """
@@ -1497,7 +1497,7 @@ r][]"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_56b():
+def test_paragraph_extra_56b() -> None:
     """
     Test case extra 56a:  Paragraph with collapsed link with newline in label
     """
@@ -1524,7 +1524,7 @@ a[ba&#xa;r][]a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_56c():
+def test_paragraph_extra_56c() -> None:
     """
     Test case extra 56c:  Paragraph with collapsed image with newline in label
     """
@@ -1549,7 +1549,7 @@ a![ba&#xa;r][]a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_56d():
+def test_paragraph_extra_56d() -> None:
     """
     Test case extra 56d:  Paragraph with collapsed link with newline in middle of label
     """
@@ -1577,7 +1577,7 @@ r][]a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_57():
+def test_paragraph_extra_57() -> None:
     """
     Test case extra 57:  Paragraph with collapsed link with newline at start of label
     """
@@ -1605,7 +1605,7 @@ bar][]a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_57a():
+def test_paragraph_extra_57a() -> None:
     """
     Test case extra 57a:  Paragraph with collapsed image with newline at start of label
     """
@@ -1631,7 +1631,7 @@ bar][]a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_57aa():
+def test_paragraph_extra_57aa() -> None:
     """
     Test case extra 57aa:  variation of 57a without trailing text
     """
@@ -1656,7 +1656,7 @@ bar][]"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_57b():
+def test_paragraph_extra_57b() -> None:
     """
     Test case extra 57b:  Paragraph with collapsed link with newline in label
     """
@@ -1683,7 +1683,7 @@ bar][]"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_58():
+def test_paragraph_extra_58() -> None:
     """
     Test case extra 58:  Paragraph with full link with newline in reference
     """
@@ -1711,7 +1711,7 @@ bar]a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_58a():
+def test_paragraph_extra_58a() -> None:
     """
     Test case extra 58a:  Paragraph with full image with newline in reference
     """
@@ -1737,7 +1737,7 @@ bar]a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_58aa():
+def test_paragraph_extra_58aa() -> None:
     """
     Test case extra 58aa:  variation of 58a without trailing text
     """
@@ -1762,7 +1762,7 @@ bar]"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_58b():
+def test_paragraph_extra_58b() -> None:
     """
     Test case extra 58b:  Paragraph with full link with newline in reference
     """
@@ -1789,7 +1789,7 @@ bar]"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_59():
+def test_paragraph_extra_59() -> None:
     """
     Test case extra 59:  Paragraph with inline image with newline between image chars, invalidating it as an image
     """
@@ -1813,7 +1813,7 @@ def test_paragraph_extra_59():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_59a():
+def test_paragraph_extra_59a() -> None:
     """
     Test case extra 59a:  variation of 59 without trailing text
     """
@@ -1836,7 +1836,7 @@ def test_paragraph_extra_59a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_60():
+def test_paragraph_extra_60() -> None:
     """
     Test case extra 60:  Paragraph with inline link with newline in label but not title.
     """
@@ -1860,7 +1860,7 @@ o](/uri)a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_60a():
+def test_paragraph_extra_60a() -> None:
     """
     Test case extra 60a:  Paragraph with inline image with newline in label but not title.
     """
@@ -1882,7 +1882,7 @@ o](/uri)a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_60aa():
+def test_paragraph_extra_60aa() -> None:
     """
     Test case extra 60aa:  variation of 60a without trailing text
     """
@@ -1903,7 +1903,7 @@ o](/uri)"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_60b():
+def test_paragraph_extra_60b() -> None:
     """
     Test case extra 60b:  variation of 60 without trailing text
     """
@@ -1926,7 +1926,7 @@ o](/uri)"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_61():
+def test_paragraph_extra_61() -> None:
     """
     Test case extra 61:  Paragraph with inline image with newline in label
     """
@@ -1948,7 +1948,7 @@ o](/url "title")a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_61a():
+def test_paragraph_extra_61a() -> None:
     """
     Test case extra 61a:  Paragraph with inline link with newline in label
     """
@@ -1971,7 +1971,7 @@ def test_paragraph_extra_61a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_61b():
+def test_paragraph_extra_61b() -> None:
     """
     Test case extra 61b:  Paragraph with inline image with newline in label
     """
@@ -1992,7 +1992,7 @@ def test_paragraph_extra_61b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_61c():
+def test_paragraph_extra_61c() -> None:
     """
     Test case extra 61c:  variation of 61a with weird casing
     """
@@ -2015,7 +2015,7 @@ def test_paragraph_extra_61c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_61ca():
+def test_paragraph_extra_61ca() -> None:
     """
     Test case extra 61ca:  variation of 61b with weird casing
     """
@@ -2036,7 +2036,7 @@ def test_paragraph_extra_61ca():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_61d():
+def test_paragraph_extra_61d() -> None:
     """
     Test case extra 61d:  variation of 61a with leading zeroes
     """
@@ -2059,7 +2059,7 @@ def test_paragraph_extra_61d():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_61da():
+def test_paragraph_extra_61da() -> None:
     """
     Test case extra 61da:  variation of 61d with image
     """
@@ -2080,7 +2080,7 @@ def test_paragraph_extra_61da():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_61e():
+def test_paragraph_extra_61e() -> None:
     """
     Test case extra 61e:  variation of 61a with decimal reference
     """
@@ -2103,7 +2103,7 @@ def test_paragraph_extra_61e():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_61ea():
+def test_paragraph_extra_61ea() -> None:
     """
     Test case extra 61ea:  variation of 61ea with image
     """
@@ -2124,7 +2124,7 @@ def test_paragraph_extra_61ea():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_61f():
+def test_paragraph_extra_61f() -> None:
     """
     Test case extra 61f:  variation of 61e with leading zeroes
     """
@@ -2147,7 +2147,7 @@ def test_paragraph_extra_61f():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_61fa():
+def test_paragraph_extra_61fa() -> None:
     """
     Test case extra 61fa:  variation of 61f with image
     """
@@ -2168,7 +2168,7 @@ def test_paragraph_extra_61fa():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_61g():
+def test_paragraph_extra_61g() -> None:
     """
     Test case extra 61g:  variation of 61a with named reference
     """
@@ -2191,7 +2191,7 @@ def test_paragraph_extra_61g():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_61ga():
+def test_paragraph_extra_61ga() -> None:
     """
     Test case extra 61ga:  variation of 61g with image
     """
@@ -2212,7 +2212,7 @@ def test_paragraph_extra_61ga():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_61h():
+def test_paragraph_extra_61h() -> None:
     """
     Test case extra 61h:  variation of 61a with weird casing
     """
@@ -2235,7 +2235,7 @@ def test_paragraph_extra_61h():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_61ha():
+def test_paragraph_extra_61ha() -> None:
     """
     Test case extra 61ha:  variation of 61h with image
     """
@@ -2256,7 +2256,7 @@ def test_paragraph_extra_61ha():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_61j():
+def test_paragraph_extra_61j() -> None:
     """
     Test case extra 61j:  Paragraph with inline image with newline in label
     """
@@ -2277,7 +2277,7 @@ o](/url "title")"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_62():
+def test_paragraph_extra_62() -> None:
     """
     Test case extra 62:  Paragraph with inline image with newline before URI
     """
@@ -2299,7 +2299,7 @@ def test_paragraph_extra_62():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_62a():
+def test_paragraph_extra_62a() -> None:
     """
     Test case extra 62a:  variation of 62 with whitespace before newline
     """
@@ -2323,7 +2323,7 @@ def test_paragraph_extra_62a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_62b():
+def test_paragraph_extra_62b() -> None:
     """
     Test case extra 62b:  variation of 62 with whitespace after newline
     """
@@ -2345,7 +2345,7 @@ def test_paragraph_extra_62b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_62ba():
+def test_paragraph_extra_62ba() -> None:
     """
     Test case extra 62ba:  variation of 62b without trailing text
     """
@@ -2366,7 +2366,7 @@ def test_paragraph_extra_62ba():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_62c():
+def test_paragraph_extra_62c() -> None:
     """
     Test case extra 62c:  variation of 62 with whitespace before and after newline
     """
@@ -2390,7 +2390,7 @@ def test_paragraph_extra_62c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_62ca():
+def test_paragraph_extra_62ca() -> None:
     """
     Test case extra 62ca:  variation of 62c without trailing text
     """
@@ -2413,7 +2413,7 @@ def test_paragraph_extra_62ca():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_62d():
+def test_paragraph_extra_62d() -> None:
     """
     Test case extra 62d:  Paragraph with inline link with newline before URI
     """
@@ -2436,7 +2436,7 @@ def test_paragraph_extra_62d():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_62e():
+def test_paragraph_extra_62e() -> None:
     """
     Test case extra 62e:  Paragraph with inline image with newline before URI
     """
@@ -2457,7 +2457,7 @@ def test_paragraph_extra_62e():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_62f():
+def test_paragraph_extra_62f() -> None:
     """
     Test case extra 62f:  Paragraph with inline image with newline before URI
     """
@@ -2478,7 +2478,7 @@ def test_paragraph_extra_62f():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_63():
+def test_paragraph_extra_63() -> None:
     """
     Test case extra 63:  Paragraph with inline image with newline in the URI, invalidating it
     """
@@ -2498,7 +2498,7 @@ i "testing")a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_63a():
+def test_paragraph_extra_63a() -> None:
     """
     Test case extra 63a:  variation of 63 with link
     """
@@ -2521,7 +2521,7 @@ def test_paragraph_extra_63a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_63b():
+def test_paragraph_extra_63b() -> None:
     """
     Test case extra 63b:  variation of 63 with reference
     """
@@ -2542,7 +2542,7 @@ def test_paragraph_extra_63b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_63c():
+def test_paragraph_extra_63c() -> None:
     """
     Test case extra 63c:  variation of 63a with angle brackets
     """
@@ -2565,7 +2565,7 @@ def test_paragraph_extra_63c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_63d():
+def test_paragraph_extra_63d() -> None:
     """
     Test case extra 63d:  variation of 63c with image
     """
@@ -2586,7 +2586,7 @@ def test_paragraph_extra_63d():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_63e():
+def test_paragraph_extra_63e() -> None:
     """
     Test case extra 63e:  variation of 63 with no trailing text
     """
@@ -2606,7 +2606,7 @@ i "testing")"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_64x():
+def test_paragraph_extra_64x() -> None:
     """
     Test case extra 64:  Paragraph with inline image with newline after the URI
     """
@@ -2628,7 +2628,7 @@ def test_paragraph_extra_64x():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_64xa():
+def test_paragraph_extra_64xa() -> None:
     """
     Test case extra 64xa:  variation of 64 with no following text
     """
@@ -2649,7 +2649,7 @@ def test_paragraph_extra_64xa():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_64a():
+def test_paragraph_extra_64a() -> None:
     """
     Test case extra 64a:  variation of 64 with whitespace before newline
     """
@@ -2673,7 +2673,7 @@ def test_paragraph_extra_64a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_64b():
+def test_paragraph_extra_64b() -> None:
     """
     Test case extra 64b:  variation of 64 with whitespace after newline
     """
@@ -2695,7 +2695,7 @@ def test_paragraph_extra_64b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_64ba():
+def test_paragraph_extra_64ba() -> None:
     """
     Test case extra 64ba:  variation of 64 with whitespace after newline
     """
@@ -2716,7 +2716,7 @@ def test_paragraph_extra_64ba():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_64c():
+def test_paragraph_extra_64c() -> None:
     """
     Test case extra 64c:  variation of 64 with whitespace before and after newline
     """
@@ -2740,7 +2740,7 @@ def test_paragraph_extra_64c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_64ca():
+def test_paragraph_extra_64ca() -> None:
     """
     Test case extra 64ca:  variation of 64c with no following text
     """
@@ -2763,7 +2763,7 @@ def test_paragraph_extra_64ca():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_64d():
+def test_paragraph_extra_64d() -> None:
     """
     Test case extra 64d:  variation of 64 with newline reference
     """
@@ -2786,7 +2786,7 @@ def test_paragraph_extra_64d():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_64e():
+def test_paragraph_extra_64e() -> None:
     """
     Test case extra 64e:  variation of 64d with image
     """
@@ -2807,7 +2807,7 @@ def test_paragraph_extra_64e():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_65x():
+def test_paragraph_extra_65x() -> None:
     """
     Test case extra 65x:  Paragraph with inline image with newline after the URI and no title
     """
@@ -2829,7 +2829,7 @@ def test_paragraph_extra_65x():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_65xa():
+def test_paragraph_extra_65xa() -> None:
     """
     Test case extra 65xa:  variation of 65 with no following text
     """
@@ -2850,7 +2850,7 @@ def test_paragraph_extra_65xa():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_65a():
+def test_paragraph_extra_65a() -> None:
     """
     Test case extra 65a:  variation of 65 with link
     """
@@ -2874,7 +2874,7 @@ def test_paragraph_extra_65a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_65b():
+def test_paragraph_extra_65b() -> None:
     """
     Test case extra 65b:  variation of 65a with no following text
     """
@@ -2897,7 +2897,7 @@ def test_paragraph_extra_65b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_66x():
+def test_paragraph_extra_66x() -> None:
     """
     Test case extra 66:  Paragraph with inline image with newline in the title
     """
@@ -2919,7 +2919,7 @@ ing")a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_66xa():
+def test_paragraph_extra_66xa() -> None:
     """
     Test case extra 66xa:  variation of 66 with no following text
     """
@@ -2940,7 +2940,7 @@ ing")"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_66a():
+def test_paragraph_extra_66a() -> None:
     """
     Test case extra 66a:  variation of 66
     """
@@ -2963,7 +2963,7 @@ def test_paragraph_extra_66a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_66b():
+def test_paragraph_extra_66b() -> None:
     """
     Test case extra 66b:  variation of 66 with image
     """
@@ -2984,7 +2984,7 @@ def test_paragraph_extra_66b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_66c():
+def test_paragraph_extra_66c() -> None:
     """
     Test case extra 66c:  variation of 66 with angle breackets
     """
@@ -3006,7 +3006,7 @@ ing")a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_66ca():
+def test_paragraph_extra_66ca() -> None:
     """
     Test case extra 66ca:  variation of 66c with no following
     """
@@ -3027,7 +3027,7 @@ ing")"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_66d():
+def test_paragraph_extra_66d() -> None:
     """
     Test case extra 66d:  variation of 66 with additional backslash
     """
@@ -3051,7 +3051,7 @@ ing")a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_66da():
+def test_paragraph_extra_66da() -> None:
     """
     Test case extra 66da:  variation of 66d with no following
     """
@@ -3074,7 +3074,7 @@ ing")"""
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_67x():
+def test_paragraph_extra_67x() -> None:
     """
     Test case extra 67:  Paragraph with inline image with newline after the title
     """
@@ -3096,7 +3096,7 @@ def test_paragraph_extra_67x():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_67xa():
+def test_paragraph_extra_67xa() -> None:
     """
     Test case extra 67:  variation of 67 with no following
     """
@@ -3117,7 +3117,7 @@ def test_paragraph_extra_67xa():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_67a():
+def test_paragraph_extra_67a() -> None:
     """
     Test case extra 67a:  variation of 67 with whitespace before newline
     """
@@ -3141,7 +3141,7 @@ def test_paragraph_extra_67a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_67aa():
+def test_paragraph_extra_67aa() -> None:
     """
     Test case extra 67aa:  variation of 67 with whitespace before newline
     """
@@ -3164,7 +3164,7 @@ def test_paragraph_extra_67aa():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_67b():
+def test_paragraph_extra_67b() -> None:
     """
     Test case extra 67b:  variation of 67 with whitespace after newline
     """
@@ -3186,7 +3186,7 @@ def test_paragraph_extra_67b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_67ba():
+def test_paragraph_extra_67ba() -> None:
     """
     Test case extra 67ba:  variation of 67 with whitespace after newline
     """
@@ -3207,7 +3207,7 @@ def test_paragraph_extra_67ba():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_67c():
+def test_paragraph_extra_67c() -> None:
     """
     Test case extra 67c:  variation of 67 with whitespace before and after newline
     """
@@ -3231,7 +3231,7 @@ def test_paragraph_extra_67c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_67ca():
+def test_paragraph_extra_67ca() -> None:
     """
     Test case extra 67ca:  variation of 67 with whitespace before and after newline
     """
@@ -3254,7 +3254,7 @@ def test_paragraph_extra_67ca():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_67d():
+def test_paragraph_extra_67d() -> None:
     """
     Test case extra 67d:  variation of 67 with whitespace before and after newline
     """
@@ -3273,7 +3273,7 @@ def test_paragraph_extra_67d():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_67e():
+def test_paragraph_extra_67e() -> None:
     """
     Test case extra 67e:  variation of 67 with whitespace before and after newline
     """
@@ -3292,7 +3292,7 @@ def test_paragraph_extra_67e():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_68x():
+def test_paragraph_extra_68x() -> None:
     """
     Test case extra 68:  Paragraph with link containing label with replacement
     """
@@ -3315,7 +3315,7 @@ def test_paragraph_extra_68x():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_68a():
+def test_paragraph_extra_68a() -> None:
     """
     Test case extra 68a:  variation of 68 without special characters
     """
@@ -3338,7 +3338,7 @@ def test_paragraph_extra_68a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_68b():
+def test_paragraph_extra_68b() -> None:
     """
     Test case extra 68b:  variation of 68 with newline before special characters
     """
@@ -3362,7 +3362,7 @@ def test_paragraph_extra_68b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_69():
+def test_paragraph_extra_69() -> None:
     """
     Test case extra 69:  Paragraph with link containing label with backslash
     """
@@ -3385,7 +3385,7 @@ def test_paragraph_extra_69():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_69a():
+def test_paragraph_extra_69a() -> None:
     """
     Test case extra 69a:  variation of 69 with newline before special characters
     """
@@ -3409,7 +3409,7 @@ def test_paragraph_extra_69a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_70():
+def test_paragraph_extra_70() -> None:
     """
     Test case extra 70:  Paragraph with link containing uri with space
     """
@@ -3432,7 +3432,7 @@ def test_paragraph_extra_70():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_70a():
+def test_paragraph_extra_70a() -> None:
     """
     Test case extra 70a:  variation of 70 with newline before special characters, rendering it invalid
     """
@@ -3452,7 +3452,7 @@ def test_paragraph_extra_70a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_71x():
+def test_paragraph_extra_71x() -> None:
     """
     Test case extra 71:  Paragraph with link containing title with replacement
     """
@@ -3475,7 +3475,7 @@ def test_paragraph_extra_71x():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_71a():
+def test_paragraph_extra_71a() -> None:
     """
     Test case extra 71a:  variation of 71 with newline before special characters
     """
@@ -3499,7 +3499,7 @@ def test_paragraph_extra_71a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_72():
+def test_paragraph_extra_72() -> None:
     """
     Test case extra 72:  Paragraph with link containing title with backslash
     """
@@ -3522,7 +3522,7 @@ def test_paragraph_extra_72():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_72a():
+def test_paragraph_extra_72a() -> None:
     """
     Test case extra 72a:  variation of 72 with newline before special characters
     """
@@ -3546,7 +3546,7 @@ def test_paragraph_extra_72a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_73():
+def test_paragraph_extra_73() -> None:
     """
     Test case extra 73:  Paragraph with image containing label with replacement
     """
@@ -3567,7 +3567,7 @@ def test_paragraph_extra_73():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_73a():
+def test_paragraph_extra_73a() -> None:
     """
     Test case extra 73a:  variation of 73 without special characters
     """
@@ -3588,7 +3588,7 @@ def test_paragraph_extra_73a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_73b():
+def test_paragraph_extra_73b() -> None:
     """
     Test case extra 73b:  variation of 73 with newline before special characters
     """
@@ -3610,7 +3610,7 @@ def test_paragraph_extra_73b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_74():
+def test_paragraph_extra_74() -> None:
     """
     Test case extra 74:  Paragraph with image containing label with backslash
     """
@@ -3631,7 +3631,7 @@ def test_paragraph_extra_74():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_74a():
+def test_paragraph_extra_74a() -> None:
     """
     Test case extra 74a:  variation of 74 with newline before special characters
     """
@@ -3653,7 +3653,7 @@ def test_paragraph_extra_74a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_75():
+def test_paragraph_extra_75() -> None:
     """
     Test case extra 75:  Paragraph with image containing uri with space
     """
@@ -3674,7 +3674,7 @@ def test_paragraph_extra_75():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_75a():
+def test_paragraph_extra_75a() -> None:
     """
     Test case extra 75a:  variation of 75 with newline before special characters, invalidating it
     """
@@ -3694,7 +3694,7 @@ def test_paragraph_extra_75a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_76():
+def test_paragraph_extra_76() -> None:
     """
     Test case extra 76:  Paragraph with image containing title with replacement
     """
@@ -3715,7 +3715,7 @@ def test_paragraph_extra_76():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_76a():
+def test_paragraph_extra_76a() -> None:
     """
     Test case extra 76a:  variation of 76 with newline before special characters
     """
@@ -3737,7 +3737,7 @@ def test_paragraph_extra_76a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_77():
+def test_paragraph_extra_77() -> None:
     """
     Test case extra 77:  Paragraph with image containing title with backslash
     """
@@ -3758,7 +3758,7 @@ def test_paragraph_extra_77():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_77a():
+def test_paragraph_extra_77a() -> None:
     """
     Test case extra 77a:  variation of 77 with newline before special characters
     """
@@ -3779,7 +3779,7 @@ def test_paragraph_extra_77a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_78():
+def test_paragraph_extra_78() -> None:
     """
     Test case extra 78:  Paragraph with full link with backslash in label
     """
@@ -3806,7 +3806,7 @@ def test_paragraph_extra_78():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_78a():
+def test_paragraph_extra_78a() -> None:
     """
     Test case extra 78a:  variation of 78 with newline before special chars
     """
@@ -3834,7 +3834,7 @@ def test_paragraph_extra_78a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_79():
+def test_paragraph_extra_79() -> None:
     """
     Test case extra 79:  Paragraph with full link with replacement in label
     """
@@ -3861,7 +3861,7 @@ def test_paragraph_extra_79():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_79a():
+def test_paragraph_extra_79a() -> None:
     """
     Test case extra 79a:  variation of 79 with newline before special characters
     """
@@ -3889,7 +3889,7 @@ def test_paragraph_extra_79a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_80():
+def test_paragraph_extra_80() -> None:
     """
     Test case extra 80:  Paragraph with full link with replacement in reference
     """
@@ -3916,7 +3916,7 @@ def test_paragraph_extra_80():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_80a():
+def test_paragraph_extra_80a() -> None:
     """
     Test case extra 80a:  variation of 80 with newline before special characters
     """
@@ -3945,7 +3945,7 @@ def test_paragraph_extra_80a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_81():
+def test_paragraph_extra_81() -> None:
     """
     Test case extra 81:  Paragraph with full link with backspace in reference
     """
@@ -3972,7 +3972,7 @@ def test_paragraph_extra_81():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_81a():
+def test_paragraph_extra_81a() -> None:
     """
     Test case extra 81a:  variation of 81 with newline before special characters
     """
@@ -4001,7 +4001,7 @@ def test_paragraph_extra_81a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_82():
+def test_paragraph_extra_82() -> None:
     """
     Test case extra 82:  Paragraph with shortcut link with replacement in label
     """
@@ -4028,7 +4028,7 @@ def test_paragraph_extra_82():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_82a():
+def test_paragraph_extra_82a() -> None:
     """
     Test case extra 82a:  variation of 82 with newline before special characters
     """
@@ -4057,7 +4057,7 @@ def test_paragraph_extra_82a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_83():
+def test_paragraph_extra_83() -> None:
     """
     Test case extra 83:  Paragraph with shortcut link with backslash in label
     """
@@ -4084,7 +4084,7 @@ def test_paragraph_extra_83():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_83a():
+def test_paragraph_extra_83a() -> None:
     """
     Test case extra 83a:  variation of 83 with newline before special characters
     """
@@ -4113,7 +4113,7 @@ def test_paragraph_extra_83a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_84x():
+def test_paragraph_extra_84x() -> None:
     """
     Test case extra 84:  Paragraph with collapsed link with replacement in label
     """
@@ -4140,7 +4140,7 @@ def test_paragraph_extra_84x():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_84a():
+def test_paragraph_extra_84a() -> None:
     """
     Test case extra 84a:  variation of 84 with newline before special characters
     """
@@ -4169,7 +4169,7 @@ def test_paragraph_extra_84a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_85():
+def test_paragraph_extra_85() -> None:
     """
     Test case extra 85:  Paragraph with collapsed link with backslash in label
     """
@@ -4196,7 +4196,7 @@ def test_paragraph_extra_85():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_85a():
+def test_paragraph_extra_85a() -> None:
     """
     Test case extra 85a:  variation of 85 with newline before special characters
     """
@@ -4225,7 +4225,7 @@ def test_paragraph_extra_85a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_90x():
+def test_paragraph_extra_90x() -> None:
     """
     Test case extra 90:  Paragraph with full image with backslash in label
     """
@@ -4250,7 +4250,7 @@ def test_paragraph_extra_90x():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_90a():
+def test_paragraph_extra_90a() -> None:
     """
     Test case extra 90a:  variation of 90 with newline before special chars
     """
@@ -4276,7 +4276,7 @@ def test_paragraph_extra_90a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_91x():
+def test_paragraph_extra_91x() -> None:
     """
     Test case extra 91:  Paragraph with full image with replacement in label
     """
@@ -4301,7 +4301,7 @@ def test_paragraph_extra_91x():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_91a():
+def test_paragraph_extra_91a() -> None:
     """
     Test case extra 91a:  variation of 91 with newline before special characters
     """
@@ -4327,7 +4327,7 @@ def test_paragraph_extra_91a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_92x():
+def test_paragraph_extra_92x() -> None:
     """
     Test case extra 92:  Paragraph with full image with replacement in reference
     """
@@ -4352,7 +4352,7 @@ def test_paragraph_extra_92x():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_92a():
+def test_paragraph_extra_92a() -> None:
     """
     Test case extra 92a:  variation of 92 with newline before special characters
     """
@@ -4379,7 +4379,7 @@ def test_paragraph_extra_92a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_93x():
+def test_paragraph_extra_93x() -> None:
     """
     Test case extra 93:  Paragraph with full image with backspace in reference
     """
@@ -4404,7 +4404,7 @@ def test_paragraph_extra_93x():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_93a():
+def test_paragraph_extra_93a() -> None:
     """
     Test case extra 93a:  variation of 93 with newline before special characters
     """
@@ -4431,7 +4431,7 @@ def test_paragraph_extra_93a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_94x():
+def test_paragraph_extra_94x() -> None:
     """
     Test case extra 94:  Paragraph with shortcut image with replacement in label
     """
@@ -4456,7 +4456,7 @@ def test_paragraph_extra_94x():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_94a():
+def test_paragraph_extra_94a() -> None:
     """
     Test case extra 94a:  variation of 94 with newline before special characters
     """
@@ -4483,7 +4483,7 @@ def test_paragraph_extra_94a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_95x():
+def test_paragraph_extra_95x() -> None:
     """
     Test case extra 95:  Paragraph with shortcut image with backslash in label
     """
@@ -4508,7 +4508,7 @@ def test_paragraph_extra_95x():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_95a():
+def test_paragraph_extra_95a() -> None:
     """
     Test case extra 95a:  variation of 95 with newline before special characters
     """
@@ -4535,7 +4535,7 @@ def test_paragraph_extra_95a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_96x():
+def test_paragraph_extra_96x() -> None:
     """
     Test case extra 96:  Paragraph with collapsed image with replacement in label
     """
@@ -4560,7 +4560,7 @@ def test_paragraph_extra_96x():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_96a():
+def test_paragraph_extra_96a() -> None:
     """
     Test case extra 96a:  variation of 96 with newline before special characters
     """
@@ -4587,7 +4587,7 @@ def test_paragraph_extra_96a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_97x():
+def test_paragraph_extra_97x() -> None:
     """
     Test case extra 97:  Paragraph with collapsed image with backslash in label
     """
@@ -4612,7 +4612,7 @@ def test_paragraph_extra_97x():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_97a():
+def test_paragraph_extra_97a() -> None:
     """
     Test case extra 97a:  variation of 97 with newline before special characters
     """
@@ -4639,7 +4639,7 @@ def test_paragraph_extra_97a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_d5():
+def test_paragraph_extra_d5() -> None:
     """
     Test case extra d5:  Paragraph with link split at the whitespaces
     """
@@ -4667,7 +4667,7 @@ def test_paragraph_extra_d5():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_d6():
+def test_paragraph_extra_d6() -> None:
     """
     Test case extra d6:  Paragraph with image split at the whitespaces
     """
@@ -4693,7 +4693,7 @@ def test_paragraph_extra_d6():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_e3():
+def test_paragraph_extra_e3() -> None:
     """
     Test case extra e3:  Inline link inside of inline link
     """
@@ -4716,7 +4716,7 @@ def test_paragraph_extra_e3():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_e3a():
+def test_paragraph_extra_e3a() -> None:
     """
     Test case extra e3a:  variation of e3 with inner image
     """
@@ -4740,7 +4740,7 @@ def test_paragraph_extra_e3a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_e3b():
+def test_paragraph_extra_e3b() -> None:
     """
     Test case extra e3b:  variation of e3 with inner and outer image
     """
@@ -4761,7 +4761,7 @@ def test_paragraph_extra_e3b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_e3c():
+def test_paragraph_extra_e3c() -> None:
     """
     Test case extra e3c:  variation of e3 with outer image
     """
@@ -4782,7 +4782,7 @@ def test_paragraph_extra_e3c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_e4():
+def test_paragraph_extra_e4() -> None:
     """
     Test case extra e4:  Full link w/ label matching inside of inline link
     """
@@ -4809,7 +4809,7 @@ def test_paragraph_extra_e4():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_e4a():
+def test_paragraph_extra_e4a() -> None:
     """
     Test case extra e4a:  variation of e4 with inner image
     """
@@ -4836,7 +4836,7 @@ def test_paragraph_extra_e4a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_e4b():
+def test_paragraph_extra_e4b() -> None:
     """
     Test case extra e4b:  variation of e4 with inner and outer image
     """
@@ -4861,7 +4861,7 @@ def test_paragraph_extra_e4b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_e4c():
+def test_paragraph_extra_e4c() -> None:
     """
     Test case extra e4c:  variation of e4 with outer image
     """
@@ -4886,7 +4886,7 @@ def test_paragraph_extra_e4c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_e5():
+def test_paragraph_extra_e5() -> None:
     """
     Test case extra e5:  Full link w/ reference matching inside of inline link
     """
@@ -4913,7 +4913,7 @@ def test_paragraph_extra_e5():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_e5a():
+def test_paragraph_extra_e5a() -> None:
     """
     Test case extra e5a:  variation of e5 with inner image
     """
@@ -4941,7 +4941,7 @@ def test_paragraph_extra_e5a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_e5b():
+def test_paragraph_extra_e5b() -> None:
     """
     Test case extra e5b:  variation of e5 with inner and outer image
     """
@@ -4966,7 +4966,7 @@ def test_paragraph_extra_e5b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_e5c():
+def test_paragraph_extra_e5c() -> None:
     """
     Test case extra e5c:  variation of e5 with outer image
     """
@@ -4991,7 +4991,7 @@ def test_paragraph_extra_e5c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_e6():
+def test_paragraph_extra_e6() -> None:
     """
     Test case extra e6:  Collapsed link inside of inline link
     """
@@ -5018,7 +5018,7 @@ def test_paragraph_extra_e6():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_e6a():
+def test_paragraph_extra_e6a() -> None:
     """
     Test case extra e6a:  variation of e6 with inner image
     """
@@ -5048,7 +5048,7 @@ def test_paragraph_extra_e6a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_e6b():
+def test_paragraph_extra_e6b() -> None:
     """
     Test case extra e6b:  variation of e6 with inner and outer image
     """
@@ -5073,7 +5073,7 @@ def test_paragraph_extra_e6b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_e6c():
+def test_paragraph_extra_e6c() -> None:
     """
     Test case extra e6c:  variation of e6 with outer image
     """
@@ -5098,7 +5098,7 @@ def test_paragraph_extra_e6c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_e7():
+def test_paragraph_extra_e7() -> None:
     """
     Test case extra e7:  Collapsed link inside of inline link
     """
@@ -5125,7 +5125,7 @@ def test_paragraph_extra_e7():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_e7a():
+def test_paragraph_extra_e7a() -> None:
     """
     Test case extra e7a:  variation of e7 with inner image
     """
@@ -5152,7 +5152,7 @@ def test_paragraph_extra_e7a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_e7b():
+def test_paragraph_extra_e7b() -> None:
     """
     Test case extra e7b:  variation of e7 with inner and outer image
     """
@@ -5177,7 +5177,7 @@ def test_paragraph_extra_e7b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_e7c():
+def test_paragraph_extra_e7c() -> None:
     """
     Test case extra e7c:  variation of e7 with outer image
     """
@@ -5202,7 +5202,7 @@ def test_paragraph_extra_e7c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_e8():
+def test_paragraph_extra_e8() -> None:
     """
     Test case extra e8:  Shortcut link inside of inline link
     """
@@ -5229,7 +5229,7 @@ def test_paragraph_extra_e8():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_e8a():
+def test_paragraph_extra_e8a() -> None:
     """
     Test case extra e8a:  variation of e8 with inner image
     """
@@ -5259,7 +5259,7 @@ def test_paragraph_extra_e8a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_e8b():
+def test_paragraph_extra_e8b() -> None:
     """
     Test case extra e8b:  variation of e8 with inner and outer image
     """
@@ -5284,7 +5284,7 @@ def test_paragraph_extra_e8b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_e8c():
+def test_paragraph_extra_e8c() -> None:
     """
     Test case extra e8c:  variation of e8 with outer image
     """
@@ -5309,7 +5309,7 @@ def test_paragraph_extra_e8c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_e9():
+def test_paragraph_extra_e9() -> None:
     """
     Test case extra e9:  Shortcut link inside of inline link
     """
@@ -5336,7 +5336,7 @@ def test_paragraph_extra_e9():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_e9a():
+def test_paragraph_extra_e9a() -> None:
     """
     Test case extra e9a:  variation of e9 with inner image
     """
@@ -5363,7 +5363,7 @@ def test_paragraph_extra_e9a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_e9b():
+def test_paragraph_extra_e9b() -> None:
     """
     Test case extra e9a:  variation of e9 with inner and outer image
     """
@@ -5388,7 +5388,7 @@ def test_paragraph_extra_e9b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_e9c():
+def test_paragraph_extra_e9c() -> None:
     """
     Test case extra e9c:  variation of e9 with outer image
     """
@@ -5413,7 +5413,7 @@ def test_paragraph_extra_e9c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f0():
+def test_paragraph_extra_f0() -> None:
     """
     Test case extra f0:  Inline link inside of full link
     """
@@ -5444,7 +5444,7 @@ def test_paragraph_extra_f0():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f0a():
+def test_paragraph_extra_f0a() -> None:
     """
     Test case extra f0a:  variation of f0 with inner image
     """
@@ -5472,7 +5472,7 @@ def test_paragraph_extra_f0a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f0b():
+def test_paragraph_extra_f0b() -> None:
     """
     Test case extra f0a:  variation of f0 with inner and outer image
     """
@@ -5497,7 +5497,7 @@ def test_paragraph_extra_f0b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f0c():
+def test_paragraph_extra_f0c() -> None:
     """
     Test case extra f0c:  variation of f0 with outer image
     """
@@ -5522,7 +5522,7 @@ def test_paragraph_extra_f0c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f1():
+def test_paragraph_extra_f1() -> None:
     """
     Test case extra f1:  Full link inside of full link
     """
@@ -5553,7 +5553,7 @@ def test_paragraph_extra_f1():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f1a():
+def test_paragraph_extra_f1a() -> None:
     """
     Test case extra f1a:  variation of f1 with inner image
     """
@@ -5581,7 +5581,7 @@ def test_paragraph_extra_f1a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f1b():
+def test_paragraph_extra_f1b() -> None:
     """
     Test case extra f1b:  variation of f1 with inner image
     """
@@ -5606,7 +5606,7 @@ def test_paragraph_extra_f1b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f1c():
+def test_paragraph_extra_f1c() -> None:
     """
     Test case extra f1c:  variation of f1 with inner image
     """
@@ -5631,7 +5631,7 @@ def test_paragraph_extra_f1c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f2():
+def test_paragraph_extra_f2() -> None:
     """
     Test case extra f2:  Full link inside of full link
     """
@@ -5658,7 +5658,7 @@ def test_paragraph_extra_f2():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f2a():
+def test_paragraph_extra_f2a() -> None:
     """
     Test case extra f2a:  variation of f2 with inner image
     """
@@ -5685,7 +5685,7 @@ def test_paragraph_extra_f2a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f2b():
+def test_paragraph_extra_f2b() -> None:
     """
     Test case extra f2b:  variation of f2 with inner image
     """
@@ -5712,7 +5712,7 @@ def test_paragraph_extra_f2b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f2c():
+def test_paragraph_extra_f2c() -> None:
     """
     Test case extra f2c:  variation of f2 with inner image
     """
@@ -5737,7 +5737,7 @@ def test_paragraph_extra_f2c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f3():
+def test_paragraph_extra_f3() -> None:
     """
     Test case extra f3:  Collapsed link inside of full link
     """
@@ -5764,7 +5764,7 @@ def test_paragraph_extra_f3():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f3a():
+def test_paragraph_extra_f3a() -> None:
     """
     Test case extra f3a:  variation of f3 with inner image
     """
@@ -5791,7 +5791,7 @@ def test_paragraph_extra_f3a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f3b():
+def test_paragraph_extra_f3b() -> None:
     """
     Test case extra f3b:  variation of f3 with inner and outer image
     """
@@ -5816,7 +5816,7 @@ def test_paragraph_extra_f3b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f3c():
+def test_paragraph_extra_f3c() -> None:
     """
     Test case extra f3c:  variation of f3 with outer image
     """
@@ -5841,7 +5841,7 @@ def test_paragraph_extra_f3c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f4():
+def test_paragraph_extra_f4() -> None:
     """
     Test case extra f4:  Collapsed link inside of full link
     """
@@ -5872,7 +5872,7 @@ def test_paragraph_extra_f4():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f4a():
+def test_paragraph_extra_f4a() -> None:
     """
     Test case extra f4a:  variation of f4 with inner image
     """
@@ -5900,7 +5900,7 @@ def test_paragraph_extra_f4a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f4b():
+def test_paragraph_extra_f4b() -> None:
     """
     Test case extra f4b:  variation of f4 with inner and outer image
     """
@@ -5925,7 +5925,7 @@ def test_paragraph_extra_f4b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f4c():
+def test_paragraph_extra_f4c() -> None:
     """
     Test case extra f4c:  variation of f4 with outer image
     """
@@ -5950,7 +5950,7 @@ def test_paragraph_extra_f4c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f5():
+def test_paragraph_extra_f5() -> None:
     """
     Test case extra f5:  Shortcut link inside of full link
     """
@@ -5977,7 +5977,7 @@ def test_paragraph_extra_f5():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f5a():
+def test_paragraph_extra_f5a() -> None:
     """
     Test case extra f5a:  variation of f5 with inner image
     """
@@ -6004,7 +6004,7 @@ def test_paragraph_extra_f5a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f5b():
+def test_paragraph_extra_f5b() -> None:
     """
     Test case extra f5b:  variation of f5 with inner and outer image
     """
@@ -6029,7 +6029,7 @@ def test_paragraph_extra_f5b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f5c():
+def test_paragraph_extra_f5c() -> None:
     """
     Test case extra f5c:  variation of f5 with outer image
     """
@@ -6054,7 +6054,7 @@ def test_paragraph_extra_f5c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f6():
+def test_paragraph_extra_f6() -> None:
     """
     Test case extra f6:  Shortcut link inside of full link
     """
@@ -6085,7 +6085,7 @@ def test_paragraph_extra_f6():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f6a():
+def test_paragraph_extra_f6a() -> None:
     """
     Test case extra f6a:  variation of f6 with inner image
     """
@@ -6113,7 +6113,7 @@ def test_paragraph_extra_f6a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f6b():
+def test_paragraph_extra_f6b() -> None:
     """
     Test case extra f6b:  variation of f6 with inner and outer image
     """
@@ -6138,7 +6138,7 @@ def test_paragraph_extra_f6b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f6c():
+def test_paragraph_extra_f6c() -> None:
     """
     Test case extra f6c:  variation of f6 with outer image
     """
@@ -6163,7 +6163,7 @@ def test_paragraph_extra_f6c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f7():
+def test_paragraph_extra_f7() -> None:
     """
     Test case extra f7:  Inline link inside of collapsed link
     """
@@ -6190,7 +6190,7 @@ def test_paragraph_extra_f7():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f7a():
+def test_paragraph_extra_f7a() -> None:
     """
     Test case extra f7a:  variation of f7 with inner image
     """
@@ -6215,7 +6215,7 @@ def test_paragraph_extra_f7a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f7b():
+def test_paragraph_extra_f7b() -> None:
     """
     Test case extra f7b:  variation of f7 with inner and outer image
     """
@@ -6240,7 +6240,7 @@ def test_paragraph_extra_f7b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f7c():
+def test_paragraph_extra_f7c() -> None:
     """
     Test case extra f7c:  variation of f7 with outer image
     """
@@ -6267,7 +6267,7 @@ def test_paragraph_extra_f7c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f8():
+def test_paragraph_extra_f8() -> None:
     """
     Test case extra f8:  Inline link inside of collapsed link
     """
@@ -6294,7 +6294,7 @@ def test_paragraph_extra_f8():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f8a():
+def test_paragraph_extra_f8a() -> None:
     """
     Test case extra f8a:  variation of f8 with inner image
     """
@@ -6319,7 +6319,7 @@ def test_paragraph_extra_f8a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f8b():
+def test_paragraph_extra_f8b() -> None:
     """
     Test case extra f8b:  variation of f8 with inner and outer image
     """
@@ -6344,7 +6344,7 @@ def test_paragraph_extra_f8b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f8c():
+def test_paragraph_extra_f8c() -> None:
     """
     Test case extra f8c:  variation of f8 with outer image
     """
@@ -6371,7 +6371,7 @@ def test_paragraph_extra_f8c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f9():
+def test_paragraph_extra_f9() -> None:
     """
     Test case extra f9:  Full link inside of collapsed link
     """
@@ -6398,7 +6398,7 @@ def test_paragraph_extra_f9():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f9a():
+def test_paragraph_extra_f9a() -> None:
     """
     Test case extra f9a:  variation of f9 with inner image
     """
@@ -6423,7 +6423,7 @@ def test_paragraph_extra_f9a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f9b():
+def test_paragraph_extra_f9b() -> None:
     """
     Test case extra f9b:  variation of f9 with inner and outer image
     """
@@ -6448,7 +6448,7 @@ def test_paragraph_extra_f9b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_f9c():
+def test_paragraph_extra_f9c() -> None:
     """
     Test case extra f9c:  variation of f9 with outer image
     """
@@ -6475,7 +6475,7 @@ def test_paragraph_extra_f9c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g0():
+def test_paragraph_extra_g0() -> None:
     """
     Test case extra g0:  Full link inside of collapsed link
     """
@@ -6498,7 +6498,7 @@ def test_paragraph_extra_g0():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g0a():
+def test_paragraph_extra_g0a() -> None:
     """
     Test case extra g0a:  variation of g0 with inner image
     """
@@ -6521,7 +6521,7 @@ def test_paragraph_extra_g0a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g0b():
+def test_paragraph_extra_g0b() -> None:
     """
     Test case extra g0b:  variation of g0 with inner and outer image
     """
@@ -6544,7 +6544,7 @@ def test_paragraph_extra_g0b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g0c():
+def test_paragraph_extra_g0c() -> None:
     """
     Test case extra g0c:  variation of g0 with outer image
     """
@@ -6567,7 +6567,7 @@ def test_paragraph_extra_g0c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g1():
+def test_paragraph_extra_g1() -> None:
     """
     Test case extra g1:  Collapsed link inside of collapsed link
     """
@@ -6590,7 +6590,7 @@ def test_paragraph_extra_g1():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g1a():
+def test_paragraph_extra_g1a() -> None:
     """
     Test case extra g1a:  variation of g1 with inner image
     """
@@ -6613,7 +6613,7 @@ def test_paragraph_extra_g1a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g1b():
+def test_paragraph_extra_g1b() -> None:
     """
     Test case extra g1b:  variation of g1 with inner and outer image
     """
@@ -6636,7 +6636,7 @@ def test_paragraph_extra_g1b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g1c():
+def test_paragraph_extra_g1c() -> None:
     """
     Test case extra g1c:  variation of g1 with outer image
     """
@@ -6659,7 +6659,7 @@ def test_paragraph_extra_g1c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g2():
+def test_paragraph_extra_g2() -> None:
     """
     Test case extra g2:  Collapsed link inside of collapsed link
     """
@@ -6686,7 +6686,7 @@ def test_paragraph_extra_g2():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g2a():
+def test_paragraph_extra_g2a() -> None:
     """
     Test case extra g2a:  variation of g2 with inner image
     """
@@ -6711,7 +6711,7 @@ def test_paragraph_extra_g2a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g2b():
+def test_paragraph_extra_g2b() -> None:
     """
     Test case extra g2b:  variation of g2 with inner and outer image
     """
@@ -6736,7 +6736,7 @@ def test_paragraph_extra_g2b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g2c():
+def test_paragraph_extra_g2c() -> None:
     """
     Test case extra g2c:  variation of g2 with outer image
     """
@@ -6763,7 +6763,7 @@ def test_paragraph_extra_g2c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g3():
+def test_paragraph_extra_g3() -> None:
     """
     Test case extra g3:  Shortcut link inside of collapsed link
     """
@@ -6786,7 +6786,7 @@ def test_paragraph_extra_g3():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g3a():
+def test_paragraph_extra_g3a() -> None:
     """
     Test case extra g3a:  variation of g3 with inner image
     """
@@ -6809,7 +6809,7 @@ def test_paragraph_extra_g3a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g3b():
+def test_paragraph_extra_g3b() -> None:
     """
     Test case extra g3a:  variation of g3 with inner and outer image
     """
@@ -6832,7 +6832,7 @@ def test_paragraph_extra_g3b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g3c():
+def test_paragraph_extra_g3c() -> None:
     """
     Test case extra g3c:  variation of g3 with outer image
     """
@@ -6855,7 +6855,7 @@ def test_paragraph_extra_g3c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g4():
+def test_paragraph_extra_g4() -> None:
     """
     Test case extra g4:  Shortcut link inside of collapsed link
     """
@@ -6882,7 +6882,7 @@ def test_paragraph_extra_g4():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g4a():
+def test_paragraph_extra_g4a() -> None:
     """
     Test case extra g4a:  variation of g4 with inner image
     """
@@ -6907,7 +6907,7 @@ def test_paragraph_extra_g4a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g4b():
+def test_paragraph_extra_g4b() -> None:
     """
     Test case extra g4b:  variation of g4 with inner and outer image
     """
@@ -6932,7 +6932,7 @@ def test_paragraph_extra_g4b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g4c():
+def test_paragraph_extra_g4c() -> None:
     """
     Test case extra g4c:  variation of g4 with outer image
     """
@@ -6959,7 +6959,7 @@ def test_paragraph_extra_g4c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g5():
+def test_paragraph_extra_g5() -> None:
     """
     Test case extra g5:  Inline link inside of shortcut link
     """
@@ -6986,7 +6986,7 @@ def test_paragraph_extra_g5():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g5a():
+def test_paragraph_extra_g5a() -> None:
     """
     Test case extra g5a:  variation of g5 with inner image
     """
@@ -7011,7 +7011,7 @@ def test_paragraph_extra_g5a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g5b():
+def test_paragraph_extra_g5b() -> None:
     """
     Test case extra g5b:  variation of g5 with inner and outer image
     """
@@ -7036,7 +7036,7 @@ def test_paragraph_extra_g5b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g5c():
+def test_paragraph_extra_g5c() -> None:
     """
     Test case extra g5c:  variation of g5 with outer image
     """
@@ -7063,7 +7063,7 @@ def test_paragraph_extra_g5c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g6():
+def test_paragraph_extra_g6() -> None:
     """
     Test case extra g6:  Inline link inside of shortcut link
     """
@@ -7090,7 +7090,7 @@ def test_paragraph_extra_g6():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g6a():
+def test_paragraph_extra_g6a() -> None:
     """
     Test case extra g6a:  variation of g6 with inner image
     """
@@ -7115,7 +7115,7 @@ def test_paragraph_extra_g6a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g6b():
+def test_paragraph_extra_g6b() -> None:
     """
     Test case extra g6b:  variation of g6 with inner and outer image
     """
@@ -7140,7 +7140,7 @@ def test_paragraph_extra_g6b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g6c():
+def test_paragraph_extra_g6c() -> None:
     """
     Test case extra g6c:  variation of g6 with outer image
     """
@@ -7167,7 +7167,7 @@ def test_paragraph_extra_g6c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g7():
+def test_paragraph_extra_g7() -> None:
     """
     Test case extra f7:  Full link inside of shortcut link
     """
@@ -7194,7 +7194,7 @@ def test_paragraph_extra_g7():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g7a():
+def test_paragraph_extra_g7a() -> None:
     """
     Test case extra g7a:  variation of g7 with inner image
     """
@@ -7219,7 +7219,7 @@ def test_paragraph_extra_g7a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g7b():
+def test_paragraph_extra_g7b() -> None:
     """
     Test case extra g7b:  variation of g7 with inner and outer image
     """
@@ -7244,7 +7244,7 @@ def test_paragraph_extra_g7b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g7c():
+def test_paragraph_extra_g7c() -> None:
     """
     Test case extra g7c:  variation of g7 with outer image
     """
@@ -7271,7 +7271,7 @@ def test_paragraph_extra_g7c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g8():
+def test_paragraph_extra_g8() -> None:
     """
     Test case extra g8:  Full link inside of shortcut link
     """
@@ -7298,7 +7298,7 @@ def test_paragraph_extra_g8():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g8a():
+def test_paragraph_extra_g8a() -> None:
     """
     Test case extra g8a:  variation of g8 with inner image
     """
@@ -7323,7 +7323,7 @@ def test_paragraph_extra_g8a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g8b():
+def test_paragraph_extra_g8b() -> None:
     """
     Test case extra g8b:  variation of g8 with inner and outer image
     """
@@ -7348,7 +7348,7 @@ def test_paragraph_extra_g8b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g8c():
+def test_paragraph_extra_g8c() -> None:
     """
     Test case extra g8c:  variation of g8 with outer image
     """
@@ -7375,7 +7375,7 @@ def test_paragraph_extra_g8c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g9():
+def test_paragraph_extra_g9() -> None:
     """
     Test case extra g9:  Collapsed link inside of shortcut link
     """
@@ -7398,7 +7398,7 @@ def test_paragraph_extra_g9():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g9a():
+def test_paragraph_extra_g9a() -> None:
     """
     Test case extra g9a:  variation of g9 with inner image
     """
@@ -7421,7 +7421,7 @@ def test_paragraph_extra_g9a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g9b():
+def test_paragraph_extra_g9b() -> None:
     """
     Test case extra g9b:  variation of g9 with inner and outer image
     """
@@ -7444,7 +7444,7 @@ def test_paragraph_extra_g9b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_g9c():
+def test_paragraph_extra_g9c() -> None:
     """
     Test case extra g9c:  variation of g9 with outer image
     """
@@ -7467,7 +7467,7 @@ def test_paragraph_extra_g9c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_h0():
+def test_paragraph_extra_h0() -> None:
     """
     Test case extra h0:  Collapsed link inside of shortcut link
     """
@@ -7494,7 +7494,7 @@ def test_paragraph_extra_h0():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_h0a():
+def test_paragraph_extra_h0a() -> None:
     """
     Test case extra h0a:  variation of h0 with inner image
     """
@@ -7519,7 +7519,7 @@ def test_paragraph_extra_h0a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_h0b():
+def test_paragraph_extra_h0b() -> None:
     """
     Test case extra h0b:  variation of h0 with inner and outer image
     """
@@ -7544,7 +7544,7 @@ def test_paragraph_extra_h0b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_h0c():
+def test_paragraph_extra_h0c() -> None:
     """
     Test case extra h0c:  variation of h0 with outer image
     """
@@ -7571,7 +7571,7 @@ def test_paragraph_extra_h0c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_h1():
+def test_paragraph_extra_h1() -> None:
     """
     Test case extra h1:  Shortcut link inside of shortcut link
     """
@@ -7594,7 +7594,7 @@ def test_paragraph_extra_h1():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_h1a():
+def test_paragraph_extra_h1a() -> None:
     """
     Test case extra h1a:  variation of h1 with inner image
     """
@@ -7617,7 +7617,7 @@ def test_paragraph_extra_h1a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_h1b():
+def test_paragraph_extra_h1b() -> None:
     """
     Test case extra h1b:  variation of h1 with inner and outer image
     """
@@ -7640,7 +7640,7 @@ def test_paragraph_extra_h1b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_h1c():
+def test_paragraph_extra_h1c() -> None:
     """
     Test case extra h1c:  variation of h1 with outer image
     """
@@ -7663,7 +7663,7 @@ def test_paragraph_extra_h1c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_h2():
+def test_paragraph_extra_h2() -> None:
     """
     Test case extra h2:  Shortcut link inside of shortcut link
     """
@@ -7690,7 +7690,7 @@ def test_paragraph_extra_h2():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_h2a():
+def test_paragraph_extra_h2a() -> None:
     """
     Test case extra h2a:  variation of h2 with inner image
     """
@@ -7715,7 +7715,7 @@ def test_paragraph_extra_h2a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_h2b():
+def test_paragraph_extra_h2b() -> None:
     """
     Test case extra h2b:  variation of h2 with inner and outer image
     """
@@ -7740,7 +7740,7 @@ def test_paragraph_extra_h2b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_h2c():
+def test_paragraph_extra_h2c() -> None:
     """
     Test case extra h2c:  variation of h2 with outer image
     """
@@ -7767,7 +7767,7 @@ def test_paragraph_extra_h2c():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_h9():
+def test_paragraph_extra_h9() -> None:
     """
     Test case extra h9:  Inline link containing line breaks
     """
@@ -7790,7 +7790,7 @@ def test_paragraph_extra_h9():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_h9a():
+def test_paragraph_extra_h9a() -> None:
     """
     Test case extra h9:  variation of h9 as an image
     """
@@ -7811,7 +7811,7 @@ def test_paragraph_extra_h9a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_h9aa():
+def test_paragraph_extra_h9aa() -> None:
     """
     Test case extra h9:  variation of h9a without following text
     """
@@ -7831,7 +7831,7 @@ def test_paragraph_extra_h9aa():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_h9b():
+def test_paragraph_extra_h9b() -> None:
     """
     Test case extra h9b:  variation of h9 without following text
     """
@@ -7853,7 +7853,7 @@ def test_paragraph_extra_h9b():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_j0():
+def test_paragraph_extra_j0() -> None:
     """
     Test case extra j0:  Inline link containing line breaks and spaces
     """
@@ -7876,7 +7876,7 @@ def test_paragraph_extra_j0():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_j0a():
+def test_paragraph_extra_j0a() -> None:
     """
     Test case extra j0a:  variation of j0 with image
     """
@@ -7897,7 +7897,7 @@ def test_paragraph_extra_j0a():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_j0b():
+def test_paragraph_extra_j0b() -> None:
     """
     Test case extra j0b:  variation of j0 with extra space after link
     """
@@ -7924,7 +7924,7 @@ def</p>""".replace(
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_j0c():
+def test_paragraph_extra_j0c() -> None:
     """
     Test case extra j0c:  variation of j0a with extra space after image
     """
@@ -7949,7 +7949,7 @@ def</p>""".replace(
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_j0d():
+def test_paragraph_extra_j0d() -> None:
     """
     Test case extra j0d:  variation of j0 with no following text
     """
@@ -7971,7 +7971,7 @@ def test_paragraph_extra_j0d():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_j0e():
+def test_paragraph_extra_j0e() -> None:
     """
     Test case extra j0e:  variation of j0 with more trailing space
     """
@@ -8001,7 +8001,7 @@ def test_paragraph_extra_j0e():
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_j0ea():
+def test_paragraph_extra_j0ea() -> None:
     """
     Test case extra j0ea:  variation of j0e inside of block quote
     """
@@ -8037,7 +8037,7 @@ def</p>
 
 
 @pytest.mark.gfm
-def test_paragraph_extra_j0eb():
+def test_paragraph_extra_j0eb() -> None:
     """
     Test case extra j0eb:  variation of j0e inside of list
     """

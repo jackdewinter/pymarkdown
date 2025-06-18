@@ -33,7 +33,7 @@ class ProcessSimpleInlineProtocol(Protocol):
     Protocol to allow for simple processing of inline elements.
     """
 
-    def __call__(
+    def __call__(  # noqa: E704
         self,
         parser_properties: ParseBlockPassProperties,
         source_text: str,

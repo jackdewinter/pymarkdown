@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_paragraph_series_a_b():
+def test_paragraph_series_a_b() -> None:
     """
     Test case:  Paragraph starts with a backslash escape
     was:        test_paragraph_extra_01
@@ -28,7 +28,7 @@ def test_paragraph_series_a_b():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_a_bh():
+def test_paragraph_series_a_bh() -> None:
     """
     Test case:  Paragraph starts with a backslash as in a hard line break
     was:        test_paragraph_extra_02
@@ -50,7 +50,7 @@ def test_paragraph_series_a_bh():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_a_sh():
+def test_paragraph_series_a_sh() -> None:
     """
     Test case:  Paragraph starts with spaces as in a hard line break
     was:        test_paragraph_extra_03
@@ -69,7 +69,7 @@ def test_paragraph_series_a_sh():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_a_cs():
+def test_paragraph_series_a_cs() -> None:
     """
     Test case:  Paragraph string starting with a code span.
     was:        test_paragraph_extra_04
@@ -90,7 +90,7 @@ def test_paragraph_series_a_cs():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_a_cr():
+def test_paragraph_series_a_cr() -> None:
     """
     Test case:  Paragraph string starting with a character reference.
     was:        test_paragraph_extra_05
@@ -110,7 +110,7 @@ def test_paragraph_series_a_cr():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_a_rh():
+def test_paragraph_series_a_rh() -> None:
     """
     Test case:  Paragraph string starting with a raw html block.
     was:        test_paragraph_extra_06
@@ -131,7 +131,7 @@ def test_paragraph_series_a_rh():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_a_ua():
+def test_paragraph_series_a_ua() -> None:
     """
     Test case:  Paragraph string starting with an URI autolink
     was:        test_paragraph_extra_07
@@ -154,7 +154,7 @@ def test_paragraph_series_a_ua():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_a_ea():
+def test_paragraph_series_a_ea() -> None:
     """
     Test case:  Paragraph string starting with an email autolink
     was:        test_paragraph_extra_08
@@ -175,7 +175,7 @@ def test_paragraph_series_a_ea():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_a_e():
+def test_paragraph_series_a_e() -> None:
     """
     Test case:  Paragraph string starting with an emphasis
     was:        test_paragraph_extra_09
@@ -198,7 +198,7 @@ def test_paragraph_series_a_e():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_a_l():
+def test_paragraph_series_a_l() -> None:
     """
     Test case:  Paragraph string starting with a link
     was:        test_paragraph_extra_10
@@ -221,7 +221,7 @@ def test_paragraph_series_a_l():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_a_i():
+def test_paragraph_series_a_i() -> None:
     """
     Test case:  Paragraph string starting with an image
     was:        test_paragraph_extra_11

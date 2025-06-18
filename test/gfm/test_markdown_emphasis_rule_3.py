@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_emphasis_374():
+def test_emphasis_374() -> None:
     """
     Test case 374:  Rule 3:  This is not emphasis, because the closing delimiter does not match the opening delimiter:
     """
@@ -23,7 +23,7 @@ def test_emphasis_374():
 
 
 @pytest.mark.gfm
-def test_emphasis_375():
+def test_emphasis_375() -> None:
     """
     Test case 375:  This is not emphasis, because the closing * is preceded by whitespace
     """
@@ -38,7 +38,7 @@ def test_emphasis_375():
 
 
 @pytest.mark.gfm
-def test_emphasis_376():
+def test_emphasis_376() -> None:
     """
     Test case 376:  A newline also counts as whitespace:
     """
@@ -59,7 +59,7 @@ def test_emphasis_376():
 
 
 @pytest.mark.gfm
-def test_emphasis_377():
+def test_emphasis_377() -> None:
     """
     Test case 377:  This is not emphasis, because the second * is preceded by punctuation and followed by an alphanumeric (hence it is not part of a right-flanking delimiter run:
     """
@@ -74,7 +74,7 @@ def test_emphasis_377():
 
 
 @pytest.mark.gfm
-def test_emphasis_378():
+def test_emphasis_378() -> None:
     """
     Test case 378:  The point of this restriction is more easily appreciated with this example:
     """
@@ -99,7 +99,7 @@ def test_emphasis_378():
 
 
 @pytest.mark.gfm
-def test_emphasis_379():
+def test_emphasis_379() -> None:
     """
     Test case 379:  Intraword emphasis with * is allowed:
     """

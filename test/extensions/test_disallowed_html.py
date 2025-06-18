@@ -3,14 +3,17 @@ Tests for the optional markdown-disallow-raw-html processing
 """
 
 from test.utils import act_and_assert, assert_that_exception_is_raised
+from typing import List
 
 import pytest
+
+from pymarkdown.tokens.markdown_token import MarkdownToken
 
 config_map = {"extensions": {"markdown-disallow-raw-html": {"enabled": True}}}
 
 
 @pytest.mark.gfm
-def test_disallowed_html_bad_change_type():
+def test_disallowed_html_bad_change_type() -> None:
     """
     Test to make sure that nothing changes if we try and specify a change_tag_names that is not a string.
     """
@@ -24,7 +27,7 @@ def test_disallowed_html_bad_change_type():
     }
 
     source_markdown = """something"""
-    expected_tokens = []
+    expected_tokens: List[MarkdownToken] = []
     expected_gfm = """something"""
     expected_error = "The value for property 'extensions.markdown-disallow-raw-html.change_tag_names' must be of type 'str'."
 
@@ -41,7 +44,7 @@ def test_disallowed_html_bad_change_type():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_bad_empty_string():
+def test_disallowed_html_bad_empty_string() -> None:
     """
     Test to make sure that nothing changes if we try and specify a change_tag_names that is empty.
     """
@@ -55,7 +58,7 @@ def test_disallowed_html_bad_empty_string():
     }
 
     source_markdown = """something"""
-    expected_tokens = []
+    expected_tokens: List[MarkdownToken] = []
     expected_gfm = """something"""
     expected_error = "Configuration item 'extensions.markdown-disallow-raw-html.change_tag_names' contains at least one empty string."
 
@@ -72,7 +75,7 @@ def test_disallowed_html_bad_empty_string():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_bad_only_commas():
+def test_disallowed_html_bad_only_commas() -> None:
     """
     Test to make sure that nothing changes if we try and specify a change_tag_names that is only commas.
     """
@@ -86,7 +89,7 @@ def test_disallowed_html_bad_only_commas():
     }
 
     source_markdown = """something"""
-    expected_tokens = []
+    expected_tokens: List[MarkdownToken] = []
     expected_gfm = """something"""
     expected_error = "Configuration item 'extensions.markdown-disallow-raw-html.change_tag_names' contains at least one empty string."
 
@@ -103,7 +106,7 @@ def test_disallowed_html_bad_only_commas():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_bad_no_prefix():
+def test_disallowed_html_bad_no_prefix() -> None:
     """
     Test to make sure that nothing changes if we try and specify a change_tag_names that contains at least one element that does not start with a + or -.
     """
@@ -120,7 +123,7 @@ def test_disallowed_html_bad_no_prefix():
     }
 
     source_markdown = """something"""
-    expected_tokens = []
+    expected_tokens: List[MarkdownToken] = []
     expected_gfm = """something"""
     expected_error = "Configuration item 'extensions.markdown-disallow-raw-html.change_tag_names' elements must either start with '+' or '-'."
 
@@ -137,7 +140,7 @@ def test_disallowed_html_bad_no_prefix():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_bad_no_valid_tag_name():
+def test_disallowed_html_bad_no_valid_tag_name() -> None:
     """
     Test to make sure that nothing changes if we try and specify a change_tag_names that contains at least one elements that is not a valid tag name.
     """
@@ -154,7 +157,7 @@ def test_disallowed_html_bad_no_valid_tag_name():
     }
 
     source_markdown = """something"""
-    expected_tokens = []
+    expected_tokens: List[MarkdownToken] = []
     expected_gfm = """something"""
     expected_error = "Configuration item 'extensions.markdown-disallow-raw-html.change_tag_names' contains an element 'some thing' that is not a valid tag name."
 
@@ -171,7 +174,7 @@ def test_disallowed_html_bad_no_valid_tag_name():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_top_disabled():
+def test_disallowed_html_top_disabled() -> None:
     """
     Test to make sure that without disallowed turned on, HTML blocks are treated normally.
     """
@@ -196,7 +199,7 @@ def test_disallowed_html_top_disabled():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_top_enabled_and_not_disallowed():
+def test_disallowed_html_top_enabled_and_not_disallowed() -> None:
     """
     Test to make sure that with disallowed turned on, but with a HTML block that is allowed.
     """
@@ -223,7 +226,7 @@ def test_disallowed_html_top_enabled_and_not_disallowed():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_top_enabled_and_now_disallowed():
+def test_disallowed_html_top_enabled_and_now_disallowed() -> None:
     """
     Test to make sure that with disallowed turned on, but with a HTML block that is disallowed through configuration.
     """
@@ -265,7 +268,7 @@ def test_disallowed_html_top_enabled_and_now_disallowed():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_top_enabled():
+def test_disallowed_html_top_enabled() -> None:
     """
     Test to make sure that with disallowed turned on, disallowed tag names are translated.
     """
@@ -298,7 +301,7 @@ def test_disallowed_html_top_enabled():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_top_enabled_no_longer_disallowed():
+def test_disallowed_html_top_enabled_no_longer_disallowed() -> None:
     """
     Test to make sure that with disallowed turned on but with config to remove a disallowed tag name, it is acceptable.
     """
@@ -334,7 +337,7 @@ def test_disallowed_html_top_enabled_no_longer_disallowed():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_top_with_attributes_disabled():
+def test_disallowed_html_top_with_attributes_disabled() -> None:
     """
     Test to make sure that without disallowed turned on, HTML blocks with attributes are treated normally.
     """
@@ -359,7 +362,7 @@ def test_disallowed_html_top_with_attributes_disabled():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_top_with_attributes_enabled():
+def test_disallowed_html_top_with_attributes_enabled() -> None:
     """
     Test to make sure that with disallowed turned on, disallowed HTML blocks with attributes are treated properly.
     """
@@ -392,7 +395,7 @@ def test_disallowed_html_top_with_attributes_enabled():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_top_with_openclose_disabled():
+def test_disallowed_html_top_with_openclose_disabled() -> None:
     """
     Test to make sure that without disallowed turned on, HTML blocks with autoclose are treated properly.
     """
@@ -423,7 +426,7 @@ def test_disallowed_html_top_with_openclose_disabled():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_top_with_openclose_enabled():
+def test_disallowed_html_top_with_openclose_enabled() -> None:
     """
     Test to make sure that with disallowed turned on, disallowed HTML blocks with autoclose are treated properly.
     """
@@ -456,7 +459,7 @@ def test_disallowed_html_top_with_openclose_enabled():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_top_with_space_disabled():
+def test_disallowed_html_top_with_space_disabled() -> None:
     """
     Test to make sure that without disallowed turned on, HTML blocks preceeded by spaces are treated properly.
     """
@@ -481,7 +484,7 @@ def test_disallowed_html_top_with_space_disabled():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_top_with_space_enabled():
+def test_disallowed_html_top_with_space_enabled() -> None:
     """
     Test to make sure that with disallowed turned on, HTML blocks preceeded by spaces are treated properly.
     """
@@ -514,7 +517,7 @@ def test_disallowed_html_top_with_space_enabled():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_top_with_list_disabled():
+def test_disallowed_html_top_with_list_disabled() -> None:
     """
     Test to make sure that without disallowed turned on, HTML blocks within lists with spaces are treated properly.
     """
@@ -545,7 +548,7 @@ def test_disallowed_html_top_with_list_disabled():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_top_with_list_enabled():
+def test_disallowed_html_top_with_list_enabled() -> None:
     """
     Test to make sure that with disallowed turned on, HTML blocks within lists with spaces are treated properly.
     """
@@ -583,7 +586,7 @@ def test_disallowed_html_top_with_list_enabled():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_top_with_list_and_tab_disabled():
+def test_disallowed_html_top_with_list_and_tab_disabled() -> None:
     """
     Test to make sure that without disallowed turned on, HTML blocks within lists with tabs are treated properly.
     """
@@ -616,7 +619,7 @@ def test_disallowed_html_top_with_list_and_tab_disabled():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_top_with_list_and_tab_enabled():
+def test_disallowed_html_top_with_list_and_tab_enabled() -> None:
     """
     Test to make sure that with disallowed turned on, HTML blocks within lists with tabs are treated properly.
     """
@@ -656,7 +659,7 @@ def test_disallowed_html_top_with_list_and_tab_enabled():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_top_with_block_disabled():
+def test_disallowed_html_top_with_block_disabled() -> None:
     """
     Test to make sure that without disallowed turned on, HTML blocks within block quotes with spaces are treated properly.
     """
@@ -685,7 +688,7 @@ def test_disallowed_html_top_with_block_disabled():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_top_with_block_enabled():
+def test_disallowed_html_top_with_block_enabled() -> None:
     """
     Test to make sure that with disallowed turned on, HTML blocks within block quotes with spaces are treated properly.
     """
@@ -722,7 +725,7 @@ def test_disallowed_html_top_with_block_enabled():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_top_with_block_and_tab_disabled():
+def test_disallowed_html_top_with_block_and_tab_disabled() -> None:
     """
     Test to make sure that without disallowed turned on, HTML blocks within block quotes with tabs are treated properly.
     """
@@ -753,7 +756,7 @@ def test_disallowed_html_top_with_block_and_tab_disabled():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_top_with_block_and_tab_enabled():
+def test_disallowed_html_top_with_block_and_tab_enabled() -> None:
     """
     Test to make sure that with disallowed turned on, HTML blocks within block quotes with tabs are treated properly.
     """
@@ -792,7 +795,7 @@ def test_disallowed_html_top_with_block_and_tab_enabled():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_inner_disabled():
+def test_disallowed_html_inner_disabled() -> None:
     """
     Test to make sure that without disallowed turned on, inside of HTML blocks are treated normally.
     """
@@ -821,7 +824,7 @@ def test_disallowed_html_inner_disabled():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_inner_enabled():
+def test_disallowed_html_inner_enabled() -> None:
     """
     Test to make sure that with disallowed turned on, inside of HTML blocks are treated normally.
     """
@@ -852,7 +855,7 @@ def test_disallowed_html_inner_enabled():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_inner_enabled_and_not_disallowed():
+def test_disallowed_html_inner_enabled_and_not_disallowed() -> None:
     """
     Test to make sure that without disallowed turned on, inside of HTML blocks are treated normally.
     """
@@ -883,7 +886,7 @@ def test_disallowed_html_inner_enabled_and_not_disallowed():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_double_disabled():
+def test_disallowed_html_double_disabled() -> None:
     """
     Test to make sure that without disallowed turned on, a "double start" inside of HTML blocks are treated normally.
     """
@@ -912,7 +915,7 @@ def test_disallowed_html_double_disabled():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_double_enabled():
+def test_disallowed_html_double_enabled() -> None:
     """
     Test to make sure that with disallowed turned on, a "double start" inside of HTML blocks are treated normally.
     """
@@ -943,7 +946,7 @@ def test_disallowed_html_double_enabled():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_inner_with_attributes_disabled():
+def test_disallowed_html_inner_with_attributes_disabled() -> None:
     """
     Test to make sure that without disallowed turned on, an inside of HTML blocks with attributes are treated normally.
     """
@@ -972,7 +975,7 @@ def test_disallowed_html_inner_with_attributes_disabled():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_inner_with_attributes_enabled():
+def test_disallowed_html_inner_with_attributes_enabled() -> None:
     """
     Test to make sure that with disallowed turned on, an inside of HTML blocks with attributes are treated normally.
     """
@@ -1003,7 +1006,7 @@ def test_disallowed_html_inner_with_attributes_enabled():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_inner_with_openclose_disabled():
+def test_disallowed_html_inner_with_openclose_disabled() -> None:
     """
     Test to make sure that without disallowed turned on, an inside of HTML blocks with auto-close are treated normally.
     """
@@ -1032,7 +1035,7 @@ def test_disallowed_html_inner_with_openclose_disabled():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_inner_with_openclose_enabled():
+def test_disallowed_html_inner_with_openclose_enabled() -> None:
     """
     Test to make sure that with disallowed turned on, an inside of HTML blocks with auto-close are treated normally.
     """
@@ -1063,7 +1066,7 @@ def test_disallowed_html_inner_with_openclose_enabled():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_raw_disabled():
+def test_disallowed_html_raw_disabled() -> None:
     """
     Test to make sure that without disallowed turned on, raw HTML is treated normally.
     """
@@ -1084,7 +1087,7 @@ def test_disallowed_html_raw_disabled():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_raw_enabled():
+def test_disallowed_html_raw_enabled() -> None:
     """
     Test to make sure that with disallowed turned on, disallowed raw HTML is treated normally.
     """
@@ -1105,7 +1108,7 @@ def test_disallowed_html_raw_enabled():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_raw_enabled_and_not_disallowed():
+def test_disallowed_html_raw_enabled_and_not_disallowed() -> None:
     """
     Test to make sure that without disallowed turned on, RAW HTML is treated normally.
     """
@@ -1128,7 +1131,7 @@ def test_disallowed_html_raw_enabled_and_not_disallowed():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_raw_with_attributes_disabled():
+def test_disallowed_html_raw_with_attributes_disabled() -> None:
     """
     Test to make sure that without disallowed turned on, RAW HTML is treated normally.
     """
@@ -1149,7 +1152,7 @@ def test_disallowed_html_raw_with_attributes_disabled():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_raw_with_attributes_enabled():
+def test_disallowed_html_raw_with_attributes_enabled() -> None:
     """
     Test to make sure that without disallowed turned on, RAW HTML is treated normally.
     """
@@ -1170,7 +1173,7 @@ def test_disallowed_html_raw_with_attributes_enabled():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_raw_with_openclose_disabled():
+def test_disallowed_html_raw_with_openclose_disabled() -> None:
     """
     Test to make sure that without disallowed turned on, RAW HTML is treated normally.
     """
@@ -1191,7 +1194,7 @@ def test_disallowed_html_raw_with_openclose_disabled():
 
 
 @pytest.mark.gfm
-def test_disallowed_html_raw_with_openclose_enabled():
+def test_disallowed_html_raw_with_openclose_enabled() -> None:
     """
     Test to make sure that without disallowed turned on, RAW HTML is treated normally.
     """

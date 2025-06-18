@@ -22,9 +22,6 @@ rem Look for options on the command line.
 
 set MY_VERBOSE=
 set MY_PUBLISH=
-set MY_MYPY=
-set MY_SOURCERY=1
-set RESET_PIPFILE=
 :process_arguments
 if "%1" == "-h" (
     echo Command: %0 [options]
@@ -33,21 +30,12 @@ if "%1" == "-h" (
     echo   Options:
     echo     -h                This message.
 	echo     -v                Display verbose information.
-	echo     -f				   Force reset of pipfile.
 	echo     -p				   Publish project summaries if successful.
-	echo     -m				   Only run mypy checks and exit.
-	echo     -ns			   Run all checks except for sourcery.
     GOTO real_end
 ) else if "%1" == "-v" (
 	set MY_VERBOSE=--verbose
 ) else if "%1" == "-p" (
 	set MY_PUBLISH=1
-) else if "%1" == "-m" (
-	set MY_MYPY=1
-) else if "%1" == "-f" (
-	set RESET_PIPFILE=1
-) else if "%1" == "-ns" (
-	set MY_SOURCERY=
 ) else if "%1" == "" (
     goto after_process_arguments
 ) else (
@@ -65,115 +53,57 @@ echo {Analysis of project started.}
 
 rem Cleanly start the main part of the script
 
-rem Check to see if the Pipfile is newer than the Pipfile.lock file.
-if defined RESET_PIPFILE (
-	echo {Forcing a hard reset of the PipEnv environment.}
-	pipenv --venv > %CLEAN_TEMPFILE%
-    if errorlevel 1 (
-		echo   {PipEnv environment was not established.  Reset not required.}
-		set RESET_PIPFILE=1
-		goto reset_pipfile
-    )
-	set TEST_FILE=
-	for /f "tokens=*" %%x in (%CLEAN_TEMPFILE%) do set TEST_FILE=%%x
-
-	if not exist "!TEST_FILE!\S2" (
-		echo {Creating temporary directory !TEST_FILE! for move test.}
-		mkdir "!TEST_FILE!\S2"
-    	if errorlevel 1 (
-			echo bad mkdir
-		)
-	)
-	echo {Executing move test to see if one or more files in directory !TEST_FILE! are locked.}
-	rem echo move /y "!TEST_FILE!\Scripts" "!TEST_FILE!\S2" .. %CLEAN_TEMPFILE%
-	move /y "!TEST_FILE!\Scripts" "!TEST_FILE!\S2" > %CLEAN_TEMPFILE%
-    if errorlevel 1 (
-		type %CLEAN_TEMPFILE%
-		goto directory_locked
-    )
-
-	@REM echo --
-	@REM echo !TEST_FILE!
-	@REM echo --
-	@REM dir "!TEST_FILE!"
-	@REM echo --
-
-	echo {Removing previous PipEnv environment.}
-	echo rmdir /s /q "!TEST_FILE!"
-	rmdir /s /q "!TEST_FILE!"
-    if errorlevel 1 (
-		echo bad rmdir
-    )
-
-	@REM echo --
-	@REM echo !TEST_FILE!
-	@REM echo --
-	if not exist "!TEST_FILE!" (
-		echo {Directory has been removed.}
-	) else (
-		dir "!TEST_FILE!"
-		goto directory_locked
-	)
-
-) else (
-	python utils\find_outdated_piplock_file.py
-	if ERRORLEVEL 2 (
-		echo.
-		echo Analysis of project cannot proceed without a Pipfile.
-		goto error_end
-	)
-	if ERRORLEVEL 1 (
-		echo {'Pipfile' and 'Pipfile.lock' are not in sync with each other.}
-		set RESET_PIPFILE=1
-	)
+rem Make sure that Git has been installed and that the script is being executed
+rem from within a Git repository.
+where git > nul 2>&1
+if ERRORLEVEL 1 (
+	echo.
+	echo Git is either not installed or not referenced in the PATH variable.
+	goto error_end
 )
-goto reset_pipfile
-:directory_locked
-echo   {One or more directories in !TEST_FILE! are locked.}
-echo   {Close any open IDEs or shells in that directory and try again.}
-echo   {If lock persists, try pipenv --rm to try and force the lock to be released.}
-goto error_end
-:reset_pipfile
-if defined RESET_PIPFILE (
+
+git rev-parse --is-inside-work-tree > nul 2>&1
+if ERRORLEVEL 1 (
+	echo.
+	echo Script must be executed from within a Git repository due to dependencies.
+	goto error_end
+)
+
+rem Check to see if the Pipfile is newer than the Pipfile.lock file.
+python utils\find_outdated_piplock_file.py
+if ERRORLEVEL 2 (
+	echo.
+	echo Analysis of project cannot proceed without a Pipfile.
+	goto error_end
+)
+if ERRORLEVEL 1 (
+	echo {'Pipfile' and 'Pipfile.lock' are not in sync with each other.}
 	echo {Syncing python packages with new PipEnv 'Pipfile'.}
 	erase Pipfile.lock
 	pipenv lock
-	pipenv update -d
 	if ERRORLEVEL 1 (
 		echo.
-		echo {Creating and updating new Pipfile.lock file failed.}
+		echo {Creating new Pipfile.lock file failed.}
+		goto error_end
+	)
+
+	pipenv sync -d
+	if ERRORLEVEL 1 (
+		echo.
+		echo {Syncing python packages with PipEnv failed.}
 		goto error_end
 	)
 )
 
-if defined MY_MYPY (
-	goto executeMyPy
-)
-
 echo {Executing pre-commit hooks on Python code.}
-set PRE_COMMIT_FLAGS=
-if defined MY_PUBLISH (
-	set PRE_COMMIT_FLAGS=--all
-)
-pipenv run pre-commit run !PRE_COMMIT_FLAGS!
+pipenv run pre-commit run --all
 if ERRORLEVEL 1 (
 	echo.
 	echo {Executing pre-commit hooks on Python code failed.}
 	goto error_end
 )
 
-if defined MY_SOURCERY (
-	if "%SOURCERY_USER_KEY%" == "" (
-		if exist "..\sourcery.bat" (
-			echo {Sourcery user key not define, but sourcery.bat script detected. Executing.}
-			call "..\sourcery.bat"
-		)
-	)
-)
-
-if not defined MY_SOURCERY (
-	echo {Skipping Sourcery static analyzer by request.}
-) else if "%SOURCERY_USER_KEY%" == "" (
+if "%SOURCERY_USER_KEY%" == "" (
 	echo {Sourcery user key not defined.  Skipping Sourcery static analyzer.}
 ) else (
 	echo {Executing Sourcery static analyzer on Python code.}
@@ -192,48 +122,54 @@ if not defined MY_SOURCERY (
 		set "SOURCERY_LIMIT=--diff ^"git diff^""
 	)
 
-	pipenv run sourcery review --check pymarkdown !SOURCERY_LIMIT!
+	pipenv run sourcery review --fix --verbose . !SOURCERY_LIMIT!
 	if ERRORLEVEL 1 (
 		echo.
-		echo {Executing Sourcery on Python code failed.}
+		echo {Executing Sourcery fix on project code failed.}
+		goto error_end
+	)
+
+	pipenv run sourcery review --check --verbose . !SOURCERY_LIMIT!
+	if ERRORLEVEL 1 (
+		echo.
+		echo {Executing Sourcery check on project code after fix failed. Failures remain.}
 		goto error_end
 	)
 )
 
 echo {Executing pylint utils analyzer on Python source code to verify suppressions and document them.}
-echo pipenv run pylint_utils --config setup.cfg --recurse -r publish\pylint_suppression.json %PYTHON_MODULE_NAME%
-pipenv run pylint_utils --config setup.cfg --recurse -r publish\pylint_suppression.json %PYTHON_MODULE_NAME%
+pipenv run python pylint_utils --config setup.cfg --recurse -r publish\pylint_suppression.json %PYTHON_MODULE_NAME%
 if ERRORLEVEL 1 (
 	echo.
 	echo {Executing reporting of pylint suppressions in Python source code failed.}
 	goto error_end
 )
 
-git diff --name-only --staged > %CLEAN_TEMPFILE%
+git diff --name-only --staged --diff-filter=d > %CLEAN_TEMPFILE%
 set ALL_FILES=
 for /f "tokens=*" %%x in (%CLEAN_TEMPFILE%) do (
 	set TEST_FILE=%%x
-	if /i [!TEST_FILE:~-3!]==[.py] (
-		if EXIST !TEST_FILE! (
-			if "!TEST_FILE!" == "test/pytest_execute.py" (
-				echo {Skipping !TEST_FILE!...}
-			) else (
-				echo {Adding !TEST_FILE! to pylint suppression list.}
-				set ALL_FILES=!ALL_FILES! !TEST_FILE!
-			)
-		) else (
-			echo {Skipping scan of !TEST_FILE! as it no longer exists.}
-		)
-	)
+	if /i [!TEST_FILE:~-3!]==[.py] set ALL_FILES=!ALL_FILES! !TEST_FILE!
 )
 if "%ALL_FILES%" == "" (
 	echo {Not executing pylint suppression checker on Python source code. No eligible Python files staged.}
 ) else (
 	echo {Executing pylint suppression checker on Python source code.}
-	pipenv run pylint_utils -s %ALL_FILES%
+	pipenv run python pylint_utils --config setup.cfg -s %ALL_FILES%
 	if ERRORLEVEL 1 (
 		echo.
 		echo {Executing reporting of unused pylint suppressions in modified Python source code failed.}
+		goto error_end
+	)
+)
+
+if defined MY_PUBLISH (
+	echo {Building package for current repository.}
+	call package.cmd > %CLEAN_TEMPFILE%
+	if ERRORLEVEL 1 (
+		cat %CLEAN_TEMPFILE%
+		echo.
+		echo {Building package for repository failed.}
 		goto error_end
 	)
 )
@@ -258,7 +194,6 @@ if defined MY_PUBLISH (
 
 rem Cleanly exit the script
 
-:good_end
 echo.
 set PC_EXIT_CODE=0
 echo {Analysis of project succeeded.}

@@ -5,7 +5,7 @@ Module to test the StackToken class.
 from pymarkdown.tokens.stack_token import StackToken
 
 
-def test_stack_token_equal():
+def test_stack_token_equal() -> None:
     """
     Test to make sure two equal StackToken instances are equal.
     """
@@ -21,7 +21,7 @@ def test_stack_token_equal():
     assert are_equal
 
 
-def test_stack_token_not_equal_type():
+def test_stack_token_not_equal_type() -> None:
     """
     Test to make sure two StackToken instances with a different type name are not equal.
     """
@@ -37,7 +37,7 @@ def test_stack_token_not_equal_type():
     assert not are_equal
 
 
-def test_stack_token_not_equal_extra():
+def test_stack_token_not_equal_extra() -> None:
     """
     Test to make sure two StackToken instances with a different extra data are not equal.
     """
@@ -53,7 +53,7 @@ def test_stack_token_not_equal_extra():
     assert not are_equal
 
 
-def test_stack_token_not_equal_not_same_type():
+def test_stack_token_not_equal_not_same_type() -> None:
     """
     Test to make sure a StackToken instance is not equal to a non-StackToken.
     """

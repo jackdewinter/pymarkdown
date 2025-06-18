@@ -7,20 +7,20 @@ import runpy
 from test.patches.patch_base import PatchBase
 from test.patches.patch_builtin_open import path_builtin_open_with_exception
 from test.utils import assert_that_exception_is_raised
-from typing import Any
+from typing import Any, cast
 
 from pymarkdown.api import PyMarkdownApi, PyMarkdownApiException
 
 
-def get_semantic_version():
+def get_semantic_version() -> str:
     """
     Get the semantic version from the "version.py" file.
     """
     version_meta = runpy.run_path("./pymarkdown/version.py")
-    return version_meta["__version__"]
+    return cast(str, version_meta["__version__"])
 
 
-def test_api_application_version():
+def test_api_application_version() -> None:
     """
     Test to make sure that we can retrieve the application version.
     """
@@ -35,7 +35,7 @@ def test_api_application_version():
     assert found_version == get_semantic_version()
 
 
-def test_api_interface_version():
+def test_api_interface_version() -> None:
     """
     Test to make sure that we can retrieve the interface version. As there
     is nothing to compare it to yet, right now it is set to 1.
@@ -54,7 +54,7 @@ def test_api_interface_version():
     assert found_version == 1
 
 
-def test_api_tokenizer_init_exception():
+def test_api_tokenizer_init_exception() -> None:
     """
     Test to make sure that if we have any problems initializing the
     core, that we can handle it.
@@ -121,7 +121,7 @@ class PatchFileSourceProvider(PatchBase):
         assert not kwargs
 
 
-def test_api_tokenizer_failure_during_file_scan():
+def test_api_tokenizer_failure_during_file_scan() -> None:
     """
     Test to make sure that we can handle an unexpected error that gets raised
     in the middle of the parsing of one or more files.

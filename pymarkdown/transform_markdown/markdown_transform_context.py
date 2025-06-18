@@ -46,7 +46,7 @@ class StartMarkdownTokenTransformProtocol(Protocol):
     Protocol to call for the start token of a markdown transform.
     """
 
-    def __call__(
+    def __call__(  # noqa: E704
         self,
         context: "MarkdownTransformContext",
         current_token: MarkdownToken,
@@ -63,7 +63,7 @@ class EndMarkdownTokenTransformProtocol(Protocol):
     Protocol to allow registration of handlers for the markdown transform.
     """
 
-    def __call__(
+    def __call__(  # noqa: E704
         self,
         context: "MarkdownTransformContext",
         current_token: MarkdownToken,
@@ -82,7 +82,7 @@ class StartMarkdownContainerTokenTransformProtocol(Protocol):
     """
 
     # pylint: disable=too-many-arguments
-    def __call__(
+    def __call__(  # noqa: E704
         self,
         context: "MarkdownTransformContext",
         current_token: MarkdownToken,
@@ -103,7 +103,7 @@ class EndMarkdownContainerTokenTransformProtocol(Protocol):
     Protocol to allow registration of handlers for the container tokens of a markdown transform.
     """
 
-    def __call__(
+    def __call__(  # noqa: E704
         self,
         context: "MarkdownTransformContext",
         current_token: MarkdownToken,
@@ -121,7 +121,7 @@ class RegisterMarkdownTransformHandlersProtocol(Protocol):
     Protocol to allow registration of handlers for the markdown transform.
     """
 
-    def __call__(
+    def __call__(  # noqa: E704
         self,
         type_to_register: type,
         start_function: StartMarkdownTokenTransformProtocol,
@@ -138,7 +138,7 @@ class StartHtmlTokenTransformProtocol(Protocol):
     Protocol to call for the start token of a html transform.
     """
 
-    def __call__(
+    def __call__(  # noqa: E704
         self,
         output_html: str,
         next_token: MarkdownToken,
@@ -155,7 +155,7 @@ class EndHtmlTokenTransformProtocol(Protocol):
     Protocol to call for the end token or a html transform.
     """
 
-    def __call__(
+    def __call__(  # noqa: E704
         self,
         output_html: str,
         next_token: MarkdownToken,
@@ -172,7 +172,7 @@ class RegisterHtmlTransformHandlersProtocol(Protocol):
     Protocol to allow registration of handlers for the html transform.
     """
 
-    def __call__(
+    def __call__(  # noqa: E704
         self,
         type_to_register: type,
         start_function: StartHtmlTokenTransformProtocol,

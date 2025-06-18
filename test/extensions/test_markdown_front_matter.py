@@ -6,16 +6,18 @@ import copy
 import os
 from test.markdown_scanner import MarkdownScanner
 from test.utils import act_and_assert, assert_that_exception_is_raised
+from typing import List
 
 import pytest
 
 from pymarkdown.general.bad_tokenization_error import BadTokenizationError
+from pymarkdown.tokens.markdown_token import MarkdownToken
 
 config_map = {"extensions": {"front-matter": {"enabled": True}}}
 
 
 @pytest.mark.gfm
-def test_front_matter_01():
+def test_front_matter_01() -> None:
     """
     Any whitespace before the three - characters causes it not to fire.
     fill in layer - test_thematic_breaks_020
@@ -43,7 +45,7 @@ Title: my document
 
 
 @pytest.mark.gfm
-def test_front_matter_02():
+def test_front_matter_02() -> None:
     """
     The starting character must be the '-' character, not the other two.
     """
@@ -72,7 +74,7 @@ Title: my document
 
 
 @pytest.mark.gfm
-def test_front_matter_03():
+def test_front_matter_03() -> None:
     """
     Everything between the start and end is parsed, but not as part of HTML output.
     """
@@ -98,7 +100,7 @@ Date: 2023-May-02
 
 
 @pytest.mark.gfm
-def test_front_matter_04():
+def test_front_matter_04() -> None:
     """
     There must be an opening and closing boundary for it to be eligible as front matter.
     """
@@ -119,7 +121,7 @@ def test_front_matter_04():
 
 
 @pytest.mark.gfm
-def test_front_matter_05():
+def test_front_matter_05() -> None:
     """
     There must be an opening and closing boundary for it to be eligible as front matter.
     """
@@ -148,7 +150,7 @@ test:
 
 
 @pytest.mark.gfm
-def test_front_matter_06():
+def test_front_matter_06() -> None:
     """
     There must be an opening and closing boundary for it to be eligible as front matter.
     Even if there is just a field name and no value.
@@ -172,7 +174,7 @@ test:
 
 
 @pytest.mark.gfm
-def test_front_matter_07():
+def test_front_matter_07() -> None:
     """
     There must be an opening and closing boundary for it to be eligible as front matter.
     Containing a single line field name and value is normal.
@@ -196,7 +198,7 @@ test: abc
 
 
 @pytest.mark.gfm
-def test_front_matter_08x():
+def test_front_matter_08x() -> None:
     """
     There must be an opening and closing boundary for it to be eligible as front matter.
     In normal mode, a multiline field value is indicated by a second line that is indented
@@ -222,7 +224,7 @@ test: abc
 
 
 @pytest.mark.gfm
-def test_front_matter_08a():
+def test_front_matter_08a() -> None:
     """
     There must be an opening and closing boundary for it to be eligible as front matter.
     In normal mode, a multiline field value is indicated by a second line that is indented
@@ -249,7 +251,7 @@ test: |
 
 
 @pytest.mark.gfm
-def test_front_matter_09():
+def test_front_matter_09() -> None:
     """
     Various parts of the second line can be considered a continuation of the first line.
     """
@@ -273,7 +275,7 @@ test: abc
 
 
 @pytest.mark.gfm
-def test_front_matter_10x():
+def test_front_matter_10x() -> None:
     """
     A field name cannot be indented.
     """
@@ -302,7 +304,7 @@ def:</h2>"""
 
 
 @pytest.mark.gfm
-def test_front_matter_10a():
+def test_front_matter_10a() -> None:
     """
     A field name cannot be indented.
     """
@@ -326,7 +328,7 @@ def:
 
 
 @pytest.mark.gfm
-def test_front_matter_11():
+def test_front_matter_11() -> None:
     """
     A front matter element must contain at least one field name.
     """
@@ -345,7 +347,7 @@ def test_front_matter_11():
 
 
 @pytest.mark.gfm
-def test_front_matter_12():
+def test_front_matter_12() -> None:
     """
     A continuation without a field to associate it with is bad.
     """
@@ -375,7 +377,7 @@ def test_front_matter_12():
 
 
 @pytest.mark.gfm
-def test_front_matter_13():
+def test_front_matter_13() -> None:
     """
     If a blank line is encountered before the end marker, the entire header is
     thrown out.
@@ -408,7 +410,7 @@ Title: my document
 
 
 @pytest.mark.gfm
-def test_front_matter_14x():
+def test_front_matter_14x() -> None:
     """
     Any whitespace after the three - characters in the start boundary is acceptable.
     """
@@ -433,7 +435,7 @@ Title: my document
 
 
 @pytest.mark.gfm
-def test_front_matter_14a():
+def test_front_matter_14a() -> None:
     """
     14 - variant
     """
@@ -456,7 +458,7 @@ Title: my document
 
 
 @pytest.mark.gfm
-def test_front_matter_14b():
+def test_front_matter_14b() -> None:
     """
     14 - variant, but with \u00a0 which is unicode ws, but not normal whitespace
     """
@@ -482,7 +484,7 @@ Title: my document</h2>"""
 
 
 @pytest.mark.gfm
-def test_front_matter_15():
+def test_front_matter_15() -> None:
     """
     Any whitespace after the three - characters in the end boundary is acceptable.
     """
@@ -507,7 +509,7 @@ Title: my document
 
 
 @pytest.mark.gfm
-def test_front_matter_15a():
+def test_front_matter_15a() -> None:
     """
     Any whitespace after the three - characters in the end boundary is acceptable.
     """
@@ -530,7 +532,7 @@ Title: my document
 
 
 @pytest.mark.gfm
-def test_front_matter_15b():
+def test_front_matter_15b() -> None:
     """
     Any whitespace after the three - characters in the end boundary is acceptable.
     """
@@ -556,7 +558,7 @@ Title: my document
 
 
 @pytest.mark.gfm
-def test_front_matter_16():
+def test_front_matter_16() -> None:
     """
     More than three - characters in the boundary is not acceptable.
     """
@@ -585,7 +587,7 @@ Title: my document
 
 
 @pytest.mark.gfm
-def test_front_matter_17_no_blanks():
+def test_front_matter_17_no_blanks() -> None:
     """
     This is an extension of test_front_matter_13. If a blank line is encountered
     before the end marker, but after a field name, the entire header is still thrown out.
@@ -620,7 +622,7 @@ Title: my document
 
 
 @pytest.mark.gfm
-def test_front_matter_17_blanks():
+def test_front_matter_17_blanks() -> None:
     """
     This is an extension of test_front_matter_13. If a blank line is encountered
     before the end marker, but after a field name, the entire header is still thrown out.
@@ -650,7 +652,7 @@ Title: my document
 
 
 @pytest.mark.gfm
-def test_front_matter_18_no_blanks():
+def test_front_matter_18_no_blanks() -> None:
     """
     This is an extension of test_front_matter_13/17. If a blank line is encountered
     before the end marker, but after a field name and indented by at least 4 spaces,
@@ -688,7 +690,7 @@ Title: my document
 
 
 @pytest.mark.gfm
-def test_front_matter_18_blanks():
+def test_front_matter_18_blanks() -> None:
     """
     This is an extension of test_front_matter_13/17. If a blank line is encountered
     before the end marker, but after a field name and indented by at least 4 spaces,
@@ -721,7 +723,7 @@ Title: my document
 
 
 @pytest.mark.gfm
-def test_front_matter_19_no_blanks():
+def test_front_matter_19_no_blanks() -> None:
     """
     This is an extension of test_front_matter_18. If a blank line is encountered
     before the end marker, but before a field name and indented by at least 4 spaces,
@@ -757,7 +759,7 @@ Title: my document
 
 
 @pytest.mark.gfm
-def test_front_matter_19_blanks():
+def test_front_matter_19_blanks() -> None:
     """
     This is an extension of test_front_matter_18. If a blank line is encountered
     before the end marker, but before a field name and indented by at least 4 spaces,
@@ -790,7 +792,7 @@ Title: my document
 
 
 @pytest.mark.gfm
-def test_front_matter_20():
+def test_front_matter_20() -> None:
     """
     This is a made up example for testing.  Due to code in the extension handler,
     this will throw an exception when the a header `test` with value `assert` is
@@ -802,7 +804,7 @@ def test_front_matter_20():
 test: assert
 ---
 """
-    expected_tokens = []
+    expected_tokens: List[MarkdownToken] = []
     expected_gfm = ""
 
     expected_output = "An unhandled error occurred processing the document."
@@ -819,7 +821,7 @@ test: assert
     )
 
 
-def test_front_matter_21x():
+def test_front_matter_21x() -> None:
     """
     Test to make sure that a properly setup front matter section and enabled
     extension works as intended.
@@ -855,7 +857,7 @@ def test_front_matter_21x():
     )
 
 
-def test_front_matter_21a():
+def test_front_matter_21a() -> None:
     """
     Variance on 21, but with an improperly activated front matter extension.
     """
@@ -896,7 +898,7 @@ def test_front_matter_21a():
     )
 
 
-def test_front_matter_21b():
+def test_front_matter_21b() -> None:
     """
     Variance on 21, but with an improperly activated front matter extension.
     """
@@ -930,7 +932,7 @@ The value for property 'extensions.front-matter.enabled' must be of type 'bool'.
     )
 
 
-def test_front_matter_21c():
+def test_front_matter_21c() -> None:
     """
     Variance on 21, but with an improperly activated front matter extension.
     """

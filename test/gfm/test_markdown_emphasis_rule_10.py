@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_emphasis_431():
+def test_emphasis_431() -> None:
     """
     Test case 431:  (part 1) Any nonempty sequence of inline elements can be the contents of a strongly emphasized span.
     """
@@ -32,7 +32,7 @@ def test_emphasis_431():
 
 
 @pytest.mark.gfm
-def test_emphasis_432():
+def test_emphasis_432() -> None:
     """
     Test case 432:  (part 2) Any nonempty sequence of inline elements can be the contents of a strongly emphasized span.
     """
@@ -55,7 +55,7 @@ bar</strong></p>"""
 
 
 @pytest.mark.gfm
-def test_emphasis_433():
+def test_emphasis_433() -> None:
     """
     Test case 433:  (part 1) In particular, emphasis and strong emphasis can be nested inside strong emphasis:
     """
@@ -80,7 +80,7 @@ def test_emphasis_433():
 
 
 @pytest.mark.gfm
-def test_emphasis_434():
+def test_emphasis_434() -> None:
     """
     Test case 434:  (part 2) In particular, emphasis and strong emphasis can be nested inside strong emphasis:
     """
@@ -105,7 +105,7 @@ def test_emphasis_434():
 
 
 @pytest.mark.gfm
-def test_emphasis_435():
+def test_emphasis_435() -> None:
     """
     Test case 435:  (part 3) In particular, emphasis and strong emphasis can be nested inside strong emphasis:
     """
@@ -129,7 +129,7 @@ def test_emphasis_435():
 
 
 @pytest.mark.gfm
-def test_emphasis_436():
+def test_emphasis_436() -> None:
     """
     Test case 436:  (part 4) In particular, emphasis and strong emphasis can be nested inside strong emphasis:
     """
@@ -153,7 +153,7 @@ def test_emphasis_436():
 
 
 @pytest.mark.gfm
-def test_emphasis_437():
+def test_emphasis_437() -> None:
     """
     Test case 437:  (part 5) In particular, emphasis and strong emphasis can be nested inside strong emphasis:
     """
@@ -178,7 +178,7 @@ def test_emphasis_437():
 
 
 @pytest.mark.gfm
-def test_emphasis_438():
+def test_emphasis_438() -> None:
     """
     Test case 438:  (part 6) In particular, emphasis and strong emphasis can be nested inside strong emphasis:
     """
@@ -203,7 +203,7 @@ def test_emphasis_438():
 
 
 @pytest.mark.gfm
-def test_emphasis_439():
+def test_emphasis_439() -> None:
     """
     Test case 439:  (part 7) In particular, emphasis and strong emphasis can be nested inside strong emphasis:
     """
@@ -227,7 +227,7 @@ def test_emphasis_439():
 
 
 @pytest.mark.gfm
-def test_emphasis_440():
+def test_emphasis_440() -> None:
     """
     Test case 440:  (part 8) In particular, emphasis and strong emphasis can be nested inside strong emphasis:
     """
@@ -251,7 +251,7 @@ def test_emphasis_440():
 
 
 @pytest.mark.gfm
-def test_emphasis_441():
+def test_emphasis_441() -> None:
     """
     Test case 441:  (part 1) Indefinite levels of nesting are possible:
     """
@@ -282,7 +282,7 @@ bim</em> bop</strong></p>"""
 
 
 @pytest.mark.gfm
-def test_emphasis_442():
+def test_emphasis_442() -> None:
     """
     Test case 442:  (part 2) Indefinite levels of nesting are possible:
     """
@@ -308,7 +308,7 @@ def test_emphasis_442():
 
 
 @pytest.mark.gfm
-def test_emphasis_443():
+def test_emphasis_443() -> None:
     """
     Test case 443:  (part 1) There can be no empty emphasis or strong emphasis:
     """
@@ -327,7 +327,7 @@ def test_emphasis_443():
 
 
 @pytest.mark.gfm
-def test_emphasis_444():
+def test_emphasis_444() -> None:
     """
     Test case 444:  (part 2) There can be no empty emphasis or strong emphasis:
     """

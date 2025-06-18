@@ -1,3 +1,4 @@
 include install-requirements.txt
 include pymarkdown/resources/entities.json
 include pymarkdown/py.typed
+include pymarkdown/.external-package

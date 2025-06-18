@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_inlines_307():
+def test_inlines_307() -> None:
     """
     Test case 307:  Thus, for example, in
     """

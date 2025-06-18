@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_1x():
+def test_whitespaces_emphasis_1x() -> None:
     """
     Test case:  open left is followed by whitespace
     """
@@ -35,7 +35,7 @@ def test_whitespaces_emphasis_1x():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_1xa():
+def test_whitespaces_emphasis_1xa() -> None:
     """
     Test case:  open left is followed by whitespace
     """
@@ -50,7 +50,7 @@ def test_whitespaces_emphasis_1xa():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_1a():
+def test_whitespaces_emphasis_1a() -> None:
     """
     Test case:  open left is followed by unicode whitespace
     """
@@ -65,7 +65,7 @@ def test_whitespaces_emphasis_1a():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_1ax():
+def test_whitespaces_emphasis_1ax() -> None:
     """
     Test case:  open left is followed by unicode whitespace
     """
@@ -80,7 +80,7 @@ def test_whitespaces_emphasis_1ax():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_1b():
+def test_whitespaces_emphasis_1b() -> None:
     """
     Test case:  open left is followed by whitespace
     """
@@ -95,7 +95,7 @@ def test_whitespaces_emphasis_1b():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_1bx():
+def test_whitespaces_emphasis_1bx() -> None:
     """
     Test case:  open left is followed by whitespace
     """
@@ -110,7 +110,7 @@ def test_whitespaces_emphasis_1bx():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_1c():
+def test_whitespaces_emphasis_1c() -> None:
     """
     Test case:  open left is followed by unicode whitespace
     """
@@ -125,7 +125,7 @@ def test_whitespaces_emphasis_1c():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_1cx():
+def test_whitespaces_emphasis_1cx() -> None:
     """
     Test case:  open left is followed by unicode whitespace
     """
@@ -140,7 +140,7 @@ def test_whitespaces_emphasis_1cx():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_1d():
+def test_whitespaces_emphasis_1d() -> None:
     """
     Test case:  open left is followed by unicode whitespace
     """
@@ -155,7 +155,7 @@ def test_whitespaces_emphasis_1d():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_1dx():
+def test_whitespaces_emphasis_1dx() -> None:
     """
     Test case:  open left is followed by unicode whitespace
     """
@@ -170,7 +170,7 @@ def test_whitespaces_emphasis_1dx():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_1e():
+def test_whitespaces_emphasis_1e() -> None:
     """
     Test case:  open left is followed by unicode whitespace
     """
@@ -185,7 +185,7 @@ def test_whitespaces_emphasis_1e():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_1ex():
+def test_whitespaces_emphasis_1ex() -> None:
     """
     Test case:  open left is followed by unicode whitespace
     """
@@ -200,7 +200,7 @@ def test_whitespaces_emphasis_1ex():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_2x():
+def test_whitespaces_emphasis_2x() -> None:
     """
     Test case:  open left is not followed by unicode whitespace or punctuation
     """
@@ -221,7 +221,7 @@ def test_whitespaces_emphasis_2x():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_2xx():
+def test_whitespaces_emphasis_2xx() -> None:
     """
     Test case:  open left is not followed by unicode whitespace or punctuation
     """
@@ -242,7 +242,7 @@ def test_whitespaces_emphasis_2xx():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_2a():
+def test_whitespaces_emphasis_2a() -> None:
     """
     Test case:  open left is not followed by unicode whitespace or punctuation
     """
@@ -263,7 +263,7 @@ def test_whitespaces_emphasis_2a():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_2ax():
+def test_whitespaces_emphasis_2ax() -> None:
     """
     Test case:  open left is not followed by unicode whitespace or punctuation
     """
@@ -284,7 +284,7 @@ def test_whitespaces_emphasis_2ax():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_3x():
+def test_whitespaces_emphasis_3x() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by beginning of line
     """
@@ -305,7 +305,7 @@ def test_whitespaces_emphasis_3x():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_3xx():
+def test_whitespaces_emphasis_3xx() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by beginning of line
     """
@@ -326,7 +326,7 @@ def test_whitespaces_emphasis_3xx():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_3a():
+def test_whitespaces_emphasis_3a() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by beginning of line
     """
@@ -347,7 +347,7 @@ def test_whitespaces_emphasis_3a():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_3ax():
+def test_whitespaces_emphasis_3ax() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by beginning of line
     """
@@ -368,7 +368,7 @@ def test_whitespaces_emphasis_3ax():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_3b():
+def test_whitespaces_emphasis_3b() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by beginning of line
     """
@@ -389,7 +389,7 @@ def test_whitespaces_emphasis_3b():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_3bx():
+def test_whitespaces_emphasis_3bx() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by beginning of line
     """
@@ -410,7 +410,7 @@ def test_whitespaces_emphasis_3bx():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_3c():
+def test_whitespaces_emphasis_3c() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by beginning of line
     """
@@ -431,7 +431,7 @@ def test_whitespaces_emphasis_3c():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_3cx():
+def test_whitespaces_emphasis_3cx() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by beginning of line
     """
@@ -452,7 +452,7 @@ def test_whitespaces_emphasis_3cx():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_3d():
+def test_whitespaces_emphasis_3d() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by beginning of line Pc
     """
@@ -473,7 +473,7 @@ def test_whitespaces_emphasis_3d():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_3dx():
+def test_whitespaces_emphasis_3dx() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by beginning of line Pc
     """
@@ -494,7 +494,7 @@ def test_whitespaces_emphasis_3dx():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_3e():
+def test_whitespaces_emphasis_3e() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by beginning of line Pc
     """
@@ -515,7 +515,7 @@ def test_whitespaces_emphasis_3e():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_3ex():
+def test_whitespaces_emphasis_3ex() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by beginning of line
     """
@@ -536,7 +536,7 @@ def test_whitespaces_emphasis_3ex():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_4x():
+def test_whitespaces_emphasis_4x() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by whitespace
     """
@@ -557,7 +557,7 @@ def test_whitespaces_emphasis_4x():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_4xa():
+def test_whitespaces_emphasis_4xa() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by whitespace
     """
@@ -578,7 +578,7 @@ def test_whitespaces_emphasis_4xa():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_4a():
+def test_whitespaces_emphasis_4a() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by whitespace
     """
@@ -601,7 +601,7 @@ def test_whitespaces_emphasis_4a():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_4ax():
+def test_whitespaces_emphasis_4ax() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by whitespace
     """
@@ -624,7 +624,7 @@ def test_whitespaces_emphasis_4ax():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_4b():
+def test_whitespaces_emphasis_4b() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by whitespace
     """
@@ -645,7 +645,7 @@ def test_whitespaces_emphasis_4b():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_4bx():
+def test_whitespaces_emphasis_4bx() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by whitespace
     """
@@ -666,7 +666,7 @@ def test_whitespaces_emphasis_4bx():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_4c():
+def test_whitespaces_emphasis_4c() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by whitespace
     """
@@ -689,7 +689,7 @@ def test_whitespaces_emphasis_4c():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_4cx():
+def test_whitespaces_emphasis_4cx() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by whitespace
     """
@@ -712,7 +712,7 @@ def test_whitespaces_emphasis_4cx():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_4d():
+def test_whitespaces_emphasis_4d() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by whitespace
     """
@@ -735,7 +735,7 @@ def test_whitespaces_emphasis_4d():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_4dx():
+def test_whitespaces_emphasis_4dx() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by whitespace
     """
@@ -758,7 +758,7 @@ def test_whitespaces_emphasis_4dx():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_4e():
+def test_whitespaces_emphasis_4e() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by whitespace
     """
@@ -781,7 +781,7 @@ def test_whitespaces_emphasis_4e():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_4ex():
+def test_whitespaces_emphasis_4ex() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by whitespace
     """
@@ -804,7 +804,7 @@ def test_whitespaces_emphasis_4ex():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_5x():
+def test_whitespaces_emphasis_5x() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by punctuation
     """
@@ -827,7 +827,7 @@ def test_whitespaces_emphasis_5x():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_5xx():
+def test_whitespaces_emphasis_5xx() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by punctuation
     """
@@ -850,7 +850,7 @@ def test_whitespaces_emphasis_5xx():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_5a():
+def test_whitespaces_emphasis_5a() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by punctuation
     """
@@ -873,7 +873,7 @@ def test_whitespaces_emphasis_5a():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_5ax():
+def test_whitespaces_emphasis_5ax() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by punctuation
     """
@@ -896,7 +896,7 @@ def test_whitespaces_emphasis_5ax():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_5b():
+def test_whitespaces_emphasis_5b() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by punctuation
     """
@@ -919,7 +919,7 @@ def test_whitespaces_emphasis_5b():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_5bx():
+def test_whitespaces_emphasis_5bx() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by punctuation
     """
@@ -942,7 +942,7 @@ def test_whitespaces_emphasis_5bx():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_5c():
+def test_whitespaces_emphasis_5c() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by punctuation
     """
@@ -965,7 +965,7 @@ def test_whitespaces_emphasis_5c():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_5cx():
+def test_whitespaces_emphasis_5cx() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by punctuation
     """
@@ -988,7 +988,7 @@ def test_whitespaces_emphasis_5cx():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_5d():
+def test_whitespaces_emphasis_5d() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by punctuation
     """
@@ -1011,7 +1011,7 @@ def test_whitespaces_emphasis_5d():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_5dx():
+def test_whitespaces_emphasis_5dx() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by punctuation
     """
@@ -1034,7 +1034,7 @@ def test_whitespaces_emphasis_5dx():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_5e():
+def test_whitespaces_emphasis_5e() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by punctuation
     """
@@ -1057,7 +1057,7 @@ def test_whitespaces_emphasis_5e():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_5ex():
+def test_whitespaces_emphasis_5ex() -> None:
     """
     Test case:  open left is followed by punctuation and preceeded by punctuation
     """
@@ -1080,7 +1080,7 @@ def test_whitespaces_emphasis_5ex():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_6x():
+def test_whitespaces_emphasis_6x() -> None:
     """
     Test case:  open left is followed by punctuation and not preceeded by punctuation or whitespace
     """
@@ -1095,7 +1095,7 @@ def test_whitespaces_emphasis_6x():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_6xx():
+def test_whitespaces_emphasis_6xx() -> None:
     """
     Test case:  open left is followed by punctuation and not preceeded by punctuation or whitespace
     """
@@ -1110,7 +1110,7 @@ def test_whitespaces_emphasis_6xx():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_6a():
+def test_whitespaces_emphasis_6a() -> None:
     """
     Test case:  open left is followed by punctuation and not preceeded by punctuation or whitespace
     """
@@ -1125,7 +1125,7 @@ def test_whitespaces_emphasis_6a():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_6ax():
+def test_whitespaces_emphasis_6ax() -> None:
     """
     Test case:  open left is followed by punctuation and not preceeded by punctuation or whitespace
     """
@@ -1140,7 +1140,7 @@ def test_whitespaces_emphasis_6ax():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_6b():
+def test_whitespaces_emphasis_6b() -> None:
     """
     Test case:  open left is followed by punctuation and not preceeded by punctuation or whitespace
     """
@@ -1155,7 +1155,7 @@ def test_whitespaces_emphasis_6b():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_6bx():
+def test_whitespaces_emphasis_6bx() -> None:
     """
     Test case:  open left is followed by punctuation and not preceeded by punctuation or whitespace
     """
@@ -1170,7 +1170,7 @@ def test_whitespaces_emphasis_6bx():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_6c():
+def test_whitespaces_emphasis_6c() -> None:
     """
     Test case:  open left is followed by punctuation and not preceeded by punctuation or whitespace
     """
@@ -1185,7 +1185,7 @@ def test_whitespaces_emphasis_6c():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_6cx():
+def test_whitespaces_emphasis_6cx() -> None:
     """
     Test case:  open left is followed by punctuation and not preceeded by punctuation or whitespace
     """
@@ -1200,7 +1200,7 @@ def test_whitespaces_emphasis_6cx():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_6d():
+def test_whitespaces_emphasis_6d() -> None:
     """
     Test case:  open left is followed by punctuation and not preceeded by punctuation or whitespace
     """
@@ -1219,7 +1219,7 @@ def test_whitespaces_emphasis_6d():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_6dx():
+def test_whitespaces_emphasis_6dx() -> None:
     """
     Test case:  open left is followed by punctuation and not preceeded by punctuation or whitespace
     """
@@ -1238,7 +1238,7 @@ def test_whitespaces_emphasis_6dx():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_6e():
+def test_whitespaces_emphasis_6e() -> None:
     """
     Test case:  open left is followed by punctuation and not preceeded by punctuation or whitespace
     """
@@ -1257,7 +1257,7 @@ def test_whitespaces_emphasis_6e():
 
 
 @pytest.mark.gfm
-def test_whitespaces_emphasis_6ex():
+def test_whitespaces_emphasis_6ex() -> None:
     """
     Test case:  open left is followed by punctuation and not preceeded by punctuation or whitespace
     """

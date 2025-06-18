@@ -1,19 +1,37 @@
 @echo off
 setlocal EnableDelayedExpansion
-set OLDDIR=%CD%
 pushd %~dp0
 
 rem Required to make sure coverage is written to the right areas.
-@REM set COVERAGE_FILE=build/.coverage
+set COVERAGE_FILE=build/.coverage
 set "PROJECT_DIRECTORY=%cd%"
 set PYTHONPATH=%PROJECT_DIRECTORY%
 
 rem Set needed environment variables.
+set PROPERTIES_FILE=project.properties
 set PTEST_TEMPFILE=temp_ptest.txt
 set PTEST_SCRIPT_DIRECTORY=%~dp0
-set PTEST_PYSCAN_SCRIPT_PATH=project_summarizer
 set PTEST_TEST_RESULTS_PATH=report\tests.xml
 set PTEST_TEST_COVERAGE_PATH=report\coverage.xml
+
+rem Read properties from the properties file and set in the current environment.
+FOR /f %%N IN (%PROPERTIES_FILE%) DO (
+	set TEST_LINE=%%N
+	IF NOT "!TEST_LINE:~0,1!"=="#" (
+		SET %%N
+	)
+)
+if not defined PYTHON_MODULE_NAME (
+	echo "Property 'PYTHON_MODULE_NAME' must be set in the %PROPERTIES_FILE% file."
+	goto error_end
+)
+
+if "%PYTHON_MODULE_NAME%" == "project_summarizer" (
+	set PTEST_PYSCAN_SCRIPT_PATH=python %PTEST_SCRIPT_DIRECTORY%\project_summarizer\main.py
+) else (
+	set PTEST_PYSCAN_SCRIPT_PATH=project_summarizer
+)
+echo %PTEST_PYSCAN_SCRIPT_PATH%
 
 rem Look for options on the command line.
 set PTEST_PUBLISH_SUMMARIES=
@@ -35,7 +53,6 @@ if "%1" == "-h" (
 	echo     -m                Enabled multi-core testing.
 	echo     -f                Produce a full report for the tests instead of a 'changes only' report.
 	echo     -p                Publish project summaries instead of running tests.
-	echo     -d                Capture test cases in the specified existing directory.
 	echo     -k [keyword]      Execute only the tests matching the specified keyword.
     GOTO real_end
 ) else if "%1" == "-p" (
@@ -54,13 +71,6 @@ if "%1" == "-h" (
 	set PTEST_KEYWORD=%2
 	if not defined PTEST_KEYWORD (
 		echo Option -k requires a keyword argument to follow it.
-		goto error_end
-	)
-	shift
-) else if "%1" == "-d" (
-	set PTEST_KEEP_DIRECTORY=%2
-	if not defined PTEST_KEEP_DIRECTORY (
-		echo Option -d requires a keyword argument to follow it.
 		goto error_end
 	)
 	shift
@@ -97,36 +107,20 @@ if defined PTEST_MULTI_CORE_ARGS (
 	set PTEST_MULTI_CORE_ARGS=-n !CORES_TO_USE! --dist loadscope
 )
 
-if defined PTEST_KEEP_DIRECTORY (
-	if not exist %PTEST_KEEP_DIRECTORY%\nul (
-		echo.
-		echo {Path specified by the -d option is not an existing directory.}
-		goto error_end
-	) else (
-		pushd %OLDDIR%
-		cd
-		cd !PTEST_KEEP_DIRECTORY!
-		FOR /F "tokens=* USEBACKQ" %%F IN (`cd`) DO (
-			SET my_var=%%F
-		)		
-		set "PTEST_KEEP_DIRECTORY=!my_var!"
-		popd
-
-		erase !PTEST_KEEP_DIRECTORY!\*.md
-	)
-)
-
 rem Enter main part of script.
+
+rem The build directory can sometimes be a problem, so just nuke it.
+rmdir /s /q build > nul 2>&1
+
 if defined PTEST_KEYWORD (
 	echo {Executing partial test suite...}
 	set PYTEST_ARGS=
 ) else (
 	if defined PTEST_COVERAGE_MODE (
 		echo {Executing full test suite with coverage...}
-		set PYTEST_ARGS=--html=report/report.html --cov --cov-branch --cov-fail-under=10 --strict-markers -ra --cov-report xml:report/coverage.xml --cov-report html:report/coverage --junitxml=report/tests.xml
+		set PYTEST_ARGS=--cov --cov-branch --cov-report xml:report/coverage.xml --cov-report html:report/coverage 
 	) else (
 		echo {Executing full test suite...}
-		set PYTEST_ARGS=--strict-markers -ra
 	)
 )
 set TEST_EXECUTION_FAILED=

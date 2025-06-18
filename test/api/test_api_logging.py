@@ -15,6 +15,9 @@ from test.utils import (
     capture_logging_changes_with_new_handler,
     create_temporary_file_for_reuse,
 )
+from typing import List, Set, cast
+
+from pytest import LogCaptureFixture
 
 from pymarkdown.api import (
     PyMarkdownApi,
@@ -26,7 +29,7 @@ from pymarkdown.api import (
 from pymarkdown.application_logging import ApplicationLogging
 
 
-def test_api_logging_bad_value():
+def test_api_logging_bad_value() -> None:
     """
     Test to make sure that we report a bad value being specified as a log level.
     """
@@ -41,10 +44,13 @@ def test_api_logging_bad_value():
     caught_exception = assert_that_exception_is_raised(
         PyMarkdownApiArgumentException, expected_output, PyMarkdownApi().log, test_value
     )
-    assert caught_exception.argument_name == "log_level"
+    assert (
+        cast(PyMarkdownApiArgumentException, caught_exception).argument_name
+        == "log_level"
+    )
 
 
-def test_api_logging_single_file(caplog):
+def test_api_logging_single_file(caplog: LogCaptureFixture) -> None:
     """
     Test to make sure that we can invoke a list of a file with no logging
     specified at all.
@@ -63,7 +69,7 @@ def test_api_logging_single_file(caplog):
     assert caplog.text == ""
 
 
-def test_api_logging_debug(caplog):
+def test_api_logging_debug(caplog: LogCaptureFixture) -> None:
     """
     Test to make sure that we can invoke a list of a file with debug logging
     or higher specified.
@@ -85,7 +91,7 @@ def test_api_logging_debug(caplog):
     __ensure_log_levels_in_caplog_text(caplog.text, expected_log_levels)
 
 
-def test_api_logging_debug_to_file():
+def test_api_logging_debug_to_file() -> None:
     """
     Test to make sure that we can invoke a list of a file with debug logging
     or higher specified, and have it sent to a file.
@@ -108,7 +114,7 @@ def test_api_logging_debug_to_file():
         __ensure_log_levels_in_log_file(log_path, expected_log_levels)
 
 
-def test_api_logging_debug_to_file_as_directory():
+def test_api_logging_debug_to_file_as_directory() -> None:
     """
     Test to make sure that we can invoke the logging subsystem with
     the log file being a directory, and having it fail properly.
@@ -133,7 +139,7 @@ def test_api_logging_debug_to_file_as_directory():
         )
 
 
-def test_api_logging_debug_to_file_as_directory_and_stack_trace():
+def test_api_logging_debug_to_file_as_directory_and_stack_trace() -> None:
     """
     Test to make sure that we can invoke the logging subsystem with
     the log file being a directory, and having it fail properly.
@@ -159,7 +165,7 @@ def test_api_logging_debug_to_file_as_directory_and_stack_trace():
         )
 
 
-def test_api_logging_info(caplog):
+def test_api_logging_info(caplog: LogCaptureFixture) -> None:
     """
     Test to make sure that we can invoke a list of a file with info logging
     or higher specified.
@@ -180,7 +186,7 @@ def test_api_logging_info(caplog):
     __ensure_log_levels_in_caplog_text(caplog.text, expected_log_levels)
 
 
-def test_api_logging_warning(caplog):
+def test_api_logging_warning(caplog: LogCaptureFixture) -> None:
     """
     Test to make sure that we can invoke a list of a file with warning logging
     or higher specified.
@@ -201,7 +207,7 @@ def test_api_logging_warning(caplog):
     __ensure_log_levels_in_caplog_text(caplog.text, expected_log_levels)
 
 
-def test_api_logging_error(caplog):
+def test_api_logging_error(caplog: LogCaptureFixture) -> None:
     """
     Test to make sure that we can invoke a list of a file with error logging
     or higher specified.
@@ -211,7 +217,7 @@ def test_api_logging_error(caplog):
 
     # Arrange
     source_path = "my-bad-path"
-    expected_log_levels = []
+    expected_log_levels: List[str] = []
     expected_output = f"Provided path '{source_path}' does not exist."
 
     # Act & Assert
@@ -224,7 +230,7 @@ def test_api_logging_error(caplog):
     __ensure_log_levels_in_caplog_text(caplog.text, expected_log_levels)
 
 
-def test_api_logging_critical(caplog):
+def test_api_logging_critical(caplog: LogCaptureFixture) -> None:
     """
     Test to make sure that we can invoke a list of a file with critical logging
     or higher specified.
@@ -234,7 +240,7 @@ def test_api_logging_critical(caplog):
 
     # Arrange
     source_path = "my-bad-path"
-    expected_log_levels = []
+    expected_log_levels: List[str] = []
 
     expected_output = f"Provided path '{source_path}' does not exist."
 
@@ -248,7 +254,7 @@ def test_api_logging_critical(caplog):
     __ensure_log_levels_in_caplog_text(caplog.text, expected_log_levels)
 
 
-def test_api_logging_stack_trace_with_no_exception(caplog):
+def test_api_logging_stack_trace_with_no_exception(caplog: LogCaptureFixture) -> None:
     """
     Test to make sure that turning on stack trace has an effect, even
     if no exception is registered.
@@ -298,7 +304,7 @@ def test_api_logging_stack_trace_with_no_exception(caplog):
 # TODO version with exception
 
 
-def test_api_logging_inheriting_logging(caplog):
+def test_api_logging_inheriting_logging(caplog: LogCaptureFixture) -> None:
     """
     Test to make sure any logging set up external to the API is respected
     if the inherit_logging flag is passed.
@@ -331,7 +337,7 @@ def test_api_logging_inheriting_logging(caplog):
     __ensure_log_levels_in_caplog_text(caplog.text, expected_log_levels)
 
 
-def test_api_logging_inheriting_logging_and_set_log_level():
+def test_api_logging_inheriting_logging_and_set_log_level() -> None:
     """
     Test to make sure that we get a proper exception if we ask for log
     inheritance and then try and set the log level.
@@ -350,7 +356,7 @@ def test_api_logging_inheriting_logging_and_set_log_level():
     )
 
 
-def test_api_logging_inheriting_logging_and_set_log_file():
+def test_api_logging_inheriting_logging_and_set_log_file() -> None:
     """
     Test to make sure that we get a proper exception if we ask for log
     inheritance and then try and set the log file.
@@ -368,20 +374,24 @@ def test_api_logging_inheriting_logging_and_set_log_file():
     )
 
 
-def __ensure_log_levels_in_log_file(log_file_path, expected_log_levels):
+def __ensure_log_levels_in_log_file(
+    log_file_path: str, expected_log_levels: List[str]
+) -> None:
     with open(log_file_path, "r", encoding="utf-8") as readme_file:
         log_file_text = readme_file.read()
         __ensure_log_levels_in_caplog_text(log_file_text, expected_log_levels)
 
 
-def __ensure_log_levels_in_caplog_text(caplog_text, expected_log_levels):
+def __ensure_log_levels_in_caplog_text(
+    caplog_text: str, expected_log_levels: List[str]
+) -> None:
     """
     For any emitted log information, the log level will always be the first
     piece of information on each line.  This simply ensures that all log level
     values that are expected are present at least once in the output.
     """
 
-    found_levels = set()
+    found_levels: Set[str] = set()
     for next_line in caplog_text.split("\n"):
         split_next_line = next_line.split(" ")
         if split_next_line and split_next_line[0]:

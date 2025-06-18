@@ -46,7 +46,7 @@ class InlineHandlerProtocol(Protocol):
     Protocol to handle the various inline sequences.
     """
 
-    def __call__(
+    def __call__(  # noqa: E704
         self,
         parser_properties: ParseBlockPassProperties,
         inline_request: InlineRequest,

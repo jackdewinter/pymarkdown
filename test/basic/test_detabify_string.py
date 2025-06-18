@@ -5,7 +5,7 @@ Tests for the detabisty_string functions.
 from pymarkdown.general.tab_helper import TabHelper
 
 
-def test_detabify_string_simple_case():
+def test_detabify_string_simple_case() -> None:
     """
     xxx
     """
@@ -22,7 +22,7 @@ def test_detabify_string_simple_case():
     assert detabified_line_to_match == adjusted_line
 
 
-def test_detabify_string_simple_case_with_offset():
+def test_detabify_string_simple_case_with_offset() -> None:
     """
     xxx
     """
@@ -39,7 +39,7 @@ def test_detabify_string_simple_case_with_offset():
     assert detabified_line_to_match == adjusted_line
 
 
-def test_detabify_string_simple_case_with_spaces():
+def test_detabify_string_simple_case_with_spaces() -> None:
     """
     xxx
     """
@@ -56,7 +56,7 @@ def test_detabify_string_simple_case_with_spaces():
     assert detabified_line_to_match == adjusted_line
 
 
-def test_detabify_string_simple_case_with_spaces_and_offset():
+def test_detabify_string_simple_case_with_spaces_and_offset() -> None:
     """
     xxx
     """
@@ -73,7 +73,7 @@ def test_detabify_string_simple_case_with_spaces_and_offset():
     assert detabified_line_to_match == adjusted_line
 
 
-def test_find_detabify_string_simple_case():
+def test_find_detabify_string_simple_case() -> None:
     """
     xxx
     """
@@ -95,7 +95,7 @@ def test_find_detabify_string_simple_case():
     assert adjusted_original_line == expected_adjusted_line
 
 
-def test_find_detabify_string_simple_case_x():
+def test_find_detabify_string_simple_case_x() -> None:
     """
     xxx
     """

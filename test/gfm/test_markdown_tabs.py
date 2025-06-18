@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_tabs_001():
+def test_tabs_001() -> None:
     """
     Test case 001:  (part a) a tab can be used instead of four spaces in an indented code block.
     """
@@ -28,7 +28,7 @@ def test_tabs_001():
 
 
 @pytest.mark.gfm
-def test_tabs_001a():
+def test_tabs_001a() -> None:
     """
     Test case 001:  (part a) a tab can be used instead of four spaces in an indented code block.
     """
@@ -50,7 +50,7 @@ foo\tbaz\t\tbim
 
 
 @pytest.mark.gfm
-def test_tabs_001b():
+def test_tabs_001b() -> None:
     """
     Test case 001:  (part a) a tab can be used instead of four spaces in an indented code block.
     """
@@ -72,7 +72,7 @@ def test_tabs_001b():
 
 
 @pytest.mark.gfm
-def test_tabs_001c():
+def test_tabs_001c() -> None:
     """
     Test case 001:  (part a) a tab can be used instead of four spaces in an indented code block.
     """
@@ -94,7 +94,7 @@ def test_tabs_001c():
 
 
 @pytest.mark.gfm
-def test_tabs_001d():
+def test_tabs_001d() -> None:
     """
     Test case 001:  (part a) a tab can be used instead of four spaces in an indented code block.
     """
@@ -116,7 +116,7 @@ def test_tabs_001d():
 
 
 @pytest.mark.gfm
-def test_tabs_002():
+def test_tabs_002() -> None:
     """
     Test case 002:  (part b) a tab can be used instead of four spaces in an indented code block.
     """
@@ -136,7 +136,7 @@ def test_tabs_002():
 
 
 @pytest.mark.gfm
-def test_tabs_002a():
+def test_tabs_002a() -> None:
     """
     Test case 002a:  variation on 002 with spaces instead of tabs
     """
@@ -156,7 +156,7 @@ def test_tabs_002a():
 
 
 @pytest.mark.gfm
-def test_tabs_002b():
+def test_tabs_002b() -> None:
     """
     Test case 002b:  variation of 002 tested against Babelmark
     """
@@ -189,7 +189,7 @@ def test_tabs_002b():
 
 
 @pytest.mark.gfm
-def test_tabs_002c():
+def test_tabs_002c() -> None:
     """
     Test case 002:  (part b) a tab can be used instead of four spaces in an indented code block.
     """
@@ -211,7 +211,7 @@ foo\tbaz\t\tbim
 
 
 @pytest.mark.gfm
-def test_tabs_003():
+def test_tabs_003() -> None:
     """
     Test case 003:  (part c) a tab can be used instead of four spaces in an indented code block.
     """
@@ -233,7 +233,7 @@ def test_tabs_003():
 
 
 @pytest.mark.gfm
-def test_tabs_004x():
+def test_tabs_004x() -> None:
     """
     Test case 004:  (part a) a continuation paragraph of a list item is indented
                     with a tab; this has exactly the same effect as indentation
@@ -268,7 +268,7 @@ def test_tabs_004x():
 
 
 @pytest.mark.gfm
-def test_tabs_004a():
+def test_tabs_004a() -> None:
     """
     Test case 004a:  variation on 004 with spaces instead of tabs
     """
@@ -301,7 +301,7 @@ def test_tabs_004a():
 
 
 @pytest.mark.gfm
-def test_tabs_005x():
+def test_tabs_005x() -> None:
     """
     Test case 005:  (part b) a continuation paragraph of a list item is indented
                     with a tab; this has exactly the same effect as indentation
@@ -337,7 +337,7 @@ def test_tabs_005x():
 
 
 @pytest.mark.gfm
-def test_tabs_005a():
+def test_tabs_005a() -> None:
     """
     Test case 005:  (part b) a continuation paragraph of a list item is indented
                     with a tab; this has exactly the same effect as indentation
@@ -383,7 +383,7 @@ def test_tabs_005a():
 
 
 @pytest.mark.gfm
-def test_tabs_005b():
+def test_tabs_005b() -> None:
     """
     Test case 005:  (part b) a continuation paragraph of a list item is indented
                     with a tab; this has exactly the same effect as indentation
@@ -419,7 +419,7 @@ def test_tabs_005b():
 
 
 @pytest.mark.gfm
-def test_tabs_006x():
+def test_tabs_006x() -> None:
     """
     Test case 006:  case > is followed by a tab, which is treated as if it were expanded into three spaces.
     """
@@ -443,7 +443,7 @@ def test_tabs_006x():
 
 
 @pytest.mark.gfm
-def test_tabs_006a():
+def test_tabs_006a() -> None:
     """
     Test case 006a:  variation of 006 with spaces leading in instead of tab
     """
@@ -467,7 +467,7 @@ def test_tabs_006a():
 
 
 @pytest.mark.gfm
-def test_tabs_006b():
+def test_tabs_006b() -> None:
     """
     Test case 006b:  variation of 006 with spaces leading in instead of tab
     """
@@ -491,7 +491,7 @@ def test_tabs_006b():
 
 
 @pytest.mark.gfm
-def test_tabs_006c():
+def test_tabs_006c() -> None:
     """
     Test case 006c:  variation of 006 with spaces leading in instead of tab
     """
@@ -515,7 +515,7 @@ def test_tabs_006c():
 
 
 @pytest.mark.gfm
-def test_tabs_006d():
+def test_tabs_006d() -> None:
     """
     Test case 006b:  variation of 006 with spaces leading in instead of tab
     """
@@ -538,7 +538,7 @@ def test_tabs_006d():
 
 
 @pytest.mark.gfm
-def test_tabs_007xx():
+def test_tabs_007xx() -> None:
     """
     Test case 007:  none
     """
@@ -564,7 +564,7 @@ def test_tabs_007xx():
 
 
 @pytest.mark.gfm
-def test_tabs_007xa():
+def test_tabs_007xa() -> None:
     """
     Test case 007:  none
     """
@@ -590,7 +590,7 @@ def test_tabs_007xa():
 
 
 @pytest.mark.gfm
-def test_tabs_007ax():
+def test_tabs_007ax() -> None:
     """
     Test case 007a:  variation on 007 with ordered list
     """
@@ -616,7 +616,7 @@ def test_tabs_007ax():
 
 
 @pytest.mark.gfm
-def test_tabs_007aa():
+def test_tabs_007aa() -> None:
     """
     Test case 007a:  variation on 007 with ordered list
     """
@@ -642,7 +642,7 @@ def test_tabs_007aa():
 
 
 @pytest.mark.gfm
-def test_tabs_007bx():
+def test_tabs_007bx() -> None:
     """
     Test case 007b:  variation on 007 with ordered list
     """
@@ -668,7 +668,7 @@ def test_tabs_007bx():
 
 
 @pytest.mark.gfm
-def test_tabs_007ba():
+def test_tabs_007ba() -> None:
     """
     Test case 007b:  variation on 007 with ordered list
     """
@@ -694,7 +694,7 @@ def test_tabs_007ba():
 
 
 @pytest.mark.gfm
-def test_tabs_007cx():
+def test_tabs_007cx() -> None:
     """
     Test case 007c:  variation on 007 with ordered list
     """
@@ -720,7 +720,7 @@ def test_tabs_007cx():
 
 
 @pytest.mark.gfm
-def test_tabs_007ca():
+def test_tabs_007ca() -> None:
     """
     Test case 007c:  variation on 007 with ordered list
     """
@@ -746,7 +746,7 @@ def test_tabs_007ca():
 
 
 @pytest.mark.gfm
-def test_tabs_008():
+def test_tabs_008() -> None:
     """
     Test case 008:  none
     """
@@ -769,7 +769,7 @@ bar
 
 
 @pytest.mark.gfm
-def test_tabs_008a():
+def test_tabs_008a() -> None:
     """
     Test case 008:  none
     """
@@ -792,7 +792,7 @@ bar
 
 
 @pytest.mark.gfm
-def test_tabs_008b():
+def test_tabs_008b() -> None:
     """
     Test case 008:  none
     """
@@ -815,7 +815,7 @@ bar
 
 
 @pytest.mark.gfm
-def test_tabs_009():
+def test_tabs_009() -> None:
     """
     Test case 009:  none
     """
@@ -859,7 +859,7 @@ def test_tabs_009():
 
 
 @pytest.mark.gfm
-def test_tabs_010():
+def test_tabs_010() -> None:
     """
     Test case 010:  none
     """
@@ -874,7 +874,7 @@ def test_tabs_010():
 
 
 @pytest.mark.gfm
-def test_tabs_011():
+def test_tabs_011() -> None:
     """
     Test case 011:  none
     """

@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_paragraph_series_b_b():
+def test_paragraph_series_b_b() -> None:
     """
     Test case:  Paragraph containing a backslash
     was:        test_paragraph_extra_12
@@ -28,7 +28,7 @@ def test_paragraph_series_b_b():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_b_cs():
+def test_paragraph_series_b_cs() -> None:
     """
     Test case:  Paragraph containing a code span.
     was:        test_paragraph_extra_13
@@ -50,7 +50,7 @@ def test_paragraph_series_b_cs():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_b_cr():
+def test_paragraph_series_b_cr() -> None:
     """
     Test case:  Paragraph containing a character reference.
     was:        test_paragraph_extra_14
@@ -70,7 +70,7 @@ def test_paragraph_series_b_cr():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_b_rh():
+def test_paragraph_series_b_rh() -> None:
     """
     Test case:  Paragraph containing a raw html block.
     was:        test_paragraph_extra_15
@@ -92,7 +92,7 @@ def test_paragraph_series_b_rh():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_b_ua():
+def test_paragraph_series_b_ua() -> None:
     """
     Test case:  Paragraph containing an URI autolink
     was:        test_paragraph_extra_16
@@ -116,7 +116,7 @@ def test_paragraph_series_b_ua():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_b_ea():
+def test_paragraph_series_b_ea() -> None:
     """
     Test case:  Paragraph containing an email autolink
     was:        test_paragraph_extra_17
@@ -138,7 +138,7 @@ def test_paragraph_series_b_ea():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_b_e():
+def test_paragraph_series_b_e() -> None:
     """
     Test case:  Paragraph containing emphasis
     was:        test_paragraph_extra_18
@@ -162,7 +162,7 @@ def test_paragraph_series_b_e():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_b_l():
+def test_paragraph_series_b_l() -> None:
     """
     Test case:  Paragraph containing a link.
     was:        test_paragraph_extra_19
@@ -186,7 +186,7 @@ def test_paragraph_series_b_l():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_b_i():
+def test_paragraph_series_b_i() -> None:
     """
     Test case:  Paragraph containing an image
     was:        test_paragraph_extra_20

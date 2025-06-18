@@ -4,6 +4,7 @@ Module for specifying configuration properties through the API.
 
 import os
 from test.utils import assert_that_exception_is_raised
+from typing import cast
 
 from pymarkdown.api import (
     PyMarkdownApi,
@@ -13,7 +14,7 @@ from pymarkdown.api import (
 )
 
 
-def test_api_properties_set_property_with_empty_property_name():
+def test_api_properties_set_property_with_empty_property_name() -> None:
     """
     Test to make sure that a property name is always provided.
     """
@@ -32,10 +33,13 @@ def test_api_properties_set_property_with_empty_property_name():
         property_name,
         property_value,
     )
-    assert caught_exception.argument_name == "property_name"
+    assert (
+        cast(PyMarkdownApiArgumentException, caught_exception).argument_name
+        == "property_name"
+    )
 
 
-def test_api_properties_set_boolean_property_with_empty_property_name():
+def test_api_properties_set_boolean_property_with_empty_property_name() -> None:
     """
     Test to make sure that a property name is always provided.
     """
@@ -54,10 +58,13 @@ def test_api_properties_set_boolean_property_with_empty_property_name():
         property_name,
         property_value,
     )
-    assert caught_exception.argument_name == "property_name"
+    assert (
+        cast(PyMarkdownApiArgumentException, caught_exception).argument_name
+        == "property_name"
+    )
 
 
-def test_api_properties_set_boolean_property_with_non_boolean_value():
+def test_api_properties_set_boolean_property_with_non_boolean_value() -> None:
     """
     Test to make sure that a property value for set_boolean_property is a boolean.
     """
@@ -76,10 +83,13 @@ def test_api_properties_set_boolean_property_with_non_boolean_value():
         property_name,
         property_value,
     )
-    assert caught_exception.argument_name == "property_value"
+    assert (
+        cast(PyMarkdownApiArgumentException, caught_exception).argument_name
+        == "property_value"
+    )
 
 
-def test_api_properties_set_integer_property_with_empty_property_name():
+def test_api_properties_set_integer_property_with_empty_property_name() -> None:
     """
     Test to make sure that a property name is always provided.
     """
@@ -98,10 +108,13 @@ def test_api_properties_set_integer_property_with_empty_property_name():
         property_name,
         property_value,
     )
-    assert caught_exception.argument_name == "property_name"
+    assert (
+        cast(PyMarkdownApiArgumentException, caught_exception).argument_name
+        == "property_name"
+    )
 
 
-def test_api_properties_set_integer_property_with_non_integer_value():
+def test_api_properties_set_integer_property_with_non_integer_value() -> None:
     """
     Test to make sure that a property value for set_integer_property is an integer.
     """
@@ -122,10 +135,13 @@ def test_api_properties_set_integer_property_with_non_integer_value():
         property_name,
         property_value,
     )
-    assert caught_exception.argument_name == "property_value"
+    assert (
+        cast(PyMarkdownApiArgumentException, caught_exception).argument_name
+        == "property_value"
+    )
 
 
-def test_api_properties_set_string_property_with_empty_property_name():
+def test_api_properties_set_string_property_with_empty_property_name() -> None:
     """
     Test to make sure that a property name is always provided.
     """
@@ -144,10 +160,13 @@ def test_api_properties_set_string_property_with_empty_property_name():
         property_name,
         property_value,
     )
-    assert caught_exception.argument_name == "property_name"
+    assert (
+        cast(PyMarkdownApiArgumentException, caught_exception).argument_name
+        == "property_name"
+    )
 
 
-def test_api_properties_set_string_property_with_non_string_value():
+def test_api_properties_set_string_property_with_non_string_value() -> None:
     """
     Test to make sure that a property value for set_string_property is a string.
     """
@@ -166,10 +185,13 @@ def test_api_properties_set_string_property_with_non_string_value():
         property_name,
         property_value,
     )
-    assert caught_exception.argument_name == "property_value"
+    assert (
+        cast(PyMarkdownApiArgumentException, caught_exception).argument_name
+        == "property_value"
+    )
 
 
-def test_api_properties_with_strict_and_bad_extension_initialize():
+def test_api_properties_with_strict_and_bad_extension_initialize() -> None:
     """
     Test to make sure that if we are setting an expected value and we do not
     set it with the right primitives while strict is enabled, it will raise
@@ -201,7 +223,7 @@ The value for property 'extensions.front-matter.enabled' must be of type 'bool'.
     )
 
 
-def test_api_properties_without_strict_and_bad_extension_initialize():
+def test_api_properties_without_strict_and_bad_extension_initialize() -> None:
     """
     Test to make sure that if we are setting an expected value and we do not
     set it with the right primitives without strict enabled, it will fail silently.
@@ -245,7 +267,7 @@ def test_api_properties_without_strict_and_bad_extension_initialize():
     )
 
 
-def test_api_properties_with_strict_and_good_extension_initialize():
+def test_api_properties_with_strict_and_good_extension_initialize() -> None:
     """
     Test to make sure that if we are setting an expected value and we set it
     with the right primitives with strict enabled, it will succeed.
@@ -275,7 +297,7 @@ def test_api_properties_with_strict_and_good_extension_initialize():
     assert not scan_result.pragma_errors
 
 
-def test_api_properties_with_good_integer_property_but_exception():
+def test_api_properties_with_good_integer_property_but_exception() -> None:
     """
     Test to make sure that we can still provide a valid integer property, but get a configuration exception.
 
@@ -306,7 +328,7 @@ The value for property 'extensions.front-matter.enabled' must be of type 'bool'.
     )
 
 
-def test_api_properties_with_good_integer_property():
+def test_api_properties_with_good_integer_property() -> None:
     """
     Test to make sure that we can still provide a valid integer property.
 
@@ -337,7 +359,7 @@ def test_api_properties_with_good_integer_property():
     assert not scan_result.pragma_errors
 
 
-def test_api_properties_with_good_string_property():
+def test_api_properties_with_good_string_property() -> None:
     """
     Test to make sure that we can still provide a valid string property.
 

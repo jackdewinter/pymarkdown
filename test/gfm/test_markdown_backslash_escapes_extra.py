@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_1():
+def test_backslash_escapes_extra_1() -> None:
     """
     Test case backslash extra 1:  backslash before the code span open
     """
@@ -27,7 +27,7 @@ def test_backslash_escapes_extra_1():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_1a():
+def test_backslash_escapes_extra_1a() -> None:
     """
     Test case backslash extra 1a:  backslash before the code span closed
     """
@@ -46,7 +46,7 @@ def test_backslash_escapes_extra_1a():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_2():
+def test_backslash_escapes_extra_2() -> None:
     """
     Test case backslash extra 2:  backslash before the character reference
     """
@@ -65,7 +65,7 @@ def test_backslash_escapes_extra_2():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_3():
+def test_backslash_escapes_extra_3() -> None:
     """
     Test case backslash extra 3:  backslash before the inline html open
     """
@@ -84,7 +84,7 @@ def test_backslash_escapes_extra_3():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_4():
+def test_backslash_escapes_extra_4() -> None:
     """
     Test case backslash extra 4:  backslash before the inline html close
     """
@@ -103,7 +103,7 @@ def test_backslash_escapes_extra_4():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_5():
+def test_backslash_escapes_extra_5() -> None:
     """
     Test case backslash extra 5:  backslash before the autolink open
     """
@@ -122,7 +122,7 @@ def test_backslash_escapes_extra_5():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_6():
+def test_backslash_escapes_extra_6() -> None:
     """
     Test case backslash extra 6:  backslash before the autolink close
     """
@@ -142,7 +142,7 @@ def test_backslash_escapes_extra_6():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_7():
+def test_backslash_escapes_extra_7() -> None:
     """
     Test case backslash extra 7:  backslash before the emphasis start
     """
@@ -161,7 +161,7 @@ def test_backslash_escapes_extra_7():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_8():
+def test_backslash_escapes_extra_8() -> None:
     """
     Test case backslash extra 8:  backslash before the emphasis end
     """
@@ -180,7 +180,7 @@ def test_backslash_escapes_extra_8():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_9():
+def test_backslash_escapes_extra_9() -> None:
     """
     Test case backslash extra 9:  backslash before the first emphasis start
     """
@@ -202,7 +202,7 @@ def test_backslash_escapes_extra_9():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_10():
+def test_backslash_escapes_extra_10() -> None:
     """
     Test case backslash extra 10:  backslash before the first emphasis end
     """
@@ -225,7 +225,7 @@ def test_backslash_escapes_extra_10():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_11():
+def test_backslash_escapes_extra_11() -> None:
     """
     Test case backslash extra 11:  backslash before the link open
     """
@@ -244,7 +244,7 @@ def test_backslash_escapes_extra_11():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_12():
+def test_backslash_escapes_extra_12() -> None:
     """
     Test case backslash extra 12:  backslash before the image open
     """
@@ -267,7 +267,7 @@ def test_backslash_escapes_extra_12():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_13():
+def test_backslash_escapes_extra_13() -> None:
     """
     Test case backslash extra 13:  backslash between the image open characters
     Also see: 600
@@ -287,7 +287,7 @@ def test_backslash_escapes_extra_13():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_14():
+def test_backslash_escapes_extra_14() -> None:
     """
     Test case backslash extra 14:  backslash before the code span open in setext
     """
@@ -307,7 +307,7 @@ def test_backslash_escapes_extra_14():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_14a():
+def test_backslash_escapes_extra_14a() -> None:
     """
     Test case backslash extra 14a:  backslash before the code span closed in setext
     """
@@ -327,7 +327,7 @@ def test_backslash_escapes_extra_14a():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_15():
+def test_backslash_escapes_extra_15() -> None:
     """
     Test case backslash extra 15:  backslash before the character reference in setext
     """
@@ -347,7 +347,7 @@ def test_backslash_escapes_extra_15():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_16():
+def test_backslash_escapes_extra_16() -> None:
     """
     Test case backslash extra 16:  backslash before the inline html open in setext
     """
@@ -367,7 +367,7 @@ def test_backslash_escapes_extra_16():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_17():
+def test_backslash_escapes_extra_17() -> None:
     """
     Test case backslash extra 17:  backslash before the inline html close in setext
     """
@@ -387,7 +387,7 @@ def test_backslash_escapes_extra_17():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_18():
+def test_backslash_escapes_extra_18() -> None:
     """
     Test case backslash extra 18:  backslash before the autolink open in setext
     """
@@ -407,7 +407,7 @@ def test_backslash_escapes_extra_18():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_19():
+def test_backslash_escapes_extra_19() -> None:
     """
     Test case backslash extra 19:  backslash before the autolink close in setext
     """
@@ -428,7 +428,7 @@ def test_backslash_escapes_extra_19():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_20():
+def test_backslash_escapes_extra_20() -> None:
     """
     Test case backslash extra 20:  backslash before the emphasis start in setext
     """
@@ -448,7 +448,7 @@ def test_backslash_escapes_extra_20():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_21():
+def test_backslash_escapes_extra_21() -> None:
     """
     Test case backslash extra 21:  backslash before the emphasis end in setext
     """
@@ -468,7 +468,7 @@ def test_backslash_escapes_extra_21():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_22():
+def test_backslash_escapes_extra_22() -> None:
     """
     Test case backslash extra 22:  backslash before the first emphasis start in setext
     """
@@ -491,7 +491,7 @@ def test_backslash_escapes_extra_22():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_23():
+def test_backslash_escapes_extra_23() -> None:
     """
     Test case backslash extra 23:  backslash before the first emphasis end in setext
     """
@@ -515,7 +515,7 @@ def test_backslash_escapes_extra_23():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_24():
+def test_backslash_escapes_extra_24() -> None:
     """
     Test case backslash extra 24:  backslash before the link open in setext
     """
@@ -535,7 +535,7 @@ def test_backslash_escapes_extra_24():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_25():
+def test_backslash_escapes_extra_25() -> None:
     """
     Test case backslash extra 25:  backslash before the image open in setext
     """
@@ -559,7 +559,7 @@ def test_backslash_escapes_extra_25():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_26():
+def test_backslash_escapes_extra_26() -> None:
     """
     Test case backslash extra 26:  backslash between the image open characters in setext
     """
@@ -579,7 +579,7 @@ def test_backslash_escapes_extra_26():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_27():
+def test_backslash_escapes_extra_27() -> None:
     """
     Test case backslash extra 27:  backslash before the code span open in atx
     """
@@ -598,7 +598,7 @@ def test_backslash_escapes_extra_27():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_27a():
+def test_backslash_escapes_extra_27a() -> None:
     """
     Test case backslash extra 27a:  backslash before the code span closed in atx
     """
@@ -618,7 +618,7 @@ def test_backslash_escapes_extra_27a():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_28():
+def test_backslash_escapes_extra_28() -> None:
     """
     Test case backslash extra 28:  backslash before the character reference in atx
     """
@@ -637,7 +637,7 @@ def test_backslash_escapes_extra_28():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_29():
+def test_backslash_escapes_extra_29() -> None:
     """
     Test case backslash extra 29:  backslash before the inline html open in atx
     """
@@ -656,7 +656,7 @@ def test_backslash_escapes_extra_29():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_30():
+def test_backslash_escapes_extra_30() -> None:
     """
     Test case backslash extra 30:  backslash before the inline html close in atx
     """
@@ -675,7 +675,7 @@ def test_backslash_escapes_extra_30():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_31():
+def test_backslash_escapes_extra_31() -> None:
     """
     Test case backslash extra 31:  backslash before the autolink open in atx
     """
@@ -694,7 +694,7 @@ def test_backslash_escapes_extra_31():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_32():
+def test_backslash_escapes_extra_32() -> None:
     """
     Test case backslash extra 32:  backslash before the autolink close in atx
     """
@@ -715,7 +715,7 @@ def test_backslash_escapes_extra_32():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_33():
+def test_backslash_escapes_extra_33() -> None:
     """
     Test case backslash extra 33:  backslash before the emphasis start in atx
     """
@@ -730,7 +730,7 @@ def test_backslash_escapes_extra_33():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_34():
+def test_backslash_escapes_extra_34() -> None:
     """
     Test case backslash extra 34:  backslash before the emphasis end in atx
     """
@@ -749,7 +749,7 @@ def test_backslash_escapes_extra_34():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_35():
+def test_backslash_escapes_extra_35() -> None:
     """
     Test case backslash extra 35:  backslash before the first emphasis start in atx
     """
@@ -772,7 +772,7 @@ def test_backslash_escapes_extra_35():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_36():
+def test_backslash_escapes_extra_36() -> None:
     """
     Test case backslash extra 36:  backslash before the first emphasis end in atx
     """
@@ -795,7 +795,7 @@ def test_backslash_escapes_extra_36():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_37():
+def test_backslash_escapes_extra_37() -> None:
     """
     Test case backslash extra 37:  backslash before the link open in atx
     """
@@ -814,7 +814,7 @@ def test_backslash_escapes_extra_37():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_38():
+def test_backslash_escapes_extra_38() -> None:
     """
     Test case backslash extra 38:  backslash before the image open in atx
     """
@@ -837,7 +837,7 @@ def test_backslash_escapes_extra_38():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_extra_39():
+def test_backslash_escapes_extra_39() -> None:
     """
     Test case backslash extra 39:  backslash between the image open characters in atx
     """

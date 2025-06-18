@@ -9,7 +9,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_pragmas_no_command():
+def test_pragmas_no_command() -> None:
     """
     Test the case where we specify a pragma, but do not specify a command.
 
@@ -46,7 +46,7 @@ def test_pragmas_no_command():
 
 
 @pytest.mark.gfm
-def test_pragmas_bad_command():
+def test_pragmas_bad_command() -> None:
     """
     Test the case where we specify a pragma, but specify a command that is not recognized.
     """
@@ -84,7 +84,7 @@ def test_pragmas_bad_command():
 
 
 @pytest.mark.gfm
-def test_pragmas_disable_next_line_no_id():
+def test_pragmas_disable_next_line_no_id() -> None:
     """
     Test the case where we specify a 'disable-next-line' pragma, but specify no id to disable.
     """
@@ -122,7 +122,7 @@ def test_pragmas_disable_next_line_no_id():
 
 
 @pytest.mark.gfm
-def test_pragmas_disable_next_line_no_id_more_spaces():
+def test_pragmas_disable_next_line_no_id_more_spaces() -> None:
     """
     Test the case where we specify a 'disable-next-line' pragma, but specify no id to disable.
     """
@@ -160,7 +160,7 @@ def test_pragmas_disable_next_line_no_id_more_spaces():
 
 
 @pytest.mark.gfm
-def test_pragmas_disable_next_line_bad_id():
+def test_pragmas_disable_next_line_bad_id() -> None:
     """
     Test the case where we specify a 'disable-next-line' pragma, but specify a bad id to disable.
     """
@@ -198,7 +198,7 @@ def test_pragmas_disable_next_line_bad_id():
 
 
 @pytest.mark.gfm
-def test_pragmas_disable_next_line_valid_id():
+def test_pragmas_disable_next_line_valid_id() -> None:
     """
     Test the case where we specify a 'disable-next-line' pragma with a valid id to disable.
     """
@@ -230,7 +230,7 @@ def test_pragmas_disable_next_line_valid_id():
 
 
 @pytest.mark.gfm
-def test_pragmas_disable_next_line_valid_name():
+def test_pragmas_disable_next_line_valid_name() -> None:
     """
     Test the case where we specify a 'disable-next-line' pragma with a valid name to disable.
     """
@@ -262,7 +262,7 @@ def test_pragmas_disable_next_line_valid_name():
 
 
 @pytest.mark.gfm
-def test_pragmas_disable_next_line_valid_name_and_id():
+def test_pragmas_disable_next_line_valid_name_and_id() -> None:
     """
     Test the case where we specify a 'disable-next-line' pragma with a valid id and name to disable.
     """
@@ -294,7 +294,7 @@ def test_pragmas_disable_next_line_valid_name_and_id():
 
 
 @pytest.mark.gfm
-def test_pragmas_disable_next_line_valid_id_and_alternate_start():
+def test_pragmas_disable_next_line_valid_id_and_alternate_start() -> None:
     """
     Test the case where we specify a 'disable-next-line' pragma with a valid id to disable
     and the alternate start sequence.
@@ -327,7 +327,7 @@ def test_pragmas_disable_next_line_valid_id_and_alternate_start():
 
 
 @pytest.mark.gfm
-def test_pragmas_disable_next_line_valid_id_and_no_fire():
+def test_pragmas_disable_next_line_valid_id_and_no_fire() -> None:
     """
     Test the case where we specify a 'disable-next-line' pragma with a valid id to disable
     but no firing of that rule.
@@ -363,7 +363,7 @@ def test_pragmas_disable_next_line_valid_id_and_no_fire():
 
 
 @pytest.mark.gfm
-def test_pragmas_disable_next_line_no_pragmas():
+def test_pragmas_disable_next_line_no_pragmas() -> None:
     """
     Test the case where we test the file used in test_pragmas_disable_next_line_valid_id, but disable pragmas.
 
@@ -404,7 +404,7 @@ def test_pragmas_disable_next_line_no_pragmas():
     )
 
 
-def test_pragmas_disable_next_line_valid_id_extra_ws_before_pragma():
+def test_pragmas_disable_next_line_valid_id_extra_ws_before_pragma() -> None:
     """
     Test the case where we specify a 'disable-next-line' pragma with a valid id to disable and extra whitespace
     before the pyml.
@@ -435,7 +435,7 @@ def test_pragmas_disable_next_line_valid_id_extra_ws_before_pragma():
     )
 
 
-def test_pragmas_disable_next_line_valid_id_extra_ws_after_pragma():
+def test_pragmas_disable_next_line_valid_id_extra_ws_after_pragma() -> None:
     """
     Test the case where we specify a 'disable-next-line' pragma with a valid id to disable and extra whitespace
     after the pyml.
@@ -466,7 +466,7 @@ def test_pragmas_disable_next_line_valid_id_extra_ws_after_pragma():
     )
 
 
-def test_pragmas_disable_next_line_valid_id_extra_ws_after():
+def test_pragmas_disable_next_line_valid_id_extra_ws_after() -> None:
     """
     Test the case where we specify a 'disable-next-line' pragma with a valid id to disable and extra whitespace
     after the pyml.
@@ -497,7 +497,7 @@ def test_pragmas_disable_next_line_valid_id_extra_ws_after():
     )
 
 
-def test_pragmas_disable_next_line_valid_id_extra_ws_after_command():
+def test_pragmas_disable_next_line_valid_id_extra_ws_after_command() -> None:
     """
     Test the case where we specify a 'disable-next-line' pragma with a valid id to disable and extra whitespace
     after the pyml command.
@@ -529,7 +529,7 @@ def test_pragmas_disable_next_line_valid_id_extra_ws_after_command():
 
 
 @pytest.mark.gfm
-def test_pragmas_disable_num_line_no_lines():
+def test_pragmas_disable_num_line_no_lines() -> None:
     """
     Test the case where we specify a 'disable-next-line' pragma, but specify no lines to disable.
     """
@@ -567,7 +567,7 @@ def test_pragmas_disable_num_line_no_lines():
 
 
 @pytest.mark.gfm
-def test_pragmas_disable_num_line_bad_id():
+def test_pragmas_disable_num_line_bad_id() -> None:
     """
     Test the case where we specify a 'disable-next-line' pragma, but specify no lines to disable.
     """
@@ -605,7 +605,7 @@ def test_pragmas_disable_num_line_bad_id():
 
 
 @pytest.mark.gfm
-def test_pragmas_disable_num_line_no_whitespace_before_count():
+def test_pragmas_disable_num_line_no_whitespace_before_count() -> None:
     """
     Test the case where we specify a 'disable-next-line' pragma, but specify no lines to disable.
     """
@@ -643,7 +643,7 @@ def test_pragmas_disable_num_line_no_whitespace_before_count():
 
 
 @pytest.mark.gfm
-def test_pragmas_disable_num_line_bad_lines():
+def test_pragmas_disable_num_line_bad_lines() -> None:
     """
     Test the case where we specify a 'disable-next-line' pragma, but specify no lines to disable.
     """
@@ -681,7 +681,7 @@ def test_pragmas_disable_num_line_bad_lines():
 
 
 @pytest.mark.gfm
-def test_pragmas_disable_num_line_no_whitespace_before_countx():
+def test_pragmas_disable_num_line_no_whitespace_before_countx() -> None:
     """
     Test the case where we specify a 'disable-next-line' pragma, but specify no lines to disable.
     """
@@ -719,7 +719,7 @@ def test_pragmas_disable_num_line_no_whitespace_before_countx():
 
 
 @pytest.mark.gfm
-def test_pragmas_disable_num_line_after_lines():
+def test_pragmas_disable_num_line_after_lines() -> None:
     """
     Test the case where we specify a 'disable-next-line' pragma, but specify no lines to disable.
     """
@@ -757,7 +757,7 @@ def test_pragmas_disable_num_line_after_lines():
 
 
 @pytest.mark.gfm
-def test_pragmas_disable_num_line_bad_idx():
+def test_pragmas_disable_num_line_bad_idx() -> None:
     """
     Test the case where we specify a 'disable-next-line' pragma, but specify a bad id to disable.
     """
@@ -795,7 +795,7 @@ def test_pragmas_disable_num_line_bad_idx():
 
 
 @pytest.mark.gfm
-def test_pragmas_disable_num_line_valid_id():
+def test_pragmas_disable_num_line_valid_id() -> None:
     """
     Test the case where we specify a 'disable-next-line' pragma with a valid id to disable.
     """
@@ -827,7 +827,7 @@ def test_pragmas_disable_num_line_valid_id():
 
 
 @pytest.mark.gfm
-def test_pragmas_disable_num_line_valid_name():
+def test_pragmas_disable_num_line_valid_name() -> None:
     """
     Test the case where we specify a 'disable-next-line' pragma with a valid name to disable.
     """
@@ -859,7 +859,7 @@ def test_pragmas_disable_num_line_valid_name():
 
 
 @pytest.mark.gfm
-def test_pragmas_disable_num_line_valid_name_and_id():
+def test_pragmas_disable_num_line_valid_name_and_id() -> None:
     """
     Test the case where we specify a 'disable-next-line' pragma with a valid id and name to disable.
     """
@@ -891,7 +891,7 @@ def test_pragmas_disable_num_line_valid_name_and_id():
 
 
 @pytest.mark.gfm
-def test_pragmas_disable_num_line_valid_id_and_no_fire():
+def test_pragmas_disable_num_line_valid_id_and_no_fire() -> None:
     """
     Test the case where we specify a 'disable-next-line' pragma with a valid id to disable
     but no firing of that rule.
@@ -927,7 +927,7 @@ def test_pragmas_disable_num_line_valid_id_and_no_fire():
 
 
 @pytest.mark.gfm
-def test_pragmas_disable_num_line_valid_id_and_only_comma():
+def test_pragmas_disable_num_line_valid_id_and_only_comma() -> None:
     """
     Test the case where we specify a 'disable-next-line' pragma with a valid id to disable
     but no firing of that rule.
@@ -966,7 +966,7 @@ def test_pragmas_disable_num_line_valid_id_and_only_comma():
 
 
 @pytest.mark.gfm
-def test_pragmas_disable_num_line_valid_id_and_bad_id():
+def test_pragmas_disable_num_line_valid_id_and_bad_id() -> None:
     """
     Test the case where we specify a 'disable-next-line' pragma with a valid id to disable
     but no firing of that rule.
@@ -1002,7 +1002,7 @@ def test_pragmas_disable_num_line_valid_id_and_bad_id():
 
 
 @pytest.mark.gfm
-def test_pragmas_disable_num_line_multiple_disabled():
+def test_pragmas_disable_num_line_multiple_disabled() -> None:
     """
     Test the case where we specify a 'disable-next-line' pragma with a valid id to disable
     but no firing of that rule.
@@ -1043,7 +1043,7 @@ def test_pragmas_disable_num_line_multiple_disabled():
 
 
 @pytest.mark.gfm
-def test_pragmas_disable_num_line_multiple_enabled():
+def test_pragmas_disable_num_line_multiple_enabled() -> None:
     """
     Test the case where we specify a 'disable-next-line' pragma with a valid id to disable
     but no firing of that rule.
@@ -1076,7 +1076,7 @@ def test_pragmas_disable_num_line_multiple_enabled():
 
 
 @pytest.mark.gfm
-def test_pragmas_disable_num_line_multiple_enabled_by_name():
+def test_pragmas_disable_num_line_multiple_enabled_by_name() -> None:
     """
     Test the case where we specify a 'disable-next-line' pragma with a valid id to disable
     but no firing of that rule.
@@ -1109,7 +1109,7 @@ def test_pragmas_disable_num_line_multiple_enabled_by_name():
 
 
 @pytest.mark.gfm
-def test_pragmas_disable_num_line_multiple_enabled_one_pragmad_one_not():
+def test_pragmas_disable_num_line_multiple_enabled_one_pragmad_one_not() -> None:
     """
     Test the case where we specify a 'disable-next-line' pragma with a valid id to disable
     but no firing of that rule.
@@ -1146,7 +1146,7 @@ def test_pragmas_disable_num_line_multiple_enabled_one_pragmad_one_not():
 
 
 @pytest.mark.gfm
-def test_pragmas_disable_without_enabled():
+def test_pragmas_disable_without_enabled() -> None:
     """
     Test the case where we specify a 'disable' pragma with a valid id to disable but without a balancing enable.
     """
@@ -1178,7 +1178,7 @@ def test_pragmas_disable_without_enabled():
 
 
 @pytest.mark.gfm
-def test_pragmas_disable_with_enabled():
+def test_pragmas_disable_with_enabled() -> None:
     """
     Test the case where we specify a 'disable' pragma with a valid id to disable but without a balancing enable.
     """
@@ -1212,7 +1212,7 @@ def test_pragmas_disable_with_enabled():
 
 
 @pytest.mark.gfm
-def test_pragmas_enable_with_no_disable():
+def test_pragmas_enable_with_no_disable() -> None:
     """
     Test the case where we specify a 'disable' pragma with a valid id to disable but without a balancing enable.
     """
@@ -1249,7 +1249,7 @@ def test_pragmas_enable_with_no_disable():
 
 
 @pytest.mark.gfm
-def test_pragmas_double_disable_with_enable():
+def test_pragmas_double_disable_with_enable() -> None:
     """
     Test the case where we specify a 'disable' pragma with a valid id to disable but without a balancing enable.
     """
@@ -1283,7 +1283,7 @@ def test_pragmas_double_disable_with_enable():
 
 
 @pytest.mark.gfm
-def test_pragmas_multiple_disable_enable_blocks():
+def test_pragmas_multiple_disable_enable_blocks() -> None:
     """
     Test the case where we specify a 'disable' pragma with a valid id to disable but without a balancing enable.
     """
@@ -1315,7 +1315,7 @@ def test_pragmas_multiple_disable_enable_blocks():
 
 
 @pytest.mark.gfm
-def test_pragmas_multiple_disable_with_no_rules():
+def test_pragmas_multiple_disable_with_no_rules() -> None:
     """
     Test the case where we specify a 'disable' pragma with a valid id to disable but without a balancing enable.
     """
@@ -1347,7 +1347,7 @@ def test_pragmas_multiple_disable_with_no_rules():
 
 
 @pytest.mark.gfm
-def test_pragmas_multiple_enable_with_no_rules():
+def test_pragmas_multiple_enable_with_no_rules() -> None:
     """
     Test the case where we specify a 'disable' pragma with a valid id to disable but without a balancing enable.
     """

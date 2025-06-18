@@ -559,14 +559,14 @@ source_path = os.path.join("test", "resources", "rules", "md007") + os.sep
 
 
 @pytest.mark.parametrize("test", configTests, ids=id_test_plug_rule_fn)
-def test_pml101_config(test: pluginRuleTest) -> None:
+def test_pml101_config(test: pluginConfigErrorTest) -> None:
     """
     Execute a parameterized fix test for plugin md001.
     """
     execute_configuration_test(test, f"{source_path}good_list_indentation.md")
 
 
-def test_pml101_query_config():
+def test_pml101_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "pml101",
         """

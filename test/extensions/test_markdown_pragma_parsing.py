@@ -10,7 +10,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_pragma_parsing_01():
+def test_pragma_parsing_01() -> None:
     """
     Test case 01:  Pragma alone in a document.
     """
@@ -25,7 +25,7 @@ def test_pragma_parsing_01():
 
 
 @pytest.mark.gfm
-def test_pragma_parsing_02():
+def test_pragma_parsing_02() -> None:
     """
     Test case 02:  Pargma within a paragraph.
     """
@@ -51,7 +51,7 @@ and still going.
 
 
 @pytest.mark.gfm
-def test_pragma_parsing_03():
+def test_pragma_parsing_03() -> None:
     """
     Test case 03:  Pragma at the start and end of the document.
     """
@@ -75,7 +75,7 @@ and still going.
 
 
 @pytest.mark.gfm
-def test_pragma_parsing_03a():
+def test_pragma_parsing_03a() -> None:
     """
     Test case 03a:  Pragma at start and end with a single line paragraph.
     """
@@ -97,7 +97,7 @@ This is a paragraph.
 
 
 @pytest.mark.gfm
-def test_pragma_parsing_04():
+def test_pragma_parsing_04() -> None:
     """
     Test case 04:  Only two pragmas in entire document.
     """
@@ -113,7 +113,7 @@ def test_pragma_parsing_04():
 
 
 @pytest.mark.gfm
-def test_pragma_parsing_05():
+def test_pragma_parsing_05() -> None:
     """
     Test case 05:  Single line paragraph with double pragmas to start and end document.
     """
@@ -137,7 +137,7 @@ this is a paragraph
 
 
 @pytest.mark.gfm
-def test_pragma_parsing_06():
+def test_pragma_parsing_06() -> None:
     """
     Test case 06:  Verify that an HTML comment followed by the "pyml " title without any whitespace is parsed.
     """
@@ -160,7 +160,7 @@ this is a paragraph
 
 
 @pytest.mark.gfm
-def test_pragma_parsing_07():
+def test_pragma_parsing_07() -> None:
     """
     Test case 07:  Verify that an HTML comment followed by the "pyml " title with multiple whitespace is parsed.
     """
@@ -185,7 +185,7 @@ this is a paragraph
 
 
 @pytest.mark.gfm
-def test_pragma_parsing_08():
+def test_pragma_parsing_08() -> None:
     """
     Test case 08:  Pragma-like, without the space after the pragma title.
     """
@@ -210,7 +210,7 @@ this is a paragraph
 
 
 @pytest.mark.gfm
-def test_pragma_parsing_09():
+def test_pragma_parsing_09() -> None:
     """
     Test case 08:  Pragma-like, without the closing comment sequence.
     """
@@ -232,7 +232,7 @@ this is a paragraph
 
 
 @pytest.mark.gfm
-def test_pragma_parsing_010():
+def test_pragma_parsing_010() -> None:
     """
     Test case 10:  Pragma heading, but with different casing.
     """
@@ -255,7 +255,7 @@ this is a paragraph
 
 
 @pytest.mark.gfm
-def test_pragma_parsing_011():
+def test_pragma_parsing_011() -> None:
     """
     Test case 11:  Pragma heading, but with extra spacing after the closing comment.
     """
@@ -280,7 +280,7 @@ this is a paragraph
 
 
 @pytest.mark.gfm
-def test_pragma_parsing_011a():
+def test_pragma_parsing_011a() -> None:
     """
     Test case 11:  Pragma heading, but with extra spacing after the closing comment.
     """
@@ -303,7 +303,7 @@ this is a paragraph
 
 
 @pytest.mark.gfm
-def test_pragma_parsing_011b():
+def test_pragma_parsing_011b() -> None:
     """
     Test case 11:  Pragma heading, but with extra spacing after the closing comment.
     """

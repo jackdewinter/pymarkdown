@@ -7,7 +7,7 @@ from test.markdown_scanner import MarkdownScanner
 from test.utils import create_temporary_configuration_file
 
 
-def test_markdown_with_dash_e_single_by_name():
+def test_markdown_with_dash_e_single_by_name() -> None:
     """
     Test to make sure we get enable a rule if '-e' is supplied and the name of the
     rule is provided. The test data for MD047 is used as it is a simple file that
@@ -57,7 +57,7 @@ MD999>>completed_file
     )
 
 
-def test_markdown_with_dash_e_single_by_id():
+def test_markdown_with_dash_e_single_by_id() -> None:
     """
     Test to make sure we get enable a rule if '-e' is supplied and the id of the
     rule is provided. The test data for MD047 is used as it is a simple file that
@@ -107,7 +107,7 @@ MD999>>completed_file
     )
 
 
-def test_markdown_with_enabled_by_configuration_id():
+def test_markdown_with_enabled_by_configuration_id() -> None:
     """
     Test to make sure we enable a rule by using the rule's id in the
     configuration, with no help from the command line.
@@ -162,7 +162,7 @@ MD999>>completed_file
         )
 
 
-def test_markdown_with_enabled_by_configuration_name():
+def test_markdown_with_enabled_by_configuration_name() -> None:
     """
     Test to make sure we enable a rule by using the rule's name in the
     configuration, with no help from the command line.
@@ -219,7 +219,7 @@ MD999>>completed_file
         )
 
 
-def test_markdown_with_dash_d_single_by_name():
+def test_markdown_with_dash_d_single_by_name() -> None:
     """
     Test to make sure we get enable a rule if '-d' is supplied and the name of the
     rule is provided. The test data for MD047 is used as it is a simple file that
@@ -251,7 +251,7 @@ def test_markdown_with_dash_d_single_by_name():
     )
 
 
-def test_markdown_with_dash_d_single_by_id():
+def test_markdown_with_dash_d_single_by_id() -> None:
     """
     Test to make sure we get enable a rule if '-d' is supplied and the id of the
     rule is provided. The test data for MD047 is used as it is a simple file that
@@ -283,7 +283,7 @@ def test_markdown_with_dash_d_single_by_id():
     )
 
 
-def test_markdown_with_dash_d_and_dash_e_single_by_name():
+def test_markdown_with_dash_d_and_dash_e_single_by_name() -> None:
     """
     Test to make sure we get disabled if a rule if '-d' is supplied
     and if 'e' is supplied, both with the name of the rule.

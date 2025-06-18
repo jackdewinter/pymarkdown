@@ -9,7 +9,7 @@ import pytest
 
 # pylint: disable=too-many-lines
 @pytest.mark.gfm
-def test_paragraph_series_j_l_bh_s_t():
+def test_paragraph_series_j_l_bh_s_t() -> None:
     """
     Test case:  Inline link containing backslash hard line break in label, followed by text
     was:        test_paragraph_extra_h8
@@ -36,7 +36,7 @@ com</a>a</p>"""
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_i_bh_s_t():
+def test_paragraph_series_j_i_bh_s_t() -> None:
     """
     Test case:  Inline image containing backslash hard line break in label, followed by text
     was:        test_paragraph_extra_h8a
@@ -59,7 +59,7 @@ com" title="title" />a</p>"""
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_l_sh_s_t():
+def test_paragraph_series_j_l_sh_s_t() -> None:
     """
     Test case:  Inline image containing space hard line break in label, followed by text
     was:        test_paragraph_extra_h8b
@@ -86,7 +86,7 @@ com</a>a</p>"""
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_i_sh_s_t():
+def test_paragraph_series_j_i_sh_s_t() -> None:
     """
     Test case:  Inline image containing space hard line break in label, followed by text
     was:        test_paragraph_extra_h8c
@@ -109,7 +109,7 @@ com" title="title" />a</p>"""
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_l_rh_s_t():
+def test_paragraph_series_j_l_rh_s_t() -> None:
     """
     Test case:  Inline link containing split raw html in label
     was:        test_paragraph_extra_c7, changed split text at end to text
@@ -136,7 +136,7 @@ fg>nk</a>a</p>"""
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_i_rh_s_t():
+def test_paragraph_series_j_i_rh_s_t() -> None:
     """
     Test case:  Inline image containing split raw html in label
     was:        test_paragraph_extra_c8, changed split text at end to text
@@ -159,7 +159,7 @@ fg>nk" />a</p>"""
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_l_em_s_t():
+def test_paragraph_series_j_l_em_s_t() -> None:
     """
     Test case:  Inline link containing split emphasis in label
     was:        test_paragraph_extra_e1
@@ -187,7 +187,7 @@ def test_paragraph_series_j_l_em_s_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_i_em_s_t():
+def test_paragraph_series_j_i_em_s_t() -> None:
     """
     Test case:  Inline image containing split emphasis in label
     was:        test_paragraph_extra_e2
@@ -209,7 +209,7 @@ def test_paragraph_series_j_i_em_s_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_l_em_t():
+def test_paragraph_series_j_l_em_t() -> None:
     """
     Test case:  Inline image containing emphasis in label
     was:        test_paragraph_extra_d9
@@ -235,7 +235,7 @@ def test_paragraph_series_j_l_em_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_i_em_t():
+def test_paragraph_series_j_i_em_t() -> None:
     """
     Test case:  Inline link containing emphasis in label
     was:        test_paragraph_extra_e0
@@ -257,7 +257,7 @@ def test_paragraph_series_j_i_em_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_l_ua_t():
+def test_paragraph_series_j_l_ua_t() -> None:
     """
     Test case:  Inline link containing URI autolink in label
     was:        test_paragraph_extra_h6
@@ -283,7 +283,7 @@ def test_paragraph_series_j_l_ua_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_i_ua_t():
+def test_paragraph_series_j_i_ua_t() -> None:
     """
     Test case:  Inline image containing URI autolink in label
     was:        test_paragraph_extra_h6a
@@ -307,7 +307,7 @@ def test_paragraph_series_j_i_ua_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_l_ea_t():
+def test_paragraph_series_j_l_ea_t() -> None:
     """
     Test case:  Inline link containing email autolink in label
     was:        test_paragraph_extra_h7
@@ -333,7 +333,7 @@ def test_paragraph_series_j_l_ea_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_i_ea_t():
+def test_paragraph_series_j_i_ea_t() -> None:
     """
     Test case:  Inline image containing email autolink in label
     was:        test_paragraph_extra_h7a
@@ -355,7 +355,7 @@ def test_paragraph_series_j_i_ea_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_l_cs_t():
+def test_paragraph_series_j_l_cs_t() -> None:
     """
     Test case:  Inline link containing code span in label
     was:        test_paragraph_extra_h4
@@ -381,7 +381,7 @@ def test_paragraph_series_j_l_cs_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_i_cs_t():
+def test_paragraph_series_j_i_cs_t() -> None:
     """
     Test case:  Inline image containing code span in label
     was:        test_paragraph_extra_h4a
@@ -403,7 +403,7 @@ def test_paragraph_series_j_i_cs_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_l_rh_t():
+def test_paragraph_series_j_l_rh_t() -> None:
     """
     Test case:  Inline link containing code span in label
     was:        test_paragraph_extra_h5
@@ -429,7 +429,7 @@ def test_paragraph_series_j_l_rh_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_i_rh_t():
+def test_paragraph_series_j_i_rh_t() -> None:
     """
     Test case:  Inline image containing code span in label
     was:        test_paragraph_extra_h5a
@@ -451,7 +451,7 @@ def test_paragraph_series_j_i_rh_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_l_cs_s_t():
+def test_paragraph_series_j_l_cs_s_t() -> None:
     """
     Test case:  Inline link containing split code span in label
     """
@@ -476,7 +476,7 @@ def test_paragraph_series_j_l_cs_s_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_i_cs_s_t():
+def test_paragraph_series_j_i_cs_s_t() -> None:
     """
     Test case:  Inline image containing split code span in label
     """
@@ -497,7 +497,7 @@ def test_paragraph_series_j_i_cs_s_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_l_nt_t_s_t():
+def test_paragraph_series_j_l_nt_t_s_t() -> None:
     """
     Test case:  Inline link with no title containing split text in label
     was:        test_paragraph_extra_a2
@@ -521,7 +521,7 @@ o" />a</p>"""
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_i_nt_t_s_t():
+def test_paragraph_series_j_i_nt_t_s_t() -> None:
     """
     Test case:  Inline image with no title containing split text in label
     was:        test_paragraph_extra_a2a
@@ -547,7 +547,7 @@ o</a>a</p>"""
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_l_t_s_t():
+def test_paragraph_series_j_l_t_s_t() -> None:
     """
     Test case:  Inline link containing split text in label
     """
@@ -570,7 +570,7 @@ o" title="title" />a</p>"""
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_i_t_s_t():
+def test_paragraph_series_j_i_t_s_t() -> None:
     """
     Test case:  Inline image containing split text in label
     """
@@ -595,7 +595,7 @@ o</a>a</p>"""
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_i_nt_t_t():
+def test_paragraph_series_j_i_nt_t_t() -> None:
     """
     Test case:  Inline image with no title containing text in label
     """
@@ -616,7 +616,7 @@ def test_paragraph_series_j_i_nt_t_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_l_nt_t_t():
+def test_paragraph_series_j_l_nt_t_t() -> None:
     """
     Test case:  Inline link with no title containing text in label
     """
@@ -639,7 +639,7 @@ def test_paragraph_series_j_l_nt_t_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_l_t_t():
+def test_paragraph_series_j_l_t_t() -> None:
     """
     Test case:  Inline link containing text in label
     """
@@ -660,7 +660,7 @@ def test_paragraph_series_j_l_t_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_i_t_t():
+def test_paragraph_series_j_i_t_t() -> None:
     """
     Test case:  Inline image containing text in label
     """
@@ -683,7 +683,7 @@ def test_paragraph_series_j_i_t_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_l_t_t_s():
+def test_paragraph_series_j_l_t_t_s() -> None:
     """
     Test case:  Inline link containing text in label and split text after
     """
@@ -707,7 +707,7 @@ b</p>"""
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_i_t_t_s():
+def test_paragraph_series_j_i_t_t_s() -> None:
     """
     Test case:  Inline image containing text in label and split text after
     """
@@ -729,7 +729,7 @@ b</p>"""
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_l_t_cs_s():
+def test_paragraph_series_j_l_t_cs_s() -> None:
     """
     Test case:  Inline link with no title containing split text in label
     was:        test_paragraph_extra_c9, added title, removed split raw html in label
@@ -753,7 +753,7 @@ def test_paragraph_series_j_l_t_cs_s():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_i_t_cs_s():
+def test_paragraph_series_j_i_t_cs_s() -> None:
     """
     Test case:  Inline link with no title containing split text in label
     was:        test_paragraph_extra_d0, added title, removed split raw html in label
@@ -777,7 +777,7 @@ def test_paragraph_series_j_i_t_cs_s():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_l_t_cs():
+def test_paragraph_series_j_l_t_cs() -> None:
     """
     Test case:  Inline link with text in label followed by code span
     """
@@ -800,7 +800,7 @@ def test_paragraph_series_j_l_t_cs():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_i_t_cs():
+def test_paragraph_series_j_i_t_cs() -> None:
     """
     Test case:  Inline image with text in label followed by code span
     """
@@ -823,7 +823,7 @@ def test_paragraph_series_j_i_t_cs():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_l_t_rh_s():
+def test_paragraph_series_j_l_t_rh_s() -> None:
     """
     Test case:  Inline link containing text in label with split raw html after
     was:        test_paragraph_extra_d1, added title, removed split raw html in label
@@ -848,7 +848,7 @@ b></p>"""
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_i_t_rh_s():
+def test_paragraph_series_j_i_t_rh_s() -> None:
     """
     Test case:  Inline image containing text in label with split raw html after
     was:        test_paragraph_extra_d2, added title, removed split raw html in label
@@ -871,7 +871,7 @@ b></p>"""
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_l_t_rh():
+def test_paragraph_series_j_l_t_rh() -> None:
     """
     Test case:  Inline link containing text in label with raw html after
     was:        test_paragraph_extra_d1, added title, removed split raw html in label
@@ -895,7 +895,7 @@ def test_paragraph_series_j_l_t_rh():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_i_t_rh():
+def test_paragraph_series_j_i_t_rh() -> None:
     """
     Test case:  Inline image containing text in label with split raw html after
     was:        test_paragraph_extra_d2, added title, removed split raw html in label
@@ -917,7 +917,7 @@ def test_paragraph_series_j_i_t_rh():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_l_t_em_s():
+def test_paragraph_series_j_l_t_em_s() -> None:
     """
     Test case:  Inline link containing text in label with split emphasis after
     was:        test_paragraph_extra_d3, added title, removed split raw html in label
@@ -944,7 +944,7 @@ b</em></p>"""
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_i_t_em_s():
+def test_paragraph_series_j_i_t_em_s() -> None:
     """
     Test case:  Inline image containing text in label with split emphasis after
     was:        test_paragraph_extra_d4, added title, removed split raw html in label
@@ -969,7 +969,7 @@ b</em></p>"""
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_l_t_em():
+def test_paragraph_series_j_l_t_em() -> None:
     """
     Test case:  Inline link containing text in label with emphasis after
     """
@@ -994,7 +994,7 @@ def test_paragraph_series_j_l_t_em():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_i_t_em():
+def test_paragraph_series_j_i_t_em() -> None:
     """
     Test case:  Inline image containing text in label with emphasis after
     was:        test_paragraph_extra_d4, added title, removed split raw html in label
@@ -1018,7 +1018,7 @@ def test_paragraph_series_j_i_t_em():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_em_l_t_t():
+def test_paragraph_series_j_em_l_t_t() -> None:
     """
     Test case:  Inline link containing text in label surrounded by emphasis
     was:        test_paragraph_extra_d7
@@ -1042,7 +1042,7 @@ def test_paragraph_series_j_em_l_t_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_em_i_t_t():
+def test_paragraph_series_j_em_i_t_t() -> None:
     """
     Test case:  Inline link containing text in label surrounded by emphasis
     was:        test_paragraph_extra_d8
@@ -1064,7 +1064,7 @@ def test_paragraph_series_j_em_i_t_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_l_t_ua():
+def test_paragraph_series_j_l_t_ua() -> None:
     """
     Test case:  Inline link containing text in label followed by url autolink
     """
@@ -1088,7 +1088,7 @@ def test_paragraph_series_j_l_t_ua():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_i_t_ua():
+def test_paragraph_series_j_i_t_ua() -> None:
     """
     Test case:  Inline image containing text in label followed by url autolink
     """
@@ -1110,7 +1110,7 @@ def test_paragraph_series_j_i_t_ua():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_l_t_ea():
+def test_paragraph_series_j_l_t_ea() -> None:
     """
     Test case:  Inline link containing text in label followed by email autolink
     """
@@ -1134,7 +1134,7 @@ def test_paragraph_series_j_l_t_ea():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_i_t_ea():
+def test_paragraph_series_j_i_t_ea() -> None:
     """
     Test case:  Inline image containing text in label followed by email autolink
     """
@@ -1156,7 +1156,7 @@ def test_paragraph_series_j_i_t_ea():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_l_t_bh():
+def test_paragraph_series_j_l_t_bh() -> None:
     """
     Test case:  Inline link containing text in label followed by backslash hard break
     """
@@ -1181,7 +1181,7 @@ a</p>"""
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_i_t_bh():
+def test_paragraph_series_j_i_t_bh() -> None:
     """
     Test case:  Inline image containing text in label followed by backslash hard break
     """
@@ -1204,7 +1204,7 @@ a</p>"""
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_l_t_sh():
+def test_paragraph_series_j_l_t_sh() -> None:
     """
     Test case:  Inline link containing text in label followed by spaces hard break
     """
@@ -1229,7 +1229,7 @@ a</p>"""
 
 
 @pytest.mark.gfm
-def test_paragraph_series_j_i_t_sh():
+def test_paragraph_series_j_i_t_sh() -> None:
     """
     Test case:  Inline image containing text in label followed by spaces hard break
     """

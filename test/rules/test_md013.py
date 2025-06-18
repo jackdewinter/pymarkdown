@@ -12,7 +12,7 @@ import pytest
 
 
 @pytest.mark.rules
-def test_md013_bad_configuration_line_length():
+def test_md013_bad_configuration_line_length() -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     line_length value with a string that is not an integer.
@@ -48,7 +48,7 @@ def test_md013_bad_configuration_line_length():
 
 
 @pytest.mark.rules
-def test_md013_bad_configuration_line_length_zero():
+def test_md013_bad_configuration_line_length_zero() -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     line_length value with an integer that is 0.
@@ -84,7 +84,7 @@ def test_md013_bad_configuration_line_length_zero():
 
 
 @pytest.mark.rules
-def test_md013_bad_configuration_heading_line_length():
+def test_md013_bad_configuration_heading_line_length() -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     heading_line_length value with a string that is not an integer.
@@ -120,7 +120,7 @@ def test_md013_bad_configuration_heading_line_length():
 
 
 @pytest.mark.rules
-def test_md013_bad_configuration_headings_active():
+def test_md013_bad_configuration_headings_active() -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     headings value with a string that is not a boolean.
@@ -156,7 +156,7 @@ def test_md013_bad_configuration_headings_active():
 
 
 @pytest.mark.rules
-def test_md013_bad_configuration_code_block_line_length():
+def test_md013_bad_configuration_code_block_line_length() -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     code_block_line_length value with a string that is not an integer.
@@ -192,7 +192,7 @@ def test_md013_bad_configuration_code_block_line_length():
 
 
 @pytest.mark.rules
-def test_md013_bad_configuration_code_blocks_active():
+def test_md013_bad_configuration_code_blocks_active() -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     code_blocks value with a string that is not a boolean.
@@ -228,7 +228,7 @@ def test_md013_bad_configuration_code_blocks_active():
 
 
 @pytest.mark.rules
-def test_md013_bad_configuration_strict_mode():
+def test_md013_bad_configuration_strict_mode() -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     strict value with a string that is not a boolean.
@@ -264,7 +264,7 @@ def test_md013_bad_configuration_strict_mode():
 
 
 @pytest.mark.rules
-def test_md013_bad_configuration_stern_mode():
+def test_md013_bad_configuration_stern_mode() -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     stern value with a string that is not a boolean.
@@ -300,7 +300,7 @@ def test_md013_bad_configuration_stern_mode():
 
 
 @pytest.mark.rules
-def test_md013_good_small_line():
+def test_md013_good_small_line() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a single line with 38 characters.
@@ -330,7 +330,7 @@ def test_md013_good_small_line():
 
 
 @pytest.mark.rules
-def test_md013_good_small_line_with_config():
+def test_md013_good_small_line_with_config() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a single line with 38 characters, with configuration
@@ -368,7 +368,7 @@ def test_md013_good_small_line_with_config():
 
 
 @pytest.mark.rules
-def test_md013_good_medium_line():
+def test_md013_good_medium_line() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a single line with 80 characters.
@@ -398,7 +398,7 @@ def test_md013_good_medium_line():
 
 
 @pytest.mark.rules
-def test_md013_good_medium_line_with_config():
+def test_md013_good_medium_line_with_config() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a single line with 80 characters with a configured maximum
@@ -436,7 +436,7 @@ def test_md013_good_medium_line_with_config():
 
 
 @pytest.mark.rules
-def test_md013_good_long_line():
+def test_md013_good_long_line() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a single line with 80 characters.
@@ -470,7 +470,7 @@ def test_md013_good_long_line():
 
 
 @pytest.mark.rules
-def test_md013_good_long_line_with_config():
+def test_md013_good_long_line_with_config() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a single line with 80 characters with a configured maximum
@@ -504,7 +504,7 @@ def test_md013_good_long_line_with_config():
 
 
 @pytest.mark.rules
-def test_md013_good_medium_line_with_long_last_word():
+def test_md013_good_medium_line_with_long_last_word() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a single line the crosses the normal 80 character limit
@@ -539,7 +539,7 @@ def test_md013_good_medium_line_with_long_last_word():
 
 
 @pytest.mark.rules
-def test_md013_good_medium_line_with_long_last_word_with_config_strict():
+def test_md013_good_medium_line_with_long_last_word_with_config_strict() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a single line the crosses the normal 80 character limit
@@ -581,7 +581,7 @@ def test_md013_good_medium_line_with_long_last_word_with_config_strict():
 
 
 @pytest.mark.rules
-def test_md013_good_medium_line_with_long_last_word_with_config_stern():
+def test_md013_good_medium_line_with_long_last_word_with_config_stern() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a single line the crosses the normal 80 character limit
@@ -623,7 +623,7 @@ def test_md013_good_medium_line_with_long_last_word_with_config_stern():
 
 
 @pytest.mark.rules
-def test_md013_bad_medium_line_with_long_last_word():
+def test_md013_bad_medium_line_with_long_last_word() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a single line with multiple words past the 80 character
@@ -662,7 +662,7 @@ def test_md013_bad_medium_line_with_long_last_word():
 
 
 @pytest.mark.rules
-def test_md013_bad_medium_line_with_long_last_word_with_config_strict():
+def test_md013_bad_medium_line_with_long_last_word_with_config_strict() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a single line with multiple words past the 80 character
@@ -704,7 +704,7 @@ def test_md013_bad_medium_line_with_long_last_word_with_config_strict():
 
 
 @pytest.mark.rules
-def test_md013_bad_medium_line_with_long_last_word_with_config_stern():
+def test_md013_bad_medium_line_with_long_last_word_with_config_stern() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a single line with multiple words past the 80 character
@@ -742,7 +742,7 @@ def test_md013_bad_medium_line_with_long_last_word_with_config_stern():
 
 
 @pytest.mark.rules
-def test_md013_bad_paragraph_with_long_line_in_middle():
+def test_md013_bad_paragraph_with_long_line_in_middle() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a multiple lines with a very long line in the middle.
@@ -780,7 +780,7 @@ def test_md013_bad_paragraph_with_long_line_in_middle():
 
 
 @pytest.mark.rules
-def test_md013_good_fenced_code_block():
+def test_md013_good_fenced_code_block() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a good line within a fenced code block.
@@ -810,7 +810,7 @@ def test_md013_good_fenced_code_block():
 
 
 @pytest.mark.rules
-def test_md013_bad_fenced_code_block():
+def test_md013_bad_fenced_code_block() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a long line within a fenced code block.
@@ -840,7 +840,7 @@ def test_md013_bad_fenced_code_block():
 
 
 @pytest.mark.rules
-def test_md013_bad_fenced_code_block_with_config():
+def test_md013_bad_fenced_code_block_with_config() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a very long line within a fenced code block, even with
@@ -874,7 +874,7 @@ def test_md013_bad_fenced_code_block_with_config():
 
 
 @pytest.mark.rules
-def test_md013_bad_fenced_code_block_with_config_active():
+def test_md013_bad_fenced_code_block_with_config_active() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a long line within a fenced code block, but with the
@@ -908,7 +908,7 @@ def test_md013_bad_fenced_code_block_with_config_active():
 
 
 @pytest.mark.rules
-def test_md013_good_indented_code_block():
+def test_md013_good_indented_code_block() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a long line within an indented code block, but with the
@@ -939,7 +939,7 @@ def test_md013_good_indented_code_block():
 
 
 @pytest.mark.rules
-def test_md013_bad_indented_code_block():
+def test_md013_bad_indented_code_block() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a long line within an indented code block.
@@ -969,7 +969,7 @@ def test_md013_bad_indented_code_block():
 
 
 @pytest.mark.rules
-def test_md013_bad_indented_code_block_with_config():
+def test_md013_bad_indented_code_block_with_config() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a long line within an indented code block, but with the
@@ -1003,7 +1003,7 @@ def test_md013_bad_indented_code_block_with_config():
 
 
 @pytest.mark.rules
-def test_md013_bad_indented_code_block_with_config_active():
+def test_md013_bad_indented_code_block_with_config_active() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a long line within an indented code block, but with the
@@ -1037,7 +1037,7 @@ def test_md013_bad_indented_code_block_with_config_active():
 
 
 @pytest.mark.rules
-def test_md013_good_thematic_break():
+def test_md013_good_thematic_break() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a normal line within a thematic break.
@@ -1067,7 +1067,7 @@ def test_md013_good_thematic_break():
 
 
 @pytest.mark.rules
-def test_md013_bad_thematic_break():
+def test_md013_bad_thematic_break() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a long line within a thematic break.
@@ -1097,7 +1097,7 @@ def test_md013_bad_thematic_break():
 
 
 @pytest.mark.rules
-def test_md013_bad_thematic_break_with_config():
+def test_md013_bad_thematic_break_with_config() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a long line within a thematic break, but with a configuration
@@ -1131,7 +1131,7 @@ def test_md013_bad_thematic_break_with_config():
 
 
 @pytest.mark.rules
-def test_md013_good_atx_heading():
+def test_md013_good_atx_heading() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a normal line within an Atx Heading.
@@ -1161,7 +1161,7 @@ def test_md013_good_atx_heading():
 
 
 @pytest.mark.rules
-def test_md013_bad_atx_heading():
+def test_md013_bad_atx_heading() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a long line within an Atx Heading.
@@ -1191,7 +1191,7 @@ def test_md013_bad_atx_heading():
 
 
 @pytest.mark.rules
-def test_md013_bad_atx_heading_with_config():
+def test_md013_bad_atx_heading_with_config() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a long line within an Atx Heading, but with configuration
@@ -1225,7 +1225,7 @@ def test_md013_bad_atx_heading_with_config():
 
 
 @pytest.mark.rules
-def test_md013_bad_atx_heading_with_config_active():
+def test_md013_bad_atx_heading_with_config_active() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a long line within an Atx Heading, but with configuration
@@ -1259,7 +1259,7 @@ def test_md013_bad_atx_heading_with_config_active():
 
 
 @pytest.mark.rules
-def test_md013_good_setext_heading():
+def test_md013_good_setext_heading() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a normal line within a SetExt Heading.
@@ -1289,7 +1289,7 @@ def test_md013_good_setext_heading():
 
 
 @pytest.mark.rules
-def test_md013_bad_setext_heading():
+def test_md013_bad_setext_heading() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a long line within a SetExt Heading.
@@ -1319,7 +1319,7 @@ def test_md013_bad_setext_heading():
 
 
 @pytest.mark.rules
-def test_md013_bad_setext_heading_with_config():
+def test_md013_bad_setext_heading_with_config() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a long line within a SetExt Heading, but configuration to
@@ -1353,7 +1353,7 @@ def test_md013_bad_setext_heading_with_config():
 
 
 @pytest.mark.rules
-def test_md013_bad_setext_heading_with_config_active():
+def test_md013_bad_setext_heading_with_config_active() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a long line within a SetExt Heading, but with headings
@@ -1387,7 +1387,7 @@ def test_md013_bad_setext_heading_with_config_active():
 
 
 @pytest.mark.rules
-def test_md013_good_html_block():
+def test_md013_good_html_block() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a normal line within a HTML block.
@@ -1417,7 +1417,7 @@ def test_md013_good_html_block():
 
 
 @pytest.mark.rules
-def test_md013_bad_html_block():
+def test_md013_bad_html_block() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a long line within a HTML block.
@@ -1447,7 +1447,7 @@ def test_md013_bad_html_block():
 
 
 @pytest.mark.rules
-def test_md013_bad_html_block_with_config():
+def test_md013_bad_html_block_with_config() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a long line within a HTML block, but configuration to allow
@@ -1480,7 +1480,7 @@ def test_md013_bad_html_block_with_config():
     )
 
 
-def test_md013_query_config():
+def test_md013_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md013",
         """

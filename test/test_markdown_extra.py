@@ -17,7 +17,7 @@ from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 
 
 @pytest.mark.gfm
-def test_extra_001():
+def test_extra_001() -> None:
     """
     Test a totally blank input.
     """
@@ -32,7 +32,7 @@ def test_extra_001():
 
 
 @pytest.mark.gfm
-def test_extra_002():
+def test_extra_002() -> None:
     """
     Test a blank input with only whitespace.
     """
@@ -47,7 +47,7 @@ def test_extra_002():
 
 
 @pytest.mark.gfm
-def test_extra_003():
+def test_extra_003() -> None:
     """
     Test to make sure the wide range of characters meets the GRM/CommonMark encodings.
     Note that since % is not followed by a 2 digit hex value, it is encoded per
@@ -74,7 +74,7 @@ def test_extra_003():
 
 
 @pytest.mark.gfm
-def test_extra_004():
+def test_extra_004() -> None:
     """
     Test to make sure the wide range of characters meets the GRM/CommonMark encodings.
     Note that since % is followed by a 2 digit hex value, it is encoded per the common
@@ -106,7 +106,7 @@ def test_extra_004():
 
 
 @pytest.mark.gfm
-def test_extra_005():
+def test_extra_005() -> None:
     """
     When encoding link characters, special attention is used for the % characters as
     the CommonMark parser treats "%<hex-char><hex-char>" as non-encodable.  Make sure
@@ -129,7 +129,7 @@ def test_extra_005():
 
 
 @pytest.mark.gfm
-def test_extra_006():
+def test_extra_006() -> None:
     """
     lists and fenced code blocks within a block quote
     """
@@ -175,7 +175,7 @@ def test_extra_006():
 
 
 @pytest.mark.gfm
-def test_extra_007a():
+def test_extra_007a() -> None:
     """
     Text and a link reference definition within a block quote.
     """
@@ -211,7 +211,7 @@ a real test</p>
 
 
 @pytest.mark.gfm
-def test_extra_007b():
+def test_extra_007b() -> None:
     """
     Variation on 7a with more spacing
     """
@@ -250,7 +250,7 @@ a real test</p>
 
 
 @pytest.mark.gfm
-def test_extra_007cx():
+def test_extra_007cx() -> None:
     """
     Variation on 7a with more spacing
     """
@@ -295,7 +295,7 @@ a real test</p>
 
 
 @pytest.mark.gfm
-def test_extra_007ca():
+def test_extra_007ca() -> None:
     """
     Variation on 7a with more spacing
     """
@@ -338,7 +338,7 @@ a real test</p>
 
 
 @pytest.mark.gfm
-def test_extra_007d():
+def test_extra_007d() -> None:
     """
     Variation on 7a with more spacing
     """
@@ -379,7 +379,7 @@ a real test</p>
 
 
 @pytest.mark.gfm
-def test_extra_007e():
+def test_extra_007e() -> None:
     """
     Almost looks like a fenced code block, but is really a code span.
     """
@@ -414,7 +414,7 @@ a real test</p>
 
 
 @pytest.mark.gfm
-def test_extra_008x():
+def test_extra_008x() -> None:
     """
     Simple unordered list with increasing indent in a block quote.
     """
@@ -463,7 +463,7 @@ def test_extra_008x():
 
 
 @pytest.mark.gfm
-def test_extra_008a():
+def test_extra_008a() -> None:
     """
     Variation on 8 with no block quote.
     """
@@ -508,7 +508,7 @@ def test_extra_008a():
 
 
 @pytest.mark.gfm
-def test_extra_009x():
+def test_extra_009x() -> None:
     """
     Simple block quote within an unordered list.
     """
@@ -539,7 +539,7 @@ def test_extra_009x():
 
 
 @pytest.mark.gfm
-def test_extra_009a():
+def test_extra_009a() -> None:
     """
     Simple block quote within an ordered list.
     """
@@ -570,7 +570,7 @@ def test_extra_009a():
 
 
 @pytest.mark.gfm
-def test_extra_009b():
+def test_extra_009b() -> None:
     """
     Simple block quote within an ordered list.
     """
@@ -603,7 +603,7 @@ def test_extra_009b():
 
 
 @pytest.mark.gfm
-def test_extra_009c():
+def test_extra_009c() -> None:
     """
     Simple block quote within an ordered list.
     """
@@ -636,7 +636,7 @@ Just one section.</p>
 
 
 @pytest.mark.gfm
-def test_extra_010x():
+def test_extra_010x() -> None:
     """
     List item with weird progression.
     """
@@ -689,7 +689,7 @@ def test_extra_010x():
 
 
 @pytest.mark.gfm
-def test_extra_010a():
+def test_extra_010a() -> None:
     """
     List item with weird progression.
     """
@@ -726,7 +726,7 @@ def test_extra_010a():
 
 
 @pytest.mark.gfm
-def test_extra_010b():
+def test_extra_010b() -> None:
     """
     List item with weird progression.
     """
@@ -785,7 +785,7 @@ def test_extra_010b():
 
 
 @pytest.mark.gfm
-def test_extra_011x():
+def test_extra_011x() -> None:
     """
     Block quote followed directly by Atx Heading.
     """
@@ -819,7 +819,7 @@ dd</p>
 
 
 @pytest.mark.gfm
-def test_extra_011a():
+def test_extra_011a() -> None:
     """
     Variation of 11 with no newline after Atx Heading
     """
@@ -851,7 +851,7 @@ dd</p>
 
 
 @pytest.mark.gfm
-def test_extra_011b():
+def test_extra_011b() -> None:
     """
     Variation of 11 with newline after Block Quote and before Atx Heading
     """
@@ -885,7 +885,7 @@ dd</p>
 
 
 @pytest.mark.gfm
-def test_extra_012():
+def test_extra_012() -> None:
     """
     Unordered lists, nested within each other with weird indents.
     """
@@ -973,7 +973,7 @@ def test_extra_012():
 
 
 @pytest.mark.gfm
-def test_extra_013x():
+def test_extra_013x() -> None:
     """
     Paragraph followed by a blank line and a SetExt heading in a block quote
     """
@@ -1010,7 +1010,7 @@ indented</h2>
 
 
 @pytest.mark.gfm
-def test_extra_013a():
+def test_extra_013a() -> None:
     """
     Variation of 13x without the block quote.
     """
@@ -1043,7 +1043,7 @@ indented</h2>"""
 
 
 @pytest.mark.gfm
-def test_extra_014x():
+def test_extra_014x() -> None:
     """
     TBD - test_md027_good_block_quote_ordered_list_thematic_break
     """
@@ -1086,7 +1086,7 @@ this
 
 
 @pytest.mark.gfm
-def test_extra_014a():
+def test_extra_014a() -> None:
     """
     TBD - test_md027_good_block_quote_ordered_list_thematic_break_misaligned
     """
@@ -1129,7 +1129,7 @@ this
 
 
 @pytest.mark.gfm
-def test_extra_014bx():
+def test_extra_014bx() -> None:
     """
     TBD - test_md027_good_block_quote_ordered_list_thematic_break
     """
@@ -1176,7 +1176,7 @@ this
 
 
 @pytest.mark.gfm
-def test_extra_014ba():
+def test_extra_014ba() -> None:
     """
     TBD - test_md027_good_block_quote_ordered_list_thematic_break
     """
@@ -1219,7 +1219,7 @@ this
 
 
 @pytest.mark.gfm
-def test_extra_014bb():
+def test_extra_014bb() -> None:
     """
     TBD - test_md027_good_block_quote_ordered_list_thematic_break
     """
@@ -1259,7 +1259,7 @@ this</p>
 
 
 @pytest.mark.gfm
-def test_extra_015():
+def test_extra_015() -> None:
     """
     TBD - test_md027_good_block_quote_ordered_list_atx_heading
     """
@@ -1304,7 +1304,7 @@ this
 
 
 @pytest.mark.gfm
-def test_extra_015a():
+def test_extra_015a() -> None:
     """
     TBD - test_md027_good_block_quote_ordered_list_atx_heading
     """
@@ -1349,7 +1349,7 @@ this
 
 
 @pytest.mark.gfm
-def test_extra_016():
+def test_extra_016() -> None:
     """
     TBD
     """
@@ -1398,7 +1398,7 @@ this</p>
 
 
 @pytest.mark.gfm
-def test_extra_016a():
+def test_extra_016a() -> None:
     """
     TBD
     """
@@ -1449,7 +1449,7 @@ this</p>
 
 
 @pytest.mark.gfm
-def test_extra_017():
+def test_extra_017() -> None:
     """
     TBD
     """
@@ -1500,7 +1500,7 @@ code block
 
 
 @pytest.mark.gfm
-def test_extra_018x():
+def test_extra_018x() -> None:
     """
     Validate that having a fenced block inside of a list does not close the list
     when the code block is started.
@@ -1549,7 +1549,7 @@ this
 
 
 @pytest.mark.gfm
-def test_extra_018a():
+def test_extra_018a() -> None:
     """
     variation of 18 with indent on first line
     """
@@ -1595,7 +1595,7 @@ this
 
 
 @pytest.mark.gfm
-def test_extra_018b():
+def test_extra_018b() -> None:
     """
     variation of 18 with indent on second line
     """
@@ -1641,7 +1641,7 @@ this
 
 
 @pytest.mark.gfm
-def test_extra_018c():
+def test_extra_018c() -> None:
     """
     variation of 18 with indent on third line
     """
@@ -1687,7 +1687,7 @@ this
 
 
 @pytest.mark.gfm
-def test_extra_019x():
+def test_extra_019x() -> None:
     """
     Validate that having an HTML block inside of a list does not close the list
     when the HTML block is started.
@@ -1732,7 +1732,7 @@ this
 
 
 @pytest.mark.gfm
-def test_extra_019a():
+def test_extra_019a() -> None:
     """
     Variation of 019 with extra space in front of html block.
     """
@@ -1775,7 +1775,7 @@ this
 
 
 @pytest.mark.gfm
-def test_extra_019b():
+def test_extra_019b() -> None:
     """
     Variation of 019 with extra space in front of html block.
     """
@@ -1820,7 +1820,7 @@ this
 
 
 @pytest.mark.gfm
-def test_extra_020x():
+def test_extra_020x() -> None:
     """
     TBD
     """
@@ -1865,7 +1865,7 @@ this</p>
 
 
 @pytest.mark.gfm
-def test_extra_020a():
+def test_extra_020a() -> None:
     """
     TBD
     """
@@ -1911,7 +1911,7 @@ this</p>
 
 
 @pytest.mark.gfm
-def test_extra_020b():
+def test_extra_020b() -> None:
     """
     TBD
     """
@@ -1958,7 +1958,7 @@ this</p>
 
 
 @pytest.mark.gfm
-def test_extra_020c():
+def test_extra_020c() -> None:
     """
     TBD
     """
@@ -2003,7 +2003,7 @@ this</p>
 
 
 @pytest.mark.gfm
-def test_extra_020d():
+def test_extra_020d() -> None:
     """
     TBD
     """
@@ -2044,7 +2044,7 @@ this
 
 
 @pytest.mark.gfm
-def test_extra_021x():
+def test_extra_021x() -> None:
     """
     TBD
     """
@@ -2087,7 +2087,7 @@ def test_extra_021x():
 
 
 @pytest.mark.gfm
-def test_extra_021a():
+def test_extra_021a() -> None:
     """
     TBD
     """
@@ -2138,7 +2138,7 @@ def test_extra_021a():
 
 
 @pytest.mark.gfm
-def test_extra_021b():
+def test_extra_021b() -> None:
     """
     TBD
     """
@@ -2175,7 +2175,7 @@ this</li>
 
 
 @pytest.mark.gfm
-def test_extra_021c():
+def test_extra_021c() -> None:
     """
     TBD
     """
@@ -2231,7 +2231,7 @@ def test_extra_021c():
 
 
 @pytest.mark.gfm
-def test_extra_022():
+def test_extra_022() -> None:
     """
     TBD
     """
@@ -2288,7 +2288,7 @@ def test_extra_022():
 
 
 @pytest.mark.gfm
-def test_extra_023xx():
+def test_extra_023xx() -> None:
     """
     TBD
     """
@@ -2328,7 +2328,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_extra_023xa():
+def test_extra_023xa() -> None:
     """
     TBD
     """
@@ -2368,7 +2368,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_extra_023xb():
+def test_extra_023xb() -> None:
     """
     TBD
     """
@@ -2408,7 +2408,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_extra_023xc():
+def test_extra_023xc() -> None:
     """
     TBD
     """
@@ -2450,7 +2450,7 @@ bar</li>
 
 
 @pytest.mark.gfm
-def test_extra_023ax():
+def test_extra_023ax() -> None:
     """
     TBD
     """
@@ -2475,7 +2475,7 @@ with two lines.</li>
 
 
 @pytest.mark.gfm
-def test_extra_023aa():
+def test_extra_023aa() -> None:
     """
     TBD
     """
@@ -2500,7 +2500,7 @@ with two lines.</li>
 
 
 @pytest.mark.gfm
-def test_extra_023ab():
+def test_extra_023ab() -> None:
     """
     TBD
     """
@@ -2525,7 +2525,7 @@ with two lines.</li>
 
 
 @pytest.mark.gfm
-def test_extra_024x():
+def test_extra_024x() -> None:
     """
     TBD
     """
@@ -2592,7 +2592,7 @@ def test_extra_024x():
 
 
 @pytest.mark.gfm
-def test_extra_024a():
+def test_extra_024a() -> None:
     """
     TBD
     """
@@ -2659,7 +2659,7 @@ def test_extra_024a():
 
 
 @pytest.mark.gfm
-def test_extra_025xx():
+def test_extra_025xx() -> None:
     """
     TBD
     """
@@ -2708,7 +2708,7 @@ item</p>
 
 
 @pytest.mark.gfm
-def test_extra_025xa():
+def test_extra_025xa() -> None:
     """
     TBD
     """
@@ -2753,7 +2753,7 @@ that</p>
 
 
 @pytest.mark.gfm
-def test_extra_025ax():
+def test_extra_025ax() -> None:
     """
     TBD
     """
@@ -2802,7 +2802,7 @@ item</p>
 
 
 @pytest.mark.gfm
-def test_extra_025aa():
+def test_extra_025aa() -> None:
     """
     TBD
     """
@@ -2847,7 +2847,7 @@ that</p>
 
 
 @pytest.mark.gfm
-def test_extra_025bx():
+def test_extra_025bx() -> None:
     """
     TBD
     """
@@ -2894,7 +2894,7 @@ this
 
 
 @pytest.mark.gfm
-def test_extra_025ba():
+def test_extra_025ba() -> None:
     """
     TBD
     """
@@ -2937,7 +2937,7 @@ that</p>
 
 
 @pytest.mark.gfm
-def test_extra_025cxx():
+def test_extra_025cxx() -> None:
     """
     TBD
     """
@@ -2984,7 +2984,7 @@ item</p>
 
 
 @pytest.mark.gfm
-def test_extra_025cxb():
+def test_extra_025cxb() -> None:
     """
     TBD
     """
@@ -3031,7 +3031,7 @@ item</p>
 
 
 @pytest.mark.gfm
-def test_extra_025cxc():
+def test_extra_025cxc() -> None:
     """
     TBD
     """
@@ -3076,7 +3076,7 @@ def test_extra_025cxc():
 
 
 @pytest.mark.gfm
-def test_extra_025cxd():
+def test_extra_025cxd() -> None:
     """
     TBD
     """
@@ -3111,7 +3111,7 @@ def test_extra_025cxd():
 
 
 @pytest.mark.gfm
-def test_extra_025cxe():
+def test_extra_025cxe() -> None:
     """
     TBD
     """
@@ -3152,7 +3152,7 @@ def test_extra_025cxe():
 
 
 @pytest.mark.gfm
-def test_extra_025cxf():
+def test_extra_025cxf() -> None:
     """
     TBD
     """
@@ -3195,7 +3195,7 @@ is</p>
 
 
 @pytest.mark.gfm
-def test_extra_025cxg():
+def test_extra_025cxg() -> None:
     """
     TBD
     """
@@ -3238,7 +3238,7 @@ is</p>
 
 
 @pytest.mark.gfm
-def test_extra_025cxz():
+def test_extra_025cxz() -> None:
     """
     Verify that a nesting of block quote, ordered list, block quote, with
     the maximum number of spaces allowed, works properly,
@@ -3279,7 +3279,7 @@ def test_extra_025cxz():
 
 
 @pytest.mark.gfm
-def test_extra_025ca():
+def test_extra_025ca() -> None:
     """
     TBD
     """
@@ -3322,7 +3322,7 @@ that</p>
 
 
 @pytest.mark.gfm
-def test_extra_026x():
+def test_extra_026x() -> None:
     """
     TBD
     """
@@ -3376,7 +3376,7 @@ def test_extra_026x():
 
 
 @pytest.mark.gfm
-def test_extra_026a():
+def test_extra_026a() -> None:
     """
     TBD
     """
@@ -3444,7 +3444,7 @@ def test_extra_026a():
 
 
 @pytest.mark.gfm
-def test_extra_026b():
+def test_extra_026b() -> None:
     """
     TBD
     note: this may look weird.  the ordered list has an indent of 3, with a single
@@ -3492,7 +3492,7 @@ def test_extra_026b():
 
 
 @pytest.mark.gfm
-def test_extra_026cx():
+def test_extra_026cx() -> None:
     """
     TBD
     """
@@ -3523,7 +3523,7 @@ def test_extra_026cx():
 
 
 @pytest.mark.gfm
-def test_extra_026ca():
+def test_extra_026ca() -> None:
     """
     TBD
     """
@@ -3550,7 +3550,7 @@ def test_extra_026ca():
 
 
 @pytest.mark.gfm
-def test_extra_026cb():
+def test_extra_026cb() -> None:
     """
     TBD
     """
@@ -3585,7 +3585,7 @@ def test_extra_026cb():
 
 
 @pytest.mark.gfm
-def test_extra_026cc():
+def test_extra_026cc() -> None:
     """
     TBD
     """
@@ -3620,7 +3620,7 @@ def test_extra_026cc():
 
 
 @pytest.mark.gfm
-def test_extra_026cd():
+def test_extra_026cd() -> None:
     """
     TBD
     """
@@ -3654,7 +3654,7 @@ def test_extra_026cd():
 
 
 @pytest.mark.gfm
-def test_extra_027a():
+def test_extra_027a() -> None:
     """
     TBD
     """
@@ -3705,7 +3705,7 @@ def test_extra_027a():
 
 
 @pytest.mark.gfm
-def test_extra_028():
+def test_extra_028() -> None:
     """
     TBD
     """
@@ -3766,7 +3766,7 @@ def test_extra_028():
 
 
 @pytest.mark.gfm
-def test_extra_028a():
+def test_extra_028a() -> None:
     """
     TBD
     """
@@ -3820,7 +3820,7 @@ def test_extra_028a():
 
 
 @pytest.mark.gfm
-def test_extra_029x():
+def test_extra_029x() -> None:
     """
     TBD
     """
@@ -3856,7 +3856,7 @@ def test_extra_029x():
 
 
 @pytest.mark.gfm
-def test_extra_029a():
+def test_extra_029a() -> None:
     """
     TBD
     """
@@ -3916,7 +3916,7 @@ def test_extra_029a():
 
 
 @pytest.mark.gfm
-def test_extra_029b():
+def test_extra_029b() -> None:
     """
     TBD
     """
@@ -3976,7 +3976,7 @@ def test_extra_029b():
 
 
 @pytest.mark.gfm
-def test_extra_029c():
+def test_extra_029c() -> None:
     """
     TBD
     """
@@ -4073,7 +4073,7 @@ p4
 
 
 @pytest.mark.gfm
-def test_extra_029d():
+def test_extra_029d() -> None:
     """
     TBD
     """
@@ -4133,7 +4133,7 @@ def test_extra_029d():
 
 
 @pytest.mark.gfm
-def test_extra_029e():
+def test_extra_029e() -> None:
     """
     TBD
     """
@@ -4167,7 +4167,7 @@ def test_extra_029e():
 
 
 @pytest.mark.gfm
-def test_extra_029f():
+def test_extra_029f() -> None:
     """
     TBD
     """
@@ -4201,7 +4201,7 @@ def test_extra_029f():
 
 
 @pytest.mark.gfm
-def test_extra_029g():
+def test_extra_029g() -> None:
     """
     TBD
     """
@@ -4235,7 +4235,7 @@ def test_extra_029g():
 
 
 @pytest.mark.gfm
-def test_extra_029h():
+def test_extra_029h() -> None:
     """
     TBD
     """
@@ -4269,7 +4269,7 @@ def test_extra_029h():
 
 
 @pytest.mark.gfm
-def test_extra_030xx():
+def test_extra_030xx() -> None:
     """
     TBD - from test_md010_bad_xxx
     """
@@ -4299,7 +4299,7 @@ def test_extra_030xx():
 
 
 @pytest.mark.gfm
-def test_extra_030xa():
+def test_extra_030xa() -> None:
     """
     TBD - from test_md010_bad_xxx
     """
@@ -4329,7 +4329,7 @@ def test_extra_030xa():
 
 
 @pytest.mark.gfm
-def test_extra_030ax():
+def test_extra_030ax() -> None:
     """
     TBD - from test_md010_bad_xxx
     """
@@ -4359,7 +4359,7 @@ def test_extra_030ax():
 
 
 @pytest.mark.gfm
-def test_extra_030aa():
+def test_extra_030aa() -> None:
     """
     TBD - from test_md010_bad_xxx
     """
@@ -4389,7 +4389,7 @@ def test_extra_030aa():
 
 
 @pytest.mark.gfm
-def test_extra_030bx():
+def test_extra_030bx() -> None:
     """
     TBD - from test_md010_bad_xxx
     """
@@ -4419,7 +4419,7 @@ def test_extra_030bx():
 
 
 @pytest.mark.gfm
-def test_extra_030ba():
+def test_extra_030ba() -> None:
     """
     TBD - from test_md010_bad_xxx
     """
@@ -4449,7 +4449,7 @@ def test_extra_030ba():
 
 
 @pytest.mark.gfm
-def test_extra_031x():
+def test_extra_031x() -> None:
     """
     TBD - from test_md010_bad_xxx
 
@@ -4503,7 +4503,7 @@ oisix.com.\t\t300\tIN\tMX\t250 mx3.idc.jp.
 
 
 @pytest.mark.gfm
-def test_extra_032():
+def test_extra_032() -> None:
     """
     TBD - from test_md010_bad_xxx
     """
@@ -4542,7 +4542,7 @@ def test_extra_032():
 
 
 @pytest.mark.gfm
-def test_extra_033x():
+def test_extra_033x() -> None:
     """
     TBD
     """
@@ -4578,7 +4578,7 @@ def test_extra_033x():
 
 
 @pytest.mark.gfm
-def test_extra_033a():
+def test_extra_033a() -> None:
     """
     TBD - from test_md010_bad_xxx
     """
@@ -4614,7 +4614,7 @@ def test_extra_033a():
 
 
 @pytest.mark.gfm
-def test_extra_034d():
+def test_extra_034d() -> None:
     """
     TBD - from https://github.com/jackdewinter/pymarkdown/issues/731
     """
@@ -4650,7 +4650,7 @@ block
 
 
 @pytest.mark.gfm
-def test_extra_034e():
+def test_extra_034e() -> None:
     """
     TBD - from https://github.com/jackdewinter/pymarkdown/issues/731
     """
@@ -4687,7 +4687,7 @@ def test_extra_034e():
 
 
 @pytest.mark.gfm
-def test_extra_035x():
+def test_extra_035x() -> None:
     """
     TBD - from https://github.com/jackdewinter/pymarkdown/issues/945
     """
@@ -4715,7 +4715,7 @@ def test_extra_035x():
 
 
 @pytest.mark.gfm
-def test_extra_035a():
+def test_extra_035a() -> None:
     """
     This may look like a blank line, but according to GFM, no space characters above x20
     unless using emphasis.
@@ -4739,7 +4739,7 @@ This page should not break pymarkdown</p>"""
 
 
 @pytest.mark.gfm
-def test_extra_036():
+def test_extra_036() -> None:
     """
     TBD
     """
@@ -4776,7 +4776,7 @@ just some text
 
 
 @pytest.mark.gfm
-def test_extra_037():
+def test_extra_037() -> None:
     """
     TBD
     """
@@ -4817,7 +4817,7 @@ with two lines.</p>
 
 
 @pytest.mark.gfm
-def test_extra_038x():
+def test_extra_038x() -> None:
     """
     TBD
     """
@@ -4855,7 +4855,7 @@ part 3</h2>
 
 
 @pytest.mark.gfm
-def test_extra_038a():
+def test_extra_038a() -> None:
     """
     TBD
     """
@@ -4887,7 +4887,7 @@ part 3</h2>"""
 
 
 @pytest.mark.gfm
-def test_extra_038bx():
+def test_extra_038bx() -> None:
     """
     TBD
     """
@@ -4922,7 +4922,7 @@ part 3</li>
 
 
 @pytest.mark.gfm
-def test_extra_038ba():
+def test_extra_038ba() -> None:
     """
     TBD
     """
@@ -4960,7 +4960,7 @@ part 3</h2>
 
 
 @pytest.mark.gfm
-def test_extra_038bb():
+def test_extra_038bb() -> None:
     """
     TBD
     """
@@ -4998,7 +4998,7 @@ part 3</h2>
 
 
 @pytest.mark.gfm
-def test_extra_038bc():
+def test_extra_038bc() -> None:
     """
     TBD
     """
@@ -5034,7 +5034,7 @@ part 3</h2>
 
 
 @pytest.mark.gfm
-def test_extra_038bd():
+def test_extra_038bd() -> None:
     """
     TBD
     """
@@ -5072,7 +5072,7 @@ part 3</h2>
 
 
 @pytest.mark.gfm
-def test_extra_038be():
+def test_extra_038be() -> None:
     """
     TBD
     """
@@ -5108,7 +5108,7 @@ part 3</h2>
 
 
 @pytest.mark.gfm
-def test_extra_038cx():
+def test_extra_038cx() -> None:
     """
     TBD
     """
@@ -5143,7 +5143,7 @@ part 3</li>
 
 
 @pytest.mark.gfm
-def test_extra_038ca():
+def test_extra_038ca() -> None:
     """
     TBD
     """
@@ -5181,7 +5181,7 @@ part 3</h2>
 
 
 @pytest.mark.gfm
-def test_extra_038dx():
+def test_extra_038dx() -> None:
     """
     TBD
     """
@@ -5229,7 +5229,7 @@ part 6</h2>
 
 
 @pytest.mark.gfm
-def test_extra_038da():
+def test_extra_038da() -> None:
     """
     TBD
     """
@@ -5281,7 +5281,7 @@ part 6</h2>
 
 
 @pytest.mark.gfm
-def test_extra_039x():
+def test_extra_039x() -> None:
     """
     TBD
     """
@@ -5319,7 +5319,7 @@ part 4</h2>
 
 
 @pytest.mark.gfm
-def test_extra_039a():
+def test_extra_039a() -> None:
     """
     TBD
     """
@@ -5363,7 +5363,7 @@ part 6</h2>
 
 
 @pytest.mark.gfm
-def test_extra_040x():
+def test_extra_040x() -> None:
     """
     TBD
     """
@@ -5397,7 +5397,7 @@ part 3</h2>
 
 
 @pytest.mark.gfm
-def test_extra_040a():
+def test_extra_040a() -> None:
     """
     TBD
     """
@@ -5431,7 +5431,7 @@ part 3</h2>
 
 
 @pytest.mark.gfm
-def test_extra_040b():
+def test_extra_040b() -> None:
     """
     TBD, when fixed, also fix bad_setext_four_unordered_list_with_tab_codespan_13
     """
@@ -5464,7 +5464,7 @@ part 3</h2>
 
 
 @pytest.mark.gfm
-def test_extra_040c():
+def test_extra_040c() -> None:
     """
     TBD, when fixed, also fix bad_setext_four_unordered_list_with_tab_codespan_13
     """
@@ -5497,7 +5497,7 @@ part 3</h2>
 
 
 @pytest.mark.gfm
-def test_extra_040d():
+def test_extra_040d() -> None:
     """
     TBD, when fixed, also fix bad_setext_four_unordered_list_with_tab_codespan_13
     """
@@ -5530,7 +5530,7 @@ part 3</h2>
 
 
 @pytest.mark.gfm
-def test_extra_040e():
+def test_extra_040e() -> None:
     """
     TBD, when fixed, also fix bad_setext_four_unordered_list_with_tab_codespan_13
     """
@@ -5562,7 +5562,7 @@ part 3</li>
 
 
 @pytest.mark.gfm
-def test_extra_041x():
+def test_extra_041x() -> None:
     """
     TBD
     """
@@ -5591,7 +5591,7 @@ def test_extra_041x():
 
 
 @pytest.mark.gfm
-def test_extra_041a():
+def test_extra_041a() -> None:
     """
     TBD
     """
@@ -5625,7 +5625,7 @@ def test_extra_041a():
 
 
 @pytest.mark.gfm
-def test_extra_042b():
+def test_extra_042b() -> None:
     """
     TBD
     """
@@ -5684,7 +5684,7 @@ def test_extra_042b():
 
 
 @pytest.mark.gfm
-def test_extra_042c():
+def test_extra_042c() -> None:
     """
     TBD
     """
@@ -5747,7 +5747,7 @@ def test_extra_042c():
 
 
 @pytest.mark.gfm
-def test_extra_042d():
+def test_extra_042d() -> None:
     """
     TBD
     """
@@ -5797,7 +5797,7 @@ def test_extra_042d():
 
 
 @pytest.mark.gfm
-def test_extra_042x():
+def test_extra_042x() -> None:
     """
     TBD
     """
@@ -5829,7 +5829,7 @@ def test_extra_042x():
 
 
 @pytest.mark.gfm
-def test_extra_042xx():
+def test_extra_042xx() -> None:
     """
     TBD
     """
@@ -5864,7 +5864,7 @@ def test_extra_042xx():
 
 
 @pytest.mark.gfm
-def test_extra_042xa():
+def test_extra_042xa() -> None:
     """
     TBD
     """
@@ -5897,7 +5897,7 @@ def test_extra_042xa():
 
 
 @pytest.mark.gfm
-def test_extra_042xb():
+def test_extra_042xb() -> None:
     """
     TBD
     """
@@ -5932,7 +5932,7 @@ def test_extra_042xb():
 
 
 @pytest.mark.gfm
-def test_extra_042xc():
+def test_extra_042xc() -> None:
     """
     TBD
     """
@@ -5967,7 +5967,7 @@ def test_extra_042xc():
 
 
 @pytest.mark.gfm
-def test_extra_043x():
+def test_extra_043x() -> None:
     """
     TBD
     """
@@ -5986,7 +5986,7 @@ def test_extra_043x():
 
 
 @pytest.mark.gfm
-def test_extra_043a():
+def test_extra_043a() -> None:
     """
     TBD
     """
@@ -6005,7 +6005,7 @@ def test_extra_043a():
 
 
 @pytest.mark.gfm
-def test_extra_044d():
+def test_extra_044d() -> None:
     """
     TBD
     """
@@ -6051,7 +6051,7 @@ This is text and no blank line.</p>
 
 
 @pytest.mark.gfm
-def test_extra_044e():
+def test_extra_044e() -> None:
     """
     TBD
     """
@@ -6101,7 +6101,7 @@ This is text and no blank line.</p>
 
 
 @pytest.mark.gfm
-def test_extra_044jeb():
+def test_extra_044jeb() -> None:
     """
     TBD
     """
@@ -6165,7 +6165,7 @@ un-block</p>
 
 @pytest.mark.gfm
 @pytest.mark.skip
-def test_extra_044jec():
+def test_extra_044jec() -> None:
     """
     TBD
     """
@@ -6232,7 +6232,7 @@ un-block</p>
 
 
 @pytest.mark.gfm
-def test_extra_044mb():
+def test_extra_044mb() -> None:
     """
     TBD
     """
@@ -6263,7 +6263,7 @@ def test_extra_044mb():
 
 
 @pytest.mark.gfm
-def test_extra_044mcxx():
+def test_extra_044mcxx() -> None:
     """
     TBD
     """
@@ -6300,7 +6300,7 @@ this</li>
 
 
 @pytest.mark.gfm
-def test_extra_044mcxa():
+def test_extra_044mcxa() -> None:
     """
     TBD
     """
@@ -6333,7 +6333,7 @@ this</li>
 
 
 @pytest.mark.gfm
-def test_extra_044mca():
+def test_extra_044mca() -> None:
     """
     TBD
     """
@@ -6370,7 +6370,7 @@ this</li>
 
 
 @pytest.mark.gfm
-def test_extra_044mcb():
+def test_extra_044mcb() -> None:
     """
     TBD
     """
@@ -6407,7 +6407,7 @@ this</li>
 
 
 @pytest.mark.gfm
-def test_extra_044mcc():
+def test_extra_044mcc() -> None:
     """
     TBD
     """
@@ -6444,7 +6444,7 @@ this</li>
 
 
 @pytest.mark.gfm
-def test_extra_044mcd():
+def test_extra_044mcd() -> None:
     """
     TBD
     """
@@ -6481,7 +6481,7 @@ this</li>
 
 
 @pytest.mark.gfm
-def test_extra_044mce():
+def test_extra_044mce() -> None:
     """
     TBD
     """
@@ -6518,7 +6518,7 @@ this</li>
 
 
 @pytest.mark.gfm
-def test_extra_046a():
+def test_extra_046a() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block
@@ -6570,7 +6570,7 @@ list 2</h2>
 
 
 @pytest.mark.gfm
-def test_extra_046cx():
+def test_extra_046cx() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block
@@ -6630,7 +6630,7 @@ inner block</p>
 
 
 @pytest.mark.gfm
-def test_extra_046l0():
+def test_extra_046l0() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_bare
@@ -6675,7 +6675,7 @@ def test_extra_046l0():
 
 
 @pytest.mark.gfm
-def test_extra_046l1():
+def test_extra_046l1() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_bare
@@ -6727,7 +6727,7 @@ def test_extra_046l1():
 
 
 @pytest.mark.gfm
-def test_extra_046w0a():
+def test_extra_046w0a() -> None:
     """
     TBD
     bad_fenced_block_surrounded_by_list
@@ -6770,7 +6770,7 @@ A code block
 
 
 @pytest.mark.gfm
-def test_extra_046w1():
+def test_extra_046w1() -> None:
     """
     TBD
     bad_fenced_block_surrounded_by_list
@@ -6817,7 +6817,7 @@ A code block
 
 
 @pytest.mark.gfm
-def test_extra_046x0():
+def test_extra_046x0() -> None:
     """
     TBD
     bad_fenced_block_surrounded_by_block_quote
@@ -6860,7 +6860,7 @@ A code block
 
 
 @pytest.mark.gfm
-def test_extra_046x1():
+def test_extra_046x1() -> None:
     """
     TBD
     bad_fenced_block_surrounded_by_block_quote
@@ -6907,7 +6907,7 @@ A code block
 
 
 @pytest.mark.gfm
-def test_extra_047b0():
+def test_extra_047b0() -> None:
     """
     TBD
     bad_fenced_block_in_list_with_previous_inner_list
@@ -6959,7 +6959,7 @@ couple of lines</li>
 
 
 @pytest.mark.gfm
-def test_extra_047b1():
+def test_extra_047b1() -> None:
     """
     TBD
     bad_fenced_block_in_list_with_previous_inner_list
@@ -7018,7 +7018,7 @@ couple of lines</li>
 
 
 @pytest.mark.gfm
-def test_extra_047c0():
+def test_extra_047c0() -> None:
     """
     TBD
     bad_fenced_block_in_list_with_previous_inner_list_with_thematics
@@ -7076,7 +7076,7 @@ couple of lines</li>
 
 
 @pytest.mark.gfm
-def test_extra_047c1():
+def test_extra_047c1() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list
@@ -7141,7 +7141,7 @@ couple of lines</li>
 
 
 @pytest.mark.gfm
-def test_extra_047f0():
+def test_extra_047f0() -> None:
     """
     TBD
     bad_fenced_block_only_after_in_block_quote_with_thematics
@@ -7186,7 +7186,7 @@ def test_extra_047f0():
 
 
 @pytest.mark.gfm
-def test_extra_047f1():
+def test_extra_047f1() -> None:
     """
     TBD
     bad_fenced_block_only_before_in_block_quote_with_thematics
@@ -7231,7 +7231,7 @@ def test_extra_047f1():
 
 
 @pytest.mark.gfm
-def test_extra_047f1a():
+def test_extra_047f1a() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_with_previous_inner_block_with_setext
@@ -7287,7 +7287,7 @@ inner block</p>
 
 
 @pytest.mark.gfm
-def test_extra_047f2():
+def test_extra_047f2() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_with_previous_inner_block_and_para_continue_and_thematics
@@ -7340,7 +7340,7 @@ This is text and no blank line.</p>
 
 
 @pytest.mark.gfm
-def test_extra_047f4():
+def test_extra_047f4() -> None:
     """
     TBD
     bad_fenced_block_surrounded_by_block_quote_with_thematics
@@ -7389,7 +7389,7 @@ A code block
 
 
 @pytest.mark.gfm
-def test_extra_047f5():
+def test_extra_047f5() -> None:
     """
     TBD
     bad_fenced_block_surrounded_by_block_quote_with_setext
@@ -7446,7 +7446,7 @@ abc
 
 
 @pytest.mark.gfm
-def test_extra_049a0():
+def test_extra_049a0() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_in_list_with_previous_list_double_drop_with_thematics
@@ -7513,7 +7513,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_049b0():
+def test_extra_049b0() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_block_triple_drop
@@ -7572,7 +7572,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_049b1a():
+def test_extra_049b1a() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_block_triple_drop_with_thematics
@@ -7631,7 +7631,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_049b1b():
+def test_extra_049b1b() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_block_triple_drop_with_thematics
@@ -7694,7 +7694,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_049c0():
+def test_extra_049c0() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_block_quad_drop
@@ -7750,7 +7750,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_049c1():
+def test_extra_049c1() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_block_quad_drop_with_thematics
@@ -7809,7 +7809,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_049d0():
+def test_extra_049d0() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_quad_drop
@@ -7872,7 +7872,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_049d1():
+def test_extra_049d1() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_quad_drop_with_thematics
@@ -7938,7 +7938,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_049e0():
+def test_extra_049e0() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_blockx_quad_drop
@@ -7999,7 +7999,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_049f0():
+def test_extra_049f0() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_in_list_with_previous_block_quad_drop
@@ -8057,7 +8057,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_049g0():
+def test_extra_049g0() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_in_list_with_previous_block_triple_drop
@@ -8115,7 +8115,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_049h0():
+def test_extra_049h0() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block_quad_drop_with_thematics
@@ -8179,7 +8179,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_049j0():
+def test_extra_049j0() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_quad_drop
@@ -8246,7 +8246,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_049j1():
+def test_extra_049j1() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_quad_drop_and_thematics
@@ -8316,7 +8316,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_049k0():
+def test_extra_049k0() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_with_previous_inner_block_triple_drop
@@ -8377,7 +8377,7 @@ block 3</p>
 
 
 @pytest.mark.gfm
-def test_extra_049k1():
+def test_extra_049k1() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_with_previous_inner_block_triple_drop_without_thematics
@@ -8432,7 +8432,7 @@ block 3</p>
 
 
 @pytest.mark.gfm
-def test_extra_049l0():
+def test_extra_049l0() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_block_quote_with_previous_inner_list_double_drop
@@ -8485,7 +8485,7 @@ block 3</li>
 
 
 @pytest.mark.gfm
-def test_extra_049l1():
+def test_extra_049l1() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_list_double_drop
@@ -8544,7 +8544,7 @@ inner list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_049l2a():
+def test_extra_049l2a() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_list_triple_drop
@@ -8603,7 +8603,7 @@ inner list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_049l2b():
+def test_extra_049l2b() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_list_triple_drop
@@ -8666,7 +8666,7 @@ inner list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_049l3a():
+def test_extra_049l3a() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_list_triple_drop
@@ -8728,7 +8728,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_049l3b():
+def test_extra_049l3b() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_list_triple_drop
@@ -8794,7 +8794,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_049l5():
+def test_extra_049l5() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_inner_list_double_drop
@@ -8850,7 +8850,7 @@ block 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_049l6():
+def test_extra_049l6() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_list_double_drop
@@ -8912,7 +8912,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_049l7a():
+def test_extra_049l7a() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_double_drop_x
@@ -8980,7 +8980,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_049l7b():
+def test_extra_049l7b() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_double_drop_x
@@ -9054,7 +9054,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_049l8a():
+def test_extra_049l8a() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_triple_drop
@@ -9121,7 +9121,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_049l8b():
+def test_extra_049l8b() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_triple_drop
@@ -9192,7 +9192,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_049l8c():
+def test_extra_049l8c() -> None:
     """
     TBD
     """
@@ -9258,7 +9258,7 @@ list 3</li>
 
 
 @pytest.mark.gfm
-def test_extra_049l9a():
+def test_extra_049l9a() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_triple_drop
@@ -9328,7 +9328,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_049l9b():
+def test_extra_049l9b() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_triple_drop
@@ -9404,7 +9404,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_049l4xa():
+def test_extra_049l4xa() -> None:
     """
     TBD
     preventing bad_fenced_block_in_list_in_list_in_list_with_previous_block_double_drop
@@ -9470,7 +9470,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_049l4xb():
+def test_extra_049l4xb() -> None:
     """
     TBD
     preventing bad_fenced_block_in_list_in_list_in_list_with_previous_block_double_drop
@@ -9542,7 +9542,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_049l4a():
+def test_extra_049l4a() -> None:
     """
     TBD
     """
@@ -9596,7 +9596,7 @@ def test_extra_049l4a():
 
 
 @pytest.mark.gfm
-def test_extra_050a0a():
+def test_extra_050a0a() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_with_previous_inner_block_double_drop
@@ -9652,7 +9652,7 @@ another list</li>
 
 
 @pytest.mark.gfm
-def test_extra_050a0b():
+def test_extra_050a0b() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_with_previous_inner_block_double_drop
@@ -9713,7 +9713,7 @@ block 2.2</p>
 
 
 @pytest.mark.gfm
-def test_extra_050b0():
+def test_extra_050b0() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_in_list_with_previous_list_double_drop
@@ -9782,7 +9782,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_050b1():
+def test_extra_050b1() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_in_list_with_previous_list_double_drop
@@ -9857,7 +9857,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_050c0():
+def test_extra_050c0() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_in_list_with_previous_block_triple_drop_with_thematics
@@ -9924,7 +9924,7 @@ another list</li>
 
 
 @pytest.mark.gfm
-def test_extra_050c1():
+def test_extra_050c1() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_in_list_with_previous_block_triple_drop_with_thematics
@@ -9996,7 +9996,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_050c2():
+def test_extra_050c2() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_in_list_with_previous_block_quad_drop
@@ -10061,7 +10061,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_050c3():
+def test_extra_050c3() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_in_list_with_previous_block_quad_drop
@@ -10130,7 +10130,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_050d0():
+def test_extra_050d0() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_double_drop
@@ -10194,7 +10194,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_050d1():
+def test_extra_050d1() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_double_drop
@@ -10264,7 +10264,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_050e0():
+def test_extra_050e0() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_in_list_with_previous_block_double_drop
@@ -10322,7 +10322,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_050e1():
+def test_extra_050e1() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_in_list_with_previous_block_double_drop
@@ -10384,7 +10384,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_050f0():
+def test_extra_050f0() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_in_list_with_previous_list_triple_drop
@@ -10448,7 +10448,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_050f1():
+def test_extra_050f1() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_in_list_with_previous_list_triple_drop
@@ -10516,7 +10516,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_050g0():
+def test_extra_050g0() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_block_quote_double_drop_with_previous_inner_block
@@ -10567,7 +10567,7 @@ block 3</p>
 
 
 @pytest.mark.gfm
-def test_extra_050g1():
+def test_extra_050g1() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_block_quote_double_drop_with_previous_inner_block
@@ -10622,7 +10622,7 @@ block 3</p>
 
 
 @pytest.mark.gfm
-def test_extra_050h0():
+def test_extra_050h0() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_block_quote_with_previous_inner_list_double_drop
@@ -10675,7 +10675,7 @@ block 3</li>
 
 
 @pytest.mark.gfm
-def test_extra_050h1():
+def test_extra_050h1() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_block_quote_with_previous_inner_list_double_drop
@@ -10732,7 +10732,7 @@ block 3</li>
 
 
 @pytest.mark.gfm
-def test_extra_051a0():
+def test_extra_051a0() -> None:
     """
     TBD
     bad_in_list_with_double_blanks_at_end
@@ -10772,7 +10772,7 @@ def test_extra_051a0():
 
 
 @pytest.mark.gfm
-def test_extra_051a1():
+def test_extra_051a1() -> None:
     """
     TBD
     bad_in_list_with_double_blanks_at_start
@@ -10812,7 +10812,7 @@ def test_extra_051a1():
 
 
 @pytest.mark.gfm
-def test_extra_051a2():
+def test_extra_051a2() -> None:
     """
     TBD
     bad_in_list_in_block_quote_with_double_blanks_at_start
@@ -10859,7 +10859,7 @@ def test_extra_051a2():
 
 
 @pytest.mark.gfm
-def test_extra_051b0():
+def test_extra_051b0() -> None:
     """
     TBD
     bad_in_list_in_block_quote_with_triple_blanks_at_middle
@@ -10908,7 +10908,7 @@ def test_extra_051b0():
 
 
 @pytest.mark.gfm
-def test_extra_051b1():
+def test_extra_051b1() -> None:
     """
     TBD
     bad_in_list_in_block_quote_with_triple_blanks_at_middle
@@ -10955,7 +10955,7 @@ def test_extra_051b1():
 
 
 @pytest.mark.gfm
-def test_extra_051b2():
+def test_extra_051b2() -> None:
     """
     TBD
     md012_bad_in_list_in_block_quote_with_double_blanks_at_start
@@ -10999,7 +10999,7 @@ def test_extra_051b2():
 
 
 @pytest.mark.gfm
-def test_extra_051c0x():
+def test_extra_051c0x() -> None:
     """
     TBD
     bad_in_list_in_list_with_double_blanks_at_start
@@ -11048,7 +11048,7 @@ def test_extra_051c0x():
 
 
 @pytest.mark.gfm
-def test_extra_051c0a():
+def test_extra_051c0a() -> None:
     """
     TBD
     bad_in_list_in_list_with_double_blanks_at_start
@@ -11101,7 +11101,7 @@ def test_extra_051c0a():
 
 
 @pytest.mark.gfm
-def test_extra_051c1x():
+def test_extra_051c1x() -> None:
     """
     TBD
     """
@@ -11149,7 +11149,7 @@ def test_extra_051c1x():
 
 
 @pytest.mark.gfm
-def test_extra_051c1a():
+def test_extra_051c1a() -> None:
     """
     TBD
     """
@@ -11201,7 +11201,7 @@ def test_extra_051c1a():
 
 
 @pytest.mark.gfm
-def test_extra_051c2():
+def test_extra_051c2() -> None:
     """
     TBD
     """
@@ -11244,7 +11244,7 @@ def test_extra_051c2():
 
 
 @pytest.mark.gfm
-def test_extra_051c3x():
+def test_extra_051c3x() -> None:
     """
     TBD
     """
@@ -11291,7 +11291,7 @@ def test_extra_051c3x():
 
 
 @pytest.mark.gfm
-def test_extra_051c3a():
+def test_extra_051c3a() -> None:
     """
     TBD
     """
@@ -11340,7 +11340,7 @@ def test_extra_051c3a():
 
 
 @pytest.mark.gfm
-def test_extra_051c4x():
+def test_extra_051c4x() -> None:
     """
     TBD
     """
@@ -11378,7 +11378,7 @@ barney</p>
 
 
 @pytest.mark.gfm
-def test_extra_051c4a():
+def test_extra_051c4a() -> None:
     """
     TBD
     """
@@ -11413,7 +11413,7 @@ barney</p>
 
 
 @pytest.mark.gfm
-def test_extra_051c5x():
+def test_extra_051c5x() -> None:
     """
     TBD
     """
@@ -11449,7 +11449,7 @@ barney</p>
 
 
 @pytest.mark.gfm
-def test_extra_051c5a():
+def test_extra_051c5a() -> None:
     """
     TBD
     """
@@ -11481,7 +11481,7 @@ barney</p>"""
 
 
 @pytest.mark.gfm
-def test_extra_051c6x():
+def test_extra_051c6x() -> None:
     """
     TBD
     """
@@ -11532,7 +11532,7 @@ def test_extra_051c6x():
 
 
 @pytest.mark.gfm
-def test_extra_051c6a():
+def test_extra_051c6a() -> None:
     """
     TBD
     """
@@ -11586,7 +11586,7 @@ def test_extra_051c6a():
 
 
 @pytest.mark.gfm
-def test_extra_051c7x():
+def test_extra_051c7x() -> None:
     """
     TBD
     """
@@ -11629,7 +11629,7 @@ barney</p>
 
 
 @pytest.mark.gfm
-def test_extra_051c7a():
+def test_extra_051c7a() -> None:
     """
     TBD
     """
@@ -11675,7 +11675,7 @@ barney</p>
 
 
 @pytest.mark.gfm
-def test_extra_051c8x():
+def test_extra_051c8x() -> None:
     """
     TBD
     """
@@ -11726,7 +11726,7 @@ barney</p>
 
 
 @pytest.mark.gfm
-def test_extra_051c8a():
+def test_extra_051c8a() -> None:
     """
     TBD
     """
@@ -11780,7 +11780,7 @@ barney</p>
 
 
 @pytest.mark.gfm
-def test_extra_051c9x():
+def test_extra_051c9x() -> None:
     """
     TBD
     """
@@ -11843,7 +11843,7 @@ def test_extra_051c9x():
 
 
 @pytest.mark.gfm
-def test_extra_051c9a():
+def test_extra_051c9a() -> None:
     """
     TBD
     """
@@ -11909,7 +11909,7 @@ def test_extra_051c9a():
 
 
 @pytest.mark.gfm
-def test_extra_051cax():
+def test_extra_051cax() -> None:
     """
     TBD
     """
@@ -11966,7 +11966,7 @@ def test_extra_051cax():
 
 
 @pytest.mark.gfm
-def test_extra_051caa():
+def test_extra_051caa() -> None:
     """
     TBD
     """
@@ -12026,7 +12026,7 @@ def test_extra_051caa():
 
 
 @pytest.mark.gfm
-def test_extra_051cbx():
+def test_extra_051cbx() -> None:
     """
     TBD
     """
@@ -12088,7 +12088,7 @@ def test_extra_051cbx():
 
 
 @pytest.mark.gfm
-def test_extra_051cba():
+def test_extra_051cba() -> None:
     """
     TBD
     """
@@ -12153,7 +12153,7 @@ def test_extra_051cba():
 
 
 @pytest.mark.gfm
-def test_extra_051cbb():
+def test_extra_051cbb() -> None:
     """
     TBD
     """
@@ -12218,7 +12218,7 @@ def test_extra_051cbb():
 
 
 @pytest.mark.gfm
-def test_extra_051cbc():
+def test_extra_051cbc() -> None:
     """
     TBD
     """
@@ -12262,7 +12262,7 @@ def test_extra_051cbc():
 
 
 @pytest.mark.gfm
-def test_extra_051cbd():
+def test_extra_051cbd() -> None:
     """
     TBD
     """
@@ -12293,7 +12293,7 @@ barney</p>
 
 
 @pytest.mark.gfm
-def test_extra_051cbe():
+def test_extra_051cbe() -> None:
     """
     TBD
     """
@@ -12337,7 +12337,7 @@ def test_extra_051cbe():
 
 
 @pytest.mark.gfm
-def test_extra_051ccx():
+def test_extra_051ccx() -> None:
     """
     TBD
     """
@@ -12392,7 +12392,7 @@ def test_extra_051ccx():
 
 
 @pytest.mark.gfm
-def test_extra_051cca():
+def test_extra_051cca() -> None:
     """
     TBD
     """
@@ -12449,7 +12449,7 @@ def test_extra_051cca():
 
 
 @pytest.mark.gfm
-def test_extra_051cdx():
+def test_extra_051cdx() -> None:
     """
     TBD
     """
@@ -12502,7 +12502,7 @@ def test_extra_051cdx():
 
 
 @pytest.mark.gfm
-def test_extra_051cda():
+def test_extra_051cda() -> None:
     """
     TBD
     """
@@ -12557,7 +12557,7 @@ def test_extra_051cda():
 
 
 @pytest.mark.gfm
-def test_extra_051cex():
+def test_extra_051cex() -> None:
     """
     TBD
     """
@@ -12608,7 +12608,7 @@ def test_extra_051cex():
 
 
 @pytest.mark.gfm
-def test_extra_051cea():
+def test_extra_051cea() -> None:
     """
     TBD
     """
@@ -12662,7 +12662,7 @@ def test_extra_051cea():
 
 
 @pytest.mark.gfm
-def test_extra_051cfx():
+def test_extra_051cfx() -> None:
     """
     TBD
     """
@@ -12716,7 +12716,7 @@ def test_extra_051cfx():
 
 
 @pytest.mark.gfm
-def test_extra_051cfa():
+def test_extra_051cfa() -> None:
     """
     TBD
     """
@@ -12772,7 +12772,7 @@ def test_extra_051cfa():
 
 
 @pytest.mark.gfm
-def test_extra_051d():
+def test_extra_051d() -> None:
     """
     TBD
     bad_single_block_quote_space_bottom
@@ -12805,7 +12805,7 @@ def test_extra_051d():
 
 
 @pytest.mark.gfm
-def test_extra_051e():
+def test_extra_051e() -> None:
     """
     TBD
     bad_unordered_list_fall_off_after_fenced_open
@@ -12851,7 +12851,7 @@ def test_extra_051e():
 
 
 @pytest.mark.gfm
-def test_extra_051f0():
+def test_extra_051f0() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_double_drop_and_thematics
@@ -12922,7 +12922,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_051f1():
+def test_extra_051f1() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_double_drop_and_thematics
@@ -12999,7 +12999,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_051g0():
+def test_extra_051g0() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_triple_drop_and_thematics
@@ -13069,7 +13069,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_051g1():
+def test_extra_051g1() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_list_triple_drop_and_thematics
@@ -13143,7 +13143,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_051h0():
+def test_extra_051h0() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_block_triple_drop
@@ -13196,7 +13196,7 @@ fourth block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_051h1():
+def test_extra_051h1() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_block_triple_drop
@@ -13253,7 +13253,7 @@ fourth block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_051j0():
+def test_extra_051j0() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_block_triple_drop_with_thematics
@@ -13309,7 +13309,7 @@ fourth block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_051k0():
+def test_extra_051k0() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block_triple_drop_with_thematics
@@ -13373,7 +13373,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_052a0():
+def test_extra_052a0() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_block_double_drop
@@ -13426,7 +13426,7 @@ fourth block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_052a1():
+def test_extra_052a1() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_block_quote_in_block_quote_with_previous_block_double_drop
@@ -13483,7 +13483,7 @@ fourth block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_052b0():
+def test_extra_052b0() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_with_previous_inner_block_double_drop_without_thematics
@@ -13538,7 +13538,7 @@ block 3</p>
 
 
 @pytest.mark.gfm
-def test_extra_052b1():
+def test_extra_052b1() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_with_previous_inner_block_double_drop_without_thematics
@@ -13597,7 +13597,7 @@ block 3</p>
 
 
 @pytest.mark.gfm
-def test_extra_052c0():
+def test_extra_052c0() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_double_drop_with_thematics
@@ -13664,7 +13664,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_052c1():
+def test_extra_052c1() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_double_drop_with_thematics
@@ -13737,7 +13737,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_052d0():
+def test_extra_052d0() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_list_triple_drop_and_thematics
@@ -13802,7 +13802,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_052d1():
+def test_extra_052d1() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_in_block_quote_with_previous_list_triple_drop_and_thematics
@@ -13871,7 +13871,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_052e0():
+def test_extra_052e0() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_list_double_drop_with_thematics
@@ -13936,7 +13936,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_052e1():
+def test_extra_052e1() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_list_double_drop_with_thematics
@@ -14005,7 +14005,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_052f0():
+def test_extra_052f0() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_inner_list_triple_drop
@@ -14061,7 +14061,7 @@ block 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_052f1():
+def test_extra_052f1() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_inner_list_triple_drop
@@ -14121,7 +14121,7 @@ block 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_052g0():
+def test_extra_052g0() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_in_list_with_previous_block_triple_drop
@@ -14179,7 +14179,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_052g1():
+def test_extra_052g1() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_block_quote_in_list_with_previous_block_triple_drop
@@ -14241,7 +14241,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_052h0():
+def test_extra_052h0() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_list_triple_drop_with_thematics
@@ -14306,7 +14306,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_052h1():
+def test_extra_052h1() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_block_quote_in_list_with_previous_list_triple_drop_with_thematics
@@ -14375,7 +14375,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_052j0():
+def test_extra_052j0() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_triple_drop
@@ -14438,7 +14438,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_052j1():
+def test_extra_052j1() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_triple_drop
@@ -14505,7 +14505,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_052k0():
+def test_extra_052k0() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_triple_drop_with_thematics
@@ -14571,7 +14571,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_052k1():
+def test_extra_052k1() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_in_block_quote_with_previous_block_triple_drop_with_thematics
@@ -14641,7 +14641,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_052l0():
+def test_extra_052l0() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_double_drop
@@ -14711,7 +14711,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_052l1():
+def test_extra_052l1() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_double_drop
@@ -14787,7 +14787,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_052m0():
+def test_extra_052m0() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_double_drop
@@ -14860,7 +14860,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_052m1():
+def test_extra_052m1() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_in_block_quote_with_previous_list_double_drop
@@ -14939,7 +14939,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_052n0():
+def test_extra_052n0() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_with_previous_inner_block_double_drop_with_thematics
@@ -15001,7 +15001,7 @@ another list</li>
 
 
 @pytest.mark.gfm
-def test_extra_052n1():
+def test_extra_052n1() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_with_previous_inner_block_double_drop_with_thematics
@@ -15068,7 +15068,7 @@ block 2.2</p>
 
 
 @pytest.mark.gfm
-def test_extra_052p0():
+def test_extra_052p0() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_list_with_previous_block_triple_drop
@@ -15130,7 +15130,7 @@ another list</li>
 
 
 @pytest.mark.gfm
-def test_extra_052p1():
+def test_extra_052p1() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_list_with_previous_block_triple_drop
@@ -15197,7 +15197,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_052q0():
+def test_extra_052q0() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_list_with_previous_block_triple_drop_and_thematics
@@ -15260,7 +15260,7 @@ another list</li>
 
 @pytest.mark.gfm
 # @pytest.mark.skip
-def test_extra_052r0():
+def test_extra_052r0() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_list_with_previous_list_triple_drop
@@ -15328,7 +15328,7 @@ another list</li>
 
 
 @pytest.mark.gfm
-def test_extra_052r1():
+def test_extra_052r1() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_list_with_previous_list_triple_drop
@@ -15401,7 +15401,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_052s0():
+def test_extra_052s0() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_list_with_previous_list_double_drop_and_thematics
@@ -15474,7 +15474,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_052s1():
+def test_extra_052s1() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_list_with_previous_list_double_drop_and_thematics
@@ -15553,7 +15553,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_052t0():
+def test_extra_052t0() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_list_with_previous_list_triple_drop_and_thematics
@@ -15625,7 +15625,7 @@ another list</li>
 
 
 @pytest.mark.gfm
-def test_extra_052u0():
+def test_extra_052u0() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_in_list_with_previous_block_triple_drop
@@ -15690,7 +15690,7 @@ another list</li>
 
 
 @pytest.mark.gfm
-def test_extra_052u1():
+def test_extra_052u1() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_in_list_with_previous_block_triple_drop
@@ -15759,7 +15759,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_052v0():
+def test_extra_052v0() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_in_list_with_previous_block_double_drop_with_thematics
@@ -15828,7 +15828,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_052v1():
+def test_extra_052v1() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_in_list_with_previous_block_double_drop_with_thematics
@@ -15903,7 +15903,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_052w0():
+def test_extra_052w0() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_in_list_with_previous_list_triple_drop
@@ -15970,7 +15970,7 @@ another list</li>
 
 
 @pytest.mark.gfm
-def test_extra_052w1():
+def test_extra_052w1() -> None:
     """
     TBD
     bad_fenced_block_in_list_in_list_in_list_with_previous_list_triple_drop
@@ -16042,7 +16042,7 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_extra_053a0():
+def test_extra_053a0() -> None:
     """
     TBD
     issue-1302
@@ -16071,7 +16071,7 @@ Emits MD020 warning.
 
 
 @pytest.mark.gfm
-def test_extra_053a1():
+def test_extra_053a1() -> None:
     """
     TBD
     issue-1302
@@ -16100,7 +16100,7 @@ Emits MD020 warning.
 
 
 @pytest.mark.gfm
-def test_extra_053b0():
+def test_extra_053b0() -> None:
     """
     TBD
     issue-1326
@@ -16182,7 +16182,7 @@ z
 
 
 @pytest.mark.gfm
-def test_extra_053c0():
+def test_extra_053c0() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_blockx_double_drop
@@ -16244,7 +16244,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_053c1():
+def test_extra_053c1() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_blockx_double_drop
@@ -16312,7 +16312,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_053d0():
+def test_extra_053d0() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block_double_drop_with_thematics
@@ -16377,7 +16377,7 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_extra_053d1():
+def test_extra_053d1() -> None:
     """
     TBD
     bad_fenced_block_in_block_quote_in_list_in_block_quote_with_previous_block_double_drop_with_thematics
@@ -16449,7 +16449,7 @@ block 2</p>
 
 @pytest.mark.skip
 @pytest.mark.gfm
-def test_extra_054x():
+def test_extra_054x() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
 
@@ -16484,7 +16484,7 @@ some other text</li>
 
 
 @pytest.mark.gfm
-def test_extra_999():
+def test_extra_999() -> None:
     """
     Temporary test to keep coverage up while consistency checks disabled.
     """
@@ -16498,7 +16498,7 @@ def test_extra_999():
     new_front_matter = FrontMatterMarkdownToken("--", "--", ["a: b"], {}, new_position)
     new_value = new_front_matter.calculate_block_token_height(new_front_matter)
     assert new_value != 999
-    new_value = new_front_matter.calculate_initial_whitespace()
+    new_value, _ = new_front_matter.calculate_initial_whitespace()
     assert new_value != 999
     assert new_front_matter.is_extension
 

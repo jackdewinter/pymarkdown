@@ -11,7 +11,7 @@ import pytest
 
 
 @pytest.mark.rules
-def test_md045_good_inline_image():
+def test_md045_good_inline_image() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains inline images with alt text.
@@ -43,7 +43,7 @@ def test_md045_good_inline_image():
 
 
 @pytest.mark.rules
-def test_md045_bad_inline_image():
+def test_md045_bad_inline_image() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains inline images with no alt text.
@@ -78,7 +78,7 @@ def test_md045_bad_inline_image():
 
 
 @pytest.mark.rules
-def test_md045_bad_inline_image_whitespace_only():
+def test_md045_bad_inline_image_whitespace_only() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains inline images with alt text that is whitespace only.
@@ -116,7 +116,7 @@ def test_md045_bad_inline_image_whitespace_only():
 
 
 @pytest.mark.rules
-def test_md045_bad_inline_image_whitespace_only_2():
+def test_md045_bad_inline_image_whitespace_only_2() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains inline images with alt text that is whitespace only.
@@ -154,7 +154,7 @@ def test_md045_bad_inline_image_whitespace_only_2():
 
 
 @pytest.mark.rules
-def test_md045_good_full_image():
+def test_md045_good_full_image() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains full images with alt text.
@@ -186,7 +186,7 @@ def test_md045_good_full_image():
 
 
 @pytest.mark.rules
-def test_md045_bad_full_image():
+def test_md045_bad_full_image() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains full images with not alt text.
@@ -221,7 +221,7 @@ def test_md045_bad_full_image():
 
 
 @pytest.mark.rules
-def test_md045_good_shortcut_image():
+def test_md045_good_shortcut_image() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains shortcut images with alt text.
@@ -252,7 +252,7 @@ def test_md045_good_shortcut_image():
     )
 
 
-def test_md045_query_config():
+def test_md045_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md045",
         """

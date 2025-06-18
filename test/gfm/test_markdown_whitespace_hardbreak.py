@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_whitespaces_hard_break_with_spaces():
+def test_whitespaces_hard_break_with_spaces() -> None:
     """
     Test case:  hard_break with spaces
     """
@@ -31,7 +31,7 @@ bar</p>"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_hard_break_with_tabs():
+def test_whitespaces_hard_break_with_tabs() -> None:
     """
     Test case:  hard_break with tabs
     """
@@ -52,7 +52,7 @@ bar</p>"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_hard_break_with_form_feeds():
+def test_whitespaces_hard_break_with_form_feeds() -> None:
     """
     Test case: hard_break with form feeds
     """

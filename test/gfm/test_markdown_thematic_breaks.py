@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_thematic_breaks_013():
+def test_thematic_breaks_013() -> None:
     """
     Test case 013:  A line consisting of 0-3 spaces of indentation, followed by a sequence of three or more matching -, _, or * characters, each followed optionally by any number of spaces or tabs, forms a thematic break.
     """
@@ -31,7 +31,7 @@ ___"""
 
 
 @pytest.mark.gfm
-def test_thematic_breaks_014():
+def test_thematic_breaks_014() -> None:
     """
     Test case 014:  (part a) Wrong characters:
     """
@@ -46,7 +46,7 @@ def test_thematic_breaks_014():
 
 
 @pytest.mark.gfm
-def test_thematic_breaks_015():
+def test_thematic_breaks_015() -> None:
     """
     Test case 015:  (part b) Wrong characters:
     """
@@ -61,7 +61,7 @@ def test_thematic_breaks_015():
 
 
 @pytest.mark.gfm
-def test_thematic_breaks_016():
+def test_thematic_breaks_016() -> None:
     """
     Test case 016:  Not enough characters:
     """
@@ -84,7 +84,7 @@ __</p>"""
 
 
 @pytest.mark.gfm
-def test_thematic_breaks_017():
+def test_thematic_breaks_017() -> None:
     """
     Test case 017:  One to three spaces indent are allowed:
     """
@@ -107,7 +107,7 @@ def test_thematic_breaks_017():
 
 
 @pytest.mark.gfm
-def test_thematic_breaks_018():
+def test_thematic_breaks_018() -> None:
     """
     Test case 018:  (part a) Four spaces is too many:
     """
@@ -127,7 +127,7 @@ def test_thematic_breaks_018():
 
 
 @pytest.mark.gfm
-def test_thematic_breaks_019():
+def test_thematic_breaks_019() -> None:
     """
     Test case 019:  (part b) Four spaces is too many:
     """
@@ -148,7 +148,7 @@ def test_thematic_breaks_019():
 
 
 @pytest.mark.gfm
-def test_thematic_breaks_020():
+def test_thematic_breaks_020() -> None:
     """
     Test case 020:  More than three characters may be used:
     """
@@ -163,7 +163,7 @@ def test_thematic_breaks_020():
 
 
 @pytest.mark.gfm
-def test_thematic_breaks_021():
+def test_thematic_breaks_021() -> None:
     """
     Test case 021:  (part a) Spaces are allowed between the characters:
     """
@@ -178,7 +178,7 @@ def test_thematic_breaks_021():
 
 
 @pytest.mark.gfm
-def test_thematic_breaks_022():
+def test_thematic_breaks_022() -> None:
     """
     Test case 022:  (part b) Spaces are allowed between the characters:
     """
@@ -193,7 +193,7 @@ def test_thematic_breaks_022():
 
 
 @pytest.mark.gfm
-def test_thematic_breaks_023():
+def test_thematic_breaks_023() -> None:
     """
     Test case 023:  (part c) Spaces are allowed between the characters:
     """
@@ -208,7 +208,7 @@ def test_thematic_breaks_023():
 
 
 @pytest.mark.gfm
-def test_thematic_breaks_024():
+def test_thematic_breaks_024() -> None:
     """
     Test case 024:  Spaces are allowed at the end:
     """
@@ -223,7 +223,7 @@ def test_thematic_breaks_024():
 
 
 @pytest.mark.gfm
-def test_thematic_breaks_025():
+def test_thematic_breaks_025() -> None:
     """
     Test case 025:  However, no other characters may occur in the line:
     """
@@ -256,7 +256,7 @@ a------
 
 
 @pytest.mark.gfm
-def test_thematic_breaks_026():
+def test_thematic_breaks_026() -> None:
     """
     Test case 026:  It is required that all of the non-whitespace characters be the same. So, this is not a thematic break:
     """
@@ -277,7 +277,7 @@ def test_thematic_breaks_026():
 
 
 @pytest.mark.gfm
-def test_thematic_breaks_027():
+def test_thematic_breaks_027() -> None:
     """
     Test case 027:  Thematic breaks do not need blank lines before or after:
     """
@@ -312,7 +312,7 @@ def test_thematic_breaks_027():
 
 
 @pytest.mark.gfm
-def test_thematic_breaks_028():
+def test_thematic_breaks_028() -> None:
     """
     Test case 028:  Thematic breaks can interrupt a paragraph:
     """
@@ -339,7 +339,7 @@ bar"""
 
 
 @pytest.mark.gfm
-def test_thematic_breaks_029():
+def test_thematic_breaks_029() -> None:
     """
     Test case 029:  If a line of dashes that meets the above conditions for being a thematic break could also be interpreted as the underline of a setext heading, the interpretation as a setext heading takes precedence. Thus, for example, this is a setext heading, not a paragraph followed by a thematic break:
     """
@@ -364,7 +364,7 @@ bar"""
 
 
 @pytest.mark.gfm
-def test_thematic_breaks_030():
+def test_thematic_breaks_030() -> None:
     """
     Test case 030:  When both a thematic break and a list item are possible interpretations of a line, the thematic break takes precedence:
     """
@@ -399,7 +399,7 @@ def test_thematic_breaks_030():
 
 
 @pytest.mark.gfm
-def test_thematic_breaks_031():
+def test_thematic_breaks_031() -> None:
     """
     Test case 031:  If you want a thematic break in a list item, use a different bullet:
     """
@@ -430,7 +430,7 @@ def test_thematic_breaks_031():
 
 
 @pytest.mark.gfm
-def test_thematic_breaks_031o():
+def test_thematic_breaks_031o() -> None:
     """
     Test case 031o:  variation on 31 with ordered list
     """

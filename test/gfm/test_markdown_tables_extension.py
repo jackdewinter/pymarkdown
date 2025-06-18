@@ -9,7 +9,7 @@ import pytest
 config_map = {"extensions": {"markdown-tables": {"enabled": True}}}
 
 
-def test_tables_extension_198_disabled():
+def test_tables_extension_198_disabled() -> None:
     """
     Test case 198:  The delimiter row consists of cells whose only content are hyphens (-), and optionally, a leading or trailing colon (:), or both, to indicate left, right, or center alignment respectively.
     """
@@ -29,7 +29,7 @@ def test_tables_extension_198_disabled():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-def test_tables_extension_198_enabled():
+def test_tables_extension_198_enabled() -> None:
     """
     Test case 198:  The delimiter row consists of cells whose only content are hyphens (-), and optionally, a leading or trailing colon (:), or both, to indicate left, right, or center alignment respectively.
     """
@@ -81,7 +81,7 @@ def test_tables_extension_198_enabled():
     )
 
 
-def test_tables_extension_198_enabled_with_leading_same():
+def test_tables_extension_198_enabled_with_leading_same() -> None:
     """
     variation on 198 with leading spaces, all the same
     """
@@ -133,7 +133,7 @@ def test_tables_extension_198_enabled_with_leading_same():
     )
 
 
-def test_tables_extension_198_enabled_with_leading_different():
+def test_tables_extension_198_enabled_with_leading_different() -> None:
     """
     variation on 198 with leading spaces, all different
     """
@@ -185,7 +185,7 @@ def test_tables_extension_198_enabled_with_leading_different():
     )
 
 
-def test_tables_extension_198_enabled_with_trailing_same():
+def test_tables_extension_198_enabled_with_trailing_same() -> None:
     """
     variation on 198 with trailing spaces, all the same
     """
@@ -239,7 +239,7 @@ def test_tables_extension_198_enabled_with_trailing_same():
     )
 
 
-def test_tables_extension_198_enabled_with_empty_columns():
+def test_tables_extension_198_enabled_with_empty_columns() -> None:
     """
     variation on 198 with trailing spaces, all the same
     """
@@ -291,7 +291,7 @@ def test_tables_extension_198_enabled_with_empty_columns():
     )
 
 
-def test_tables_extension_198_enabled_with_internal_tabs():
+def test_tables_extension_198_enabled_with_internal_tabs() -> None:
     """
     Test case 198:  The delimiter row consists of cells whose only content are hyphens (-), and optionally, a leading or trailing colon (:), or both, to indicate left, right, or center alignment respectively.
     """
@@ -343,7 +343,7 @@ def test_tables_extension_198_enabled_with_internal_tabs():
     )
 
 
-def test_tables_extension_199_disabled():
+def test_tables_extension_199_disabled() -> None:
     """
     Test case 199:  Cells in one column don’t need to match length, though it’s easier to read if they are. Likewise, use of leading and trailing pipes may be inconsistent:
     """
@@ -363,7 +363,7 @@ bar | baz"""
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-def test_tables_extension_199_enabled():
+def test_tables_extension_199_enabled() -> None:
     """
     Test case 199:  Cells in one column don’t need to match length, though it’s easier to read if they are. Likewise, use of leading and trailing pipes may be inconsistent:
     """
@@ -415,7 +415,7 @@ bar | baz"""
     )
 
 
-def test_tables_extension_199_enabled_all_three():
+def test_tables_extension_199_enabled_all_three() -> None:
     """
     Test case 199:  Cells in one column don’t need to match length, though it’s easier to read if they are. Likewise, use of leading and trailing pipes may be inconsistent:
     """
@@ -475,7 +475,7 @@ def test_tables_extension_199_enabled_all_three():
     )
 
 
-def test_tables_extension_199_enabled_bad_center():
+def test_tables_extension_199_enabled_bad_center() -> None:
     """
     Test case 199:  Cells in one column don’t need to match length, though it’s easier to read if they are. Likewise, use of leading and trailing pipes may be inconsistent:
     """
@@ -499,7 +499,7 @@ def test_tables_extension_199_enabled_bad_center():
     )
 
 
-def test_tables_extension_199_enabled_bad_right_length():
+def test_tables_extension_199_enabled_bad_right_length() -> None:
     """
     Test case 199:  Cells in one column don’t need to match length, though it’s easier to read if they are. Likewise, use of leading and trailing pipes may be inconsistent:
     """
@@ -523,7 +523,7 @@ def test_tables_extension_199_enabled_bad_right_length():
     )
 
 
-def test_tables_extension_199_enabled_bad_right_character():
+def test_tables_extension_199_enabled_bad_right_character() -> None:
     """
     Test case 199:  Cells in one column don’t need to match length, though it’s easier to read if they are. Likewise, use of leading and trailing pipes may be inconsistent:
     """
@@ -547,7 +547,7 @@ def test_tables_extension_199_enabled_bad_right_character():
     )
 
 
-def test_tables_extension_199_enabled_bad_left_length():
+def test_tables_extension_199_enabled_bad_left_length() -> None:
     """
     Test case 199:  Cells in one column don’t need to match length, though it’s easier to read if they are. Likewise, use of leading and trailing pipes may be inconsistent:
     """
@@ -571,7 +571,7 @@ def test_tables_extension_199_enabled_bad_left_length():
     )
 
 
-def test_tables_extension_199_enabled_bad_left_character():
+def test_tables_extension_199_enabled_bad_left_character() -> None:
     """
     Test case 199:  Cells in one column don’t need to match length, though it’s easier to read if they are. Likewise, use of leading and trailing pipes may be inconsistent:
     """
@@ -595,7 +595,7 @@ def test_tables_extension_199_enabled_bad_left_character():
     )
 
 
-def test_tables_extension_200_disabled():
+def test_tables_extension_200_disabled() -> None:
     """
     Test case 200:  Include a pipe in a cell’s content by escaping it, including inside other inline spans:
     """
@@ -622,7 +622,7 @@ def test_tables_extension_200_disabled():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-def test_tables_extension_200_enabled():
+def test_tables_extension_200_enabled() -> None:
     """
     Test case 200:  Include a pipe in a cell’s content by escaping it, including inside other inline spans:
     """
@@ -681,7 +681,7 @@ def test_tables_extension_200_enabled():
     )
 
 
-def test_tables_extension_200_enabled_trailing_escaped_bar():
+def test_tables_extension_200_enabled_trailing_escaped_bar() -> None:
     """
     Test case 200:  Include a pipe in a cell’s content by escaping it, including inside other inline spans:
     """
@@ -743,7 +743,7 @@ def test_tables_extension_200_enabled_trailing_escaped_bar():
 # TODO diff separator test cases
 
 
-def test_tables_extension_200_enabled_trailing_escaped_bar_2():
+def test_tables_extension_200_enabled_trailing_escaped_bar_2() -> None:
     """
     Test case 200:  Include a pipe in a cell’s content by escaping it, including inside other inline spans:
     """
@@ -804,7 +804,7 @@ def test_tables_extension_200_enabled_trailing_escaped_bar_2():
     )
 
 
-def test_tables_extension_200_enabled_only_escaped_bar():
+def test_tables_extension_200_enabled_only_escaped_bar() -> None:
     """
     Test case 200:  Include a pipe in a cell’s content by escaping it, including inside other inline spans:
     """
@@ -857,7 +857,7 @@ def test_tables_extension_200_enabled_only_escaped_bar():
     )
 
 
-def test_tables_extension_200_enabled_a():
+def test_tables_extension_200_enabled_a() -> None:
     """
     Test case 200:  Include a pipe in a cell’s content by escaping it, including inside other inline spans:
     """
@@ -903,7 +903,7 @@ b `\\|` oo
     )
 
 
-def test_tables_extension_200_enabled_b():
+def test_tables_extension_200_enabled_b() -> None:
     """
     Test case 200:  Include a pipe in a cell’s content by escaping it, including inside other inline spans:
     """
@@ -953,7 +953,7 @@ def test_tables_extension_200_enabled_b():
     )
 
 
-def test_tables_extension_201_disabled():
+def test_tables_extension_201_disabled() -> None:
     """
     Test case 201:  (part 1) The table is broken at the first empty line, or beginning of another block-level structure:
     """
@@ -979,7 +979,7 @@ def test_tables_extension_201_disabled():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-def test_tables_extension_201_enabled_x():
+def test_tables_extension_201_enabled_x() -> None:
     """
     Test case 201:  (part 1) The table is broken at the first empty line, or beginning of another block-level structure:
     """
@@ -1040,7 +1040,7 @@ def test_tables_extension_201_enabled_x():
     )
 
 
-def test_tables_extension_201_enabled_xa():
+def test_tables_extension_201_enabled_xa() -> None:
     """
     Test case 201:  (part 1) The table is broken at the first empty line, or beginning of another block-level structure:
     """
@@ -1103,7 +1103,7 @@ def test_tables_extension_201_enabled_xa():
     )
 
 
-def test_tables_extension_201_enabled_xb():
+def test_tables_extension_201_enabled_xb() -> None:
     """
     Test case 201:  (part 1) The table is broken at the first empty line, or beginning of another block-level structure:
     """
@@ -1164,7 +1164,7 @@ def test_tables_extension_201_enabled_xb():
     )
 
 
-def test_tables_extension_201_enabled_ax():
+def test_tables_extension_201_enabled_ax() -> None:
     """
     Test case 201:  (part 1) The table is broken at the first empty line, or beginning of another block-level structure:
     """
@@ -1221,7 +1221,7 @@ def test_tables_extension_201_enabled_ax():
     )
 
 
-def test_tables_extension_201_enabled_aa():
+def test_tables_extension_201_enabled_aa() -> None:
     """
     Test case 201:  (part 1) The table is broken at the first empty line, or beginning of another block-level structure:
     """
@@ -1280,7 +1280,7 @@ def test_tables_extension_201_enabled_aa():
     )
 
 
-def test_tables_extension_201_enabled_ab():
+def test_tables_extension_201_enabled_ab() -> None:
     """
     Test case 201:  (part 1) The table is broken at the first empty line, or beginning of another block-level structure:
     """
@@ -1337,7 +1337,7 @@ def test_tables_extension_201_enabled_ab():
     )
 
 
-def test_tables_extension_201_enabled_bx():
+def test_tables_extension_201_enabled_bx() -> None:
     """
     Test case 201:  (part 1) The table is broken at the first empty line, or beginning of another block-level structure:
     """
@@ -1392,7 +1392,7 @@ def test_tables_extension_201_enabled_bx():
     )
 
 
-def test_tables_extension_201_enabled_ba():
+def test_tables_extension_201_enabled_ba() -> None:
     """
     Test case 201:  (part 1) The table is broken at the first empty line, or beginning of another block-level structure:
     """
@@ -1449,7 +1449,7 @@ def test_tables_extension_201_enabled_ba():
     )
 
 
-def test_tables_extension_201_enabled_bb():
+def test_tables_extension_201_enabled_bb() -> None:
     """
     Test case 201:  (part 1) The table is broken at the first empty line, or beginning of another block-level structure:
     """
@@ -1504,7 +1504,7 @@ def test_tables_extension_201_enabled_bb():
     )
 
 
-def test_tables_extension_201_enabled_cx():
+def test_tables_extension_201_enabled_cx() -> None:
     """
     Test case 201:  (part 1) The table is broken at the first empty line, or beginning of another block-level structure:
     """
@@ -1562,7 +1562,7 @@ def test_tables_extension_201_enabled_cx():
     )
 
 
-def test_tables_extension_201_enabled_ca():
+def test_tables_extension_201_enabled_ca() -> None:
     """
     Test case 201:  (part 1) The table is broken at the first empty line, or beginning of another block-level structure:
     """
@@ -1622,7 +1622,7 @@ def test_tables_extension_201_enabled_ca():
     )
 
 
-def test_tables_extension_201_enabled_dx():
+def test_tables_extension_201_enabled_dx() -> None:
     """
     Test case 201:  (part 1) The table is broken at the first empty line, or beginning of another block-level structure:
     """
@@ -1678,7 +1678,7 @@ def test_tables_extension_201_enabled_dx():
     )
 
 
-def test_tables_extension_201_enabled_da():
+def test_tables_extension_201_enabled_da() -> None:
     """
     Test case 201:  (part 1) The table is broken at the first empty line, or beginning of another block-level structure:
     """
@@ -1736,7 +1736,7 @@ def test_tables_extension_201_enabled_da():
     )
 
 
-def test_tables_extension_201_enabled_db():
+def test_tables_extension_201_enabled_db() -> None:
     """
     Test case 201:  (part 1) The table is broken at the first empty line, or beginning of another block-level structure:
     """
@@ -1792,7 +1792,7 @@ def test_tables_extension_201_enabled_db():
     )
 
 
-def test_tables_extension_201_enabled_ex():
+def test_tables_extension_201_enabled_ex() -> None:
     """
     Test case 201:  (part 1) The table is broken at the first empty line, or beginning of another block-level structure:
     """
@@ -1849,7 +1849,7 @@ def test_tables_extension_201_enabled_ex():
     )
 
 
-def test_tables_extension_201_enabled_ea():
+def test_tables_extension_201_enabled_ea() -> None:
     """
     Test case 201:  (part 1) The table is broken at the first empty line, or beginning of another block-level structure:
     """
@@ -1908,7 +1908,7 @@ def test_tables_extension_201_enabled_ea():
     )
 
 
-def test_tables_extension_201_enabled_eb():
+def test_tables_extension_201_enabled_eb() -> None:
     """
     Test case 201:  (part 1) The table is broken at the first empty line, or beginning of another block-level structure:
     """
@@ -1965,7 +1965,7 @@ def test_tables_extension_201_enabled_eb():
     )
 
 
-def test_tables_extension_201_enabled_fx():
+def test_tables_extension_201_enabled_fx() -> None:
     """
     Test case 201:  (part 1) The table is broken at the first empty line, or beginning of another block-level structure:
     """
@@ -2021,7 +2021,7 @@ def test_tables_extension_201_enabled_fx():
     )
 
 
-def test_tables_extension_201_enabled_fa():
+def test_tables_extension_201_enabled_fa() -> None:
     """
     Test case 201:  (part 1) The table is broken at the first empty line, or beginning of another block-level structure:
     """
@@ -2079,7 +2079,7 @@ def test_tables_extension_201_enabled_fa():
     )
 
 
-def test_tables_extension_201_enabled_fb():
+def test_tables_extension_201_enabled_fb() -> None:
     """
     Test case 201:  (part 1) The table is broken at the first empty line, or beginning of another block-level structure:
     """
@@ -2135,7 +2135,7 @@ def test_tables_extension_201_enabled_fb():
     )
 
 
-def test_tables_extension_201_enabled_gx():
+def test_tables_extension_201_enabled_gx() -> None:
     """
     Test case 201:  (part 1) The table is broken at the first empty line, or beginning of another block-level structure:
     """
@@ -2196,7 +2196,7 @@ def test_tables_extension_201_enabled_gx():
     )
 
 
-def test_tables_extension_201_enabled_ga():
+def test_tables_extension_201_enabled_ga() -> None:
     """
     Test case 201:  (part 1) The table is broken at the first empty line, or beginning of another block-level structure:
     """
@@ -2259,7 +2259,7 @@ def test_tables_extension_201_enabled_ga():
     )
 
 
-def test_tables_extension_201_enabled_gb():
+def test_tables_extension_201_enabled_gb() -> None:
     """
     Test case 201:  (part 1) The table is broken at the first empty line, or beginning of another block-level structure:
     """
@@ -2320,7 +2320,7 @@ def test_tables_extension_201_enabled_gb():
     )
 
 
-def test_tables_extension_202_disabled():
+def test_tables_extension_202_disabled() -> None:
     """
     Test case 202:  (part 2) The table is broken at the first empty line, or beginning of another block-level structure:
     """
@@ -2349,7 +2349,7 @@ bar"""
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-def test_tables_extension_202_enabled():
+def test_tables_extension_202_enabled() -> None:
     """
     Test case 202:  (part 2) The table is broken at the first empty line, or beginning of another block-level structure:
     """
@@ -2418,7 +2418,7 @@ bar"""
     )
 
 
-def test_tables_extension_203_disabled():
+def test_tables_extension_203_disabled() -> None:
     """
     Test case 203:  The header row must match the delimiter row in the number of cells. If not, a table will not be recognized:
     """
@@ -2438,7 +2438,7 @@ def test_tables_extension_203_disabled():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-def test_tables_extension_203_enabled():
+def test_tables_extension_203_enabled() -> None:
     """
     Test case 203:  The header row must match the delimiter row in the number of cells. If not, a table will not be recognized:
     """
@@ -2460,7 +2460,7 @@ def test_tables_extension_203_enabled():
     )
 
 
-def test_tables_extension_204_disabled():
+def test_tables_extension_204_disabled() -> None:
     """
     Test case 204:  The remainder of the table’s rows may vary in the number of cells. If there are a number of cells fewer than the number of cells in the header row, empty cells are inserted. If there are greater, the excess is ignored:
     """
@@ -2483,7 +2483,7 @@ def test_tables_extension_204_disabled():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-def test_tables_extension_204_enabled():
+def test_tables_extension_204_enabled() -> None:
     """
     Test case 204:  The remainder of the table’s rows may vary in the number of cells. If there are a number of cells fewer than the number of cells in the header row, empty cells are inserted. If there are greater, the excess is ignored:
     """
@@ -2545,7 +2545,7 @@ def test_tables_extension_204_enabled():
     )
 
 
-def test_tables_extension_205_disabled():
+def test_tables_extension_205_disabled() -> None:
     """
     Test case 205:  If there are no rows in the body, no <tbody> is generated in HTML output:
     """
@@ -2564,7 +2564,7 @@ def test_tables_extension_205_disabled():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-def test_tables_extension_205_enabled():
+def test_tables_extension_205_enabled() -> None:
     """
     Test case 205:  If there are no rows in the body, no <tbody> is generated in HTML output:
     """
@@ -2599,7 +2599,7 @@ def test_tables_extension_205_enabled():
     )
 
 
-def test_tables_extension_extra_in_block():
+def test_tables_extension_extra_in_block() -> None:
     """
     Test case extra 1:  TBD
     """
@@ -2656,7 +2656,7 @@ def test_tables_extension_extra_in_block():
 
 
 # @pytest.mark.skip
-def test_tables_extension_extra_in_block_in_block_after_first_line():
+def test_tables_extension_extra_in_block_in_block_after_first_line() -> None:
     """
     Test case extra 1:  TBD
     """
@@ -2691,7 +2691,7 @@ def test_tables_extension_extra_in_block_in_block_after_first_line():
     )
 
 
-def test_tables_extension_extra_in_block_in_block_after_first_line_xx():
+def test_tables_extension_extra_in_block_in_block_after_first_line_xx() -> None:
     """
     Test case extra 1:  TBD
     """
@@ -2717,7 +2717,7 @@ def test_tables_extension_extra_in_block_in_block_after_first_line_xx():
     )
 
 
-def test_tables_extension_extra_in_block_in_block_after_first_line_xa():
+def test_tables_extension_extra_in_block_in_block_after_first_line_xa() -> None:
     """
     Test case extra 1:  TBD
     """
@@ -2747,7 +2747,7 @@ def test_tables_extension_extra_in_block_in_block_after_first_line_xa():
     )
 
 
-def test_tables_extension_extra_in_block_in_block_after_first_line_xb():
+def test_tables_extension_extra_in_block_in_block_after_first_line_xb() -> None:
     """
     Test case extra 1:  TBD
     """
@@ -2773,7 +2773,7 @@ def test_tables_extension_extra_in_block_in_block_after_first_line_xb():
     )
 
 
-def test_tables_extension_extra_in_block_in_block_after_first_line_xc():
+def test_tables_extension_extra_in_block_in_block_after_first_line_xc() -> None:
     """
     Test case extra 1:  TBD
     """
@@ -2805,7 +2805,7 @@ def test_tables_extension_extra_in_block_in_block_after_first_line_xc():
     )
 
 
-def test_tables_extension_extra_in_block_in_block_after_first_line_xd():
+def test_tables_extension_extra_in_block_in_block_after_first_line_xd() -> None:
     """
     Test case extra 1:  TBD
     """
@@ -2838,7 +2838,7 @@ def test_tables_extension_extra_in_block_in_block_after_first_line_xd():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-def test_tables_extension_extra_in_block_in_block_after_first_line_xe():
+def test_tables_extension_extra_in_block_in_block_after_first_line_xe() -> None:
     """
     Test case extra 1:  TBD
     """
@@ -2877,7 +2877,7 @@ def
     )
 
 
-def test_tables_extension_extra_in_ulist():
+def test_tables_extension_extra_in_ulist() -> None:
     """
     Test case extra 1:  TBD
     """
@@ -2935,7 +2935,7 @@ def test_tables_extension_extra_in_ulist():
     )
 
 
-def test_tables_extension_extra_in_olist():
+def test_tables_extension_extra_in_olist() -> None:
     """
     Test case extra 1:  TBD
     """
@@ -2993,7 +2993,7 @@ def test_tables_extension_extra_in_olist():
     )
 
 
-def test_tables_extension_extra_in_block_in_block_xx():
+def test_tables_extension_extra_in_block_in_block_xx() -> None:
     """
     Test case extra 1:  TBD
     similar to test_link_reference_definitions_extra_02cx
@@ -3026,7 +3026,7 @@ def test_tables_extension_extra_in_block_in_block_xx():
     )
 
 
-def test_tables_extension_extra_in_block_in_block_xa():
+def test_tables_extension_extra_in_block_in_block_xa() -> None:
     """
     Test case extra 1:  TBD
     similar to test_link_reference_definitions_extra_02ca
@@ -3064,7 +3064,7 @@ def test_tables_extension_extra_in_block_in_block_xa():
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_list_header_line_only():
+def test_tables_extension_extra_in_list_header_line_only() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     test_html_blocks_extra_02x
@@ -3100,7 +3100,7 @@ some other text</li>
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_block_quote_header_line_only_x():
+def test_tables_extension_extra_in_block_quote_header_line_only_x() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
 
@@ -3138,7 +3138,7 @@ some other text</p>
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_block_quote_header_line_only_a():
+def test_tables_extension_extra_in_block_quote_header_line_only_a() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
 
@@ -3174,7 +3174,9 @@ some other text</p>
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_list_header_line_only_with_separator_in_seperate_list_item():
+def test_tables_extension_extra_in_list_header_line_only_with_separator_in_seperate_list_item() -> (
+    None
+):
     """
     Test case extra 02:  variation of 1 with html block started in list item
     test_html_blocks_extra_02x
@@ -3217,7 +3219,7 @@ some other text</li>
 
 # @pytest.mark.skip
 @pytest.mark.gfm
-def test_tables_extension_extra_in_list_header_and_separator_only():
+def test_tables_extension_extra_in_list_header_and_separator_only() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     test_html_blocks_extra_02x
@@ -3270,7 +3272,7 @@ some other text</li>
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_block_quote_header_and_separator_only():
+def test_tables_extension_extra_in_block_quote_header_and_separator_only() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -3322,7 +3324,9 @@ some other text</p>
 
 # @pytest.mark.skip
 @pytest.mark.gfm
-def test_tables_extension_extra_in_list_header_and_separator_only_lrd_in_next_list_item():
+def test_tables_extension_extra_in_list_header_and_separator_only_lrd_in_next_list_item() -> (
+    None
+):
     """
     Test case extra 02:  variation of 1 with html block started in list item
     test_html_blocks_extra_02x
@@ -3382,7 +3386,9 @@ def test_tables_extension_extra_in_list_header_and_separator_only_lrd_in_next_li
 
 # @pytest.mark.skip
 @pytest.mark.gfm
-def test_tables_extension_extra_in_list_header_and_separator_only_lrd_in_previous_list_item():
+def test_tables_extension_extra_in_list_header_and_separator_only_lrd_in_previous_list_item() -> (
+    None
+):
     """
     Test case extra 02:  variation of 1 with html block started in list item
     test_html_blocks_extra_02x
@@ -3439,7 +3445,7 @@ def test_tables_extension_extra_in_list_header_and_separator_only_lrd_in_previou
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_list_followed_by_new_line_and_atx():
+def test_tables_extension_extra_in_list_followed_by_new_line_and_atx() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -3507,7 +3513,7 @@ def test_tables_extension_extra_in_list_followed_by_new_line_and_atx():
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_block_quote_followed_by_new_line_and_atx():
+def test_tables_extension_extra_in_block_quote_followed_by_new_line_and_atx() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     test_block_quotes_extra_03bb
@@ -3574,7 +3580,7 @@ def test_tables_extension_extra_in_block_quote_followed_by_new_line_and_atx():
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_list_header_only_after_text_and_new_line():
+def test_tables_extension_extra_in_list_header_only_after_text_and_new_line() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -3610,7 +3616,9 @@ def test_tables_extension_extra_in_list_header_only_after_text_and_new_line():
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_block_quote_header_only_after_text_and_new_line():
+def test_tables_extension_extra_in_block_quote_header_only_after_text_and_new_line() -> (
+    None
+):
     """
     Test case extra 02:  variation of 1 with html block started in list item
     test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_more_lines_3b
@@ -3645,7 +3653,7 @@ def test_tables_extension_extra_in_block_quote_header_only_after_text_and_new_li
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_list_after_paragraph():
+def test_tables_extension_extra_in_list_after_paragraph() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
 
@@ -3712,7 +3720,7 @@ def test_tables_extension_extra_in_list_after_paragraph():
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_block_quote_after_paragraph():
+def test_tables_extension_extra_in_block_quote_after_paragraph() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -3776,7 +3784,7 @@ def test_tables_extension_extra_in_block_quote_after_paragraph():
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_list_after_atx():
+def test_tables_extension_extra_in_list_after_atx() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -3842,7 +3850,7 @@ def test_tables_extension_extra_in_list_after_atx():
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_block_quote_after_atx():
+def test_tables_extension_extra_in_block_quote_after_atx() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -3906,7 +3914,7 @@ def test_tables_extension_extra_in_block_quote_after_atx():
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_list_followed_atx():
+def test_tables_extension_extra_in_list_followed_atx() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -3972,7 +3980,7 @@ def test_tables_extension_extra_in_list_followed_atx():
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_block_quote_followed_atx():
+def test_tables_extension_extra_in_block_quote_followed_atx() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -4036,7 +4044,7 @@ def test_tables_extension_extra_in_block_quote_followed_atx():
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_list_after_thematic():
+def test_tables_extension_extra_in_list_after_thematic() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -4100,7 +4108,7 @@ def test_tables_extension_extra_in_list_after_thematic():
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_block_quote_after_thematic():
+def test_tables_extension_extra_in_block_quote_after_thematic() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -4162,7 +4170,7 @@ def test_tables_extension_extra_in_block_quote_after_thematic():
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_list_followed_thematic():
+def test_tables_extension_extra_in_list_followed_thematic() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -4226,7 +4234,7 @@ def test_tables_extension_extra_in_list_followed_thematic():
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_block_quote_followed_thematic():
+def test_tables_extension_extra_in_block_quote_followed_thematic() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -4288,7 +4296,7 @@ def test_tables_extension_extra_in_block_quote_followed_thematic():
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_list_after_indented_block():
+def test_tables_extension_extra_in_list_after_indented_block() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -4357,7 +4365,7 @@ code block
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_block_quote_after_indented_block():
+def test_tables_extension_extra_in_block_quote_after_indented_block() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -4424,7 +4432,7 @@ code block
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_list_followed_indented_block():
+def test_tables_extension_extra_in_list_followed_indented_block() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -4493,7 +4501,7 @@ code block
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_block_quote_followed_indented_block():
+def test_tables_extension_extra_in_block_quote_followed_indented_block() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -4560,7 +4568,7 @@ code block
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_list_after_fenced_block():
+def test_tables_extension_extra_in_list_after_fenced_block() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -4629,7 +4637,7 @@ def test_tables_extension_extra_in_list_after_fenced_block():
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_block_quote_after_fenced_block():
+def test_tables_extension_extra_in_block_quote_after_fenced_block() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -4696,7 +4704,7 @@ def test_tables_extension_extra_in_block_quote_after_fenced_block():
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_list_followed_fenced_block():
+def test_tables_extension_extra_in_list_followed_fenced_block() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -4765,7 +4773,7 @@ def test_tables_extension_extra_in_list_followed_fenced_block():
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_block_quote_followed_fenced_block():
+def test_tables_extension_extra_in_block_quote_followed_fenced_block() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -4832,7 +4840,7 @@ def test_tables_extension_extra_in_block_quote_followed_fenced_block():
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_list_after_html_block():
+def test_tables_extension_extra_in_list_after_html_block() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -4898,7 +4906,7 @@ def test_tables_extension_extra_in_list_after_html_block():
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_block_quote_after_html_block():
+def test_tables_extension_extra_in_block_quote_after_html_block() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -4962,7 +4970,7 @@ def test_tables_extension_extra_in_block_quote_after_html_block():
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_list_followed_html_block():
+def test_tables_extension_extra_in_list_followed_html_block() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -5028,7 +5036,7 @@ def test_tables_extension_extra_in_list_followed_html_block():
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_block_quote_followed_html_block():
+def test_tables_extension_extra_in_block_quote_followed_html_block() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -5092,7 +5100,7 @@ def test_tables_extension_extra_in_block_quote_followed_html_block():
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_list_after_lrd():
+def test_tables_extension_extra_in_list_after_lrd() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -5167,7 +5175,7 @@ def test_tables_extension_extra_in_list_after_lrd():
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_block_quote_after_lrd():
+def test_tables_extension_extra_in_block_quote_after_lrd() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -5241,7 +5249,7 @@ def test_tables_extension_extra_in_block_quote_after_lrd():
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_block_quote_after_lrd_a():
+def test_tables_extension_extra_in_block_quote_after_lrd_a() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -5322,7 +5330,7 @@ def test_tables_extension_extra_in_block_quote_after_lrd_a():
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_list_followed_lrd():
+def test_tables_extension_extra_in_list_followed_lrd() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -5390,7 +5398,7 @@ def test_tables_extension_extra_in_list_followed_lrd():
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_block_quote_followed_lrd():
+def test_tables_extension_extra_in_block_quote_followed_lrd() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -5458,7 +5466,7 @@ def test_tables_extension_extra_in_block_quote_followed_lrd():
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_list_chxb():
+def test_tables_extension_extra_in_list_chxb() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -5530,7 +5538,7 @@ def test_tables_extension_extra_in_list_chxb():
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_list_cha():
+def test_tables_extension_extra_in_list_cha() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -5600,7 +5608,7 @@ def test_tables_extension_extra_in_list_cha():
 
 
 @pytest.mark.gfm
-def test_tables_extension_extra_in_block_chb():
+def test_tables_extension_extra_in_block_chb() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """

@@ -9,7 +9,7 @@ import pytest
 
 # pylint: disable=too-many-lines
 @pytest.mark.gfm
-def test_hard_line_breaks_654():
+def test_hard_line_breaks_654() -> None:
     """
     Test case 654:  A line break (not in a code span or HTML tag) that is preceded by two or more spaces and does not occur at the end of a block is parsed as a hard line break (rendered in HTML as a <br /> tag):
     """
@@ -34,7 +34,7 @@ baz</p>"""
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_655x():
+def test_hard_line_breaks_655x() -> None:
     """
     Test case 655:  For a more visible alternative, a backslash before the line ending may be used instead of two spaces:
     """
@@ -57,7 +57,7 @@ baz</p>"""
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_655a():
+def test_hard_line_breaks_655a() -> None:
     """
     Test case 655a:  variation of 655 with two backslashes at end
     """
@@ -78,7 +78,7 @@ baz</p>"""
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_656():
+def test_hard_line_breaks_656() -> None:
     """
     Test case 656:  More than two spaces can be used:
     """
@@ -103,7 +103,7 @@ baz</p>"""
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_657():
+def test_hard_line_breaks_657() -> None:
     """
     Test case 657:  (part 1) Leading spaces at the beginning of the next line are ignored:
     """
@@ -128,7 +128,7 @@ bar</p>"""
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_658():
+def test_hard_line_breaks_658() -> None:
     """
     Test case 658:  (part 2) Leading spaces at the beginning of the next line are ignored:
     """
@@ -151,7 +151,7 @@ bar</p>"""
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_659():
+def test_hard_line_breaks_659() -> None:
     """
     Test case 659:  (part 1) Line breaks can occur inside emphasis, links, and other constructs that allow inline content:
     """
@@ -178,7 +178,7 @@ bar</em></p>"""
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_660():
+def test_hard_line_breaks_660() -> None:
     """
     Test case 660:  (part 2) Line breaks can occur inside emphasis, links, and other constructs that allow inline content:
     """
@@ -205,7 +205,7 @@ bar</em></p>"""
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_661():
+def test_hard_line_breaks_661() -> None:
     """
     Test case 661:  (part 1) Line breaks do not occur inside code spans
     """
@@ -227,7 +227,7 @@ span`""".replace(
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_662():
+def test_hard_line_breaks_662() -> None:
     """
     Test case 662:  (part 2) Line breaks do not occur inside code spans
     """
@@ -247,7 +247,7 @@ span`"""
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_663():
+def test_hard_line_breaks_663() -> None:
     """
     Test case 663:  (part 1) or HTML tags:
     """
@@ -272,7 +272,7 @@ bar"></p>""".replace(
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_664():
+def test_hard_line_breaks_664() -> None:
     """
     Test case 664:  (part 2) or HTML tags:
     """
@@ -293,7 +293,7 @@ bar"></p>"""
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_665():
+def test_hard_line_breaks_665() -> None:
     """
     Test case 665:  (part 1) Neither syntax for hard line breaks works at the end of a paragraph or other block element:
     """
@@ -308,7 +308,7 @@ def test_hard_line_breaks_665():
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_665a():
+def test_hard_line_breaks_665a() -> None:
     """
     Test case 665a:  variation of 665 with a space before hb character
     """
@@ -323,7 +323,7 @@ def test_hard_line_breaks_665a():
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_666():
+def test_hard_line_breaks_666() -> None:
     """
     Test case 666:  (part 2) Neither syntax for hard line breaks works at the end of a paragraph or other block element:
     """
@@ -338,7 +338,7 @@ def test_hard_line_breaks_666():
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_667():
+def test_hard_line_breaks_667() -> None:
     """
     Test case 667:  (part 3) Neither syntax for hard line breaks works at the end of a paragraph or other block element:
     """
@@ -353,7 +353,7 @@ def test_hard_line_breaks_667():
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_668():
+def test_hard_line_breaks_668() -> None:
     """
     Test case 668:  (part 4) Neither syntax for hard line breaks works at the end of a paragraph or other block element:
     """
@@ -368,7 +368,7 @@ def test_hard_line_breaks_668():
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_extra_01x():
+def test_hard_line_breaks_extra_01x() -> None:
     """
     Test case extra 01x:  Hard line breaks at start of line
     """
@@ -391,7 +391,7 @@ This is new.""".replace(
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_extra_01a():
+def test_hard_line_breaks_extra_01a() -> None:
     """
     Test case extra 01x:  Hard line breaks at start of line
     """
@@ -413,7 +413,7 @@ This is new.</p>"""
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_extra_02x():
+def test_hard_line_breaks_extra_02x() -> None:
     """
     Test case extra 02x:  Hard line breaks as the only whitespace on the line
     """
@@ -441,7 +441,7 @@ This is new.""".replace(
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_extra_02a():
+def test_hard_line_breaks_extra_02a() -> None:
     """
     Test case extra 02a:  Hard line breaks at start of blank line
     """
@@ -466,7 +466,7 @@ This is new.</p>"""
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_extra_03x():
+def test_hard_line_breaks_extra_03x() -> None:
     """
     Test case extra 03x:  Hard line break followed by text
     """
@@ -489,7 +489,7 @@ This is new.</p>"""
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_extra_03a():
+def test_hard_line_breaks_extra_03a() -> None:
     """
     Test case extra 03a:  Hard line break followed by backslash escaped
     """
@@ -512,7 +512,7 @@ def test_hard_line_breaks_extra_03a():
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_extra_03b():
+def test_hard_line_breaks_extra_03b() -> None:
     """
     Test case extra 03b:  Hard line break followed by entity
     """
@@ -535,7 +535,7 @@ def test_hard_line_breaks_extra_03b():
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_extra_03c():
+def test_hard_line_breaks_extra_03c() -> None:
     """
     Test case extra 03c:  Hard line break followed by code span
     """
@@ -559,7 +559,7 @@ def test_hard_line_breaks_extra_03c():
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_extra_03d():
+def test_hard_line_breaks_extra_03d() -> None:
     """
     Test case extra 03d:  Hard line break followed by emphasis
     """
@@ -585,7 +585,7 @@ def test_hard_line_breaks_extra_03d():
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_extra_03e():
+def test_hard_line_breaks_extra_03e() -> None:
     """
     Test case extra 03e:  Hard line break followed by link
     """
@@ -611,7 +611,7 @@ def test_hard_line_breaks_extra_03e():
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_extra_03f():
+def test_hard_line_breaks_extra_03f() -> None:
     """
     Test case extra 03f:  Hard line break followed by link
     """
@@ -635,7 +635,7 @@ def test_hard_line_breaks_extra_03f():
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_extra_03g():
+def test_hard_line_breaks_extra_03g() -> None:
     """
     Test case extra 03g:  Hard line break followed by autolink
     """
@@ -659,7 +659,7 @@ def test_hard_line_breaks_extra_03g():
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_extra_03h():
+def test_hard_line_breaks_extra_03h() -> None:
     """
     Test case extra 03h:  Hard line break followed by autolink
     """
@@ -683,7 +683,7 @@ def test_hard_line_breaks_extra_03h():
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_extra_03i():
+def test_hard_line_breaks_extra_03i() -> None:
     """
     Test case extra 03i:  Hard line break followed by hard line break
     """
@@ -709,7 +709,7 @@ this is new.</p>"""
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_extra_04x():
+def test_hard_line_breaks_extra_04x() -> None:
     """
     Test case extra 04:  Hard line break followed by text
     """
@@ -734,7 +734,7 @@ This is new.</p>"""
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_extra_04xa():
+def test_hard_line_breaks_extra_04xa() -> None:
     """
     Test case extra 04xa:  Hard line break followed by whitespace and text
     """
@@ -759,7 +759,7 @@ This is new.</p>"""
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_extra_04a():
+def test_hard_line_breaks_extra_04a() -> None:
     """
     Test case extra 04a:  Hard line break followed by backslash escaped
     """
@@ -784,7 +784,7 @@ def test_hard_line_breaks_extra_04a():
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_extra_04b():
+def test_hard_line_breaks_extra_04b() -> None:
     """
     Test case extra 04b:  Hard line break followed by entity
     """
@@ -809,7 +809,7 @@ def test_hard_line_breaks_extra_04b():
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_extra_04c():
+def test_hard_line_breaks_extra_04c() -> None:
     """
     Test case extra 04c:  Hard line break followed by code span
     """
@@ -835,7 +835,7 @@ def test_hard_line_breaks_extra_04c():
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_extra_04d():
+def test_hard_line_breaks_extra_04d() -> None:
     """
     Test case extra 04d:  Hard line break followed by emphasis
     """
@@ -863,7 +863,7 @@ def test_hard_line_breaks_extra_04d():
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_extra_04e():
+def test_hard_line_breaks_extra_04e() -> None:
     """
     Test case extra 04e:  Hard line break followed by link
     """
@@ -891,7 +891,7 @@ def test_hard_line_breaks_extra_04e():
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_extra_04f():
+def test_hard_line_breaks_extra_04f() -> None:
     """
     Test case extra 04f:  Hard line break followed by link
     """
@@ -917,7 +917,7 @@ def test_hard_line_breaks_extra_04f():
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_extra_04g():
+def test_hard_line_breaks_extra_04g() -> None:
     """
     Test case extra 04g:  Hard line break followed by autolink
     """
@@ -943,7 +943,7 @@ def test_hard_line_breaks_extra_04g():
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_extra_04h():
+def test_hard_line_breaks_extra_04h() -> None:
     """
     Test case extra 04h:  Hard line break followed by autolink
     """
@@ -969,7 +969,7 @@ def test_hard_line_breaks_extra_04h():
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_extra_04i():
+def test_hard_line_breaks_extra_04i() -> None:
     """
     Test case extra 04i:  Hard line break followed by hard line break
     """
@@ -997,7 +997,7 @@ this is new.""".replace(
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_extra_05x():
+def test_hard_line_breaks_extra_05x() -> None:
     """
     Test case extra 05:  Hard line break followed by space and emphasis
     """
@@ -1025,7 +1025,7 @@ def test_hard_line_breaks_extra_05x():
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_extra_05a():
+def test_hard_line_breaks_extra_05a() -> None:
     """
     Test case extra 05a:  Hard line break followed by space and emphasis
     """

@@ -19,7 +19,7 @@ class ApplicationFileScannerOutputProtocol(Protocol):
     Protocol to provide for redirection of output (standard or error).
     """
 
-    def __call__(
+    def __call__(  # noqa: E704
         self,
         output_string: str,
     ) -> None: ...  # pragma: no cover

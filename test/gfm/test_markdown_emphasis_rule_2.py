@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_emphasis_366():
+def test_emphasis_366() -> None:
     """
     Test case 366:  Rule 2:
     """
@@ -29,7 +29,7 @@ def test_emphasis_366():
 
 
 @pytest.mark.gfm
-def test_emphasis_367():
+def test_emphasis_367() -> None:
     """
     Test case 367:  This is not emphasis, because the opening _ is followed by whitespace:
     """
@@ -44,7 +44,7 @@ def test_emphasis_367():
 
 
 @pytest.mark.gfm
-def test_emphasis_368():
+def test_emphasis_368() -> None:
     """
     Test case 368:  This is not emphasis, because the opening _ is preceded by an alphanumeric and followed by punctuation:
     """
@@ -63,7 +63,7 @@ def test_emphasis_368():
 
 
 @pytest.mark.gfm
-def test_emphasis_369():
+def test_emphasis_369() -> None:
     """
     Test case 369:  (part 1) Emphasis with _ is not allowed inside words:
     """
@@ -78,7 +78,7 @@ def test_emphasis_369():
 
 
 @pytest.mark.gfm
-def test_emphasis_370():
+def test_emphasis_370() -> None:
     """
     Test case 370:  (part 2) Emphasis with _ is not allowed inside words:
     """
@@ -93,7 +93,7 @@ def test_emphasis_370():
 
 
 @pytest.mark.gfm
-def test_emphasis_371():
+def test_emphasis_371() -> None:
     """
     Test case 371:  (part 3) Emphasis with _ is not allowed inside words:
     """
@@ -112,7 +112,7 @@ def test_emphasis_371():
 
 
 @pytest.mark.gfm
-def test_emphasis_372():
+def test_emphasis_372() -> None:
     """
     Test case 372:  Here _ does not generate emphasis, because the first delimiter run is right-flanking and the second left-flanking:
     """
@@ -131,7 +131,7 @@ def test_emphasis_372():
 
 
 @pytest.mark.gfm
-def test_emphasis_373():
+def test_emphasis_373() -> None:
     """
     Test case 373:  This is emphasis, even though the opening delimiter is both left- and right-flanking, because it is preceded by punctuation:
     """

@@ -452,6 +452,9 @@ class MarkdownToken:
 
     @property
     def is_table_end(self) -> bool:
+        """
+        Returns whether the current token is the end of a table element.
+        """
         return (
             self.token_name
             == self.token_name
@@ -460,12 +463,18 @@ class MarkdownToken:
 
     @property
     def is_table_header_item(self) -> bool:
+        """
+        Returns whether the current token is a header item from a table.
+        """
         return (
             self.token_name == self.token_name == MarkdownToken._token_table_header_item
         )
 
     @property
     def is_table_row_item(self) -> bool:
+        """
+        Returns whether the current token is a row item from a table.
+        """
         return self.token_name == self.token_name == MarkdownToken._token_table_row_item
 
     @property
@@ -734,14 +743,15 @@ class EndMarkdownToken(MarkdownToken):
         line_number: int = 0,
         column_number: int = 0,
     ) -> None:
-        if isinstance(start_markdown_token, MarkdownToken):
+        assert isinstance(start_markdown_token, MarkdownToken)
+        assert (
+            start_markdown_token.requires_end_token
+        ), f"Token '{start_markdown_token} does not require end token."
+        if not start_markdown_token.can_force_close:
             assert (
-                start_markdown_token.requires_end_token
-            ), f"Token '{start_markdown_token} does not require end token."
-            if not start_markdown_token.can_force_close:
-                assert (
-                    not was_forced
-                ), f"Token '{start_markdown_token}'s end token cannot be forced."
+                not was_forced
+            ), f"Token '{start_markdown_token}'s end token cannot be forced."
+
         (
             self.__type_name,
             self.__extracted_whitespace,

@@ -5,7 +5,7 @@ Tests for the functions that deal with parsing of html tags.
 from pymarkdown.html.html_helper import HtmlHelper
 
 
-def test_empty_tag_name():
+def test_empty_tag_name() -> None:
     """
     Make sure to test an empty tag name.
     """
@@ -21,7 +21,7 @@ def test_empty_tag_name():
     assert expected_is_valid == actual_is_valid
 
 
-def test_simple_alphabetic_tag_name():
+def test_simple_alphabetic_tag_name() -> None:
     """
     Make sure to test a simple alphabetic tag name.
     """
@@ -37,7 +37,7 @@ def test_simple_alphabetic_tag_name():
     assert expected_is_valid == actual_is_valid
 
 
-def test_simple_alphanumeric_tag_name():
+def test_simple_alphanumeric_tag_name() -> None:
     """
     Make sure to test a simple alphanumeric tag name.
     """
@@ -53,7 +53,7 @@ def test_simple_alphanumeric_tag_name():
     assert expected_is_valid == actual_is_valid
 
 
-def test_simple_upper_case_alphanumeric_tag_name():
+def test_simple_upper_case_alphanumeric_tag_name() -> None:
     """
     Make sure to test a simple uppercase alphanumeric tag name.
     """
@@ -69,7 +69,7 @@ def test_simple_upper_case_alphanumeric_tag_name():
     assert expected_is_valid == actual_is_valid
 
 
-def test_simple_mixed_case_alphanumeric_tag_name():
+def test_simple_mixed_case_alphanumeric_tag_name() -> None:
     """
     Make sure to test a mixed case alphabetic tag name.
     """
@@ -85,7 +85,7 @@ def test_simple_mixed_case_alphanumeric_tag_name():
     assert expected_is_valid == actual_is_valid
 
 
-def test_simple_dashed_tag_name():
+def test_simple_dashed_tag_name() -> None:
     """
     Make sure to test a simple valid tag name with a dash.
     """
@@ -101,7 +101,7 @@ def test_simple_dashed_tag_name():
     assert expected_is_valid == actual_is_valid
 
 
-def test_simple_dashed_bad_name():
+def test_simple_dashed_bad_name() -> None:
     """
     Make sure to test a simple invalid tag name.
     """
@@ -117,7 +117,7 @@ def test_simple_dashed_bad_name():
     assert expected_is_valid == actual_is_valid
 
 
-def test_simple_attribute_name():
+def test_simple_attribute_name() -> None:
     """
     Make sure to test a simple attribute name.
     """
@@ -136,7 +136,7 @@ def test_simple_attribute_name():
     assert expected_resultant_index == actual_resultant_index
 
 
-def test_dashed_attribute_name():
+def test_dashed_attribute_name() -> None:
     """
     Make sure to test an attribute name with a dash.
     """
@@ -155,7 +155,7 @@ def test_dashed_attribute_name():
     assert expected_resultant_index == actual_resultant_index
 
 
-def test_coloned_attribute_name():
+def test_coloned_attribute_name() -> None:
     """
     Make sure to test an attribute name with a colon.
     """
@@ -174,7 +174,7 @@ def test_coloned_attribute_name():
     assert expected_resultant_index == actual_resultant_index
 
 
-def test_invalid_attribute_name_start():
+def test_invalid_attribute_name_start() -> None:
     """
     Make sure to test an attribute name that has an invalid start character
     """
@@ -193,7 +193,7 @@ def test_invalid_attribute_name_start():
     assert expected_resultant_index == actual_resultant_index
 
 
-def test_invalid_attribute_name():
+def test_invalid_attribute_name() -> None:
     """
     Make sure to test an attribute name that is invalid.
     """
@@ -212,7 +212,7 @@ def test_invalid_attribute_name():
     assert expected_resultant_index == actual_resultant_index
 
 
-def test_attribute_name_runs_out_of_string():
+def test_attribute_name_runs_out_of_string() -> None:
     """
     Make sure to test an attribute name that runs out of space in the string.
     """
@@ -231,7 +231,7 @@ def test_attribute_name_runs_out_of_string():
     assert expected_resultant_index == actual_resultant_index
 
 
-def test_no_attribute_name_following_value():
+def test_no_attribute_name_following_value() -> None:
     """
     Make sure to test an attribute name without a following attribute value.
     """
@@ -250,7 +250,7 @@ def test_no_attribute_name_following_value():
     assert expected_resultant_index == actual_resultant_index
 
 
-def test_no_attribute_name_following_value_and_no_close():
+def test_no_attribute_name_following_value_and_no_close() -> None:
     """
     Make sure to test an attribute name without a following attribute value and no close bracket.
     """
@@ -269,7 +269,7 @@ def test_no_attribute_name_following_value_and_no_close():
     assert expected_resultant_index == actual_resultant_index
 
 
-def test_attribute_name_equals_sign_only():
+def test_attribute_name_equals_sign_only() -> None:
     """
     Make sure to test an attribute name with a following equal sign only.
     """
@@ -288,7 +288,7 @@ def test_attribute_name_equals_sign_only():
     assert expected_resultant_index == actual_resultant_index
 
 
-def test_attribute_name_equals_sign_and_close():
+def test_attribute_name_equals_sign_and_close() -> None:
     """
     Make sure to test an attribute name with a following equal sign and a close.
     """
@@ -307,7 +307,7 @@ def test_attribute_name_equals_sign_and_close():
     assert expected_resultant_index == actual_resultant_index
 
 
-def test_double_quoted_attribute_name_following_value_empty():
+def test_double_quoted_attribute_name_following_value_empty() -> None:
     """
     Make sure to test an attribute name with a following double quoted value that is empty.
     """
@@ -326,7 +326,7 @@ def test_double_quoted_attribute_name_following_value_empty():
     assert expected_resultant_index == actual_resultant_index
 
 
-def test_double_quoted_attribute_name_following_value_not_empty():
+def test_double_quoted_attribute_name_following_value_not_empty() -> None:
     """
     Make sure to test an attribute name with a following double quoted value that is not empty.
     """
@@ -345,7 +345,7 @@ def test_double_quoted_attribute_name_following_value_not_empty():
     assert expected_resultant_index == actual_resultant_index
 
 
-def test_double_quoted_attribute_name_following_value_and_whitespace_around():
+def test_double_quoted_attribute_name_following_value_and_whitespace_around() -> None:
     """
     Make sure to test an attribute name with a following double quoted value with whitespace around it.
     """
@@ -364,7 +364,7 @@ def test_double_quoted_attribute_name_following_value_and_whitespace_around():
     assert expected_resultant_index == actual_resultant_index
 
 
-def test_double_quoted_attribute_name_following_value_and_no_close_quotes():
+def test_double_quoted_attribute_name_following_value_and_no_close_quotes() -> None:
     """
     Make sure to test an attribute name with a following double quoted value that has no close quotes.
     """
@@ -383,7 +383,7 @@ def test_double_quoted_attribute_name_following_value_and_no_close_quotes():
     assert expected_resultant_index == actual_resultant_index
 
 
-def test_double_quoted_attribute_name_following_value_and_no_close():
+def test_double_quoted_attribute_name_following_value_and_no_close() -> None:
     """
     Make sure to test an attribute name with a following double quoted value that has no close tag.
     """
@@ -402,7 +402,7 @@ def test_double_quoted_attribute_name_following_value_and_no_close():
     assert expected_resultant_index == actual_resultant_index
 
 
-def test_single_quoted_attribute_name_following_value_empty():
+def test_single_quoted_attribute_name_following_value_empty() -> None:
     """
     Make sure to test an attribute name with a following single quoted value that is empty.
     """
@@ -421,7 +421,7 @@ def test_single_quoted_attribute_name_following_value_empty():
     assert expected_resultant_index == actual_resultant_index
 
 
-def test_single_quoted_attribute_name_following_value_not_empty():
+def test_single_quoted_attribute_name_following_value_not_empty() -> None:
     """
     Make sure to test an attribute name with a following single quoted value that is not empty.
     """
@@ -440,7 +440,7 @@ def test_single_quoted_attribute_name_following_value_not_empty():
     assert expected_resultant_index == actual_resultant_index
 
 
-def test_single_quoted_attribute_name_following_value_and_whitespace_around():
+def test_single_quoted_attribute_name_following_value_and_whitespace_around() -> None:
     """
     Make sure to test an attribute name with a following single quoted value with whitespace around it.
     """
@@ -459,7 +459,7 @@ def test_single_quoted_attribute_name_following_value_and_whitespace_around():
     assert expected_resultant_index == actual_resultant_index
 
 
-def test_single_quoted_attribute_name_following_value_and_no_close_quotes():
+def test_single_quoted_attribute_name_following_value_and_no_close_quotes() -> None:
     """
     Make sure to test an attribute name with a following single quoted value that has no close quotes.
     """
@@ -478,7 +478,7 @@ def test_single_quoted_attribute_name_following_value_and_no_close_quotes():
     assert expected_resultant_index == actual_resultant_index
 
 
-def test_single_quoted_attribute_name_following_value_and_no_close():
+def test_single_quoted_attribute_name_following_value_and_no_close() -> None:
     """
     Make sure to test an attribute name with a following single quoted value that has no close tag.
     """
@@ -497,7 +497,7 @@ def test_single_quoted_attribute_name_following_value_and_no_close():
     assert expected_resultant_index == actual_resultant_index
 
 
-def test_non_quoted_attribute_name_following_value():
+def test_non_quoted_attribute_name_following_value() -> None:
     """
     Make sure to test an attribute name with a following non-quoted value that is not empty.
     """
@@ -516,7 +516,7 @@ def test_non_quoted_attribute_name_following_value():
     assert expected_resultant_index == actual_resultant_index
 
 
-def test_non_quoted_attribute_name_following_value_empty():
+def test_non_quoted_attribute_name_following_value_empty() -> None:
     """
     Make sure to test an attribute name with a following non-quoted value that is empty.
     """

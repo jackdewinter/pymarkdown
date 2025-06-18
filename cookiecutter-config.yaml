@@ -1,0 +1,51 @@
+default_context:
+    project_name: "pymarkdown"
+    project_version: "0.9.31"
+
+    main_class_name : "PyMarkdownLint"
+    project_src_additional_path: ", stubs"
+    project_src_dependencies: |
+        "application_properties==0.8.2",
+        "types-pyyaml",
+        pytest, types-PyYAML, application_properties, columnar        
+
+    pypi_package_name: "pymarkdownlnt"
+
+    github_organization: "jackdewinter"
+    github_project_name: "pymarkdown"
+    
+    one_line_setup_description : "A GitHub Flavored Markdown compliant Markdown linter."
+
+    setup_intended_audience : "\"Intended Audience :: Developers\","
+    setup_additional_classifier : |
+        "Topic :: Software Development :: Libraries :: Application Frameworks",
+    setup_keywords : "\"markdown\", \"linter\", \"markdown linter\""
+    setup_package_modules : |
+        "pymarkdown",
+        "pymarkdown.block_quotes",
+        "pymarkdown.coalesce",
+        "pymarkdown.container_blocks",
+        "pymarkdown.extension_manager",
+        "pymarkdown.extensions",
+        "pymarkdown.general",
+        "pymarkdown.html",
+        "pymarkdown.inline",
+        "pymarkdown.leaf_blocks",
+        "pymarkdown.links",
+        "pymarkdown.list_blocks",
+        "pymarkdown.plugin_manager",
+        "pymarkdown.plugins",
+        "pymarkdown.plugins.utils",
+        "pymarkdown.resources",
+        "pymarkdown.tokens",
+        "pymarkdown.transform_gfm",
+        "pymarkdown.transform_markdown",
+    setup_package_data : "\"\": [\"*.typed\"]"
+    setup_entry_points : |
+        "pymarkdown=pymarkdown.__main__:main",
+        "pymarkdownlnt=pymarkdown.__main__:main",
+
+    rtd_site_name : "PyMarkdown Linter (PyMarkdownLnt)"
+    rtd_deploy_name : "pymarkdown"
+
+    # setup_development_status" : "4 - Beta"

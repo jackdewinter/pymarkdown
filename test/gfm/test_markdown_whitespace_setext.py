@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_spaces_before():
+def test_whitespaces_setext_headings_with_spaces_before() -> None:
     """
     Test case:  SetExt Headings preceeded by spaces.
     """
@@ -28,7 +28,7 @@ def test_whitespaces_setext_headings_with_spaces_before():
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_too_many_spaces_before():
+def test_whitespaces_setext_headings_with_too_many_spaces_before() -> None:
     """
     Test case:  SetExt Headings preceeded by spaces.
     """
@@ -49,7 +49,7 @@ def test_whitespaces_setext_headings_with_too_many_spaces_before():
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_x():
+def test_whitespaces_setext_headings_with_tabs_before_x() -> None:
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -70,7 +70,7 @@ def test_whitespaces_setext_headings_with_tabs_before_x():
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_repeat():
+def test_whitespaces_setext_headings_with_tabs_before_repeat() -> None:
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -92,7 +92,7 @@ def test_whitespaces_setext_headings_with_tabs_before_repeat():
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_form_feeds_before():
+def test_whitespaces_setext_headings_with_form_feeds_before() -> None:
     """
     Test case:  SetExt Headings preceeded by spaces and form feeds.
     """
@@ -113,7 +113,7 @@ def test_whitespaces_setext_headings_with_form_feeds_before():
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_spaces_before_within_list():
+def test_whitespaces_setext_headings_with_spaces_before_within_list() -> None:
     """
     Test case:  SetExt Headings preceeded by spaces.
     """
@@ -139,7 +139,7 @@ def test_whitespaces_setext_headings_with_spaces_before_within_list():
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_spaces_before_within_block_quotes():
+def test_whitespaces_setext_headings_with_spaces_before_within_block_quotes() -> None:
     """
     Test case:  SetExt Headings preceeded by spaces.
     """
@@ -166,7 +166,9 @@ def
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_spaces_before_within_double_block_quotes():
+def test_whitespaces_setext_headings_with_spaces_before_within_double_block_quotes() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces.
     """
@@ -200,7 +202,9 @@ def test_whitespaces_setext_headings_with_spaces_before_within_double_block_quot
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_spaces_before_within_double_block_quotes_with_single():
+def test_whitespaces_setext_headings_with_spaces_before_within_double_block_quotes_with_single() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces.
     """
@@ -235,7 +239,7 @@ def test_whitespaces_setext_headings_with_spaces_before_within_double_block_quot
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_unordered_list_x():
+def test_whitespaces_setext_headings_with_tabs_before_within_unordered_list_x() -> None:
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -262,7 +266,9 @@ def test_whitespaces_setext_headings_with_tabs_before_within_unordered_list_x():
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_unordered_list_and_single_space():
+def test_whitespaces_setext_headings_with_tabs_before_within_unordered_list_and_single_space() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces.
     """
@@ -288,7 +294,9 @@ def test_whitespaces_setext_headings_with_tabs_before_within_unordered_list_and_
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_unordered_list_and_spaces():
+def test_whitespaces_setext_headings_with_tabs_before_within_unordered_list_and_spaces() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -314,7 +322,9 @@ def test_whitespaces_setext_headings_with_tabs_before_within_unordered_list_and_
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_unordered_double_list():
+def test_whitespaces_setext_headings_with_tabs_before_within_unordered_double_list() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -351,7 +361,7 @@ def test_whitespaces_setext_headings_with_tabs_before_within_unordered_double_li
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_ordered_list_x():
+def test_whitespaces_setext_headings_with_tabs_before_within_ordered_list_x() -> None:
     """
     Test case:  SetExt Headings preceeded by spaces.
     """
@@ -377,7 +387,9 @@ def test_whitespaces_setext_headings_with_tabs_before_within_ordered_list_x():
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_ordered_list_and_single_space():
+def test_whitespaces_setext_headings_with_tabs_before_within_ordered_list_and_single_space() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces.
     """
@@ -403,7 +415,9 @@ def test_whitespaces_setext_headings_with_tabs_before_within_ordered_list_and_si
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_ordered_list_and_spaces():
+def test_whitespaces_setext_headings_with_tabs_before_within_ordered_list_and_spaces() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -429,7 +443,9 @@ def test_whitespaces_setext_headings_with_tabs_before_within_ordered_list_and_sp
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_ordered_double_list_x():
+def test_whitespaces_setext_headings_with_tabs_before_within_ordered_double_list_x() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -465,7 +481,9 @@ def test_whitespaces_setext_headings_with_tabs_before_within_ordered_double_list
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_ordered_double_list_no_spaces():
+def test_whitespaces_setext_headings_with_tabs_before_within_ordered_double_list_no_spaces() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -501,7 +519,9 @@ def test_whitespaces_setext_headings_with_tabs_before_within_ordered_double_list
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_ordered_double_list_tab_after_indent():
+def test_whitespaces_setext_headings_with_tabs_before_within_ordered_double_list_tab_after_indent() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -537,7 +557,9 @@ def test_whitespaces_setext_headings_with_tabs_before_within_ordered_double_list
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_ordered_double_list_one_space():
+def test_whitespaces_setext_headings_with_tabs_before_within_ordered_double_list_one_space() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -573,7 +595,9 @@ def test_whitespaces_setext_headings_with_tabs_before_within_ordered_double_list
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_ordered_double_list_only_spaces():
+def test_whitespaces_setext_headings_with_tabs_before_within_ordered_double_list_only_spaces() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -609,7 +633,7 @@ def test_whitespaces_setext_headings_with_tabs_before_within_ordered_double_list
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_formfeeds_before_within_list():
+def test_whitespaces_setext_headings_with_formfeeds_before_within_list() -> None:
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -634,7 +658,9 @@ def test_whitespaces_setext_headings_with_formfeeds_before_within_list():
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_spaces_before_within_double_block_quotes_with_zero_and_zero_spaces_at_start():
+def test_whitespaces_setext_headings_with_spaces_before_within_double_block_quotes_with_zero_and_zero_spaces_at_start() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -669,7 +695,9 @@ def test_whitespaces_setext_headings_with_spaces_before_within_double_block_quot
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_spaces_before_within_double_block_quotes_with_zero_and_one_space_at_start():
+def test_whitespaces_setext_headings_with_spaces_before_within_double_block_quotes_with_zero_and_one_space_at_start() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -704,7 +732,9 @@ def test_whitespaces_setext_headings_with_spaces_before_within_double_block_quot
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_spaces_before_within_double_block_quotes_with_zero_and_two_spaces_at_start():
+def test_whitespaces_setext_headings_with_spaces_before_within_double_block_quotes_with_zero_and_two_spaces_at_start() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -739,7 +769,9 @@ def test_whitespaces_setext_headings_with_spaces_before_within_double_block_quot
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_spaces_before_within_double_block_quotes_with_zero_and_three_spaces_at_start():
+def test_whitespaces_setext_headings_with_spaces_before_within_double_block_quotes_with_zero_and_three_spaces_at_start() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -774,7 +806,9 @@ def test_whitespaces_setext_headings_with_spaces_before_within_double_block_quot
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_spaces_before_within_double_block_quotes_with_zero_and_four_spaces_at_start():
+def test_whitespaces_setext_headings_with_spaces_before_within_double_block_quotes_with_zero_and_four_spaces_at_start() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -783,7 +817,7 @@ def test_whitespaces_setext_headings_with_spaces_before_within_double_block_quot
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_block_quotes_x1():
+def test_whitespaces_setext_headings_with_tabs_before_within_block_quotes_x1() -> None:
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -810,7 +844,7 @@ def
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_block_quotes_x2():
+def test_whitespaces_setext_headings_with_tabs_before_within_block_quotes_x2() -> None:
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -837,7 +871,9 @@ def
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_block_quotes_repeat():
+def test_whitespaces_setext_headings_with_tabs_before_within_block_quotes_repeat() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -867,7 +903,9 @@ def test_whitespaces_setext_headings_with_tabs_before_within_block_quotes_repeat
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_block_quotes_bare_repeat():
+def test_whitespaces_setext_headings_with_tabs_before_within_block_quotes_bare_repeat() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     Note: instead of repeating the pattern of having a repeat of the element, this
@@ -895,7 +933,9 @@ def</h2>
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_block_quotes_bare_with_space_repeat():
+def test_whitespaces_setext_headings_with_tabs_before_within_block_quotes_bare_with_space_repeat() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -919,7 +959,9 @@ def test_whitespaces_setext_headings_with_tabs_before_within_block_quotes_bare_w
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_block_quotes_bare_with_many_tabs():
+def test_whitespaces_setext_headings_with_tabs_before_within_block_quotes_bare_with_many_tabs() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -943,7 +985,9 @@ def test_whitespaces_setext_headings_with_tabs_before_within_block_quotes_bare_w
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quotes_1():
+def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quotes_1() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -977,7 +1021,9 @@ def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quotes
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quotes_2():
+def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quotes_2() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -1011,7 +1057,9 @@ def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quotes
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quotes_3():
+def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quotes_3() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -1045,7 +1093,9 @@ def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quotes
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quotes_with_single():
+def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quotes_with_single() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -1082,7 +1132,9 @@ abc</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quotes_with_single_and_space():
+def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quotes_with_single_and_space() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -1122,7 +1174,9 @@ abc</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_block_quote_bare_2_x():
+def test_whitespaces_setext_headings_with_tabs_before_within_block_quote_bare_2_x() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -1148,7 +1202,9 @@ def</h2>
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_block_quote_bare_2_plus_space():
+def test_whitespaces_setext_headings_with_tabs_before_within_block_quote_bare_2_plus_space() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -1176,7 +1232,9 @@ def</h2>
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_block_quote_bare_2_plus_space_and_tab():
+def test_whitespaces_setext_headings_with_tabs_before_within_block_quote_bare_2_plus_space_and_tab() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -1204,7 +1262,9 @@ def</h2>
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_block_quote_bare_2_plus_space_and_tab_and_space():
+def test_whitespaces_setext_headings_with_tabs_before_within_block_quote_bare_2_plus_space_and_tab_and_space() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -1232,7 +1292,9 @@ def</h2>
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_block_quote_bare_3():
+def test_whitespaces_setext_headings_with_tabs_before_within_block_quote_bare_3() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -1260,7 +1322,9 @@ ghi</h2>
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_block_quote_bare_with_space():
+def test_whitespaces_setext_headings_with_tabs_before_within_block_quote_bare_with_space() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -1286,7 +1350,9 @@ def</h2>
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quote():
+def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quote() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -1320,7 +1386,9 @@ def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quote(
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quote_with_single():
+def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quote_with_single() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -1355,7 +1423,9 @@ def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quote_
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quote_with_single_and_space():
+def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quote_with_single_and_space() -> (
+    None
+):
     """
     Test case:  SetExt Headings preceeded by spaces and tabs.
     """
@@ -1393,7 +1463,7 @@ def test_whitespaces_setext_headings_with_tabs_before_within_double_block_quote_
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_spaces_after():
+def test_whitespaces_setext_headings_with_spaces_after() -> None:
     """
     Test case:  SetExt Headings followed by spaces.
     """
@@ -1413,7 +1483,7 @@ def test_whitespaces_setext_headings_with_spaces_after():
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_after():
+def test_whitespaces_setext_headings_with_tabs_after() -> None:
     """
     Test case:  SetExt Headings followed by spaces and tabs.
     """
@@ -1433,7 +1503,7 @@ def test_whitespaces_setext_headings_with_tabs_after():
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_tabs_after_within():
+def test_whitespaces_setext_headings_with_tabs_after_within() -> None:
     """
     Test case:  SetExt Headings followed by spaces and tabs.
     """
@@ -1459,7 +1529,7 @@ def test_whitespaces_setext_headings_with_tabs_after_within():
 
 
 @pytest.mark.gfm
-def test_whitespaces_setext_headings_with_form_feeds_after():
+def test_whitespaces_setext_headings_with_form_feeds_after() -> None:
     """
     Test case:  SetExt Headings followed by form feeds.
     """

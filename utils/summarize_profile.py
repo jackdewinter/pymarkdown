@@ -1,3 +1,7 @@
+"""
+This script is used to summarize the output of a Python profiler, such as cProfile.
+"""
+
 import json
 import os
 import sys
@@ -24,13 +28,13 @@ with open(sys.argv[1], "r", encoding="utf-8") as stats_input_file:
 # ncalls    tottime  percall  cumtime  percall filename:lineno(function)
 # 1600       25.554    0.016   54.422    0.034 C:\enlistments\pymarkdown\pymarkdown\container_blocks\container_block_processor.py:318(__look_back_in_document_for_block_quote)
 # 58246318   16.601    0.000   23.959    0.000 C:\enlistments\pymarkdown\pymarkdown\tokens\markdown_token.py:250(is_block_quote_start)
-have_seen_header_row = False
+HAVE_SEEN_HEADER_ROW = False
 eligible_lines = []
 for next_line in stats_input_lines:
     next_line = next_line.strip()
     if next_line.startswith("ncalls "):
-        have_seen_header_row = True
-    elif have_seen_header_row:
+        HAVE_SEEN_HEADER_ROW = True
+    elif HAVE_SEEN_HEADER_ROW:
         if not next_line:
             break
         eligible_lines.append([x for x in next_line.split(" ") if x.strip()])
@@ -41,14 +45,14 @@ curated_samples = []
 for next_line in eligible_lines:
     curated_row = {"ncalls": next_line[0], "tottime": next_line[1]}
     if len(next_line) > 6:
-        curated_file_name = " ".join(next_line[5:])
-        curated_line_number = "N/A"
-        curated_function_name = "N/A"
+        CURATED_FILE_NAME = " ".join(next_line[5:])
+        CURATED_LINE_NUMBER = "N/A"
+        CURATED_FUNCTION_NAME = "N/A"
     else:
         if next_line[5].startswith(base_project_path):
-            curated_file_name = next_line[5][len(base_project_path) :]
+            CURATED_FILE_NAME = next_line[5][len(base_project_path) :]
         else:
-            curated_file_name = next(
+            CURATED_FILE_NAME = next(
                 (
                     dde + next_line[5][len(ddd) :]
                     for ddd, dde in python_core_paths.items()
@@ -56,15 +60,15 @@ for next_line in eligible_lines:
                 ),
                 next_line[5],
             )
-        file_name_end_index = curated_file_name.index(":")
-        curated_line_number = curated_file_name[file_name_end_index + 1 :]
-        line_number_end_index = curated_line_number.index("(")
-        curated_function_name = curated_line_number[line_number_end_index + 1 : -1]
-        curated_line_number = curated_line_number[:line_number_end_index]
-        curated_file_name = curated_file_name[:file_name_end_index]
-    curated_row["file_name"] = curated_file_name
-    curated_row["line_number"] = curated_line_number
-    curated_row["function_name"] = curated_function_name
+        file_name_end_index = CURATED_FILE_NAME.index(":")
+        CURATED_LINE_NUMBER = CURATED_FILE_NAME[file_name_end_index + 1 :]
+        line_number_end_index = CURATED_LINE_NUMBER.index("(")
+        CURATED_FUNCTION_NAME = CURATED_LINE_NUMBER[line_number_end_index + 1 : -1]
+        CURATED_LINE_NUMBER = CURATED_LINE_NUMBER[:line_number_end_index]
+        CURATED_FILE_NAME = CURATED_FILE_NAME[:file_name_end_index]
+    curated_row["file_name"] = CURATED_FILE_NAME
+    curated_row["line_number"] = CURATED_LINE_NUMBER
+    curated_row["function_name"] = CURATED_FUNCTION_NAME
     curated_samples.append(curated_row)
 
 print(json.dumps(curated_samples))

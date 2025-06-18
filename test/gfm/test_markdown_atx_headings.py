@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_atx_headings_032():
+def test_atx_headings_032() -> None:
     """
     Test case 032:  Simple headings
     """
@@ -52,7 +52,7 @@ def test_atx_headings_032():
 
 
 @pytest.mark.gfm
-def test_atx_headings_033():
+def test_atx_headings_033() -> None:
     """
     Test case 033:  More than six # characters is not a heading:
     """
@@ -67,7 +67,7 @@ def test_atx_headings_033():
 
 
 @pytest.mark.gfm
-def test_atx_headings_034():
+def test_atx_headings_034() -> None:
     """
     Test case 034:  At least one space is required between the # characters and the heading’s contents, unless the heading is empty.
     """
@@ -93,7 +93,7 @@ def test_atx_headings_034():
 
 
 @pytest.mark.gfm
-def test_atx_headings_035():
+def test_atx_headings_035() -> None:
     """
     Test case 035:  this is not a heading, because the first # is escaped:
     """
@@ -108,7 +108,7 @@ def test_atx_headings_035():
 
 
 @pytest.mark.gfm
-def test_atx_headings_036():
+def test_atx_headings_036() -> None:
     """
     Test case 036:  Contents are parsed as inlines:
     """
@@ -131,7 +131,7 @@ def test_atx_headings_036():
 
 
 @pytest.mark.gfm
-def test_atx_headings_037():
+def test_atx_headings_037() -> None:
     """
     Test case 037:  Leading and trailing whitespace is ignored in parsing inline content:
     """
@@ -150,7 +150,7 @@ def test_atx_headings_037():
 
 
 @pytest.mark.gfm
-def test_atx_headings_038():
+def test_atx_headings_038() -> None:
     """
     Test case 038:  One to three spaces indentation are allowed:
     """
@@ -179,7 +179,7 @@ def test_atx_headings_038():
 
 
 @pytest.mark.gfm
-def test_atx_headings_039():
+def test_atx_headings_039() -> None:
     """
     Test case 039:  (part a) Four spaces are too much:
     """
@@ -199,7 +199,7 @@ def test_atx_headings_039():
 
 
 @pytest.mark.gfm
-def test_atx_headings_040():
+def test_atx_headings_040() -> None:
     """
     Test case 040:  (part b) Four spaces are too much:
     """
@@ -220,7 +220,7 @@ def test_atx_headings_040():
 
 
 @pytest.mark.gfm
-def test_atx_headings_041():
+def test_atx_headings_041() -> None:
     """
     Test case 041:  A closing sequence of # characters is optional:
     """
@@ -244,7 +244,7 @@ def test_atx_headings_041():
 
 
 @pytest.mark.gfm
-def test_atx_headings_042():
+def test_atx_headings_042() -> None:
     """
     Test case 042:  It need not be the same length as the opening sequence:
     """
@@ -268,7 +268,7 @@ def test_atx_headings_042():
 
 
 @pytest.mark.gfm
-def test_atx_headings_043():
+def test_atx_headings_043() -> None:
     """
     Test case 043:  Spaces are allowed after the closing sequence:
     """
@@ -287,7 +287,7 @@ def test_atx_headings_043():
 
 
 @pytest.mark.gfm
-def test_atx_headings_044():
+def test_atx_headings_044() -> None:
     """
     Test case 044:  A sequence of # characters with anything but spaces following it is not a closing sequence, but counts as part of the contents of the heading:
     """
@@ -306,7 +306,7 @@ def test_atx_headings_044():
 
 
 @pytest.mark.gfm
-def test_atx_headings_045():
+def test_atx_headings_045() -> None:
     """
     Test case 045:  The closing sequence must be preceded by a space:
     """
@@ -321,7 +321,7 @@ def test_atx_headings_045():
 
 
 @pytest.mark.gfm
-def test_atx_headings_046():
+def test_atx_headings_046() -> None:
     """
     Test case 046:  Backslash-escaped # characters do not count as part of the closing sequence:
     """
@@ -350,7 +350,7 @@ def test_atx_headings_046():
 
 
 @pytest.mark.gfm
-def test_atx_headings_047():
+def test_atx_headings_047() -> None:
     """
     Test case 047:  (part a) ATX headings need not be separated from surrounding content by blank lines, and they can interrupt paragraphs:
     """
@@ -375,7 +375,7 @@ def test_atx_headings_047():
 
 
 @pytest.mark.gfm
-def test_atx_headings_048():
+def test_atx_headings_048() -> None:
     """
     Test case 048:  (part b) ATX headings need not be separated from surrounding content by blank lines, and they can interrupt paragraphs:
     """
@@ -404,7 +404,7 @@ Bar foo"""
 
 
 @pytest.mark.gfm
-def test_atx_headings_049():
+def test_atx_headings_049() -> None:
     """
     Test case 049:  ATX headings can be empty:
     """

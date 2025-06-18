@@ -8,7 +8,7 @@ from test.utils import (
     copy_to_temporary_file,
     write_temporary_configuration,
 )
-from typing import Any, List, Optional
+from typing import Any, Generator, List, Optional, Tuple
 
 import pytest
 
@@ -63,7 +63,9 @@ def id_test_plug_rule_fn(val: Any) -> str:
     raise AssertionError()
 
 
-def build_fix_and_clash_lists(scanTests: List[pluginRuleTest]):
+def build_fix_and_clash_lists(
+    scanTests: List[pluginRuleTest],
+) -> Tuple[List[pluginRuleTest], List[pluginRuleTest]]:
     fixTests: List[pluginRuleTest] = []
     clashTests: List[pluginRuleTest] = []
     for i in scanTests:
@@ -78,7 +80,7 @@ def build_fix_and_clash_lists(scanTests: List[pluginRuleTest]):
 @contextmanager
 def build_arguments(
     test: pluginRuleTest, is_fix: bool, skip_disabled_rules: bool = False
-):
+) -> Generator[Tuple[str, List[str]], None, None]:
     temp_source_path = None
     try:
         if test.source_file_name:
@@ -91,7 +93,7 @@ def build_arguments(
                 test.source_file_contents, file_name_suffix=".md"
             )
 
-        supplied_arguments = []
+        supplied_arguments: List[str] = []
         if test.use_debug:
             supplied_arguments.append("--stack-trace")
         if test.add_plugin_path:
@@ -119,7 +121,7 @@ def build_arguments(
             os.remove(temp_source_path)
 
 
-def execute_scan_test(test: pluginRuleTest, host_rule_id: str):
+def execute_scan_test(test: pluginRuleTest, host_rule_id: str) -> None:
     scanner = MarkdownScanner()
     with build_arguments(test, False) as (temp_source_path, supplied_arguments):
         expected_return_code = test.scan_expected_return_code
@@ -143,9 +145,9 @@ def execute_scan_test(test: pluginRuleTest, host_rule_id: str):
             execute_results = scanner.invoke_main(arguments=supplied_arguments)
             assert execute_results.return_code == 1 or execute_results.return_code == 0
             assert execute_results.std_err.getvalue() == ""
-            disabled_rules = test.disable_rules.lower().split(",")
+            disabled_rules: List[str] = test.disable_rules.lower().split(",")
 
-            found_rules = []
+            found_rules: List[str] = []
             for next_line in execute_results.std_out.getvalue().split("\n"):
                 if not next_line:
                     continue
@@ -163,7 +165,7 @@ def execute_scan_test(test: pluginRuleTest, host_rule_id: str):
 
 def calculate_scan_tests(scanTests: List[pluginRuleTest]) -> List[pluginRuleTest]:
     return [
-        (pytest.param(i, marks=pytest.mark.skip) if i.mark_scan_as_skipped else i)
+        (pytest.param(i, marks=pytest.mark.skip) if i.mark_scan_as_skipped else i)  # type: ignore
         for i in scanTests
     ]
 
@@ -171,7 +173,7 @@ def calculate_scan_tests(scanTests: List[pluginRuleTest]) -> List[pluginRuleTest
 def calculate_fix_tests(scanTests: List[pluginRuleTest]) -> List[pluginRuleTest]:
     return [
         (
-            pytest.param(i, marks=pytest.mark.skip)
+            pytest.param(i, marks=pytest.mark.skip)  # type: ignore
             if i.mark_fix_as_skipped or i.mark_scan_as_skipped
             else i
         )
@@ -180,7 +182,7 @@ def calculate_fix_tests(scanTests: List[pluginRuleTest]) -> List[pluginRuleTest]
     ]
 
 
-def execute_fix_test(test: pluginRuleTest):
+def execute_fix_test(test: pluginRuleTest) -> None:
     scanner = MarkdownScanner()
     with build_arguments(test, True) as (temp_source_path, supplied_arguments):
         expected_return_code = test.fix_expected_return_code
@@ -197,6 +199,7 @@ def execute_fix_test(test: pluginRuleTest):
         else:
             expected_error = ""
         expected_file_contents = test.fix_expected_file_contents
+        assert expected_file_contents is not None
 
         # Act
         execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -212,7 +215,7 @@ def execute_configuration_test(
     test: pluginConfigErrorTest,
     file_to_use: Optional[str] = None,
     file_contents: Optional[str] = None,
-):
+) -> None:
     scanner = MarkdownScanner()
 
     temp_source_path = None
@@ -258,10 +261,10 @@ class pluginQueryConfigTest:
     expected_output: str
 
 
-def execute_query_configuration_test(test: pluginQueryConfigTest):
+def execute_query_configuration_test(test: pluginQueryConfigTest) -> None:
     scanner = MarkdownScanner()
 
-    supplied_arguments = []
+    supplied_arguments: List[str] = []
     # if test.use_strict_config:
     #     supplied_arguments.append("--strict-config")
     # if test.set_args:

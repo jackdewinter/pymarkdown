@@ -10,7 +10,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_html_blocks_118():
+def test_html_blocks_118() -> None:
     """
     Test case 118:  (weird sample) <pre> within a HTML block started by <table> will not affect the parser state
     """
@@ -51,7 +51,7 @@ _world_.
 
 
 @pytest.mark.gfm
-def test_html_blocks_119():
+def test_html_blocks_119() -> None:
     """
     Test case 119:  (part 1) Some simple examples follow. Here are some basic HTML blocks of type 6:
     """
@@ -89,7 +89,7 @@ okay."""
 
 
 @pytest.mark.gfm
-def test_html_blocks_120():
+def test_html_blocks_120() -> None:
     """
     Test case 120:  (part 2) Some simple examples follow. Here are some basic HTML blocks of type 6:
     """
@@ -112,7 +112,7 @@ def test_html_blocks_120():
 
 
 @pytest.mark.gfm
-def test_html_blocks_121():
+def test_html_blocks_121() -> None:
     """
     Test case 121:  A block can also start with a closing tag:
     """
@@ -133,7 +133,7 @@ def test_html_blocks_121():
 
 
 @pytest.mark.gfm
-def test_html_blocks_122():
+def test_html_blocks_122() -> None:
     """
     Test case 122:  Here we have two HTML blocks with a Markdown paragraph between them:
     """
@@ -168,7 +168,7 @@ def test_html_blocks_122():
 
 
 @pytest.mark.gfm
-def test_html_blocks_123():
+def test_html_blocks_123() -> None:
     """
     Test case 123:  (part 1) The tag on the first line can be partial, as long
                     as it is split where there would be whitespace:
@@ -192,7 +192,7 @@ def test_html_blocks_123():
 
 
 @pytest.mark.gfm
-def test_html_blocks_123a():
+def test_html_blocks_123a() -> None:
     """
     Test case 123a:  variation of 123 within a list
     """
@@ -227,7 +227,7 @@ class="bar">
 
 
 @pytest.mark.gfm
-def test_html_blocks_123bx():
+def test_html_blocks_123bx() -> None:
     """
     Test case 123b:  variation of 123 within a block quote
     """
@@ -260,7 +260,7 @@ class="bar">
 
 
 @pytest.mark.gfm
-def test_html_blocks_123ba():
+def test_html_blocks_123ba() -> None:
     """
     Test case 123ba:  variation of 123b within a block quote with all
         lines starting with block quote
@@ -288,7 +288,7 @@ class="bar">
 
 
 @pytest.mark.gfm
-def test_html_blocks_123bb():
+def test_html_blocks_123bb() -> None:
     """
     Test case 123bb:  variation of 123b within a block quote with all
         lines starting with block quote, and extra spaces
@@ -316,7 +316,7 @@ def test_html_blocks_123bb():
 
 
 @pytest.mark.gfm
-def test_html_blocks_123c():
+def test_html_blocks_123c() -> None:
     """
     Test case 123c:  variation of 123 within a SetExt Heading
     """
@@ -339,7 +339,7 @@ class="bar">
 
 
 @pytest.mark.gfm
-def test_html_blocks_123d():
+def test_html_blocks_123d() -> None:
     """
     Test case 123c:  variation of 123 within a Atx Heading
     """
@@ -363,7 +363,7 @@ class="bar">"""
 
 
 @pytest.mark.gfm
-def test_html_blocks_124():
+def test_html_blocks_124() -> None:
     """
     Test case 124:  (part 2) The tag on the first line can be partial, as long
                     as it is split where there would be whitespace:
@@ -387,7 +387,7 @@ def test_html_blocks_124():
 
 
 @pytest.mark.gfm
-def test_html_blocks_125():
+def test_html_blocks_125() -> None:
     """
     Test case 125:  An open tag need not be closed:
     """
@@ -417,7 +417,7 @@ def test_html_blocks_125():
 
 
 @pytest.mark.gfm
-def test_html_blocks_126():
+def test_html_blocks_126() -> None:
     """
     Test case 126:  (part 1) A partial tag need not even be completed (garbage in, garbage out):
     """
@@ -438,7 +438,7 @@ def test_html_blocks_126():
 
 
 @pytest.mark.gfm
-def test_html_blocks_127():
+def test_html_blocks_127() -> None:
     """
     Test case 127:  (part 2) A partial tag need not even be completed (garbage in, garbage out):
     """
@@ -459,7 +459,7 @@ foo"""
 
 
 @pytest.mark.gfm
-def test_html_blocks_128():
+def test_html_blocks_128() -> None:
     """
     Test case 128:  The initial tag doesn’t even need to be a valid tag, as long as it starts like one:
     """
@@ -480,7 +480,7 @@ def test_html_blocks_128():
 
 
 @pytest.mark.gfm
-def test_html_blocks_129():
+def test_html_blocks_129() -> None:
     """
     Test case 129:  (part 1) In type 6 blocks, the initial tag need not be on a line by itself:
     """
@@ -499,7 +499,7 @@ def test_html_blocks_129():
 
 
 @pytest.mark.gfm
-def test_html_blocks_130():
+def test_html_blocks_130() -> None:
     """
     Test case 130:  (part 2) In type 6 blocks, the initial tag need not be on a line by itself:
     """
@@ -522,7 +522,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_html_blocks_131():
+def test_html_blocks_131() -> None:
     """
     Test case 131:  Everything until the next blank line or end of document gets included in the HTML block.
     """
@@ -547,7 +547,7 @@ int x = 33;
 
 
 @pytest.mark.gfm
-def test_html_blocks_132():
+def test_html_blocks_132() -> None:
     """
     Test case 132:  To start an HTML block with a tag that is not in the list of
                     block-level tags in (6), you must put the tag by itself on
@@ -572,7 +572,7 @@ def test_html_blocks_132():
 
 
 @pytest.mark.gfm
-def test_html_blocks_133():
+def test_html_blocks_133() -> None:
     """
     Test case 133:  (part 1) In type 7 blocks, the tag name can be anything:
     """
@@ -595,7 +595,7 @@ def test_html_blocks_133():
 
 
 @pytest.mark.gfm
-def test_html_blocks_134():
+def test_html_blocks_134() -> None:
     """
     Test case 134:  (part 2) In type 7 blocks, the tag name can be anything:
     """
@@ -618,7 +618,7 @@ def test_html_blocks_134():
 
 
 @pytest.mark.gfm
-def test_html_blocks_135():
+def test_html_blocks_135() -> None:
     """
     Test case 135:  (part 3) In type 7 blocks, the tag name can be anything:
     """
@@ -639,7 +639,7 @@ def test_html_blocks_135():
 
 
 @pytest.mark.gfm
-def test_html_blocks_136():
+def test_html_blocks_136() -> None:
     """
     Test case 136:  These rules are designed to allow us to work with tags that
                     can function as either block-level or inline-level tags. The
@@ -666,7 +666,7 @@ def test_html_blocks_136():
 
 
 @pytest.mark.gfm
-def test_html_blocks_137():
+def test_html_blocks_137() -> None:
     """
     Test case 137:  In this case, we get a raw HTML block that just includes the
                     <del> tag (because it ends with the following blank line).
@@ -703,7 +703,7 @@ def test_html_blocks_137():
 
 
 @pytest.mark.gfm
-def test_html_blocks_138():
+def test_html_blocks_138() -> None:
     """
     Test case 138:  Finally, in this case, the <del> tags are interpreted as raw
                     HTML inside the CommonMark paragraph. (Because the tag is not
@@ -729,7 +729,7 @@ def test_html_blocks_138():
 
 
 @pytest.mark.gfm
-def test_html_blocks_139():
+def test_html_blocks_139() -> None:
     """
     Test case 139:  A pre tag (type 1):
     """
@@ -765,7 +765,7 @@ main = print $ parseTags tags
 
 
 @pytest.mark.gfm
-def test_html_blocks_140():
+def test_html_blocks_140() -> None:
     """
     Test case 140:  A script tag (type 1):
     """
@@ -799,7 +799,7 @@ document.getElementById("demo").innerHTML = "Hello JavaScript!";
 
 
 @pytest.mark.gfm
-def test_html_blocks_141():
+def test_html_blocks_141() -> None:
     """
     Test case 141:  A style tag (type 1):
     """
@@ -835,7 +835,7 @@ p {color:blue;}
 
 
 @pytest.mark.gfm
-def test_html_blocks_142():
+def test_html_blocks_142() -> None:
     """
     Test case 142:  (part 1) If there is no matching end tag, the block will end
                     at the end of the document (or the enclosing block quote or
@@ -864,7 +864,7 @@ foo"""
 
 
 @pytest.mark.gfm
-def test_html_blocks_142a():
+def test_html_blocks_142a() -> None:
     """
     Test case 142a:  variation of 142 with extra parameter
     """
@@ -893,7 +893,7 @@ foo"""
 
 
 @pytest.mark.gfm
-def test_html_blocks_143x():
+def test_html_blocks_143x() -> None:
     """
     Test case 143:  (part 2) If there is no matching end tag, the block will end
                     at the end of the document (or the enclosing block quote or
@@ -927,7 +927,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_html_blocks_143a():
+def test_html_blocks_143a() -> None:
     """
     Test case 143a:  variation of 143 with extra line
     """
@@ -961,7 +961,7 @@ bar
 
 
 @pytest.mark.gfm
-def test_html_blocks_143b():
+def test_html_blocks_143b() -> None:
     """
     Test case 143b:  variation of 143 with extra two lines
     """
@@ -997,7 +997,7 @@ baz
 
 
 @pytest.mark.gfm
-def test_html_blocks_143c():
+def test_html_blocks_143c() -> None:
     """
     Test case 143b:  variation of 143 with extra three lines
     """
@@ -1033,7 +1033,7 @@ baz
 
 
 @pytest.mark.gfm
-def test_html_blocks_144():
+def test_html_blocks_144() -> None:
     """
     Test case 144:  (part 3) If there is no matching end tag, the block will end
                     at the end of the document (or the enclosing block quote or
@@ -1066,7 +1066,7 @@ def test_html_blocks_144():
 
 
 @pytest.mark.gfm
-def test_html_blocks_144a():
+def test_html_blocks_144a() -> None:
     """
     Test case 144a:  Variation of 144 to add extra paragraph
     """
@@ -1104,7 +1104,7 @@ foo"""
 
 
 @pytest.mark.gfm
-def test_html_blocks_144b():
+def test_html_blocks_144b() -> None:
     """
     Test case 144a:  Variation of 144 to add extra paragraph
     """
@@ -1149,7 +1149,7 @@ foo"""
 
 
 @pytest.mark.gfm
-def test_html_blocks_145():
+def test_html_blocks_145() -> None:
     """
     Test case 145:  (part 1) The end tag can occur on the same line as the start tag:
     """
@@ -1175,7 +1175,7 @@ def test_html_blocks_145():
 
 
 @pytest.mark.gfm
-def test_html_blocks_146():
+def test_html_blocks_146() -> None:
     """
     Test case 146:  (part 2) The end tag can occur on the same line as the start tag:
     """
@@ -1201,7 +1201,7 @@ def test_html_blocks_146():
 
 
 @pytest.mark.gfm
-def test_html_blocks_147():
+def test_html_blocks_147() -> None:
     """
     Test case 147:  Note that anything on the last line after the end tag will be included in the HTML block:
     """
@@ -1224,7 +1224,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_html_blocks_148():
+def test_html_blocks_148() -> None:
     """
     Test case 148:  A comment (type 2):
     """
@@ -1256,7 +1256,7 @@ bar
 
 
 @pytest.mark.gfm
-def test_html_blocks_149():
+def test_html_blocks_149() -> None:
     """
     Test case 149:  A processing instruction (type 3):
     """
@@ -1292,7 +1292,7 @@ okay"""
 
 
 @pytest.mark.gfm
-def test_html_blocks_150():
+def test_html_blocks_150() -> None:
     """
     Test case 150:  A declaration (type 4):
     """
@@ -1311,7 +1311,7 @@ def test_html_blocks_150():
 
 
 @pytest.mark.gfm
-def test_html_blocks_151():
+def test_html_blocks_151() -> None:
     """
     Test case 151:  CDATA (type 5):
     """
@@ -1361,7 +1361,7 @@ function matchwo(a,b)
 
 
 @pytest.mark.gfm
-def test_html_blocks_152():
+def test_html_blocks_152() -> None:
     """
     Test case 152:  (part 1) The opening tag can be indented 1-3 spaces, but not 4:
     """
@@ -1388,7 +1388,7 @@ def test_html_blocks_152():
 
 
 @pytest.mark.gfm
-def test_html_blocks_153():
+def test_html_blocks_153() -> None:
     """
     Test case 153:  (part 2) The opening tag can be indented 1-3 spaces, but not 4:
     """
@@ -1415,7 +1415,7 @@ def test_html_blocks_153():
 
 
 @pytest.mark.gfm
-def test_html_blocks_154():
+def test_html_blocks_154() -> None:
     """
     Test case 154:  An HTML block of types 1–6 can interrupt a paragraph, and need not be preceded by a blank line.
     """
@@ -1443,7 +1443,7 @@ bar
 
 
 @pytest.mark.gfm
-def test_html_blocks_155():
+def test_html_blocks_155() -> None:
     """
     Test case 155:  However, a following blank line is needed, except at the end
                     of a document, and except for blocks of types 1–5, above:
@@ -1469,7 +1469,7 @@ bar
 
 
 @pytest.mark.gfm
-def test_html_blocks_156():
+def test_html_blocks_156() -> None:
     """
     Test case 156:  HTML blocks of type 7 cannot interrupt a paragraph:
     """
@@ -1494,7 +1494,7 @@ baz</p>"""
 
 
 @pytest.mark.gfm
-def test_html_blocks_157():
+def test_html_blocks_157() -> None:
     """
     Test case 157:  (part 1) This rule differs from John Gruber’s original Markdown syntax specification
     """
@@ -1530,7 +1530,7 @@ def test_html_blocks_157():
 
 
 @pytest.mark.gfm
-def test_html_blocks_158():
+def test_html_blocks_158() -> None:
     """
     Test case 158:  (part 2) This rule differs from John Gruber’s original Markdown syntax specification
     """
@@ -1553,7 +1553,7 @@ def test_html_blocks_158():
 
 
 @pytest.mark.gfm
-def test_html_blocks_159():
+def test_html_blocks_159() -> None:
     """
     Test case 159:  The rule given above seems a simpler and more elegant way of
                     achieving the same expressive power, which is also much simpler
@@ -1606,7 +1606,7 @@ Hi
 
 
 @pytest.mark.gfm
-def test_html_blocks_160():
+def test_html_blocks_160() -> None:
     """
     Test case 160:  The rule given above seems a simpler and more elegant way of
                     achieving the same expressive power, which is also much simpler
@@ -1660,7 +1660,7 @@ def test_html_blocks_160():
 
 
 @pytest.mark.gfm
-def test_html_blocks_160a():
+def test_html_blocks_160a() -> None:
     """
     Test case 160a:  variation of 160 with the blank lines removed
     """
@@ -1691,7 +1691,7 @@ def test_html_blocks_160a():
 
 
 @pytest.mark.gfm
-def test_html_blocks_cov1():
+def test_html_blocks_cov1() -> None:
     """
     Test case cov1:  Based on coverage analysis.
     """
@@ -1719,7 +1719,7 @@ def test_html_blocks_cov1():
 
 
 @pytest.mark.gfm
-def test_html_blocks_cov2x():
+def test_html_blocks_cov2x() -> None:
     """
     Test case cov2:  Based on coverage analysis.
     """
@@ -1749,7 +1749,7 @@ def test_html_blocks_cov2x():
 
 
 @pytest.mark.gfm
-def test_html_blocks_cov2a():
+def test_html_blocks_cov2a() -> None:
     """
     Test case cov2:  Based on coverage analysis.
     """
@@ -1779,7 +1779,7 @@ def test_html_blocks_cov2a():
 
 
 @pytest.mark.gfm
-def test_html_blocks_cov2b():
+def test_html_blocks_cov2b() -> None:
     """
     Test case cov2:  Based on coverage analysis.
     """
@@ -1809,7 +1809,7 @@ def test_html_blocks_cov2b():
 
 
 @pytest.mark.gfm
-def test_html_blocks_cov3():
+def test_html_blocks_cov3() -> None:
     """
     Test case cov3:  Based on coverage analysis.
     """
@@ -1831,7 +1831,7 @@ def test_html_blocks_cov3():
 
 
 @pytest.mark.gfm
-def test_html_blocks_cov4():
+def test_html_blocks_cov4() -> None:
     """
     Test case cov4:  Based on coverage analysis.
     """
@@ -1855,7 +1855,7 @@ bad&gt;
 
 
 @pytest.mark.gfm
-def test_html_blocks_extra_01x():
+def test_html_blocks_extra_01x() -> None:
     """
     Test case extra 01:  start a "list block" within a HTML code block
     """
@@ -1882,7 +1882,7 @@ some other text
 
 
 @pytest.mark.gfm
-def test_html_blocks_extra_01a():
+def test_html_blocks_extra_01a() -> None:
     """
     Test case extra 01:  variation of 1 with a LRD instead of text
     """
@@ -1909,7 +1909,7 @@ def test_html_blocks_extra_01a():
 
 
 @pytest.mark.gfm
-def test_html_blocks_extra_02x():
+def test_html_blocks_extra_02x() -> None:
     """
     Test case extra 02:  variation of 1 with html block started in list item
     """
@@ -1947,7 +1947,7 @@ some other text
 
 
 @pytest.mark.gfm
-def test_html_blocks_extra_02a():
+def test_html_blocks_extra_02a() -> None:
     """
     Test case extra 02:  variation of 2 with LRD
 
@@ -1990,7 +1990,7 @@ def test_html_blocks_extra_02a():
 
 
 @pytest.mark.gfm
-def test_html_blocks_extra_02b():
+def test_html_blocks_extra_02b() -> None:
     """
     Test case extra 02:  variation of 2a with extra indents
 
@@ -2032,7 +2032,7 @@ script</li>
 
 
 @pytest.mark.gfm
-def test_html_blocks_extra_02c():
+def test_html_blocks_extra_02c() -> None:
     """
     Test case extra 02:  variation of 2b without indents
 
@@ -2074,7 +2074,7 @@ script</li>
 
 
 @pytest.mark.gfm
-def test_html_blocks_extra_03x():
+def test_html_blocks_extra_03x() -> None:
     """
     Test case extra 03:  variation of 2 without list start on line 2
     """
@@ -2111,7 +2111,7 @@ some text
 
 
 @pytest.mark.gfm
-def test_html_blocks_extra_03a():
+def test_html_blocks_extra_03a() -> None:
     """
     Test case extra 03:  variation of 3 with LRD
     """
@@ -2148,7 +2148,7 @@ def test_html_blocks_extra_03a():
 
 
 @pytest.mark.gfm
-def test_html_blocks_extra_04x():
+def test_html_blocks_extra_04x() -> None:
     """
     Test case extra 04:  variation of 1 with "block quote" on line 2
     """
@@ -2175,7 +2175,7 @@ some other text
 
 
 @pytest.mark.gfm
-def test_html_blocks_extra_04a():
+def test_html_blocks_extra_04a() -> None:
     """
     Test case extra 04:  variation of 4 with LRD
     """
@@ -2202,7 +2202,7 @@ def test_html_blocks_extra_04a():
 
 
 @pytest.mark.gfm
-def test_html_blocks_extra_05x():
+def test_html_blocks_extra_05x() -> None:
     """
     Test case extra 05:  variation of 4 with HTML block in block quote
     """
@@ -2237,7 +2237,7 @@ some text
 
 
 @pytest.mark.gfm
-def test_html_blocks_extra_05a():
+def test_html_blocks_extra_05a() -> None:
     """
     Test case extra 05:  variation of 5 with LRD
     """
@@ -2272,7 +2272,7 @@ def test_html_blocks_extra_05a():
 
 
 @pytest.mark.gfm
-def test_html_blocks_extra_06x():
+def test_html_blocks_extra_06x() -> None:
     """
     Test case extra 06:  variation of 4 with start on line 1 and not line 2
     """
@@ -2307,7 +2307,7 @@ some other text
 
 
 @pytest.mark.gfm
-def test_html_blocks_extra_06a():
+def test_html_blocks_extra_06a() -> None:
     """
     Test case extra 06:  variation of 6 with LRD
 
@@ -2344,7 +2344,7 @@ def test_html_blocks_extra_06a():
 
 
 @pytest.mark.gfm
-def test_html_blocks_extra_07():
+def test_html_blocks_extra_07() -> None:
     """
     Test case extra 07:  mixed "block quotes" and "list blocks" inside of HTML block
     """
@@ -2375,7 +2375,7 @@ def test_html_blocks_extra_07():
 
 
 @pytest.mark.gfm
-def test_html_blocks_extra_08x():
+def test_html_blocks_extra_08x() -> None:
     """
     Test case extra 08
     """
@@ -2410,7 +2410,7 @@ def:
 
 
 @pytest.mark.gfm
-def test_html_blocks_extra_08a():
+def test_html_blocks_extra_08a() -> None:
     """
     Test case extra 08
     """
@@ -2445,7 +2445,7 @@ def:
 
 
 @pytest.mark.gfm
-def test_html_blocks_extra_08b():
+def test_html_blocks_extra_08b() -> None:
     """
     Test case extra 08
     """
@@ -2479,7 +2479,7 @@ def:
 
 
 @pytest.mark.gfm
-def test_html_blocks_extra_08c():
+def test_html_blocks_extra_08c() -> None:
     """
     Test case extra 08
     """
@@ -2518,7 +2518,7 @@ def:
 
 
 @pytest.mark.gfm
-def test_html_blocks_extra_08d():
+def test_html_blocks_extra_08d() -> None:
     """
     Test case extra 08
     """
@@ -2557,7 +2557,7 @@ def:
 
 
 @pytest.mark.gfm
-def test_html_blocks_extra_08e():
+def test_html_blocks_extra_08e() -> None:
     """
     Test case extra 09
     """
@@ -2592,7 +2592,7 @@ def:
 
 
 @pytest.mark.gfm
-def test_html_blocks_extra_08f():
+def test_html_blocks_extra_08f() -> None:
     """
     Test case extra 08
     """
@@ -2627,7 +2627,7 @@ def:
 
 
 @pytest.mark.gfm
-def test_html_blocks_extra_09x():
+def test_html_blocks_extra_09x() -> None:
     """
     Test case extra 09
     """
@@ -2662,7 +2662,7 @@ def:
 
 
 @pytest.mark.gfm
-def test_html_blocks_extra_09a():
+def test_html_blocks_extra_09a() -> None:
     """
     Test case extra 09
     """

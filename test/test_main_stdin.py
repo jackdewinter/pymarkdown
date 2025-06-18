@@ -6,7 +6,7 @@ import os
 from test.markdown_scanner import MarkdownScanner
 
 
-def test_markdown_with_scan_stdin_without_triggers():
+def test_markdown_with_scan_stdin_without_triggers() -> None:
     """
     Test to make sure
     """
@@ -33,7 +33,7 @@ def test_markdown_with_scan_stdin_without_triggers():
     )
 
 
-def test_markdown_with_scan_stdin_with_triggers():
+def test_markdown_with_scan_stdin_with_triggers() -> None:
     """
     Test to make sure
     """
@@ -61,7 +61,7 @@ stdin:1:6: MD047: Each file should end with a single newline character. (single-
     )
 
 
-def test_markdown_with_scan_stdin_with_triggers_and_disabled_rules():
+def test_markdown_with_scan_stdin_with_triggers_and_disabled_rules() -> None:
     """
     Test to make sure
     """
@@ -90,7 +90,7 @@ def test_markdown_with_scan_stdin_with_triggers_and_disabled_rules():
     )
 
 
-def test_markdown_with_scan_stdin_with_bad_write():
+def test_markdown_with_scan_stdin_with_bad_write() -> None:
     """
     Test to make sure
     """

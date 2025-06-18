@@ -20,7 +20,7 @@ else:
     EXCLUSIONS_X = "-e, --exclude PATH_EXCLUSIONS"
 
 
-def test_markdown_with_dash_h():
+def test_markdown_with_dash_h() -> None:
     """
     Test to make sure we get help if '-h' is supplied
     """
@@ -62,7 +62,7 @@ positional arguments:
     )
 
 
-def test_markdown_with_dash_l_only():
+def test_markdown_with_dash_l_only() -> None:
     """
     Test to make sure we get simple help if '-l' is supplied without any paths
 
@@ -91,7 +91,7 @@ main.py scan: error: the following arguments are required: path
     )
 
 
-def test_markdown_with_dash_l_on_bad_path():
+def test_markdown_with_dash_l_on_bad_path() -> None:
     """
     Test to make sure we get failure text if '-l' is supplied with a bad path.
 
@@ -120,7 +120,7 @@ No matching files found."""
     )
 
 
-def test_markdown_with_dash_l_on_non_md_directory():
+def test_markdown_with_dash_l_on_non_md_directory() -> None:
     """
     Test to make sure we get failure text if '-l' is supplied with a path containing no md files.
 
@@ -147,7 +147,7 @@ def test_markdown_with_dash_l_on_non_md_directory():
     )
 
 
-def test_markdown_with_dash_l_on_md_directory():
+def test_markdown_with_dash_l_on_md_directory() -> None:
     """
     Test to make sure we get the path to a single file if '-l' is supplied
     with a path containing a simple md file.
@@ -178,7 +178,7 @@ def test_markdown_with_dash_l_on_md_directory():
     )
 
 
-def test_markdown_with_dash_l_on_md_directory_with_explicit_file_exclude():
+def test_markdown_with_dash_l_on_md_directory_with_explicit_file_exclude() -> None:
     """
     Test to make sure we get no paths if '-l' is supplied with a path with a
     single file and and exclude that matches the file is also supplied.
@@ -204,7 +204,9 @@ def test_markdown_with_dash_l_on_md_directory_with_explicit_file_exclude():
     )
 
 
-def test_markdown_with_dash_l_on_md_directory_with_explicit_multiple_file_exclude():
+def test_markdown_with_dash_l_on_md_directory_with_explicit_multiple_file_exclude() -> (
+    None
+):
     """
     Test to make sure we get no paths if '-l' is supplied with a path with a
     single file and and exclude that matches the file is also supplied.
@@ -238,7 +240,9 @@ def test_markdown_with_dash_l_on_md_directory_with_explicit_multiple_file_exclud
     )
 
 
-def test_markdown_with_dash_l_on_md_directory_with_explicit_directory_exclude_no_ending_slash():
+def test_markdown_with_dash_l_on_md_directory_with_explicit_directory_exclude_no_ending_slash() -> (
+    None
+):
     """
     Test to make sure we get no paths if '-l' is supplied with a path with a
     single file and and exclude that matches the directory that file is in is also supplied.
@@ -264,7 +268,9 @@ def test_markdown_with_dash_l_on_md_directory_with_explicit_directory_exclude_no
     )
 
 
-def test_markdown_with_dash_l_on_md_directory_with_explicit_directory_exclude_with_ending_slash():
+def test_markdown_with_dash_l_on_md_directory_with_explicit_directory_exclude_with_ending_slash() -> (
+    None
+):
     """
     Test to make sure we get no paths if '-l' is supplied with a path with a
     single file and and exclude that matches the directory that file is in is also supplied.
@@ -290,7 +296,7 @@ def test_markdown_with_dash_l_on_md_directory_with_explicit_directory_exclude_wi
     )
 
 
-def test_markdown_with_dash_l_on_mixed_directories():
+def test_markdown_with_dash_l_on_mixed_directories() -> None:
     """
     Test to make sure we get the path to a single file if '-l' is supplied
     with multiple paths containing a simple md file.
@@ -319,7 +325,7 @@ def test_markdown_with_dash_l_on_mixed_directories():
     )
 
 
-def test_markdown_with_dash_l_on_non_md_file():
+def test_markdown_with_dash_l_on_non_md_file() -> None:
     """
     Test to make sure we get a failure if '-l' is supplied with a file path that isn't a md file.
 
@@ -351,7 +357,7 @@ No matching files found.""".replace(
     )
 
 
-def test_markdown_with_dash_l_on_md_file():
+def test_markdown_with_dash_l_on_md_file() -> None:
     """
     Test to make sure we a single path to a file if '-l' is supplied with
     a file path that is a simple md file.
@@ -380,7 +386,7 @@ def test_markdown_with_dash_l_on_md_file():
     )
 
 
-def test_markdown_with_dash_l_on_mixed_files():
+def test_markdown_with_dash_l_on_mixed_files() -> None:
     """
     Test to make sure we get a failure '-l' is supplied with a file path
     that is a simple md file and one that isn't.
@@ -417,7 +423,7 @@ No matching files found.""".replace(
     )
 
 
-def test_markdown_with_dash_l_on_globbed_files():
+def test_markdown_with_dash_l_on_globbed_files() -> None:
     """
     Test to make sure we get a list of valid paths if '-l' is supplied
     with a globbed file path that works.
@@ -452,7 +458,7 @@ def test_markdown_with_dash_l_on_globbed_files():
     )
 
 
-def test_markdown_with_dash_l_on_globbed_files_with_ignored_recursion():
+def test_markdown_with_dash_l_on_globbed_files_with_ignored_recursion() -> None:
     """
     Test to make sure we get a list of valid paths if '-l' is supplied
     with a globbed file path that works.  Because a globbed path is
@@ -484,7 +490,7 @@ def test_markdown_with_dash_l_on_globbed_files_with_ignored_recursion():
     )
 
 
-def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion():
+def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion() -> None:
     """
     Test to make sure we get a list of valid paths if '-l' is supplied
     with a globbed file path that includes the ** for recursion.
@@ -520,7 +526,9 @@ two.md"""
     )
 
 
-def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_and_exclude_single_file():
+def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_and_exclude_single_file() -> (
+    None
+):
     """
     Test to make sure we get a list of valid paths if '-l' is supplied
     with a globbed file path that includes the ** for recursion.
@@ -561,7 +569,9 @@ two.md"""
     )
 
 
-def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_and_exclude_single_directory():
+def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_and_exclude_single_directory() -> (
+    None
+):
     """
     Test to make sure we get a list of valid paths if '-l' is supplied
     with a globbed file path that includes the ** for recursion.
@@ -595,7 +605,9 @@ two.md"""
     )
 
 
-def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_and_exclude_single_asterisk_files():
+def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_and_exclude_single_asterisk_files() -> (
+    None
+):
     """
     Test to make sure we get a list of valid paths if '-l' is supplied
     with a globbed file path that includes the ** for recursion.
@@ -630,7 +642,9 @@ two.md"""
     )
 
 
-def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_and_exclude_double_asterisk_files():
+def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_and_exclude_double_asterisk_files() -> (
+    None
+):
     """
     Test to make sure we get a list of valid paths if '-l' is supplied
     with a globbed file path that includes the ** for recursion.
@@ -662,7 +676,9 @@ two.md"""
     )
 
 
-def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_with_mutually_exclusive_exclude_directory():
+def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_with_mutually_exclusive_exclude_directory() -> (
+    None
+):
     """
     Test to make sure we get a list of valid paths if '-l' is supplied
     with a globbed file path that includes the ** for recursion.
@@ -690,7 +706,9 @@ def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_with_mutua
     )
 
 
-def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_with_mutually_exclusive_exclude_file():
+def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_with_mutually_exclusive_exclude_file() -> (
+    None
+):
     """
     Test to make sure we get a list of valid paths if '-l' is supplied
     with a globbed file path that includes the ** for recursion.
@@ -718,7 +736,9 @@ def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_with_mutua
     )
 
 
-def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_with_mutually_exclusive_exclude():
+def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_with_mutually_exclusive_exclude() -> (
+    None
+):
     """
     Test to make sure we get a list of valid paths if '-l' is supplied
     with a globbed file path that includes the ** for recursion.
@@ -752,7 +772,7 @@ def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_with_mutua
     )
 
 
-def test_markdown_with_dash_l_on_non_matching_globbed_files():
+def test_markdown_with_dash_l_on_non_matching_globbed_files() -> None:
     """
     Test to make sure we get a failure if '-l' is supplied with a
     globbed file path that works but does not find any matching files.
@@ -780,7 +800,7 @@ def test_markdown_with_dash_l_on_non_matching_globbed_files():
     )
 
 
-def test_markdown_with_dash_l_on_directory():
+def test_markdown_with_dash_l_on_directory() -> None:
     """
     Test to make sure we get a list of paths if '-l' is supplied with a directory
     containing valid Markdown files.
@@ -819,7 +839,7 @@ def test_markdown_with_dash_l_on_directory():
     )
 
 
-def test_markdown_with_dash_l_and_dash_r_on_directory():
+def test_markdown_with_dash_l_and_dash_r_on_directory() -> None:
     """
     Test to make sure we get a large list of files if '-l' and '-r' is
     supplied with a directory that, recursively, contains lots of valid

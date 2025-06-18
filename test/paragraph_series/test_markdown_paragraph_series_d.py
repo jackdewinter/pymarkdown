@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_paragraph_series_d_b():
+def test_paragraph_series_d_b() -> None:
     """
     Test case:  Paragraph this is only a backslash escape
     was:        test_paragraph_extra_32
@@ -28,7 +28,7 @@ def test_paragraph_series_d_b():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_d_bh():
+def test_paragraph_series_d_bh() -> None:
     """
     Test case:  Paragraph this is only a backslash as in a hard line break
     was:        test_paragraph_extra_33
@@ -50,7 +50,7 @@ def test_paragraph_series_d_bh():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_d_sh():
+def test_paragraph_series_d_sh() -> None:
     """
     Test case:  Paragraph this is only 2+ spaces as in a hard line break
     was:        test_paragraph_extra_34
@@ -69,7 +69,7 @@ def test_paragraph_series_d_sh():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_d_cs():
+def test_paragraph_series_d_cs() -> None:
     """
     Test case:  Paragraph this is only a code span.
     was:        test_paragraph_extra_35
@@ -89,7 +89,7 @@ def test_paragraph_series_d_cs():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_d_cr():
+def test_paragraph_series_d_cr() -> None:
     """
     Test case:  Paragraph this is only a character reference.
     was:        test_paragraph_extra_36
@@ -109,7 +109,7 @@ def test_paragraph_series_d_cr():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_d_rh():
+def test_paragraph_series_d_rh() -> None:
     """
     Test case:  Paragraph this is only a raw html block.
     was:        test_paragraph_extra_37
@@ -129,7 +129,7 @@ def test_paragraph_series_d_rh():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_d_ua():
+def test_paragraph_series_d_ua() -> None:
     """
     Test case:  Paragraph this is only an URI autolink
     was:        test_paragraph_extra_38
@@ -151,7 +151,7 @@ def test_paragraph_series_d_ua():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_d_ea():
+def test_paragraph_series_d_ea() -> None:
     """
     Test case:  Paragraph this is only an email autolink
     was:        test_paragraph_extra_39
@@ -171,7 +171,7 @@ def test_paragraph_series_d_ea():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_d_e():
+def test_paragraph_series_d_e() -> None:
     """
     Test case:  Paragraph this is only an emphasis
     was:        test_paragraph_extra_40
@@ -193,7 +193,7 @@ def test_paragraph_series_d_e():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_d_l_nt():
+def test_paragraph_series_d_l_nt() -> None:
     """
     Test case:  Paragraph this is only a link without a title
     was:        test_paragraph_extra_41
@@ -215,7 +215,7 @@ def test_paragraph_series_d_l_nt():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_d_i_nt():
+def test_paragraph_series_d_i_nt() -> None:
     """
     Test case:  Paragraph this is only an image without a title
     was:        test_paragraph_extra_41a
@@ -235,7 +235,7 @@ def test_paragraph_series_d_i_nt():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_d_i_t():
+def test_paragraph_series_d_i_t() -> None:
     """
     Test case:  Paragraph this is only an image
     was:        test_paragraph_extra_42
@@ -255,7 +255,7 @@ def test_paragraph_series_d_i_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_d_l_t():
+def test_paragraph_series_d_l_t() -> None:
     """
     Test case:  Paragraph this is only a link
     was:        test_paragraph_extra_42a

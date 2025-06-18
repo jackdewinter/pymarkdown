@@ -9,7 +9,7 @@ import pytest
 
 # pylint: disable=too-many-lines
 @pytest.mark.gfm
-def test_setext_headings_050():
+def test_setext_headings_050() -> None:
     """
     Test case 050:  Simple examples:
     """
@@ -43,7 +43,7 @@ Foo *bar*
 
 
 @pytest.mark.gfm
-def test_setext_headings_051():
+def test_setext_headings_051() -> None:
     """
     Test case 051:  The content of the heading may span more than one line:
     """
@@ -68,7 +68,7 @@ baz</em></h1>"""
 
 
 @pytest.mark.gfm
-def test_setext_headings_052xx():
+def test_setext_headings_052xx() -> None:
     """
     Test case 052:  The heading’s raw content is formed by concatenating the lines
                     and removing initial and final whitespace.
@@ -94,7 +94,7 @@ baz</em></h1>"""
 
 
 @pytest.mark.gfm
-def test_setext_headings_052xa():
+def test_setext_headings_052xa() -> None:
     """
     Test case 052:  The heading’s raw content is formed by concatenating the lines
                     and removing initial and final whitespace.
@@ -122,7 +122,7 @@ baz</em></h1>"""
 
 
 @pytest.mark.gfm
-def test_setext_headings_052a():
+def test_setext_headings_052a() -> None:
     """
     Test case 052a:  variation of 52 to deal with multiple lines that start with whitespace.
     """
@@ -146,7 +146,7 @@ c</h1>"""
 
 
 @pytest.mark.gfm
-def test_setext_headings_052b():
+def test_setext_headings_052b() -> None:
     """
     Test case 052b:  variation of 52a with extra trailing spaces
     """
@@ -172,7 +172,7 @@ c</h1>"""
 
 
 @pytest.mark.gfm
-def test_setext_headings_052c():
+def test_setext_headings_052c() -> None:
     """
     Test case 052c:  variation of 52 with more trailing spaces
     """
@@ -200,7 +200,7 @@ c</h1>"""
 
 
 @pytest.mark.gfm
-def test_setext_headings_052d():
+def test_setext_headings_052d() -> None:
     """
     Test case 052d:  variation of 52 with inline emphasis
     """
@@ -230,7 +230,7 @@ c</h1>"""
 
 
 @pytest.mark.gfm
-def test_setext_headings_052ex():
+def test_setext_headings_052ex() -> None:
     """
     Test case 052e:  variation of 52 with inline emphasis and trailing space
     """
@@ -261,7 +261,7 @@ c</h1>"""
 
 
 @pytest.mark.gfm
-def test_setext_headings_052ea():
+def test_setext_headings_052ea() -> None:
     """
     Test case 052ea:  variation of 52e with more
     """
@@ -301,7 +301,7 @@ c</h1>"""
 
 
 @pytest.mark.gfm
-def test_setext_headings_052eb():
+def test_setext_headings_052eb() -> None:
     """
     Test case 052eb:  variation of 52e with even more
     """
@@ -350,7 +350,7 @@ c</h1>"""
 
 
 @pytest.mark.gfm
-def test_setext_headings_052f():
+def test_setext_headings_052f() -> None:
     """
     Test case 052f:  variation of 52f with more
     """
@@ -381,7 +381,7 @@ c</h1>"""
 
 
 @pytest.mark.gfm
-def test_setext_headings_053():
+def test_setext_headings_053() -> None:
     """
     Test case 053:  The underlining can be any length:
     """
@@ -409,7 +409,7 @@ Foo
 
 
 @pytest.mark.gfm
-def test_setext_headings_054():
+def test_setext_headings_054() -> None:
     """
     Test case 054:  The heading content can be indented up to three spaces, and need not line up with the underlining:
     """
@@ -445,7 +445,7 @@ def test_setext_headings_054():
 
 
 @pytest.mark.gfm
-def test_setext_headings_055():
+def test_setext_headings_055() -> None:
     """
     Test case 055:  Four spaces indent is too much:
     """
@@ -474,7 +474,7 @@ Foo
 
 
 @pytest.mark.gfm
-def test_setext_headings_056():
+def test_setext_headings_056() -> None:
     """
     Test case 056:  The setext heading underline can be indented up to three spaces, and may have trailing spaces:
     """
@@ -494,7 +494,7 @@ def test_setext_headings_056():
 
 
 @pytest.mark.gfm
-def test_setext_headings_057():
+def test_setext_headings_057() -> None:
     """
     Test case 057:  Four spaces is too much:
     """
@@ -515,7 +515,7 @@ def test_setext_headings_057():
 
 
 @pytest.mark.gfm
-def test_setext_headings_058():
+def test_setext_headings_058() -> None:
     """
     Test case 058:  The setext heading underline cannot contain internal spaces:
     """
@@ -546,7 +546,7 @@ Foo
 
 
 @pytest.mark.gfm
-def test_setext_headings_059():
+def test_setext_headings_059() -> None:
     """
     Test case 059:  Trailing spaces in the content line do not cause a line break:
     """
@@ -568,7 +568,7 @@ def test_setext_headings_059():
 
 
 @pytest.mark.gfm
-def test_setext_headings_060():
+def test_setext_headings_060() -> None:
     """
     Test case 060:  Nor does a backslash at the end:
     """
@@ -588,7 +588,7 @@ def test_setext_headings_060():
 
 
 @pytest.mark.gfm
-def test_setext_headings_061():
+def test_setext_headings_061() -> None:
     """
     Test case 061:  Since indicators of block structure take precedence over indicators
                     of inline structure, the following are setext headings:
@@ -627,7 +627,7 @@ of dashes"/>"""
 
 
 @pytest.mark.gfm
-def test_setext_headings_062():
+def test_setext_headings_062() -> None:
     """
     Test case 062:  (part a) The setext heading underline cannot be a lazy continuation
                     line in a list item or block quote:
@@ -654,7 +654,7 @@ def test_setext_headings_062():
 
 
 @pytest.mark.gfm
-def test_setext_headings_063():
+def test_setext_headings_063() -> None:
     """
     Test case 063:  (part b) The setext heading underline cannot be a lazy continuation
     line in a list item or block quote:
@@ -682,7 +682,7 @@ bar
 
 
 @pytest.mark.gfm
-def test_setext_headings_064():
+def test_setext_headings_064() -> None:
     """
     Test case 064:  (part c) The setext heading underline cannot be a lazy continuation
                     line in a list item or block quote:
@@ -709,7 +709,7 @@ def test_setext_headings_064():
 
 
 @pytest.mark.gfm
-def test_setext_headings_064a():
+def test_setext_headings_064a() -> None:
     """
     Test case 064a:  variation of 64 other underline
     """
@@ -735,7 +735,7 @@ def test_setext_headings_064a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_064b():
+def test_setext_headings_064b() -> None:
     """
     Test case 064a:  variation of 64 other underline
     """
@@ -761,7 +761,7 @@ def test_setext_headings_064b():
 
 
 @pytest.mark.gfm
-def test_setext_headings_064ba():
+def test_setext_headings_064ba() -> None:
     """
     Test case 064a:  variation of 64 other underline
     """
@@ -787,7 +787,7 @@ def test_setext_headings_064ba():
 
 
 @pytest.mark.gfm
-def test_setext_headings_064c():
+def test_setext_headings_064c() -> None:
     """
     Test case 064a:  variation of 64 other underline
     """
@@ -814,7 +814,7 @@ def test_setext_headings_064c():
 
 
 @pytest.mark.gfm
-def test_setext_headings_065():
+def test_setext_headings_065() -> None:
     """
     Test case 065:  A blank line is needed between a paragraph and a following
                     setext heading, since otherwise the paragraph becomes part
@@ -838,7 +838,7 @@ Bar</h2>"""
 
 
 @pytest.mark.gfm
-def test_setext_headings_066():
+def test_setext_headings_066() -> None:
     """
     Test case 066:  A blank line is needed between a paragraph and a following
                     setext heading, since otherwise the paragraph becomes part
@@ -874,7 +874,7 @@ Baz"""
 
 
 @pytest.mark.gfm
-def test_setext_headings_067():
+def test_setext_headings_067() -> None:
     """
     Test case 067:  Setext headings cannot be empty:
     """
@@ -895,7 +895,7 @@ def test_setext_headings_067():
 
 
 @pytest.mark.gfm
-def test_setext_headings_068():
+def test_setext_headings_068() -> None:
     """
     Test case 068:  (part a) Setext heading text lines must not be interpretable
                     as block constructs other than paragraphs. So, the line of
@@ -914,7 +914,7 @@ def test_setext_headings_068():
 
 
 @pytest.mark.gfm
-def test_setext_headings_069():
+def test_setext_headings_069() -> None:
     """
     Test case 069:  (part b) Setext heading text lines must not be interpretable
                     as block constructs other than paragraphs. So, the line of
@@ -942,7 +942,7 @@ def test_setext_headings_069():
 
 
 @pytest.mark.gfm
-def test_setext_headings_069a():
+def test_setext_headings_069a() -> None:
     """
     Test case 069a: variation of 069 with other underline
     """
@@ -967,7 +967,7 @@ def test_setext_headings_069a():
 
 
 @pytest.mark.gfm
-def test_setext_headings_070():
+def test_setext_headings_070() -> None:
     """
     Test case 070:  (part c) Setext heading text lines must not be interpretable
                     as block constructs other than paragraphs. So, the line of
@@ -992,7 +992,7 @@ def test_setext_headings_070():
 
 
 @pytest.mark.gfm
-def test_setext_headings_071():
+def test_setext_headings_071() -> None:
     """
     Test case 071:  (part d) Setext heading text lines must not be interpretable
                     as block constructs other than paragraphs. So, the line of
@@ -1020,7 +1020,7 @@ def test_setext_headings_071():
 
 
 @pytest.mark.gfm
-def test_setext_headings_072():
+def test_setext_headings_072() -> None:
     """
     Test case 072:  If you want a heading with > foo as its literal text, you can use backslash escapes:
     """
@@ -1040,7 +1040,7 @@ def test_setext_headings_072():
 
 
 @pytest.mark.gfm
-def test_setext_headings_073():
+def test_setext_headings_073() -> None:
     """
     Test case 073:  Authors who want interpretation 1 can put a blank line after the first paragraph:
     https://github.github.com/gfm/#example-73
@@ -1073,7 +1073,7 @@ baz"""
 
 
 @pytest.mark.gfm
-def test_setext_headings_074():
+def test_setext_headings_074() -> None:
     """
     Test case 074:  Authors who want interpretation 2 can put blank lines around the thematic break,
     https://github.github.com/gfm/#example-74
@@ -1107,7 +1107,7 @@ bar</p>
 
 
 @pytest.mark.gfm
-def test_setext_headings_075():
+def test_setext_headings_075() -> None:
     """
     Test case 075:  or use a thematic break that cannot count as a setext heading underline, such as
     https://github.github.com/gfm/#example-75
@@ -1137,7 +1137,7 @@ bar</p>
 
 
 @pytest.mark.gfm
-def test_setext_headings_076():
+def test_setext_headings_076() -> None:
     """
     Test case 076:  Authors who want interpretation 3 can use backslash escapes:
     https://github.github.com/gfm/#example-76

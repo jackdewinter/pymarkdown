@@ -5,7 +5,7 @@ from pymarkdown.tokens.inline_code_span_markdown_token import (
 )
 
 
-def test_inline_code_span_markdown_token_modify_with_bad_name():
+def test_inline_code_span_markdown_token_modify_with_bad_name() -> None:
     """
     Test to make sure that try to change this token with a bad name fails.
     """

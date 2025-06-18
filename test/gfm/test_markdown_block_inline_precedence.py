@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_block_inline_precedence_012():
+def test_block_inline_precedence_012() -> None:
     """
     Test case 012:  Indicators of block structure always take precedence over indicators of inline structure.
     """

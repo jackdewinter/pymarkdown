@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_soft_line_breaks_669():
+def test_soft_line_breaks_669() -> None:
     """
     Test case 669:  A regular line break (not in a code span or HTML tag) that is not preceded by two or more spaces or a backslash is parsed as a softbreak.
     """
@@ -29,7 +29,7 @@ baz</p>"""
 
 
 @pytest.mark.gfm
-def test_soft_line_breaks_670():
+def test_soft_line_breaks_670() -> None:
     """
     Test case 670:  Spaces at the end of the line and beginning of the next line are removed:
     """

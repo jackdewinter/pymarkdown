@@ -5,7 +5,7 @@ Tests for the extract_until_whitespace function.
 from pymarkdown.general.parser_helper import ParserHelper
 
 
-def test_empty_string_with_good_index():
+def test_empty_string_with_good_index() -> None:
     """
     Make sure that an empty string is handled properly with a good index
     """
@@ -22,7 +22,7 @@ def test_empty_string_with_good_index():
     assert expected_output == actual_output
 
 
-def test_empty_string_with_bad_right_index():
+def test_empty_string_with_bad_right_index() -> None:
     """
     Make sure that an empty string is handled properly with an index that is too far to the right.
     """
@@ -39,7 +39,7 @@ def test_empty_string_with_bad_right_index():
     assert expected_output == actual_output
 
 
-def test_empty_string_with_bad_left_index():
+def test_empty_string_with_bad_left_index() -> None:
     """
     Make sure that an empty string is handled properly with an index that is too far to the left.
     """
@@ -56,7 +56,7 @@ def test_empty_string_with_bad_left_index():
     assert expected_output == actual_output
 
 
-def test_simple_case_from_start():
+def test_simple_case_from_start() -> None:
     """
     Make sure that we test a simple extraction from the start of the string.
     """
@@ -73,7 +73,7 @@ def test_simple_case_from_start():
     assert expected_output == actual_output
 
 
-def test_simple_case_from_middle():
+def test_simple_case_from_middle() -> None:
     """
     Make sure that we test a simple extraction from the middle of the string.
     """
@@ -90,7 +90,7 @@ def test_simple_case_from_middle():
     assert expected_output == actual_output
 
 
-def test_simple_case_from_end():
+def test_simple_case_from_end() -> None:
     """
     Make sure that we test a simple extraction from the end of the string.
     """
@@ -107,7 +107,7 @@ def test_simple_case_from_end():
     assert expected_output == actual_output
 
 
-def test_already_on_whitespace():
+def test_already_on_whitespace() -> None:
     """
     Make sure that we test extracting while already on a whitespace character.
     """

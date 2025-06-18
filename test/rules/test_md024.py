@@ -11,7 +11,7 @@ import pytest
 
 
 @pytest.mark.rules
-def test_md024_good_different_heading_content_atx():
+def test_md024_good_different_heading_content_atx() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains Atx headings with no duplicate content.
@@ -41,7 +41,7 @@ def test_md024_good_different_heading_content_atx():
 
 
 @pytest.mark.rules
-def test_md024_bad_same_heading_content_atx():
+def test_md024_bad_same_heading_content_atx() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains Atx headings with duplicate content.
@@ -74,7 +74,7 @@ def test_md024_bad_same_heading_content_atx():
 
 
 @pytest.mark.rules
-def test_md024_bad_same_heading_content_atx_with_extra_whitespace():
+def test_md024_bad_same_heading_content_atx_with_extra_whitespace() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains Atx headings with content that is almost duplicate except for
@@ -109,7 +109,7 @@ def test_md024_bad_same_heading_content_atx_with_extra_whitespace():
 
 
 @pytest.mark.rules
-def test_md024_bad_same_heading_content_atx_with_extra_emphasis():
+def test_md024_bad_same_heading_content_atx_with_extra_emphasis() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains Atx headings with content that is almost duplicate except for emphasis.
@@ -143,7 +143,7 @@ def test_md024_bad_same_heading_content_atx_with_extra_emphasis():
 
 
 @pytest.mark.rules
-def test_md024_bad_same_heading_content_atx_in_same_list_item():
+def test_md024_bad_same_heading_content_atx_in_same_list_item() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains Atx headings with duplicate content within the same list item.
@@ -180,7 +180,7 @@ def test_md024_bad_same_heading_content_atx_in_same_list_item():
 
 
 @pytest.mark.rules
-def test_md024_bad_same_heading_content_atx_in_different_list_items():
+def test_md024_bad_same_heading_content_atx_in_different_list_items() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains Atx headings with duplicate content in different list items.
@@ -217,7 +217,7 @@ def test_md024_bad_same_heading_content_atx_in_different_list_items():
 
 
 @pytest.mark.rules
-def test_md024_bad_same_heading_content_atx_in_same_block_quote():
+def test_md024_bad_same_heading_content_atx_in_same_block_quote() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains Atx headings with duplicate content in the same block quote.
@@ -254,7 +254,7 @@ def test_md024_bad_same_heading_content_atx_in_same_block_quote():
 
 
 @pytest.mark.rules
-def test_md024_bad_same_heading_content_atx_in_different_block_quotes():
+def test_md024_bad_same_heading_content_atx_in_different_block_quotes() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains Atx headings with duplicate content in the different block quotes.
@@ -293,7 +293,7 @@ def test_md024_bad_same_heading_content_atx_in_different_block_quotes():
 
 
 @pytest.mark.rules
-def test_md024_bad_same_heading_in_siblings_atx():
+def test_md024_bad_same_heading_in_siblings_atx() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains Atx headings with duplicate content in sibling headings.
@@ -328,7 +328,7 @@ def test_md024_bad_same_heading_in_siblings_atx():
 
 
 @pytest.mark.rules
-def test_md024_bad_same_heading_but_not_in_siblings_atx():
+def test_md024_bad_same_heading_but_not_in_siblings_atx() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains Atx headings with duplicate content in non-siblings.
@@ -361,7 +361,7 @@ def test_md024_bad_same_heading_but_not_in_siblings_atx():
 
 
 @pytest.mark.rules
-def test_md024_good_different_heading_content_atx_with_configuration():
+def test_md024_good_different_heading_content_atx_with_configuration() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains Atx headings with different content.
@@ -397,7 +397,7 @@ def test_md024_good_different_heading_content_atx_with_configuration():
 
 
 @pytest.mark.rules
-def test_md024_good_same_heading_content_atx_with_configuration():
+def test_md024_good_same_heading_content_atx_with_configuration() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains Atx headings with duplicate content in non-siblings.
@@ -433,7 +433,7 @@ def test_md024_good_same_heading_content_atx_with_configuration():
 
 
 @pytest.mark.rules
-def test_md024_bad_same_heading_in_siblings_atx_with_configuration():
+def test_md024_bad_same_heading_in_siblings_atx_with_configuration() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains Atx headings with duplicate content in siblings.
@@ -472,7 +472,7 @@ def test_md024_bad_same_heading_in_siblings_atx_with_configuration():
 
 
 @pytest.mark.rules
-def test_md024_good_same_heading_but_not_in_siblings_atx_with_configuration():
+def test_md024_good_same_heading_but_not_in_siblings_atx_with_configuration() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains Atx headings with duplicate content in siblings.
@@ -508,7 +508,9 @@ def test_md024_good_same_heading_but_not_in_siblings_atx_with_configuration():
 
 
 @pytest.mark.rules
-def test_md024_good_same_heading_but_not_in_siblings_atx_with_alternate_configuration():
+def test_md024_good_same_heading_but_not_in_siblings_atx_with_alternate_configuration() -> (
+    None
+):
     """
     Test to make sure this rule does not trigger with a document that
     contains Atx headings with duplicate content in siblings.
@@ -544,7 +546,7 @@ def test_md024_good_same_heading_but_not_in_siblings_atx_with_alternate_configur
 
 
 @pytest.mark.rules
-def test_md024_good_different_inline_heading_content_atx():
+def test_md024_good_different_inline_heading_content_atx() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains Atx headings with almost duplicate content.
@@ -574,7 +576,7 @@ def test_md024_good_different_inline_heading_content_atx():
 
 
 @pytest.mark.rules
-def test_md024_good_different_heading_content_setext():
+def test_md024_good_different_heading_content_setext() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains SetExt headings with no duplicate content.
@@ -604,7 +606,7 @@ def test_md024_good_different_heading_content_setext():
 
 
 @pytest.mark.rules
-def test_md024_bad_same_heading_content_setext():
+def test_md024_bad_same_heading_content_setext() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains SetExt headings with duplicate content.
@@ -637,7 +639,7 @@ def test_md024_bad_same_heading_content_setext():
 
 
 @pytest.mark.rules
-def test_md024_bad_same_heading_in_siblings_setext():
+def test_md024_bad_same_heading_in_siblings_setext() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains SetExt headings with duplicate content in siblings.
@@ -674,7 +676,7 @@ def test_md024_bad_same_heading_in_siblings_setext():
 
 
 @pytest.mark.rules
-def test_md024_bad_same_heading_but_not_in_siblings_setext():
+def test_md024_bad_same_heading_but_not_in_siblings_setext() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains SetExt headings with duplicate content in siblings.
@@ -713,7 +715,7 @@ def test_md024_bad_same_heading_but_not_in_siblings_setext():
 
 
 @pytest.mark.rules
-def test_md024_good_different_heading_content_setext_with_configuration():
+def test_md024_good_different_heading_content_setext_with_configuration() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains SetExt headings with duplicate content in siblings with configuration.
@@ -749,7 +751,7 @@ def test_md024_good_different_heading_content_setext_with_configuration():
 
 
 @pytest.mark.rules
-def test_md024_good_same_heading_content_setext_with_configuration():
+def test_md024_good_same_heading_content_setext_with_configuration() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains SetExt headings with duplicate content in siblings with configuration.
@@ -785,7 +787,7 @@ def test_md024_good_same_heading_content_setext_with_configuration():
 
 
 @pytest.mark.rules
-def test_md024_bad_same_heading_in_siblings_setext_with_configuration():
+def test_md024_bad_same_heading_in_siblings_setext_with_configuration() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains SetExt headings with duplicate content in siblings with configuration.
@@ -826,7 +828,9 @@ def test_md024_bad_same_heading_in_siblings_setext_with_configuration():
 
 
 @pytest.mark.rules
-def test_md024_good_same_heading_but_not_in_siblings_setext_with_configuration():
+def test_md024_good_same_heading_but_not_in_siblings_setext_with_configuration() -> (
+    None
+):
     """
     Test to make sure this rule does not trigger with a document that
     contains SetExt headings with duplicate content in siblings with configuration.
@@ -867,7 +871,7 @@ def test_md024_good_same_heading_but_not_in_siblings_setext_with_configuration()
         )
 
 
-def test_md024_query_config():
+def test_md024_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md024",
         """

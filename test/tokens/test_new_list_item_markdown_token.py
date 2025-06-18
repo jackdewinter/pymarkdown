@@ -4,7 +4,7 @@ from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.tokens.new_list_item_markdown_token import NewListItemMarkdownToken
 
 
-def test_reference_markdown_token_modify_with_bad_name():
+def test_reference_markdown_token_modify_with_bad_name() -> None:
     """
     Test to make sure that try to change this token with a bad name fails.
     """
@@ -13,7 +13,7 @@ def test_reference_markdown_token_modify_with_bad_name():
     modification_context = MockPluginModifyContext()
     original_token = NewListItemMarkdownToken(
         indent_level=4,
-        position_marker=PositionMarker(1, 1, 1),
+        position_marker=PositionMarker(1, 1, "", 1),
         extracted_whitespace="",
         list_start_content="1",
     )

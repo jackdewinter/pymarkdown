@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_emphasis_360():
+def test_emphasis_360() -> None:
     """
     Test case 360:  Rule 1:
     """
@@ -31,7 +31,7 @@ def test_emphasis_360():
 
 
 @pytest.mark.gfm
-def test_emphasis_361():
+def test_emphasis_361() -> None:
     """
     Test case 361:  This is not emphasis, because the opening * is followed by whitespace,
                     and hence not part of a left-flanking delimiter run:
@@ -47,7 +47,7 @@ def test_emphasis_361():
 
 
 @pytest.mark.gfm
-def test_emphasis_362():
+def test_emphasis_362() -> None:
     """
     Test case 362:  This is not emphasis, because the opening * is preceded by an
                     alphanumeric and followed by punctuation, and hence not part of
@@ -68,7 +68,7 @@ def test_emphasis_362():
 
 
 @pytest.mark.gfm
-def test_emphasis_363():
+def test_emphasis_363() -> None:
     """
     Test case 363:  Unicode nonbreaking spaces count as whitespace, too:
     """
@@ -87,7 +87,7 @@ def test_emphasis_363():
 
 
 @pytest.mark.gfm
-def test_emphasis_364():
+def test_emphasis_364() -> None:
     """
     Test case 364:  (part 1) Intraword emphasis with * is permitted:
     """
@@ -109,7 +109,7 @@ def test_emphasis_364():
 
 
 @pytest.mark.gfm
-def test_emphasis_365():
+def test_emphasis_365() -> None:
     """
     Test case 365:  (part 2) Intraword emphasis with * is permitted:
     """
