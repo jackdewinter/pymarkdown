@@ -22,6 +22,16 @@
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
+- [Issue 1378](https://github.com/jackdewinter/pymarkdown/issues/1378)
+    - upgrade to latest version of `application_properties`, v0.9.0
+    - enabled ability to use JSON5 (default) or normal JSON via command line
+      switch
+    - made small modifications to plugins as our team is unaware of any
+      custom plugin users
+        - change is to use a local `MyApplicationPropertiesFacade` which
+          provides better abstraction
+    - removed redundant configuration documentation in favor of pointing
+      links at updated `application_properties` documentation
 - [Issue 1427](https://github.com/jackdewinter/pymarkdown/issues/1427)
     - Adhering to project templates across various projects.
 
