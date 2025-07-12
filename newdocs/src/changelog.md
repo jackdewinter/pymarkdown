@@ -17,7 +17,7 @@
 
 - None
 
-## Version 0.9.31 - 2025-06-15
+## Version 0.9.31 - 2025-07-11
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Added
