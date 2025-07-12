@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_paragraph_blocks_189():
+def test_paragraph_blocks_189() -> None:
     """
     Test case 189:  simple case of paragraphs
     """
@@ -34,7 +34,7 @@ bbb"""
 
 
 @pytest.mark.gfm
-def test_paragraph_blocks_190():
+def test_paragraph_blocks_190() -> None:
     """
     Test case 189:  Paragraphs can contain multiple lines, but no blank lines:
     """
@@ -64,7 +64,7 @@ ddd</p>"""
 
 
 @pytest.mark.gfm
-def test_paragraph_blocks_190a():
+def test_paragraph_blocks_190a() -> None:
     """
     Test case 190a:  variation of 190 with extra lines
     """
@@ -98,7 +98,7 @@ fff</p>"""
 
 
 @pytest.mark.gfm
-def test_paragraph_blocks_191():
+def test_paragraph_blocks_191() -> None:
     """
     Test case 191:  Multiple blank lines between paragraph have no effect:
     """
@@ -126,7 +126,7 @@ bbb"""
 
 
 @pytest.mark.gfm
-def test_paragraph_blocks_192():
+def test_paragraph_blocks_192() -> None:
     """
     Test case 192:  Leading spaces are skipped:
     """
@@ -147,7 +147,7 @@ bbb</p>"""
 
 
 @pytest.mark.gfm
-def test_paragraph_blocks_193():
+def test_paragraph_blocks_193() -> None:
     """
     Test case 193:  Lines after the first may be indented any amount, since indented
                     code blocks cannot interrupt paragraphs.
@@ -171,7 +171,7 @@ ccc</p>"""
 
 
 @pytest.mark.gfm
-def test_paragraph_blocks_194():
+def test_paragraph_blocks_194() -> None:
     """
     Test case 194: (part a) However, the first line may be indented at most three
                     spaces, or an indented code block will be triggered:
@@ -193,7 +193,7 @@ bbb</p>"""
 
 
 @pytest.mark.gfm
-def test_paragraph_blocks_195():
+def test_paragraph_blocks_195() -> None:
     """
     Test case 195:  (part b) However, the first line may be indented at most three
                     spaces, or an indented code block will be triggered:
@@ -219,7 +219,7 @@ bbb"""
 
 
 @pytest.mark.gfm
-def test_paragraph_blocks_196x():
+def test_paragraph_blocks_196x() -> None:
     """
     Test case 196:  Final spaces are stripped before inline parsing, so a paragraph
                     that ends with two or more spaces will not end with a hard line
@@ -246,7 +246,7 @@ bbb</p>"""
 
 
 @pytest.mark.gfm
-def test_paragraph_blocks_196a():
+def test_paragraph_blocks_196a() -> None:
     """
     Test case 196a:  variation of 196, but with tabs instead of space.
     """
@@ -267,7 +267,7 @@ bbb</p>"""
 
 
 @pytest.mark.gfm
-def test_paragraph_blocks_196b():
+def test_paragraph_blocks_196b() -> None:
     """
     Test case 196a:  variation of 196, but with tabs instead of spaces, and in a list
     """
@@ -292,7 +292,7 @@ bbb</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_blocks_196c():
+def test_paragraph_blocks_196c() -> None:
     """
     Test case 196a:  variation of 196, but with tabs instead of spaces, and in a list
     """
@@ -327,7 +327,7 @@ bbb</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_blocks_196d():
+def test_paragraph_blocks_196d() -> None:
     """
     Test case 196a:  variation of 196, but with tabs instead of spaces, and in a list
     """
@@ -352,7 +352,7 @@ bbb</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_blocks_196e():
+def test_paragraph_blocks_196e() -> None:
     """
     Test case 196a:  variation of 196, but with tabs instead of spaces, and in a list
     """
@@ -387,7 +387,7 @@ bbb</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_blocks_196f():
+def test_paragraph_blocks_196f() -> None:
     """
     Test case 196a:  variation of 196, but with tabs instead of spaces, and in a list
     """
@@ -432,7 +432,7 @@ bbb</li>
 
 
 @pytest.mark.gfm
-def test_paragraph_blocks_196g():
+def test_paragraph_blocks_196g() -> None:
     """
     Test case 196a:  variation of 196, but with tabs instead of spaces, and in a list
     """

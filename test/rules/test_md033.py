@@ -10,7 +10,7 @@ import pytest
 
 
 @pytest.mark.rules
-def test_md033_bad_configuration_allowed_elements():
+def test_md033_bad_configuration_allowed_elements() -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     allowed_elements value with an integer that is not a string.
@@ -46,7 +46,7 @@ def test_md033_bad_configuration_allowed_elements():
 
 
 @pytest.mark.rules
-def test_md033_bad_configuration_allowed_elements_with_empty():
+def test_md033_bad_configuration_allowed_elements_with_empty() -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     allowed_elements value with an integer that is not a string.
@@ -82,7 +82,7 @@ def test_md033_bad_configuration_allowed_elements_with_empty():
 
 
 @pytest.mark.rules
-def test_md033_bad_configuration_allow_first_image_element():
+def test_md033_bad_configuration_allow_first_image_element() -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     allow_first_image_element value with an integer that is not a boolean.
@@ -118,7 +118,7 @@ def test_md033_bad_configuration_allow_first_image_element():
 
 
 @pytest.mark.rules
-def test_md033_bad_html_block_present():
+def test_md033_bad_html_block_present() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains html blocks.
@@ -163,7 +163,7 @@ def test_md033_bad_html_block_present():
 
 
 @pytest.mark.rules
-def test_md033_bad_html_block_present_with_configuration():
+def test_md033_bad_html_block_present_with_configuration() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains html blocks with emptied out allowed_elements.
@@ -218,7 +218,7 @@ def test_md033_bad_html_block_present_with_configuration():
 
 
 @pytest.mark.rules
-def test_md033_bad_html_block_present_with_other_configuration():
+def test_md033_bad_html_block_present_with_other_configuration() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains html blocks with alternate allowed_elements.
@@ -264,7 +264,7 @@ def test_md033_bad_html_block_present_with_other_configuration():
 
 
 @pytest.mark.rules
-def test_md033_bad_inline_html_present():
+def test_md033_bad_inline_html_present() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains raw html.
@@ -297,7 +297,7 @@ def test_md033_bad_inline_html_present():
 
 
 @pytest.mark.rules
-def test_md033_bad_html_in_atx_heading():
+def test_md033_bad_html_in_atx_heading() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains raw html in an atx heading.
@@ -334,7 +334,7 @@ def test_md033_bad_html_in_atx_heading():
 
 
 @pytest.mark.rules
-def test_md033_good_html_comment():
+def test_md033_good_html_comment() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains an hTML comment block.
@@ -364,7 +364,7 @@ def test_md033_good_html_comment():
 
 
 @pytest.mark.rules
-def test_md033_good_html_image_heading():
+def test_md033_good_html_image_heading() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a html block image heading.
@@ -394,7 +394,7 @@ def test_md033_good_html_image_heading():
 
 
 @pytest.mark.rules
-def test_md033_good_html_image_heading_with_config():
+def test_md033_good_html_image_heading_with_config() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a html block image heading and configuration to turn
@@ -432,7 +432,7 @@ def test_md033_good_html_image_heading_with_config():
 
 
 @pytest.mark.rules
-def test_md033_bad_html_heading():
+def test_md033_bad_html_heading() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a bad html block image heading.
@@ -466,7 +466,7 @@ def test_md033_bad_html_heading():
 
 
 @pytest.mark.rules
-def test_md033_bad_html_image_heading_blank():
+def test_md033_bad_html_image_heading_blank() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a bad html block image heading.
@@ -500,7 +500,7 @@ def test_md033_bad_html_image_heading_blank():
 
 
 @pytest.mark.rules
-def test_md033_bad_html_image_with_other():
+def test_md033_bad_html_image_with_other() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a bad html block image heading.
@@ -534,7 +534,7 @@ def test_md033_bad_html_image_with_other():
 
 
 @pytest.mark.rules
-def test_md033_good_convoluted():
+def test_md033_good_convoluted() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a weird html block.
@@ -564,7 +564,7 @@ def test_md033_good_convoluted():
 
 
 @pytest.mark.rules
-def test_md033_bad_html_dangling():
+def test_md033_bad_html_dangling() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a html block that is opened but not closed.
@@ -598,7 +598,7 @@ def test_md033_bad_html_dangling():
 
 
 @pytest.mark.rules
-def test_md033_good_by_default():
+def test_md033_good_by_default() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains some of the weirder HTML elements, but still valid
@@ -628,7 +628,7 @@ def test_md033_good_by_default():
 
 
 @pytest.mark.rules
-def test_md033_bad_html_declaration():
+def test_md033_bad_html_declaration() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a HTML declaration that is not the DOCTYPE declaration.
@@ -660,7 +660,7 @@ def test_md033_bad_html_declaration():
     )
 
 
-def test_md033_query_config():
+def test_md033_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md033",
         """

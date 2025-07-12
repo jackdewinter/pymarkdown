@@ -60,23 +60,27 @@ class RuleMd009(RulePlugin):
         """
         Event to allow the plugin to load configuration information.
         """
-        self.__break_spaces = self.plugin_configuration.get_integer_property(
-            "br_spaces",
-            default_value=2,
-            valid_value_fn=self.__validate_break_spaces,
+        self.__break_spaces = (
+            self.plugin_configuration.get_integer_property_with_default(
+                "br_spaces",
+                2,
+                valid_value_fn=self.__validate_break_spaces,
+            )
         )
         if self.__break_spaces < 2:
             self.__break_spaces = 0
 
-        self.__strict_mode = self.plugin_configuration.get_boolean_property(
-            "strict",
-            default_value=False,
+        self.__strict_mode = (
+            self.plugin_configuration.get_boolean_property_with_default(
+                "strict",
+                False,
+            )
         )
 
         self.__list_item_empty_lines_mode = (
-            self.plugin_configuration.get_boolean_property(
+            self.plugin_configuration.get_boolean_property_with_default(
                 "list_item_empty_lines",
-                default_value=False,
+                False,
             )
         )
 

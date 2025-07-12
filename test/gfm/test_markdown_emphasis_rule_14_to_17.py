@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_emphasis_476():
+def test_emphasis_476() -> None:
     """
     Test case 476:  (part 1) Rule 14
     """
@@ -31,7 +31,7 @@ def test_emphasis_476():
 
 
 @pytest.mark.gfm
-def test_emphasis_477():
+def test_emphasis_477() -> None:
     """
     Test case 477:  (part 2) Rule 14
     """
@@ -56,7 +56,7 @@ def test_emphasis_477():
 
 
 @pytest.mark.gfm
-def test_emphasis_478():
+def test_emphasis_478() -> None:
     """
     Test case 478:  (part 1) Rule 15
     """
@@ -78,7 +78,7 @@ def test_emphasis_478():
 
 
 @pytest.mark.gfm
-def test_emphasis_479():
+def test_emphasis_479() -> None:
     """
     Test case 479:  (part 2) Rule 15
     """
@@ -103,7 +103,7 @@ def test_emphasis_479():
 
 
 @pytest.mark.gfm
-def test_emphasis_480():
+def test_emphasis_480() -> None:
     """
     Test case 480:  (part 1) Rule 16
     """
@@ -125,7 +125,7 @@ def test_emphasis_480():
 
 
 @pytest.mark.gfm
-def test_emphasis_481():
+def test_emphasis_481() -> None:
     """
     Test case 481:  (part 2) Rule 16
     """
@@ -147,7 +147,7 @@ def test_emphasis_481():
 
 
 @pytest.mark.gfm
-def test_emphasis_482():
+def test_emphasis_482() -> None:
     """
     Test case 482:  (part 1) Rule 17
     """
@@ -169,7 +169,7 @@ def test_emphasis_482():
 
 
 @pytest.mark.gfm
-def test_emphasis_483():
+def test_emphasis_483() -> None:
     """
     Test case 483:  (part 2) Rule 17
     """
@@ -191,7 +191,7 @@ def test_emphasis_483():
 
 
 @pytest.mark.gfm
-def test_emphasis_484():
+def test_emphasis_484() -> None:
     """
     Test case 484:  (part 3) Rule 17
     """
@@ -211,7 +211,7 @@ def test_emphasis_484():
 
 
 @pytest.mark.gfm
-def test_emphasis_485():
+def test_emphasis_485() -> None:
     """
     Test case 485:  (part 4) Rule 17
     """
@@ -231,7 +231,7 @@ def test_emphasis_485():
 
 
 @pytest.mark.gfm
-def test_emphasis_486():
+def test_emphasis_486() -> None:
     """
     Test case 486:  (part 5) Rule 17
     """
@@ -251,7 +251,7 @@ def test_emphasis_486():
 
 
 @pytest.mark.gfm
-def test_emphasis_487():
+def test_emphasis_487() -> None:
     """
     Test case 487:  (part 6) Rule 17
     """
@@ -273,7 +273,7 @@ def test_emphasis_487():
 
 
 @pytest.mark.gfm
-def test_emphasis_488():
+def test_emphasis_488() -> None:
     """
     Test case 488:  (part 7) Rule 17
     """
@@ -295,7 +295,7 @@ def test_emphasis_488():
 
 
 @pytest.mark.gfm
-def test_emphasis_489():
+def test_emphasis_489() -> None:
     """
     Test case 489:  (part 8) Rule 17
     """
@@ -317,7 +317,7 @@ def test_emphasis_489():
 
 
 @pytest.mark.gfm
-def test_emphasis_490():
+def test_emphasis_490() -> None:
     """
     Test case 490:  (part 9) Rule 17
     """

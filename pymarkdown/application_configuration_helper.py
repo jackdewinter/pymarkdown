@@ -3,19 +3,14 @@ Module to handle the processing of configuration for the application.
 """
 
 import argparse
-import json
 import logging
-import os
 from typing import Callable, Optional
 
-import tomli
-import yaml
-from application_properties import (
-    ApplicationProperties,
-    ApplicationPropertiesJsonLoader,
-    ApplicationPropertiesTomlLoader,
-    ApplicationPropertiesUtilities,
-    ApplicationPropertiesYamlLoader,
+from application_properties import ApplicationProperties
+from application_properties.multisource_configuration_loader import (
+    ConfigurationFileType,
+    MultisourceConfigurationLoader,
+    MultisourceConfigurationLoaderOptions,
 )
 
 LOGGER = logging.getLogger(__name__)
@@ -27,9 +22,8 @@ class ApplicationConfigurationHelper:
     Class to handle the processing of configuration for the application.
     """
 
+    __pyproject_section_header = "tool.pymarkdown"
     __default_configuration_file = ".pymarkdown"
-    __default_yaml_configuration_file_extension = ".yaml"
-    __other_default_yaml_configuration_file_extension = ".yml"
 
     @staticmethod
     def apply_configuration_layers(
@@ -41,183 +35,30 @@ class ApplicationConfigurationHelper:
         Apply any general python configuration files followed by any configuration
         files specific to this project.
         """
-        LOGGER.debug("Looking for any standard python configuration files.")
-        ApplicationPropertiesUtilities.process_standard_python_configuration_files(
-            properties, handle_error
-        )
 
-        LOGGER.debug("Looking for application specific configuration files.")
-        ApplicationConfigurationHelper.__process_project_specific_json_configuration(
-            args,
-            properties,
-            handle_error,
+        options = MultisourceConfigurationLoaderOptions(
+            load_json_files_as_json5=args.use_json5_for_configuration
         )
+        loader = MultisourceConfigurationLoader(options)
+        loader.add_local_pyproject_toml_file(
+            ApplicationConfigurationHelper.__pyproject_section_header
+        )
+        loader.add_local_project_configuration_file(
+            ApplicationConfigurationHelper.__default_configuration_file,
+            ConfigurationFileType.JSON,
+            [ConfigurationFileType.YAML, ConfigurationFileType.YML],
+        )
+        if args.configuration_file:
+            loader.add_specified_configuration_file(
+                args.configuration_file, ConfigurationFileType.NONE
+            )
+        loader.add_manually_set_properties(args.set_configuration)
+        loader.process(properties, handle_error)
 
         if args.strict_configuration or properties.get_boolean_property(
             "mode.strict-config", strict_mode=True
         ):
             properties.enable_strict_mode()
-
-    @staticmethod
-    def __process_project_specific_json_configuration(
-        args: argparse.Namespace,
-        application_properties: ApplicationProperties,
-        handle_error_fn: Callable[[str, Optional[Exception]], None],
-    ) -> None:
-        """
-        Load configuration information from JSON configuration files.
-        """
-
-        # Look for the default configuration files in the current working directory.
-        ApplicationConfigurationHelper.__process_default_configuration_files(
-            application_properties, handle_error_fn
-        )
-
-        # A configuration file specified on the command line has a higher precedence
-        # than anything except a specific setting applied on the command line.
-        if args.configuration_file:
-            if not os.path.isfile(args.configuration_file):
-                handle_error_fn(
-                    f"Specified configuration file `{args.configuration_file}` does not exist.",
-                    None,
-                )
-
-            LOGGER.debug(
-                "Determining file type for specified configuration file '%s'.",
-                args.configuration_file,
-            )
-            try:
-                with open(args.configuration_file, encoding="utf-8") as infile:
-                    json.load(infile)
-                did_load_as_json = True
-            except json.decoder.JSONDecodeError:
-                did_load_as_json = False
-
-            try:
-                with open(args.configuration_file, "rb") as infile:
-                    loaded_document = yaml.safe_load(infile)
-                did_load_as_yaml = not isinstance(loaded_document, str)
-            except yaml.MarkedYAMLError:
-                did_load_as_yaml = False
-
-            try:
-                with open(args.configuration_file, "rb") as infile:
-                    tomli.load(infile)
-                did_load_as_toml = True
-            except tomli.TOMLDecodeError:
-                did_load_as_toml = False
-
-            if did_load_as_json:
-                LOGGER.debug(
-                    "Attempting to load configuration file '%s' as a JSON file.",
-                    args.configuration_file,
-                )
-                ApplicationPropertiesJsonLoader.load_and_set(
-                    application_properties,
-                    args.configuration_file,
-                    handle_error_fn=handle_error_fn,
-                    clear_property_map=False,
-                    check_for_file_presence=False,
-                )
-            elif did_load_as_yaml:
-                LOGGER.debug(
-                    "Attempting to load configuration file '%s' as a YAML file.",
-                    args.configuration_file,
-                )
-                ApplicationPropertiesYamlLoader.load_and_set(
-                    application_properties,
-                    args.configuration_file,
-                    handle_error_fn=handle_error_fn,
-                    clear_property_map=False,
-                    check_for_file_presence=False,
-                )
-            elif did_load_as_toml:
-                LOGGER.debug(
-                    "Attempting to load configuration file '%s' as a TOML file.",
-                    args.configuration_file,
-                )
-                ApplicationPropertiesTomlLoader.load_and_set(
-                    application_properties,
-                    args.configuration_file,
-                    handle_error_fn=handle_error_fn,
-                    clear_property_map=False,
-                    check_for_file_presence=False,
-                )
-            else:
-                formatted_error = f"Specified configuration file '{args.configuration_file}' was not parseable as a JSON, YAML, or TOML file."
-                LOGGER.warning(formatted_error)
-                handle_error_fn(formatted_error, None)
-
-        # A specific setting applied on the command line has the highest precedence.
-        if args.set_configuration:
-            LOGGER.debug(
-                "Attempting to set one or more provided manual properties '%s'.",
-                args.set_configuration,
-            )
-            application_properties.set_manual_property(args.set_configuration)
-
-    @staticmethod
-    def __process_default_configuration_files(
-        application_properties: ApplicationProperties,
-        handle_error_fn: Callable[[str, Optional[Exception]], None],
-    ) -> None:
-        abs_file_name = os.path.abspath(
-            ApplicationConfigurationHelper.__default_configuration_file
-        )
-        LOGGER.debug(
-            "Attempting to find/load '%s' as a default JSON configuration file.",
-            abs_file_name,
-        )
-        (
-            did_apply_map,
-            did_have_one_error,
-        ) = ApplicationPropertiesJsonLoader.load_and_set(
-            application_properties,
-            abs_file_name,
-            handle_error_fn=handle_error_fn,
-            clear_property_map=False,
-            check_for_file_presence=True,
-        )
-        if not did_apply_map and not did_have_one_error:
-            new_file_name = (
-                abs_file_name
-                + ApplicationConfigurationHelper.__default_yaml_configuration_file_extension
-            )
-            LOGGER.debug(
-                "Attempting to find/load '%s' as a default YAML configuration file.",
-                new_file_name,
-            )
-            (
-                did_apply_map,
-                did_have_one_error,
-            ) = ApplicationPropertiesYamlLoader.load_and_set(
-                application_properties,
-                new_file_name,
-                handle_error_fn=handle_error_fn,
-                clear_property_map=False,
-                check_for_file_presence=True,
-            )
-        if not did_apply_map and not did_have_one_error:
-            new_file_name = (
-                abs_file_name
-                + ApplicationConfigurationHelper.__other_default_yaml_configuration_file_extension
-            )
-            LOGGER.debug(
-                "Attempting to find/load '%s' as a default YAML configuration file.",
-                new_file_name,
-            )
-            (
-                did_apply_map,
-                did_have_one_error,
-            ) = ApplicationPropertiesYamlLoader.load_and_set(
-                application_properties,
-                new_file_name,
-                handle_error_fn=handle_error_fn,
-                clear_property_map=False,
-                check_for_file_presence=True,
-            )
-        if not did_apply_map:
-            LOGGER.debug("No default configuration files were loaded.")
 
 
 # pylint: enable=too-few-public-methods

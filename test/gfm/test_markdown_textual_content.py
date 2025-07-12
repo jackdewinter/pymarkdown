@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_textual_content_671():
+def test_textual_content_671() -> None:
     """
     Test case 671:  (part 1) Any characters not given an interpretation by the above rules will be parsed as plain textual content.
     """
@@ -27,7 +27,7 @@ def test_textual_content_671():
 
 
 @pytest.mark.gfm
-def test_textual_content_672():
+def test_textual_content_672() -> None:
     """
     Test case 672:  (part 2) Any characters not given an interpretation by the above rules will be parsed as plain textual content.
     """
@@ -42,7 +42,7 @@ def test_textual_content_672():
 
 
 @pytest.mark.gfm
-def test_textual_content_673():
+def test_textual_content_673() -> None:
     """
     Test case 673:  Internal spaces are preserved verbatim:
     """

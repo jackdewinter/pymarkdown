@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_1():
+def test_atx_headings_extra_1() -> None:
     """
     Test case extra 1:  ATX headings starts with a backslash escape
     """
@@ -27,7 +27,7 @@ def test_atx_headings_extra_1():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_2():
+def test_atx_headings_extra_2() -> None:
     """
     Test case extra 2:  ATX headings starts with a backslash as in a hard line break
     """
@@ -42,7 +42,7 @@ def test_atx_headings_extra_2():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_3():
+def test_atx_headings_extra_3() -> None:
     """
     Test case extra 3:  ATX headings starts with 2+ spaces as in a hard line break
     """
@@ -57,7 +57,7 @@ def test_atx_headings_extra_3():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_4():
+def test_atx_headings_extra_4() -> None:
     """
     Test case extra 4:  ATX headings string starting with a code span.
     """
@@ -78,7 +78,7 @@ def test_atx_headings_extra_4():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_5():
+def test_atx_headings_extra_5() -> None:
     """
     Test case extra 5:  ATX headings string starting with a character reference.
     """
@@ -97,7 +97,7 @@ def test_atx_headings_extra_5():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_6():
+def test_atx_headings_extra_6() -> None:
     """
     Test case extra 6:  ATX headings string starting with a raw html block.
     """
@@ -118,7 +118,7 @@ def test_atx_headings_extra_6():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_7():
+def test_atx_headings_extra_7() -> None:
     """
     Test case extra 7:  ATX headings string starting with an URI autolink
     """
@@ -139,7 +139,7 @@ def test_atx_headings_extra_7():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_8():
+def test_atx_headings_extra_8() -> None:
     """
     Test case extra 8:  ATX headings string starting with an email autolink
     """
@@ -162,7 +162,7 @@ def test_atx_headings_extra_8():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_9():
+def test_atx_headings_extra_9() -> None:
     """
     Test case extra 9:  ATX headings string starting with an emphasis
     """
@@ -185,7 +185,7 @@ def test_atx_headings_extra_9():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_10():
+def test_atx_headings_extra_10() -> None:
     """
     Test case extra 10:  ATX headings string starting with a link.  also see 183
     """
@@ -208,7 +208,7 @@ def test_atx_headings_extra_10():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_11():
+def test_atx_headings_extra_11() -> None:
     """
     Test case extra 11:  ATX headings string starting with an image
     """
@@ -229,7 +229,7 @@ def test_atx_headings_extra_11():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_12():
+def test_atx_headings_extra_12() -> None:
     """
     Test case extra 12:  ATX headings containing a backslash
     """
@@ -248,7 +248,7 @@ def test_atx_headings_extra_12():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_13():
+def test_atx_headings_extra_13() -> None:
     """
     Test case extra 13:  ATX headings containing a code span.
     """
@@ -269,7 +269,7 @@ def test_atx_headings_extra_13():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_14():
+def test_atx_headings_extra_14() -> None:
     """
     Test case extra 14:  ATX headings containing a character reference.
     """
@@ -288,7 +288,7 @@ def test_atx_headings_extra_14():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_15():
+def test_atx_headings_extra_15() -> None:
     """
     Test case extra 15:  ATX heading containing a raw html block.
     """
@@ -309,7 +309,7 @@ def test_atx_headings_extra_15():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_16():
+def test_atx_headings_extra_16() -> None:
     """
     Test case extra 16:  ATX heading containing an URI autolink
     """
@@ -330,7 +330,7 @@ def test_atx_headings_extra_16():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_17():
+def test_atx_headings_extra_17() -> None:
     """
     Test case extra 17:  ATX heading containing an email autolink
     """
@@ -353,7 +353,7 @@ def test_atx_headings_extra_17():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_18():
+def test_atx_headings_extra_18() -> None:
     """
     Test case extra 18:  ATX heading containing emphasis
     """
@@ -376,7 +376,7 @@ def test_atx_headings_extra_18():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_19():
+def test_atx_headings_extra_19() -> None:
     """
     Test case extra 19:  ATX heading containing a link.
     """
@@ -399,7 +399,7 @@ def test_atx_headings_extra_19():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_20():
+def test_atx_headings_extra_20() -> None:
     """
     Test case extra 20:  ATX heading containing an image
     """
@@ -422,7 +422,7 @@ def test_atx_headings_extra_20():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_21():
+def test_atx_headings_extra_21() -> None:
     """
     Test case extra 21:  ATX headings ends with a backslash escape
     """
@@ -441,7 +441,7 @@ def test_atx_headings_extra_21():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_22():
+def test_atx_headings_extra_22() -> None:
     """
     Test case extra 22:  ATX headings ends with a backslash as in a hard line break
     """
@@ -460,7 +460,7 @@ def test_atx_headings_extra_22():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_23():
+def test_atx_headings_extra_23() -> None:
     """
     Test case extra 23:  ATX headings ends with 2+ spaces as in a hard line break
     """
@@ -479,7 +479,7 @@ def test_atx_headings_extra_23():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_24():
+def test_atx_headings_extra_24() -> None:
     """
     Test case extra 24:  ATX headings string ending with a code span.
     """
@@ -499,7 +499,7 @@ def test_atx_headings_extra_24():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_25():
+def test_atx_headings_extra_25() -> None:
     """
     Test case extra 25:  ATX headings string ending with a character reference.
     """
@@ -518,7 +518,7 @@ def test_atx_headings_extra_25():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_26():
+def test_atx_headings_extra_26() -> None:
     """
     Test case extra 26:  ATX headings string ending with a raw html block.
     """
@@ -538,7 +538,7 @@ def test_atx_headings_extra_26():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_27():
+def test_atx_headings_extra_27() -> None:
     """
     Test case extra 27:  ATX headings string ending with an URI autolink
     """
@@ -560,7 +560,7 @@ def test_atx_headings_extra_27():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_28():
+def test_atx_headings_extra_28() -> None:
     """
     Test case extra 28:  ATX headings string ending with an email autolink
     """
@@ -580,7 +580,7 @@ def test_atx_headings_extra_28():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_29():
+def test_atx_headings_extra_29() -> None:
     """
     Test case extra 29:  ATX headings string ending with an emphasis
     """
@@ -602,7 +602,7 @@ def test_atx_headings_extra_29():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_30():
+def test_atx_headings_extra_30() -> None:
     """
     Test case extra 30:  ATX headings string ending with a link.
     """
@@ -624,7 +624,7 @@ def test_atx_headings_extra_30():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_31():
+def test_atx_headings_extra_31() -> None:
     """
     Test case extra 31:  ATX headings string ending with an image
     """
@@ -644,7 +644,7 @@ def test_atx_headings_extra_31():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_32():
+def test_atx_headings_extra_32() -> None:
     """
     Test case extra 32:  ATX heading this is only a backslash escape
     """
@@ -663,7 +663,7 @@ def test_atx_headings_extra_32():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_33():
+def test_atx_headings_extra_33() -> None:
     """
     Test case extra 33:  ATX heading this is only a backslash as in a hard line break
     """
@@ -678,7 +678,7 @@ def test_atx_headings_extra_33():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_34():
+def test_atx_headings_extra_34() -> None:
     """
     Test case extra 34:  ATX heading this is only 2+ spaces as in a hard line break
     """
@@ -693,7 +693,7 @@ def test_atx_headings_extra_34():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_35():
+def test_atx_headings_extra_35() -> None:
     """
     Test case extra 35:  ATX heading this is only a code span.
     """
@@ -713,7 +713,7 @@ def test_atx_headings_extra_35():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_36():
+def test_atx_headings_extra_36() -> None:
     """
     Test case extra 36:  ATX heading this is only a character reference.
     """
@@ -732,7 +732,7 @@ def test_atx_headings_extra_36():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_37():
+def test_atx_headings_extra_37() -> None:
     """
     Test case extra 37:  ATX heading this is only a raw html block.
     """
@@ -752,7 +752,7 @@ def test_atx_headings_extra_37():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_38():
+def test_atx_headings_extra_38() -> None:
     """
     Test case extra 38:  ATX heading this is only an URI autolink
     """
@@ -774,7 +774,7 @@ def test_atx_headings_extra_38():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_39():
+def test_atx_headings_extra_39() -> None:
     """
     Test case extra 39:  ATX heading this is only an email autolink
     """
@@ -794,7 +794,7 @@ def test_atx_headings_extra_39():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_40():
+def test_atx_headings_extra_40() -> None:
     """
     Test case extra 40:  ATX heading this is only an emphasis
     """
@@ -816,7 +816,7 @@ def test_atx_headings_extra_40():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_41():
+def test_atx_headings_extra_41() -> None:
     """
     Test case extra 41:  ATX heading this is only a link.
     """
@@ -838,7 +838,7 @@ def test_atx_headings_extra_41():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_42():
+def test_atx_headings_extra_42() -> None:
     """
     Test case extra 42:  ATX heading this is only an image
     """
@@ -858,7 +858,7 @@ def test_atx_headings_extra_42():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_43x():
+def test_atx_headings_extra_43x() -> None:
     """
     Test case extra 43x:  Not quote ATX.
     """
@@ -877,7 +877,7 @@ def test_atx_headings_extra_43x():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_43a():
+def test_atx_headings_extra_43a() -> None:
     """
     Test case extra 43:  Not quote ATX, on either of two possible lines.
     """
@@ -899,7 +899,7 @@ def test_atx_headings_extra_43a():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_44x():
+def test_atx_headings_extra_44x() -> None:
     """
     Test case extra 44:  Tab character instead of space between the # and text.
     """
@@ -918,7 +918,7 @@ def test_atx_headings_extra_44x():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_44a():
+def test_atx_headings_extra_44a() -> None:
     """
     Test case extra 44:  Tab character instead of space between the # and text at the end.
     """

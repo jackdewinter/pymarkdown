@@ -65,14 +65,14 @@ class RuleMd029(RulePlugin):
         """
         Event to allow the plugin to load configuration information.
         """
-        self.__style = self.plugin_configuration.get_string_property(
+        self.__style = self.plugin_configuration.get_string_property_with_default(
             "style",
-            default_value=RuleMd029.__one_or_ordered_style,
+            RuleMd029.__one_or_ordered_style,
             valid_value_fn=self.__validate_configuration_style,
         )
         self.__allow_extended_start_values = (
-            self.plugin_configuration.get_boolean_property(
-                "allow_extended_start_values", default_value=False
+            self.plugin_configuration.get_boolean_property_with_default(
+                "allow_extended_start_values", False
             )
         )
 

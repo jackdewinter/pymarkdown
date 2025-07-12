@@ -12,7 +12,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_spaces_before():
+def test_whitespaces_indented_code_with_spaces_before() -> None:
     """
     Test case:  Indented Code blocks preceeded by spaces.
     """
@@ -32,7 +32,7 @@ def test_whitespaces_indented_code_with_spaces_before():
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_too_many_spaces_before():
+def test_whitespaces_indented_code_with_too_many_spaces_before() -> None:
     """
     Test case:  Indented Code blocks preceeded by spaces. Because the behavior
                 of too many spaces is to be declared as an indented block,
@@ -42,7 +42,7 @@ def test_whitespaces_indented_code_with_too_many_spaces_before():
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before():
+def test_whitespaces_indented_code_with_tabs_before() -> None:
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -62,7 +62,7 @@ def test_whitespaces_indented_code_with_tabs_before():
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_repeat():
+def test_whitespaces_indented_code_with_tabs_before_repeat() -> None:
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -84,7 +84,7 @@ def test_whitespaces_indented_code_with_tabs_before_repeat():
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_form_feeds_before():
+def test_whitespaces_indented_code_with_form_feeds_before() -> None:
     """
     Test case:  Indented Code blocks preceeded by spaces and form feeds.
                 Because the form feed does not equate to a space character,
@@ -102,7 +102,7 @@ def test_whitespaces_indented_code_with_form_feeds_before():
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_spaces_before_within_list():
+def test_whitespaces_indented_code_with_spaces_before_within_list() -> None:
     """
     Test case:  Indented Code blocks preceeded by spaces.
     """
@@ -127,7 +127,9 @@ indented block</li>
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_spaces_before_within_list_with_blank_line():
+def test_whitespaces_indented_code_with_spaces_before_within_list_with_blank_line() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces.
     """
@@ -160,7 +162,7 @@ def test_whitespaces_indented_code_with_spaces_before_within_list_with_blank_lin
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_spaces_before_within_block_quotes():
+def test_whitespaces_indented_code_with_spaces_before_within_block_quotes() -> None:
     """
     Test case:  Indented Code blocks preceeded by spaces.
     """
@@ -187,7 +189,9 @@ indented block</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_spaces_before_within_block_quotes_with_blank_line():
+def test_whitespaces_indented_code_with_spaces_before_within_block_quotes_with_blank_line() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces.
     """
@@ -220,7 +224,9 @@ def</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_spaces_before_within_double_block_quotes():
+def test_whitespaces_indented_code_with_spaces_before_within_double_block_quotes() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces.
     """
@@ -254,7 +260,9 @@ indented block</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_spaces_before_within_double_block_quotes_with_blank_line():
+def test_whitespaces_indented_code_with_spaces_before_within_double_block_quotes_with_blank_line() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces.
     """
@@ -294,7 +302,9 @@ indented block</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_spaces_before_within_double_block_quote_with_single():
+def test_whitespaces_indented_code_with_spaces_before_within_double_block_quote_with_single() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces.
     """
@@ -328,7 +338,9 @@ indented block</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_spaces_before_within_double_block_quote_with_single_with_blank_line():
+def test_whitespaces_indented_code_with_spaces_before_within_double_block_quote_with_single_with_blank_line() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces.
     """
@@ -372,7 +384,7 @@ def test_whitespaces_indented_code_with_spaces_before_within_double_block_quote_
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_unordered_list_x():
+def test_whitespaces_indented_code_with_tabs_before_within_unordered_list_x() -> None:
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -397,7 +409,9 @@ def</li>
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_unordered_list_x_with_blank_line():
+def test_whitespaces_indented_code_with_tabs_before_within_unordered_list_x_with_blank_line() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -430,7 +444,9 @@ def test_whitespaces_indented_code_with_tabs_before_within_unordered_list_x_with
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_unordered_list_and_single_space():
+def test_whitespaces_indented_code_with_tabs_before_within_unordered_list_and_single_space() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces.
     """
@@ -455,7 +471,9 @@ def</li>
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_unordered_list_and_single_space_and_blank_line():
+def test_whitespaces_indented_code_with_tabs_before_within_unordered_list_and_single_space_and_blank_line() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces.
     """
@@ -488,7 +506,9 @@ def test_whitespaces_indented_code_with_tabs_before_within_unordered_list_and_si
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_unordered_list_and_spaces():
+def test_whitespaces_indented_code_with_tabs_before_within_unordered_list_and_spaces() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -513,7 +533,9 @@ def</li>
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_unordered_list_and_spaces_with_blank_line():
+def test_whitespaces_indented_code_with_tabs_before_within_unordered_list_and_spaces_with_blank_line() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -546,7 +568,9 @@ def test_whitespaces_indented_code_with_tabs_before_within_unordered_list_and_sp
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_unordered_double_list():
+def test_whitespaces_indented_code_with_tabs_before_within_unordered_double_list() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -581,7 +605,9 @@ ghi</li>
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_unordered_double_list_with_blank_line():
+def test_whitespaces_indented_code_with_tabs_before_within_unordered_double_list_with_blank_line() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -624,7 +650,7 @@ def test_whitespaces_indented_code_with_tabs_before_within_unordered_double_list
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_ordered_list_x():
+def test_whitespaces_indented_code_with_tabs_before_within_ordered_list_x() -> None:
     """
     Test case:  Indented Code blocks preceeded by spaces.
     """
@@ -649,7 +675,9 @@ def</li>
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_ordered_list_x_with_blank_line():
+def test_whitespaces_indented_code_with_tabs_before_within_ordered_list_x_with_blank_line() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces.
     """
@@ -682,7 +710,7 @@ def test_whitespaces_indented_code_with_tabs_before_within_ordered_list_x_with_b
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_spaces_before_within_ordered_list():
+def test_whitespaces_indented_code_with_spaces_before_within_ordered_list() -> None:
     """
     Test case:  Indented Code blocks preceeded by spaces.
     """
@@ -707,7 +735,9 @@ def</li>
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_spaces_before_within_ordered_list_with_blank_line():
+def test_whitespaces_indented_code_with_spaces_before_within_ordered_list_with_blank_line() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces.
     """
@@ -740,7 +770,9 @@ def test_whitespaces_indented_code_with_spaces_before_within_ordered_list_with_b
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_ordered_list_and_single_space():
+def test_whitespaces_indented_code_with_tabs_before_within_ordered_list_and_single_space() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces.
     """
@@ -765,7 +797,9 @@ def</li>
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_ordered_list_and_single_space_with_blank_line():
+def test_whitespaces_indented_code_with_tabs_before_within_ordered_list_and_single_space_with_blank_line() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces.
     """
@@ -798,7 +832,9 @@ def test_whitespaces_indented_code_with_tabs_before_within_ordered_list_and_sing
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_ordered_list_and_spaces():
+def test_whitespaces_indented_code_with_tabs_before_within_ordered_list_and_spaces() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -823,7 +859,9 @@ def</li>
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_ordered_list_and_spaces_with_blank_line():
+def test_whitespaces_indented_code_with_tabs_before_within_ordered_list_and_spaces_with_blank_line() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -856,7 +894,9 @@ def test_whitespaces_indented_code_with_tabs_before_within_ordered_list_and_spac
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_ordered_double_list_x():
+def test_whitespaces_indented_code_with_tabs_before_within_ordered_double_list_x() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -899,7 +939,9 @@ def test_whitespaces_indented_code_with_tabs_before_within_ordered_double_list_x
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_ordered_double_list_no_spaces():
+def test_whitespaces_indented_code_with_tabs_before_within_ordered_double_list_no_spaces() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -934,7 +976,9 @@ ghi</li>
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_ordered_double_list_no_spaces_with_blank_line():
+def test_whitespaces_indented_code_with_tabs_before_within_ordered_double_list_no_spaces_with_blank_line() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -976,7 +1020,9 @@ def test_whitespaces_indented_code_with_tabs_before_within_ordered_double_list_n
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_ordered_double_list_tab_after_indent():
+def test_whitespaces_indented_code_with_tabs_before_within_ordered_double_list_tab_after_indent() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -1011,7 +1057,9 @@ ghi	jkl</li>
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_ordered_double_list_tab_after_indent_with_blank_line():
+def test_whitespaces_indented_code_with_tabs_before_within_ordered_double_list_tab_after_indent_with_blank_line() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -1053,7 +1101,9 @@ def test_whitespaces_indented_code_with_tabs_before_within_ordered_double_list_t
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_ordered_double_list_one_space():
+def test_whitespaces_indented_code_with_tabs_before_within_ordered_double_list_one_space() -> (
+    None
+):
     """
     Test case:  Due to the whitespace being interpretted as a continuation
                 of the second list, this should not be interepreted as an
@@ -1090,7 +1140,9 @@ ghi</li>
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_ordered_double_list_one_space_with_blank_line():
+def test_whitespaces_indented_code_with_tabs_before_within_ordered_double_list_one_space_with_blank_line() -> (
+    None
+):
     """
     Test case:  Due to the whitespace being interpretted as a continuation
                 of the second list, this should not be interepreted as an
@@ -1134,7 +1186,9 @@ def test_whitespaces_indented_code_with_tabs_before_within_ordered_double_list_o
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_ordered_double_list_only_spaces():
+def test_whitespaces_indented_code_with_tabs_before_within_ordered_double_list_only_spaces() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -1169,7 +1223,9 @@ ghi</li>
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_ordered_double_list_only_spaces_with_blank_line():
+def test_whitespaces_indented_code_with_tabs_before_within_ordered_double_list_only_spaces_with_blank_line() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -1211,7 +1267,7 @@ def test_whitespaces_indented_code_with_tabs_before_within_ordered_double_list_o
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_formfeeds_before_within_list():
+def test_whitespaces_indented_code_with_formfeeds_before_within_list() -> None:
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -1236,7 +1292,9 @@ def test_whitespaces_indented_code_with_formfeeds_before_within_list():
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_spaces_before_within_double_block_quotes_with_zero_and_zero_spaces_at_start():
+def test_whitespaces_indented_code_with_spaces_before_within_double_block_quotes_with_zero_and_zero_spaces_at_start() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -1270,7 +1328,9 @@ ghi</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_spaces_before_within_double_block_quotes_with_zero_and_zero_spaces_at_start_with_blank_line():
+def test_whitespaces_indented_code_with_spaces_before_within_double_block_quotes_with_zero_and_zero_spaces_at_start_with_blank_line() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -1310,7 +1370,9 @@ def test_whitespaces_indented_code_with_spaces_before_within_double_block_quotes
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_spaces_before_within_double_block_quotes_with_zero_and_one_space_at_start():
+def test_whitespaces_indented_code_with_spaces_before_within_double_block_quotes_with_zero_and_one_space_at_start() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -1344,7 +1406,9 @@ ghi</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_spaces_before_within_double_block_quotes_with_zero_and_one_space_at_start_with_blank_line():
+def test_whitespaces_indented_code_with_spaces_before_within_double_block_quotes_with_zero_and_one_space_at_start_with_blank_line() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -1384,7 +1448,9 @@ def test_whitespaces_indented_code_with_spaces_before_within_double_block_quotes
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_spaces_before_within_double_block_quotes_with_zero_and_three_spaces_at_start():
+def test_whitespaces_indented_code_with_spaces_before_within_double_block_quotes_with_zero_and_three_spaces_at_start() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -1418,7 +1484,9 @@ ghi</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_spaces_before_within_double_block_quotes_with_zero_and_three_spaces_at_start_with_blank_line():
+def test_whitespaces_indented_code_with_spaces_before_within_double_block_quotes_with_zero_and_three_spaces_at_start_with_blank_line() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -1458,7 +1526,9 @@ def test_whitespaces_indented_code_with_spaces_before_within_double_block_quotes
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_spaces_before_within_double_block_quotes_with_zero_and_four_spaces_at_start():
+def test_whitespaces_indented_code_with_spaces_before_within_double_block_quotes_with_zero_and_four_spaces_at_start() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -1492,7 +1562,9 @@ ghi</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_spaces_before_within_double_block_quotes_with_zero_and_four_spaces_at_start_with_blank_line():
+def test_whitespaces_indented_code_with_spaces_before_within_double_block_quotes_with_zero_and_four_spaces_at_start_with_blank_line() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -1532,7 +1604,7 @@ def test_whitespaces_indented_code_with_spaces_before_within_double_block_quotes
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_block_quotes_x1():
+def test_whitespaces_indented_code_with_tabs_before_within_block_quotes_x1() -> None:
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -1559,7 +1631,9 @@ ghi</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_block_quotes_x1_with_blank_line():
+def test_whitespaces_indented_code_with_tabs_before_within_block_quotes_x1_with_blank_line() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -1592,7 +1666,7 @@ def</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_block_quotes_x2():
+def test_whitespaces_indented_code_with_tabs_before_within_block_quotes_x2() -> None:
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -1619,7 +1693,9 @@ ghi</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_block_quotes_x2_with_blank_line():
+def test_whitespaces_indented_code_with_tabs_before_within_block_quotes_x2_with_blank_line() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -1652,7 +1728,9 @@ def</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_block_quotes_repeat():
+def test_whitespaces_indented_code_with_tabs_before_within_block_quotes_repeat() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -1687,7 +1765,9 @@ indented block
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_block_quotes_bare_repeat():
+def test_whitespaces_indented_code_with_tabs_before_within_block_quotes_bare_repeat() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -1713,7 +1793,9 @@ indented block
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_block_quotes_bare_with_space_repeat():
+def test_whitespaces_indented_code_with_tabs_before_within_block_quotes_bare_with_space_repeat() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -1739,7 +1821,9 @@ indented block
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_within_block_quotes_bare_with_many_tabs():
+def test_whitespaces_indented_code_with_tabs_before_within_block_quotes_bare_with_many_tabs() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -1768,7 +1852,9 @@ abc\tdef
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_with_block_quote_with_blank():
+def test_whitespaces_indented_code_with_tabs_before_with_block_quote_with_blank() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -1801,7 +1887,7 @@ def</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote():
+def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote() -> None:
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -1835,7 +1921,9 @@ indented block</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with_blank():
+def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with_blank() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -1875,7 +1963,9 @@ def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with_single_with_blank():
+def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with_single_with_blank() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -1914,7 +2004,9 @@ def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with_single_with_blank_and_space():
+def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with_single_with_blank_and_space() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -1953,7 +2045,9 @@ def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with_single_with_spaces_and_blank_x():
+def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with_single_with_spaces_and_blank_x() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -1993,7 +2087,9 @@ def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with_single_with_spaces_and_blank_and_tab():
+def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with_single_with_spaces_and_blank_and_tab() -> (
+    None
+):
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """
@@ -2036,7 +2132,7 @@ def test_whitespaces_indented_code_with_tabs_before_with_double_block_quote_with
 
 
 @pytest.mark.gfm
-def test_whitespaces_indented_code_with_single_tab_before():
+def test_whitespaces_indented_code_with_single_tab_before() -> None:
     """
     Test case:  Indented Code blocks preceeded by spaces and tabs.
     """

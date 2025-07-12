@@ -22,7 +22,7 @@ else:
     EXCLUSIONS_X = "-e, --exclude PATH_EXCLUSIONS"
 
 
-def test_application_file_scanner_args_no_changes():
+def test_application_file_scanner_args_no_changes() -> None:
     """
     Test to make sure we get all scanner args without any flags changed.
     """
@@ -58,7 +58,7 @@ positional arguments:
     compare_expected_to_actual(expected_output, args)
 
 
-def test_application_file_scanner_args_bad_extension():
+def test_application_file_scanner_args_bad_extension() -> None:
     """
     Test to make sure we get all scanner args with a bad default extension.
     """
@@ -77,7 +77,7 @@ def test_application_file_scanner_args_bad_extension():
     )
 
 
-def test_application_file_scanner_args_with_file_type_name():
+def test_application_file_scanner_args_with_file_type_name() -> None:
     """
     Test to make sure we get all scanner args with a file type name specified.
     """
@@ -115,7 +115,7 @@ positional arguments:
     compare_expected_to_actual(expected_output, args)
 
 
-def test_application_file_scanner_args_with_empty_file_type_name():
+def test_application_file_scanner_args_with_empty_file_type_name() -> None:
     """
     Test to make sure we get all scanner args with an empty file type name specified.
     """
@@ -153,7 +153,7 @@ positional arguments:
     compare_expected_to_actual(expected_output, args)
 
 
-def test_application_file_scanner_args_without_list_files():
+def test_application_file_scanner_args_without_list_files() -> None:
     """
     Test to make sure we get all scanner args with list files disabled
     """
@@ -189,7 +189,7 @@ positional arguments:
     compare_expected_to_actual(expected_output, args)
 
 
-def test_application_file_scanner_args_without_recurse_directories():
+def test_application_file_scanner_args_without_recurse_directories() -> None:
     """
     Test to make sure we get all scanner args with recurse directories disabled
     """
@@ -225,7 +225,7 @@ positional arguments:
     compare_expected_to_actual(expected_output, args)
 
 
-def test_application_file_scanner_args_without_alternate_extensions():
+def test_application_file_scanner_args_without_alternate_extensions() -> None:
     """
     Test to make sure we get all scanner args with alternate extensions disabled
     """
@@ -259,7 +259,7 @@ positional arguments:
     compare_expected_to_actual(expected_output, args)
 
 
-def test_application_file_scanner_args_without_exclusions():
+def test_application_file_scanner_args_without_exclusions() -> None:
     """
     Test to make sure we get all scanner args with alternate extensions disabled
     """

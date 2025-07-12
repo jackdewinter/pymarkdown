@@ -10,7 +10,7 @@ import pytest
 
 
 @pytest.mark.rules
-def test_md042_good_non_empty_link():
+def test_md042_good_non_empty_link() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains links that have non-empty urls.
@@ -40,7 +40,7 @@ def test_md042_good_non_empty_link():
 
 
 @pytest.mark.rules
-def test_md042_bad_empty_link():
+def test_md042_bad_empty_link() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains links that have empty urls.
@@ -70,7 +70,7 @@ def test_md042_bad_empty_link():
 
 
 @pytest.mark.rules
-def test_md042_bad_whitespace_link():
+def test_md042_bad_whitespace_link() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains links that have whitespace only urls.
@@ -100,7 +100,7 @@ def test_md042_bad_whitespace_link():
 
 
 @pytest.mark.rules
-def test_md042_good_non_empty_fragment():
+def test_md042_good_non_empty_fragment() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains links that has a non-empty url fragment.
@@ -130,7 +130,7 @@ def test_md042_good_non_empty_fragment():
 
 
 @pytest.mark.rules
-def test_md042_bad_link_empty_fragment():
+def test_md042_bad_link_empty_fragment() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains links that have empty url fragments.
@@ -160,7 +160,7 @@ def test_md042_bad_link_empty_fragment():
 
 
 @pytest.mark.rules
-def test_md042_bad_link_whitespace_fragment():
+def test_md042_bad_link_whitespace_fragment() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains links that have whitespace only url fragments.
@@ -190,7 +190,7 @@ def test_md042_bad_link_whitespace_fragment():
 
 
 @pytest.mark.rules
-def test_md042_good_non_empty_image():
+def test_md042_good_non_empty_image() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains images that have non-empty urls.
@@ -220,7 +220,7 @@ def test_md042_good_non_empty_image():
 
 
 @pytest.mark.rules
-def test_md042_bad_empty_image():
+def test_md042_bad_empty_image() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains links that have empty urls.
@@ -249,7 +249,7 @@ def test_md042_bad_empty_image():
     )
 
 
-def test_md042_query_config():
+def test_md042_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md042",
         """

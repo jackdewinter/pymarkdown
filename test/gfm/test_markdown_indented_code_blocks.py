@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_indented_code_blocks_077():
+def test_indented_code_blocks_077() -> None:
     """
     Test case 077:  Simple examples:
     """
@@ -30,7 +30,7 @@ def test_indented_code_blocks_077():
 
 
 @pytest.mark.gfm
-def test_indented_code_blocks_078():
+def test_indented_code_blocks_078() -> None:
     """
     Test case 078:  (part a) If there is any ambiguity between an interpretation
                     of indentation as a code block and as indicating that material
@@ -65,7 +65,7 @@ def test_indented_code_blocks_078():
 
 
 @pytest.mark.gfm
-def test_indented_code_blocks_079():
+def test_indented_code_blocks_079() -> None:
     """
     Test case 079:  (part b) If there is any ambiguity between an interpretation
                     of indentation as a code block and as indicating that material
@@ -104,7 +104,7 @@ def test_indented_code_blocks_079():
 
 
 @pytest.mark.gfm
-def test_indented_code_blocks_080():
+def test_indented_code_blocks_080() -> None:
     """
     Test case 080:  The contents of a code block are literal text, and do not get parsed as Markdown:
     """
@@ -130,7 +130,7 @@ def test_indented_code_blocks_080():
 
 
 @pytest.mark.gfm
-def test_indented_code_blocks_081():
+def test_indented_code_blocks_081() -> None:
     """
     Test case 081:  Here we have three chunks separated by blank lines:
     """
@@ -162,7 +162,7 @@ chunk3
 
 
 @pytest.mark.gfm
-def test_indented_code_blocks_082():
+def test_indented_code_blocks_082() -> None:
     """
     Test case 082:  Any initial spaces beyond four will be included in the content, even in interior blank lines:
     """
@@ -188,7 +188,7 @@ def test_indented_code_blocks_082():
 
 
 @pytest.mark.gfm
-def test_indented_code_blocks_082a():
+def test_indented_code_blocks_082a() -> None:
     """
     Test case 082a:  variation of 82 with just enough indentation on second line
     """
@@ -214,7 +214,7 @@ def test_indented_code_blocks_082a():
 
 
 @pytest.mark.gfm
-def test_indented_code_blocks_083():
+def test_indented_code_blocks_083() -> None:
     """
     Test case 083:  An indented code block cannot interrupt a paragraph. (This allows hanging indents and the like.)
     """
@@ -235,7 +235,7 @@ bar</p>"""
 
 
 @pytest.mark.gfm
-def test_indented_code_blocks_084():
+def test_indented_code_blocks_084() -> None:
     """
     Test case 084:  However, any non-blank line with fewer than four leading spaces
                     ends the code block immediately. So a paragraph may occur immediately
@@ -262,7 +262,7 @@ bar"""
 
 
 @pytest.mark.gfm
-def test_indented_code_blocks_084a():
+def test_indented_code_blocks_084a() -> None:
     """
     Test case 084a:  Copied from 84 with extra lines inserted to verify trailing blanks are not part of section.
     """
@@ -291,7 +291,7 @@ bar"""
 
 
 @pytest.mark.gfm
-def test_indented_code_blocks_085():
+def test_indented_code_blocks_085() -> None:
     """
     Test case 085:  And indented code can occur immediately before and after other kinds of blocks:
     """
@@ -331,7 +331,7 @@ Heading
 
 
 @pytest.mark.gfm
-def test_indented_code_blocks_086():
+def test_indented_code_blocks_086() -> None:
     """
     Test case 086:  The first line can be indented more than four spaces:
     """
@@ -353,7 +353,7 @@ bar
 
 
 @pytest.mark.gfm
-def test_indented_code_blocks_086a():
+def test_indented_code_blocks_086a() -> None:
     """
     Test case 086a:  variation of 86 to include more spaces so extracted != left
     """
@@ -375,7 +375,7 @@ bar
 
 
 @pytest.mark.gfm
-def test_indented_code_blocks_086b():
+def test_indented_code_blocks_086b() -> None:
     """
     Test case 086b:  variation of 86 to play around with spaces
     """
@@ -397,7 +397,7 @@ def test_indented_code_blocks_086b():
 
 
 @pytest.mark.gfm
-def test_indented_code_blocks_087():
+def test_indented_code_blocks_087() -> None:
     """
     Test case 087:  Blank lines preceding or following an indented code block are not included in it:
     """
@@ -423,7 +423,7 @@ def test_indented_code_blocks_087():
 
 
 @pytest.mark.gfm
-def test_indented_code_blocks_088():
+def test_indented_code_blocks_088() -> None:
     """
     Test case 088:  Trailing spaces are included in the code block’s content:
     """

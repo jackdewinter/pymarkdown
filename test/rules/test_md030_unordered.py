@@ -503,7 +503,7 @@ def test_md030_fix(test: pluginRuleTest) -> None:
 
 
 @pytest.mark.parametrize("test", configTests, ids=id_test_plug_rule_fn)
-def test_md030_config(test: pluginRuleTest) -> None:
+def test_md030_config(test: pluginConfigErrorTest) -> None:
     """
     Execute a parameterized fix test for plugin md001.
     """

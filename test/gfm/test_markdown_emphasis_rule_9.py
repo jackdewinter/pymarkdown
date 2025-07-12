@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_emphasis_413():
+def test_emphasis_413() -> None:
     """
     Test case 413:  (part 1) Any nonempty sequence of inline elements can be the contents of an emphasized span.
     """
@@ -32,7 +32,7 @@ def test_emphasis_413():
 
 
 @pytest.mark.gfm
-def test_emphasis_414():
+def test_emphasis_414() -> None:
     """
     Test case 414:  (part 2) Any nonempty sequence of inline elements can be the contents of an emphasized span.
     """
@@ -55,7 +55,7 @@ bar</em></p>"""
 
 
 @pytest.mark.gfm
-def test_emphasis_415():
+def test_emphasis_415() -> None:
     """
     Test case 415:  (part 1) In particular, emphasis and strong emphasis can be nested inside emphasis:
     """
@@ -80,7 +80,7 @@ def test_emphasis_415():
 
 
 @pytest.mark.gfm
-def test_emphasis_416():
+def test_emphasis_416() -> None:
     """
     Test case 416:  (part 2) In particular, emphasis and strong emphasis can be nested inside emphasis:
     """
@@ -105,7 +105,7 @@ def test_emphasis_416():
 
 
 @pytest.mark.gfm
-def test_emphasis_417():
+def test_emphasis_417() -> None:
     """
     Test case 417:  (part 3) In particular, emphasis and strong emphasis can be nested inside emphasis:
     """
@@ -129,7 +129,7 @@ def test_emphasis_417():
 
 
 @pytest.mark.gfm
-def test_emphasis_418():
+def test_emphasis_418() -> None:
     """
     Test case 418:  (part 4) In particular, emphasis and strong emphasis can be nested inside emphasis:
     """
@@ -153,7 +153,7 @@ def test_emphasis_418():
 
 
 @pytest.mark.gfm
-def test_emphasis_419():
+def test_emphasis_419() -> None:
     """
     Test case 419:  (part 5) In particular, emphasis and strong emphasis can be nested inside emphasis:
     """
@@ -178,7 +178,7 @@ def test_emphasis_419():
 
 
 @pytest.mark.gfm
-def test_emphasis_420():
+def test_emphasis_420() -> None:
     """
     Test case 420:  (part 6) In particular, emphasis and strong emphasis can be nested inside emphasis:
     """
@@ -203,7 +203,7 @@ def test_emphasis_420():
 
 
 @pytest.mark.gfm
-def test_emphasis_421():
+def test_emphasis_421() -> None:
     """
     Test case 421:  For the same reason, we don’t get two consecutive emphasis sections in this example:
     """
@@ -224,7 +224,7 @@ def test_emphasis_421():
 
 
 @pytest.mark.gfm
-def test_emphasis_422():
+def test_emphasis_422() -> None:
     """
     Test case 422:  (part 1) The same condition ensures that the following cases are all strong emphasis nested inside emphasis, even when the interior spaces are omitted:
     """
@@ -248,7 +248,7 @@ def test_emphasis_422():
 
 
 @pytest.mark.gfm
-def test_emphasis_423():
+def test_emphasis_423() -> None:
     """
     Test case 423:  (part 2) The same condition ensures that the following cases are all strong emphasis nested inside emphasis, even when the interior spaces are omitted:
     """
@@ -272,7 +272,7 @@ def test_emphasis_423():
 
 
 @pytest.mark.gfm
-def test_emphasis_424():
+def test_emphasis_424() -> None:
     """
     Test case 424:  (part 3) The same condition ensures that the following cases are all strong emphasis nested inside emphasis, even when the interior spaces are omitted:
     """
@@ -296,7 +296,7 @@ def test_emphasis_424():
 
 
 @pytest.mark.gfm
-def test_emphasis_425():
+def test_emphasis_425() -> None:
     """
     Test case 425:  (part 1) When the lengths of the interior closing and opening delimiter runs are both multiples of 3, though, they can match to create emphasis:
     """
@@ -321,7 +321,7 @@ def test_emphasis_425():
 
 
 @pytest.mark.gfm
-def test_emphasis_426():
+def test_emphasis_426() -> None:
     """
     Test case 426:  (part 2) When the lengths of the interior closing and opening delimiter runs are both multiples of 3, though, they can match to create emphasis:
     """
@@ -350,7 +350,7 @@ def test_emphasis_426():
 
 
 @pytest.mark.gfm
-def test_emphasis_427():
+def test_emphasis_427() -> None:
     """
     Test case 427:  (part 1) When the lengths of the interior closing and opening delimiter runs are both multiples of 3, though, they can match to create emphasis:
     """
@@ -379,7 +379,7 @@ def test_emphasis_427():
 
 
 @pytest.mark.gfm
-def test_emphasis_428():
+def test_emphasis_428() -> None:
     """
     Test case 428:  (part 2) When the lengths of the interior closing and opening delimiter runs are both multiples of 3, though, they can match to create emphasis:
     """
@@ -405,7 +405,7 @@ def test_emphasis_428():
 
 
 @pytest.mark.gfm
-def test_emphasis_429():
+def test_emphasis_429() -> None:
     """
     Test case 429:  (part 1) There can be no empty emphasis or strong emphasis:
     """
@@ -424,7 +424,7 @@ def test_emphasis_429():
 
 
 @pytest.mark.gfm
-def test_emphasis_430():
+def test_emphasis_430() -> None:
     """
     Test case 430:  (part 2) There can be no empty emphasis or strong emphasis:
     """

@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_spaces_before():
+def test_whitespaces_fenced_code_open_with_spaces_before() -> None:
     """
     Test case:  Fenced Code blocks preceeded by spaces.
     """
@@ -29,7 +29,7 @@ abc"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_spaces_before_and_close():
+def test_whitespaces_fenced_code_open_with_spaces_before_and_close() -> None:
     """
     Test case:  Fenced Code blocks preceeded by spaces.
     """
@@ -51,7 +51,7 @@ abc
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_too_many_spaces_before():
+def test_whitespaces_fenced_code_open_with_too_many_spaces_before() -> None:
     """
     Test case:  Fenced Code blocks preceeded by spaces.
     """
@@ -74,7 +74,7 @@ abc</p>"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before():
+def test_whitespaces_fenced_code_open_with_tabs_before() -> None:
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -96,7 +96,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before():
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_form_feeds_before():
+def test_whitespaces_fenced_code_open_with_form_feeds_before() -> None:
     """
     Test case:  Fenced Code blocks preceeded by spaces and form feeds.
     """
@@ -117,7 +117,7 @@ def test_whitespaces_fenced_code_open_with_form_feeds_before():
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_spaces_before_within_list():
+def test_whitespaces_fenced_code_open_with_spaces_before_within_list() -> None:
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -148,7 +148,9 @@ def test_whitespaces_fenced_code_open_with_spaces_before_within_list():
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_spaces_before_within_list_and_close():
+def test_whitespaces_fenced_code_open_with_spaces_before_within_list_and_close() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -180,7 +182,7 @@ def test_whitespaces_fenced_code_open_with_spaces_before_within_list_and_close()
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_spaces_before_within_block_quotes():
+def test_whitespaces_fenced_code_open_with_spaces_before_within_block_quotes() -> None:
     """
     Test case:  Fenced Code blocks preceeded by spaces.
     """
@@ -209,7 +211,9 @@ abc</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_spaces_before_within_block_quotes_and_close():
+def test_whitespaces_fenced_code_open_with_spaces_before_within_block_quotes_and_close() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces.
     """
@@ -239,7 +243,9 @@ def
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quotes():
+def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quotes() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces.
     """
@@ -275,7 +281,9 @@ abc</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quotes_and_close():
+def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quotes_and_close() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces.
     """
@@ -312,7 +320,9 @@ def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quo
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quotes_with_single_x():
+def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quotes_with_single_x() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces.
     """
@@ -351,7 +361,9 @@ def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quo
 
 
 @pytest.mark.gfm
-def test_whitespaces_html_open_with_spaces_before_within_double_block_quotes_with_single_x():
+def test_whitespaces_html_open_with_spaces_before_within_double_block_quotes_with_single_x() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces.
     """
@@ -390,7 +402,9 @@ def test_whitespaces_html_open_with_spaces_before_within_double_block_quotes_wit
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quotes_with_single_and_close():
+def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quotes_with_single_and_close() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces.
     """
@@ -430,7 +444,9 @@ def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quo
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_x():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_x() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -461,7 +477,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_x()
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_x_and_close():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_x_and_close() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -493,7 +511,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_x_a
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_and_single_space_x():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_and_single_space_x() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces.
     """
@@ -524,7 +544,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_and
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_and_single_space_and_close():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_and_single_space_and_close() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces.
     """
@@ -556,7 +578,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_and
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_and_spaces():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_and_spaces() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -587,7 +611,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_and
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_and_spaces_and_close():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_and_spaces_and_close() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -621,7 +647,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_list_and
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_double_list():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_double_list() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -662,7 +690,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_double_l
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_double_list_and_close():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_double_list_and_close() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -704,7 +734,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_unordered_double_l
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_x():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_x() -> None:
     """
     Test case:  Fenced Code blocks preceeded by spaces.
     """
@@ -735,7 +765,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_x():
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_x_and_close():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_x_and_close() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces.
     """
@@ -767,7 +799,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_x_and
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_spaces_before_within_ordered_list():
+def test_whitespaces_fenced_code_open_with_spaces_before_within_ordered_list() -> None:
     """
     Test case:  Fenced Code blocks preceeded by spaces.
     """
@@ -798,7 +830,9 @@ def test_whitespaces_fenced_code_open_with_spaces_before_within_ordered_list():
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_spaces_before_within_ordered_list_and_close():
+def test_whitespaces_fenced_code_open_with_spaces_before_within_ordered_list_and_close() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces.
     """
@@ -830,7 +864,9 @@ def test_whitespaces_fenced_code_open_with_spaces_before_within_ordered_list_and
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_and_single_space_x():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_and_single_space_x() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces.
     """
@@ -861,7 +897,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_and_s
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_and_single_space_and_close():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_and_single_space_and_close() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces.
     """
@@ -893,7 +931,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_and_s
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_and_spaces_x():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_and_spaces_x() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -924,7 +964,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_and_s
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_and_spaces_and_close():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_and_spaces_and_close() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -956,7 +998,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_list_and_s
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_list_x():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_list_x() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -997,7 +1041,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_lis
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_list_x_and_close():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_list_x_and_close() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -1039,7 +1085,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_lis
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_list_no_spaces_x():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_list_no_spaces_x() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -1079,7 +1127,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_lis
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_list_no_spaces_and_close():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_list_no_spaces_and_close() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -1120,7 +1170,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_lis
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_list_tab_after_indent():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_list_tab_after_indent() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -1160,7 +1212,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_lis
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_list_tab_after_indent_and_close():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_list_tab_after_indent_and_close() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -1201,7 +1255,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_lis
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_list_one_space_after():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_list_one_space_after() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -1241,7 +1297,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_lis
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_list_one_space_after_and_close():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_list_one_space_after_and_close() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -1282,7 +1340,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_lis
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_list_one_space_before():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_list_one_space_before() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -1322,7 +1382,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_lis
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_list_one_space_before_and_close():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_list_one_space_before_and_close() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -1363,7 +1425,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_lis
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_list_only_spaces():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_list_only_spaces() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -1403,7 +1467,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_lis
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_list_only_spaces_and_close():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_list_only_spaces_and_close() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -1444,7 +1510,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_ordered_double_lis
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_formfeeds_before_within_list():
+def test_whitespaces_fenced_code_open_with_formfeeds_before_within_list() -> None:
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -1471,7 +1537,9 @@ def test_whitespaces_fenced_code_open_with_formfeeds_before_within_list():
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_formfeeds_before_within_list_and_close():
+def test_whitespaces_fenced_code_open_with_formfeeds_before_within_list_and_close() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -1499,7 +1567,9 @@ def test_whitespaces_fenced_code_open_with_formfeeds_before_within_list_and_clos
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quotes_with_zero_and_zero_spaces_at_start():
+def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quotes_with_zero_and_zero_spaces_at_start() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -1538,7 +1608,9 @@ abc"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quotes_with_zero_and_zero_spaces_at_start_and_close():
+def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quotes_with_zero_and_zero_spaces_at_start_and_close() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -1578,7 +1650,9 @@ abc
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quotes_with_zero_and_one_space_at_start():
+def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quotes_with_zero_and_one_space_at_start() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -1617,7 +1691,9 @@ def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quo
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quotes_with_zero_and_one_space_at_start_and_close():
+def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quotes_with_zero_and_one_space_at_start_and_close() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -1657,7 +1733,9 @@ def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quo
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quotes_with_zero_and_two_spaces_at_start():
+def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quotes_with_zero_and_two_spaces_at_start() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -1696,7 +1774,9 @@ def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quo
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quotes_with_zero_and_two_spaces_at_start_and_close():
+def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quotes_with_zero_and_two_spaces_at_start_and_close() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -1736,7 +1816,9 @@ def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quo
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quotes_with_zero_and_three_spaces_at_start():
+def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quotes_with_zero_and_three_spaces_at_start() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -1775,7 +1857,9 @@ def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quo
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quotes_with_zero_and_three_spaces_at_start_with_close():
+def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quotes_with_zero_and_three_spaces_at_start_with_close() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -1815,7 +1899,9 @@ def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quo
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quotes_with_zero_and_four_spaces_at_start():
+def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quotes_with_zero_and_four_spaces_at_start() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -1824,7 +1910,7 @@ def test_whitespaces_fenced_code_open_with_spaces_before_within_double_block_quo
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_x1():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_x1() -> None:
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
     """
@@ -1853,7 +1939,9 @@ abc</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_x1_and_close():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_x1_and_close() -> (
+    None
+):
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
     """
@@ -1883,7 +1971,7 @@ def
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_x2():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_x2() -> None:
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -1912,7 +2000,9 @@ abc</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_x2_and_close():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_x2_and_close() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -1942,7 +2032,9 @@ def
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_repeat():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_repeat() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -1974,7 +2066,9 @@ def</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_repeat_and_close():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_repeat_and_close() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -2007,7 +2101,9 @@ def</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_bare_repeat():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_bare_repeat() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -2032,7 +2128,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_bare_
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_bare_repeat_and_close():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_bare_repeat_and_close() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -2058,7 +2156,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_bare_
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_bare_with_space_repeat():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_bare_with_space_repeat() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -2083,7 +2183,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_bare_
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_bare_with_space_repeat_and_close():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_bare_with_space_repeat_and_close() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -2109,7 +2211,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_bare_
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_bare_with_many_tabs():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_bare_with_many_tabs() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -2134,7 +2238,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_bare_
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_bare_with_many_tabs_and_close():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_bare_with_many_tabs_and_close() -> (
+    None
+):
     """
     Test case:  Fenced Code blocks preceeded by spaces and tabs.
     """
@@ -2163,7 +2269,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quotes_bare_
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_1a():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_1a() -> (
+    None
+):
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
     """
@@ -2192,7 +2300,9 @@ def</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_x():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_x() -> (
+    None
+):
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
     """
@@ -2218,7 +2328,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_1():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_1() -> (
+    None
+):
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
     """
@@ -2244,7 +2356,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_2():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_2() -> (
+    None
+):
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
     """
@@ -2271,7 +2385,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_space():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_space() -> (
+    None
+):
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
     """
@@ -2297,7 +2413,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_x():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_x() -> (
+    None
+):
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
     """
@@ -2323,7 +2441,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_less_indent():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_less_indent() -> (
+    None
+):
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
     """
@@ -2349,7 +2469,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_more_indent():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_more_indent() -> (
+    None
+):
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
     """
@@ -2375,7 +2497,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_no_indent():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_no_indent() -> (
+    None
+):
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
     """
@@ -2401,7 +2525,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_max_indent_x():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_max_indent_x() -> (
+    None
+):
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
     """
@@ -2427,7 +2553,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_max_indent_max_1():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_max_indent_max_1() -> (
+    None
+):
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
     """
@@ -2453,7 +2581,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_max_indent_max_2():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_max_indent_max_2() -> (
+    None
+):
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
     """
@@ -2479,7 +2609,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_max_indent_max_3():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_max_indent_max_3() -> (
+    None
+):
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
     """
@@ -2505,7 +2637,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_max_indent_max_4():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_max_indent_max_4() -> (
+    None
+):
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
     """
@@ -2531,7 +2665,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_varying_indent_1():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_varying_indent_1() -> (
+    None
+):
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
     """
@@ -2559,7 +2695,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_varying_indent_2():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_varying_indent_2() -> (
+    None
+):
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
     """
@@ -2587,7 +2725,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_varying_indent_3():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside_2_bare_with_2_spaces_with_varying_indent_3() -> (
+    None
+):
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
     """
@@ -2615,7 +2755,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_block_quote_inside
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_double_block_quote():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_double_block_quote() -> (
+    None
+):
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
     """
@@ -2649,7 +2791,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_double_block_quote
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_double_block_quote_with_single_x():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_double_block_quote_with_single_x() -> (
+    None
+):
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
     """
@@ -2685,7 +2829,9 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_double_block_quote
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_within_double_block_quote_with_single_and_space():
+def test_whitespaces_fenced_code_open_with_tabs_before_within_double_block_quote_with_single_and_space() -> (
+    None
+):
     """
     Test case:  Fenced Code block preceeded by spaces and tabs.
     """
@@ -2724,7 +2870,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_double_block_quote
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_spaces_before_info():
+def test_whitespaces_fenced_code_open_with_spaces_before_info() -> None:
     """
     Test case:  Fenced Code blocks info string followed by spaces.
     """
@@ -2745,7 +2891,7 @@ abc"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_before_info():
+def test_whitespaces_fenced_code_open_with_tabs_before_info() -> None:
     """
     Test case:  Fenced Code block info string followed by spaces and tabs.
     """
@@ -2766,7 +2912,7 @@ abc"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_form_feeds_before_info():
+def test_whitespaces_fenced_code_open_with_form_feeds_before_info() -> None:
     """
     Test case:  Fenced Code blocks info string followed by form feeds.
     """
@@ -2787,7 +2933,7 @@ abc"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_spaces_after_info():
+def test_whitespaces_fenced_code_open_with_spaces_after_info() -> None:
     """
     Test case:  Fenced Code blocks info string followed by spaces.
     """
@@ -2808,7 +2954,7 @@ abc"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_tabs_after_info():
+def test_whitespaces_fenced_code_open_with_tabs_after_info() -> None:
     """
     Test case:  Fenced Code block info string followed by spaces and tabs.
     """
@@ -2829,7 +2975,7 @@ abc"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_form_feeds_after_language():
+def test_whitespaces_fenced_code_open_with_form_feeds_after_language() -> None:
     """
     Test case:  Fenced Code blocks info string followed by form feeds.
     """
@@ -2850,7 +2996,7 @@ abc"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_open_with_form_feeds_after_info():
+def test_whitespaces_fenced_code_open_with_form_feeds_after_info() -> None:
     """
     Test case:  Fenced Code blocks info string followed by form feeds.
     """
@@ -2873,7 +3019,7 @@ abc""".replace(
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_closed_with_tabs_within():
+def test_whitespaces_fenced_code_closed_with_tabs_within() -> None:
     """
     Test case:  Fenced Code blocks...
     """
@@ -2895,7 +3041,7 @@ abc\tdef
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_closed_with_spaces_before():
+def test_whitespaces_fenced_code_closed_with_spaces_before() -> None:
     """
     Test case:  Fenced Code blocks closed preceeded by spaces.
     """
@@ -2917,7 +3063,7 @@ abc
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_closed_with_tabs_before():
+def test_whitespaces_fenced_code_closed_with_tabs_before() -> None:
     """
     Test case:  Fenced Code block closed preceeded by spaces and tabs.
     """
@@ -2940,7 +3086,7 @@ abc
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_closed_with_tabs_before_x():
+def test_whitespaces_fenced_code_closed_with_tabs_before_x() -> None:
     """
     Test case:  Fenced Code block closed preceeded by spaces and tabs.
     """
@@ -2968,7 +3114,7 @@ def test_whitespaces_fenced_code_closed_with_tabs_before_x():
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_closed_with_form_feeds_before():
+def test_whitespaces_fenced_code_closed_with_form_feeds_before() -> None:
     """
     Test case:  Fenced Code blocks closed preceeded by form feeds.
     """
@@ -2991,7 +3137,7 @@ abc
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_closed_with_spaces_after():
+def test_whitespaces_fenced_code_closed_with_spaces_after() -> None:
     """
     Test case:  Fenced Code blocks closed followed by spaces.
     """
@@ -3013,7 +3159,7 @@ abc
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_closed_with_tabs_after():
+def test_whitespaces_fenced_code_closed_with_tabs_after() -> None:
     """
     Test case:  Fenced Code block closed followed by spaces and tabs.
     """
@@ -3036,7 +3182,7 @@ abc
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_closed_with_tabs_after_and_before():
+def test_whitespaces_fenced_code_closed_with_tabs_after_and_before() -> None:
     """
     Test case:  Fenced Code block close followed by tabs and preceeded be spaces.
     """
@@ -3059,7 +3205,7 @@ abc
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_closed_with_tabs_after_and_before_2():
+def test_whitespaces_fenced_code_closed_with_tabs_after_and_before_2() -> None:
     """
     Test case:  Fenced Code block close followed by tabs and preceeded be spaces.
     """
@@ -3088,7 +3234,7 @@ def test_whitespaces_fenced_code_closed_with_tabs_after_and_before_2():
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_closed_with_form_feeds_after():
+def test_whitespaces_fenced_code_closed_with_form_feeds_after() -> None:
     """
     Test case:  Fenced Code blocks closed followed by form feeds.
     """
@@ -3111,7 +3257,7 @@ abc
 
 
 @pytest.mark.gfm
-def test_whitespaces_fenced_code_with_tabs_inside():
+def test_whitespaces_fenced_code_with_tabs_inside() -> None:
     """
     Test case:  Fenced Code block closed followed by spaces and tabs.
     """

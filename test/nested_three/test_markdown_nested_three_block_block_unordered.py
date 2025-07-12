@@ -10,7 +10,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_unordered():
+def test_nested_three_block_block_unordered() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list works
     properly.
@@ -44,7 +44,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_nl_unordered():
+def test_nested_three_block_nl_block_nl_unordered() -> None:
     """
     Verify that a nesting of block quote, new line, block quote, new line, unordered list works
     properly.
@@ -82,7 +82,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_nl_unordered_no_bq1():
+def test_nested_three_block_nl_block_nl_unordered_no_bq1() -> None:
     """
     Verify that a nesting of block quote, new line, block quote, new line, unordered list works
     properly.
@@ -127,7 +127,7 @@ def test_nested_three_block_nl_block_nl_unordered_no_bq1():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_nl_unordered_no_bq2():
+def test_nested_three_block_nl_block_nl_unordered_no_bq2() -> None:
     """
     Verify that a nesting of block quote, new line, block quote, new line, unordered list works
     properly.
@@ -172,7 +172,7 @@ def test_nested_three_block_nl_block_nl_unordered_no_bq2():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_nl_unordered_no_bq3():
+def test_nested_three_block_nl_block_nl_unordered_no_bq3() -> None:
     """
     Verify that a nesting of block quote, new line, block quote, new line, unordered list works
     properly.
@@ -218,7 +218,7 @@ def test_nested_three_block_nl_block_nl_unordered_no_bq3():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_text_nl_unordered():
+def test_nested_three_block_text_nl_block_text_nl_unordered() -> None:
     """
     Verify that a nesting of block quote, new line, block quote, new line, unordered list works
     properly.
@@ -262,7 +262,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_text_nl_unordered_no_bq1():
+def test_nested_three_block_text_nl_block_text_nl_unordered_no_bq1() -> None:
     """
     Verify that a nesting of block quote, new line, block quote, new line, unordered list works
     properly.
@@ -313,7 +313,7 @@ def test_nested_three_block_text_nl_block_text_nl_unordered_no_bq1():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_text_nl_unordered_no_bq2():
+def test_nested_three_block_text_nl_block_text_nl_unordered_no_bq2() -> None:
     """
     Verify that a nesting of block quote, new line, block quote, new line, unordered list works
     properly.
@@ -364,7 +364,7 @@ def test_nested_three_block_text_nl_block_text_nl_unordered_no_bq2():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_text_nl_unordered_no_bq3():
+def test_nested_three_block_text_nl_block_text_nl_unordered_no_bq3() -> None:
     """
     Verify that a nesting of block quote, new line, block quote, new line, unordered list works
     properly.
@@ -401,7 +401,7 @@ item</p>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_block_unordered():
+def test_nested_three_block_skip_block_unordered() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list works
     properly.
@@ -435,7 +435,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_nl_unordered():
+def test_nested_three_block_skip_nl_block_nl_unordered() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list works
     properly.
@@ -473,7 +473,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_nl_unordered_no_bq1():
+def test_nested_three_block_skip_nl_block_nl_unordered_no_bq1() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list works
     properly.
@@ -511,7 +511,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_nl_unordered_no_bq2():
+def test_nested_three_block_skip_nl_block_nl_unordered_no_bq2() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list works
     properly.
@@ -549,7 +549,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_nl_unordered_no_bq3():
+def test_nested_three_block_skip_nl_block_nl_unordered_no_bq3() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list works
     properly.
@@ -591,7 +591,7 @@ def test_nested_three_block_skip_nl_block_nl_unordered_no_bq3():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_text_nl_unordered():
+def test_nested_three_block_skip_text_nl_block_text_nl_unordered() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list works
     properly.
@@ -635,7 +635,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_text_nl_unordered_no_bq1():
+def test_nested_three_block_skip_text_nl_block_text_nl_unordered_no_bq1() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list works
     properly.
@@ -679,7 +679,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_text_nl_unordered_no_bq2():
+def test_nested_three_block_skip_text_nl_block_text_nl_unordered_no_bq2() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list works
     properly.
@@ -723,7 +723,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_text_nl_unordered_no_bq3():
+def test_nested_three_block_skip_text_nl_block_text_nl_unordered_no_bq3() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list works
     properly.
@@ -760,7 +760,7 @@ item</p>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_skip_unordered():
+def test_nested_three_block_block_skip_unordered() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list works
     properly.
@@ -794,7 +794,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_skip_nl_unordered():
+def test_nested_three_block_nl_block_skip_nl_unordered() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list works
     properly.
@@ -832,7 +832,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_skip_nl_unordered_no_bq1():
+def test_nested_three_block_nl_block_skip_nl_unordered_no_bq1() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list works
     properly.
@@ -870,7 +870,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_skip_nl_unordered_no_bq2():
+def test_nested_three_block_nl_block_skip_nl_unordered_no_bq2() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list works
     properly.
@@ -908,7 +908,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_nl_block_skip_nl_unordered_no_bq3():
+def test_nested_three_block_nl_block_skip_nl_unordered_no_bq3() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list works
     properly.
@@ -951,7 +951,7 @@ def test_nested_three_block_nl_block_skip_nl_unordered_no_bq3():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_skip_text_nl_unordered():
+def test_nested_three_block_text_nl_block_skip_text_nl_unordered() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list works
     properly.
@@ -995,7 +995,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_skip_text_nl_unordered_no_bq1():
+def test_nested_three_block_text_nl_block_skip_text_nl_unordered_no_bq1() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list works
     properly.
@@ -1039,7 +1039,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_skip_text_nl_unordered_no_bq2():
+def test_nested_three_block_text_nl_block_skip_text_nl_unordered_no_bq2() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list works
     properly.
@@ -1083,7 +1083,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_block_skip_text_nl_unordered_no_bq3():
+def test_nested_three_block_text_nl_block_skip_text_nl_unordered_no_bq3() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list works
     properly.
@@ -1120,7 +1120,7 @@ item</p>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_block_skip_unordered():
+def test_nested_three_block_skip_block_skip_unordered() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list works
     properly.
@@ -1154,7 +1154,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_skip_nl_unordered():
+def test_nested_three_block_skip_nl_block_skip_nl_unordered() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list works
     properly.
@@ -1192,7 +1192,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_skip_nl_unordered_no_bq1():
+def test_nested_three_block_skip_nl_block_skip_nl_unordered_no_bq1() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list works
     properly.
@@ -1230,7 +1230,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_skip_nl_unordered_no_bq2():
+def test_nested_three_block_skip_nl_block_skip_nl_unordered_no_bq2() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list works
     properly.
@@ -1268,7 +1268,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_nl_block_skip_nl_unordered_no_bq3():
+def test_nested_three_block_skip_nl_block_skip_nl_unordered_no_bq3() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list works
     properly.
@@ -1303,7 +1303,7 @@ def test_nested_three_block_skip_nl_block_skip_nl_unordered_no_bq3():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_skip_text_nl_unordered():
+def test_nested_three_block_skip_text_nl_block_skip_text_nl_unordered() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list works
     properly.
@@ -1347,7 +1347,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_skip_text_nl_unordered_no_bq1():
+def test_nested_three_block_skip_text_nl_block_skip_text_nl_unordered_no_bq1() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list works
     properly.
@@ -1391,7 +1391,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_skip_text_nl_unordered_no_bq2():
+def test_nested_three_block_skip_text_nl_block_skip_text_nl_unordered_no_bq2() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list works
     properly.
@@ -1435,7 +1435,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_skip_text_nl_block_skip_text_nl_unordered_no_bq3():
+def test_nested_three_block_skip_text_nl_block_skip_text_nl_unordered_no_bq3() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list works
     properly.
@@ -1472,7 +1472,7 @@ item</p>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_unordered_max():
+def test_nested_three_block_max_block_max_unordered_max() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     the maximum number of spaces allowed works properly.
@@ -1506,7 +1506,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_unordered_max_with_li():
+def test_nested_three_block_max_block_max_unordered_max_with_li() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     the maximum number of spaces allowed works properly, with a new list item.
@@ -1544,7 +1544,7 @@ def test_nested_three_block_max_block_max_unordered_max_with_li():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_unordered_max_empty():
+def test_nested_three_block_max_block_max_unordered_max_empty() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list,
     and no text on the first line, with the maximum number of spaces
@@ -1579,7 +1579,7 @@ def test_nested_three_block_max_block_max_unordered_max_empty():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_unordered_max_empty_with_li():
+def test_nested_three_block_max_block_max_unordered_max_empty_with_li() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list,
     and no text on the first line, with the maximum number of spaces
@@ -1616,7 +1616,7 @@ def test_nested_three_block_max_block_max_unordered_max_empty_with_li():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_unordered_max_no_bq1():
+def test_nested_three_block_max_block_max_unordered_max_no_bq1() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     the maximum number of spaces allowed works properly,
@@ -1651,7 +1651,7 @@ def test_nested_three_block_max_block_max_unordered_max_no_bq1():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_unordered_max_no_bq1_with_li():
+def test_nested_three_block_max_block_max_unordered_max_no_bq1_with_li() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     the maximum number of spaces allowed works properly,
@@ -1686,7 +1686,7 @@ def test_nested_three_block_max_block_max_unordered_max_no_bq1_with_li():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_unordered_max_empty_no_bq1():
+def test_nested_three_block_max_block_max_unordered_max_empty_no_bq1() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list,
     and no text on the first line, with the maximum number of spaces allowed works properly,
@@ -1723,7 +1723,7 @@ def test_nested_three_block_max_block_max_unordered_max_empty_no_bq1():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_unordered_max_empty_no_bq1_with_li():
+def test_nested_three_block_max_block_max_unordered_max_empty_no_bq1_with_li() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list,
     and no text on the first line, with the maximum number of spaces allowed works properly,
@@ -1760,7 +1760,7 @@ def test_nested_three_block_max_block_max_unordered_max_empty_no_bq1_with_li():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_unordered_max_no_bq2():
+def test_nested_three_block_max_block_max_unordered_max_no_bq2() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     the maximum number of spaces allowed works properly,
@@ -1795,7 +1795,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_unordered_max_no_bq2_with_li():
+def test_nested_three_block_max_block_max_unordered_max_no_bq2_with_li() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     the maximum number of spaces allowed works properly,
@@ -1830,7 +1830,7 @@ def test_nested_three_block_max_block_max_unordered_max_no_bq2_with_li():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_unordered_max_empty_no_bq2():
+def test_nested_three_block_max_block_max_unordered_max_empty_no_bq2() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list, and
     no text on the first line, with
@@ -1868,7 +1868,7 @@ def test_nested_three_block_max_block_max_unordered_max_empty_no_bq2():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_unordered_max_empty_no_bq2_with_li():
+def test_nested_three_block_max_block_max_unordered_max_empty_no_bq2_with_li() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list, and
     no text on the first line, with
@@ -1906,7 +1906,7 @@ def test_nested_three_block_max_block_max_unordered_max_empty_no_bq2_with_li():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_unordered_max_no_bq3():
+def test_nested_three_block_max_block_max_unordered_max_no_bq3() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     the maximum number of spaces allowed works properly,
@@ -1941,7 +1941,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_unordered_max_no_bq3_with_li():
+def test_nested_three_block_max_block_max_unordered_max_no_bq3_with_li() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     the maximum number of spaces allowed works properly,
@@ -1976,7 +1976,7 @@ def test_nested_three_block_max_block_max_unordered_max_no_bq3_with_li():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_unordered_max_empty_no_bq3():
+def test_nested_three_block_max_block_max_unordered_max_empty_no_bq3() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -2013,7 +2013,7 @@ def test_nested_three_block_max_block_max_unordered_max_empty_no_bq3():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_unordered_max_empty_no_bq3_with_li():
+def test_nested_three_block_max_block_max_unordered_max_empty_no_bq3_with_li() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -2050,7 +2050,7 @@ def test_nested_three_block_max_block_max_unordered_max_empty_no_bq3_with_li():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_plus_one_block_max_unordered_max():
+def test_nested_three_block_max_plus_one_block_max_unordered_max() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     the maximum number of spaces (plus one for the first) allowed works properly.
@@ -2073,7 +2073,7 @@ def test_nested_three_block_max_plus_one_block_max_unordered_max():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_plus_one_block_max_unordered_max_no_bq1():
+def test_nested_three_block_max_plus_one_block_max_unordered_max_no_bq1() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     the maximum number of spaces (plus one for the first) allowed works properly,
@@ -2097,7 +2097,7 @@ def test_nested_three_block_max_plus_one_block_max_unordered_max_no_bq1():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_plus_one_block_max_unordered_max_no_bq2():
+def test_nested_three_block_max_plus_one_block_max_unordered_max_no_bq2() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     the maximum number of spaces (plus one for the first) allowed works properly,
@@ -2121,7 +2121,7 @@ def test_nested_three_block_max_plus_one_block_max_unordered_max_no_bq2():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_plus_one_block_max_unordered_max_no_bq3():
+def test_nested_three_block_max_plus_one_block_max_unordered_max_no_bq3() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     the maximum number of spaces (plus one for the first) allowed works properly,
@@ -2145,7 +2145,7 @@ def test_nested_three_block_max_plus_one_block_max_unordered_max_no_bq3():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_plus_one_unordered_max():
+def test_nested_three_block_max_block_max_plus_one_unordered_max() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     the maximum number of spaces (plus one for the second) allowed works properly.
@@ -2172,7 +2172,7 @@ def test_nested_three_block_max_block_max_plus_one_unordered_max():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_plus_one_unordered_max_no_bq1():
+def test_nested_three_block_max_block_max_plus_one_unordered_max_no_bq1() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     the maximum number of spaces (plus one for the second) allowed works properly,
@@ -2204,7 +2204,7 @@ def test_nested_three_block_max_block_max_plus_one_unordered_max_no_bq1():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_plus_one_unordered_max_no_bq2():
+def test_nested_three_block_max_block_max_plus_one_unordered_max_no_bq2() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     the maximum number of spaces (plus one for the second) allowed works properly,
@@ -2232,7 +2232,7 @@ def test_nested_three_block_max_block_max_plus_one_unordered_max_no_bq2():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_plus_one_unordered_max_no_bq3():
+def test_nested_three_block_max_block_max_plus_one_unordered_max_no_bq3() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     the maximum number of spaces (plus one for the second) allowed works properly,
@@ -2264,7 +2264,7 @@ def test_nested_three_block_max_block_max_plus_one_unordered_max_no_bq3():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_unordered_max_plus_one():
+def test_nested_three_block_max_block_max_unordered_max_plus_one() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     the maximum number of spaces (plus one for the third) allowed works properly.
@@ -2295,7 +2295,7 @@ def test_nested_three_block_max_block_max_unordered_max_plus_one():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_unordered_max_plus_one_with_li():
+def test_nested_three_block_max_block_max_unordered_max_plus_one_with_li() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     the maximum number of spaces (plus one for the third) allowed works properly,
@@ -2327,7 +2327,7 @@ def test_nested_three_block_max_block_max_unordered_max_plus_one_with_li():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_unordered_max_plus_one_no_bq1():
+def test_nested_three_block_max_block_max_unordered_max_plus_one_no_bq1() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     the maximum number of spaces (plus one for the third) allowed works properly,
@@ -2363,7 +2363,7 @@ def test_nested_three_block_max_block_max_unordered_max_plus_one_no_bq1():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_unordered_max_plus_one_no_bq2():
+def test_nested_three_block_max_block_max_unordered_max_plus_one_no_bq2() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     the maximum number of spaces (plus one for the third) allowed works properly,
@@ -2399,7 +2399,7 @@ def test_nested_three_block_max_block_max_unordered_max_plus_one_no_bq2():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_unordered_max_plus_one_no_bq3():
+def test_nested_three_block_max_block_max_unordered_max_plus_one_no_bq3() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     the maximum number of spaces (plus one for the third) allowed works properly,
@@ -2435,7 +2435,9 @@ def test_nested_three_block_max_block_max_unordered_max_plus_one_no_bq3():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_unordered_drop_list_after_new_list_and_text_with_thematic_and_fenced():
+def test_nested_three_block_block_unordered_drop_list_after_new_list_and_text_with_thematic_and_fenced() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     a new list item, then dropping the list and continuing with a thematic block
@@ -2495,7 +2497,9 @@ block 3</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_unordered_drop_list_after_new_list_and_text_with_thematic_and_fenced_with_blanks():
+def test_nested_three_block_block_unordered_drop_list_after_new_list_and_text_with_thematic_and_fenced_with_blanks() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     a new list item, then dropping the list and continuing with a thematic block
@@ -2558,7 +2562,9 @@ block 3</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_unordered_nl_extra_block_drop_block_with_thematics_around_fenced():
+def test_nested_three_block_block_unordered_nl_extra_block_drop_block_with_thematics_around_fenced() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     a new list item, then dropping the list and continuing with a thematic block
@@ -2619,7 +2625,9 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_unordered_nl_extra_block_drop_block_with_thematics_around_blanks_around_fenced():
+def test_nested_three_block_block_unordered_nl_extra_block_drop_block_with_thematics_around_blanks_around_fenced() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     a new list item, then dropping the list and continuing with a thematic block
@@ -2683,7 +2691,9 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_unordered_nl_extra_block_drop_block_with_fenced():
+def test_nested_three_block_block_unordered_nl_extra_block_drop_block_with_fenced() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     a new list item, then dropping the list and continuing with a thematic block
@@ -2742,7 +2752,9 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_unordered_nl_extra_block_drop_block_with_blanks_around_fenced():
+def test_nested_three_block_block_unordered_nl_extra_block_drop_block_with_blanks_around_fenced() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     a new list item, then dropping the list and continuing with a thematic block
@@ -2805,7 +2817,9 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_unordered_nl_extra_list_li_drop_list_with_fenced():
+def test_nested_three_block_block_unordered_nl_extra_list_li_drop_list_with_fenced() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     a new list item, then dropping the list and continuing with a thematic block
@@ -2870,7 +2884,9 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_unordered_nl_extra_list_li_drop_list_with_blanks_around_fenced():
+def test_nested_three_block_block_unordered_nl_extra_list_li_drop_list_with_blanks_around_fenced() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     a new list item, then dropping the list and continuing with a thematic block
@@ -2939,7 +2955,9 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_unordered_extra_block_drop_block_blanks_around_fenced():
+def test_nested_three_block_block_unordered_extra_block_drop_block_blanks_around_fenced() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     a new list item, then dropping the list and continuing with a thematic block
@@ -3003,7 +3021,9 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_unordered_extra_block_drop_block_blanks_with_trailing_space_around_fenced():
+def test_nested_three_block_block_unordered_extra_block_drop_block_blanks_with_trailing_space_around_fenced() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     a new list item, then dropping the list and continuing with a thematic block
@@ -3069,7 +3089,9 @@ block 2</p>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_unordered_extra_list_li_drop_list_thematics_around_fenced():
+def test_nested_three_block_block_unordered_extra_list_li_drop_list_thematics_around_fenced() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     a new list item, then dropping the list and continuing with a thematic block
@@ -3137,7 +3159,9 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_unordered_extra_list_li_drop_list_thematics_around_blanks_and_fenced():
+def test_nested_three_block_block_unordered_extra_list_li_drop_list_thematics_around_blanks_and_fenced() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     a new list item, then dropping the list and continuing with a thematic block
@@ -3209,7 +3233,9 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_unordered_extra_list_li_double_drop_with_single_indent_fenced_then_thematics():
+def test_nested_three_block_block_unordered_extra_list_li_double_drop_with_single_indent_fenced_then_thematics() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     a new list item, then dropping the list and continuing with a thematic block
@@ -3277,7 +3303,9 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_unordered_extra_list_li_double_drop_fenced_then_thematics_around_fenced():
+def test_nested_three_block_block_unordered_extra_list_li_double_drop_fenced_then_thematics_around_fenced() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     a new list item, then dropping the list and continuing with a thematic block
@@ -3345,7 +3373,9 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_unordered_extra_list_li_double_drop_fenced_then_headings_around_fenced():
+def test_nested_three_block_block_unordered_extra_list_li_double_drop_fenced_then_headings_around_fenced() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     a new list item, then dropping the list and continuing with a thematic block
@@ -3417,7 +3447,9 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_unordered_extra_list_li_double_drop_fenced_then_htmls_around_fenced():
+def test_nested_three_block_block_unordered_extra_list_li_double_drop_fenced_then_htmls_around_fenced() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     a new list item, then dropping the list and continuing with a thematic block
@@ -3488,7 +3520,9 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_unordered_extra_list_li_thematics_first_with_single_indent_around_fenced():
+def test_nested_three_block_block_unordered_extra_list_li_thematics_first_with_single_indent_around_fenced() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     a new list item, then dropping the list and continuing with a thematic block
@@ -3555,7 +3589,9 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_unordered_extra_list_li_thematics_first_with_double_indent_around_fenced():
+def test_nested_three_block_block_unordered_extra_list_li_thematics_first_with_double_indent_around_fenced() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     a new list item, then dropping the list and continuing with a thematic block
@@ -3623,7 +3659,9 @@ list 2</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_unordered_extra_list_thematics_first_with_double_indent_around_fenced():
+def test_nested_three_block_block_unordered_extra_list_thematics_first_with_double_indent_around_fenced() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     a new list item, then dropping the list and continuing with a thematic block
@@ -3685,7 +3723,9 @@ list 2
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_unordered_extra_list_single_line_thematics_first_with_double_indent_around_fenced():
+def test_nested_three_block_block_unordered_extra_list_single_line_thematics_first_with_double_indent_around_fenced() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     a new list item, then dropping the list and continuing with a thematic block
@@ -3745,7 +3785,7 @@ def test_nested_three_block_block_unordered_extra_list_single_line_thematics_fir
 
 
 @pytest.mark.gfm
-def test_nested_three_block_block_unordered_thematics_around_fenced():
+def test_nested_three_block_block_unordered_thematics_around_fenced() -> None:
     """
     Verify that a nesting of block quote, block quote, unordered list, with
     a new list item, then dropping the list and continuing with a thematic block

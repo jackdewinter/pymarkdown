@@ -460,7 +460,7 @@ def test_md021_fix(test: pluginRuleTest) -> None:
     execute_fix_test(test)
 
 
-def test_md021_query_config():
+def test_md021_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md021",
         """

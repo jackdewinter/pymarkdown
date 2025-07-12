@@ -72,9 +72,9 @@ class RuleMd035(RulePlugin):
         """
         Event to allow the plugin to load configuration information.
         """
-        self.__rule_style = self.plugin_configuration.get_string_property(
+        self.__rule_style = self.plugin_configuration.get_string_property_with_default(
             "style",
-            default_value=RuleMd035.__consistent_style,
+            RuleMd035.__consistent_style,
             valid_value_fn=self.__validate_configuration_style,
         )
         if self.__rule_style != RuleMd035.__consistent_style:

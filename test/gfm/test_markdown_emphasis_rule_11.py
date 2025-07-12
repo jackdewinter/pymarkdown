@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_emphasis_445():
+def test_emphasis_445() -> None:
     """
     Test case 445:  (part 1) Rule 11
     """
@@ -23,7 +23,7 @@ def test_emphasis_445():
 
 
 @pytest.mark.gfm
-def test_emphasis_446():
+def test_emphasis_446() -> None:
     """
     Test case 446:  (part 2) Rule 11
     """
@@ -45,7 +45,7 @@ def test_emphasis_446():
 
 
 @pytest.mark.gfm
-def test_emphasis_447():
+def test_emphasis_447() -> None:
     """
     Test case 447:  (part 3) Rule 11
     """
@@ -67,7 +67,7 @@ def test_emphasis_447():
 
 
 @pytest.mark.gfm
-def test_emphasis_448():
+def test_emphasis_448() -> None:
     """
     Test case 448:  (part 4) Rule 11
     """
@@ -82,7 +82,7 @@ def test_emphasis_448():
 
 
 @pytest.mark.gfm
-def test_emphasis_449():
+def test_emphasis_449() -> None:
     """
     Test case 449:  (part 5) Rule 11
     """
@@ -104,7 +104,7 @@ def test_emphasis_449():
 
 
 @pytest.mark.gfm
-def test_emphasis_450():
+def test_emphasis_450() -> None:
     """
     Test case 450:  (part 6) Rule 11
     """
@@ -126,7 +126,7 @@ def test_emphasis_450():
 
 
 @pytest.mark.gfm
-def test_emphasis_451():
+def test_emphasis_451() -> None:
     """
     Test case 451:  (part 1) Note that when delimiters do not match evenly, Rule 11 determines that the excess literal * characters will appear outside of the emphasis, rather than inside it:
     """
@@ -148,7 +148,7 @@ def test_emphasis_451():
 
 
 @pytest.mark.gfm
-def test_emphasis_452():
+def test_emphasis_452() -> None:
     """
     Test case 452:  (part 2) Note that when delimiters do not match evenly, Rule 11 determines that the excess literal * characters will appear outside of the emphasis, rather than inside it:
     """
@@ -170,7 +170,7 @@ def test_emphasis_452():
 
 
 @pytest.mark.gfm
-def test_emphasis_453():
+def test_emphasis_453() -> None:
     """
     Test case 453:  (part 3) Note that when delimiters do not match evenly, Rule 11 determines that the excess literal * characters will appear outside of the emphasis, rather than inside it:
     """
@@ -192,7 +192,7 @@ def test_emphasis_453():
 
 
 @pytest.mark.gfm
-def test_emphasis_454():
+def test_emphasis_454() -> None:
     """
     Test case 454:  (part 4) Note that when delimiters do not match evenly, Rule 11 determines that the excess literal * characters will appear outside of the emphasis, rather than inside it:
     """
@@ -214,7 +214,7 @@ def test_emphasis_454():
 
 
 @pytest.mark.gfm
-def test_emphasis_455():
+def test_emphasis_455() -> None:
     """
     Test case 455:  (part 5) Note that when delimiters do not match evenly, Rule 11 determines that the excess literal * characters will appear outside of the emphasis, rather than inside it:
     """
@@ -236,7 +236,7 @@ def test_emphasis_455():
 
 
 @pytest.mark.gfm
-def test_emphasis_456():
+def test_emphasis_456() -> None:
     """
     Test case 456:  (part 6) Note that when delimiters do not match evenly, Rule 11 determines that the excess literal * characters will appear outside of the emphasis, rather than inside it:
     """

@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_spaces_before_label():
+def test_whitespaces_inline_link_with_spaces_before_label() -> None:
     """
     Test case:  inline link label with spaces before
     """
@@ -29,7 +29,7 @@ def test_whitespaces_inline_link_with_spaces_before_label():
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_tabs_outside():
+def test_whitespaces_inline_link_with_tabs_outside() -> None:
     """
     Test case:  inline link label with tabs before
     """
@@ -52,7 +52,7 @@ def test_whitespaces_inline_link_with_tabs_outside():
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_tabs_large_outside():
+def test_whitespaces_inline_link_with_tabs_large_outside() -> None:
     """
     Test case:  inline link label with tabs before
     """
@@ -79,7 +79,7 @@ large\text</p>"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_tabs_large_outside_no_spaces():
+def test_whitespaces_inline_link_with_tabs_large_outside_no_spaces() -> None:
     """
     Test case:  inline link label with tabs before
     """
@@ -106,7 +106,9 @@ large\text</p>"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_tabs_large_outside_with_duplicate_outside():
+def test_whitespaces_inline_link_with_tabs_large_outside_with_duplicate_outside() -> (
+    None
+):
     """
     Test case:  inline link label with tabs before
     """
@@ -133,7 +135,9 @@ large\text large\text</p>"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_tabs_large_outside_with_duplicate_outside_first_two():
+def test_whitespaces_inline_link_with_tabs_large_outside_with_duplicate_outside_first_two() -> (
+    None
+):
     """
     Test case:  inline link label with tabs before
     """
@@ -158,7 +162,9 @@ this\tis this\tis <a href="/url">fred</a> a\tlink a\tlink</p>"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_tabs_large_outside_with_duplicate_outside_and_links():
+def test_whitespaces_inline_link_with_tabs_large_outside_with_duplicate_outside_and_links() -> (
+    None
+):
     """
     Test case:  inline link label with tabs before
     """
@@ -189,7 +195,9 @@ large\text large\text</p>"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_tabs_large_outside_with_duplicate_outside_and_links_no_space():
+def test_whitespaces_inline_link_with_tabs_large_outside_with_duplicate_outside_and_links_no_space() -> (
+    None
+):
     """
     Test case:  inline link label with tabs before
     """
@@ -220,7 +228,9 @@ large\text large\text</p>"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_tabs_large_outside_with_duplicate_outside_and_links_no_word_just_space():
+def test_whitespaces_inline_link_with_tabs_large_outside_with_duplicate_outside_and_links_no_word_just_space() -> (
+    None
+):
     """
     Test case:  inline link label with tabs before
     """
@@ -251,7 +261,9 @@ large\text large\text</p>"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_tabs_large_outside_with_duplicate_outside_and_links_no_word_just_tab():
+def test_whitespaces_inline_link_with_tabs_large_outside_with_duplicate_outside_and_links_no_word_just_tab() -> (
+    None
+):
     """
     Test case:  inline link label with tabs before
     """
@@ -282,7 +294,9 @@ large\text large\text</p>"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_tabs_large_outside_with_duplicate_outside_and_links_more_links():
+def test_whitespaces_inline_link_with_tabs_large_outside_with_duplicate_outside_and_links_more_links() -> (
+    None
+):
     """
     Test case:  inline link label with tabs before
     """
@@ -321,7 +335,9 @@ large\text<a href="/url">betty</a>large\text</p>"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_tabs_large_outside_with_more_links_and_middle_surrounding_spaces():
+def test_whitespaces_inline_link_with_tabs_large_outside_with_more_links_and_middle_surrounding_spaces() -> (
+    None
+):
     """
     Test case:  inline link label with tabs before
     """
@@ -360,7 +376,9 @@ large\text<a href="/url">betty</a>large\text</p>"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_tabs_large_outside_with_more_links_and_middle_surrounding_tabs():
+def test_whitespaces_inline_link_with_tabs_large_outside_with_more_links_and_middle_surrounding_tabs() -> (
+    None
+):
     """
     Test case:  inline link label with tabs before
     """
@@ -399,7 +417,9 @@ large\text\t<a href="/url">betty</a>\tlarge\text</p>"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_tabs_large_outside_with_more_links_and_ending_with_spaces():
+def test_whitespaces_inline_link_with_tabs_large_outside_with_more_links_and_ending_with_spaces() -> (
+    None
+):
     """
     Test case:  inline link label with tabs before
     """
@@ -437,7 +457,9 @@ large\text\t<a href="/url">betty</a></p>"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_tabs_large_outside_with_more_links_and_ending_with_tabs():
+def test_whitespaces_inline_link_with_tabs_large_outside_with_more_links_and_ending_with_tabs() -> (
+    None
+):
     """
     Test case:  inline link label with tabs before
     """
@@ -475,7 +497,7 @@ large\text\t<a href="/url">betty</a></p>"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_tabs_before_label():
+def test_whitespaces_inline_link_with_tabs_before_label() -> None:
     """
     Test case:  inline link label with tabs before
     """
@@ -496,7 +518,7 @@ def test_whitespaces_inline_link_with_tabs_before_label():
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_form_feeds_before_label():
+def test_whitespaces_inline_link_with_form_feeds_before_label() -> None:
     """
     Test case:  inline link label with form feeds before
     """
@@ -517,7 +539,7 @@ def test_whitespaces_inline_link_with_form_feeds_before_label():
 
 
 @pytest.mark.gfm
-def test_whitespaces_shortcut_link_with_spaces_before_label():
+def test_whitespaces_shortcut_link_with_spaces_before_label() -> None:
     """
     Test case:  shortcut link label with spaces before
     """
@@ -544,7 +566,7 @@ def test_whitespaces_shortcut_link_with_spaces_before_label():
 
 
 @pytest.mark.gfm
-def test_whitespaces_shortcut_link_with_tabs_before_label():
+def test_whitespaces_shortcut_link_with_tabs_before_label() -> None:
     """
     Test case:  shortcut link label with tabs before
     """
@@ -569,7 +591,7 @@ def test_whitespaces_shortcut_link_with_tabs_before_label():
 
 
 @pytest.mark.gfm
-def test_whitespaces_shortcut_link_with_form_feeds_before_label():
+def test_whitespaces_shortcut_link_with_form_feeds_before_label() -> None:
     """
     Test case:  shortcut link label with form feeds before
     """
@@ -594,7 +616,7 @@ def test_whitespaces_shortcut_link_with_form_feeds_before_label():
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_spaces_in_label():
+def test_whitespaces_inline_link_with_spaces_in_label() -> None:
     """
     Test case:  inline link label with spaces in
     """
@@ -615,7 +637,7 @@ def test_whitespaces_inline_link_with_spaces_in_label():
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_tabs_in_label():
+def test_whitespaces_inline_link_with_tabs_in_label() -> None:
     """
     Test case:  inline link label with tabs in
     """
@@ -636,7 +658,7 @@ def test_whitespaces_inline_link_with_tabs_in_label():
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_form_feeds_in_label():
+def test_whitespaces_inline_link_with_form_feeds_in_label() -> None:
     """
     Test case:  inline link label with form feeds in
     """
@@ -657,7 +679,7 @@ def test_whitespaces_inline_link_with_form_feeds_in_label():
 
 
 @pytest.mark.gfm
-def test_whitespaces_shortcut_link_with_spaces_in_label():
+def test_whitespaces_shortcut_link_with_spaces_in_label() -> None:
     """
     Test case:  shortcut link label with spaces in
     """
@@ -682,7 +704,7 @@ def test_whitespaces_shortcut_link_with_spaces_in_label():
 
 
 @pytest.mark.gfm
-def test_whitespaces_shortcut_link_with_tabs_in_label():
+def test_whitespaces_shortcut_link_with_tabs_in_label() -> None:
     """
     Test case:  shortcut link label with tabs in
     """
@@ -707,7 +729,7 @@ def test_whitespaces_shortcut_link_with_tabs_in_label():
 
 
 @pytest.mark.gfm
-def test_whitespaces_shortcut_link_with_form_feeds_in_label():
+def test_whitespaces_shortcut_link_with_form_feeds_in_label() -> None:
     """
     Test case:  shortcut link label with form feeds in
     """
@@ -732,7 +754,7 @@ def test_whitespaces_shortcut_link_with_form_feeds_in_label():
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_spaces_after_label():
+def test_whitespaces_inline_link_with_spaces_after_label() -> None:
     """
     Test case:  inline link label with after before
     """
@@ -753,7 +775,7 @@ def test_whitespaces_inline_link_with_spaces_after_label():
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_tabs_after_label():
+def test_whitespaces_inline_link_with_tabs_after_label() -> None:
     """
     Test case:  inline link label with tabs after
     """
@@ -774,7 +796,7 @@ def test_whitespaces_inline_link_with_tabs_after_label():
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_form_feeds_after_label():
+def test_whitespaces_inline_link_with_form_feeds_after_label() -> None:
     """
     Test case:  inline link label with form feeds after
     """
@@ -795,7 +817,7 @@ def test_whitespaces_inline_link_with_form_feeds_after_label():
 
 
 @pytest.mark.gfm
-def test_whitespaces_shortcut_link_with_spaces_after_label():
+def test_whitespaces_shortcut_link_with_spaces_after_label() -> None:
     """
     Test case:  shortcut link label with spaces after
     """
@@ -820,7 +842,7 @@ def test_whitespaces_shortcut_link_with_spaces_after_label():
 
 
 @pytest.mark.gfm
-def test_whitespaces_shortcut_link_with_tabs_after_label():
+def test_whitespaces_shortcut_link_with_tabs_after_label() -> None:
     """
     Test case:  shortcut link label with tabs after
     """
@@ -845,7 +867,7 @@ def test_whitespaces_shortcut_link_with_tabs_after_label():
 
 
 @pytest.mark.gfm
-def test_whitespaces_shortcut_link_with_form_feeds_after_label():
+def test_whitespaces_shortcut_link_with_form_feeds_after_label() -> None:
     """
     Test case:  shortcut link label with form feeds after
     """
@@ -870,7 +892,7 @@ def test_whitespaces_shortcut_link_with_form_feeds_after_label():
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_tabs_and_references():
+def test_whitespaces_inline_link_with_tabs_and_references() -> None:
     """
     Test case:  inline link label with tabs after
     """
@@ -891,7 +913,7 @@ def test_whitespaces_inline_link_with_tabs_and_references():
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_tabs_and_code_span():
+def test_whitespaces_inline_link_with_tabs_and_code_span() -> None:
     """
     Test case:  inline link label with tabs after
     """
@@ -914,7 +936,7 @@ def test_whitespaces_inline_link_with_tabs_and_code_span():
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_tabs_and_emphasis():
+def test_whitespaces_inline_link_with_tabs_and_emphasis() -> None:
     """
     Test case:  inline link label with tabs after
     """
@@ -939,7 +961,7 @@ def test_whitespaces_inline_link_with_tabs_and_emphasis():
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_tabs_and_image():
+def test_whitespaces_inline_link_with_tabs_and_image() -> None:
     """
     Test case:  inline link label with tabs after
     """
@@ -964,7 +986,7 @@ def test_whitespaces_inline_link_with_tabs_and_image():
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_tabs_inside_of_tabs():
+def test_whitespaces_inline_link_with_tabs_inside_of_tabs() -> None:
     """
     Test case:  inline link label with tabs after
     """
@@ -989,7 +1011,7 @@ def test_whitespaces_inline_link_with_tabs_inside_of_tabs():
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_tabs_and_newlines():
+def test_whitespaces_inline_link_with_tabs_and_newlines() -> None:
     """
     Test case:  inline link label with tabs after
     """
@@ -1014,7 +1036,7 @@ boy</a>\tpass</p>"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_spaces_before_destination():
+def test_whitespaces_inline_link_with_spaces_before_destination() -> None:
     """
     Test case:  inline link label with spaces before the destination
     """
@@ -1035,7 +1057,7 @@ def test_whitespaces_inline_link_with_spaces_before_destination():
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_tabs_before_destination():
+def test_whitespaces_inline_link_with_tabs_before_destination() -> None:
     """
     Test case:  inline link label with tabs before the destination
     """
@@ -1056,7 +1078,7 @@ def test_whitespaces_inline_link_with_tabs_before_destination():
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_form_feeds_before_destination():
+def test_whitespaces_inline_link_with_form_feeds_before_destination() -> None:
     """
     Test case:  inline link label with form feeds before the destination
     """
@@ -1077,7 +1099,7 @@ def test_whitespaces_inline_link_with_form_feeds_before_destination():
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_spaces_after_destination():
+def test_whitespaces_inline_link_with_spaces_after_destination() -> None:
     """
     Test case:  inline link label with spaces after the destination
     """
@@ -1098,7 +1120,7 @@ def test_whitespaces_inline_link_with_spaces_after_destination():
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_tabs_after_destination():
+def test_whitespaces_inline_link_with_tabs_after_destination() -> None:
     """
     Test case:  inline link label with tabs after the destination
     """
@@ -1119,7 +1141,7 @@ def test_whitespaces_inline_link_with_tabs_after_destination():
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_form_feeds_after_destination():
+def test_whitespaces_inline_link_with_form_feeds_after_destination() -> None:
     """
     Test case:  inline link label with form feeds after the destination
     """
@@ -1140,7 +1162,7 @@ def test_whitespaces_inline_link_with_form_feeds_after_destination():
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_spaces_before_title():
+def test_whitespaces_inline_link_with_spaces_before_title() -> None:
     """
     Test case:  inline link label with spaces before the title
     """
@@ -1161,7 +1183,7 @@ def test_whitespaces_inline_link_with_spaces_before_title():
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_tabs_before_title():
+def test_whitespaces_inline_link_with_tabs_before_title() -> None:
     """
     Test case:  inline link label with tabs before the title
     """
@@ -1182,7 +1204,7 @@ def test_whitespaces_inline_link_with_tabs_before_title():
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_form_feeds_before_title():
+def test_whitespaces_inline_link_with_form_feeds_before_title() -> None:
     """
     Test case:  inline link label with form feeds before the title
     """
@@ -1203,7 +1225,7 @@ def test_whitespaces_inline_link_with_form_feeds_before_title():
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_spaces_after_title():
+def test_whitespaces_inline_link_with_spaces_after_title() -> None:
     """
     Test case:  inline link label with spaces after the title
     """
@@ -1224,7 +1246,7 @@ def test_whitespaces_inline_link_with_spaces_after_title():
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_tabs_after_title():
+def test_whitespaces_inline_link_with_tabs_after_title() -> None:
     """
     Test case:  inline link label with tabs after the title
     """
@@ -1245,7 +1267,7 @@ def test_whitespaces_inline_link_with_tabs_after_title():
 
 
 @pytest.mark.gfm
-def test_whitespaces_inline_link_with_form_feeds_after_title():
+def test_whitespaces_inline_link_with_form_feeds_after_title() -> None:
     """
     Test case:  inline link label with form feeds after the title
     """
@@ -1266,7 +1288,7 @@ def test_whitespaces_inline_link_with_form_feeds_after_title():
 
 
 @pytest.mark.gfm
-def test_whitespaces_full_link_with_tabs_in_reference():
+def test_whitespaces_full_link_with_tabs_in_reference() -> None:
     """
     Test case:  inline link label with tabs before the title
     """

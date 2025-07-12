@@ -52,17 +52,17 @@ that they are looking for.
 
 ## Enabling and Disabling Rules
 
-Keeping in mind the [configuration layering](./advanced_configuration.md/#configuration-ordering-layering)
+Keeping in mind the [configuration layering](https://application-properties.readthedocs.io/en/latest/getting-started/#configuration-ordering-layering)
 that occurs, the most direct way of enabling and disabling plugins is through
 the `--enable-rules` and `--disable-rules` command line options.  As these
-are [general command line settings](./advanced_configuration.md#general-command-line-setting),
+are [specific command line settings](https://application-properties.readthedocs.io/en/latest/command-line/#specific-command-line-settings),
 these settings override every other enable/disable configuration for the rules
 specified by the command line arguments.
 
 After that comes the `--set` argument which is detailed in the Advanced Configuration
-document under [Specific Command Line Settings](./advanced_configuration.md#specific-command-line-settings).
+document under [General Command Line Settings](https://application-properties.readthedocs.io/en/latest/command-line/#general-command-line-settings).
 Using the format `--set=plugins.{id}.enabled=$!True` (with the escaping of
-[certain characters](./advanced_configuration.md#special-characters-and-shells)
+[certain characters](https://application-properties.readthedocs.io/en/latest/command-line/#special-characters-and-shells)
 being required), a single plugin may be enabled.  Disabling a plugin is as simple
 as replacing the `True` with a `False`.
 

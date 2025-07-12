@@ -103,8 +103,10 @@ class RuleMd031(RulePlugin):
         """
         Event to allow the plugin to load configuration information.
         """
-        self.__trigger_in_list_items = self.plugin_configuration.get_boolean_property(
-            "list_items", default_value=True
+        self.__trigger_in_list_items = (
+            self.plugin_configuration.get_boolean_property_with_default(
+                "list_items", True
+            )
         )
 
     def query_config(self) -> List[QueryConfigItem]:

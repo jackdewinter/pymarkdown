@@ -7,6 +7,7 @@ from typing import List, Optional, Union, cast
 
 from application_properties import ApplicationPropertiesFacade
 
+from pymarkdown.my_application_properties_facade import MyApplicationPropertiesFacade
 from pymarkdown.plugin_manager.plugin_details import (
     PluginDetails,
     PluginDetailsV2,
@@ -32,7 +33,7 @@ class RulePlugin(ABC):
             self.__is_completed_file_implemented_in_plugin,
             self.__is_query_config_implemented_in_plugin,
         ) = (True, True, True, True, False)
-        self.__plugin_specific_facade: Optional[ApplicationPropertiesFacade] = None
+        self.__plugin_specific_facade: Optional[MyApplicationPropertiesFacade] = None
 
     @abstractmethod
     def get_details(self) -> PluginDetails:
@@ -41,7 +42,7 @@ class RulePlugin(ABC):
         """
 
     @property
-    def plugin_configuration(self) -> ApplicationPropertiesFacade:
+    def plugin_configuration(self) -> MyApplicationPropertiesFacade:
         """
         Get the configuration facade associated with this plugin.
         """
@@ -54,12 +55,9 @@ class RulePlugin(ABC):
         """
         Set the configuration map with values for the plugin.
         """
-        self.__plugin_specific_facade = plugin_specific_facade
-
-        # x = self.__class__.__dict__
-        # y = self.get_details()
-        # if y.plugin_id.lower() == "pml101":
-        #     y = y.plugin_id.lower()
+        self.__plugin_specific_facade = MyApplicationPropertiesFacade(
+            plugin_specific_facade
+        )
 
         self.__is_query_config_implemented_in_plugin = (
             "query_config" in self.__class__.__dict__

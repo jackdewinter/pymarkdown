@@ -13,7 +13,7 @@ import pytest
 
 
 @pytest.mark.rules
-def test_md022_bad_proper_line_spacing_atx():
+def test_md022_bad_proper_line_spacing_atx() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains atx headings with proper spacing around them.
@@ -43,7 +43,7 @@ def test_md022_bad_proper_line_spacing_atx():
 
 
 @pytest.mark.rules
-def test_md022_good_proper_line_spacing_setext():
+def test_md022_good_proper_line_spacing_setext() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains setext headings with proper spacing around them.
@@ -73,7 +73,7 @@ def test_md022_good_proper_line_spacing_setext():
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_atx():
+def test_md022_bad_no_line_spacing_atx() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with no proper spacing around them.
@@ -113,7 +113,7 @@ def test_md022_bad_no_line_spacing_atx():
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_atx_in_same_block_quote():
+def test_md022_bad_no_line_spacing_atx_in_same_block_quote() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with no proper spacing around them in a block quote.
@@ -157,7 +157,7 @@ def test_md022_bad_no_line_spacing_atx_in_same_block_quote():
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_atx_in_same_list_item():
+def test_md022_bad_no_line_spacing_atx_in_same_list_item() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with no proper spacing around them in a list item.
@@ -201,7 +201,7 @@ def test_md022_bad_no_line_spacing_atx_in_same_list_item():
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_atx_in_different_list_items():
+def test_md022_bad_no_line_spacing_atx_in_different_list_items() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with no proper spacing around them in different list items.
@@ -245,7 +245,7 @@ def test_md022_bad_no_line_spacing_atx_in_different_list_items():
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_before_atx():
+def test_md022_bad_no_line_spacing_before_atx() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with no proper spacing before them.
@@ -279,7 +279,7 @@ def test_md022_bad_no_line_spacing_before_atx():
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_before_atx_in_same_list_item():
+def test_md022_bad_no_line_spacing_before_atx_in_same_list_item() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with no proper spacing before them in a list item.
@@ -317,7 +317,7 @@ def test_md022_bad_no_line_spacing_before_atx_in_same_list_item():
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_before_atx_in_different_list_items():
+def test_md022_bad_no_line_spacing_before_atx_in_different_list_items() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with no proper spacing before them in different list items.
@@ -355,7 +355,7 @@ def test_md022_bad_no_line_spacing_before_atx_in_different_list_items():
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_before_atx_in_same_block_quote():
+def test_md022_bad_no_line_spacing_before_atx_in_same_block_quote() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with no proper spacing before them in a block quote.
@@ -393,7 +393,7 @@ def test_md022_bad_no_line_spacing_before_atx_in_same_block_quote():
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_before_setext():
+def test_md022_bad_no_line_spacing_before_setext() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains setext headings with no proper spacing before them.
@@ -423,7 +423,7 @@ def test_md022_bad_no_line_spacing_before_setext():
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_after_atx():
+def test_md022_bad_no_line_spacing_after_atx() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with no proper spacing after them.
@@ -460,7 +460,7 @@ def test_md022_bad_no_line_spacing_after_atx():
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_after_atx_in_same_list_item():
+def test_md022_bad_no_line_spacing_after_atx_in_same_list_item() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with no proper spacing after them in the same list item.
@@ -501,7 +501,7 @@ def test_md022_bad_no_line_spacing_after_atx_in_same_list_item():
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_after_atx_in_same_block_quote():
+def test_md022_bad_no_line_spacing_after_atx_in_same_block_quote() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with no proper spacing after them in a block quote.
@@ -542,7 +542,7 @@ def test_md022_bad_no_line_spacing_after_atx_in_same_block_quote():
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_after_atx_in_different_list_items():
+def test_md022_bad_no_line_spacing_after_atx_in_different_list_items() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with no proper spacing after them in different list items.
@@ -583,7 +583,7 @@ def test_md022_bad_no_line_spacing_after_atx_in_different_list_items():
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_after_atx_in_different_block_quotes():
+def test_md022_bad_no_line_spacing_after_atx_in_different_block_quotes() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with no proper spacing after them in different block quotes.
@@ -626,7 +626,7 @@ def test_md022_bad_no_line_spacing_after_atx_in_different_block_quotes():
 
 
 @pytest.mark.rules
-def test_md022_good_atx_with_html_and_good_line_spacing():
+def test_md022_good_atx_with_html_and_good_line_spacing() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains atx headings with good spacing between them and the HTML
@@ -657,7 +657,7 @@ def test_md022_good_atx_with_html_and_good_line_spacing():
 
 
 @pytest.mark.rules
-def test_md022_bad_atx_with_html_and_bad_line_spacing():
+def test_md022_bad_atx_with_html_and_bad_line_spacing() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings without good spacing between them and the HTML
@@ -695,7 +695,7 @@ def test_md022_bad_atx_with_html_and_bad_line_spacing():
 
 
 @pytest.mark.rules
-def test_md022_good_atx_with_paragraph_and_good_line_spacing():
+def test_md022_good_atx_with_paragraph_and_good_line_spacing() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains atx headings with good spacing between them and the paragraphs
@@ -730,7 +730,7 @@ def test_md022_good_atx_with_paragraph_and_good_line_spacing():
 
 
 @pytest.mark.rules
-def test_md022_bad_atx_with_paragraph_and_bad_line_spacing():
+def test_md022_bad_atx_with_paragraph_and_bad_line_spacing() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with good spacing between them and the paragraphs
@@ -772,7 +772,7 @@ def test_md022_bad_atx_with_paragraph_and_bad_line_spacing():
 
 
 @pytest.mark.rules
-def test_md022_good_atx_with_code_block_and_good_line_spacing():
+def test_md022_good_atx_with_code_block_and_good_line_spacing() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains atx headings with good spacing between them and the code
@@ -809,7 +809,7 @@ def test_md022_good_atx_with_code_block_and_good_line_spacing():
 
 
 @pytest.mark.rules
-def test_md022_bad_atx_with_code_block_and_bad_line_spacing():
+def test_md022_bad_atx_with_code_block_and_bad_line_spacing() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with bad spacing between them and the code
@@ -853,7 +853,7 @@ def test_md022_bad_atx_with_code_block_and_bad_line_spacing():
 
 
 @pytest.mark.rules
-def test_md022_good_atx_with_thematic_break_and_good_line_spacing():
+def test_md022_good_atx_with_thematic_break_and_good_line_spacing() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains atx headings with good spacing between them and the thematic
@@ -888,7 +888,7 @@ def test_md022_good_atx_with_thematic_break_and_good_line_spacing():
 
 
 @pytest.mark.rules
-def test_md022_bad_atx_with_thematic_break_and_bad_line_spacing():
+def test_md022_bad_atx_with_thematic_break_and_bad_line_spacing() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with bad spacing between them and the thematic
@@ -930,7 +930,7 @@ def test_md022_bad_atx_with_thematic_break_and_bad_line_spacing():
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_setext():
+def test_md022_bad_no_line_spacing_setext() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with bad spacing after them and the
@@ -972,7 +972,7 @@ def test_md022_bad_no_line_spacing_setext():
 
 
 @pytest.mark.rules
-def test_md022_bad_no_line_spacing_after_setext():
+def test_md022_bad_no_line_spacing_after_setext() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains setext headings with bad spacing after them and the
@@ -1010,7 +1010,7 @@ def test_md022_bad_no_line_spacing_after_setext():
 
 
 @pytest.mark.rules
-def test_md022_good_setext_with_code_block_and_good_line_spacing():
+def test_md022_good_setext_with_code_block_and_good_line_spacing() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains setext headings with good spacing between them and the
@@ -1047,7 +1047,7 @@ def test_md022_good_setext_with_code_block_and_good_line_spacing():
 
 
 @pytest.mark.rules
-def test_md022_bad_setext_with_code_block_and_bad_line_spacing():
+def test_md022_bad_setext_with_code_block_and_bad_line_spacing() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains setext headings with bad spacing between them and the
@@ -1091,7 +1091,7 @@ def test_md022_bad_setext_with_code_block_and_bad_line_spacing():
 
 
 @pytest.mark.rules
-def test_md022_good_setext_with_html_and_good_line_spacing():
+def test_md022_good_setext_with_html_and_good_line_spacing() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains setext headings with good spacing between them and the
@@ -1126,7 +1126,7 @@ def test_md022_good_setext_with_html_and_good_line_spacing():
 
 
 @pytest.mark.rules
-def test_md022_bad_setext_with_html_and_bad_line_spacing():
+def test_md022_bad_setext_with_html_and_bad_line_spacing() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains setext headings with bad spacing between them and the
@@ -1168,7 +1168,7 @@ def test_md022_bad_setext_with_html_and_bad_line_spacing():
 
 
 @pytest.mark.rules
-def test_md022_good_setext_with_thematic_break_and_good_line_spacing():
+def test_md022_good_setext_with_thematic_break_and_good_line_spacing() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains setext headings with good spacing between them and the
@@ -1203,7 +1203,7 @@ def test_md022_good_setext_with_thematic_break_and_good_line_spacing():
 
 
 @pytest.mark.rules
-def test_md022_bad_setext_with_thematic_break_and_bad_line_spacing():
+def test_md022_bad_setext_with_thematic_break_and_bad_line_spacing() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains setext headings with bad spacing between them and the
@@ -1245,7 +1245,7 @@ def test_md022_bad_setext_with_thematic_break_and_bad_line_spacing():
 
 
 @pytest.mark.rules
-def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_above():
+def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_above() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with good spacing between them and the
@@ -1286,7 +1286,7 @@ def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_above():
 
 
 @pytest.mark.rules
-def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_above():
+def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_above() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains atx headings with extra spacing between them and the
@@ -1325,7 +1325,7 @@ def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_above():
 
 
 @pytest.mark.rules
-def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_below():
+def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_below() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains atx headings with good spacing between them and the
@@ -1369,7 +1369,7 @@ def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_below():
 
 
 @pytest.mark.rules
-def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_below():
+def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_below() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains atx headings with extra spacing between them and the
@@ -1408,7 +1408,9 @@ def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_below():
 
 
 @pytest.mark.rules
-def test_md022_good_double_line_spacing_above_and_below_atx_with_alternate_lines_both():
+def test_md022_good_double_line_spacing_above_and_below_atx_with_alternate_lines_both() -> (
+    None
+):
     """
     Test to make sure this rule does not trigger with a document that
     contains atx headings with extra spacing above them and the
@@ -1453,7 +1455,7 @@ def test_md022_good_double_line_spacing_above_and_below_atx_with_alternate_lines
 
 
 @pytest.mark.rules
-def test_md022_good_alternating_heading_types():
+def test_md022_good_alternating_heading_types() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains alternating heading types with good spacing between them and the
@@ -1486,7 +1488,7 @@ def test_md022_good_alternating_heading_types():
 
 
 @pytest.mark.rules
-def test_md022_bad_alternating_heading_types_with_alternate_spacing():
+def test_md022_bad_alternating_heading_types_with_alternate_spacing() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains alternating heading types with good spacing between them and the
@@ -1549,7 +1551,9 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing():
 
 
 @pytest.mark.rules
-def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_config():
+def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_config() -> (
+    None
+):
     """
     Test to make sure this rule does trigger with a document that
     contains alternating heading types with good spacing between them and the
@@ -1601,7 +1605,9 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_conf
 
 
 @pytest.mark.rules
-def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_config_strict_mode():
+def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_config_strict_mode() -> (
+    None
+):
     """
     Test to make sure this rule fails with alternative configuration that is invalid.
     """
@@ -1644,7 +1650,7 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_conf
 
 
 @pytest.mark.rules
-def test_md022_good_unordered_list_into_atx_into_paragraph():
+def test_md022_good_unordered_list_into_atx_into_paragraph() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains an Atx heading types with good spacing between them and
@@ -1679,7 +1685,7 @@ def test_md022_good_unordered_list_into_atx_into_paragraph():
 
 
 @pytest.mark.rules
-def test_md022_bad_heading_surrounded_by_block_quote():
+def test_md022_bad_heading_surrounded_by_block_quote() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains an Atx heading types with block quotes directly before
@@ -1721,7 +1727,7 @@ def test_md022_bad_heading_surrounded_by_block_quote():
 
 
 @pytest.mark.rules
-def test_md022_bad_heading_surrounded_by_list():
+def test_md022_bad_heading_surrounded_by_list() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains an Atx heading types with list items directly before
@@ -1761,7 +1767,7 @@ def test_md022_bad_heading_surrounded_by_list():
 
 
 @pytest.mark.rules
-def test_md022_good_heading_in_block_quote():
+def test_md022_good_heading_in_block_quote() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains an Atx heading in a block quote, with nicely spaced
@@ -1792,7 +1798,7 @@ def test_md022_good_heading_in_block_quote():
 
 
 @pytest.mark.rules
-def test_md022_good_heading_in_list():
+def test_md022_good_heading_in_list() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains an Atx heading in a list item, with nicely spaced
@@ -1823,7 +1829,7 @@ def test_md022_good_heading_in_list():
 
 
 @pytest.mark.rules
-def test_md022_link_reference_definition_before_header():
+def test_md022_link_reference_definition_before_header() -> None:
     """
     Test to make sure this rule
     """
@@ -1856,7 +1862,7 @@ def test_md022_link_reference_definition_before_header():
 
 
 @pytest.mark.rules
-def test_md022_link_reference_definition_around_header():
+def test_md022_link_reference_definition_around_header() -> None:
     """
     Test to make sure this rule
     """
@@ -1897,7 +1903,7 @@ def test_md022_link_reference_definition_around_header():
 
 
 @pytest.mark.rules
-def test_md022_fenced_block_before_header():
+def test_md022_fenced_block_before_header() -> None:
     """
     Test to make sure this rule
     """
@@ -1926,7 +1932,7 @@ def test_md022_fenced_block_before_header():
 
 
 @pytest.mark.rules
-def test_md022_issue_1268():
+def test_md022_issue_1268() -> None:
     """
     Test to make sure this rule
     """
@@ -1961,7 +1967,7 @@ Some long lines
 
 
 @pytest.mark.rules
-def test_md022_good_with_pragmas_blanks_after_around_and_before():
+def test_md022_good_with_pragmas_blanks_after_around_and_before() -> None:
     """
     Test to make sure this rule works properly with pragmas.
     """
@@ -2014,7 +2020,7 @@ Some more text
 
 
 @pytest.mark.rules
-def test_md022_bad_with_pragmas_blanks_after_around_and_before():
+def test_md022_bad_with_pragmas_blanks_after_around_and_before() -> None:
     """
     Test to make sure this rule works properly with pragmas.
     """
@@ -2071,7 +2077,7 @@ Some more text
 
 
 @pytest.mark.rules
-def test_md022_good_with_pragmas_blanks_before():
+def test_md022_good_with_pragmas_blanks_before() -> None:
     """
     Test to make sure this rule works properly with pragmas.
     """
@@ -2114,7 +2120,7 @@ Some text
 
 
 @pytest.mark.rules
-def test_md022_bad_with_pragmas_blanks_before():
+def test_md022_bad_with_pragmas_blanks_before() -> None:
     """
     Test to make sure this rule works properly with pragmas.
     """
@@ -2157,7 +2163,7 @@ Some text
 
 
 @pytest.mark.rules
-def test_md022_good_with_pragmas_blanks_around():
+def test_md022_good_with_pragmas_blanks_around() -> None:
     """
     Test to make sure this rule works properly with pragmas.
     """
@@ -2204,7 +2210,7 @@ Some more text
 
 
 @pytest.mark.rules
-def test_md022_bad_with_pragmas_blanks_around():
+def test_md022_bad_with_pragmas_blanks_around() -> None:
     """
     Test to make sure this rule works properly with pragmas.
     """
@@ -2252,7 +2258,7 @@ Some more text
 
 
 @pytest.mark.rules
-def test_md022_good_with_pragmas_blanks_after():
+def test_md022_good_with_pragmas_blanks_after() -> None:
     """
     Test to make sure this rule works properly with pragmas.
     """
@@ -2293,7 +2299,7 @@ def test_md022_good_with_pragmas_blanks_after():
 
 
 @pytest.mark.rules
-def test_md022_bad_with_pragmas_blanks_after():
+def test_md022_bad_with_pragmas_blanks_after() -> None:
     """
     Test to make sure this rule works properly with pragmas.
     """
@@ -2335,7 +2341,7 @@ def test_md022_bad_with_pragmas_blanks_after():
             )
 
 
-def test_md022_query_config():
+def test_md022_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md022",
         """

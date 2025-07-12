@@ -49,13 +49,13 @@ class RuleMd033(RulePlugin):
         Event to allow the plugin to load configuration information.
         """
         self.__allow_first_image_element = (
-            self.plugin_configuration.get_boolean_property(
-                "allow_first_image_element", default_value=True
+            self.plugin_configuration.get_boolean_property_with_default(
+                "allow_first_image_element", True
             )
         )
-        allowed_elements = self.plugin_configuration.get_string_property(
+        allowed_elements = self.plugin_configuration.get_string_property_with_default(
             "allowed_elements",
-            default_value="!--,![CDATA[,!DOCTYPE",
+            "!--,![CDATA[,!DOCTYPE",
         )
         self.__allowed_elements = []
         if allowed_elements := allowed_elements.strip(" "):

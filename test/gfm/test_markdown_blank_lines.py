@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_blank_lines_197():
+def test_blank_lines_197() -> None:
     """
     Test case 197:  Blank lines at the beginning and end of the document are also ignored.
     """
@@ -46,7 +46,7 @@ aaa
 
 
 @pytest.mark.gfm
-def test_blank_lines_197a():
+def test_blank_lines_197a() -> None:
     """
     Test case 197a:  variation of 197 with extra spaces
     """

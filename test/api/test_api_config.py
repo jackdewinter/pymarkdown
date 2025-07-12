@@ -11,6 +11,7 @@ from test.utils import (
     create_temporary_configuration_file,
     temporary_change_to_directory,
 )
+from typing import cast
 
 from pymarkdown.api import (
     PyMarkdownApi,
@@ -19,7 +20,7 @@ from pymarkdown.api import (
 )
 
 
-def test_api_config_with_empty_path():
+def test_api_config_with_empty_path() -> None:
     """
     Test to make sure that an empty path to add is reported as an error.
     """
@@ -36,10 +37,13 @@ def test_api_config_with_empty_path():
         configuration_path,
     )
 
-    assert caught_exception.argument_name == "path_to_config_file"
+    assert (
+        cast(PyMarkdownApiArgumentException, caught_exception).argument_name
+        == "path_to_config_file"
+    )
 
 
-def test_api_config_with_bad_path():
+def test_api_config_with_bad_path() -> None:
     """
     Test to make sure that a bad configuration path to add is reported as an error.
 
@@ -64,7 +68,7 @@ def test_api_config_with_bad_path():
     )
 
 
-def test_api_config_with_bad_contents():
+def test_api_config_with_bad_contents() -> None:
     """
     Test to make sure that a configuration file with bad contents is reported as an error.
 
@@ -76,7 +80,9 @@ def test_api_config_with_bad_contents():
     source_path = os.path.join(
         "test", "resources", "rules", "md047", "end_with_blank_line.md"
     )
-    supplied_configuration = "not a json file"
+    supplied_configuration = """hallo: 1
+bye
+"""
     with create_temporary_configuration_file(
         supplied_configuration
     ) as configuration_file:
@@ -91,7 +97,7 @@ def test_api_config_with_bad_contents():
         )
 
 
-def test_api_config_with_config_file_with_good_value():
+def test_api_config_with_config_file_with_good_value() -> None:
     """
     Test to make sure that a configuration file with a good value is interpretted
     as such.
@@ -145,7 +151,7 @@ MD999>>completed_file
     )
 
 
-def test_api_config_with_config_file_with_bad_value():
+def test_api_config_with_config_file_with_bad_value() -> None:
     """
     Test to make sure that a configuration file with a bad value is interpretted
     as such.
@@ -199,7 +205,7 @@ MD999>>completed_file
     )
 
 
-def test_api_config_with_good_strict_and_bad_config():
+def test_api_config_with_good_strict_and_bad_config() -> None:
     """
     Test to make sure that a configuration file with bad contents is reported as an error.
 
@@ -229,7 +235,7 @@ def test_api_config_with_good_strict_and_bad_config():
         )
 
 
-def test_api_config_with_bad_strict_and_bad_config():
+def test_api_config_with_bad_strict_and_bad_config() -> None:
     """
     Test to make sure that a configuration file with bad contents is reported as an error.
 
@@ -256,7 +262,7 @@ def test_api_config_with_bad_strict_and_bad_config():
         )
 
 
-def test_api_config_with_exception_during_confiuguration():
+def test_api_config_with_exception_during_confiuguration() -> None:
     """
     Test to make sure that a configuration file...
 
@@ -290,7 +296,7 @@ Plugin id 'MD999' had a critical failure during the '__apply_configuration' acti
 
     # Assert
     assert (
-        caught_exception.reason
+        cast(PyMarkdownApiException, caught_exception).reason
         == """BadPluginError encountered while configuring plugins:
 Plugin id 'MD999' had a critical failure during the '__apply_configuration' action."""
     )
@@ -303,7 +309,7 @@ MD999>>other_test_value>>1
     )
 
 
-def test_api_config_with_exception_during_scanning():
+def test_api_config_with_exception_during_scanning() -> None:
     """
     Test to make sure that a configuration file...
 
@@ -350,7 +356,7 @@ MD999>>token:[atx(1,1):1:0:]
     )
 
 
-def test_api_config_with_bad_contents_for_default_config():
+def test_api_config_with_bad_contents_for_default_config() -> None:
     """
     Test to make sure that a default configuration file with bad contents is reported as an error.
     """
@@ -382,15 +388,19 @@ def test_api_config_with_bad_contents_for_default_config():
         assert caught_exception.reason.startswith("Specified configuration file '")
         assert caught_exception.reason.endswith(
             "' is not a valid JSON file: Expecting value: line 1 column 1 (char 0)."
+        ) or caught_exception.reason.endswith(
+            "is not a valid JSON file: ('Expected U+0072 near 1, found U+0068', None, 'h')."
         )
     else:
         assert (
             caught_exception.reason
             == f"Specified configuration file '{os.path.abspath(configuration_file)}' is not a valid JSON file: Expecting value: line 1 column 1 (char 0)."
+            or caught_exception.reason
+            == f"Specified configuration file '{os.path.abspath(configuration_file)}' is not a valid JSON file: ('Expected U+0072 near 1, found U+0068', None, 'h')."
         )
 
 
-def test_api_config_with_bad_settings_for_default_config():
+def test_api_config_with_bad_settings_for_default_config() -> None:
     """
     Test to make sure that a default configuration file with bad contents is reported as an error.
 
@@ -425,7 +435,7 @@ def test_api_config_with_bad_settings_for_default_config():
                 )
 
 
-def test_api_config_with_bad_contents_for_pyproject_toml():
+def test_api_config_with_bad_contents_for_pyproject_toml() -> None:
     """
     Test to make sure that a pyproject.toml file with bad contents is reported as an error.
     """

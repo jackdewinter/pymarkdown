@@ -3,6 +3,7 @@ Module to provide tests for source providers.
 """
 
 import os
+from typing import Optional
 
 from pymarkdown.general.source_providers import (
     FileSourceProvider,
@@ -10,15 +11,16 @@ from pymarkdown.general.source_providers import (
 )
 
 
-def __verify_line(expected_line, actual_line):
+def __verify_line(expected_line: Optional[str], actual_line: Optional[str]) -> None:
     if expected_line is None:
         assert actual_line is None, (
             "Actual line should be None, not: '" + actual_line + "'"
         )
     else:
+        actual_line_text = actual_line or "<NONE>"
         assert actual_line == expected_line, (
             "Actual line:   '"
-            + actual_line
+            + actual_line_text
             + "'\n"
             + "Expected line: '"
             + expected_line
@@ -26,7 +28,7 @@ def __verify_line(expected_line, actual_line):
         )
 
 
-def test_source_provider_in_memory_empty_string():
+def test_source_provider_in_memory_empty_string() -> None:
     """
     Test the in memory source provider with an empty string.
     """
@@ -45,7 +47,7 @@ def test_source_provider_in_memory_empty_string():
     __verify_line(expected_second_line, actual_second_line)
 
 
-def test_source_provider_in_memory_one_line():
+def test_source_provider_in_memory_one_line() -> None:
     """
     Test the in memory source provider with one line of input.
     """
@@ -64,7 +66,7 @@ def test_source_provider_in_memory_one_line():
     __verify_line(expected_second_line, actual_second_line)
 
 
-def test_source_provider_in_memory_two_lines():
+def test_source_provider_in_memory_two_lines() -> None:
     """
     Test the in memory source provider with two lines of input.
     """
@@ -88,7 +90,7 @@ def test_source_provider_in_memory_two_lines():
     __verify_line(expected_third_line, actual_third_line)
 
 
-def test_source_provider_file_empty():
+def test_source_provider_file_empty() -> None:
     """
     Test the file source provider with an empty file.
     """
@@ -109,7 +111,7 @@ def test_source_provider_file_empty():
     __verify_line(expected_second_line, actual_second_line)
 
 
-def test_source_provider_file_single_line():
+def test_source_provider_file_single_line() -> None:
     """
     Test the file source provider with a single line
     """
@@ -130,7 +132,7 @@ def test_source_provider_file_single_line():
     __verify_line(expected_second_line, actual_second_line)
 
 
-def test_source_provider_file_two_lines():
+def test_source_provider_file_two_lines() -> None:
     """
     Test the file source provider with two lines of input.
     """
@@ -154,7 +156,7 @@ def test_source_provider_file_two_lines():
     __verify_line(expected_third_line, actual_third_line)
 
 
-def test_source_provider_file_two_lines_with_blank_between():
+def test_source_provider_file_two_lines_with_blank_between() -> None:
     """
     Test the file source provider with two lines of input with a blank between them.
     """
@@ -181,7 +183,7 @@ def test_source_provider_file_two_lines_with_blank_between():
     __verify_line(expected_fourth_line, actual_fourth_line)
 
 
-def test_source_provider_file_two_lines_with_blank_between_and_trailing():
+def test_source_provider_file_two_lines_with_blank_between_and_trailing() -> None:
     """
     Test the file source provider with two lines of input with a blank between them and a trailing line.
     """

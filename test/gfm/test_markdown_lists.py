@@ -9,7 +9,7 @@ import pytest
 
 # pylint: disable=too-many-lines
 @pytest.mark.gfm
-def test_list_items_281():
+def test_list_items_281() -> None:
     """
     Test case 281:  (part 1) Changing the bullet or ordered list delimiter starts a new list:
     """
@@ -47,7 +47,7 @@ def test_list_items_281():
 
 
 @pytest.mark.gfm
-def test_list_items_281a():
+def test_list_items_281a() -> None:
     """
     Test case 281a:  variation on 281 with second item indented
     """
@@ -86,7 +86,7 @@ def test_list_items_281a():
 
 
 @pytest.mark.gfm
-def test_list_items_281b():
+def test_list_items_281b() -> None:
     """
     Test case 281b:  variation on 281 with second item indented and third with different list start
     """
@@ -128,7 +128,7 @@ def test_list_items_281b():
 
 
 @pytest.mark.gfm
-def test_list_items_281c():
+def test_list_items_281c() -> None:
     """
     Test case 281c:  variation on 281b with third item indented, and a following list item for the parent
     """
@@ -176,7 +176,7 @@ def test_list_items_281c():
 
 
 @pytest.mark.gfm
-def test_list_items_281d():
+def test_list_items_281d() -> None:
     """
     Test case 281d:  variation on 281 with extra item and indentation differences
     """
@@ -228,7 +228,7 @@ def test_list_items_281d():
 
 
 @pytest.mark.gfm
-def test_list_items_281e():
+def test_list_items_281e() -> None:
     """
     Test case 281e:  variation on 281 with extra item and indentation differences
     """
@@ -280,7 +280,7 @@ def test_list_items_281e():
 
 
 @pytest.mark.gfm
-def test_list_items_281f():
+def test_list_items_281f() -> None:
     """
     Test case 281f:  variation on 281 with blank line
     """
@@ -322,7 +322,7 @@ def test_list_items_281f():
 
 
 @pytest.mark.gfm
-def test_list_items_281g():
+def test_list_items_281g() -> None:
     """
     Test case 281g:  variation on 281 with blank line
     """
@@ -360,7 +360,7 @@ boffo</p>
 
 
 @pytest.mark.gfm
-def test_list_items_282():
+def test_list_items_282() -> None:
     """
     Test case 282:  (part 2) Changing the bullet or ordered list delimiter starts a new list:
     """
@@ -398,7 +398,7 @@ def test_list_items_282():
 
 
 @pytest.mark.gfm
-def test_list_items_282a():
+def test_list_items_282a() -> None:
     """
     Test case 282a:  variation on 282 with indentation differences
     """
@@ -436,7 +436,7 @@ def test_list_items_282a():
 
 
 @pytest.mark.gfm
-def test_list_items_282b():
+def test_list_items_282b() -> None:
     """
     Test case 282b:  variation on 282 with indentation differences
     """
@@ -474,7 +474,7 @@ def test_list_items_282b():
 
 
 @pytest.mark.gfm
-def test_list_items_282c():
+def test_list_items_282c() -> None:
     """
     Test case 282c:  variation on 282 with indentation differences
     """
@@ -505,7 +505,7 @@ def test_list_items_282c():
 
 
 @pytest.mark.gfm
-def test_list_items_282cu():
+def test_list_items_282cu() -> None:
     """
     Test case 282cu:  variation on 282 with indentation differences
     """
@@ -544,7 +544,7 @@ def test_list_items_282cu():
 
 
 @pytest.mark.gfm
-def test_list_items_282d():
+def test_list_items_282d() -> None:
     """
     Test case 282d:  variation on 282 with indentation differences and extra blank lines
     """
@@ -588,7 +588,7 @@ def test_list_items_282d():
 
 
 @pytest.mark.gfm
-def test_list_items_283():
+def test_list_items_283() -> None:
     """
     Test case 283:  In CommonMark, a list can interrupt a paragraph. That is, no blank
                     line is needed to separate a paragraph from a following list:
@@ -623,7 +623,7 @@ def test_list_items_283():
 
 
 @pytest.mark.gfm
-def test_list_items_284():
+def test_list_items_284() -> None:
     """
     Test case 284:  In order to solve of unwanted lists in paragraphs with hard-wrapped
                     numerals, we allow only lists starting with 1 to interrupt paragraphs. Thus,
@@ -645,7 +645,7 @@ def test_list_items_284():
 
 
 @pytest.mark.gfm
-def test_list_items_285():
+def test_list_items_285() -> None:
     """
     Test case 285:  We may still get an unintended result in cases like
     """
@@ -673,7 +673,7 @@ def test_list_items_285():
 
 
 @pytest.mark.gfm
-def test_list_items_286():
+def test_list_items_286() -> None:
     """
     Test case 286:  (part 1) There can be any number of blank lines between items:
     """
@@ -720,7 +720,7 @@ def test_list_items_286():
 
 
 @pytest.mark.gfm
-def test_list_items_287():
+def test_list_items_287() -> None:
     """
     Test case 287:  (part 2) There can be any number of blank lines between items:
     """
@@ -774,7 +774,7 @@ def test_list_items_287():
 
 
 @pytest.mark.gfm
-def test_list_items_288():
+def test_list_items_288() -> None:
     """
     Test case 288:  (part 1) To separate consecutive lists of the same type, or to
                     separate a list from an indented code block that would otherwise
@@ -830,7 +830,7 @@ def test_list_items_288():
 
 
 @pytest.mark.gfm
-def test_list_items_289():
+def test_list_items_289() -> None:
     """
     Test case 289:  (part 2) To separate consecutive lists of the same type, or to
                     separate a list from an indented code block that would otherwise
@@ -890,7 +890,7 @@ def test_list_items_289():
 
 
 @pytest.mark.gfm
-def test_list_items_290():
+def test_list_items_290() -> None:
     """
     Test case 290:  (part 1) List items need not be indented to the same level. The
                     following list items will be treated as items at the same list level,
@@ -951,7 +951,7 @@ def test_list_items_290():
 
 
 @pytest.mark.gfm
-def test_list_items_291():
+def test_list_items_291() -> None:
     """
     Test case 291:  (part 2) List items need not be indented to the same level. The
                     following list items will be treated as items at the same list
@@ -999,7 +999,7 @@ def test_list_items_291():
 
 
 @pytest.mark.gfm
-def test_list_items_292x():
+def test_list_items_292x() -> None:
     """
     Test case 292x:  Note, however, that list items may not be indented more than
                      three spaces. Here - e is treated as a paragraph continuation line,
@@ -1044,7 +1044,7 @@ def test_list_items_292x():
 
 
 @pytest.mark.gfm
-def test_list_items_292xa():
+def test_list_items_292xa() -> None:
     """
     Test case 292xa:  variation on 292 with double indentation
     """
@@ -1107,7 +1107,7 @@ def test_list_items_292xa():
 
 
 @pytest.mark.gfm
-def test_list_items_292a():
+def test_list_items_292a() -> None:
     """
     Test case 292a:  variation on 292 with indentation differences
     """
@@ -1148,7 +1148,7 @@ def test_list_items_292a():
 
 
 @pytest.mark.gfm
-def test_list_items_292b():
+def test_list_items_292b() -> None:
     """
     Test case 292b:  variation on 292 with indentation differences
     """
@@ -1195,7 +1195,7 @@ def test_list_items_292b():
 
 
 @pytest.mark.gfm
-def test_list_items_292c():
+def test_list_items_292c() -> None:
     """
     Test case 292c:  variation on 292 with ordered lists
     """
@@ -1238,7 +1238,7 @@ def test_list_items_292c():
 
 
 @pytest.mark.gfm
-def test_list_items_292d():
+def test_list_items_292d() -> None:
     """
     Test case 292d:  variation on 292 with ordered lists
     """
@@ -1279,7 +1279,7 @@ def test_list_items_292d():
 
 
 @pytest.mark.gfm
-def test_list_items_292e():
+def test_list_items_292e() -> None:
     """
     Test case 292e:  variation on 292 with ordered lists
     """
@@ -1326,7 +1326,7 @@ def test_list_items_292e():
 
 
 @pytest.mark.gfm
-def test_list_items_293():
+def test_list_items_293() -> None:
     """
     Test case 293:  And here, 3. c is treated as in indented code block, because it
                     is indented four spaces and preceded by a blank line.
@@ -1370,7 +1370,7 @@ def test_list_items_293():
 
 
 @pytest.mark.gfm
-def test_list_items_293ax():
+def test_list_items_293ax() -> None:
     """
     Test case 293a:  variation on 293 with no blank lines
     """
@@ -1401,7 +1401,7 @@ def test_list_items_293ax():
 
 
 @pytest.mark.gfm
-def test_list_items_293aa():
+def test_list_items_293aa() -> None:
     """
     Test case 293a:  variation on 293 with no blank lines
     """
@@ -1432,7 +1432,7 @@ def test_list_items_293aa():
 
 
 @pytest.mark.gfm
-def test_list_items_293b():
+def test_list_items_293b() -> None:
     """
     Test case 293b:  variation on 293 with no blank lines and indent changes
     """
@@ -1471,7 +1471,7 @@ def test_list_items_293b():
 
 
 @pytest.mark.gfm
-def test_list_items_293c():
+def test_list_items_293c() -> None:
     """
     Test case 293c:  variation on 293 with no blank lines and indent changes
     """
@@ -1513,7 +1513,7 @@ def test_list_items_293c():
 
 
 @pytest.mark.gfm
-def test_list_items_293d():
+def test_list_items_293d() -> None:
     """
     Test case 293d:  variation on 293 with no blank lines and indent changes
     """
@@ -1561,7 +1561,7 @@ def test_list_items_293d():
 
 
 @pytest.mark.gfm
-def test_list_items_293e():
+def test_list_items_293e() -> None:
     """
     Test case 293e:  variation on 293 with no blank lines and indent changes
     """
@@ -1613,7 +1613,7 @@ def test_list_items_293e():
 
 
 @pytest.mark.gfm
-def test_list_items_293f():
+def test_list_items_293f() -> None:
     """
     Test case 293f:  variation on 293 with no blank lines and indent changes
     """
@@ -1665,7 +1665,7 @@ def test_list_items_293f():
 
 
 @pytest.mark.gfm
-def test_list_items_294():
+def test_list_items_294() -> None:
     """
     Test case 294:  This is a loose list, because there is a blank line between two of the list items:
     """
@@ -1708,7 +1708,7 @@ def test_list_items_294():
 
 
 @pytest.mark.gfm
-def test_list_items_295():
+def test_list_items_295() -> None:
     """
     Test case 295:  So is this, with an empty second item:
     """
@@ -1747,7 +1747,7 @@ def test_list_items_295():
 
 
 @pytest.mark.gfm
-def test_list_items_296():
+def test_list_items_296() -> None:
     """
     Test case 296:  (part 1) These are loose lists, even though there is no space
                     between the items, because one of the items directly contains
@@ -1797,7 +1797,7 @@ def test_list_items_296():
 
 
 @pytest.mark.gfm
-def test_list_items_297x():
+def test_list_items_297x() -> None:
     """
     Test case 297:  (part 2) These are loose lists, even though there is no space
                     between the items, because one of the items directly contains
@@ -1844,7 +1844,7 @@ def test_list_items_297x():
 
 
 @pytest.mark.gfm
-def test_list_items_297a():
+def test_list_items_297a() -> None:
     """
     Test case 297a:  variation on 297 with Atx Heading
     """
@@ -1892,7 +1892,7 @@ def test_list_items_297a():
 
 
 @pytest.mark.gfm
-def test_list_items_297b():
+def test_list_items_297b() -> None:
     """
     Test case 297b:  variation on 297 with SetExt Heading
     """
@@ -1941,7 +1941,7 @@ def test_list_items_297b():
 
 
 @pytest.mark.gfm
-def test_list_items_297c():
+def test_list_items_297c() -> None:
     """
     Test case 297c:  variation on 297 with HTML Block
     """
@@ -1993,7 +1993,7 @@ line
 
 
 @pytest.mark.gfm
-def test_list_items_297d():
+def test_list_items_297d() -> None:
     """
     Test case 297d:  variation on 297 with Indented Code Block
     """
@@ -2042,7 +2042,7 @@ def test_list_items_297d():
 
 
 @pytest.mark.gfm
-def test_list_items_297e():
+def test_list_items_297e() -> None:
     """
     Test case 297e:  variation on 297 with Fenced Code Block
     """
@@ -2093,7 +2093,7 @@ def test_list_items_297e():
 
 
 @pytest.mark.gfm
-def test_list_items_297f():
+def test_list_items_297f() -> None:
     """
     Test case 297f:  variation on 297 with fenced and html blocks
     """
@@ -2153,7 +2153,7 @@ line
 
 
 @pytest.mark.gfm
-def test_list_items_298():
+def test_list_items_298() -> None:
     """
     Test case 298:  This is a tight list, because the blank lines are in a code block:
     """
@@ -2197,7 +2197,7 @@ def test_list_items_298():
 
 
 @pytest.mark.gfm
-def test_list_items_299():
+def test_list_items_299() -> None:
     """
     Test case 299:  This is a tight list, because the blank line is between two
                     paragraphs of a sublist. So the sublist is loose while the
@@ -2247,7 +2247,7 @@ def test_list_items_299():
 
 
 @pytest.mark.gfm
-def test_list_items_300x():
+def test_list_items_300x() -> None:
     """
     Test case 300:  This is a tight list, because the blank line is inside the block quote:
     """
@@ -2288,7 +2288,7 @@ def test_list_items_300x():
 
 
 @pytest.mark.gfm
-def test_list_items_300a():
+def test_list_items_300a() -> None:
     """
     Test case 300a:  variation on 300 with fine line ordered list start
     """
@@ -2332,7 +2332,7 @@ def test_list_items_300a():
 
 
 @pytest.mark.gfm
-def test_list_items_300b():
+def test_list_items_300b() -> None:
     """
     Test case 300b:  variation on 300 with fine list start indented
     """
@@ -2376,7 +2376,7 @@ def test_list_items_300b():
 
 
 @pytest.mark.gfm
-def test_list_items_301x():
+def test_list_items_301x() -> None:
     """
     Test case 301:  This list is tight, because the consecutive block elements are not separated by blank lines:
     """
@@ -2423,7 +2423,7 @@ def test_list_items_301x():
 
 
 @pytest.mark.gfm
-def test_list_items_301a():
+def test_list_items_301a() -> None:
     """
     Test case 301a:  variation on 301 with extra block quote level
     """
@@ -2474,7 +2474,7 @@ def test_list_items_301a():
 
 
 @pytest.mark.gfm
-def test_list_items_301b():
+def test_list_items_301b() -> None:
     """
     Test case 301b:  variation on 301 with extra indent on fenced
     """
@@ -2521,7 +2521,7 @@ def test_list_items_301b():
 
 
 @pytest.mark.gfm
-def test_list_items_301cx():
+def test_list_items_301cx() -> None:
     """
     Test case 301c:  variation on 301 with paragraph instead of fenced
     """
@@ -2562,7 +2562,7 @@ c</p>
 
 
 @pytest.mark.gfm
-def test_list_items_301ca():
+def test_list_items_301ca() -> None:
     """
     Test case 301ca:  variation on 301c with paragraph in block quote
     """
@@ -2603,7 +2603,7 @@ c</p>
 
 
 @pytest.mark.gfm
-def test_list_items_301cb():
+def test_list_items_301cb() -> None:
     """
     Test case 301cb:  variation on 301c with missing second line
     """
@@ -2637,7 +2637,7 @@ c</p>
 
 
 @pytest.mark.gfm
-def test_list_items_301d():
+def test_list_items_301d() -> None:
     """
     Test case 301d:  variation on 301 with indented code block
     """
@@ -2684,7 +2684,7 @@ def test_list_items_301d():
 
 
 @pytest.mark.gfm
-def test_list_items_302():
+def test_list_items_302() -> None:
     """
     Test case 302:  (part 1) A single-paragraph list is tight:
     """
@@ -2707,7 +2707,7 @@ def test_list_items_302():
 
 
 @pytest.mark.gfm
-def test_list_items_303():
+def test_list_items_303() -> None:
     """
     Test case 303:  (part 2) A single-paragraph list is tight:
     """
@@ -2740,7 +2740,7 @@ def test_list_items_303():
 
 
 @pytest.mark.gfm
-def test_list_items_304():
+def test_list_items_304() -> None:
     """
     Test case 304:  This list is loose, because of the blank line between the two block elements in the list item:
     """
@@ -2775,7 +2775,7 @@ def test_list_items_304():
 
 
 @pytest.mark.gfm
-def test_list_items_305x():
+def test_list_items_305x() -> None:
     """
     Test case 305:  (part 1) Here the outer list is loose, the inner list tight:
     """
@@ -2816,7 +2816,7 @@ def test_list_items_305x():
 
 
 @pytest.mark.gfm
-def test_list_items_305a():
+def test_list_items_305a() -> None:
     """
     Test case 305a:  variation on 305 with different lists
     """
@@ -2865,7 +2865,7 @@ def test_list_items_305a():
 
 
 @pytest.mark.gfm
-def test_list_items_305b():
+def test_list_items_305b() -> None:
     """
     Test case 305b:  variation on 305 with different lists
     """
@@ -2914,7 +2914,7 @@ def test_list_items_305b():
 
 
 @pytest.mark.gfm
-def test_list_items_306():
+def test_list_items_306() -> None:
     """
     Test case 306:  (part 2) Here the outer list is loose, the inner list tight:
     """
@@ -2979,7 +2979,7 @@ def test_list_items_306():
 
 
 @pytest.mark.gfm
-def test_list_items_extra_01x():
+def test_list_items_extra_01x() -> None:
     """
     Test case List01:  link definition within a list item
                        copy of test_link_reference_definitions_161 but within list item
@@ -3009,7 +3009,7 @@ def test_list_items_extra_01x():
 
 
 @pytest.mark.gfm
-def test_list_items_extra_01a():
+def test_list_items_extra_01a() -> None:
     """
     Test case Bq03a:  link definition within a list item
                       copy of test_link_reference_definitions_161 but within
@@ -3040,7 +3040,7 @@ def test_list_items_extra_01a():
 
 
 @pytest.mark.gfm
-def test_list_items_extra_01b():
+def test_list_items_extra_01b() -> None:
     """
     Test case Bq03a:  link definition within a list item
                       copy of test_link_reference_definitions_164 but within

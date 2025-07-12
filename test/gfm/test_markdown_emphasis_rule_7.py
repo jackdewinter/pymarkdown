@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_emphasis_400():
+def test_emphasis_400() -> None:
     """
     Test case 400:  Rule 7: This is not strong emphasis, because the closing delimiter is preceded by whitespace:
     """
@@ -23,7 +23,7 @@ def test_emphasis_400():
 
 
 @pytest.mark.gfm
-def test_emphasis_401():
+def test_emphasis_401() -> None:
     """
     Test case 401:  This is not strong emphasis, because the second ** is preceded by punctuation and followed by an alphanumeric:
     """
@@ -38,7 +38,7 @@ def test_emphasis_401():
 
 
 @pytest.mark.gfm
-def test_emphasis_402():
+def test_emphasis_402() -> None:
     """
     Test case 402:  (part 1) The point of this restriction is more easily appreciated with these examples
     """
@@ -63,7 +63,7 @@ def test_emphasis_402():
 
 
 @pytest.mark.gfm
-def test_emphasis_403():
+def test_emphasis_403() -> None:
     """
     Test case 403:  (part 2) The point of this restriction is more easily appreciated with these examples
     """
@@ -94,7 +94,7 @@ def test_emphasis_403():
 
 
 @pytest.mark.gfm
-def test_emphasis_404():
+def test_emphasis_404() -> None:
     """
     Test case 404:  (part 3) The point of this restriction is more easily appreciated with these examples
     """
@@ -119,7 +119,7 @@ def test_emphasis_404():
 
 
 @pytest.mark.gfm
-def test_emphasis_405():
+def test_emphasis_405() -> None:
     """
     Test case 405:  Intraword emphasis:
     """

@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_paragraph_series_h_f_l_t():
+def test_paragraph_series_h_f_l_t() -> None:
     """
     Test case:  Paragraph with full link label text split over 2 lines
     was:        test_paragraph_extra_a6
@@ -37,7 +37,7 @@ nk][bar]a
 
 
 @pytest.mark.gfm
-def test_paragraph_series_h_f_i_t():
+def test_paragraph_series_h_f_i_t() -> None:
     """
     Test case:  Paragraph with full image label text split over 2 lines
     was:        test_paragraph_extra_b8
@@ -64,7 +64,7 @@ nk][bar]a
 
 
 @pytest.mark.gfm
-def test_paragraph_series_h_f_l_cs():
+def test_paragraph_series_h_f_l_cs() -> None:
     """
     Test case:  Paragraph with full link label code span split over 2 lines
     was:        test_paragraph_extra_a7
@@ -97,7 +97,7 @@ fg`nk][bar]a
 
 
 @pytest.mark.gfm
-def test_paragraph_series_h_f_i_cs():
+def test_paragraph_series_h_f_i_cs() -> None:
     """
     Test case:  Paragraph with full image label code span split over 2 lines
     was:        test_paragraph_extra_b9
@@ -124,7 +124,7 @@ fg`nk][bar]a
 
 
 @pytest.mark.gfm
-def test_paragraph_series_h_f_l_rh():
+def test_paragraph_series_h_f_l_rh() -> None:
     """
     Test case:  Paragraph with full link label raw html split over 2 lines
     was:        test_paragraph_extra_a8
@@ -155,7 +155,7 @@ fg>nk][bar]a
 
 
 @pytest.mark.gfm
-def test_paragraph_series_h_f_i_rh():
+def test_paragraph_series_h_f_i_rh() -> None:
     """
     Test case:  Paragraph with full image label raw html split over 2 lines
     was:        test_paragraph_extra_c0
@@ -182,7 +182,7 @@ fg>nk][bar]a
 
 
 @pytest.mark.gfm
-def test_paragraph_series_h_c_l_t():
+def test_paragraph_series_h_c_l_t() -> None:
     """
     Test case:  Paragraph with collapsed link label text split over 2 lines
     was:        test_paragraph_extra_a9
@@ -211,7 +211,7 @@ nk][]a
 
 
 @pytest.mark.gfm
-def test_paragraph_series_h_c_i_t():
+def test_paragraph_series_h_c_i_t() -> None:
     """
     Test case:  Paragraph with collapsed image label text split over 2 lines
     was:        test_paragraph_extra_c1
@@ -238,7 +238,7 @@ nk][]a
 
 
 @pytest.mark.gfm
-def test_paragraph_series_h_c_l_cs():
+def test_paragraph_series_h_c_l_cs() -> None:
     """
     Test case:  Paragraph with collapsed link label code span split over 2 lines
     was:        test_paragraph_extra_b0
@@ -271,7 +271,7 @@ fg`nk][]a
 
 
 @pytest.mark.gfm
-def test_paragraph_series_h_c_i_cs():
+def test_paragraph_series_h_c_i_cs() -> None:
     """
     Test case:  Paragraph with collapsed image label code span split over 2 lines
     was:        test_paragraph_extra_c2
@@ -298,7 +298,7 @@ fg`nk][]a
 
 
 @pytest.mark.gfm
-def test_paragraph_series_h_c_l_rh():
+def test_paragraph_series_h_c_l_rh() -> None:
     """
     Test case:  Paragraph with collapsed link label raw html split over 2 lines
     was:        test_paragraph_extra_b1
@@ -329,7 +329,7 @@ fg>nk][]a
 
 
 @pytest.mark.gfm
-def test_paragraph_series_h_c_i_rh():
+def test_paragraph_series_h_c_i_rh() -> None:
     """
     Test case:  Paragraph with collapsed image label raw html split over 2 lines
     was:        test_paragraph_extra_c3
@@ -356,7 +356,7 @@ fg>nk][]a
 
 
 @pytest.mark.gfm
-def test_paragraph_series_h_s_l_t():
+def test_paragraph_series_h_s_l_t() -> None:
     """
     Test case:  Paragraph with shortcut link label text split over 2 lines
     was:        test_paragraph_extra_b2
@@ -385,7 +385,7 @@ nk]a
 
 
 @pytest.mark.gfm
-def test_paragraph_series_h_s_i_t():
+def test_paragraph_series_h_s_i_t() -> None:
     """
     Test case:  Paragraph with shortcut image label text split over 2 lines
     was:        test_paragraph_extra_c4
@@ -412,7 +412,7 @@ nk]a
 
 
 @pytest.mark.gfm
-def test_paragraph_series_h_s_l_cs():
+def test_paragraph_series_h_s_l_cs() -> None:
     """
     Test case:  Paragraph with shortcut link label code span split over 2 lines
     was:        test_paragraph_extra_b3
@@ -445,7 +445,7 @@ fg`nk]a
 
 
 @pytest.mark.gfm
-def test_paragraph_series_h_s_i_cs():
+def test_paragraph_series_h_s_i_cs() -> None:
     """
     Test case:  Paragraph with shortcut image label code span split over 2 lines
     was:        test_paragraph_extra_c5
@@ -472,7 +472,7 @@ fg`nk]a
 
 
 @pytest.mark.gfm
-def test_paragraph_series_h_s_l_rh():
+def test_paragraph_series_h_s_l_rh() -> None:
     """
     Test case:  Paragraph with shortcut link label raw html split over 2 lines
     was:        test_paragraph_extra_b4
@@ -503,7 +503,7 @@ fg>nk]a
 
 
 @pytest.mark.gfm
-def test_paragraph_series_h_s_i_rh():
+def test_paragraph_series_h_s_i_rh() -> None:
     """
     Test case:  Paragraph with shortcut image label raw html split over 2 lines
     was:        test_paragraph_extra_c6
@@ -530,7 +530,7 @@ fg>nk]a
 
 
 @pytest.mark.gfm
-def test_paragraph_series_h_i_l_t():
+def test_paragraph_series_h_i_l_t() -> None:
     """
     Test case:  Paragraph with inline link label text split over 2 lines
     was:        test_paragraph_extra_a3
@@ -555,7 +555,7 @@ nk](/uri "title" )a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_series_h_i_i_t():
+def test_paragraph_series_h_i_i_t() -> None:
     """
     Test case:  Paragraph with inline image label text split over 2 lines
     was:        test_paragraph_extra_b5
@@ -577,7 +577,7 @@ def test_paragraph_series_h_i_i_t():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_h_i_l_cs():
+def test_paragraph_series_h_i_l_cs() -> None:
     """
     Test case:  Paragraph with inline link label code span split over 2 lines
     was:        test_paragraph_extra_a4
@@ -606,7 +606,7 @@ fg`nk](/uri "title" )a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_series_h_i_i_cs():
+def test_paragraph_series_h_i_i_cs() -> None:
     """
     Test case:  Paragraph with inline image label code span split over 2 lines
     was:        test_paragraph_extra_b6
@@ -628,7 +628,7 @@ def test_paragraph_series_h_i_i_cs():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_h_i_l_rh():
+def test_paragraph_series_h_i_l_rh() -> None:
     """
     Test case:  Paragraph with inline link label raw html split over 2 lines
     was:        test_paragraph_extra_a5
@@ -655,7 +655,7 @@ fg>nk](/uri "title" )a"""
 
 
 @pytest.mark.gfm
-def test_paragraph_series_h_i_i_rh():
+def test_paragraph_series_h_i_i_rh() -> None:
     """
     Test case:  Paragraph with inline image label raw html split over 2 lines
     was:        test_paragraph_extra_b7

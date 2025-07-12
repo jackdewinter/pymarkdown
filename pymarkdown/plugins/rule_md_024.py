@@ -49,10 +49,13 @@ class RuleMd024(RulePlugin):
         """
         Event to allow the plugin to load configuration information.
         """
-        self.__siblings_only = self.plugin_configuration.get_boolean_property(
-            "siblings_only", default_value=False
-        ) or self.plugin_configuration.get_boolean_property(
-            "allow_different_nesting", default_value=False
+        self.__siblings_only = (
+            self.plugin_configuration.get_boolean_property_with_default(
+                "siblings_only", False
+            )
+            or self.plugin_configuration.get_boolean_property_with_default(
+                "allow_different_nesting", False
+            )
         )
 
     def query_config(self) -> List[QueryConfigItem]:

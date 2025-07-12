@@ -68,14 +68,14 @@ class RuleMd003(RulePlugin):
         """
         Event to allow the plugin to load configuration information.
         """
-        self.__style_type = self.plugin_configuration.get_string_property(
+        self.__style_type = self.plugin_configuration.get_string_property_with_default(
             "style",
-            default_value=RuleMd003.__consistent_style,
+            RuleMd003.__consistent_style,
             valid_value_fn=self.__validate_configuration_style,
         )
         self.__allow_consistent_setext_update = (
-            self.plugin_configuration.get_boolean_property(
-                "allow-setext-update", default_value=False
+            self.plugin_configuration.get_boolean_property_with_default(
+                "allow-setext-update", False
             )
             if self.__style_type == RuleMd003.__consistent_style
             else False

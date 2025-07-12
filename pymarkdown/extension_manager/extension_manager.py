@@ -25,6 +25,7 @@ from pymarkdown.extensions.pragma_token import PragmaExtension
 from pymarkdown.extensions.task_list_items import MarkdownTaskListItemsExtension
 from pymarkdown.general.main_presentation import MainPresentation
 from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.my_application_properties_facade import MyApplicationPropertiesFacade
 from pymarkdown.return_code_helper import ApplicationResult
 
 LOGGER = logging.getLogger(__name__)
@@ -63,7 +64,6 @@ class ExtensionManager:
 
     def initialize(
         self,
-        args: argparse.Namespace,
         properties: ApplicationProperties,
     ) -> None:
         """
@@ -71,7 +71,6 @@ class ExtensionManager:
         """
 
         self.__properties = properties
-        _ = args
 
         all_extensions: List[ParserExtension] = [
             FrontMatterExtension(),
@@ -358,7 +357,7 @@ class ExtensionManager:
 
     def __determine_if_extension_enabled(
         self, extension_object: ExtensionDetails
-    ) -> Tuple[bool, ApplicationPropertiesFacade]:
+    ) -> Tuple[bool, MyApplicationPropertiesFacade]:
         """
         Given the enable and disable rule values, evaluate the enabled or disabled
         state of the extension in proper order.
@@ -377,8 +376,8 @@ class ExtensionManager:
             f"{ExtensionManager.__extensions_prefix}{self.__properties.separator}"
             + f"{extension_object.extension_id}{self.__properties.separator}"
         )
-        extension_specific_facade = ApplicationPropertiesFacade(
-            self.__properties, plugin_section_title
+        extension_specific_facade = MyApplicationPropertiesFacade(
+            ApplicationPropertiesFacade(self.__properties, plugin_section_title)
         )
         new_value = extension_specific_facade.get_boolean_property(
             "enabled", default_value=None

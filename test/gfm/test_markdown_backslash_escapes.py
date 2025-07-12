@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_308():
+def test_backslash_escapes_308() -> None:
     """
     Test case 308:  Any ASCII punctuation character may be backslash-escaped:
     """
@@ -27,7 +27,7 @@ def test_backslash_escapes_308():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_309():
+def test_backslash_escapes_309() -> None:
     """
     Test case 309:  Backslashes before other characters are treated as literal backslashes:
     """
@@ -46,7 +46,7 @@ def test_backslash_escapes_309():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_310():
+def test_backslash_escapes_310() -> None:
     """
     Test case 310:  Escaped characters are treated as regular characters and do not have their usual Markdown meanings:
     """
@@ -81,7 +81,7 @@ def test_backslash_escapes_310():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_311():
+def test_backslash_escapes_311() -> None:
     """
     Test case 311:  If a backslash is itself escaped, the following character is not:
     """
@@ -103,7 +103,7 @@ def test_backslash_escapes_311():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_312():
+def test_backslash_escapes_312() -> None:
     """
     Test case 312:  A backslash at the end of the line is a hard line break:
     """
@@ -126,7 +126,7 @@ bar</p>"""
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_313():
+def test_backslash_escapes_313() -> None:
     """
     Test case 313:  (part 1) Backslash escapes do not work in code blocks, code spans, autolinks, or raw HTML:
     """
@@ -145,7 +145,7 @@ def test_backslash_escapes_313():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_314():
+def test_backslash_escapes_314() -> None:
     """
     Test case 314:  (part 2) Backslash escapes do not work in code blocks, code spans, autolinks, or raw HTML:
     """
@@ -165,7 +165,7 @@ def test_backslash_escapes_314():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_315():
+def test_backslash_escapes_315() -> None:
     """
     Test case 315:  (part 3) Backslash escapes do not work in code blocks, code spans, autolinks, or raw HTML:
     """
@@ -187,7 +187,7 @@ def test_backslash_escapes_315():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_316():
+def test_backslash_escapes_316() -> None:
     """
     Test case 316:  (part 4) Backslash escapes do not work in code blocks, code spans, autolinks, or raw HTML:
     """
@@ -206,7 +206,7 @@ def test_backslash_escapes_316():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_317():
+def test_backslash_escapes_317() -> None:
     """
     Test case 317:  (part 5) Backslash escapes do not work in code blocks, code spans, autolinks, or raw HTML:
     """
@@ -225,7 +225,7 @@ def test_backslash_escapes_317():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_318():
+def test_backslash_escapes_318() -> None:
     """
     Test case 318:  (part 1) But they work in all other contexts, including URLs and link titles, link references, and info strings in fenced code blocks:
     """
@@ -246,7 +246,7 @@ def test_backslash_escapes_318():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_319():
+def test_backslash_escapes_319() -> None:
     """
     Test case 319:  (part 2) But they work in all other contexts, including URLs and link titles, link references, and info strings in fenced code blocks:
     """
@@ -273,7 +273,7 @@ def test_backslash_escapes_319():
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_320():
+def test_backslash_escapes_320() -> None:
     """
     Test case 320:  (part 3) But they work in all other contexts, including URLs and link titles, link references, and info strings in fenced code blocks:
     """
@@ -295,7 +295,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_320a():
+def test_backslash_escapes_320a() -> None:
     """
     Test case 320a:  variation of 320 with an extra backslash after the +
     """
@@ -317,7 +317,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_320b():
+def test_backslash_escapes_320b() -> None:
     """
     Test case 320b:  variation of 320 with an extra backslash at the end
     """
@@ -339,7 +339,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_backslash_escapes_320c():
+def test_backslash_escapes_320c() -> None:
     """
     Test case 320c:  variation of 320 with an extra backslash at the end and extra space
     """

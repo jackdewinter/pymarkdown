@@ -9,7 +9,7 @@ import pytest
 
 # pylint: disable=too-many-lines
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max():
+def test_nested_three_block_max_block_max_ordered_max() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly.
@@ -43,7 +43,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_drop_ordered_x():
+def test_nested_three_block_max_block_max_ordered_max_drop_ordered_x() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly.
@@ -79,7 +79,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_drop_ordered_block():
+def test_nested_three_block_max_block_max_ordered_max_drop_ordered_block() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly.
@@ -113,7 +113,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_drop_ordered_block_block():
+def test_nested_three_block_max_block_max_ordered_max_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly.
@@ -147,7 +149,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_drop_ordered_block_block_all():
+def test_nested_three_block_max_block_max_ordered_max_drop_ordered_block_block_all() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly.
@@ -181,7 +185,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_with_li():
+def test_nested_three_block_max_block_max_ordered_max_with_li() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, with a list item.
@@ -219,7 +223,7 @@ def test_nested_three_block_max_block_max_ordered_max_with_li():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_with_li_and_nl():
+def test_nested_three_block_max_block_max_ordered_max_with_li_and_nl() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, with a list item.
@@ -259,7 +263,9 @@ again</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_with_li_and_nl_drop_ordered():
+def test_nested_three_block_max_block_max_ordered_max_with_li_and_nl_drop_ordered() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, with a list item.
@@ -299,7 +305,9 @@ again</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_with_li_and_nl_drop_ordered_block():
+def test_nested_three_block_max_block_max_ordered_max_with_li_and_nl_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, with a list item.
@@ -339,7 +347,9 @@ again</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_with_li_and_nl_drop_ordered_block_block():
+def test_nested_three_block_max_block_max_ordered_max_with_li_and_nl_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, with a list item.
@@ -379,7 +389,9 @@ again</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_with_li_and_nl_drop_ordered_block_block_all():
+def test_nested_three_block_max_block_max_ordered_max_with_li_and_nl_drop_ordered_block_block_all() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, with a list item.
@@ -419,7 +431,7 @@ again</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty():
+def test_nested_three_block_max_block_max_ordered_max_empty() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, and
     no text on the first line, with
@@ -454,7 +466,7 @@ def test_nested_three_block_max_block_max_ordered_max_empty():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_drop_ordered_x():
+def test_nested_three_block_max_block_max_ordered_max_empty_drop_ordered_x() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, and
     no text on the first line, with
@@ -490,7 +502,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_drop_ordered_x():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_with_space_drop_ordered():
+def test_nested_three_block_max_block_max_ordered_max_empty_with_space_drop_ordered() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, and
     no text on the first line, with
@@ -528,7 +542,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_with_space_drop_orde
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_drop_ordered_no_item_indent():
+def test_nested_three_block_max_block_max_ordered_max_empty_drop_ordered_no_item_indent() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, and
     no text on the first line, with
@@ -564,7 +580,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_drop_ordered_no_item
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_drop_ordered_block_x():
+def test_nested_three_block_max_block_max_ordered_max_empty_drop_ordered_block_x() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, and
     no text on the first line, with
@@ -600,7 +618,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_drop_ordered_block_x
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_drop_ordered_block_block():
+def test_nested_three_block_max_block_max_ordered_max_empty_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, and
     no text on the first line, with
@@ -636,7 +656,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_drop_ordered_block_b
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_drop_ordered_block_block_all():
+def test_nested_three_block_max_block_max_ordered_max_empty_drop_ordered_block_block_all() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, and
     no text on the first line, with
@@ -672,7 +694,7 @@ item"""
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_with_li():
+def test_nested_three_block_max_block_max_ordered_max_empty_with_li() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, and
     no text on the first line, with
@@ -709,7 +731,7 @@ def test_nested_three_block_max_block_max_ordered_max_empty_with_li():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_with_li_and_nl():
+def test_nested_three_block_max_block_max_ordered_max_empty_with_li_and_nl() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, and
     no text on the first line, with
@@ -748,7 +770,9 @@ list</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_with_li_and_nl_drop_ordered():
+def test_nested_three_block_max_block_max_ordered_max_empty_with_li_and_nl_drop_ordered() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, and
     no text on the first line, with
@@ -787,7 +811,9 @@ list</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_with_li_and_nl_drop_ordered_block():
+def test_nested_three_block_max_block_max_ordered_max_empty_with_li_and_nl_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, and
     no text on the first line, with
@@ -826,7 +852,9 @@ list</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_with_li_and_nl_drop_ordered_block_block():
+def test_nested_three_block_max_block_max_ordered_max_empty_with_li_and_nl_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, and
     no text on the first line, with
@@ -865,7 +893,9 @@ list</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_with_li_and_nl_drop_ordered_block_block_all():
+def test_nested_three_block_max_block_max_ordered_max_empty_with_li_and_nl_drop_ordered_block_block_all() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, and
     no text on the first line, with
@@ -904,7 +934,7 @@ list</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq1():
+def test_nested_three_block_max_block_max_ordered_max_no_bq1() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -939,7 +969,7 @@ def test_nested_three_block_max_block_max_ordered_max_no_bq1():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq1_drop_ordered():
+def test_nested_three_block_max_block_max_ordered_max_no_bq1_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -974,7 +1004,9 @@ def test_nested_three_block_max_block_max_ordered_max_no_bq1_drop_ordered():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq1_drop_ordered_block():
+def test_nested_three_block_max_block_max_ordered_max_no_bq1_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -1009,7 +1041,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq1_drop_ordered_block_block():
+def test_nested_three_block_max_block_max_ordered_max_no_bq1_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -1044,7 +1078,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq1_drop_ordered_block_block_all():
+def test_nested_three_block_max_block_max_ordered_max_no_bq1_drop_ordered_block_block_all() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -1079,7 +1115,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq1_with_li():
+def test_nested_three_block_max_block_max_ordered_max_no_bq1_with_li() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -1114,7 +1150,7 @@ def test_nested_three_block_max_block_max_ordered_max_no_bq1_with_li():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq1_with_li_and_nl():
+def test_nested_three_block_max_block_max_ordered_max_no_bq1_with_li_and_nl() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -1151,7 +1187,9 @@ another</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq1_with_li_and_nl_drop_ordered():
+def test_nested_three_block_max_block_max_ordered_max_no_bq1_with_li_and_nl_drop_ordered() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -1188,7 +1226,9 @@ another</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq1_with_li_and_nl_drop_ordered_block():
+def test_nested_three_block_max_block_max_ordered_max_no_bq1_with_li_and_nl_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -1225,7 +1265,9 @@ another</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq1_with_li_and_nl_drop_ordered_block_block():
+def test_nested_three_block_max_block_max_ordered_max_no_bq1_with_li_and_nl_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -1262,7 +1304,9 @@ another</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq1_with_li_and_nl_drop_ordered_block_block_all():
+def test_nested_three_block_max_block_max_ordered_max_no_bq1_with_li_and_nl_drop_ordered_block_block_all() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -1299,7 +1343,7 @@ another</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -1336,7 +1380,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1_drop_ordered():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1_drop_ordered() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -1373,7 +1419,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1_drop_ordered(
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1_drop_ordered_block():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -1410,7 +1458,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1_drop_ordered_
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1_drop_ordered_block_block():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -1446,7 +1496,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1_drop_ordered_
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1_drop_ordered_block_block_all():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1_drop_ordered_block_block_all() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -1482,7 +1534,7 @@ item"""
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1_with_li():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1_with_li() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -1519,7 +1571,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1_with_li():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1_with_li_and_nl():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1_with_li_and_nl() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -1558,7 +1612,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1_with_li_and_n
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1_with_li_and_nl_drop_ordered():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1_with_li_and_nl_drop_ordered() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -1597,7 +1653,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1_with_li_and_n
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1_with_li_and_nl_drop_ordered_block():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1_with_li_and_nl_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -1636,7 +1694,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1_with_li_and_n
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1_with_li_and_nl_drop_ordered_block_block():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1_with_li_and_nl_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -1678,7 +1738,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1_with_li_and_n
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1_with_li_and_nl_drop_ordered_block_block_all():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq1_with_li_and_nl_drop_ordered_block_block_all() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -1720,7 +1782,7 @@ list"""
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq2():
+def test_nested_three_block_max_block_max_ordered_max_no_bq2() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -1755,7 +1817,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq2_drop_ordered():
+def test_nested_three_block_max_block_max_ordered_max_no_bq2_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -1790,7 +1852,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq2_drop_ordered_block():
+def test_nested_three_block_max_block_max_ordered_max_no_bq2_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -1825,7 +1889,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq2_drop_ordered_block_block():
+def test_nested_three_block_max_block_max_ordered_max_no_bq2_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -1860,7 +1926,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq2_drop_ordered_block_block_all():
+def test_nested_three_block_max_block_max_ordered_max_no_bq2_drop_ordered_block_block_all() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -1895,7 +1963,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq2_with_li():
+def test_nested_three_block_max_block_max_ordered_max_no_bq2_with_li() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -1930,7 +1998,7 @@ def test_nested_three_block_max_block_max_ordered_max_no_bq2_with_li():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq2_with_li_and_nl():
+def test_nested_three_block_max_block_max_ordered_max_no_bq2_with_li_and_nl() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -1967,7 +2035,9 @@ redux</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq2_with_li_and_nl_drop_ordered():
+def test_nested_three_block_max_block_max_ordered_max_no_bq2_with_li_and_nl_drop_ordered() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -2004,7 +2074,9 @@ redux</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq2_with_li_and_nl_drop_ordered_block():
+def test_nested_three_block_max_block_max_ordered_max_no_bq2_with_li_and_nl_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -2041,7 +2113,9 @@ redux</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq2_with_li_and_nl_drop_ordered_block_block():
+def test_nested_three_block_max_block_max_ordered_max_no_bq2_with_li_and_nl_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -2078,7 +2152,9 @@ redux</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq2_with_li_and_nl_drop_ordered_block_block_all():
+def test_nested_three_block_max_block_max_ordered_max_no_bq2_with_li_and_nl_drop_ordered_block_block_all() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -2115,7 +2191,7 @@ redux</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -2152,7 +2228,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_drop_ordered():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_drop_ordered() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -2189,7 +2267,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_drop_ordered(
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_drop_ordered_block():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -2225,7 +2305,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_drop_ordered_
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_drop_ordered_block_block():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -2261,7 +2343,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_drop_ordered_
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_drop_ordered_block_block_all():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_drop_ordered_block_block_all() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -2297,7 +2381,7 @@ item"""
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_with_li():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_with_li() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -2334,7 +2418,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_with_li():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_with_li_and_nl_x():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_with_li_and_nl_x() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -2377,7 +2463,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_with_li_and_n
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_with_li_and_nl_drop_ordered():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_with_li_and_nl_drop_ordered() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -2420,7 +2508,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_with_li_and_n
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_with_li_and_nl_drop_ordered_block():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_with_li_and_nl_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -2463,7 +2553,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_with_li_and_n
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_with_li_and_nl_drop_ordered_block_block():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_with_li_and_nl_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -2505,7 +2597,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_with_li_and_n
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_with_li_and_nl_drop_ordered_block_block_all():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq2_with_li_and_nl_drop_ordered_block_block_all() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -2547,7 +2641,7 @@ list"""
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq3():
+def test_nested_three_block_max_block_max_ordered_max_no_bq3() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -2582,7 +2676,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq3_drop_ordered():
+def test_nested_three_block_max_block_max_ordered_max_no_bq3_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -2617,7 +2711,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq3_drop_ordered_block():
+def test_nested_three_block_max_block_max_ordered_max_no_bq3_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -2652,7 +2748,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq3_drop_ordered_block_block():
+def test_nested_three_block_max_block_max_ordered_max_no_bq3_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -2687,7 +2785,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq3_drop_ordered_block_block_all():
+def test_nested_three_block_max_block_max_ordered_max_no_bq3_drop_ordered_block_block_all() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -2722,7 +2822,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq3_with_li():
+def test_nested_three_block_max_block_max_ordered_max_no_bq3_with_li() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -2757,7 +2857,7 @@ def test_nested_three_block_max_block_max_ordered_max_no_bq3_with_li():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq3_with_li_and_nl():
+def test_nested_three_block_max_block_max_ordered_max_no_bq3_with_li_and_nl() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -2794,7 +2894,9 @@ redux</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq3_with_li_and_nl_drop_ordered():
+def test_nested_three_block_max_block_max_ordered_max_no_bq3_with_li_and_nl_drop_ordered() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -2831,7 +2933,9 @@ redux</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq3_with_li_and_nl_drop_ordered_block():
+def test_nested_three_block_max_block_max_ordered_max_no_bq3_with_li_and_nl_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -2868,7 +2972,9 @@ redux</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq3_with_li_and_nl_drop_ordered_block_block():
+def test_nested_three_block_max_block_max_ordered_max_no_bq3_with_li_and_nl_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -2905,7 +3011,9 @@ redux</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_no_bq3_with_li_and_nl_drop_ordered_block_block_all():
+def test_nested_three_block_max_block_max_ordered_max_no_bq3_with_li_and_nl_drop_ordered_block_block_all() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly,
@@ -2942,7 +3050,7 @@ redux</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -2979,7 +3087,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_drop_ordered():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_drop_ordered() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -3016,7 +3126,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_drop_ordered(
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_drop_ordered_block():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -3053,7 +3165,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_drop_ordered_
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_drop_ordered_block_block():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -3089,7 +3203,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_drop_ordered_
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_drop_ordered_block_block_all():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_drop_ordered_block_block_all() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -3125,7 +3241,7 @@ item"""
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_with_li():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_with_li() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -3162,7 +3278,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_with_li():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_with_li_and_nl():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_with_li_and_nl() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -3201,7 +3319,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_with_li_and_n
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_with_li_and_nl_drop_ordered():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_with_li_and_nl_drop_ordered() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -3240,7 +3360,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_with_li_and_n
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_with_li_and_nl_drop_ordered_block():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_with_li_and_nl_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -3279,7 +3401,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_with_li_and_n
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_with_li_and_nl_drop_ordered_block_block():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_with_li_and_nl_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -3321,7 +3445,9 @@ def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_with_li_and_n
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_with_li_and_nl_drop_ordered_block_block_all():
+def test_nested_three_block_max_block_max_ordered_max_empty_no_bq3_with_li_and_nl_drop_ordered_block_block_all() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces allowed works properly, and no text on the first line,
@@ -3363,7 +3489,7 @@ list"""
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_plus_one_block_max_ordered_max():
+def test_nested_three_block_max_plus_one_block_max_ordered_max() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the first) allowed works properly.
@@ -3386,7 +3512,7 @@ def test_nested_three_block_max_plus_one_block_max_ordered_max():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_plus_one_block_max_ordered_max_drop_ordered():
+def test_nested_three_block_max_plus_one_block_max_ordered_max_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the first) allowed works properly.
@@ -3409,7 +3535,9 @@ def test_nested_three_block_max_plus_one_block_max_ordered_max_drop_ordered():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_plus_one_block_max_ordered_max_drop_ordered_block():
+def test_nested_three_block_max_plus_one_block_max_ordered_max_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the first) allowed works properly.
@@ -3432,7 +3560,9 @@ def test_nested_three_block_max_plus_one_block_max_ordered_max_drop_ordered_bloc
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_plus_one_block_max_ordered_max_drop_ordered_block_block():
+def test_nested_three_block_max_plus_one_block_max_ordered_max_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the first) allowed works properly.
@@ -3455,7 +3585,9 @@ item
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_plus_one_block_max_ordered_max_drop_ordered_block_block_all():
+def test_nested_three_block_max_plus_one_block_max_ordered_max_drop_ordered_block_block_all() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the first) allowed works properly.
@@ -3481,7 +3613,7 @@ item"""
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq1():
+def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq1() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the first) allowed works properly,
@@ -3505,7 +3637,9 @@ def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq1():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq1_drop_ordered():
+def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq1_drop_ordered() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the first) allowed works properly,
@@ -3529,7 +3663,9 @@ def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq1_drop_order
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq1_drop_ordered_block():
+def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq1_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the first) allowed works properly,
@@ -3553,7 +3689,9 @@ def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq1_drop_order
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq1_drop_ordered_block_block():
+def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq1_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the first) allowed works properly,
@@ -3577,7 +3715,9 @@ item
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq1_drop_ordered_block_block_all():
+def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq1_drop_ordered_block_block_all() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the first) allowed works properly,
@@ -3604,7 +3744,7 @@ item"""
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq2():
+def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq2() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the first) allowed works properly,
@@ -3628,7 +3768,9 @@ def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq2():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq2_drop_ordered():
+def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq2_drop_ordered() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the first) allowed works properly,
@@ -3652,7 +3794,9 @@ def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq2_drop_order
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq2_drop_ordered_block():
+def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq2_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the first) allowed works properly,
@@ -3676,7 +3820,9 @@ def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq2_drop_order
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq2_drop_ordered_block_block():
+def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq2_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the first) allowed works properly,
@@ -3700,7 +3846,9 @@ item
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq2_drop_ordered_block_block_all():
+def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq2_drop_ordered_block_block_all() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the first) allowed works properly,
@@ -3727,7 +3875,7 @@ item"""
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq3():
+def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq3() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the first) allowed works properly,
@@ -3751,7 +3899,9 @@ def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq3():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq3_drop_ordered():
+def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq3_drop_ordered() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the first) allowed works properly,
@@ -3775,7 +3925,9 @@ def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq3_drop_order
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq3_drop_ordered_block():
+def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq3_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the first) allowed works properly,
@@ -3799,7 +3951,9 @@ def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq3_drop_order
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq3_drop_ordered_block_block():
+def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq3_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the first) allowed works properly,
@@ -3823,7 +3977,9 @@ item
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq3_drop_ordered_block_block_all():
+def test_nested_three_block_max_plus_one_block_max_ordered_max_no_bq3_drop_ordered_block_block_all() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the first) allowed works properly,
@@ -3850,7 +4006,7 @@ item"""
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_plus_one_ordered_max():
+def test_nested_three_block_max_block_max_plus_one_ordered_max() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the second) allowed works properly.
@@ -3877,7 +4033,7 @@ def test_nested_three_block_max_block_max_plus_one_ordered_max():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_plus_one_ordered_max_drop_ordered():
+def test_nested_three_block_max_block_max_plus_one_ordered_max_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the second) allowed works properly.
@@ -3904,7 +4060,9 @@ def test_nested_three_block_max_block_max_plus_one_ordered_max_drop_ordered():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_plus_one_ordered_max_drop_ordered_block():
+def test_nested_three_block_max_block_max_plus_one_ordered_max_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the second) allowed works properly.
@@ -3931,7 +4089,9 @@ item
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_plus_one_ordered_max_drop_ordered_block_block():
+def test_nested_three_block_max_block_max_plus_one_ordered_max_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the second) allowed works properly.
@@ -3961,7 +4121,9 @@ def test_nested_three_block_max_block_max_plus_one_ordered_max_drop_ordered_bloc
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_plus_one_ordered_max_drop_ordered_block_block_all():
+def test_nested_three_block_max_block_max_plus_one_ordered_max_drop_ordered_block_block_all() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the second) allowed works properly.
@@ -3991,7 +4153,7 @@ item"""
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq1():
+def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq1() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the second) allowed works properly,
@@ -4023,7 +4185,9 @@ def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq1():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq1_drop_ordered():
+def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq1_drop_ordered() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the second) allowed works properly,
@@ -4055,7 +4219,9 @@ def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq1_drop_order
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq1_drop_ordered_block():
+def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq1_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the second) allowed works properly,
@@ -4087,7 +4253,9 @@ def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq1_drop_order
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq1_drop_ordered_block_block():
+def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq1_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the second) allowed works properly,
@@ -4118,7 +4286,9 @@ def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq1_drop_order
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq1_drop_ordered_block_block_all():
+def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq1_drop_ordered_block_block_all() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the second) allowed works properly,
@@ -4149,7 +4319,7 @@ item"""
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq2():
+def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq2() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the second) allowed works properly.
@@ -4176,7 +4346,9 @@ def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq2():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq2_drop_ordered():
+def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq2_drop_ordered() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the second) allowed works properly.
@@ -4203,7 +4375,9 @@ def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq2_drop_order
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq2_drop_ordered_block():
+def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq2_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the second) allowed works properly.
@@ -4230,7 +4404,9 @@ item
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq2_drop_ordered_block_block():
+def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq2_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the second) allowed works properly.
@@ -4260,7 +4436,9 @@ def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq2_drop_order
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq2_drop_ordered_block_block_all():
+def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq2_drop_ordered_block_block_all() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the second) allowed works properly.
@@ -4290,7 +4468,7 @@ item"""
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq3():
+def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq3() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the second) allowed works properly.
@@ -4321,7 +4499,9 @@ def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq3():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq3_drop_ordered():
+def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq3_drop_ordered() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the second) allowed works properly.
@@ -4352,7 +4532,9 @@ def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq3_drop_order
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq3_drop_ordered_block():
+def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq3_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the second) allowed works properly.
@@ -4383,7 +4565,9 @@ def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq3_drop_order
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq3_drop_ordered_block_block():
+def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq3_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the second) allowed works properly.
@@ -4413,7 +4597,9 @@ def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq3_drop_order
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq3_drop_ordered_block_block_all():
+def test_nested_three_block_max_block_max_plus_one_ordered_max_no_bq3_drop_ordered_block_block_all() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the second) allowed works properly.
@@ -4443,7 +4629,7 @@ item"""
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_plus_one():
+def test_nested_three_block_max_block_max_ordered_max_plus_one() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the third) allowed works properly.
@@ -4474,7 +4660,7 @@ def test_nested_three_block_max_block_max_ordered_max_plus_one():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_plus_one_drop_ordered():
+def test_nested_three_block_max_block_max_ordered_max_plus_one_drop_ordered() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the third) allowed works properly.
@@ -4505,7 +4691,9 @@ item
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_plus_one_drop_ordered_block():
+def test_nested_three_block_max_block_max_ordered_max_plus_one_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the third) allowed works properly.
@@ -4539,7 +4727,9 @@ def test_nested_three_block_max_block_max_ordered_max_plus_one_drop_ordered_bloc
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_plus_one_drop_ordered_block_block():
+def test_nested_three_block_max_block_max_ordered_max_plus_one_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the third) allowed works properly.
@@ -4573,7 +4763,9 @@ def test_nested_three_block_max_block_max_ordered_max_plus_one_drop_ordered_bloc
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_plus_one_drop_ordered_block_block_all():
+def test_nested_three_block_max_block_max_ordered_max_plus_one_drop_ordered_block_block_all() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the third) allowed works properly.
@@ -4607,7 +4799,7 @@ item"""
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq1():
+def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq1() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the third) allowed works properly,
@@ -4643,7 +4835,9 @@ def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq1():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq1_drop_ordered():
+def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq1_drop_ordered() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the third) allowed works properly,
@@ -4679,7 +4873,9 @@ def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq1_drop_order
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq1_drop_ordered_block():
+def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq1_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the third) allowed works properly,
@@ -4715,7 +4911,9 @@ def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq1_drop_order
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq1_drop_ordered_block_block():
+def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq1_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the third) allowed works properly,
@@ -4750,7 +4948,9 @@ def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq1_drop_order
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq1_drop_ordered_block_block_all():
+def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq1_drop_ordered_block_block_all() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the third) allowed works properly,
@@ -4785,7 +4985,7 @@ item"""
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq2():
+def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq2() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the third) allowed works properly,
@@ -4821,7 +5021,9 @@ def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq2():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq2_drop_ordered():
+def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq2_drop_ordered() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the third) allowed works properly,
@@ -4857,7 +5059,9 @@ def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq2_drop_order
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq2_drop_ordered_block():
+def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq2_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the third) allowed works properly,
@@ -4892,7 +5096,9 @@ def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq2_drop_order
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq2_drop_ordered_block_block():
+def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq2_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the third) allowed works properly,
@@ -4927,7 +5133,9 @@ def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq2_drop_order
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq2_drop_ordered_block_block_all():
+def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq2_drop_ordered_block_block_all() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the third) allowed works properly,
@@ -4962,7 +5170,7 @@ item"""
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq3():
+def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq3() -> None:
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the third) allowed works properly,
@@ -4998,7 +5206,9 @@ def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq3():
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq3_drop_ordered():
+def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq3_drop_ordered() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the third) allowed works properly,
@@ -5034,7 +5244,9 @@ def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq3_drop_order
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq3_drop_ordered_block():
+def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq3_drop_ordered_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the third) allowed works properly,
@@ -5070,7 +5282,9 @@ def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq3_drop_order
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq3_drop_ordered_block_block():
+def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq3_drop_ordered_block_block() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the third) allowed works properly,
@@ -5105,7 +5319,9 @@ def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq3_drop_order
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq3_drop_ordered_block_block_all():
+def test_nested_three_block_max_block_max_ordered_max_plus_one_no_bq3_drop_ordered_block_block_all() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the third) allowed works properly,
@@ -5140,7 +5356,9 @@ item"""
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_text_drop_block_two_space_indent_text():
+def test_nested_three_block_max_block_max_ordered_max_text_drop_block_two_space_indent_text() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the third) allowed works properly,
@@ -5175,7 +5393,9 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_max_block_max_ordered_max_text_drop_block_one_space_indent_text():
+def test_nested_three_block_max_block_max_ordered_max_text_drop_block_one_space_indent_text() -> (
+    None
+):
     """
     Verify that a nesting of block quote, block quote, ordered list, with
     the maximum number of spaces (plus one for the third) allowed works properly,

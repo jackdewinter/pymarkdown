@@ -51,9 +51,11 @@ class RuleMd010(RulePlugin):
         """
         Event to allow the plugin to load configuration information.
         """
-        self.__check_in_code_blocks = self.plugin_configuration.get_boolean_property(
-            "code_blocks",
-            default_value=True,
+        self.__check_in_code_blocks = (
+            self.plugin_configuration.get_boolean_property_with_default(
+                "code_blocks",
+                True,
+            )
         )
 
     def query_config(self) -> List[QueryConfigItem]:

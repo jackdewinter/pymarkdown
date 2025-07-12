@@ -237,6 +237,8 @@ remove_virtual_environment() {
 			echo "  {If lock persists, try pipenv --rm to try and force the lock to be released.}"
 			complete_process 1
 		fi
+
+		mkdir .venv
 	fi
 
 	if [[ -z ${RESET_PYTHON_VERSION} ]]; then
@@ -280,21 +282,27 @@ execute_pre_commit() {
 
 	verbose_echo ""
 	verbose_echo "{Executing pre-commit hooks on Python code.}"
-	PRE_COMMIT_ARGS=
-	if [[ ${PUBLISH_MODE} -ne 0 ]]; then
-		PRE_COMMIT_ARGS="--all"
-	fi
+	PRE_COMMIT_ARGS=()
 	if [[ ${MYPY_ONLY_MODE} -ne 0 ]]; then
-		PRE_COMMIT_ARGS="${PRE_COMMIT_ARGS} mypy"
+		PRE_COMMIT_ARGS+=("mypy")
+	fi
+	if [[ ${PUBLISH_MODE} -ne 0 ]]; then
+		PRE_COMMIT_ARGS+=("--all")
 	fi
 	echo ""
-	if ! pipenv run pre-commit run "${PRE_COMMIT_ARGS}"; then
+	if ! pipenv run pre-commit run "${PRE_COMMIT_ARGS[@]}"; then
 		complete_process 1 "{Executing pre-commit hooks on Python code failed.}"
 	fi
 	echo ""
 }
 
 load_sourcery_configuration() {
+
+	local sourcery_config_file="${SCRIPT_DIR}"/.sourcery.yaml
+	if ! [[ -f ${sourcery_config_file} ]]; then
+		verbose_echo "{Sourcery configuration file not present. Skipping Sourcery analysis.}"
+		return 1
+	fi
 
 	echo ""
 	if [[ -z ${SOURCERY_USER_KEY:-} ]]; then
@@ -316,6 +324,7 @@ load_sourcery_configuration() {
 			complete_process 1 "{Variable 'SOURCERY_USER_KEY' is not defined and no sourceable script detected.}"
 		fi
 	fi
+	return 0
 }
 
 execute_sourcery() {
@@ -327,18 +336,24 @@ execute_sourcery() {
 
 	if [[ ${PUBLISH_MODE} -ne 0 ]]; then
 		verbose_echo "{  Executing Sourcery against full project contents.}"
-		if ! pipenv run sourcery review --check pymarkdown; then
+		if ! pipenv run sourcery review --check "${PYTHON_MODULE_NAME}"; then
 			complete_process 1 "{Executing Sourcery on Python code failed.}"
 		fi
 	else
 		verbose_echo "{  Executing Sourcery against changed project contents.}"
-		if ! pipenv run sourcery review --check pymarkdown --diff "git diff"; then
+		if ! pipenv run sourcery review --check "${PYTHON_MODULE_NAME}" --diff "git diff"; then
 			complete_process 1 "{Executing Sourcery on Python code failed.}"
 		fi
 	fi
 }
 
 find_unused_pylint_suppressions() {
+
+	if [[ ${PYTHON_MODULE_NAME} == "pylint_utils" ]]; then
+		PYLINT_UTILS_SCRIPT_PATH=(python "${SCRIPT_DIR}/main.py")
+	else
+		PYLINT_UTILS_SCRIPT_PATH=(pylint_utils)
+	fi
 
 	SCAN_FILES=()
 	git diff --name-only --staged >"${TEMP_FILE}"
@@ -353,7 +368,7 @@ find_unused_pylint_suppressions() {
 		verbose_echo "{Not executing pylint suppression checker on Python source code. No eligible Python files staged.}"
 	else
 		verbose_echo "{Executing pylint suppression checker on Python source code.}"
-		if ! pipenv run pylint_utils -s "${SCAN_FILES[@]}"; then
+		if ! pipenv run "${PYLINT_UTILS_SCRIPT_PATH[@]}" --ignore-path test/resources -s "${SCAN_FILES[@]}"; then
 			complete_process 1 "{Executing reporting of unused pylint suppressions in modified Python source code failed.}"
 		fi
 	fi
@@ -376,9 +391,15 @@ publish_analysis_results_if_requested() {
 
 analyze_pylint_suppressions() {
 
+	if [[ ${PYTHON_MODULE_NAME} == "pylint_utils" ]]; then
+		PYLINT_UTILS_SCRIPT_PATH=(python "${SCRIPT_DIR}/main.py")
+	else
+		PYLINT_UTILS_SCRIPT_PATH=(pylint_utils)
+	fi
+
 	echo ""
 	verbose_echo "{Executing pylint utils analyzer on Python source code to verify suppressions and document them.}"
-	if ! pipenv run pylint_utils --recurse -r "${SCRIPT_DIR}/publish/pylint_suppression.json" "${PYTHON_MODULE_NAME}"; then
+	if ! pipenv run "${PYLINT_UTILS_SCRIPT_PATH[@]}" --recurse -r "${SCRIPT_DIR}/publish/pylint_suppression.json" "${PYTHON_MODULE_NAME}"; then
 		complete_process 1 "{Executing reporting of pylint suppressions in Python source code failed.}"
 	fi
 }
@@ -393,41 +414,12 @@ execute_test_suite() {
 }
 
 execute_performance_suite() {
-
-	local tests_to_execute="1,2,3,4,5,10,15,20,25,30,35,40,45,50,60,70,80,90,100"
-	# shorter list for now
-	tests_to_execute="1,2,3,4,5,10,15,20,25,30,35,40,45,50"
-	local sample_size=5
-
-	verbose_echo ""
-	verbose_echo "{Executing performance tests on application with rules enabled.}"
-	rm -f "${SCRIPT_DIR}/build/series.csv" >/dev/null 2>&1
-	rm -f "${SCRIPT_DIR}/build/series.json" >/dev/null 2>&1
-	if ! ./perf_series.sh --count ${sample_size} --list ${tests_to_execute} --only-first; then
-		complete_process 1 "{Executing of performance tests with rules enabled failed.}"
+	if [[ ! -f "${SCRIPT_DIR}/perf_clean.sh" ]]; then
+		complete_process 1 "No performance suite available for this project.  Please check the project documentation for more information."
 	fi
-	if ! cp "${SCRIPT_DIR}/build/series.csv" "${SCRIPT_DIR}/publish/perf-with-rules.csv" >"${TEMP_FILE}" 2>&1; then
-		complete_process 1 "{Publishing of performance test times with rules enabled failed.}"
+	if ! ./perf_clean.sh; then
+		complete_process 1 "{Executing performance tests failed.}"
 	fi
-	if ! cp "${SCRIPT_DIR}/build/series.json" "${SCRIPT_DIR}/publish/perf-with-rules.json" >"${TEMP_FILE}" 2>&1; then
-		complete_process 1 "{Publishing of performance test profile with rules enabled failed.}"
-	fi
-	verbose_echo "{Results of performance tests on application with rules enabled have been published.}"
-
-	verbose_echo ""
-	verbose_echo "{Executing performance tests on application with rules disabled.}"
-	rm -f "${SCRIPT_DIR}/build/series.csv" >/dev/null 2>&1
-	rm -f "${SCRIPT_DIR}/build/series.json" >/dev/null 2>&1
-	if ! ./perf_series.sh --no-rules --count ${sample_size} --list ${tests_to_execute} --only-first; then
-		complete_process 1 "{Executing of performance tests with rules disabled failed.}"
-	fi
-	if ! cp "${SCRIPT_DIR}/build/series.csv" "${SCRIPT_DIR}/publish/perf-without-rules.csv" >"${TEMP_FILE}" 2>&1; then
-		complete_process 1 "{Publishing of performance test times with rules disabled failed.}"
-	fi
-	if ! cp "${SCRIPT_DIR}/build/series.json" "${SCRIPT_DIR}/publish/perf-without-rules.json" >"${TEMP_FILE}" 2>&1; then
-		complete_process 1 "{Publishing of performance test profile with rules disabled failed.}"
-	fi
-	verbose_echo "{Results of performance tests on application with rules disabled have been published.}"
 }
 
 # Parse any command line values.
@@ -437,6 +429,16 @@ parse_command_line "$@"
 start_process
 
 load_properties_from_file
+
+if ! python.exe -m pip install --upgrade pip >"${TEMP_FILE}" 2>&1; then
+	cat "${TEMP_FILE}"
+	complete_process 1 "{Cannot ensure pip has been upgraded.  Please check your Python installation and try again.}"
+fi
+
+if ! pip install -U pipenv==2025.0.3 >"${TEMP_FILE}" 2>&1; then
+	cat "${TEMP_FILE}"
+	complete_process 1 "{Cannot ensure pipenv has been upgraded.  Please check your Python installation and try again.}"
+fi
 
 RESET_PIPFILE=0
 if [[ ${FORCE_RESET_MODE} -ne 0 ]]; then
@@ -460,9 +462,9 @@ fi
 if [[ ${NO_SOURCERY_MODE} -ne 0 ]] || [[ ${PERFORMANCE_ONLY_MODE} -ne 0 ]]; then
 	echo "{Skipping Sourcery static analyzer by request.}"
 else
-	load_sourcery_configuration
-
-	execute_sourcery
+	if load_sourcery_configuration; then
+		execute_sourcery
+	fi
 
 	if [[ ${SOURCERY_ONLY_MODE} -ne 0 ]]; then
 		complete_process 0
@@ -475,6 +477,15 @@ if [[ ${PERFORMANCE_ONLY_MODE} -eq 0 ]]; then
 	find_unused_pylint_suppressions
 
 	execute_test_suite
+
+	if ! ./package-release.sh; then
+		complete_process 1 "{Packaging of the project failed.}"
+	fi
+
+	if ! pipenv run pyroma -n 10 . >"${TEMP_FILE}" 2>&1; then
+		cat "${TEMP_FILE}"
+		complete_process 1 "{Executing pyroma on Python code failed.}"
+	fi
 fi
 
 if [[ ${PERFORMANCE_MODE} -ne 0 ]]; then

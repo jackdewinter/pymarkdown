@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_list_blocks_231x():
+def test_list_blocks_231x() -> None:
     """
     Test case 231:  If the list item is ordered, then it is also assigned a start number, based on the ordered list marker.
     """
@@ -48,7 +48,7 @@ with two lines.</p>
 
 
 @pytest.mark.gfm
-def test_list_blocks_231a():
+def test_list_blocks_231a() -> None:
     """
     Test case 231:  If the list item is ordered, then it is also assigned a start number, based on the ordered list marker.
     """
@@ -88,7 +88,7 @@ with two lines.</p>
 
 
 @pytest.mark.gfm
-def test_list_blocks_231b():
+def test_list_blocks_231b() -> None:
     """
     Test case 231:  variant
     """
@@ -117,7 +117,7 @@ with two lines.
 
 
 @pytest.mark.gfm
-def test_list_blocks_232():
+def test_list_blocks_232() -> None:
     """
     Test case 232:  And let M be the marker 1., and N = 2. Then rule #1 says that
                     the following is an ordered list item with start number 1, and
@@ -165,7 +165,7 @@ with two lines.</p>
 
 
 @pytest.mark.gfm
-def test_list_blocks_233():
+def test_list_blocks_233() -> None:
     """
     Test case 233:  (part 1) Here are some examples showing how far content must be indented to be put under the list item:
 
@@ -202,7 +202,7 @@ def test_list_blocks_233():
 
 
 @pytest.mark.gfm
-def test_list_blocks_234():
+def test_list_blocks_234() -> None:
     """
     Test case 234:  (part 2) Here are some examples showing how far content must be indented to be put under the list item:
     """
@@ -234,7 +234,7 @@ def test_list_blocks_234():
 
 
 @pytest.mark.gfm
-def test_list_blocks_235():
+def test_list_blocks_235() -> None:
     """
     Test case 235:  (part 3) Here are some examples showing how far content must be indented to be put under the list item:
 
@@ -267,7 +267,7 @@ def test_list_blocks_235():
 
 
 @pytest.mark.gfm
-def test_list_blocks_236():
+def test_list_blocks_236() -> None:
     """
     Test case 236:  (part 4) Here are some examples showing how far content must be indented to be put under the list item:
     """
@@ -300,7 +300,7 @@ def test_list_blocks_236():
 
 @pytest.mark.gfm
 @pytest.mark.skip
-def test_list_blocks_237x():
+def test_list_blocks_237x() -> None:
     """
     Test case 237:  The spaces after the list marker determine how much relative indentation is needed. Which column this indentation reaches will depend on how the list item is embedded in other constructions, as shown by this example:
     """
@@ -340,7 +340,7 @@ def test_list_blocks_237x():
 
 
 @pytest.mark.gfm
-def test_list_blocks_237a():
+def test_list_blocks_237a() -> None:
     """
     Test case 237a:  variation of 237 properly indented
     """
@@ -374,7 +374,7 @@ def test_list_blocks_237a():
 
 
 @pytest.mark.gfm
-def test_list_blocks_237bx():
+def test_list_blocks_237bx() -> None:
     """
     Test case 237a:  variation of 237 improperly indented
     """
@@ -408,7 +408,7 @@ def test_list_blocks_237bx():
 
 
 @pytest.mark.gfm
-def test_list_blocks_237ba():
+def test_list_blocks_237ba() -> None:
     """
     Test case 237ba:  variation of 237b improperly indented
     """
@@ -442,7 +442,7 @@ def test_list_blocks_237ba():
 
 
 @pytest.mark.gfm
-def test_list_blocks_237c():
+def test_list_blocks_237c() -> None:
     """
     Test case 237c:  variation of 237 properly indented
     """
@@ -476,7 +476,7 @@ def test_list_blocks_237c():
 
 
 @pytest.mark.gfm
-def test_list_blocks_237d():
+def test_list_blocks_237d() -> None:
     """
     Test case 237d:  variation of 237 properly indented
     """
@@ -510,7 +510,7 @@ def test_list_blocks_237d():
 
 
 @pytest.mark.gfm
-def test_list_blocks_237e():
+def test_list_blocks_237e() -> None:
     """
     Test case 237:  variation of 237 with not enough on final
     """
@@ -549,7 +549,7 @@ def test_list_blocks_237e():
 
 @pytest.mark.gfm
 @pytest.mark.skip
-def test_list_blocks_237f():
+def test_list_blocks_237f() -> None:
     """
     Test case 237:  variation of 237 with blank lines before and after
     """
@@ -594,7 +594,7 @@ def test_list_blocks_237f():
 
 @pytest.mark.gfm
 @pytest.mark.skip
-def test_list_blocks_237g():
+def test_list_blocks_237g() -> None:
     """
     Test case 237:  variation of 237 where bq starts before
     """
@@ -636,7 +636,7 @@ def test_list_blocks_237g():
 
 
 @pytest.mark.gfm
-def test_list_blocks_238x():
+def test_list_blocks_238x() -> None:
     """
     Test case 238:  The converse is also possible. In the following example, the word two occurs far to the right of the initial text of the list item, one, but it is not considered part of the list item, because it is not indented far enough past the blockquote marker:
     """
@@ -675,7 +675,7 @@ def test_list_blocks_238x():
 
 @pytest.mark.gfm
 @pytest.mark.skip
-def test_list_blocks_238a():
+def test_list_blocks_238a() -> None:
     """
     Test case 238a:  variation of 238 with  more spacing
     """
@@ -717,7 +717,7 @@ def test_list_blocks_238a():
 
 
 @pytest.mark.gfm
-def test_list_blocks_238b():
+def test_list_blocks_238b() -> None:
     """
     Test case 238:  variation of 238 with blanks before and after
     """
@@ -759,7 +759,7 @@ def test_list_blocks_238b():
 
 
 @pytest.mark.gfm
-def test_list_blocks_238c():
+def test_list_blocks_238c() -> None:
     """
     Test case 238:  variation of 238 where bq starts before
     """
@@ -799,7 +799,7 @@ def test_list_blocks_238c():
 
 
 @pytest.mark.gfm
-def test_list_blocks_239():
+def test_list_blocks_239() -> None:
     """
     Test case 239:  Note that at least one space is needed between the list marker and any following content, so these are not list items:
     """
@@ -825,7 +825,7 @@ def test_list_blocks_239():
 
 
 @pytest.mark.gfm
-def test_list_blocks_240():
+def test_list_blocks_240() -> None:
     """
     Test case 240:  A list item may contain blocks that are separated by more than one blank line.
     """
@@ -859,7 +859,7 @@ def test_list_blocks_240():
 
 
 @pytest.mark.gfm
-def test_list_blocks_241():
+def test_list_blocks_241() -> None:
     """
     Test case 241:  A list item may contain any kind of block:
     """
@@ -912,7 +912,7 @@ def test_list_blocks_241():
 
 
 @pytest.mark.gfm
-def test_list_blocks_242():
+def test_list_blocks_242() -> None:
     """
     Test case 242:  A list item that contains an indented code block will preserve empty lines within the code block verbatim.
     """
@@ -951,7 +951,7 @@ baz
 
 
 @pytest.mark.gfm
-def test_list_blocks_242a():
+def test_list_blocks_242a() -> None:
     """
     Test case 242a:  variation of 242 with no blank line after first line
     """
@@ -988,7 +988,7 @@ bar</p>
 
 
 @pytest.mark.gfm
-def test_list_blocks_242b():
+def test_list_blocks_242b() -> None:
     """
     Test case 242b:  variation of 242 with extra blank lines
     """
@@ -1033,7 +1033,7 @@ baz
 
 
 @pytest.mark.gfm
-def test_list_blocks_242c():
+def test_list_blocks_242c() -> None:
     """
     Test case 242c:  variation of 242 with extra blank lines
     """
@@ -1076,7 +1076,7 @@ baz
 
 
 @pytest.mark.gfm
-def test_list_blocks_242d():
+def test_list_blocks_242d() -> None:
     """
     Test case 242d:  variation of 242, if in a paragraph, the text's indents are split
                      between the paragraph and the enclosing list
@@ -1111,7 +1111,7 @@ baz</p>
 
 
 @pytest.mark.gfm
-def test_list_blocks_243():
+def test_list_blocks_243() -> None:
     """
     Test case 243:  (part 1) Note that ordered list start numbers must be nine digits or less:
     """
@@ -1134,7 +1134,7 @@ def test_list_blocks_243():
 
 
 @pytest.mark.gfm
-def test_list_blocks_244():
+def test_list_blocks_244() -> None:
     """
     Test case 244:  (part 2) Note that ordered list start numbers must be nine digits or less:
     """
@@ -1153,7 +1153,7 @@ def test_list_blocks_244():
 
 
 @pytest.mark.gfm
-def test_list_blocks_245():
+def test_list_blocks_245() -> None:
     """
     Test case 245:  (part 1) A start number may begin with 0s:
     """
@@ -1176,7 +1176,7 @@ def test_list_blocks_245():
 
 
 @pytest.mark.gfm
-def test_list_blocks_246():
+def test_list_blocks_246() -> None:
     """
     Test case 246:  (part 2) A start number may begin with 0s:
     """
@@ -1199,7 +1199,7 @@ def test_list_blocks_246():
 
 
 @pytest.mark.gfm
-def test_list_blocks_247():
+def test_list_blocks_247() -> None:
     """
     Test case 247:  A start number may not be negative:
     """
@@ -1214,7 +1214,7 @@ def test_list_blocks_247():
 
 
 @pytest.mark.gfm
-def test_list_blocks_248():
+def test_list_blocks_248() -> None:
     """
     Test case 248:  An indented code block will have to be indented four spaces beyond the edge of the region where text will be included in the list item. In the following case that is 6 spaces:
     """
@@ -1247,7 +1247,7 @@ def test_list_blocks_248():
 
 
 @pytest.mark.gfm
-def test_list_blocks_248a():
+def test_list_blocks_248a() -> None:
     """
     Test case 248a:  variation of 248 with less indent on line three
     """
@@ -1279,7 +1279,7 @@ def test_list_blocks_248a():
 
 
 @pytest.mark.gfm
-def test_list_blocks_249():
+def test_list_blocks_249() -> None:
     """
     Test case 249:  And in this case it is 11 spaces:
     """
@@ -1312,7 +1312,7 @@ def test_list_blocks_249():
 
 
 @pytest.mark.gfm
-def test_list_blocks_250():
+def test_list_blocks_250() -> None:
     """
     Test case 250:  (part 1) If the first block in the list item is an indented code block, then by rule #2, the contents must be indented one space after the list marker:
     """
@@ -1347,7 +1347,7 @@ paragraph
 
 
 @pytest.mark.gfm
-def test_list_blocks_251():
+def test_list_blocks_251() -> None:
     """
     Test case 251:  (part 2) If the first block in the list item is an indented code block, then by rule #2, the contents must be indented one space after the list marker:
     """
@@ -1388,7 +1388,7 @@ def test_list_blocks_251():
 
 
 @pytest.mark.gfm
-def test_list_blocks_252():
+def test_list_blocks_252() -> None:
     """
     Test case 252:  (part 2) If the first block in the list item is an indented code block, then by rule #2, the contents must be indented one space after the list marker:
     """
@@ -1429,7 +1429,7 @@ def test_list_blocks_252():
 
 
 @pytest.mark.gfm
-def test_list_blocks_253():
+def test_list_blocks_253() -> None:
     """
     Test case 253:  (part 1) Note that rules #1 and #2 only apply to two cases: (a) cases in which the lines to be included in a list item begin with a non-whitespace character, and (b) cases in which they begin with an indented code block. In a case like the following, where the first block begins with a three-space indent, the rules do not allow us to form a list item by indenting the whole thing and prepending a list marker:
     """
@@ -1455,7 +1455,7 @@ bar"""
 
 
 @pytest.mark.gfm
-def test_list_blocks_254():
+def test_list_blocks_254() -> None:
     """
     Test case 254:  (part 2) Note that rules #1 and #2 only apply to two cases: (a) cases in which the lines to be included in a list item begin with a non-whitespace character, and (b) cases in which they begin with an indented code block. In a case like the following, where the first block begins with a three-space indent, the rules do not allow us to form a list item by indenting the whole thing and prepending a list marker:
     """
@@ -1485,7 +1485,7 @@ def test_list_blocks_254():
 
 
 @pytest.mark.gfm
-def test_list_blocks_255():
+def test_list_blocks_255() -> None:
     """
     Test case 255:  This is not a significant restriction, because when a block begins with 1-3 spaces indent, the indentation can always be removed without a change in interpretation, allowing rule #1 to be applied. So, in the above case:
     """
@@ -1517,7 +1517,7 @@ def test_list_blocks_255():
 
 
 @pytest.mark.gfm
-def test_list_blocks_256x():
+def test_list_blocks_256x() -> None:
     """
     Test case 256:  Here are some list items that start with a blank line but are not empty:
     """
@@ -1566,7 +1566,7 @@ def test_list_blocks_256x():
 
 
 @pytest.mark.gfm
-def test_list_blocks_256a():
+def test_list_blocks_256a() -> None:
     """
     Test case 256a:  variation on 256 with extra spaces on blank lines don't make any impact
     """
@@ -1617,7 +1617,7 @@ def test_list_blocks_256a():
 
 
 @pytest.mark.gfm
-def test_list_blocks_256b():
+def test_list_blocks_256b() -> None:
     """
     Test case 256b:  variation on 256 with extra spaces on blank lines don't make any impact
     """
@@ -1668,7 +1668,7 @@ def test_list_blocks_256b():
 
 
 @pytest.mark.gfm
-def test_list_blocks_256c():
+def test_list_blocks_256c() -> None:
     """
     Test case 256c:  variation of 256 with ordered list
     """
@@ -1714,7 +1714,7 @@ def test_list_blocks_256c():
 
 
 @pytest.mark.gfm
-def test_list_blocks_256d():
+def test_list_blocks_256d() -> None:
     """
     Test case 256d:  variation of 256with (almost) ordered list
     """
@@ -1769,7 +1769,7 @@ def test_list_blocks_256d():
 
 
 @pytest.mark.gfm
-def test_list_blocks_256e():
+def test_list_blocks_256e() -> None:
     """
     Test case 256e:  variation of 256 with (almost) ordered list
     """
@@ -1816,7 +1816,7 @@ def test_list_blocks_256e():
 
 
 @pytest.mark.gfm
-def test_list_blocks_257xx():
+def test_list_blocks_257xx() -> None:
     """
     Test case 257:  When the list item starts with a blank line, the number of spaces following the list marker doesn’t change the required indentation:
     """
@@ -1843,7 +1843,7 @@ def test_list_blocks_257xx():
 
 
 @pytest.mark.gfm
-def test_list_blocks_257xa():
+def test_list_blocks_257xa() -> None:
     """
     Test case 257:  TBD
     """
@@ -1868,7 +1868,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_list_blocks_257xb():
+def test_list_blocks_257xb() -> None:
     """
     Test case 257:  TBD
     """
@@ -1893,7 +1893,7 @@ foo</li>
 
 
 @pytest.mark.gfm
-def test_list_blocks_257xc():
+def test_list_blocks_257xc() -> None:
     """
     Test case 257:  TBD
     """
@@ -1920,7 +1920,7 @@ bar</li>
 
 
 @pytest.mark.gfm
-def test_list_blocks_257xd():
+def test_list_blocks_257xd() -> None:
     """
     Test case 257:  TBD
     """
@@ -1952,7 +1952,7 @@ def test_list_blocks_257xd():
 
 
 @pytest.mark.gfm
-def test_list_blocks_257xe():
+def test_list_blocks_257xe() -> None:
     """
     Test case 257:  TBD
     """
@@ -1979,7 +1979,7 @@ bar</li>
 
 
 @pytest.mark.gfm
-def test_list_blocks_257xf():
+def test_list_blocks_257xf() -> None:
     """
     Test case 257:  TBD
     """
@@ -2010,7 +2010,7 @@ bar</li>
 
 
 @pytest.mark.gfm
-def test_list_blocks_257a():
+def test_list_blocks_257a() -> None:
     """
     Test case 257a:  variation on 257 with no extra spaces on start line
     """
@@ -2035,7 +2035,7 @@ def test_list_blocks_257a():
 
 
 @pytest.mark.gfm
-def test_list_blocks_257b():
+def test_list_blocks_257b() -> None:
     """
     Test case 257b:  variation on 257 with no extra spaces on start line
         and ordered list
@@ -2061,7 +2061,7 @@ def test_list_blocks_257b():
 
 
 @pytest.mark.gfm
-def test_list_blocks_258():
+def test_list_blocks_258() -> None:
     """
     Test case 258:  A list item can begin with at most one blank line. In the following example, foo is not part of the list item:
     """
@@ -2089,7 +2089,7 @@ def test_list_blocks_258():
 
 
 @pytest.mark.gfm
-def test_list_blocks_259():
+def test_list_blocks_259() -> None:
     """
     Test case 259:  Here is an empty bullet list item:
     """
@@ -2122,7 +2122,7 @@ def test_list_blocks_259():
 
 
 @pytest.mark.gfm
-def test_list_blocks_260():
+def test_list_blocks_260() -> None:
     """
     Test case 260:  It does not matter whether there are spaces following the list marker:
     """
@@ -2157,7 +2157,7 @@ def test_list_blocks_260():
 
 
 @pytest.mark.gfm
-def test_list_blocks_261():
+def test_list_blocks_261() -> None:
     """
     Test case 261:  Here is an empty ordered list item:
     """
@@ -2190,7 +2190,7 @@ def test_list_blocks_261():
 
 
 @pytest.mark.gfm
-def test_list_blocks_262():
+def test_list_blocks_262() -> None:
     """
     Test case 262:  A list may start or end with an empty list item:
     """
@@ -2207,7 +2207,7 @@ def test_list_blocks_262():
 
 
 @pytest.mark.gfm
-def test_list_blocks_262a():
+def test_list_blocks_262a() -> None:
     """
     Test case 262a:  variation on 262 with ordered list
     """
@@ -2224,7 +2224,7 @@ def test_list_blocks_262a():
 
 
 @pytest.mark.gfm
-def test_list_blocks_263():
+def test_list_blocks_263() -> None:
     """
     Test case 263:  However, an empty list item cannot interrupt a paragraph:
     """
@@ -2254,7 +2254,7 @@ foo
 
 
 @pytest.mark.gfm
-def test_list_blocks_263a():
+def test_list_blocks_263a() -> None:
     """
     Test case 263a:  variation on 263
     """
@@ -2289,7 +2289,7 @@ def test_list_blocks_263a():
 
 
 @pytest.mark.gfm
-def test_list_blocks_263b():
+def test_list_blocks_263b() -> None:
     """
     Test case 263b:  variation on 263a with following list number
     """
@@ -2316,7 +2316,7 @@ def test_list_blocks_263b():
 
 
 @pytest.mark.gfm
-def test_list_blocks_263bu():
+def test_list_blocks_263bu() -> None:
     """
     Test case 257bu:  variation on 257b with unordered
     """
@@ -2351,7 +2351,7 @@ def test_list_blocks_263bu():
 
 
 @pytest.mark.gfm
-def test_list_blocks_264():
+def test_list_blocks_264() -> None:
     """
     Test case 264:  Indented one space:
     """
@@ -2397,7 +2397,7 @@ with two lines.</p>
 
 
 @pytest.mark.gfm
-def test_list_blocks_265():
+def test_list_blocks_265() -> None:
     """
     Test case 265:  Indented two spaces:
     """
@@ -2443,7 +2443,7 @@ with two lines.</p>
 
 
 @pytest.mark.gfm
-def test_list_blocks_266():
+def test_list_blocks_266() -> None:
     """
     Test case 266:  Indented three spaces:
     """
@@ -2489,7 +2489,7 @@ with two lines.</p>
 
 
 @pytest.mark.gfm
-def test_list_blocks_267():
+def test_list_blocks_267() -> None:
     """
     Test case 267:  Four spaces indent gives a code block
     """
@@ -2519,7 +2519,7 @@ def test_list_blocks_267():
 
 
 @pytest.mark.gfm
-def test_list_blocks_268():
+def test_list_blocks_268() -> None:
     """
     Test case 268:  Here is an example with lazy continuation lines:
     """
@@ -2565,7 +2565,7 @@ with two lines.</p>
 
 
 @pytest.mark.gfm
-def test_list_blocks_269x():
+def test_list_blocks_269x() -> None:
     """
     Test case 269:  Indentation can be partially deleted:
     """
@@ -2590,7 +2590,7 @@ with two lines.</li>
 
 
 @pytest.mark.gfm
-def test_list_blocks_269a():
+def test_list_blocks_269a() -> None:
     """
     Test case 269a:  variation on 269 with less indent on second line
     """
@@ -2615,7 +2615,7 @@ with two lines.</li>
 
 
 @pytest.mark.gfm
-def test_list_blocks_269b():
+def test_list_blocks_269b() -> None:
     """
     Test case 269b:  variation on 269 with more indent on second line
     """
@@ -2640,7 +2640,7 @@ with two lines.</li>
 
 
 @pytest.mark.gfm
-def test_list_blocks_269c():
+def test_list_blocks_269c() -> None:
     """
     Test case 269c:  variation on 269 with extra line
     """
@@ -2667,7 +2667,7 @@ the two lines.</li>
 
 
 @pytest.mark.gfm
-def test_list_blocks_270x():
+def test_list_blocks_270x() -> None:
     """
     Test case 270:  (part 1) These examples show how laziness can work in nested structures:
     """
@@ -2702,7 +2702,7 @@ continued here.</p>
 
 
 @pytest.mark.gfm
-def test_list_blocks_270a():
+def test_list_blocks_270a() -> None:
     """
     Test case 270a: variation of 270 that starts and stops with a blank
     """
@@ -2741,7 +2741,7 @@ continued here.</p>
 
 
 @pytest.mark.gfm
-def test_list_blocks_270b():
+def test_list_blocks_270b() -> None:
     """
     Test case 270a: variation of 270 with a list item
     """
@@ -2776,7 +2776,7 @@ continued here.</li>
 
 
 @pytest.mark.gfm
-def test_list_blocks_270c():
+def test_list_blocks_270c() -> None:
     """
     Test case 270:  variation where bq starts before
     """
@@ -2813,7 +2813,7 @@ continued here.</p>
 
 
 @pytest.mark.gfm
-def test_list_blocks_270d():
+def test_list_blocks_270d() -> None:
     """
     Test case 270:  variation where bq starts before
     """
@@ -2854,7 +2854,7 @@ continued here.</p>
 
 
 @pytest.mark.gfm
-def test_list_blocks_271x():
+def test_list_blocks_271x() -> None:
     """
     Test case 271:  (part 2) These examples show how laziness can work in nested structures:
     """
@@ -2889,7 +2889,7 @@ continued here.</p>
 
 
 @pytest.mark.gfm
-def test_list_blocks_271ax():
+def test_list_blocks_271ax() -> None:
     """
     Test case 271a:  variation of 271 with blank line after
     """
@@ -2926,7 +2926,7 @@ continued here.</p>
 
 
 @pytest.mark.gfm
-def test_list_blocks_271aa():
+def test_list_blocks_271aa() -> None:
     """
     Test case 271a:  variation of 271 with blank line after
     """
@@ -2968,7 +2968,7 @@ continued here.</p>
 
 
 @pytest.mark.gfm
-def test_list_blocks_271b():
+def test_list_blocks_271b() -> None:
     """
     Test case 271:  variation of 271 with list item
     """
@@ -3010,7 +3010,7 @@ def test_list_blocks_271b():
 
 
 @pytest.mark.gfm
-def test_list_blocks_271c():
+def test_list_blocks_271c() -> None:
     """
     Test case 271:  variation where bq starts before
     """
@@ -3047,7 +3047,7 @@ continued here.</p>
 
 
 @pytest.mark.gfm
-def test_list_blocks_271d():
+def test_list_blocks_271d() -> None:
     """
     Test case 271:  variation of 271b without base list item
     """
@@ -3076,7 +3076,7 @@ continued here.</li>
 
 
 @pytest.mark.gfm
-def test_list_blocks_271e():
+def test_list_blocks_271e() -> None:
     """
     Test case 271:  variation of 271b without inner list item
     """
@@ -3114,7 +3114,7 @@ def test_list_blocks_271e():
 
 
 @pytest.mark.gfm
-def test_list_blocks_271fx():
+def test_list_blocks_271fx() -> None:
     """
     Test case 271:  variation of 271e with extra nesting
     """
@@ -3162,7 +3162,7 @@ def test_list_blocks_271fx():
 
 
 @pytest.mark.gfm
-def test_list_blocks_271fa():
+def test_list_blocks_271fa() -> None:
     """
     Test case 271:  variation of 271e with extra nesting
     """
@@ -3201,7 +3201,7 @@ def test_list_blocks_271fa():
 
 
 @pytest.mark.gfm
-def test_list_blocks_272():
+def test_list_blocks_272() -> None:
     """
     Test case 272:  So, in this case we need two spaces indent:
     """
@@ -3254,7 +3254,7 @@ def test_list_blocks_272():
 
 
 @pytest.mark.gfm
-def test_list_blocks_273():
+def test_list_blocks_273() -> None:
     """
     Test case 273:  One is not enough:
     """
@@ -3295,7 +3295,7 @@ def test_list_blocks_273():
 
 
 @pytest.mark.gfm
-def test_list_blocks_274():
+def test_list_blocks_274() -> None:
     """
     Test case 274:  Here we need four, because the list marker is wider:
     """
@@ -3328,7 +3328,7 @@ def test_list_blocks_274():
 
 
 @pytest.mark.gfm
-def test_list_blocks_274a():
+def test_list_blocks_274a() -> None:
     """
     Test case 274a:  variation on 274 with different start number and extra list
     """
@@ -3370,7 +3370,7 @@ def test_list_blocks_274a():
 
 
 @pytest.mark.gfm
-def test_list_blocks_274b():
+def test_list_blocks_274b() -> None:
     """
     Test case 274b:  variation on 274 with different start number and extra unordered list
     """
@@ -3412,7 +3412,7 @@ def test_list_blocks_274b():
 
 
 @pytest.mark.gfm
-def test_list_blocks_274c():
+def test_list_blocks_274c() -> None:
     """
     Test case 274c:  variation on 274 with ul start and other lists as ordered
     """
@@ -3454,7 +3454,7 @@ def test_list_blocks_274c():
 
 
 @pytest.mark.gfm
-def test_list_blocks_275():
+def test_list_blocks_275() -> None:
     """
     Test case 275:  Three is not enough:
     """
@@ -3486,7 +3486,7 @@ def test_list_blocks_275():
 
 
 @pytest.mark.gfm
-def test_list_blocks_276():
+def test_list_blocks_276() -> None:
     """
     Test case 276:  (part 1) A list may be the first block in a list item:
     """
@@ -3515,7 +3515,7 @@ def test_list_blocks_276():
 
 
 @pytest.mark.gfm
-def test_list_blocks_276a():
+def test_list_blocks_276a() -> None:
     """
     Test case 276a:  variation on 276 with ol as second list
     """
@@ -3544,7 +3544,7 @@ def test_list_blocks_276a():
 
 
 @pytest.mark.gfm
-def test_list_blocks_276aa():
+def test_list_blocks_276aa() -> None:
     """
     Test case 276aa:  variation on 276 with extra list
     """
@@ -3579,7 +3579,7 @@ def test_list_blocks_276aa():
 
 
 @pytest.mark.gfm
-def test_list_blocks_276ab():
+def test_list_blocks_276ab() -> None:
     """
     Test case 276ab:  variation on 276 with extra list
     """
@@ -3614,7 +3614,7 @@ def test_list_blocks_276ab():
 
 
 @pytest.mark.gfm
-def test_list_blocks_276b():
+def test_list_blocks_276b() -> None:
     """
     Test case 276b:  variation on 276 inverted list types
     """
@@ -3643,7 +3643,7 @@ def test_list_blocks_276b():
 
 
 @pytest.mark.gfm
-def test_list_blocks_276ba():
+def test_list_blocks_276ba() -> None:
     """
     Test case 276ba:  variation on 276b with extra list
     """
@@ -3678,7 +3678,7 @@ def test_list_blocks_276ba():
 
 
 @pytest.mark.gfm
-def test_list_blocks_276bb():
+def test_list_blocks_276bb() -> None:
     """
     Test case 276bb:  variation on 276b with extra list
     """
@@ -3713,7 +3713,7 @@ def test_list_blocks_276bb():
 
 
 @pytest.mark.gfm
-def test_list_blocks_276c():
+def test_list_blocks_276c() -> None:
     """
     Test case 276c:  variation on 276 both ordered
     """
@@ -3742,7 +3742,7 @@ def test_list_blocks_276c():
 
 
 @pytest.mark.gfm
-def test_list_blocks_276ca():
+def test_list_blocks_276ca() -> None:
     """
     Test case 276ca:  variation on 276 both ordered and extra list
     """
@@ -3777,7 +3777,7 @@ def test_list_blocks_276ca():
 
 
 @pytest.mark.gfm
-def test_list_blocks_276cb():
+def test_list_blocks_276cb() -> None:
     """
     Test case 276cb:  variation on 276 both ordered and extra list
     """
@@ -3812,7 +3812,7 @@ def test_list_blocks_276cb():
 
 
 @pytest.mark.gfm
-def test_list_blocks_276d():
+def test_list_blocks_276d() -> None:
     """
     Test case 276d:  variation on 276 with ordered list increment
     """
@@ -3841,7 +3841,7 @@ def test_list_blocks_276d():
 
 
 @pytest.mark.gfm
-def test_list_blocks_276da():
+def test_list_blocks_276da() -> None:
     """
     Test case 276da:  variation on 276d with ordered list increment and extra list
     """
@@ -3876,7 +3876,7 @@ def test_list_blocks_276da():
 
 
 @pytest.mark.gfm
-def test_list_blocks_276db():
+def test_list_blocks_276db() -> None:
     """
     Test case 276db:  variation on 276d with ordered list increment and extra list
     """
@@ -3911,7 +3911,7 @@ def test_list_blocks_276db():
 
 
 @pytest.mark.gfm
-def test_list_blocks_277():
+def test_list_blocks_277() -> None:
     """
     Test case 277:  (part 2) A list may be the first block in a list item:
     """
@@ -3946,7 +3946,7 @@ def test_list_blocks_277():
 
 
 @pytest.mark.gfm
-def test_list_blocks_278():
+def test_list_blocks_278() -> None:
     """
     Test case 278:  A list item can contain a heading:
     """
@@ -3984,7 +3984,7 @@ baz</li>
 
 
 @pytest.mark.gfm
-def test_list_blocks_extra_1():
+def test_list_blocks_extra_1() -> None:
     """
     Test case 01:  Lists and sublists
     """
@@ -4039,7 +4039,7 @@ def test_list_blocks_extra_1():
 
 
 @pytest.mark.gfm
-def test_list_blocks_extra_2():
+def test_list_blocks_extra_2() -> None:
     """
     Test case 02:  Lists and sublists with increasing numbers
     """
@@ -4086,7 +4086,7 @@ def test_list_blocks_extra_2():
 
 
 @pytest.mark.gfm
-def test_list_blocks_extra_2u():
+def test_list_blocks_extra_2u() -> None:
     """
     Test case 02u:  unordered lists and sublists
     """
@@ -4141,7 +4141,7 @@ def test_list_blocks_extra_2u():
 
 
 @pytest.mark.gfm
-def test_list_blocks_extra_2a():
+def test_list_blocks_extra_2a() -> None:
     """
     Test case 02a:  ordered lists and sublists with text on next line
     """
@@ -4184,7 +4184,7 @@ jkl</li>
 
 
 @pytest.mark.gfm
-def test_list_blocks_extra_3():
+def test_list_blocks_extra_3() -> None:
     """
     Test case 03:  Code span in lists.
     """
@@ -4235,7 +4235,7 @@ def test_list_blocks_extra_3():
 
 
 @pytest.mark.gfm
-def test_list_blocks_extra_4():
+def test_list_blocks_extra_4() -> None:
     """
     Test case 04:  A list item can a link split over lines, regardless of any
                    spacing, as a paragraph has already been started.
@@ -4281,7 +4281,7 @@ def test_list_blocks_extra_4():
 
 
 @pytest.mark.gfm
-def test_list_blocks_extra_4a():
+def test_list_blocks_extra_4a() -> None:
     """
     Test case 04a:  A list item can a link split over lines, regardless of any
                     spacing, as a paragraph has already been started.
@@ -4327,7 +4327,7 @@ def test_list_blocks_extra_4a():
 
 
 @pytest.mark.gfm
-def test_list_blocks_extra_4b():
+def test_list_blocks_extra_4b() -> None:
     """
     Test case 04b:  A list item can a link split over lines, regardless of any
                     spacing, as a paragraph has already been started.
@@ -4373,7 +4373,7 @@ def test_list_blocks_extra_4b():
 
 
 @pytest.mark.gfm
-def test_list_blocks_extra_5a():
+def test_list_blocks_extra_5a() -> None:
     """
     Test case 05a:  A list item with one level and lazy continuation lines
     """
@@ -4398,7 +4398,7 @@ def</li>
 
 
 @pytest.mark.gfm
-def test_list_blocks_extra_5b():
+def test_list_blocks_extra_5b() -> None:
     """
     Test case 05a:  A list item with two levels and lazy continuation lines
     """
@@ -4433,7 +4433,7 @@ def</li>
 
 
 @pytest.mark.gfm
-def test_list_blocks_extra_5c():
+def test_list_blocks_extra_5c() -> None:
     """
     Test case 05c:  A list item with three levels and lazy continuation lines
     """
@@ -4478,7 +4478,7 @@ def</li>
 
 
 @pytest.mark.gfm
-def test_list_blocks_extra_5d():
+def test_list_blocks_extra_5d() -> None:
     """
     Test case 05c:  A list item with four levels and lazy continuation lines
     """
@@ -4533,7 +4533,7 @@ def</li>
 
 
 @pytest.mark.gfm
-def test_list_blocks_extra_6xx():
+def test_list_blocks_extra_6xx() -> None:
     """
     Test case 06:  the sublist is properly idented, but the start is extra
                    indented to right justify the list
@@ -4575,7 +4575,7 @@ def test_list_blocks_extra_6xx():
 
 
 @pytest.mark.gfm
-def test_list_blocks_extra_6xa():
+def test_list_blocks_extra_6xa() -> None:
     """
     Test case 06:  the sublist is properly idented, but the list start is aligned
                    to left justify the list
@@ -4617,7 +4617,7 @@ def test_list_blocks_extra_6xa():
 
 
 @pytest.mark.gfm
-def test_list_blocks_extra_6xb():
+def test_list_blocks_extra_6xb() -> None:
     """
     Test case 06:  the sublist is properly idented, but the start is extra
                    indented to right justify the list
@@ -4665,7 +4665,7 @@ def test_list_blocks_extra_6xb():
 
 
 @pytest.mark.gfm
-def test_list_blocks_extra_6xc():
+def test_list_blocks_extra_6xc() -> None:
     """
     Test case 06:  the sublist is properly idented, but the start is extra
                    indented to right justify the list
@@ -4703,7 +4703,7 @@ def test_list_blocks_extra_6xc():
 
 
 @pytest.mark.gfm
-def test_list_blocks_extra_6xd():
+def test_list_blocks_extra_6xd() -> None:
     """
     Test case 06:  the sublist is properly idented, but the start is extra
                    indented to right justify the list
@@ -4745,7 +4745,7 @@ def test_list_blocks_extra_6xd():
 
 
 @pytest.mark.gfm
-def test_list_blocks_extra_6xe():
+def test_list_blocks_extra_6xe() -> None:
     """
     Test case 06:  the sublist is properly idented, but the start is extra
                    indented to right justify the list
@@ -4801,7 +4801,7 @@ first paragraph</p>
 
 
 @pytest.mark.gfm
-def test_list_blocks_extra_6ax():
+def test_list_blocks_extra_6ax() -> None:
     """
     Test case 06:  the sublist is properly idented, but the start is
                    indented an extra space "just because"
@@ -4843,7 +4843,7 @@ def test_list_blocks_extra_6ax():
 
 
 @pytest.mark.gfm
-def test_list_blocks_extra_6aa():
+def test_list_blocks_extra_6aa() -> None:
     """
     Test case 06:  variation of 6ax with extra ident
     """
@@ -4884,7 +4884,7 @@ def test_list_blocks_extra_6aa():
 
 
 @pytest.mark.gfm
-def test_list_blocks_extra_6ab():
+def test_list_blocks_extra_6ab() -> None:
     """
     Test case 06:  variation of 6ax with extra ident
     """
@@ -4929,7 +4929,7 @@ def test_list_blocks_extra_6ab():
 
 
 @pytest.mark.gfm
-def test_list_blocks_extra_6ac():
+def test_list_blocks_extra_6ac() -> None:
     """
     Test case 06:  variation of 6ax with unordered list
     """
@@ -4970,7 +4970,7 @@ def test_list_blocks_extra_6ac():
 
 
 @pytest.mark.gfm
-def test_list_blocks_extra_6ad():
+def test_list_blocks_extra_6ad() -> None:
     """
     Test case 06:  variation of 6ax with first level list being unordered
     """
@@ -5011,7 +5011,7 @@ def test_list_blocks_extra_6ad():
 
 
 @pytest.mark.gfm
-def test_list_blocks_extra_6ae():
+def test_list_blocks_extra_6ae() -> None:
     """
     Test case 06:  variation of 6ax with first level list being unordered
     """

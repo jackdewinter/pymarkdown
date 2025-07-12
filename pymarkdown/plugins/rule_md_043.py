@@ -102,9 +102,9 @@ class RuleMd043(RulePlugin):
         """
         Event to allow the plugin to load configuration information.
         """
-        raw_headings = self.plugin_configuration.get_string_property(
+        raw_headings = self.plugin_configuration.get_string_property_with_default(
             "headings",
-            default_value="",
+            "",
             valid_value_fn=self.__validate_heading_pattern,
         )
         self.__raw_headings = raw_headings

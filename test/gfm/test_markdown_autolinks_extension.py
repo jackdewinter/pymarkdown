@@ -7,7 +7,7 @@ from test.utils import act_and_assert
 config_map = {"extensions": {"markdown-extended-autolinks": {"enabled": True}}}
 
 
-def test_autolinks_621x():
+def test_autolinks_621x() -> None:
     """
     Test case 621:  The scheme http will be inserted automatically:
     """
@@ -29,7 +29,7 @@ def test_autolinks_621x():
     )
 
 
-def test_autolinks_621a():
+def test_autolinks_621a() -> None:
     """
     Test case 621:  Not if disabled.
     """
@@ -47,7 +47,7 @@ def test_autolinks_621a():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-def test_autolinks_621b():
+def test_autolinks_621b() -> None:
     """
     Test case 621:  variation, with minimal domains.
     """
@@ -67,7 +67,7 @@ def test_autolinks_621b():
     )
 
 
-def test_autolinks_621c():
+def test_autolinks_621c() -> None:
     """
     Test case 621:  variation, with spaces on either side.
     """
@@ -87,7 +87,7 @@ def test_autolinks_621c():
     )
 
 
-def test_autolinks_621d():
+def test_autolinks_621d() -> None:
     """
     Test case 621:  variation, with too few ws
     """
@@ -103,7 +103,7 @@ def test_autolinks_621d():
     )
 
 
-def test_autolinks_621e():
+def test_autolinks_621e() -> None:
     """
     Test case 621:  variation, with too many ws
     """
@@ -119,7 +119,7 @@ def test_autolinks_621e():
     )
 
 
-def test_autolinks_621f():
+def test_autolinks_621f() -> None:
     """
     Test case 621:  variation, with double start..
     """
@@ -135,7 +135,7 @@ def test_autolinks_621f():
     )
 
 
-def test_autolinks_621fa():
+def test_autolinks_621fa() -> None:
     """
     Test case 621:  variation, with only double start..
     """
@@ -151,7 +151,7 @@ def test_autolinks_621fa():
     )
 
 
-def test_autolinks_621g():
+def test_autolinks_621g() -> None:
     """
     Test case 621:  variation, with empty domain
     """
@@ -167,7 +167,7 @@ def test_autolinks_621g():
     )
 
 
-def test_autolinks_621h():
+def test_autolinks_621h() -> None:
     """
     Test case 621:  variation, with single domain
     """
@@ -183,7 +183,7 @@ def test_autolinks_621h():
     )
 
 
-def test_autolinks_621ia():
+def test_autolinks_621ia() -> None:
     """
     Test case 621:  variation, with underscore in first of three domain parts
     """
@@ -203,7 +203,7 @@ def test_autolinks_621ia():
     )
 
 
-def test_autolinks_621ib():
+def test_autolinks_621ib() -> None:
     """
     Test case 621:  variation, with underscore in second of three domain parts
     """
@@ -223,7 +223,7 @@ def test_autolinks_621ib():
     )
 
 
-def test_autolinks_621ic():
+def test_autolinks_621ic() -> None:
     """
     Test case 621:  variation, with underscore in second of three domain parts
     """
@@ -243,7 +243,7 @@ def test_autolinks_621ic():
     )
 
 
-def test_autolinks_621j():
+def test_autolinks_621j() -> None:
     """
     Test case 621:  variation, simple case
     """
@@ -259,7 +259,7 @@ def test_autolinks_621j():
     )
 
 
-def test_autolinks_621k():
+def test_autolinks_621k() -> None:
     """
     Test case 621:  variation, with emphasis
     """
@@ -283,7 +283,7 @@ def test_autolinks_621k():
     )
 
 
-def test_autolinks_621l():
+def test_autolinks_621l() -> None:
     """
     Test case 621:  variation, with emphasis
     """
@@ -309,7 +309,7 @@ def test_autolinks_621l():
     )
 
 
-def test_autolinks_621m():
+def test_autolinks_621m() -> None:
     """
     Test case 621:  variation, with emphasis
     """
@@ -330,7 +330,7 @@ def test_autolinks_621m():
     )
 
 
-def test_autolinks_622x():
+def test_autolinks_622x() -> None:
     """
     Test case 622:  After a valid domain, zero or more non-space non-< characters may follow
     """
@@ -352,7 +352,7 @@ def test_autolinks_622x():
     )
 
 
-def test_autolinks_622a():
+def test_autolinks_622a() -> None:
     """
     Test case 622:  only if enabled
     """
@@ -370,7 +370,7 @@ def test_autolinks_622a():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-def test_autolinks_623x():
+def test_autolinks_623x() -> None:
     """
     Test case 623:  Trailing punctuation (specifically, ?, !, ., ,, :, *, _, and ~) will not be considered part of the autolink, though they may be included in the interior of the link:
     """
@@ -401,7 +401,7 @@ Visit www.commonmark.org/a.b."""
     )
 
 
-def test_autolinks_623a():
+def test_autolinks_623a() -> None:
     """
     Test case 623:  variant, double .
     """
@@ -432,7 +432,7 @@ Visit www.commonmark.org/a.b.."""
     )
 
 
-def test_autolinks_623b():
+def test_autolinks_623b() -> None:
     """
     Test case 623:  variant, double .
     """
@@ -476,7 +476,7 @@ Visit <a href="http://www.commonmark.org">www.commonmark.org</a>~ now!</p>"""
     )
 
 
-def test_autolinks_623c():
+def test_autolinks_623c() -> None:
     """
     Test case 623:  variant, double .
     """
@@ -522,7 +522,7 @@ Visit <a href="http://www.commonmark.org/a=b">www.commonmark.org/a=b</a>~ now!</
     )
 
 
-def test_autolinks_624x():
+def test_autolinks_624x() -> None:
     """
     Test case 624:  When an autolink ends in ), we scan the entire autolink for the total number of parentheses. If there is a greater number of closing parentheses than opening ones, we don’t consider the unmatched trailing parentheses part of the autolink, in order to facilitate including an autolink inside a parenthesis:
     """
@@ -567,7 +567,7 @@ www.google.com/search?q=Markup+(business)))
     )
 
 
-def test_autolinks_624a():
+def test_autolinks_624a() -> None:
     """
     Test case 624a:  variant
     """
@@ -588,7 +588,7 @@ def test_autolinks_624a():
     )
 
 
-def test_autolinks_625():
+def test_autolinks_625() -> None:
     """
     Test case 625:  This check is only done when the link ends in a closing parentheses ), so if the only parentheses are in the interior of the autolink, no special rules are applied:
     """
@@ -608,7 +608,7 @@ def test_autolinks_625():
     )
 
 
-def test_autolinks_626x():
+def test_autolinks_626x() -> None:
     """
     Test case 626:  If an autolink ends in a semicolon (;), we check to see if it appears to resemble an entity reference; if the preceding text is & followed by one or more alphanumeric characters. If so, it is excluded from the autolink:
     """
@@ -636,7 +636,7 @@ www.google.com/search?q=commonmark&hl;"""
     )
 
 
-def test_autolinks_626a():
+def test_autolinks_626a() -> None:
     """
     Test case 626:  variant, without &
     """
@@ -656,7 +656,7 @@ def test_autolinks_626a():
     )
 
 
-def test_autolinks_626b():
+def test_autolinks_626b() -> None:
     """
     Test case 626:  variant, without non-alpha
     """
@@ -676,7 +676,7 @@ def test_autolinks_626b():
     )
 
 
-def test_autolinks_627():
+def test_autolinks_627() -> None:
     """
     Test case 627:  < immediately ends an autolink.
     """
@@ -697,7 +697,7 @@ def test_autolinks_627():
     )
 
 
-def test_autolinks_628x():
+def test_autolinks_628x() -> None:
     """
     Test case 628:  An extended url autolink will be recognised when one of the schemes http://, or https://, followed by a valid domain, then zero or more non-space non-< characters according to extended autolink path validation:
     """
@@ -726,7 +726,7 @@ def test_autolinks_628x():
     )
 
 
-def test_autolinks_628a():
+def test_autolinks_628a() -> None:
     """
     Test case 628:  but only if enabled
     """
@@ -750,7 +750,7 @@ def test_autolinks_628a():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-def test_autolinks_628b():
+def test_autolinks_628b() -> None:
     """
     Test case 628:  variant
     """
@@ -770,7 +770,7 @@ def test_autolinks_628b():
     )
 
 
-def test_autolinks_628c():
+def test_autolinks_628c() -> None:
     """
     Test case 628:  variant
     """
@@ -786,7 +786,7 @@ def test_autolinks_628c():
     )
 
 
-def test_autolinks_629x():
+def test_autolinks_629x() -> None:
     """
     Test case 629:  The scheme mailto: will automatically be added to the generated link:
     """
@@ -806,7 +806,7 @@ def test_autolinks_629x():
     )
 
 
-def test_autolinks_629a():
+def test_autolinks_629a() -> None:
     """
     Test case 629:  variant, not activated
     """
@@ -820,7 +820,7 @@ def test_autolinks_629a():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-def test_autolinks_629b():
+def test_autolinks_629b() -> None:
     """
     Test case 629:  variant, in middle of sentence
     """
@@ -844,7 +844,7 @@ def test_autolinks_629b():
     )
 
 
-def test_autolinks_629c():
+def test_autolinks_629c() -> None:
     """
     Test case 629:  variant, surrounded by emphasis
     """
@@ -868,7 +868,7 @@ def test_autolinks_629c():
     )
 
 
-def test_autolinks_629d():
+def test_autolinks_629d() -> None:
     """
     Test case 629:  variant, emphasis and new lines
     """
@@ -892,7 +892,7 @@ def test_autolinks_629d():
     )
 
 
-def test_autolinks_629e():
+def test_autolinks_629e() -> None:
     """
     Test case 629:  variant, just middle and second half
     """
@@ -912,7 +912,7 @@ def test_autolinks_629e():
     )
 
 
-def test_autolinks_629f():
+def test_autolinks_629f() -> None:
     """
     Test case 629:  variant, with special characters
     """
@@ -934,7 +934,7 @@ def test_autolinks_629f():
     )
 
 
-def test_autolinks_629g():
+def test_autolinks_629g() -> None:
     """
     Test case 629:  variant, just middle and second half
     """
@@ -954,7 +954,7 @@ def test_autolinks_629g():
     )
 
 
-def test_autolinks_630x():
+def test_autolinks_630x() -> None:
     """
     Test case 630:  + can occur before the @, but not after.
     """
@@ -978,7 +978,7 @@ def test_autolinks_630x():
     )
 
 
-def test_autolinks_630xa():
+def test_autolinks_630xa() -> None:
     """
     Test case 630:  variant
     """
@@ -1000,7 +1000,7 @@ def test_autolinks_630xa():
     )
 
 
-def test_autolinks_630a():
+def test_autolinks_630a() -> None:
     """
     Test case 630:  variant
     """
@@ -1021,7 +1021,7 @@ def test_autolinks_630a():
     )
 
 
-def test_autolinks_630b():
+def test_autolinks_630b() -> None:
     """
     Test case 630:  variant
     """
@@ -1042,7 +1042,7 @@ def test_autolinks_630b():
     )
 
 
-def test_autolinks_630c():
+def test_autolinks_630c() -> None:
     """
     Test case 630:  variant
     """
@@ -1065,7 +1065,7 @@ def test_autolinks_630c():
     )
 
 
-def test_autolinks_630d():
+def test_autolinks_630d() -> None:
     """
     Test case 630:  variant
     """
@@ -1086,7 +1086,7 @@ def test_autolinks_630d():
     )
 
 
-def test_autolinks_630e():
+def test_autolinks_630e() -> None:
     """
     Test case 630:  variant
     """
@@ -1107,7 +1107,7 @@ def test_autolinks_630e():
     )
 
 
-def test_autolinks_631():
+def test_autolinks_631() -> None:
     """
     Test case 631:  ., -, and _ can occur on both sides of the @, but only . may occur at the end of the email address, in which case it will not be considered part of the address:
     """
@@ -1149,7 +1149,7 @@ a.b-c_d@a.b_"""
     )
 
 
-def test_autolinks_633():
+def test_autolinks_633() -> None:
     """
     Test case 633:  The scheme of the protocol will automatically be added to the generated link. All the rules of email address autolinking apply.
     """
@@ -1221,7 +1221,7 @@ xmpp:foo@bar.baz."""
     )
 
 
-def test_autolinks_634():
+def test_autolinks_634() -> None:
     """
     Test case 634:  A described in the specification xmpp offers an optional / followed by a resource. The resource can contain all alphanumeric characters, as well as @ and ..
     """
@@ -1257,7 +1257,7 @@ xmpp:foo@bar.baz/txt@bin.com
     )
 
 
-def test_autolinks_634a():
+def test_autolinks_634a() -> None:
     """
     Test case 634:  variant
     """
@@ -1279,7 +1279,7 @@ def test_autolinks_634a():
     )
 
 
-def test_autolinks_635x():
+def test_autolinks_635x() -> None:
     """
     Test case 635:  Further / characters are not considered part of the domain:
     """
@@ -1302,7 +1302,7 @@ def test_autolinks_635x():
     )
 
 
-def test_autolinks_635a():
+def test_autolinks_635a() -> None:
     """
     Test case 635:  variant
     """

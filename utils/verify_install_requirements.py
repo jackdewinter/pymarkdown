@@ -30,7 +30,7 @@ def __read_requirements_file() -> Dict[str, Tuple[str, str]]:
     try:
         with open(__REQUIREMENTS_FILE_NAME, "rt", encoding="utf-8") as input_file:
             all_lines = input_file.readlines()
-        requirements_map = {}
+        file_map = {}
         for next_line in all_lines:
             if next_line.endswith("\n"):
                 next_line = next_line[:-1]
@@ -40,11 +40,11 @@ def __read_requirements_file() -> Dict[str, Tuple[str, str]]:
                     separator_index = next_line.index(">=")
                 separator_text = next_line[separator_index : separator_index + 2]
                 version_text = next_line[separator_index + 2 :]
-                requirements_map[next_line[:separator_index]] = (
+                file_map[next_line[:separator_index]] = (
                     separator_text,
                     version_text,
                 )
-        return requirements_map
+        return file_map
     except OSError as this_exception:
         formatted_error = (
             f"Specified file '{__PIPFILE_FILE_NAME}' "
@@ -54,14 +54,18 @@ def __read_requirements_file() -> Dict[str, Tuple[str, str]]:
         sys.exit(1)
 
 
-install_map = __read_requirements_file()
+requirements_map = __read_requirements_file()
+print(requirements_map)
 pipfile_map = __read_pipfile()
+print(pipfile_map)
 
 ERRORS_FOUND = 0
-for next_requirement_name, next_requirement_value in install_map.items():
-    print(f"Verifying package '{next_requirement_name}'.")
+for next_requirement_name, next_requirement_value in requirements_map.items():
+    print(f"Verifying install requirement package '{next_requirement_name}'.")
     if next_requirement_name not in pipfile_map:
-        print(f"  Install requirement '{next_requirement_name}' not found in Pipfile.")
+        print(
+            f"  Install requirement package '{next_requirement_name}' not found in Pipfile."
+        )
         ERRORS_FOUND += 1
     else:
         pipfile_value = pipfile_map[next_requirement_name]
@@ -69,11 +73,21 @@ for next_requirement_name, next_requirement_value in install_map.items():
         pipfile_value = pipfile_value[:2], pipfile_value[2:]
         if pipfile_value != next_requirement_value:
             print(
-                f"  Pipfile key '{next_requirement_name}' has a value of '{pipfile_value}' that does not equal the install requirement '{next_requirement_value}'."
+                f"  Pipfile package '{next_requirement_name}' has a value of '{pipfile_value}' that does not equal the install requirement package of '{next_requirement_value}'."
             )
             ERRORS_FOUND += 1
         else:
-            print(f"  Package '{next_requirement_name}' verified.")
+            print(f"  Install requirement package '{next_requirement_name}' verified.")
+
+for next_pipfile_name in pipfile_map:
+    print(f"Verifying pipfile package '{next_pipfile_name}'.")
+    if next_pipfile_name not in requirements_map:
+        print(
+            f"  Pipfile package '{next_pipfile_name}' not found in install requirements."
+        )
+        ERRORS_FOUND += 1
+    else:
+        print(f"  Pipfile package '{next_pipfile_name}' verified.")
 
 print(f"Errors found: {ERRORS_FOUND}")
 if ERRORS_FOUND > 0:

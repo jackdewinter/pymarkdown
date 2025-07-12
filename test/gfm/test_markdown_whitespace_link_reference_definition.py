@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_before():
+def test_whitespaces_lrd_with_spaces_before() -> None:
     """
     Test case:  LRD preceeded by spaces.
     """
@@ -31,7 +31,7 @@ def test_whitespaces_lrd_with_spaces_before():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_too_many_spaces_before():
+def test_whitespaces_lrd_with_too_many_spaces_before() -> None:
     """
     Test case:  LRD preceeded by spaces.
     """
@@ -52,7 +52,7 @@ def test_whitespaces_lrd_with_too_many_spaces_before():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before():
+def test_whitespaces_lrd_with_tabs_before() -> None:
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -77,7 +77,7 @@ def test_whitespaces_lrd_with_tabs_before():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_repeat():
+def test_whitespaces_lrd_with_tabs_before_repeat() -> None:
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -106,7 +106,7 @@ def test_whitespaces_lrd_with_tabs_before_repeat():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_form_feeds_before():
+def test_whitespaces_lrd_with_form_feeds_before() -> None:
     """
     Test case:  LRD preceeded by form feeds.
     """
@@ -127,7 +127,7 @@ def test_whitespaces_lrd_with_form_feeds_before():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_before_within_list():
+def test_whitespaces_lrd_with_spaces_before_within_list() -> None:
     """
     Test case:  LRD preceeded by spaces and tabs.
     """
@@ -154,7 +154,7 @@ def test_whitespaces_lrd_with_spaces_before_within_list():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_before_within_block_quotes():
+def test_whitespaces_lrd_with_spaces_before_within_block_quotes() -> None:
     """
     Test case:  LRD preceeded by spaces.
     """
@@ -183,7 +183,7 @@ def
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_before_within_double_block_quotes():
+def test_whitespaces_lrd_with_spaces_before_within_double_block_quotes() -> None:
     """
     Test case:  LRD preceeded by spaces.
     """
@@ -219,7 +219,9 @@ def test_whitespaces_lrd_with_spaces_before_within_double_block_quotes():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_before_within_double_block_quote_with_single():
+def test_whitespaces_lrd_with_spaces_before_within_double_block_quote_with_single() -> (
+    None
+):
     """
     Test case:  LRD preceeded by spaces.
     """
@@ -255,7 +257,7 @@ def test_whitespaces_lrd_with_spaces_before_within_double_block_quote_with_singl
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_unordered_list_x():
+def test_whitespaces_lrd_with_tabs_before_within_unordered_list_x() -> None:
     """
     Test case:  LRD preceeded by spaces and tabs.
     """
@@ -287,7 +289,9 @@ def test_whitespaces_lrd_with_tabs_before_within_unordered_list_x():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_unordered_list_and_single_space():
+def test_whitespaces_lrd_with_tabs_before_within_unordered_list_and_single_space() -> (
+    None
+):
     """
     Test case:  LRD preceeded by spaces.
     """
@@ -319,7 +323,7 @@ def test_whitespaces_lrd_with_tabs_before_within_unordered_list_and_single_space
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_unordered_list_and_spaces():
+def test_whitespaces_lrd_with_tabs_before_within_unordered_list_and_spaces() -> None:
     """
     Test case:  LRD preceeded by spaces and tabs.
     """
@@ -351,7 +355,7 @@ def test_whitespaces_lrd_with_tabs_before_within_unordered_list_and_spaces():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_unordered_double_list():
+def test_whitespaces_lrd_with_tabs_before_within_unordered_double_list() -> None:
     """
     Test case:  LRD preceeded by spaces and tabs.
     """
@@ -393,7 +397,7 @@ def test_whitespaces_lrd_with_tabs_before_within_unordered_double_list():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_ordered_list_x():
+def test_whitespaces_lrd_with_tabs_before_within_ordered_list_x() -> None:
     """
     Test case:  LRD preceeded by spaces.
     """
@@ -425,7 +429,7 @@ def test_whitespaces_lrd_with_tabs_before_within_ordered_list_x():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_before_within_ordered_list():
+def test_whitespaces_lrd_with_spaces_before_within_ordered_list() -> None:
     """
     Test case:  LRD preceeded by spaces.
     """
@@ -457,7 +461,9 @@ def test_whitespaces_lrd_with_spaces_before_within_ordered_list():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_ordered_list_and_single_space():
+def test_whitespaces_lrd_with_tabs_before_within_ordered_list_and_single_space() -> (
+    None
+):
     """
     Test case:  LRD preceeded by spaces.
     """
@@ -489,7 +495,7 @@ def test_whitespaces_lrd_with_tabs_before_within_ordered_list_and_single_space()
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_ordered_list_and_spaces():
+def test_whitespaces_lrd_with_tabs_before_within_ordered_list_and_spaces() -> None:
     """
     Test case:  LRD preceeded by spaces and tabs.
     """
@@ -521,7 +527,7 @@ def test_whitespaces_lrd_with_tabs_before_within_ordered_list_and_spaces():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_ordered_double_list_x():
+def test_whitespaces_lrd_with_tabs_before_within_ordered_double_list_x() -> None:
     """
     Test case:  LRD preceeded by spaces and tabs.
     """
@@ -563,7 +569,9 @@ def test_whitespaces_lrd_with_tabs_before_within_ordered_double_list_x():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_ordered_double_list_no_spaces():
+def test_whitespaces_lrd_with_tabs_before_within_ordered_double_list_no_spaces() -> (
+    None
+):
     """
     Test case:  LRD preceeded by spaces and tabs.
     """
@@ -605,7 +613,9 @@ def test_whitespaces_lrd_with_tabs_before_within_ordered_double_list_no_spaces()
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_ordered_double_list_tab_after_indent():
+def test_whitespaces_lrd_with_tabs_before_within_ordered_double_list_tab_after_indent() -> (
+    None
+):
     """
     Test case:  LRD preceeded by spaces and tabs.
     """
@@ -647,7 +657,9 @@ def test_whitespaces_lrd_with_tabs_before_within_ordered_double_list_tab_after_i
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_ordered_double_list_one_space():
+def test_whitespaces_lrd_with_tabs_before_within_ordered_double_list_one_space() -> (
+    None
+):
     """
     Test case:  LRD preceeded by spaces and tabs.
     """
@@ -689,7 +701,9 @@ def test_whitespaces_lrd_with_tabs_before_within_ordered_double_list_one_space()
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_ordered_double_list_only_spaces():
+def test_whitespaces_lrd_with_tabs_before_within_ordered_double_list_only_spaces() -> (
+    None
+):
     """
     Test case:  LRD preceeded by spaces and tabs.
     """
@@ -731,7 +745,7 @@ def test_whitespaces_lrd_with_tabs_before_within_ordered_double_list_only_spaces
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_formfeeds_before_within_list():
+def test_whitespaces_lrd_with_formfeeds_before_within_list() -> None:
     """
     Test case:  LRD preceeded by spaces and tabs.
     """
@@ -763,7 +777,9 @@ def test_whitespaces_lrd_with_formfeeds_before_within_list():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_before_within_double_block_quotes_with_zero_and_zero_spaces_at_start():
+def test_whitespaces_lrd_with_spaces_before_within_double_block_quotes_with_zero_and_zero_spaces_at_start() -> (
+    None
+):
     """
     Test case:  LRD preceeded by spaces and tabs.
     """
@@ -804,7 +820,9 @@ def test_whitespaces_lrd_with_spaces_before_within_double_block_quotes_with_zero
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_before_within_double_block_quotes_with_zero_and_one_space_at_start():
+def test_whitespaces_lrd_with_spaces_before_within_double_block_quotes_with_zero_and_one_space_at_start() -> (
+    None
+):
     """
     Test case:  LRD preceeded by spaces and tabs.
     """
@@ -845,7 +863,9 @@ def test_whitespaces_lrd_with_spaces_before_within_double_block_quotes_with_zero
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_before_within_double_block_quotes_with_zero_and_two_spaces_at_start():
+def test_whitespaces_lrd_with_spaces_before_within_double_block_quotes_with_zero_and_two_spaces_at_start() -> (
+    None
+):
     """
     Test case:  LRD preceeded by spaces and tabs.
     """
@@ -886,7 +906,9 @@ def test_whitespaces_lrd_with_spaces_before_within_double_block_quotes_with_zero
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_before_within_double_block_quotes_with_zero_and_three_spaces_at_start():
+def test_whitespaces_lrd_with_spaces_before_within_double_block_quotes_with_zero_and_three_spaces_at_start() -> (
+    None
+):
     """
     Test case:  LRD preceeded by spaces and tabs.
     """
@@ -927,7 +949,9 @@ def test_whitespaces_lrd_with_spaces_before_within_double_block_quotes_with_zero
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_before_within_double_block_quotes_with_zero_and_four_spaces_at_start():
+def test_whitespaces_lrd_with_spaces_before_within_double_block_quotes_with_zero_and_four_spaces_at_start() -> (
+    None
+):
     """
     Test case:  LRD preceeded by spaces and tabs.
     """
@@ -936,7 +960,7 @@ def test_whitespaces_lrd_with_spaces_before_within_double_block_quotes_with_zero
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_x1():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_x1() -> None:
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -965,7 +989,7 @@ def
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_x2():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_x2() -> None:
     """
     Test case:  LRD preceeded by spaces and tabs.
     """
@@ -999,7 +1023,7 @@ def
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_repeat():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_repeat() -> None:
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -1038,7 +1062,7 @@ def
 
 @pytest.mark.skip
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat() -> None:
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -1074,7 +1098,9 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat():
 
 @pytest.mark.skip
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -1110,7 +1136,9 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_re
 
 @pytest.mark.skip
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_many_tabs():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_many_tabs() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -1148,7 +1176,7 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_many_tab
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_before_within_block_quote_just_enough():
+def test_whitespaces_lrd_with_spaces_before_within_block_quote_just_enough() -> None:
     """
     Test case:  LRD preceeded by spaces.
     """
@@ -1177,7 +1205,7 @@ def
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_before_within_block_quote_bare():
+def test_whitespaces_lrd_with_spaces_before_within_block_quote_bare() -> None:
     """
     Test case:  LRD preceeded by spaces.
     """
@@ -1205,7 +1233,7 @@ def test_whitespaces_lrd_with_spaces_before_within_block_quote_bare():
 
 @pytest.mark.skip
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_1a():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_1a() -> None:
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -1242,7 +1270,7 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_1a():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_1b():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_1b() -> None:
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -1277,7 +1305,7 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_1b():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_1c():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_1c() -> None:
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -1315,7 +1343,7 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_1c():
 
 @pytest.mark.skip
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_2a():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_2a() -> None:
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -1352,7 +1380,7 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_2a():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_2b():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_2b() -> None:
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -1387,7 +1415,7 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_2b():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_2c():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_2c() -> None:
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -1425,7 +1453,7 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_2c():
 
 @pytest.mark.skip
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_3():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_3() -> None:
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -1460,7 +1488,7 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_3():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_before_within_block_quotes_bare_repeat_3():
+def test_whitespaces_lrd_with_spaces_before_within_block_quotes_bare_repeat_3() -> None:
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -1496,7 +1524,9 @@ def test_whitespaces_lrd_with_spaces_before_within_block_quotes_bare_repeat_3():
 
 @pytest.mark.skip
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_1a():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_1a() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -1533,7 +1563,9 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_re
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_1b():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_1b() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -1568,7 +1600,9 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_re
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_1c():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_1c() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -1606,7 +1640,9 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_re
 
 @pytest.mark.skip
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_2x():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_2x() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -1642,7 +1678,9 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_re
 
 @pytest.mark.skip
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_2a():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_2a() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -1679,7 +1717,9 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_re
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_before_within_block_quotes_bare_with_space_repeat_2a():
+def test_whitespaces_lrd_with_spaces_before_within_block_quotes_bare_with_space_repeat_2a() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -1716,7 +1756,9 @@ def test_whitespaces_lrd_with_spaces_before_within_block_quotes_bare_with_space_
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_2b():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_2b() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -1751,7 +1793,9 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_re
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_2c():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_2c() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -1788,7 +1832,9 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_re
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_3x():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_3x() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -1813,7 +1859,9 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_re
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_3a():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_3a() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -1843,7 +1891,9 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_re
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_4x():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_4x() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -1868,7 +1918,9 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_re
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_4a():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_4a() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -1898,7 +1950,9 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_re
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_5x():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_5x() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -1923,7 +1977,9 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_re
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_5a():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_5a() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -1953,7 +2009,9 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_re
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_6():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_6() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -1978,7 +2036,9 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_re
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_6a():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_6a() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -2008,7 +2068,9 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_re
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_lines_1xx():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_lines_1xx() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -2038,7 +2100,9 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_line
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_lines_1xa():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_lines_1xa() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -2068,7 +2132,9 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_line
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_lines_1xb():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_lines_1xb() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -2098,7 +2164,9 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_line
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_lines_1a():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_lines_1a() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -2128,7 +2196,9 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_line
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_lines_1b():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_lines_1b() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -2158,7 +2228,9 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_line
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_lines_1c():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_lines_1c() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -2188,7 +2260,9 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_line
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_lines_1d():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_lines_1d() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -2222,7 +2296,9 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_line
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_lines_1ea():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_lines_1ea() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -2268,7 +2344,9 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_line
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_lines_1f():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_lines_1f() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -2310,7 +2388,9 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_line
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_more_lines_2x():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_more_lines_2x() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -2341,7 +2421,9 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_more_lin
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_more_lines_2a():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_more_lines_2a() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -2384,7 +2466,9 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_more_lin
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_more_lines_2b():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_more_lines_2b() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -2428,7 +2512,9 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_more_lin
 
 @pytest.mark.skip
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_more_lines_3x():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_more_lines_3x() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -2475,7 +2561,9 @@ abc</p>
 
 @pytest.mark.skip
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_before_within_block_quotes_bare_over_more_lines_3x():
+def test_whitespaces_lrd_with_spaces_before_within_block_quotes_bare_over_more_lines_3x() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -2522,7 +2610,9 @@ abc</p>
 
 @pytest.mark.skip
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_before_within_block_quotes_bare_over_more_lines_3xa():
+def test_whitespaces_lrd_with_spaces_before_within_block_quotes_bare_over_more_lines_3xa() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -2568,7 +2658,9 @@ abc</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_more_lines_3a():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_more_lines_3a() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -2609,7 +2701,9 @@ abc</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_more_lines_3b():
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_more_lines_3b() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -2646,7 +2740,7 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_more_lin
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_double_block_quotes():
+def test_whitespaces_lrd_with_tabs_before_within_double_block_quotes() -> None:
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -2682,7 +2776,9 @@ def test_whitespaces_lrd_with_tabs_before_within_double_block_quotes():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_double_block_quotes_with_single():
+def test_whitespaces_lrd_with_tabs_before_within_double_block_quotes_with_single() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -2718,7 +2814,9 @@ def test_whitespaces_lrd_with_tabs_before_within_double_block_quotes_with_single
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_double_block_quotes_with_single_and_space():
+def test_whitespaces_lrd_with_tabs_before_within_double_block_quotes_with_single_and_space() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -2757,7 +2855,7 @@ def test_whitespaces_lrd_with_tabs_before_within_double_block_quotes_with_single
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_before_label():
+def test_whitespaces_lrd_with_spaces_before_label() -> None:
     """
     Test case:  LRD link label preceeded by spaces.
     """
@@ -2780,7 +2878,7 @@ def test_whitespaces_lrd_with_spaces_before_label():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_label():
+def test_whitespaces_lrd_with_tabs_before_label() -> None:
     """
     Test case:  LRD link label preceeded by tabs.
     """
@@ -2803,7 +2901,7 @@ def test_whitespaces_lrd_with_tabs_before_label():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_form_feeds_before_label():
+def test_whitespaces_lrd_with_form_feeds_before_label() -> None:
     """
     Test case:  LRD link label preceeded by form feeds.
     """
@@ -2826,7 +2924,7 @@ def test_whitespaces_lrd_with_form_feeds_before_label():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_after_label():
+def test_whitespaces_lrd_with_spaces_after_label() -> None:
     """
     Test case:  LRD link label followed by spaces.
     """
@@ -2849,7 +2947,7 @@ def test_whitespaces_lrd_with_spaces_after_label():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_after_label():
+def test_whitespaces_lrd_with_tabs_after_label() -> None:
     """
     Test case:  LRD link label followwed by tabs.
     """
@@ -2872,7 +2970,7 @@ def test_whitespaces_lrd_with_tabs_after_label():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_form_feeds_after_label():
+def test_whitespaces_lrd_with_form_feeds_after_label() -> None:
     """
     Test case:  LRD link label followed by form feeds.
     """
@@ -2895,7 +2993,7 @@ def test_whitespaces_lrd_with_form_feeds_after_label():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_in_label():
+def test_whitespaces_lrd_with_spaces_in_label() -> None:
     """
     Test case:  LRD link label with spaces inside.
     """
@@ -2918,7 +3016,7 @@ def test_whitespaces_lrd_with_spaces_in_label():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_in_label():
+def test_whitespaces_lrd_with_tabs_in_label() -> None:
     """
     Test case:  LRD link label followwed by tabs.
     """
@@ -2941,7 +3039,7 @@ def test_whitespaces_lrd_with_tabs_in_label():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_form_feeds_in_label():
+def test_whitespaces_lrd_with_form_feeds_in_label() -> None:
     """
     Test case:  LRD link label followed by form feeds.
     """
@@ -2964,7 +3062,7 @@ def test_whitespaces_lrd_with_form_feeds_in_label():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_before_destination():
+def test_whitespaces_lrd_with_spaces_before_destination() -> None:
     """
     Test case:  LRD destination preceeded by spaces.
     """
@@ -2987,7 +3085,7 @@ def test_whitespaces_lrd_with_spaces_before_destination():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_destination():
+def test_whitespaces_lrd_with_tabs_before_destination() -> None:
     """
     Test case:  LRD destination preceeded by tabs.
     """
@@ -3010,7 +3108,7 @@ def test_whitespaces_lrd_with_tabs_before_destination():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_form_feeds_before_destination():
+def test_whitespaces_lrd_with_form_feeds_before_destination() -> None:
     """
     Test case:  LRD destination preceeded by form feeds.
     """
@@ -3033,7 +3131,7 @@ def test_whitespaces_lrd_with_form_feeds_before_destination():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_after_destination():
+def test_whitespaces_lrd_with_spaces_after_destination() -> None:
     """
     Test case:  LRD destination followed by spaces.
     """
@@ -3056,7 +3154,7 @@ def test_whitespaces_lrd_with_spaces_after_destination():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_after_destination():
+def test_whitespaces_lrd_with_tabs_after_destination() -> None:
     """
     Test case:  LRD destination followed by tabs.
     """
@@ -3079,7 +3177,7 @@ def test_whitespaces_lrd_with_tabs_after_destination():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_form_feeds_after_destination():
+def test_whitespaces_lrd_with_form_feeds_after_destination() -> None:
     """
     Test case:  LRD destination followed by form feeds.
     """
@@ -3102,7 +3200,7 @@ def test_whitespaces_lrd_with_form_feeds_after_destination():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_before_title():
+def test_whitespaces_lrd_with_spaces_before_title() -> None:
     """
     Test case:  LRD title preceeded by spaces.
     """
@@ -3125,7 +3223,7 @@ def test_whitespaces_lrd_with_spaces_before_title():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_title():
+def test_whitespaces_lrd_with_tabs_before_title() -> None:
     """
     Test case:  LRD title preceeded by tabs.
     """
@@ -3148,7 +3246,7 @@ def test_whitespaces_lrd_with_tabs_before_title():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_form_feeds_before_title():
+def test_whitespaces_lrd_with_form_feeds_before_title() -> None:
     """
     Test case:  LRD title preceeded by form feeds.
     """
@@ -3171,7 +3269,7 @@ def test_whitespaces_lrd_with_form_feeds_before_title():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_after_title():
+def test_whitespaces_lrd_with_spaces_after_title() -> None:
     """
     Test case:  LRD title followed by spaces.
     """
@@ -3194,7 +3292,7 @@ def test_whitespaces_lrd_with_spaces_after_title():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_after_title():
+def test_whitespaces_lrd_with_tabs_after_title() -> None:
     """
     Test case:  LRD title followed by tabs.
     """
@@ -3217,7 +3315,7 @@ def test_whitespaces_lrd_with_tabs_after_title():
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_form_feeds_after_title():
+def test_whitespaces_lrd_with_form_feeds_after_title() -> None:
     """
     Test case:  LRD title followed by form feeds.
     """

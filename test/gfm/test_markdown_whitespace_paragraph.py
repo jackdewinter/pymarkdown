@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_spaces_before():
+def test_whitespaces_paragraph_with_spaces_before() -> None:
     """
     Test case:  paragraph preceeded by spaces.
     """
@@ -27,7 +27,7 @@ def test_whitespaces_paragraph_with_spaces_before():
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_too_many_spaces_before():
+def test_whitespaces_paragraph_with_too_many_spaces_before() -> None:
     """
     Test case:  Paragraph preceeded by spaces.
     """
@@ -48,7 +48,7 @@ def</p>"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before():
+def test_whitespaces_paragraph_with_tabs_before() -> None:
     """
     Test case:  Paragraph preceeded by spaces and tabs.
     """
@@ -68,7 +68,7 @@ def test_whitespaces_paragraph_with_tabs_before():
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before_repeat():
+def test_whitespaces_paragraph_with_tabs_before_repeat() -> None:
     """
     Test case:  Paragraph preceeded by spaces and tabs.
     """
@@ -90,7 +90,7 @@ def test_whitespaces_paragraph_with_tabs_before_repeat():
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_form_feeds_before():
+def test_whitespaces_paragraph_with_form_feeds_before() -> None:
     """
     Test case:  Paragraph preceeded by spaces and form feeds.
     """
@@ -105,7 +105,7 @@ def test_whitespaces_paragraph_with_form_feeds_before():
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_spaces_before_within_list():
+def test_whitespaces_paragraph_with_spaces_before_within_list() -> None:
     """
     Test case:  Paragraph preceeded by spaces and tabs.
     """
@@ -130,7 +130,7 @@ def</li>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_spaces_before_within_block_quotes():
+def test_whitespaces_paragraph_with_spaces_before_within_block_quotes() -> None:
     """
     Test case:  paragraph preceeded by spaces.
     """
@@ -157,7 +157,7 @@ a paragraph</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_spaces_before_within_double_block_quotes():
+def test_whitespaces_paragraph_with_spaces_before_within_double_block_quotes() -> None:
     """
     Test case:  paragraph preceeded by spaces.
     """
@@ -191,7 +191,9 @@ a paragraph</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_spaces_before_within_double_block_quotes_with_single():
+def test_whitespaces_paragraph_with_spaces_before_within_double_block_quotes_with_single() -> (
+    None
+):
     """
     Test case:  paragraph preceeded by spaces.
     """
@@ -225,7 +227,7 @@ a paragraph</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before_within_unordered_list_x():
+def test_whitespaces_paragraph_with_tabs_before_within_unordered_list_x() -> None:
     """
     Test case:  Paragraph preceeded by spaces and tabs.
     """
@@ -250,7 +252,9 @@ def</li>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before_within_unordered_list_and_single_space():
+def test_whitespaces_paragraph_with_tabs_before_within_unordered_list_and_single_space() -> (
+    None
+):
     """
     Test case:  Paragraph preceeded by spaces.
     """
@@ -275,7 +279,9 @@ def</li>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before_within_unordered_list_and_spaces():
+def test_whitespaces_paragraph_with_tabs_before_within_unordered_list_and_spaces() -> (
+    None
+):
     """
     Test case:  Paragraph preceeded by spaces and tabs.
     """
@@ -300,7 +306,7 @@ def</li>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before_within_unordered_double_list():
+def test_whitespaces_paragraph_with_tabs_before_within_unordered_double_list() -> None:
     """
     Test case:  Paragraph preceeded by spaces and tabs.
     """
@@ -335,7 +341,9 @@ ghi</li>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before_within_unordered_double_list_double_tabs():
+def test_whitespaces_paragraph_with_tabs_before_within_unordered_double_list_double_tabs() -> (
+    None
+):
     """
     Test case:  TBD
     """
@@ -370,7 +378,7 @@ ghi</li>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before_within_ordered_list_x():
+def test_whitespaces_paragraph_with_tabs_before_within_ordered_list_x() -> None:
     """
     Test case:  Paragraph preceeded by spaces.
     """
@@ -395,7 +403,7 @@ def</li>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_spaces_before_within_ordered_list():
+def test_whitespaces_paragraph_with_spaces_before_within_ordered_list() -> None:
     """
     Test case:  Paragraph preceeded by spaces.
     """
@@ -420,7 +428,9 @@ def</li>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before_within_ordered_list_and_single_space():
+def test_whitespaces_paragraph_with_tabs_before_within_ordered_list_and_single_space() -> (
+    None
+):
     """
     Test case:  Paragraph preceeded by spaces.
     """
@@ -445,7 +455,9 @@ def</li>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before_within_ordered_list_and_spaces():
+def test_whitespaces_paragraph_with_tabs_before_within_ordered_list_and_spaces() -> (
+    None
+):
     """
     Test case:  Paragraph preceeded by spaces and tabs.
     """
@@ -470,7 +482,7 @@ def</li>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before_within_ordered_double_list_x():
+def test_whitespaces_paragraph_with_tabs_before_within_ordered_double_list_x() -> None:
     """
     Test case:  Paragraph preceeded by spaces and tabs.
     """
@@ -505,7 +517,9 @@ ghi</li>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before_within_ordered_double_list_double_tabs():
+def test_whitespaces_paragraph_with_tabs_before_within_ordered_double_list_double_tabs() -> (
+    None
+):
     """
     Test case:  This was intended to be an indented block, but is not due to a
     paragraph continutation
@@ -541,7 +555,9 @@ ghi</li>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before_within_ordered_double_list_no_spaces():
+def test_whitespaces_paragraph_with_tabs_before_within_ordered_double_list_no_spaces() -> (
+    None
+):
     """
     Test case:  Paragraph preceeded by spaces and tabs.
     """
@@ -576,7 +592,9 @@ ghi</li>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before_within_ordered_double_list_tab_after_indent():
+def test_whitespaces_paragraph_with_tabs_before_within_ordered_double_list_tab_after_indent() -> (
+    None
+):
     """
     Test case:  Paragraph preceeded by spaces and tabs.
     """
@@ -611,7 +629,9 @@ ghi\tjkl\tmno</li>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before_within_ordered_double_list_one_space():
+def test_whitespaces_paragraph_with_tabs_before_within_ordered_double_list_one_space() -> (
+    None
+):
     """
     Test case:  Paragraph preceeded by spaces and tabs.
     """
@@ -646,7 +666,9 @@ ghi</li>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before_within_ordered_double_list_only_spaces():
+def test_whitespaces_paragraph_with_tabs_before_within_ordered_double_list_only_spaces() -> (
+    None
+):
     """
     Test case:  Paragraph preceeded by spaces and tabs.
     """
@@ -681,7 +703,7 @@ ghi</li>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_formfeeds_before_within_list():
+def test_whitespaces_paragraph_with_formfeeds_before_within_list() -> None:
     """
     Test case:  Paragraph preceeded by spaces and tabs.
     """
@@ -706,7 +728,9 @@ def test_whitespaces_paragraph_with_formfeeds_before_within_list():
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_spaces_before_within_double_block_quotes_with_zero_and_zero_spaces_at_start():
+def test_whitespaces_paragraph_with_spaces_before_within_double_block_quotes_with_zero_and_zero_spaces_at_start() -> (
+    None
+):
     """
     Test case:  Paragraph preceeded by spaces and tabs.
     """
@@ -740,7 +764,9 @@ ghi</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_spaces_before_within_double_block_quotes_with_zero_and_one_space_at_start():
+def test_whitespaces_paragraph_with_spaces_before_within_double_block_quotes_with_zero_and_one_space_at_start() -> (
+    None
+):
     """
     Test case:  Paragraph preceeded by spaces and tabs.
     """
@@ -774,7 +800,9 @@ ghi</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_spaces_before_within_double_block_quotes_with_zero_and_two_spaces_at_start():
+def test_whitespaces_paragraph_with_spaces_before_within_double_block_quotes_with_zero_and_two_spaces_at_start() -> (
+    None
+):
     """
     Test case:  Paragraph preceeded by spaces and tabs.
     """
@@ -808,7 +836,9 @@ ghi</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_spaces_before_within_double_block_quotes_with_zero_and_three_spaces_at_start():
+def test_whitespaces_paragraph_with_spaces_before_within_double_block_quotes_with_zero_and_three_spaces_at_start() -> (
+    None
+):
     """
     Test case:  Paragraph preceeded by spaces and tabs.
     """
@@ -842,7 +872,9 @@ ghi</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_spaces_before_within_double_block_quotes_with_zero_and_four_spaces_at_start():
+def test_whitespaces_paragraph_with_spaces_before_within_double_block_quotes_with_zero_and_four_spaces_at_start() -> (
+    None
+):
     """
     Test case:  Paragraph preceeded by spaces and tabs.
     """
@@ -851,7 +883,7 @@ def test_whitespaces_paragraph_with_spaces_before_within_double_block_quotes_wit
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before_within_block_quotes_x1():
+def test_whitespaces_paragraph_with_tabs_before_within_block_quotes_x1() -> None:
     """
     Test case:  Paragraph preceeded by spaces and tabs.
     """
@@ -878,7 +910,7 @@ ghi</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before_within_block_quotes_x2():
+def test_whitespaces_paragraph_with_tabs_before_within_block_quotes_x2() -> None:
     """
     Test case:  Paragraph preceeded by spaces and tabs.
     """
@@ -905,7 +937,7 @@ ghi</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before_within_block_quotes_repeat():
+def test_whitespaces_paragraph_with_tabs_before_within_block_quotes_repeat() -> None:
     """
     Test case:  Paragraph preceeded by spaces and tabs.
     """
@@ -934,7 +966,9 @@ jkl</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before_within_block_quotes_bare_repeat():
+def test_whitespaces_paragraph_with_tabs_before_within_block_quotes_bare_repeat() -> (
+    None
+):
     """
     Test case:  Paragraph preceeded by spaces and tabs.
     """
@@ -959,7 +993,9 @@ def</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before_within_block_quotes_bare_with_space_repeat():
+def test_whitespaces_paragraph_with_tabs_before_within_block_quotes_bare_with_space_repeat() -> (
+    None
+):
     """
     Test case:  Paragraph preceeded by spaces and tabs.
     """
@@ -984,7 +1020,9 @@ def</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before_within_block_quotes_bare_with_many_tabs():
+def test_whitespaces_paragraph_with_tabs_before_within_block_quotes_bare_with_many_tabs() -> (
+    None
+):
     """
     Test case:  Paragraph preceeded by spaces and tabs.
     """
@@ -1009,7 +1047,7 @@ d\te\tf</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before_within_double_block_quotes_1():
+def test_whitespaces_paragraph_with_tabs_before_within_double_block_quotes_1() -> None:
     """
     Test case:  Paragraph preceeded by spaces and tabs.
     """
@@ -1043,7 +1081,7 @@ ghi</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before_within_double_block_quotes_2():
+def test_whitespaces_paragraph_with_tabs_before_within_double_block_quotes_2() -> None:
     """
     Test case:  Paragraph preceeded by spaces and tabs.
     """
@@ -1077,7 +1115,7 @@ ghi</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before_within_double_block_quotes_3():
+def test_whitespaces_paragraph_with_tabs_before_within_double_block_quotes_3() -> None:
     """
     Test case:  Paragraph preceeded by spaces and tabs.
     """
@@ -1111,7 +1149,9 @@ ghi</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before_within_double_block_quotes_with_single():
+def test_whitespaces_paragraph_with_tabs_before_within_double_block_quotes_with_single() -> (
+    None
+):
     """
     Test case:  Paragraph preceeded by spaces and tabs.
     """
@@ -1145,7 +1185,9 @@ ghi</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before_within_double_block_quotes_with_single_and_space():
+def test_whitespaces_paragraph_with_tabs_before_within_double_block_quotes_with_single_and_space() -> (
+    None
+):
     """
     Test case:  Paragraph preceeded by spaces and tabs.
     """
@@ -1182,7 +1224,7 @@ ghi</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_just_tabs_before():
+def test_whitespaces_paragraph_with_just_tabs_before() -> None:
     """
     Test case:  paragraph preceeded by tabs.
     """
@@ -1202,7 +1244,9 @@ def test_whitespaces_paragraph_with_just_tabs_before():
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before_within_block_quote_bare_repeat_2():
+def test_whitespaces_paragraph_with_tabs_before_within_block_quote_bare_repeat_2() -> (
+    None
+):
     """
     Test case:  paragraph preceeded by tabs.
     """
@@ -1227,7 +1271,9 @@ a\tparagraph</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_before_within_double_block_quote_with_single_and_space_within():
+def test_whitespaces_paragraph_with_tabs_before_within_double_block_quote_with_single_and_space_within() -> (
+    None
+):
     """
     Test case:  paragraph preceeded by tabs.
     """
@@ -1264,7 +1310,7 @@ a\tparagraph</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_inside():
+def test_whitespaces_paragraph_with_tabs_inside() -> None:
     """
     Test case:  paragraph preceeded by tabs.
     """
@@ -1283,7 +1329,7 @@ def test_whitespaces_paragraph_with_tabs_inside():
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_inside_and_emphasis():
+def test_whitespaces_paragraph_with_tabs_inside_and_emphasis() -> None:
     """
     Test case:  paragraph preceeded by tabs.
     """
@@ -1306,7 +1352,7 @@ def test_whitespaces_paragraph_with_tabs_inside_and_emphasis():
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_just_form_feeds_before():
+def test_whitespaces_paragraph_with_just_form_feeds_before() -> None:
     """
     Test case:  paragraph preceeded by form feeds.
     """
@@ -1325,7 +1371,7 @@ def test_whitespaces_paragraph_with_just_form_feeds_before():
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_spaces_and_form_feeds_before():
+def test_whitespaces_paragraph_with_spaces_and_form_feeds_before() -> None:
     """
     Test case:  paragraph preceeded by form feeds.
     """
@@ -1344,7 +1390,7 @@ def test_whitespaces_paragraph_with_spaces_and_form_feeds_before():
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_spaces_and_form_feeds_before_and_after():
+def test_whitespaces_paragraph_with_spaces_and_form_feeds_before_and_after() -> None:
     """
     Test case:  paragraph preceeded by form feeds.
     """
@@ -1363,7 +1409,7 @@ def test_whitespaces_paragraph_with_spaces_and_form_feeds_before_and_after():
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_spaces_after():
+def test_whitespaces_paragraph_with_spaces_after() -> None:
     """
     Test case:  paragraph followed by spaces.
     """
@@ -1382,7 +1428,7 @@ def test_whitespaces_paragraph_with_spaces_after():
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_after():
+def test_whitespaces_paragraph_with_tabs_after() -> None:
     """
     Test case:  paragraph followed by tabs.
     """
@@ -1401,7 +1447,7 @@ def test_whitespaces_paragraph_with_tabs_after():
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_after_double():
+def test_whitespaces_paragraph_with_tabs_after_double() -> None:
     """
     Test case:  paragraph followed by tabs.
     """
@@ -1422,7 +1468,7 @@ another paragraph</p>"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_after_double_only_first():
+def test_whitespaces_paragraph_with_tabs_after_double_only_first() -> None:
     """
     Test case:  paragraph followed by tabs.
     """
@@ -1443,7 +1489,7 @@ another paragraph</p>"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_after_double_only_second():
+def test_whitespaces_paragraph_with_tabs_after_double_only_second() -> None:
     """
     Test case:  paragraph followed by tabs.
     """
@@ -1464,7 +1510,7 @@ another paragraph</p>"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_after_only_middle():
+def test_whitespaces_paragraph_with_tabs_after_only_middle() -> None:
     """
     Test case:  paragraph followed by tabs.
     """
@@ -1487,7 +1533,7 @@ yet another paragraph</p>"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_mixed_and_no_newline():
+def test_whitespaces_paragraph_with_tabs_mixed_and_no_newline() -> None:
     """
     Test case:  paragraph followed by tabs.
     """
@@ -1512,7 +1558,7 @@ a\tbb\tccc\tddd</p>"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_tabs_mixed_and_newline():
+def test_whitespaces_paragraph_with_tabs_mixed_and_newline() -> None:
     """
     Test case:  paragraph followed by tabs.
     """
@@ -1539,7 +1585,7 @@ a\tbb\tccc\tddd</p>"""
 
 
 @pytest.mark.gfm
-def test_whitespaces_paragraph_with_form_feeds_after():
+def test_whitespaces_paragraph_with_form_feeds_after() -> None:
     """
     Test case:  paragraph followed by form feeds.
     """

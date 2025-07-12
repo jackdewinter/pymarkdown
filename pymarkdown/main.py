@@ -96,8 +96,8 @@ class PyMarkdownLint:
 
         self.__show_stack_trace = args.show_stack_trace
         if not self.__show_stack_trace and self.__properties:
-            self.__show_stack_trace = self.__properties.get_boolean_property(
-                "log.stack-trace"
+            self.__show_stack_trace = (
+                self.__properties.get_boolean_property("log.stack-trace") or False
             )
 
         if self.__logging:
@@ -170,6 +170,13 @@ class PyMarkdownLint:
         )
         ApplicationPropertiesUtilities.add_default_command_line_arguments(parser)
         parser.add_argument(
+            "--no-json5",
+            dest="use_json5_for_configuration",
+            action="store_false",
+            default=True,
+            help="use stdlib's json reader instead of new JSON5 json reader",
+        )
+        parser.add_argument(
             "--stack-trace",
             dest="show_stack_trace",
             action="store_true",
@@ -218,7 +225,7 @@ class PyMarkdownLint:
 
     def __initialize_plugins_and_extensions(self, args: argparse.Namespace) -> None:
         self.__initialize_plugins(args)
-        self.__initialize_extensions(args)
+        self.__initialize_extensions()
 
         if args.primary_subparser == PluginManager.argparse_subparser_name():
             ReturnCodeHelper.exit_application(
@@ -279,10 +286,9 @@ class PyMarkdownLint:
     # pylint: enable=broad-exception-caught
 
     # pylint: disable=broad-exception-caught
-    def __initialize_extensions(self, args: argparse.Namespace) -> None:
+    def __initialize_extensions(self) -> None:
         try:
             self.__extensions.initialize(
-                args,
                 self.__properties,
             )
             self.__extensions.apply_configuration()

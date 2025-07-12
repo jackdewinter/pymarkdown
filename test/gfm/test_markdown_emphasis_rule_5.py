@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_emphasis_387():
+def test_emphasis_387() -> None:
     """
     Test case 387:  Rule 5:
     """
@@ -29,7 +29,7 @@ def test_emphasis_387():
 
 
 @pytest.mark.gfm
-def test_emphasis_388():
+def test_emphasis_388() -> None:
     """
     Test case 388:  This is not strong emphasis, because the opening delimiter is followed by whitespace:
     """
@@ -44,7 +44,7 @@ def test_emphasis_388():
 
 
 @pytest.mark.gfm
-def test_emphasis_389():
+def test_emphasis_389() -> None:
     """
     Test case 389:  This is not strong emphasis, because the opening ** is preceded by an alphanumeric and followed by punctuation, and hence not part of a left-flanking delimiter run:
     """
@@ -63,7 +63,7 @@ def test_emphasis_389():
 
 
 @pytest.mark.gfm
-def test_emphasis_390():
+def test_emphasis_390() -> None:
     """
     Test case 390:  Intraword strong emphasis with ** is permitted:
     """

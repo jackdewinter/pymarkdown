@@ -222,14 +222,14 @@ def test_md048_fix(test: pluginRuleTest) -> None:
 
 
 @pytest.mark.parametrize("test", configTests, ids=id_test_plug_rule_fn)
-def test_md048_config(test: pluginRuleTest) -> None:
+def test_md048_config(test: pluginConfigErrorTest) -> None:
     """
     Execute a parameterized fix test for plugin md001.
     """
     execute_configuration_test(test, f"{source_path}bad_fenced_backticks_and_tildes.md")
 
 
-def test_md048_query_config():
+def test_md048_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md048",
         """

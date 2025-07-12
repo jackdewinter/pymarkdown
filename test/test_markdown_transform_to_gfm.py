@@ -6,16 +6,18 @@ from test.utils import act_and_assert, assert_that_exception_is_raised
 
 import pytest
 
+from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.tokens.markdown_token import (
     EndMarkdownToken,
     MarkdownToken,
     MarkdownTokenClass,
 )
+from pymarkdown.tokens.paragraph_markdown_token import ParagraphMarkdownToken
 from pymarkdown.transform_gfm.transform_to_gfm import TransformToGfm
 
 
 @pytest.mark.gfm
-def test_gfm_bad_token():
+def test_gfm_bad_token() -> None:
     """
     Test to ensure that a bad markdown token asserts an error.
     """
@@ -35,7 +37,7 @@ def test_gfm_bad_token():
 
 
 @pytest.mark.gfm
-def test_gfm_bad_end_token():
+def test_gfm_bad_end_token() -> None:
     """
     Test to ensure that a bad markdown end token asserts an error.
     """
@@ -43,7 +45,9 @@ def test_gfm_bad_end_token():
     # Arrange
     transformer = TransformToGfm()
     tokens_to_test = [
-        EndMarkdownToken("bad", "", None, "hi", False),
+        EndMarkdownToken(
+            "bad", "", None, ParagraphMarkdownToken("", PositionMarker(1, 1, "")), False
+        ),
     ]
     expected_output = "Markdown token end type bad not supported."
 
@@ -54,7 +58,7 @@ def test_gfm_bad_end_token():
 
 
 @pytest.mark.gfm
-def test_do_add_end_of_stream_token():
+def test_do_add_end_of_stream_token() -> None:
     """
     Test to...
 

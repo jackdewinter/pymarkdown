@@ -400,7 +400,7 @@ function is the equivalent of the `--stack-trace` command line argument.
 
 ### General Configuration
 
-The [General Command Line Setting](./advanced_configuration.md#general-command-line-setting)
+The [General Command Line Setting](https://application-properties.readthedocs.io/en/latest/command-line/#general-command-line-settings)
 command line arguments are available using the two `*_rule_by_identifier` functions.
 The `disable_rule_by_identifier` function is the equivalent of the `--disable-rules`
 argument, and the `enable_rule_by_identifier` function is the equivalent of the
@@ -408,21 +408,21 @@ argument, and the `enable_rule_by_identifier` function is the equivalent of the
 
 ### Specific Configuration
 
-The [Specific Command Line Setting](./advanced_configuration.md#specific-command-line-settings)
+The [Specific Command Line Setting](https://application-properties.readthedocs.io/en/latest/command-line/#specific-command-line-settings)
 command line arguments are available using the `set_property` and related functions.
-Instead of asking the API user to understand the [Configuration Item Types](./advanced_configuration.md#configuration-item-types),
+Instead of asking the API user to understand the [Configuration Item Types](https://application-properties.readthedocs.io/en/latest/command-line/#configuration-item-types),
 three helper functions are provided: `set_boolean_property`, `set_integer_property`,
 and `set_string_property`.
 
 ### Configuration File
 
-A [configuration file](./advanced_configuration.md#command-line-configuration-file)
+A [configuration file](https://application-properties.readthedocs.io/en/latest/command-line/#command-line-configuration-files)
 can be specified by using the `configuration_file_path` function.  This is the equivalent
 of using the `--config {file}` command line argument.
 
 ### Strict Configuration
 
-[Strict configuration mode](./advanced_configuration.md#strict-configuration-mode)
+[Strict configuration mode](https://application-properties.readthedocs.io/en/latest/command-line/#strict-configuration-mode)
 can be enabled by calling the `enable_strict_configuration` function. This is the
 equivalent of using the `--strict-config` command line argument.
 

@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_emphasis_391():
+def test_emphasis_391() -> None:
     """
     Test case 391:  Rule 6:
     """
@@ -29,7 +29,7 @@ def test_emphasis_391():
 
 
 @pytest.mark.gfm
-def test_emphasis_392():
+def test_emphasis_392() -> None:
     """
     Test case 392:  This is not strong emphasis, because the opening delimiter is followed by whitespace:
     """
@@ -44,7 +44,7 @@ def test_emphasis_392():
 
 
 @pytest.mark.gfm
-def test_emphasis_393():
+def test_emphasis_393() -> None:
     """
     Test case 393:  A newline counts as whitespace:
     """
@@ -65,7 +65,7 @@ foo bar__</p>"""
 
 
 @pytest.mark.gfm
-def test_emphasis_394():
+def test_emphasis_394() -> None:
     """
     Test case 394:  This is not strong emphasis, because the opening __ is preceded by an alphanumeric and followed by punctuation:
     """
@@ -84,7 +84,7 @@ def test_emphasis_394():
 
 
 @pytest.mark.gfm
-def test_emphasis_395():
+def test_emphasis_395() -> None:
     """
     Test case 395:  (part 1) Intraword strong emphasis is forbidden with __:
     """
@@ -99,7 +99,7 @@ def test_emphasis_395():
 
 
 @pytest.mark.gfm
-def test_emphasis_396():
+def test_emphasis_396() -> None:
     """
     Test case 396:  (part 2) Intraword strong emphasis is forbidden with __:
     """
@@ -114,7 +114,7 @@ def test_emphasis_396():
 
 
 @pytest.mark.gfm
-def test_emphasis_397():
+def test_emphasis_397() -> None:
     """
     Test case 397:  (part 3) Intraword strong emphasis is forbidden with __:
     """
@@ -133,7 +133,7 @@ def test_emphasis_397():
 
 
 @pytest.mark.gfm
-def test_emphasis_398():
+def test_emphasis_398() -> None:
     """
     Test case 398:  (part 4) Intraword strong emphasis is forbidden with __:
     """
@@ -158,7 +158,7 @@ def test_emphasis_398():
 
 
 @pytest.mark.gfm
-def test_emphasis_399():
+def test_emphasis_399() -> None:
     """
     Test case 399:  This is strong emphasis, even though the opening delimiter is both left- and right-flanking, because it is preceded by punctuation:
     """

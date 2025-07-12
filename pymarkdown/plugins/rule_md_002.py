@@ -50,10 +50,12 @@ class RuleMd002(RulePlugin):
         """
         Event to allow the plugin to load configuration information.
         """
-        self.__start_level = self.plugin_configuration.get_integer_property(
-            "level",
-            default_value=1,
-            valid_value_fn=self.__validate_configuration_other_test_value,
+        self.__start_level = (
+            self.plugin_configuration.get_integer_property_with_default(
+                "level",
+                1,
+                valid_value_fn=self.__validate_configuration_other_test_value,
+            )
         )
 
     def query_config(self) -> List[QueryConfigItem]:

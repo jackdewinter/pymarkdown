@@ -9,6 +9,7 @@ from test.utils import (
     assert_that_exception_is_raised,
     write_temporary_configuration,
 )
+from typing import cast
 
 import pytest
 
@@ -22,7 +23,7 @@ from pymarkdown.api import (
 )
 
 
-def test_api_scan_bad_path_to_scan():
+def test_api_scan_bad_path_to_scan() -> None:
     """
     Test to make sure that an empty path to scan is reported as an error.
     """
@@ -41,10 +42,13 @@ def test_api_scan_bad_path_to_scan():
     )
 
     # Assert
-    assert caught_exception.argument_name == "path_to_scan"
+    assert (
+        cast(PyMarkdownApiArgumentException, caught_exception).argument_name
+        == "path_to_scan"
+    )
 
 
-def test_api_scan_bad_alternate_extensions():
+def test_api_scan_bad_alternate_extensions() -> None:
     """
     Test to make sure that a bad list of alternate extensions is reported as an error.
     """
@@ -65,10 +69,13 @@ def test_api_scan_bad_alternate_extensions():
     )
 
     # Assert
-    assert caught_exception.argument_name == "alternate_extensions"
+    assert (
+        cast(PyMarkdownApiArgumentException, caught_exception).argument_name
+        == "alternate_extensions"
+    )
 
 
-def test_api_scan_simple_clean():
+def test_api_scan_simple_clean() -> None:
     """
     Test to make sure that we can invoke a scan of a file that scans cleanly.
 
@@ -90,7 +97,7 @@ def test_api_scan_simple_clean():
     assert not scan_result.pragma_errors
 
 
-def test_api_scan_for_non_existant_file():
+def test_api_scan_for_non_existant_file() -> None:
     """
     Test to make sure that scanning for a non-existant file returns a
     reproducible result.
@@ -113,7 +120,7 @@ def test_api_scan_for_non_existant_file():
     )
 
 
-def test_api_scan_for_non_matching_glob():
+def test_api_scan_for_non_matching_glob() -> None:
     """
     Test to make sure that scanning for a glob that does not match
     anything produces a predictable result.
@@ -136,7 +143,7 @@ def test_api_scan_for_non_matching_glob():
     )
 
 
-def test_api_scan_for_non_markdown_file():
+def test_api_scan_for_non_markdown_file() -> None:
     """
     Test to make sure that scanning for a file that does not have markdown
     extension produces reliable results.
@@ -159,7 +166,7 @@ def test_api_scan_for_non_markdown_file():
     )
 
 
-def test_api_scan_for_non_markdown_file_with_alternate_extensions():
+def test_api_scan_for_non_markdown_file_with_alternate_extensions() -> None:
     """
     Test to make sure that scanning for a file that does not have markdown
     extension but with alternate extensions enabled produces reliable results.
@@ -184,7 +191,7 @@ def test_api_scan_for_non_markdown_file_with_alternate_extensions():
 
 
 @pytest.mark.timeout(30)
-def test_api_scan_recursive_for_directory():
+def test_api_scan_recursive_for_directory() -> None:
     """
     Test to make sure that scanning a directory gives predictable results.
 
@@ -243,7 +250,7 @@ def test_api_scan_recursive_for_directory():
     for i in scan_result.scan_failures:
         itemized_scan_failures = itemized_scan_failures + "\n" + str(i)
     print(itemized_scan_failures)
-    assert len(scan_result.scan_failures) == 124
+    assert len(scan_result.scan_failures) == 127
 
     scan_failures = []
     for i in scan_result.scan_failures:
@@ -253,7 +260,7 @@ def test_api_scan_recursive_for_directory():
     assert_if_lists_different(scan_failures, expected_failure_paths)
 
 
-def test_api_scan_with_multiple_scan_issues():
+def test_api_scan_with_multiple_scan_issues() -> None:
     """
     Test to make sure that we can handle multiple scan issues within
     a given file.
@@ -302,7 +309,7 @@ def test_api_scan_with_multiple_scan_issues():
     # TODO another one, where have to enable rules
 
 
-def test_api_scan_with_pragma_failure():
+def test_api_scan_with_pragma_failure() -> None:
     """
     Test to make sure that we can handle a case where we specify a pragma,
     but do not specify a command.  Because the pragma was not successful,
@@ -334,7 +341,7 @@ def test_api_scan_with_pragma_failure():
     )
 
 
-def test_api_with_good_pragma():
+def test_api_with_good_pragma() -> None:
     """
     Test to make sure that we can handle a case where we specify a valid pragma
     that disabled the Md019 rule on the line following it.  This is a version of
@@ -361,7 +368,7 @@ def test_api_with_good_pragma():
     assert not scan_result.pragma_errors
 
 
-def test_api_scan_string_test():
+def test_api_scan_string_test() -> None:
     """
     Test to make sure that an empty path to scan is reported as an error.
     """
@@ -385,7 +392,7 @@ def test_api_scan_string_test():
     assert not scan_result.pragma_errors
 
 
-def test_api_scan_string_test_good_file_after_disables():
+def test_api_scan_string_test_good_file_after_disables() -> None:
     """
     Test to make sure that an empty path to scan is reported as an error.
 
@@ -414,7 +421,7 @@ this is a very long line
     assert not scan_result.pragma_errors
 
 
-def test_api_scan_string_test_bad_file_due_to_no_disables():
+def test_api_scan_string_test_bad_file_due_to_no_disables() -> None:
     """
     Test to make sure that an empty path to scan is reported as an error.
 
@@ -445,7 +452,7 @@ this is a very long line
     assert not scan_result.pragma_errors
 
 
-def test_api_fix_string_simple_clean():
+def test_api_fix_string_simple_clean() -> None:
     """
     Test to make sure that we can invoke a fix of a file with no issues.
     """
@@ -464,7 +471,7 @@ The line after this line should be blank.
     assert string_to_scan == scan_result.fixed_file
 
 
-def test_api_fix_string_simple_small_fix():
+def test_api_fix_string_simple_small_fix() -> None:
     """
     Test to make sure that we can invoke a fix of a file with a simple fix.
     """
@@ -486,7 +493,7 @@ The line after this line should be blank.
     assert expected_string == scan_result.fixed_file
 
 
-def test_api_fix_path_no_files():
+def test_api_fix_path_no_files() -> None:
     """
     Test to make sure that we can invoke a fix of files on a path, where none are found.
     """
@@ -501,7 +508,7 @@ def test_api_fix_path_no_files():
         assert not scan_result.files_fixed
 
 
-def test_api_fix_path_single_file_no_fix_required():
+def test_api_fix_path_single_file_no_fix_required() -> None:
     """
     Test to make sure that we can invoke a fix of files on a path, where a single file is found requiring no fixes.
     """
@@ -524,7 +531,7 @@ The line after this line should be blank.
         assert not scan_result.files_fixed
 
 
-def test_api_fix_path_single_file_fix_required():
+def test_api_fix_path_single_file_fix_required() -> None:
     """
     Test to make sure that we can invoke a fix of files on a path, where a single file is found requiring fixes.
     """
@@ -547,7 +554,7 @@ The line after this line should be blank."""
         assert file_name in scan_result.files_fixed
 
 
-def test_api_fix_path_single_file_fix_required_with_error():
+def test_api_fix_path_single_file_fix_required_with_error() -> None:
     """
     Test to make sure that we can invoke a fix of files on a path, where a single file is found requiring fixes,
     but an exception is thrown during processing.
@@ -576,7 +583,7 @@ test: assert
         )
 
 
-def test_api_fix_path_single_file_fix_required_with_alternate_extension():
+def test_api_fix_path_single_file_fix_required_with_alternate_extension() -> None:
     """
     Test to make sure that we can invoke a fix of files on a path, where a single file is found requiring fixes,
     but with a non-standard extension.
@@ -602,7 +609,7 @@ The line after this line should be blank."""
         assert file_name in scan_result.files_fixed
 
 
-def test_api_fix_path_multiple_files_same_directory_fix_required():
+def test_api_fix_path_multiple_files_same_directory_fix_required() -> None:
     """
     Test to make sure that we can invoke a fix of files on a path, where multiple files are found requiring fixes.
     """
@@ -629,7 +636,9 @@ The line after this line should be blank."""
         assert file_name_two in scan_result.files_fixed
 
 
-def test_api_fix_path_multiple_files_nested_directory_fix_required_no_recursion():
+def test_api_fix_path_multiple_files_nested_directory_fix_required_no_recursion() -> (
+    None
+):
     """
     Test to make sure that we can invoke a fix of files on a path, where multiple files in nested
     directories exist requiring fixes, but only the base directory is specified.
@@ -659,7 +668,9 @@ The line after this line should be blank."""
         assert file_name_two not in scan_result.files_fixed
 
 
-def test_api_fix_path_multiple_files_nested_directory_fix_required_with_recursion():
+def test_api_fix_path_multiple_files_nested_directory_fix_required_with_recursion() -> (
+    None
+):
     """
     Test to make sure that we can invoke a fix of files on a path, where multiple files in nested
     directories exist requiring fixes, and the base directory is specified with recursion enabled.

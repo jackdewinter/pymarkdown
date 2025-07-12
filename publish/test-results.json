@@ -1511,7 +1511,7 @@
             "totalTests": 60,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 4,
+            "skippedTests": 0,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -1572,7 +1572,7 @@
         },
         {
             "name": "test.test_main_config",
-            "totalTests": 15,
+            "totalTests": 17,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1637,6 +1637,14 @@
         {
             "name": "test.test_transform_markdown",
             "totalTests": 2,
+            "failedTests": 0,
+            "errorTests": 0,
+            "skippedTests": 0,
+            "elapsedTimeInMilliseconds": 0
+        },
+        {
+            "name": "test.test_version",
+            "totalTests": 1,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,

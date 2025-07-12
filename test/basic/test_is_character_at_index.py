@@ -5,7 +5,7 @@ Tests for the various is_character* functions.
 from pymarkdown.general.parser_helper import ParserHelper
 
 
-def test_is_character_at_index_whitespace_with_empty_string():
+def test_is_character_at_index_whitespace_with_empty_string() -> None:
     """
     Make sure that an empty string is handled properly.
     """
@@ -24,7 +24,7 @@ def test_is_character_at_index_whitespace_with_empty_string():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_whitespace_with_low_index():
+def test_is_character_at_index_whitespace_with_low_index() -> None:
     """
     Make sure that a string with a low index is handled properly.
     """
@@ -43,7 +43,7 @@ def test_is_character_at_index_whitespace_with_low_index():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_whitespace_with_high_index():
+def test_is_character_at_index_whitespace_with_high_index() -> None:
     """
     Make sure that a string with a high index is handled properly.
     """
@@ -62,7 +62,7 @@ def test_is_character_at_index_whitespace_with_high_index():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_whitespace_with_whitespace():
+def test_is_character_at_index_whitespace_with_whitespace() -> None:
     """
     Make sure that a string with whitespace at the index is handled properly.
     """
@@ -81,7 +81,7 @@ def test_is_character_at_index_whitespace_with_whitespace():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_whitespace_with_whitespace_at_end():
+def test_is_character_at_index_whitespace_with_whitespace_at_end() -> None:
     """
     Make sure that a string with whitespace at the index is handled properly.
     """
@@ -100,7 +100,7 @@ def test_is_character_at_index_whitespace_with_whitespace_at_end():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_whitespace_without_whitespace():
+def test_is_character_at_index_whitespace_without_whitespace() -> None:
     """
     Make sure that a string with whitespace at the index is handled properly.
     """
@@ -119,7 +119,7 @@ def test_is_character_at_index_whitespace_without_whitespace():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_not_whitespace_with_empty_string():
+def test_is_character_at_index_not_whitespace_with_empty_string() -> None:
     """
     Make sure that an empty string is handled properly.
     """
@@ -138,7 +138,7 @@ def test_is_character_at_index_not_whitespace_with_empty_string():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_not_whitespace_with_low_index():
+def test_is_character_at_index_not_whitespace_with_low_index() -> None:
     """
     Make sure that a string with a low index is handled properly.
     """
@@ -157,7 +157,7 @@ def test_is_character_at_index_not_whitespace_with_low_index():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_not_whitespace_with_high_index():
+def test_is_character_at_index_not_whitespace_with_high_index() -> None:
     """
     Make sure that a string with a high index is handled properly.
     """
@@ -176,7 +176,7 @@ def test_is_character_at_index_not_whitespace_with_high_index():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_not_whitespace_with_whitespace():
+def test_is_character_at_index_not_whitespace_with_whitespace() -> None:
     """
     Make sure that a string with whitespace at the index is handled properly.
     """
@@ -195,7 +195,7 @@ def test_is_character_at_index_not_whitespace_with_whitespace():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_not_whitespace_with_whitespace_at_end():
+def test_is_character_at_index_not_whitespace_with_whitespace_at_end() -> None:
     """
     Make sure that a string with whitespace at the index is handled properly.
     """
@@ -214,7 +214,7 @@ def test_is_character_at_index_not_whitespace_with_whitespace_at_end():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_not_whitespace_without_whitespace():
+def test_is_character_at_index_not_whitespace_without_whitespace() -> None:
     """
     Make sure that a string with whitespace at the index is handled properly.
     """
@@ -233,7 +233,7 @@ def test_is_character_at_index_not_whitespace_without_whitespace():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_one_of_with_empty_string():
+def test_is_character_at_index_one_of_with_empty_string() -> None:
     """
     Make sure that an empty string is handled properly.
     """
@@ -253,7 +253,7 @@ def test_is_character_at_index_one_of_with_empty_string():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_one_of_with_low_index():
+def test_is_character_at_index_one_of_with_low_index() -> None:
     """
     Make sure that a string with a low index is handled properly.
     """
@@ -273,7 +273,7 @@ def test_is_character_at_index_one_of_with_low_index():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_one_of_with_high_index():
+def test_is_character_at_index_one_of_with_high_index() -> None:
     """
     Make sure that a string with a high index is handled properly.
     """
@@ -293,7 +293,7 @@ def test_is_character_at_index_one_of_with_high_index():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_one_of_with_whitespace():
+def test_is_character_at_index_one_of_with_whitespace() -> None:
     """
     Make sure that a string with one of the characters present at the index is handled properly.
     """
@@ -313,7 +313,7 @@ def test_is_character_at_index_one_of_with_whitespace():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_one_of_with_whitespace2():
+def test_is_character_at_index_one_of_with_whitespace2() -> None:
     """
     Make sure that a string with another one of the characters present at the index is handled properly.
     """
@@ -333,7 +333,7 @@ def test_is_character_at_index_one_of_with_whitespace2():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_one_of_with_character_at_end():
+def test_is_character_at_index_one_of_with_character_at_end() -> None:
     """
     Make sure that a string with one of the characters at the index is handled properly.
     """
@@ -353,7 +353,7 @@ def test_is_character_at_index_one_of_with_character_at_end():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_one_of_without_whitespace():
+def test_is_character_at_index_one_of_without_whitespace() -> None:
     """
     Make sure that a string without any characters at the index is handled properly.
     """
@@ -373,7 +373,7 @@ def test_is_character_at_index_one_of_without_whitespace():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_not_one_of_with_empty_string():
+def test_is_character_at_index_not_one_of_with_empty_string() -> None:
     """
     Make sure that an empty string is handled properly.
     """
@@ -393,7 +393,7 @@ def test_is_character_at_index_not_one_of_with_empty_string():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_not_one_of_with_low_index():
+def test_is_character_at_index_not_one_of_with_low_index() -> None:
     """
     Make sure that a string with a low index is handled properly.
     """
@@ -413,7 +413,7 @@ def test_is_character_at_index_not_one_of_with_low_index():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_not_one_of_with_high_index():
+def test_is_character_at_index_not_one_of_with_high_index() -> None:
     """
     Make sure that a string with a high index is handled properly.
     """
@@ -433,7 +433,7 @@ def test_is_character_at_index_not_one_of_with_high_index():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_not_one_of_with_whitespace():
+def test_is_character_at_index_not_one_of_with_whitespace() -> None:
     """
     Make sure that a string with one of the characters present at the index is handled properly.
     """
@@ -453,7 +453,7 @@ def test_is_character_at_index_not_one_of_with_whitespace():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_not_one_of_with_whitespace2():
+def test_is_character_at_index_not_one_of_with_whitespace2() -> None:
     """
     Make sure that a string with another one of the characters present at the index is handled properly.
     """
@@ -473,7 +473,7 @@ def test_is_character_at_index_not_one_of_with_whitespace2():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_not_one_of_with_character_at_end():
+def test_is_character_at_index_not_one_of_with_character_at_end() -> None:
     """
     Make sure that a string with one of the characters at the index is handled properly.
     """
@@ -493,7 +493,7 @@ def test_is_character_at_index_not_one_of_with_character_at_end():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_not_one_of_without_whitespace():
+def test_is_character_at_index_not_one_of_without_whitespace() -> None:
     """
     Make sure that a string without any characters at the index is handled properly.
     """
@@ -513,7 +513,7 @@ def test_is_character_at_index_not_one_of_without_whitespace():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_with_empty_string():
+def test_is_character_at_index_with_empty_string() -> None:
     """
     Make sure that an empty string is handled properly.
     """
@@ -533,7 +533,7 @@ def test_is_character_at_index_with_empty_string():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_with_low_index():
+def test_is_character_at_index_with_low_index() -> None:
     """
     Make sure that a string with a low index is handled properly.
     """
@@ -553,7 +553,7 @@ def test_is_character_at_index_with_low_index():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_with_high_index():
+def test_is_character_at_index_with_high_index() -> None:
     """
     Make sure that a string with a high index is handled properly.
     """
@@ -573,7 +573,7 @@ def test_is_character_at_index_with_high_index():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_with_whitespace():
+def test_is_character_at_index_with_whitespace() -> None:
     """
     Make sure that a string with one of the characters present at the index is handled properly.
     """
@@ -593,7 +593,7 @@ def test_is_character_at_index_with_whitespace():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_with_character_at_end():
+def test_is_character_at_index_with_character_at_end() -> None:
     """
     Make sure that a string with one of the characters at the index is handled properly.
     """
@@ -613,7 +613,7 @@ def test_is_character_at_index_with_character_at_end():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_without_whitespace():
+def test_is_character_at_index_without_whitespace() -> None:
     """
     Make sure that a string without any characters at the index is handled properly.
     """
@@ -633,7 +633,7 @@ def test_is_character_at_index_without_whitespace():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_not_with_empty_string():
+def test_is_character_at_index_not_with_empty_string() -> None:
     """
     Make sure that an empty string is handled properly.
     """
@@ -653,7 +653,7 @@ def test_is_character_at_index_not_with_empty_string():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_not_with_low_index():
+def test_is_character_at_index_not_with_low_index() -> None:
     """
     Make sure that a string with a low index is handled properly.
     """
@@ -673,7 +673,7 @@ def test_is_character_at_index_not_with_low_index():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_not_with_high_index():
+def test_is_character_at_index_not_with_high_index() -> None:
     """
     Make sure that a string with a high index is handled properly.
     """
@@ -693,7 +693,7 @@ def test_is_character_at_index_not_with_high_index():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_not_with_whitespace():
+def test_is_character_at_index_not_with_whitespace() -> None:
     """
     Make sure that a string with one of the characters present at the index is handled properly.
     """
@@ -713,7 +713,7 @@ def test_is_character_at_index_not_with_whitespace():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_not_with_character_at_end():
+def test_is_character_at_index_not_with_character_at_end() -> None:
     """
     Make sure that a string with one of the characters at the index is handled properly.
     """
@@ -733,7 +733,7 @@ def test_is_character_at_index_not_with_character_at_end():
     assert expected_output == actual_output
 
 
-def test_is_character_at_index_not_without_whitespace():
+def test_is_character_at_index_not_without_whitespace() -> None:
     """
     Make sure that a string without any characters at the index is handled properly.
     """
@@ -753,7 +753,7 @@ def test_is_character_at_index_not_without_whitespace():
     assert expected_output == actual_output
 
 
-def test_are_characters_at_index_with_empty_string():
+def test_are_characters_at_index_with_empty_string() -> None:
     """
     Make sure that an empty string is handled properly.
     """
@@ -773,7 +773,7 @@ def test_are_characters_at_index_with_empty_string():
     assert expected_output == actual_output
 
 
-def test_are_characters_at_index_with_low_index():
+def test_are_characters_at_index_with_low_index() -> None:
     """
     Make sure that a string with a low index is handled properly.
     """
@@ -793,7 +793,7 @@ def test_are_characters_at_index_with_low_index():
     assert expected_output == actual_output
 
 
-def test_are_characters_at_index_with_high_index():
+def test_are_characters_at_index_with_high_index() -> None:
     """
     Make sure that a string with a high index is handled properly.
     """
@@ -813,7 +813,7 @@ def test_are_characters_at_index_with_high_index():
     assert expected_output == actual_output
 
 
-def test_are_characters_at_index_with_present():
+def test_are_characters_at_index_with_present() -> None:
     """
     Make sure that a string with one of the characters present at the index is handled properly.
     """
@@ -833,7 +833,7 @@ def test_are_characters_at_index_with_present():
     assert expected_output == actual_output
 
 
-def test_are_characters_at_index_with_character_at_end():
+def test_are_characters_at_index_with_character_at_end() -> None:
     """
     Make sure that a string with one of the characters at the index is handled properly.
     """
@@ -853,7 +853,7 @@ def test_are_characters_at_index_with_character_at_end():
     assert expected_output == actual_output
 
 
-def are_characters_at_index_with_not_present():
+def are_characters_at_index_with_not_present() -> None:
     """
     Make sure that a string without any characters at the index is handled properly.
     """

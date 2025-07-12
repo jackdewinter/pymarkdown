@@ -44,8 +44,10 @@ class RuleMd001(RulePlugin):
         )
 
     def initialize_from_config(self) -> None:
-        self.__front_matter_title = self.plugin_configuration.get_string_property(
-            "front_matter_title", default_value="title"
+        self.__front_matter_title = (
+            self.plugin_configuration.get_string_property_with_default(
+                "front_matter_title", "title"
+            )
         )
 
     def query_config(self) -> List[QueryConfigItem]:

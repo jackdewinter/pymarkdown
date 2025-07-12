@@ -13,7 +13,7 @@ import pytest
 
 
 @pytest.mark.rules
-def test_md018_good_start_spacing():
+def test_md018_good_start_spacing() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains properly spaced Atx Headings that are interpretted as such.
@@ -43,7 +43,7 @@ def test_md018_good_start_spacing():
 
 
 @pytest.mark.rules
-def test_md018_good_start_spacing_in_list():
+def test_md018_good_start_spacing_in_list() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains properly spaced Atx Headings that are interpretted as such
@@ -74,7 +74,7 @@ def test_md018_good_start_spacing_in_list():
 
 
 @pytest.mark.rules
-def test_md018_good_start_spacing_in_block_quotes():
+def test_md018_good_start_spacing_in_block_quotes() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains properly spaced Atx Headings that are interpretted as such
@@ -105,7 +105,7 @@ def test_md018_good_start_spacing_in_block_quotes():
 
 
 @pytest.mark.rules
-def test_md018_bad_ignore_bad_atx_closed_spacing():
+def test_md018_bad_ignore_bad_atx_closed_spacing() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains improperly spaced Atx Headings that are considered to be
@@ -138,7 +138,7 @@ def test_md018_bad_ignore_bad_atx_closed_spacing():
 
 
 @pytest.mark.rules
-def test_md018_bad_missing_atx_start_spacing():
+def test_md018_bad_missing_atx_start_spacing() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a possible Atx Headings without the proper space at the start.
@@ -173,7 +173,7 @@ def test_md018_bad_missing_atx_start_spacing():
 
 
 @pytest.mark.rules
-def test_md018_bad_missing_atx_start_spacing_in_list():
+def test_md018_bad_missing_atx_start_spacing_in_list() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a possible Atx Headings without the proper space at the start
@@ -209,7 +209,7 @@ def test_md018_bad_missing_atx_start_spacing_in_list():
 
 
 @pytest.mark.rules
-def test_md018_bad_missing_atx_start_spacing_in_block_quote():
+def test_md018_bad_missing_atx_start_spacing_in_block_quote() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains a possible Atx Headings without the proper space at the start
@@ -245,7 +245,7 @@ def test_md018_bad_missing_atx_start_spacing_in_block_quote():
 
 
 @pytest.mark.rules
-def test_md018_good_with_setext_headings():
+def test_md018_good_with_setext_headings() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a possible Atx Headings without the proper space at the start
@@ -276,7 +276,7 @@ def test_md018_good_with_setext_headings():
 
 
 @pytest.mark.rules
-def test_md018_good_with_code_blocks():
+def test_md018_good_with_code_blocks() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a possible Atx Headings without the proper space at the start
@@ -309,7 +309,7 @@ def test_md018_good_with_code_blocks():
 
 
 @pytest.mark.rules
-def test_md018_good_with_html_blocks():
+def test_md018_good_with_html_blocks() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a possible Atx Headings without the proper space at the start
@@ -342,7 +342,7 @@ def test_md018_good_with_html_blocks():
 
 
 @pytest.mark.rules
-def test_md018_bad_multiple_within_paragraph():
+def test_md018_bad_multiple_within_paragraph() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains multiple possible Atx Headings without the proper space at the start
@@ -378,7 +378,7 @@ def test_md018_bad_multiple_within_paragraph():
 
 
 @pytest.mark.rules
-def test_md018_bad_multiple_within_paragraph_separated_codespan():
+def test_md018_bad_multiple_within_paragraph_separated_codespan() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains multiple possible Atx Headings without the proper space at the start
@@ -418,7 +418,7 @@ def test_md018_bad_multiple_within_paragraph_separated_codespan():
 
 
 @pytest.mark.rules
-def test_md018_bad_multiple_within_paragraph_separated_codespan_multi():
+def test_md018_bad_multiple_within_paragraph_separated_codespan_multi() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains multiple possible Atx Headings without the proper space at the start
@@ -458,7 +458,7 @@ def test_md018_bad_multiple_within_paragraph_separated_codespan_multi():
 
 
 @pytest.mark.rules
-def test_md018_bad_multiple_within_paragraph_separated_inline_codespan_multi():
+def test_md018_bad_multiple_within_paragraph_separated_inline_codespan_multi() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains multiple possible Atx Headings without the proper space at the start
@@ -497,7 +497,7 @@ def test_md018_bad_multiple_within_paragraph_separated_inline_codespan_multi():
 
 
 @pytest.mark.rules
-def test_md018_bad_multiple_within_paragraph_separated_inline_rawhtml_multi():
+def test_md018_bad_multiple_within_paragraph_separated_inline_rawhtml_multi() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains multiple possible Atx Headings without the proper space at the start
@@ -538,7 +538,7 @@ def test_md018_bad_multiple_within_paragraph_separated_inline_rawhtml_multi():
 
 
 @pytest.mark.rules
-def test_md018_bad_multiple_within_paragraph_separated_inline_image_multi():
+def test_md018_bad_multiple_within_paragraph_separated_inline_image_multi() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains multiple possible Atx Headings without the proper space at the start
@@ -577,7 +577,7 @@ def test_md018_bad_multiple_within_paragraph_separated_inline_image_multi():
 
 
 @pytest.mark.rules
-def test_md018_bad_multiple_within_paragraph_separated_full_image_multi():
+def test_md018_bad_multiple_within_paragraph_separated_full_image_multi() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains multiple possible Atx Headings without the proper space at the start
@@ -616,7 +616,7 @@ def test_md018_bad_multiple_within_paragraph_separated_full_image_multi():
 
 
 @pytest.mark.rules
-def test_md018_bad_multiple_within_paragraph_separated_shortcut_image_multi():
+def test_md018_bad_multiple_within_paragraph_separated_shortcut_image_multi() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains multiple possible Atx Headings without the proper space at the start
@@ -655,7 +655,7 @@ def test_md018_bad_multiple_within_paragraph_separated_shortcut_image_multi():
 
 
 @pytest.mark.rules
-def test_md018_bad_multiple_within_paragraph_separated_collapsed_image_multi():
+def test_md018_bad_multiple_within_paragraph_separated_collapsed_image_multi() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains multiple possible Atx Headings without the proper space at the start
@@ -694,7 +694,7 @@ def test_md018_bad_multiple_within_paragraph_separated_collapsed_image_multi():
 
 
 @pytest.mark.rules
-def test_md018_bad_multiple_within_paragraph_separated_inline_link_multi():
+def test_md018_bad_multiple_within_paragraph_separated_inline_link_multi() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains multiple possible Atx Headings without the proper space at the start
@@ -733,7 +733,7 @@ def test_md018_bad_multiple_within_paragraph_separated_inline_link_multi():
 
 
 @pytest.mark.rules
-def test_md018_bad_multiple_within_paragraph_separated_full_link_multi():
+def test_md018_bad_multiple_within_paragraph_separated_full_link_multi() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains multiple possible Atx Headings without the proper space at the start
@@ -772,7 +772,7 @@ def test_md018_bad_multiple_within_paragraph_separated_full_link_multi():
 
 
 @pytest.mark.rules
-def test_md018_bad_multiple_within_paragraph_separated_shortcut_link_multi():
+def test_md018_bad_multiple_within_paragraph_separated_shortcut_link_multi() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains multiple possible Atx Headings without the proper space at the start
@@ -811,7 +811,7 @@ def test_md018_bad_multiple_within_paragraph_separated_shortcut_link_multi():
 
 
 @pytest.mark.rules
-def test_md018_bad_multiple_within_paragraph_separated_collapsed_link_multi():
+def test_md018_bad_multiple_within_paragraph_separated_collapsed_link_multi() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains multiple possible Atx Headings without the proper space at the start
@@ -850,7 +850,7 @@ def test_md018_bad_multiple_within_paragraph_separated_collapsed_link_multi():
 
 
 @pytest.mark.rules
-def test_md018_bad_multiple_within_paragraph_separated_inline_hardbreak_multi():
+def test_md018_bad_multiple_within_paragraph_separated_inline_hardbreak_multi() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains multiple possible Atx Headings without the proper space at the start
@@ -888,7 +888,7 @@ def test_md018_bad_multiple_within_paragraph_separated_inline_hardbreak_multi():
 
 
 @pytest.mark.rules
-def test_md018_bad_paragraphs_with_starting_whitespace():
+def test_md018_bad_paragraphs_with_starting_whitespace() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains multiple possible Atx Headings without the proper space at the start
@@ -928,7 +928,7 @@ def test_md018_bad_paragraphs_with_starting_whitespace():
 
 
 @pytest.mark.rules
-def test_md018_bad_single_paragraph_with_starting_space():
+def test_md018_bad_single_paragraph_with_starting_space() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains multiple possible Atx Headings without the proper space at the start
@@ -968,7 +968,7 @@ def test_md018_bad_single_paragraph_with_starting_space():
 
 
 @pytest.mark.rules
-def test_md018_bad_single_paragraph_with_starting_whitespace():
+def test_md018_bad_single_paragraph_with_starting_whitespace() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains multiple possible Atx Headings without the proper space at the start
@@ -1008,7 +1008,7 @@ def test_md018_bad_single_paragraph_with_starting_whitespace():
 
 
 @pytest.mark.rules
-def test_md018_bad_single_paragraph_with_whitespace():
+def test_md018_bad_single_paragraph_with_whitespace() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains multiple possible Atx Headings without the proper space at the start
@@ -1046,7 +1046,7 @@ def test_md018_bad_single_paragraph_with_whitespace():
 
 
 @pytest.mark.rules
-def test_md018_issue_1267():
+def test_md018_issue_1267() -> None:
     """
     Test to make sure this rule handles having a task list as part of the document.
     Reported as Issue 1267, ran up against guard code.
@@ -1087,7 +1087,7 @@ title: abc
     )
 
 
-def test_md018_query_config():
+def test_md018_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md018",
         """

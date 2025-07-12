@@ -6,7 +6,7 @@ import os
 from test.markdown_scanner import MarkdownScanner
 
 
-def test_markdown_with_dash_ae_with_invalid_file_extension():
+def test_markdown_with_dash_ae_with_invalid_file_extension() -> None:
     """
     Test to make sure
     """
@@ -36,7 +36,7 @@ def test_markdown_with_dash_ae_with_invalid_file_extension():
     )
 
 
-def test_markdown_with_dash_ae_with_valid_file_extension():
+def test_markdown_with_dash_ae_with_valid_file_extension() -> None:
     """
     Test to make sure
     """
@@ -66,7 +66,7 @@ def test_markdown_with_dash_ae_with_valid_file_extension():
     )
 
 
-def test_markdown_with_dash_ae_with_valid_file_extension_multiple():
+def test_markdown_with_dash_ae_with_valid_file_extension_multiple() -> None:
     """
     Test to make sure that a file with a non-md extension but with
     alternate extensions is accepted as a valid file.
@@ -98,7 +98,7 @@ def test_markdown_with_dash_ae_with_valid_file_extension_multiple():
     )
 
 
-def test_markdown_with_dash_ae_with_invalid_file_extension_no_period():
+def test_markdown_with_dash_ae_with_invalid_file_extension_no_period() -> None:
     """
     Test to make sure
     """
@@ -131,7 +131,7 @@ main.py scan: error: argument -ae/--alternate-extensions: Extension 'md' must st
     )
 
 
-def test_markdown_with_dash_ae_with_invalid_file_extension_no_alphanum():
+def test_markdown_with_dash_ae_with_invalid_file_extension_no_alphanum() -> None:
     """
     Test to make sure
     """
@@ -164,7 +164,7 @@ main.py scan: error: argument -ae/--alternate-extensions: Extension '.*' must on
     )
 
 
-def test_markdown_with_dash_ae_with_invalid_file_extension_only_period():
+def test_markdown_with_dash_ae_with_invalid_file_extension_only_period() -> None:
     """
     Test to make sure
     """
@@ -197,7 +197,7 @@ main.py scan: error: argument -ae/--alternate-extensions: Extension '.' must hav
     )
 
 
-def test_markdown_with_dash_ae_with_invalid_file_extension_semicolon_as_sep():
+def test_markdown_with_dash_ae_with_invalid_file_extension_semicolon_as_sep() -> None:
     """
     Test to make sure
     """
@@ -230,7 +230,7 @@ main.py scan: error: argument -ae/--alternate-extensions: Extension '.md;.txt' m
     )
 
 
-def test_markdown_with_dash_ae_with_invalid_file_extension_empty():
+def test_markdown_with_dash_ae_with_invalid_file_extension_empty() -> None:
     """
     Test to make sure
     """
@@ -263,7 +263,7 @@ main.py scan: error: argument -ae/--alternate-extensions: Extension '' must star
     )
 
 
-def test_markdown_with_dash_ae_xxx1():
+def test_markdown_with_dash_ae_xxx1() -> None:
     """
     Test to make sure
     """
@@ -291,7 +291,7 @@ def test_markdown_with_dash_ae_xxx1():
     )
 
 
-def test_markdown_with_dash_ae_xxx2():
+def test_markdown_with_dash_ae_xxx2() -> None:
     """
     Test to make sure
     """

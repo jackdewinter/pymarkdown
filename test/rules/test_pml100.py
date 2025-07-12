@@ -601,7 +601,7 @@ def test_pml100(test: Pml100Test) -> None:
         "--strict-config",
         "scan-stdin",
     ]
-    new_args = []
+    new_args: List[str] = []
     for next_argument in test.args:
         new_args.extend(
             [
@@ -630,8 +630,8 @@ pml100ErrorTests = [
         "\n\nBadPluginError encountered while configuring plugins:\nThe value for property 'plugins.disallowed-html.change_tag_names' must be of type 'str'.\n",
     ),
     ErrorPml100Test(
-        "bad empty string",
-        ["enabled=$!True", "change_tag_names="],
+        "bad empty whitespace string",
+        ["enabled=$!True", "change_tag_names= "],
         "\n\nBadPluginError encountered while configuring plugins:\nConfiguration item 'plugins.disallowed-html.change_tag_names' contains at least one empty string.\n",
     ),
     ErrorPml100Test(
@@ -664,7 +664,7 @@ def test_pml100_errors(test: ErrorPml100Test) -> None:
         "--strict-config",
         "scan-stdin",
     ]
-    new_args = []
+    new_args: List[str] = []
     for next_argument in test.args:
         new_args.extend(
             [
@@ -688,7 +688,7 @@ def test_pml100_errors(test: ErrorPml100Test) -> None:
     )
 
 
-def test_pml100_query_config():
+def test_pml100_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "pml100",
         """
@@ -701,9 +701,9 @@ def test_pml100_query_config():
                      pml100.md
 
 
-  CONFIGURATION ITEM  TYPE     VALUE
+  CONFIGURATION ITEM  TYPE    VALUE
 
-  change_tag_names    integer  None
+  change_tag_names    string  ""
 
 """,
     )

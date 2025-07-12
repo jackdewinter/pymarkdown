@@ -16,7 +16,7 @@ else:
     ARGPARSE_X = "options:"
 
 
-def test_markdown_with_extensions_only():
+def test_markdown_with_extensions_only() -> None:
     """
     Test to make sure the command line interface to extensions
     only shows the extensions help related information.
@@ -52,7 +52,7 @@ positional arguments:
     )
 
 
-def test_markdown_with_extensions_list_only():
+def test_markdown_with_extensions_list_only() -> None:
     """
     Test to make sure the command line interface to extensions
     only shows the installed extensions when asked for a list.
@@ -91,7 +91,7 @@ def test_markdown_with_extensions_list_only():
     )
 
 
-def test_markdown_with_extensions_list_only_all():
+def test_markdown_with_extensions_list_only_all() -> None:
     """
     Test to make sure the command line interface to extensions
     only shows the installed extensions when asked for a list.
@@ -131,7 +131,7 @@ def test_markdown_with_extensions_list_only_all():
     )
 
 
-def test_markdown_with_extensions_list_and_filter_by_id_ends_with_r():
+def test_markdown_with_extensions_list_and_filter_by_id_ends_with_r() -> None:
     """
     Test to make sure the command line interface to extensions
     only shows the installed extensions when asked for a list.
@@ -161,7 +161,9 @@ def test_markdown_with_extensions_list_and_filter_by_id_ends_with_r():
     )
 
 
-def test_markdown_with_extensions_list_and_filter_by_id_ends_with_r_and_configuration_true():
+def test_markdown_with_extensions_list_and_filter_by_id_ends_with_r_and_configuration_true() -> (
+    None
+):
     """
     Test to make sure the command line interface to extensions
     only shows the installed extensions when asked for a list.
@@ -198,7 +200,9 @@ def test_markdown_with_extensions_list_and_filter_by_id_ends_with_r_and_configur
             os.remove(configuration_file)
 
 
-def test_markdown_with_extensions_list_and_filter_by_id_ends_with_r_and_configuration_false():
+def test_markdown_with_extensions_list_and_filter_by_id_ends_with_r_and_configuration_false() -> (
+    None
+):
     """
     Test to make sure the command line interface to extensions
     only shows the installed extensions when asked for a list.
@@ -235,7 +239,7 @@ def test_markdown_with_extensions_list_and_filter_by_id_ends_with_r_and_configur
             os.remove(configuration_file)
 
 
-def test_markdown_with_extensions_error_during_configuration():
+def test_markdown_with_extensions_error_during_configuration() -> None:
     """
     Test to make sure the command line interface to extensions
     shows the exception text when the initialization fails due
@@ -278,7 +282,7 @@ blah
             os.remove(configuration_file)
 
 
-def test_markdown_with_extensions_value_error_during_configuration():
+def test_markdown_with_extensions_value_error_during_configuration() -> None:
     """
     Test to make sure the command line interface to extensions
     shows the exception text when the configuration fails due
@@ -313,7 +317,7 @@ blah
             os.remove(configuration_file)
 
 
-def test_markdown_with_extensions_and_no_error_during_configuration():
+def test_markdown_with_extensions_and_no_error_during_configuration() -> None:
     """
     Test to make sure the command line interface to extensions
     list the exception text when the initialization does not fail.
@@ -351,7 +355,9 @@ def test_markdown_with_extensions_and_no_error_during_configuration():
             os.remove(configuration_file)
 
 
-def test_markdown_with_extensions_list_and_filter_by_id_ends_with_non_sequence():
+def test_markdown_with_extensions_list_and_filter_by_id_ends_with_non_sequence() -> (
+    None
+):
     """
     Test to make sure the command line interface to extensions
     lists the matching items (none) when presented with an identifier
@@ -377,7 +383,7 @@ def test_markdown_with_extensions_list_and_filter_by_id_ends_with_non_sequence()
     )
 
 
-def test_markdown_with_extensions_list_and_filter_by_name_link():
+def test_markdown_with_extensions_list_and_filter_by_name_link() -> None:
     """
     Test to make sure the command line interface to extensions
     lists the matching items when presented with an identifier
@@ -407,7 +413,7 @@ def test_markdown_with_extensions_list_and_filter_by_name_link():
     )
 
 
-def test_markdown_with_extensions_list_and_bad_filter():
+def test_markdown_with_extensions_list_and_bad_filter() -> None:
     """
     Test to make sure the command line interface to extensions
     lists presents an error when a bad filter is supplied.
@@ -432,7 +438,7 @@ main.py extensions list: error: argument list_filter: Value '*' is not a valid p
     )
 
 
-def test_markdown_with_extensions_info_and_bad_filter():
+def test_markdown_with_extensions_info_and_bad_filter() -> None:
     """
     Test to make sure the command line interface to extensions
     lists presents an error when a bad filter is supplied with
@@ -458,7 +464,7 @@ main.py extensions info: error: argument info_filter: Value 'abc.def' is not a v
     )
 
 
-def test_markdown_with_extensions_info_and_not_found_filter():
+def test_markdown_with_extensions_info_and_not_found_filter() -> None:
     """
     Test to make sure the command line interface to extensions
     info presents an error when a bad id is supplied.
@@ -481,7 +487,7 @@ def test_markdown_with_extensions_info_and_not_found_filter():
     )
 
 
-def test_markdown_with_extensions_info_and_found_filter():
+def test_markdown_with_extensions_info_and_found_filter() -> None:
     """
     Test to make sure the command line interface to extensions
     info presents information when a valid id is supplied.

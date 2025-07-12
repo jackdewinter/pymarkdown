@@ -31,7 +31,7 @@ class CloseOpenBlocksProtocol(Protocol):
     """
 
     # pylint: disable=too-many-arguments
-    def __call__(
+    def __call__(  # noqa: E704
         self,
         parser_state: ParserState,
         destination_array: Optional[List[MarkdownToken]] = None,
@@ -56,7 +56,7 @@ class HandleBlankLineProtocol(Protocol):
     Protocol to provide typing for the blank line function.
     """
 
-    def __call__(
+    def __call__(  # noqa: E704
         self,
         parser_state: ParserState,
         input_line: str,

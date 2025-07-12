@@ -54,10 +54,12 @@ class RulePml101(RulePlugin):
         """
         Event to allow the plugin to load configuration information.
         """
-        self.__indent_basis = self.plugin_configuration.get_integer_property(
-            "indent",
-            default_value=4,
-            valid_value_fn=self.__validate_configuration_indent,
+        self.__indent_basis = (
+            self.plugin_configuration.get_integer_property_with_default(
+                "indent",
+                4,
+                valid_value_fn=self.__validate_configuration_indent,
+            )
         )
 
     def query_config(self) -> List[QueryConfigItem]:

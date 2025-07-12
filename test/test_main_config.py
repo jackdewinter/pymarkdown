@@ -9,7 +9,7 @@ from test.markdown_scanner import MarkdownScanner
 from .utils import create_temporary_configuration_file, temporary_change_to_directory
 
 
-def test_markdown_with_dash_e_single_by_id_and_good_config():
+def test_markdown_with_dash_e_single_by_id_and_good_config() -> None:
     """
     Test to make sure we get enable a rule if '-e' is supplied and the id of the
     rule is provided. The test data for MD047 is used as it is a simple file that
@@ -65,7 +65,123 @@ MD999>>completed_file
         )
 
 
-def test_markdown_with_dash_e_single_by_id_and_bad_config():
+def test_markdown_with_dash_e_single_by_id_and_good_config_with_comment() -> None:
+    """
+    Test that is a variation of `test_markdown_with_dash_e_single_by_id_and_good_config`
+    that supplies the configuration as a JSON5 file with comments.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    supplied_configuration = """
+{
+    "plugins": {
+        // This is a comment.
+        "md999": {
+            "test_value": 2
+        }
+    }
+}
+"""
+
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
+        supplied_arguments = [
+            "-e",
+            "MD999",
+            "-c",
+            configuration_file,
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 0
+        expected_output = """MD999>>init_from_config
+MD999>>test_value>>2
+MD999>>other_test_value>>1
+MD999>>starting_new_file>>
+MD999>>token:[atx(1,1):1:0:]
+MD999>>token:[text(1,3):This is a test: ]
+MD999>>token:[end-atx::]
+MD999>>token:[BLANK(2,1):]
+MD999>>token:[para(3,1):]
+MD999>>token:[text(3,1):The line after this line should be blank.:]
+MD999>>token:[end-para:::True]
+MD999>>token:[BLANK(4,1):]
+MD999>>token:[end-of-stream(5,0)]
+MD999>>next_line:# This is a test
+MD999>>next_line:
+MD999>>next_line:The line after this line should be blank.
+MD999>>next_line:
+MD999>>completed_file
+"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+
+
+def test_markdown_with_dash_e_single_by_id_and_good_config_with_comment_no_json5() -> (
+    None
+):
+    """
+    Test that is a variation of `test_markdown_with_dash_e_single_by_id_and_good_config`
+    that supplies the configuration as a JSON5 file with comments, but with JSON5 support
+    for configuration files disabled.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    supplied_configuration = """
+{
+    "plugins": {
+        // This is a comment.
+        "md999": {
+            "test_value": 2
+        }
+    }
+}
+"""
+
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
+        supplied_arguments = [
+            "-e",
+            "MD999",
+            "-c",
+            configuration_file,
+            "--no-json5",
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = ""
+        expected_error = f"Specified configuration file '{configuration_file}' was not parseable as a JSON, YAML, or TOML file."
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+
+
+def test_markdown_with_dash_e_single_by_id_and_bad_config() -> None:
     """
     Test to make sure we get enable a rule if '-e' is supplied and the id of the
     rule is provided. The test data for MD047 is used as it is a simple file that
@@ -121,7 +237,7 @@ MD999>>completed_file
         )
 
 
-def test_markdown_with_dash_e_single_by_id_and_bad_config_file():
+def test_markdown_with_dash_e_single_by_id_and_bad_config_file() -> None:
     """
     Test to make sure we get an error if we provide a configuration file that is
     in a json format, but not valid.
@@ -162,10 +278,11 @@ def test_markdown_with_dash_e_single_by_id_and_bad_config_file():
         )
 
 
-def test_markdown_with_dash_e_single_by_id_and_non_json_config_file():
+def test_markdown_with_dash_e_single_by_id_and_non_json_config_file() -> None:
     """
     Test to make sure we get an error if we provide a configuration file that is
-    not in a json format.
+    not in a json format.  Note that simple content such as "not a json file"
+    may be interpretted as YAML.
 
     This function shadows
     test_api_config_with_bad_contents
@@ -176,7 +293,9 @@ def test_markdown_with_dash_e_single_by_id_and_non_json_config_file():
     source_path = os.path.join(
         "test", "resources", "rules", "md047", "end_with_blank_line.md"
     )
-    supplied_configuration = "not a json file"
+    supplied_configuration = """hallo: 1
+bye
+"""
     with create_temporary_configuration_file(
         supplied_configuration
     ) as configuration_file:
@@ -202,7 +321,7 @@ def test_markdown_with_dash_e_single_by_id_and_non_json_config_file():
         )
 
 
-def test_markdown_with_dash_e_single_by_id_and_non_present_config_file():
+def test_markdown_with_dash_e_single_by_id_and_non_present_config_file() -> None:
     """
     Test to make sure we get an error if we provide a configuration file that is
     not in a json format.
@@ -242,7 +361,7 @@ Specified configuration file `not-exists` does not exist."""
     )
 
 
-def test_markdown_with_dash_e_single_by_id_and_good_select_config():
+def test_markdown_with_dash_e_single_by_id_and_good_select_config() -> None:
     """
     Test to make sure we get enable a rule if '-e' is supplied and the id of the
     rule is provided. The test data for MD047 is used as it is a simple file that
@@ -301,7 +420,7 @@ MD999>>completed_file
         )
 
 
-def test_markdown_with_dash_e_single_by_id_and_bad_select_config():
+def test_markdown_with_dash_e_single_by_id_and_bad_select_config() -> None:
     """
     Test to make sure we get enable a rule if '-e' is supplied and the id of the
     rule is provided. The test data for MD047 is used as it is a simple file that
@@ -360,7 +479,9 @@ MD999>>completed_file
         )
 
 
-def test_markdown_with_dash_e_single_by_id_and_config_causing_config_exception():
+def test_markdown_with_dash_e_single_by_id_and_config_causing_config_exception() -> (
+    None
+):
     """
     Test to make sure if we tell the test plugin to throw an exception during the
     call to `initialize_from_config`, that it is handled properly.
@@ -402,7 +523,9 @@ Plugin id 'MD999' had a critical failure during the '__apply_configuration' acti
         )
 
 
-def test_markdown_with_dash_e_single_by_id_and_config_causing_next_token_exception():
+def test_markdown_with_dash_e_single_by_id_and_config_causing_next_token_exception() -> (
+    None
+):
     """
     Test to make sure if we tell the test plugin to throw an exception during the
     call to `next_token`, that it is handled properly.
@@ -448,7 +571,7 @@ MD999>>token:[atx(1,1):1:0:]
         )
 
 
-def test_markdown_with_bad_strict_config_type():
+def test_markdown_with_bad_strict_config_type() -> None:
     """
     Test to make sure that we can set the strict configuration mode from
     the configuration file, capturing any bad errors.
@@ -483,7 +606,7 @@ def test_markdown_with_bad_strict_config_type():
         )
 
 
-def test_markdown_with_good_strict_config_type():
+def test_markdown_with_good_strict_config_type() -> None:
     """
     Test to make sure that we can set the strict configuration mode from
     the configuration file, capturing any bad errors.
@@ -518,7 +641,7 @@ def test_markdown_with_good_strict_config_type():
         )
 
 
-def test_markdown_with_default_configuration_file_with_error():
+def test_markdown_with_default_configuration_file_with_error() -> None:
     """
     Test to make sure that a default configuration will be read and have the
     same errors as if it was specified on the command line.
@@ -560,7 +683,7 @@ def test_markdown_with_default_configuration_file_with_error():
             )
 
 
-def test_markdown_with_overlapping_configuration_files():
+def test_markdown_with_overlapping_configuration_files() -> None:
     """
     Test to make sure that information from a default configuration file and
     a specified configuration file give each other the right layering.
@@ -620,7 +743,7 @@ this is a very long line
                 )
 
 
-def test_markdown_with_pyproject_configuration_file_with_error():
+def test_markdown_with_pyproject_configuration_file_with_error() -> None:
     """
     Test to make sure that a pyproject configuration will be read and have the
     same errors as if it was specified on the command line.
@@ -664,7 +787,7 @@ a.c = "3"
             )
 
 
-def test_markdown_with_pyproject_direct_configuration_file_with_error():
+def test_markdown_with_pyproject_direct_configuration_file_with_error() -> None:
     """
     Test to make sure that a pyproject configuration will be read and have the
     same errors as if it was specified on the command line.

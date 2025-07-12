@@ -7,7 +7,7 @@ from test.utils import act_and_assert
 config_map = {"extensions": {"markdown-task-list-items": {"enabled": True}}}
 
 
-def test_task_list_items_279_x():
+def test_task_list_items_279_x() -> None:
     """
     Test case 279:  Nothing happens to the inline context unless the configuration is enabled, which it is not.
     """
@@ -32,7 +32,7 @@ def test_task_list_items_279_x():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-def test_task_list_items_279_a():
+def test_task_list_items_279_a() -> None:
     """
     Test case 279:  If the character between the brackets is a whitespace character, the checkbox is unchecked. Otherwise, the checkbox is checked.
     """
@@ -61,7 +61,7 @@ def test_task_list_items_279_a():
     )
 
 
-def test_task_list_items_279_b():
+def test_task_list_items_279_b() -> None:
     """
     Test case 279:  variation, with non-acceptable character inside
     """
@@ -92,7 +92,7 @@ def test_task_list_items_279_b():
     )
 
 
-def test_task_list_items_279_c():
+def test_task_list_items_279_c() -> None:
     """
     Test case 279:  variation, with multiple characters inside
     """
@@ -123,7 +123,7 @@ def test_task_list_items_279_c():
     )
 
 
-def test_task_list_items_279_d():
+def test_task_list_items_279_d() -> None:
     """
     Test case 279:  variation, with no whitespace after
     """
@@ -154,7 +154,7 @@ def test_task_list_items_279_d():
     )
 
 
-def test_task_list_items_279_e():
+def test_task_list_items_279_e() -> None:
     """
     Test case 279:  variation, with non-whitespace text before
     """
@@ -185,7 +185,7 @@ def test_task_list_items_279_e():
     )
 
 
-def test_task_list_items_279_f():
+def test_task_list_items_279_f() -> None:
     """
     Test case 279:  variation, does not work with block quotes
     """
@@ -211,7 +211,7 @@ a [x]bar</p>
     )
 
 
-def test_task_list_items_280_x():
+def test_task_list_items_280_x() -> None:
     """
     Test case 280:  Nothing happens to the inline context unless the configuration is enabled, which it is not.
     """
@@ -255,7 +255,7 @@ def test_task_list_items_280_x():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-def test_task_list_items_280_a():
+def test_task_list_items_280_a() -> None:
     """
     Test case 280:  Task lists can be arbitrarily nested:
     """
@@ -305,7 +305,7 @@ def test_task_list_items_280_a():
     )
 
 
-def test_task_list_items_280_b():
+def test_task_list_items_280_b() -> None:
     """
     Test case 280:  task lists are only at the start of the first paragraph
     """

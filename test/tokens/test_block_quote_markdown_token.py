@@ -4,7 +4,7 @@ from pymarkdown.general.position_marker import PositionMarker
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 
 
-def test_block_quote_markdown_token_modify_with_bad_name():
+def test_block_quote_markdown_token_modify_with_bad_name() -> None:
     """
     Test to make sure that try to change this token with a bad name fails.
     """
@@ -12,7 +12,7 @@ def test_block_quote_markdown_token_modify_with_bad_name():
     # Arrange
     modification_context = MockPluginModifyContext()
     original_token = BlockQuoteMarkdownToken(
-        position_marker=PositionMarker(1, 1, 1),
+        position_marker=PositionMarker(1, 1, "", 1),
         extracted_whitespace="",
     )
 

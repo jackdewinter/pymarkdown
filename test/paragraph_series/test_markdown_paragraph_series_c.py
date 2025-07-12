@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_paragraph_series_c_b():
+def test_paragraph_series_c_b() -> None:
     """
     Test case:  Paragraphs ends with a backslash escape
     was:        test_paragraph_extra_21
@@ -28,7 +28,7 @@ def test_paragraph_series_c_b():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_c_bh():
+def test_paragraph_series_c_bh() -> None:
     """
     Test case:  Paragraph ends with a backslash as in a hard line break
     was:        test_paragraph_extra_22
@@ -50,7 +50,7 @@ def test_paragraph_series_c_bh():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_c_sh():
+def test_paragraph_series_c_sh() -> None:
     """
     Test case:  Paragraph ends with 2+ spaces as in a hard line break
     was:        test_paragraph_extra_23
@@ -74,7 +74,7 @@ def test_paragraph_series_c_sh():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_c_cs():
+def test_paragraph_series_c_cs() -> None:
     """
     Test case:  Paragraph string ending with a code span.
     was:        test_paragraph_extra_24
@@ -95,7 +95,7 @@ def test_paragraph_series_c_cs():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_c_cr():
+def test_paragraph_series_c_cr() -> None:
     """
     Test case:  Paragraph string ending with a character reference.
     was:        test_paragraph_extra_25
@@ -115,7 +115,7 @@ def test_paragraph_series_c_cr():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_c_rh():
+def test_paragraph_series_c_rh() -> None:
     """
     Test case:  Paragraph string ending with a raw html block.
     was:        test_paragraph_extra_26
@@ -136,7 +136,7 @@ def test_paragraph_series_c_rh():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_c_ua():
+def test_paragraph_series_c_ua() -> None:
     """
     Test case:  Paragraph string ending with an URI autolink
     was:        test_paragraph_extra_27
@@ -159,7 +159,7 @@ def test_paragraph_series_c_ua():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_c_ea():
+def test_paragraph_series_c_ea() -> None:
     """
     Test case:  Paragraph string ending with an email autolink
     was:        test_paragraph_extra_28
@@ -180,7 +180,7 @@ def test_paragraph_series_c_ea():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_c_e():
+def test_paragraph_series_c_e() -> None:
     """
     Test case:  Paragraph string ending with an emphasis
     was:        test_paragraph_extra_29
@@ -203,7 +203,7 @@ def test_paragraph_series_c_e():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_c_l():
+def test_paragraph_series_c_l() -> None:
     """
     Test case:  Paragraph string ending with a link.
     was:        test_paragraph_extra_30
@@ -226,7 +226,7 @@ def test_paragraph_series_c_l():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_c_i():
+def test_paragraph_series_c_i() -> None:
     """
     Test case:  Paragraph string ending with an image
     was:        test_paragraph_extra_31

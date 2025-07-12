@@ -4,7 +4,7 @@ from pymarkdown.links.link_helper_properties import LinkHelperProperties
 from pymarkdown.tokens.link_start_markdown_token import LinkStartMarkdownToken
 
 
-def test_reference_markdown_token_modify_with_bad_name():
+def test_reference_markdown_token_modify_with_bad_name() -> None:
     """
     Test to make sure that try to change this token with a bad name fails.
     """

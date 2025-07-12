@@ -11,7 +11,7 @@ import pytest
 
 
 @pytest.mark.gfm
-def test_whitespaces_block_quotes_with_spaces():
+def test_whitespaces_block_quotes_with_spaces() -> None:
     """
     Test case:  Block quotes preceeded by spaces.
     """
@@ -34,7 +34,7 @@ def test_whitespaces_block_quotes_with_spaces():
 
 
 @pytest.mark.gfm
-def test_whitespaces_block_quotes_with_spaces_double():
+def test_whitespaces_block_quotes_with_spaces_double() -> None:
     """
     Test case:  Block quotes preceeded by spaces.
     """
@@ -61,7 +61,7 @@ def test_whitespaces_block_quotes_with_spaces_double():
 
 
 @pytest.mark.gfm
-def test_whitespaces_block_quotes_with_tabs():
+def test_whitespaces_block_quotes_with_tabs() -> None:
     """
     Test case:  Block quotes preceeded by spaces.
     """
@@ -81,7 +81,7 @@ def test_whitespaces_block_quotes_with_tabs():
 
 
 @pytest.mark.gfm
-def test_whitespaces_block_quotes_with_tabs_double_x():
+def test_whitespaces_block_quotes_with_tabs_double_x() -> None:
     """
     Test case:  Block quotes preceeded by spaces.
     """
@@ -109,7 +109,7 @@ def test_whitespaces_block_quotes_with_tabs_double_x():
 
 
 @pytest.mark.gfm
-def test_whitespaces_block_quotes_with_tabs_double_split():
+def test_whitespaces_block_quotes_with_tabs_double_split() -> None:
     """
     Test case:  Block quotes preceeded by spaces.
     """
@@ -137,7 +137,7 @@ def test_whitespaces_block_quotes_with_tabs_double_split():
 
 
 @pytest.mark.gfm
-def test_whitespaces_block_quotes_with_tabs_triple_space_space_space_x():
+def test_whitespaces_block_quotes_with_tabs_triple_space_space_space_x() -> None:
     """
     Test case:  Block quotes preceeded by spaces.
     """
@@ -168,7 +168,7 @@ def test_whitespaces_block_quotes_with_tabs_triple_space_space_space_x():
 
 
 @pytest.mark.gfm
-def test_whitespaces_block_quotes_with_tabs_triple_space_space_space_double():
+def test_whitespaces_block_quotes_with_tabs_triple_space_space_space_double() -> None:
     """
     Test case:  Block quotes preceeded by spaces.
     """
@@ -201,7 +201,7 @@ block quote</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_block_quotes_with_tabs_triple_space_space_tab_x():
+def test_whitespaces_block_quotes_with_tabs_triple_space_space_tab_x() -> None:
     """
     Test case:  Block quotes preceeded by spaces.
     """
@@ -232,7 +232,7 @@ def test_whitespaces_block_quotes_with_tabs_triple_space_space_tab_x():
 
 
 @pytest.mark.gfm
-def test_whitespaces_block_quotes_with_tabs_triple_space_space_tab_split_x():
+def test_whitespaces_block_quotes_with_tabs_triple_space_space_tab_split_x() -> None:
     """
     Test case:  Block quotes preceeded by spaces.
     """
@@ -263,7 +263,7 @@ def test_whitespaces_block_quotes_with_tabs_triple_space_space_tab_split_x():
 
 
 @pytest.mark.gfm
-def test_whitespaces_block_quotes_with_tabs_triple_space_space_tab_double():
+def test_whitespaces_block_quotes_with_tabs_triple_space_space_tab_double() -> None:
     """
     Test case:  Block quotes preceeded by spaces.
     """
@@ -296,7 +296,9 @@ block quote</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_block_quotes_with_tabs_triple_space_space_tab_split_double():
+def test_whitespaces_block_quotes_with_tabs_triple_space_space_tab_split_double() -> (
+    None
+):
     """
     Test case:  Block quotes preceeded by spaces.
     """
@@ -329,7 +331,7 @@ block quote</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_block_quotes_with_tabs_triple_space_tab_space_x():
+def test_whitespaces_block_quotes_with_tabs_triple_space_tab_space_x() -> None:
     """
     Test case:  Block quotes preceeded by spaces.
     """
@@ -360,7 +362,7 @@ def test_whitespaces_block_quotes_with_tabs_triple_space_tab_space_x():
 
 
 @pytest.mark.gfm
-def test_whitespaces_block_quotes_with_tabs_triple_space_tab_split_space_x():
+def test_whitespaces_block_quotes_with_tabs_triple_space_tab_split_space_x() -> None:
     """
     Test case:  Block quotes preceeded by spaces.
     """
@@ -391,7 +393,7 @@ def test_whitespaces_block_quotes_with_tabs_triple_space_tab_split_space_x():
 
 
 @pytest.mark.gfm
-def test_whitespaces_block_quotes_with_tabs_triple_space_tab_space_double():
+def test_whitespaces_block_quotes_with_tabs_triple_space_tab_space_double() -> None:
     """
     Test case:  Block quotes preceeded by spaces.
     """
@@ -424,7 +426,9 @@ block quote</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_block_quotes_with_tabs_triple_space_tab_split_space_double():
+def test_whitespaces_block_quotes_with_tabs_triple_space_tab_split_space_double() -> (
+    None
+):
     """
     Test case:  Block quotes preceeded by spaces.
     """
@@ -457,7 +461,7 @@ block quote</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_block_quotes_with_tabs_triple_space_tab_tab_x():
+def test_whitespaces_block_quotes_with_tabs_triple_space_tab_tab_x() -> None:
     """
     Test case:  Block quotes preceeded by spaces.
     """
@@ -488,7 +492,9 @@ def test_whitespaces_block_quotes_with_tabs_triple_space_tab_tab_x():
 
 
 @pytest.mark.gfm
-def test_whitespaces_block_quotes_with_tabs_triple_space_tab_split_tab_split_x():
+def test_whitespaces_block_quotes_with_tabs_triple_space_tab_split_tab_split_x() -> (
+    None
+):
     """
     Test case:  Block quotes preceeded by spaces.
     """
@@ -519,7 +525,7 @@ def test_whitespaces_block_quotes_with_tabs_triple_space_tab_split_tab_split_x()
 
 
 @pytest.mark.gfm
-def test_whitespaces_block_quotes_with_tabs_triple_space_tab_tab_double():
+def test_whitespaces_block_quotes_with_tabs_triple_space_tab_tab_double() -> None:
     """
     Test case:  Block quotes preceeded by spaces.
     """
@@ -552,7 +558,9 @@ block quote</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_block_quotes_with_tabs_triple_space_tab_split_tab_split_double_x():
+def test_whitespaces_block_quotes_with_tabs_triple_space_tab_split_tab_split_double_x() -> (
+    None
+):
     """
     Test case:  Block quotes preceeded by spaces.
     """
@@ -585,7 +593,9 @@ block quote</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_block_quotes_with_tabs_triple_space_tab_split_tab_split_double_with_prefix():
+def test_whitespaces_block_quotes_with_tabs_triple_space_tab_split_tab_split_double_with_prefix() -> (
+    None
+):
     """
     Test case:  Block quotes preceeded by spaces.
     """
@@ -625,7 +635,7 @@ block quote</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_block_quotes_with_tabs_double_with_extra_space():
+def test_whitespaces_block_quotes_with_tabs_double_with_extra_space() -> None:
     """
     Test case:  Block quotes preceeded by spaces.
     """
@@ -652,7 +662,7 @@ def test_whitespaces_block_quotes_with_tabs_double_with_extra_space():
 
 
 @pytest.mark.gfm
-def test_whitespaces_block_quotes_with_tabs_split_double_with_extra_space():
+def test_whitespaces_block_quotes_with_tabs_split_double_with_extra_space() -> None:
     """
     Test case:  Block quotes preceeded by spaces.
     """
@@ -679,7 +689,7 @@ def test_whitespaces_block_quotes_with_tabs_split_double_with_extra_space():
 
 
 @pytest.mark.gfm
-def test_whitespaces_block_quotes_with_tabs_double_with_minus_space():
+def test_whitespaces_block_quotes_with_tabs_double_with_minus_space() -> None:
     """
     Test case:  Block quotes preceeded by spaces.
     """
@@ -706,7 +716,7 @@ def test_whitespaces_block_quotes_with_tabs_double_with_minus_space():
 
 
 @pytest.mark.gfm
-def test_whitespaces_block_quotes_with_tabs_split_double_with_minus_space():
+def test_whitespaces_block_quotes_with_tabs_split_double_with_minus_space() -> None:
     """
     Test case:  Block quotes preceeded by spaces.
     """
@@ -733,7 +743,7 @@ def test_whitespaces_block_quotes_with_tabs_split_double_with_minus_space():
 
 
 @pytest.mark.gfm
-def test_whitespaces_block_quotes_with_formfeeds():
+def test_whitespaces_block_quotes_with_formfeeds() -> None:
     """
     Test case:  Block quotes preceeded by spaces.
     """
@@ -752,7 +762,7 @@ def test_whitespaces_block_quotes_with_formfeeds():
 
 
 @pytest.mark.gfm
-def test_whitespaces_block_quotes_with_xtabs():
+def test_whitespaces_block_quotes_with_xtabs() -> None:
     """
     Test case:  Block quotes preceeded by spaces and tabs.
     """
@@ -784,7 +794,7 @@ def test_whitespaces_block_quotes_with_xtabs():
 
 
 @pytest.mark.gfm
-def test_whitespaces_block_quotes_with_tabs_x2():
+def test_whitespaces_block_quotes_with_tabs_x2() -> None:
     """
     Test case:  Block quotes preceeded by spaces and tabs.
     """
@@ -818,7 +828,7 @@ same block quote</p>
 
 
 @pytest.mark.gfm
-def test_whitespaces_block_quotes_with_form_feeds_x():
+def test_whitespaces_block_quotes_with_form_feeds_x() -> None:
     """
     Test case:  Block quotes preceeded by spaces and form feeds (ascii whitespace).
     """
@@ -843,7 +853,7 @@ def test_whitespaces_block_quotes_with_form_feeds_x():
 
 
 @pytest.mark.gfm
-def test_whitespaces_ordered_lists_with_spaces():
+def test_whitespaces_ordered_lists_with_spaces() -> None:
     """
     Test case:  Ordered lists preceeded by spaces.
     """
@@ -866,7 +876,7 @@ def test_whitespaces_ordered_lists_with_spaces():
 
 
 @pytest.mark.gfm
-def test_whitespaces_ordered_lists_with_tabs_x():
+def test_whitespaces_ordered_lists_with_tabs_x() -> None:
     """
     Test case:  Ordered lists preceeded by spaces and tabs.
     """
@@ -899,7 +909,7 @@ def test_whitespaces_ordered_lists_with_tabs_x():
 
 
 @pytest.mark.gfm
-def test_whitespaces_ordered_lists_with_space_and_tabs():
+def test_whitespaces_ordered_lists_with_space_and_tabs() -> None:
     """
     Test case:  Ordered lists preceeded by spaces and tabs.
     """
@@ -932,7 +942,7 @@ def test_whitespaces_ordered_lists_with_space_and_tabs():
 
 
 @pytest.mark.gfm
-def test_whitespaces_ordered_lists_with_spaces_and_tabs():
+def test_whitespaces_ordered_lists_with_spaces_and_tabs() -> None:
     """
     Test case:  Ordered lists preceeded by spaces and tabs.
     """
@@ -965,7 +975,7 @@ def test_whitespaces_ordered_lists_with_spaces_and_tabs():
 
 
 @pytest.mark.gfm
-def test_whitespaces_ordered_lists_with_spaces_for_indent_and_tab_after():
+def test_whitespaces_ordered_lists_with_spaces_for_indent_and_tab_after() -> None:
     """
     Test case:  Unordered lists preceeded by spaces and tabs.
     """
@@ -998,7 +1008,9 @@ def test_whitespaces_ordered_lists_with_spaces_for_indent_and_tab_after():
 
 
 @pytest.mark.gfm
-def test_whitespaces_ordered_lists_with_spaces_for_indent_and_tab_after_with_space_and_paragraph():
+def test_whitespaces_ordered_lists_with_spaces_for_indent_and_tab_after_with_space_and_paragraph() -> (
+    None
+):
     """
     Test case:  Unordered lists preceeded by spaces and tabs.
     """
@@ -1031,7 +1043,7 @@ def test_whitespaces_ordered_lists_with_spaces_for_indent_and_tab_after_with_spa
 
 
 @pytest.mark.gfm
-def test_whitespaces_ordered_lists_with_form_feeds():
+def test_whitespaces_ordered_lists_with_form_feeds() -> None:
     """
     Test case:  Ordered lists preceeded by spaces and form feeds (ascii whitespace).
     """
@@ -1056,7 +1068,7 @@ def test_whitespaces_ordered_lists_with_form_feeds():
 
 
 @pytest.mark.gfm
-def test_whitespaces_unordered_lists_with_spaces():
+def test_whitespaces_unordered_lists_with_spaces() -> None:
     """
     Test case:  Unordered lists preceeded by spaces.
     """
@@ -1079,7 +1091,7 @@ def test_whitespaces_unordered_lists_with_spaces():
 
 
 @pytest.mark.gfm
-def test_whitespaces_unordered_lists_with_tabs_x():
+def test_whitespaces_unordered_lists_with_tabs_x() -> None:
     """
     Test case:  Unordered lists preceeded by spaces and tabs.
     """
@@ -1112,7 +1124,7 @@ def test_whitespaces_unordered_lists_with_tabs_x():
 
 
 @pytest.mark.gfm
-def test_whitespaces_unordered_lists_with_space_and_tabs():
+def test_whitespaces_unordered_lists_with_space_and_tabs() -> None:
     """
     Test case:  Unordered lists preceeded by spaces and tabs.
     """
@@ -1145,7 +1157,7 @@ def test_whitespaces_unordered_lists_with_space_and_tabs():
 
 
 @pytest.mark.gfm
-def test_whitespaces_unordered_lists_with_spaces_and_tabs():
+def test_whitespaces_unordered_lists_with_spaces_and_tabs() -> None:
     """
     Test case:  Unordered lists preceeded by spaces and tabs.
     """
@@ -1178,7 +1190,7 @@ def test_whitespaces_unordered_lists_with_spaces_and_tabs():
 
 
 @pytest.mark.gfm
-def test_whitespaces_unordered_lists_with_spaces_for_indent_and_tab_after():
+def test_whitespaces_unordered_lists_with_spaces_for_indent_and_tab_after() -> None:
     """
     Test case:  Unordered lists preceeded by spaces and tabs.
     """
@@ -1211,7 +1223,9 @@ def test_whitespaces_unordered_lists_with_spaces_for_indent_and_tab_after():
 
 
 @pytest.mark.gfm
-def test_whitespaces_unordered_lists_with_spaces_for_indent_and_tab_after_with_space_and_paragraph():
+def test_whitespaces_unordered_lists_with_spaces_for_indent_and_tab_after_with_space_and_paragraph() -> (
+    None
+):
     """
     Test case:  Unordered lists preceeded by spaces and tabs.
     """
@@ -1244,7 +1258,7 @@ def test_whitespaces_unordered_lists_with_spaces_for_indent_and_tab_after_with_s
 
 
 @pytest.mark.gfm
-def test_whitespaces_unordered_lists_with_form_feeds():
+def test_whitespaces_unordered_lists_with_form_feeds() -> None:
     """
     Test case:  Unordered lists preceeded by spaces and form feeds (ascii whitespace).
     """

@@ -11,7 +11,7 @@ from pymarkdown.api import (
 )
 
 
-def test_api_api_basics_example(caplog):
+def test_api_api_basics_example(caplog: pytest.LogCaptureFixture) -> None:
     """
     Test to make sure that we can retrieve the application version.
     """
@@ -28,7 +28,7 @@ def test_api_api_basics_example(caplog):
     )
 
 
-def test_api_exceptions_example_bad(caplog):
+def test_api_exceptions_example_bad(caplog: pytest.LogCaptureFixture) -> None:
     """
     Test to make sure that if there is nothing to scan, this will report it.
     """
@@ -43,15 +43,15 @@ def test_api_exceptions_example_bad(caplog):
 
     assert (
         caplog.text
-        == """WARNING  pymarkdown.main:main.py:323 Provided path 'some-manner-of-path' does not exist.
-WARNING  pymarkdown.main:main.py:323 No matching files found.
+        == """WARNING  pymarkdown.main:main.py:329 Provided path 'some-manner-of-path' does not exist.
+WARNING  pymarkdown.main:main.py:329 No matching files found.
 """
     )
     assert not did_complete
 
 
 @pytest.mark.timeout(30)
-def test_api_exceptions_example_good(caplog):
+def test_api_exceptions_example_good(caplog: pytest.LogCaptureFixture) -> None:
     """
     Test to make sure that if there is at least one thing to scan,
     the README.md in this case, it will scan it.
@@ -69,7 +69,9 @@ def test_api_exceptions_example_good(caplog):
     assert caplog.text == ""
 
 
-def test_api_positive_results(caplog, capsys):
+def test_api_positive_results(
+    caplog: pytest.LogCaptureFixture, capsys: pytest.CaptureFixture[str]
+) -> None:
     """
     Test to make sure that we test the "sample.md" and the output
     from the API documentation.
@@ -96,7 +98,9 @@ def test_api_positive_results(caplog, capsys):
     assert captured.out == "[]\n[]\n"
 
 
-def test_api_scan_failures(caplog, capsys):
+def test_api_scan_failures(
+    caplog: pytest.LogCaptureFixture, capsys: pytest.CaptureFixture[str]
+) -> None:
     """
     Test to make sure that we test a modified "sample.md" and the output
     from the API documentation. This modification should cause Rule Md047
@@ -126,7 +130,9 @@ def test_api_scan_failures(caplog, capsys):
     )
 
 
-def test_api_extra_information(caplog, capsys):
+def test_api_extra_information(
+    caplog: pytest.LogCaptureFixture, capsys: pytest.CaptureFixture[str]
+) -> None:
     """
     Test to make sure that we test a modified "sample.md" that has extra
     information in its failure object.
@@ -157,7 +163,9 @@ def test_api_extra_information(caplog, capsys):
     )
 
 
-def test_api_pragma_failures(caplog, capsys):
+def test_api_pragma_failures(
+    caplog: pytest.LogCaptureFixture, capsys: pytest.CaptureFixture[str]
+) -> None:
     """
     Test to make sure that we test a modified "sample.md" with a malformed pragma.
     """

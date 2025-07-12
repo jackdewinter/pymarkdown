@@ -11,8 +11,10 @@ from test.utils import (
     create_temporary_configuration_file,
 )
 
+from pytest import LogCaptureFixture
 
-def test_markdown_return_code_command_line_bad():
+
+def test_markdown_return_code_command_line_bad() -> None:
     """
     Test to...
     """
@@ -25,8 +27,8 @@ def test_markdown_return_code_command_line_bad():
     expected_output = ""
     expected_error = """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
-               [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
-               [--continue-on-error]
+               [--set SET_CONFIGURATION] [--strict-config] [--no-json5]
+               [--stack-trace] [--continue-on-error]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE] [--return-code-scheme {default,minimal}]
                {extensions,fix,plugins,scan,scan-stdin,version} ...
@@ -41,7 +43,7 @@ main.py: error: argument --return-code-scheme: invalid __validate_return_code_sc
     )
 
 
-def test_markdown_return_code_default_success():
+def test_markdown_return_code_default_success() -> None:
     """
     Test to make sure a return code of 0 for SUCCESS is a default.
 
@@ -75,7 +77,9 @@ def test_markdown_return_code_default_success():
     )
 
 
-def test_markdown_return_code_default_no_files_to_scan(caplog):
+def test_markdown_return_code_default_no_files_to_scan(
+    caplog: LogCaptureFixture,
+) -> None:
     """
     Test to make sure a return code of 1 for NO_FILES_TO_SCAN is a default.
 
@@ -109,7 +113,7 @@ No matching files found."""
     assert "Using direct arguments: [" in caplog.text
 
 
-def test_markdown_return_code_default_command_line_error():
+def test_markdown_return_code_default_command_line_error() -> None:
     """
     Test to make sure a return code of 2 for COMMAND_LINE_ERROR is a default.
 
@@ -140,7 +144,7 @@ main.py scan: error: the following arguments are required: path
     )
 
 
-def test_markdown_return_code_default_fixed_at_least_one_file():
+def test_markdown_return_code_default_fixed_at_least_one_file() -> None:
     """
     Test to make sure a return code of 3 for FIXED_AT_LEAST_ONE_FILE is a default.
 
@@ -187,7 +191,7 @@ def test_markdown_return_code_default_fixed_at_least_one_file():
         assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
-def test_markdown_return_code_default_scan_triggered_at_least_once():
+def test_markdown_return_code_default_scan_triggered_at_least_once() -> None:
     """
     Test to make sure a return code of 1 for SCAN_TRIGGERED_AT_LEAST_ONCE is a default.
 
@@ -227,7 +231,7 @@ def test_markdown_return_code_default_scan_triggered_at_least_once():
     )
 
 
-def test_markdown_return_code_default_system_error():
+def test_markdown_return_code_default_system_error() -> None:
     """
     Test to make sure a return code of 1 for SYSTEM_ERROR is a default.
 
@@ -265,7 +269,7 @@ def test_markdown_return_code_default_system_error():
     )
 
 
-def test_markdown_return_code_minimal_success():
+def test_markdown_return_code_minimal_success() -> None:
     """
     Test to make sure a return code of 0 for SUCCESS is applied with the minimal scheme.
 
@@ -297,7 +301,9 @@ def test_markdown_return_code_minimal_success():
     )
 
 
-def test_markdown_return_code_minimal_no_files_to_scan(caplog):
+def test_markdown_return_code_minimal_no_files_to_scan(
+    caplog: LogCaptureFixture,
+) -> None:
     """
     Test to make sure a return code of 0 for NO_FILES_TO_SCAN is applied with the minimal scheme.
 
@@ -336,7 +342,7 @@ No matching files found."""
     assert "Using direct arguments: [" in caplog.text
 
 
-def test_markdown_return_code_minimal_command_line_error():
+def test_markdown_return_code_minimal_command_line_error() -> None:
     """
     Test to make sure a return code of 2 for COMMAND_LINE_ERROR is applied with the minimal scheme.
 
@@ -365,7 +371,7 @@ main.py scan: error: the following arguments are required: path
     )
 
 
-def test_markdown_return_code_minimal_fixed_at_least_one_file():
+def test_markdown_return_code_minimal_fixed_at_least_one_file() -> None:
     """
     Test to make sure a return code of 0 for FIXED_AT_LEAST_ONE_FILE is applied with the minimal scheme.
 
@@ -411,7 +417,7 @@ def test_markdown_return_code_minimal_fixed_at_least_one_file():
         # assert_file_is_as_expected(temp_source_path, expected_file_contents)
 
 
-def test_markdown_return_code_minimal_scan_triggered_at_least_once():
+def test_markdown_return_code_minimal_scan_triggered_at_least_once() -> None:
     """
     Test to make sure a return code of 0 for SCAN_TRIGGERED_AT_LEAST_ONCE is applied with the minimal scheme.
 
@@ -451,7 +457,7 @@ def test_markdown_return_code_minimal_scan_triggered_at_least_once():
     )
 
 
-def test_markdown_return_code_minimal_system_error():
+def test_markdown_return_code_minimal_system_error() -> None:
     """
     Test to make sure a return code of 1 for SYSTEM_ERROR is applied with the minimal scheme.
 

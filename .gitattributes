@@ -1,0 +1,2 @@
+# git update-index --chmod=+x *.sh
+*.sh		text eol=lf

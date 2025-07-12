@@ -10,7 +10,7 @@ import pytest
 
 
 @pytest.mark.rules
-def test_md028_good_split_block_quote():
+def test_md028_good_split_block_quote() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains a single block quote containing a blank line with no missing bq character.
@@ -40,7 +40,7 @@ def test_md028_good_split_block_quote():
 
 
 @pytest.mark.rules
-def test_md028_bad_split_block_quote():
+def test_md028_bad_split_block_quote() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains two block quotes separated by a blank line with no bq character.
@@ -73,7 +73,7 @@ def test_md028_bad_split_block_quote():
 
 
 @pytest.mark.rules
-def test_md028_bad_split_block_quote_multiple_blanks():
+def test_md028_bad_split_block_quote_multiple_blanks() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains two block quotes containing two blank lines with no bq character.
@@ -114,7 +114,7 @@ def test_md028_bad_split_block_quote_multiple_blanks():
 
 
 @pytest.mark.rules
-def test_md028_good_split_atx():
+def test_md028_good_split_atx() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains two block quotes separated by an Atx Heading.
@@ -146,7 +146,7 @@ def test_md028_good_split_atx():
 
 
 @pytest.mark.rules
-def test_md028_good_split_blank_atx():
+def test_md028_good_split_blank_atx() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains two block quotes separated by a blank Atx Heading.
@@ -178,7 +178,7 @@ def test_md028_good_split_blank_atx():
 
 
 @pytest.mark.rules
-def test_md028_good_blank_paragraph_blank():
+def test_md028_good_blank_paragraph_blank() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains two block quotes separated by a blank line, a paragraph,
@@ -209,7 +209,7 @@ def test_md028_good_blank_paragraph_blank():
 
 
 @pytest.mark.rules
-def test_md028_bad_blank_paragraph():
+def test_md028_bad_blank_paragraph() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains two block quotes separated by a paragraph and a blank line.
@@ -242,7 +242,7 @@ def test_md028_bad_blank_paragraph():
 
 
 @pytest.mark.rules
-def test_md028_good_blank_paragraph():
+def test_md028_good_blank_paragraph() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains two block quotes separated by a blank line and a paragraph.
@@ -272,7 +272,7 @@ def test_md028_good_blank_paragraph():
 
 
 @pytest.mark.rules
-def test_md028_bad_split_block_quote_in_list():
+def test_md028_bad_split_block_quote_in_list() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains two block quotes separated by a blank line, all within
@@ -306,7 +306,7 @@ def test_md028_bad_split_block_quote_in_list():
 
 
 @pytest.mark.rules
-def test_md028_bad_para_and_split_block_quote_in_list():
+def test_md028_bad_para_and_split_block_quote_in_list() -> None:
     """
     Test to make sure this rule does trigger with a document that
     contains two block quotes separated by a blank within a list item.
@@ -343,7 +343,7 @@ def test_md028_bad_para_and_split_block_quote_in_list():
 
 
 @pytest.mark.rules
-def test_md028_bad_split_blank_with_nested_bq():
+def test_md028_bad_split_blank_with_nested_bq() -> None:
     """
     Test to make sure this rule does not trigger with a document that
     contains two double block quotes separated by a blank line with a bq start character.
@@ -375,7 +375,7 @@ def test_md028_bad_split_blank_with_nested_bq():
     )
 
 
-def test_md028_query_config():
+def test_md028_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md028",
         """

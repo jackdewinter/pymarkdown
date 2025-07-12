@@ -13,7 +13,7 @@ source_path = os.path.join("test", "resources", "rules", "md002") + os.sep
 
 
 @pytest.mark.rules
-def test_md002_all_samples():
+def test_md002_all_samples() -> None:
     """
     Test to make sure we get the expected behavior after scanning the files in the
     test/resources/rules/md002 directory.
@@ -54,7 +54,7 @@ def test_md002_all_samples():
 
 
 @pytest.mark.rules
-def test_md002_bad_configuration_level():
+def test_md002_bad_configuration_level() -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     level value with a string of "1".
@@ -89,7 +89,7 @@ def test_md002_bad_configuration_level():
 
 
 @pytest.mark.rules
-def test_md002_bad_configuration_level_value():
+def test_md002_bad_configuration_level_value() -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
     level value with an integer outside of the range.
@@ -124,7 +124,7 @@ def test_md002_bad_configuration_level_value():
 
 
 @pytest.mark.rules
-def test_md002_good_proper_atx_heading_start():
+def test_md002_good_proper_atx_heading_start() -> None:
     """
     Test to make sure the rule does not trigger with a level 1
     Atx Heading at the start of the document.
@@ -153,7 +153,7 @@ def test_md002_good_proper_atx_heading_start():
 
 
 @pytest.mark.rules
-def test_md002_bad_proper_atx_heading_start_with_alternate_configuration():
+def test_md002_bad_proper_atx_heading_start_with_alternate_configuration() -> None:
     """
     Test to make sure the rule does trigger with a level 1 Atx Heading at the
     start of the document with configuration to change the level to 2.
@@ -192,7 +192,7 @@ def test_md002_bad_proper_atx_heading_start_with_alternate_configuration():
 
 
 @pytest.mark.rules
-def test_md002_good_proper_setext_heading_start():
+def test_md002_good_proper_setext_heading_start() -> None:
     """
     Test to make sure the rule does not trigger with a level 1 SetExt Heading at the
     start of the document.
@@ -221,7 +221,7 @@ def test_md002_good_proper_setext_heading_start():
 
 
 @pytest.mark.rules
-def test_md002_bad_proper_setext_heading_start_with_alternate_configuration():
+def test_md002_bad_proper_setext_heading_start_with_alternate_configuration() -> None:
     """
     Test to make sure the rule does trigger with a level 1 SetExt Heading at the
     start of the document and configuration to change level to `2`.
@@ -260,7 +260,7 @@ def test_md002_bad_proper_setext_heading_start_with_alternate_configuration():
 
 
 @pytest.mark.rules
-def test_md002_bad_improper_atx_heading_start():
+def test_md002_bad_improper_atx_heading_start() -> None:
     """
     Test to make sure the rule does trigger with a non-level 1 Atx Heading at the
     start of the document.
@@ -293,7 +293,7 @@ def test_md002_bad_improper_atx_heading_start():
 
 
 @pytest.mark.rules
-def test_md002_good_improper_atx_heading_start_with_alternate_configuration():
+def test_md002_good_improper_atx_heading_start_with_alternate_configuration() -> None:
     """
     Test to make sure the rule does not trigger with a level 2 Atx Heading at the
     start of the document and configuration to match.
@@ -328,7 +328,7 @@ def test_md002_good_improper_atx_heading_start_with_alternate_configuration():
 
 
 @pytest.mark.rules
-def test_md002_bad_improper_setext_heading_start():
+def test_md002_bad_improper_setext_heading_start() -> None:
     """
     Test to make sure the rule does trigger with a non-level 1 SetExt Heading at the
     start of the document.
@@ -363,7 +363,9 @@ def test_md002_bad_improper_setext_heading_start():
 
 
 @pytest.mark.rules
-def test_md002_good_improper_setext_heading_start_with_alternate_configuration():
+def test_md002_good_improper_setext_heading_start_with_alternate_configuration() -> (
+    None
+):
     """
     Test to make sure the rule does not trigger with a level 2 SetExt Heading at the
     start of the document and configuration to match.
@@ -399,7 +401,7 @@ def test_md002_good_improper_setext_heading_start_with_alternate_configuration()
         )
 
 
-def test_md002_query_config():
+def test_md002_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md002",
         """

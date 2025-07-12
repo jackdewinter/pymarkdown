@@ -5,7 +5,7 @@ Tests for the find_nth_occurrence function.
 from pymarkdown.general.parser_helper import ParserHelper
 
 
-def test_find_nth_simple_positive():
+def test_find_nth_simple_positive() -> None:
     """
     Make sure that a simple case of the first of a sample in that sample works.
     """
@@ -23,7 +23,7 @@ def test_find_nth_simple_positive():
     assert expected_output == actual_output
 
 
-def test_find_nth_simple_negative():
+def test_find_nth_simple_negative() -> None:
     """
     Make sure that a simple case of the first of a sample not in that sample works.
     """
@@ -41,7 +41,7 @@ def test_find_nth_simple_negative():
     assert expected_output == actual_output
 
 
-def test_find_nth_double_positive():
+def test_find_nth_double_positive() -> None:
     """
     Make sure that a simple case of the second of a sample in
     another sample with two occurrences works.
@@ -60,7 +60,7 @@ def test_find_nth_double_positive():
     assert expected_output == actual_output
 
 
-def test_find_nth_double_negative():
+def test_find_nth_double_negative() -> None:
     """
     Make sure that a simple case of the second of a sample in
     another sample with only one occurrence does not work.
@@ -79,7 +79,7 @@ def test_find_nth_double_negative():
     assert expected_output == actual_output
 
 
-def test_find_nth_overlap_positive():
+def test_find_nth_overlap_positive() -> None:
     """
     Make sure that a more complex case of overlapping positivies works.
     """
