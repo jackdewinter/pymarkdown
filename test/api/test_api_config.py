@@ -388,6 +388,8 @@ def test_api_config_with_bad_contents_for_default_config() -> None:
         assert caught_exception.reason.startswith("Specified configuration file '")
         assert caught_exception.reason.endswith(
             "' is not a valid JSON file: Expecting value: line 1 column 1 (char 0)."
+        ) or caught_exception.reason.endswith(
+            "is not a valid JSON file: ('Expected U+0072 near 1, found U+0068', None, 'h')."
         )
     else:
         assert (
