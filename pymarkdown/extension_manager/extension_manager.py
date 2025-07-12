@@ -376,8 +376,8 @@ class ExtensionManager:
             f"{ExtensionManager.__extensions_prefix}{self.__properties.separator}"
             + f"{extension_object.extension_id}{self.__properties.separator}"
         )
-        extension_specific_facade = ApplicationPropertiesFacade(
-            self.__properties, plugin_section_title
+        extension_specific_facade = MyApplicationPropertiesFacade(
+            ApplicationPropertiesFacade(self.__properties, plugin_section_title)
         )
         new_value = extension_specific_facade.get_boolean_property(
             "enabled", default_value=None
@@ -397,7 +397,7 @@ class ExtensionManager:
             extension_object.extension_enabled_by_default
             if new_value is None
             else new_value
-        ), MyApplicationPropertiesFacade(extension_specific_facade)
+        ), extension_specific_facade
 
 
 # pylint: enable=too-many-instance-attributes
