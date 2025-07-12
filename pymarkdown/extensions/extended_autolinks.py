@@ -4,8 +4,6 @@ Module to provide for extending what is considered to be an autolink.
 
 from typing import Optional, Tuple, cast
 
-from application_properties import ApplicationPropertiesFacade
-
 from pymarkdown.container_blocks.parse_block_pass_properties import (
     ParseBlockPassProperties,
 )
@@ -17,6 +15,7 @@ from pymarkdown.extension_manager.parser_extension import ParserExtension
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.inline.inline_request import InlineRequest
 from pymarkdown.inline.inline_response import InlineResponse
+from pymarkdown.my_application_properties_facade import MyApplicationPropertiesFacade
 from pymarkdown.tokens.email_autolink_markdown_token import EmailAutolinkMarkdownToken
 from pymarkdown.tokens.text_markdown_token import TextMarkdownToken
 from pymarkdown.tokens.uri_autolink_markdown_token import UriAutolinkMarkdownToken
@@ -62,7 +61,7 @@ class MarkdownExtendedAutolinksExtension(ParserExtension):
         )
 
     def apply_configuration(
-        self, extension_specific_facade: ApplicationPropertiesFacade
+        self, extension_specific_facade: MyApplicationPropertiesFacade
     ) -> None:
         """
         Apply any configuration required by the extension.

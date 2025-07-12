@@ -25,6 +25,7 @@ from pymarkdown.extensions.pragma_token import PragmaExtension
 from pymarkdown.extensions.task_list_items import MarkdownTaskListItemsExtension
 from pymarkdown.general.main_presentation import MainPresentation
 from pymarkdown.general.parser_helper import ParserHelper
+from pymarkdown.my_application_properties_facade import MyApplicationPropertiesFacade
 from pymarkdown.return_code_helper import ApplicationResult
 
 LOGGER = logging.getLogger(__name__)
@@ -356,7 +357,7 @@ class ExtensionManager:
 
     def __determine_if_extension_enabled(
         self, extension_object: ExtensionDetails
-    ) -> Tuple[bool, ApplicationPropertiesFacade]:
+    ) -> Tuple[bool, MyApplicationPropertiesFacade]:
         """
         Given the enable and disable rule values, evaluate the enabled or disabled
         state of the extension in proper order.
@@ -396,7 +397,7 @@ class ExtensionManager:
             extension_object.extension_enabled_by_default
             if new_value is None
             else new_value
-        ), extension_specific_facade
+        ), MyApplicationPropertiesFacade(extension_specific_facade)
 
 
 # pylint: enable=too-many-instance-attributes

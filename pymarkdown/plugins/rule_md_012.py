@@ -67,10 +67,12 @@ class RuleMd012(RulePlugin):
         """
         Event to allow the plugin to load configuration information.
         """
-        self.__blank_lines_maximum = self.plugin_configuration.get_integer_property(
-            "maximum",
-            default_value=1,
-            valid_value_fn=self.__validate_maximum,
+        self.__blank_lines_maximum = (
+            self.plugin_configuration.get_integer_property_with_default(
+                "maximum",
+                1,
+                valid_value_fn=self.__validate_maximum,
+            )
         )
 
     def query_config(self) -> List[QueryConfigItem]:

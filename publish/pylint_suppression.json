@@ -256,6 +256,9 @@
             "too-many-instance-attributes": 1,
             "broad-exception-caught": 3
         },
+        "pymarkdown/my_application_properties_facade.py": {
+            "too-many-arguments": 4
+        },
         "pymarkdown/plugin_manager/__init__.py": {},
         "pymarkdown/plugin_manager/bad_plugin_error.py": {
             "too-many-arguments": 1
@@ -527,7 +530,7 @@
         "too-many-instance-attributes": 27,
         "too-many-public-methods": 5,
         "too-few-public-methods": 40,
-        "too-many-arguments": 261,
+        "too-many-arguments": 265,
         "too-many-locals": 52,
         "chained-comparison": 3,
         "too-many-boolean-expressions": 8,

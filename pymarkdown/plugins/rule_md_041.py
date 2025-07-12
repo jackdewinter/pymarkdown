@@ -58,15 +58,17 @@ class RuleMd041(RulePlugin):
         """
         Event to allow the plugin to load configuration information.
         """
-        self.__start_level = self.plugin_configuration.get_integer_property(
-            "level",
-            default_value=1,
-            valid_value_fn=self.__validate_configuration_level,
+        self.__start_level = (
+            self.plugin_configuration.get_integer_property_with_default(
+                "level",
+                1,
+                valid_value_fn=self.__validate_configuration_level,
+            )
         )
         self.__front_matter_title = (
-            self.plugin_configuration.get_string_property(
+            self.plugin_configuration.get_string_property_with_default(
                 "front_matter_title",
-                default_value="title",
+                "title",
                 valid_value_fn=self.__validate_configuration_title,
             )
             .lower()

@@ -58,16 +58,18 @@ class RuleMd025(RulePlugin):
         """
         Event to allow the plugin to load configuration information.
         """
-        self.__level = self.plugin_configuration.get_integer_property(
+        self.__level = self.plugin_configuration.get_integer_property_with_default(
             "level",
-            default_value=1,
+            1,
             valid_value_fn=self.__validate_configuration_level,
         )
-        self.__front_matter_title = self.plugin_configuration.get_string_property(
-            "front_matter_title",
-            default_value="title",
-            valid_value_fn=self.__validate_configuration_title,
-        ).lower()
+        self.__front_matter_title = (
+            self.plugin_configuration.get_string_property_with_default(
+                "front_matter_title",
+                "title",
+                valid_value_fn=self.__validate_configuration_title,
+            ).lower()
+        )
 
     def query_config(self) -> List[QueryConfigItem]:
         """

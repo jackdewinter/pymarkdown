@@ -4,9 +4,8 @@ Module to provide structure to extend the parser
 
 from abc import ABC, abstractmethod
 
-from application_properties import ApplicationPropertiesFacade
-
 from pymarkdown.extension_manager.extension_impl import ExtensionDetails
+from pymarkdown.my_application_properties_facade import MyApplicationPropertiesFacade
 
 
 class ParserExtension(ABC):
@@ -28,7 +27,7 @@ class ParserExtension(ABC):
 
     @abstractmethod
     def apply_configuration(
-        self, extension_specific_facade: ApplicationPropertiesFacade
+        self, extension_specific_facade: MyApplicationPropertiesFacade
     ) -> None:
         """
         Apply any configuration required by the extension.

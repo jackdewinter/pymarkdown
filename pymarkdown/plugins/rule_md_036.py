@@ -60,8 +60,8 @@ class RuleMd036(RulePlugin):
         """
         Event to allow the plugin to load configuration information.
         """
-        self.__punctuation = self.plugin_configuration.get_string_property(
-            "punctuation", default_value=".,;:!?。，；：？"
+        self.__punctuation = self.plugin_configuration.get_string_property_with_default(
+            "punctuation", ".,;:!?。，；：？"
         )
 
     def query_config(self) -> List[QueryConfigItem]:

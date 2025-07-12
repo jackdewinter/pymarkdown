@@ -4,7 +4,7 @@ repos:
     hooks:
     - id: black
       name: "Format: Black"
-      args: ["--exclude", "test/resources", "." ]
+      args: ["--exclude", "test/resources", "--exclude", ".venv",  "." ]
       pass_filenames: false
   - repo: https://github.com/pycqa/isort
     rev: 5.13.2
@@ -98,7 +98,7 @@ repos:
       name: "Scan:   MyPy"
       args: [--warn-return-any, --strict, pymarkdown, stubs]
       additional_dependencies: [
-          "application_properties==0.8.2",
+          "application_properties",
           "types-pyyaml",
           pytest, types-PyYAML, application_properties, columnar
       ]
@@ -110,7 +110,7 @@ repos:
       name: "Scan:   MyPy (test)"
       args: [--warn-return-any, --exclude, test/resources, --strict, test, stubs  ]
       additional_dependencies: [
-          "application_properties==0.8.2",
+          "application_properties",
           "types-pyyaml",
           pytest, types-PyYAML, application_properties, columnar
       ]

@@ -630,8 +630,8 @@ pml100ErrorTests = [
         "\n\nBadPluginError encountered while configuring plugins:\nThe value for property 'plugins.disallowed-html.change_tag_names' must be of type 'str'.\n",
     ),
     ErrorPml100Test(
-        "bad empty string",
-        ["enabled=$!True", "change_tag_names="],
+        "bad empty whitespace string",
+        ["enabled=$!True", "change_tag_names= "],
         "\n\nBadPluginError encountered while configuring plugins:\nConfiguration item 'plugins.disallowed-html.change_tag_names' contains at least one empty string.\n",
     ),
     ErrorPml100Test(
@@ -701,9 +701,9 @@ def test_pml100_query_config() -> None:
                      pml100.md
 
 
-  CONFIGURATION ITEM  TYPE     VALUE
+  CONFIGURATION ITEM  TYPE    VALUE
 
-  change_tag_names    integer  None
+  change_tag_names    string  ""
 
 """,
     )

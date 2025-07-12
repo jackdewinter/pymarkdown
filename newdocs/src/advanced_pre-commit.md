@@ -203,12 +203,12 @@ This section relates to configuration files, as they are described in the
 document on [Advanced Configuration](./advanced_configuration.md#configuration-files).
 If you have not read that document to understand how PyMarkdown handles
 configuration files, please read that document before proceeding.  Note that
-while we can specify configuration files with [different internal formats](./advanced_configuration.md#configuration-file-types),
+while we can specify configuration files with [different internal formats](https://application-properties.readthedocs.io/en/latest/file-types/#configuration-file-types),
 the following configuration examples are going to specify a JSON configuration file
 named `pymarkdown.json`.
 
 The easiest way to use PyMarkdown configuration files is to specify one of the
-[default configuration files](./advanced_configuration.md#default-configuration-files).
+[default configuration files](https://application-properties.readthedocs.io/en/latest/file-types/#default-configuration-files).
 The PyMarkdown application looks for these configuration files with predetermined
 names
 in the directory that PyMarkdown is executed from.  As Pre-Commit has no concept
@@ -574,7 +574,7 @@ our user's findings.  We started with the example provided in the section
 
 Using that example as a base, we applied the logic from the
 [Hook Argument Breakdown](#hook-argument-breakdown)
-section, specifically the [--alternate-extensions or -ae](./user-guide.md#--alternate-extensions-or--ae)
+section, specifically the [--alternate-extensions or -ae](./user-guide.md#-alternate-extensions-or-ae)
 flag of the `scan` action, and added the `args` element to produce:
 
 ```yaml

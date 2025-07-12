@@ -237,6 +237,8 @@ remove_virtual_environment() {
 			echo "  {If lock persists, try pipenv --rm to try and force the lock to be released.}"
 			complete_process 1
 		fi
+
+		mkdir .venv
 	fi
 
 	if [[ -z ${RESET_PYTHON_VERSION} ]]; then

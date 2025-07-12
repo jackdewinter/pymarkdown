@@ -31,8 +31,8 @@ twine = "==6.1.0"
 
 [packages]
 columnar = ">=1.4.0"
-application-properties = ">=0.8.2"
 typing-extensions = ">=4.5.0"
+application-properties = ">=0.9.0"
 
 [requires]
 python_version = "3.13"

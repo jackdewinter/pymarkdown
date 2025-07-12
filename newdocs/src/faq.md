@@ -24,11 +24,11 @@ these issues usually falls into a handful of explanations.
     - This catches problems with values that are the wrong type.
     - If specifying values on the command line or with a configuration file that
       does not natively support typing, need to provide type hints.
-    - For more, [see this section](./advanced_configuration.md#configuration-item-types).
+    - For more, [see this section](https://application-properties.readthedocs.io/en/latest/command-line/#configuration-item-types).
 
 ## I am using a `--set` command, but it is not working?
 
 This issue is a bit more focused than the previous question. In this case,
 it could have something to do with your shell and escape characters.
-Check out [this section](./advanced_configuration.md#configuration-item-types)
+Check out [this section](https://application-properties.readthedocs.io/en/latest/command-line/#configuration-item-types)
 for more information.

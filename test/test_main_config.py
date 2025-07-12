@@ -65,6 +65,122 @@ MD999>>completed_file
         )
 
 
+def test_markdown_with_dash_e_single_by_id_and_good_config_with_comment() -> None:
+    """
+    Test that is a variation of `test_markdown_with_dash_e_single_by_id_and_good_config`
+    that supplies the configuration as a JSON5 file with comments.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    supplied_configuration = """
+{
+    "plugins": {
+        // This is a comment.
+        "md999": {
+            "test_value": 2
+        }
+    }
+}
+"""
+
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
+        supplied_arguments = [
+            "-e",
+            "MD999",
+            "-c",
+            configuration_file,
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 0
+        expected_output = """MD999>>init_from_config
+MD999>>test_value>>2
+MD999>>other_test_value>>1
+MD999>>starting_new_file>>
+MD999>>token:[atx(1,1):1:0:]
+MD999>>token:[text(1,3):This is a test: ]
+MD999>>token:[end-atx::]
+MD999>>token:[BLANK(2,1):]
+MD999>>token:[para(3,1):]
+MD999>>token:[text(3,1):The line after this line should be blank.:]
+MD999>>token:[end-para:::True]
+MD999>>token:[BLANK(4,1):]
+MD999>>token:[end-of-stream(5,0)]
+MD999>>next_line:# This is a test
+MD999>>next_line:
+MD999>>next_line:The line after this line should be blank.
+MD999>>next_line:
+MD999>>completed_file
+"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+
+
+def test_markdown_with_dash_e_single_by_id_and_good_config_with_comment_no_json5() -> (
+    None
+):
+    """
+    Test that is a variation of `test_markdown_with_dash_e_single_by_id_and_good_config`
+    that supplies the configuration as a JSON5 file with comments, but with JSON5 support
+    for configuration files disabled.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = os.path.join(
+        "test", "resources", "rules", "md047", "end_with_blank_line.md"
+    )
+    supplied_configuration = """
+{
+    "plugins": {
+        // This is a comment.
+        "md999": {
+            "test_value": 2
+        }
+    }
+}
+"""
+
+    with create_temporary_configuration_file(
+        supplied_configuration
+    ) as configuration_file:
+        supplied_arguments = [
+            "-e",
+            "MD999",
+            "-c",
+            configuration_file,
+            "--no-json5",
+            "scan",
+            source_path,
+        ]
+
+        expected_return_code = 1
+        expected_output = ""
+        expected_error = f"Specified configuration file '{configuration_file}' was not parseable as a JSON, YAML, or TOML file."
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+
+
 def test_markdown_with_dash_e_single_by_id_and_bad_config() -> None:
     """
     Test to make sure we get enable a rule if '-e' is supplied and the id of the
@@ -165,7 +281,8 @@ def test_markdown_with_dash_e_single_by_id_and_bad_config_file() -> None:
 def test_markdown_with_dash_e_single_by_id_and_non_json_config_file() -> None:
     """
     Test to make sure we get an error if we provide a configuration file that is
-    not in a json format.
+    not in a json format.  Note that simple content such as "not a json file"
+    may be interpretted as YAML.
 
     This function shadows
     test_api_config_with_bad_contents
@@ -176,7 +293,9 @@ def test_markdown_with_dash_e_single_by_id_and_non_json_config_file() -> None:
     source_path = os.path.join(
         "test", "resources", "rules", "md047", "end_with_blank_line.md"
     )
-    supplied_configuration = "not a json file"
+    supplied_configuration = """hallo: 1
+bye
+"""
     with create_temporary_configuration_file(
         supplied_configuration
     ) as configuration_file:

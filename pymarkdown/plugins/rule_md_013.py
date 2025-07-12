@@ -61,20 +61,26 @@ class RuleMd013(RulePlugin):
         """
         Event to allow the plugin to load configuration information.
         """
-        self.__line_length = self.plugin_configuration.get_integer_property(
-            "line_length",
-            default_value=80,
-            valid_value_fn=self.__validate_minimum,
+        self.__line_length = (
+            self.plugin_configuration.get_integer_property_with_default(
+                "line_length",
+                80,
+                valid_value_fn=self.__validate_minimum,
+            )
         )
-        self.__code_block_line_length = self.plugin_configuration.get_integer_property(
-            "code_block_line_length",
-            default_value=80,
-            valid_value_fn=self.__validate_minimum,
+        self.__code_block_line_length = (
+            self.plugin_configuration.get_integer_property_with_default(
+                "code_block_line_length",
+                80,
+                valid_value_fn=self.__validate_minimum,
+            )
         )
-        self.__heading_line_length = self.plugin_configuration.get_integer_property(
-            "heading_line_length",
-            default_value=80,
-            valid_value_fn=self.__validate_minimum,
+        self.__heading_line_length = (
+            self.plugin_configuration.get_integer_property_with_default(
+                "heading_line_length",
+                80,
+                valid_value_fn=self.__validate_minimum,
+            )
         )
         self.__minimum_line_length = min(
             self.__line_length,
@@ -82,21 +88,27 @@ class RuleMd013(RulePlugin):
             self.__heading_line_length,
         )
 
-        self.__code_blocks_active = self.plugin_configuration.get_boolean_property(
-            "code_blocks",
-            default_value=True,
+        self.__code_blocks_active = (
+            self.plugin_configuration.get_boolean_property_with_default(
+                "code_blocks",
+                True,
+            )
         )
-        self.__headings_active = self.plugin_configuration.get_boolean_property(
-            "headings",
-            default_value=True,
+        self.__headings_active = (
+            self.plugin_configuration.get_boolean_property_with_default(
+                "headings",
+                True,
+            )
         )
-        self.__strict_mode = self.plugin_configuration.get_boolean_property(
-            "strict",
-            default_value=False,
+        self.__strict_mode = (
+            self.plugin_configuration.get_boolean_property_with_default(
+                "strict",
+                False,
+            )
         )
-        self.__stern_mode = self.plugin_configuration.get_boolean_property(
+        self.__stern_mode = self.plugin_configuration.get_boolean_property_with_default(
             "stern",
-            default_value=False,
+            False,
         )
 
     def query_config(self) -> List[QueryConfigItem]:

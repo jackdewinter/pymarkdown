@@ -59,24 +59,24 @@ class RuleMd030(RulePlugin):
         """
         Event to allow the plugin to load configuration information.
         """
-        self.__ul_single = self.plugin_configuration.get_integer_property(
+        self.__ul_single = self.plugin_configuration.get_integer_property_with_default(
             "ul_single",
-            default_value=1,
+            1,
             valid_value_fn=self.__validate_minimum,
         )
-        self.__ul_multi = self.plugin_configuration.get_integer_property(
+        self.__ul_multi = self.plugin_configuration.get_integer_property_with_default(
             "ul_multi",
-            default_value=1,
+            1,
             valid_value_fn=self.__validate_minimum,
         )
-        self.__ol_single = self.plugin_configuration.get_integer_property(
+        self.__ol_single = self.plugin_configuration.get_integer_property_with_default(
             "ol_single",
-            default_value=1,
+            1,
             valid_value_fn=self.__validate_minimum,
         )
-        self.__ol_multi = self.plugin_configuration.get_integer_property(
+        self.__ol_multi = self.plugin_configuration.get_integer_property_with_default(
             "ol_multi",
-            default_value=1,
+            1,
             valid_value_fn=self.__validate_minimum,
         )
 

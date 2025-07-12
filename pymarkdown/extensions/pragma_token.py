@@ -6,7 +6,6 @@ import logging
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Set, Tuple
 
-from application_properties import ApplicationPropertiesFacade
 from typing_extensions import Protocol
 
 from pymarkdown.container_blocks.parse_block_pass_properties import (
@@ -21,6 +20,7 @@ from pymarkdown.general.constants import Constants
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_logger import ParserLogger
 from pymarkdown.general.position_marker import PositionMarker
+from pymarkdown.my_application_properties_facade import MyApplicationPropertiesFacade
 from pymarkdown.plugin_manager.found_plugin import FoundPlugin
 from pymarkdown.tokens.markdown_token import MarkdownToken, MarkdownTokenClass
 from pymarkdown.transform_gfm.transform_state import TransformState
@@ -81,7 +81,7 @@ class PragmaExtension(ParserExtension):
         )
 
     def apply_configuration(
-        self, extension_specific_facade: ApplicationPropertiesFacade
+        self, extension_specific_facade: MyApplicationPropertiesFacade
     ) -> None:
         """
         Apply any configuration required by the extension.

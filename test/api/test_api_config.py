@@ -80,7 +80,9 @@ def test_api_config_with_bad_contents() -> None:
     source_path = os.path.join(
         "test", "resources", "rules", "md047", "end_with_blank_line.md"
     )
-    supplied_configuration = "not a json file"
+    supplied_configuration = """hallo: 1
+bye
+"""
     with create_temporary_configuration_file(
         supplied_configuration
     ) as configuration_file:
@@ -391,6 +393,8 @@ def test_api_config_with_bad_contents_for_default_config() -> None:
         assert (
             caught_exception.reason
             == f"Specified configuration file '{os.path.abspath(configuration_file)}' is not a valid JSON file: Expecting value: line 1 column 1 (char 0)."
+            or caught_exception.reason
+            == f"Specified configuration file '{os.path.abspath(configuration_file)}' is not a valid JSON file: ('Expected U+0072 near 1, found U+0068', None, 'h')."
         )
 
 

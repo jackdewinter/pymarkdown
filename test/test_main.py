@@ -46,8 +46,8 @@ def test_markdown_with_no_parameters() -> None:
     expected_output = (
         """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
-               [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
-               [--continue-on-error]
+               [--set SET_CONFIGURATION] [--strict-config] [--no-json5]
+               [--stack-trace] [--continue-on-error]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE] [--return-code-scheme {default,minimal}]
                {extensions,fix,plugins,scan,scan-stdin,version} ...
@@ -77,6 +77,8 @@ positional arguments:
                         manually set an individual configuration property
   --strict-config       throw an error if configuration is bad, instead of
                         assuming default
+  --no-json5            use stdlib's json reader instead of new JSON5 json
+                        reader
   --stack-trace         if an error occurs, print out the stack trace for
                         debug purposes
   --continue-on-error   if a tokenization or plugin error occurs, allow
@@ -119,8 +121,8 @@ def test_markdown_with_no_parameters_through_module() -> None:
     expected_output = (
         """usage: __main.py__ [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                    [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
-                   [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
-                   [--continue-on-error]
+                   [--set SET_CONFIGURATION] [--strict-config] [--no-json5]
+                   [--stack-trace] [--continue-on-error]
                    [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                    [--log-file LOG_FILE]
                    [--return-code-scheme {default,minimal}]
@@ -151,6 +153,8 @@ positional arguments:
                         manually set an individual configuration property
   --strict-config       throw an error if configuration is bad, instead of
                         assuming default
+  --no-json5            use stdlib's json reader instead of new JSON5 json
+                        reader
   --stack-trace         if an error occurs, print out the stack trace for
                         debug purposes
   --continue-on-error   if a tokenization or plugin error occurs, allow
@@ -193,8 +197,8 @@ def test_markdown_with_no_parameters_through_main() -> None:
     expected_output = (
         """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
-               [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
-               [--continue-on-error]
+               [--set SET_CONFIGURATION] [--strict-config] [--no-json5]
+               [--stack-trace] [--continue-on-error]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE] [--return-code-scheme {default,minimal}]
                {extensions,fix,plugins,scan,scan-stdin,version} ...
@@ -224,6 +228,8 @@ positional arguments:
                         manually set an individual configuration property
   --strict-config       throw an error if configuration is bad, instead of
                         assuming default
+  --no-json5            use stdlib's json reader instead of new JSON5 json
+                        reader
   --stack-trace         if an error occurs, print out the stack trace for
                         debug purposes
   --continue-on-error   if a tokenization or plugin error occurs, allow
@@ -265,8 +271,8 @@ def test_markdown_with_dash_h() -> None:
     expected_output = (
         """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
-               [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
-               [--continue-on-error]
+               [--set SET_CONFIGURATION] [--strict-config] [--no-json5]
+               [--stack-trace] [--continue-on-error]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE] [--return-code-scheme {default,minimal}]
                {extensions,fix,plugins,scan,scan-stdin,version} ...
@@ -296,6 +302,8 @@ positional arguments:
                         manually set an individual configuration property
   --strict-config       throw an error if configuration is bad, instead of
                         assuming default
+  --no-json5            use stdlib's json reader instead of new JSON5 json
+                        reader
   --stack-trace         if an error occurs, print out the stack trace for
                         debug purposes
   --continue-on-error   if a tokenization or plugin error occurs, allow

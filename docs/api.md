@@ -465,8 +465,7 @@ Create a new instance of the `PyMarkdownApi` class.
             property_value (bool): `True` or `False` boolean value to set the property to.
 
         Raises:
-            PyMarkdownApiArgumentException: If `property_name` is empty or if `property_value`
-            is not a `bool` value.
+            PyMarkdownApiArgumentException: If `property_name` is empty or if `property_value` is not a `bool` value.
 
         Returns:
             An instance of `PyMarkdownApi` to allow for function chaining.
@@ -486,8 +485,7 @@ Create a new instance of the `PyMarkdownApi` class.
             property_value (int): Integer value to set the property to.
 
         Raises:
-            PyMarkdownApiArgumentException: If `property_name` is empty or if
-            `property_value` is not an `int` value.
+            PyMarkdownApiArgumentException: If `property_name` is empty or if `property_value` is not an `int` value.
 
         Returns:
             An instance of `PyMarkdownApi` to allow for function chaining.
@@ -534,8 +532,7 @@ Create a new instance of the `PyMarkdownApi` class.
             property_value (str): String value to set the property to.
 
         Raises:
-            PyMarkdownApiArgumentException: If `property_name` is empty or if
-            `property_value` is not an `str` value.
+            PyMarkdownApiArgumentException: If `property_name` is empty or if `property_value` is not an `str` value.
 
         Returns:
             An instance of `PyMarkdownApi` to allow for function chaining.
@@ -690,7 +687,7 @@ Create a new instance of the `PyMarkdownApi` class.
     - specific information on why PyMarkdown generated the pragma error
 
     More information on Pragmas and
-    their use are available [here](./user-guide.md#pragma-extension).
+    their use are available [here](../user-guide.md#pragma-extension).
 
     Attributes:
         file_path (str): Path to the file that contains the improperly constructed pragma.
@@ -732,7 +729,7 @@ Create a new instance of the `PyMarkdownApi` class.
         column_number (int): Column number of the triggered rule failure.
         rule_id (str): ID of the rule that was triggered.
         rule_name (str): Name(s) of the rule that was triggered.
-        rule_description (str) Longer description of the rule that was triggered.
+        rule_description (str): Longer description of the rule that was triggered.
         extra_error_information (Optional[str]): String providing more information on why the rule was triggered.
 
     ### Class variables

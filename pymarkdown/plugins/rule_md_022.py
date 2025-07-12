@@ -57,15 +57,19 @@ class RuleMd022(RulePlugin):
         """
         Event to allow the plugin to load configuration information.
         """
-        self.__lines_above = self.plugin_configuration.get_integer_property(
-            "lines_above",
-            default_value=1,
-            valid_value_fn=RuleMd022.__validate_configuration_value,
+        self.__lines_above = (
+            self.plugin_configuration.get_integer_property_with_default(
+                "lines_above",
+                1,
+                valid_value_fn=RuleMd022.__validate_configuration_value,
+            )
         )
-        self.__lines_below = self.plugin_configuration.get_integer_property(
-            "lines_below",
-            default_value=1,
-            valid_value_fn=RuleMd022.__validate_configuration_value,
+        self.__lines_below = (
+            self.plugin_configuration.get_integer_property_with_default(
+                "lines_below",
+                1,
+                valid_value_fn=RuleMd022.__validate_configuration_value,
+            )
         )
 
     def query_config(self) -> List[QueryConfigItem]:

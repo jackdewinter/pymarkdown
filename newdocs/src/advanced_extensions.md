@@ -135,14 +135,14 @@ This information is also available on the command line by using the
 [`extension` command](./user-guide.md#extension-command).
 
 Examples of enabling an extension from configuration files are given in the
-examples under the documentation for [Configuration File Types](./advanced_configuration.md/#configuration-file-types).
+examples under the documentation for [Configuration File Types](https://application-properties.readthedocs.io/en/latest/file-types/).
 Similarly, examples of enabling an extension from the command line are
-provided under the documentation for [Configuration Item Types](./advanced_configuration.md/#typing-examples).
+provided under the documentation for [Configuration Item Types](https://application-properties.readthedocs.io/en/latest/command-line/#typing-examples).
 The only difference between enabling and disabling an extension is whether
 the `enabled` item is assigned a boolean value of `True` or `False`.
 
 Note that for the command line, the assignment of a boolean value requires
-special characters, as detailed in the documentation on [Special Characters and Shells](./advanced_configuration.md#special-characters-and-shells).
+special characters, as detailed in the documentation on [Special Characters and Shells](https://application-properties.readthedocs.io/en/latest/command-line/#special-characters-and-shells).
 
 ## Extension Configuration
 

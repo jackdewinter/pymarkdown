@@ -6,7 +6,6 @@ import logging
 from typing import Any, List, Optional, Tuple, Union
 
 import yaml
-from application_properties import ApplicationPropertiesFacade
 from yaml import SafeLoader
 
 from pymarkdown.extension_manager.extension_impl import ExtensionDetails
@@ -22,6 +21,7 @@ from pymarkdown.general.source_providers import SourceProvider
 from pymarkdown.leaf_blocks.thematic_leaf_block_processor import (
     ThematicLeafBlockProcessor,
 )
+from pymarkdown.my_application_properties_facade import MyApplicationPropertiesFacade
 from pymarkdown.tokens.markdown_token import MarkdownToken
 
 POGGER = ParserLogger(logging.getLogger(__name__))
@@ -57,13 +57,15 @@ class FrontMatterExtension(ParserExtension):
         )
 
     def apply_configuration(
-        self, extension_specific_facade: ApplicationPropertiesFacade
+        self, extension_specific_facade: MyApplicationPropertiesFacade
     ) -> None:
         """
         Apply any configuration required by the extension.
         """
-        self.__allow_blank_lines = extension_specific_facade.get_boolean_property(
-            "allow_blank_lines", default_value=False
+        self.__allow_blank_lines = (
+            extension_specific_facade.get_boolean_property_with_default(
+                "allow_blank_lines", False
+            )
         )
 
     # pylint: disable=too-many-arguments

@@ -53,14 +53,16 @@ class PluginOne(RulePlugin):
         Event to allow the plugin to load configuration.
         """
         print(f"{self.get_details().plugin_id}>>init_from_config")
-        self.test_value = self.plugin_configuration.get_integer_property(
-            "test_value", default_value=1
+        self.test_value = self.plugin_configuration.get_integer_property_with_default(
+            "test_value", 1
         )
         print(f"{self.get_details().plugin_id}>>test_value>>{self.test_value}")
-        self.other_test_value = self.plugin_configuration.get_integer_property(
-            "other_test_value",
-            default_value=1,
-            valid_value_fn=self.__validate_configuration_other_test_value,
+        self.other_test_value = (
+            self.plugin_configuration.get_integer_property_with_default(
+                "other_test_value",
+                1,
+                valid_value_fn=self.__validate_configuration_other_test_value,
+            )
         )
         print(
             f"{self.get_details().plugin_id}>>other_test_value>>{self.other_test_value}"

@@ -96,8 +96,8 @@ class PyMarkdownLint:
 
         self.__show_stack_trace = args.show_stack_trace
         if not self.__show_stack_trace and self.__properties:
-            self.__show_stack_trace = self.__properties.get_boolean_property(
-                "log.stack-trace"
+            self.__show_stack_trace = (
+                self.__properties.get_boolean_property("log.stack-trace") or False
             )
 
         if self.__logging:
@@ -169,6 +169,13 @@ class PyMarkdownLint:
             help="path to a plugin containing a new rule to apply",
         )
         ApplicationPropertiesUtilities.add_default_command_line_arguments(parser)
+        parser.add_argument(
+            "--no-json5",
+            dest="use_json5_for_configuration",
+            action="store_false",
+            default=True,
+            help="use stdlib's json reader instead of new JSON5 json reader",
+        )
         parser.add_argument(
             "--stack-trace",
             dest="show_stack_trace",

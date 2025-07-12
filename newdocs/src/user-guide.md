@@ -629,19 +629,20 @@ PyMarkdown provides a healthy amount of configuration that is independent
 of the command used.  The full list of general arguments is:
 
 ```text
-optional arguments:
+options:
   -h, --help            show this help message and exit
-  -e ENABLE_RULES, --enable-rules ENABLE_RULES
+  -e, --enable-rules ENABLE_RULES
                         comma separated list of rules to enable
-  -d DISABLE_RULES, --disable-rules DISABLE_RULES
+  -d, --disable-rules DISABLE_RULES
                         comma separated list of rules to disable
   --add-plugin ADD_PLUGIN
                         path to a plugin containing a new rule to apply
-  --config CONFIGURATION_FILE, -c CONFIGURATION_FILE
+  --config, -c CONFIGURATION_FILE
                         path to the configuration file to use
-  --set SET_CONFIGURATION, -s SET_CONFIGURATION
+  --set, -s SET_CONFIGURATION
                         manually set an individual configuration property
   --strict-config       throw an error if configuration is bad, instead of assuming default
+  --no-json5            use stdlib's json reader instead of new JSON5 json reader
   --stack-trace         if an error occurs, print out the stack trace for debug purposes
   --continue-on-error   if a tokenization or plugin error occurs, allow processing to continue
   --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
@@ -686,8 +687,8 @@ to explicitly set for
 the current execution of the PyMarkdown application.  While the basic usage of configuration
 files is typically simple, there are a fair number of interactions to consider
 when supplying configuration.  As such, this is more fully covered in the
-[Advanced Configuration](./advanced_configuration.md#specific-command-line-settings)
-section of this documentation.
+[Advanced Configuration](https://application-properties.readthedocs.io/en/latest/command-line/#specific-command-line-settings)
+section of the `application_properties` documentation.
 
 ##### --strict-config (configuration)
 
@@ -706,6 +707,20 @@ configuration in
 `strict mode` with the `--strict-config` argument, a more useful error message
 will be generated, explaining why the configuration
 value was not acceptable.
+
+#### --no-json5 (configuration)
+
+<!--- pyml disable-next-line no-emphasis-as-heading-->
+**Available: Version 0.9.32**
+
+The version 0.9.32 release took care of a long standing [issue](https://github.com/jackdewinter/pymarkdown/issues/1378)
+to support comments in JSON configuration files.  After looking at the
+option, the best solution was to default to using the JSON5 parser
+as it has a clear specification and is backwards compatible with
+the standard JSON specification.  In situations where the user feels
+that their JSON configuration file is not being parsed correctly by
+the JSON5 parser, the `--no-json5` switch reverts back to the JSON parser implemented
+by the Python standard libraries.
 
 ##### --stack-trace (error reporting)
 

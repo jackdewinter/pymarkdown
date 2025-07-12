@@ -79,16 +79,20 @@ class RuleMd044(RulePlugin):
         """
         Event to allow the plugin to load configuration information.
         """
-        self.__check_in_code_blocks = self.plugin_configuration.get_boolean_property(
-            "code_blocks", default_value=True
+        self.__check_in_code_blocks = (
+            self.plugin_configuration.get_boolean_property_with_default(
+                "code_blocks", True
+            )
         )
-        self.__check_in_code_spans = self.plugin_configuration.get_boolean_property(
-            "code_spans", default_value=True
+        self.__check_in_code_spans = (
+            self.plugin_configuration.get_boolean_property_with_default(
+                "code_spans", True
+            )
         )
         self.__proper_name_list = []
-        self.__names = self.plugin_configuration.get_string_property(
+        self.__names = self.plugin_configuration.get_string_property_with_default(
             "names",
-            default_value="",
+            "",
         ).strip(" ")
         if self.__names:
             lower_list: List[str] = []

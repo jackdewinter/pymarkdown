@@ -4,13 +4,12 @@ Module to provide for a list item that can be check off.
 
 from typing import Optional, cast
 
-from application_properties import ApplicationPropertiesFacade
-
 from pymarkdown.extension_manager.extension_impl import ExtensionDetails
 from pymarkdown.extension_manager.extension_manager_constants import (
     ExtensionManagerConstants,
 )
 from pymarkdown.extension_manager.parser_extension import ParserExtension
+from pymarkdown.my_application_properties_facade import MyApplicationPropertiesFacade
 from pymarkdown.tokens.inline_markdown_token import InlineMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.transform_gfm.transform_state import TransformState
@@ -48,7 +47,7 @@ class MarkdownTaskListItemsExtension(ParserExtension):
         )
 
     def apply_configuration(
-        self, extension_specific_facade: ApplicationPropertiesFacade
+        self, extension_specific_facade: MyApplicationPropertiesFacade
     ) -> None:
         """
         Apply any configuration required by the extension.

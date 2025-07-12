@@ -31,7 +31,7 @@ class RulePml100(RulePlugin):
         self.__container_manager = ContainerTokenManager()
         self.__in_block = False
         self.__disallowed_tag_names: Set[str] = set()
-        self.__modify_tag_names = ""
+        self.__modify_tag_names: str = ""
 
     def get_details(self) -> PluginDetails:
         """
@@ -63,11 +63,12 @@ class RulePml100(RulePlugin):
             "script",
             "plaintext",
         }
-        self.__modify_tag_names = self.plugin_configuration.get_string_property(
-            "change_tag_names",
-            default_value=None,
+        self.__modify_tag_names = (
+            self.plugin_configuration.get_string_property_with_default(
+                "change_tag_names", ""
+            )
         )
-        if self.__modify_tag_names is not None:
+        if self.__modify_tag_names:
             tag_config_name = "plugins.disallowed-html.change_tag_names"
             for next_tag_part in self.__modify_tag_names.split(","):
                 next_tag_part = next_tag_part.strip(" ")
