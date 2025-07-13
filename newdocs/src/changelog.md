@@ -10,7 +10,11 @@
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
-- None
+- [Issue 1400](https://github.com/jackdewinter/pymarkdown/issues/1400)
+    - addressed issues with Md041 and how it handles HTML Block elements
+      at the start of a document
+    - added extra examples to documentation to expand on some interesting
+      areas with the Md041 rule and "invisible" tags
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed
