@@ -121,7 +121,11 @@ def build_arguments(
             os.remove(temp_source_path)
 
 
-def execute_scan_test(test: pluginRuleTest, host_rule_id: str) -> None:
+def execute_scan_test(
+    test: pluginRuleTest,
+    host_rule_id: str,
+    suppress_first_line_heading_rule: bool = True,
+) -> None:
     scanner = MarkdownScanner()
     with build_arguments(test, False) as (temp_source_path, supplied_arguments):
         expected_return_code = test.scan_expected_return_code
@@ -131,7 +135,10 @@ def execute_scan_test(test: pluginRuleTest, host_rule_id: str) -> None:
         expected_error = test.scan_expected_error
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner.invoke_main(
+            arguments=supplied_arguments,
+            suppress_first_line_heading_rule=suppress_first_line_heading_rule,
+        )
 
         # Assert
         execute_results.assert_results(
@@ -215,6 +222,7 @@ def execute_configuration_test(
     test: pluginConfigErrorTest,
     file_to_use: Optional[str] = None,
     file_contents: Optional[str] = None,
+    suppress_first_line_heading_rule: bool = True,
 ) -> None:
     scanner = MarkdownScanner()
 
@@ -230,7 +238,7 @@ def execute_configuration_test(
             raise AssertionError(
                 "One of `file_to_use` and `file_contents` must be specified."
             )
-        supplied_arguments = []
+        supplied_arguments: List[str] = []
         if test.use_strict_config:
             supplied_arguments.append("--strict-config")
         if test.set_args:
@@ -244,7 +252,10 @@ def execute_configuration_test(
         expected_error = test.expected_error
 
         # Act
-        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+        execute_results = scanner.invoke_main(
+            arguments=supplied_arguments,
+            suppress_first_line_heading_rule=suppress_first_line_heading_rule,
+        )
 
         # Assert
         execute_results.assert_results(

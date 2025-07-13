@@ -1,1 +1,1 @@
-<!-- some comment -->
+<html></html>

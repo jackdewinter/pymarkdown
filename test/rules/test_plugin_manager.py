@@ -1343,7 +1343,7 @@ def test_markdown_with_plugins_list_only() -> None:
   md038   no-space-in-code                True       True       0.5.1    Yes
   md039   no-space-in-links               True       True       0.5.2    Yes
   md040   fenced-code-language            True       True       0.5.0    No
-  md041   first-line-heading, first-line  True       True       0.6.0    No
+  md041   first-line-heading, first-line  True       True       0.7.0    No
           -h1
   md042   no-empty-links                  True       True       0.5.0    No
   md043   required-headings, required-he  True       True       0.6.0    No
@@ -1427,7 +1427,7 @@ def test_markdown_with_plugins_list_only_all() -> None:
   md038   no-space-in-code                True       True       0.5.1    Yes
   md039   no-space-in-links               True       True       0.5.2    Yes
   md040   fenced-code-language            True       True       0.5.0    No
-  md041   first-line-heading, first-line  True       True       0.6.0    No
+  md041   first-line-heading, first-line  True       True       0.7.0    No
           -h1
   md042   no-empty-links                  True       True       0.5.0    No
   md043   required-headings, required-he  True       True       0.6.0    No
@@ -1510,7 +1510,7 @@ def test_markdown_with_plugins_list_after_command_line_disable_all_rules() -> No
   md038   no-space-in-code                True       False      0.5.1    Yes
   md039   no-space-in-links               True       False      0.5.2    Yes
   md040   fenced-code-language            True       False      0.5.0    No
-  md041   first-line-heading, first-line  True       False      0.6.0    No
+  md041   first-line-heading, first-line  True       False      0.7.0    No
           -h1
   md042   no-empty-links                  True       False      0.5.0    No
   md043   required-headings, required-he  True       False      0.6.0    No
@@ -1598,7 +1598,7 @@ def test_markdown_with_plugins_list_after_configuration_disable_all_rules() -> N
   md038   no-space-in-code                True       False      0.5.1    Yes
   md039   no-space-in-links               True       False      0.5.2    Yes
   md040   fenced-code-language            True       False      0.5.0    No
-  md041   first-line-heading, first-line  True       False      0.6.0    No
+  md041   first-line-heading, first-line  True       False      0.7.0    No
           -h1
   md042   no-empty-links                  True       False      0.5.0    No
   md043   required-headings, required-he  True       False      0.6.0    No
@@ -1690,7 +1690,7 @@ def test_markdown_with_plugins_list_after_command_line_disable_all_rules_and_ena
   md038   no-space-in-code                True       False      0.5.1    Yes
   md039   no-space-in-links               True       False      0.5.2    Yes
   md040   fenced-code-language            True       False      0.5.0    No
-  md041   first-line-heading, first-line  True       False      0.6.0    No
+  md041   first-line-heading, first-line  True       False      0.7.0    No
           -h1
   md042   no-empty-links                  True       False      0.5.0    No
   md043   required-headings, required-he  True       False      0.6.0    No
