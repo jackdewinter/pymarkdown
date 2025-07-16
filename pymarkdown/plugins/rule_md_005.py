@@ -414,9 +414,12 @@ class RuleMd005(RulePlugin):
         if self.__calculate_indent_level(list_level) != token.indent_level:
             # if self.__debug:
             #     print("ri3")
-            self.__report_issue(
-                context, token, self.__unordered_list_indents[list_level] - 2
-            )
+            first_indent = self.__unordered_list_indents[list_level] - 2
+            second_indent = token.column_number - 1
+            if first_indent != second_indent:
+                self.__report_issue(
+                    context, token, self.__unordered_list_indents[list_level] - 2
+                )
 
     def __handle_ordered_list_start(self, token: OrderedListStartMarkdownToken) -> None:
         token_copy = copy.deepcopy(token)
