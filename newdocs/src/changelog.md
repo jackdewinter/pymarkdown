@@ -10,6 +10,8 @@
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
+- [Issue 1387](https://github.com/jackdewinter/pymarkdown/issues/1387)
+    - fixed weird indent issue with Md005
 - [Issue 1400](https://github.com/jackdewinter/pymarkdown/issues/1400)
     - addressed issues with Md041 and how it handles HTML Block elements
       at the start of a document
