@@ -1012,6 +1012,46 @@ scanTests = [
 """,
     ),
     pluginRuleTest(
+        "issue-1387-i",
+        source_file_contents="""1. elt 1
+    * unordered lvl 1 elt
+    * unordered lvl 1 elt
+        * unordered lvl 2 elt
+2. elt 2
+3. elt 3
+4. elt 4
+5. elt 5
+6. elt 6
+7. elt 7
+8. elt 8
+9. elt 9
+10. elt 10
+    * unordered lvl 1 elt
+""",
+        scan_expected_return_code=0,
+        disable_rules=__plugin_disable_md007,
+    ),
+    pluginRuleTest(
+        "issue-1387-j",
+        source_file_contents="""1. elt 1
+2. elt 2
+3. elt 3
+4. elt 4
+5. elt 5
+6. elt 6
+7. elt 7
+8. elt 8
+9. elt 9
+    * unordered lvl 1 elt
+    * unordered lvl 1 elt
+        * unordered lvl 2 elt
+10. elt 10
+    * unordered lvl 1 elt
+""",
+        scan_expected_return_code=0,
+        disable_rules=__plugin_disable_md007,
+    ),
+    pluginRuleTest(
         "mix_md005_md007_only_md005_1",
         disable_rules=__plugin_disable_md007,
         source_file_contents=""" + first
