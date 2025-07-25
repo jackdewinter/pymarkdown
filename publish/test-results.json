@@ -628,15 +628,15 @@
         },
         {
             "name": "test.gfm.test_markdown_tables_extension",
-            "totalTests": 108,
+            "totalTests": 129,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 11,
             "elapsedTimeInMilliseconds": 0
         },
         {
             "name": "test.gfm.test_markdown_tabs",
-            "totalTests": 34,
+            "totalTests": 35,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -740,10 +740,10 @@
         },
         {
             "name": "test.gfm.test_markdown_whitespace_link_reference_definition",
-            "totalTests": 101,
+            "totalTests": 102,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 12,
+            "skippedTests": 0,
             "elapsedTimeInMilliseconds": 0
         },
         {

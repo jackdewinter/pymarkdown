@@ -479,8 +479,17 @@ class LinkReferenceDefinitionHelper:
         assert unmodified_line_to_parse.endswith(
             remaining_line_to_parse
         ), "Current line must end with the remaining text."
-        link_ref_stack_token.add_continuation_line(remaining_line_to_parse)
-        link_ref_stack_token.add_unmodified_line(unmodified_line_to_parse)
+        # assert parser_state.original_line_to_parse is not None
+        assert unmodified_line_to_parse is not None
+        link_ref_stack_token.add_continuation_line(
+            parser_state.original_line_to_parse or ""
+        )
+        if unmodified_line_to_parse or (parser_state.original_line_to_parse is None):
+            link_ref_stack_token.add_unmodified_line(unmodified_line_to_parse)
+        else:
+            link_ref_stack_token.add_unmodified_line(
+                parser_state.original_line_to_parse
+            )
         while link_ref_stack_token.continuation_lines:
             POGGER.debug(
                 "continuation_lines>>$<<",
@@ -495,6 +504,7 @@ class LinkReferenceDefinitionHelper:
                 ),
             )
 
+            assert link_ref_stack_token.unmodified_lines[-1] is not None
             lines_to_requeue.append(link_ref_stack_token.unmodified_lines[-1])
             POGGER.debug(
                 ">>continuation_line>>$",

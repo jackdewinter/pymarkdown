@@ -1134,7 +1134,7 @@ def test_whitespaces_thematic_breaks_with_tabs_before_within_double_block_quotes
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
-        "[block-quote(2,1)::> > \n> ]",
+        "[block-quote(2,1)::> > \n>]",
         "[para(2,5):]",
         "[text(2,5):def:]",
         "[end-para:::False]",

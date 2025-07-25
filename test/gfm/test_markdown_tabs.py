@@ -538,6 +538,30 @@ def test_tabs_006d() -> None:
 
 
 @pytest.mark.gfm
+def test_tabs_006e() -> None:
+    """
+    Test case 006b:  variation of 006 with spaces leading in instead of tab
+    """
+
+    # Arrange
+    source_markdown = """> \t    foo"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[icode-block(1,7):\t  :]",
+        "[text(1,7):  foo:]",
+        "[end-icode-block:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<pre><code>  foo
+</code></pre>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_tabs_007xx() -> None:
     """
     Test case 007:  none

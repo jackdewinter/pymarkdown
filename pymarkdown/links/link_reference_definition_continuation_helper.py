@@ -145,7 +145,6 @@ class LinkReferenceDefinitionContinuationHelper:
                     parser_state,
                     link_def_token,
                     last_container_index,
-                    lines_to_requeue,
                     process_mode,
                     extracted_whitespace,
                     parsed_lrd_tuple,
@@ -187,7 +186,6 @@ class LinkReferenceDefinitionContinuationHelper:
         parser_state: ParserState,
         link_def_token: LinkDefinitionStackToken,
         last_container_index: int,
-        lines_to_requeue: List[str],
         process_mode: int,
         extracted_whitespace: str,
         parsed_lrd_tuple: LinkReferenceDefinitionTuple,
@@ -218,7 +216,6 @@ class LinkReferenceDefinitionContinuationHelper:
                 link_def_token,
                 process_mode,
                 block_quote_token,
-                lines_to_requeue,
             )
         else:
             (
@@ -238,7 +235,6 @@ class LinkReferenceDefinitionContinuationHelper:
         link_def_token: LinkDefinitionStackToken,
         process_mode: int,
         block_quote_token: BlockQuoteMarkdownToken,
-        lines_to_requeue: List[str],
     ) -> str:
         parsed_lines = link_def_token.continuation_lines[0]
         original_lines = link_def_token.unmodified_lines[0]
@@ -394,7 +390,7 @@ class LinkReferenceDefinitionContinuationHelper:
             POGGER.debug("last_leading_space>:$:<", last_leading_space)
             # if last_leading_space[0] == "\n":
             #     last_leading_space = last_leading_space[1:]
-            leading_spaces.append(last_leading_space)
+            leading_spaces.insert(0, last_leading_space)
         assert len(split_tabs_list) == len(
             leading_spaces
         ), "The two lists must have the same length."
@@ -404,8 +400,9 @@ class LinkReferenceDefinitionContinuationHelper:
         )
         is_first = not block_quote_token.bleading_spaces
         for prefix_to_add in leading_spaces:
-            if split_tabs_list[0]:
-                prefix_to_add = prefix_to_add[:-1]
+            # if split_tabs_list[0] and prefix_to_add[-1] == " "):
+            #   prefix_to_add = prefix_to_add[:-1]
+            assert not (split_tabs_list[0] and prefix_to_add[-1] == " ")
             del split_tabs_list[0]
             POGGER.debug(
                 "__xx_multiple_fix_leading_spaces>>block_token>>$", block_quote_token

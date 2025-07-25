@@ -491,10 +491,10 @@ class TabHelper:
         # POGGER.debug(
         #     "last_block_quote_leading_space=:$:", last_block_quote_leading_space
         # )
-        assert last_block_quote_leading_space.endswith(
-            " "
-        ), "Block quote ls must end with a space."
-        last_block_quote_leading_space = last_block_quote_leading_space[:-1]
+        if last_block_quote_leading_space:
+            assert last_block_quote_leading_space[-1] in [" ", ">"]
+            if last_block_quote_leading_space[-1] != ">":
+                last_block_quote_leading_space = last_block_quote_leading_space[:-1]
         # POGGER.debug(
         #     "last_block_quote_leading_space=:$:", last_block_quote_leading_space
         # )
@@ -739,6 +739,7 @@ class TabHelper:
 
         search_index = 1
         keep_going = True
+        detabbed_ex_part = ex_part = ""
         while keep_going:
             ex_part = extracted_space[indent_used : indent_used + search_index]
             detabbed_ex_part = TabHelper.detabify_string(
@@ -768,6 +769,7 @@ class TabHelper:
         """
         search_index = 1
         keep_going = True
+        ex_part = detabbed_ex_part = ""
         while keep_going:
             ex_part = extracted_space[indent_used : indent_used + search_index]
             detabbed_ex_part = TabHelper.detabify_string(

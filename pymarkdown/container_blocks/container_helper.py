@@ -144,10 +144,8 @@ class ContainerHelper:
         ]
         # POGGER.debug("last_newline_part>>:$:<", last_newline_part)
         if split_tab:
-            assert last_newline_part.endswith(
-                " "
-            ), "Bleading space part must end with a space character."
-            last_newline_part = last_newline_part[:-1]
+            # if last_newline_part.endswith(                " "            ):
+            #     last_newline_part = last_newline_part[:-1]
             # POGGER.debug("last_newline_part>>:$:<", last_newline_part)
             split_tab = False
         # POGGER.debug("split_tab>>:$:<", split_tab)

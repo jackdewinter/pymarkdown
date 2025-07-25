@@ -1060,7 +1060,6 @@ def
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat() -> None:
     """
@@ -1073,7 +1072,7 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat() -> N
 [fred]
 [barney]"""
     expected_tokens = [
-        "[block-quote(1,1)::>\n>]",
+        "[block-quote(1,1)::>\n>\n]",
         "[link-ref-def(1,5):True:\t:fred:: :/url1:::::]",
         "[link-ref-def(2,5):True:\t:barney:: :/url2:::::]",
         "[end-block-quote:::True]",
@@ -1096,7 +1095,6 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat() -> N
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat() -> (
     None
@@ -1111,7 +1109,7 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_re
 [fred]
 [barney]"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n> ]",
+        "[block-quote(1,1)::> \n> \n]",
         "[link-ref-def(1,5):True:\t:fred:: :/url1:::::]",
         "[link-ref-def(2,5):True:\t:barney:: :/url2:::::]",
         "[end-block-quote:::True]",
@@ -1134,7 +1132,6 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_re
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_many_tabs() -> (
     None
@@ -1149,7 +1146,7 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_many_tab
 [fred]
 [barney]"""
     expected_tokens = [
-        "[block-quote(1,1)::>\n>]",
+        "[block-quote(1,1)::>\n>\n]",
         "[link-ref-def(1,5):True:\t:fred::\t:/url1::\t:::]",
         "[link-ref-def(2,5):True:\t:barney::\t:/url2::\t:::]",
         "[end-block-quote:::True]",
@@ -1231,7 +1228,6 @@ def test_whitespaces_lrd_with_spaces_before_within_block_quote_bare() -> None:
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_1a() -> None:
     """
@@ -1266,7 +1262,7 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_1a() -
 <a href="/url2">barney</a></p>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
@@ -1341,7 +1337,6 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_1c() -
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_2a() -> None:
     """
@@ -1451,7 +1446,6 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_2c() -
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_repeat_3() -> None:
     """
@@ -1522,7 +1516,6 @@ def test_whitespaces_lrd_with_spaces_before_within_block_quotes_bare_repeat_3() 
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_1a() -> (
     None
@@ -1638,7 +1631,6 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_re
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_2x() -> (
     None
@@ -1653,7 +1645,7 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_re
 [fred]
 [barney]"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n> ]",
+        "[block-quote(1,1)::> \n> \n]",
         "[link-ref-def(1,5):True:\t:fred::\t:/url1::\t:::]",
         "[link-ref-def(2,5):True:\t:barney::\t:/url2::\t:::]",
         "[end-block-quote:::True]",
@@ -1676,7 +1668,6 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_re
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_repeat_2a() -> (
     None
@@ -1713,7 +1704,7 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_space_re
 <a href="/url2">barney</a></p>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
@@ -2164,7 +2155,7 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_line
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_lines_1a() -> (
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_lines_1ax() -> (
     None
 ):
     """
@@ -2178,6 +2169,38 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_line
 [fred]"""
     expected_tokens = [
         "[block-quote(1,1)::>\n> ]",
+        "[link-ref-def(1,5):True:\t:fred::\t\n\t:/url::\t:::]",
+        "[end-block-quote:::False]",
+        "[BLANK(3,1):]",
+        "[para(4,1):]",
+        "[link(4,1):shortcut:/url:::::fred:False::::]",
+        "[text(4,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<blockquote>
+</blockquote>
+<p><a href="/url">fred</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_lines_1aa() -> (
+    None
+):
+    """
+    Test case:  LRD preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """> \t[fred]:\t
+> \t/url\t
+
+[fred]"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> ]",
         "[link-ref-def(1,5):True:\t:fred::\t\n\t:/url::\t:::]",
         "[end-block-quote:::False]",
         "[BLANK(3,1):]",
@@ -2510,7 +2533,6 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_more_lin
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_more_lines_3x() -> (
     None
@@ -2530,7 +2552,7 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_more_lin
 
 [fred]"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n>\n> \n> \n> \n> \n> \n> \n> \n> \n]",
+        "[block-quote(1,1)::> \n>\n> \n> \n> \n> \n> \n]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
@@ -2556,10 +2578,9 @@ abc</p>
 <p><a href="/url">fred</a></p>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_lrd_with_spaces_before_within_block_quotes_bare_over_more_lines_3x() -> (
     None
@@ -2579,7 +2600,7 @@ def test_whitespaces_lrd_with_spaces_before_within_block_quotes_bare_over_more_l
 
 [fred]"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n>\n> \n> \n> \n> \n]",
+        "[block-quote(1,1)::> \n>\n> \n> \n> \n> \n> \n]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
@@ -2605,10 +2626,9 @@ abc</p>
 <p><a href="/url">fred</a></p>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_lrd_with_spaces_before_within_block_quotes_bare_over_more_lines_3xa() -> (
     None
@@ -2628,7 +2648,7 @@ def test_whitespaces_lrd_with_spaces_before_within_block_quotes_bare_over_more_l
 >
 > [fred]"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n>\n> \n> \n> \n> \n]",
+        "[block-quote(1,1)::> \n>\n> \n> \n> \n> \n> \n>\n> ]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
@@ -2637,24 +2657,24 @@ def test_whitespaces_lrd_with_spaces_before_within_block_quotes_bare_over_more_l
         "[para(5,3):\n\n]",
         '[text(5,3):\a"\a&quot;\atimes\nnew roman\nabc::\n\n]',
         "[end-para:::True]",
-        "[end-block-quote:::True]",
-        "[BLANK(8,1):]",
-        "[para(9,1):]",
-        "[link(9,1):shortcut:/url:::::fred:False::::]",
-        "[text(9,2):fred:]",
+        "[BLANK(8,2):]",
+        "[para(9,3):]",
+        "[link(9,3):shortcut:/url:::::fred:False::::]",
+        "[text(9,4):fred:]",
         "[end-link::]",
         "[end-para:::True]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <p>abc</p>
-<p>&quot;times	
-new	roman	
+<p>&quot;times
+new roman
 abc</p>
-</blockquote>
-<p><a href="/url">fred</a></p>"""
+<p><a href="/url">fred</a></p>
+</blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm

@@ -18,6 +18,7 @@ from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.tokens.stack_token import (
+    LinkDefinitionStackToken,
     ListStackToken,
     StackToken,
     TableBlockStackToken,
@@ -263,6 +264,54 @@ class ParserState:
                     else 0
                 )
 
+    def __abc_part_2(
+        self,
+        number_of_lines_to_requeue: int,
+        requeue_line_info: RequeueLineInfo,
+        stack_token: StackToken,
+        last_block_stack_token: StackToken,
+    ) -> None:
+        if (
+            number_of_lines_to_requeue > 1
+            and not requeue_line_info.lines_to_requeue[0]
+            and isinstance(stack_token, LinkDefinitionStackToken)
+        ):
+            number_of_lines_to_requeue -= 1
+
+        assert last_block_stack_token.matching_markdown_token is not None
+        # if last_block_stack_token.matching_markdown_token is not None:
+        block_quote_token = cast(
+            BlockQuoteMarkdownToken, last_block_stack_token.matching_markdown_token
+        )
+        # endif
+        copy_of_block_quote_token = cast(
+            TableBlockStackToken, stack_token
+        ).copy_of_last_block_quote_markdown_token
+        bleading_space_count = (
+            copy_of_block_quote_token.bleading_spaces.count("\n")
+            if copy_of_block_quote_token and copy_of_block_quote_token.bleading_spaces
+            else -1
+        )
+        if isinstance(stack_token, TableBlockStackToken):
+            bleading_space_count -= 1
+        current_bleading_space_count = (
+            block_quote_token.bleading_spaces.count("\n")
+            if block_quote_token.bleading_spaces
+            else 0
+        )
+        while (
+            number_of_lines_to_requeue > 0
+            and current_bleading_space_count > bleading_space_count
+        ):
+            if block_quote_token.bleading_spaces:
+                block_quote_token.remove_last_bleading_space()
+            number_of_lines_to_requeue -= 1
+            current_bleading_space_count = (
+                block_quote_token.bleading_spaces.count("\n")
+                if block_quote_token.bleading_spaces
+                else 0
+            )
+
     def abc(self, requeue_line_info: RequeueLineInfo, stack_token: StackToken) -> None:
         """
         TBD
@@ -271,10 +320,9 @@ class ParserState:
         """
         if requeue_line_info.has_been_abc_ed:
             return
+        modded_stack_token = cast(TableBlockStackToken, stack_token)
         number_of_lines_to_requeue = len(requeue_line_info.lines_to_requeue)
-        self.__abc_part_1(
-            number_of_lines_to_requeue, cast(TableBlockStackToken, stack_token)
-        )
+        self.__abc_part_1(number_of_lines_to_requeue, modded_stack_token)
         last_block_stack_token = cast(
             TableBlockStackToken, stack_token
         ).last_block_quote_stack_token
@@ -282,40 +330,12 @@ class ParserState:
             if (last_block_quote_index := self.find_last_block_quote_on_stack()) > 0:
                 last_block_stack_token = self.token_stack[last_block_quote_index]
         if last_block_stack_token:
-            assert last_block_stack_token.matching_markdown_token is not None
-            # if last_block_stack_token.matching_markdown_token is not None:
-            block_quote_token = cast(
-                BlockQuoteMarkdownToken, last_block_stack_token.matching_markdown_token
+            self.__abc_part_2(
+                number_of_lines_to_requeue,
+                requeue_line_info,
+                stack_token,
+                last_block_stack_token,
             )
-            # endif
-            copy_of_block_quote_token = cast(
-                TableBlockStackToken, stack_token
-            ).copy_of_last_block_quote_markdown_token
-            bleading_space_count = (
-                copy_of_block_quote_token.bleading_spaces.count("\n")
-                if copy_of_block_quote_token
-                and copy_of_block_quote_token.bleading_spaces
-                else -1
-            )
-            if isinstance(stack_token, TableBlockStackToken):
-                bleading_space_count -= 1
-            current_bleading_space_count = (
-                block_quote_token.bleading_spaces.count("\n")
-                if block_quote_token.bleading_spaces
-                else 0
-            )
-            while (
-                number_of_lines_to_requeue > 0
-                and current_bleading_space_count > bleading_space_count
-            ):
-                if block_quote_token.bleading_spaces:
-                    block_quote_token.remove_last_bleading_space()
-                number_of_lines_to_requeue -= 1
-                current_bleading_space_count = (
-                    block_quote_token.bleading_spaces.count("\n")
-                    if block_quote_token.bleading_spaces
-                    else 0
-                )
         requeue_line_info.has_been_abc_ed = True
 
     def find_last_block_quote_on_stack(self) -> int:

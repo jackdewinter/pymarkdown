@@ -2807,7 +2807,7 @@ def test_whitespaces_fenced_code_open_with_tabs_before_within_double_block_quote
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
-        "[block-quote(2,1)::> > \n> ]",
+        "[block-quote(2,1)::> > \n>]",
         "[para(2,5):]",
         "[text(2,5):def:]",
         "[end-para:::False]",

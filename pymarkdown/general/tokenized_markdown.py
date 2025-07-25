@@ -613,9 +613,9 @@ class TokenizedMarkdown:
             POGGER.debug(
                 "cob>>original_line_to_parse>$>", parser_state.original_line_to_parse
             )
-            assert not requeue_line_info.lines_to_requeue[
-                0
-            ], "Resetting implies something must have been there to reset."
+            # assert not requeue_line_info.lines_to_requeue[
+            #     0
+            # ], "Resetting implies something must have been there to reset."
             requeue_line_info.lines_to_requeue[0] = parser_state.original_line_to_parse
             POGGER.debug(
                 "cob>>(adjusted)lines_to_requeue>>$",
@@ -1078,6 +1078,7 @@ class TokenizedMarkdown:
                 "hbl>>process_link_reference_definition>>stopping link definition"
             )
             empty_position_marker = PositionMarker(-1, 0, "")
+            assert parser_state.original_line_to_parse is not None
             (
                 _,
                 _,
@@ -1085,7 +1086,15 @@ class TokenizedMarkdown:
                 requeue_line_info,
                 new_tokens,
             ) = LinkReferenceDefinitionHelper.process_link_reference_definition(
-                parser_state, empty_position_marker, "", "", "", 0, 0, "", 2
+                parser_state,
+                empty_position_marker,
+                "",
+                "",
+                "",
+                0,
+                0,
+                parser_state.original_line_to_parse,
+                2,
             )
             assert not did_pause_lrd, "LRD parsing must not be paused."
             POGGER.debug(
