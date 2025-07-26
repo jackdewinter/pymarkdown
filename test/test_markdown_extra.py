@@ -16459,25 +16459,26 @@ def test_extra_054x() -> None:
     # Arrange
     source_markdown = """> [abc]: /url 'abc
 >
-> some text
+> some text [abc]
 """
     expected_tokens = [
-        "[ulist(1,1):-::2::\n]",
+        "[block-quote(1,1)::> \n]",
         "[para(1,3):]",
-        "[text(1,3):| foo | bar |:]",
+        "[text(1,3):[abc]: /url 'abc:]",
         "[end-para:::True]",
-        "[li(2,1):2::]",
-        "[para(2,3):\n]",
-        "[text(2,3):some text\nsome other text::\n]",
+        "[end-block-quote:::True]",
+        "[BLANK(2,1):]",
+        "[block-quote(3,1)::> \n]",
+        "[para(3,3):]",
+        "[text(3,3):some text [abc]:]",
         "[end-para:::True]",
+        "[end-block-quote:::True]",
         "[BLANK(4,1):]",
-        "[end-ulist:::True]",
     ]
-    expected_gfm = """<ul>
-<li>| foo | bar |</li>
-<li>some text
-some other text</li>
-</ul>"""
+    expected_gfm = """<blockquote>
+<p>[abc]: /url 'abc</p>
+<p>some text [abc]</p>
+</blockquote>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)

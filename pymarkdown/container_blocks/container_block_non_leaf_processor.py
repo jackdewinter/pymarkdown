@@ -173,6 +173,8 @@ class ContainerBlockNonLeafProcessor:
 
         if grab_bag.requeue_line_info or grab_bag.did_blank:
             grab_bag.can_continue = False
+            # if grab_bag.requeue_line_info:
+            #     grab_bag.extend_container_tokens_with_leaf_tokens()
             return
 
         nested_force_list_continuation = (

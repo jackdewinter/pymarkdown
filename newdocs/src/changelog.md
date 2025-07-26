@@ -17,6 +17,8 @@
       at the start of a document
     - added extra examples to documentation to expand on some interesting
       areas with the Md041 rule and "invisible" tags
+- [Issue 1446](https://github.com/jackdewinter/pymarkdown/issues/1446)
+    - multiple issues with LRDs and whitespace/tabs
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed

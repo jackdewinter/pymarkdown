@@ -148,7 +148,7 @@ class BlockQuoteNonFencedHelper:
 
     # pylint: enable=too-many-arguments, too-many-locals
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __handle_non_fenced_code_section_no_requeue(
         parser_state: ParserState,
@@ -208,6 +208,9 @@ class BlockQuoteNonFencedHelper:
                 line_to_parse,
             )
         )
+        if requeue_line_info:
+            container_level_tokens.extend(leaf_tokens)
+            leaf_tokens = []
         return (
             line_to_parse,
             start_index,
@@ -217,7 +220,7 @@ class BlockQuoteNonFencedHelper:
             requeue_line_info,
         )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -392,17 +395,62 @@ class BlockQuoteNonFencedHelper:
             POGGER.debug("__hbqs>>adjusted_removed_text>>:$:<", adjusted_removed_text)
 
         POGGER.debug("__hbqs>>adjusted_removed_text>>:$:<", adjusted_removed_text)
-        tabbed_removed_text = BlockQuoteNonFencedHelper.__adjust_1_with_tab(
-            original_line, adjusted_removed_text
+        adjusted_removed_text, tabbed_removed_text = (
+            BlockQuoteNonFencedHelper.__adjust_1_with_tab(
+                original_line, adjusted_removed_text
+            )
         )
         return (adjusted_removed_text, tabbed_removed_text)
 
     # pylint: enable=too-many-arguments
 
     @staticmethod
+    def __adjust_1_with_tab_part_1(
+        detabified_original_line_prefix: str, adjusted_removed_text: str
+    ) -> str:
+        _, dolp_start_whitespace_index = ParserHelper.collect_backwards_while_spaces(
+            detabified_original_line_prefix, -1
+        )
+        _, art_start_whitespace_index = ParserHelper.collect_backwards_while_spaces(
+            adjusted_removed_text, -1
+        )
+        detabified_original_line_prefix_without_trailing_spaces = (
+            detabified_original_line_prefix[:dolp_start_whitespace_index]
+        )
+        adjusted_removed_text_without_trailing_spaces = adjusted_removed_text[
+            :art_start_whitespace_index
+        ]
+        # if detabified_original_line_prefix_without_trailing_spaces == adjusted_removed_text_without_trailing_spaces:
+        #     return adjusted_removed_text_without_trailing_spaces, None
+        assert (
+            detabified_original_line_prefix_without_trailing_spaces
+            == adjusted_removed_text_without_trailing_spaces
+        )
+        return adjusted_removed_text_without_trailing_spaces
+
+    @staticmethod
+    def __adjust_1_with_tab_loop(
+        original_line_prefix: str,
+        detabified_original_line_prefix: str,
+        adjusted_removed_text: str,
+    ) -> Optional[str]:
+        original_line_prefix_without_trailing_tab = original_line_prefix[:-1]
+        prefix_detabified_original_line_prefix = detabified_original_line_prefix[
+            : len(original_line_prefix_without_trailing_tab)
+        ]
+        if (
+            original_line_prefix_without_trailing_tab
+            == prefix_detabified_original_line_prefix
+        ):
+            return BlockQuoteNonFencedHelper.__adjust_1_with_tab_part_1(
+                detabified_original_line_prefix, adjusted_removed_text
+            )
+        return None
+
+    @staticmethod
     def __adjust_1_with_tab(
         original_line: str, adjusted_removed_text: str
-    ) -> Optional[str]:
+    ) -> Tuple[str, Optional[str]]:
         tabbed_removed_text = None
 
         if "\t" in original_line:
@@ -423,6 +471,18 @@ class BlockQuoteNonFencedHelper:
                     "detabified_original_line_prefix>>:$:<",
                     detabified_original_line_prefix,
                 )
+                if (
+                    len(detabified_original_line_prefix) > len(adjusted_removed_text)
+                    and original_line_prefix[-1] == "\t"
+                    and adjusted_removed_text[-1] == " "
+                ):
+                    loop_value = BlockQuoteNonFencedHelper.__adjust_1_with_tab_loop(
+                        original_line_prefix,
+                        detabified_original_line_prefix,
+                        adjusted_removed_text,
+                    )
+                    if loop_value is not None:
+                        return loop_value, None
                 if detabified_original_line_prefix == adjusted_removed_text:
                     break
                 original_line_index += 1
@@ -436,7 +496,7 @@ class BlockQuoteNonFencedHelper:
                 and detabified_original_line_prefix == adjusted_removed_text
             ):
                 tabbed_removed_text = original_line_prefix
-        return tabbed_removed_text
+        return adjusted_removed_text, tabbed_removed_text
 
     @staticmethod
     def __block_quote_start_adjust(

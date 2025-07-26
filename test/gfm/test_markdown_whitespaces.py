@@ -118,7 +118,7 @@ def test_whitespaces_block_quotes_with_tabs_double_split() -> None:
     # Arrange
     source_markdown = """>\t> block quote"""
     expected_tokens = [
-        "[block-quote(1,1)::> ]",
+        "[block-quote(1,1)::>]",
         '[block-quote(1,5)::>   > :{0: ">\\t> "}]',
         "[para(1,7):]",
         "[text(1,7):block quote:]",
@@ -241,7 +241,7 @@ def test_whitespaces_block_quotes_with_tabs_triple_space_space_tab_split_x() -> 
     source_markdown = """>   >\t> block quote"""
     expected_tokens = [
         "[block-quote(1,1)::> ]",
-        "[block-quote(1,5)::>   > ]",
+        "[block-quote(1,5)::>   >]",
         '[block-quote(1,9)::>   >   > :{0: ">   >\\t> "}]',
         "[para(1,11):]",
         "[text(1,11):block quote:]",
@@ -370,7 +370,7 @@ def test_whitespaces_block_quotes_with_tabs_triple_space_tab_split_space_x() -> 
     # Arrange
     source_markdown = """>\t>  > block quote"""
     expected_tokens = [
-        "[block-quote(1,1)::> ]",
+        "[block-quote(1,1)::>]",
         '[block-quote(1,5)::>   > :{0: ">\\t> "}]',
         '[block-quote(1,8)::>   >  > :{0: ">\\t>  > "}]',
         "[para(1,10):]",
@@ -437,7 +437,7 @@ def test_whitespaces_block_quotes_with_tabs_triple_space_tab_split_space_double(
     source_markdown = """>\t>  > block quote
 >\t>  > block quote"""
     expected_tokens = [
-        "[block-quote(1,1)::> ]",
+        "[block-quote(1,1)::>]",
         '[block-quote(1,5)::>   > :{0: ">\\t> "}]',
         '[block-quote(1,8)::>   >  > \n>   >  > :{0: ">\\t>  > ", 1: ">\\t>  > "}]',
         "[para(1,10):\n]",
@@ -569,7 +569,7 @@ def test_whitespaces_block_quotes_with_tabs_triple_space_tab_split_tab_split_dou
     source_markdown = """>\t>\t> block quote
 >\t>\t> block quote"""
     expected_tokens = [
-        "[block-quote(1,1)::> ]",
+        "[block-quote(1,1)::>]",
         "[block-quote(1,5)::>   > ]",
         '[block-quote(1,9)::>   >   > \n>   >   > :{0: ">\\t>\\t> ", 1: ">\\t>\\t> "}]',
         "[para(1,11):\n]",
@@ -610,7 +610,7 @@ def test_whitespaces_block_quotes_with_tabs_triple_space_tab_split_tab_split_dou
         "[text(1,1):This is just some text.:]",
         "[end-para:::True]",
         "[BLANK(2,1): ]",
-        "[block-quote(3,1)::> ]",
+        "[block-quote(3,1)::>]",
         "[block-quote(3,5)::>   > ]",
         '[block-quote(3,9)::>   >   > \n>   >   > :{0: ">\\t>\\t> ", 1: ">\\t>\\t> "}]',
         "[para(3,11):\n]",
@@ -643,7 +643,7 @@ def test_whitespaces_block_quotes_with_tabs_double_with_extra_space() -> None:
     # Arrange
     source_markdown = """>\t>  block quote"""
     expected_tokens = [
-        "[block-quote(1,1)::> ]",
+        "[block-quote(1,1)::>]",
         '[block-quote(1,5)::>   > :{0: ">\\t> "}]',
         "[para(1,8): ]",
         "[text(1,8):block quote:]",
@@ -670,7 +670,7 @@ def test_whitespaces_block_quotes_with_tabs_split_double_with_extra_space() -> N
     # Arrange
     source_markdown = """ >\t>  block quote"""
     expected_tokens = [
-        "[block-quote(1,2): : > ]",
+        "[block-quote(1,2): : >]",
         '[block-quote(1,5):: >  > :{0: " >\\t> "}]',
         "[para(1,8): ]",
         "[text(1,8):block quote:]",
@@ -724,7 +724,7 @@ def test_whitespaces_block_quotes_with_tabs_split_double_with_minus_space() -> N
     # Arrange
     source_markdown = """ >\t>block quote"""
     expected_tokens = [
-        "[block-quote(1,2): : > ]",
+        "[block-quote(1,2): : >]",
         '[block-quote(1,5):: >  >:{0: " >\\t>"}]',
         "[para(1,6):]",
         "[text(1,6):block quote:]",
@@ -771,7 +771,7 @@ def test_whitespaces_block_quotes_with_xtabs() -> None:
     source_markdown = """ > block quote
  >\t> another block quote"""
     expected_tokens = [
-        "[block-quote(1,2): : > \n > ]",
+        "[block-quote(1,2): : > \n >]",
         "[para(1,4):]",
         "[text(1,4):block quote:]",
         "[end-para:::True]",
@@ -804,7 +804,7 @@ def test_whitespaces_block_quotes_with_tabs_x2() -> None:
  >\t> another block quote
  >\t> same block quote"""
     expected_tokens = [
-        "[block-quote(1,2): : > \n > ]",
+        "[block-quote(1,2): : > \n >]",
         "[para(1,4):]",
         "[text(1,4):block quote:]",
         "[end-para:::True]",

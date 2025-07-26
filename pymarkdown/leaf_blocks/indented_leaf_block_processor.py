@@ -294,7 +294,7 @@ class IndentedLeafBlockProcessor:
 
     # pylint: enable=too-many-locals
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __parse_indented_code_block_with_tab(
         parser_state: ParserState,
@@ -329,6 +329,7 @@ class IndentedLeafBlockProcessor:
             last_block_quote_lead_spaces,
             adj_lead_space_len,
             adjust_block_quote_indent,
+            other_adjustment,
         ) = IndentedLeafBlockProcessor.__get_indented_block_with_tab_quote_properties(
             parser_state, last_block_quote_index, original_line
         )
@@ -341,12 +342,13 @@ class IndentedLeafBlockProcessor:
         return IndentedLeafBlockProcessor.__parse_indented_code_block_with_tab_complete(
             after_space_index,
             ex_space,
-            lead_space_len,
+            lead_space_len + other_adjustment,
             original_line,
             adjust_block_quote_indent,
         )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
+
     @staticmethod
     def __parse_indented_code_block_with_tab_complete(
         after_space_index: int,
@@ -361,22 +363,6 @@ class IndentedLeafBlockProcessor:
             ex_space, additional_start_delta=lead_space_len
         )
         POGGER.debug("detabified_ex_space>:$:<", detabified_ex_space)
-        # assert detabified_ex_space == extracted_whitespace
-        # last_good_space_index = -1
-        # space_index = 1
-        # detabified_ex_space = ""
-        # while space_index < len(ex_space) + 1 and len(detabified_ex_space) < 4:
-        #     POGGER.debug("space_index>:$:<", space_index)
-        #     last_good_space_index = space_index
-        #     space_prefix = ex_space[:space_index]
-        #     POGGER.debug("sdf>:$:<", space_prefix)
-        #     POGGER.debug("lead_space_len>:$:<", lead_space_len)
-        #     detabified_ex_space = TabHelper.detabify_string(
-        #         space_prefix, additional_start_delta=lead_space_len
-        #     )
-        #     POGGER.debug("detabified_ex_space>:$:<", detabified_ex_space)
-        #     space_index += 1
-        # assert len(detabified_ex_space) >= 4
 
         (last_good_space_index, space_prefix, detabified_ex_space) = (
             TabHelper.search_for_tabbed_prefix(ex_space, lead_space_len, 4)
@@ -451,8 +437,9 @@ class IndentedLeafBlockProcessor:
         # POGGER.debug("extracted_whitespace>:$:<", extracted_whitespace)
         # POGGER.debug("indented_text>:$:<", indented_text)
 
-        if adjust_block_quote_indent:
-            TabHelper.adjust_block_quote_indent_for_tab(parser_state)
+        assert not adjust_block_quote_indent
+        # if adjust_block_quote_indent:
+        #     TabHelper.adjust_block_quote_indent_for_tab(parser_state)
 
         new_tokens.append(
             TextMarkdownToken(
@@ -467,7 +454,7 @@ class IndentedLeafBlockProcessor:
     @staticmethod
     def __get_indented_block_with_tab_quote_properties(
         parser_state: ParserState, last_block_quote_index: int, original_line: str
-    ) -> Tuple[str, int, bool]:
+    ) -> Tuple[str, int, bool, int]:
         adjust_block_quote_indent = False
 
         POGGER.debug(
@@ -493,10 +480,16 @@ class IndentedLeafBlockProcessor:
             POGGER.debug(
                 "last_block_quote_lead_spaces>:$:<", last_block_quote_lead_spaces
             )
-        assert (
-            last_block_quote_lead_spaces[-1] == " "
-        ), "Last character of bleading spaces must be a space."
-        last_part_minus_tailing_space = last_block_quote_lead_spaces[:-1]
+        if last_block_quote_lead_spaces[-1] == " ":
+            last_part_minus_tailing_space = last_block_quote_lead_spaces[:-1]
+        else:
+            last_part_minus_tailing_space = last_block_quote_lead_spaces
+            return (
+                last_block_quote_lead_spaces,
+                adj_lead_space_len,
+                adjust_block_quote_indent,
+                1,
+            )
         POGGER.debug(
             "last_part_minus_tailing_space>:$:<", last_part_minus_tailing_space
         )
@@ -505,9 +498,10 @@ class IndentedLeafBlockProcessor:
         ), "Original line must start with the last split part, minus any tailing space."
         trailing_char_in_original = original_line[len(last_part_minus_tailing_space)]
         POGGER.debug("trailing_char_in_original>:$:<", trailing_char_in_original)
-        if trailing_char_in_original == ParserHelper.tab_character:
-            adjust_block_quote_indent = True
-            adj_lead_space_len = -1
+        assert trailing_char_in_original != ParserHelper.tab_character
+        # if trailing_char_in_original == ParserHelper.tab_character:
+        #     adjust_block_quote_indent = True
+        #     adj_lead_space_len = -1
         POGGER.debug("last_block_quote_lead_spaces>:$:<", last_block_quote_lead_spaces)
         # if not adjust_block_quote_indent:
         #     assert original_line.startswith(last_block_quote_lead_spaces)
@@ -515,6 +509,7 @@ class IndentedLeafBlockProcessor:
             last_block_quote_lead_spaces,
             adj_lead_space_len,
             adjust_block_quote_indent,
+            0,
         )
 
     # pylint: disable=too-many-arguments

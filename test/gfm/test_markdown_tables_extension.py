@@ -5684,3 +5684,1259 @@ def test_tables_extension_extra_in_block_chb() -> None:
         config_map=config_map,
         show_debug=False,
     )
+
+
+def test_whitespaces_tables_with_tabs_before() -> None:
+    """
+    Test case 198:  The
+    """
+
+    # Arrange
+    source_markdown = """\t| foo | bar |
+\t| --- | --- |
+\t| baz | bim |"""
+    expected_tokens = [
+        "[icode-block(1,5):\t:\n\t\n\t]",
+        "[text(1,5):| foo | bar |\n| --- | --- |\n| baz | bim |:]",
+        "[end-icode-block:::True]",
+    ]
+    expected_gfm = """<pre><code>| foo | bar |
+| --- | --- |
+| baz | bim |
+</code></pre>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=config_map
+    )
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_whitespaces_tables_with_tabs_before_within_unordered_list_x() -> None:
+    """
+    Test case:  tables preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """- abc
+\t| foo | bar |
+\t| --- | --- |
+\t| baz | bim |
+
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  \n  \n\n]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[table(2,5)]",
+        "[table-header(2,5)]",
+        "[table-header-item(2,5)]",
+        "[text(2,5):foo:]",
+        "[end-table-header-item: |::False]",
+        "[table-header-item(2,5)]",
+        "[text(2,5):bar:]",
+        "[end-table-header-item: |::False]",
+        "[end-table-header:::False]",
+        "[table-body(2,5)]",
+        "[table-row(2,5)]",
+        "[table-row-item(2,5)]",
+        "[text(2,5):baz:]",
+        "[end-table-row-item: |::False]",
+        "[table-row-item(2,5)]",
+        "[text(2,5):bim:]",
+        "[end-table-row-item: |::False]",
+        "[end-table-row:::False]",
+        "[end-table-body:::False]",
+        "[end-table:::False]",
+        "[BLANK(5,1):]",
+        "[BLANK(6,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc<table>
+<thead>
+<tr>
+<th>foo</th>
+<th>bar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>baz</td>
+<td>bim</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=config_map,
+    )
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_whitespaces_tables_with_tabs_before_within_unordered_list_and_single_space() -> (
+    None
+):
+    """
+    Test case:  LRD preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """- abc
+ \t| foo | bar |
+ \t| --- | --- |
+ \t| baz | bim |
+
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  \n  \n\n]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[table(2,5)]",
+        "[table-header(2,5)]",
+        "[table-header-item(2,5)]",
+        "[text(2,5):foo:]",
+        "[end-table-header-item: |::False]",
+        "[table-header-item(2,5)]",
+        "[text(2,5):bar:]",
+        "[end-table-header-item: |::False]",
+        "[end-table-header:::False]",
+        "[table-body(2,5)]",
+        "[table-row(2,5)]",
+        "[table-row-item(2,5)]",
+        "[text(2,5):baz:]",
+        "[end-table-row-item: |::False]",
+        "[table-row-item(2,5)]",
+        "[text(2,5):bim:]",
+        "[end-table-row-item: |::False]",
+        "[end-table-row:::False]",
+        "[end-table-body:::False]",
+        "[end-table:::False]",
+        "[BLANK(5,1):]",
+        "[BLANK(6,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc<table>
+<thead>
+<tr>
+<th>foo</th>
+<th>bar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>baz</td>
+<td>bim</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=config_map,
+    )
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_whitespaces_tables_with_tabs_before_within_unordered_list_and_spaces() -> None:
+    """
+    Test case:  LRD preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  \t| foo | bar |
+  \t| --- | --- |
+  \t| baz | bim |
+
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  \n  \n\n]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[table(2,5)]",
+        "[table-header(2,5)]",
+        "[table-header-item(2,5)]",
+        "[text(2,5):foo:]",
+        "[end-table-header-item: |::False]",
+        "[table-header-item(2,5)]",
+        "[text(2,5):bar:]",
+        "[end-table-header-item: |::False]",
+        "[end-table-header:::False]",
+        "[table-body(2,5)]",
+        "[table-row(2,5)]",
+        "[table-row-item(2,5)]",
+        "[text(2,5):baz:]",
+        "[end-table-row-item: |::False]",
+        "[table-row-item(2,5)]",
+        "[text(2,5):bim:]",
+        "[end-table-row-item: |::False]",
+        "[end-table-row:::False]",
+        "[end-table-body:::False]",
+        "[end-table:::False]",
+        "[BLANK(5,1):]",
+        "[BLANK(6,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc<table>
+<thead>
+<tr>
+<th>foo</th>
+<th>bar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>baz</td>
+<td>bim</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_tables_with_tabs_before_within_unordered_double_list() -> None:
+    """
+    Test case:  LRD preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  - def
+\t| foo | bar |
+\t| --- | --- |
+\t| baz | bim |
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[ulist(2,3):-::4:  :\t\n\t\n\t\n]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::True]",
+        "[table(3,5)]",
+        "[table-header(3,5)]",
+        "[table-header-item(3,5)]",
+        "[text(3,5):foo:]",
+        "[end-table-header-item: |::False]",
+        "[table-header-item(3,5)]",
+        "[text(3,5):bar:]",
+        "[end-table-header-item: |::False]",
+        "[end-table-header:::False]",
+        "[table-body(3,5)]",
+        "[table-row(3,5)]",
+        "[table-row-item(3,5)]",
+        "[text(3,5):baz:]",
+        "[end-table-row-item: |::False]",
+        "[table-row-item(3,5)]",
+        "[text(3,5):bim:]",
+        "[end-table-row-item: |::False]",
+        "[end-table-row:::False]",
+        "[end-table-body:::False]",
+        "[end-table:::False]",
+        "[BLANK(6,1):]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+<ul>
+<li>def<table>
+<thead>
+<tr>
+<th>foo</th>
+<th>bar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>baz</td>
+<td>bim</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=config_map,
+    )
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_whitespaces_tables_with_tabs_before_within_ordered_list_x() -> None:
+    """
+    Test case:  LRD preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+\t| foo | bar |
+\t| --- | --- |
+\t| baz | bim |
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   \n   \n   \n]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[table(2,5)]",
+        "[table-header(2,5)]",
+        "[table-header-item(2,5)]",
+        "[text(2,5):foo:]",
+        "[end-table-header-item: |::False]",
+        "[table-header-item(2,5)]",
+        "[text(2,5):bar:]",
+        "[end-table-header-item: |::False]",
+        "[end-table-header:::False]",
+        "[table-body(2,5)]",
+        "[table-row(2,5)]",
+        "[table-row-item(2,5)]",
+        "[text(2,5):baz:]",
+        "[end-table-row-item: |::False]",
+        "[table-row-item(2,5)]",
+        "[text(2,5):bim:]",
+        "[end-table-row-item: |::False]",
+        "[end-table-row:::False]",
+        "[end-table-body:::False]",
+        "[end-table:::False]",
+        "[BLANK(5,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc<table>
+<thead>
+<tr>
+<th>foo</th>
+<th>bar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>baz</td>
+<td>bim</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=config_map,
+    )
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_whitespaces_tables_with_tabs_before_within_ordered_list_and_single_space() -> (
+    None
+):
+    """
+    Test case:  LRD preceeded by spaces.
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+ \t| foo | bar |
+ \t| --- | --- |
+ \t| baz | bim |
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   \n   \n   \n]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[table(2,5)]",
+        "[table-header(2,5)]",
+        "[table-header-item(2,5)]",
+        "[text(2,5):foo:]",
+        "[end-table-header-item: |::False]",
+        "[table-header-item(2,5)]",
+        "[text(2,5):bar:]",
+        "[end-table-header-item: |::False]",
+        "[end-table-header:::False]",
+        "[table-body(2,5)]",
+        "[table-row(2,5)]",
+        "[table-row-item(2,5)]",
+        "[text(2,5):baz:]",
+        "[end-table-row-item: |::False]",
+        "[table-row-item(2,5)]",
+        "[text(2,5):bim:]",
+        "[end-table-row-item: |::False]",
+        "[end-table-row:::False]",
+        "[end-table-body:::False]",
+        "[end-table:::False]",
+        "[BLANK(5,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc<table>
+<thead>
+<tr>
+<th>foo</th>
+<th>bar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>baz</td>
+<td>bim</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=config_map,
+    )
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_whitespaces_tables_with_tabs_before_within_ordered_list_and_spaces() -> None:
+    """
+    Test case:  LRD preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+  \t| foo | bar |
+  \t| --- | --- |
+  \t| baz | bim |
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   \n   \n   \n]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[table(2,5)]",
+        "[table-header(2,5)]",
+        "[table-header-item(2,5)]",
+        "[text(2,5):foo:]",
+        "[end-table-header-item: |::False]",
+        "[table-header-item(2,5)]",
+        "[text(2,5):bar:]",
+        "[end-table-header-item: |::False]",
+        "[end-table-header:::False]",
+        "[table-body(2,5)]",
+        "[table-row(2,5)]",
+        "[table-row-item(2,5)]",
+        "[text(2,5):baz:]",
+        "[end-table-row-item: |::False]",
+        "[table-row-item(2,5)]",
+        "[text(2,5):bim:]",
+        "[end-table-row-item: |::False]",
+        "[end-table-row:::False]",
+        "[end-table-body:::False]",
+        "[end-table:::False]",
+        "[BLANK(5,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc<table>
+<thead>
+<tr>
+<th>foo</th>
+<th>bar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>baz</td>
+<td>bim</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_tables_with_tabs_before_within_ordered_double_list_x() -> None:
+    """
+    Test case:  LRD preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+   1. def
+\t  | foo | bar |
+\t  | --- | --- |
+\t  | baz | bim |
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[olist(2,4):.:1:6:   :\t  \n\t  \n\t  \n]",
+        "[para(2,7):]",
+        "[text(2,7):def:]",
+        "[end-para:::True]",
+        "[table(3,7)]",
+        "[table-header(3,7)]",
+        "[table-header-item(3,7)]",
+        "[text(3,7):foo:]",
+        "[end-table-header-item: |::False]",
+        "[table-header-item(3,7)]",
+        "[text(3,7):bar:]",
+        "[end-table-header-item: |::False]",
+        "[end-table-header:::False]",
+        "[table-body(3,7)]",
+        "[table-row(3,7)]",
+        "[table-row-item(3,7)]",
+        "[text(3,7):baz:]",
+        "[end-table-row-item: |::False]",
+        "[table-row-item(3,7)]",
+        "[text(3,7):bim:]",
+        "[end-table-row-item: |::False]",
+        "[end-table-row:::False]",
+        "[end-table-body:::False]",
+        "[end-table:::False]",
+        "[BLANK(6,1):]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<ol>
+<li>def<table>
+<thead>
+<tr>
+<th>foo</th>
+<th>bar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>baz</td>
+<td>bim</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ol>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_tables_with_tabs_before_within_ordered_double_list_no_spaces() -> (
+    None
+):
+    """
+    Test case:  LRD preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+   1. def
+\t| foo | bar |
+\t| --- | --- |
+\t| baz | bim |
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[olist(2,4):.:1:6:   :\n\n\n]",
+        "[para(2,7):\n\t\n\t\n\t]",
+        "[text(2,7):def\n| foo | bar |\n| --- | --- |\n| baz | bim |::\n\n\n]",
+        "[end-para:::True]",
+        "[BLANK(6,1):]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<ol>
+<li>def
+| foo | bar |
+| --- | --- |
+| baz | bim |</li>
+</ol>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_tables_with_tabs_before_within_ordered_double_list_tab_after_indent() -> (
+    None
+):
+    """
+    Test case:  LRD preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+   1. def
+   \t| foo | bar |
+   \t| --- | --- |
+   \t| baz | bim |
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[olist(2,4):.:1:6:   :\n\n\n]",
+        "[para(2,7):\n   \t\n   \t\n   \t]",
+        "[text(2,7):def\n| foo | bar |\n| --- | --- |\n| baz | bim |::\n\n\n]",
+        "[end-para:::True]",
+        "[BLANK(6,1):]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<ol>
+<li>def
+| foo | bar |
+| --- | --- |
+| baz | bim |</li>
+</ol>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_tables_with_tabs_before_within_ordered_double_list_one_space() -> (
+    None
+):
+    """
+    Test case:  LRD preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+   1. def
+\t | foo | bar |
+\t | --- | --- |
+\t | baz | bim |
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[olist(2,4):.:1:6:   :\n\n\n]",
+        "[para(2,7):\n\t \n\t \n\t ]",
+        "[text(2,7):def\n| foo | bar |\n| --- | --- |\n| baz | bim |::\n\n\n]",
+        "[end-para:::True]",
+        "[BLANK(6,1):]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<ol>
+<li>def
+| foo | bar |
+| --- | --- |
+| baz | bim |</li>
+</ol>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_tables_with_tabs_before_within_ordered_double_list_two_spaces() -> (
+    None
+):
+    """
+    Test case:  LRD preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+   1. def
+\t  | foo | bar |
+\t  | --- | --- |
+\t  | baz | bim |
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[olist(2,4):.:1:6:   :\t  \n\t  \n\t  \n]",
+        "[para(2,7):]",
+        "[text(2,7):def:]",
+        "[end-para:::True]",
+        "[table(3,7)]",
+        "[table-header(3,7)]",
+        "[table-header-item(3,7)]",
+        "[text(3,7):foo:]",
+        "[end-table-header-item: |::False]",
+        "[table-header-item(3,7)]",
+        "[text(3,7):bar:]",
+        "[end-table-header-item: |::False]",
+        "[end-table-header:::False]",
+        "[table-body(3,7)]",
+        "[table-row(3,7)]",
+        "[table-row-item(3,7)]",
+        "[text(3,7):baz:]",
+        "[end-table-row-item: |::False]",
+        "[table-row-item(3,7)]",
+        "[text(3,7):bim:]",
+        "[end-table-row-item: |::False]",
+        "[end-table-row:::False]",
+        "[end-table-body:::False]",
+        "[end-table:::False]",
+        "[BLANK(6,1):]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<ol>
+<li>def<table>
+<thead>
+<tr>
+<th>foo</th>
+<th>bar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>baz</td>
+<td>bim</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ol>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_tables_with_tabs_before_within_block_quotes_x1() -> None:
+    """
+    Test case:  LRD preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> def
+\t| foo | bar |
+\t| --- | --- |
+\t| baz | bim |
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n\n\n\n]",
+        "[para(1,3):\n\n\t\n\t\n\t]",
+        "[text(1,3):abc\ndef\n| foo | bar |\n| --- | --- |\n| baz | bim |::\n\n\n\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc
+def
+| foo | bar |
+| --- | --- |
+| baz | bim |</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_tables_with_tabs_before_within_block_quotes_x2() -> None:
+    """
+    Test case:  LRD preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> def
+  \t| foo | bar |
+  \t| --- | --- |
+  \t| baz | bim |
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n\n\n\n]",
+        "[para(1,3):\n\n  \t\n  \t\n  \t]",
+        "[text(1,3):abc\ndef\n| foo | bar |\n| --- | --- |\n| baz | bim |::\n\n\n\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc
+def
+| foo | bar |
+| --- | --- |
+| baz | bim |</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=config_map,
+    )
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_whitespaces_tables_with_tabs_before_within_block_quotes_repeat() -> None:
+    """
+    Test case:  LRD preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> def
+>\t| foo | bar |
+>\t| --- | --- |
+>\t| baz | bim |
+
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> ]",
+        "[para(1,3):\n]",
+        "[text(1,3):abc\ndef::\n]",
+        "[end-para:::True]",
+        "[table(3,5)]",
+        "[table-header(3,5)]",
+        "[table-header-item(3,5)]",
+        "[text(3,5):foo:]",
+        "[end-table-header-item: |::False]",
+        "[table-header-item(3,5)]",
+        "[text(3,5):bar:]",
+        "[end-table-header-item: |::False]",
+        "[end-table-header:::False]",
+        "[table-body(3,5)]",
+        "[table-row(3,5)]",
+        "[table-row-item(3,5)]",
+        "[text(3,5):baz:]",
+        "[end-table-row-item: |::False]",
+        "[table-row-item(3,5)]",
+        "[text(3,5):bim:]",
+        "[end-table-row-item: |::False]",
+        "[end-table-row:::False]",
+        "[end-table-body:::False]",
+        "[end-table:::False]",
+        "[end-block-quote:::False]",
+        "[BLANK(6,1):]",
+        "[BLANK(7,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc
+def</p>
+<table>
+<thead>
+<tr>
+<th>foo</th>
+<th>bar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>baz</td>
+<td>bim</td>
+</tr>
+</tbody>
+</table>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=config_map,
+    )
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_whitespaces_tables_with_tabs_before_within_block_quotes_bare_repeat() -> None:
+    """
+    Test case:  LRD preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """>\t| foo | bar |
+>\t| --- | --- |
+>\t| baz | bim |
+
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> ]",
+        "[table(1,5)]",
+        "[table-header(1,5)]",
+        "[table-header-item(1,5)]",
+        "[text(1,5):foo:]",
+        "[end-table-header-item: |::False]",
+        "[table-header-item(1,5)]",
+        "[text(1,5):bar:]",
+        "[end-table-header-item: |::False]",
+        "[end-table-header:::False]",
+        "[table-body(1,5)]",
+        "[table-row(1,5)]",
+        "[table-row-item(1,5)]",
+        "[text(1,5):baz:]",
+        "[end-table-row-item: |::False]",
+        "[table-row-item(1,5)]",
+        "[text(1,5):bim:]",
+        "[end-table-row-item: |::False]",
+        "[end-table-row:::False]",
+        "[end-table-body:::False]",
+        "[end-table:::False]",
+        "[end-block-quote:::False]",
+        "[BLANK(4,1):]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<table>
+<thead>
+<tr>
+<th>foo</th>
+<th>bar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>baz</td>
+<td>bim</td>
+</tr>
+</tbody>
+</table>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=config_map,
+    )
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_whitespaces_tables_with_tabs_before_within_block_quotes_bare_with_many_tabs() -> (
+    None
+):
+    """
+    Test case:  LRD preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """>\t|\tfoo\t|\tbar\t|
+>\t|\t---\t|\t---\t|
+>\t|\tbaz\t|\tbim\t|"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> ]",
+        "[table(1,5)]",
+        "[table-header(1,5)]",
+        "[table-header-item(1,5)]",
+        "[text(1,5):foo:]",
+        "[end-table-header-item:\t|::False]",
+        "[table-header-item(1,5)]",
+        "[text(1,5):bar:]",
+        "[end-table-header-item:\t|::False]",
+        "[end-table-header:::False]",
+        "[table-body(1,5)]",
+        "[table-row(1,5)]",
+        "[table-row-item(1,5)]",
+        "[text(1,5):baz:]",
+        "[end-table-row-item:\t|::False]",
+        "[table-row-item(1,5)]",
+        "[text(1,5):bim:]",
+        "[end-table-row-item:\t|::False]",
+        "[end-table-row:::False]",
+        "[end-table-body:::False]",
+        "[end-table:::False]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<table>
+<thead>
+<tr>
+<th>foo</th>
+<th>bar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>baz</td>
+<td>bim</td>
+</tr>
+</tbody>
+</table>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=config_map,
+    )
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_whitespaces_tables_with_tabs_before_within_block_quotes_bare_with_space_repeat_1a() -> (
+    None
+):
+    """
+    Test case:  LRD preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """> \t| foo | bar |
+> \t| --- | --- |
+> \t| baz | bim |
+
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> ]",
+        "[table(1,5)]",
+        "[table-header(1,5)]",
+        "[table-header-item(1,5)]",
+        "[text(1,5):foo:]",
+        "[end-table-header-item: |::False]",
+        "[table-header-item(1,5)]",
+        "[text(1,5):bar:]",
+        "[end-table-header-item: |::False]",
+        "[end-table-header:::False]",
+        "[table-body(1,5)]",
+        "[table-row(1,5)]",
+        "[table-row-item(1,5)]",
+        "[text(1,5):baz:]",
+        "[end-table-row-item: |::False]",
+        "[table-row-item(1,5)]",
+        "[text(1,5):bim:]",
+        "[end-table-row-item: |::False]",
+        "[end-table-row:::False]",
+        "[end-table-body:::False]",
+        "[end-table:::False]",
+        "[end-block-quote:::False]",
+        "[BLANK(4,1):]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<table>
+<thead>
+<tr>
+<th>foo</th>
+<th>bar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>baz</td>
+<td>bim</td>
+</tr>
+</tbody>
+</table>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_tables_with_tabs_before_within_double_block_quotes() -> None:
+    """
+    Test case:  LRD preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+\t| foo | bar |
+\t| --- | --- |
+\t| baz | bim |
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n\n\n\n]",
+        "[para(2,5):\n\t\n\t\n\t]",
+        "[text(2,5):def\n| foo | bar |\n| --- | --- |\n| baz | bim |::\n\n\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def
+| foo | bar |
+| --- | --- |
+| baz | bim |</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=config_map,
+    )
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_whitespaces_tables_with_tabs_before_within_double_block_quotes_with_single() -> (
+    None
+):
+    """
+    Test case:  LRD preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> > def
+>\t| foo | bar |
+>\t| --- | --- |
+>\t| baz | bim |
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> > \n>\n> \n> \n]",
+        "[para(2,5):\n\t\n  \n  ]",
+        "[text(2,5):def\n| foo | bar |\n| --- | --- |\n| baz | bim |::\n\n\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+<blockquote>
+<p>def
+| foo | bar |
+| --- | --- |
+| baz | bim |</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=config_map,
+    )
