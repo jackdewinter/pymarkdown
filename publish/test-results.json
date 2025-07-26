@@ -1372,7 +1372,7 @@
         },
         {
             "name": "test.rules.test_md032",
-            "totalTests": 16,
+            "totalTests": 30,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1620,7 +1620,7 @@
         },
         {
             "name": "test.test_markdown_extra",
-            "totalTests": 328,
+            "totalTests": 329,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 2,
