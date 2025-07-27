@@ -95,7 +95,7 @@ of the `application_properties` project documentation.
 These items directly affect the collection of configuration values and how they
 are interpreted.
 
-<!--- pyml disable-num-lines 5 line-length-->
+<!-- pyml disable-num-lines 5 line-length-->
 | Key | Command Line | Type | Description |
 | -- | -- | -- |-- |
 | --                    | --config {file}           | string    | Path to the configuration file to use. |
@@ -106,7 +106,7 @@ are interpreted.
 
 These items affect the logging for the application.
 
-<!--- pyml disable-num-lines 5 line-length-->
+<!-- pyml disable-num-lines 5 line-length-->
 | Key | Command Line | Type | Description |
 | -- | -- | -- |-- |
 | log.file          | --log-file        | string  | Destination file for log messages. |
@@ -139,7 +139,7 @@ but this seemed to be the right time to make an exception.
 
 These affect the collection of rule plugins and whether they are called.
 
-<!--- pyml disable-num-lines 5 line-length-->
+<!-- pyml disable-num-lines 5 line-length-->
 | Key | Command Line | Type | Description |
 | -- | -- | -- |-- |
 | *special* | --enable-rules,-e   | string    | Comma separated list of rules to enable. |
@@ -164,10 +164,10 @@ string containing the paths.
 
 ### General Plugin Settings
 
-<!--- pyml disable-next-line no-emphasis-as-heading-->
+<!-- pyml disable-next-line no-emphasis-as-heading-->
 **Available: Version 0.9.30**
 
-<!--- pyml disable-num-lines 4 line-length-->
+<!-- pyml disable-num-lines 4 line-length-->
 | Key | Command Line | Type | Description |
 | -- | -- | -- |-- |
 | `plugins.selectively_enable_rules` | -- | Boolean | Specify whether to enable selective enable mode. |
@@ -194,7 +194,7 @@ For more information on this, refer to the section on the
 
 ### Rule Plugin Settings
 
-<!--- pyml disable-num-lines 4 line-length-->
+<!-- pyml disable-num-lines 4 line-length-->
 | Key | Command Line | Type | Description |
 | -- | -- | -- |-- |
 | `plugins.{id}.enabled` | -- | Boolean | Specify whether the plugin rule is enabled. |
@@ -229,7 +229,7 @@ each [extension](./advanced_extensions.md).
 
 These items do not fit nicely into any other category.
 
-<!--- pyml disable-num-lines 4 line-length-->
+<!-- pyml disable-num-lines 4 line-length-->
 | Key | Command Line | Type | Description |
 | -- | -- | -- |-- |
 | -- | --continue-on-error | Boolean | Enable PyMarkdown to continue after application errors. |
@@ -282,7 +282,7 @@ priority over command line enables.
 
 #### Exception: Selective Enabling of Rules
 
-<!--- pyml disable-next-line no-emphasis-as-heading-->
+<!-- pyml disable-next-line no-emphasis-as-heading-->
 **Available: Version 0.9.30**
 
 Suggested by a user in [Issue 1396](https://github.com/jackdewinter/pymarkdown/issues/1396),

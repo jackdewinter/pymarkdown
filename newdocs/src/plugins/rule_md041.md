@@ -80,7 +80,7 @@ value to an empty string (`""`).
 
 #### HTML Tags
 
-<!--- pyml disable-next-line no-emphasis-as-heading-->
+<!-- pyml disable-next-line no-emphasis-as-heading-->
 **Available: Version 0.9.32**
 
 Responding to a challenge from [our users](https://github.com/jackdewinter/pymarkdown/issues/1400),
@@ -164,7 +164,7 @@ what text should be in that heading.
 | `plugins.first-line-heading.` |
 | `plugins.first-line-h1.` |
 
-<!--- pyml disable-num-lines 5 line-length-->
+<!-- pyml disable-num-lines 5 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |

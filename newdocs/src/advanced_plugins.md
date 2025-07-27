@@ -199,7 +199,7 @@ above it suppressed this failure.
 ```Markdown
 some paragraph
 
-<!--- pyml disable-next-line no-multiple-space-atx-->
+<!-- pyml disable-next-line no-multiple-space-atx-->
 #  My Bad Atx Heading
 
 some other paragraph
@@ -244,17 +244,17 @@ make a small change to the format:
 ```Markdown
 ## Unversioned - In Main, Not Released
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - None
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - None
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - None

@@ -74,7 +74,7 @@ that are created with emphasis, it does not attempt to fix them.
 | `plugins.no-emphasis-as-heading.` |
 | `plugins.no-emphasis-as-header.` |
 
-<!--- pyml disable-num-lines 4 line-length-->
+<!-- pyml disable-num-lines 4 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |

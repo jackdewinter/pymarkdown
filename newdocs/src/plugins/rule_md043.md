@@ -102,7 +102,7 @@ headings, determining the "proper" algorithm quickly becomes problematic.
 | `plugins.required-headings.` |
 | `plugins.required-headers.` |
 
-<!--- pyml disable-num-lines 4 line-length-->
+<!-- pyml disable-num-lines 4 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |

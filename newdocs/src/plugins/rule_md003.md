@@ -91,7 +91,7 @@ release.
 | `plugins.heading-style.` |
 | `plugins.header-style.` |
 
-<!--- pyml disable-num-lines 5 line-length-->
+<!-- pyml disable-num-lines 5 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
@@ -100,7 +100,7 @@ release.
 
 Valid heading styles:
 
-<!--- pyml disable-num-lines 8 line-length-->
+<!-- pyml disable-num-lines 8 line-length-->
 | Style | Description |
 | -- | -- |
 | `consistent` | The first heading in the document specifies the style for the rest of the document. |

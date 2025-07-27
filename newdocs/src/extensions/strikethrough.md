@@ -42,7 +42,7 @@ produces the following html:
 
 which renders as:
 
-<!--- pyml disable-next-line no-inline-html-->
+<!-- pyml disable-next-line no-inline-html-->
 <del>abc</del>
 
 ## Specifics

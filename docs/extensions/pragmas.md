@@ -211,7 +211,7 @@ to add is `disable-next-line no-multiple-space-atx`, as follows:
 ```Markdown
 some paragraph
 
-<!--- pyml disable-next-line no-multiple-space-atx-->
+<!-- pyml disable-next-line no-multiple-space-atx-->
 #  My Bad Atx Heading
 
 some other paragraph

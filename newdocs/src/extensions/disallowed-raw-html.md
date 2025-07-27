@@ -13,7 +13,7 @@
 | --- |
 | `extensions.markdown-disallow-raw-html.` |
 
-<!--- pyml disable-num-lines 4 line-length -->
+<!-- pyml disable-num-lines 4 line-length -->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `False` | Whether the extension is enabled. |
@@ -43,7 +43,7 @@ produces the following html:
 
 which renders as:
 
-<!--- pyml disable-next-line no-inline-html-->
+<!-- pyml disable-next-line no-inline-html-->
 &lt;script>hljs.highlightAll();</script>
 
 ## Specifics

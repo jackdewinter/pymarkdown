@@ -81,7 +81,7 @@ The fix for this rule is currently in review.
 | `plugins.pml101.` |
 | `plugins.disallowed-html.` |
 
-<!--- pyml disable-num-lines 4 line-length-->
+<!-- pyml disable-num-lines 4 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |

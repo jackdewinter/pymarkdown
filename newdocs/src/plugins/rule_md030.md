@@ -76,7 +76,7 @@ list start sequences will be set to have 1 space before the text.
 | `plugins.md030.` |
 | `plugins.list-marker-space.` |
 
-<!--- pyml disable-num-lines 7 line-length-->
+<!-- pyml disable-num-lines 7 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |

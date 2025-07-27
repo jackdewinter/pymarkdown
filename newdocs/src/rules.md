@@ -10,7 +10,7 @@
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Heading levels should only increment by one level at a time.
@@ -25,12 +25,12 @@ Heading levels should only increment by one level at a time.
 | Autofix Available | No |
 | Enabled By Default | No |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Deprecation
 
 This rule has been deprecated in favor of [Rule Md041](./plugins/rule_md041.md).
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 First heading of the document should be a top-level heading.
@@ -45,7 +45,7 @@ First heading of the document should be a top-level heading.
 | Autofix Available | Pending |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Heading style should be consistent throughout the document.
@@ -60,7 +60,7 @@ Heading style should be consistent throughout the document.
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Inconsistent Unordered List Start style.
@@ -75,7 +75,7 @@ Inconsistent Unordered List Start style.
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Inconsistent indentation for list items at the same level.
@@ -90,12 +90,12 @@ Inconsistent indentation for list items at the same level.
 | Autofix Available | Yes |
 | Enabled By Default | No |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Deprecation
 
 This rule has been deprecated in favor of [Rule Md007](./plugins/rule_md007.md).
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Consider starting bulleted lists at the beginning of the line.
@@ -110,7 +110,7 @@ Consider starting bulleted lists at the beginning of the line.
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Unordered list indentation.
@@ -125,7 +125,7 @@ Unordered list indentation.
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Trailing spaces.
@@ -140,7 +140,7 @@ Trailing spaces.
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Hard tabs.
@@ -155,7 +155,7 @@ Hard tabs.
 | Autofix Available | Pending |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Reversed link syntax.
@@ -170,7 +170,7 @@ Reversed link syntax.
 | Autofix Available | Pending |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Multiple consecutive blank lines.
@@ -185,7 +185,7 @@ Multiple consecutive blank lines.
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Line length.
@@ -200,7 +200,7 @@ Line length.
 | Autofix Available | No |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Dollar signs used before commands without showing output.
@@ -215,7 +215,7 @@ Dollar signs used before commands without showing output.
 | Autofix Available | No |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 No space present after the hash character on a possible Atx Heading.
@@ -230,7 +230,7 @@ No space present after the hash character on a possible Atx Heading.
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Multiple spaces are present after hash character on Atx Heading.
@@ -245,7 +245,7 @@ Multiple spaces are present after hash character on Atx Heading.
 | Autofix Available | No |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 No space present inside of the hashes on a possible Atx Closed Heading.
@@ -260,7 +260,7 @@ No space present inside of the hashes on a possible Atx Closed Heading.
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Multiple spaces are present inside hash characters on Atx Closed Heading.
@@ -275,7 +275,7 @@ Multiple spaces are present inside hash characters on Atx Closed Heading.
 | Autofix Available | Pending |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Headings should be surrounded by blank lines.
@@ -290,7 +290,7 @@ Headings should be surrounded by blank lines.
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Headings must start at the beginning of the line.
@@ -305,7 +305,7 @@ Headings must start at the beginning of the line.
 | Autofix Available | No |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Multiple headings cannot contain the same content.
@@ -320,7 +320,7 @@ Multiple headings cannot contain the same content.
 | Autofix Available | No |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Multiple top-level headings in the same document.
@@ -335,7 +335,7 @@ Multiple top-level headings in the same document.
 | Autofix Available | No |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Trailing punctuation present in heading text.
@@ -350,7 +350,7 @@ Trailing punctuation present in heading text.
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Multiple spaces after blockquote symbol.
@@ -365,7 +365,7 @@ Multiple spaces after blockquote symbol.
 | Autofix Available | No |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Blank line inside blockquote.
@@ -380,7 +380,7 @@ Blank line inside blockquote.
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Ordered list item prefix.
@@ -395,7 +395,7 @@ Ordered list item prefix.
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Spaces after list markers.
@@ -410,7 +410,7 @@ Spaces after list markers.
 | Autofix Available | Pending |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Fenced code blocks should be surrounded by blank lines.
@@ -425,7 +425,7 @@ Fenced code blocks should be surrounded by blank lines.
 | Autofix Available | Pending |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 List blocks should be surrounded by blank lines.
@@ -440,7 +440,7 @@ List blocks should be surrounded by blank lines.
 | Autofix Available | No* |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Inline HTML.
@@ -455,7 +455,7 @@ Inline HTML.
 | Autofix Available | No* |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Bare URL used.
@@ -470,7 +470,7 @@ Bare URL used.
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Horizontal rule style.
@@ -485,7 +485,7 @@ Horizontal rule style.
 | Autofix Available | No |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Emphasis possibly used instead of a heading element.
@@ -509,7 +509,7 @@ Emphasis possibly used instead of a heading element.
 | --- |
 | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Spaces inside emphasis markers.
@@ -524,7 +524,7 @@ Spaces inside emphasis markers.
 | Autofix Available | Yes* |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Spaces inside code span elements.
@@ -539,7 +539,7 @@ Spaces inside code span elements.
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Spaces inside link text.
@@ -554,7 +554,7 @@ Spaces inside link text.
 | Autofix Available | No |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Fenced code blocks should have a language specified.
@@ -569,7 +569,7 @@ Fenced code blocks should have a language specified.
 | Autofix Available | No |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 First line in file should be a top-level heading.
@@ -584,7 +584,7 @@ First line in file should be a top-level heading.
 | Autofix Available | No |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 No empty links.
@@ -599,7 +599,7 @@ No empty links.
 | Autofix Available | No |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Required heading structure.
@@ -614,7 +614,7 @@ Required heading structure.
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Proper names should have the correct capitalization.
@@ -629,7 +629,7 @@ Proper names should have the correct capitalization.
 | Autofix Available | No |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Images should have alternate text (alt text).
@@ -644,7 +644,7 @@ Images should have alternate text (alt text).
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Code block style.
@@ -659,7 +659,7 @@ Code block style.
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Each file should end with a single newline character.
@@ -674,7 +674,7 @@ Each file should end with a single newline character.
 | Autofix Available | Yes |
 | Enabled By Default | Yes |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Code fence style should be consistent throughout the document.
@@ -689,7 +689,7 @@ Code fence style should be consistent throughout the document.
 | Autofix Available | Pending review |
 | Enabled By Default | No |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Disallowed HTML elements.
@@ -704,7 +704,7 @@ Disallowed HTML elements.
 | Autofix Available | Pending review |
 | Enabled By Default | No |
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 Anchored list indentation.

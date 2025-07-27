@@ -33,11 +33,11 @@ with open(temporary_file_name, "wt", encoding="utf-8") as destination_file:
                 file_contents[dd:end_of_first_part]
                 .replace(
                     "## Summary",
-                    "<!--- pyml disable-next-line no-duplicate-heading-->\n### Summary",
+                    "<!-- pyml disable-next-line no-duplicate-heading-->\n### Summary",
                 )
                 .replace(
                     "## Deprecation",
-                    "<!--- pyml disable-next-line no-duplicate-heading-->\n### Deprecation",
+                    "<!-- pyml disable-next-line no-duplicate-heading-->\n### Deprecation",
                 )
                 .replace("./rule_", "./plugins/rule_")
             )

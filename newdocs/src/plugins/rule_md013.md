@@ -86,7 +86,7 @@ release.
 | `plugins.md013.` |
 | `plugins.line-length.` |
 
-<!--- pyml disable-num-lines 10 line-length-->
+<!-- pyml disable-num-lines 10 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |

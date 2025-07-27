@@ -30,7 +30,7 @@ team.  If you volunteer to help, we can provide guidance and help to you
 at a low cost to us.  If what you want to do is not contrary to the direction of
 the project, we can usually work something out to help you meet your needs.
   
-<!--- pyml disable-next-line no-emphasis-as-heading-->
+<!-- pyml disable-next-line no-emphasis-as-heading-->
 **OR**  
   
 Let us say that you want to get involved with a project and help.  You

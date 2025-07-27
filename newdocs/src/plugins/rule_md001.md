@@ -95,7 +95,7 @@ The heading count (number of `#` characters) is adjusted to match what is expect
 | `plugins.heading-increment.` |
 | `plugins.header-increment.` |
 
-<!--- pyml disable-num-lines 4 line-length-->
+<!-- pyml disable-num-lines 4 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |

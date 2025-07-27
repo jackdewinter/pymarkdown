@@ -41,7 +41,7 @@ with open(temporary_file_name, "wt", encoding="utf-8") as destination_file:
 
 [Full Documentation](./extensions/{next_extension_file})
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 {extension_summary_text}"""
             )

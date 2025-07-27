@@ -139,7 +139,7 @@ changing that second item's list start to `2`.
 | `plugins.md029.` |
 | `plugins.ol-prefix.` |
 
-<!--- pyml disable-num-lines 5 line-length-->
+<!-- pyml disable-num-lines 5 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
@@ -148,7 +148,7 @@ changing that second item's list start to `2`.
 
 Valid heading styles:
 
-<!--- pyml disable-num-lines 6 line-length-->
+<!-- pyml disable-num-lines 6 line-length-->
 | Style | Description |
 | -- | -- |
 | `one_or_ordered` | Either of the `one` or `ordered` styles below. |
