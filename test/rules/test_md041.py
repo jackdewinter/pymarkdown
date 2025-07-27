@@ -286,6 +286,24 @@ the `plugins.md041.level` configuration -->
         set_args=["plugins.md041.invisible_tags=bob"],
         disable_rules="MD033",
     ),
+    pluginRuleTest(  # Ensure that first and last parts of comments are the same.
+        "issue-1447-a",
+        source_file_contents="""<!--- pyml disable-next-line first-line-heading --->
+-8<- "README.md"
+""",
+    ),
+    pluginRuleTest(  # Ensure that first and last parts of comments are the same.
+        "issue-1447-b",
+        source_file_contents="""<!--- pyml disable-num-lines 200 first-line-heading --->
+-8<- "README.md"
+""",
+    ),
+    pluginRuleTest(  # Ensure that first and last parts of comments are the same.
+        "issue-1447-c",
+        source_file_contents="""<!--- pyml disable first-line-heading --->
+-8<- "README.md"
+""",
+    ),
 ]
 
 

@@ -3,6 +3,14 @@
 ## Unversioned - In Main, Not Released
 
 <!--- pyml disable-next-line no-duplicate-heading-->
+### Notes
+
+- If using pragmas, [Issue 1447](https://github.com/jackdewinter/pymarkdown/issues/1447)
+  fixed an issue where a closing `--->` was not being handled properly.  As a result
+  of fixing this issue in this release, pragmas starting with a `<!--` must end
+  with `-->` and pragma starting with a `<!---` must end with `--->`.
+
+<!--- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - None
@@ -19,6 +27,8 @@
       areas with the Md041 rule and "invisible" tags
 - [Issue 1446](https://github.com/jackdewinter/pymarkdown/issues/1446)
     - multiple issues with LRDs and whitespace/tabs
+- [Issue 1447](https://github.com/jackdewinter/pymarkdown/issues/1447)
+    - was not handling `--->` properly at the end of pragmas
 
 <!--- pyml disable-next-line no-duplicate-heading-->
 ### Changed

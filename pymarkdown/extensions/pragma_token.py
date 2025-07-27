@@ -102,13 +102,14 @@ class PragmaExtension(ParserExtension):
 
         POGGER.debug("look_for_pragmas - >$<", line_to_parse)
         POGGER.debug("look_for_pragmas - ws >$<", extracted_whitespace)
+        used_standard_prefix = line_to_parse.startswith(PragmaToken.pragma_prefix)
+        used_alternate_prefix = line_to_parse.startswith(
+            PragmaToken.pragma_alternate_prefix
+        )
         if (
             not container_depth
             and not extracted_whitespace
-            and (
-                line_to_parse.startswith(PragmaToken.pragma_prefix)
-                or line_to_parse.startswith(PragmaToken.pragma_alternate_prefix)
-            )
+            and (used_standard_prefix or used_alternate_prefix)
         ):
             was_extended_prefix = line_to_parse.startswith(
                 PragmaToken.pragma_alternate_prefix
@@ -125,17 +126,23 @@ class PragmaExtension(ParserExtension):
             remaining_line = (
                 line_to_parse[start_index:].rstrip(Constants.ascii_whitespace).lower()
             )
-            if remaining_line.startswith(
-                PragmaToken.pragma_title
-            ) and remaining_line.endswith(PragmaToken.pragma_suffix):
-                index_number = (
-                    -position_marker.line_number
-                    if was_extended_prefix
-                    else position_marker.line_number
+            if remaining_line.startswith(PragmaToken.pragma_title):
+                found_matching_suffix = (
+                    remaining_line.endswith(PragmaToken.pragma_suffix)
+                    if used_standard_prefix
+                    else remaining_line.endswith(PragmaToken.pragma_alternate_suffix)
                 )
-                parser_properties.pragma_lines[index_number] = line_to_parse
-                POGGER.debug("pragma $ extracted - >$<", index_number, line_to_parse)
-                return True
+                if found_matching_suffix:
+                    index_number = (
+                        -position_marker.line_number
+                        if was_extended_prefix
+                        else position_marker.line_number
+                    )
+                    parser_properties.pragma_lines[index_number] = line_to_parse
+                    POGGER.debug(
+                        "pragma $ extracted - >$<", index_number, line_to_parse
+                    )
+                    return True
         POGGER.debug("pragma not extracted - >$<", line_to_parse)
         return False
 
@@ -158,9 +165,11 @@ class PragmaExtension(ParserExtension):
         if next_line_number > 0:
             prefix_length = len(PragmaToken.pragma_prefix)
             actual_line_number = next_line_number
+            suffix_to_use = PragmaToken.pragma_suffix
         else:
             prefix_length = len(PragmaToken.pragma_alternate_prefix)
             actual_line_number = -next_line_number
+            suffix_to_use = PragmaToken.pragma_alternate_suffix
 
         line_after_prefix = pragma_lines[next_line_number][prefix_length:]
         after_whitespace_index, _ = ParserHelper.extract_spaces_verified(
@@ -169,9 +178,7 @@ class PragmaExtension(ParserExtension):
         after_whitespace_index, _ = ParserHelper.extract_spaces_verified(
             line_after_prefix, after_whitespace_index + len(PragmaToken.pragma_title)
         )
-        command_data = line_after_prefix[
-            after_whitespace_index : -len(PragmaToken.pragma_suffix)
-        ]
+        command_data = line_after_prefix[after_whitespace_index : -len(suffix_to_use)]
         after_command_index, command = ParserHelper.extract_until_spaces_verified(
             command_data, 0
         )
@@ -489,6 +496,7 @@ class PragmaToken(MarkdownToken):
     pragma_alternate_prefix = "<!---"
     pragma_title = "pyml "
     pragma_suffix = "-->"
+    pragma_alternate_suffix = "--->"
 
     def __init__(self, pragma_lines: Dict[int, str]) -> None:
         self.__pragma_lines = pragma_lines

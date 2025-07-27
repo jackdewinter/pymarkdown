@@ -287,7 +287,7 @@ class TransformToMarkdown:
         cls, pragma_token: PragmaToken, transformed_data: str
     ) -> str:
         ordered_lines = collections.OrderedDict(
-            sorted(pragma_token.pragma_lines.items())
+            sorted(pragma_token.pragma_lines.items(), key=lambda x: abs(x[0]))
         )
 
         for next_line_number in ordered_lines:
@@ -301,7 +301,8 @@ class TransformToMarkdown:
                 f"pragma-->{ParserHelper.make_value_visible(detabified_pragma)}<--"
             )
 
-            if next_line_number == 1:
+            abs_line_number = abs(next_line_number)
+            if abs_line_number == 1:
 
                 transformed_data = (
                     (
@@ -315,7 +316,7 @@ class TransformToMarkdown:
                 nth_index = ParserHelper.find_nth_occurrence(
                     transformed_data,
                     ParserHelper.newline_character,
-                    next_line_number - 1,
+                    abs_line_number - 1,
                 )
                 transformed_data = (
                     (
