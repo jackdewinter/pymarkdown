@@ -16485,6 +16485,40 @@ def test_extra_054x() -> None:
 
 
 @pytest.mark.gfm
+def test_extra_055x() -> None:
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """This is text and a blank line.
+
++ a list
+[blah]: /url
+"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):This is text and a blank line.:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[ulist(3,1):+::2::\n]",
+        "[para(3,3):\n]",
+        "[text(3,3):a list\n[blah]: /url::\n]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<p>This is text and a blank line.</p>
+<ul>
+<li>a list
+[blah]: /url</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_extra_999() -> None:
     """
     Temporary test to keep coverage up while consistency checks disabled.
