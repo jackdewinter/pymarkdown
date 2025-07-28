@@ -60,7 +60,7 @@ specification at the above link.
 | `plugins.md010.` |
 | `plugins.no-hard-tabs.` |
 
-<!--- pyml disable-num-lines 4 line-length-->
+<!-- pyml disable-num-lines 4 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |

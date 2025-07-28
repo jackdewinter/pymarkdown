@@ -393,7 +393,7 @@ followed by one or more alphanumeric characters.
 
 ##### -e, --exclude PATH_EXCLUSIONS
 
-<!--- pyml disable-next-line no-emphasis-as-heading-->
+<!-- pyml disable-next-line no-emphasis-as-heading-->
 **Available: Version 0.9.30**
 
 The `-e` or `--exclude` arguments instruct PyMarkdown to exclude any of the specified
@@ -483,7 +483,7 @@ For example, consider
 the following Markdown snippet:
 
 ```Markdown
-<!--- pyml disable-next-line no-multiple-space-atx-->
+<!-- pyml disable-next-line no-multiple-space-atx-->
 #  My Bad Atx Heading
 ```
 
@@ -710,7 +710,7 @@ value was not acceptable.
 
 #### --no-json5 (configuration)
 
-<!--- pyml disable-next-line no-emphasis-as-heading-->
+<!-- pyml disable-next-line no-emphasis-as-heading-->
 **Available: Version 0.9.32**
 
 The version 0.9.32 release took care of a long standing [issue](https://github.com/jackdewinter/pymarkdown/issues/1378)
@@ -866,7 +866,7 @@ intelligence to establish the context surrounding the text sequence `#bob`
 to determine what was intended.  Without that added context, the rule
 cannot properly fix this failure.
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 #### Command Line Arguments
 
 Correcting failures is a logical extension of scanning for those same failures.
@@ -1005,7 +1005,7 @@ aliases, the `info` subcommand for extensions can only take the ID of the extens
 and not an alias.  Otherwise, the use of the command and the data returned
 closely mirror the behavior of the `plugins` command.
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 #### List Subcommand
 
 The `list` subcommand produces a columnized list of the properties associated with
@@ -1031,7 +1031,7 @@ The information returned includes columns for:
   markdown-task-list-items     Markdown Task List Items     False      False      0.5.0
 ```
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 #### Info Subcommand
 
 The `info` subcommand produces an itemized list of names and values

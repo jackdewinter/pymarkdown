@@ -277,7 +277,7 @@ the failure being reported.  To fix up the above text snippet, we would change
 that snippet to:
 
 ```MArkdown
-<!--- pyml disable-next-line first-line-heading-->
+<!-- pyml disable-next-line first-line-heading -->
 This is a title
 
 ```
@@ -298,7 +298,7 @@ To see an example of such a failure, change the contents of `sample.md` to the
 following text and rescan the file:
 
 ```MArkdown
-&lt;!--- pyml disable-next-line invalid-->
+&lt;!-- pyml disable-next-line invalid-->
 This is a title
 
 ```

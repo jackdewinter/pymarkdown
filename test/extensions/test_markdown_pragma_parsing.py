@@ -326,3 +326,107 @@ this is a paragraph
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_pragma_parsing_issue_1447_a() -> None:
+    """
+    Test case: TBD
+    """
+
+    # Arrange
+    source_markdown = """<!--- pyml disable-next-line first-line-heading --->
+-8<- "README.md"
+"""
+    expected_tokens = [
+        "[para(2,1):]",
+        '[text(2,1):-8\a<\a&lt;\a- \a"\a&quot;\aREADME.md\a"\a&quot;\a:]',
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[pragma:-1:<!--- pyml disable-next-line first-line-heading --->]",
+    ]
+    expected_gfm = """<p>-8&lt;- &quot;README.md&quot;</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_pragma_parsing_issue_1447_b() -> None:
+    """
+    Test case: TBD
+    """
+
+    # Arrange
+    source_markdown = """<!-- pyml disable-next-line first-line-heading -->
+-8<- "README.md"
+"""
+    expected_tokens = [
+        "[para(2,1):]",
+        '[text(2,1):-8\a<\a&lt;\a- \a"\a&quot;\aREADME.md\a"\a&quot;\a:]',
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[pragma:1:<!-- pyml disable-next-line first-line-heading -->]",
+    ]
+    expected_gfm = """<p>-8&lt;- &quot;README.md&quot;</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_pragma_parsing_issue_1447_c() -> None:
+    """
+    Test case: TBD
+    """
+
+    # Arrange
+    source_markdown = """<!--- pyml disable-next-line first-line-heading --->
+-8<- "README.md"
+<!-- pyml disable-next-line first-line-heading -->
+-8<- "README.md"
+"""
+    expected_tokens = [
+        "[para(2,1):\n]",
+        '[text(2,1):-8\a<\a&lt;\a- \a"\a&quot;\aREADME.md\a"\a&quot;\a\n-8\a<\a&lt;\a- \a"\a&quot;\aREADME.md\a"\a&quot;\a::\n]',
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[pragma:-1:<!--- pyml disable-next-line first-line-heading --->;3:<!-- pyml disable-next-line first-line-heading -->]",
+    ]
+    expected_gfm = """<p>-8&lt;- &quot;README.md&quot;
+-8&lt;- &quot;README.md&quot;</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_pragma_parsing_issue_1447_d() -> None:
+    """
+    Test case: TBD
+    """
+
+    # Arrange
+    source_markdown = """<!--- pyml disable-next-line first-line-heading --->
+-8<- "README.md"
+<!-- pyml disable-next-line first-line-heading -->
+-8<- "README.md"
+<!--- pyml disable-next-line first-line-heading --->
+-8<- "README.md"
+<!-- pyml disable-next-line first-line-heading -->
+-8<- "README.md"
+"""
+    expected_tokens = [
+        "[para(2,1):\n\n\n]",
+        '[text(2,1):-8\a<\a&lt;\a- \a"\a&quot;\aREADME.md\a"\a&quot;\a\n-8\a<\a&lt;\a- \a"\a&quot;\aREADME.md\a"\a&quot;\a\n-8\a<\a&lt;\a- \a"\a&quot;\aREADME.md\a"\a&quot;\a\n-8\a<\a&lt;\a- \a"\a&quot;\aREADME.md\a"\a&quot;\a::\n\n\n]',
+        "[end-para:::True]",
+        "[BLANK(9,1):]",
+        "[pragma:-1:<!--- pyml disable-next-line first-line-heading --->;3:<!-- pyml disable-next-line first-line-heading -->;-5:<!--- pyml disable-next-line first-line-heading --->;7:<!-- pyml disable-next-line first-line-heading -->]",
+    ]
+    expected_gfm = """<p>-8&lt;- &quot;README.md&quot;
+-8&lt;- &quot;README.md&quot;
+-8&lt;- &quot;README.md&quot;
+-8&lt;- &quot;README.md&quot;</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

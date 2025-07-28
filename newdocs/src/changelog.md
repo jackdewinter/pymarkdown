@@ -2,12 +2,20 @@
 
 ## Unversioned - In Main, Not Released
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Notes
+
+- If using pragmas, [Issue 1447](https://github.com/jackdewinter/pymarkdown/issues/1447)
+  fixed an issue where a closing `--->` was not being handled properly.  As a result
+  of fixing this issue in this release, pragmas starting with a `<!--` must end
+  with `-->` and pragma starting with a `<!---` must end with `--->`.
+
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - None
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Issue 1387](https://github.com/jackdewinter/pymarkdown/issues/1387)
@@ -19,15 +27,17 @@
       areas with the Md041 rule and "invisible" tags
 - [Issue 1446](https://github.com/jackdewinter/pymarkdown/issues/1446)
     - multiple issues with LRDs and whitespace/tabs
+- [Issue 1447](https://github.com/jackdewinter/pymarkdown/issues/1447)
+    - was not handling `--->` properly at the end of pragmas
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - None
 
 ## Version 0.9.31 - 2025-07-11
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - [Issue 1378](https://github.com/jackdewinter/pymarkdown/issues/1378)
@@ -43,19 +53,19 @@
 - [Issue 1427](https://github.com/jackdewinter/pymarkdown/issues/1427)
     - Adhering to project templates across various projects.
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - None
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - None
 
 ## Version 0.9.30 - Date: 2025-04-19
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - [Issue 1396](https://github.com/jackdewinter/pymarkdown/issues/1396)
@@ -66,7 +76,7 @@
 - [Issue 1403](https://github.com/jackdewinter/pymarkdown/issues/1403)
     - Added `disable` and `enable` for pragmas
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Issue 1379](https://github.com/jackdewinter/pymarkdown/issues/1379)
@@ -79,19 +89,19 @@
 - [Issue 1401](https://github.com/jackdewinter/pymarkdown/issues/1401)
     - Fixed a small issue with the `**` glob characters not working properly
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - None
 
 ## Version 0.9.29 - Date: 2025-03-10
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - None
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Issue 1352](https://github.com/jackdewinter/pymarkdown/issues/1352)
@@ -108,14 +118,14 @@
 - [Issue 1371](https://github.com/jackdewinter/pymarkdown/issues/1371)
     - Fixed Md031 fix issues related to issue 1364 fixes.
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - None
 
 ## Version 0.9.28 - Date: 2025-02-10
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - [Issue 1289](https://github.com/jackdewinter/pymarkdown/issues/1289)
@@ -130,7 +140,7 @@
 - [Issue 1327](https://github.com/jackdewinter/pymarkdown/issues/1327)
     - added simple mechanism to log and view performance measurements
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Issue 1302](https://github.com/jackdewinter/pymarkdown/issues/1302)
@@ -150,7 +160,7 @@
 - [Issue 1346](https://github.com/jackdewinter/pymarkdown/issues/1346)
     - fixed SNAFU8 for MD031 fix mode, assert
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - [Issue 1277](https://github.com/jackdewinter/pymarkdown/issues/1277)
@@ -159,7 +169,7 @@
 
 ## Version 0.9.27 - Date: 2025-01-09
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - [Issue 1299](https://github.com/jackdewinter/pymarkdown/issues/1299)
@@ -168,13 +178,13 @@
     - added bash scripts to compliment most of the Windows .cmd scripts,
       including the clean.cmd being complimented by clean.sh
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Issue 1297](https://github.com/jackdewinter/pymarkdown/issues/1297)
     - Fixed some Md031 fix tests, organized others.
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - [Issue 1290](https://github.com/jackdewinter/pymarkdown/issues/1290)
@@ -182,7 +192,7 @@
 
 ## Version 0.9.26 - Date: 2024-12-09
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - [Issue 810](https://github.com/jackdewinter/pymarkdown/issues/810)
@@ -192,7 +202,7 @@
       a specified directory, then scanning them one at a time with
       PyMarkdown and each of the extensions enabled.
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Issue 1259](https://github.com/jackdewinter/pymarkdown/issues/1259)
@@ -217,7 +227,7 @@
     - Fixed issue with Md022 and pragmas, similar to
       [Issue 1208](https://github.com/jackdewinter/pymarkdown/issues/1208).
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - [Issue 1258](https://github.com/jackdewinter/pymarkdown/issues/1258)
@@ -225,7 +235,7 @@
 
 ## Version 0.9.25 - Date: 2024-11-07
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - [Issue 1233](https://github.com/jackdewinter/pymarkdown/issues/1233)
@@ -235,7 +245,7 @@
       containers are involved, and then dropping one or more of those
       containers in a single line.
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Issue 1208](https://github.com/jackdewinter/pymarkdown/issues/1208)
@@ -257,7 +267,7 @@
     - Batch of fixes for cases when Md031 is trying to properly space
       a fenced code block after dropping 2 containers.
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - [Issue 1231)](https://github.com/jackdewinter/pymarkdown/issues/1231)
@@ -286,14 +296,14 @@ starting to use our fix mode on your Markdown documents and there are
 issues, please file an issue. We appreciate any help that we can get
 to improve the project for everyone!
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - [Issue 1212](https://github.com/jackdewinter/pymarkdown/issues/1212)
     - added cases to Md031 for SetExt
     - added extra test cases and resolution to other cases
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Issue 1169](https://github.com/jackdewinter/pymarkdown/issues/1169)
@@ -332,7 +342,7 @@ to improve the project for everyone!
 - [Issue 1168](https://github.com/jackdewinter/pymarkdown/issues/1168)
     - fixed issue with more deeply nested containers
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - Started to pull common code from MD031 for use in Md027
@@ -362,12 +372,12 @@ starting to use our fix mode on your Markdown documents and there are
 issues, please file an issue. We appreciate any help that we can get
 to improve the project for everyone!
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - None
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Issue 1141](https://github.com/jackdewinter/pymarkdown/issues/1141)
@@ -403,7 +413,7 @@ to improve the project for everyone!
 - [Issue 1156](https://github.com/jackdewinter/pymarkdown/issues/1156)
     - fixed indent issue (test_extra_044ldb0)
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - None
@@ -435,13 +445,13 @@ issues with transparency.  Therefore, while the fixed list is somewhat
 long, it is an honest reflection of the issues that we found and
 addressed.
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - [Issue 818](https://github.com/jackdewinter/pymarkdown/issues/818)
     - Adding Fix Mode for Md031.
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Issue 1120](https://github.com/jackdewinter/pymarkdown/issues/1120)
@@ -510,7 +520,7 @@ addressed.
     - fixed rehydrate issue with extra block quote character being added at end
       of document
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - None
@@ -524,7 +534,7 @@ that are causing unpredictable behavior.  That behavior is mostly
 in the area of producing the correct Markdown from tokens to allow
 the fix mode to produce reliable fixes.
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - [Issue 826](https://github.com/jackdewinter/pymarkdown/issues/826)
@@ -532,13 +542,13 @@ the fix mode to produce reliable fixes.
 - [Issue 824](https://github.com/jackdewinter/pymarkdown/issues/824)
     - Added fix mode for Rule Md046
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Issue 1099](https://github.com/jackdewinter/pymarkdown/issues/1099)
     - Fixed longstanding issue with tabs and newlines in code spans
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - [Issue 1103](https://github.com/jackdewinter/pymarkdown/issues/1103)
@@ -555,7 +565,7 @@ shape for release.
 To view the new documentation, goto
 [ReadTheDocs](https://pymarkdown.readthedocs.io/en/latest/).
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - [Issue 1075](https://github.com/jackdewinter/pymarkdown/issues/1075)
@@ -567,7 +577,7 @@ To view the new documentation, goto
 - [Issue 1081](https://github.com/jackdewinter/pymarkdown/issues/1081)
     - Added "plugins info" extension to show current configuration.
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Issue 1015](https://github.com/jackdewinter/pymarkdown/issues/1015)
@@ -575,7 +585,7 @@ To view the new documentation, goto
 - [Issue 1077](https://github.com/jackdewinter/pymarkdown/issues/1077)
     - Fixed issue with previous cleanup
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - None
@@ -590,7 +600,7 @@ shape for release.
 To view the new documentation, goto
 [ReadTheDocs](https://pymarkdown.readthedocs.io/en/latest/).
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - [Issue 801](https://github.com/jackdewinter/pymarkdown/issues/801)
@@ -601,12 +611,12 @@ To view the new documentation, goto
 - [Issue 1070](https://github.com/jackdewinter/pymarkdown/issues/1070)
     - Complete redo of advanced configuration documentation.
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - None
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - [Issue 1031](https://github.com/jackdewinter/pymarkdown/issues/1031)
@@ -622,14 +632,14 @@ To view the new documentation, goto
 
 ## Version 0.9.18 - Date: 2024-03-18
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - [Issue 990](https://github.com/jackdewinter/pymarkdown/issues/990)
     - added ability to use a TOML file in `pyproject.toml` format with the
       `--config` command line flag
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Issue 992](https://github.com/jackdewinter/pymarkdown/issues/992)
@@ -647,7 +657,7 @@ To view the new documentation, goto
 - [Issue 1015](https://github.com/jackdewinter/pymarkdown/issues/1015)
     - Fixed issue with split tab and a simple list indent
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - [Issue 944](https://github.com/jackdewinter/pymarkdown/issues/944)
@@ -680,7 +690,7 @@ Some notable additions/changes are:
     - note that this new rule give advice against Md007, so only one of the two
       rules should be enabled at any one time
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - [Issue 975](https://github.com/jackdewinter/pymarkdown/issues/975)
@@ -694,7 +704,7 @@ Some notable additions/changes are:
     - Added base foundation for new documentation, publishing on
       read-the-docs.
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Issue 929](https://github.com/jackdewinter/pymarkdown/issues/929)
@@ -718,7 +728,7 @@ Some notable additions/changes are:
       flag not working as expected
     - fixed to properly set log level to DEBUG for early application debugging
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - [Issue 966](https://github.com/jackdewinter/newsite.git)
@@ -745,7 +755,7 @@ Some other notable additions/changes are:
       over to this new pattern
     - any plugin with the new Fix feature has parameterized tests
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - [Issue 618](https://github.com/jackdewinter/pymarkdown/issues/618)
@@ -792,7 +802,7 @@ Some other notable additions/changes are:
     - Added `--continue-on-error` command line flag to "ignore" errors
       and to keep on processing.
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - [Issue 806](https://github.com/jackdewinter/pymarkdown/issues/806)
@@ -815,7 +825,7 @@ Some other notable additions/changes are:
 - [Issue 936](https://github.com/jackdewinter/pymarkdown/issues/936)
     - change documentation for rules that will not have a fix
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Issue 929](https://github.com/jackdewinter/pymarkdown/issues/929)
@@ -823,7 +833,7 @@ Some other notable additions/changes are:
 - [Issue 930](https://github.com/jackdewinter/pymarkdown/issues/930)
     - Fixed issue of missing `py.typed` file.
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Completed
 
 - [Issue 827](https://github.com/jackdewinter/pymarkdown/issues/827)
@@ -845,17 +855,17 @@ The issues fixed include some issues that fixed assertions, caused improperly
 formed HTML, and caused improperly formed Markdown. The majority of these issue
 involved tab characters and containers.
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - None
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - None
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Issue 731](https://github.com/jackdewinter/pymarkdown/issues/731)
@@ -955,7 +965,7 @@ That experimentation lead to a couple of changes:
 - Added a new pragma command `disable-num-lines` to handle disabling rules for
   a given count of lines.
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - [Issue 776](https://github.com/jackdewinter/pymarkdown/issues/776)
@@ -964,13 +974,13 @@ That experimentation lead to a couple of changes:
     - added extension to disallow html, per GFM
     - added rule PML100 which detected the same thing, but does not fix
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - [Issue 750](https://github.com/jackdewinter/pymarkdown/issues/750)
     - started work on making the tests more compact and efficient
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Issue 774](https://github.com/jackdewinter/pymarkdown/issues/774)
@@ -990,7 +1000,7 @@ That experimentation lead to a couple of changes:
 Note: noted there were some issues with the pymarkdown_test project and
 giving false positives.  Will be looking into that for the next release.
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Issue 755](https://github.com/jackdewinter/pymarkdown/pull/755)
@@ -1029,7 +1039,7 @@ have been addressed:
     - The rule was not dealing with tabs in code-blocks properly
     - Fixed so that any line that contains a code-block does not trigger the rule
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - [Issue 618](https://github.com/jackdewinter/pymarkdown/issues/618)
@@ -1038,7 +1048,7 @@ have been addressed:
 - [Issue 691](https://github.com/jackdewinter/pymarkdown/issues/691)
     - Allow YAML for configuration files
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - [Issue 723](https://github.com/jackdewinter/pymarkdown/issues/723)
@@ -1053,14 +1063,14 @@ have been addressed:
 - [Issue 746](https://github.com/jackdewinter/pymarkdown/issues/746)
     - Moved scanning related code from main.py to new file module
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - None
 
 ## Version 0.9.12 - Date: 2023-07-24
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - [Issue 655](https://github.com/jackdewinter/pymarkdown/issues/655)
@@ -1082,33 +1092,33 @@ have been addressed:
 - Added new [pymarkdown_test](https://github.com/jackdewinter/pymarkdown_test)
   project with (hopefully) automated kickoff from PyMarkdown
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - None
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - None
 
 ## Version 0.9.11 - Date: 2023-04-17
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - Emergency fix.
 
 ## Version 0.9.10 - Date: 2023-04-16
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - [Issue 627](https://github.com/jackdewinter/pymarkdown/issues/627)
     - Added support for default `.pymarkdown` configuration file
     - Updated documentation for configuration
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - [Issue 582](https://github.com/jackdewinter/pymarkdown/issues/582)
@@ -1133,7 +1143,7 @@ have been addressed:
     - ensured that remaining whitespace tests have the standard combinations
       tested in the previous whitespace tests
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Issue 613](https://github.com/jackdewinter/pymarkdown/issues/613)
@@ -1167,7 +1177,7 @@ This was a point release.  Issues that were addressed:
 - ensuring that tabs are represented properly in the internal token format
 - cleaning up code to reduce various `PyLint` errors
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - [Issue 561](https://github.com/jackdewinter/pymarkdown/issues/561)
@@ -1175,7 +1185,7 @@ This was a point release.  Issues that were addressed:
         - made sure all code hits 40% Sourcery quality threshold
         - cleaned up testing scripts
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - various
@@ -1187,7 +1197,7 @@ This was a point release.  Issues that were addressed:
 - [Issue 496](https://github.com/jackdewinter/pymarkdown/issues/496)
     - moved file scanner code into own module
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Issue 561](https://github.com/jackdewinter/pymarkdown/issues/561)
@@ -1221,7 +1231,7 @@ in Posix format and Windows reporting paths in Windows format.  If you have
 scripts that invoke PyMarkdown and interprets any returned paths, please
 examine those scripts to see if they need to be changed.
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - [Issue 407](https://github.com/jackdewinter/pymarkdown/issues/407)
@@ -1236,7 +1246,7 @@ examine those scripts to see if they need to be changed.
     - added proper support for Unicode whitespace and Unicode punctuation around
       emphasis elements
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - [Issue 168](https://github.com/jackdewinter/pymarkdown/issues/168)
@@ -1250,7 +1260,7 @@ examine those scripts to see if they need to be changed.
 - [Issue 454](https://github.com/jackdewinter/pymarkdown/issues/454)
     - fixed special HTML sequences that were detected by Md033
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Issue 301](https://github.com/jackdewinter/pymarkdown/issues/301)
@@ -1283,12 +1293,12 @@ examine those scripts to see if they need to be changed.
 
 ## Version 0.9.7 - Date: 2022-07-04
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - None
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - Bumping of versions of dependent packages
@@ -1298,7 +1308,7 @@ examine those scripts to see if they need to be changed.
     - moved many of the "one-off" parameters out of arguments into a "grab-bag"
       with logging
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Fixed - Issue 355](https://github.com/jackdewinter/pymarkdown/issues/355)
@@ -1314,7 +1324,7 @@ examine those scripts to see if they need to be changed.
 
 ## Version 0.9.6 - Date: 2022-04-02
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - [Added - Issue 293](https://github.com/jackdewinter/pymarkdown/issues/293)
@@ -1322,7 +1332,7 @@ examine those scripts to see if they need to be changed.
 - [Added - Issue 319](https://github.com/jackdewinter/pymarkdown/issues/319)
     - added mypy typing to entire project and removed stubs for `application_properties`
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - [Changed - Issue 154](https://github.com/jackdewinter/pymarkdown/issues/154)
@@ -1330,7 +1340,7 @@ examine those scripts to see if they need to be changed.
 - [Changed - Issue 283](https://github.com/jackdewinter/pymarkdown/issues/283)
     - general: moved more modules into specific directories
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Fixed - Issue 95](https://github.com/jackdewinter/pymarkdown/issues/95)
@@ -1369,7 +1379,7 @@ PLEASE! If you encounter any issues with this product, please
 and tell us about it! There are a lot of combinations of Markdown elements to cover,
 and we need your help to prioritize them all!
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - [Added - Issue 227](https://github.com/jackdewinter/pymarkdown/issues/227)
@@ -1381,13 +1391,13 @@ and we need your help to prioritize them all!
     - scenario tests: variations of 3-level max space tests with no text after
       container starts on first line
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - [Changed - Issue 248](https://github.com/jackdewinter/pymarkdown/issues/248)
     - github actions: only run against `main` branch
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Fixed - Issue 189](https://github.com/jackdewinter/pymarkdown/issues/189)
@@ -1441,7 +1451,7 @@ tokens in situations with nested containers.
     - One of our contributors pointed out a number of falacies, and we agreed.
 - Enhanced testing of the whitespace calculations recently completed.
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - [Changed - Issue 184](https://github.com/jackdewinter/pymarkdown/issues/184)
@@ -1452,7 +1462,7 @@ tokens in situations with nested containers.
 - [Changed - Issue 214](https://github.com/jackdewinter/pymarkdown/issues/214)
     - removing call home support
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Fixed - Issue 159](https://github.com/jackdewinter/pymarkdown/issues/159)
@@ -1506,14 +1516,14 @@ the full descriptions are below, here are some highlights:
 - Lots of refactoring to reduce complexity and adhere to guidelines
 - Rewrite of the whitespace calculations to drastically reduce their complexity
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - [Added - Issue 104](https://github.com/jackdewinter/pymarkdown/issues/104)
     - core: added support for calling home every week to see if there is a new
       version at PyPi.org
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - [Changed - Issue 85](https://github.com/jackdewinter/pymarkdown/issues/85)
@@ -1550,7 +1560,7 @@ the full descriptions are below, here are some highlights:
 - [Changed - Issue 166](https://github.com/jackdewinter/pymarkdown/issues/166)
     - refactoring: large refactoring to standardize the whitespace in tokens
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Fixed - Issue 87](https://github.com/jackdewinter/pymarkdown/issues/87)
@@ -1596,12 +1606,12 @@ the full descriptions are below, here are some highlights:
 - Added more scenario tests and verified that those worked
 - Fixed small issues with parser and rules, mostly boundary cases
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - None
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - [Changed - Issue 44](https://github.com/jackdewinter/pymarkdown/issues/44)
@@ -1618,7 +1628,7 @@ the full descriptions are below, here are some highlights:
 - [Changed - Issue 70](https://github.com/jackdewinter/pymarkdown/issues/70)
     - scenario tests: gave better names, added one for configuration
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Fixed - Issue 43](https://github.com/jackdewinter/pymarkdown/issues/43)
@@ -1671,7 +1681,7 @@ here are some highlights:
 - Added support to allow PyMarkdown to be executed as a module with `-m`
 - Various scenario test tasks including verifying disabled rules were required
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - [Added](https://github.com/jackdewinter/pymarkdown/issues/28)
@@ -1692,7 +1702,7 @@ here are some highlights:
 - [Added](https://github.com/jackdewinter/pymarkdown/issues/42)
     - core: added sorting of triggered rules before they are displayed
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - [Changed](https://github.com/jackdewinter/pymarkdown/issues/36)
@@ -1701,7 +1711,7 @@ here are some highlights:
     - documentation: addressed some documentation issues with docs/rules.md and
       doc/rules/rule_md032.md
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Fixed](https://github.com/jackdewinter/pymarkdown/issues/22)
@@ -1736,7 +1746,7 @@ were:
 - Better support from the command line for extensions and plugins
 - Implementing all the rules for launch
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - [Added](https://github.com/jackdewinter/pymarkdown/issues/8) - ability to have
@@ -1748,7 +1758,7 @@ were:
 - [Added](https://github.com/jackdewinter/pymarkdown/issues/14) - support for missing
   rules in the initial set of rules.
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - [Changed](https://github.com/jackdewinter/pymarkdown/issues/7) - to move the code
@@ -1759,7 +1769,7 @@ were:
 - [Updated](https://github.com/jackdewinter/pymarkdown/issues/11) - documentation
   on front-matter and pragma extensions.
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - [Fixed](https://github.com/jackdewinter/pymarkdown/issues/13) - issues with nested
@@ -1767,18 +1777,18 @@ were:
 
 ## Version 0.8.0 - Date: 2021-05-31
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - added `-r` flag to control whether the scan is recursive
 - added support for linting and testing through GitHub Actions
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - None
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - improved documentation
@@ -1788,17 +1798,17 @@ were:
 
 ## Version 0.5.0 - Date: 2021-05-16
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
 - Initial release
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
 - None
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
 - None

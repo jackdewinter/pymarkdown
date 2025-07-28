@@ -260,7 +260,7 @@
         },
         {
             "name": "test.extensions.test_markdown_pragma_parsing",
-            "totalTests": 14,
+            "totalTests": 18,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -1444,7 +1444,7 @@
         },
         {
             "name": "test.rules.test_md041",
-            "totalTests": 29,
+            "totalTests": 32,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,

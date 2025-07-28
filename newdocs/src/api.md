@@ -301,7 +301,7 @@ to the following:
 ```Markdown
 # This is a test
 
-x<!--- pyml disable-next-line ul-indent--->
+<!-- pyml disable-next-line ul-indent-->
  * this is level 1
 
 ```
@@ -320,7 +320,7 @@ following text and rescan the file:
 ```Markdown
 # This is a test
 
-x<!--- pyml disable-next-line invalid--->
+<!-- pyml disable-next-line invalid-->
  * this is level 1
 
 ```

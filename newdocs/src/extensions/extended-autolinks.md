@@ -52,7 +52,7 @@ produces the following html:
 
 which renders as:
 
-<!--- pyml disable-num-lines 5 no-inline-html,line-length -->
+<!-- pyml disable-num-lines 5 no-inline-html,line-length -->
 <p>Visit <a href="http://www.commonmark.org/help">www.commonmark.org/help</a> for more information.</p>
 
 <p>Visit <a href="http://www.commonmark.org/help">www.commonmark.org/help</a>.</p>
@@ -78,7 +78,7 @@ will produce the following html:
 
 which renders as:
 
-<!--- pyml disable-num-lines 2 no-inline-html-->
+<!-- pyml disable-num-lines 2 no-inline-html-->
 <p><a href="http://commonmark.org">http://commonmark.org</a></p>
 <p>(Visit <a href="https://encrypted.google.com/search?q=Markup+(business)">https://encrypted.google.com/search?q=Markup+(business)</a>)</p>
 
@@ -101,7 +101,7 @@ will produce the following html:
 
 which renders as:
 
-<!--- pyml disable-num-lines 2 no-inline-html,line-length -->
+<!-- pyml disable-num-lines 2 no-inline-html,line-length -->
 <p><a href="mailto:foo@bar.baz">foo@bar.baz</a></p>
 <p>hello@mail+xyz.example isn't valid, but <a href="mailto:hello+xyz@mail.example">hello+xyz@mail.example</a> is.</p>
 
@@ -124,7 +124,7 @@ will produce the following html:
 
 which renders as:
 
-<!--- pyml disable-num-lines 2 no-inline-html-->
+<!-- pyml disable-num-lines 2 no-inline-html-->
 <p><a href="mailto:foo@bar.baz">mailto:foo@bar.baz</a></p>
 <p><a href="xmpp:foo@bar.baz/txt">xmpp:foo@bar.baz/txt</a></p>
 

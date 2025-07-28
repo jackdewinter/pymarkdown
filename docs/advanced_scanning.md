@@ -159,13 +159,13 @@ document.  This text must be at the start of the line and be the only thing
 on the entire line:
 
 ```Markdown
-<!-- pyml disable-next-line no-multiple-space-atx-->
+<!-- pyml disable-next-line no-multiple-space-atx -->
 ```
 
 or
 
 ```Markdown
-<!--- pyml disable-next-line no-multiple-space-atx,md019-->
+<!-- pyml disable-next-line no-multiple-space-atx,md019 -->
 ```
 
 The first part of the HTML comment, the text up to the end of
@@ -184,7 +184,7 @@ following the pragma in this example:
 ```Markdown
 # Top Level Header
 
-<!--- pyml disable-next-line no-multiple-space-atx-->
+<!-- pyml disable-next-line no-multiple-space-atx -->
 ##     Too Many Spaces At the Start Of This One
 
 More text here.

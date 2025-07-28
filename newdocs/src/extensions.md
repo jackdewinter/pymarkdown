@@ -4,7 +4,7 @@
 
 [Full Documentation](./extensions/disallowed-raw-html.md)
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 This extension follows the GitHub Flavored Markdown
@@ -17,7 +17,7 @@ being rendered as a HTML tag by browsers.
 
 [Full Documentation](./extensions/extended-autolinks.md)
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 This extension follows the GitHub Flavored Markdown
@@ -31,7 +31,7 @@ introduces autolinks that the parser will recognize without any enclosing charac
 
 [Full Documentation](./extensions/front-matter.md)
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 This extension allows for the parsing of Markdown "front-matter" at
@@ -48,7 +48,7 @@ augment the Markdown document.
 
 [Full Documentation](./extensions/pragmas.md)
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 This extension allows the PyMarkdown parser to look for "pragmas" that provide
@@ -64,7 +64,7 @@ of lines after the pragma.
 
 [Full Documentation](./extensions/strikethrough.md)
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 This extension follows the GitHub Flavored Markdown
@@ -78,7 +78,7 @@ emphasis blocks.
 
 [Full Documentation](./extensions/task-list-items.md)
 
-<!--- pyml disable-next-line no-duplicate-heading-->
+<!-- pyml disable-next-line no-duplicate-heading-->
 ### Summary
 
 This extension follows the GitHub Flavored Markdown

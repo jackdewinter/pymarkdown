@@ -68,7 +68,7 @@ release.
 | `plugins.blanks-around-headings.` |
 | `plugins.blanks-around-headers.` |
 
-<!--- pyml disable-num-lines 5 line-length-->
+<!-- pyml disable-num-lines 5 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |

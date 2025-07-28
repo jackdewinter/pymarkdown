@@ -46,7 +46,7 @@ With this extension enabled, the following Markdown text:
 ```Markdown
 some paragraph
 
-<!--- pyml disable-next-line no-multiple-space-atx-->
+<!--- pyml disable-next-line no-multiple-space-atx--->
 #  My Bad Atx Heading
 
 some other paragraph
@@ -140,7 +140,8 @@ part of interpreting pragmas.
 Pragmas must occur at the start of the line.  No initial whitespace is allowed.
 The pragma is a normal HTML comment, starting with the character
 sequence `<!--` or `<!---`, and ending with the character
-sequence `-->` or `--->`.  As some editors do not clearly show trailing whitespace
+sequence `-->` or `--->`.  
+As some editors do not clearly show trailing whitespace
 characters, any number of whitespace characters may follow
 the closing character sequence.  Within the bounds of the HTML comment, the
 pragma data is preceded by zero or more whitespace characters, the character
@@ -155,6 +156,14 @@ regular expression:
 ```
 
 where the group `(.*)` is the pragma command.
+
+<!--- pyml disable-next-line no-emphasis-as-heading --->
+**Available: Version 0.9.32**
+
+To avoid any confusion, if the character sequence `<!--` is used to start the pragma,
+the `-->` sequence must be used to close the pragma.  Likewise for the sequences
+`<!---` and `--->`. This is a breaking change from before where only the `-->` sequence
+was used to close the pragma, which was confusing to some users.
 
 ##### Removal From Document Stream
 
@@ -187,7 +196,7 @@ to add is `disable-next-line no-multiple-space-atx`, as follows:
 ```Markdown
 some paragraph
 
-<!--- pyml disable-next-line no-multiple-space-atx-->
+<!--- pyml disable-next-line no-multiple-space-atx--->
 #  My Bad Atx Heading
 
 some other paragraph
@@ -216,9 +225,9 @@ the error that was raised.  For example, given the following three invalid pragm
 commands:
 
 ```Markdown
- <!--- pyml -->
- <!--- pyml bad -->
- <!--- pyml disable-num-lines a a -->
+ <!-- pyml -->
+ <!-- pyml bad -->
+ <!-- pyml disable-num-lines a a -->
 ```
 
 the following failures are generated:
@@ -257,7 +266,7 @@ is `disable-next-line md031` or `disable-next-line blanks-around-fences`.
 
 ```Markdown
 some paragraph
-<!--- pyml disable-next-line blanks-around-fences-->
+<!--- pyml disable-next-line blanks-around-fences--->
 #  My Bad Atx Heading
 some other paragraph
 ```
@@ -282,7 +291,7 @@ Therefore, a proper command to suppress rule id `md031` on the next three lines
 is `disable-num-lines 3 md031` or `disable-num-lines 3 blanks-around-fences`.
 
 ```Markdown
-<!--- pyml disable-num-lines 3 blanks-around-fences-->
+<!-- pyml disable-num-lines 3 blanks-around-fences-->
 some paragraph
 #  My Bad Atx Heading
 some other paragraph
@@ -290,7 +299,7 @@ some other paragraph
 
 ##### Disable Command and Enable Command
 
-<!--- pyml disable-next-line no-emphasis-as-heading-->
+<!-- pyml disable-next-line no-emphasis-as-heading-->
 **Available: Version 0.9.30**
 
 Introduced due to user requests, the `disable` and `enable` commands are used to

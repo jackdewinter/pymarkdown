@@ -13,7 +13,7 @@
 | --- |
 | `extensions.front-matter.` |
 
-<!--- pyml disable-num-lines 4 line-length-->
+<!-- pyml disable-num-lines 4 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `False` | Whether the extension is enabled. |

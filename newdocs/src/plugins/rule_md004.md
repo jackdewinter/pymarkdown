@@ -97,7 +97,7 @@ list start.
 | `plugins.md004.` |
 | `plugins.ul-style.` |
 
-<!--- pyml disable-num-lines 4 line-length-->
+<!-- pyml disable-num-lines 4 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
@@ -105,7 +105,7 @@ list start.
 
 Valid heading styles:
 
-<!--- pyml disable-num-lines 7 line-length-->
+<!-- pyml disable-num-lines 7 line-length-->
 | Style | Description |
 | -- | -- |
 | `consistent` | The first Unordered List Start in the document specifies the style for the rest of the document. |

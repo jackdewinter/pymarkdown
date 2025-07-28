@@ -48,7 +48,7 @@ produces the following html:
 
 which renders as:
 
-<!--- pyml disable-num-lines 5 no-inline-html-->
+<!-- pyml disable-num-lines 5 no-inline-html-->
 <ul>
 <li><input type="checkbox"> something</li>
 <li><input checked="" type="checkbox"> something</li>

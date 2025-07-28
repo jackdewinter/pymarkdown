@@ -79,7 +79,7 @@ The reason for not being able to auto-fix this rule is its deprecation in favor 
 | `plugins.first-heading-h1.` |
 | `plugins.first-header-h1.` |
 
-<!--- pyml disable-num-lines 4 line-length-->
+<!-- pyml disable-num-lines 4 line-length-->
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `False` | Whether the plugin rule is enabled. |
