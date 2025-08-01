@@ -15,7 +15,7 @@
 
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `False` | Whether the extension is enabled. |
+| `enabled` | `boolean` | `True` | Whether the extension is enabled. |
 
 ## Summary
 

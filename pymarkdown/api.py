@@ -42,7 +42,10 @@ class PyMarkdownApi:
         self.__configuration_path: Optional[str] = None
         self.__enable_rule_identifiers: List[str] = []
         self.__disable_rule_identifiers: List[str] = []
+        self.__enable_extension_identifiers: List[str] = []
         self.__set_properties: List[str] = []
+        self.__disable_json5_configuration = False
+        self.__enable_continue_on_error = False
 
     def scan_path(
         self,
@@ -73,7 +76,7 @@ class PyMarkdownApi:
             PyMarkdownApiException: If some other error was found.
 
         Returns:
-            An instance containing any scan failures or pragma errors
+            An instance of `PyMarkdownScanPathResult` containing any scan failures or pragma errors
                 encountered when scanning the eligible files on the provided path.
 
         Examples:
@@ -273,6 +276,7 @@ class PyMarkdownApi:
         """
         self.__verify_string_argument_not_empty("string_to_scan", string_to_scan)
 
+        temp_file = None
         try:
             with tempfile.NamedTemporaryFile(
                 "wt", suffix=".md", encoding="utf-8", delete=False
@@ -304,7 +308,7 @@ class PyMarkdownApi:
                     bool(fix_result.files_fixed), fixed_file.read()
                 )
         finally:
-            if os.path.isfile(temp_file.name):  # pragma: no cover
+            if temp_file and os.path.isfile(temp_file.name):  # pragma: no cover
                 os.remove(temp_file.name)
 
     def list_path(
@@ -458,6 +462,35 @@ class PyMarkdownApi:
         self.__verify_string_argument_not_empty("rule_identifier", rule_identifier)
 
         self.__enable_rule_identifiers.append(rule_identifier)
+        return self
+
+    def enable_extension_by_identifier(
+        self, extension_identifier: str
+    ) -> "PyMarkdownApi":
+        """
+        Enable a single extension by its identifier.
+
+        Args:
+            extension_identifier (str): Identifier for the extension to enable.
+
+        Raises:
+            PyMarkdownApiArgumentException: If `extension_identifier` is empty.
+
+        Returns:
+            An instance of `PyMarkdownApi` to allow for function chaining.
+
+        Examples:
+            This function enables a single extension by its identifier.
+
+                from pymarkdown.api import PyMarkdownApi
+
+                PyMarkdownApi().enable_extension_by_identifier("front-matter").scan_path("file.md")
+        """
+        self.__verify_string_argument_not_empty(
+            "extension_identifier", extension_identifier
+        )
+
+        self.__enable_extension_identifiers.append(extension_identifier)
         return self
 
     def configuration_file_path(self, path_to_config_file: str) -> "PyMarkdownApi":
@@ -855,16 +888,54 @@ class PyMarkdownApi:
         self.__enable_stack_trace = True
         return self
 
+    def disable_json5_configuration(self) -> "PyMarkdownApi":
+        """
+        Disable the use of the JSON5 parser for configuration files, instead
+        using the base json parser from the Python standard library.
+
+        Returns:
+            An instance of `PyMarkdownApi` to allow for function chaining.
+
+        Examples:
+            This function disables the use of the JSON5 parser for configuration files.
+
+                from pymarkdown.api import PyMarkdownApi
+
+                PyMarkdownApi().disable_json5_configuration().scan_path("file.md")
+        """
+        self.__disable_json5_configuration = True
+        return self
+
+    def enable_continue_on_error(self) -> "PyMarkdownApi":
+        """
+        Enable the scanning of multiple files to continue, even if some of the files
+        have critical errors.
+
+        Returns:
+            An instance of `PyMarkdownApi` to allow for function chaining.
+
+        Examples:
+            This function disables the use of the JSON5 parser for configuration files.
+
+                from pymarkdown.api import PyMarkdownApi
+
+                PyMarkdownApi().disable_json5_configuration().scan_path("file.md")
+        """
+        self.__enable_continue_on_error = True
+        return self
+
     def __handle_scan_results(
         self, return_code: int, this_presentation: "_ApiPresentation"
     ) -> "PyMarkdownScanPathResult":
         assert (
             not this_presentation.pso
         ), "should not display for scan_path, but for ext ops and plugin ops"
-        if return_code != 0:
+        if return_code != 0 and not self.__enable_continue_on_error:
             self.__generate_scan_exception(this_presentation)
         return PyMarkdownScanPathResult(
-            this_presentation.scan_failures, this_presentation.pragma_errors
+            this_presentation.scan_failures,
+            this_presentation.pragma_errors,
+            this_presentation.pse,
         )
 
     def __handle_fix_results(
@@ -873,9 +944,9 @@ class PyMarkdownApi:
         assert (
             not this_presentation.pso
         ), "should not display for scan_path, but for ext ops and plugin ops"
-        if return_code not in [0, 3]:
+        if return_code not in [0, 3] and not self.__enable_continue_on_error:
             raise PyMarkdownApiException(this_presentation.pse[-1].strip("\n"))
-        return PyMarkdownFixResult(this_presentation.files_fixed)
+        return PyMarkdownFixResult(this_presentation.files_fixed, this_presentation.pse)
 
     def __generate_scan_exception(self, this_presentation: "_ApiPresentation") -> None:
         if not this_presentation.pse:
@@ -910,6 +981,12 @@ class PyMarkdownApi:
     def __build_common_arguments(self, action_to_invoke: str) -> List[str]:
         common_arguments: List[str] = []
 
+        # Note: `--return-code-scheme` is not included here as the API provides the
+        #       same information as the return code through other means.
+        if self.__disable_json5_configuration:
+            common_arguments.append("--no-json5")
+        if self.__enable_continue_on_error:
+            common_arguments.append("--continue-on-error")
         if self.__enable_stack_trace:
             common_arguments.append("--stack-trace")
         if self.__enable_strict_configuration:
@@ -939,6 +1016,10 @@ class PyMarkdownApi:
                 for next_identifier in self.__disable_rule_identifiers
             )
             common_arguments.extend(("--disable-rules", rules_to_disable))
+        if self.__enable_extension_identifiers:
+            common_arguments.extend(
+                ("--enable-extensions", ",".join(self.__enable_extension_identifiers))
+            )
 
         common_arguments.append(action_to_invoke)
         return common_arguments
@@ -1078,6 +1159,12 @@ class PyMarkdownScanPathResult:
     """
     List of zero or more `PyMarkdownPragmaError` objects.
     """
+    critical_errors: List[str]
+    """
+    List of zero or more critical errors that were encountered during the scan. Only
+    set if `enable_continue_on_error` was set when the `scan_path` or `scan_string`
+    function was invoked.  If no critical errors were encountered, this list is empty.
+    """
 
 
 @dataclass(frozen=True)
@@ -1087,7 +1174,7 @@ class PyMarkdownFixResult:
 
     The only information that PyMarkdown provides about scanned and fixed
     documents are the names of the documents that were fixed.  As such, this result
-    simple provides those same Markdown file names.
+    simply provides those same Markdown file names.
 
     Attributes:
         files_fixed (List[str]): List of zero or more files that were fixed.
@@ -1096,6 +1183,12 @@ class PyMarkdownFixResult:
     files_fixed: List[str]
     """
     List of zero or more files that were fixed.
+    """
+    critical_errors: List[str]
+    """
+    List of zero or more critical errors that were encountered during the fixing of the files. Only
+    set if `enable_continue_on_error` was set when the `fix_path` function was invoked.
+    If no critical errors were encountered, this list is empty.
     """
 
 

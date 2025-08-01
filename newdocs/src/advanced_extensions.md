@@ -128,21 +128,32 @@ Community extensions come into play in these two cases, as well as others yet to
 be implemented.  The extensions will allow our team to grow PyMarkdown to handle
 more scenarios and increase the accuracy of our linting rules.
 
-## Enabling and Disabling
+## Enabling and Disabling Extensions
 
-Each extension's documentation specifies whether it is enabled or disabled by default.
-This information is also available on the command line by using the
-[`extension` command](./user-guide.md#extension-command).
+Keeping in mind the [configuration layering](https://application-properties.readthedocs.io/en/latest/getting-started/#configuration-ordering-layering)
+that occurs, the most direct way of enabling extensions is through the `--enable-extensions`
+command line option.  Because almost every extension is disabled by default (except
+for `linter-pragmas`), the `--disable-extensions` command line option was dropped
+to reduce command line option clutter.  Note that the `--enable-extensions` option
+is a [specific command line setting](https://application-properties.readthedocs.io/en/latest/command-line/#specific-command-line-settings),
+overriding every other enable/disable configuration for the extensions
+specified by other command line arguments.
 
-Examples of enabling an extension from configuration files are given in the
-examples under the documentation for [Configuration File Types](https://application-properties.readthedocs.io/en/latest/file-types/).
-Similarly, examples of enabling an extension from the command line are
-provided under the documentation for [Configuration Item Types](https://application-properties.readthedocs.io/en/latest/command-line/#typing-examples).
-The only difference between enabling and disabling an extension is whether
-the `enabled` item is assigned a boolean value of `True` or `False`.
+After the specific command line setting comes the `--set` argument which is detailed
+in the Advanced Configuration document under
+[General Command Line Settings](https://application-properties.readthedocs.io/en/latest/command-line/#general-command-line-settings).
+Using the format `--set=extensions.{id}.enabled=$!True` (with the escaping of
+[certain characters](https://application-properties.readthedocs.io/en/latest/command-line/#special-characters-and-shells)
+being required), a single extension may be enabled.  Disabling an extension is
+as simple as replacing the `True` with a `False`.
 
-Note that for the command line, the assignment of a boolean value requires
-special characters, as detailed in the documentation on [Special Characters and Shells](https://application-properties.readthedocs.io/en/latest/command-line/#special-characters-and-shells).
+Finally, there are the [configuration files](./advanced_configuration.md/#configuration-files).
+The configuration files provide a more compact and easier way to set configuration
+item values. The configuration files are available in JSON, YAML, and TOML formats,
+with configuration files specified on the command line as well as implicit configuration
+files that are searched for in the current directory when the application starts.
+These tend to be used for more static configuration settings and can easily be shared
+between projects.
 
 ## Extension Configuration
 

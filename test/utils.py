@@ -63,7 +63,7 @@ def act_and_assert(
 
     extension_manager = ExtensionManager(MainPresentation())
     extension_manager.initialize(test_properties)
-    extension_manager.apply_configuration()
+    extension_manager.apply_configuration("")
     tokenizer.apply_configuration(test_properties, extension_manager)
     transformer = TransformToGfm()
 

@@ -355,6 +355,73 @@ def test_markdown_with_extensions_and_no_error_during_configuration() -> None:
             os.remove(configuration_file)
 
 
+def test_markdown_with_direct_extensions_argument_and_invalid_extension_name() -> None:
+    """
+    Test to make sure the command line `--enable-extensions` argument
+    works as expected when listing extensions.
+
+    test_api_scan_with_enabling_invalid_extension
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--enable-extensions",
+        "this-extension-does-not-exist",
+        "extensions",
+        "list",
+        "f*r",
+    ]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = """Error BadPluginError encountered while initializing extensions:
+Invalid extensions ids supplied to the --enable-extensions command-line option: this-extension-does-not-exist."""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_direct_extensions_argument_and_valid_extension_name() -> None:
+    """
+    Test to make sure the command line `--enable-extensions` argument
+    works as expected when listing extensions.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--enable-extensions",
+        "front-matter",
+        "extensions",
+        "list",
+        "f*r",
+    ]
+
+    expected_return_code = 0
+    expected_output = """
+  ID            NAME                   ENABLED    ENABLED    VERSION
+                                       (DEFAULT)  (CURRENT)
+
+  front-matter  Front Matter Metadata  False      True       0.5.0
+
+"""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
 def test_markdown_with_extensions_list_and_filter_by_id_ends_with_non_sequence() -> (
     None
 ):

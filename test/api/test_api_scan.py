@@ -7,6 +7,7 @@ import tempfile
 from test.utils import (
     assert_if_lists_different,
     assert_that_exception_is_raised,
+    create_temporary_configuration_file,
     write_temporary_configuration,
 )
 from typing import cast
@@ -250,7 +251,7 @@ def test_api_scan_recursive_for_directory() -> None:
     for i in scan_result.scan_failures:
         itemized_scan_failures = itemized_scan_failures + "\n" + str(i)
     print(itemized_scan_failures)
-    assert len(scan_result.scan_failures) == 127
+    assert len(scan_result.scan_failures) == 135
 
     scan_failures = []
     for i in scan_result.scan_failures:
@@ -698,6 +699,354 @@ The line after this line should be blank."""
         assert scan_result.files_fixed
         assert file_name_one in scan_result.files_fixed
         assert file_name_two in scan_result.files_fixed
+
+
+def test_api_scan_with_enabling_front_matter_extension() -> None:
+    """
+    Test to make sure that we can
+    """
+
+    # Arrange
+    source_string = """---
+title: fred
+---
+This is a document
+
+this is a very long line
+"""
+
+    # Act
+    scan_result = (
+        PyMarkdownApi()
+        .enable_extension_by_identifier("front-matter")
+        .scan_string(source_string)
+    )
+
+    # Assert
+    assert scan_result
+    assert len(scan_result.scan_failures) == 0
+    assert not scan_result.pragma_errors
+
+
+def test_api_scan_with_enabling_invalid_extension() -> None:
+    """
+    Test to make sure that we can
+
+    test_markdown_with_direct_extensions_argument_and_invalid_extension_name
+    """
+
+    # Arrange
+    source_string = """---
+title: fred
+---
+This is a document
+
+this is a very long line
+"""
+
+    # Act
+    found_exception = None
+    try:
+
+        PyMarkdownApi().enable_extension_by_identifier(
+            "this-extension-does-not-exist"
+        ).scan_string(source_string)
+        raise AssertionError("Should have failed by now.")
+    except PyMarkdownApiException as this_exception:
+        found_exception = this_exception
+
+    # Assert
+    assert found_exception
+    assert (
+        str(found_exception)
+        == """Error BadPluginError encountered while initializing extensions:
+Invalid extensions ids supplied to the --enable-extensions command-line option: this-extension-does-not-exist."""
+    )
+
+
+def test_api_scan_with_disabling_json5_configuration_parsing() -> None:
+    """
+    Test to make sure that we can
+    """
+
+    # Arrange
+    supplied_configuration = """
+{
+    "plugins": {
+        // This is a comment.
+        "md999": {
+            "test_value": 2
+        }
+    }
+}
+"""
+    source_string = """This is a document
+
+this is a very long line
+"""
+    with tempfile.TemporaryDirectory() as tmp_dir_path:
+        configuration_file_name = write_temporary_configuration(
+            supplied_configuration, directory=tmp_dir_path, file_name_suffix=".json"
+        )
+
+        # Act
+        try:
+            PyMarkdownApi().configuration_file_path(
+                configuration_file_name
+            ).disable_json5_configuration().scan_string(source_string)
+            raise AssertionError("Should have failed by now.")
+        except PyMarkdownApiException as this_exception:
+            found_exception = this_exception
+
+    # Assert
+    assert found_exception
+    assert (
+        str(found_exception)
+        == f"""Specified configuration file '{configuration_file_name}' is not a valid JSON file: Expecting property name enclosed in double quotes: line 4 column 9 (char 28)."""
+    )
+
+
+def test_api_scan_middle_file_exception_with_continue_on_error() -> None:
+    """
+    Test to make sure that we can
+
+    test_exception_handling_scan_with_tokenization_exception_and_flag
+    """
+
+    scan_result = None
+    contents_file_1_and_3 = """#\tPerfectly healthy file
+This triggers several rules:
+1. Guess which ones
+1. Bla
+"""
+    contents_file_2 = """---
+test: assert
+---
+"""
+    with tempfile.TemporaryDirectory() as tmp_dir_path:
+        with create_temporary_configuration_file(
+            contents_file_1_and_3,
+            directory=tmp_dir_path,
+            file_name_prefix="tmp1",
+            file_name_suffix=".md",
+        ) as file_name_1:
+            with create_temporary_configuration_file(
+                contents_file_2,
+                directory=tmp_dir_path,
+                file_name_prefix="tmp2",
+                file_name_suffix=".md",
+            ) as file_name_2:
+                with create_temporary_configuration_file(
+                    contents_file_1_and_3,
+                    directory=tmp_dir_path,
+                    file_name_prefix="tmp3",
+                    file_name_suffix=".md",
+                ) as file_name_3:
+                    # Arrange
+                    expected_output = [
+                        f"{file_name_1}:1:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)",
+                        f"{file_name_1}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)",
+                        f"{file_name_1}:1:2: MD010: Hard tabs [Column: 2] (no-hard-tabs)",
+                        f"{file_name_1}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)",
+                        f"{file_name_3}:1:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)",
+                        f"{file_name_3}:1:1: MD022: Headings should be surrounded by blank lines. [Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)",
+                        f"{file_name_3}:1:2: MD010: Hard tabs [Column: 2] (no-hard-tabs)",
+                        f"{file_name_3}:3:1: MD032: Lists should be surrounded by blank lines (blanks-around-lists)",
+                    ]
+                    expected_error = f"""{file_name_2}:0:0: An unhandled error occurred processing the document."""
+
+                    # Act
+                    try:
+                        scan_result = (
+                            PyMarkdownApi()
+                            .enable_extension_by_identifier("front-matter")
+                            .enable_continue_on_error()
+                            .scan_path(os.path.join(tmp_dir_path, "*"))
+                        )
+                    except PyMarkdownApiException as this_exception:
+                        raise AssertionError(f"Unexpected exception: {this_exception}")
+
+    # Assert
+    assert scan_result is not None
+    assert len(scan_result.scan_failures) == len(expected_output)
+    for failure_index, next_failure in enumerate(scan_result.scan_failures):
+
+        extra_data = (
+            f"{next_failure.extra_error_information} "
+            if next_failure.extra_error_information
+            else " "
+        )
+        assert (
+            expected_output[failure_index]
+            == f"{next_failure.scan_file}:{next_failure.line_number}:{next_failure.column_number}: {next_failure.rule_id}: {next_failure.rule_description}{extra_data}({next_failure.rule_name})"
+        )
+
+    assert len(scan_result.pragma_errors) == 0
+    assert len(scan_result.critical_errors) == 1
+    assert scan_result.critical_errors == [expected_error]
+
+
+def test_api_fix_middle_file_exception_with_continue_on_error() -> None:
+    """
+    Test to make sure that we can
+
+    test_exception_handling_scan_with_tokenization_exception_and_flag
+    """
+
+    fix_result = None
+    contents_file_1_and_3 = """#\tPerfectly healthy file
+This triggers several rules:
+1. Guess which ones
+1. Bla
+"""
+    contents_file_2 = """---
+test: assert
+---
+"""
+    with tempfile.TemporaryDirectory() as tmp_dir_path:
+        with create_temporary_configuration_file(
+            contents_file_1_and_3,
+            directory=tmp_dir_path,
+            file_name_prefix="tmp1",
+            file_name_suffix=".md",
+        ) as file_name_1:
+            with create_temporary_configuration_file(
+                contents_file_2,
+                directory=tmp_dir_path,
+                file_name_prefix="tmp2",
+                file_name_suffix=".md",
+            ) as file_name_2:
+                with create_temporary_configuration_file(
+                    contents_file_1_and_3,
+                    directory=tmp_dir_path,
+                    file_name_prefix="tmp3",
+                    file_name_suffix=".md",
+                ) as file_name_3:
+                    # Arrange
+                    expected_error = f"""{file_name_2}:0:0: An unhandled error occurred processing the document."""
+
+                    # Act
+                    try:
+                        fix_result = (
+                            PyMarkdownApi()
+                            .enable_extension_by_identifier("front-matter")
+                            .enable_continue_on_error()
+                            .fix_path(os.path.join(tmp_dir_path, "*"))
+                        )
+                    except PyMarkdownApiException as this_exception:
+                        raise AssertionError(f"Unexpected exception: {this_exception}")
+
+    # Assert
+    assert fix_result is not None
+    assert fix_result.files_fixed == [file_name_1, file_name_3]
+    assert len(fix_result.critical_errors) == 1
+    assert fix_result.critical_errors == [expected_error]
+
+
+def test_api_scan_middle_file_exception_no_continue_on_error() -> None:
+    """
+    Test to make sure that we can
+
+    test_exception_handling_scan_with_tokenization_exception_and_flag
+    """
+
+    contents_file_1_and_3 = """#\tPerfectly healthy file
+This triggers several rules:
+1. Guess which ones
+1. Bla
+"""
+    contents_file_2 = """---
+test: assert
+---
+"""
+    with tempfile.TemporaryDirectory() as tmp_dir_path:
+        with create_temporary_configuration_file(
+            contents_file_1_and_3,
+            directory=tmp_dir_path,
+            file_name_prefix="tmp1",
+            file_name_suffix=".md",
+        ):
+            with create_temporary_configuration_file(
+                contents_file_2,
+                directory=tmp_dir_path,
+                file_name_prefix="tmp2",
+                file_name_suffix=".md",
+            ):
+                with create_temporary_configuration_file(
+                    contents_file_1_and_3,
+                    directory=tmp_dir_path,
+                    file_name_prefix="tmp3",
+                    file_name_suffix=".md",
+                ):
+
+                    # Arrange
+                    expected_error = """Unexpected Error(BadTokenizationError): An unhandled error occurred processing the document."""
+
+                    # Act
+                    try:
+                        PyMarkdownApi().enable_extension_by_identifier(
+                            "front-matter"
+                        ).scan_path(os.path.join(tmp_dir_path, "*"))
+                        raise AssertionError("Should have failed by now.")
+                    except PyMarkdownApiException as this_exception:
+                        found_exception = this_exception
+
+                # Assert
+                print(found_exception)
+                assert str(found_exception) == expected_error
+
+
+def test_api_fix_middle_file_exception_no_continue_on_error() -> None:
+    """
+    Test to make sure that we can
+
+    test_exception_handling_scan_with_tokenization_exception_and_flag
+    """
+
+    contents_file_1_and_3 = """#\tPerfectly healthy file
+This triggers several rules:
+1. Guess which ones
+1. Bla
+"""
+    contents_file_2 = """---
+test: assert
+---
+"""
+    with tempfile.TemporaryDirectory() as tmp_dir_path:
+        with create_temporary_configuration_file(
+            contents_file_1_and_3,
+            directory=tmp_dir_path,
+            file_name_prefix="tmp1",
+            file_name_suffix=".md",
+        ):
+            with create_temporary_configuration_file(
+                contents_file_2,
+                directory=tmp_dir_path,
+                file_name_prefix="tmp2",
+                file_name_suffix=".md",
+            ):
+                with create_temporary_configuration_file(
+                    contents_file_1_and_3,
+                    directory=tmp_dir_path,
+                    file_name_prefix="tmp3",
+                    file_name_suffix=".md",
+                ):
+
+                    # Arrange
+                    expected_error = """Unexpected Error(BadTokenizationError): An unhandled error occurred processing the document."""
+
+                    # Act
+                    try:
+                        PyMarkdownApi().enable_extension_by_identifier(
+                            "front-matter"
+                        ).fix_path(os.path.join(tmp_dir_path, "*"))
+                        raise AssertionError("Should have failed by now.")
+                    except PyMarkdownApiException as this_exception:
+                        found_exception = this_exception
+
+                # Assert
+                print(found_exception)
+                assert str(found_exception) == expected_error
 
 
 # change print_system_error to also accept optional exception?

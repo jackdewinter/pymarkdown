@@ -13,7 +13,11 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
-- None
+- [Issue 1454](https://github.com/jackdewinter/pymarkdown/issues/1454)
+    - added support for `--enable-extensions` to the command line and API
+- [Issue 1455](https://github.com/jackdewinter/pymarkdown/issues/1455)
+    - added API functions for `--no-json5` and `--continue-on-error` to
+      achieve parity with command line
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
