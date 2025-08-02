@@ -123,6 +123,7 @@ def test_markdown_with_dash_dash_log_level_invalid(caplog: LogCaptureFixture) ->
     expected_return_code = 2
     expected_output = ""
     expected_error = """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
+               [--enable-extensions ENABLE_EXTENSIONS]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                [--set SET_CONFIGURATION] [--strict-config] [--no-json5]
                [--stack-trace] [--continue-on-error]

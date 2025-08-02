@@ -5,7 +5,7 @@ Module to provide classes to deal with extensions.
 import argparse
 import logging
 import re
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Set, Tuple
 
 from application_properties import ApplicationProperties, ApplicationPropertiesFacade
 from columnar import columnar
@@ -26,6 +26,7 @@ from pymarkdown.extensions.task_list_items import MarkdownTaskListItemsExtension
 from pymarkdown.general.main_presentation import MainPresentation
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.my_application_properties_facade import MyApplicationPropertiesFacade
+from pymarkdown.plugin_manager.bad_plugin_error import BadPluginError
 from pymarkdown.return_code_helper import ApplicationResult
 
 LOGGER = logging.getLogger(__name__)
@@ -97,10 +98,26 @@ class ExtensionManager:
             _ = next_extension.extension_interface_version
             _ = next_extension.extension_configuration
 
-    def apply_configuration(self) -> None:
+    def apply_configuration(self, enable_extensions_from_command_line: str) -> None:
         """
         Apply any supplied configuration to each of the enabled extensions.
         """
+        command_line_enabled_extensions: Set[str] = set()
+        if enable_extensions_from_command_line:
+            command_line_enabled_extensions.update(
+                next_rule_identifier.strip()
+                for next_rule_identifier in enable_extensions_from_command_line.lower().split(
+                    ","
+                )
+            )
+
+        if invalid_extension_ids := command_line_enabled_extensions - set(
+            self.__extension_details.keys()
+        ):
+            raise BadPluginError(
+                formatted_message=f"Invalid extensions ids supplied to the --enable-extensions command-line option: {','.join(invalid_extension_ids)}."
+            )
+
         for (
             next_extension_id,
             next_extension_detail,
@@ -108,7 +125,9 @@ class ExtensionManager:
             (
                 is_enabled,
                 extension_specific_facade,
-            ) = self.__determine_if_extension_enabled(next_extension_detail)
+            ) = self.__determine_if_extension_enabled(
+                next_extension_detail, command_line_enabled_extensions
+            )
             LOGGER.info("extension %s: enabled=%s", next_extension_id, is_enabled)
             if is_enabled:
                 self.__enabled_extensions.append(next_extension_id)
@@ -356,18 +375,14 @@ class ExtensionManager:
         )
 
     def __determine_if_extension_enabled(
-        self, extension_object: ExtensionDetails
+        self,
+        extension_object: ExtensionDetails,
+        command_line_enabled_extensions: Set[str],
     ) -> Tuple[bool, MyApplicationPropertiesFacade]:
         """
         Given the enable and disable rule values, evaluate the enabled or disabled
         state of the extension in proper order.
         """
-
-        new_value = None
-        LOGGER.debug(
-            "Extension '%s'",
-            extension_object.extension_id,
-        )
 
         assert (
             self.__properties is not None
@@ -379,19 +394,28 @@ class ExtensionManager:
         extension_specific_facade = MyApplicationPropertiesFacade(
             ApplicationPropertiesFacade(self.__properties, plugin_section_title)
         )
-        new_value = extension_specific_facade.get_boolean_property(
-            "enabled", default_value=None
+
+        LOGGER.debug(
+            "Extension '%s'",
+            extension_object.extension_id,
         )
-        if new_value is None:
-            LOGGER.debug(
-                "No other enable state found, setting to default of '%s'.",
-                str(extension_object.extension_enabled_by_default),
-            )
+        new_value = None
+        if extension_object.extension_id in command_line_enabled_extensions:
+            new_value = True
         else:
-            LOGGER.debug(
-                "Extension specific key 'enabled' found, value is '%s'.",
-                str(new_value),
+            new_value = extension_specific_facade.get_boolean_property(
+                "enabled", default_value=None
             )
+            if new_value is None:
+                LOGGER.debug(
+                    "No other enable state found, setting to default of '%s'.",
+                    str(extension_object.extension_enabled_by_default),
+                )
+            else:
+                LOGGER.debug(
+                    "Extension specific key 'enabled' found, value is '%s'.",
+                    str(new_value),
+                )
 
         return (
             extension_object.extension_enabled_by_default

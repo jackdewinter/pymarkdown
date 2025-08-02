@@ -131,6 +131,13 @@ class PyMarkdownLint:
             default="",
             help="comma separated list of rules to disable",
         )
+        parser.add_argument(
+            "--enable-extensions",
+            dest="enable_extensions",
+            action="store",
+            default="",
+            help="comma separated list of extensions to enable",
+        )
 
         parser.add_argument(
             "-x-stdin",
@@ -225,7 +232,7 @@ class PyMarkdownLint:
 
     def __initialize_plugins_and_extensions(self, args: argparse.Namespace) -> None:
         self.__initialize_plugins(args)
-        self.__initialize_extensions()
+        self.__initialize_extensions(args)
 
         if args.primary_subparser == PluginManager.argparse_subparser_name():
             ReturnCodeHelper.exit_application(
@@ -286,12 +293,12 @@ class PyMarkdownLint:
     # pylint: enable=broad-exception-caught
 
     # pylint: disable=broad-exception-caught
-    def __initialize_extensions(self) -> None:
+    def __initialize_extensions(self, args: argparse.Namespace) -> None:
         try:
             self.__extensions.initialize(
                 self.__properties,
             )
-            self.__extensions.apply_configuration()
+            self.__extensions.apply_configuration(args.enable_extensions)
 
         except ValueError as this_exception:
             formatted_error = (

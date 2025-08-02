@@ -60,7 +60,7 @@
         },
         {
             "name": "test.api.test_api_scan",
-            "totalTests": 24,
+            "totalTests": 31,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
@@ -244,7 +244,7 @@
         },
         {
             "name": "test.extensions.test_extension_manager",
-            "totalTests": 15,
+            "totalTests": 17,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,

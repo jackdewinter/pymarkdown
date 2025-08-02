@@ -81,6 +81,20 @@ Create a new instance of the `PyMarkdownApi` class.
 
                 PyMarkdownApi().path_to_config_file("pymarkdown.cfg").scan_path("file.md")
 
+    `disable_json5_configuration(self) ‑> api.PyMarkdownApi`
+    :   Disable the use of the JSON5 parser for configuration files, instead
+        using the base json parser from the Python standard library.
+
+        Returns:
+            An instance of `PyMarkdownApi` to allow for function chaining.
+
+        Examples:
+            This function disables the use of the JSON5 parser for configuration files.
+
+                from pymarkdown.api import PyMarkdownApi
+
+                PyMarkdownApi().disable_json5_configuration().scan_path("file.md")
+
     `disable_rule_by_identifier(self, rule_identifier: str) ‑> api.PyMarkdownApi`
     :   Disable a single rule by one of its identifiers.
 
@@ -99,6 +113,39 @@ Create a new instance of the `PyMarkdownApi` class.
                 from pymarkdown.api import PyMarkdownApi
 
                 PyMarkdownApi().disable_rule_by_identifier("md031").scan_path("file.md")
+
+    `enable_continue_on_error(self) ‑> api.PyMarkdownApi`
+    :   Enable the scanning of multiple files to continue, even if some of the files
+        have critical errors.
+
+        Returns:
+            An instance of `PyMarkdownApi` to allow for function chaining.
+
+        Examples:
+            This function disables the use of the JSON5 parser for configuration files.
+
+                from pymarkdown.api import PyMarkdownApi
+
+                PyMarkdownApi().disable_json5_configuration().scan_path("file.md")
+
+    `enable_extension_by_identifier(self, extension_identifier: str) ‑> api.PyMarkdownApi`
+    :   Enable a single extension by its identifier.
+
+        Args:
+            extension_identifier (str): Identifier for the extension to enable.
+
+        Raises:
+            PyMarkdownApiArgumentException: If `extension_identifier` is empty.
+
+        Returns:
+            An instance of `PyMarkdownApi` to allow for function chaining.
+
+        Examples:
+            This function enables a single extension by its identifier.
+
+                from pymarkdown.api import PyMarkdownApi
+
+                PyMarkdownApi().enable_extension_by_identifier("front-matter").scan_path("file.md")
 
     `enable_rule_by_identifier(self, rule_identifier: str) ‑> api.PyMarkdownApi`
     :   Enable a single rule by one of its identifiers.
@@ -404,7 +451,7 @@ Create a new instance of the `PyMarkdownApi` class.
             PyMarkdownApiException: If some other error was found.
 
         Returns:
-            An instance containing any scan failures or pragma errors
+            An instance of `PyMarkdownScanPathResult` containing any scan failures or pragma errors
                 encountered when scanning the eligible files on the provided path.
 
         Examples:
@@ -627,17 +674,22 @@ Create a new instance of the `PyMarkdownApi` class.
     * builtins.Exception
     * builtins.BaseException
 
-`PyMarkdownFixResult(files_fixed: List[str])`
+`PyMarkdownFixResult(files_fixed: List[str], critical_errors: List[str])`
 :   Result for the fix_path function.
 
     The only information that PyMarkdown provides about scanned and fixed
     documents are the names of the documents that were fixed.  As such, this result
-    simple provides those same Markdown file names.
+    simply provides those same Markdown file names.
 
     Attributes:
         files_fixed (List[str]): List of zero or more files that were fixed.
 
     ### Class variables
+
+    `critical_errors: List[str]`
+    :   List of zero or more critical errors that were encountered during the fixing of the files. Only
+        set if `enable_continue_on_error` was set when the `fix_path` function was invoked.
+        If no critical errors were encountered, this list is empty.
 
     `files_fixed: List[str]`
     :   List of zero or more files that were fixed.
@@ -760,7 +812,7 @@ Create a new instance of the `PyMarkdownApi` class.
     `partial_equals(self, other: PyMarkdownScanFailure) ‑> bool`
     :   Decide if special fields are the same from both items.
 
-`PyMarkdownScanPathResult(scan_failures: List[api.PyMarkdownScanFailure], pragma_errors: List[api.PyMarkdownPragmaError])`
+`PyMarkdownScanPathResult(scan_failures: List[api.PyMarkdownScanFailure], pragma_errors: List[api.PyMarkdownPragmaError], critical_errors: List[str])`
 :   Result for the `scan_path` and `scan_string` functions.
 
     As both `PyMarkdownScanFailure` objects and `PyMarkdownPragmaError` objects
@@ -772,6 +824,11 @@ Create a new instance of the `PyMarkdownApi` class.
         pragma_errors (List[PyMarkdownPragmaError]): Zero or more `PyMarkdownPragmaError` objects.
 
     ### Class variables
+
+    `critical_errors: List[str]`
+    :   List of zero or more critical errors that were encountered during the scan. Only
+        set if `enable_continue_on_error` was set when the `scan_path` or `scan_string`
+        function was invoked.  If no critical errors were encountered, this list is empty.
 
     `pragma_errors: List[api.PyMarkdownPragmaError]`
     :   List of zero or more `PyMarkdownPragmaError` objects.

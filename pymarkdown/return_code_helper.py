@@ -87,7 +87,7 @@ class ReturnCodeHelper:
     __DEFAULT_SCHEME_NAME = "default"
     __MINIMAL_SCHEME_NAME = "minimal"
 
-    __available_schemes = {
+    __available_schemes: Dict[str, SchemeDefinition] = {
         __DEFAULT_SCHEME_NAME: DefaultScheme(),
         __MINIMAL_SCHEME_NAME: MinimalScheme(),
     }

@@ -320,7 +320,7 @@ following text and rescan the file:
 ```Markdown
 # This is a test
 
-<!-- pyml disable-next-line invalid-->
+&lt;!-- pyml disable-next-line invalid-->
  * this is level 1
 
 ```

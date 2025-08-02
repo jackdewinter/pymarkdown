@@ -45,6 +45,7 @@ def test_markdown_with_no_parameters() -> None:
     expected_return_code = 2
     expected_output = (
         """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
+               [--enable-extensions ENABLE_EXTENSIONS]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                [--set SET_CONFIGURATION] [--strict-config] [--no-json5]
                [--stack-trace] [--continue-on-error]
@@ -69,6 +70,8 @@ positional arguments:
                         comma separated list of rules to enable
   {DISABLE_RULES_X}
                         comma separated list of rules to disable
+  --enable-extensions ENABLE_EXTENSIONS
+                        comma separated list of extensions to enable
   --add-plugin ADD_PLUGIN
                         path to a plugin containing a new rule to apply
   {CONFIG_FILE_X}
@@ -120,6 +123,7 @@ def test_markdown_with_no_parameters_through_module() -> None:
     expected_return_code = 2
     expected_output = (
         """usage: __main.py__ [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
+                   [--enable-extensions ENABLE_EXTENSIONS]
                    [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                    [--set SET_CONFIGURATION] [--strict-config] [--no-json5]
                    [--stack-trace] [--continue-on-error]
@@ -145,6 +149,8 @@ positional arguments:
                         comma separated list of rules to enable
   {DISABLE_RULES_X}
                         comma separated list of rules to disable
+  --enable-extensions ENABLE_EXTENSIONS
+                        comma separated list of extensions to enable
   --add-plugin ADD_PLUGIN
                         path to a plugin containing a new rule to apply
   {CONFIG_FILE_X}
@@ -196,6 +202,7 @@ def test_markdown_with_no_parameters_through_main() -> None:
     expected_return_code = 2
     expected_output = (
         """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
+               [--enable-extensions ENABLE_EXTENSIONS]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                [--set SET_CONFIGURATION] [--strict-config] [--no-json5]
                [--stack-trace] [--continue-on-error]
@@ -220,6 +227,8 @@ positional arguments:
                         comma separated list of rules to enable
   {DISABLE_RULES_X}
                         comma separated list of rules to disable
+  --enable-extensions ENABLE_EXTENSIONS
+                        comma separated list of extensions to enable
   --add-plugin ADD_PLUGIN
                         path to a plugin containing a new rule to apply
   {CONFIG_FILE_X}
@@ -270,6 +279,7 @@ def test_markdown_with_dash_h() -> None:
     expected_return_code = 0
     expected_output = (
         """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
+               [--enable-extensions ENABLE_EXTENSIONS]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                [--set SET_CONFIGURATION] [--strict-config] [--no-json5]
                [--stack-trace] [--continue-on-error]
@@ -294,6 +304,8 @@ positional arguments:
                         comma separated list of rules to enable
   {DISABLE_RULES_X}
                         comma separated list of rules to disable
+  --enable-extensions ENABLE_EXTENSIONS
+                        comma separated list of extensions to enable
   --add-plugin ADD_PLUGIN
                         path to a plugin containing a new rule to apply
   {CONFIG_FILE_X}
