@@ -29,6 +29,9 @@
       at the start of a document
     - added extra examples to documentation to expand on some interesting
       areas with the Md041 rule and "invisible" tags
+- [Issue 1443](https://github.com/jackdewinter/pymarkdown/issues/1443)
+    - an invalid LRD, started right after a container block was started
+      did not unwind properly
 - [Issue 1446](https://github.com/jackdewinter/pymarkdown/issues/1446)
     - multiple issues with LRDs and whitespace/tabs
 - [Issue 1447](https://github.com/jackdewinter/pymarkdown/issues/1447)
