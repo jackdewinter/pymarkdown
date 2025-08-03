@@ -399,15 +399,50 @@ class LinkReferenceDefinitionHelper:
             parser_state.token_stack.extend(lrd_stack_token.copy_of_token_stack)
         POGGER.debug(">>XXXXXX>>token_stack(after):$:", parser_state.token_stack)
 
+        LinkReferenceDefinitionHelper.__prepare_for_requeue_reset_document_and_stack_inner(
+            parser_state, original_document_depth
+        )
+        POGGER.debug(">>XXXXXX>>token_document(after):$:", parser_state.token_document)
+
+    @staticmethod
+    def __prepare_for_requeue_reset_document_and_stack_inner(
+        parser_state: ParserState, original_document_depth: int
+    ) -> None:
         POGGER.debug(">>XXXXXX>>original_document_depth:$:", original_document_depth)
         POGGER.debug(
             ">>XXXXXX>>token_document_depth:$:",
             len(parser_state.token_document),
         )
         POGGER.debug(">>XXXXXX>>token_document(before):$:", parser_state.token_document)
+        have_had_undeleted_block_stack_token = False
         while len(parser_state.token_document) > original_document_depth:
+            have_had_recent_undeleted_block_stack_token = False
+            matching_markdown_token = parser_state.token_stack[
+                -1
+            ].matching_markdown_token
+            if (
+                matching_markdown_token
+                and parser_state.token_document[-1] == matching_markdown_token
+                and (
+                    matching_markdown_token.is_block_quote_start
+                    or matching_markdown_token.is_list_start
+                )
+            ):
+                del parser_state.token_stack[-1]
+                have_had_recent_undeleted_block_stack_token = (
+                    have_had_undeleted_block_stack_token
+                ) = True
+
+            if (
+                have_had_undeleted_block_stack_token
+                and not have_had_recent_undeleted_block_stack_token
+            ):
+                assert (
+                    len(parser_state.token_document) - 1 == original_document_depth
+                    or parser_state.token_document[-1].is_table_end
+                )
+                break
             del parser_state.token_document[-1]
-        POGGER.debug(">>XXXXXX>>token_document(after):$:", parser_state.token_document)
 
     # pylint: disable=too-many-arguments
     @staticmethod

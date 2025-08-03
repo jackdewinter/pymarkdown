@@ -540,10 +540,10 @@
         },
         {
             "name": "test.gfm.test_markdown_link_reference_definitions",
-            "totalTests": 70,
+            "totalTests": 97,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 1,
+            "skippedTests": 0,
             "elapsedTimeInMilliseconds": 0
         },
         {
