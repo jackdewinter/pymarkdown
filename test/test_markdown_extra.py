@@ -15259,7 +15259,6 @@ another list</li>
 
 
 @pytest.mark.gfm
-# @pytest.mark.skip
 def test_extra_052r0() -> None:
     """
     TBD
@@ -16447,7 +16446,6 @@ block 2</p>
     act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_extra_054x() -> None:
     """
@@ -16462,13 +16460,11 @@ def test_extra_054x() -> None:
 > some text [abc]
 """
     expected_tokens = [
-        "[block-quote(1,1)::> \n]",
+        "[block-quote(1,1)::> \n>\n> \n]",
         "[para(1,3):]",
         "[text(1,3):[abc]: /url 'abc:]",
         "[end-para:::True]",
-        "[end-block-quote:::True]",
-        "[BLANK(2,1):]",
-        "[block-quote(3,1)::> \n]",
+        "[BLANK(2,2):]",
         "[para(3,3):]",
         "[text(3,3):some text [abc]:]",
         "[end-para:::True]",
