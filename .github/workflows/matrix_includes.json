@@ -2,31 +2,31 @@
     {
         "python":"3.9",
         "platform":"windows-latest",
-        "timeout":10,
+        "timeout":15,
         "runOn":"previous"
     },
     {
         "python":"3.10",
         "platform":"windows-latest",
-        "timeout":10,
+        "timeout":15,
         "runOn":"previous"
     },
     {
         "python":"3.11",
         "platform":"windows-latest",
-        "timeout":10,
+        "timeout":15,
         "runOn":"previous"
     },
     {
         "python":"3.12",
         "platform":"windows-latest",
-        "timeout":10,
+        "timeout":15,
         "runOn":"previous"
     },
     {
         "python":"3.13",
         "platform":"windows-latest",
-        "timeout":10,
+        "timeout":15,
         "runOn":"current"
     },
     {
