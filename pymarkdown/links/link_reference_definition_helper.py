@@ -405,8 +405,20 @@ class LinkReferenceDefinitionHelper:
             len(parser_state.token_document),
         )
         POGGER.debug(">>XXXXXX>>token_document(before):$:", parser_state.token_document)
+        abc = False
         while len(parser_state.token_document) > original_document_depth:
-            del parser_state.token_document[-1]
+            abd = False
+            lt =parser_state.token_document[-1]
+            ll =  parser_state.token_stack[-1].matching_markdown_token
+            if ll and lt == ll and (ll.is_block_quote_start or ll.is_list_start):
+                del parser_state.token_stack[-1]
+                abd = abc = True
+
+            if abc and not abd:
+                assert len(parser_state.token_document) -1 == original_document_depth or parser_state.token_document[-1].is_table_end
+                break
+            else:
+                del parser_state.token_document[-1]
         POGGER.debug(">>XXXXXX>>token_document(after):$:", parser_state.token_document)
 
     # pylint: disable=too-many-arguments

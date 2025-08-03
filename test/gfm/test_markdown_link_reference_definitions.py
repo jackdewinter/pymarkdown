@@ -6,6 +6,8 @@ from test.utils import act_and_assert
 
 import pytest
 
+config_map = {"extensions": {"markdown-tables": {"enabled": True}}}
+
 
 @pytest.mark.gfm
 def test_link_reference_definitions_161() -> None:
@@ -1900,41 +1902,6 @@ def test_link_reference_definitions_extra_02ba() -> None:
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
-
-@pytest.mark.skip
-@pytest.mark.gfm
-def test_link_reference_definitions_extra_02bc() -> None:
-    """
-    Test case extra 02b:  variation of 2 within different block quote
-    """
-
-    # Arrange
-    source_markdown = """> [foo]:
->> [foo]:
->> # abc"""
-    expected_tokens = [
-        "[block-quote(1,1)::> ]",
-        "[para(1,3):]",
-        "[text(1,3):[foo]::]",
-        "[end-para:::True]",
-        "[block-quote(2,1)::>> ]",
-        "[para(2,4):]",
-        "[text(2,4):/url:]",
-        "[end-para:::True]",
-        "[end-block-quote:::True]",
-        "[end-block-quote:::True]",
-    ]
-    expected_gfm = """<blockquote>
-<p>[foo]:</p>
-<blockquote>
-<p>/url</p>
-</blockquote>
-</blockquote>"""
-
-    # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
-
-
 @pytest.mark.gfm
 def test_link_reference_definitions_extra_02cx() -> None:
     """
@@ -1995,3 +1962,569 @@ def test_link_reference_definitions_extra_02ca() -> None:
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_03x() -> None:
+    """
+    Test case extra 02b:  variation of 2 within different block quote
+
+    renamed from test_link_reference_definitions_extra_02bcx
+    """
+
+    # Arrange
+    source_markdown = """> [foo]:
+>> [foo]:
+>> # abc"""
+    expected_tokens = ['[block-quote(1,1)::> ]', '[para(1,3):]', '[text(1,3):[foo]::]', '[end-para:::True]', '[block-quote(2,1)::>> \n>> ]', '[para(2,4):]', '[text(2,4):[foo]::]', '[end-para:::False]', '[atx(3,4):1:0:]', '[text(3,6):abc: ]', '[end-atx::]', '[end-block-quote:::True]', '[end-block-quote:::True]']
+    expected_gfm = """<blockquote>
+<p>[foo]:</p>
+<blockquote>
+<p>[foo]:</p>
+<h1>abc</h1>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_03a() -> None:
+    """
+    Test case extra 02b:  variation of 2 within different block quote
+    """
+
+    # Arrange
+    source_markdown = """>> [foo]:
+>> [foo]:
+>> # abc"""
+    expected_tokens = ['[block-quote(1,1)::]', '[block-quote(1,2)::>> \n>> \n>> ]', '[link-ref-def(1,4):True::foo::\n:%5Bfoo%5D::[foo]:::::]', '[atx(3,4):1:0:]', '[text(3,6):abc: ]', '[end-atx::]', '[end-block-quote:::True]', '[end-block-quote:::True]']
+    expected_gfm = """<blockquote>
+<blockquote>
+<h1>abc</h1>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_03b() -> None:
+    """
+    Test case extra 02b:  variation of 2 within different block quote
+
+    # May seem like 2 LRD starts, but the LRD start itself qualifies as a link destination https://github.github.com/gfm/#link-destination
+    """
+
+    # Arrange
+    source_markdown = """[foo]:
+[foo]:
+# abc"""
+    expected_tokens = ['[link-ref-def(1,1):True::foo::\n:%5Bfoo%5D::[foo]:::::]', '[atx(3,1):1:0:]', '[text(3,3):abc: ]', '[end-atx::]']
+    expected_gfm = """<h1>abc</h1>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_03c() -> None:
+    """
+    Test case extra 02b:  variation of 2 within different block quote
+    """
+
+    # Arrange
+    source_markdown = """> # this is a heading
+>> [foo]:
+>> # abc"""
+    expected_tokens = ['[block-quote(1,1)::> ]', '[atx(1,3):1:0:]', '[text(1,5):this is a heading: ]', '[end-atx::]', '[block-quote(2,1)::>> \n>> ]', '[para(2,4):]', '[text(2,4):[foo]::]', '[end-para:::False]', '[atx(3,4):1:0:]', '[text(3,6):abc: ]', '[end-atx::]', '[end-block-quote:::True]', '[end-block-quote:::True]']
+    expected_gfm = """<blockquote>
+<h1>this is a heading</h1>
+<blockquote>
+<p>[foo]:</p>
+<h1>abc</h1>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_03d() -> None:
+    """
+    Test case extra 02b:  variation of 2 within different block quote
+    """
+
+    # Arrange
+    source_markdown = """> this is a heading
+> ---------
+>> [foo]:
+>> # abc"""
+    expected_tokens = ['[block-quote(1,1)::> \n> ]', '[setext(2,3):-:9::(1,3)]', '[text(1,3):this is a heading:]', '[end-setext::]', '[block-quote(3,1)::>> \n>> ]', '[para(3,4):]', '[text(3,4):[foo]::]', '[end-para:::False]', '[atx(4,4):1:0:]', '[text(4,6):abc: ]', '[end-atx::]', '[end-block-quote:::True]', '[end-block-quote:::True]']
+    expected_gfm = """<blockquote>
+<h2>this is a heading</h2>
+<blockquote>
+<p>[foo]:</p>
+<h1>abc</h1>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_03e() -> None:
+    """
+    Test case extra 02b:  variation of 2 within different block quote
+    """
+
+    # Arrange
+    source_markdown = """>     this is a heading
+>> [foo]:
+>> # abc"""
+    expected_tokens = ['[block-quote(1,1)::> ]', '[icode-block(1,7):    :]', '[text(1,7):this is a heading:]', '[end-icode-block:::True]', '[block-quote(2,1)::>> \n>> ]', '[para(2,4):]', '[text(2,4):[foo]::]', '[end-para:::False]', '[atx(3,4):1:0:]', '[text(3,6):abc: ]', '[end-atx::]', '[end-block-quote:::True]', '[end-block-quote:::True]']
+    expected_gfm = """<blockquote>
+<pre><code>this is a heading
+</code></pre>
+<blockquote>
+<p>[foo]:</p>
+<h1>abc</h1>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_03fx() -> None:
+    """
+    Test case extra 02b:  variation of 2 within different block quote
+    """
+
+    # Arrange
+    source_markdown = """> ```Python
+> print("Hello World")
+> ```
+>> [foo]:
+>> # abc"""
+    expected_tokens = ['[block-quote(1,1)::> \n> \n> ]', '[fcode-block(1,3):`:3:Python:::::]', '[text(2,3):print(\a"\a&quot;\aHello World\a"\a&quot;\a):]', '[end-fcode-block:::3:False]', '[block-quote(4,1)::>> \n>> ]', '[para(4,4):]', '[text(4,4):[foo]::]', '[end-para:::False]', '[atx(5,4):1:0:]', '[text(5,6):abc: ]', '[end-atx::]', '[end-block-quote:::True]', '[end-block-quote:::True]']
+    expected_gfm = """<blockquote>
+<pre><code class="language-Python">print(&quot;Hello World&quot;)
+</code></pre>
+<blockquote>
+<p>[foo]:</p>
+<h1>abc</h1>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_03fa() -> None:
+    """
+    Test case extra 02b:  variation of 2 within different block quote
+    """
+
+    # Arrange
+    source_markdown = """> ```Python
+> print("Hello World")
+>> [foo]:
+>> # abc"""
+    expected_tokens = ['[block-quote(1,1)::> \n> \n>\n>]', '[fcode-block(1,3):`:3:Python:::::]', '[text(2,3):print(\a"\a&quot;\aHello World\a"\a&quot;\a)\n\a>\a&gt;\a [foo]:\n\a>\a&gt;\a # abc:]', '[end-fcode-block::::True]', '[end-block-quote:::True]']
+    expected_gfm = """<blockquote>
+<pre><code class="language-Python">print(&quot;Hello World&quot;)
+&gt; [foo]:
+&gt; # abc
+</code></pre>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_03gx() -> None:
+    """
+    Test case extra 02b:  variation of 2 within different block quote
+    """
+
+    # Arrange
+    source_markdown = """> <!-- comment -->
+>> [foo]:
+>> # abc"""
+    expected_tokens = ['[block-quote(1,1)::> ]', '[html-block(1,3)]', '[text(1,3):<!-- comment -->:]', '[end-html-block:::False]', '[block-quote(2,1)::>> \n>> ]', '[para(2,4):]', '[text(2,4):[foo]::]', '[end-para:::False]', '[atx(3,4):1:0:]', '[text(3,6):abc: ]', '[end-atx::]', '[end-block-quote:::True]', '[end-block-quote:::True]']
+    expected_gfm = """<blockquote>
+<!-- comment -->
+<blockquote>
+<p>[foo]:</p>
+<h1>abc</h1>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_03ga() -> None:
+    """
+    Test case extra 02b:  variation of 2 within different block quote
+    """
+
+    # Arrange
+    source_markdown = """> <some-tag>
+>> [foo]:
+>> # abc"""
+    expected_tokens = ['[block-quote(1,1)::> \n>\n>]', '[html-block(1,3)]', '[text(1,3):<some-tag>\n> [foo]:\n> # abc:]', '[end-html-block:::True]', '[end-block-quote:::True]']
+    expected_gfm = """<blockquote>
+<some-tag>
+> [foo]:
+> # abc
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_03gb() -> None:
+    """
+    Test case extra 02b:  variation of 2 within different block quote
+    """
+
+    # Arrange
+    source_markdown = """> <some-tag>
+>
+>> [foo]:
+>> # abc"""
+    expected_tokens = ['[block-quote(1,1)::> \n>]', '[html-block(1,3)]', '[text(1,3):<some-tag>:]', '[end-html-block:::False]', '[BLANK(2,2):]', '[block-quote(3,1)::>> \n>> ]', '[para(3,4):]', '[text(3,4):[foo]::]', '[end-para:::False]', '[atx(4,4):1:0:]', '[text(4,6):abc: ]', '[end-atx::]', '[end-block-quote:::True]', '[end-block-quote:::True]']
+    expected_gfm = """<blockquote>
+<some-tag>
+<blockquote>
+<p>[foo]:</p>
+<h1>abc</h1>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_03h() -> None:
+    """
+    Test case extra 02b:  variation of 2 within different block quote
+    """
+
+    # Arrange
+    source_markdown = """> | title1 | title2 |
+> | --- | --- |
+> | r1c1 | r1c2 |
+>> [foo]:
+>> # abc"""
+    expected_tokens = ['[block-quote(1,1)::> \n> \n> ]', '[table(1,3)]', '[table-header(1,3)]', '[table-header-item(1,3)]', '[text(1,3):title1:]', '[end-table-header-item: |::False]', '[table-header-item(1,3)]', '[text(1,3):title2:]', '[end-table-header-item: |::False]', '[end-table-header:::False]', '[table-body(1,3)]', '[table-row(1,3)]', '[table-row-item(1,3)]', '[text(1,3):r1c1:]', '[end-table-row-item: |::False]', '[table-row-item(1,3)]', '[text(1,3):r1c2:]', '[end-table-row-item: |::False]', '[end-table-row:::False]', '[end-table-body:::False]', '[end-table:::False]', '[block-quote(4,1)::>> \n>> ]', '[para(4,4):]', '[text(4,4):[foo]::]', '[end-para:::False]', '[atx(5,4):1:0:]', '[text(5,6):abc: ]', '[end-atx::]', '[end-block-quote:::True]', '[end-block-quote:::True]']
+    expected_gfm = """<blockquote>
+<table>
+<thead>
+<tr>
+<th>title1</th>
+<th>title2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>r1c1</td>
+<td>r1c2</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>[foo]:</p>
+<h1>abc</h1>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, config_map=config_map, show_debug=False)
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_04x() -> None:
+    """
+    Test case extra 02b:  variation of 2 within different block quote
+    """
+
+    # Arrange
+    source_markdown = """- [foo]:
+  - [foo]:
+    # abc"""
+    expected_tokens = ['[ulist(1,1):-::2:]', '[para(1,3):]', '[text(1,3):[foo]::]', '[end-para:::True]', '[ulist(2,3):-::4:  :    ]', '[para(2,5):]', '[text(2,5):[foo]::]', '[end-para:::False]', '[atx(3,5):1:0:]', '[text(3,7):abc: ]', '[end-atx::]', '[end-ulist:::True]', '[end-ulist:::True]']
+    expected_gfm = """<ul>
+<li>[foo]:
+<ul>
+<li>[foo]:
+<h1>abc</h1>
+</li>
+</ul>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_04a() -> None:
+    """
+    Test case extra 02b:  variation of 2 within different block quote
+    """
+
+    # Arrange
+    source_markdown = """- [foo]:
+  [foo]:
+  # abc"""
+    expected_tokens = ['[ulist(1,1):-::2::  \n  ]', '[link-ref-def(1,3):True::foo::\n:%5Bfoo%5D::[foo]:::::]', '[atx(3,3):1:0:]', '[text(3,5):abc: ]', '[end-atx::]', '[end-ulist:::True]']
+    expected_gfm = """<ul>
+<li>
+<h1>abc</h1>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_04b() -> None:
+    """
+    Test case extra 02b:  variation of 2 within different block quote
+    """
+
+    # Arrange
+    source_markdown = """- # heading
+  - [foo]:
+    # abc"""
+    expected_tokens = ['[ulist(1,1):-::2:]', '[atx(1,3):1:0:]', '[text(1,5):heading: ]', '[end-atx::]', '[ulist(2,3):-::4:  :    ]', '[para(2,5):]', '[text(2,5):[foo]::]', '[end-para:::False]', '[atx(3,5):1:0:]', '[text(3,7):abc: ]', '[end-atx::]', '[end-ulist:::True]', '[end-ulist:::True]']
+    expected_gfm = """<ul>
+<li>
+<h1>heading</h1>
+<ul>
+<li>[foo]:
+<h1>abc</h1>
+</li>
+</ul>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_04c() -> None:
+    """
+    Test case extra 02b:  variation of 2 within different block quote
+    """
+
+    # Arrange
+    source_markdown = """- heading
+  ==========
+  - [foo]:
+    # abc"""
+    expected_tokens = ['[ulist(1,1):-::2::  ]', '[setext(2,3):=:10::(1,3)]', '[text(1,3):heading:]', '[end-setext::]', '[ulist(3,3):-::4:  :    ]', '[para(3,5):]', '[text(3,5):[foo]::]', '[end-para:::False]', '[atx(4,5):1:0:]', '[text(4,7):abc: ]', '[end-atx::]', '[end-ulist:::True]', '[end-ulist:::True]']
+    expected_gfm = """<ul>
+<li>
+<h1>heading</h1>
+<ul>
+<li>[foo]:
+<h1>abc</h1>
+</li>
+</ul>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_04d() -> None:
+    """
+    Test case extra 02b:  variation of 2 within different block quote
+    """
+
+    # Arrange
+    source_markdown = """-     icb
+  - [foo]:
+    # abc"""
+    expected_tokens = ['[ulist(1,1):-::2:]', '[icode-block(1,7):    :]', '[text(1,7):icb:]', '[end-icode-block:::True]', '[ulist(2,3):-::4:  :    ]', '[para(2,5):]', '[text(2,5):[foo]::]', '[end-para:::False]', '[atx(3,5):1:0:]', '[text(3,7):abc: ]', '[end-atx::]', '[end-ulist:::True]', '[end-ulist:::True]']
+    expected_gfm = """<ul>
+<li>
+<pre><code>icb
+</code></pre>
+<ul>
+<li>[foo]:
+<h1>abc</h1>
+</li>
+</ul>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_04ex() -> None:
+    """
+    Test case extra 02b:  variation of 2 within different block quote
+    """
+
+    # Arrange
+    source_markdown = """- ```Python
+  print("Hello World")
+  ```
+  - [foo]:
+    # abc"""
+    expected_tokens = ['[ulist(1,1):-::2::  \n  ]', '[fcode-block(1,3):`:3:Python:::::]', '[text(2,3):print(\a"\a&quot;\aHello World\a"\a&quot;\a):]', '[end-fcode-block:::3:False]', '[ulist(4,3):-::4:  :    ]', '[para(4,5):]', '[text(4,5):[foo]::]', '[end-para:::False]', '[atx(5,5):1:0:]', '[text(5,7):abc: ]', '[end-atx::]', '[end-ulist:::True]', '[end-ulist:::True]']
+    expected_gfm = """<ul>
+<li>
+<pre><code class="language-Python">print(&quot;Hello World&quot;)
+</code></pre>
+<ul>
+<li>[foo]:
+<h1>abc</h1>
+</li>
+</ul>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_04ea() -> None:
+    """
+    Test case extra 02b:  variation of 2 within different block quote
+    """
+
+    # Arrange
+    source_markdown = """- ```Python
+  print("Hello World")
+  - [foo]:
+    # abc"""
+    expected_tokens = ['[ulist(1,1):-::2::  \n  \n  ]', '[fcode-block(1,3):`:3:Python:::::]', '[text(2,3):print(\a"\a&quot;\aHello World\a"\a&quot;\a)\n- [foo]:\n  # abc:]', '[end-fcode-block::::True]', '[end-ulist:::True]']
+    expected_gfm = """<ul>
+<li>
+<pre><code class="language-Python">print(&quot;Hello World&quot;)
+- [foo]:
+  # abc
+</code></pre>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_04fx() -> None:
+    """
+    Test case extra 02b:  variation of 2 within different block quote
+    """
+
+    # Arrange
+    source_markdown = """- <!-- comment -->
+  - [foo]:
+    # abc"""
+    expected_tokens = ['[ulist(1,1):-::2:]', '[html-block(1,3)]', '[text(1,3):<!-- comment -->:]', '[end-html-block:::False]', '[ulist(2,3):-::4:  :    ]', '[para(2,5):]', '[text(2,5):[foo]::]', '[end-para:::False]', '[atx(3,5):1:0:]', '[text(3,7):abc: ]', '[end-atx::]', '[end-ulist:::True]', '[end-ulist:::True]']
+    expected_gfm = """<ul>
+<li>
+<!-- comment -->
+<ul>
+<li>[foo]:
+<h1>abc</h1>
+</li>
+</ul>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_04fa() -> None:
+    """
+    Test case extra 02b:  variation of 2 within different block quote
+    """
+
+    # Arrange
+    source_markdown = """- <some-tag>
+  - [foo]:
+    # abc"""
+    expected_tokens = ['[ulist(1,1):-::2::  \n  ]', '[html-block(1,3)]', '[text(1,3):<some-tag>\n- [foo]:\n  # abc:]', '[end-html-block:::True]', '[end-ulist:::True]']
+    expected_gfm = """<ul>
+<li>
+<some-tag>
+- [foo]:
+  # abc
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_04fb() -> None:
+    """
+    Test case extra 02b:  variation of 2 within different block quote
+    """
+
+    # Arrange
+    source_markdown = """- <some-tag>
+
+  - [foo]:
+    # abc"""
+    expected_tokens = ['[ulist(1,1):-::2::]', '[html-block(1,3)]', '[text(1,3):<some-tag>:]', '[end-html-block:::False]', '[BLANK(2,1):]', '[ulist(3,3):-::4:  :    ]', '[para(3,5):]', '[text(3,5):[foo]::]', '[end-para:::False]', '[atx(4,5):1:0:]', '[text(4,7):abc: ]', '[end-atx::]', '[end-ulist:::True]', '[end-ulist:::True]']
+    expected_gfm = """<ul>
+<li>
+<some-tag>
+<ul>
+<li>[foo]:
+<h1>abc</h1>
+</li>
+</ul>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_04g() -> None:
+    """
+    Test case extra 02b:  variation of 2 within different block quote
+    """
+
+    # Arrange
+    source_markdown = """- | title1 | title2 |
+  | --- | --- |
+  | r1c1 | r1c2 |
+  - [foo]:
+    # abc"""
+    expected_tokens = ['[ulist(1,1):-::2::  \n  ]', '[table(1,3)]', '[table-header(1,3)]', '[table-header-item(1,3)]', '[text(1,3):title1:]', '[end-table-header-item: |::False]', '[table-header-item(1,3)]', '[text(1,3):title2:]', '[end-table-header-item: |::False]', '[end-table-header:::False]', '[table-body(1,3)]', '[table-row(1,3)]', '[table-row-item(1,3)]', '[text(1,3):r1c1:]', '[end-table-row-item: |::False]', '[table-row-item(1,3)]', '[text(1,3):r1c2:]', '[end-table-row-item: |::False]', '[end-table-row:::False]', '[end-table-body:::False]', '[end-table:::False]', '[ulist(4,3):-::4:  :    ]', '[para(4,5):]', '[text(4,5):[foo]::]', '[end-para:::False]', '[atx(5,5):1:0:]', '[text(5,7):abc: ]', '[end-atx::]', '[end-ulist:::True]', '[end-ulist:::True]']
+    expected_gfm = """<ul>
+<li>
+<table>
+<thead>
+<tr>
+<th>title1</th>
+<th>title2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>r1c1</td>
+<td>r1c2</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>[foo]:
+<h1>abc</h1>
+</li>
+</ul>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, config_map=config_map, show_debug=False)
