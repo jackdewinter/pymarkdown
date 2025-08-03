@@ -16459,7 +16459,18 @@ def test_extra_054x() -> None:
 >
 > some text [abc]
 """
-    expected_tokens = ['[block-quote(1,1)::> \n>\n> \n]', '[para(1,3):]', "[text(1,3):[abc]: /url 'abc:]", '[end-para:::True]', '[BLANK(2,2):]', '[para(3,3):]', '[text(3,3):some text [abc]:]', '[end-para:::True]', '[end-block-quote:::True]', '[BLANK(4,1):]']
+    expected_tokens = [
+        "[block-quote(1,1)::> \n>\n> \n]",
+        "[para(1,3):]",
+        "[text(1,3):[abc]: /url 'abc:]",
+        "[end-para:::True]",
+        "[BLANK(2,2):]",
+        "[para(3,3):]",
+        "[text(3,3):some text [abc]:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(4,1):]",
+    ]
     expected_gfm = """<blockquote>
 <p>[abc]: /url 'abc</p>
 <p>some text [abc]</p>
