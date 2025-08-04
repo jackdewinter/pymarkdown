@@ -6,7 +6,7 @@ name = "pypi"
 [dev-packages]
 build = "==0.10.0"
 cookieslicer = "==0.1.5"
-coverage = "==7.9.0"
+coverage = "==7.10.2"
 importlib-metadata = "==8.7.0"
 mkdocs = "==1.6.1"
 mkdocstrings = "0.29.1"
