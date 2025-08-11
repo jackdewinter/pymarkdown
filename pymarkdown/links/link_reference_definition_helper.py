@@ -39,7 +39,6 @@ class LinkReferenceDefinitionHelper:
         original_stack_depth: int,
         original_document_depth: int,
         original_line: str,
-        process_mode: int,
     ) -> Tuple[bool, bool, bool, Optional[RequeueLineInfo], List[MarkdownToken]]:
         """
         Process a link deference definition.  Note, this requires a lot of work to
@@ -123,7 +122,6 @@ class LinkReferenceDefinitionHelper:
             did_complete_lrd,
             parsed_lrd_tuple,
             lines_to_requeue,
-            process_mode,
         )
         if lines_to_requeue:
             assert (
@@ -266,6 +264,8 @@ class LinkReferenceDefinitionHelper:
                 start_index,
                 extracted_whitespace,
                 is_blank_line,
+                remaining_line_to_parse,
+                was_started,
             )
             POGGER.debug(
                 ">>parse_link_reference_definition>>was_started>>did_complete_lrd>>$"
@@ -283,9 +283,7 @@ class LinkReferenceDefinitionHelper:
                     and (end_lrd_index == line_to_parse_size)
                 )
             ):
-                POGGER.debug(
-                    ">>parse_link_reference_definition>>was_started>>GOT HARD FAILURE"
-                )
+                POGGER.debug(                    ">>parse_link_reference_definition>>was_started>>GOT HARD FAILURE"                )
                 (
                     is_blank_line,
                     line_to_parse,
@@ -297,6 +295,7 @@ class LinkReferenceDefinitionHelper:
                     remaining_line_to_parse,
                     lines_to_requeue,
                     unmodified_line_to_parse,
+                    was_started
                 )
         else:
             (
@@ -309,6 +308,8 @@ class LinkReferenceDefinitionHelper:
                 start_index,
                 extracted_whitespace,
                 is_blank_line,
+                remaining_line_to_parse,
+                was_started,
             )
             POGGER.debug(
                 ">>parse_link_reference_definition>>did_complete_lrd>>$>>end_lrd_index>>$>>len(line_to_parse)>>$",
@@ -391,7 +392,6 @@ class LinkReferenceDefinitionHelper:
                 del parser_state.token_stack[-1]
         else:
             while len(parser_state.token_stack):
-                # assert False
                 del parser_state.token_stack[-1]
             assert (
                 lrd_stack_token.copy_of_token_stack is not None
@@ -486,6 +486,7 @@ class LinkReferenceDefinitionHelper:
         remaining_line_to_parse: str,
         lines_to_requeue: List[str],
         unmodified_line_to_parse: str,
+        was_started:bool
     ) -> Tuple[
         bool,
         str,
@@ -514,7 +515,6 @@ class LinkReferenceDefinitionHelper:
         assert unmodified_line_to_parse.endswith(
             remaining_line_to_parse
         ), "Current line must end with the remaining text."
-        # assert parser_state.original_line_to_parse is not None
         assert unmodified_line_to_parse is not None
         link_ref_stack_token.add_continuation_line(
             parser_state.original_line_to_parse or ""
@@ -581,7 +581,7 @@ class LinkReferenceDefinitionHelper:
                 line_to_parse,
                 start_index,
                 extracted_whitespace,
-                is_blank_line,
+                is_blank_line,"", False
             )
             POGGER.debug(
                 ">>parse_link_reference_definition>>was_started>>did_complete_lrd>>$"
@@ -653,7 +653,6 @@ class LinkReferenceDefinitionHelper:
                 parser_state.original_stack_depth,
                 parser_state.original_document_depth,
                 original_line,
-                0,
             )
             if requeue_line_info:
                 outer_processed = True

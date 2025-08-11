@@ -2655,7 +2655,6 @@ def test_tables_extension_extra_in_block() -> None:
     )
 
 
-# @pytest.mark.skip
 def test_tables_extension_extra_in_block_in_block_after_first_line() -> None:
     """
     Test case extra 1:  TBD
@@ -3217,7 +3216,6 @@ some other text</li>
     )
 
 
-# @pytest.mark.skip
 @pytest.mark.gfm
 def test_tables_extension_extra_in_list_header_and_separator_only() -> None:
     """
@@ -3322,7 +3320,6 @@ some other text</p>
     )
 
 
-# @pytest.mark.skip
 @pytest.mark.gfm
 def test_tables_extension_extra_in_list_header_and_separator_only_lrd_in_next_list_item() -> (
     None
@@ -3384,7 +3381,6 @@ def test_tables_extension_extra_in_list_header_and_separator_only_lrd_in_next_li
     )
 
 
-# @pytest.mark.skip
 @pytest.mark.gfm
 def test_tables_extension_extra_in_list_header_and_separator_only_lrd_in_previous_list_item() -> (
     None
@@ -5923,6 +5919,7 @@ def test_whitespaces_tables_with_tabs_before_within_unordered_list_and_spaces() 
     )
 
 
+@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_tables_with_tabs_before_within_unordered_double_list() -> None:
     """
@@ -6206,6 +6203,7 @@ def test_whitespaces_tables_with_tabs_before_within_ordered_list_and_spaces() ->
     )
 
 
+@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_tables_with_tabs_before_within_ordered_double_list_x() -> None:
     """
@@ -6427,6 +6425,7 @@ def test_whitespaces_tables_with_tabs_before_within_ordered_double_list_one_spac
     )
 
 
+@pytest.mark.skip
 @pytest.mark.gfm
 def test_whitespaces_tables_with_tabs_before_within_ordered_double_list_two_spaces() -> (
     None

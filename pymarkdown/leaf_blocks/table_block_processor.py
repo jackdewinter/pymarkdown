@@ -26,7 +26,6 @@ class TableBlockHelper:
         original_stack_depth: int,
         original_document_depth: int,
         original_line: str,
-        process_mode: int,
     ) -> Tuple[bool, bool, bool, Optional[RequeueLineInfo], List[MarkdownToken]]:
         """
         Process a table row.  Note, this requires a lot of work to
@@ -96,7 +95,6 @@ class TableBlockHelper:
             did_pause_table,
             force_ignore_first_as_table,
             new_tokens,
-            did_remove_stack_token,
         ) = TableBlockContinuationHelper.determine_continue_or_stop(
             parser_state,
             position_marker,
@@ -112,7 +110,6 @@ class TableBlockHelper:
             did_complete_table,
             parsed_table_tuple,
             lines_to_requeue,
-            process_mode,
         )
         if lines_to_requeue:
             assert (
@@ -125,13 +122,16 @@ class TableBlockHelper:
                 original_stack_depth,
                 original_document_depth,
                 lines_to_requeue,
-                did_remove_stack_token,
             )
-            force_ignore_first_as_table = True  # TODO check this
+            ## Different from LRD.
+            # force_ignore_first_as_table = True  # TODO check this
+            ## Different from LRD.
             requeue_line_info = RequeueLineInfo(
                 lines_to_requeue, False, force_ignore_first_as_table
             )
+            ## Different from LRD.
             parser_state.abc(requeue_line_info, table_stack_token)
+            ## Different from LRD.
         else:
             requeue_line_info = None
 
@@ -371,11 +371,12 @@ class TableBlockHelper:
             ">>table_stack_token>>copy_of_token_stack:$:",
             table_stack_token.copy_of_token_stack,
         )
-        # assert len(parser_state.token_stack) >= original_stack_depth
         if len(parser_state.token_stack) >= original_stack_depth:
             while (
                 len(parser_state.token_stack) > original_stack_depth
+            ## Different from LRD.
                 and not parser_state.token_stack[-1].is_block_quote
+            ## Different from LRD.
             ):
                 del parser_state.token_stack[-1]
         else:
@@ -387,6 +388,7 @@ class TableBlockHelper:
             parser_state.token_stack.extend(table_stack_token.copy_of_token_stack)
         POGGER.debug(">>XXXXXX>>token_stack(after):$:", parser_state.token_stack)
 
+        ## Different from LRD.
         POGGER.debug(">>XXXXXX>>original_document_depth:$:", original_document_depth)
         POGGER.debug(
             ">>XXXXXX>>token_document_depth:$:",
@@ -398,6 +400,7 @@ class TableBlockHelper:
             and not parser_state.token_document[-1].is_block_quote_start
         ):
             del parser_state.token_document[-1]
+        ## Different from LRD.
         POGGER.debug(">>XXXXXX>>token_document(after):$:", parser_state.token_document)
 
     @staticmethod
@@ -408,7 +411,6 @@ class TableBlockHelper:
         original_stack_depth: int,
         original_document_depth: int,
         lines_to_requeue: List[str],
-        did_remove_stack_token: bool,
     ) -> None:
         # This works because in most cases, we add things.  However, in cases like
         # an indented code block, we process the "is it indented enough" and close
@@ -467,9 +469,12 @@ class TableBlockHelper:
         assert unmodified_line_to_parse.endswith(
             remaining_line_to_parse
         ), "Current line must end with the remaining text."
+        ## Different from LRD.
         table_stack_token.add_continuation_line(remaining_line_to_parse)
         table_stack_token.add_unmodified_line(unmodified_line_to_parse)
+        ## Different from LRD.
 
+        ## Different from LRD.
         try_again = len(table_stack_token.continuation_lines) > 2
         if not try_again:
             is_blank_line = False
@@ -478,11 +483,13 @@ class TableBlockHelper:
             end_table_index = -1
         xdf = 2 if len(table_stack_token.continuation_lines) == 2 else 1
         while xdf:
+        ## Different from LRD.
 
             lines_to_requeue.append(table_stack_token.unmodified_lines[-1])
             del table_stack_token.continuation_lines[-1]
             del table_stack_token.unmodified_lines[-1]
 
+        ## Different from LRD.
             if try_again:
                 (
                     is_blank_line,
@@ -506,11 +513,7 @@ class TableBlockHelper:
                     was_started,
                 )
             xdf -= 1
-        # is_blank_line ??? True
-        # line_to_parse ???
-        # did_complete_table False
-        # end_table_index -1
-        # parser_table_tuple None
+        ## Different from LRD.
         assert is_blank_line is not None, "while loop must have executed at least once."
         assert line_to_parse is not None, "while loop must have executed at least once."
         assert (
@@ -544,11 +547,13 @@ class TableBlockHelper:
             pre_tokens,
         )
 
+        ## Different from LRD.
         if (
             parser_state.parse_properties.is_tables_enabled
             and not outer_processed
             and not ignore_table_start
         ):
+        ## Different from LRD.
             POGGER.debug(
                 "handle_table_leaf_block>>outer_processed>>$",
                 position_marker.text_to_parse[position_marker.index_number :],
@@ -571,7 +576,6 @@ class TableBlockHelper:
                 parser_state.original_stack_depth,
                 parser_state.original_document_depth,
                 original_line,
-                0,
             )
             if requeue_line_info:
                 outer_processed = True
@@ -587,7 +591,9 @@ class TableBlockHelper:
                     outer_processed,
                 )
         else:
-            requeue_line_info, new_tokens = requeue_line_info, []
+        ## Different from LRD.
+            new_tokens = []
+        ## Different from LRD.
 
         POGGER.debug("handle_table_leaf_block>>pre_tokens>>$<<", pre_tokens)
         pre_tokens.extend(new_tokens)
