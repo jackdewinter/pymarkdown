@@ -30,7 +30,7 @@ jobs:
     steps:
 
     - name: Check out code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Calculate test matrix
       id: set-matrix
@@ -55,7 +55,7 @@ jobs:
     steps:
 
     - name: Check out code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Calculate test matrix
       id: set-matrix
@@ -176,7 +176,7 @@ jobs:
     steps:
 
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Python ${{ matrix.python }}
         uses: actions/setup-python@v5.6.0
