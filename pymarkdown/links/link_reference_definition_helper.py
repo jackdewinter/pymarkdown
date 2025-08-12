@@ -283,7 +283,9 @@ class LinkReferenceDefinitionHelper:
                     and (end_lrd_index == line_to_parse_size)
                 )
             ):
-                POGGER.debug(                    ">>parse_link_reference_definition>>was_started>>GOT HARD FAILURE"                )
+                POGGER.debug(
+                    ">>parse_link_reference_definition>>was_started>>GOT HARD FAILURE"
+                )
                 (
                     is_blank_line,
                     line_to_parse,
@@ -295,7 +297,7 @@ class LinkReferenceDefinitionHelper:
                     remaining_line_to_parse,
                     lines_to_requeue,
                     unmodified_line_to_parse,
-                    was_started
+                    was_started,
                 )
         else:
             (
@@ -486,7 +488,7 @@ class LinkReferenceDefinitionHelper:
         remaining_line_to_parse: str,
         lines_to_requeue: List[str],
         unmodified_line_to_parse: str,
-        was_started:bool
+        was_started: bool,
     ) -> Tuple[
         bool,
         str,
@@ -581,7 +583,9 @@ class LinkReferenceDefinitionHelper:
                 line_to_parse,
                 start_index,
                 extracted_whitespace,
-                is_blank_line,"", False
+                is_blank_line,
+                "",
+                False,
             )
             POGGER.debug(
                 ">>parse_link_reference_definition>>was_started>>did_complete_lrd>>$"

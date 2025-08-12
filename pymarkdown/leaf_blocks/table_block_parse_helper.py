@@ -421,4 +421,5 @@ class TableParseHelper:
             return True  # continue_with_lrd
         return False
 
+
 ## Different from LRD.

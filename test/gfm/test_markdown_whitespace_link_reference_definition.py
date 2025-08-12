@@ -2194,7 +2194,6 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_line
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-
 @pytest.mark.gfm
 def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_lines_1f() -> (
     None
@@ -3185,6 +3184,7 @@ def test_whitespaces_lrd_with_form_feeds_after_title() -> None:
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
 def test_whitespaces_lrd_with_tabs_before_within_unordered_list_x() -> None:
     """
@@ -3216,8 +3216,11 @@ def test_whitespaces_lrd_with_tabs_before_within_unordered_list_x() -> None:
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_unordered_list_multiple_tabs_xx() -> None:
+def test_whitespaces_lrd_with_tabs_before_within_unordered_list_multiple_tabs_xx() -> (
+    None
+):
     """
     Test case:  LRD preceeded by spaces and tabs.
     """
@@ -3227,7 +3230,17 @@ def test_whitespaces_lrd_with_tabs_before_within_unordered_list_multiple_tabs_xx
 \t[fred]:\t/url\t"bob\t"
 
 [fred]"""
-    expected_tokens = ['[ulist(1,1):-::2::\n]', '[para(1,3):\n\t]', '[text(1,3):abc\n[fred]:\t/url\t\a"\a&quot;\abob\t\a"\a&quot;\a::\n]', '[end-para:::True]', '[BLANK(3,1):]', '[end-ulist:::True]', '[para(4,1):]', '[text(4,1):[fred]:]', '[end-para:::True]']
+    expected_tokens = [
+        "[ulist(1,1):-::2::\n]",
+        "[para(1,3):\n\t]",
+        '[text(1,3):abc\n[fred]:\t/url\t\a"\a&quot;\abob\t\a"\a&quot;\a::\n]',
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[end-ulist:::True]",
+        "[para(4,1):]",
+        "[text(4,1):[fred]:]",
+        "[end-para:::True]",
+    ]
     expected_gfm = """<ul>
 <li>abc
 [fred]:\t/url\t&quot;bob\t&quot;</li>
@@ -3237,8 +3250,11 @@ def test_whitespaces_lrd_with_tabs_before_within_unordered_list_multiple_tabs_xx
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_unordered_list_multiple_tabs_xa() -> None:
+def test_whitespaces_lrd_with_tabs_before_within_unordered_list_multiple_tabs_xa() -> (
+    None
+):
     """
     Test case:  LRD preceeded by spaces and tabs.
     """
@@ -3248,7 +3264,17 @@ def test_whitespaces_lrd_with_tabs_before_within_unordered_list_multiple_tabs_xa
 \t[fred]:\t/url\t"bob\t"
 
 [fred]"""
-    expected_tokens = ['[block-quote(1,1)::> \n\n]', '[para(1,3):\n\t]', '[text(1,3):abc\n[fred]:\t/url\t\a"\a&quot;\abob\t\a"\a&quot;\a::\n]', '[end-para:::True]', '[end-block-quote:::True]', '[BLANK(3,1):]', '[para(4,1):]', '[text(4,1):[fred]:]', '[end-para:::True]']
+    expected_tokens = [
+        "[block-quote(1,1)::> \n\n]",
+        "[para(1,3):\n\t]",
+        '[text(1,3):abc\n[fred]:\t/url\t\a"\a&quot;\abob\t\a"\a&quot;\a::\n]',
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(3,1):]",
+        "[para(4,1):]",
+        "[text(4,1):[fred]:]",
+        "[end-para:::True]",
+    ]
     expected_gfm = """<blockquote>
 <p>abc
 [fred]:\t/url\t&quot;bob\t&quot;</p>
@@ -3258,8 +3284,11 @@ def test_whitespaces_lrd_with_tabs_before_within_unordered_list_multiple_tabs_xa
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_unordered_list_multiple_tabs_a() -> None:
+def test_whitespaces_lrd_with_tabs_before_within_unordered_list_multiple_tabs_a() -> (
+    None
+):
     """
     Test case:  LRD preceeded by spaces and tabs.
     """
@@ -3270,7 +3299,21 @@ def test_whitespaces_lrd_with_tabs_before_within_unordered_list_multiple_tabs_a(
 \t[fred]:\t/url\t"bob"\t
 
 [fred]"""
-    expected_tokens = ['[ulist(1,1):-::2::\n\n]', '[para(1,3):]', '[text(1,3):abc:]', '[end-para:::True]', '[BLANK(2,1):]', '[link-ref-def(3,5):True:\t:fred::\t:/url::\t:bob:"bob":\t]', '[BLANK(4,1):]', '[end-ulist:::True]', '[para(5,1):]', '[link(5,1):shortcut:/url:bob::::fred:False::::]', '[text(5,2):fred:]', '[end-link::]', '[end-para:::True]']
+    expected_tokens = [
+        "[ulist(1,1):-::2::\n\n]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        '[link-ref-def(3,5):True:\t:fred::\t:/url::\t:bob:"bob":\t]',
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+        "[para(5,1):]",
+        "[link(5,1):shortcut:/url:bob::::fred:False::::]",
+        "[text(5,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
     expected_gfm = """<ul>
 <li>
 <p>abc</p>
@@ -3280,6 +3323,7 @@ def test_whitespaces_lrd_with_tabs_before_within_unordered_list_multiple_tabs_a(
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
 
 @pytest.mark.gfm
 def test_whitespaces_lrd_with_tabs_before_within_unordered_list_and_single_space() -> (
@@ -3423,9 +3467,7 @@ def test_whitespaces_lrd_with_tabs_before_within_ordered_list_x() -> None:
 
 @pytest.mark.skip
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_list_single_over_two_lines_x() -> (
-    None
-):
+def test_whitespaces_lrd_with_tabs_before_within_list_single_over_two_lines_x() -> None:
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -3437,7 +3479,21 @@ def test_whitespaces_lrd_with_tabs_before_within_list_single_over_two_lines_x() 
   /url
 
 [fred]"""
-    expected_tokens = ['[ulist(1,1):-::2::\n\n  \n]', '[para(1,3):]', '[text(1,3):abc:]', '[end-para:::True]', '[BLANK(2,1):]', '[link-ref-def(3,5):True:\t:fred::\t\n :/url:::::]', '[BLANK(5,1):]', '[end-ulist:::True]', '[para(6,1):]', '[link(6,1):shortcut:/url:::::fred:False::::]', '[text(6,2):fred:]', '[end-link::]', '[end-para:::True]']
+    expected_tokens = [
+        "[ulist(1,1):-::2::\n\n  \n]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[link-ref-def(3,5):True:\t:fred::\t\n :/url:::::]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+        "[para(6,1):]",
+        "[link(6,1):shortcut:/url:::::fred:False::::]",
+        "[text(6,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
     expected_gfm = """<ul>
 <li>
 <p>abc</p>
@@ -3448,11 +3504,10 @@ def test_whitespaces_lrd_with_tabs_before_within_list_single_over_two_lines_x() 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.skip
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_list_single_over_two_lines_a() -> (
-    None
-):
+def test_whitespaces_lrd_with_tabs_before_within_list_single_over_two_lines_a() -> None:
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -3464,7 +3519,21 @@ def test_whitespaces_lrd_with_tabs_before_within_list_single_over_two_lines_a() 
   /url
 
 [fred]"""
-    expected_tokens = ['[ulist(1,1):-::2::\n  \n  \n]', '[para(1,3):]', '[text(1,3):abc:]', '[end-para:::True]', '[BLANK(2,1):]', '[link-ref-def(3,5):True:\t:fred::\n:/url:::::]', '[BLANK(5,1):]', '[end-ulist:::True]', '[para(6,1):]', '[link(6,1):shortcut:/url:::::fred:False::::]', '[text(6,2):fred:]', '[end-link::]', '[end-para:::True]']
+    expected_tokens = [
+        "[ulist(1,1):-::2::\n  \n  \n]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[link-ref-def(3,5):True:\t:fred::\n:/url:::::]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+        "[para(6,1):]",
+        "[link(6,1):shortcut:/url:::::fred:False::::]",
+        "[text(6,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
     expected_gfm = """<ul>
 <li>
 <p>abc</p>
@@ -3475,10 +3544,9 @@ def test_whitespaces_lrd_with_tabs_before_within_list_single_over_two_lines_a() 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_list_bare_over_two_lines_1ea() -> (
-    None
-):
+def test_whitespaces_lrd_with_tabs_before_within_list_bare_over_two_lines_1ea() -> None:
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -3489,7 +3557,17 @@ def test_whitespaces_lrd_with_tabs_before_within_list_bare_over_two_lines_1ea() 
 \t/url\t
 
 [fred]"""
-    expected_tokens = ['[ulist(1,1):-::2::\n\n]', '[para(1,3):\n\t\n\t:\t]', '[text(1,3):abc\n[fred]:\n/url::\n\t\n]', '[end-para:::True]', '[BLANK(4,1):]', '[end-ulist:::True]', '[para(5,1):]', '[text(5,1):[fred]:]', '[end-para:::True]']
+    expected_tokens = [
+        "[ulist(1,1):-::2::\n\n]",
+        "[para(1,3):\n\t\n\t:\t]",
+        "[text(1,3):abc\n[fred]:\n/url::\n\t\n]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+        "[para(5,1):]",
+        "[text(5,1):[fred]:]",
+        "[end-para:::True]",
+    ]
     expected_gfm = """<ul>
 <li>abc
 [fred]:	

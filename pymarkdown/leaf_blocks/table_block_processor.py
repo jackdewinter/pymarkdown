@@ -374,9 +374,9 @@ class TableBlockHelper:
         if len(parser_state.token_stack) >= original_stack_depth:
             while (
                 len(parser_state.token_stack) > original_stack_depth
-            ## Different from LRD.
+                ## Different from LRD.
                 and not parser_state.token_stack[-1].is_block_quote
-            ## Different from LRD.
+                ## Different from LRD.
             ):
                 del parser_state.token_stack[-1]
         else:
@@ -483,13 +483,13 @@ class TableBlockHelper:
             end_table_index = -1
         xdf = 2 if len(table_stack_token.continuation_lines) == 2 else 1
         while xdf:
-        ## Different from LRD.
+            ## Different from LRD.
 
             lines_to_requeue.append(table_stack_token.unmodified_lines[-1])
             del table_stack_token.continuation_lines[-1]
             del table_stack_token.unmodified_lines[-1]
 
-        ## Different from LRD.
+            ## Different from LRD.
             if try_again:
                 (
                     is_blank_line,
@@ -553,7 +553,7 @@ class TableBlockHelper:
             and not outer_processed
             and not ignore_table_start
         ):
-        ## Different from LRD.
+            ## Different from LRD.
             POGGER.debug(
                 "handle_table_leaf_block>>outer_processed>>$",
                 position_marker.text_to_parse[position_marker.index_number :],
@@ -591,7 +591,7 @@ class TableBlockHelper:
                     outer_processed,
                 )
         else:
-        ## Different from LRD.
+            ## Different from LRD.
             new_tokens = []
         ## Different from LRD.
 

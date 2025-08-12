@@ -8,8 +8,6 @@ from pymarkdown.container_blocks.container_grab_bag import POGGER
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.parser_state import ParserState
 from pymarkdown.general.position_marker import PositionMarker
-from pymarkdown.general.tab_helper import TabHelper
-from pymarkdown.leaf_blocks.table_block_parse_helper import TableParseHelper
 from pymarkdown.leaf_blocks.table_block_tuple import TableTuple
 from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
@@ -98,10 +96,10 @@ class TableBlockContinuationHelper:
             assert (
                 parsed_table_tuple.normalized_destination is not None
             ), "normalized_destination must be defined by now."
-    ## Different from LRD.
+            ## Different from LRD.
             # did_add_definition = False  # LinkParseHelper.add_link_definition(                parsed_table_tuple.normalized_destination, parsed_table_tuple.link_titles            )
             table_stack_token = cast(TableBlockStackToken, parser_state.token_stack[-1])
-    ## Different from LRD.
+            ## Different from LRD.
             assert (
                 table_stack_token.extracted_whitespace is not None
             ), "extracted_whitespace must be defined by now."
@@ -116,7 +114,8 @@ class TableBlockContinuationHelper:
                 table_stack_token.continuation_lines,
             )
             POGGER.debug(
-                "table_stack_token.unmodified_lines>:$:<", table_stack_token.unmodified_lines
+                "table_stack_token.unmodified_lines>:$:<",
+                table_stack_token.unmodified_lines,
             )
             POGGER.debug("lines_to_requeue>:$:<", lines_to_requeue)
 
@@ -126,6 +125,7 @@ class TableBlockContinuationHelper:
             )
             POGGER.debug("does_any_line_have_tabs>:$:<", does_any_line_have_tabs)
 
+            _ = extracted_whitespace
             # last_container_index = parser_state.find_last_container_on_stack()
             # if does_any_line_have_tabs and last_container_index > 0:
             #     (
@@ -140,14 +140,14 @@ class TableBlockContinuationHelper:
             #         parsed_table_tuple,
             #     )
 
-        ## Different from LRD.
+            ## Different from LRD.
             # assert (
             #     parsed_table_tuple.normalized_destination is not None
             # ), "normalized_destination must be defined by now."
-        ## Different from LRD.
+            ## Different from LRD.
             new_tokens: List[MarkdownToken] = []
 
-    ## Different from LRD.
+            ## Different from LRD.
             start_token = TableMarkdownToken(
                 position_marker=table_stack_token.start_position_marker,
             )
@@ -194,7 +194,7 @@ class TableBlockContinuationHelper:
             new_tokens.append(
                 start_token.generate_close_markdown_token_from_markdown_token("", "")
             )
-    ## Different from LRD.
+            ## Different from LRD.
 
             # POGGER.debug(">>link_info>>$", parsed_table_tuple.link_info)
             # assert parsed_table_tuple.link_info.line_destination_whitespace is not None
@@ -204,11 +204,11 @@ class TableBlockContinuationHelper:
             #         parsed_table_tuple.link_info.line_destination_whitespace
             #     ),
             # )
-    ## Different from LRD.
+            ## Different from LRD.
             TableBlockContinuationHelper.__stop_table_continuation_end(
                 parser_state, new_tokens
             )
-    ## Different from LRD.
+            ## Different from LRD.
             return did_pause_table, len(lines_to_requeue) > 1, new_tokens
 
         del parser_state.token_stack[-1]
@@ -528,7 +528,7 @@ class TableBlockContinuationHelper:
         position_marker: PositionMarker,
         was_started: bool,
         remaining_line_to_parse: str,
-        extracted_whitespace:str,
+        extracted_whitespace: str,
         unmodified_line_to_parse: str,
         original_stack_depth: int,
         original_document_depth: int,

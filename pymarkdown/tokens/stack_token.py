@@ -594,8 +594,13 @@ class TableBlockStackToken(StackToken):
     Class to provide for a stack token for a possible table block.
     """
 
-    def __init__(self, extracted_whitespace:str, position_marker: PositionMarker) -> None:
-        (self.__start_position_marker,self.__extracted_whitespace) = (position_marker,extracted_whitespace)
+    def __init__(
+        self, extracted_whitespace: str, position_marker: PositionMarker
+    ) -> None:
+        (self.__start_position_marker, self.__extracted_whitespace) = (
+            position_marker,
+            extracted_whitespace,
+        )
         self.original_stack_depth: Optional[int] = None
         self.original_document_depth: Optional[int] = None
         self.last_block_quote_stack_token: Optional[StackToken] = None
@@ -619,7 +624,6 @@ class TableBlockStackToken(StackToken):
         Returns the extracted whitespace associated with this stack token.
         """
         return self.__extracted_whitespace
-
 
     @property
     def continuation_lines(self) -> List[str]:

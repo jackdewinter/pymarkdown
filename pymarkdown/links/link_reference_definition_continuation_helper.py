@@ -202,7 +202,7 @@ class LinkReferenceDefinitionContinuationHelper:
                 BlockQuoteMarkdownToken, last_block_quote_token.matching_markdown_token
             )
         last_list_index = parser_state.find_last_list_block_on_stack()
-        if last_list_index:           
+        if last_list_index:
             last_list_token = parser_state.token_stack[last_list_index]
             list_token = cast(
                 ListStartMarkdownToken, last_list_token.matching_markdown_token
@@ -222,18 +222,20 @@ class LinkReferenceDefinitionContinuationHelper:
                 block_quote_token,
                 last_block_quote_index,
                 list_token,
-                last_list_index
+                last_list_index,
             )
         else:
             (
                 extracted_whitespace,
                 parsed_lrd_tuple,
             ) = LinkReferenceDefinitionContinuationHelper.__stop_lrd_continuation_with_tab_multiple(
-                parser_state, extracted_whitespace, link_def_token,                 block_quote_token,
+                parser_state,
+                extracted_whitespace,
+                link_def_token,
+                block_quote_token,
                 last_block_quote_index,
                 list_token,
-                last_list_index
-
+                last_list_index,
             )
 
         return extracted_whitespace, parsed_lrd_tuple
@@ -244,10 +246,10 @@ class LinkReferenceDefinitionContinuationHelper:
     def __stop_lrd_continuation_with_tab_single(
         parser_state: ParserState,
         link_def_token: LinkDefinitionStackToken,
-        block_quote_token: BlockQuoteMarkdownToken,
-        last_block_quote_index : int,
-        list_token : ListStartMarkdownToken,
-        last_list_index        : int
+        block_quote_token: Optional[BlockQuoteMarkdownToken],
+        last_block_quote_index: int,
+        list_token: Optional[ListStartMarkdownToken],
+        last_list_index: int,
     ) -> str:
         parsed_line = link_def_token.continuation_lines[0]
         original_line = link_def_token.unmodified_lines[0]
@@ -274,7 +276,9 @@ class LinkReferenceDefinitionContinuationHelper:
             if last_block_quote_index > last_list_index:
                 TabHelper.adjust_block_quote_indent_for_tab(parser_state)
             else:
-                TabHelper.adjust_block_quote_indent_for_tab(parser_state, extracted_whitespace=extracted_whitespace)
+                TabHelper.adjust_block_quote_indent_for_tab(
+                    parser_state, extracted_whitespace=extracted_whitespace
+                )
         # POGGER.debug(
         #     "block_quote_token.leading_spaces>:$:<", block_quote_token.bleading_spaces
         # )
@@ -285,10 +289,10 @@ class LinkReferenceDefinitionContinuationHelper:
         parser_state: ParserState,
         extracted_whitespace: str,
         link_def_token: LinkDefinitionStackToken,
-        block_quote_token: BlockQuoteMarkdownToken,
-        last_block_quote_index:int,
-        list_token:ListStartMarkdownToken,
-        last_list_index:int,
+        block_quote_token: Optional[BlockQuoteMarkdownToken],
+        last_block_quote_index: int,
+        list_token: Optional[ListStartMarkdownToken],
+        last_list_index: int,
     ) -> Tuple[str, LinkReferenceDefinitionTuple]:
         split_tabs_list: List[bool] = []
         completed_lrd_text: str = ""
@@ -327,6 +331,7 @@ class LinkReferenceDefinitionContinuationHelper:
         assert new_parsed_lrd_tuple is not None, "New tuple must be defined."
 
         # if last_block_quote_index > last_list_index:
+        assert block_quote_token is not None
         LinkReferenceDefinitionContinuationHelper.__xx_multiple_fix_bleading_spaces(
             block_quote_token, split_tabs_list, link_def_token
         )
@@ -477,7 +482,7 @@ class LinkReferenceDefinitionContinuationHelper:
     #             l4 = l3.find(l2)
     #             l5 = l3[:l4]
     #             prefix_to_add = ""
-            
+
     #         del split_tabs_list[0]
     #         POGGER.debug(
     #             "__xx_multiple_fix_bleading_spaces>>block_token>>$", list_token
