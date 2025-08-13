@@ -5,10 +5,32 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Notes
 
+- None
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Added
+
+- None
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
+- None
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+- None
+
+## Version 0.9.32 - 2025-08-12
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Notes
+
 - If using pragmas, [Issue 1447](https://github.com/jackdewinter/pymarkdown/issues/1447)
   fixed an issue where a closing `--->` was not being handled properly.  As a result
   of fixing this issue in this release, pragmas starting with a `<!--` must end
-  with `-->` and pragma starting with a `<!---` must end with `--->`.
+  with `-->` and pragmas starting with a `<!---` must end with `--->`.
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
