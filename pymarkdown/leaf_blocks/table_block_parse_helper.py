@@ -16,6 +16,7 @@ from pymarkdown.links.link_reference_definition_parse_helper import (
 )
 
 
+## Different from LRD.
 class TableParseHelper:
     __table_column_separator_character = "|"
 
@@ -419,3 +420,6 @@ class TableParseHelper:
             #     continue_with_lrd = found_index != remaining_line_size - 1
             return True  # continue_with_lrd
         return False
+
+
+## Different from LRD.

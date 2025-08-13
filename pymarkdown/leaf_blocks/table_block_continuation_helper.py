@@ -45,14 +45,10 @@ class TableBlockContinuationHelper:
         did_complete_table: bool,
         parsed_table_tuple: Optional[TableTuple],
         lines_to_requeue: List[str],
-        process_mode: int,
-    ) -> Tuple[bool, bool, List[MarkdownToken], bool]:
+    ) -> Tuple[bool, bool, List[MarkdownToken]]:
         """
         Determine whether to continue with the processing of the table.
         """
-        # TODO leave in until testing of tables with tabs is complete.
-        _ = (process_mode, extracted_whitespace)
-
         if did_pause_table := (
             end_table_index >= 0
             and end_table_index == line_to_parse_size
@@ -64,6 +60,7 @@ class TableBlockContinuationHelper:
                 position_marker,
                 was_started,
                 remaining_line_to_parse,
+                extracted_whitespace,
                 unmodified_line_to_parse,
                 original_stack_depth,
                 original_document_depth,
@@ -78,7 +75,7 @@ class TableBlockContinuationHelper:
             )
 
         POGGER.debug(">>parse_table>>other")
-        return did_pause_table, False, [], False
+        return did_pause_table, False, []
 
     # pylint: enable=too-many-arguments, too-many-locals
 
@@ -89,7 +86,7 @@ class TableBlockContinuationHelper:
         parsed_table_tuple: Optional[TableTuple],
         lines_to_requeue: List[str],
         did_pause_table: bool,
-    ) -> Tuple[bool, bool, List[MarkdownToken], bool]:
+    ) -> Tuple[bool, bool, List[MarkdownToken]]:
         """
         As part of processing a table, stop a continuation.
         """
@@ -99,25 +96,27 @@ class TableBlockContinuationHelper:
             assert (
                 parsed_table_tuple.normalized_destination is not None
             ), "normalized_destination must be defined by now."
-            # TODO remove nd from parsed_table_tuple
+            ## Different from LRD.
             # did_add_definition = False  # LinkParseHelper.add_link_definition(                parsed_table_tuple.normalized_destination, parsed_table_tuple.link_titles            )
             table_stack_token = cast(TableBlockStackToken, parser_state.token_stack[-1])
-            # assert (
-            #     link_def_token.extracted_whitespace is not None
-            # ), "extracted_whitespace must be defined by now."
-            # extracted_whitespace = link_def_token.extracted_whitespace
+            ## Different from LRD.
+            assert (
+                table_stack_token.extracted_whitespace is not None
+            ), "extracted_whitespace must be defined by now."
+            extracted_whitespace = table_stack_token.extracted_whitespace
 
-            # POGGER.debug(
-            #     "link_def_token.extracted_whitespace>:$:<",
-            #     link_def_token.extracted_whitespace,
-            # )
-            # POGGER.debug(
-            #     "link_def_token.continuation_lines>:$:<",
-            #     link_def_token.continuation_lines,
-            # )
-            # POGGER.debug(
-            #     "link_def_token.unmodified_lines>:$:<", link_def_token.unmodified_lines
-            # )
+            POGGER.debug(
+                "table_stack_token.extracted_whitespace>:$:<",
+                table_stack_token.extracted_whitespace,
+            )
+            POGGER.debug(
+                "table_stack_token.continuation_lines>:$:<",
+                table_stack_token.continuation_lines,
+            )
+            POGGER.debug(
+                "table_stack_token.unmodified_lines>:$:<",
+                table_stack_token.unmodified_lines,
+            )
             POGGER.debug("lines_to_requeue>:$:<", lines_to_requeue)
 
             does_any_line_have_tabs = any(
@@ -126,6 +125,7 @@ class TableBlockContinuationHelper:
             )
             POGGER.debug("does_any_line_have_tabs>:$:<", does_any_line_have_tabs)
 
+            _ = extracted_whitespace
             # last_container_index = parser_state.find_last_container_on_stack()
             # if does_any_line_have_tabs and last_container_index > 0:
             #     (
@@ -136,16 +136,18 @@ class TableBlockContinuationHelper:
             #         table_stack_token,
             #         last_container_index,
             #         lines_to_requeue,
-            #         process_mode,
             #         extracted_whitespace,
             #         parsed_table_tuple,
             #     )
 
-            assert (
-                parsed_table_tuple.normalized_destination is not None
-            ), "normalized_destination must be defined by now."
+            ## Different from LRD.
+            # assert (
+            #     parsed_table_tuple.normalized_destination is not None
+            # ), "normalized_destination must be defined by now."
+            ## Different from LRD.
             new_tokens: List[MarkdownToken] = []
 
+            ## Different from LRD.
             start_token = TableMarkdownToken(
                 position_marker=table_stack_token.start_position_marker,
             )
@@ -192,6 +194,7 @@ class TableBlockContinuationHelper:
             new_tokens.append(
                 start_token.generate_close_markdown_token_from_markdown_token("", "")
             )
+            ## Different from LRD.
 
             # POGGER.debug(">>link_info>>$", parsed_table_tuple.link_info)
             # assert parsed_table_tuple.link_info.line_destination_whitespace is not None
@@ -201,13 +204,15 @@ class TableBlockContinuationHelper:
             #         parsed_table_tuple.link_info.line_destination_whitespace
             #     ),
             # )
+            ## Different from LRD.
             TableBlockContinuationHelper.__stop_table_continuation_end(
                 parser_state, new_tokens
             )
-            return did_pause_table, len(lines_to_requeue) > 1, new_tokens, False
+            ## Different from LRD.
+            return did_pause_table, len(lines_to_requeue) > 1, new_tokens
 
         del parser_state.token_stack[-1]
-        return did_pause_table, True, [], True
+        return did_pause_table, True, []
 
     @staticmethod
     def __stop_table_continuation_end(
@@ -294,11 +299,9 @@ class TableBlockContinuationHelper:
     #     table_stack_token: TableBlockStackToken,
     #     last_container_index: int,
     #     lines_to_requeue: List[str],
-    #     process_mode: int,
     #     extracted_whitespace: str,
     #     parsed_table_tuple: TableTuple,
     # ) -> Tuple[str, TableTuple]:
-    #     assert False
     #     POGGER.debug(
     #         "extracted_whitespace>:$:<",
     #         table_stack_token.extracted_whitespace,
@@ -323,9 +326,7 @@ class TableBlockContinuationHelper:
     #         extracted_whitespace = TableBlockContinuationHelper.__stop_table_continuation_with_tab_single(
     #             parser_state,
     #             table_stack_token,
-    #             process_mode,
     #             block_quote_token,
-    #             lines_to_requeue,
     #         )
     #     else:
     #         (
@@ -341,9 +342,7 @@ class TableBlockContinuationHelper:
     # def __stop_table_continuation_with_tab_single(
     #     parser_state: ParserState,
     #     table_stack_token: TableBlockStackToken,
-    #     process_mode: int,
     #     block_quote_token: BlockQuoteMarkdownToken,
-    #     lines_to_requeue: List[str],
     # ) -> str:
     #     parsed_lines = table_stack_token.continuation_lines[0]
     #     original_lines = table_stack_token.unmodified_lines[0]
@@ -356,15 +355,15 @@ class TableBlockContinuationHelper:
     #         parsed_lines, original_lines
     #     )
 
-    #     POGGER.debug("process_mode>:$:<", process_mode)
     #     POGGER.debug(
     #         "block_quote_token.leading_spaces>:$:<", block_quote_token.bleading_spaces
     #     )
-    #     if process_mode == 1:
-    #         block_quote_token.remove_last_bleading_space()
-    #     else:
-    #         for _ in lines_to_requeue:
-    #             block_quote_token.remove_last_bleading_space()
+    #     # POGGER.debug("process_mode>:$:<", process_mode)
+    #     # if process_mode == 1:
+    #     #     block_quote_token.remove_last_bleading_space()
+    #     # else:
+    #     #     for _ in lines_to_requeue:
+    #     #         block_quote_token.remove_last_bleading_space()
 
     #     if split_tab:
     #         TabHelper.adjust_block_quote_indent_for_tab(parser_state)
@@ -380,26 +379,25 @@ class TableBlockContinuationHelper:
     #     table_stack_token: TableBlockStackToken,
     #     block_quote_token: BlockQuoteMarkdownToken,
     # ) -> Tuple[str, TableTuple]:
-    #     assert False
     #     split_tabs_list: List[bool] = []
-    #     completed_table_text: str = ""
+    #     completed_lrd_text: str = ""
     #     alt_ws: Optional[str] = None
     #     for this_line_index, this_line in enumerate(table_stack_token.continuation_lines):
     #         (
-    #             completed_table_text,
+    #             completed_lrd_text,
     #             extracted_whitespace,
     #             alt_ws,
     #         ) = TableBlockContinuationHelper.__stop_table_continuation_with_tab_multiple_loop(
     #             table_stack_token,
     #             this_line_index,
     #             this_line,
-    #             completed_table_text,
+    #             completed_lrd_text,
     #             extracted_whitespace,
     #             alt_ws,
     #             split_tabs_list,
     #         )
 
-    #     POGGER.debug("completed_table_text>:$:<", completed_table_text)
+    #     POGGER.debug("completed_lrd_text>:$:<", completed_lrd_text)
     #     assert alt_ws is not None, "This value must be set inside of the for loop."
 
     #     (
@@ -407,13 +405,13 @@ class TableBlockContinuationHelper:
     #         next_index,
     #         new_parsed_table_tuple,
     #     ) = TableParseHelper.parse_table(
-    #         parser_state, completed_table_text, 0, alt_ws, True, ""
+    #         parser_state, completed_lrd_text, 0, alt_ws, True, "", True
     #     )
     #     assert (
     #         did_succeed
     #     ), "Since this is the stop and there is at least one valid match, this must be true."
     #     assert (
-    #         len(completed_table_text) == next_index
+    #         len(completed_lrd_text) == next_index
     #     ), "Index must be at the end of the stirng."
     #     assert new_parsed_table_tuple is not None, "New tuple must be defined."
 
@@ -422,18 +420,17 @@ class TableBlockContinuationHelper:
     #     )
     #     return extracted_whitespace, new_parsed_table_tuple
 
-    # # pylint: disable=too-many-arguments
+    # # # pylint: disable=too-many-arguments
     # @staticmethod
     # def __stop_table_continuation_with_tab_multiple_loop(
     #     table_stack_token: TableBlockStackToken,
     #     this_line_index: int,
     #     this_line: str,
-    #     completed_table_text: str,
+    #     completed_lrd_text: str,
     #     extracted_whitespace: str,
     #     alt_ws: Optional[str],
     #     split_tabs_list: List[bool],
     # ) -> Tuple[str, str, Optional[str]]:
-    #     assert False
     #     original_this_line = table_stack_token.unmodified_lines[this_line_index]
     #     POGGER.debug("this_line_index>:$:<", this_line_index)
     #     POGGER.debug("this_line>:$:<", this_line)
@@ -447,20 +444,20 @@ class TableBlockContinuationHelper:
     #         this_line, original_this_line
     #     )
 
-    #     if completed_table_text:
-    #         completed_table_text += "\n"
+    #     if completed_lrd_text:
+    #         completed_lrd_text += "\n"
     #     if this_line_index == 0:
     #         extracted_whitespace = extracted_ws
     #         alt_ws = TabHelper.detabify_string(
     #             extracted_whitespace, start_whitespace_index
     #         )
     #     else:
-    #         completed_table_text += extracted_ws
-    #     completed_table_text += this_line
+    #         completed_lrd_text += extracted_ws
+    #     completed_lrd_text += this_line
     #     split_tabs_list.append(split_tab)
-    #     return completed_table_text, extracted_whitespace, alt_ws
+    #     return completed_lrd_text, extracted_whitespace, alt_ws
 
-    # # pylint: enable=too-many-arguments
+    # # # pylint: enable=too-many-arguments
 
     # @staticmethod
     # def __find_line_ws(parsed_lines: str, original_lines: str) -> Tuple[str, bool, int]:
@@ -501,7 +498,7 @@ class TableBlockContinuationHelper:
     #         POGGER.debug("last_leading_space>:$:<", last_leading_space)
     #         # if last_leading_space[0] == "\n":
     #         #     last_leading_space = last_leading_space[1:]
-    #         leading_spaces.append(last_leading_space)
+    #         leading_spaces.insert(0, last_leading_space)
     #     assert len(split_tabs_list) == len(
     #         leading_spaces
     #     ), "The two lists must have the same length."
@@ -511,8 +508,9 @@ class TableBlockContinuationHelper:
     #     )
     #     is_first = not block_quote_token.bleading_spaces
     #     for prefix_to_add in leading_spaces:
-    #         if split_tabs_list[0]:
-    #             prefix_to_add = prefix_to_add[:-1]
+    #         # if split_tabs_list[0] and prefix_to_add[-1] == " "):
+    #         #   prefix_to_add = prefix_to_add[:-1]
+    #         assert not (split_tabs_list[0] and prefix_to_add[-1] == " ")
     #         del split_tabs_list[0]
     #         POGGER.debug(
     #             "__xx_multiple_fix_leading_spaces>>block_token>>$", block_quote_token
@@ -530,6 +528,7 @@ class TableBlockContinuationHelper:
         position_marker: PositionMarker,
         was_started: bool,
         remaining_line_to_parse: str,
+        extracted_whitespace: str,
         unmodified_line_to_parse: str,
         original_stack_depth: int,
         original_document_depth: int,
@@ -541,7 +540,7 @@ class TableBlockContinuationHelper:
         line_to_store = remaining_line_to_parse
         if not was_started:
             POGGER.debug(">>parse_table>>marking start")
-            new_token = TableBlockStackToken(position_marker)
+            new_token = TableBlockStackToken(extracted_whitespace, position_marker)
             parser_state.token_stack.append(new_token)
             new_token.original_stack_depth = original_stack_depth
             new_token.original_document_depth = original_document_depth

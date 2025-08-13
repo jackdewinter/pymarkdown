@@ -40,6 +40,3 @@ class TableTuple:
     normalized_destination: Optional[str]
     xyz: List[TableRow]
     col_as: List[Optional[str]]
-
-    # link_titles: LinkReferenceTitles
-    # link_info: LinkReferenceInfo

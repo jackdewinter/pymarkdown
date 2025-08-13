@@ -34,6 +34,8 @@ class LinkReferenceDefinitionParseHelper:
         start_index: int,
         extracted_whitespace: str,
         is_blank_line: bool,
+        remaining_line_to_parse: str,
+        was_started: bool,
     ) -> Tuple[bool, int, Optional[LinkReferenceDefinitionTuple]]:
         """
         Handle the parsing of what appears to be a link reference definition.

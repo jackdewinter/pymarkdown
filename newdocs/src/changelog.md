@@ -37,6 +37,8 @@
     - multiple issues with LRDs and whitespace/tabs
 - [Issue 1447](https://github.com/jackdewinter/pymarkdown/issues/1447)
     - was not handling `--->` properly at the end of pragmas
+- [Issue 1464](https://github.com/jackdewinter/pymarkdown/issues/1464)
+    - adding better support for tabs with LRDs.
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed

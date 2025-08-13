@@ -19,6 +19,7 @@ from pymarkdown.tokens.block_quote_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.tokens.link_reference_definition_markdown_token import (
     LinkReferenceDefinitionMarkdownToken,
 )
+from pymarkdown.tokens.list_start_markdown_token import ListStartMarkdownToken
 from pymarkdown.tokens.markdown_token import MarkdownToken
 from pymarkdown.tokens.stack_token import LinkDefinitionStackToken
 
@@ -50,7 +51,6 @@ class LinkReferenceDefinitionContinuationHelper:
         did_complete_lrd: bool,
         parsed_lrd_tuple: Optional[LinkReferenceDefinitionTuple],
         lines_to_requeue: List[str],
-        process_mode: int,
     ) -> Tuple[bool, bool, List[MarkdownToken]]:
         """
         Determine whether to continue with the processing of the LRD.
@@ -77,7 +77,6 @@ class LinkReferenceDefinitionContinuationHelper:
                 did_complete_lrd,
                 parsed_lrd_tuple,
                 lines_to_requeue,
-                process_mode,
                 did_pause_lrd,
             )
 
@@ -94,7 +93,6 @@ class LinkReferenceDefinitionContinuationHelper:
         did_complete_lrd: bool,
         parsed_lrd_tuple: Optional[LinkReferenceDefinitionTuple],
         lines_to_requeue: List[str],
-        process_mode: int,
         did_pause_lrd: bool,
     ) -> Tuple[bool, bool, List[MarkdownToken]]:
         """
@@ -145,7 +143,6 @@ class LinkReferenceDefinitionContinuationHelper:
                     parser_state,
                     link_def_token,
                     last_container_index,
-                    process_mode,
                     extracted_whitespace,
                     parsed_lrd_tuple,
                 )
@@ -186,7 +183,6 @@ class LinkReferenceDefinitionContinuationHelper:
         parser_state: ParserState,
         link_def_token: LinkDefinitionStackToken,
         last_container_index: int,
-        process_mode: int,
         extracted_whitespace: str,
         parsed_lrd_tuple: LinkReferenceDefinitionTuple,
     ) -> Tuple[str, LinkReferenceDefinitionTuple]:
@@ -194,14 +190,23 @@ class LinkReferenceDefinitionContinuationHelper:
             "extracted_whitespace>:$:<",
             link_def_token.extracted_whitespace,
         )
-        assert parser_state.token_stack[
-            last_container_index
-        ].is_block_quote, "Container must be a block quote."
+        # assert parser_state.token_stack[
+        #     last_container_index
+        # ].is_block_quote, "Container must be a block quote."
+        block_quote_token = None
+        list_token = None
         last_block_quote_index = parser_state.find_last_block_quote_on_stack()
-        last_block_quote_token = parser_state.token_stack[last_block_quote_index]
-        block_quote_token = cast(
-            BlockQuoteMarkdownToken, last_block_quote_token.matching_markdown_token
-        )
+        if last_block_quote_index:
+            last_block_quote_token = parser_state.token_stack[last_block_quote_index]
+            block_quote_token = cast(
+                BlockQuoteMarkdownToken, last_block_quote_token.matching_markdown_token
+            )
+        last_list_index = parser_state.find_last_list_block_on_stack()
+        if last_list_index:
+            last_list_token = parser_state.token_stack[last_list_index]
+            list_token = cast(
+                ListStartMarkdownToken, last_list_token.matching_markdown_token
+            )
 
         POGGER.debug(
             "link_def_token.continuation_lines>:$:<", link_def_token.continuation_lines
@@ -214,15 +219,23 @@ class LinkReferenceDefinitionContinuationHelper:
             extracted_whitespace = LinkReferenceDefinitionContinuationHelper.__stop_lrd_continuation_with_tab_single(
                 parser_state,
                 link_def_token,
-                process_mode,
                 block_quote_token,
+                last_block_quote_index,
+                list_token,
+                last_list_index,
             )
         else:
             (
                 extracted_whitespace,
                 parsed_lrd_tuple,
             ) = LinkReferenceDefinitionContinuationHelper.__stop_lrd_continuation_with_tab_multiple(
-                parser_state, extracted_whitespace, link_def_token, block_quote_token
+                parser_state,
+                extracted_whitespace,
+                link_def_token,
+                block_quote_token,
+                last_block_quote_index,
+                list_token,
+                last_list_index,
             )
 
         return extracted_whitespace, parsed_lrd_tuple
@@ -233,24 +246,26 @@ class LinkReferenceDefinitionContinuationHelper:
     def __stop_lrd_continuation_with_tab_single(
         parser_state: ParserState,
         link_def_token: LinkDefinitionStackToken,
-        process_mode: int,
-        block_quote_token: BlockQuoteMarkdownToken,
+        block_quote_token: Optional[BlockQuoteMarkdownToken],
+        last_block_quote_index: int,
+        list_token: Optional[ListStartMarkdownToken],
+        last_list_index: int,
     ) -> str:
-        parsed_lines = link_def_token.continuation_lines[0]
-        original_lines = link_def_token.unmodified_lines[0]
+        parsed_line = link_def_token.continuation_lines[0]
+        original_line = link_def_token.unmodified_lines[0]
 
         (
             extracted_whitespace,
             split_tab,
             _,
         ) = LinkReferenceDefinitionContinuationHelper.__find_line_ws(
-            parsed_lines, original_lines
+            parsed_line, original_line
         )
 
-        POGGER.debug("process_mode>:$:<", process_mode)
-        POGGER.debug(
-            "block_quote_token.leading_spaces>:$:<", block_quote_token.bleading_spaces
-        )
+        # POGGER.debug(
+        #     "block_quote_token.leading_spaces>:$:<", block_quote_token.bleading_spaces
+        # )
+        # POGGER.debug("process_mode>:$:<", process_mode)
         # if process_mode == 1:
         #     block_quote_token.remove_last_bleading_space()
         # else:
@@ -258,10 +273,15 @@ class LinkReferenceDefinitionContinuationHelper:
         #         block_quote_token.remove_last_bleading_space()
 
         if split_tab:
-            TabHelper.adjust_block_quote_indent_for_tab(parser_state)
-        POGGER.debug(
-            "block_quote_token.leading_spaces>:$:<", block_quote_token.bleading_spaces
-        )
+            if last_block_quote_index > last_list_index:
+                TabHelper.adjust_block_quote_indent_for_tab(parser_state)
+            else:
+                TabHelper.adjust_block_quote_indent_for_tab(
+                    parser_state, extracted_whitespace=extracted_whitespace
+                )
+        # POGGER.debug(
+        #     "block_quote_token.leading_spaces>:$:<", block_quote_token.bleading_spaces
+        # )
         return extracted_whitespace
 
     @staticmethod
@@ -269,7 +289,10 @@ class LinkReferenceDefinitionContinuationHelper:
         parser_state: ParserState,
         extracted_whitespace: str,
         link_def_token: LinkDefinitionStackToken,
-        block_quote_token: BlockQuoteMarkdownToken,
+        block_quote_token: Optional[BlockQuoteMarkdownToken],
+        last_block_quote_index: int,
+        list_token: Optional[ListStartMarkdownToken],
+        last_list_index: int,
     ) -> Tuple[str, LinkReferenceDefinitionTuple]:
         split_tabs_list: List[bool] = []
         completed_lrd_text: str = ""
@@ -297,7 +320,7 @@ class LinkReferenceDefinitionContinuationHelper:
             next_index,
             new_parsed_lrd_tuple,
         ) = LinkReferenceDefinitionParseHelper.parse_link_reference_definition(
-            parser_state, completed_lrd_text, 0, alt_ws, True
+            parser_state, completed_lrd_text, 0, "", True, "", True
         )
         assert (
             did_succeed
@@ -307,9 +330,15 @@ class LinkReferenceDefinitionContinuationHelper:
         ), "Index must be at the end of the stirng."
         assert new_parsed_lrd_tuple is not None, "New tuple must be defined."
 
-        LinkReferenceDefinitionContinuationHelper.__xx_multiple_fix_leading_spaces(
+        # if last_block_quote_index > last_list_index:
+        assert block_quote_token is not None
+        LinkReferenceDefinitionContinuationHelper.__xx_multiple_fix_bleading_spaces(
             block_quote_token, split_tabs_list, link_def_token
         )
+        # else:
+        #     LinkReferenceDefinitionContinuationHelper.__xx_multiple_fix_leading_spaces(
+        #         list_token, split_tabs_list, link_def_token
+        #     )
         return extracted_whitespace, new_parsed_lrd_tuple
 
     # pylint: disable=too-many-arguments
@@ -362,6 +391,9 @@ class LinkReferenceDefinitionContinuationHelper:
         POGGER.debug("start_whitespace_index>:$:<", start_whitespace_index)
         tabified_whitespace = original_lines[start_whitespace_index:start_text_index]
         POGGER.debug("tabified_whitespace>:$:<", tabified_whitespace)
+
+        # find_tabified_string instead?
+
         split_tab = bool(tabified_whitespace and tabified_whitespace[0] == "\t")
         if not split_tab:
             tabified_whitespace = tabified_whitespace[1:]
@@ -372,7 +404,7 @@ class LinkReferenceDefinitionContinuationHelper:
         return extracted_whitespace, split_tab, start_whitespace_index
 
     @staticmethod
-    def __xx_multiple_fix_leading_spaces(
+    def __xx_multiple_fix_bleading_spaces(
         block_quote_token: BlockQuoteMarkdownToken,
         split_tabs_list: List[bool],
         link_def_token: LinkDefinitionStackToken,
@@ -405,13 +437,62 @@ class LinkReferenceDefinitionContinuationHelper:
             assert not (split_tabs_list[0] and prefix_to_add[-1] == " ")
             del split_tabs_list[0]
             POGGER.debug(
-                "__xx_multiple_fix_leading_spaces>>block_token>>$", block_quote_token
+                "__xx_multiple_fix_bleading_spaces>>block_token>>$", block_quote_token
             )
             block_quote_token.add_bleading_spaces(prefix_to_add, is_first)
             POGGER.debug(
-                "__xx_multiple_fix_leading_spaces>>block_token>>$", block_quote_token
+                "__xx_multiple_fix_bleading_spaces>>block_token>>$", block_quote_token
             )
             is_first = False
+
+    # @staticmethod
+    # def __xx_multiple_fix_leading_spaces(
+    #     list_token: ListStartMarkdownToken,
+    #     split_tabs_list: List[bool],
+    #     link_def_token: LinkDefinitionStackToken,
+    # ) -> None:
+    #     POGGER.debug("split_tabs_list>:$:<", split_tabs_list)
+    #     POGGER.debug(
+    #         "list_token.leading_spaces>:$:<", list_token.leading_spaces
+    #     )
+    #     assert (
+    #         list_token.leading_spaces is not None
+    #     ), "leading spaces must be defined by now."
+    #     leading_spaces: List[str] = []
+    #     for _ in link_def_token.continuation_lines:
+    #         last_leading_space = list_token.remove_last_leading_space()
+    #         POGGER.debug("last_leading_space>:$:<", last_leading_space)
+    #         # if last_leading_space[0] == "\n":
+    #         #     last_leading_space = last_leading_space[1:]
+    #         leading_spaces.insert(0, last_leading_space)
+    #     assert len(split_tabs_list) == len(
+    #         leading_spaces
+    #     ), "The two lists must have the same length."
+    #     POGGER.debug("leading_spaces>:$:<", leading_spaces)
+    #     POGGER.debug(
+    #         "list_token.leading_spaces>:$:<", list_token.leading_spaces
+    #     )
+    #     is_first = not list_token.leading_spaces
+    #     for x, prefix_to_add in enumerate(leading_spaces):
+    #         # assert not (split_tabs_list[0] and prefix_to_add[-1] == " ")
+    #         if split_tabs_list[0]:
+    #             l1 = prefix_to_add
+    #             l2 = link_def_token.continuation_lines[x]
+    #             l3 = link_def_token.unmodified_lines[x]
+    #             l4 = l3.find(l2)
+    #             l5 = l3[:l4]
+    #             prefix_to_add = ""
+
+    #         del split_tabs_list[0]
+    #         POGGER.debug(
+    #             "__xx_multiple_fix_bleading_spaces>>block_token>>$", list_token
+    #         )
+    #         list_token.add_leading_spaces(prefix_to_add)
+    #         POGGER.debug(
+    #             "__xx_multiple_fix_bleading_spaces>>block_token>>$", list_token
+    #         )
+    #         is_first = False
+    #     i = 0
 
     # pylint: disable=too-many-arguments
     @staticmethod

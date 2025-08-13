@@ -201,6 +201,11 @@ class LeafBlockProcessorParagraph:
                     if checked_whitespace_for_tab and not is_block_quote_container
                     else 0
                 )
+                if checked_whitespace_for_tab and not is_block_quote_container:
+                    detabified_whitespace = TabHelper.detabify_string(
+                        corrected_extracted_whitespace
+                    )
+                    initial_offset = len(detabified_whitespace)
                 POGGER.debug("initial_offset=:$:", initial_offset)
                 corrected_tab_text, _, _ = TabHelper.find_detabify_string_verified(
                     original_line,

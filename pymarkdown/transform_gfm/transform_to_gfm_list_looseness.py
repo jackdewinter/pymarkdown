@@ -256,10 +256,12 @@ class TransformToGfmListLooseness:
             POGGER.debug(">>end_>using_start>>$", pre_prev_token)
 
         current_check = (
-            current_token.is_block and not current_token.is_link_reference_definition
+            # current_token.is_block and not current_token.is_link_reference_definition
+            current_token.is_block
+            or current_token.is_link_reference_definition
         )
         pre_prev_check = (
-            pre_prev_token.is_block and not pre_prev_token.is_link_reference_definition
+            pre_prev_token.is_block  # and not pre_prev_token.is_link_reference_definition
         )
 
         POGGER.debug(">>other--stack_count>>$", stack_count)

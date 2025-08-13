@@ -745,7 +745,7 @@ class TokenizedMarkdown:
             requeue_line_info,
             adjusted_tokens,
         ) = LinkReferenceDefinitionHelper.process_link_reference_definition(
-            parser_state, empty_position_marker, "", "", "", 0, 0, "", 1
+            parser_state, empty_position_marker, "", "", "", 0, 0, ""
         )
 
         POGGER.debug("BOOOM: caller_can_handle_requeue=$", caller_can_handle_requeue)
@@ -788,7 +788,7 @@ class TokenizedMarkdown:
             requeue_line_info,
             adjusted_tokens,
         ) = TableBlockHelper.process_table_rows(
-            parser_state, empty_position_marker, "", "", "", 0, 0, "", 1
+            parser_state, empty_position_marker, "", "", "", 0, 0, ""
         )
 
         POGGER.debug("BOOOM: caller_can_handle_requeue=$", caller_can_handle_requeue)
@@ -1094,7 +1094,6 @@ class TokenizedMarkdown:
                 0,
                 0,
                 parser_state.original_line_to_parse,
-                2,
             )
             assert not did_pause_lrd, "LRD parsing must not be paused."
             POGGER.debug(
@@ -1114,7 +1113,7 @@ class TokenizedMarkdown:
                 requeue_line_info,
                 new_tokens,
             ) = TableBlockHelper.process_table_rows(
-                parser_state, empty_position_marker, "", "", unmod, 0, 0, "", 2
+                parser_state, empty_position_marker, "", "", unmod, 0, 0, ""
             )
             assert not did_pause_lrd, "Table parsing must not be paused."
             POGGER.debug("hbl<<process_table>>stopping table")

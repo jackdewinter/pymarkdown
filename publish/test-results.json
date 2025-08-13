@@ -631,7 +631,7 @@
             "totalTests": 129,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 11,
+            "skippedTests": 14,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -740,10 +740,10 @@
         },
         {
             "name": "test.gfm.test_markdown_whitespace_link_reference_definition",
-            "totalTests": 102,
+            "totalTests": 108,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 2,
             "elapsedTimeInMilliseconds": 0
         },
         {
