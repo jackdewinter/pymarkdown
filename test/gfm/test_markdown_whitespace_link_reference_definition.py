@@ -6,9 +6,10 @@ from test.utils import act_and_assert
 
 import pytest
 
+enable_tables_config_map = {"extensions": {"markdown-tables": {"enabled": True}}}
 
-@pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_before() -> None:
+
+def test_whitespaces_lrd_with_spaces_before_x() -> None:
     """
     Test case:  LRD preceeded by spaces.
     """
@@ -30,10 +31,11 @@ def test_whitespaces_lrd_with_spaces_before() -> None:
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.gfm
 def test_whitespaces_lrd_with_too_many_spaces_before() -> None:
     """
     Test case:  LRD preceeded by spaces.
+
+    test_whitespaces_tables_with_too_many_spaces_before
     """
 
     # Arrange
@@ -51,10 +53,37 @@ def test_whitespaces_lrd_with_too_many_spaces_before() -> None:
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before() -> None:
+def test_whitespaces_lrd_with_too_many_spaces_before_after_first() -> None:
+    """
+    Test case:  LRD preceeded by spaces.
+
+    test_whitespaces_tables_with_too_many_spaces_before_after_first
+    """
+
+    # Arrange
+    source_markdown = """[fred]:
+    /url
+    'title'
+[fred]"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::fred::\n    :/url::\n    :title:'title':]",
+        "[para(4,1):]",
+        "[link(4,1):shortcut:/url:title::::fred:False::::]",
+        "[text(4,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><a href="/url" title="title">fred</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+def test_whitespaces_lrd_with_tabs_before_x() -> None:
     """
     Test case:  LRD preceeded by tabs.
+
+    test_whitespaces_tables_with_tabs_before_x
     """
 
     # Arrange
@@ -127,18 +156,113 @@ def test_whitespaces_lrd_with_form_feeds_before() -> None:
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_before_within_list() -> None:
+def test_whitespaces_lrd_with_spaces_within_ulist_x() -> None:
     """
-    Test case:  LRD preceeded by spaces and tabs.
+    Test case: "LRD" within a single unordered list item.
+    """
+
+    # Arrange
+    source_markdown = """- [fred]: /url
+[fred]"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[link-ref-def(1,3):True::fred:: :/url:::::]",
+        "[end-ulist:::True]",
+        "[para(2,1):]",
+        "[link(2,1):shortcut:/url:::::fred:False::::]",
+        "[text(2,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<ul>
+<li></li>
+</ul>
+<p><a href="/url">fred</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_spaces_within_ulist_a() -> None:
+    """
+    Test case: "LRD" within a single unordered list item.
+    """
+
+    # Arrange
+    source_markdown = """- [fred]: /url 'abc'
+[fred]"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[link-ref-def(1,3):True::fred:: :/url:: :abc:'abc':]",
+        "[end-ulist:::True]",
+        "[para(2,1):]",
+        "[link(2,1):shortcut:/url:abc::::fred:False::::]",
+        "[text(2,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<ul>
+<li></li>
+</ul>
+<p><a href="/url" title="abc">fred</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_spaces_within_ulist_leading_para_x() -> None:
+    """
+    Test case: "LRD" within a single unordered list item, preceeded by a blank line and just enough spaces.
+        The blank line is required as LRDs cannot interrupt a paragraph.
+
+    Related: test_whitespaces_tables_extension_with_spaces_within_ulist
     """
 
     # Arrange
     source_markdown = """- abc
-    [fred]: /url
+
+  [fred]: /url
+[fred]"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::\n  ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[link-ref-def(3,3):True::fred:: :/url:::::]",
+        "[end-ulist:::True]",
+        "[para(4,1):]",
+        "[link(4,1):shortcut:/url:::::fred:False::::]",
+        "[text(4,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>abc</p>
+</li>
+</ul>
+<p><a href="/url">fred</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+def test_whitespaces_lrd_with_spaces_within_ulist_leading_para_a() -> None:
+    """
+    Test case: "LRD" within a single unordered list item, preceeded by a blank line and just enough spaces.
+        The blank line is required as LRDs cannot interrupt a paragraph.
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  [fred]: /url
 [fred]"""
     expected_tokens = [
         "[ulist(1,1):-::2::  \n]",
-        "[para(1,3):\n  \n]",
+        "[para(1,3):\n\n]",
         "[text(1,3):abc\n[fred]: /url\n[fred]::\n\n]",
         "[end-para:::True]",
         "[end-ulist:::True]",
@@ -153,20 +277,304 @@ def test_whitespaces_lrd_with_spaces_before_within_list() -> None:
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_before_within_block_quotes() -> None:
+def test_whitespaces_lrd_with_spaces_within_ulist_leading_para_b() -> None:
     """
-    Test case:  LRD preceeded by spaces.
+    Test case: "LRD" within a single unordered list item, preceeded by a blank line and just enough spaces.
+        The blank line is required as LRDs cannot interrupt a paragraph.
+    """
+
+    # Arrange
+    source_markdown = """-
+  [fred]: /url
+[fred]"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[BLANK(1,2):]",
+        "[link-ref-def(2,3):True::fred:: :/url:::::]",
+        "[end-ulist:::True]",
+        "[para(3,1):]",
+        "[link(3,1):shortcut:/url:::::fred:False::::]",
+        "[text(3,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<ul>
+<li></li>
+</ul>
+<p><a href="/url">fred</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+def test_whitespaces_lrd_with_spaces_extra_within_ulist_leading_para() -> None:
+    """
+    Test case: "LRD" within a single unordered list item, preceeded by a blank line and more than enough spaces.
+        The blank line is required as LRDs cannot interrupt a paragraph.
+
+    Related: test_whitespaces_tables_extension_with_spaces_extra_within_ulist
+    """
+
+    # Arrange
+    source_markdown = """- abc
+
+    [fred]: /url
+[fred]"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::\n  ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[link-ref-def(3,5):True:  :fred:: :/url:::::]",
+        "[end-ulist:::True]",
+        "[para(4,1):]",
+        "[link(4,1):shortcut:/url:::::fred:False::::]",
+        "[text(4,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>abc</p>
+</li>
+</ul>
+<p><a href="/url">fred</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+def test_whitespaces_lrd_with_spaces_within_ulist_leading_para_split_two_lines_minus_all_spaces() -> (
+    None
+):
+    """
+    Test case extra 01:  LRD within list item
+    """
+
+    # Arrange
+    source_markdown = """- [foo]:
+/url"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::]",
+        "[para(1,3):\n]",
+        "[text(1,3):[foo]:\n/url::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>[foo]:
+/url</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+def test_whitespaces_lrd_with_spaces_within_ulist_leading_para_split_two_lines_x() -> (
+    None
+):
+    """
+    Test case extra 01a:  variation on 1 with proper indent
+    """
+
+    # Arrange
+    source_markdown = """- [foo]:
+  /url"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[link-ref-def(1,3):True::foo::\n:/url:::::]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li></li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+def test_whitespaces_lrd_with_spaces_within_ulist_leading_para_split_two_lines_minus_some_spaces() -> (
+    None
+):
+    """
+    Test case extra 01b:  variation on 1 with almost proper indent
+
+    NOTE: Due to https://talk.commonmark.org/t/block-quotes-laziness-and-link-reference-definitions/3751
+          the GFM output has been adjusted to compensate for PyMarkdown using a token and not parsing
+          the text afterwards.
+
+    """
+
+    # Arrange
+    source_markdown = """- [foo]:
+ /url"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::]",
+        "[para(1,3):\n ]",
+        "[text(1,3):[foo]:\n/url::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>[foo]:
+/url</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+def test_whitespaces_lrd_with_spaces_within_olist() -> None:
+    """
+    Test case: "LRD" within a single ordered list item, preceeded by just enough spaces.
+        As LRDs cannot interrupt a paragraph, this should be treated as an extension of the paragraph.
+
+    Related: test_whitespaces_tables_extension_with_spaces_within_olist
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+
+   [fred]: /url
+[fred]"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n   ]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[link-ref-def(3,4):True::fred:: :/url:::::]",
+        "[end-olist:::True]",
+        "[para(4,1):]",
+        "[link(4,1):shortcut:/url:::::fred:False::::]",
+        "[text(4,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<p>abc</p>
+</li>
+</ol>
+<p><a href="/url">fred</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+def test_whitespaces_lrd_with_spaces_extra_within_olist() -> None:
+    """
+    Test case: "LRD" within a single ordered list item, preceeded by extra spaces.
+        As LRDs cannot interrupt a paragraph, this should be treated as an extension of the paragraph.
+
+    Related: test_whitespaces_tables_extension_with_spaces_extra_within_olist
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+
+    [fred]: /url
+[fred]"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n   ]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[link-ref-def(3,5):True: :fred:: :/url:::::]",
+        "[end-olist:::True]",
+        "[para(4,1):]",
+        "[link(4,1):shortcut:/url:::::fred:False::::]",
+        "[text(4,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<p>abc</p>
+</li>
+</ol>
+<p><a href="/url">fred</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+def test_whitespaces_lrd_with_spaces_within_block_quote() -> None:
+    """
+    Test case: LRD within a single block quote, preceeded by just enough spaces.
+        As LRDs cannot interrupt a paragraph, this should be treated as an extension of the paragraph.
+
+    Related: test_whitespaces_tables_extension_with_spaces_within_block_quote
+    """
+
+    # Arrange
+    source_markdown = """> [fred]: /url
+> [fred]"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> ]",
+        "[link-ref-def(1,3):True::fred:: :/url:::::]",
+        "[para(2,3):]",
+        "[link(2,3):shortcut:/url:::::fred:False::::]",
+        "[text(2,4):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p><a href="/url">fred</a></p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+def test_whitespaces_lrd_with_spaces_extra_within_block_quote() -> None:
+    """
+    Test case: LRD within a single block quote, preceeded by extra spaces.
+        As LRDs cannot interrupt a paragraph, this should be treated as an extension of the paragraph.
+
+    Related: test_whitespaces_tables_extension_with_spaces_extra_within_block_quote
+    """
+
+    # Arrange
+    source_markdown = """> abc
+>  [fred]: /url
+>  [fred]"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> ]",
+        "[para(1,3):\n \n ]",
+        "[text(1,3):abc\n[fred]: /url\n[fred]::\n\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc
+[fred]: /url
+[fred]</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+def test_whitespaces_lrd_with_spaces_after_block_quote() -> None:
+    """
+    Test case: Table after text within single block quote, without any block quote start character.
+        As LRDs cannot interrupt a paragraph, this should be treated as an extension of the paragraph.
+
+    Related: test_whitespaces_tables_extension_with_spaces_after_block_quote
     """
 
     # Arrange
     source_markdown = """> abc
 > def
-    [fred]: /url
+  [fred]: /url
 [fred]"""
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n\n]",
-        "[para(1,3):\n\n    \n]",
+        "[para(1,3):\n\n  \n]",
         "[text(1,3):abc\ndef\n[fred]: /url\n[fred]::\n\n\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
@@ -182,33 +590,69 @@ def
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_before_within_double_block_quotes() -> None:
+def test_whitespaces_lrd_with_spaces_after_blank_line_and_block_quote() -> None:
     """
-    Test case:  LRD preceeded by spaces.
+    Test case: Table after text within single block quote, without any block quote start character.
+
+    Related: test_whitespaces_tables_extension_with_spaces_after_block_quote
     """
 
     # Arrange
     source_markdown = """> abc
-> > def
-    [fred]: /url
+> def
+
+  [fred]: /url
 [fred]"""
     expected_tokens = [
-        "[block-quote(1,1)::> ]",
-        "[para(1,3):]",
-        "[text(1,3):abc:]",
+        "[block-quote(1,1)::> \n> \n]",
+        "[para(1,3):\n]",
+        "[text(1,3):abc\ndef::\n]",
         "[end-para:::True]",
-        "[block-quote(2,1)::> > \n\n]",
-        "[para(2,5):\n    \n]",
-        "[text(2,5):def\n[fred]: /url\n[fred]::\n\n]",
+        "[end-block-quote:::True]",
+        "[BLANK(3,1):]",
+        "[link-ref-def(4,3):True:  :fred:: :/url:::::]",
+        "[para(5,1):]",
+        "[link(5,1):shortcut:/url:::::fred:False::::]",
+        "[text(5,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc
+def</p>
+</blockquote>
+<p><a href="/url">fred</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+def test_whitespaces_lrd_with_some_spaces_after_double_block_quotes() -> None:
+    """
+    Test case: "LRD" after text within double block quote, without any block quote start character.
+        As LRDs cannot interrupt a paragraph, this should be treated as an extension of the paragraph.
+
+    Related: xxxxxxxxxxtexxxxst_whitespaces_tables_extension_with_spaces_after_block_quote
+    """
+
+    # Arrange
+    source_markdown = """> > abc
+> > def
+  [fred]: /url
+[fred]"""
+    expected_tokens = [
+        "[block-quote(1,1)::]",
+        "[block-quote(1,3)::> > \n> > \n\n]",
+        "[para(1,5):\n\n  \n]",
+        "[text(1,5):abc\ndef\n[fred]: /url\n[fred]::\n\n\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
-<p>abc</p>
 <blockquote>
-<p>def
+<p>abc
+def
 [fred]: /url
 [fred]</p>
 </blockquote>
@@ -218,12 +662,49 @@ def test_whitespaces_lrd_with_spaces_before_within_double_block_quotes() -> None
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_before_within_double_block_quote_with_single() -> (
+def test_whitespaces_lrd_with_extra_spaces_after_double_block_quotes() -> None:
+    """
+    Test case: "LRD" after text within double block quote, without any block quote start character.
+        As LRDs cannot interrupt a paragraph, this should be treated as an extension of the paragraph.
+
+    Related: test_whitespaces_tables_extension_with_extra_spaces_after_double_block_quotes
+    """
+
+    # Arrange
+    source_markdown = """> > abc
+> > def
+    [fred]: /url
+[fred]"""
+    expected_tokens = [
+        "[block-quote(1,1)::]",
+        "[block-quote(1,3)::> > \n> > \n\n]",
+        "[para(1,5):\n\n    \n]",
+        "[text(1,5):abc\ndef\n[fred]: /url\n[fred]::\n\n\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<blockquote>
+<p>abc
+def
+[fred]: /url
+[fred]</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+def test_whitespaces_lrd_with_spaces_within_single_block_quote_after_double_block_quote() -> (
     None
 ):
     """
-    Test case:  LRD preceeded by spaces.
+    Test case: "LRD" after text within single block quote, occurring after a double block quote.
+        As LRDs cannot interrupt a paragraph, this should be treated as an extension of the paragraph.
+
+    Related: test_whitespaces_tables_extension_with_spaces_within_single_block_quote_after_double_block_quote
     """
 
     # Arrange
@@ -251,38 +732,6 @@ def test_whitespaces_lrd_with_spaces_before_within_double_block_quote_with_singl
 [fred]</p>
 </blockquote>
 </blockquote>"""
-
-    # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
-
-
-@pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_before_within_ordered_list() -> None:
-    """
-    Test case:  LRD preceeded by spaces.
-    """
-
-    # Arrange
-    source_markdown = """1. abc
-    [fred]: /url
-
-[fred]"""
-    expected_tokens = [
-        "[olist(1,1):.:1:3::   \n]",
-        "[para(1,4):\n ]",
-        "[text(1,4):abc\n[fred]: /url::\n]",
-        "[end-para:::True]",
-        "[BLANK(3,1):]",
-        "[end-olist:::True]",
-        "[para(4,1):]",
-        "[text(4,1):[fred]:]",
-        "[end-para:::True]",
-    ]
-    expected_gfm = """<ol>
-<li>abc
-[fred]: /url</li>
-</ol>
-<p>[fred]</p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -573,7 +1022,7 @@ def test_whitespaces_lrd_with_tabs_before_within_ordered_double_list_only_spaces
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_formfeeds_before_within_list() -> None:
+def test_whitespaces_lrd_with_formfeeds_before_within_list_x() -> None:
     """
     Test case:  LRD preceeded by spaces and tabs.
     """
@@ -598,6 +1047,44 @@ def test_whitespaces_lrd_with_formfeeds_before_within_list() -> None:
 <li>abc
 \u000C \u000C[fred]: /url</li>
 </ul>
+<p>[fred]</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_formfeeds_before_within_list_a() -> None:
+    """
+    Test case:  LRD preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """- abc
+
+ \u000C \u000C[fred]: /url
+
+[fred]"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[end-ulist:::True]",
+        "[para(3,2): \u000C \u000C]",
+        "[text(3,2):[fred]: /url:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[para(5,1):]",
+        "[text(5,1):[fred]:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc</li>
+</ul>
+<p> \u000C \u000C[fred]: /url</p>
 <p>[fred]</p>"""
 
     # Act & Assert
@@ -777,17 +1264,6 @@ def test_whitespaces_lrd_with_spaces_before_within_double_block_quotes_with_zero
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_before_within_double_block_quotes_with_zero_and_four_spaces_at_start() -> (
-    None
-):
-    """
-    Test case:  LRD preceeded by spaces and tabs.
-    """
-
-    test_whitespaces_lrd_with_spaces_before_within_double_block_quotes()
-
-
-@pytest.mark.gfm
 def test_whitespaces_lrd_with_tabs_before_within_block_quotes_x1() -> None:
     """
     Test case:  LRD preceeded by tabs.
@@ -844,6 +1320,44 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_x2() -> None:
 def
 [fred]: /url</p>
 </blockquote>
+<p>[fred]</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_tabs_before_within_block_quotes_x3() -> None:
+    """
+    Test case:  LRD preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> def
+
+\t[fred]: /url
+[fred]"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n]",
+        "[para(1,3):\n]",
+        "[text(1,3):abc\ndef::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(3,1):]",
+        "[icode-block(4,5):\t:]",
+        "[text(4,5):[fred]: /url:]",
+        "[end-icode-block:::False]",
+        "[para(5,1):]",
+        "[text(5,1):[fred]:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc
+def</p>
+</blockquote>
+<pre><code>[fred]: /url
+</code></pre>
 <p>[fred]</p>"""
 
     # Act & Assert
@@ -994,10 +1508,7 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_with_many_tab
 <a href="/url2">barney</a></p>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
-
-
-###
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
@@ -1023,33 +1534,6 @@ def test_whitespaces_lrd_with_spaces_before_within_block_quote_just_enough() -> 
 def
 [fred]: /url
 [fred]</p>
-</blockquote>"""
-
-    # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
-
-
-@pytest.mark.gfm
-def test_whitespaces_lrd_with_spaces_before_within_block_quote_bare() -> None:
-    """
-    Test case:  LRD preceeded by spaces.
-    """
-
-    # Arrange
-    source_markdown = """> [fred]: /url
-> [fred]"""
-    expected_tokens = [
-        "[block-quote(1,1)::> \n> ]",
-        "[link-ref-def(1,3):True::fred:: :/url:::::]",
-        "[para(2,3):]",
-        "[link(2,3):shortcut:/url:::::fred:False::::]",
-        "[text(2,4):fred:]",
-        "[end-link::]",
-        "[end-para:::True]",
-        "[end-block-quote:::True]",
-    ]
-    expected_gfm = """<blockquote>
-<p><a href="/url">fred</a></p>
 </blockquote>"""
 
     # Act & Assert
@@ -2205,8 +2689,8 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_two_line
     # Arrange
     source_markdown = """> abc
 >
-> 	[fred]:	
-> 	/url	
+> \t[fred]:\t
+> \t/url\t
 > abc
 
 [fred]"""
@@ -2273,51 +2757,6 @@ def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_more_lin
 
 @pytest.mark.gfm
 def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_more_lines_2a() -> (
-    None
-):
-    """
-    Test case:  LRD preceeded by tabs.
-    """
-
-    # Arrange
-    source_markdown = """> abc
->
-> \t[fred]:\t
-> \t/url\t
-> \t"title"\t
-> abc
-
-[fred]"""
-    expected_tokens = [
-        "[block-quote(1,1)::> \n>\n> \n> \n> \n> \n]",
-        "[para(1,3):]",
-        "[text(1,3):abc:]",
-        "[end-para:::True]",
-        "[BLANK(2,2):]",
-        '[link-ref-def(3,5):True:\t:fred::\t\n\t:/url::\t\n\t:title:"title":\t]',
-        "[para(6,3):]",
-        "[text(6,3):abc:]",
-        "[end-para:::True]",
-        "[end-block-quote:::True]",
-        "[BLANK(7,1):]",
-        "[para(8,1):]",
-        "[link(8,1):shortcut:/url:title::::fred:False::::]",
-        "[text(8,2):fred:]",
-        "[end-link::]",
-        "[end-para:::True]",
-    ]
-    expected_gfm = """<blockquote>
-<p>abc</p>
-<p>abc</p>
-</blockquote>
-<p><a href="/url" title="title">fred</a></p>"""
-
-    # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
-
-
-@pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_block_quotes_bare_over_more_lines_2b() -> (
     None
 ):
     """
@@ -2699,9 +3138,6 @@ def test_whitespaces_lrd_with_tabs_before_within_double_block_quotes_with_single
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-###
-
-
 @pytest.mark.gfm
 def test_whitespaces_lrd_with_spaces_before_label() -> None:
     """
@@ -2985,8 +3421,10 @@ def test_whitespaces_lrd_with_spaces_after_destination() -> None:
     """
 
     # Arrange
-    source_markdown = """[fred]: /url  
-[fred]"""
+    source_markdown = """[fred]: /url\a\a
+[fred]""".replace(
+        "\a", " "
+    )
     expected_tokens = [
         "[link-ref-def(1,1):True::fred:: :/url::  :::]",
         "[para(2,1):]",
@@ -3123,8 +3561,10 @@ def test_whitespaces_lrd_with_spaces_after_title() -> None:
     """
 
     # Arrange
-    source_markdown = """[fred]: /url "title"   
-[fred]"""
+    source_markdown = """[fred]: /url "title"\a\a\a
+[fred]""".replace(
+        "\a", " "
+    )
     expected_tokens = [
         '[link-ref-def(1,1):True::fred:: :/url:: :title:"title":   ]',
         "[para(2,1):]",
@@ -3252,7 +3692,41 @@ def test_whitespaces_lrd_with_tabs_before_within_unordered_list_multiple_tabs_xx
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_unordered_list_multiple_tabs_xa() -> (
+def test_whitespaces_lrd_with_tabs_before_within_ordered_list_multiple_tabs_xx() -> (
+    None
+):
+    """
+    Test case:  LRD preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+\t[fred]:\t/url\t"bob\t"
+
+[fred]"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n]",
+        "[para(1,4):\n\t]",
+        '[text(1,4):abc\n[fred]:\t/url\t\a"\a&quot;\abob\t\a"\a&quot;\a::\n]',
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[end-olist:::True]",
+        "[para(4,1):]",
+        "[text(4,1):[fred]:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+[fred]:\t/url\t&quot;bob\t&quot;</li>
+</ol>
+<p>[fred]</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_tabs_before_within_unordered_list_multiple_tabs_xax() -> (
     None
 ):
     """
@@ -3280,6 +3754,84 @@ def test_whitespaces_lrd_with_tabs_before_within_unordered_list_multiple_tabs_xa
 [fred]:\t/url\t&quot;bob\t&quot;</p>
 </blockquote>
 <p>[fred]</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_tabs_before_within_unordered_list_multiple_tabs_xaa() -> (
+    None
+):
+    """
+    Test case:  LRD preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+
+\t[fred]:\t/url\t"bob\t"
+
+[fred]"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(2,1):]",
+        "[icode-block(3,5):\t:]",
+        '[text(3,5):[fred]:\t/url\t\a"\a&quot;\abob\t\a"\a&quot;\a:]',
+        "[end-icode-block:::False]",
+        "[BLANK(4,1):]",
+        "[para(5,1):]",
+        "[text(5,1):[fred]:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+</blockquote>
+<pre><code>[fred]:\t/url\t&quot;bob\t&quot;
+</code></pre>
+<p>[fred]</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_tabs_before_within_unordered_list_multiple_tabs_xab() -> (
+    None
+):
+    """
+    Test case:  LRD preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """> abc
+>
+>\t[fred]:\t/url\t"bob\t"
+
+[fred]"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n>\n>\n]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[BLANK(2,2):]",
+        '[link-ref-def(3,5):True:\t:fred::\t:/url::\t:bob\t:"bob\t":]',
+        "[end-block-quote:::True]",
+        "[BLANK(4,1):]",
+        "[para(5,1):]",
+        "[link(5,1):shortcut:/url:bob\t::::fred:False::::]",
+        "[text(5,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc</p>
+</blockquote>
+<p><a href="/url" title="bob\t">fred</a></p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -3326,6 +3878,44 @@ def test_whitespaces_lrd_with_tabs_before_within_unordered_list_multiple_tabs_a(
 
 
 @pytest.mark.gfm
+def test_whitespaces_lrd_with_tabs_before_within_ordered_list_multiple_tabs_a() -> None:
+    """
+    Test case:  LRD preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+
+\t[fred]:\t/url\t"bob"\t
+
+[fred]"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n\n]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        '[link-ref-def(3,5):True:\t:fred::\t:/url::\t:bob:"bob":\t]',
+        "[BLANK(4,1):]",
+        "[end-olist:::True]",
+        "[para(5,1):]",
+        "[link(5,1):shortcut:/url:bob::::fred:False::::]",
+        "[text(5,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<p>abc</p>
+</li>
+</ol>
+<p><a href="/url" title="bob">fred</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_whitespaces_lrd_with_tabs_before_within_unordered_list_and_single_space() -> (
     None
 ):
@@ -3360,7 +3950,39 @@ def test_whitespaces_lrd_with_tabs_before_within_unordered_list_and_single_space
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_unordered_list_and_spaces() -> None:
+def test_whitespaces_lrd_with_tabs_before_within_unordered_list_and_spaces_x() -> None:
+    """
+    Test case:  LRD preceeded by spaces and tabs.
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  \t[fred]: /url
+
+[fred]"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n]",
+        "[para(1,3):\n\t]",
+        "[text(1,3):abc\n[fred]: /url::\n]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[end-ulist:::True]",
+        "[para(4,1):]",
+        "[text(4,1):[fred]:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+[fred]: /url</li>
+</ul>
+<p>[fred]</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_tabs_before_within_unordered_list_and_spaces_a() -> None:
     """
     Test case:  LRD preceeded by spaces and tabs.
     """
@@ -3465,9 +4087,10 @@ def test_whitespaces_lrd_with_tabs_before_within_ordered_list_x() -> None:
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_list_single_over_two_lines_x() -> None:
+def test_whitespaces_lrd_with_tabs_before_within_unordered_list_single_over_two_lines_x() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -3485,7 +4108,7 @@ def test_whitespaces_lrd_with_tabs_before_within_list_single_over_two_lines_x() 
         "[text(1,3):abc:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
-        "[link-ref-def(3,5):True:\t:fred::\t\n :/url:::::]",
+        "[link-ref-def(3,5):True:\t:fred::\t\n:/url:::::]",
         "[BLANK(5,1):]",
         "[end-ulist:::True]",
         "[para(6,1):]",
@@ -3505,9 +4128,51 @@ def test_whitespaces_lrd_with_tabs_before_within_list_single_over_two_lines_x() 
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_list_single_over_two_lines_a() -> None:
+def test_whitespaces_lrd_with_tabs_before_within_ordered_list_single_over_two_lines_x() -> (
+    None
+):
+    """
+    Test case:  LRD preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+
+\t[fred]:\t
+   /url
+
+[fred]"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n\n   \n]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[link-ref-def(3,5):True:\t:fred::\t\n:/url:::::]",
+        "[BLANK(5,1):]",
+        "[end-olist:::True]",
+        "[para(6,1):]",
+        "[link(6,1):shortcut:/url:::::fred:False::::]",
+        "[text(6,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<p>abc</p>
+</li>
+</ol>
+<p><a href="/url">fred</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_tabs_before_within_unordered_list_single_over_two_lines_a() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -3520,7 +4185,7 @@ def test_whitespaces_lrd_with_tabs_before_within_list_single_over_two_lines_a() 
 
 [fred]"""
     expected_tokens = [
-        "[ulist(1,1):-::2::\n  \n  \n]",
+        "[ulist(1,1):-::2::\n \n  \n]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
@@ -3546,7 +4211,99 @@ def test_whitespaces_lrd_with_tabs_before_within_list_single_over_two_lines_a() 
 
 
 @pytest.mark.gfm
-def test_whitespaces_lrd_with_tabs_before_within_list_bare_over_two_lines_1ea() -> None:
+def test_whitespaces_lrd_with_tabs_before_within_ordered_list_single_over_two_lines_a() -> (
+    None
+):
+    """
+    Test case:  LRD preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+
+ \t[fred]:
+   /url
+
+[fred]"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n \n   \n]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[link-ref-def(3,5):True:\t:fred::\n:/url:::::]",
+        "[BLANK(5,1):]",
+        "[end-olist:::True]",
+        "[para(6,1):]",
+        "[link(6,1):shortcut:/url:::::fred:False::::]",
+        "[text(6,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<p>abc</p>
+</li>
+</ol>
+<p><a href="/url">fred</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_tabs_before_within_list_single_over_two_lines_b() -> None:
+    """
+    Test case:  LRD preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  - def
+
+  \t[fred]:
+    /url
+
+[fred]"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[ulist(2,3):-::4:  :\n  \n    \n]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[link-ref-def(4,5):True:\t:fred::\n:/url:::::]",
+        "[BLANK(6,1):]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+        "[para(7,1):]",
+        "[link(7,1):shortcut:/url:::::fred:False::::]",
+        "[text(7,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+<ul>
+<li>
+<p>def</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><a href="/url">fred</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_tabs_before_within_unordered_list_bare_over_two_lines_1ea() -> (
+    None
+):
     """
     Test case:  LRD preceeded by tabs.
     """
@@ -3574,6 +4331,407 @@ def test_whitespaces_lrd_with_tabs_before_within_list_bare_over_two_lines_1ea() 
 /url</li>
 </ul>
 <p>[fred]</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_tabs_before_within_unordered_list_over_two_lines_1ea() -> (
+    None
+):
+    """
+    Test case:  LRD preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """- abc
+
+\t[fred]:\t
+\t/url\t
+
+[fred]"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::\n\n\n]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[link-ref-def(3,5):True:\t:fred::\t\n\t:/url::\t:::]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+        "[para(6,1):]",
+        "[link(6,1):shortcut:/url:::::fred:False::::]",
+        "[text(6,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>abc</p>
+</li>
+</ul>
+<p><a href="/url">fred</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_tabs_before_within_ordered_list_bare_over_two_lines_1ea() -> (
+    None
+):
+    """
+    Test case:  LRD preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+\t[fred]:\t
+\t/url\t
+
+[fred]"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n\n]",
+        "[para(1,4):\n\t\n\t:\t]",
+        "[text(1,4):abc\n[fred]:\n/url::\n\t\n]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-olist:::True]",
+        "[para(5,1):]",
+        "[text(5,1):[fred]:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+[fred]:
+/url</li>
+</ol>
+<p>[fred]</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_tabs_before_within_ordered_list_over_two_lines_1ea() -> (
+    None
+):
+    """
+    Test case:  LRD preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+
+\t[fred]:\t
+\t/url\t
+
+[fred]"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::\n\n\n]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[link-ref-def(3,5):True:\t:fred::\t\n\t:/url::\t:::]",
+        "[BLANK(5,1):]",
+        "[end-olist:::True]",
+        "[para(6,1):]",
+        "[link(6,1):shortcut:/url:::::fred:False::::]",
+        "[text(6,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<p>abc</p>
+</li>
+</ol>
+<p><a href="/url">fred</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_spaces_before_same() -> None:
+    """
+    Test case:  LRD preceeded by tabs.
+
+    test_tables_extension_198_enabled_with_leading_same
+    """
+
+    # Arrange
+    source_markdown = """ [fred]:
+ /url
+ "title"
+
+[fred]"""
+    expected_tokens = [
+        '[link-ref-def(1,2):True: :fred::\n :/url::\n :title:"title":]',
+        "[BLANK(4,1):]",
+        "[para(5,1):]",
+        "[link(5,1):shortcut:/url:title::::fred:False::::]",
+        "[text(5,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><a href="/url" title="title">fred</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_spaces_before_different() -> None:
+    """
+    Test case:  LRD preceeded by tabs.
+
+    test_tables_extension_198_enabled_with_leading_different
+    """
+
+    # Arrange
+    source_markdown = """ [fred]:
+/url
+   "title"
+
+[fred]"""
+    expected_tokens = [
+        '[link-ref-def(1,2):True: :fred::\n:/url::\n   :title:"title":]',
+        "[BLANK(4,1):]",
+        "[para(5,1):]",
+        "[link(5,1):shortcut:/url:title::::fred:False::::]",
+        "[text(5,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><a href="/url" title="title">fred</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_spaces_trailing_single() -> None:
+    """
+    Test case:  LRD preceeded by tabs.
+
+    test_tables_extension_198_enabled_with_trailing_single
+    """
+
+    # Arrange
+    source_markdown = """[fred]:\a
+/url\a
+"title"\a
+
+[fred]""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        '[link-ref-def(1,1):True::fred:: \n:/url:: \n:title:"title": ]',
+        "[BLANK(4,1):]",
+        "[para(5,1):]",
+        "[link(5,1):shortcut:/url:title::::fred:False::::]",
+        "[text(5,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><a href="/url" title="title">fred</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_spaces_trailing_double() -> None:
+    """
+    Test case:  LRD preceeded by tabs.
+
+    test_tables_extension_198_enabled_with_trailing_double
+    """
+
+    # Arrange
+    source_markdown = """[fred]:\a\a
+/url\a\a
+"title"\a\a
+
+[fred]""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        '[link-ref-def(1,1):True::fred::  \n:/url::  \n:title:"title":  ]',
+        "[BLANK(4,1):]",
+        "[para(5,1):]",
+        "[link(5,1):shortcut:/url:title::::fred:False::::]",
+        "[text(5,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><a href="/url" title="title">fred</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_spaces_trailing_triple() -> None:
+    """
+    Test case:  LRD preceeded by tabs.
+
+    test_tables_extension_198_enabled_with_trailing_triple
+    """
+
+    # Arrange
+    source_markdown = """[fred]:\a\a\a
+/url\a\a\a
+"title"\a\a\a
+
+[fred]""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        '[link-ref-def(1,1):True::fred::   \n:/url::   \n:title:"title":   ]',
+        "[BLANK(4,1):]",
+        "[para(5,1):]",
+        "[link(5,1):shortcut:/url:title::::fred:False::::]",
+        "[text(5,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><a href="/url" title="title">fred</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_spaces_followed_by_lrd() -> None:
+    """
+    Test case:  LRD preceeded by tabs.
+
+    - test_tables_extension_201_enabled_fx
+    """
+
+    # Arrange
+    source_markdown = """[fred]: /url1
+[barney]: /url2
+[fred]
+[barney]
+"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::fred:: :/url1:::::]",
+        "[link-ref-def(2,1):True::barney:: :/url2:::::]",
+        "[para(3,1):\n]",
+        "[link(3,1):shortcut:/url1:::::fred:False::::]",
+        "[text(3,2):fred:]",
+        "[end-link::]",
+        "[text(3,7):\n::\n]",
+        "[link(4,1):shortcut:/url2:::::barney:False::::]",
+        "[text(4,2):barney:]",
+        "[end-link::]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<p><a href="/url1">fred</a>\n<a href="/url2">barney</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_spaces_followed_by_table() -> None:
+    """
+    Test case:  LRD preceeded by tabs.
+    """
+
+    # Arrange
+    source_markdown = """[fred]: /url1
+| abc | def |
+|-----|-----|
+| ghi | jkl |
+[fred]
+"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::fred:: :/url1:::::]",
+        "[table(2,1)]",
+        "[table-header(2,1)]",
+        "[table-header-item(2,1)]",
+        "[text(2,1):abc:]",
+        "[end-table-header-item: |::False]",
+        "[table-header-item(2,1)]",
+        "[text(2,1):def:]",
+        "[end-table-header-item: |::False]",
+        "[end-table-header:::False]",
+        "[table-body(2,1)]",
+        "[table-row(2,1)]",
+        "[table-row-item(2,1)]",
+        "[text(2,1):ghi:]",
+        "[end-table-row-item: |::False]",
+        "[table-row-item(2,1)]",
+        "[text(2,1):jkl:]",
+        "[end-table-row-item: |::False]",
+        "[end-table-row:::False]",
+        "[end-table-body:::False]",
+        "[end-table:::False]",
+        "[para(5,1):]",
+        "[link(5,1):shortcut:/url1:::::fred:False::::]",
+        "[text(5,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<table>
+<thead>
+<tr>
+<th>abc</th>
+<th>def</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ghi</td>
+<td>jkl</td>
+</tr>
+</tbody>
+</table>
+<p><a href="/url1">fred</a></p>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=enable_tables_config_map,
+    )
+
+
+@pytest.mark.gfm
+def test_whitespaces_lrd_with_spaces_followed_by_thematic() -> None:
+    """
+    Test case:  LRD preceeded by tabs.
+
+    - test_tables_extension_201_enabled_bx
+    """
+
+    # Arrange
+    source_markdown = """[fred]: /url1
+---
+[fred]
+"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::fred:: :/url1:::::]",
+        "[tbreak(2,1):-::---]",
+        "[para(3,1):]",
+        "[link(3,1):shortcut:/url1:::::fred:False::::]",
+        "[text(3,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<hr />
+<p><a href="/url1">fred</a></p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)

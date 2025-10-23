@@ -1,4 +1,8 @@
-from typing import Optional, cast
+"""
+Module to provide for an encapsulation of the table header markdown token.
+"""
+
+from typing import List, Optional, cast
 
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.general.position_marker import PositionMarker
@@ -75,7 +79,7 @@ class TableMarkdownToken(LeafMarkdownToken):
         """
         Rehydrate the link reference definition from the token.
         """
-        _ = (previous_token, current_token, context)
+        _ = (previous_token, current_token, next_token, context)
         return ""
 
     @staticmethod
@@ -99,7 +103,7 @@ class TableMarkdownToken(LeafMarkdownToken):
     ) -> str:
         _ = (transform_state, next_token)
 
-        token_parts = []
+        token_parts: List[str] = []
         if (
             not output_html
             and transform_state.transform_stack
@@ -115,7 +119,7 @@ class TableMarkdownToken(LeafMarkdownToken):
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
-        _ = next_token
+        _ = (next_token, transform_state)
 
         return "".join([output_html, "</table>", ParserHelper.newline_character])
 
@@ -146,6 +150,10 @@ class TableMarkdownHeaderToken(LeafMarkdownToken):
             extracted_whitespace="",
             requires_end_token=True,
         )
+
+        # header_row_leading_whitespace
+        # did_header_row_start_with_separator
+        # header_row_trailing_whitespace
 
     # pylint: disable=protected-access
     @staticmethod
@@ -178,6 +186,7 @@ class TableMarkdownHeaderToken(LeafMarkdownToken):
         """
         Rehydrate the link reference definition from the token.
         """
+        _ = previous_token
         context.block_stack.append(current_token)
 
         header_start_text = cast(
@@ -201,7 +210,7 @@ class TableMarkdownHeaderToken(LeafMarkdownToken):
         """
         Rehydrate the link reference definition from the token.
         """
-        _ = (previous_token, current_token, context)
+        _ = (previous_token, next_token, context)
         del context.block_stack[-1]
         start_token = cast(
             TableMarkdownHeaderToken,
@@ -255,7 +264,7 @@ class TableMarkdownHeaderToken(LeafMarkdownToken):
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
-        _ = next_token
+        _ = (next_token, transform_state)
 
         return "".join(
             [
@@ -332,7 +341,7 @@ class TableMarkdownHeaderItemToken(LeafMarkdownToken):
         """
         Rehydrate the link reference definition from the token.
         """
-        _ = (previous_token, current_token, context)
+        _ = (previous_token, next_token, context)
         return cast(EndMarkdownToken, current_token).extracted_whitespace
 
     @staticmethod
@@ -373,7 +382,7 @@ class TableMarkdownHeaderItemToken(LeafMarkdownToken):
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
-        _ = next_token
+        _ = (next_token, transform_state)
 
         return "".join(
             [
@@ -446,7 +455,7 @@ class TableMarkdownBodyToken(LeafMarkdownToken):
         """
         Rehydrate the link reference definition from the token.
         """
-        _ = (previous_token, current_token, context)
+        _ = (previous_token, current_token, next_token, context)
         return ""
 
     @staticmethod
@@ -484,7 +493,7 @@ class TableMarkdownBodyToken(LeafMarkdownToken):
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
-        _ = next_token
+        _ = (next_token, transform_state)
 
         return "".join([output_html, "</tbody>", ParserHelper.newline_character])
 
@@ -494,6 +503,7 @@ class TableMarkdownRowToken(LeafMarkdownToken):
     Class to provide for an encapsulation of the table header markdown token.
     """
 
+    # pylint: disable=too-many-arguments
     def __init__(
         self,
         leading_whitespace: str,
@@ -514,6 +524,8 @@ class TableMarkdownRowToken(LeafMarkdownToken):
             extracted_whitespace="",
             requires_end_token=True,
         )
+
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=protected-access
     @staticmethod
@@ -564,7 +576,7 @@ class TableMarkdownRowToken(LeafMarkdownToken):
         """
         Rehydrate the link reference definition from the token.
         """
-        _ = (previous_token, current_token, context)
+        _ = (previous_token, next_token, context)
         del context.block_stack[-1]
         return (
             cast(EndMarkdownToken, current_token).extracted_whitespace
@@ -609,11 +621,17 @@ class TableMarkdownRowToken(LeafMarkdownToken):
         output_html: str,
         next_token: MarkdownToken,
         transform_state: TransformState,
-    ) -> str:
-        _ = next_token
+    ) -> str:  # sourcery skip: for-append-to-extend, for-index-underscore
+        _ = (transform_state, next_token)
 
         ff = [output_html]
-        ff.extend("<td></td>\n" for _ in range(_.start_markdown_token.delta))
+        for _i in range(
+            cast(
+                TableMarkdownRowToken,
+                cast(EndMarkdownToken, next_token).start_markdown_token,
+            ).delta
+        ):
+            ff.append("<td></td>\n")
         ff.extend(("</tr>", ParserHelper.newline_character))
         return "".join(ff)
 
@@ -682,7 +700,7 @@ class TableMarkdownRowItemToken(LeafMarkdownToken):
         """
         Rehydrate the link reference definition from the token.
         """
-        _ = (previous_token, current_token, context)
+        _ = (previous_token, next_token, context)
         return cast(TableMarkdownRowItemToken, current_token).extracted_whitespace
 
     @staticmethod
@@ -723,6 +741,6 @@ class TableMarkdownRowItemToken(LeafMarkdownToken):
         next_token: MarkdownToken,
         transform_state: TransformState,
     ) -> str:
-        _ = next_token
+        _ = (next_token, transform_state)
 
         return "".join([output_html, "</td>", ParserHelper.newline_character])

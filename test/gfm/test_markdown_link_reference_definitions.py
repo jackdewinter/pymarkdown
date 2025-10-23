@@ -13,6 +13,8 @@ config_map = {"extensions": {"markdown-tables": {"enabled": True}}}
 def test_link_reference_definitions_161() -> None:
     """
     Test case 161:  (part 1) A link reference definition does not correspond to a structural element of a document.
+
+    test_tables_extension_198_enabled_x
     """
 
     # Arrange
@@ -282,6 +284,8 @@ with blank line
 def test_link_reference_definitions_167() -> None:
     """
     Test case 167:  The title may be omitted:
+
+    test_tables_extension_202_enabled
     """
 
     # Arrange
@@ -652,6 +656,8 @@ def test_link_reference_definitions_181() -> None:
 def test_link_reference_definitions_182() -> None:
     """
     Test case 182:  A link reference definition cannot interrupt a paragraph.
+
+    test_whitespaces_tables_with_paragraph_before
     """
 
     # Arrange
@@ -677,11 +683,13 @@ def test_link_reference_definitions_182() -> None:
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_183() -> None:
+def test_link_reference_definitions_183x() -> None:
     """
     Test case 183:  (part 1) However, it can directly follow other block elements,
                     such as headings and thematic breaks, and it need not be followed
                     by a blank line.
+
+    test_whitespaces_tables_with_atx_before
     """
 
     # Arrange
@@ -715,6 +723,8 @@ def test_link_reference_definitions_183() -> None:
 def test_link_reference_definitions_183a() -> None:
     """
     Test case 183a:  variation of 183 with it following a thematic break
+
+    test_whitespaces_tables_with_thematic_before
     """
 
     # Arrange
@@ -745,6 +755,8 @@ def test_link_reference_definitions_183a() -> None:
 def test_link_reference_definitions_183b() -> None:
     """
     Test case 183b:  variation of 183 with it following a SetExt Heading
+
+    test_whitespaces_tables_with_setext_before
     """
 
     # Arrange
@@ -778,6 +790,8 @@ def test_link_reference_definitions_183b() -> None:
 def test_link_reference_definitions_183c() -> None:
     """
     Test case 183a:  variation of 183 with it following an indented code block
+
+    test_whitespaces_tables_with_indented_code_block_before
     """
 
     # Arrange
@@ -811,6 +825,8 @@ def test_link_reference_definitions_183c() -> None:
 def test_link_reference_definitions_183d() -> None:
     """
     Test case 183d:  variation of 183 with it following a fenced code block
+
+    test_whitespaces_tables_with_fenced_code_block_before
     """
 
     # Arrange
@@ -846,6 +862,8 @@ indented code block
 def test_link_reference_definitions_183e() -> None:
     """
     Test case 183e:  variation of 183 with it following a HTML block
+
+    test_whitespaces_tables_with_html_block_before
     """
 
     # Arrange
@@ -879,9 +897,13 @@ def test_link_reference_definitions_183e() -> None:
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_183f() -> None:
+def test_link_reference_definitions_183fx() -> None:
     """
     Test case 183f:  variation of 183 with it following a block quote
+                     due to the paragraph started in the block quote,
+                     the LRD is not valid and is a continuation of the paragraph
+
+    test_whitespaces_tables_with_block_quote_before_with_no_blank_in_bq
     """
 
     # Arrange
@@ -906,9 +928,90 @@ def test_link_reference_definitions_183f() -> None:
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_183gx() -> None:
+def test_link_reference_definitions_183fa() -> None:
+    """
+    Test case 183f:  variation of 183 with it following a block quote
+                     due to the paragraph started in the block quote,
+                     the LRD is not valid and is a continuation of the paragraph
+
+    test_whitespaces_tables_with_block_quote_before_with_blank_in_bq
+    """
+
+    # Arrange
+    source_markdown = """> this is a block quote
+>
+[foo]: /url
+> [Foo]"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n>]",
+        "[para(1,3):]",
+        "[text(1,3):this is a block quote:]",
+        "[end-para:::True]",
+        "[BLANK(2,2):]",
+        "[end-block-quote:::True]",
+        "[link-ref-def(3,1):True::foo:: :/url:::::]",
+        "[block-quote(4,1)::> ]",
+        "[para(4,3):]",
+        "[link(4,3):shortcut:/url:::::Foo:False::::]",
+        "[text(4,4):Foo:]",
+        "[end-link::]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>this is a block quote</p>
+</blockquote>
+<blockquote>
+<p><a href="/url">Foo</a></p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_183fb() -> None:
+    """
+    Test case 183f:  variation of 183 with it following a block quote
+                     due to the paragraph started in the block quote,
+                     the LRD is not valid and is a continuation of the paragraph
+
+    test_whitespaces_tables_with_block_quote_before_with_only_blank_in_bq
+    """
+
+    # Arrange
+    source_markdown = """>
+[foo]: /url
+> [Foo]"""
+    expected_tokens = [
+        "[block-quote(1,1)::>]",
+        "[BLANK(1,2):]",
+        "[end-block-quote:::True]",
+        "[link-ref-def(2,1):True::foo:: :/url:::::]",
+        "[block-quote(3,1)::> ]",
+        "[para(3,3):]",
+        "[link(3,3):shortcut:/url:::::Foo:False::::]",
+        "[text(3,4):Foo:]",
+        "[end-link::]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+</blockquote>
+<blockquote>
+<p><a href="/url">Foo</a></p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_183gxx() -> None:
     """
     Test case 183g:  variation of 183 with it following a list
+
+    test_whitespaces_tables_with_unordered_before_with_no_blank_in_list
     """
 
     # Arrange
@@ -933,6 +1036,194 @@ def test_link_reference_definitions_183gx() -> None:
 </ul>
 <blockquote>
 <p>[Foo]</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_183gxa() -> None:
+    """
+    Test case 183g:  variation of 183 with it following a list
+
+    test_whitespaces_tables_with_unordered_before_with_only_blank_in_list
+    """
+
+    # Arrange
+    source_markdown = """-
+[foo]: /url
+> [Foo]"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[BLANK(1,2):]",
+        "[end-ulist:::True]",
+        "[link-ref-def(2,1):True::foo:: :/url:::::]",
+        "[block-quote(3,1)::> ]",
+        "[para(3,3):]",
+        "[link(3,3):shortcut:/url:::::Foo:False::::]",
+        "[text(3,4):Foo:]",
+        "[end-link::]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<ul>
+<li></li>
+</ul>
+<blockquote>
+<p><a href="/url">Foo</a></p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_183gxb() -> None:
+    """
+    Test case 183g:  variation of 183 with it following a list
+
+    test_whitespaces_tables_with_unordered_list_before_with_blank_in_list
+    """
+
+    # Arrange
+    source_markdown = """- this is a block quote
+
+[foo]: /url
+> [Foo]"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::]",
+        "[para(1,3):]",
+        "[text(1,3):this is a block quote:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[end-ulist:::True]",
+        "[link-ref-def(3,1):True::foo:: :/url:::::]",
+        "[block-quote(4,1)::> ]",
+        "[para(4,3):]",
+        "[link(4,3):shortcut:/url:::::Foo:False::::]",
+        "[text(4,4):Foo:]",
+        "[end-link::]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>this is a block quote</li>
+</ul>
+<blockquote>
+<p><a href="/url">Foo</a></p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_183gxc() -> None:
+    """
+    Test case 183g:  variation of 183 with it following a list
+
+    test_whitespaces_tables_with_ordered_list_before_with_blank_in_list
+    """
+
+    # Arrange
+    source_markdown = """1. this is a block quote
+
+[foo]: /url
+> [Foo]"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::]",
+        "[para(1,4):]",
+        "[text(1,4):this is a block quote:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[end-olist:::True]",
+        "[link-ref-def(3,1):True::foo:: :/url:::::]",
+        "[block-quote(4,1)::> ]",
+        "[para(4,3):]",
+        "[link(4,3):shortcut:/url:::::Foo:False::::]",
+        "[text(4,4):Foo:]",
+        "[end-link::]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>this is a block quote</li>
+</ol>
+<blockquote>
+<p><a href="/url">Foo</a></p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_183gxd() -> None:
+    """
+    Test case 183g:  variation of 183 with it following a list
+
+    test_whitespaces_tables_with_ordered_before_with_no_blank_in_list
+    """
+
+    # Arrange
+    source_markdown = """1. this is a block quote
+[foo]: /url
+> [Foo]"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::]",
+        "[para(1,4):\n]",
+        "[text(1,4):this is a block quote\n[foo]: /url::\n]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[block-quote(3,1)::> ]",
+        "[para(3,3):]",
+        "[text(3,3):[Foo]:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>this is a block quote
+[foo]: /url</li>
+</ol>
+<blockquote>
+<p>[Foo]</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_183gxe() -> None:
+    """
+    Test case 183g:  variation of 183 with it following a list
+
+    test_whitespaces_tables_with_ordered_before_with_only_blank_in_list
+    """
+
+    # Arrange
+    source_markdown = """1.
+[foo]: /url
+> [Foo]"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[BLANK(1,3):]",
+        "[end-olist:::True]",
+        "[link-ref-def(2,1):True::foo:: :/url:::::]",
+        "[block-quote(3,1)::> ]",
+        "[para(3,3):]",
+        "[link(3,3):shortcut:/url:::::Foo:False::::]",
+        "[text(3,4):Foo:]",
+        "[end-link::]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<ol>
+<li></li>
+</ol>
+<blockquote>
+<p><a href="/url">Foo</a></p>
 </blockquote>"""
 
     # Act & Assert
@@ -1189,6 +1480,8 @@ def test_link_reference_definitions_184() -> None:
     Test case 184:  (part 2) However, it can directly follow other block elements,
                     such as headings and thematic breaks, and it need not be followed
                     by a blank line.
+
+    test_tables_extension_202_enabled
     """
 
     # Arrange
@@ -1215,11 +1508,13 @@ bar
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_185() -> None:
+def test_link_reference_definitions_185x() -> None:
     """
     Test case 185:  (part 3) However, it can directly follow other block elements,
                     such as headings and thematic breaks, and it need not be followed
                     by a blank line.
+
+    - test_tables_extension_202_enabled, related
     """
 
     # Arrange
@@ -1246,6 +1541,8 @@ def test_link_reference_definitions_185() -> None:
 def test_link_reference_definitions_185ax() -> None:
     """
     Test case 185a:  variation of 185 with Atx Heading between
+
+    test_tables_extension_201_enabled_ax
     """
 
     # Arrange
@@ -1307,6 +1604,8 @@ def test_link_reference_definitions_185aa() -> None:
 def test_link_reference_definitions_185b() -> None:
     """
     Test case 185b:  variation of 185 with fenced code block between
+
+    test_tables_extension_201_enabled_dx
     """
 
     # Arrange
@@ -1338,6 +1637,8 @@ my text
 def test_link_reference_definitions_185c() -> None:
     """
     Test case 185c:  variation of 185 with indented code block between
+
+    test_tables_extension_201_enabled_cx
     """
 
     # Arrange
@@ -1367,6 +1668,8 @@ def test_link_reference_definitions_185c() -> None:
 def test_link_reference_definitions_185d() -> None:
     """
     Test case 185d:  variation of 185 with HTML Block between
+
+    test_tables_extension_201_enabled_ex
     """
 
     # Arrange
@@ -1399,6 +1702,8 @@ def test_link_reference_definitions_185d() -> None:
 def test_link_reference_definitions_185e() -> None:
     """
     Test case 185a:  variation of 185 with Block Quote between
+
+    test_tables_extension_201_enabled_x
     """
 
     # Arrange
@@ -1429,6 +1734,8 @@ def test_link_reference_definitions_185e() -> None:
 def test_link_reference_definitions_185fx() -> None:
     """
     Test case 185a:  variation of 185 with List between
+
+    test_tables_extension_201_enabled_hx
     """
 
     # Arrange
@@ -1478,6 +1785,38 @@ def test_link_reference_definitions_185fa() -> None:
 <li>This is a simple list
 <img src="/url" alt="foo" /></li>
 </ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_185gx() -> None:
+    """
+    Test case 185a:  variation of 185 with List between
+
+    test_tables_extension_201_enabled_gx
+    """
+
+    # Arrange
+    source_markdown = """[foo]: /url
+1. This is a simple list
+   [foo]"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::foo:: :/url:::::]",
+        "[olist(2,1):.:1:3::   ]",
+        "[para(2,4):\n]",
+        "[text(2,4):This is a simple list\n::\n]",
+        "[link(3,1):shortcut:/url:::::foo:False::::]",
+        "[text(3,2):foo:]",
+        "[end-link::]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>This is a simple list
+<a href="/url">foo</a></li>
+</ol>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -1557,7 +1896,7 @@ def test_link_reference_definitions_187() -> None:
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_188() -> None:
+def test_link_reference_definitions_188x() -> None:
     """
     Test case 188:  Whether something is a link reference definition is independent
                     of whether the link reference it defines is used in the document.
@@ -1652,28 +1991,28 @@ def test_link_reference_definitions_188e() -> None:
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_extra_01() -> None:
+def test_link_reference_definitions_extra_01cx() -> None:
     """
-    Test case extra 01:  LRD within list item
-
-    NOTE: Due to https://talk.commonmark.org/t/block-quotes-laziness-and-link-reference-definitions/3751
-          the GFM output has been adjusted to compensate for PyMarkdown using a token and not parsing
-          the text afterwards.
+    Test case extra 01c:  variation of 1 split across list items
     """
 
     # Arrange
     source_markdown = """- [foo]:
-/url"""
+- /url"""
     expected_tokens = [
-        "[ulist(1,1):-::2::]",
-        "[para(1,3):\n]",
-        "[text(1,3):[foo]:\n/url::\n]",
+        "[ulist(1,1):-::2:]",
+        "[para(1,3):]",
+        "[text(1,3):[foo]::]",
+        "[end-para:::True]",
+        "[li(2,1):2::]",
+        "[para(2,3):]",
+        "[text(2,3):/url:]",
         "[end-para:::True]",
         "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
-<li>[foo]:
-/url</li>
+<li>[foo]:</li>
+<li>/url</li>
 </ul>"""
 
     # Act & Assert
@@ -1681,9 +2020,121 @@ def test_link_reference_definitions_extra_01() -> None:
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_extra_01a() -> None:
+def test_link_reference_definitions_extra_01ca() -> None:
     """
-    Test case extra 01a:  variation on 1 with proper indent
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """- abc
+- [foo]: /url"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[li(2,1):2::]",
+        "[link-ref-def(2,3):True::foo:: :/url:::::]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc</li>
+<li></li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_01cb() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """- [foo]: /url
+- 'abc'"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[link-ref-def(1,3):True::foo:: :/url:::::]",
+        "[li(2,1):2::]",
+        "[para(2,3):]",
+        "[text(2,3):'abc':]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li></li>
+<li>'abc'</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_01cc() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """- [foo]: /url
+- abc"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[link-ref-def(1,3):True::foo:: :/url:::::]",
+        "[li(2,1):2::]",
+        "[para(2,3):]",
+        "[text(2,3):abc:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li></li>
+<li>abc</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_01cd() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """- [foo]: /url
+  - abc"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[link-ref-def(1,3):True::foo:: :/url:::::]",
+        "[ulist(2,3):-::4:  ]",
+        "[para(2,5):]",
+        "[text(2,5):abc:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<ul>
+<li>abc</li>
+</ul>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_01ce() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
     """
 
     # Arrange
@@ -1703,28 +2154,22 @@ def test_link_reference_definitions_extra_01a() -> None:
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_extra_01b() -> None:
+def test_link_reference_definitions_extra_01cf() -> None:
     """
-    Test case extra 01b:  variation on 1 with almost proper indent
-
-    NOTE: Due to https://talk.commonmark.org/t/block-quotes-laziness-and-link-reference-definitions/3751
-          the GFM output has been adjusted to compensate for PyMarkdown using a token and not parsing
-          the text afterwards.
+    Test case extra 01c:  variation of 1 split across list items
     """
 
     # Arrange
     source_markdown = """- [foo]:
- /url"""
+  /url
+  'title'"""
     expected_tokens = [
-        "[ulist(1,1):-::2::]",
-        "[para(1,3):\n ]",
-        "[text(1,3):[foo]:\n/url::\n]",
-        "[end-para:::True]",
+        "[ulist(1,1):-::2::  \n  ]",
+        "[link-ref-def(1,3):True::foo::\n:/url::\n:title:'title':]",
         "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
-<li>[foo]:
-/url</li>
+<li></li>
 </ul>"""
 
     # Act & Assert
@@ -1732,7 +2177,164 @@ def test_link_reference_definitions_extra_01b() -> None:
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_extra_01c() -> None:
+def test_link_reference_definitions_extra_01cg() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """- [foo]: /url
+  - [foo2]: /url2"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[link-ref-def(1,3):True::foo:: :/url:::::]",
+        "[ulist(2,3):-::4:  ]",
+        "[link-ref-def(2,5):True::foo2:: :/url2:::::]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<ul>
+<li></li>
+</ul>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_01ch() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """- [foo]: /url
+- [foo2]: /url2"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[link-ref-def(1,3):True::foo:: :/url:::::]",
+        "[li(2,1):2::]",
+        "[link-ref-def(2,3):True::foo2:: :/url2:::::]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li></li>
+<li></li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_01cj() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """- [foo]: /url
+[foo2]: /url2"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[link-ref-def(1,3):True::foo:: :/url:::::]",
+        "[end-ulist:::True]",
+        "[link-ref-def(2,1):True::foo2:: :/url2:::::]",
+    ]
+    expected_gfm = """<ul>
+<li></li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_01ck() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """- [foo]: /url
+> [foo2]: /url2"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[link-ref-def(1,3):True::foo:: :/url:::::]",
+        "[end-ulist:::True]",
+        "[block-quote(2,1)::> ]",
+        "[link-ref-def(2,3):True::foo2:: :/url2:::::]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<ul>
+<li></li>
+</ul>
+<blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_01cl() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """- [foo]: /url
+1. [foo2]: /url2"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[link-ref-def(1,3):True::foo:: :/url:::::]",
+        "[end-ulist:::True]",
+        "[olist(2,1):.:1:3:]",
+        "[link-ref-def(2,4):True::foo2:: :/url2:::::]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li></li>
+</ul>
+<ol>
+<li></li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_01cm() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """- [foo]: /url
+- [foo2]: /url2"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[link-ref-def(1,3):True::foo:: :/url:::::]",
+        "[li(2,1):2::]",
+        "[link-ref-def(2,3):True::foo2:: :/url2:::::]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li></li>
+<li></li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_01cn() -> None:
     """
     Test case extra 01c:  variation of 1 split across list items
     """
@@ -1794,6 +2396,7 @@ def test_link_reference_definitions_extra_02x() -> None:
     """
     Test case extra 02:  variation
     """
+    ## NOTE: Difference in interpreation from CommonMark
 
     # Arrange
     source_markdown = """> [foo]:
@@ -1815,7 +2418,7 @@ def test_link_reference_definitions_extra_02x() -> None:
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_extra_02a() -> None:
+def test_link_reference_definitions_extra_02ax() -> None:
     """
     Test case extra 02a:  variation of 2 within block quote
     """
@@ -1827,6 +2430,30 @@ def test_link_reference_definitions_extra_02a() -> None:
         "[block-quote(1,1)::> \n> ]",
         "[link-ref-def(1,3):True::foo::\n:/url:::::]",
         "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_02aa() -> None:
+    """
+    Test case extra 02a:  variation of 2 within block quote
+    """
+
+    # Arrange
+    source_markdown = """> [foo]:
+> /url
+> "abc"
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n]",
+        '[link-ref-def(1,3):True::foo::\n:/url::\n:abc:"abc":]',
+        "[end-block-quote:::True]",
+        "[BLANK(4,1):]",
     ]
     expected_gfm = """<blockquote>
 </blockquote>"""
@@ -3118,3 +3745,678 @@ def test_link_reference_definitions_extra_05cx() -> None:
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_06a() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """1. [fred]: /url
+[fred]"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[link-ref-def(1,4):True::fred:: :/url:::::]",
+        "[end-olist:::True]",
+        "[para(2,1):]",
+        "[link(2,1):shortcut:/url:::::fred:False::::]",
+        "[text(2,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<ol>
+<li></li>
+</ol>
+<p><a href="/url">fred</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_06b() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """1. [foo]:
+   /url"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   ]",
+        "[link-ref-def(1,4):True::foo::\n:/url:::::]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li></li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_06c() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """1. [fred]: /url 'abc'
+[fred]"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[link-ref-def(1,4):True::fred:: :/url:: :abc:'abc':]",
+        "[end-olist:::True]",
+        "[para(2,1):]",
+        "[link(2,1):shortcut:/url:abc::::fred:False::::]",
+        "[text(2,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<ol>
+<li></li>
+</ol>
+<p><a href="/url" title="abc">fred</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_06d() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """1. [foo]:
+   /url
+   'title'"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   \n   ]",
+        "[link-ref-def(1,4):True::foo::\n:/url::\n:title:'title':]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li></li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_06e() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """1. [foo]: /url
+[foo2]: /url2"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[link-ref-def(1,4):True::foo:: :/url:::::]",
+        "[end-olist:::True]",
+        "[link-ref-def(2,1):True::foo2:: :/url2:::::]",
+    ]
+    expected_gfm = """<ol>
+<li></li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_06f() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """1. [foo]: /url
+> [foo2]: /url2"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[link-ref-def(1,4):True::foo:: :/url:::::]",
+        "[end-olist:::True]",
+        "[block-quote(2,1)::> ]",
+        "[link-ref-def(2,3):True::foo2:: :/url2:::::]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<ol>
+<li></li>
+</ol>
+<blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_06g() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """1. [foo]: /url
+> [foo2]: /url2"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[link-ref-def(1,4):True::foo:: :/url:::::]",
+        "[end-olist:::True]",
+        "[block-quote(2,1)::> ]",
+        "[link-ref-def(2,3):True::foo2:: :/url2:::::]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<ol>
+<li></li>
+</ol>
+<blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_06h() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """1. [foo]: /url
+1. [foo2]: /url2"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[link-ref-def(1,4):True::foo:: :/url:::::]",
+        "[li(2,1):3::1]",
+        "[link-ref-def(2,4):True::foo2:: :/url2:::::]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li></li>
+<li></li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_06j() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """1.
+  [fred]: /url
+[fred]"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[BLANK(1,3):]",
+        "[end-olist:::True]",
+        "[link-ref-def(2,3):True:  :fred:: :/url:::::]",
+        "[para(3,1):]",
+        "[link(3,1):shortcut:/url:::::fred:False::::]",
+        "[text(3,2):fred:]",
+        "[end-link::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<ol>
+<li></li>
+</ol>
+<p><a href="/url">fred</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_06k() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """1. [foo]:
+   /url"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   ]",
+        "[link-ref-def(1,4):True::foo::\n:/url:::::]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li></li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_06l() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """1. [foo]:
+/url"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::]",
+        "[para(1,4):\n]",
+        "[text(1,4):[foo]:\n/url::\n]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>[foo]:
+/url</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_06m() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """1. [foo]: /url
+   1. 'abc'"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[link-ref-def(1,4):True::foo:: :/url:::::]",
+        "[olist(2,4):.:1:6:   ]",
+        "[para(2,7):]",
+        "[text(2,7):'abc':]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<ol>
+<li>'abc'</li>
+</ol>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_06n() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """1. [foo]: /url
+   1. [foo2]: /url2"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[link-ref-def(1,4):True::foo:: :/url:::::]",
+        "[olist(2,4):.:1:6:   ]",
+        "[link-ref-def(2,7):True::foo2:: :/url2:::::]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<ol>
+<li></li>
+</ol>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_06p() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+1. [foo]: /url"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[li(2,1):3::1]",
+        "[link-ref-def(2,4):True::foo:: :/url:::::]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc</li>
+<li></li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_06q() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """1. [foo]: /url
+1. abc"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[link-ref-def(1,4):True::foo:: :/url:::::]",
+        "[li(2,1):3::1]",
+        "[para(2,4):]",
+        "[text(2,4):abc:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li></li>
+<li>abc</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_06r() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """1. [foo]: /url
+1. [foo2]: /url2"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[link-ref-def(1,4):True::foo:: :/url:::::]",
+        "[li(2,1):3::1]",
+        "[link-ref-def(2,4):True::foo2:: :/url2:::::]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li></li>
+<li></li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_07a() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """> [foo]: /url"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[link-ref-def(1,3):True::foo:: :/url:::::]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_07b() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """[foo]
+> [foo]: /url"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[link(1,1):shortcut:/url:::::foo:False::::]",
+        "[text(1,2):foo:]",
+        "[end-link::]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> ]",
+        "[link-ref-def(2,3):True::foo:: :/url:::::]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<p><a href="/url">foo</a></p>
+<blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_07c() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """[foo]
+> [foo]: /url"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[link(1,1):shortcut:/url:::::foo:False::::]",
+        "[text(1,2):foo:]",
+        "[end-link::]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> ]",
+        "[link-ref-def(2,3):True::foo:: :/url:::::]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<p><a href="/url">foo</a></p>
+<blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_07d() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """[foo]
+> [foo]: /url"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[link(1,1):shortcut:/url:::::foo:False::::]",
+        "[text(1,2):foo:]",
+        "[end-link::]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> ]",
+        "[link-ref-def(2,3):True::foo:: :/url:::::]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<p><a href="/url">foo</a></p>
+<blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_07e() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """> [fred]: /url1
+> > "title"
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[link-ref-def(1,3):True::fred:: :/url1:::::]",
+        "[block-quote(2,1)::> > \n]",
+        "[para(2,5):]",
+        '[text(2,5):\a"\a&quot;\atitle\a"\a&quot;\a:]',
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(3,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<blockquote>
+<p>&quot;title&quot;</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_07fx() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """> [fred]: /url1
+> - "title"
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n]",
+        "[link-ref-def(1,3):True::fred:: :/url1:::::]",
+        "[ulist(2,3):-::4:]",
+        "[para(2,5):]",
+        '[text(2,5):\a"\a&quot;\atitle\a"\a&quot;\a:]',
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(3,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>&quot;title&quot;</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_07fa() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """> [fred]: /url1
+- "title"
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n]",
+        "[link-ref-def(1,3):True::fred:: :/url1:::::]",
+        "[end-block-quote:::True]",
+        "[ulist(2,1):-::2::]",
+        "[para(2,3):]",
+        '[text(2,3):\a"\a&quot;\atitle\a"\a&quot;\a:]',
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<blockquote>
+</blockquote>
+<ul>
+<li>&quot;title&quot;</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_07gx() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """> [fred]: /url1
+> 1. "title"
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n]",
+        "[link-ref-def(1,3):True::fred:: :/url1:::::]",
+        "[olist(2,3):.:1:5:]",
+        "[para(2,6):]",
+        '[text(2,6):\a"\a&quot;\atitle\a"\a&quot;\a:]',
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(3,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>&quot;title&quot;</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_07ga() -> None:
+    """
+    Test case extra 01c:  variation of 1 split across list items
+    """
+
+    # Arrange
+    source_markdown = """> [fred]: /url1
+1. "title"
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n]",
+        "[link-ref-def(1,3):True::fred:: :/url1:::::]",
+        "[end-block-quote:::True]",
+        "[olist(2,1):.:1:3::]",
+        "[para(2,4):]",
+        '[text(2,4):\a"\a&quot;\atitle\a"\a&quot;\a:]',
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<blockquote>
+</blockquote>
+<ol>
+<li>&quot;title&quot;</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

@@ -84,6 +84,7 @@ show_usage() {
 	echo "  -m,--mypy-only          Only run mypy checks and exit."
 	echo "  -np,--no-publish        Do not publish project summaries if successful."
 	echo "  -ns,--no-sourcery       Do not run any sourcery checks."
+	echo "  -nw,--no-workers        Do not use multipel workers when executing tests."
 	echo "  -s,--sourcery-only      Only run sourcery checks and exit."
 	echo "  --perf                  Collect standard performance metrics."
 	echo "  --perf-only             Only collect standard performance metrics."
@@ -107,6 +108,7 @@ parse_command_line() {
 	NO_SOURCERY_MODE=0
 	FORCE_RESET_MODE=0
 	RESET_PYTHON_VERSION=
+	WORKERS_MODE=--workers
 	PARAMS=()
 	while (("$#")); do
 		case "$1" in
@@ -129,6 +131,10 @@ parse_command_line() {
 			;;
 		-ns | --no-sourcery)
 			NO_SOURCERY_MODE=1
+			shift
+			;;
+		-nw | --no-workers)
+			WORKERS_MODE=
 			shift
 			;;
 		-s | --sourcery-only)
@@ -408,7 +414,7 @@ execute_test_suite() {
 
 	echo ""
 	verbose_echo "{Executing unit tests on Python code.}"
-	if ! ./ptest.sh --coverage --workers; then
+	if ! ./ptest.sh --coverage ${WORKERS_MODE}; then
 		complete_process 1 "{Executing application tests failed.}"
 	fi
 }
