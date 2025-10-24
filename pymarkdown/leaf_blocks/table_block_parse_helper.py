@@ -21,6 +21,63 @@ class TableParseHelper:
     __table_column_separator_character = "|"
 
     @staticmethod
+    def parse_table(
+        parser_state: ParserState,
+        line_to_parse: str,
+        start_index: int,
+        extracted_whitespace: str,
+        is_blank_line: bool,
+        remaining_line_to_parse: Optional[str],
+        was_started: bool,
+    ) -> Tuple[bool, int, Optional[TableTuple]]:
+
+        if was_started:
+            if remaining_line_to_parse is not None:
+                did_start = TableParseHelper.__parse_table_1(
+                    parser_state, remaining_line_to_parse
+                )
+            else:
+                did_start = True
+        else:
+            did_start = TableParseHelper.__is_table_start(
+                parser_state, line_to_parse, start_index, extracted_whitespace
+            )
+        if not did_start:
+            POGGER.debug("BAIL")
+            return False, -1, None
+
+        column_separator_characters = (
+            TableParseHelper.__table_column_separator_character + "\n"
+        )
+        # multiple lines
+
+        xyz: List[TableRow] = []
+        col_as: List[Optional[str]] = []
+
+        while start_index < len(line_to_parse):
+
+            new_index, start_index, extracted_whitespace = (
+                TableParseHelper.__parse_table_4(
+                    line_to_parse,
+                    start_index,
+                    column_separator_characters,
+                    xyz,
+                    extracted_whitespace,
+                )
+            )
+
+            if len(xyz) == 2:
+                did_parse_separators = TableParseHelper.__parse_table_2(xyz, col_as)
+                if not did_parse_separators:
+                    return False, -1, None
+
+        keep_going = is_blank_line and len(xyz) >= 2
+        if keep_going:
+            return TableParseHelper.__create_table_token(new_index, xyz, col_as)
+        else:
+            return keep_going, new_index, None
+
+    @staticmethod
     def __parse_table_1(
         parser_state: ParserState, remaining_line_to_parse: str
     ) -> bool:
@@ -78,63 +135,6 @@ class TableParseHelper:
             is_leaf_block_start = is_lrd_start
 
         return not is_leaf_block_start
-
-    @staticmethod
-    def parse_table(
-        parser_state: ParserState,
-        line_to_parse: str,
-        start_index: int,
-        extracted_whitespace: str,
-        is_blank_line: bool,
-        remaining_line_to_parse: Optional[str],
-        was_started: bool,
-    ) -> Tuple[bool, int, Optional[TableTuple]]:
-
-        if was_started:
-            if remaining_line_to_parse is not None:
-                did_start = TableParseHelper.__parse_table_1(
-                    parser_state, remaining_line_to_parse
-                )
-            else:
-                did_start = True
-        else:
-            did_start = TableParseHelper.__is_table_start(
-                parser_state, line_to_parse, start_index, extracted_whitespace
-            )
-        if not did_start:
-            POGGER.debug("BAIL")
-            return False, -1, None
-
-        column_separator_characters = (
-            TableParseHelper.__table_column_separator_character + "\n"
-        )
-        # multiple lines
-
-        xyz: List[TableRow] = []
-        col_as: List[Optional[str]] = []
-
-        while start_index < len(line_to_parse):
-
-            new_index, start_index, extracted_whitespace = (
-                TableParseHelper.__parse_table_4(
-                    line_to_parse,
-                    start_index,
-                    column_separator_characters,
-                    xyz,
-                    extracted_whitespace,
-                )
-            )
-
-            if len(xyz) == 2:
-                did_parse_separators = TableParseHelper.__parse_table_2(xyz, col_as)
-                if not did_parse_separators:
-                    return False, -1, None
-
-        keep_going = is_blank_line and len(xyz) >= 2
-        if keep_going:
-            return TableParseHelper.__create_table_token(new_index, xyz, col_as)
-        else:
-            return keep_going, new_index, None
 
     @staticmethod
     def __parse_table_4(

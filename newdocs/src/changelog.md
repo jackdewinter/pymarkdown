@@ -5,6 +5,58 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Notes
 
+- None
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Added
+
+- None
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+- None
+
+## Version 0.9.33 - 2025-10-22
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Notes
+
+This release was a long time in coming, mostly because of things that are not
+immediately obvious.  Our team took some time to look and experiment with some
+other Python tools, with the aim of reducing the count of tests for the project
+without sacrificing any coverage.  In addition, we have started to look at the
+performance of the project, and how to best accomplish those improvements. Through
+the end of the year, we have concrete plans to address any new issues, reduce the
+test count while maintaining quality, finishing [Issue 1468](https://github.com/jackdewinter/pymarkdown/issues/1468),
+and working on performance enhancements.
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Added
+
+- None
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
+- [Issue 1468](https://github.com/jackdewinter/pymarkdown/issues/1468)
+    - started effort to harmonize the LRD and Table tests
+    - mapped out level 0 and level 1 container tests for LRDs, adding extra tests
+      where necessary
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+- None
+
+## Version 0.9.32 - 2025-08-12
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Notes
+
 - If using pragmas, [Issue 1447](https://github.com/jackdewinter/pymarkdown/issues/1447)
   fixed an issue where a closing `--->` was not being handled properly.  As a result
   of fixing this issue in this release, pragmas starting with a `<!--` must end
