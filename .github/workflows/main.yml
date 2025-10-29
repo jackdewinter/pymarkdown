@@ -255,7 +255,7 @@ jobs:
           path: ${{github.workspace}}/dist/
 
   publish-to-pypi:
-    # See https://github.com/pypa/gh-action-pypi-publish/tree/release/v1/
+    # See https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/
     needs: [packaging]
     name: Publish Python 🐍 distribution 📦 to PyPI
     runs-on: ubuntu-latest
