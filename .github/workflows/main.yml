@@ -246,7 +246,7 @@ jobs:
       - name: Twine
         run: |
           export PYTHONIOENCODING=utf-8
-          pipenv run twine check dist/*    
+          pipenv run twine check --strict dist/*    
 
       - name: Upload Package
         uses: actions/upload-artifact@v5
