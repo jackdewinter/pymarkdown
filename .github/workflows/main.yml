@@ -254,7 +254,7 @@ jobs:
           name: packaged-library
           path: ${{github.workspace}}/dist/
 
-  publish-to-testpypi:
+  publish-to-pypi:
     # See https://github.com/pypa/gh-action-pypi-publish/tree/release/v1/
     needs: [packaging]
     name: Publish Python 🐍 distribution 📦 to PyPI
