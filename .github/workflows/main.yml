@@ -241,7 +241,7 @@ jobs:
       - name: Setup
         run: |
           export PYTHONIOENCODING=utf-8
-          pipenv run python setup.py sdist bdist_wheel
+          pipenv run python -Im build
 
       - name: Twine
         run: |
