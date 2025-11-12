@@ -11,8 +11,15 @@ import pytest
 
 source_path = os.path.join("test", "resources", "rules", "md002") + os.sep
 
+only_enable_this_rule_arguments = (
+    "-e",
+    "md002",
+    "-d",
+    "*",
+)
 
-@pytest.mark.rules
+
+@pytest.mark.plugins
 def test_md002_all_samples() -> None:
     """
     Test to make sure we get the expected behavior after scanning the files in the
@@ -25,10 +32,7 @@ def test_md002_all_samples() -> None:
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "MD003",
-        "--enable-rules",
-        "MD002",
+        *only_enable_this_rule_arguments,
         "scan",
         source_path,
     ]
@@ -53,7 +57,9 @@ def test_md002_all_samples() -> None:
     )
 
 
-@pytest.mark.rules
+@pytest.mark.plugins
+@pytest.mark.skip(reason="Duplicate coverage")
+@pytest.mark.user_properties({"DupCov": {"W003": {}}})
 def test_md002_bad_configuration_level() -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
@@ -66,8 +72,7 @@ def test_md002_bad_configuration_level() -> None:
         "--strict-config",
         "--set",
         "plugins.md002.level=1",
-        "--enable-rules",
-        "MD002",
+        *only_enable_this_rule_arguments,
         "scan",
         f"{source_path}proper_atx_heading_start.md",
     ]
@@ -88,7 +93,7 @@ def test_md002_bad_configuration_level() -> None:
     )
 
 
-@pytest.mark.rules
+@pytest.mark.plugins
 def test_md002_bad_configuration_level_value() -> None:
     """
     Test to verify that a configuration error is thrown when supplying the
@@ -101,8 +106,7 @@ def test_md002_bad_configuration_level_value() -> None:
         "--strict-config",
         "--set",
         "plugins.md002.level=$#10",
-        "--enable-rules",
-        "MD002",
+        *only_enable_this_rule_arguments,
         "scan",
         f"{source_path}proper_atx_heading_start.md",
     ]
@@ -123,7 +127,7 @@ def test_md002_bad_configuration_level_value() -> None:
     )
 
 
-@pytest.mark.rules
+@pytest.mark.plugins
 def test_md002_good_proper_atx_heading_start() -> None:
     """
     Test to make sure the rule does not trigger with a level 1
@@ -133,8 +137,7 @@ def test_md002_good_proper_atx_heading_start() -> None:
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--enable-rules",
-        "MD002",
+        *only_enable_this_rule_arguments,
         "scan",
         f"{source_path}proper_atx_heading_start.md",
     ]
@@ -152,7 +155,9 @@ def test_md002_good_proper_atx_heading_start() -> None:
     )
 
 
-@pytest.mark.rules
+@pytest.mark.plugins
+@pytest.mark.skip(reason="Duplicate coverage")
+@pytest.mark.user_properties({"DupCov": {"W002": {}}})
 def test_md002_bad_proper_atx_heading_start_with_alternate_configuration() -> None:
     """
     Test to make sure the rule does trigger with a level 1 Atx Heading at the
@@ -166,8 +171,7 @@ def test_md002_bad_proper_atx_heading_start_with_alternate_configuration() -> No
         supplied_configuration
     ) as configuration_file:
         supplied_arguments = [
-            "--enable-rules",
-            "MD002",
+            *only_enable_this_rule_arguments,
             "-c",
             configuration_file,
             "scan",
@@ -191,7 +195,7 @@ def test_md002_bad_proper_atx_heading_start_with_alternate_configuration() -> No
         )
 
 
-@pytest.mark.rules
+@pytest.mark.plugins
 def test_md002_good_proper_setext_heading_start() -> None:
     """
     Test to make sure the rule does not trigger with a level 1 SetExt Heading at the
@@ -201,8 +205,7 @@ def test_md002_good_proper_setext_heading_start() -> None:
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--enable-rules",
-        "MD002",
+        *only_enable_this_rule_arguments,
         "scan",
         f"{source_path}proper_setext_heading_start.md",
     ]
@@ -220,7 +223,9 @@ def test_md002_good_proper_setext_heading_start() -> None:
     )
 
 
-@pytest.mark.rules
+@pytest.mark.plugins
+@pytest.mark.skip(reason="Duplicate coverage")
+@pytest.mark.user_properties({"DupCov": {"W002": {}}})
 def test_md002_bad_proper_setext_heading_start_with_alternate_configuration() -> None:
     """
     Test to make sure the rule does trigger with a level 1 SetExt Heading at the
@@ -234,8 +239,7 @@ def test_md002_bad_proper_setext_heading_start_with_alternate_configuration() ->
         supplied_configuration
     ) as configuration_file:
         supplied_arguments = [
-            "--enable-rules",
-            "MD002",
+            *only_enable_this_rule_arguments,
             "-c",
             configuration_file,
             "scan",
@@ -259,7 +263,7 @@ def test_md002_bad_proper_setext_heading_start_with_alternate_configuration() ->
         )
 
 
-@pytest.mark.rules
+@pytest.mark.plugins
 def test_md002_bad_improper_atx_heading_start() -> None:
     """
     Test to make sure the rule does trigger with a non-level 1 Atx Heading at the
@@ -269,8 +273,7 @@ def test_md002_bad_improper_atx_heading_start() -> None:
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--enable-rules",
-        "MD002",
+        *only_enable_this_rule_arguments,
         "scan",
         f"{source_path}improper_atx_heading_start.md",
     ]
@@ -292,7 +295,8 @@ def test_md002_bad_improper_atx_heading_start() -> None:
     )
 
 
-@pytest.mark.rules
+@pytest.mark.plugins
+@pytest.mark.skip(reason="Duplicate coverage")
 def test_md002_good_improper_atx_heading_start_with_alternate_configuration() -> None:
     """
     Test to make sure the rule does not trigger with a level 2 Atx Heading at the
@@ -306,8 +310,7 @@ def test_md002_good_improper_atx_heading_start_with_alternate_configuration() ->
         supplied_configuration
     ) as configuration_file:
         supplied_arguments = [
-            "--enable-rules",
-            "MD002",
+            *only_enable_this_rule_arguments,
             "-c",
             configuration_file,
             "scan",
@@ -327,7 +330,9 @@ def test_md002_good_improper_atx_heading_start_with_alternate_configuration() ->
         )
 
 
-@pytest.mark.rules
+@pytest.mark.plugins
+@pytest.mark.user_properties({"DupCov": {"W002": {}}})
+@pytest.mark.skip(reason="Duplicate coverage")
 def test_md002_bad_improper_setext_heading_start() -> None:
     """
     Test to make sure the rule does trigger with a non-level 1 SetExt Heading at the
@@ -337,10 +342,7 @@ def test_md002_bad_improper_setext_heading_start() -> None:
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "MD003",
-        "--enable-rules",
-        "MD002",
+        *only_enable_this_rule_arguments,
         "scan",
         f"{source_path}improper_setext_heading_start.md",
     ]
@@ -362,7 +364,8 @@ def test_md002_bad_improper_setext_heading_start() -> None:
     )
 
 
-@pytest.mark.rules
+@pytest.mark.plugins
+# @pytest.mark.user_properties({"DupCov" : {"W002":{}}})
 def test_md002_good_improper_setext_heading_start_with_alternate_configuration() -> (
     None
 ):
@@ -378,10 +381,7 @@ def test_md002_good_improper_setext_heading_start_with_alternate_configuration()
         supplied_configuration
     ) as configuration_file:
         supplied_arguments = [
-            "--disable-rules",
-            "MD003",
-            "--enable-rules",
-            "MD002",
+            *only_enable_this_rule_arguments,
             "-c",
             configuration_file,
             "scan",
@@ -401,6 +401,7 @@ def test_md002_good_improper_setext_heading_start_with_alternate_configuration()
         )
 
 
+@pytest.mark.plugins
 def test_md002_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md002",
