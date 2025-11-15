@@ -4,6 +4,7 @@ Module to provide tests related to the MD001 rule.
 
 import os
 from test.rules.utils import (
+    SuppressDuplicateCoverage,
     calculate_fix_tests,
     execute_configuration_test,
     execute_fix_test,
@@ -100,6 +101,7 @@ We skipped out a heading level in this document
 
 We skipped out a heading level in this document
 """,
+        scan_duplicate_coverage=SuppressDuplicateCoverage(rule_id="W002"),
     ),
     pluginRuleTest(
         "front_matter_with_no_title",
@@ -130,6 +132,7 @@ title: field
 We skipped out a 2nd level heading in this document, which should only
 kick in if there is a title field in the front matter.
 """,
+        fix_duplicate_coverage=SuppressDuplicateCoverage(rule_id="W003"),
     ),
     pluginRuleTest(
         "front_matter_with_alternate_title",
@@ -158,28 +161,33 @@ Subject: field
 We skipped out a 2nd level heading in this document, which should only
 kick in if there is a title field in the front matter.
 """,
+        scan_duplicate_coverage=SuppressDuplicateCoverage(rule_id="W002"),
+        fix_duplicate_coverage=SuppressDuplicateCoverage(rule_id="W002"),
     ),
 ]
 
 
+@pytest.mark.plugins
 @pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
-def test_md001_scan(test: pluginRuleTest) -> None:
+def test_md001_scan(test: pluginRuleTest, request: pytest.FixtureRequest) -> None:
     """
     Execute a parameterized scan test for plugin md001.
     """
-    execute_scan_test(test, "md001")
+    execute_scan_test(test, "md001", request=request)
 
 
+@pytest.mark.plugins
 @pytest.mark.parametrize(
     "test", calculate_fix_tests(scanTests), ids=id_test_plug_rule_fn
 )
-def test_md001_fix(test: pluginRuleTest) -> None:
+def test_md001_fix(test: pluginRuleTest, request: pytest.FixtureRequest) -> None:
     """
     Execute a parameterized fix test for plugin md001.
     """
-    execute_fix_test(test)
+    execute_fix_test(test, request=request)
 
 
+@pytest.mark.plugins
 @pytest.mark.parametrize("test", configTests, ids=id_test_plug_rule_fn)
 def test_md001_config(test: pluginConfigErrorTest) -> None:
     """
@@ -188,6 +196,7 @@ def test_md001_config(test: pluginConfigErrorTest) -> None:
     execute_configuration_test(test, f"{source_path}front_matter_with_title.md")
 
 
+@pytest.mark.plugins
 def test_md001_query_config() -> None:
     config_test = pluginQueryConfigTest(
         "md001",
