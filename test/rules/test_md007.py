@@ -942,6 +942,7 @@ scanTests = [
     ),
 ]
 
+
 @pytest.mark.parametrize("test", scanTests, ids=id_test_plug_rule_fn)
 def test_md007_scan(test: pluginRuleTest) -> None:
     """
