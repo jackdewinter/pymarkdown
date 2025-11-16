@@ -1,6 +1,48 @@
 # Change Log
 
-## Unversioned - In Main, Not Released
+## Unversioned
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Added
+
+- [Issue 1490](https://github.com/jackdewinter/pymarkdown/issues/1490)
+    - Added work to measure "extra" test coverage, with goals to keep scenario
+      coverage but reduce redundant code coverage
+    - i.e. if two scenarios are different enough but have the same code coverage,
+      have a way to mark them as such
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
+- None
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+- [Issue 1462](https://github.com/jackdewinter/pymarkdown/issues/1462)
+    - added `system.exclude_path` to provide configuration option for the
+      command-line `--exclude`
+
+## Version 0.9.33 - 2025-10-22
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Added
+
+- None
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Fixed
+
+- [Issue 1468](https://github.com/jackdewinter/pymarkdown/issues/1468)
+    - started effort to harmonize the LRD and Table tests
+    - mapped out level 0 and level 1 container tests for LRDs, adding extra tests where necessary
+
+<!-- pyml disable-next-line no-duplicate-heading-->
+### Changed
+
+- None
+
+## Version 0.9.32 - 2025-08-12
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Notes
