@@ -35,7 +35,7 @@ The PyMarkdown project has the following advantages:
   - This project can examine multiple files and directories with one invocation,
     ensuring that all detected Markdown files adhere to the same guidelines.
 - Portable
-  - The linter runs on any system running Python 3.9 or later, with no modifications.
+  - The linter runs on any system running Python 3.10 or later, with no modifications.
 - Standardized
   - The parser that powers the linter is GitHub Flavored Markdown (GFM) compliant.
     Due to that foundation, the parser does not guess how some parsers may handle
@@ -76,7 +76,7 @@ for more information on the options available for use in your Pre-Commit Hooks.
 
 ## Requirements
 
-This project required Python 3.9 or later to function.
+This project required Python 3.10 or later to function.
 
 ## Installation
 
