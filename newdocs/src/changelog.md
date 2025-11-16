@@ -16,7 +16,8 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
-- None
+- [Issue 1475](https://github.com/jackdewinter/pymarkdown/issues/1475)
+    - fixed typo in documentation
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
