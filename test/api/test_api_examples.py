@@ -57,7 +57,7 @@ def test_api_exceptions_example_good(caplog: pytest.LogCaptureFixture) -> None:
     the README.md in this case, it will scan it.
     """
 
-    source_path = "."
+    source_path = os.path.join(".", "newdocs")
     try:
         PyMarkdownApi().scan_path(source_path)
         did_complete = True

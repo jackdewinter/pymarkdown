@@ -542,6 +542,14 @@ class TableBlockHelper:
         original_line: str,
         requeue_line_info: Optional[RequeueLineInfo],
     ) -> Tuple[bool, Optional[RequeueLineInfo]]:
+        """
+        TBD
+
+        NOTE: Since `TableBlockHelper.handle_table_leaf_block` is called
+        from `ContainerBlockLeafProcessor.handle_leaf_block` after
+        `LinkReferenceDefinitionHelper.handle_link_reference_definition_leaf_block`,
+        need to ensure that we handle the requeue_line_info properly.
+        """
         POGGER.debug(
             "handle_table_leaf_block>>pre_tokens>>$<<",
             pre_tokens,
