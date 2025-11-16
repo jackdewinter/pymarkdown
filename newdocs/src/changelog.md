@@ -35,7 +35,8 @@
 
 - [Issue 1468](https://github.com/jackdewinter/pymarkdown/issues/1468)
     - started effort to harmonize the LRD and Table tests
-    - mapped out level 0 and level 1 container tests for LRDs, adding extra tests where necessary
+    - mapped out level 0 and level 1 container tests for LRDs, adding extra
+      tests where necessary
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed

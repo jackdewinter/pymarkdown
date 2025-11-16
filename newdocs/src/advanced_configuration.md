@@ -35,7 +35,8 @@ If you prefer to jump directly to specific topics, here are some sections you ma
 find useful:
 
 - [Configuration Files](#configuration-files)
-     - Learn about the types of configuration files we support and how to access them.
+    - Learn about the types of configuration files we support and how to access
+      them.
 - [Command Line Configuration](#command-line)
     - How to specify configuration items from the command line.
     - If you are working with boolean or integer values, see the
@@ -91,8 +92,10 @@ The available configuration items are broken down into the following areas:
 - [General - `mode.*` + command line](#general) - Global settings.
 - [Logs - `log.*`](#logs) - Settings that affect how logging works.
 - [System - `system.*`](#logs) - Settings that affect the entire system.
-- [Rules - `plugins.*` + command line](#rule-plugins) - Settings that affect the various plugins.
-- [Extensions - `extensions.*`](#extensions) - Settings that affect the various extensions.
+- [Rules - `plugins.*` + command line](#rule-plugins) - Settings that affect the
+  various plugins.
+- [Extensions - `extensions.*`](#extensions) - Settings that affect the various
+  extensions.
 - [Other - command line](#other) - Settings that do not fit into other categories.
 
 ### General
@@ -203,7 +206,8 @@ mode. When set to True, all rules are disabled by default, and you can then expl
 enable only the rules you want to use. This option is available through both the
 [command line](#exception-selective-enabling-of-rules) and configuration settings.
 
-For instance, if you want the PyMarkdown linter to apply only rule Md007 to a group of documents, you would use the following configuration:
+For instance, if you want the PyMarkdown linter to apply only rule Md007 to a group
+of documents, you would use the following configuration:
 
 ```text
 plugins.selectively_enable_rules: True
@@ -400,7 +404,10 @@ command line options. If you want to separate concerns, you can dedicate configu
 files to specific purposes, such as pre-commit hooks, while keeping other settings
 elsewhere. And sometimes, the choice simply comes down to personal or team preference.
 
-Ultimately, the decision between configuration files and command line arguments should be based on what works best for your workflow and team. Consider your project's requirements, how often settings change, and how you want to manage and share configuration information.
+Ultimately, the decision between configuration files and command line arguments
+should be based on what works best for your workflow and team. Consider your project's
+requirements, how often settings change, and how you want to manage and share configuration
+information.
 
 If you are only using PyMarkdown in a single part of your project and not invoking
 it elsewhere, the reasons for choosing configuration files over command line arguments
@@ -421,4 +428,6 @@ line acts as a test platform. When we see a configuration option on the command
 line, we know it’s being evaluated and hasn’t yet been fully adopted. These are
 our team’s practices, and they suit our workflow.
 
-Whatever you decide, make sure to discuss and document your team’s approach. Having clear documentation will help you revisit and understand your decisions later, especially as team members and project requirements change over time.
+Whatever you decide, make sure to discuss and document your team’s approach. Having
+clear documentation will help you revisit and understand your decisions later,
+especially as team members and project requirements change over time.

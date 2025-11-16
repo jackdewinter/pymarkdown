@@ -1548,7 +1548,7 @@
         },
         {
             "name": "test.test_listfiles",
-            "totalTests": 26,
+            "totalTests": 31,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,
