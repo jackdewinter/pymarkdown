@@ -331,7 +331,7 @@ Previously exposed for testing purposes, the PyMarkdown linter now provides the
 ability to selectively enable rules using a command line like:
 
 ```bash
-pymarkdown -e Md041 -d * scan .
+pymarkdown -e Md041 -d "*" scan .
 ```
 
 This command line instructs the application to disable all rules, enabling only
