@@ -317,7 +317,7 @@ the `main.yml` file.
     steps:
 
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Python 3.9
         uses: actions/setup-python@v5.2.0
