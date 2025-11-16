@@ -26,46 +26,6 @@
 ## Version 0.9.33 - 2025-10-22
 
 <!-- pyml disable-next-line no-duplicate-heading-->
-### Added
-
-- None
-
-<!-- pyml disable-next-line no-duplicate-heading-->
-### Fixed
-
-- [Issue 1468](https://github.com/jackdewinter/pymarkdown/issues/1468)
-    - started effort to harmonize the LRD and Table tests
-    - mapped out level 0 and level 1 container tests for LRDs, adding extra
-      tests where necessary
-
-<!-- pyml disable-next-line no-duplicate-heading-->
-### Changed
-
-- None
-
-## Version 0.9.32 - 2025-08-12
-
-<!-- pyml disable-next-line no-duplicate-heading-->
-### Notes
-
-- None
-
-<!-- pyml disable-next-line no-duplicate-heading-->
-### Added
-
-- None
-
-<!-- pyml disable-next-line no-duplicate-heading-->
-### Fixed
-
-<!-- pyml disable-next-line no-duplicate-heading-->
-### Changed
-
-- None
-
-## Version 0.9.33 - 2025-10-22
-
-<!-- pyml disable-next-line no-duplicate-heading-->
 ### Notes
 
 This release was a long time in coming, mostly because of things that are not
