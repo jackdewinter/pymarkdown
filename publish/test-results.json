@@ -1135,15 +1135,15 @@
             "totalTests": 12,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 5,
             "elapsedTimeInMilliseconds": 0
         },
         {
             "name": "test.rules.test_md003",
-            "totalTests": 42,
+            "totalTests": 38,
             "failedTests": 0,
             "errorTests": 0,
-            "skippedTests": 0,
+            "skippedTests": 1,
             "elapsedTimeInMilliseconds": 0
         },
         {
@@ -1548,7 +1548,7 @@
         },
         {
             "name": "test.test_listfiles",
-            "totalTests": 26,
+            "totalTests": 31,
             "failedTests": 0,
             "errorTests": 0,
             "skippedTests": 0,

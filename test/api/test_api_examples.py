@@ -43,8 +43,8 @@ def test_api_exceptions_example_bad(caplog: pytest.LogCaptureFixture) -> None:
 
     assert (
         caplog.text
-        == """WARNING  pymarkdown.main:main.py:336 Provided path 'some-manner-of-path' does not exist.
-WARNING  pymarkdown.main:main.py:336 No matching files found.
+        == """WARNING  pymarkdown.main:main.py:337 Provided path 'some-manner-of-path' does not exist.
+WARNING  pymarkdown.main:main.py:337 No matching files found.
 """
     )
     assert not did_complete
@@ -57,7 +57,7 @@ def test_api_exceptions_example_good(caplog: pytest.LogCaptureFixture) -> None:
     the README.md in this case, it will scan it.
     """
 
-    source_path = "."
+    source_path = os.path.join(".", "newdocs")
     try:
         PyMarkdownApi().scan_path(source_path)
         did_complete = True

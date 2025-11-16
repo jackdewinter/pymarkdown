@@ -124,7 +124,7 @@ keep projects clean, that is a big advantage.
 
 ### Portable
 
-This project runs on any system with Python 3.9 or later, with no modifications.
+This project runs on any system with Python 3.10 or later, with no modifications.
 Before any code changes are merged into the project's `main` branch, every
 scenario test is executed against the application. These tests are then repeated
 across instances of Linux, Windows, and MacOS machines to detect and fix any

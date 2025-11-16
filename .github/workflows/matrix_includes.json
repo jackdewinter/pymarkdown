@@ -1,11 +1,5 @@
 [
     {
-        "python":"3.9",
-        "platform":"windows-latest",
-        "timeout":15,
-        "runOn":"previous"
-    },
-    {
         "python":"3.10",
         "platform":"windows-latest",
         "timeout":15,
@@ -30,12 +24,6 @@
         "runOn":"current"
     },
     {
-        "python":"3.9",
-        "platform":"ubuntu-latest",
-        "timeout":7,
-        "runOn":"previous"
-    },
-    {
         "python":"3.10",
         "platform":"ubuntu-latest",
         "timeout":7,
@@ -58,12 +46,6 @@
         "platform":"ubuntu-latest",
         "timeout":7,
         "runOn":"current"
-    },
-    {
-        "python":"3.9",
-        "platform":"macos-latest",
-        "timeout":7,
-        "runOn":"previous"
     },
     {
         "python":"3.10",

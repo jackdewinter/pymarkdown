@@ -1,3 +1,4 @@
+import json
 import os
 from contextlib import contextmanager
 from dataclasses import dataclass
@@ -8,7 +9,7 @@ from test.utils import (
     copy_to_temporary_file,
     write_temporary_configuration,
 )
-from typing import Any, Generator, List, Optional, Tuple
+from typing import Any, Generator, List, Optional, Tuple, Union
 
 import pytest
 
@@ -23,6 +24,12 @@ class pluginConfigErrorTest:
     use_strict_config: bool
     set_args: List[str]
     expected_error: str
+
+
+@dataclass
+class SuppressDuplicateCoverage:
+    rule_id: str
+    reason: Optional[str] = None
 
 
 @dataclass
@@ -52,6 +59,12 @@ class pluginRuleTest:
     mark_scan_as_skipped: bool = False
     mark_fix_as_skipped: bool = False
     notes: str = ""
+    scan_duplicate_coverage: Optional[
+        Union[SuppressDuplicateCoverage, List[SuppressDuplicateCoverage]]
+    ] = None
+    fix_duplicate_coverage: Optional[
+        Union[SuppressDuplicateCoverage, List[SuppressDuplicateCoverage]]
+    ] = None
 
 
 def id_test_plug_rule_fn(val: Any) -> str:
@@ -121,11 +134,44 @@ def build_arguments(
             os.remove(temp_source_path)
 
 
+def __register_duplicate_coverage_suppression(
+    request: pytest.FixtureRequest,
+    duplicate_coverage: Union[
+        SuppressDuplicateCoverage, List[SuppressDuplicateCoverage]
+    ],
+) -> None:
+    print(type(duplicate_coverage))
+    if isinstance(duplicate_coverage, list):
+        raise AssertionError()
+        for next_dup_cov in duplicate_coverage:
+            request.node.user_properties.append(
+                (
+                    "custom_data",
+                    json.dumps({"DupCov": {"rule_id": next_dup_cov.rule_id}}),
+                )
+            )
+    else:
+        suppression_data = (
+            {"reason": duplicate_coverage.reason}
+            if duplicate_coverage.reason is not None
+            else {}
+        )
+        suppressions_map = {duplicate_coverage.rule_id: suppression_data}
+    request.node.user_properties.append(
+        ("custom_data", json.dumps({"DupCov": suppressions_map}))
+    )
+
+
 def execute_scan_test(
     test: pluginRuleTest,
     host_rule_id: str,
     suppress_first_line_heading_rule: bool = True,
+    request: Optional[pytest.FixtureRequest] = None,
 ) -> None:
+
+    if request is not None and test.scan_duplicate_coverage is not None:
+        __register_duplicate_coverage_suppression(request, test.scan_duplicate_coverage)
+
     scanner = MarkdownScanner()
     with build_arguments(test, False) as (temp_source_path, supplied_arguments):
         expected_return_code = test.scan_expected_return_code
@@ -172,7 +218,11 @@ def execute_scan_test(
 
 def calculate_scan_tests(scanTests: List[pluginRuleTest]) -> List[pluginRuleTest]:
     return [
-        (pytest.param(i, marks=pytest.mark.skip) if i.mark_scan_as_skipped else i)  # type: ignore
+        (
+            pytest.param(i, marks=pytest.mark.skip)  # type: ignore
+            if i.mark_scan_as_skipped
+            else i
+        )
         for i in scanTests
     ]
 
@@ -189,7 +239,13 @@ def calculate_fix_tests(scanTests: List[pluginRuleTest]) -> List[pluginRuleTest]
     ]
 
 
-def execute_fix_test(test: pluginRuleTest) -> None:
+def execute_fix_test(
+    test: pluginRuleTest,
+    request: Optional[pytest.FixtureRequest] = None,
+) -> None:
+    if request is not None and test.fix_duplicate_coverage is not None:
+        __register_duplicate_coverage_suppression(request, test.fix_duplicate_coverage)
+
     scanner = MarkdownScanner()
     with build_arguments(test, True) as (temp_source_path, supplied_arguments):
         expected_return_code = test.fix_expected_return_code
