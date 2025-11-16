@@ -50,7 +50,7 @@ will be returned in the form of:
 Python {major}.{minor}.{fix}
 ```
 
-The PyMarkdown application requires Python 3.9 or later to function. This means
+The PyMarkdown application requires Python 3.10 or later to function. This means
 that the output from above must show a major version of `3` and a minor version
 of `8` or higher.
 
@@ -305,7 +305,7 @@ Taken from our own
 file, this is the start of the `lint` job that we use to validate our code
 changes. For the sake of a clean example, the only change we made to the code
 snippet below was to replace the `${{ env.default-python-version }}` reference
-to an environment variable with that variable's value `3.9`, specified earlier in
+to an environment variable with that variable's value `3.10`, specified earlier in
 the `main.yml` file.
 
 ```yaml
@@ -319,10 +319,10 @@ the `main.yml` file.
       - name: Checkout Repository
         uses: actions/checkout@v5
 
-      - name: Setup Python 3.9
+      - name: Setup Python 3.10
         uses: actions/setup-python@v5.2.0
         with:
-          python-version: 3.9
+          python-version: 3.10
 
       - name: Install PipEnv
         run: |
@@ -339,7 +339,7 @@ This will pull the files from the Git repository for whichever branch the
 GitHub Actions task is being executed on.
 This is essential as most jobs act on changes to their repositories and that
 context must be set up before any other steps are defined. The next step,
-`Setup Python 3.9`, installs the specified version of Python for the pipeline's
+`Setup Python 3.10`, installs the specified version of Python for the pipeline's
 use, mirroring the steps taken in the [Installing Python](#installing-python)
 section above. The third step, `Install PipEnv`, continues that process by
 mirroring the [Installing PipEnv](#installing-pipenv) process outlined above.
