@@ -19,6 +19,8 @@ else:
     ALT_EXTENSIONS_X = "-ae, --alternate-extensions ALTERNATE_EXTENSIONS"
     EXCLUSIONS_X = "-e, --exclude PATH_EXCLUSIONS"
 
+# pylint: disable=too-many-lines
+
 
 def test_markdown_with_dash_h() -> None:
     """
@@ -187,7 +189,41 @@ def test_markdown_with_dash_l_on_md_directory_with_explicit_file_exclude() -> No
     # Arrange
     scanner = MarkdownScanner()
     source_path = f"simple{os.sep}"
-    supplied_arguments = ["scan", "-e", f"simple{os.sep}simple.md", "-l", source_path]
+    glob_to_exclude = f"simple{os.sep}simple.md"
+    supplied_arguments = ["scan", "-e", glob_to_exclude, "-l", source_path]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = "No matching files found."
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments, cwd=scanner.resource_directory
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_l_on_md_directory_with_configure_file_exclude() -> None:
+    """
+    Test to make sure we get no paths if '-l' is supplied with a path with a
+    single file and a configured exclude that matches the file is also supplied.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = f"simple{os.sep}"
+    glob_to_exclude = f"simple{os.sep}simple.md"
+    supplied_arguments = [
+        "-s",
+        f"system.exclude_path={glob_to_exclude}",
+        "scan",
+        "-l",
+        source_path,
+    ]
 
     expected_return_code = 1
     expected_output = ""
@@ -215,12 +251,50 @@ def test_markdown_with_dash_l_on_md_directory_with_explicit_multiple_file_exclud
     # Arrange
     scanner = MarkdownScanner()
     source_path = f"simple{os.sep}"
+    glob_to_exclude_1 = f"simple{os.sep}simple.md"
+    glob_to_exclude_2 = f"simple{os.sep}README.md"
     supplied_arguments = [
         "scan",
         "-e",
-        f"simple{os.sep}simple.md",
+        glob_to_exclude_1,
         "-e",
-        f"simple{os.sep}README.md",
+        glob_to_exclude_2,
+        "-l",
+        source_path,
+    ]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = "No matching files found."
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments, cwd=scanner.resource_directory
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_l_on_md_directory_with_configure_multiple_file_exclude() -> (
+    None
+):
+    """
+    Test to make sure we get no paths if '-l' is supplied with a path with a
+    single file and and exclude that matches the file is also supplied.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = f"simple{os.sep}"
+    glob_to_exclude_1 = f"simple{os.sep}simple.md"
+    glob_to_exclude_2 = f"simple{os.sep}README.md"
+    supplied_arguments = [
+        "-s",
+        f"system.exclude_path={glob_to_exclude_1},{glob_to_exclude_2}",
+        "scan",
         "-l",
         source_path,
     ]
@@ -251,7 +325,43 @@ def test_markdown_with_dash_l_on_md_directory_with_explicit_directory_exclude_no
     # Arrange
     scanner = MarkdownScanner()
     source_path = f"simple{os.sep}"
-    supplied_arguments = ["scan", "-e", "simple", "-l", source_path]
+    glob_to_exclude = "simple"
+    supplied_arguments = ["scan", "-e", glob_to_exclude, "-l", source_path]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = "No matching files found."
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments, cwd=scanner.resource_directory
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_l_on_md_directory_with_configure_directory_exclude_no_ending_slash() -> (
+    None
+):
+    """
+    Test to make sure we get no paths if '-l' is supplied with a path with a
+    single file and and exclude that matches the directory that file is in is also supplied.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = f"simple{os.sep}"
+    glob_to_exclude = "simple"
+    supplied_arguments = [
+        "-s",
+        f"system.exclude_path={glob_to_exclude}",
+        "scan",
+        "-l",
+        source_path,
+    ]
 
     expected_return_code = 1
     expected_output = ""
@@ -279,7 +389,43 @@ def test_markdown_with_dash_l_on_md_directory_with_explicit_directory_exclude_wi
     # Arrange
     scanner = MarkdownScanner()
     source_path = f"simple{os.sep}"
-    supplied_arguments = ["scan", "-e", f"simple{os.sep}", "-l", source_path]
+    glob_to_exclude = f"simple{os.sep}"
+    supplied_arguments = ["scan", "-e", glob_to_exclude, "-l", source_path]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = "No matching files found."
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments, cwd=scanner.resource_directory
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_l_on_md_directory_with_configure_directory_exclude_with_ending_slash() -> (
+    None
+):
+    """
+    Test to make sure we get no paths if '-l' is supplied with a path with a
+    single file and and exclude that matches the directory that file is in is also supplied.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = f"simple{os.sep}"
+    glob_to_exclude = f"simple{os.sep}"
+    supplied_arguments = [
+        "-s",
+        f"system.exclude_path={glob_to_exclude}",
+        "scan",
+        "-l",
+        source_path,
+    ]
 
     expected_return_code = 1
     expected_output = ""
@@ -642,7 +788,7 @@ two.md"""
     )
 
 
-def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_and_exclude_double_asterisk_files() -> (
+def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_and_exclude_double_asterisk_files_explicit() -> (
     None
 ):
     """
@@ -653,7 +799,49 @@ def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_and_exclud
     # Arrange
     scanner = MarkdownScanner()
     source_path = "complex"
-    supplied_arguments = ["scan", "-l", "-e", f"**{os.sep}README.md", f"**{os.sep}*.md"]
+    glob_to_exclude = f"**{os.sep}README.md"
+    supplied_arguments = ["scan", "-l", "-e", glob_to_exclude, f"**{os.sep}*.md"]
+
+    expected_return_code = 0
+    expected_output = f"""dir_one{os.sep}one_one.md
+dir_two{os.sep}dir_two_one{os.sep}two_one_one.md
+dir_two{os.sep}two_one.md
+one.md
+two.md"""
+
+    expected_error = """"""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments,
+        cwd=os.path.join(scanner.resource_directory, source_path),
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_l_on_globbed_files_with_globbed_recursion_and_exclude_double_asterisk_files_configure() -> (
+    None
+):
+    """
+    Test to make sure we get a list of valid paths if '-l' is supplied
+    with a globbed file path that includes the ** for recursion.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    source_path = "complex"
+    glob_to_exclude = f"**{os.sep}README.md"
+    supplied_arguments = [
+        "-s",
+        f"system.exclude_path={glob_to_exclude}",
+        "scan",
+        "-l",
+        f"**{os.sep}*.md",
+    ]
 
     expected_return_code = 0
     expected_output = f"""dir_one{os.sep}one_one.md

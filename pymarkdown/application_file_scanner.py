@@ -38,13 +38,14 @@ class ApplicationFileScanner:
         args: argparse.Namespace,
         handle_output: ApplicationFileScannerOutputProtocol,
         handle_error: ApplicationFileScannerOutputProtocol,
+        paths_to_exclude: Optional[List[str]] = None,
     ) -> Tuple[List[str], bool, bool]:
         """
         Determine the files to scan based on the arguments provided by the `add_default_command_line_arguments` function.
         """
         return ApplicationFileScanner.determine_files_to_scan(
             args.paths,
-            args.path_exclusions,
+            paths_to_exclude if paths_to_exclude is not None else args.path_exclusions,
             args.recurse_directories,
             args.alternate_extensions,
             args.list_files,

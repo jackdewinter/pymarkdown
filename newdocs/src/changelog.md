@@ -1,24 +1,27 @@
 # Change Log
 
-## Unversioned - In Main, Not Released
-
-<!-- pyml disable-next-line no-duplicate-heading-->
-### Notes
-
-- None
+## Unversioned
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Added
 
-- None
+- [Issue 1490](https://github.com/jackdewinter/pymarkdown/issues/1490)
+    - Added work to measure "extra" test coverage, with goals to keep scenario
+      coverage but reduce redundant code coverage
+    - i.e. if two scenarios are different enough but have the same code coverage,
+      have a way to mark them as such
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
+- None
+
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
 
-- None
+- [Issue 1462](https://github.com/jackdewinter/pymarkdown/issues/1462)
+    - added `system.exclude_path` to provide configuration option for the
+      command-line `--exclude`
 
 ## Version 0.9.33 - 2025-10-22
 

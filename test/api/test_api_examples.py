@@ -43,8 +43,8 @@ def test_api_exceptions_example_bad(caplog: pytest.LogCaptureFixture) -> None:
 
     assert (
         caplog.text
-        == """WARNING  pymarkdown.main:main.py:336 Provided path 'some-manner-of-path' does not exist.
-WARNING  pymarkdown.main:main.py:336 No matching files found.
+        == """WARNING  pymarkdown.main:main.py:337 Provided path 'some-manner-of-path' does not exist.
+WARNING  pymarkdown.main:main.py:337 No matching files found.
 """
     )
     assert not did_complete
