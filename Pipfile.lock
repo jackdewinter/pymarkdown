@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "89f636bfa02cdb7e4b502ea5839e60c56a61ccfa0ce5821a58e03a891c9da6cb"
+            "sha256": "900b16f718de3043c2698c61c7ade20c1188d92e925db9dcf412cbfbbb424b42"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -1229,12 +1229,12 @@
         },
         "pyroma": {
             "hashes": [
-                "sha256:6c727dc4a7a10e12274faed5fb47ebd499ca0821995befec98e3cfcaf1e7383c",
-                "sha256:a59854b6f8a72b55384cc1de42410e5c5ac59d0c40a92e84fd8364aa6cec3e37"
+                "sha256:20b28f5ad08d2588618ac3a2f0a7ba7a4febe6aa514963e4211cfa6d2ad81eb5",
+                "sha256:dabe6ad75e362b56ba189982510fd928ca8aecb8cb21ee18e927c2acf6dbf167"
             ],
             "index": "pypi",
-            "markers": "python_version >= '3.7'",
-            "version": "==4.2"
+            "markers": "python_version >= '3.9'",
+            "version": "==5.0"
         },
         "pytest": {
             "hashes": [
