@@ -921,7 +921,9 @@ class PluginManager:
         always_return_facade: bool = False,
     ) -> Optional[ApplicationPropertiesFacade]:
         plugin_specific_facade, first_facade = None, None
+        
         for next_key_name in next_plugin.plugin_identifiers:
+            # Try standard plugin prefix (for JSON configs and auto-discovered TOML)
             plugin_section_title = (
                 f"{PluginManager.__plugin_prefix}{properties.separator}"
                 + f"{next_key_name}{properties.separator}"
@@ -935,6 +937,19 @@ class PluginManager:
                 plugin_specific_facade = section_facade_candidate
                 break
 
+            # Try pyproject.toml-style prefix (for --config pyproject.toml files)
+            toml_section_title = (
+                f"tool{properties.separator}pymarkdown{properties.separator}"
+                + f"{PluginManager.__plugin_prefix}{properties.separator}"
+                + f"{next_key_name}{properties.separator}"
+            )
+            toml_section_facade_candidate = ApplicationPropertiesFacade(
+            properties, toml_section_title
+            )
+            if toml_section_facade_candidate.property_names:
+                plugin_specific_facade = toml_section_facade_candidate
+                break
+        
         if always_return_facade and not plugin_specific_facade:
             plugin_specific_facade = first_facade
         return plugin_specific_facade
