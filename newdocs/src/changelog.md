@@ -14,6 +14,8 @@
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Fixed
 
+- [Issue 1426](https://github.com/jackdewinter/pymarkdown/issues/1426)
+    - from previous work, but also asked reporter how to enhance this rule
 - [Issue 1475](https://github.com/jackdewinter/pymarkdown/issues/1475)
     - fixed typo in documentation
 
@@ -23,6 +25,9 @@
 - [Issue 1462](https://github.com/jackdewinter/pymarkdown/issues/1462)
     - added `system.exclude_path` to provide configuration option for the
       command-line `--exclude`
+- [Issue 1504](https://github.com/jackdewinter/pymarkdown/issues/1504)
+    - clarified documentation for rule Md001 and the first heading of
+      a document
 
 ## Version 0.9.33 - 2025-10-22
 

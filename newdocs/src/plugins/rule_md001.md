@@ -72,8 +72,8 @@ items or any decrease of the heading levels:
 ### Another Heading 3
 ```
 
-If a front-matter field is present with the configured name, a correct document must
-start with a level 2 heading:
+If a front-matter field is present with the configured name, it takes the place of
+a level 1 heading.  Therefore, a correct document must start with a level 2 heading:
 
 ```Markdown
 ---
@@ -82,6 +82,24 @@ title: my title
 
 ## Heading 2
 ```
+
+### Edge Case - The Very First Heading
+
+Whether the first heading is an explicit heading (such as an Atx or SetExt heading)
+or an implicit one (derived from a front-matter title), the very first heading in
+a document is treated as a special case by this rule. Since other rules govern the
+behavior of the first heading, this rule intentionally does not add any additional
+requirements for it.
+
+The rule interprets the word "increment" in its summary—
+
+> Heading levels should only increment by one level at a time.
+
+—quite literally: either an explicit or implicit heading must appear first before
+this rule is enforced. As a result, the first heading in the document is always
+ignored by this rule. The rule only takes effect starting with the second heading,
+using the first heading as a reference point to determine whether subsequent heading
+levels increment correctly.
 
 ## Fix Description
 
