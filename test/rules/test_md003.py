@@ -640,10 +640,10 @@ def test_md003_bad_atx_headings_setext() -> None:
 
             expected_return_code = 1
             expected_output = (
-                f"{markdown_file_path}:2:1: "
+                f"{markdown_file_path}:1:1: "
                 + "MD003: Heading style should be consistent throughout the document. "
                 + "[Expected: atx; Actual: setext] (heading-style,header-style)\n"
-                + f"{markdown_file_path}:5:1: "
+                + f"{markdown_file_path}:4:1: "
                 + "MD003: Heading style should be consistent throughout the document. "
                 + "[Expected: atx; Actual: setext] (heading-style,header-style)\n"
             )
@@ -688,10 +688,10 @@ def test_md003_bad_atx_headings_setext_with_atx() -> None:
 
             expected_return_code = 1
             expected_output = (
-                f"{markdown_file_path}:2:1: "
+                f"{markdown_file_path}:1:1: "
                 + "MD003: Heading style should be consistent throughout the document. "
                 + "[Expected: atx; Actual: setext] (heading-style,header-style)\n"
-                + f"{markdown_file_path}:5:1: "
+                + f"{markdown_file_path}:4:1: "
                 + "MD003: Heading style should be consistent throughout the document. "
                 + "[Expected: atx; Actual: setext] (heading-style,header-style)\n"
             )
@@ -740,10 +740,10 @@ def test_md003_bad_atx_headings_setext_with_atx_closed() -> None:
 
             expected_return_code = 1
             expected_output = (
-                f"{markdown_file_path}:2:1: "
+                f"{markdown_file_path}:1:1: "
                 + "MD003: Heading style should be consistent throughout the document. "
                 + "[Expected: atx; Actual: setext] (heading-style,header-style)\n"
-                + f"{markdown_file_path}:5:1: "
+                + f"{markdown_file_path}:4:1: "
                 + "MD003: Heading style should be consistent throughout the document. "
                 + "[Expected: atx; Actual: setext] (heading-style,header-style)\n"
                 + f"{markdown_file_path}:7:1: "
@@ -927,10 +927,10 @@ def test_md003_bad_atxclosed_headings_setext() -> None:
 
             expected_return_code = 1
             expected_output = (
-                f"{markdown_file_path}:2:1: "
+                f"{markdown_file_path}:1:1: "
                 + "MD003: Heading style should be consistent throughout the document. "
                 + "[Expected: atx_closed; Actual: setext] (heading-style,header-style)\n"
-                + f"{markdown_file_path}:5:1: "
+                + f"{markdown_file_path}:4:1: "
                 + "MD003: Heading style should be consistent throughout the document. "
                 + "[Expected: atx_closed; Actual: setext] (heading-style,header-style)\n"
             )
@@ -979,10 +979,10 @@ def test_md003_bad_atxclosed_headings_setext_with_atx() -> None:
 
             expected_return_code = 1
             expected_output = (
-                f"{markdown_file_path}:2:1: "
+                f"{markdown_file_path}:1:1: "
                 + "MD003: Heading style should be consistent throughout the document. "
                 + "[Expected: atx_closed; Actual: setext] (heading-style,header-style)\n"
-                + f"{markdown_file_path}:5:1: "
+                + f"{markdown_file_path}:4:1: "
                 + "MD003: Heading style should be consistent throughout the document. "
                 + "[Expected: atx_closed; Actual: setext] (heading-style,header-style)\n"
                 + f"{markdown_file_path}:7:1: "
@@ -1030,10 +1030,10 @@ def test_md003_bad_atxclosed_headings_setext_with_atx_closed() -> None:
 
             expected_return_code = 1
             expected_output = (
-                f"{markdown_file_path}:2:1: "
+                f"{markdown_file_path}:1:1: "
                 + "MD003: Heading style should be consistent throughout the document. "
                 + "[Expected: atx_closed; Actual: setext] (heading-style,header-style)\n"
-                + f"{markdown_file_path}:5:1: "
+                + f"{markdown_file_path}:4:1: "
                 + "MD003: Heading style should be consistent throughout the document. "
                 + "[Expected: atx_closed; Actual: setext] (heading-style,header-style)\n"
             )

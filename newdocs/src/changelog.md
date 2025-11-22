@@ -18,6 +18,14 @@
     - from previous work, but also asked reporter how to enhance this rule
 - [Issue 1475](https://github.com/jackdewinter/pymarkdown/issues/1475)
     - fixed typo in documentation
+- [Issue 1505](https://github.com/jackdewinter/pymarkdown/issues/1505)
+    - fixed an issue with Md002/Md041 where the bottom of the SetExt
+      token was being reported instead of the top
+    - additionally, fixed a small issue with empty documents falsely
+      reporting the end-of-stream token as a "bad" heading
+- [Issue 1506](https://github.com/jackdewinter/pymarkdown/issues/1506)
+    - fixed an issue with Md003 where the bottom of the SetExt
+      token was being reported instead of the top
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
