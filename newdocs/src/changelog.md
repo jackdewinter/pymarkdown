@@ -26,6 +26,9 @@
 - [Issue 1506](https://github.com/jackdewinter/pymarkdown/issues/1506)
     - fixed an issue with Md003 where the bottom of the SetExt
       token was being reported instead of the top
+- [Issue 1507](https://github.com/jackdewinter/pymarkdown/issues/1507)
+    - fixed an issue with Md023 where the bottom of the SetExt
+      token was being reported instead of the top
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
