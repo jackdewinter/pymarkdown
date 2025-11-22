@@ -85,5 +85,5 @@ class RuleMd002(RulePlugin):
             if hash_count != self.__start_level:
                 extra_data = f"Expected: h{self.__start_level}; Actual: h{hash_count}"
                 self.report_next_token_error(
-                    context, token, extra_error_information=extra_data
+                    context, token, extra_error_information=extra_data, use_original_position=token.is_setext_heading
                 )

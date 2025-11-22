@@ -111,7 +111,7 @@ This is a good document.
 This is not a good document.
 """,
         scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:2:1: MD041: First line in file should be a top level heading (first-line-heading,first-line-h1)
+        scan_expected_output="""{temp_source_path}:1:1: MD041: First line in file should be a top level heading (first-line-heading,first-line-h1)
 """,
     ),
     pluginRuleTest(
@@ -212,14 +212,19 @@ reverse setext?
 """,
     ),
     pluginRuleTest(
+        "issue-1505",
+        source_file_contents="""
+""",
+        disable_rules="MD012,MD033",
+        scan_expected_return_code=0,
+    ),
+    pluginRuleTest(
         "issue-1400-scenario-1-no-blank-line",
         source_file_contents="""<link rel="stylesheet" href="/styles.css">
 # What seems like a level-1 heading is actually part of the link html block.
 """,
         disable_rules="MD033",
-        scan_expected_return_code=1,
-        scan_expected_output="""{temp_source_path}:4:0: MD041: First line in file should be a top level heading (first-line-heading,first-line-h1)
-""",
+        scan_expected_return_code=0,
     ),
     pluginRuleTest(
         "issue-1400-scenario-1-with-blank-line",
