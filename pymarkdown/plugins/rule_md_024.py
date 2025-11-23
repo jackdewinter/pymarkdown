@@ -92,7 +92,12 @@ class RuleMd024(RulePlugin):
             self.handler_heading_end(context, token)
 
         if not skip_this_token and self.__heading_text is not None:
-            self.__heading_text += token.debug_string(include_column_row_info=False)
+            new_token_debug = token.debug_string(include_column_row_info=False)
+            if token.is_text and not self.__heading_text:
+                suffix_to_look_for = f":{token.extracted_whitespace}]"
+                if new_token_debug.endswith(suffix_to_look_for):
+                    new_token_debug = f"{new_token_debug[:-len(suffix_to_look_for)]}:]"
+            self.__heading_text += new_token_debug
 
     def handle_heading_start(self, token: AtxHeadingMarkdownToken) -> None:
         """
