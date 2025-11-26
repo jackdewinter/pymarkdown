@@ -33,6 +33,9 @@
     - fixed an issue with Md024 where the accumulated text for the Atx Heading
       and the accumulated text for the SetExt heading with the same text
       differed
+- [Issue 1510](https://github.com/jackdewinter/pymarkdown/issues/1510)
+    - fixed an issue with Md025 where the bottom of the SetExt
+      token was being reported instead of the top
 
 <!-- pyml disable-next-line no-duplicate-heading-->
 ### Changed
